@@ -34,15 +34,30 @@ function headerText(col) {
   return type.isNone(label) ? '' : String(label);
 }
 
-// Resolve a cell's raw value. A `valueGetter` (a `_function` operator closure)
-// overrides the `field` lookup; otherwise read `field` from the row, honouring
-// ag-grid's dot-path field notation (`get` splits on '.').
-function resolveValue({ col, data }) {
-  if (type.isFunction(col.valueGetter)) {
-    return col.valueGetter({ data, colDef: col });
-  }
+function fieldValue({ col, data }) {
   if (type.isNone(col.field)) return undefined;
   return get(data, col.field);
+}
+
+// Resolve a cell's raw value. A `valueGetter` (a `_function` operator closure)
+// overrides the `field` lookup; otherwise read `field` from the row, honouring
+// ag-grid's dot-path field notation (`get` splits on '.'). The getter is a
+// `_function` closure evaluated headless: if it throws — commonly by reaching
+// for an ag-grid params member (`getValue`, `node`, `api`) absent server-side —
+// warn and fall back to the plain `field` lookup rather than fail the report.
+function resolveValue({ col, data, blockId, logger }) {
+  if (!type.isFunction(col.valueGetter)) return fieldValue({ col, data });
+  try {
+    return col.valueGetter({ data, colDef: col });
+  } catch (error) {
+    logger?.warn?.(
+      { blockId, field: col.field, err: error },
+      `AgGrid report renderer: valueGetter for column '${
+        col.field ?? headerText(col)
+      }' in block '${blockId}' threw; falling back to the field value.`
+    );
+    return fieldValue({ col, data });
+  }
 }
 
 // Build one cell: the raw typed `value`, plus a `formatted` display string when
@@ -51,7 +66,7 @@ function resolveValue({ col, data }) {
 // throws — commonly by touching a browser API absent on the server — log a
 // warning and fall back to the raw value with no `formatted`.
 function buildCell({ col, data, blockId, logger }) {
-  const value = resolveValue({ col, data });
+  const value = resolveValue({ col, data, blockId, logger });
   if (!type.isFunction(col.valueFormatter)) return cell(value);
   try {
     const formatted = col.valueFormatter({ value, data, colDef: col });

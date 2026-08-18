@@ -1219,10 +1219,8 @@ export default {
             },
             rendering: {
               type: 'string',
-              enum: ['chromium'],
               errorMessage: {
                 type: 'Block "report.rendering" should be a string.',
-                enum: 'Block "report.rendering" should be "chromium".',
               },
             },
             exclude: {
@@ -1251,6 +1249,8 @@ export default {
           },
           errorMessage: {
             type: 'Block "report" should be an object.',
+            additionalProperties:
+              'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".',
           },
         },
       },

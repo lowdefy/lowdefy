@@ -15,7 +15,7 @@
 */
 
 import getContext from '@lowdefy/engine';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import createHeadlessLowdefy from './createHeadlessLowdefy.js';
 
@@ -34,11 +34,18 @@ const noop = () => undefined;
  * synthetic window; this function seeds `seed.input` and `seed.state` into the
  * context.
  *
+ * KNOWN LIMITATION — onMount: the engine has no mount lifecycle (per-block
+ * `onMount`/`onMountAsync` are a client concern, fired in
+ * `@lowdefy/client`'s Block.js, not the engine). Only `onInit` runs headless, so
+ * a page that loads its data in `onMount` renders empty. Load report data in
+ * `onInit`. Running mount events headless would mean replicating the client's
+ * per-block mount traversal here — deferred as its own change.
+ *
  * WYSIWYG contract: state seeds AFTER `getContext` (the context and its
  * `inputs` entry exist by then) but BEFORE `onInit`, so init request payloads
  * reading `_state`/`_input` see the invoker's snapshot.
  *
- * Returns `{ context, warnings }`. `context` exposes the evaluated root block
+ * Returns `{ context, warnings, assertUserNotEvaluated }`. `context` exposes the evaluated root block
  * tree — walk `context._internal.RootSlots` (or `.map` by blockId) to read
  * `propertiesEval`, `visibleEval`, `layoutEval` per block (see
  * `packages/engine/src/Block.js`). `warnings` is the skip-collector the factory
@@ -77,10 +84,10 @@ async function evaluatePage(options) {
   // `getContext` initialised and the `_input` operator reads. Copy so the
   // engine's in-place mutations during init never reach back into the caller's
   // snapshot.
-  if (seed.input !== undefined) {
+  if (!type.isNone(seed.input)) {
     lowdefy.inputs[context.id] = serializer.copy(seed.input);
   }
-  if (seed.state !== undefined) {
+  if (!type.isNone(seed.state)) {
     context.state = serializer.copy(seed.state);
   }
 
@@ -107,7 +114,9 @@ async function evaluatePage(options) {
   context._internal.update();
   assertUserNotEvaluated();
 
-  return { context, warnings };
+  // Returned so the caller can assert again after it evaluates the report chrome
+  // (title/header/footer), which reads operators outside these phases.
+  return { context, warnings, assertUserNotEvaluated };
 }
 
 export default evaluatePage;

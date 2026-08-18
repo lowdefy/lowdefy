@@ -93,6 +93,19 @@ test('omits the antd token bridge that globals.css carries', async () => {
   expect(inputCss).not.toContain('--ant-');
 });
 
+test('emits the user theme.tailwind tokens as an @theme inline block', async () => {
+  const context = createContext();
+  await writeReportStyles({
+    components: { theme: { tailwind: { color: { brand: '#722ed1' } } } },
+    context,
+  });
+  const inputCss = mockCompile.mock.calls[0][0];
+  expect(inputCss).toContain('@theme inline {');
+  expect(inputCss).toContain('--color-brand: #722ed1;');
+  // Still no antd bridge — those are dead in a static sheet.
+  expect(inputCss).not.toContain('--ant-');
+});
+
 test('includes public/styles.css as a components-layer import when it exists', async () => {
   const context = createContext();
   mockExistsSync.mockReturnValue(true);

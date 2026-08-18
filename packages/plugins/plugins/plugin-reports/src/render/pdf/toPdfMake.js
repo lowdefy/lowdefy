@@ -113,9 +113,23 @@ function translateText(node) {
   };
 }
 
+// pdfmake renders SVG through svg-to-pdfkit, whose default image handler reads a
+// non-`data:` href off the filesystem (PDFKit's openImage → fs.readFileSync).
+// A chart SVG can carry an author- or data-derived `<image href="/etc/...">`,
+// so strip every `<image>` whose href is not a `data:` URI before it reaches the
+// renderer — an embedded data image is fine, a filesystem path is not.
+function sanitizeSvg(svg) {
+  if (typeof svg !== 'string') return svg;
+  return svg.replace(/<image\b[^>]*>/gi, (tag) => {
+    const href = /(?:xlink:)?href\s*=\s*(['"])(.*?)\1/i.exec(tag);
+    if (href && /^\s*data:/i.test(href[2])) return tag;
+    return '';
+  });
+}
+
 function translateSvg(node) {
   return {
-    svg: node.svg,
+    svg: sanitizeSvg(node.svg),
     width: node.width,
     height: node.height,
     unbreakable: true,

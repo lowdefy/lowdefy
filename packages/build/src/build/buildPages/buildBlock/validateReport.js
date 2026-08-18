@@ -24,9 +24,11 @@ function validateReport(block, pageContext) {
   if (type.isNone(block.report)) return;
   const configKey = block['~k'];
 
-  if (block.report.rendering === 'chromium') {
+  if (!type.isNone(block.report.rendering)) {
     throw new ConfigError(
-      `Report "rendering: chromium" on block "${block.blockId}" on page "${pageContext.pageId}" is reserved and not yet supported.`,
+      `Report "rendering" on block "${block.blockId}" on page "${pageContext.pageId}" is reserved and not yet supported (received ${JSON.stringify(
+        block.report.rendering
+      )}).`,
       { configKey }
     );
   }

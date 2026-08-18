@@ -169,3 +169,45 @@ describe('authorization masking', () => {
     expect(generateReport).not.toHaveBeenCalled();
   });
 });
+
+describe('report-in-report guard', () => {
+  test('refuses to render when reached at a non-zero render depth', async () => {
+    const app = makeApp({ renderDepth: 1 });
+    await expect(RenderReport({ request: { pageId: 'page1' }, app })).rejects.toThrow(
+      "Report for page 'page1' cannot be rendered from within another report."
+    );
+    expect(app.getPageConfig).not.toHaveBeenCalled();
+    expect(generateReport).not.toHaveBeenCalled();
+  });
+
+  test('renders normally at the top level (renderDepth 0 or absent)', async () => {
+    const app = makeApp({ renderDepth: 0 });
+    await RenderReport({ request: { pageId: 'page1' }, app });
+    expect(generateReport).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('per-block report options', () => {
+  test('collects report options from the built page config and passes them through', async () => {
+    const app = makeApp({
+      getPageConfig: jest.fn(async () => ({
+        id: 'page1',
+        type: 'Box',
+        blockId: 'page1',
+        slots: {
+          content: {
+            blocks: [
+              { blockId: 'secret_grid', type: 'AgGridAlpine', report: { exclude: true } },
+              { blockId: 'sales', type: 'AgGridAlpine', report: { sheetName: 'Sales' } },
+            ],
+          },
+        },
+      })),
+    });
+    await RenderReport({ request: { pageId: 'page1' }, app });
+    expect(generateReport.mock.calls[0][0].reportOptions).toEqual({
+      secret_grid: { exclude: true },
+      sales: { sheetName: 'Sales' },
+    });
+  });
+});

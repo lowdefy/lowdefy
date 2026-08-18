@@ -27,8 +27,10 @@ function normalizeItems(items) {
   }
   if (!type.isArray(items)) return [];
   return items.map((item) => {
+    // isPrimitive is true for null and undefined too, so build the label with
+    // String() only for real values — undefined.toString() would throw.
     if (type.isPrimitive(item)) {
-      return { label: item === null ? '' : item.toString(), value: item, key: `${item}` };
+      return { label: type.isNone(item) ? '' : String(item), value: item, key: `${item}` };
     }
     return { label: item.label ?? item.key, value: item.value, key: item.key ?? item.label };
   });
@@ -54,7 +56,7 @@ export const Descriptions = {
     if (rows.length === 0) return null;
     const options = type.isArray(itemOptions) ? itemOptions : [];
     const body = rows.map((row, i) => {
-      const option = options.find((o) => o.key === row.key) || {};
+      const option = options.find((o) => type.isObject(o) && o.key === row.key) || {};
       const label = type.isFunction(option.transformLabel)
         ? option.transformLabel(row.label, row, i)
         : row.label;

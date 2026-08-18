@@ -177,7 +177,10 @@ Modified files should always have the Apache license header with the end date se
 
 ### Blocks
 
-> **Block testing is currently disabled. Do not create tests for blocks.**
+> **Block _component_ testing is currently disabled. Do not create tests that render a block component.**
+> The exception is static report renderers: `*.static.test.js` suites exercise a block's
+> `[Block].static.js` `toReport` function (plain data in, report-IR out, no React render), and each
+> block package that ships renderers has its own jest harness scoped to those files.
 
 Structure: `blocks/{BlockName}/` with `{BlockName}.js`, `schema.json`, `examples.yaml`, optional `style.less`
 

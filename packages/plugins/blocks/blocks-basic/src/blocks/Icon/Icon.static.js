@@ -86,7 +86,11 @@ const toReport = async ({ block, context }) => {
 
   const size =
     toPoints(properties.size) ?? toPoints(styleValue(block.style, 'fontSize')) ?? DEFAULT_SIZE;
-  const color = properties.color ?? styleValue(block.style, 'color') ?? DEFAULT_COLOR;
+  const rawColor = properties.color ?? styleValue(block.style, 'color') ?? DEFAULT_COLOR;
+  // The colour is spliced into SVG markup below, so reject any value carrying
+  // markup characters (a config-authored `red"/><image .../>`) — fall back to
+  // the default rather than let it break out of the attribute.
+  const color = /[<>"]/.test(String(rawColor)) ? DEFAULT_COLOR : rawColor;
 
   if (properties.rotate !== undefined || properties.spin === true) {
     context?.logger?.debug?.(

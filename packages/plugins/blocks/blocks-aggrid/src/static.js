@@ -16,10 +16,14 @@
 
 /**
  * Static report renderers for blocks-aggrid, aggregated behind the `./static`
- * package export. Every AgGrid variant (theme and input alike) shares one
- * `grid` renderer, re-exported per block type name so the walker can look it up
- * by `block.type`. This entry stays free of ag-grid and React so the server can
- * load the registry without a browser runtime.
+ * package export. The three display AgGrid variants share one `grid` renderer,
+ * re-exported per block type name so the walker can look it up by `block.type`.
+ * This entry stays free of ag-grid and React so the server can load the registry
+ * without a browser runtime.
+ *
+ * The input variants (AgGridInput*) are intentionally absent: reports are display
+ * documents and the walker skips `category: 'input'` blocks, so a renderer for
+ * them would never be reached.
  */
 
 import { agGridTable } from './agGridTable.static.js';
@@ -27,6 +31,3 @@ import { agGridTable } from './agGridTable.static.js';
 export const AgGridAlpine = agGridTable;
 export const AgGridBalham = agGridTable;
 export const AgGridMaterial = agGridTable;
-export const AgGridInputAlpine = agGridTable;
-export const AgGridInputBalham = agGridTable;
-export const AgGridInputMaterial = agGridTable;

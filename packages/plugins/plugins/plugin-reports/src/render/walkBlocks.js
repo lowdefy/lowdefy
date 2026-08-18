@@ -104,15 +104,38 @@ const flexGrows = (layout) => {
  */
 async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, context = {}) {
   const logger = context.logger;
+  const signal = context.signal;
   // Unsupported types are collected once per type, listing every blockId, so a
   // page with ten unrenderable widgets warns ten blockIds under one type.
   const unsupported = new Map();
+  // A renderer that throws (or emits malformed IR) degrades to a skipped block
+  // rather than failing the whole document — one broken chart must not lose the
+  // report. Collected per type like unsupported, with the first error message.
+  const failed = new Map();
 
   const recordUnsupported = (block) => {
     if (!unsupported.has(block.type)) {
       unsupported.set(block.type, new Set());
     }
     unsupported.get(block.type).add(block.blockId);
+  };
+
+  const recordFailure = (block, error) => {
+    if (!failed.has(block.type)) {
+      failed.set(block.type, { blockIds: new Set(), message: error.message });
+    }
+    failed.get(block.type).blockIds.add(block.blockId);
+    logger?.warn?.(
+      { blockId: block.blockId, blockType: block.type, err: error },
+      `Report renderer for block '${block.blockId}' (${block.type}) threw; block skipped: ${error.message}`
+    );
+  };
+
+  // Between blocks, bail once the caller has aborted: rendering a page of slow
+  // blocks (takumi Html, large charts) is CPU nobody is waiting for after the
+  // generation's deadline has passed.
+  const throwIfAborted = () => {
+    if (signal?.aborted) throw signal.reason ?? new Error('Report generation was aborted.');
   };
 
   const optionsFor = (block) =>
@@ -146,12 +169,7 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
 
   const isContainerLike = (block) => {
     const category = block.meta?.category;
-    return (
-      category === 'container' ||
-      category === 'input-container' ||
-      category === 'list' ||
-      category === 'context'
-    );
+    return category === 'container' || category === 'input-container' || category === 'list';
   };
 
   const logIgnoredLayout = (block, layout) => {
@@ -177,17 +195,31 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
       children = await walkList(childBlocksOf(block), width);
     }
 
-    let result = null;
+    let nodes;
     if (renderer && typeof renderer.toReport === 'function') {
-      result = await renderer.toReport({ block: projectBlock(block), children, layout, context });
+      // A renderer is plugin code operating on user data: a throw here is a
+      // renderer bug or a hostile property, never a config error worth failing
+      // the whole report for. Isolate it — skip the block, keep the document.
+      // validateNode runs inside the try so malformed IR degrades the same way.
+      try {
+        const result = await renderer.toReport({
+          block: projectBlock(block),
+          children,
+          layout,
+          context,
+        });
+        nodes = result == null ? [] : Array.isArray(result) ? result : [result];
+        nodes.forEach((node) => validateNode(node));
+      } catch (error) {
+        recordFailure(block, error);
+        nodes = [];
+      }
     } else {
       recordUnsupported(block);
-      if (children) result = children; // transparent passthrough
+      // A container with no renderer passes its children through transparently
+      // so a plain Card never swallows its contents.
+      nodes = children ?? [];
     }
-
-    const nodes = result == null ? [] : Array.isArray(result) ? result : [result];
-    // A closed IR: any kind a renderer invents throws a ConfigError here, in dev.
-    nodes.forEach((node) => validateNode(node));
 
     const options = optionsFor(block);
     if (options.pageBreakBefore === true && nodes.length > 0) {
@@ -242,12 +274,17 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
     };
 
     for (const block of blocks) {
+      throwIfAborted();
       if (block.visibleEval?.output === false) continue; // dynamic hiding
       const options = optionsFor(block);
       if (options.exclude === true) continue; // opt-out
       if (block.meta?.category === 'input') continue; // reports are display documents
 
       const layout = block.layoutEval?.output ?? {};
+      // antd's `span: 0` idiom hides a column; a zero (or negative) span is not
+      // full width and has no fraction, so treat it as hidden rather than let a
+      // zero-width row reach the IR validator.
+      if (type.isNumber(layout.span) && layout.span <= 0) continue;
       logIgnoredLayout(block, layout);
 
       // A flex child sits inline at its content width, so it joins the open row
@@ -307,7 +344,13 @@ async function walkBlocks(evaluatedContext, registry = {}, reportOptions = {}, c
     blockIds: [...blockIds],
   }));
 
-  return { nodes, warnings };
+  const renderErrors = [...failed.entries()].map(([blockType, { blockIds, message }]) => ({
+    blockType,
+    blockIds: [...blockIds],
+    message,
+  }));
+
+  return { nodes, warnings, renderErrors };
 }
 
 export default walkBlocks;

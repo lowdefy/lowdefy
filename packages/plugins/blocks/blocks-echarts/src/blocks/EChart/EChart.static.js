@@ -25,6 +25,24 @@ const DEFAULT_HEIGHT = 300;
 
 const isNumber = (value) => typeof value === 'number' && Number.isFinite(value);
 
+// Force animation off at the root and on every series: ECharts resolves a
+// series' own `animation` over the global flag, so a per-series `animation: true`
+// could otherwise leave the SSR frame mid-transition (bars at zero).
+function withoutAnimation(option) {
+  const base = option ?? {};
+  const series = base.series;
+  const stilled = Array.isArray(series)
+    ? series.map((s) => (s && typeof s === 'object' ? { ...s, animation: false } : s))
+    : series && typeof series === 'object'
+      ? { ...series, animation: false }
+      : series;
+  return {
+    ...base,
+    ...(series !== undefined ? { series: stilled } : {}),
+    animation: false,
+  };
+}
+
 /**
  * EChart → `svg`. Render the evaluated `properties.option` to a static SVG via
  * ECharts' zero-DOM SSR path (`init(null, …, { ssr: true, renderer: 'svg' })`),
@@ -42,9 +60,7 @@ export const EChart = {
     let chart;
     try {
       chart = echarts.init(null, null, { renderer: 'svg', ssr: true, width, height });
-      // Spread the override last so `animation: false` wins even when the
-      // option sets it true.
-      chart.setOption({ ...block.properties?.option, animation: false });
+      chart.setOption(withoutAnimation(block.properties?.option));
       const svg = chart.renderToSVGString();
       return { kind: 'svg', svg, width, height };
     } catch (error) {

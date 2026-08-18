@@ -195,7 +195,11 @@ async function runGeneration({
     );
   }
 
-  const { context, warnings: skippedActions } = await evaluatePage({
+  const {
+    context,
+    warnings: skippedActions,
+    assertUserNotEvaluated,
+  } = await evaluatePage({
     pageConfig,
     seed: snapshot,
     invocation,
@@ -212,6 +216,11 @@ async function runGeneration({
   throwIfAborted(signal);
 
   const report = evaluateReport({ context, pageConfig, pageId });
+  // report.title/header/footer are parsed with the same operators as the page,
+  // so a system render whose only _user sits in the report chrome would slip
+  // past the per-phase guards inside evaluatePage (they run before this). Assert
+  // once more here, before any document bytes exist.
+  assertUserNotEvaluated();
 
   const renderContext = {
     logger,
@@ -219,11 +228,13 @@ async function runGeneration({
     icons,
     stylesheets,
     contentWidth: contentWidthOf(report),
+    signal,
   };
 
   const walked = await walkBlocks(context, registry, reportOptions, renderContext);
   throwIfAborted(signal);
   const skippedBlockTypes = walked.warnings;
+  const renderErrors = walked.renderErrors ?? [];
 
   let buffer;
   if (format === 'pdf') {
@@ -233,14 +244,18 @@ async function runGeneration({
     buffer = await toXlsx(walked.nodes);
   }
 
-  const warnings = { skippedActions, skippedBlockTypes };
+  const warnings = { skippedActions, skippedBlockTypes, renderErrors };
 
-  if (logger && (skippedActions.length > 0 || skippedBlockTypes.length > 0)) {
+  if (
+    logger &&
+    (skippedActions.length > 0 || skippedBlockTypes.length > 0 || renderErrors.length > 0)
+  ) {
     logger.warn(
       { pageId, format, warnings },
       `Report for page '${pageId}' generated with warnings: ` +
         `${skippedActions.length} skipped action(s), ` +
-        `${skippedBlockTypes.length} unsupported block type(s).`
+        `${skippedBlockTypes.length} unsupported block type(s), ` +
+        `${renderErrors.length} block(s) that failed to render.`
     );
   }
 

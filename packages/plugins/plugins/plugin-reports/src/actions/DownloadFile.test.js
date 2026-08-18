@@ -50,7 +50,7 @@ afterEach(() => {
   global.URL.revokeObjectURL = originals.revokeObjectURL;
 });
 
-test('decodes the base64 envelope into a typed Blob and clicks a download anchor', () => {
+test('decodes the base64 envelope into a typed Blob and clicks a download anchor', async () => {
   const content = Buffer.from('%PDF-1.7 bytes').toString('base64');
   DownloadFile({ params: { name: 'report.pdf', type: 'application/pdf', content } });
 
@@ -63,6 +63,10 @@ test('decodes the base64 envelope into a typed Blob and clicks a download anchor
   expect(anchor.href).toBe('blob:mock-url');
   expect(anchor.setAttribute).toHaveBeenCalledWith('download', 'report.pdf');
   expect(anchor.click).toHaveBeenCalledTimes(1);
+  // The object URL is revoked on the next tick, not synchronously, so Safari
+  // does not cancel the in-flight download.
+  expect(global.URL.revokeObjectURL).not.toHaveBeenCalled();
+  await new Promise((resolve) => setTimeout(resolve, 0));
   expect(global.URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
 });
 

@@ -36,23 +36,22 @@ function staticRendererFiles(dir) {
   return found;
 }
 
-test('the static entry exports a toReport renderer for each AgGrid variant', () => {
-  const types = [
-    'AgGridAlpine',
-    'AgGridBalham',
-    'AgGridMaterial',
-    'AgGridInputAlpine',
-    'AgGridInputBalham',
-    'AgGridInputMaterial',
-  ];
+test('the static entry exports a toReport renderer for each display AgGrid variant', () => {
+  const types = ['AgGridAlpine', 'AgGridBalham', 'AgGridMaterial'];
   types.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
   });
 });
 
-test('every variant shares the one renderer instance', () => {
+test('input variants are not exported — the walker skips input blocks', () => {
+  expect(staticRenderers.AgGridInputAlpine).toBeUndefined();
+  expect(staticRenderers.AgGridInputBalham).toBeUndefined();
+  expect(staticRenderers.AgGridInputMaterial).toBeUndefined();
+});
+
+test('every display variant shares the one renderer instance', () => {
   expect(staticRenderers.AgGridBalham).toBe(staticRenderers.AgGridAlpine);
-  expect(staticRenderers.AgGridInputMaterial).toBe(staticRenderers.AgGridAlpine);
+  expect(staticRenderers.AgGridMaterial).toBe(staticRenderers.AgGridAlpine);
 });
 
 test('no renderer file imports ag-grid or React', () => {

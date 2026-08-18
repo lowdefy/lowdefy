@@ -16,6 +16,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
+import collectReportOptions from '../../../collectReportOptions.js';
 import generateReport from '../../../generateReport.js';
 import getReportStylesheet from '../../../render/stylesheet.js';
 import resolveRenderer from '../../../registry/resolveRenderer.js';
@@ -35,13 +36,34 @@ async function RenderReport({ request, app }) {
   const { pageId } = request;
   const format = request.format ?? 'pdf';
 
+  // A report may not render a report. renderDepth is 0 for the top-level request
+  // and ≥ 1 when this resolver is reached from another report's own requests —
+  // refuse loudly rather than recurse.
+  if ((app.renderDepth ?? 0) > 0) {
+    throw new Error(
+      `Report for page '${pageId}' cannot be rendered from within another report.`
+    );
+  }
+
   // getPageConfig applies context.authorize and returns null for an unknown
   // page AND an unauthorized one, so this one generic error covers both — a
   // report can never become an existence oracle for pages its user cannot view.
+  //
+  // Auth model: in an interactive request the caller's session gates this the
+  // same as loading the page in the browser. In a SYSTEM context (a scheduled or
+  // webhook routine) authorize() passes for every page — the transport is the
+  // authorization boundary, exactly as it is for a CallApi step in the same
+  // context. A webhook whose routine renders a protected page therefore returns
+  // it: that is the routine author's call, so gate the webhook, not the report.
   const pageConfig = await app.getPageConfig({ pageId, urlQuery: request.urlQuery });
   if (type.isNone(pageConfig)) {
     throw new Error(`Report cannot be rendered for page '${pageId}'.`);
   }
+
+  const deserializedPageConfig = serializer.deserialize(pageConfig);
+  // Per-block `report:` options (exclude / sheetName / pageBreakBefore) live on
+  // the built page JSON; read them here before the engine consumes it.
+  const reportOptions = collectReportOptions(deserializedPageConfig);
 
   const [blockMetas, lowdefyGlobal, stylesheets] = await Promise.all([
     app.readConfigFile('plugins/blockMetas.json'),
@@ -51,9 +73,10 @@ async function RenderReport({ request, app }) {
 
   const result = await generateReport({
     // getPageConfig serializes for JSON transfer; the engine consumes the
-    // runtime artifact, so deserialize it back before evaluation.
-    pageConfig: serializer.deserialize(pageConfig),
+    // runtime artifact, so the deserialized form is used for evaluation.
+    pageConfig: deserializedPageConfig,
     format,
+    reportOptions,
     snapshot: { urlQuery: request.urlQuery, input: request.input, state: request.state },
     // No user means a scheduled (system) render — the plugin's own _user guard
     // then fails fast on any page that reads _user.

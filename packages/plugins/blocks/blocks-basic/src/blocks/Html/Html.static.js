@@ -34,10 +34,20 @@
  * the walker must await renderer results.
  */
 
-import { Renderer } from '@takumi-rs/core';
-import { fromHtml } from '@takumi-rs/helpers/html';
-
 import { isBlank, styleValue } from '../../static.utils.js';
+
+// takumi (`@takumi-rs/core`) is a native Rust binding, and its platform binaries
+// are optionalDependencies — an unsupported platform installs blocks-basic fine
+// but has no binding. Import it lazily (as Icon does with React) so loading this
+// module at server boot never touches takumi; only rendering an Html block does,
+// and that failure is caught per block.
+async function loadTakumi() {
+  const [{ Renderer }, { fromHtml }] = await Promise.all([
+    import('@takumi-rs/core'),
+    import('@takumi-rs/helpers/html'),
+  ]);
+  return { Renderer, fromHtml };
+}
 
 // Fallback when the walker gives no column geometry (e.g. a direct unit-test
 // call): A4 portrait content width, matching the reports walker default.
@@ -74,10 +84,15 @@ const isNumber = (value) => typeof value === 'number' && Number.isFinite(value);
 // takumi caches parsed stylesheets and rasters on the instance, so every Html
 // block in every report reuses one parse of the app's compiled CSS.
 let renderer;
+let fromHtmlFn;
 let fontsRegistered;
 
-function getRenderer() {
-  if (!renderer) renderer = new Renderer();
+async function getRenderer() {
+  if (!renderer) {
+    const { Renderer, fromHtml } = await loadTakumi();
+    renderer = new Renderer();
+    fromHtmlFn = fromHtml;
+  }
   return renderer;
 }
 
@@ -87,10 +102,10 @@ function getRenderer() {
  * first render; with none supplied it stays unregistered and a later render
  * that does carry fonts registers them.
  */
-function registerFonts(fonts) {
+async function registerFonts(fonts) {
   if (fontsRegistered) return fontsRegistered;
-  if (!fonts) return Promise.resolve();
-  const engine = getRenderer();
+  if (!fonts) return undefined;
+  const engine = await getRenderer();
   fontsRegistered = Promise.all(
     FONT_FACES.filter(([key]) => fonts[key]).map(([key, weight, style]) =>
       engine.registerFont({ name: FONT_FAMILY, data: fonts[key], weight, style })
@@ -157,8 +172,9 @@ const toReport = async ({ block, layout, context }) => {
 
   try {
     await registerFonts(context?.fonts);
-    const { node, stylesheets } = fromHtml(markup);
-    const svg = await getRenderer().renderSvg(node, {
+    const engine = await getRenderer();
+    const { node, stylesheets } = fromHtmlFn(markup);
+    const svg = await engine.renderSvg(node, {
       width,
       ...(styleHeight !== undefined ? { height: styleHeight } : {}),
       // The block's own `<style>` content first, then the report's compiled

@@ -59,10 +59,11 @@ function formatValue({
 export const Statistic = {
   toReport: ({ block }) => {
     const { title } = block.properties;
-    return {
-      kind: 'stat',
-      label: isBlank(title) ? '' : String(title),
-      value: formatValue(block.properties),
-    };
+    const label = isBlank(title) ? '' : String(title);
+    const value = formatValue(block.properties);
+    // A stat with neither label nor value is an empty box — skip it, the way the
+    // other renderers return null for empty content.
+    if (label === '' && value === '') return null;
+    return { kind: 'stat', label, value };
   },
 };

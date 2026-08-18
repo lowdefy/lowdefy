@@ -93,8 +93,16 @@ describe('Statistic', () => {
     expect(run(Statistic, { properties: { value: 'N/A' } }).value).toBe('N/A');
   });
 
-  test('empty title becomes an empty label; missing value an empty string', () => {
-    expect(run(Statistic, { properties: {} })).toEqual({ kind: 'stat', label: '', value: '' });
+  test('a stat with neither label nor value is skipped (null)', () => {
+    expect(run(Statistic, { properties: {} })).toBeNull();
+  });
+
+  test('a title with no value still renders a stat', () => {
+    expect(run(Statistic, { properties: { title: 'Revenue' } })).toEqual({
+      kind: 'stat',
+      label: 'Revenue',
+      value: '',
+    });
   });
 });
 

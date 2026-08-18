@@ -183,7 +183,9 @@ test('unknown report property emits an additionalProperties warning', () => {
     pages: [{ id: 'p1', type: 'PageHeaderMenu', report: { margins: 10 } }],
   };
   testSchema({ components, context });
-  expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "margins"');
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".'
+  );
 });
 
 test('multiple schema issues emit multiple warnings', () => {

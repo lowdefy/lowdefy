@@ -118,17 +118,20 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
 
   // Warn on duplicate report sheet names within the page — the plugin
   // de-duplicates at render, but a collision usually signals a config mistake.
-  const seenSheetNames = {};
+  // Keyed case-insensitively (Excel treats sheet names that way) on a null-proto
+  // object so a sheetName like "constructor" is data, not a prototype key.
+  const seenSheetNames = Object.create(null);
   sheetNameRefs.forEach(({ sheetName, blockId, configKey }) => {
-    if (seenSheetNames[sheetName]) {
+    const key = String(sheetName).toLowerCase();
+    if (seenSheetNames[key]) {
       context.handleWarning(
         new ConfigWarning(
-          `Duplicate report sheetName "${sheetName}" on block "${blockId}" on page "${page.pageId}" — already defined on block "${seenSheetNames[sheetName].blockId}".`,
+          `Duplicate report sheetName "${sheetName}" on block "${blockId}" on page "${page.pageId}" — already defined on block "${seenSheetNames[key].blockId}".`,
           { configKey }
         )
       );
     } else {
-      seenSheetNames[sheetName] = { blockId };
+      seenSheetNames[key] = { blockId };
     }
   });
 

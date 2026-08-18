@@ -23,11 +23,13 @@ import getPageConfig from '../page/getPageConfig.js';
 // generation timeout has to sit below it.
 const DEFAULT_REQUEST_TIMEOUT = 30000;
 
-// A report may not render a report. app.callRequest carries a render-depth
-// counter on the context it constructs (the endpointDepth precedent), and a
-// second level throws — a page whose request targets itself terminates loudly
-// instead of looping. Depth 1 is the simplest rule that terminates; raising it
-// is a one-constant change if a concrete need appears.
+// Backstop against runaway recursion. app.callRequest carries a render-depth
+// counter on the context it constructs (the endpointDepth precedent): the report
+// page's own data requests run at depth 1, and a second level throws. The precise
+// "a report may not render a report" rule is enforced one layer up — the
+// RenderReport resolver refuses to run at renderDepth > 0 (app.renderDepth), so a
+// nested report throws before it ever reaches this cap; this only bounds the
+// generic request graph in case a future appAccess resolver recurses.
 const MAX_RENDER_DEPTH = 1;
 
 // The opt-in `app` capability handed to a request resolver whose meta declares
@@ -66,6 +68,10 @@ function createApp(context) {
     clientJsMap: context.clientJsMap,
     icons: context.icons,
     origin: context.origin,
+    // The render depth this resolver runs at: 0 for the top-level report request,
+    // ≥ 1 when reached from another report's own requests. RenderReport reads it
+    // to refuse rendering a report from within a report.
+    renderDepth: context.renderDepth ?? 0,
     requestTimeout: context.config?.requestTimeout ?? DEFAULT_REQUEST_TIMEOUT,
     user: context.user,
     logger: context.logger,

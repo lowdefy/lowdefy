@@ -48,7 +48,7 @@ test('validateReport collects sheet names for duplicate detection', () => {
   ]);
 });
 
-test('validateReport throws a ConfigError when rendering is the reserved chromium mode', () => {
+test('validateReport throws a ConfigError for any reserved rendering value', () => {
   const pageContext = createPageContext();
   expect(() =>
     validateReport(
@@ -61,5 +61,5 @@ test('validateReport throws a ConfigError when rendering is the reserved chromiu
       { blockId: 'page1', type: 'Box', report: { rendering: 'chromium' }, '~k': 'k1' },
       pageContext
     )
-  ).toThrow('Report "rendering: chromium" on block "page1" on page "page1" is reserved');
+  ).toThrow('Report "rendering" on block "page1" on page "page1" is reserved and not yet supported');
 });

@@ -57,9 +57,11 @@ function sanitizeSheetName(name) {
 
 // De-duplicate a sanitized name with a numeric suffix — `Sales`, `Sales (2)` —
 // keeping the result within the 31-character cap by trimming the base first.
+// Excel sheet names are case-insensitive, so `Sales` and `sales` collide and
+// ExcelJS throws on the second addWorksheet — track lowercased keys.
 function uniqueSheetName(name, used) {
-  if (!used.has(name)) {
-    used.add(name);
+  if (!used.has(name.toLowerCase())) {
+    used.add(name.toLowerCase());
     return name;
   }
   let counter = 2;
@@ -68,8 +70,8 @@ function uniqueSheetName(name, used) {
     const suffix = ` (${counter})`;
     candidate = `${name.slice(0, MAX_SHEET_NAME - suffix.length)}${suffix}`;
     counter += 1;
-  } while (used.has(candidate));
-  used.add(candidate);
+  } while (used.has(candidate.toLowerCase()));
+  used.add(candidate.toLowerCase());
   return candidate;
 }
 

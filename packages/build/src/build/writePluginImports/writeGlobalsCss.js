@@ -20,6 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { mergeObjects } from '@lowdefy/helpers';
 import { writeFile } from '@lowdefy/node-utils';
 import collectBlockSourceContent from './collectBlockSourceContent.js';
+import objectToThemeVars from './objectToThemeVars.js';
 
 const BRIDGE_DEFAULTS = {
   color: {
@@ -51,19 +52,6 @@ const BRIDGE_DEFAULTS = {
     sans: 'var(--ant-font-family)',
   },
 };
-
-function objectToThemeVars(obj, prefix) {
-  const lines = [];
-  for (const [key, value] of Object.entries(obj)) {
-    const varName = prefix ? `${prefix}-${key}` : `--${key}`;
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      lines.push(...objectToThemeVars(value, varName));
-    } else {
-      lines.push(`  ${varName}: ${value};`);
-    }
-  }
-  return lines;
-}
 
 function buildThemeVars(tailwindConfig) {
   const merged = mergeObjects([{}, BRIDGE_DEFAULTS, tailwindConfig ?? {}]);

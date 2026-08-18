@@ -339,16 +339,82 @@ describe('sheet names', () => {
 });
 
 describe('IR validation', () => {
-  test('a renderer returning an unknown kind throws a ConfigError', async () => {
+  test('a renderer returning an unknown kind skips the block and records a render error', async () => {
     const context = await evaluate({
       id: 'page1',
       type: 'Box',
       blocks: [{ id: 'bad', type: 'Bogus', properties: {} }],
     });
 
-    await expect(walkBlocks(context, stubRegistry(), {}, renderContext())).rejects.toThrow(
-      /Unknown report IR node kind 'not-a-real-kind'/
+    // Malformed IR from a renderer degrades to a skipped block rather than
+    // failing the whole report — a renderer bug must not lose the document.
+    const { nodes, renderErrors } = await walkBlocks(
+      context,
+      stubRegistry(),
+      {},
+      renderContext()
     );
+
+    expect(nodes).toEqual([]);
+    expect(renderErrors).toEqual([
+      {
+        blockType: 'Bogus',
+        blockIds: ['bad'],
+        message: "Unknown report IR node kind 'not-a-real-kind'.",
+      },
+    ]);
+  });
+
+  test('a renderer that throws skips the block and records a render error', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [{ id: 'boom', type: 'Widget', properties: {} }],
+    });
+
+    const registry = {
+      Widget: {
+        toReport: () => {
+          throw new Error('renderer blew up');
+        },
+      },
+    };
+    const { nodes, renderErrors } = await walkBlocks(context, registry, {}, renderContext());
+
+    expect(nodes).toEqual([]);
+    expect(renderErrors).toEqual([
+      { blockType: 'Widget', blockIds: ['boom'], message: 'renderer blew up' },
+    ]);
+  });
+});
+
+describe('hidden and aborted', () => {
+  test('a block with span 0 is treated as hidden', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'shown', type: 'Paragraph', properties: { content: 'shown' }, layout: { span: 12 } },
+        { id: 'hidden', type: 'Paragraph', properties: { content: 'hidden' }, layout: { span: 0 } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+    const texts = JSON.stringify(nodes);
+    expect(texts).toContain('shown');
+    expect(texts).not.toContain('hidden');
+  });
+
+  test('an already-aborted signal stops the walk', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [{ id: 'p', type: 'Paragraph', properties: { content: 'x' } }],
+    });
+    const controller = new AbortController();
+    controller.abort(new Error('deadline passed'));
+    await expect(
+      walkBlocks(context, stubRegistry(), {}, renderContext({ signal: controller.signal }))
+    ).rejects.toThrow('deadline passed');
   });
 });
 

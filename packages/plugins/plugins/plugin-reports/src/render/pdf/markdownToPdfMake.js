@@ -86,6 +86,16 @@ function urlOf(node, state) {
   return state.definitions[node.identifier];
 }
 
+// Only http(s) and mailto links become PDF link annotations. A `javascript:`,
+// `file:`, `vbscript:` or similar scheme in a `/URI` action is a phishing or
+// local-open vector in some viewers, so such links render as plain text.
+const SAFE_LINK_SCHEME = /^(https?:|mailto:)/i;
+
+function safeLinkUrl(url) {
+  if (typeof url !== 'string') return undefined;
+  return SAFE_LINK_SCHEME.test(url.trim()) ? url : undefined;
+}
+
 /** Collapse the newlines of soft line breaks to spaces. */
 function softWrap(value) {
   return String(value ?? '').replace(/\r?\n/g, ' ');
@@ -120,8 +130,9 @@ function inlineNode(node, style, state) {
       return [{ text: node.value, ...style, ...CODE_TEXT }];
     case 'link':
     case 'linkReference': {
-      const url = urlOf(node, state);
-      // A reference with no definition is not a link; its text still shows.
+      const url = safeLinkUrl(urlOf(node, state));
+      // A reference with no definition, or an unsafe scheme, is not a link; its
+      // text still shows.
       if (url === undefined) return inlineNodes(node.children, style, state);
       return inlineNodes(
         node.children,

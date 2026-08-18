@@ -215,6 +215,12 @@ function resolveDataUri(src, logger) {
       warn(logger, src, 'data URI decoded to zero bytes');
       return null;
     }
+    // Same ceiling as the remote path — a data URI is already fully resident, so
+    // cap the decode rather than let an oversized inline image bloat the PDF.
+    if (buffer.length > MAX_BYTES) {
+      warn(logger, src, `data URI decoded to ${buffer.length} bytes, over the ${MAX_BYTES}-byte cap`);
+      return null;
+    }
     return { buffer, mime };
   } catch {
     warn(logger, src, 'data URI failed to decode');

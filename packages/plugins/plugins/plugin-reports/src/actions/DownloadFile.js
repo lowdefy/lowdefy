@@ -38,15 +38,13 @@ function DownloadFile({ params }) {
 
   const blob = new Blob([bytes], { type: type ?? 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
-  try {
-    const el = document.createElement('a');
-    el.href = url;
-    el.setAttribute('download', name);
-    el.click();
-  } finally {
-    // Release the object URL once the click has queued the download.
-    URL.revokeObjectURL(url);
-  }
+  const el = document.createElement('a');
+  el.href = url;
+  el.setAttribute('download', name);
+  el.click();
+  // Revoke on the next tick, not synchronously: Safari cancels a download whose
+  // object URL is revoked in the same task as the click.
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 export default DownloadFile;

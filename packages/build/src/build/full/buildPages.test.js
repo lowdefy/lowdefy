@@ -1075,6 +1075,6 @@ test('throws on the reserved chromium rendering mode', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Report "rendering: chromium" on block "page_1" on page "page_1" is reserved and not yet supported.'
+    'Report "rendering" on block "page_1" on page "page_1" is reserved and not yet supported (received "chromium").'
   );
 });
