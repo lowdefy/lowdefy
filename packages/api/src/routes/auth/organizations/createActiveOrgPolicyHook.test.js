@@ -18,6 +18,7 @@ import { jest } from '@jest/globals';
 import { APIError } from 'better-auth/api';
 
 import createActiveOrgPolicyHook from './createActiveOrgPolicyHook.js';
+import { registerMcpResourceBinding } from '../../mcp/getMcpResourceBinding.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const past = new Date(Date.now() - 3600 * 1000).toISOString();
@@ -272,4 +273,46 @@ test('pinned open signup: a session for a not-yet-joined user ensures membership
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: 'team-portal' },
   });
+});
+
+test('tenant: a fresh mint ensures the org oauthResource row when a resource binding is registered', async () => {
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
+  // The mint's org lookup misses and the resource row lookup misses.
+  adapter.findOne.mockImplementation(async () => null);
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const logger = { warn: jest.fn() };
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, logger, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'oauthResource',
+    data: expect.objectContaining({
+      identifier: 'https://app.example.com/api/mcp/organization_new',
+      disabled: false,
+    }),
+  });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
+  });
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('tenant: a failed oauthResource row write does not fail the session mint', async () => {
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
+  adapter.findOne.mockImplementation(async ({ model }) => {
+    if (model === 'oauthResource') {
+      throw new Error('connection refused');
+    }
+    return null;
+  });
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const logger = { warn: jest.fn() };
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, logger, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
+    { err: expect.any(Error) },
+    'Failed to ensure the oauthResource row "https://app.example.com/api/mcp/organization_new" for organization "organization_new".'
+  );
 });

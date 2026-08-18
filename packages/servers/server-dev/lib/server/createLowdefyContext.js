@@ -18,6 +18,7 @@ import path from 'node:path';
 import {
   createApiContext,
   normalizeInjectedCaller,
+  reconcileOauthResources,
   resolveAuthentication,
   resolvePinnedOrganization,
   resolveTenantPreflight,
@@ -118,6 +119,11 @@ async function createLowdefyContext({ c }) {
     // otherwise race the startup pinned-org ensure - await the memoized
     // resolve so createApiContext reads a retained binding.
     await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
+    // One insert-missing pass over pre-existing organizations per process so
+    // every org's MCP endpoint is a valid token audience - memoized like the
+    // pinned resolve above; a failure retries on the next request. No-op when
+    // the app is not an authorization server.
+    await reconcileOauthResources({ auth: context.auth, logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
       // resolveAuthentication is the single writer of context.user.
       await resolveAuthentication(context, {

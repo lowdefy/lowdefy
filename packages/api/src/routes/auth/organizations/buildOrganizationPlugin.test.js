@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import buildOrganizationPlugin from './buildOrganizationPlugin.js';
+import { registerMcpResourceBinding } from '../../mcp/getMcpResourceBinding.js';
 
 const authConfig = {
   organizations: { policy: 'pinned', org: 'default', signup: 'invite-only' },
@@ -173,4 +176,84 @@ test('buildOrganizationPlugin declares invitation.appRoles without input: false 
     required: false,
   });
   expect('input' in plugin.options.schema.invitation.additionalFields.appRoles).toBe(false);
+});
+
+function createResourceMockAuth({ resourceRow = null } = {}) {
+  const adapter = {
+    findOne: jest.fn(async () => resourceRow),
+    create: jest.fn(async ({ data }) => ({ ...data })),
+    update: jest.fn(async () => null),
+  };
+  const auth = { $context: Promise.resolve({ adapter }) };
+  return { auth, adapter };
+}
+
+test('buildOrganizationPlugin afterCreateOrganization ensures the created org oauthResource row', async () => {
+  const { auth, adapter } = createResourceMockAuth();
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const plugin = buildOrganizationPlugin({
+    getAuth: () => auth,
+    logger: { warn: jest.fn() },
+    sendInvitationEmail: async () => {},
+  });
+
+  await plugin.options.organizationHooks.afterCreateOrganization({
+    organization: { id: 'org-1', name: 'Org One' },
+    member: { id: 'member-1' },
+    user: { id: 'user-1' },
+  });
+
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'oauthResource',
+    data: expect.objectContaining({
+      identifier: 'https://app.example.com/api/mcp/org-1',
+      disabled: false,
+    }),
+  });
+});
+
+test('buildOrganizationPlugin afterDeleteOrganization disables the deleted org oauthResource row', async () => {
+  const { auth, adapter } = createResourceMockAuth({
+    resourceRow: { identifier: 'https://app.example.com/api/mcp/org-1', disabled: false },
+  });
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const plugin = buildOrganizationPlugin({
+    getAuth: () => auth,
+    logger: { warn: jest.fn() },
+    sendInvitationEmail: async () => {},
+  });
+
+  await plugin.options.organizationHooks.afterDeleteOrganization({
+    organization: { id: 'org-1', name: 'Org One' },
+    user: { id: 'user-1' },
+  });
+
+  expect(adapter.update).toHaveBeenCalledWith({
+    model: 'oauthResource',
+    where: [{ field: 'identifier', value: 'https://app.example.com/api/mcp/org-1' }],
+    update: { disabled: true, updatedAt: expect.any(Date) },
+  });
+});
+
+test('buildOrganizationPlugin org lifecycle hooks are no-ops without an MCP resource binding', async () => {
+  const { auth, adapter } = createResourceMockAuth();
+  const plugin = buildOrganizationPlugin({
+    getAuth: () => auth,
+    logger: { warn: jest.fn() },
+    sendInvitationEmail: async () => {},
+  });
+
+  await plugin.options.organizationHooks.afterCreateOrganization({
+    organization: { id: 'org-1' },
+    member: null,
+    user: null,
+  });
+  await plugin.options.organizationHooks.afterDeleteOrganization({
+    organization: { id: 'org-1' },
+    user: null,
+  });
+
+  expect(adapter.findOne).not.toHaveBeenCalled();
+  expect(adapter.create).not.toHaveBeenCalled();
+  expect(adapter.update).not.toHaveBeenCalled();
 });

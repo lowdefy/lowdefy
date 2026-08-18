@@ -33,7 +33,7 @@ import createUserBeforeHook from './createUserBeforeHook.js';
 // IS the tier order. Build validation guarantees every entry binds a known
 // point to an existing InternalApi endpoint; one endpoint may bind several
 // points.
-function buildHooks({ authConfig, createSystemContext, getAuth }) {
+function buildHooks({ authConfig, createSystemContext, getAuth, logger }) {
   const userHooks = {};
   (authConfig.hooks ?? []).forEach((hook) => {
     if (type.isNone(userHooks[hook.point])) {
@@ -48,7 +48,7 @@ function buildHooks({ authConfig, createSystemContext, getAuth }) {
     );
   }
 
-  const engineHooks = buildEngineHooks({ authConfig, getAuth });
+  const engineHooks = buildEngineHooks({ authConfig, getAuth, logger });
 
   const databaseHooks = {};
   let afterEmailVerification;

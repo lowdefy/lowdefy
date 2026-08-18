@@ -35,6 +35,11 @@ import {
 import getMcpResourceBinding, {
   registerMcpResourceBinding,
 } from './routes/mcp/getMcpResourceBinding.js';
+import {
+  disableOauthResourceRow,
+  ensureOauthResourceRow,
+  reconcileOauthResources,
+} from './routes/mcp/oauthResourceLifecycle.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
@@ -60,6 +65,8 @@ export {
   createMcpServer,
   createSystemContext,
   createWebSocketConnection,
+  disableOauthResourceRow,
+  ensureOauthResourceRow,
   getAsIssuer,
   getAuthStrategies,
   getBetterAuth,
@@ -74,6 +81,7 @@ export {
   logClientError,
   normalizeInjectedCaller,
   redactErrorResponse,
+  reconcileOauthResources,
   redactResponse,
   resolveAuthentication,
   resolvePinnedOrganization,

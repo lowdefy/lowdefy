@@ -42,12 +42,23 @@ async function CreateOrganization({ acting, auth, properties }) {
     const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
     const orgAdapter = getOrgAdapter(authContext, orgPlugin.options);
     // createOrganization spreads the row verbatim and adds no timestamp.
-    return orgAdapter.createOrganization({
+    const organization = await orgAdapter.createOrganization({
       organization: {
         ...organizationFields,
         createdAt: new Date(),
       },
     });
+    // Adapter-layer writes fire no organizationHooks, so the org plugin's
+    // declared afterCreateOrganization is invoked directly - the endpoint
+    // path's after-create side effects hold on this path too. Same payload
+    // shape as the endpoint's call ({ organization, member, user }); a
+    // provisioned organization has no creator, so member and user are null.
+    await orgPlugin.options?.organizationHooks?.afterCreateOrganization?.({
+      organization,
+      member: null,
+      user: null,
+    });
+    return organization;
   }
 
   const endpoint = getPluginEndpoint({

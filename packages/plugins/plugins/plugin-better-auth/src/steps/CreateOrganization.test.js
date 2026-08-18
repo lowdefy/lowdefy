@@ -178,3 +178,62 @@ test('CreateOrganization creator-less surfaces the unique-index error on a dupli
     })
   ).rejects.toThrow('E11000 duplicate key error: slug');
 });
+
+test('CreateOrganization creator-less invokes the org plugin afterCreateOrganization hook with the endpoint payload shape', async () => {
+  const created = { id: 'org-1', name: 'Org One', slug: 'org-one' };
+  const createOrganization = jest.fn().mockResolvedValue(created);
+  getOrgAdapter.mockReturnValue({ createOrganization });
+  const afterCreateOrganization = jest.fn();
+  const { auth } = createMockAuth();
+  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
+    afterCreateOrganization,
+  };
+  const result = await CreateOrganization({
+    acting: systemCaller,
+    auth,
+    properties: { name: 'Org One', slug: 'org-one' },
+  });
+  // The endpoint passes { organization, member, user }; a provisioned org has
+  // no creator, so member and user are null.
+  expect(afterCreateOrganization).toHaveBeenCalledWith({
+    organization: created,
+    member: null,
+    user: null,
+  });
+  expect(result).toBe(created);
+});
+
+test('CreateOrganization creator-less surfaces an afterCreateOrganization hook failure', async () => {
+  const createOrganization = jest.fn().mockResolvedValue({ id: 'org-1' });
+  getOrgAdapter.mockReturnValue({ createOrganization });
+  const { auth } = createMockAuth();
+  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
+    afterCreateOrganization: jest.fn().mockRejectedValue(new Error('hook failed')),
+  };
+  await expect(
+    CreateOrganization({
+      acting: systemCaller,
+      auth,
+      properties: { name: 'Org One', slug: 'org-one' },
+    })
+  ).rejects.toThrow('hook failed');
+});
+
+test('CreateOrganization with a userId leaves hook invocation to the endpoint', async () => {
+  const createOrganizationEndpoint = jest.fn().mockResolvedValue({ id: 'org-1' });
+  const afterCreateOrganization = jest.fn();
+  const { auth } = createMockAuth({
+    organizationEndpoints: { createOrganization: createOrganizationEndpoint },
+  });
+  auth.options.plugins.find((plugin) => plugin.id === 'organization').options.organizationHooks = {
+    afterCreateOrganization,
+  };
+  await CreateOrganization({
+    acting: systemCaller,
+    auth,
+    properties: { name: 'Org One', slug: 'org-one', userId: 'user-9' },
+  });
+  // The endpoint fires organizationHooks itself - a step-side call would run
+  // the hook twice.
+  expect(afterCreateOrganization).not.toHaveBeenCalled();
+});

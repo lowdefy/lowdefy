@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ensureOauthResourceRow } from '../../mcp/oauthResourceLifecycle.js';
 import { setPinnedOrganization } from './getOrganizationBinding.js';
 import OrganizationKeyError from './OrganizationKeyError.js';
 
@@ -97,7 +98,7 @@ async function ensure({ auth, slug }) {
   }
 }
 
-function ensureOrganization({ auth, slug }) {
+function ensureOrganization({ auth, logger, slug }) {
   let bySlug = ensuredByAuth.get(auth);
   if (!bySlug) {
     bySlug = new Map();
@@ -105,10 +106,14 @@ function ensureOrganization({ auth, slug }) {
   }
   if (!bySlug.has(slug)) {
     const promise = ensure({ auth, slug })
-      .then((organization) => {
+      .then(async (organization) => {
         // Retain the ensured row for synchronous request-time reads - the
         // _organization operator and step organizationId defaulting.
         setPinnedOrganization({ auth, organization, slug });
+        // The seed writes through the adapter, so no organizationHooks fire -
+        // the org's MCP resource row is ensured here instead. Never throws;
+        // a failure logs and the per-process reconcile self-heals it.
+        await ensureOauthResourceRow({ auth, logger, organizationId: organization.id });
         return organization;
       })
       .catch((error) => {

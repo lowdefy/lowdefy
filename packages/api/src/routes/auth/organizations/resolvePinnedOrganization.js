@@ -43,7 +43,7 @@ async function resolvePinnedOrganization({ auth, logger }) {
     return;
   }
   try {
-    await ensureOrganization({ auth, slug: registered.slug });
+    await ensureOrganization({ auth, logger, slug: registered.slug });
   } catch (error) {
     // Transient versus configured. A briefly unreachable database must not log
     // the whole deployment out from the middleware, so those failures are

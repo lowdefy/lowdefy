@@ -17,6 +17,7 @@
 import { APIError } from 'better-auth/api';
 import { getOrgAdapter } from 'better-auth/plugins';
 
+import { ensureOauthResourceRow } from '../../mcp/oauthResourceLifecycle.js';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
@@ -37,9 +38,9 @@ import isEmailAdmitted from './isEmailAdmitted.js';
 // org (they proceed to accept); a fresh signup under create: auto mints its
 // own organization lazily, as owner, through the org plugin's adapter layer
 // (the endpoint cannot serve the mint - see applyTenantPolicy).
-function createActiveOrgPolicyHook({ getAuth, organizations }) {
+function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   async function applyPinnedPolicy({ auth, adapter, internalAdapter, session, ctx }) {
-    const organization = await ensureOrganization({ auth, slug: organizations.org });
+    const organization = await ensureOrganization({ auth, logger, slug: organizations.org });
     const member = await adapter.findOne({
       model: 'member',
       where: [
@@ -169,6 +170,10 @@ function createActiveOrgPolicyHook({ getAuth, organizations }) {
       organizationId: organization.id,
       role: 'owner',
     });
+    // The lazy mint writes through the adapter layer, so no organizationHooks
+    // fire - the org's MCP resource row is ensured here instead. Never throws
+    // into the session mint; a failure logs and the reconcile self-heals it.
+    await ensureOauthResourceRow({ auth, logger, organizationId: organization.id });
     return { data: { ...session, activeOrganizationId: organization.id } };
   }
 

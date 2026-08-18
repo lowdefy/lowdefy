@@ -24,11 +24,11 @@ import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
 // Engine hooks run first in each composed slot, so the user hook sees the
 // engine-normalized record. Config parameterizes the membership behaviors
 // (policy, signup) but they are not user-pluggable.
-function buildEngineHooks({ authConfig, getAuth }) {
+function buildEngineHooks({ authConfig, getAuth, logger }) {
   const organizations = authConfig.organizations;
 
   const engineHooks = {
-    'session.create.before': [createActiveOrgPolicyHook({ getAuth, organizations })],
+    'session.create.before': [createActiveOrgPolicyHook({ getAuth, logger, organizations })],
   };
 
   // The admission gate bites only under pinned + invite-only (the predicate

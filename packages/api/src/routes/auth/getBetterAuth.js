@@ -84,12 +84,14 @@ function getBetterAuth({
   // strategies-only app has no database - seeding an in-memory org would be
   // meaningless, and no session user can ever reach the membership wall.
   if (authJson.organizations?.policy === 'pinned' && authJson.database) {
-    ensureOrganization({ auth: instance, slug: authJson.organizations.org }).catch((error) => {
-      logger.warn(
-        { err: error },
-        `Failed to ensure the pinned organization "${authJson.organizations.org}" at startup.`
-      );
-    });
+    ensureOrganization({ auth: instance, logger, slug: authJson.organizations.org }).catch(
+      (error) => {
+        logger.warn(
+          { err: error },
+          `Failed to ensure the pinned organization "${authJson.organizations.org}" at startup.`
+        );
+      }
+    );
   }
 
   return instance;

@@ -17,10 +17,9 @@
 import { jest } from '@jest/globals';
 
 import ensureOrganization from './ensureOrganization.js';
-import getOrganizationBinding, {
-  registerOrganizationBinding,
-} from './getOrganizationBinding.js';
+import getOrganizationBinding, { registerOrganizationBinding } from './getOrganizationBinding.js';
 import OrganizationKeyError from './OrganizationKeyError.js';
+import { registerMcpResourceBinding } from '../../mcp/getMcpResourceBinding.js';
 
 function createMockAuth({ findOne, create }) {
   return {
@@ -79,10 +78,7 @@ test('ensureOrganization memoizes per auth instance and slug', async () => {
 
 test('ensureOrganization reads the winning row when a racing instance created the org first', async () => {
   const winner = { id: 'team-portal', slug: 'team-portal' };
-  const findOne = jest
-    .fn()
-    .mockResolvedValueOnce(null)
-    .mockResolvedValueOnce(winner);
+  const findOne = jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(winner);
   const create = jest.fn(async () => {
     throw new Error('E11000 duplicate key error');
   });
@@ -171,4 +167,51 @@ test('ensureOrganization retries the adapter after a mis-keyed row is re-keyed',
 
   expect(org.id).toBe('team-portal');
   expect(findOne).toHaveBeenCalledTimes(2);
+});
+
+test('ensureOrganization ensures the pinned org oauthResource row when a resource binding is registered', async () => {
+  const findOne = jest.fn(async ({ model }) => {
+    if (model === 'organization') {
+      return { id: 'team-portal', slug: 'team-portal' };
+    }
+    if (model === 'oauthResource') {
+      return null;
+    }
+    throw new Error(`Unexpected findOne model ${model}.`);
+  });
+  const create = jest.fn(async ({ data }) => ({ ...data }));
+  const auth = createMockAuth({ findOne, create });
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const logger = { warn: jest.fn() };
+
+  await ensureOrganization({ auth, logger, slug: 'team-portal' });
+
+  expect(create).toHaveBeenCalledWith({
+    model: 'oauthResource',
+    data: expect.objectContaining({
+      identifier: 'https://app.example.com/api/mcp/team-portal',
+      disabled: false,
+    }),
+  });
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('ensureOrganization resolves the org even when the oauthResource row write fails', async () => {
+  const findOne = jest.fn(async ({ model }) => {
+    if (model === 'organization') {
+      return { id: 'team-portal', slug: 'team-portal' };
+    }
+    throw new Error('connection refused');
+  });
+  const auth = createMockAuth({ findOne, create: jest.fn() });
+  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  const logger = { warn: jest.fn() };
+
+  const org = await ensureOrganization({ auth, logger, slug: 'team-portal' });
+
+  expect(org.id).toBe('team-portal');
+  expect(logger.warn).toHaveBeenCalledWith(
+    { err: expect.any(Error) },
+    'Failed to ensure the oauthResource row "https://app.example.com/api/mcp/team-portal" for organization "team-portal".'
+  );
 });
