@@ -55,6 +55,7 @@
     "@lowdefy/operators-js": "5.5.1",
     "@modelcontextprotocol/sdk": "1.29.0",
     "better-auth": "1.7.0",
+    "jose": "^6.2.3",
     "nodemailer": "9.0.3"
   },
   "devDependencies": {

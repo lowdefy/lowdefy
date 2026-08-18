@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
@@ -680,4 +681,385 @@ test('a tenant member removed mid-session stays unauthenticated', async () => {
   // Awaiting an organization covers a session carrying none at all. It must
   // never become a way around revocation.
   expect(context.user).toBe(null);
+});
+
+describe('MCP bearer branch and the general-path audience invariant', () => {
+  const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
+  const issuer = 'https://app.test.com/api/auth';
+  const orgResourceUri = (orgId) => `https://app.test.com/api/mcp/${orgId}`;
+
+  let privateKey;
+  let jwksRows;
+
+  beforeAll(async () => {
+    const keyPair = await generateKeyPair('EdDSA');
+    privateKey = keyPair.privateKey;
+    jwksRows = [
+      {
+        id: 'kid_1',
+        publicKey: JSON.stringify(await exportJWK(keyPair.publicKey)),
+        privateKey: 'encrypted-and-never-read',
+        createdAt: new Date(),
+        alg: 'EdDSA',
+      },
+    ];
+  });
+
+  beforeEach(() => {
+    process.env.BETTER_AUTH_URL = 'https://app.test.com';
+  });
+
+  afterAll(() => {
+    if (originalBetterAuthUrl === undefined) {
+      delete process.env.BETTER_AUTH_URL;
+    } else {
+      process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
+    }
+  });
+
+  function mockMcpAuth({ count = 0, member, passkey, session, user } = {}) {
+    const findOne = jest.fn(async ({ model }) => {
+      if (model === 'user') {
+        return user ?? null;
+      }
+      if (model === 'member') {
+        return member ?? null;
+      }
+      return null;
+    });
+    const findMany = jest.fn(async ({ model }) => (model === 'jwks' ? jwksRows : []));
+    const countFn = jest.fn().mockResolvedValue(count);
+    const auth = {
+      api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
+      $context: Promise.resolve({ adapter: { count: countFn, findMany, findOne } }),
+    };
+    if (passkey) {
+      auth.options = { plugins: [{ id: 'passkey' }] };
+    }
+    return { auth, count: countFn, findMany, findOne };
+  }
+
+  function mcpContext() {
+    return { config: {}, logger: mockLogger() };
+  }
+
+  async function mintToken({
+    aud = orgResourceUri('org_1'),
+    iss = issuer,
+    scope = 'mcp:read',
+    sub = 'user_1',
+  } = {}) {
+    return new SignJWT({ scope })
+      .setProtectedHeader({ alg: 'EdDSA', kid: 'kid_1' })
+      .setIssuedAt()
+      .setExpirationTime('5m')
+      .setIssuer(iss)
+      .setAudience(aud)
+      .setSubject(sub)
+      .sign(privateKey);
+  }
+
+  function bearerHeaders(token) {
+    return new Headers({ authorization: `Bearer ${token}` });
+  }
+
+  test('no bearer resolves the anonymous caller with tokenStatus none', async () => {
+    const { auth, findOne } = mockMcpAuth();
+    const context = mcpContext();
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: new Headers({}),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'none', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a session cookie never authenticates on the MCP branch - the session branch is skipped', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      session: {
+        user: { id: 'user_1' },
+        session: { id: 'sess_1', activeOrganizationId: 'org_1' },
+      },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: new Headers({ cookie: 'better-auth.session_token=abc' }),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth.tokenStatus).toBe('none');
+    expect(auth.api.getSession).not.toHaveBeenCalled();
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a token minted for another org resolves invalid on the audience check with no member lookup', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ aud: orgResourceUri('org_x') });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_y' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ orgId: 'org_y', tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a validly signed token with a foreign-service audience resolves invalid', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ aud: 'https://other-service.example.com/api' });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a token with the wrong issuer resolves invalid even with a valid signature and audience', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    // The bare origin is not the AS issuer - the issuer carries /api/auth.
+    const token = await mintToken({ iss: 'https://app.test.com' });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a valid token with a live member resolves the member caller', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1', email: 'user@example.com', attributes: { region: 'global' } },
+      member: {
+        id: 'member_1',
+        role: 'admin',
+        appRoles: ['user-admin'],
+        attributes: { region: 'eu' },
+      },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ scope: 'mcp:read mcp:write offline_access' });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toEqual({
+      id: 'user_1',
+      email: 'user@example.com',
+      roles: ['user-admin'],
+      org_roles: ['admin'],
+      attributes: { region: 'eu' },
+      active_organization_id: 'org_1',
+      organization_id: 'org_1',
+      two_factor_enrolled: false,
+    });
+    expect(context.mcpAuth).toEqual({
+      orgId: 'org_1',
+      tokenStatus: 'valid',
+      parseableJwt: true,
+      grantedScopes: ['mcp:read', 'mcp:write'],
+    });
+    expect(findOne).toHaveBeenCalledWith({
+      model: 'member',
+      where: [
+        { field: 'userId', value: 'user_1' },
+        { field: 'organizationId', value: 'org_1' },
+      ],
+    });
+  });
+
+  test('a bearer-resolved member computes two_factor_enrolled from the passkey count', async () => {
+    const { auth, count } = mockMcpAuth({
+      user: { id: 'user_1', twoFactorEnabled: false },
+      member: { id: 'member_1', role: 'member' },
+      passkey: true,
+      count: 1,
+    });
+    const context = mcpContext();
+    const token = await mintToken();
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user.two_factor_enrolled).toBe(true);
+    expect(count).toHaveBeenCalledWith({
+      model: 'passkey',
+      where: [{ field: 'userId', value: 'user_1' }],
+    });
+  });
+
+  test('a valid token whose member row is revoked degrades to the anonymous caller with tokenStatus valid', async () => {
+    const { auth } = mockMcpAuth({ user: { id: 'user_1' }, member: null });
+    const context = mcpContext();
+    const token = await mintToken();
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({
+      orgId: 'org_1',
+      tokenStatus: 'valid',
+      parseableJwt: true,
+      grantedScopes: ['mcp:read'],
+    });
+  });
+
+  test('a valid token whose subject has no user row degrades to the anonymous caller', async () => {
+    const { auth } = mockMcpAuth({
+      user: null,
+      member: { id: 'member_1', role: 'member' },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ sub: 'user_deleted' });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth.tokenStatus).toBe('valid');
+  });
+
+  test('a valid token for an org that is not the pinned org degrades to the anonymous caller', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member' },
+    });
+    registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
+    const context = mcpContext();
+    const token = await mintToken({ aud: orgResourceUri('other-org') });
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      resource: { orgId: 'other-org' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth.tokenStatus).toBe('valid');
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('an unparseable bearer resolves invalid with parseableJwt false', async () => {
+    const { auth, findOne } = mockMcpAuth();
+    const context = mcpContext();
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders('not-a-jwt'),
+      resource: { orgId: 'org_1' },
+    });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({
+      orgId: 'org_1',
+      tokenStatus: 'invalid',
+      parseableJwt: false,
+    });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('the general path refuses a bearer with an MCP-prefixed audience before the strategies run', async () => {
+    const { auth } = mockMcpAuth();
+    const context = mcpContext();
+    const token = await mintToken();
+    const strategies = [
+      mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+    ];
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      strategies,
+    });
+
+    expect(context.user).toBe(null);
+    expect(strategies[0].verify).not.toHaveBeenCalled();
+    expect(context.logger.debug).toHaveBeenCalledWith(
+      { event: 'auth_mcp_audience_bearer_rejected' },
+      'Bearer token carrying an MCP resource audience rejected on the general API surface - resolved unauthenticated.'
+    );
+  });
+
+  test('the general path passes a JWT bearer with a non-MCP audience through to the strategies', async () => {
+    const { auth } = mockMcpAuth();
+    const context = mcpContext();
+    const token = await mintToken({ aud: 'https://other-service.example.com/api' });
+    const strategies = [
+      mockStrategy({
+        id: 'service-jwt',
+        match: { user: { id: 'jwt:service-jwt:svc' } },
+        type: 'jwt',
+      }),
+    ];
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders(token),
+      strategies,
+    });
+
+    expect(context.user.id).toBe('jwt:service-jwt:svc');
+    expect(strategies[0].verify).toHaveBeenCalled();
+  });
+
+  test('the general path passes an opaque non-JWT bearer through to the strategies', async () => {
+    const { auth } = mockMcpAuth();
+    const context = mcpContext();
+    const strategies = [
+      mockStrategy({ id: 'partner-access', match: { user: { id: 'apiKey:partner-access:acme' } } }),
+    ];
+
+    await resolveAuthentication(context, {
+      auth,
+      headers: bearerHeaders('opaque-api-key'),
+      strategies,
+    });
+
+    expect(context.user.id).toBe('apiKey:partner-access:acme');
+    expect(strategies[0].verify).toHaveBeenCalled();
+  });
 });

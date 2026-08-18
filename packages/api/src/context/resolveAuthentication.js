@@ -16,9 +16,12 @@
   limitations under the License.
 */
 
+import { decodeJwt, jwtVerify } from 'jose';
 import { normalizeCaller, type } from '@lowdefy/helpers';
 
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
+import { getAsIssuer, getMcpResourceUri, getMcpUriPrefix } from '../routes/mcp/getMcpUri.js';
+import getMcpJwks from '../routes/mcp/getMcpJwks.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
 // resolveAuthentication is the single writer of context.user - nothing
@@ -27,6 +30,12 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // through to strategies, so a walled-out member cannot be silently
 // re-admitted by an apiKey/jwt strategy carrying config-granted roles. API
 // strategies are tried, in config order, only when no session resolves.
+//
+// The third branch is the MCP bearer branch, gated on the resource option
+// only the /api/mcp/:org route passes - see resolveMcpCaller below. It is
+// disjoint the same way: an MCP request never resolves a session or a
+// strategy caller, and the general path refuses any bearer whose audience is
+// an MCP resource URI before the strategies run.
 //
 // The active member row is the hard membership wall and the role source in
 // one indexed read ({ userId, organizationId } on the member model), live on
@@ -88,13 +97,227 @@ function passkeyConfigured({ auth }) {
   return (auth.options?.plugins ?? []).some((plugin) => plugin?.id === 'passkey');
 }
 
-async function resolveAuthentication(context, { auth, headers, strategies }) {
+// The membership wall and the caller assembly, shared verbatim by the session
+// and MCP bearer branches so the two ways to become a member caller cannot
+// drift - one member read, one role source, one caller shape.
+async function resolveMemberCaller(context, { adapter, auth, organizationId, user }) {
+  const member = await adapter.findOne({
+    model: 'member',
+    where: [
+      { field: 'userId', value: user.id },
+      { field: 'organizationId', value: organizationId },
+    ],
+  });
+  if (type.isNone(member)) {
+    context.logger.debug(
+      `User "${user.id}" has no member row in organization "${organizationId}" - resolved unauthenticated.`
+    );
+    return null;
+  }
+  // member.role is a CSV BetterAuth writes over a closed three-name set the
+  // platform itself writes, so no comma can appear inside a name.
+  const orgRoles = (member.role ?? '')
+    .split(',')
+    .map((role) => role.trim())
+    .filter(Boolean);
+  // twoFactorEnrolled - holds a factor that satisfies auth.twoFactor.required
+  // (Decision 4). Short-circuits on twoFactorEnabled, which rides the user
+  // record both branches hand in (session.user projects it - the plugin
+  // declares input: false but not returned: false), so only an UNENROLLED
+  // caller costs the passkey read - and once required is on, that is the
+  // shrinking minority by design.
+  //
+  // The passkey read is gated on the plugin being CONFIGURED, not on
+  // required === true: gating on required would make this field mean "has
+  // enrolled" in one deployment and "has enrolled TOTP" in another, a value that
+  // lies depending on config. A passkey counts because it is a phishing-resistant
+  // possession factor with user verification bound to it - the reason Entra and
+  // Okta accept one outright. (It is not the ONLY route a passwordless user has:
+  // Lowdefy sets allowPasswordless: true, so TOTP is reachable by them too -
+  // Decision 4. The passkey still counts here on its own merit.)
+  //
+  // Needs the platform-owned user-passkeys { userId: 1 } index - without it this
+  // is a collection scan on every request from an unenrolled caller.
+  let twoFactorEnrolled = user.twoFactorEnabled === true;
+  if (!twoFactorEnrolled && passkeyConfigured({ auth })) {
+    const passkeyCount = await adapter.count({
+      model: 'passkey',
+      where: [{ field: 'userId', value: user.id }],
+    });
+    twoFactorEnrolled = passkeyCount > 0;
+  }
+  // normalizeCaller is shallow, so the attributes bag it carries through is the
+  // merge below verbatim - app-owned keys inside it are never renamed.
+  return normalizeCaller({
+    ...user,
+    // Absent on a member row minted with no app roles - never falls back to
+    // member.role, which would make the two fields one dual-storage scheme.
+    roles: member.appRoles ?? [],
+    orgRoles,
+    attributes: {
+      ...(user.attributes ?? {}),
+      ...(member.attributes ?? {}),
+    },
+    activeOrganizationId: organizationId,
+    twoFactorEnrolled,
+    // organization_id is the caller's active org in its serialized string form -
+    // the value the tenant wall stamps onto and filters walled collections with,
+    // and the one operators read as _user: organization_id. It resolves under
+    // both organizations policies (under pinned it always equals the pinned
+    // org, since set-active-organization is disabled there).
+    organizationId,
+  });
+}
+
+// The HTTP call sites hand over Fetch Headers; direct callers pass plain
+// objects - read both so neither shape silently reads as "no bearer".
+function readBearerToken({ headers }) {
+  const authorization =
+    typeof headers?.get === 'function' ? headers.get('authorization') : headers?.authorization;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    return null;
+  }
+  return authorization.slice('Bearer '.length).trim();
+}
+
+// The closed MCP scope vocabulary - the AS grants nothing outside it, and
+// grantedScopes never carries a foreign scope string downstream.
+const MCP_SCOPES = ['mcp:read', 'mcp:write'];
+
+// An access token minted for an MCP resource must never re-enter the general
+// /api/* surface as a strategy caller - even a jwt strategy misconfigured to
+// point at the app's own JWKS would otherwise accept it with the strategy's
+// config-granted roles. Tested on the decoded aud alone, unverified:
+// rejection needs no key material, and a forged aud only denies its forger.
+// A non-JWT bearer or a decode failure is not this check's concern - opaque
+// strategy credentials fall through to the strategies unchanged.
+function hasMcpAudienceBearer({ context, headers }) {
+  const token = readBearerToken({ headers });
+  if (token === null) {
+    return false;
+  }
+  const uriPrefix = getMcpUriPrefix({ config: context.config });
+  if (uriPrefix === null) {
+    return false;
+  }
+  let aud;
+  try {
+    ({ aud } = decodeJwt(token));
+  } catch (error) {
+    return false;
+  }
+  const audiences = type.isArray(aud) ? aud : [aud];
+  const rejected = audiences.some((value) => type.isString(value) && value.startsWith(uriPrefix));
+  if (rejected) {
+    context.logger.debug(
+      { event: 'auth_mcp_audience_bearer_rejected' },
+      'Bearer token carrying an MCP resource audience rejected on the general API surface - resolved unauthenticated.'
+    );
+  }
+  return rejected;
+}
+
+// The MCP bearer branch. The org comes from the URL (under pinned that is the
+// slug), and this route accepts exactly one credential kind: an access token
+// this app's authorization server minted for this org's resource URI - a
+// session cookie or a strategy credential never authenticates here. The token
+// is verified in-process with jose against the AS's own signing keys; the
+// audience check is what binds the token to this org, so no org claim is
+// needed. context.mcpAuth records the token outcome for the route layer's
+// challenge decisions; context.user stays the only caller surface.
+async function resolveMcpCaller(context, { auth, headers, resource }) {
+  const orgId = resource.orgId;
+  const token = readBearerToken({ headers });
+  if (token === null) {
+    // The anonymous caller - public tools only, never a challenge here.
+    context.user = null;
+    context.mcpAuth = { orgId, tokenStatus: 'none', parseableJwt: true };
+    return;
+  }
+  let payload;
+  try {
+    ({ payload } = await jwtVerify(token, getMcpJwks({ auth }), {
+      issuer: getAsIssuer({ config: context.config }),
+      // jose matches an array aud containing the value, so RFC 8707
+      // multi-resource grants verify against this org's canonical URI.
+      audience: getMcpResourceUri({ config: context.config, orgId }),
+      // A token without a subject cannot source a caller - rejected as
+      // invalid rather than half-resolved.
+      requiredClaims: ['sub'],
+    }));
+  } catch (error) {
+    let parseableJwt = true;
+    try {
+      decodeJwt(token);
+    } catch (decodeError) {
+      parseableJwt = false;
+    }
+    context.logger.debug(
+      { event: 'auth_mcp_token_rejected', err: error, orgId },
+      `MCP bearer token rejected for organization "${orgId}": ${error.message}`
+    );
+    context.user = null;
+    context.mcpAuth = { orgId, tokenStatus: 'invalid', parseableJwt };
+    return;
+  }
+  // The scope claim reduced to the closed MCP vocabulary. Recorded before the
+  // member wall on purpose: a caller with a valid token but no live member row
+  // degrades to the anonymous caller, not to an invalid-token challenge.
+  const grantedScopes = (type.isString(payload.scope) ? payload.scope : '')
+    .split(' ')
+    .filter((scope) => MCP_SCOPES.includes(scope));
+  context.mcpAuth = { orgId, tokenStatus: 'valid', parseableJwt: true, grantedScopes };
+  // The same pinned wall the session branch applies: a pinned app serves one
+  // organization, so a token for any other resource URI - verifiable or not -
+  // never reaches the member read.
+  const registered = getRegisteredOrganization({ auth });
+  if (registered?.policy === 'pinned' && orgId !== registered.slug) {
+    context.logger.debug(
+      `MCP request for organization "${orgId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+    );
+    context.user = null;
+    return;
+  }
+  const { adapter } = await auth.$context;
+  // The bearer carries only sub - the caller's user fields are read live, so a
+  // deleted user degrades to the anonymous caller exactly like a revoked member.
+  const user = await adapter.findOne({
+    model: 'user',
+    where: [{ field: 'id', value: payload.sub }],
+  });
+  if (type.isNone(user)) {
+    context.logger.debug(
+      `MCP token subject "${payload.sub}" has no user row - resolved unauthenticated.`
+    );
+    context.user = null;
+    return;
+  }
+  context.user = await resolveMemberCaller(context, {
+    adapter,
+    auth,
+    organizationId: orgId,
+    user,
+  });
+}
+
+async function resolveAuthentication(context, { auth, headers, strategies, resource }) {
   if (type.isNone(auth)) {
     context.user = null;
     return;
   }
+  // Only the /api/mcp/:org route passes resource - its callers authenticate
+  // by access token alone, so the session and strategy branches are skipped
+  // outright rather than tried and out-prioritized.
+  if (!type.isNone(resource)) {
+    await resolveMcpCaller(context, { auth, headers, resource });
+    return;
+  }
   const session = await auth.api.getSession({ headers });
   if (type.isNone(session)) {
+    if (hasMcpAudienceBearer({ context, headers })) {
+      context.user = null;
+      return;
+    }
     context.user = await resolveStrategyCaller({
       headers,
       logger: context.logger,
@@ -169,71 +392,11 @@ async function resolveAuthentication(context, { auth, headers, strategies }) {
     return;
   }
   const { adapter } = await auth.$context;
-  const member = await adapter.findOne({
-    model: 'member',
-    where: [
-      { field: 'userId', value: session.user.id },
-      { field: 'organizationId', value: activeOrganizationId },
-    ],
-  });
-  if (type.isNone(member)) {
-    context.logger.debug(
-      `User "${session.user.id}" has no member row in organization "${activeOrganizationId}" - resolved unauthenticated.`
-    );
-    context.user = null;
-    return;
-  }
-  // member.role is a CSV BetterAuth writes over a closed three-name set the
-  // platform itself writes, so no comma can appear inside a name.
-  const orgRoles = (member.role ?? '')
-    .split(',')
-    .map((role) => role.trim())
-    .filter(Boolean);
-  // twoFactorEnrolled - holds a factor that satisfies auth.twoFactor.required
-  // (Decision 4). Short-circuits on twoFactorEnabled, which rides session.user
-  // (the plugin declares input: false but not returned: false), so only an
-  // UNENROLLED caller costs the passkey read - and once required is on, that is
-  // the shrinking minority by design.
-  //
-  // The passkey read is gated on the plugin being CONFIGURED, not on
-  // required === true: gating on required would make this field mean "has
-  // enrolled" in one deployment and "has enrolled TOTP" in another, a value that
-  // lies depending on config. A passkey counts because it is a phishing-resistant
-  // possession factor with user verification bound to it - the reason Entra and
-  // Okta accept one outright. (It is not the ONLY route a passwordless user has:
-  // Lowdefy sets allowPasswordless: true, so TOTP is reachable by them too -
-  // Decision 4. The passkey still counts here on its own merit.)
-  //
-  // Needs the platform-owned user-passkeys { userId: 1 } index - without it this
-  // is a collection scan on every request from an unenrolled caller.
-  let twoFactorEnrolled = session.user.twoFactorEnabled === true;
-  if (!twoFactorEnrolled && passkeyConfigured({ auth })) {
-    const passkeyCount = await adapter.count({
-      model: 'passkey',
-      where: [{ field: 'userId', value: session.user.id }],
-    });
-    twoFactorEnrolled = passkeyCount > 0;
-  }
-  // normalizeCaller is shallow, so the attributes bag it carries through is the
-  // merge below verbatim - app-owned keys inside it are never renamed.
-  context.user = normalizeCaller({
-    ...session.user,
-    // Absent on a member row minted with no app roles - never falls back to
-    // member.role, which would make the two fields one dual-storage scheme.
-    roles: member.appRoles ?? [],
-    orgRoles,
-    attributes: {
-      ...(session.user.attributes ?? {}),
-      ...(member.attributes ?? {}),
-    },
-    activeOrganizationId,
-    twoFactorEnrolled,
-    // organization_id is the caller's active org in its serialized string form -
-    // the value the tenant wall stamps onto and filters walled collections with,
-    // and the one operators read as _user: organization_id. It resolves under
-    // both organizations policies (under pinned it always equals the pinned
-    // org, since set-active-organization is disabled there).
+  context.user = await resolveMemberCaller(context, {
+    adapter,
+    auth,
     organizationId: activeOrganizationId,
+    user: session.user,
   });
 }
 
