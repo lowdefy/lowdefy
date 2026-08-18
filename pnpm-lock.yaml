@@ -2300,9 +2300,6 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.4.0
         version: link:../../../utils/helpers
-      '@lowdefy/operators':
-        specifier: 5.4.0
-        version: link:../../../operators
       exceljs:
         specifier: 4.4.0
         version: 4.4.0
@@ -2325,6 +2322,9 @@ importers:
       '@lowdefy/build':
         specifier: 5.4.0
         version: link:../../../build
+      '@lowdefy/operators':
+        specifier: 5.4.0
+        version: link:../../../operators
       '@lowdefy/operators-js':
         specifier: 5.4.0
         version: link:../../operators/operators-js
