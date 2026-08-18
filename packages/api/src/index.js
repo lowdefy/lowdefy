@@ -26,6 +26,12 @@ import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
+import {
+  getAsIssuer,
+  getMcpResourceUri,
+  getMcpUriPrefix,
+  isWellFormedOrgSegment,
+} from './routes/mcp/getMcpUri.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
@@ -51,9 +57,13 @@ export {
   createMcpServer,
   createSystemContext,
   createWebSocketConnection,
+  getAsIssuer,
   getAuthStrategies,
   getBetterAuth,
   getHomeAndMenus,
+  getMcpResourceUri,
+  getMcpUriPrefix,
+  isWellFormedOrgSegment,
   getPageConfig,
   getRootConfig,
   logClientError,
