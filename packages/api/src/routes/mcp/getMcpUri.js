@@ -64,8 +64,28 @@ function getAsIssuer({ config }) {
   return `${canonicalUrl}${config.basePath ?? ''}/api/auth`;
 }
 
+// The RFC 9728 metadata location for an org's resource - the well-known
+// segment sits after the app basePath, where the servers mount the metadata
+// route. Both the WWW-Authenticate challenge and the served document derive
+// from here, so the pointer and its target cannot drift apart.
+function getMcpResourceMetadataUri({ config, orgId }) {
+  const canonicalUrl = getCanonicalUrl();
+  if (canonicalUrl === null) {
+    return null;
+  }
+  return `${canonicalUrl}${
+    config.basePath ?? ''
+  }/.well-known/oauth-protected-resource/api/mcp/${orgId}`;
+}
+
 function isWellFormedOrgSegment(segment) {
   return typeof segment === 'string' && orgSegmentRegex.test(segment);
 }
 
-export { getMcpUriPrefix, getMcpResourceUri, getAsIssuer, isWellFormedOrgSegment };
+export {
+  getMcpUriPrefix,
+  getMcpResourceUri,
+  getMcpResourceMetadataUri,
+  getAsIssuer,
+  isWellFormedOrgSegment,
+};

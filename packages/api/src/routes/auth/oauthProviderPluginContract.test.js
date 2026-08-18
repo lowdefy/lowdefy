@@ -17,7 +17,9 @@
 import { jest } from '@jest/globals';
 import { betterAuth } from 'better-auth';
 
+import createAsMetadataHandler from './createAsMetadataHandler.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
+import { getAsIssuer } from '../mcp/getMcpUri.js';
 
 // Contract test against the installed @better-auth/oauth-provider and cimd
 // releases: constructs a real BetterAuth instance from the assembled options
@@ -133,6 +135,21 @@ test('serves signing keys at /jwks and disables the session-JWT /token endpoint'
 
   const tokenResponse = await auth.handler(new Request(`${ORIGIN}/api/auth/token`));
   expect(tokenResponse.status).toBe(404);
+});
+
+test('createAsMetadataHandler serves the same AS metadata document with issuer equal to getAsIssuer', async () => {
+  const auth = createAuth();
+  const handler = createAsMetadataHandler({ auth });
+  const response = await handler(
+    new Request(`${ORIGIN}/.well-known/oauth-authorization-server/api/auth`)
+  );
+  expect(response.status).toBe(200);
+  const metadata = await response.json();
+  expect(metadata.issuer).toBe(getAsIssuer({ config: {} }));
+  const pluginResponse = await auth.handler(
+    new Request(`${ORIGIN}/api/auth/.well-known/oauth-authorization-server`)
+  );
+  expect(metadata).toEqual(await pluginResponse.json());
 });
 
 test('advertises the registration endpoint only when dynamicClientRegistration is true', async () => {

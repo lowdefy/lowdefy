@@ -20,6 +20,7 @@ import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
 import createSystemContext from './context/createSystemContext.js';
@@ -28,6 +29,7 @@ import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import {
   getAsIssuer,
+  getMcpResourceMetadataUri,
   getMcpResourceUri,
   getMcpUriPrefix,
   isWellFormedOrgSegment,
@@ -61,6 +63,7 @@ export {
   getEndpointConfig,
   callRequest,
   createApiContext,
+  createAsMetadataHandler,
   createChannelRegistry,
   createMcpServer,
   createSystemContext,
@@ -72,6 +75,7 @@ export {
   getBetterAuth,
   getHomeAndMenus,
   getMcpResourceBinding,
+  getMcpResourceMetadataUri,
   getMcpResourceUri,
   getMcpUriPrefix,
   isWellFormedOrgSegment,

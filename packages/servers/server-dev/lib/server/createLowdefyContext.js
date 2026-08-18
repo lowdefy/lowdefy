@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  isWellFormedOrgSegment,
   normalizeInjectedCaller,
   reconcileOauthResources,
   resolveAuthentication,
@@ -50,6 +51,24 @@ import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
+
+// The per-org MCP route authenticates by access token alone - the resource
+// option switches resolveAuthentication onto its bearer branch, so it is
+// derived only for MCP paths. Every other path yields undefined and
+// authentication behaves as before. The route guard has already 404'd
+// malformed segments before this runs.
+function getMcpResource(path) {
+  const marker = '/api/mcp/';
+  const markerIndex = path.indexOf(marker);
+  if (markerIndex === -1) {
+    return undefined;
+  }
+  const orgId = path.slice(markerIndex + marker.length);
+  if (!isWellFormedOrgSegment(orgId)) {
+    return undefined;
+  }
+  return { orgId };
+}
 
 // Builds the per-request lowdefy API context (connections, secrets,
 // operators, logger, resolved user, etc.). Factored out of the /api/*
@@ -130,6 +149,7 @@ async function createLowdefyContext({ c }) {
         auth: context.auth,
         headers: c.req.raw.headers,
         strategies: getStrategies({ logger: context.logger }),
+        resource: getMcpResource(c.req.path),
       });
     }
   }

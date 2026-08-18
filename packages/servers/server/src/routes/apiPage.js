@@ -48,7 +48,11 @@ async function apiPageHandler(c) {
     // 403, not the 401 the signed-out branch above uses: a 401 is the client's
     // dead-session signal and would bounce the user to sign-in, which is the loop
     // the enrolment gate exists to avoid.
-    const callbackUrl = `${basePath}/${pageId}`;
+    //
+    // The request query rides along as one opaque same-origin callbackUrl value
+    // (mirroring the sign-in challenge redirect), so a member forced to enrol
+    // on a protected page returns to the full URL, query included.
+    const callbackUrl = `${basePath}/${pageId}${new URL(c.req.url).search}`;
     context.logger.info({ event: 'api_page_enrol_required', pageId });
     return c.json(
       {

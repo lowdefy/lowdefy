@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  isWellFormedOrgSegment,
   reconcileOauthResources,
   resolveAuthentication,
   resolvePinnedOrganization,
@@ -60,6 +61,24 @@ function getRequestId(c) {
     return incoming;
   }
   return uuid();
+}
+
+// The per-org MCP route authenticates by access token alone - the resource
+// option switches resolveAuthentication onto its bearer branch, so it is
+// derived only for MCP paths. Every other path yields undefined and
+// authentication behaves as before. The route guard has already 404'd
+// malformed segments before this runs.
+function getMcpResource(path) {
+  const marker = '/api/mcp/';
+  const markerIndex = path.indexOf(marker);
+  if (markerIndex === -1) {
+    return undefined;
+  }
+  const orgId = path.slice(markerIndex + marker.length);
+  if (!isWellFormedOrgSegment(orgId)) {
+    return undefined;
+  }
+  return { orgId };
 }
 
 // Replaces lib/server/apiWrapper.js. Builds the request context consumed by
@@ -127,6 +146,7 @@ function apiContext() {
         auth: context.auth,
         headers: c.req.raw.headers,
         strategies: getStrategies({ logger: context.logger }),
+        resource: getMcpResource(c.req.path),
       });
       // Set Sentry user context for authenticated requests
       setSentryUser({

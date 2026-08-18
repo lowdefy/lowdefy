@@ -16,6 +16,7 @@
 
 import {
   getAsIssuer,
+  getMcpResourceMetadataUri,
   getMcpResourceUri,
   getMcpUriPrefix,
   isWellFormedOrgSegment,
@@ -78,6 +79,27 @@ describe('getMcpResourceUri', () => {
   test('getMcpResourceUri returns null when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
     expect(getMcpResourceUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(null);
+  });
+});
+
+describe('getMcpResourceMetadataUri', () => {
+  test('getMcpResourceMetadataUri inserts the well-known segment ahead of the resource path', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    expect(getMcpResourceMetadataUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(
+      'https://app.example.com/.well-known/oauth-protected-resource/api/mcp/org_8f2k1x'
+    );
+  });
+
+  test('getMcpResourceMetadataUri places the well-known segment after the basePath', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com/';
+    expect(getMcpResourceMetadataUri({ config: { basePath: '/base' }, orgId: 'acme' })).toEqual(
+      'https://app.example.com/base/.well-known/oauth-protected-resource/api/mcp/acme'
+    );
+  });
+
+  test('getMcpResourceMetadataUri returns null when BETTER_AUTH_URL is unset', () => {
+    delete process.env.BETTER_AUTH_URL;
+    expect(getMcpResourceMetadataUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(null);
   });
 });
 
