@@ -18,7 +18,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
   adminClient,
-  genericOAuthClient,
   magicLinkClient,
   organizationClient,
   phoneNumberClient,
@@ -33,11 +32,18 @@ import rawLowdefyConfig from '../../../build/config.json';
 
 const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
+// GenericOAuth providers have no client plugin here. BetterAuth 1.7.0 dropped
+// genericOAuthClient from better-auth/client/plugins, and nothing replaces it:
+// through 1.6.x it was a marker plugin carrying only an id, a version, an empty
+// $InferServerPlugin for TypeScript inference, and the generic-oauth error
+// codes - no actions, atoms, fetch plugins or path methods. signIn.oauth2 is
+// resolved by the client's dynamic path proxy from the call itself
+// (signIn.oauth2 -> POST /sign-in/oauth2, POST because providerId is always
+// sent), so the sign-in a Lowdefy GenericOAuth provider makes is unaffected.
 const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
   plugins: [
     adminClient(),
-    genericOAuthClient(),
     magicLinkClient(),
     oauthProviderClient(),
     organizationClient(),
