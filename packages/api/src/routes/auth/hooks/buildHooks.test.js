@@ -72,6 +72,7 @@ function buildTestHooks({ endpointConfigs, hooks, organizations = { policy: 'ten
     authConfig: { hooks, organizations },
     createSystemContext: createMockSystemContextFactory({ endpointConfigs }),
     getAuth: () => ({}),
+    logger: { debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
   });
 }
 
@@ -86,6 +87,27 @@ test('buildHooks always registers the engine session.create.before policy slot',
   expect(databaseHooks.session.create.before).toBeInstanceOf(Function);
   expect(databaseHooks.user).toBeUndefined();
   expect(afterEmailVerification).toBeUndefined();
+});
+
+test('buildHooks always registers the engine session.update.before accept guard slot', () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [],
+  });
+  expect(databaseHooks.session.update.before).toBeInstanceOf(Function);
+});
+
+test('the accept guard slot vetoes an accept-route switch away from an active organization', async () => {
+  const { databaseHooks } = buildTestHooks({
+    hooks: [],
+  });
+  const result = await databaseHooks.session.update.before(
+    { activeOrganizationId: 'org_b' },
+    {
+      path: '/organization/accept-invitation',
+      context: { session: { session: { id: 'sess_1', activeOrganizationId: 'org_a' } } },
+    }
+  );
+  expect(result).toBe(false);
 });
 
 test('buildHooks registers the auto-join user.create.after slot for open signup under pinned', () => {

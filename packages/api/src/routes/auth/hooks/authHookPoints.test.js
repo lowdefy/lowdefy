@@ -27,6 +27,7 @@ test('the catalog covers the frozen launch point set', () => {
       'user.update.after',
       'session.create.before',
       'session.create.after',
+      'session.update.before',
       'session.delete.after',
       'account.create.before',
       'account.create.after',
@@ -50,6 +51,14 @@ test('user.update.before hands { user: null, changes } - BetterAuth provides onl
   const changes = { name: 'New Name' };
   expect(authHookPoints['user.update.before'].buildPayload(changes)).toEqual({
     user: null,
+    changes,
+  });
+});
+
+test('session.update.before hands { session: null, changes } - BetterAuth provides only the changed fields', () => {
+  const changes = { activeOrganizationId: 'org_1' };
+  expect(authHookPoints['session.update.before'].buildPayload(changes)).toEqual({
+    session: null,
     changes,
   });
 });

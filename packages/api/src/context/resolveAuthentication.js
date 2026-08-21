@@ -19,6 +19,7 @@
 import { decodeJwt, jwtVerify } from 'jose';
 import { normalizeCaller, type } from '@lowdefy/helpers';
 
+import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
 import { getAsIssuer, getMcpResourceUri, getMcpUriPrefix } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
@@ -347,6 +348,20 @@ async function resolveAuthentication(context, { auth, headers, strategies, resou
     context.logger.debug(
       `Session for user "${session.user.id}" has no active organization under tenant - resolved awaiting organization.`
     );
+    // Why they are awaiting matters to the app: an invited user who signed up
+    // directly (instead of via the invitation link) holds a pending invitation
+    // and no member row, and without a marker the public pages cannot tell
+    // them from a caller awaiting operator provisioning - the invited user is
+    // stranded the moment they lose the invitation email. The pending
+    // invitation is read here (only for this rare caller, one indexed read) so
+    // the app can route them to the accept page and hand it the invitation id.
+    // Diagnosis only - accepting stays the caller's own, explicit act.
+    const pendingInvitation = type.isString(session.user.email)
+      ? await findPendingInvitation({
+          adapter: (await auth.$context).adapter,
+          email: session.user.email,
+        })
+      : null;
     // No member row, so no per-organization attributes and no roles of either
     // kind - the global attributes ride alone.
     context.user = normalizeCaller({
@@ -355,6 +370,13 @@ async function resolveAuthentication(context, { auth, headers, strategies, resou
       orgRoles: [],
       attributes: session.user.attributes ?? {},
       awaitingOrganization: true,
+      // Always present on the awaiting caller (true or false) so app config
+      // can branch on it without an absent-key case. The invitation id rides
+      // only when one exists - never synthesized to null - and is safe to hand
+      // to its own invitee: the accept route re-verifies that the session's
+      // email matches the invitation before minting anything.
+      hasPendingInvitation: !type.isNone(pendingInvitation),
+      ...(type.isNone(pendingInvitation) ? {} : { pendingInvitationId: pendingInvitation.id }),
     });
     return;
   }

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import createAcceptActiveOrgGuardHook from '../organizations/createAcceptActiveOrgGuardHook.js';
 import createActiveOrgPolicyHook from '../organizations/createActiveOrgPolicyHook.js';
 import createAdmissionGateHook from '../organizations/createAdmissionGateHook.js';
 import createAutoJoinHook from '../organizations/createAutoJoinHook.js';
@@ -29,6 +30,11 @@ function buildEngineHooks({ authConfig, getAuth, logger }) {
 
   const engineHooks = {
     'session.create.before': [createActiveOrgPolicyHook({ getAuth, logger, organizations })],
+    // Bound under both policies: the guard keys on the accept-invitation path
+    // and only ever vetoes a switch away from an existing active organization,
+    // so under pinned (one organization: accept re-sets the same id, or repairs
+    // an org-less invitee session) it never bites.
+    'session.update.before': [createAcceptActiveOrgGuardHook({ logger })],
   };
 
   // The admission gate bites only under pinned + invite-only (the predicate
