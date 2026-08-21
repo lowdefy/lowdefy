@@ -32,7 +32,7 @@ const allowedProperties = ['contactId', 'image', 'name', 'organizationId', 'prof
 // and never joins the profile merge. The step writes nothing else - not
 // email, not emailVerified, not attributes, not roles. Adapter-direct like
 // UpdateUserAttributes: fires NO user.update database hooks.
-async function UpdateUserProfile({ auth, properties }) {
+async function UpdateUserProfile({ auth, organizationId, properties }) {
   const { contactId, image, name, profile, userId } = properties;
   const unknownProperties = Object.keys(properties).filter(
     (key) => !allowedProperties.includes(key)
@@ -106,11 +106,40 @@ async function UpdateUserProfile({ auth, properties }) {
   if (!type.isNone(image)) {
     update.image = image;
   }
-  return adapter.update({
+  const updatedUser = await adapter.update({
     model: 'user',
     where: [{ field: 'id', value: userId }],
     update,
   });
+  // Denormalize the display copies onto the target's member row in the
+  // organization the floor resolved (organizationId is the floor's resolved
+  // target, like UpdateMemberAttributes). The user row is deployment-global and
+  // last-edit-wins across workspaces; the member copy carries the identity as
+  // saved in THIS organization, and resolveMemberCaller prefers it, so change
+  // stamps and the header identity name the workspace's identity (T18). Empty
+  // strings are not written - resolveMemberCaller coalesces on nullish, so an
+  // empty member copy would mask the global fallback. No member row is a
+  // silent skip, not an error: selfTargetExempt lets a caller save their own
+  // profile without holding a member row in the resolved organization, and the
+  // global write above has already landed.
+  const memberUpdate = {};
+  if (!type.isNone(name) && name !== '') {
+    memberUpdate.name = name;
+  }
+  if (!type.isNone(image) && image !== '') {
+    memberUpdate.image = image;
+  }
+  if (!type.isNone(organizationId) && Object.keys(memberUpdate).length > 0) {
+    await adapter.update({
+      model: 'member',
+      where: [
+        { field: 'userId', value: userId },
+        { field: 'organizationId', value: organizationId },
+      ],
+      update: memberUpdate,
+    });
+  }
+  return updatedUser;
 }
 
 // The self-service save is the core flow: selfTargetExempt names the property

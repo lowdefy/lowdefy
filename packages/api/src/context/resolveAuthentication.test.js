@@ -1063,3 +1063,42 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     expect(strategies[0].verify).toHaveBeenCalled();
   });
 });
+
+test('prefers the member row display copies for name and image (per-organization identity)', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', name: 'Alice in B', image: 'data:image/svg;b' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_a' },
+    },
+    member: {
+      id: 'member_1',
+      role: 'member',
+      name: 'Alice Anderson',
+      image: 'data:image/svg;a',
+    },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  // The user row is deployment-global and last-edit-wins across workspaces;
+  // the member copies carry the identity saved in THIS organization (T18).
+  expect(context.user.name).toBe('Alice Anderson');
+  expect(context.user.image).toBe('data:image/svg;a');
+});
+
+test('falls back to the global user row for name and image when the member row carries no copies', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', name: 'Alice Anderson', image: 'data:image/svg;a' },
+      session: { id: 'sess_1', activeOrganizationId: 'org_a' },
+    },
+    member: { id: 'member_1', role: 'member' },
+  });
+  const context = {};
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.name).toBe('Alice Anderson');
+  expect(context.user.image).toBe('data:image/svg;a');
+});

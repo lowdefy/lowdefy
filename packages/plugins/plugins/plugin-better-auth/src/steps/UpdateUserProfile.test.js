@@ -267,3 +267,112 @@ test('UpdateUserProfile declares the userId self-target exemption inside its aut
   expect(UpdateUserProfile.meta.authority.selfTargetExempt).toEqual('userId');
   expect(UpdateUserProfile.meta.selfTargetExempt).toBeUndefined();
 });
+
+test('UpdateUserProfile denormalizes name and image onto the member row of the resolved organization', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest
+      .fn()
+      .mockImplementation(async ({ model, update }) => ({ id: `${model}-1`, ...update })),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  const result = await UpdateUserProfile({
+    auth,
+    organizationId: 'org-a',
+    properties: { userId: 'user-1', name: 'Alice Anderson', image: 'data:image/svg;a' },
+  });
+
+  expect(adapter.update).toHaveBeenCalledTimes(2);
+  expect(adapter.update.mock.calls[0][0]).toEqual({
+    model: 'user',
+    where: [{ field: 'id', value: 'user-1' }],
+    update: { name: 'Alice Anderson', image: 'data:image/svg;a' },
+  });
+  expect(adapter.update.mock.calls[1][0]).toEqual({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user-1' },
+      { field: 'organizationId', value: 'org-a' },
+    ],
+    update: { name: 'Alice Anderson', image: 'data:image/svg;a' },
+  });
+  // The step's return value is the user row, not the member denorm.
+  expect(result.id).toEqual('user-1');
+});
+
+test('UpdateUserProfile skips the member denorm when no organizationId is resolved', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  await UpdateUserProfile({
+    auth,
+    organizationId: null,
+    properties: { userId: 'user-1', name: 'Alice Anderson' },
+  });
+
+  expect(adapter.update).toHaveBeenCalledTimes(1);
+  expect(adapter.update.mock.calls[0][0].model).toEqual('user');
+});
+
+test('UpdateUserProfile skips the member denorm when only profile or contactId is written', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  await UpdateUserProfile({
+    auth,
+    organizationId: 'org-a',
+    properties: { userId: 'user-1', profile: { locale: 'en' }, contactId: 'contact-1' },
+  });
+
+  expect(adapter.update).toHaveBeenCalledTimes(1);
+  expect(adapter.update.mock.calls[0][0].model).toEqual('user');
+});
+
+test('UpdateUserProfile does not denorm an empty-string display copy onto the member row', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest.fn().mockResolvedValue({ id: 'user-1' }),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  await UpdateUserProfile({
+    auth,
+    organizationId: 'org-a',
+    properties: { userId: 'user-1', name: '', image: 'data:image/svg;a' },
+  });
+
+  // name '' still writes the user row (existing contract) but only image
+  // reaches the member copy - resolveMemberCaller coalesces on nullish, so an
+  // empty member.name would mask the global fallback.
+  expect(adapter.update).toHaveBeenCalledTimes(2);
+  expect(adapter.update.mock.calls[1][0].update).toEqual({ image: 'data:image/svg;a' });
+});
+
+test('UpdateUserProfile tolerates a caller with no member row in the resolved organization', async () => {
+  const adapter = {
+    findOne: jest.fn().mockResolvedValue({ id: 'user-1', profile: {} }),
+    update: jest
+      .fn()
+      .mockImplementationOnce(async ({ update }) => ({ id: 'user-1', ...update }))
+      // Adapter update on a no-match member returns null - selfTargetExempt
+      // lets a caller save their own profile without membership there.
+      .mockResolvedValueOnce(null),
+  };
+  const { auth } = createMockAuth({ adapter });
+
+  const result = await UpdateUserProfile({
+    auth,
+    organizationId: 'org-a',
+    properties: { userId: 'user-1', name: 'Alice Anderson' },
+  });
+
+  expect(adapter.update).toHaveBeenCalledTimes(2);
+  expect(result).toEqual({ id: 'user-1', name: 'Alice Anderson' });
+});

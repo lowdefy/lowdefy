@@ -150,6 +150,14 @@ async function resolveMemberCaller(context, { adapter, auth, organizationId, use
   // merge below verbatim - app-owned keys inside it are never renamed.
   return normalizeCaller({
     ...user,
+    // Per-organization display copies, denormalized onto the member row by
+    // UpdateUserProfile. The user row's name/image are deployment-global and
+    // last-edit-wins across workspaces, so a caller acting in organization A
+    // would otherwise be stamped and rendered with the identity last saved in
+    // organization B (T18). Nullish-coalesced: a member who has never saved a
+    // profile in this organization falls back to the global copies.
+    name: member.name ?? user.name,
+    image: member.image ?? user.image,
     // Absent on a member row minted with no app roles - never falls back to
     // member.role, which would make the two fields one dual-storage scheme.
     roles: member.appRoles ?? [],
