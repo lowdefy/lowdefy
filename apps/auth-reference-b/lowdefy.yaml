@@ -35,15 +35,12 @@ auth:
     enabled: true
     expiresIn: 300
 
+  # Local dev sending: run Mailpit (see ../auth-reference/README.md) and point
+  # the auth_email SMTP connection at it. auth.email only names the connection -
+  # the transport, the from address and the delivery filter live on the
+  # connection itself.
   email:
-    from: auth-reference-b@localhost
-    provider:
-      type: smtp
-      properties:
-        host:
-          _secret: SMTP_HOST
-        port: 1025
-        secure: false
+    connectionId: auth_email
 
   providers:
     - id: google
@@ -78,6 +75,17 @@ auth:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+
+# The transport auth.email sends through - Mailpit for the walkthrough.
+connections:
+  - id: auth_email
+    type: SMTP
+    properties:
+      from: auth-reference-b@localhost
+      host:
+        _secret: SMTP_HOST
+      port: 1025
+      secure: false
 
 # Per-step floor demos: a user-initiated admin step is floored on the
 # caller's org authority and refuses without it; the same step as

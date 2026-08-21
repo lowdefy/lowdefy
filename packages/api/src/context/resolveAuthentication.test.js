@@ -20,17 +20,18 @@ import { exportJWK, generateKeyPair, SignJWT } from 'jose';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveAuthentication from './resolveAuthentication.js';
 
-function mockAuth({ session, member, count, passkey } = {}) {
+function mockAuth({ session, member, count, passkey, invitations } = {}) {
   const findOne = jest.fn().mockResolvedValue(member ?? null);
   const countFn = jest.fn().mockResolvedValue(count ?? 0);
+  const findMany = jest.fn().mockResolvedValue(invitations ?? []);
   const auth = {
     api: { getSession: jest.fn().mockResolvedValue(session ?? null) },
-    $context: Promise.resolve({ adapter: { findOne, count: countFn } }),
+    $context: Promise.resolve({ adapter: { findOne, count: countFn, findMany } }),
   };
   if (passkey) {
     auth.options = { plugins: [{ id: 'passkey' }] };
   }
-  return { auth, findOne, count: countFn };
+  return { auth, findOne, count: countFn, findMany };
 }
 
 test('sets context.user to null when auth is not configured', async () => {
@@ -630,9 +631,85 @@ test('resolves a caller awaiting an organization when a tenant session carries n
     org_roles: [],
     attributes: {},
     awaiting_organization: true,
+    has_pending_invitation: false,
   });
   // No organization means there is no member row to read.
   expect(findOne).not.toHaveBeenCalled();
+});
+
+test('an awaiting caller with a pending invitation carries the diagnosis and the invitation id', async () => {
+  const { auth, findMany } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'Invited@Example.com' },
+      session: { id: 'sess_1' },
+    },
+    invitations: [
+      {
+        id: 'invitation_1',
+        organizationId: 'org_9',
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.awaiting_organization).toBe(true);
+  expect(context.user.has_pending_invitation).toBe(true);
+  expect(context.user.pending_invitation_id).toBe('invitation_1');
+  // The lookup mirrors the organization plugin's own: lowercased email,
+  // status pending, expiry filtered in code.
+  expect(findMany).toHaveBeenCalledWith({
+    model: 'invitation',
+    where: [
+      { field: 'email', value: 'invited@example.com' },
+      { field: 'status', value: 'pending' },
+    ],
+  });
+});
+
+test('an expired invitation does not mark an awaiting caller as pending', async () => {
+  const { auth } = mockAuth({
+    session: {
+      user: { id: 'user_1', email: 'invited@example.com' },
+      session: { id: 'sess_1' },
+    },
+    invitations: [
+      {
+        id: 'invitation_1',
+        status: 'pending',
+        expiresAt: new Date(Date.now() - 60_000).toISOString(),
+      },
+    ],
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.awaiting_organization).toBe(true);
+  expect(context.user.has_pending_invitation).toBe(false);
+  expect(context.user.pending_invitation_id).toBeUndefined();
+});
+
+test('an awaiting caller with no email skips the invitation lookup', async () => {
+  const { auth, findMany } = mockAuth({
+    session: {
+      user: { id: 'user_1' },
+      session: { id: 'sess_1' },
+    },
+  });
+  registerOrganizationBinding({ auth, organizations: { policy: 'tenant' } });
+  const context = { logger: mockLogger() };
+
+  await resolveAuthentication(context, { auth, headers: {} });
+
+  expect(context.user.awaiting_organization).toBe(true);
+  expect(context.user.has_pending_invitation).toBe(false);
+  expect(findMany).not.toHaveBeenCalled();
 });
 
 test('a caller awaiting an organization carries the global attributes alone', async () => {

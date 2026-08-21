@@ -52,6 +52,7 @@ test('buildAuthHooks accepts every point in the frozen catalog', () => {
     'user.update.after',
     'session.create.before',
     'session.create.after',
+    'session.update.before',
     'session.delete.after',
     'account.create.before',
     'account.create.after',
