@@ -74,6 +74,16 @@ function buildOrganizationPlugin({ getAuth, logger, sendInvitationEmail }) {
         additionalFields: {
           appRoles: { type: 'string[]', required: false, input: false },
           attributes: { type: 'json', required: false, input: false },
+          // Per-organization display copies, denormalized by UpdateUserProfile
+          // when a profile is saved with that organization resolved. The user
+          // row's name/image are deployment-global and last-edit-wins across
+          // workspaces; these carry the identity as saved in THIS organization
+          // and resolveMemberCaller prefers them, so change stamps and the
+          // header identity name the workspace's identity (T18). Absent on a
+          // member who has never saved a profile in the organization - the
+          // caller then falls back to the global copies.
+          name: { type: 'string', required: false, input: false },
+          image: { type: 'string', required: false, input: false },
         },
       },
       invitation: {
