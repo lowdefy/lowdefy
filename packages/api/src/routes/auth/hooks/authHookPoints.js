@@ -87,6 +87,15 @@ const authHookPoints = {
       user: await findHookUser({ ctx, userId: data.userId }),
     }),
   },
+  'session.update.before': {
+    kind: 'database',
+    model: 'session',
+    operation: 'update',
+    timing: 'before',
+    // Like user.update.before: BetterAuth hands the before hook only the
+    // changed fields, with no way to identify the subject session.
+    buildPayload: (data) => ({ session: null, changes: data }),
+  },
   'session.delete.after': {
     kind: 'database',
     model: 'session',

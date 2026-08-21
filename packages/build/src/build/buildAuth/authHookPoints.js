@@ -27,6 +27,7 @@ const authHookPoints = [
   'user.update.after',
   'session.create.before',
   'session.create.after',
+  'session.update.before',
   'session.delete.after',
   'account.create.before',
   'account.create.after',
