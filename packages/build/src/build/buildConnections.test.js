@@ -170,8 +170,33 @@ test('buildConnections tenant shared on an implementing connection type passes',
       connectionId: 'connection1',
       type: 'TestType',
       tenant: 'shared',
+      tenantCapability: true,
     },
   ]);
+});
+
+// The artifact stamp is what resolveTenant serves non-scoping types from at
+// runtime - types.js is build-side only, and only MongoDBCollection mirrors
+// its capability onto the runtime export.
+test('buildConnections stamps the build-validated tenant capability onto the artifact', () => {
+  const components = {
+    connections: [
+      { id: 'scoping', type: 'TestType' },
+      { id: 'nonScoping', type: 'PlainType' },
+      { id: 'undeclared', type: 'UnknownType' },
+    ],
+  };
+  const res = buildConnections({
+    components,
+    context: tenantContext({
+      connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
+    }),
+  });
+  expect(res.connections[0].tenantCapability).toBe(true);
+  expect(res.connections[1].tenantCapability).toBe(false);
+  // An absent declaration stays absent so the runtime keeps its fail-closed
+  // error for undeclared types.
+  expect(res.connections[2]).not.toHaveProperty('tenantCapability');
 });
 
 test('buildConnections throws when tenant is true', () => {
