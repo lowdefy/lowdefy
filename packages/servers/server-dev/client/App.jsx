@@ -40,7 +40,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
   return children;
 }
 
-function App({ router }) {
+function App({ config, router }) {
   const lowdefyRef = useRef({});
   const [runtimeErrors, setRuntimeErrors] = useState([]);
   // Subscribe to rootConfig SWR cache — deduplicates with Routing's fetch.
@@ -143,7 +143,7 @@ function App({ router }) {
                   />
                 }
               >
-                <Auth>
+                <Auth user={config?.user}>
                   {(auth) => {
                     return <Routing auth={auth} lowdefy={lowdefyRef.current} router={router} />;
                   }}
