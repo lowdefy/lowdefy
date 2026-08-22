@@ -183,6 +183,10 @@ function createApp() {
 
   // Every page path renders the same shell — the client fetches config and
   // handles home/404 routing, exactly like the old dev pages router did.
+  // The context middleware runs here too (mirroring the production server)
+  // so the shell can inject the resolved caller — without it the client's
+  // _user never carries roles/organization_id under `lowdefy dev`.
+  app.use('/*', apiContext());
   app.get('/', (c) => renderDevPage(c, { basePath }));
   app.get('/:rest{.+}', (c) => renderDevPage(c, { basePath }));
 
