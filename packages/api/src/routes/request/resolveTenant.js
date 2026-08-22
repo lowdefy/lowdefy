@@ -60,7 +60,16 @@ import { type } from '@lowdefy/helpers';
 //   jobs) and strategy callers have none, so they fail here by design - the
 //   wall never degrades to unscoped access.
 function resolveTenant(context, { connection, connectionConfig, requestConfig }) {
-  const capability = connection.meta?.tenant;
+  // Capability resolves from the runtime connection export first, then from
+  // the tenantCapability the build stamped onto the connection artifact
+  // (buildConnections) — the same types.js declaration the build check
+  // validated. The stamp is what lets non-scoping types (SMTP, SendGrid,
+  // AxiosHttp, AI connections, third-party plugins) serve under
+  // policy: tenant without every package mirroring meta.tenant onto its
+  // runtime export; the runtime meta still wins when present, so a drifted
+  // artifact can never downgrade a type that now enforces the contract.
+  const runtimeCapability = connection.meta?.tenant;
+  const capability = runtimeCapability ?? connectionConfig.tenantCapability;
   if (!type.isNone(connectionConfig.tenant) && capability !== true) {
     throw new ConfigError(
       `Connection type "${connectionConfig.type}" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "${connectionConfig.connectionId}".`,
@@ -79,6 +88,19 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
   if (capability !== true) {
     throw new ConfigError(
       `Connection type "${connectionConfig.type}" declares no tenant capability, so connection "${connectionConfig.connectionId}" can not be served under auth.organizations.policy: tenant. The type must declare meta tenant: true (implements the scoping contract) or tenant: false (non-scopable).`,
+      { configKey: connectionConfig['~k'] }
+    );
+  }
+  // The scoping contract is enforced by the connection package itself (the
+  // resolvers stamp writes and merge filters from the verdict), so a stamp of
+  // true is only serveable when the installed package carries the runtime
+  // meta. A build artifact claiming the contract for a runtime that does not
+  // implement it is version drift between build and server: the verdict would
+  // be computed and then silently ignored, which is exactly the unscoped
+  // access the wall exists to prevent - refuse instead.
+  if (runtimeCapability !== true) {
+    throw new ConfigError(
+      `Connection type "${connectionConfig.type}" does not implement the tenant scoping contract in the installed version, but the build artifact for connection "${connectionConfig.connectionId}" declares it. The build and the running server have drifted - rebuild the app with the installed version, or align the versions.`,
       { configKey: connectionConfig['~k'] }
     );
   }

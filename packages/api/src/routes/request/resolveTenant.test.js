@@ -147,6 +147,70 @@ test('throws ConfigError under the tenant policy when meta tenant is not exactly
   ).toThrow(ConfigError);
 });
 
+// The build stamps the types.js capability onto the connection artifact
+// (buildConnections tenantCapability), so a runtime export carrying no meta
+// serves from the build-validated declaration - the SMTP/SendGrid/Axios/AI
+// case that used to throw on every request under the tenant policy.
+test('a build-stamped non-scopable capability serves a runtime export with no meta', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: plainConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenantCapability: false },
+    requestConfig: defaultRequestConfig,
+  });
+  expect(res).toBe(null);
+});
+
+test('a build-stamped non-scopable capability does not require a caller organization', () => {
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null },
+    {
+      connection: plainConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenantCapability: false },
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+});
+
+test('a build-stamped scoping capability without runtime enforcement refuses as drift', () => {
+  const call = () =>
+    resolveTenant(contextWithOrg, {
+      connection: plainConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenantCapability: true },
+      requestConfig: defaultRequestConfig,
+    });
+  expect(call).toThrow(ConfigError);
+  expect(call).toThrow(
+    'Connection type "TestConnection" does not implement the tenant scoping contract in the installed version, but the build artifact for connection "testConnection" declares it.'
+  );
+});
+
+test('the runtime meta wins over a stale build stamp', () => {
+  // Runtime says non-scopable, stamp claims the contract: never scope on paper.
+  const res = resolveTenant(contextWithOrg, {
+    connection: nonScopableConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenantCapability: true },
+    requestConfig: defaultRequestConfig,
+  });
+  expect(res).toBe(null);
+  // Runtime enforces the contract, stamp predates it: the runtime scopes.
+  const scoped = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenantCapability: false },
+    requestConfig: defaultRequestConfig,
+  });
+  expect(scoped).toEqual({ field: 'organization_id', value: 'org-1' });
+});
+
+test('a build-stamped scoping capability with runtime enforcement resolves the verdict', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: { ...defaultConnectionConfig, tenantCapability: true },
+    requestConfig: defaultRequestConfig,
+  });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
+});
+
 test('a type declaring no capability returns null under the pinned policy', () => {
   const res = resolveTenant(
     { organization: { policy: 'pinned' }, user: { id: 'id', organization_id: 'org-1' } },

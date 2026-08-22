@@ -188,6 +188,22 @@ function buildConnections({ components, context }) {
     // Store connectionId for request validation and rename id
     connection.connectionId = connection.id;
     context.connectionIds.add(connection.connectionId);
+    // Stamp the build-validated tenant capability onto the connection
+    // artifact, so the runtime check in resolveTenant reads the SAME
+    // declaration validateTenant just validated (types.js connectionMetas)
+    // instead of requiring every connection package to mirror it onto its
+    // runtime export — which only MongoDBCollection did, so every other type
+    // (SMTP, SendGrid, AxiosHttp, the AI connections, third-party plugins)
+    // threw on first use under policy: tenant. Only the two valid booleans
+    // are stamped: an absent declaration stays absent, keeping the runtime
+    // fail-closed error for artifacts of types that declare nothing. A
+    // runtime meta.tenant still wins over the stamp (resolveTenant), and a
+    // stamp of true without runtime enforcement refuses rather than serves,
+    // so a drifted artifact can never silently unscope.
+    const tenantCapability = context.typesMap?.connectionMetas?.[connection.type]?.tenant;
+    if (tenantCapability === true || tenantCapability === false) {
+      connection.tenantCapability = tenantCapability;
+    }
     if (
       tenantPolicy &&
       context.typesMap?.connectionMetas?.[connection.type]?.tenant === true &&
