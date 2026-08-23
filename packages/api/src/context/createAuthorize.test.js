@@ -68,6 +68,12 @@ test('throws ConfigError with helpful message when auth.public is undefined', ()
   expect(() => authorize({ auth: {} })).toThrow('auth.public must be true or false.');
 });
 
+test('throws ConfigError when auth is missing or null', () => {
+  const authorize = createAuthorize({});
+  expect(() => authorize({})).toThrow('auth.public must be true or false.');
+  expect(() => authorize({ auth: null })).toThrow('auth.public must be true or false.');
+});
+
 test('throws ConfigError with received value when auth.public is wrong type', () => {
   const authorize = createAuthorize({});
   try {

@@ -30,15 +30,15 @@ function createAuthorize({ session }) {
 
   function authorize(config) {
     const { auth } = config;
-    if (auth.public === true) return true;
-    if (auth.public === false) {
+    if (auth?.public === true) return true;
+    if (auth?.public === false) {
       if (auth.roles) {
         return authenticated && auth.roles.some((role) => roles.includes(role));
       }
       return authenticated;
     }
     throw new ConfigError('auth.public must be true or false.', {
-      received: auth.public,
+      received: auth?.public,
       configKey: config['~k'],
     });
   }
