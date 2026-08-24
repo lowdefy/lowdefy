@@ -55,6 +55,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
   // Mirror the operator-evaluated sharedState object into a ref so transport.body()
   // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
@@ -343,6 +344,42 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return { url: objectUrl, mediaType: fileType, filename: name };
   }
 
+  // One intake for every way a file arrives — the paperclip picker, a
+  // clipboard paste, a drag-and-drop — so the accept list and size cap apply
+  // to all of them, not just the picker's native dialog. Pasted clipboard
+  // images all arrive as "image.png" (every browser), and the attached list
+  // is keyed by name + size, so those get a unique name.
+  function acceptsFile(file) {
+    const accept = attachmentsConfig?.accept;
+    if (!accept) return true;
+    const name = (file.name || '').toLowerCase();
+    const mime = (file.type || '').toLowerCase();
+    return accept
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean)
+      .some((t) => {
+        if (t.startsWith('.')) return name.endsWith(t);
+        if (t.endsWith('/*')) return mime.startsWith(t.slice(0, -1));
+        return mime === t;
+      });
+  }
+  function addFiles(incoming, { pasted = false } = {}) {
+    const files = Array.from(incoming ?? []).filter(
+      (f) => acceptsFile(f) && !(attachmentsConfig?.maxSize && f.size > attachmentsConfig.maxSize)
+    );
+    if (files.length === 0) return;
+    const named = files.map((f) => {
+      if (!pasted || !/^image\.\w+$/i.test(f.name)) return f;
+      const ext = f.name.split('.').pop();
+      return new File([f], `pasted-${Date.now()}.${ext}`, { type: f.type });
+    });
+    setAttachedFiles((prev) => [...prev, ...named]);
+  }
+  function dragHasFiles(e) {
+    return Array.from(e.dataTransfer?.types ?? []).includes('Files');
+  }
+
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
 
@@ -526,7 +563,38 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           />
         </div>
       )}
-      <div style={{ padding: '8px 16px 24px' }}>
+      <div
+        style={{
+          padding: '8px 16px 24px',
+          borderRadius: 12,
+          outline: dragOver ? '2px dashed currentColor' : 'none',
+          outlineOffset: -6,
+          transition: 'outline-color 120ms',
+        }}
+        // Drag-in lands in the same intake as the picker and paste. Only
+        // react to drags carrying files, so text selections dragged across
+        // the composer are left to the textarea.
+        onDragOver={
+          attachmentsConfig?.enabled
+            ? (e) => {
+                if (!dragHasFiles(e)) return;
+                e.preventDefault();
+                if (!dragOver) setDragOver(true);
+              }
+            : undefined
+        }
+        onDragLeave={attachmentsConfig?.enabled ? () => setDragOver(false) : undefined}
+        onDrop={
+          attachmentsConfig?.enabled
+            ? (e) => {
+                if (!dragHasFiles(e)) return;
+                e.preventDefault();
+                setDragOver(false);
+                addFiles(e.dataTransfer.files);
+              }
+            : undefined
+        }
+      >
         {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
           <FileCard.List
             style={{ marginBottom: 4 }}
@@ -560,11 +628,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             accept={attachmentsConfig.accept}
             multiple
             onChange={(e) => {
-              const files = Array.from(e.target.files);
-              const valid = files.filter(
-                (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-              );
-              setAttachedFiles((prev) => [...prev, ...valid]);
+              addFiles(e.target.files);
               e.target.value = '';
             }}
           />
@@ -575,6 +639,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
           onSubmit={handleSend}
+          // Clipboard paste (a screenshot, a copied file) attaches like the
+          // paperclip does.
+          onPasteFile={
+            attachmentsConfig?.enabled ? (files) => addFiles(files, { pasted: true }) : undefined
+          }
           onCancel={handleStop}
           loading={isBusy}
           prefix={
