@@ -37,6 +37,8 @@ export default {
     onSwitchChange: 'Trigger when the user toggles a sender switch.',
     onDataPart:
       'Trigger when the agent sends a custom data part. Event contains type, data, and id.',
+    onLinkClick:
+      'Trigger when the user clicks a link in a message. Event contains href and text. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate.',
   },
   methods: {
     regenerate:
