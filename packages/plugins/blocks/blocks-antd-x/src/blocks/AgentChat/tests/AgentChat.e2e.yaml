@@ -34,7 +34,14 @@ blocks:
             - type: text
               text: |
                 [in-app link](/agent-chat-target) and [external link](https://example.com)
+                and [**bold** link](/agent-chat-target?tab=two)
     events:
+      onFeedback:
+        - id: record_rating
+          type: SetState
+          params:
+            last_rating:
+              _event: rating
       onLinkClick:
         - id: record_link_click
           type: SetState
@@ -59,6 +66,7 @@ blocks:
             <span id="readout_href">{{ href }}</span>
             <span id="readout_text">{{ text }}</span>
             <span id="readout_count">{{ count or 0 }}</span>
+            <span id="readout_rating">{{ rating }}</span>
           on:
             href:
               _state: last_href
@@ -66,6 +74,8 @@ blocks:
               _state: last_text
             count:
               _state: click_count
+            rating:
+              _state: last_rating
 
   - id: chat_unwired
     type: AgentChat

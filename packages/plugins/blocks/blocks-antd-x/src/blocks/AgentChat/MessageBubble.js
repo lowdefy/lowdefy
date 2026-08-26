@@ -115,6 +115,16 @@ function resolveToolResultMode(toolResultDisplay, toolName) {
   return 'summary';
 }
 
+// Plain link text arrives as a string, but any inline formatting makes it an element tree —
+// so it is flattened rather than reported as absent.
+function linkText(children) {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(linkText).join('');
+  if (React.isValidElement(children)) return linkText(children.props?.children);
+  return '';
+}
+
 // An in-app path renders through the app's Link, so following a citation is a client-side
 // route rather than a reload that drops the conversation. Anything with a scheme opens in a
 // new tab for the same reason. Both still report the click, so an app that handles
@@ -122,7 +132,7 @@ function resolveToolResultMode(toolResultDisplay, toolName) {
 function MarkdownLink({ Link, onLinkClick }) {
   return function MarkdownAnchor({ href, children, ...props }) {
     if (!href) return <span {...props}>{children}</span>;
-    const text = typeof children === 'string' ? children : undefined;
+    const text = linkText(children);
     const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });
     const external = /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
     // A fragment cannot be expressed as a pageId link, so it keeps the anchor.

@@ -322,7 +322,7 @@ _ref:
             | `onToolResult` | A tool returns a result. | `toolName`, `toolCallId`, `output`, `error` |
             | `onError` | A streaming error occurs. | `message` |
             | `onStop` | User stops generation. | `messages` |
-            | `onFeedback` | User clicks thumbs up/down. | `messageId`, `messageContent`, `rating` |
+            | `onFeedback` | User clicks thumbs up/down. `rating` is `like` or `dislike`, or `default` when the user clicks the selected thumb again to clear the rating — branch on it explicitly rather than treating anything that is not `like` as a dislike. | `messageId`, `messageContent`, `rating` |
             | `onRegenerate` | User clicks regenerate. | `messageId`, `messages` |
             | `onDeleteMessage` | User deletes a message. | `messageId`, `content`, `messages` |
             | `onEditMessage` | User edits and resubmits. | `messageId`, `originalContent`, `newContent`, `messages` |

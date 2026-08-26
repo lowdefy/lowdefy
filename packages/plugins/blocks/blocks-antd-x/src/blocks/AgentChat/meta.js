@@ -26,7 +26,8 @@ export default {
     onConversationStart:
       'Trigger once when a conversation starts, on its first user message. Event contains the conversationId (auto-minted when no conversationId property is set).',
     onError: 'Trigger on stream error.',
-    onFeedback: 'Trigger when the user clicks thumbs up or down on a message.',
+    onFeedback:
+      'Trigger when the user clicks thumbs up or down on a message. Event contains messageId, messageContent and rating, where rating is `like`, `dislike`, or `default` when the user clicks the selected thumb again to clear the rating.',
     onRegenerate: 'Trigger when the user clicks regenerate on a message.',
     onDeleteMessage: 'Trigger when the user deletes a message.',
     onEditMessage: 'Trigger when the user edits and resubmits a message.',

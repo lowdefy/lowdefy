@@ -21,6 +21,8 @@ const inAppLink = (page, blockId) =>
   getBlock(page, blockId).locator('a[href="/agent-chat-target"]').first();
 const externalLink = (page, blockId) =>
   getBlock(page, blockId).locator('a[href="https://example.com"]').first();
+const formattedLink = (page, blockId) =>
+  getBlock(page, blockId).locator('a[href="/agent-chat-target?tab=two"]').first();
 
 test.describe('AgentChat links', () => {
   test.beforeEach(async ({ page }) => {
@@ -76,6 +78,17 @@ test.describe('AgentChat links', () => {
     await popup.close();
   });
 
+  // Link text is only a plain string when the label carries no formatting, and an in-app href
+  // with a query has to survive the split into pageId and urlQuery.
+  test('reports the flattened text of a formatted link, and keeps its query', async ({ page }) => {
+    const link = formattedLink(page, 'chat_wired');
+    await expect(link).toBeVisible();
+    await link.click();
+
+    await expect(page.locator('#readout_href')).toHaveText('/agent-chat-target?tab=two');
+    await expect(page.locator('#readout_text')).toHaveText('bold link');
+  });
+
   test('an in-app link routes client-side when onLinkClick is not wired', async ({ page }) => {
     await page.evaluate(() => {
       window.__notReloaded = true;
@@ -112,5 +125,19 @@ test.describe('AgentChat feedback', () => {
     await inAppLink(page, 'chat_wired').click();
     await expect(page.locator('#readout_count')).toHaveText('1');
     expect(await feedback.innerHTML()).toBe(after);
+  });
+
+  // Being controlled makes the clear gesture reachable for the first time, and it reports a
+  // third rating value. An app that treats anything other than `like` as a dislike would file
+  // a rejection for a rating the user just withdrew.
+  test('clicking the selected thumb again clears the rating and reports it', async ({ page }) => {
+    const feedback = getBlock(page, 'chat_wired').locator('[class*="feedback"]').first();
+    await feedback.locator('[class*="like"]').first().click();
+    await expect(page.locator('#readout_rating')).toHaveText('like');
+
+    await feedback.locator('[class*="like"]').first().click();
+    await expect(page.locator('#readout_rating')).toHaveText('default');
+    // Both thumbs are back, which is what unrated looks like.
+    await expect(feedback.locator('[class*="dislike"]').first()).toBeVisible();
   });
 });

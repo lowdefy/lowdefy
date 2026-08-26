@@ -8,4 +8,6 @@ The feedback control was write-only: it reported a rating and immediately forgot
 
 `Actions.Feedback` is now given a `value`, held per message id for the life of the chat. Being controlled, it takes on that component's selected behaviour: the chosen thumb stays highlighted and the opposite one is hidden, and clicking the selected thumb again clears the rating and brings both back. A rating can therefore be changed, but not submitted twice by accident.
 
+Note for apps already handling `onFeedback`: clearing a rating fires it with `rating: 'default'`. That value was unreachable before, because the control was never given one — so a handler that treats anything other than `like` as a dislike will now record a rejection for a rating the user has just withdrawn. Branch on the three values explicitly.
+
 Ratings are not persisted by the block — a reload or a conversation switch starts clean. Persisting them belongs to whatever stores the conversation.
