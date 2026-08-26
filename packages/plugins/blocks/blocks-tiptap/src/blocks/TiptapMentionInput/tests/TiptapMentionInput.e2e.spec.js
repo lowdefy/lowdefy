@@ -71,6 +71,50 @@ test.describe('TiptapMentionInput Block', () => {
     await expect(editor).not.toContainText('undefined');
   });
 
+  test.describe('mention identity in saved html', () => {
+    test('picked option with value._id serialises data-id and data-label', async ({ page }) => {
+      const editor = editorLocator(page, 'tiptap_mention_options');
+      await editor.click();
+      await page.keyboard.type('@Al');
+      await page
+        .locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Alice' })
+        .click();
+      const mention = editor.locator('.tiptap-mention');
+      await expect(mention).toHaveAttribute('data-id', 'user_1');
+      await expect(mention).toHaveAttribute('data-label', 'Alice');
+      const html = await editor.evaluate((n) => n.innerHTML);
+      expect(html).not.toContain('[object Object]');
+    });
+
+    test('option whose value has no scalar id omits data-id (never "[object Object]")', async ({
+      page,
+    }) => {
+      const editor = editorLocator(page, 'tiptap_mention_object_values');
+      await editor.click();
+      await page.keyboard.type('@C');
+      await page
+        .locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Carol' })
+        .click();
+      const mention = editor.locator('.tiptap-mention');
+      await expect(mention).toHaveText('@Carol');
+      await expect(mention).toHaveAttribute('data-label', 'Carol');
+      expect(await mention.getAttribute('data-id')).toBeNull();
+      const html = await editor.evaluate((n) => n.innerHTML);
+      expect(html).not.toContain('[object Object]');
+    });
+
+    test('saved html with a string data-id renders the data-label and keeps the id', async ({
+      page,
+    }) => {
+      const editor = editorLocator(page, 'tiptap_mention_saved');
+      const mention = editor.locator('.tiptap-mention');
+      await expect(mention).toHaveText('@Zed');
+      await expect(mention).toHaveAttribute('data-id', 'user_9');
+      await expect(mention).toHaveAttribute('data-label', 'Zed');
+      await expect(editor).toContainText('Ping @Zed please.');
+    });
+  });
+
   test.describe('group mentions', () => {
     const groupsId = 'tiptap_mention_groups';
 
@@ -121,7 +165,9 @@ test.describe('TiptapMentionInput Block', () => {
       const editor = editorLocator(page, groupsId);
       await editor.click();
       await page.keyboard.type('@Finance');
-      await page.locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Finance' }).click();
+      await page
+        .locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Finance' })
+        .click();
       const chip = editor.locator('.tiptap-mention-group');
       await expect(chip).toHaveText('@Finance');
       await expect(chip).toHaveClass(/tiptap-mention\b/);
@@ -135,7 +181,9 @@ test.describe('TiptapMentionInput Block', () => {
       const editor = editorLocator(page, groupsId);
       await editor.click();
       await page.keyboard.type('@Alice');
-      await page.locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Alice' }).click();
+      await page
+        .locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Alice' })
+        .click();
       const chip = editor.locator('a.tiptap-mention', { hasText: '@Alice' });
       await expect(chip).toBeVisible();
       await expect(chip).toHaveAttribute('href', '/contacts?_id=user_1');
@@ -146,12 +194,16 @@ test.describe('TiptapMentionInput Block', () => {
       const editor = editorLocator(page, groupsId);
       await editor.click();
       await page.keyboard.type('@Finance');
-      await page.locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Finance' }).click();
+      await page
+        .locator('.tiptap-mention-items .tiptap-mention-item', { hasText: 'Finance' })
+        .click();
       const chip = editor.locator('.tiptap-mention-group');
       await chip.hover();
       const popover = page.locator('.tiptap-mention-group-popover');
       await expect(popover).toBeVisible();
-      await expect(popover.locator('.tiptap-mention-group-popover-header')).toContainText('Finance');
+      await expect(popover.locator('.tiptap-mention-group-popover-header')).toContainText(
+        'Finance'
+      );
       await expect(popover.locator('.tiptap-mention-group-popover-header')).toContainText('2');
       await expect(popover).toContainText('Jane Doe');
       await expect(popover).toContainText('jane@example.com');
