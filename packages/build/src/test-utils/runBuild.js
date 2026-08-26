@@ -96,6 +96,43 @@ const testTypesMap = {
   },
 };
 
+/**
+ * Mobile types map for error tests — blocks resolve against blocks-antd-mobile;
+ * target-neutral classes are shared with the web map.
+ */
+const testTypesMapMobile = {
+  ...testTypesMap,
+  blocks: {
+    Anchor: { package: '@lowdefy/blocks-basic' },
+    Box: { package: '@lowdefy/blocks-basic' },
+    Button: { package: '@lowdefy/blocks-antd-mobile' },
+    Card: { package: '@lowdefy/blocks-antd-mobile' },
+    DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    DateSelector: { package: '@lowdefy/blocks-antd-mobile' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
+    Html: { package: '@lowdefy/blocks-basic' },
+    Icon: { package: '@lowdefy/blocks-basic' },
+    Img: { package: '@lowdefy/blocks-basic' },
+    List: { package: '@lowdefy/blocks-antd-mobile' },
+    Message: { package: '@lowdefy/blocks-antd-mobile' },
+    NavBar: { package: '@lowdefy/blocks-antd-mobile' },
+    ProgressBar: { package: '@lowdefy/blocks-loaders' },
+    Selector: { package: '@lowdefy/blocks-antd-mobile' },
+    Skeleton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonAvatar: { package: '@lowdefy/blocks-loaders' },
+    SkeletonButton: { package: '@lowdefy/blocks-loaders' },
+    SkeletonInput: { package: '@lowdefy/blocks-loaders' },
+    SkeletonParagraph: { package: '@lowdefy/blocks-loaders' },
+    Span: { package: '@lowdefy/blocks-basic' },
+    Spinner: { package: '@lowdefy/blocks-loaders' },
+    Switch: { package: '@lowdefy/blocks-antd-mobile' },
+    TabBar: { package: '@lowdefy/blocks-antd-mobile' },
+    TextArea: { package: '@lowdefy/blocks-antd-mobile' },
+    TextInput: { package: '@lowdefy/blocks-antd-mobile' },
+    Throw: { package: '@lowdefy/blocks-basic' },
+  },
+};
+
 function formatLine(line) {
   const source = line.err?.source ?? null;
   const name = line.err?.name ?? null;
@@ -123,6 +160,7 @@ function createRunBuild(build, fixturesDir) {
     try {
       await build({
         customTypesMap: testTypesMap,
+        customTypesMapMobile: testTypesMapMobile,
         directories: {
           config: configDir,
           build: path.join(configDir, '.lowdefy'),

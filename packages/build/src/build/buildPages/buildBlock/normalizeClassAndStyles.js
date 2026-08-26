@@ -28,7 +28,7 @@ function stripDotPrefix(key) {
 }
 
 function getCssKeyNames(block, pageContext) {
-  const blockMeta = pageContext?.context?.blockMetas?.[block.type];
+  const blockMeta = (pageContext?.blockMetas ?? pageContext?.context?.blockMetas)?.[block.type];
   if (!blockMeta?.cssKeys) return new Set();
   return new Set(Object.keys(blockMeta.cssKeys));
 }

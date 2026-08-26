@@ -17,17 +17,20 @@
 import { mergeObjects } from '@lowdefy/helpers';
 
 import createBuildHandleError from './utils/createBuildHandleError.js';
-import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
+import createMobileTypeCounters from './utils/createMobileTypeCounters.js';
 import createReadConfigFile from './utils/readConfigFile.js';
+import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
+import defaultTypesMapMobile from './defaultTypesMapMobile.js';
 
 function createContext({
   customMessagesMap,
   customTypesMap,
+  customTypesMapMobile,
   directories,
   logger,
   refResolver,
@@ -53,32 +56,18 @@ function createContext({
     unresolvedRefVars: {},
     seenSourceLines: new Set(),
     stage,
-    typeCounters: {
-      actions: createCounter(),
-      agents: createCounter(),
-      auth: {
-        adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
-        providers: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      notifications: createCounter(),
-      requests: createCounter(),
-      websockets: createCounter(),
-      controls: createCounter(),
-      operators: {
-        client: createCounter('client'),
-        server: createCounter('server'),
-      },
-    },
+    typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    // Custom plugins register into both maps — usage is counted per target.
+    typesMapMobile: mergeObjects([defaultTypesMapMobile, customTypesMapMobile ?? customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
+  context.typeCountersMobile = createMobileTypeCounters({ typeCounters: context.typeCounters });
+
   context.blockMetas = context.typesMap.blockMetas ?? {};
+  context.blockMetasMobile = context.typesMapMobile.blockMetas ?? {};
 
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });

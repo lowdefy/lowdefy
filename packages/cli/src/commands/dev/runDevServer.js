@@ -19,8 +19,10 @@ import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
 import resolveMockUser from './resolveMockUser.js';
 
-async function runDevServer({ context, directory }) {
-  const env = {
+// env additions/overrides spread last — the mobile dev command enables the
+// manager's mobile client lane this way.
+async function runDevServer({ context, directory, env = {} }) {
+  const spawnEnv = {
     ...process.env,
     LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
     LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
@@ -33,8 +35,9 @@ async function runDevServer({ context, directory }) {
   // Set only when requested — an undefined value would clobber the LOWDEFY_DEV_USER
   // inherited from process.env above.
   if (context.options.mockUser) {
-    env.LOWDEFY_DEV_USER = resolveMockUser(context.options.mockUser);
+    spawnEnv.LOWDEFY_DEV_USER = resolveMockUser(context.options.mockUser);
   }
+  Object.assign(spawnEnv, env);
   await spawnProcess({
     args: ['run', 'start'],
     command: context.pnpmCmd,
@@ -43,7 +46,7 @@ async function runDevServer({ context, directory }) {
       cwd: directory,
       // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
       shell: process.platform === 'win32',
-      env,
+      env: spawnEnv,
     },
     silent: false,
   });

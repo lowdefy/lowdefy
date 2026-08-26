@@ -1,0 +1,77 @@
+{
+  "name": "@lowdefy/mobile-client",
+  "version": "5.4.0",
+  "license": "Apache-2.0",
+  "description": "Vite app shell for Lowdefy mobile apps.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "mobile",
+    "capacitor"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "files": [
+    "client/*",
+    "index.html",
+    "package.original.json",
+    "vite.config.js"
+  ],
+  "scripts": {
+    "build": "cp package.json package.original.json || copy package.json package.original.json",
+    "build:client": "vite build",
+    "dev": "vite",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.4.1",
+    "@hono/auth-js": "1.1.1",
+    "@lowdefy/actions-core": "5.4.0",
+    "@lowdefy/actions-pdf-make": "5.4.0",
+    "@lowdefy/block-utils": "5.4.0",
+    "@lowdefy/blocks-antd-mobile": "5.4.0",
+    "@lowdefy/blocks-basic": "5.4.0",
+    "@lowdefy/blocks-loaders": "5.4.0",
+    "@lowdefy/client": "5.4.0",
+    "@lowdefy/helpers": "5.4.0",
+    "@lowdefy/operators-change-case": "5.4.0",
+    "@lowdefy/operators-dayjs": "5.4.0",
+    "@lowdefy/operators-diff": "5.4.0",
+    "@lowdefy/operators-js": "5.4.0",
+    "@lowdefy/operators-jsonata": "5.4.0",
+    "@lowdefy/operators-mql": "5.4.0",
+    "@lowdefy/operators-nunjucks": "5.4.0",
+    "@lowdefy/operators-uuid": "5.4.0",
+    "@lowdefy/operators-yaml": "5.4.0",
+    "@lowdefy/plugin-csv": "5.4.0",
+    "@vitejs/plugin-react": "6.0.2",
+    "antd-mobile": "5.42.1",
+    "dayjs": "1.11.20",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "5.6.0",
+    "vite": "8.0.16"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

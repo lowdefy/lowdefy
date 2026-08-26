@@ -1,0 +1,53 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: list
+type: Box
+
+events:
+  onInit:
+    - id: init_tasks
+      type: SetState
+      params:
+        task_list:
+          - title: First task
+          - title: Second task
+          - title: Third task
+
+blocks:
+  - id: task_list
+    type: List
+    properties:
+      header: Tasks
+    events:
+      onItemClick:
+        - id: set_clicked_index
+          type: SetState
+          params:
+            clicked_index:
+              _event: index
+    blocks:
+      - id: task_list.$.title
+        type: Html
+        properties:
+          html:
+            _state: task_list.$.title
+
+  - id: clicked_display
+    type: Html
+    properties:
+      html:
+        _if_none:
+          - _state: clicked_index
+          - 'none'

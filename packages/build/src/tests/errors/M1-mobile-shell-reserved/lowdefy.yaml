@@ -1,0 +1,12 @@
+# M1: mobile.shell is reserved
+# ============================
+# The mobile.shell key is reserved for the app-shell design and rejected.
+
+lowdefy: local
+
+mobile:
+  shell:
+    menuId: default
+  pages:
+    - id: m-home
+      type: Box

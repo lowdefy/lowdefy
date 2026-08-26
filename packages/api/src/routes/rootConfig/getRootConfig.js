@@ -19,12 +19,12 @@ import getLowdefyGlobal from './getLowdefyGlobal.js';
 import getLowdefyI18n from './getLowdefyI18n.js';
 import getLowdefyTheme from './getLowdefyTheme.js';
 
-async function getRootConfig(context) {
+async function getRootConfig(context, { target = 'web' } = {}) {
   const [lowdefyGlobal, theme, i18n, { home, menus }] = await Promise.all([
     getLowdefyGlobal(context),
     getLowdefyTheme(context),
     getLowdefyI18n(context),
-    getHomeAndMenus(context),
+    getHomeAndMenus(context, { target }),
   ]);
   return {
     home,

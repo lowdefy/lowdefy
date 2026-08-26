@@ -17,10 +17,16 @@ import { get } from '@lowdefy/helpers';
 
 import getMenus from './menus/getMenus.js';
 
-async function getHomeAndMenus(context) {
-  const menus = await getMenus(context);
+async function getHomeAndMenus(context, { target = 'web' } = {}) {
+  const menus = await getMenus(context, { target });
 
-  const homePageId = get(context.config, 'homePageId');
+  let homePageId;
+  if (target === 'mobile') {
+    const mobileConfig = await context.readConfigFile('mobile/config.json');
+    homePageId = get(mobileConfig ?? {}, 'homePageId');
+  } else {
+    homePageId = get(context.config, 'homePageId');
+  }
   if (homePageId) {
     return {
       home: {

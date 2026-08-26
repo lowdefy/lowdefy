@@ -18,7 +18,8 @@ import { getRootConfig } from '@lowdefy/api';
 
 async function rootHandler(c) {
   const context = c.get('lowdefyContext');
-  const rootConfig = await getRootConfig(context);
+  const target = c.req.query('target') === 'mobile' ? 'mobile' : 'web';
+  const rootConfig = await getRootConfig(context, { target });
   return c.json(rootConfig);
 }
 

@@ -266,3 +266,54 @@ test('Mixed exact and wildcard in protected array', () => {
   const res = getProtectedPages({ components });
   expect(res).toEqual(['home', 'team-users/users-list']);
 });
+
+test('Protected true includes mobile pages', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: true,
+      },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+    mobile: {
+      pages: [{ id: 'm-a', type: 'Box' }],
+    },
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['a', 'm-a']);
+});
+
+test('Protected pattern list matches mobile pages', () => {
+  const components = {
+    auth: {
+      pages: {
+        protected: ['m-*'],
+      },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+    mobile: {
+      pages: [
+        { id: 'm-a', type: 'Box' },
+        { id: 'm-b', type: 'Box' },
+      ],
+    },
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['m-a', 'm-b']);
+});
+
+test('Public list protects unlisted mobile pages', () => {
+  const components = {
+    auth: {
+      pages: {
+        public: ['a'],
+      },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+    mobile: {
+      pages: [{ id: 'm-a', type: 'Box' }],
+    },
+  };
+  const res = getProtectedPages({ components });
+  expect(res).toEqual(['m-a']);
+});

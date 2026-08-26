@@ -36,6 +36,7 @@ import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
+import rootHandler from './routes/root.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
 import websocketHandler from './routes/websocket.js';
@@ -101,6 +102,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.get('/api/websocket', websocketHandler);
+  app.get('/api/root', rootHandler);
   app.get('/api/page/*', apiPageHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls

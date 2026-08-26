@@ -51,7 +51,7 @@ function createHandleError(lowdefy) {
       // Client-originated errors — send to server for logging + location resolution
       try {
         const serialized = serializer.serialize(error);
-        const response = await fetch(`${lowdefy?.basePath ?? ''}/api/client-error`, {
+        const response = await fetch(`${lowdefy?.apiBase ?? lowdefy?.basePath ?? ''}/api/client-error`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(serialized),

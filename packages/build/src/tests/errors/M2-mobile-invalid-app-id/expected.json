@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errorContains": [
+        "App \"mobile.appId\" should be a reverse-DNS identifier (e.g. \"com.acme.tracker\"). Received \"Not A Valid AppId!\"."
+      ]
+    }
+  ]
+}

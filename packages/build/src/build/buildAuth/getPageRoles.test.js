@@ -129,3 +129,24 @@ test('Wildcard * does not match across slashes', () => {
     'team-users/list': ['admin'],
   });
 });
+
+test('Roles patterns match mobile pages', () => {
+  const components = {
+    auth: {
+      pages: {
+        roles: {
+          admin: ['m-*'],
+        },
+      },
+    },
+    pages: [{ id: 'a', type: 'Context' }],
+    mobile: {
+      pages: [
+        { id: 'm-a', type: 'Box' },
+        { id: 'm-b', type: 'Box' },
+      ],
+    },
+  };
+  const res = getPageRoles({ components });
+  expect(res).toEqual({ 'm-a': ['admin'], 'm-b': ['admin'] });
+});

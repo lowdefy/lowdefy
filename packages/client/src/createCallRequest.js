@@ -16,10 +16,10 @@
 
 import request from './request.js';
 
-function createCallRequest({ basePath }) {
+function createCallRequest({ apiBase }) {
   function callRequest({ actionId, blockId, pageId, payload, requestId }) {
     return request({
-      url: `${basePath}/api/request/${pageId}/${requestId}`,
+      url: `${apiBase}/api/request/${pageId}/${requestId}`,
       method: 'POST',
       body: { actionId, blockId, payload },
     });

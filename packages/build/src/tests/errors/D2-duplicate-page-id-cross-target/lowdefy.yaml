@@ -1,0 +1,15 @@
+# D2: Duplicate Page ID across web and mobile targets
+# ====================================================
+# Web and mobile pages share the pageId namespace — requests, auth rules and
+# /api/page/* are keyed by pageId, so a shared id is a build error.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+
+mobile:
+  pages:
+    - id: home
+      type: Box

@@ -6,6 +6,7 @@
 - _ref: tutorial/tutorial-requests-api.yaml
 - _ref: tutorial/tutorial-requests-sql.yaml
 - _ref: tutorial/tutorial-display-data-page.yaml
+- _ref: tutorial/tutorial-mobile-app.yaml
 - _ref: tutorial/tutorial-next-steps.yaml
 
 - _ref: concepts/overview.yaml
@@ -27,6 +28,7 @@
 - _ref: concepts/logger.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
+- _ref: concepts/mobile-apps.yaml
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/theming.yaml

@@ -18,7 +18,11 @@ import { type } from '@lowdefy/helpers';
 import { isInPatternList } from './matchPattern.js';
 
 function getProtectedPages({ components }) {
-  const pageIds = (components.pages || []).map((page) => page.id);
+  // Web and mobile pages share the pageId namespace — auth.pages rules apply
+  // across both targets.
+  const pageIds = [...(components.pages ?? []), ...(components.mobile?.pages ?? [])].map(
+    (page) => page.id
+  );
   let protectedPages = [];
 
   if (type.isArray(components.auth.pages.public)) {

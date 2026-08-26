@@ -211,3 +211,55 @@ test('getHome, default menu has no links', async () => {
   const res = await getHomeAndMenus(context, { menus });
   expect(res).toEqual({ home: { configured: false, pageId: null }, menus });
 });
+
+test('getHomeAndMenus, mobile target reads homePageId from mobile config artifact', async () => {
+  const getHomeAndMenus = (await import('./getHomeAndMenus.js')).default;
+  const mockReadConfigFile = jest.fn(() => ({ homePageId: 'm-home' }));
+  const context = testContext({ readConfigFile: mockReadConfigFile });
+  const menus = [
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:0',
+          menuItemId: '0',
+          type: 'MenuLink',
+          pageId: 'm-tasks',
+          auth: { public: true },
+        },
+      ],
+    },
+  ];
+  mockGetMenu.mockImplementation(() => menus);
+  const res = await getHomeAndMenus(context, { target: 'mobile' });
+  expect(mockGetMenu).toHaveBeenCalledWith(context, { target: 'mobile' });
+  expect(mockReadConfigFile).toHaveBeenCalledWith('mobile/config.json');
+  expect(res).toEqual({ home: { configured: true, pageId: 'm-home' }, menus });
+});
+
+test('getHomeAndMenus, mobile target falls back to first mobile menu link', async () => {
+  const getHomeAndMenus = (await import('./getHomeAndMenus.js')).default;
+  const mockReadConfigFile = jest.fn(() => ({ homePageId: null }));
+  const context = testContext({
+    config: { homePageId: 'web-home' },
+    readConfigFile: mockReadConfigFile,
+  });
+  const menus = [
+    {
+      menuId: 'default',
+      links: [
+        {
+          id: 'menuitem:default:0',
+          menuItemId: '0',
+          type: 'MenuLink',
+          pageId: 'm-tasks',
+          auth: { public: true },
+        },
+      ],
+    },
+  ];
+  mockGetMenu.mockImplementation(() => menus);
+  const res = await getHomeAndMenus(context, { target: 'mobile' });
+  // The web homePageId must not leak into the mobile home resolution.
+  expect(res).toEqual({ home: { configured: false, pageId: 'm-tasks' }, menus });
+});

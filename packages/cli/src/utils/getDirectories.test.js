@@ -27,6 +27,8 @@ test('default directories', () => {
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     emails: '/test/config/.lowdefy/emails',
+    mobile: '/test/config/.lowdefy/mobile',
+    mobileProject: '/test/config/mobile',
     server: '/test/config/.lowdefy/server',
   });
 });
@@ -44,6 +46,8 @@ test('specify serverDirectory in options', () => {
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     emails: '/test/config/.lowdefy/emails',
+    mobile: '/test/config/.lowdefy/mobile',
+    mobileProject: '/test/config/mobile',
     server: '/test/server',
   });
 });
@@ -61,6 +65,27 @@ test('specify devDirectory in options', () => {
     config: '/test/config',
     dev: '/test/dev',
     emails: '/test/config/.lowdefy/emails',
+    mobile: '/test/config/.lowdefy/mobile',
+    mobileProject: '/test/config/mobile',
+    server: '/test/config/.lowdefy/server',
+  });
+});
+
+test('specify mobileProjectDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      mobileProjectDirectory: '/test/my-mobile',
+    },
+  });
+
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/config/.lowdefy/dev',
+    emails: '/test/config/.lowdefy/emails',
+    mobile: '/test/config/.lowdefy/mobile',
+    mobileProject: '/test/my-mobile',
     server: '/test/config/.lowdefy/server',
   });
 });

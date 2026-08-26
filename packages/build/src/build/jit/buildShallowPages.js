@@ -23,9 +23,13 @@ import createPageRegistry from './createPageRegistry.js';
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 function buildShallowPages({ components, context }) {
+  const allPages = [
+    ...(components.pages ?? []),
+    ...(components.mobile?.pages ?? []),
+  ];
   // Set pageId on all pages (normally done by buildPage in buildPages).
   // Must run before createPageRegistry which uses page.id as map key.
-  for (const page of components.pages ?? []) {
+  for (const page of allPages) {
     if (page.id && !page.pageId) {
       page.pageId = page.id;
     }
@@ -33,10 +37,11 @@ function buildShallowPages({ components, context }) {
 
   const pageRegistry = createPageRegistry({ components, context });
 
+  // One check across both targets — pageIds share a global namespace.
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
   });
-  for (const page of components.pages ?? []) {
+  for (const page of allPages) {
     checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
   }
 
@@ -44,12 +49,12 @@ function buildShallowPages({ components, context }) {
   context.linkActionRefs = [];
   const sourcelessPageArtifacts = [];
 
-  (components.pages ?? []).forEach((page, index) => {
+  allPages.forEach((page, index) => {
     const entry = pageRegistry.get(page.id);
     // Skip pages with a source file (JIT-resolved) and resolver pages (JIT re-run)
     if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
 
-    buildPage({ page, index, context });
+    buildPage({ page, index, context, target: entry.target });
 
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;

@@ -17,26 +17,37 @@
 import iconPackages from './iconPackages.js';
 import validateIconImports from './validateIconImports.js';
 
-function getConfigIcons({ components, icons, regex }) {
-  [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
-}
-
-function getBlockDefaultIcons({ blocks, context, icons, regex }) {
+function getBlockDefaultIcons({ blocks, iconsMap, icons, regex }) {
   blocks.forEach((block) => {
-    (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
+    (iconsMap[block.typeName] ?? []).forEach((icon) => {
       [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
     });
   });
 }
 
-function buildIconImports({ blocks, components, context, defaults = {} }) {
+// scan and iconsMap default to the web config surfaces; the mobile imports
+// pass mobile pages/menus and the mobile types map.
+function buildIconImports({ blocks, components, context, defaults = {}, scan, iconsMap }) {
+  const scanRoots = scan ?? {
+    global: components.global,
+    menus: components.menus,
+    pages: components.pages,
+  };
+  const blockIconsMap = iconsMap ?? context.typesMap.icons;
+  // Serialize each scan root once — the pages tree can be large and the regex
+  // loop below runs once per icon package.
+  const scanStrings = [
+    JSON.stringify(scanRoots.global ?? {}),
+    JSON.stringify(scanRoots.menus ?? []),
+    JSON.stringify(scanRoots.pages ?? []),
+  ];
   const iconImports = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     const icons = new Set(defaults[iconPackage]);
-    getConfigIcons({ components, icons, regex });
-    getBlockDefaultIcons({ blocks, context, icons, regex });
+    scanStrings.forEach((scanString) => {
+      [...scanString.matchAll(regex)].map((match) => icons.add(match[1]));
+    });
+    getBlockDefaultIcons({ blocks, iconsMap: blockIconsMap, icons, regex });
     iconImports.push({ icons: [...icons], package: iconPackage });
   });
   return validateIconImports({ iconImports, context });

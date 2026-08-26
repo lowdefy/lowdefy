@@ -47,7 +47,9 @@ jest.unstable_mockModule('./build/copyPublicFolder.js', () => ({
 
 // Import after mocking
 const { default: build } = await import('./index.js');
-const { snapshotTypesMap } = await import('./test-utils/runBuildForSnapshots.js');
+const { snapshotTypesMap, snapshotTypesMapMobile } = await import(
+  './test-utils/runBuildForSnapshots.js'
+);
 const { default: makeId } = await import('./utils/makeId.js');
 
 /**
@@ -90,6 +92,7 @@ async function runBuildForFixture(fixtureDir) {
   try {
     await build({
       customTypesMap: snapshotTypesMap,
+      customTypesMapMobile: snapshotTypesMapMobile,
       directories: {
         config: configDir,
         build: path.join(configDir, '.lowdefy'),

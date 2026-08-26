@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import startMobileClient from './startMobileClient.mjs';
 import startServer from './startServer.mjs';
 
 function restartServer(context) {
@@ -21,6 +22,8 @@ function restartServer(context) {
     context.shutdownServer();
     context.logger.info({ spin: 'start' }, 'Restarting server...');
     startServer(context);
+    // No-op unless the mobile lane is enabled — shutdownServer killed it.
+    startMobileClient(context);
     context.logger.info({ spin: 'succeed' }, 'Restarted server.');
   };
 }

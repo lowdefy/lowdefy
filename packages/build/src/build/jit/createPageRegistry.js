@@ -73,7 +73,7 @@ function createPageRegistry({ components, context }) {
   const registry = new Map();
   const unresolvedRefVars = context.unresolvedRefVars ?? {};
 
-  (components.pages ?? []).forEach((page) => {
+  const addPage = (page, target) => {
     // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
     const keyMapEntry = context.keyMap[page['~k']];
     const refId = keyMapEntry?.['~r'] ?? null;
@@ -96,11 +96,15 @@ function createPageRegistry({ components, context }) {
       auth: page.auth,
       refId: isInline ? null : refId,
       refPath: sourceRef?.path ?? null,
+      target,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
       resolverOriginal: sourceRef?.original ?? null,
       moduleEntryId: getModuleEntryId(page.id, context),
     });
-  });
+  };
+
+  (components.pages ?? []).forEach((page) => addPage(page, 'web'));
+  (components.mobile?.pages ?? []).forEach((page) => addPage(page, 'mobile'));
 
   return registry;
 }

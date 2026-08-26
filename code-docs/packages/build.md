@@ -235,8 +235,29 @@ Build artifacts go to `.lowdefy/build/`:
 │   ├── actionSchemas.json   # Action param schemas (for runtime validation)
 │   ├── blockSchemas.json    # Block property schemas (for runtime validation)
 │   └── operatorSchemas.json # Operator param schemas (for runtime validation)
+├── mobile/            # Mobile app artifacts (see architecture/mobile-apps.md)
+│   ├── config.json          # appId, name, serverUrl, homePageId, capacitor
+│   ├── menus.json           # Mobile menus
+│   ├── theme.css            # antd-mobile CSS variables (+ dark block)
+│   └── plugins/             # Import files for the mobile Vite bundle
 └── js/                # Compiled JavaScript functions
 ```
+
+### Per-Target Builds (mobile)
+
+A top-level `mobile:` key builds mobile pages in the same pipeline with per-target
+block type resolution: mobile pages resolve against a mobile types map
+(`defaultPackagesMobile.js` → generated `defaultTypesMapMobile`) using their own
+client-side type counters (`utils/createMobileTypeCounters.js`), while server-side
+classes (requests, connections, server operators) share the main counters so mobile
+page requests reach the server imports. Mobile pages land in the shared `pages/`
+and `requests/` trees (shared pageId namespace, one duplicate-id check across
+targets) with a `target` field stamped on every page artifact. Steps:
+`buildMobile` (validation/normalization, stamps `mobile.configured`),
+`buildMobileMenu`, `buildTypesMobile`, `buildImportsMobile`, and the
+`writeMobile/*` writers. `auth.pages` rules apply across both targets
+(`buildAuth/getProtectedPages.js`, `getPageRoles.js`). See
+[architecture/mobile-apps.md](../architecture/mobile-apps.md).
 
 ### Error Tracing Artifacts
 

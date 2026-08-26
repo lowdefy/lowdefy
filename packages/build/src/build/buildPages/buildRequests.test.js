@@ -206,6 +206,7 @@ test('give request an id', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -253,6 +254,7 @@ test('request on a sub-block', () => {
         pageId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -309,6 +311,7 @@ test('multiple requests', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -369,6 +372,7 @@ test('set auth to request', () => {
         blockId: 'page_1',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [
           {
             id: 'request:page_1:request_1',
@@ -387,6 +391,7 @@ test('set auth to request', () => {
         blockId: 'page_2',
         type: 'Container',
         subscriptions: [],
+        target: 'web',
         requests: [
           {
             id: 'request:page_2:request_2',

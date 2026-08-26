@@ -79,6 +79,7 @@
     "@lowdefy/actions-pdf-make": "5.4.0",
     "@lowdefy/blocks-aggrid": "5.4.0",
     "@lowdefy/blocks-antd": "5.4.0",
+    "@lowdefy/blocks-antd-mobile": "5.4.0",
     "@lowdefy/blocks-antd-x": "5.4.0",
     "@lowdefy/blocks-diff": "5.4.0",
     "@lowdefy/blocks-echarts": "5.4.0",

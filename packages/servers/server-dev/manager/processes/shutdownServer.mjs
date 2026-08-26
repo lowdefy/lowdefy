@@ -29,6 +29,12 @@ function shutdownServer(context) {
       }
       context.devServer = null;
     }
+    if (context.mobileClient) {
+      if (!context.mobileClient.killed) {
+        context.mobileClient.kill();
+      }
+      context.mobileClient = null;
+    }
   };
 }
 

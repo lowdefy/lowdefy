@@ -20,10 +20,10 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 
 import createPluginTypesMap from '../utils/createPluginTypesMap.js';
 import defaultPackages from '../defaultPackages.js';
+import defaultPackagesMobile, { mobileBlockPackages } from '../defaultPackagesMobile.js';
 
-async function generateDefaultTypesMap() {
-  const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
-  const defaultTypesMap = {
+function createEmptyTypesMap() {
+  return {
     actions: {},
     agents: {},
     auth: {
@@ -44,26 +44,55 @@ async function generateDefaultTypesMap() {
     requests: {},
     websockets: {},
   };
+}
 
-  for (const packageName of defaultPackages) {
+async function generateTypesMap({ packageFile, packages, exportName, outFile, blockPackages }) {
+  const typesMap = createEmptyTypesMap();
+
+  for (const packageName of packages) {
     const { default: types } = await import(`${packageName}/types`);
     const version =
       packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
+    let packageTypes = types;
+    // When a block package allowlist is set, strip block types from other
+    // packages — target-neutral packages (e.g. plugin-aws) can also ship
+    // web-only blocks that must not resolve in mobile pages.
+    if (blockPackages && !blockPackages.includes(packageName)) {
+      const { blocks, blockMetas, icons, ...rest } = types;
+      packageTypes = rest;
+    }
     createPluginTypesMap({
-      packageTypes: types,
-      typesMap: defaultTypesMap,
+      packageTypes,
+      typesMap,
       packageName,
       version,
     });
   }
 
   await writeFile(
-    path.resolve(process.cwd(), './dist/defaultTypesMap.js'),
-    `const defaultTypesMap = ${JSON.stringify(defaultTypesMap, null, 2)};
+    path.resolve(process.cwd(), outFile),
+    `const ${exportName} = ${JSON.stringify(typesMap, null, 2)};
 
-export default defaultTypesMap;
+export default ${exportName};
 `
   );
+}
+
+async function generateDefaultTypesMap() {
+  const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
+  await generateTypesMap({
+    packageFile,
+    packages: defaultPackages,
+    exportName: 'defaultTypesMap',
+    outFile: './dist/defaultTypesMap.js',
+  });
+  await generateTypesMap({
+    packageFile,
+    packages: defaultPackagesMobile,
+    exportName: 'defaultTypesMapMobile',
+    outFile: './dist/defaultTypesMapMobile.js',
+    blockPackages: mobileBlockPackages,
+  });
 }
 
 generateDefaultTypesMap();

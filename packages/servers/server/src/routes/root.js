@@ -1,0 +1,30 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { getRootConfig } from '@lowdefy/api';
+
+// The web client gets root config embedded in the server-rendered HTML shell;
+// this route serves clients without a shell — the mobile app boots by fetching
+// /api/root?target=mobile. Menus keep their session-role filtering because the
+// fetch carries the session cookie through apiContext.
+async function rootHandler(c) {
+  const context = c.get('lowdefyContext');
+  const target = c.req.query('target') === 'mobile' ? 'mobile' : 'web';
+  const rootConfig = await getRootConfig(context, { target });
+  return c.json(rootConfig);
+}
+
+export default rootHandler;

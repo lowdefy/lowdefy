@@ -39,6 +39,13 @@ function addDefaultPages({ components, context }) {
     }
     return page.id;
   });
+  // Mobile pages share the pageId namespace — a mobile page with a default
+  // page's id suppresses the injection instead of colliding with it.
+  (components.mobile?.pages ?? []).forEach((page) => {
+    if (type.isObject(page)) {
+      pageIds.push(page.id);
+    }
+  });
   // deep copy to avoid mutating defaultConfig
   const filteredDefaultPages = defaultPages.filter(
     (defaultPage) => !pageIds.includes(defaultPage.id)

@@ -28,11 +28,14 @@ import readDotEnv from './readDotEnv.js';
 import validateVersion from './validateVersion.js';
 
 async function startUp({ context, options = {}, command }) {
-  context.command = command.name();
+  // Subcommands (e.g. "mobile init") report their full name — command.parent
+  // is the group command when the group's parent is the program itself.
+  const isSubcommand = Boolean(command.parent?.parent);
+  context.command = isSubcommand ? `${command.parent.name()} ${command.name()}` : command.name();
   context.commandLineOptions = options;
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   readDotEnv(context);
-  context.requiresLowdefyYaml = !['init'].includes(command.name());
+  context.requiresLowdefyYaml = !['init'].includes(context.command);
   const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;

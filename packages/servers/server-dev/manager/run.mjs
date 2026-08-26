@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
+import startMobileClient from './processes/startMobileClient.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 
@@ -109,6 +110,7 @@ try {
   }
 
   startServer(context);
+  startMobileClient(context);
   await wait(800);
   const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
   context.logger.info(
