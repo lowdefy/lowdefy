@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useChat } from '@ai-sdk/react';
 import {
   lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -34,7 +34,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageId, properties }) {
   const {
     agentId,
     urlQuery,
@@ -415,7 +415,47 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const activeSuggestions = agentSuggestions ?? suggestions;
 
+  // A link in an answer was a plain anchor: a full browser navigation out of the
+  // conversation, with no way for an app to do anything else with it. Default is only
+  // prevented when the app actually handles onLinkClick — otherwise the link keeps
+  // navigating, so wiring nothing changes nothing.
+  //
+  // Modified and non-primary clicks are never intercepted: open-in-new-tab is a
+  // reasonable thing to do with a citation, and preventing it would be a regression.
+  const interceptLinks = Boolean(events?.onLinkClick);
+
+  // Stable identity: MessageBubble memoises its markdown component map on this, and the map
+  // is rebuilt on every streaming chunk otherwise — remounting every link in the answer as
+  // it streams.
+  const handleLinkClick = useCallback(
+    ({ href, text, domEvent }) => {
+      if (
+        !interceptLinks ||
+        domEvent.defaultPrevented ||
+        domEvent.button !== 0 ||
+        domEvent.metaKey ||
+        domEvent.ctrlKey ||
+        domEvent.shiftKey ||
+        domEvent.altKey
+      ) {
+        return;
+      }
+      // Prevented synchronously: Link checks defaultPrevented immediately after calling
+      // this, and an external anchor's default fires before any async work could run.
+      domEvent.preventDefault();
+      methods.triggerEvent({ name: 'onLinkClick', event: { href, text } });
+    },
+    [interceptLinks, methods]
+  );
+
+  // The control is otherwise write-only: it reports a rating and immediately forgets it,
+  // so the thumb un-highlights on the next render and the message looks unrated. Held per
+  // message for the life of the chat instance — a rating is not persisted by the block, so
+  // it does not survive a reload or a conversation switch.
+  const [feedbackValues, setFeedbackValues] = useState({});
+
   function handleFeedback({ messageId, rating }) {
+    setFeedbackValues((prev) => ({ ...prev, [messageId]: rating }));
     const message = messages.find((msg) => msg.id === messageId);
     const messageContent =
       message?.parts
@@ -485,6 +525,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             config={messageDisplay}
             addToolApprovalResponse={addToolApprovalResponse}
             onFeedback={handleFeedback}
+            onLinkClick={handleLinkClick}
+            Link={Link}
+            feedbackValues={feedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
