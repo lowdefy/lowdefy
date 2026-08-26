@@ -49,7 +49,9 @@ function useTiptapMentionState({ value, methods }) {
       .filter((c) => c.type === 'paragraph')
       .forEach((c) => {
         c.content?.forEach((cc) => {
-          if (cc.type === 'mention') {
+          // Only freshly picked mentions carry the option object; a node parsed
+          // back from saved html has a string id and no `value` to report.
+          if (cc.type === 'mention' && cc.attrs.id?.value !== undefined) {
             mentionsMap.set(JSON.stringify(cc.attrs.id.value), cc.attrs.id.value);
           }
         });

@@ -24,6 +24,10 @@ events:
           html: '<p>Hi <span class="tiptap-mention">@Alice</span>.</p>'
         tiptap_mention_disabled:
           html: '<p>Disabled mention editor.</p>'
+        # Saved html round-trip: a mention node comes back with a STRING id
+        # (data-id) and its label in data-label.
+        tiptap_mention_saved:
+          html: '<p>Ping <span data-type="mention" class="tiptap-mention" data-id="user_9" data-label="Zed" data-mention-suggestion-char="@">@Zed</span> please.</p>'
 
 blocks:
   - id: tiptap_mention_empty
@@ -54,6 +58,24 @@ blocks:
           - label: Bob
             value:
               _id: user_2
+
+  - id: tiptap_mention_saved
+    type: TiptapMentionInput
+
+  # Options whose value has no scalar identity (the shape an app passes when
+  # the whole contact record is the value) — data-id must be omitted, never
+  # "[object Object]".
+  - id: tiptap_mention_object_values
+    type: TiptapMentionInput
+    properties:
+      placeholder: 'Try @C'
+      mentions:
+        options:
+          - label: Carol
+            value:
+              contact_id: c_1
+              name: Carol
+              email: carol@example.com
 
   - id: tiptap_mention_groups
     type: TiptapMentionInput
