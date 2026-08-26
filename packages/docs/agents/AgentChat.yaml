@@ -330,6 +330,7 @@ _ref:
             | `onSwitchChange` | User toggles a sender switch. | `key`, `checked` |
             | `onTitleGenerated` | A `data-chat-title` data part arrives — emitted automatically when the agent's [`generateTitle`](/agent-properties) property is set, or manually from an `onFinish` hook. | `title` |
             | `onDataPart` | Any data part arrives from the server. | `type`, `data`, `id` |
+            | `onLinkClick` | User clicks a link in a message. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate. | `href`, `text` |
 
             ###### Validate messages before sending:
             ```yaml
