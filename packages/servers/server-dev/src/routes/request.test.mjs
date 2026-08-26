@@ -1,0 +1,124 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { Hono } from 'hono';
+import { jest } from '@jest/globals';
+
+const mockCallRequest = jest.fn();
+jest.unstable_mockModule('@lowdefy/api', () => ({
+  callRequest: mockCallRequest,
+  redactErrorResponse: jest.fn((context, error) => ({ error: error.message })),
+}));
+
+const mockBuildPageIfNeeded = jest.fn(async () => true);
+jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
+  default: mockBuildPageIfNeeded,
+  getPageJitEnrichment: jest.fn(() => ({})),
+}));
+
+const mockGetMock = jest.fn(() => null);
+jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
+  getMock: mockGetMock,
+}));
+
+const { default: requestHandler } = await import('./request.js');
+
+const callOrder = [];
+
+function createApp() {
+  const app = new Hono();
+  app.use('*', async (c, next) => {
+    c.set('lowdefyContext', {
+      buildDirectory: '/build',
+      configDirectory: '/config',
+      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+    });
+    await next();
+  });
+  app.all('/api/request/*', requestHandler);
+  return app;
+}
+
+function post(app, path, body = { actionId: 'a', blockId: 'b', payload: {} }) {
+  return app.request(path, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+beforeEach(() => {
+  callOrder.length = 0;
+  mockBuildPageIfNeeded.mockImplementation(async () => {
+    callOrder.push('build');
+    return true;
+  });
+  mockCallRequest.mockImplementation(async () => {
+    callOrder.push('call');
+    return { success: true, response: { ok: true } };
+  });
+});
+
+afterEach(() => {
+  mockCallRequest.mockReset();
+  mockBuildPageIfNeeded.mockReset();
+  mockGetMock.mockReset();
+  mockGetMock.mockImplementation(() => null);
+});
+
+test('requestHandler builds the page JIT before calling the request', async () => {
+  const res = await post(createApp(), '/api/request/dashboard/get_rows');
+  expect(res.status).toEqual(200);
+  expect(await res.json()).toEqual({ success: true, response: { ok: true } });
+  expect(mockBuildPageIfNeeded).toHaveBeenCalledWith({
+    pageId: 'dashboard',
+    buildDirectory: '/build',
+    configDirectory: '/config',
+  });
+  expect(mockCallRequest).toHaveBeenCalledWith(
+    expect.objectContaining({ buildDirectory: '/build' }),
+    { blockId: 'b', pageId: 'dashboard', payload: {}, requestId: 'get_rows' }
+  );
+  expect(callOrder).toEqual(['build', 'call']);
+});
+
+test('requestHandler builds nested page ids as one page', async () => {
+  await post(createApp(), '/api/request/user-account/login/get_session');
+  expect(mockBuildPageIfNeeded).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: 'user-account/login' })
+  );
+  expect(mockCallRequest).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({ pageId: 'user-account/login', requestId: 'get_session' })
+  );
+});
+
+test('requestHandler replays a dev mock without building or calling the request', async () => {
+  mockGetMock.mockImplementation(() => ({ response: { rows: [1] } }));
+  const res = await post(createApp(), '/api/request/dashboard/get_rows');
+  expect(res.status).toEqual(200);
+  expect(await res.json()).toEqual({ success: true, response: { rows: [1] } });
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
+  expect(mockCallRequest).not.toHaveBeenCalled();
+});
+
+test('requestHandler rejects non-POST methods', async () => {
+  const app = createApp();
+  app.onError((err, c) => c.json({ error: err.message }, 500));
+  const res = await app.request('/api/request/dashboard/get_rows');
+  expect(res.status).toEqual(500);
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
+});
