@@ -49,7 +49,7 @@ import {
 // creator-protection guards, which key on the member's role string. With app
 // roles out of that field and the fabricated acting member claiming "owner"
 // itself, there is nothing left to defend against.
-function buildOrganizationPlugin({ getAuth, logger, sendInvitationEmail }) {
+function buildOrganizationPlugin({ authConfig = {}, getAuth, logger, sendInvitationEmail }) {
   const options = {
     ac,
     roles,
@@ -62,6 +62,12 @@ function buildOrganizationPlugin({ getAuth, logger, sendInvitationEmail }) {
     // (old accept links die with the canceled row). resend: true instead
     // re-sends the existing invitation unchanged with a refreshed expiry.
     cancelPendingInvitationsOnReInvite: true,
+    // How long an invitation stays acceptable. Left to BetterAuth's 48h
+    // default unless auth.organizations.invitationExpiresIn (seconds, build-
+    // validated) says otherwise - real invitees often need longer than two days.
+    ...(Number.isFinite(authConfig.organizations?.invitationExpiresIn)
+      ? { invitationExpiresIn: authConfig.organizations.invitationExpiresIn }
+      : {}),
     schema: {
       organization: { modelName: modelNames.organization },
       member: {

@@ -257,3 +257,33 @@ test('buildOrganizationPlugin org lifecycle hooks are no-ops without an MCP reso
   expect(adapter.create).not.toHaveBeenCalled();
   expect(adapter.update).not.toHaveBeenCalled();
 });
+
+test('buildOrganizationPlugin leaves invitationExpiresIn to the BetterAuth default when unset', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig,
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect('invitationExpiresIn' in plugin.options).toBe(false);
+});
+
+test('buildOrganizationPlugin passes auth.organizations.invitationExpiresIn through in seconds', () => {
+  const plugin = buildOrganizationPlugin({
+    authConfig: {
+      ...authConfig,
+      organizations: { ...authConfig.organizations, invitationExpiresIn: 1209600 },
+    },
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.options.invitationExpiresIn).toBe(1209600);
+});
+
+test('buildOrganizationPlugin tolerates a missing authConfig', () => {
+  const plugin = buildOrganizationPlugin({
+    getAuth: () => ({}),
+    sendInvitationEmail: async () => {},
+  });
+  expect(plugin.id).toBe('organization');
+  expect(plugin.options.invitationExpiresIn).toBeUndefined();
+});

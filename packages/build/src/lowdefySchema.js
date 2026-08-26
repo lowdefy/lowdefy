@@ -1546,11 +1546,21 @@ export default {
                 enum: 'Auth "organizations.create" should be "auto" or "operator".',
               },
             },
+            invitationExpiresIn: {
+              type: 'integer',
+              minimum: 60,
+              description:
+                'How long an organization invitation stays acceptable, in seconds. Defaults to 48 hours (172800). Re-sending an invitation refreshes its expiry.',
+              errorMessage: {
+                type: 'Auth "organizations.invitationExpiresIn" should be an integer number of seconds.',
+                minimum: 'Auth "organizations.invitationExpiresIn" should be at least 60 seconds.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "organizations" should be an object.',
             additionalProperties:
-              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup" and "create".',
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create" and "invitationExpiresIn".',
           },
         },
         dev: {
