@@ -736,6 +736,46 @@ test('validateAuthConfig throws when organizations.signup is not a known policy'
   );
 });
 
+test('validateAuthConfig passes an organizations block with an invitation expiry', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant', invitationExpiresIn: 1209600 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when organizations.invitationExpiresIn is not an integer', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { invitationExpiresIn: '14d' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.invitationExpiresIn" should be an integer number of seconds.'
+  );
+});
+
+test('validateAuthConfig throws when organizations.invitationExpiresIn is under a minute', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { invitationExpiresIn: 5 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "organizations.invitationExpiresIn" should be at least 60 seconds.'
+  );
+});
+
 test('validateAuthConfig throws when organizations contains an unknown property', () => {
   const components = {
     auth: {

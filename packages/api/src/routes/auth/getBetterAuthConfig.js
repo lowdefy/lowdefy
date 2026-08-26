@@ -530,7 +530,9 @@ function getBetterAuthConfig({
     await sendEmail({ to: email, subject, html, text, context });
   }
 
-  options.plugins.push(buildOrganizationPlugin({ getAuth, logger, sendInvitationEmail }));
+  options.plugins.push(
+    buildOrganizationPlugin({ authConfig, getAuth, logger, sendInvitationEmail })
+  );
 
   // BetterAuth's default /get-session body includes the raw session token - the
   // credential half of the httpOnly session cookie. Lowdefy is cookie-based and
