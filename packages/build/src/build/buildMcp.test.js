@@ -70,6 +70,45 @@ test('buildMcp keeps explicit name and version and sets configured', () => {
   });
 });
 
+test('buildMcp keeps serverInfo branding (title, websiteUrl, icons)', () => {
+  const context = testContext();
+  const icons = [
+    { src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] },
+  ];
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      name: 'my-tools',
+      title: 'My Tools',
+      websiteUrl: 'https://example.com',
+      icons,
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  const res = buildMcp({ components, context });
+  expect(res.mcp).toMatchObject({
+    name: 'my-tools',
+    title: 'My Tools',
+    websiteUrl: 'https://example.com',
+    icons,
+    configured: true,
+  });
+});
+
+test('buildMcp throws when an icon has no src', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      icons: [{ mimeType: 'image/png' }],
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP icon should have required property "src".'
+  );
+});
+
 test('buildMcp builds a public tool set without auth.oauthProvider', () => {
   const context = testContext();
   const components = {

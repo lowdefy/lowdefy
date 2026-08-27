@@ -109,6 +109,33 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
+test('createMcpServer advertises configured branding in serverInfo', async () => {
+  const icons = [
+    { src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] },
+  ];
+  const context = createContext({
+    configs: {
+      'mcp.json': { ...mcpJson, title: 'Test Tools', websiteUrl: 'https://example.com', icons },
+    },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  expect(client.getServerVersion()).toEqual({
+    name: 'test-tools',
+    version: '1.0.0',
+    title: 'Test Tools',
+    websiteUrl: 'https://example.com',
+    icons,
+  });
+});
+
+test('createMcpServer omits branding keys that are not configured', async () => {
+  const context = createContext();
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  expect(client.getServerVersion()).toEqual({ name: 'test-tools', version: '1.0.0' });
+});
+
 test('createMcpServer returns null when mcp is not configured', async () => {
   const context = createContext({
     configs: { 'mcp.json': { configured: false, endpoints: [] } },

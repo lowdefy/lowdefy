@@ -82,10 +82,16 @@ async function createMcpServer({ context }) {
     return endpointConfig;
   }
 
-  const server = new Server(
-    { name: mcpConfig.name, version: mcpConfig.version },
-    { capabilities: { tools: {} } }
-  );
+  // serverInfo doubles as the connector card in clients such as claude.ai:
+  // title, websiteUrl and icons are optional branding the app may configure,
+  // and are omitted (not sent as undefined) when it does not.
+  const serverInfo = { name: mcpConfig.name, version: mcpConfig.version };
+  for (const key of ['title', 'websiteUrl', 'icons']) {
+    if (!type.isNone(mcpConfig[key])) {
+      serverInfo[key] = mcpConfig[key];
+    }
+  }
+  const server = new Server(serverInfo, { capabilities: { tools: {} } });
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];
