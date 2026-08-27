@@ -109,13 +109,27 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('createMcpServer advertises configured branding in serverInfo', async () => {
+test('createMcpServer advertises configured branding in serverInfo, stripping build markers', async () => {
+  // As read from the build artifact: ~arr already unwrapped, ~k keys still present.
+  const iconsArtifact = [
+    {
+      src: 'https://example.com/icon-512.png',
+      mimeType: 'image/png',
+      sizes: ['512x512'],
+      '~k': 'm1',
+    },
+  ];
   const icons = [
     { src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] },
   ];
   const context = createContext({
     configs: {
-      'mcp.json': { ...mcpJson, title: 'Test Tools', websiteUrl: 'https://example.com', icons },
+      'mcp.json': {
+        ...mcpJson,
+        title: 'Test Tools',
+        websiteUrl: 'https://example.com',
+        icons: iconsArtifact,
+      },
     },
   });
   const server = await createMcpServer({ context });
