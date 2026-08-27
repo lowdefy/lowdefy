@@ -43,6 +43,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     messageDisplay,
     sender,
     conversationId,
+    feedbackValues: storedFeedbackValues,
     messages: externalMessages,
     display,
     drawer: drawerConfig,
@@ -177,6 +178,20 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     },
   });
 
+  // The control is otherwise write-only: it reports a rating and immediately forgets it,
+  // so the thumb un-highlights on the next render and the message looks unrated. This holds
+  // what was clicked THIS visit; the block still persists nothing itself.
+  const [feedbackValues, setFeedbackValues] = useState({});
+
+  // Ratings the app already knows about, keyed by message id — what a reload or a
+  // conversation switch would otherwise lose, since the block stores nothing. A click this
+  // visit wins over the stored value, so the thumb responds immediately and a rating the
+  // user has just withdrawn is not re-lit by a stale prop.
+  // Not memoised: the property arrives from operators that rebuild it every render, so a
+  // dependency on it would miss every time — the same reason the message sync below
+  // compares by count and id rather than by reference.
+  const effectiveFeedbackValues = { ...(storedFeedbackValues ?? {}), ...feedbackValues };
+
   // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
   const prevConversationIdRef = useRef(effectiveConversationId);
@@ -184,6 +199,9 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     if (effectiveConversationId !== prevConversationIdRef.current) {
       prevConversationIdRef.current = effectiveConversationId;
       setMessages([]);
+      // Ratings clicked in the thread being left must not carry over: they are keyed by
+      // message id, and the incoming conversation supplies its own through feedbackValues.
+      setFeedbackValues({});
     }
   }, [effectiveConversationId, setMessages]);
 
@@ -448,12 +466,6 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     [interceptLinks, methods]
   );
 
-  // The control is otherwise write-only: it reports a rating and immediately forgets it,
-  // so the thumb un-highlights on the next render and the message looks unrated. Held per
-  // message for the life of the chat instance — a rating is not persisted by the block, so
-  // it does not survive a reload or a conversation switch.
-  const [feedbackValues, setFeedbackValues] = useState({});
-
   function handleFeedback({ messageId, rating }) {
     setFeedbackValues((prev) => ({ ...prev, [messageId]: rating }));
     const message = messages.find((msg) => msg.id === messageId);
@@ -527,7 +539,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
             onFeedback={handleFeedback}
             onLinkClick={handleLinkClick}
             Link={Link}
-            feedbackValues={feedbackValues}
+            feedbackValues={effectiveFeedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}

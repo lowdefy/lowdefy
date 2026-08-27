@@ -10,4 +10,6 @@ The feedback control was write-only: it reported a rating and immediately forgot
 
 Note for apps already handling `onFeedback`: clearing a rating fires it with `rating: 'default'`. That value was unreachable before, because the control was never given one — so a handler that treats anything other than `like` as a dislike will now record a rejection for a rating the user has just withdrawn. Branch on the three values explicitly.
 
-Ratings are not persisted by the block — a reload or a conversation switch starts clean. Persisting them belongs to whatever stores the conversation.
+The block still persists nothing itself — storing a rating belongs to whatever stores the conversation — but it can now be told what was stored. The new `feedbackValues` property takes a map of message id to `like` or `dislike`, so a restored conversation comes back with its ratings showing instead of looking untouched. Without it, a reload or a conversation switch shows every message unrated even where the app recorded the rating, which reads as a lost write rather than a display gap.
+
+A rating clicked during the visit takes precedence over the supplied one, so the thumb still responds immediately, and a rating the user has just withdrawn is not re-lit by a value fetched before the withdrawal. Ratings clicked in a conversation are dropped when `conversationId` changes: they are keyed by message id, and the incoming conversation supplies its own.
