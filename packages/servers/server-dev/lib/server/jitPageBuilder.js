@@ -16,8 +16,15 @@
 
 import fs from 'fs';
 import path from 'path';
-import { serializer } from '@lowdefy/helpers';
-import { buildPageJit, createContext, hydrateDeferredRecords, makeId } from '@lowdefy/build/dev';
+import { serializer, type } from '@lowdefy/helpers';
+import {
+  buildPageJit,
+  createContext,
+  generateClientJsModule,
+  hydrateDeferredRecords,
+  iconPackages,
+  makeId,
+} from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
@@ -224,6 +231,87 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   } finally {
     pageCache.releaseBuildLock(pageId);
   }
+}
+
+// Collect every client _js hash the page references. jsMapParser reduces a _js
+// operator to either { _js: "<hash>" } or { _js: { fn: "<hash>", args } }, and
+// keeps args verbatim — so a _js nested inside another's args survives as its
+// own node and must be descended into, or its hash is dropped and the client
+// throws "_js function not found".
+function collectJsHashes(node, hashes) {
+  if (type.isArray(node)) {
+    for (const item of node) collectJsHashes(item, hashes);
+    return;
+  }
+  if (!type.isObject(node)) return;
+  if (Object.prototype.hasOwnProperty.call(node, '_js')) {
+    const inner = node._js;
+    if (type.isString(inner)) {
+      hashes.add(inner);
+      return;
+    }
+    if (type.isObject(inner) && type.isString(inner.fn)) {
+      hashes.add(inner.fn);
+      collectJsHashes(inner.args, hashes);
+      return;
+    }
+    return;
+  }
+  for (const value of Object.values(node)) collectJsHashes(value, hashes);
+}
+
+// Icons are discovered by detectMissingIcons on the pre-parse page, so a name
+// appearing only inside a _js body is real but is a hash in the served config.
+// Reproduce that surface: scan the served config plus the page's own client _js
+// source strings, and keep only names present in dynamicIconData (which holds
+// only JIT-discovered icons — static ones are already in the client bundle).
+function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
+  if (Object.keys(dynamicIconData).length === 0) return undefined;
+  const scanText = [JSON.stringify(pageConfig), ...Object.values(scopedJsMap)].join('\n');
+  const found = {};
+  for (const regex of Object.values(iconPackages)) {
+    for (const match of scanText.matchAll(regex)) {
+      const name = match[1];
+      if (dynamicIconData[name] && !found[name]) {
+        found[name] = dynamicIconData[name];
+      }
+    }
+  }
+  return Object.keys(found).length > 0 ? found : undefined;
+}
+
+// Scope this page's JIT-discovered enrichment out of the persistent build
+// context so jitPageHandler can fold it into the page-config response the client
+// already awaits — removing the two secondary fetches that stalled first paint.
+// buildContext defaults to the module-private cachedBuildContext (re-read on
+// every call, so it tracks invalidation resets); tests pass a stub.
+export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildContext }) {
+  // No build context (before the first build, or after an invalidation reset)
+  // means nothing JIT-discovered to fold — the page serves what the static
+  // client bundle already carries.
+  if (!buildContext) return {};
+
+  const clientJsMap = buildContext.jsMap.client ?? {};
+  const hashes = new Set();
+  collectJsHashes(pageConfig, hashes);
+
+  const scopedJsMap = {};
+  for (const hash of hashes) {
+    if (Object.prototype.hasOwnProperty.call(clientJsMap, hash)) {
+      scopedJsMap[hash] = clientJsMap[hash];
+    }
+  }
+
+  const jsEntries =
+    Object.keys(scopedJsMap).length > 0 ? generateClientJsModule(scopedJsMap) : undefined;
+
+  const dynamicIcons = scopeDynamicIcons({
+    pageConfig,
+    scopedJsMap,
+    dynamicIconData: buildContext.dynamicIconData ?? {},
+  });
+
+  return { jsEntries, dynamicIcons };
 }
 
 export default buildPageIfNeeded;

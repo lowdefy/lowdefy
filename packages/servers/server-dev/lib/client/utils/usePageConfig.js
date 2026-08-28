@@ -27,31 +27,7 @@ function parseJsModule(text) {
   return mod.default ?? {};
 }
 
-async function fetchJsEntries(basePath) {
-  try {
-    const res = await fetch(`${basePath}/api/js/client`, {
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
-  }
-}
-
-async function fetchDynamicIcons(basePath) {
-  try {
-    const res = await fetch(`${basePath}/api/icons/dynamic`, {
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
-  }
-}
-
-async function fetchPageConfig(url) {
+export async function fetchPageConfig(url) {
   // A stalled request (server restart mid-request, exhausted sockets) must
   // become a visible error, never an eternal Suspense fallback — the reload
   // recovery path cannot fire while the page tree is suspended.
@@ -83,16 +59,11 @@ async function fetchPageConfig(url) {
     throw new Error(data.message || 'Request error');
   }
 
-  // Fetch jsMap and dynamic icons after page build completes
-  // (JIT build may have added new entries).
-  // Extract basePath from the URL to construct the endpoints.
-  const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const [jsEntries, dynamicIcons] = await Promise.all([
-    fetchJsEntries(basePath),
-    fetchDynamicIcons(basePath),
-  ]);
-  data._jsEntries = jsEntries;
-  data._dynamicIcons = dynamicIcons;
+  // The JIT build folds this page's _js entries and dynamic icons into the
+  // response, so first paint needs no secondary fetch. _jsEntries arrives as
+  // module text — compile it to the { hash: fn } object Page expects.
+  // _dynamicIcons is already plain data — leave it for Page to inject.
+  if (data._jsEntries) data._jsEntries = parseJsModule(data._jsEntries);
 
   if (data?.dynamic === true) {
     dynamicUrls.add(url);

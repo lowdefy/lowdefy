@@ -14,21 +14,16 @@
   limitations under the License.
 */
 
-import generateClientJsModule from './generateClientJsModule.js';
 import generateJsFile from './generateJsFile.js';
 
-async function writeJs({ context }) {
-  await context.writeBuildArtifact(
-    'plugins/operators/clientJsMap.js',
-    generateClientJsModule(context.jsMap.client)
-  );
-  await context.writeBuildArtifact(
-    'plugins/operators/serverJsMap.js',
-    generateJsFile({
-      map: context.jsMap.server,
-      functionPrototype: `{ args, item, lowdefyApp, payload, secret, state, step, user }`,
-    })
-  );
+// Single definition of the client _js function prototype. Both the full build
+// (writeJs) and the dev server's per-page fold (getPageJitEnrichment) generate
+// client jsMap module text through here, so the destructured argument list has
+// exactly one source of truth.
+const CLIENT_JS_FUNCTION_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`;
+
+function generateClientJsModule(map) {
+  return generateJsFile({ map, functionPrototype: CLIENT_JS_FUNCTION_PROTOTYPE });
 }
 
-export default writeJs;
+export default generateClientJsModule;
