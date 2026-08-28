@@ -14,6 +14,75 @@
   limitations under the License.
 */
 
+/*
+  Layout inputs must NOT inherit.
+
+  grid.css reads each of these custom properties through a var(…, fallback) chain
+  so a block falls through to its own less-specific value — e.g.
+  --lf-span-lg → --lf-span-md → --lf-span, and --lf-gap-x-md → … → --lf-gap-x → 0.
+  Left unregistered, custom properties inherit by default, so a nested row/column
+  with no value of its own picks up an ANCESTOR's value instead of falling through:
+  a row's gap leaks as row-gap into every nested row, and a column's breakpoint
+  span leaks into nested columns.
+
+  Registering them with inherits:false stops the cascade. The universal syntax
+  ("*") with no initial-value preserves the "guaranteed-invalid when unset"
+  behaviour, so the existing var() fallback chains still resolve exactly as before
+  (universal syntax is not type-checked, so calc() usage is unchanged too).
+
+  --_gap is intentionally left unregistered: it is derived per-row and must inherit
+  from the row down to its columns for the flex-basis gap math.
+*/
+@property --lf-span { syntax: "*"; inherits: false; }
+@property --lf-span-sm { syntax: "*"; inherits: false; }
+@property --lf-span-md { syntax: "*"; inherits: false; }
+@property --lf-span-lg { syntax: "*"; inherits: false; }
+@property --lf-span-xl { syntax: "*"; inherits: false; }
+@property --lf-span-2xl { syntax: "*"; inherits: false; }
+@property --lf-display { syntax: "*"; inherits: false; }
+@property --lf-display-sm { syntax: "*"; inherits: false; }
+@property --lf-display-md { syntax: "*"; inherits: false; }
+@property --lf-display-lg { syntax: "*"; inherits: false; }
+@property --lf-display-xl { syntax: "*"; inherits: false; }
+@property --lf-display-2xl { syntax: "*"; inherits: false; }
+@property --lf-offset { syntax: "*"; inherits: false; }
+@property --lf-offset-sm { syntax: "*"; inherits: false; }
+@property --lf-offset-md { syntax: "*"; inherits: false; }
+@property --lf-offset-lg { syntax: "*"; inherits: false; }
+@property --lf-offset-xl { syntax: "*"; inherits: false; }
+@property --lf-offset-2xl { syntax: "*"; inherits: false; }
+@property --lf-order { syntax: "*"; inherits: false; }
+@property --lf-order-sm { syntax: "*"; inherits: false; }
+@property --lf-order-md { syntax: "*"; inherits: false; }
+@property --lf-order-lg { syntax: "*"; inherits: false; }
+@property --lf-order-xl { syntax: "*"; inherits: false; }
+@property --lf-order-2xl { syntax: "*"; inherits: false; }
+@property --lf-push { syntax: "*"; inherits: false; }
+@property --lf-push-sm { syntax: "*"; inherits: false; }
+@property --lf-push-md { syntax: "*"; inherits: false; }
+@property --lf-push-lg { syntax: "*"; inherits: false; }
+@property --lf-push-xl { syntax: "*"; inherits: false; }
+@property --lf-push-2xl { syntax: "*"; inherits: false; }
+@property --lf-pull { syntax: "*"; inherits: false; }
+@property --lf-pull-sm { syntax: "*"; inherits: false; }
+@property --lf-pull-md { syntax: "*"; inherits: false; }
+@property --lf-pull-lg { syntax: "*"; inherits: false; }
+@property --lf-pull-xl { syntax: "*"; inherits: false; }
+@property --lf-pull-2xl { syntax: "*"; inherits: false; }
+@property --lf-gap-x { syntax: "*"; inherits: false; }
+@property --lf-gap-x-sm { syntax: "*"; inherits: false; }
+@property --lf-gap-x-md { syntax: "*"; inherits: false; }
+@property --lf-gap-x-lg { syntax: "*"; inherits: false; }
+@property --lf-gap-x-xl { syntax: "*"; inherits: false; }
+@property --lf-gap-x-2xl { syntax: "*"; inherits: false; }
+@property --lf-gap-y { syntax: "*"; inherits: false; }
+@property --lf-gap-y-sm { syntax: "*"; inherits: false; }
+@property --lf-gap-y-md { syntax: "*"; inherits: false; }
+@property --lf-gap-y-lg { syntax: "*"; inherits: false; }
+@property --lf-gap-y-xl { syntax: "*"; inherits: false; }
+@property --lf-gap-y-2xl { syntax: "*"; inherits: false; }
+
+
 @layer components {
   /* =====================================================
      Row (Area)
