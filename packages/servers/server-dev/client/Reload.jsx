@@ -28,9 +28,9 @@ const Reload = ({ children, basePath, lowdefy }) => {
   // reset is a one-shot boolean the engine lowers only after a page mounts
   // (getContext.js) — while a page is suspended it stays true and setReset(true)
   // bails out of re-rendering. The tick always changes, so every reload event
-  // re-renders Routing, which re-reads reloadVersion and mints a fresh
-  // Suspense/SWR key — a suspended tab recovers instead of stranding on the
-  // building screen.
+  // re-invokes Routing's render prop, which re-reads reloadVersion and mints a
+  // fresh Suspense/SWR key — a suspended tab recovers instead of stranding on
+  // the building screen.
   const [, setReloadTick] = useState(0);
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
