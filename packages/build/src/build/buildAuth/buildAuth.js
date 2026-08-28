@@ -19,6 +19,7 @@
 import { type } from '@lowdefy/helpers';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAgentAuth from './buildAgentAuth.js';
+import buildAuthStrategies from './buildAuthStrategies.js';
 import buildApiAuth from './buildApiAuth.js';
 import buildPageAuth from './buildPageAuth.js';
 import buildWebsocketAuth from './buildWebsocketAuth.js';
@@ -28,6 +29,7 @@ function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
   validateAuthConfig({ components, context });
   components.auth.configured = configured;
+  buildAuthStrategies({ components });
   buildApiAuth({ components, context });
   buildWebsocketAuth({ components, context });
   buildAgentAuth({ components, context });

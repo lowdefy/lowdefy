@@ -6,6 +6,7 @@ const defaultTypesMap = {
     callbacks: {},
     events: {},
     providers: {},
+    strategies: {},
   },
   blockMetas: {},
   blocks: {},

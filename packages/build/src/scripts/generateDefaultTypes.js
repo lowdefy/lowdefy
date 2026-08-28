@@ -31,6 +31,7 @@ async function generateDefaultTypesMap() {
       callbacks: {},
       events: {},
       providers: {},
+      strategies: {},
     },
     blockMetas: {},
     blocks: {},

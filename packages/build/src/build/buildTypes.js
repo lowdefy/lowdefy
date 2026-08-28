@@ -73,6 +73,7 @@ function buildTypes({ components, context }) {
       callbacks: {},
       events: {},
       providers: {},
+      strategies: {},
     },
     blocks: {},
     connections: {},
@@ -126,6 +127,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.providers,
     store: components.types.auth.providers,
     typeClass: 'Auth provider',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.auth.strategies,
+    definitions: context.typesMap.auth.strategies,
+    store: components.types.auth.strategies,
+    typeClass: 'Auth strategy',
   });
 
   buildTypeClass(context, {

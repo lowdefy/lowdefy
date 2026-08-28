@@ -61,6 +61,7 @@ function createContext({
         callbacks: createCounter(),
         events: createCounter(),
         providers: createCounter(),
+        strategies: createCounter(),
       },
       blocks: createCounter(),
       connections: createCounter(),
