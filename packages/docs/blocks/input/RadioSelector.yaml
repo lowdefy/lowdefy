@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: RadioSelector
     pageTitle: RadioSelector
-    section: Input Blocks
     filePath: blocks/input/RadioSelector.yaml
     block_type: RadioSelector
     antd_component: Radio

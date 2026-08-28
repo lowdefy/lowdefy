@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Calendar
     pageTitle: Calendar
-    section: Display Blocks
     filePath: blocks/display/Calendar.yaml
     block_type: Calendar
     antd_component: Calendar

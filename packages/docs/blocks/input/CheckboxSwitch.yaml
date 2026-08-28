@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: CheckboxSwitch
     pageTitle: CheckboxSwitch
-    section: Input Blocks
     filePath: blocks/input/CheckboxSwitch.yaml
     block_type: CheckboxSwitch
     antd_component: Checkbox

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SegmentedSelector
     pageTitle: SegmentedSelector
-    section: Input Blocks
     filePath: blocks/input/SegmentedSelector.yaml
     block_type: SegmentedSelector
     antd_component: Segmented

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SkeletonButton
     pageTitle: SkeletonButton
-    section: Display Blocks
     filePath: blocks/display/SkeletonButton.yaml
     block_type: SkeletonButton
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonButton

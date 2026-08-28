@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: GoogleSheet
     pageTitle: Google Sheets
-    section: Connections
     filePath: connections/GoogleSheet.yaml
     content:
       - id: markdown

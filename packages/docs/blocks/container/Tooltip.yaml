@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Tooltip
     pageTitle: Tooltip
-    section: Container Blocks
     filePath: blocks/container/Tooltip.yaml
     block_type: Tooltip
     antd_component: Tooltip

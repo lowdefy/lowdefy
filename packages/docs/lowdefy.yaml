@@ -16,29 +16,37 @@ name: '@lowdefy/docs'
 lowdefy: local
 license: Apache-2.0
 
+# Brand tokens copied from packages/website (tailwind.config.js, src/app/globals.css).
 theme:
   antd:
     token:
-      borderRadius: 6
+      colorPrimary: '#1990ff'
+      colorInfo: '#1990ff'
+      colorLink: '#1990ff'
+      borderRadius: 8
+      colorBgLayout: '#f8fafc' # slate-50, the site's section bands
+      colorBorder: '#e2e8f0' # slate-200
+      fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif'
+      fontFamilyCode: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace"
     darkToken:
-      colorBgLayout: '#131419'
-      colorBgContainer: '#1a1b22'
-      colorBgElevated: '#252731'
-      colorBorder: '#353743'
-      colorBorderSecondary: '#252731'
+      colorBgLayout: '#020617' # slate-950, the site's dark body
+      colorBgContainer: '#0f172a' # slate-900, sections and cards
+      colorBgElevated: '#1e293b' # slate-800, popovers
+      colorBorder: '#334155' # slate-700
+      colorBorderSecondary: '#1e293b'
     darkComponents:
       Layout:
-        bodyBg: '#131419'
-        headerBg: '#0e0f13'
-        siderBg: '#0e0f13'
-        triggerBg: '#1a1b22'
-        triggerColor: '#e4e4e7'
+        bodyBg: '#020617'
+        headerBg: '#020617'
+        siderBg: '#020617'
+        triggerBg: '#0f172a'
+        triggerColor: '#e2e8f0'
       Menu:
-        darkItemBg: '#0e0f13'
-        darkSubMenuItemBg: '#0e0f13'
-        darkPopupBg: '#1a1b22'
-        darkItemSelectedBg: '#252731'
-        darkItemHoverBg: '#1a1b22'
+        darkItemBg: '#020617'
+        darkSubMenuItemBg: '#020617'
+        darkPopupBg: '#0f172a'
+        darkItemSelectedBg: '#1e293b'
+        darkItemHoverBg: '#0f172a'
 cli:
   disableTelemetry: true
   watchIgnore:

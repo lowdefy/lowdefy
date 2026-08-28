@@ -1,0 +1,140 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: four-primitives
+    pageTitle: The Four Primitives
+    filePath: concepts/core/four-primitives.yaml
+    content:
+      - id: primitives_intro
+        type: Markdown
+        properties:
+          content: |
+            Every Lowdefy app is composed from four primitives. Learn these four ideas and you can read any Lowdefy app.
+
+      - id: primitives_cards
+        type: Box
+        layout:
+          gap: 16
+        blocks:
+          - id: primitive_card_blocks
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Blocks
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: primitive_link_blocks
+                  type: Link
+                  params:
+                    pageId: blocks
+            blocks:
+              - id: primitive_card_blocks_text
+                type: Paragraph
+                properties:
+                  content: What the user sees. React components — inputs, tables, charts, containers — arranged into pages.
+          - id: primitive_card_operators
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Operators
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: primitive_link_operators
+                  type: Link
+                  params:
+                    pageId: operators
+            blocks:
+              - id: primitive_card_operators_text
+                type: Paragraph
+                properties:
+                  content: How the app thinks. Functions written in config that read state and shape data, re-evaluated on every change.
+          - id: primitive_card_actions
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Actions
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: primitive_link_actions
+                  type: Link
+                  params:
+                    pageId: events-and-actions
+            blocks:
+              - id: primitive_card_actions_text
+                type: Paragraph
+                properties:
+                  content: What happens next. Event handlers that run when users click, pages load, or values change.
+          - id: primitive_card_connections
+            type: Card
+            layout:
+              flex: 1 1 280px
+            style:
+              cursor: pointer
+            properties:
+              title: Connections
+              size: small
+              hoverable: true
+            events:
+              onClick:
+                - id: primitive_link_connections
+                  type: Link
+                  params:
+                    pageId: connections-and-requests
+            blocks:
+              - id: primitive_card_connections_text
+                type: Paragraph
+                properties:
+                  content: Where the data lives. Server-side integrations to databases, APIs, and services, called through requests.
+
+      - id: primitives_body
+        type: Markdown
+        properties:
+          content: |
+            ## How they fit together
+
+            A page is a tree of **blocks**. Blocks hold values in page **state** — a `TextInput` writes what the user types, a `Selector` writes the chosen option.
+
+            **Operators** are functions evaluated in config. They read state and context — `_state`, `_user`, `_media` — and compute the values around them: a block's visibility, a title's text, a request's query. When state changes, operators re-evaluate and the page updates.
+
+            User interaction fires **events** — a click, a page load, an input change. Each event runs a list of **actions**: `SetState` writes state, `Link` navigates, `Request` calls the server.
+
+            **Connections** define the services your app talks to — a database, an HTTP API, an AI provider. **Requests** execute against them on the server, so credentials never reach the browser. Actions trigger requests; operators read their results.
+
+            One loop, four primitives: blocks render state → events fire actions → actions set state and call requests → operators re-evaluate → blocks re-render.
+
+            ## Where to go deeper
+
+            - [Blocks](/blocks) — the block object and the page tree.
+            - [Operators](/operators) — evaluation rules and where operators work.
+            - [Events and Actions](/events-and-actions) — event chains, error handling.
+            - [Connections and Requests](/connections-and-requests) — the server-side model.
+            - Or see everything in the [Reference](/reference).

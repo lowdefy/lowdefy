@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: OpenIDConnectProvider
     pageTitle: OpenIDConnectProvider
-    section: User Authentication
     filePath: users/reference/OpenIDConnectProvider.yaml
     content:
       - id: content

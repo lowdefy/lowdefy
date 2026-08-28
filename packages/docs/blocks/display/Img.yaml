@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Img
     pageTitle: Img
-    section: Display Blocks
     filePath: blocks/display/Img.yaml
     block_type: Img
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Img

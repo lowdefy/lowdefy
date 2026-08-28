@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: user-object
     pageTitle: User Object
-    section: User Authentication
     filePath: users/user-object.yaml
     content:
       - id: user_object
@@ -102,10 +101,3 @@ _ref:
                     openid_custom_claim: 'profile.https://example.com/custom'
                 ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Roles
-            previous_page_id: roles
-            next_page_title: Auth Configuration
-            next_page_id: auth-configuration

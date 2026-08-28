@@ -1,0 +1,1181 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: blocks-reference
+    pageTitle: Blocks
+    filePath: blocks/index.yaml
+    content:
+      - id: intro
+        type: Markdown
+        properties:
+          content: |
+            Blocks are the visual building parts of every page. Browse by what you are building — the sidebar groups the same blocks by technical type (Input / Display / Container / List).
+      - id: section_forms_title
+        type: Title
+        properties:
+          content: Forms
+          level: 3
+      - id: section_forms_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Capture input with validated form controls.
+      - id: section_forms_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_textinput
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_textinput
+                  type: Link
+                  params:
+                    pageId: TextInput
+            blocks:
+              - id: card_textinput_label
+                type: Html
+                properties:
+                  html: '<b>TextInput</b>'
+          - id: card_numberinput
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_numberinput
+                  type: Link
+                  params:
+                    pageId: NumberInput
+            blocks:
+              - id: card_numberinput_label
+                type: Html
+                properties:
+                  html: '<b>NumberInput</b>'
+          - id: card_textarea
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_textarea
+                  type: Link
+                  params:
+                    pageId: TextArea
+            blocks:
+              - id: card_textarea_label
+                type: Html
+                properties:
+                  html: '<b>TextArea</b>'
+          - id: card_selector
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_selector
+                  type: Link
+                  params:
+                    pageId: Selector
+            blocks:
+              - id: card_selector_label
+                type: Html
+                properties:
+                  html: '<b>Selector</b>'
+          - id: card_multipleselector
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_multipleselector
+                  type: Link
+                  params:
+                    pageId: MultipleSelector
+            blocks:
+              - id: card_multipleselector_label
+                type: Html
+                properties:
+                  html: '<b>MultipleSelector</b>'
+          - id: card_dateselector
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_dateselector
+                  type: Link
+                  params:
+                    pageId: DateSelector
+            blocks:
+              - id: card_dateselector_label
+                type: Html
+                properties:
+                  html: '<b>DateSelector</b>'
+          - id: card_switch
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_switch
+                  type: Link
+                  params:
+                    pageId: Switch
+            blocks:
+              - id: card_switch_label
+                type: Html
+                properties:
+                  html: '<b>Switch</b>'
+          - id: card_checkboxselector
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_checkboxselector
+                  type: Link
+                  params:
+                    pageId: CheckboxSelector
+            blocks:
+              - id: card_checkboxselector_label
+                type: Html
+                properties:
+                  html: '<b>CheckboxSelector</b>'
+          - id: card_radioselector
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_radioselector
+                  type: Link
+                  params:
+                    pageId: RadioSelector
+            blocks:
+              - id: card_radioselector_label
+                type: Html
+                properties:
+                  html: '<b>RadioSelector</b>'
+          - id: card_s3uploadbutton
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_s3uploadbutton
+                  type: Link
+                  params:
+                    pageId: S3UploadButton
+            blocks:
+              - id: card_s3uploadbutton_label
+                type: Html
+                properties:
+                  html: '<b>S3UploadButton</b>'
+      - id: section_data_display_title
+        type: Title
+        properties:
+          content: Data display
+          level: 3
+      - id: section_data_display_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Tables, charts, and stats.
+      - id: section_data_display_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_aggrid
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_aggrid
+                  type: Link
+                  params:
+                    pageId: AgGrid
+            blocks:
+              - id: card_aggrid_label
+                type: Html
+                properties:
+                  html: '<b>AgGrid</b>'
+          - id: card_echart
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_echart
+                  type: Link
+                  params:
+                    pageId: EChart
+            blocks:
+              - id: card_echart_label
+                type: Html
+                properties:
+                  html: '<b>EChart</b>'
+          - id: card_statistic
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_statistic
+                  type: Link
+                  params:
+                    pageId: Statistic
+            blocks:
+              - id: card_statistic_label
+                type: Html
+                properties:
+                  html: '<b>Statistic</b>'
+          - id: card_descriptions
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_descriptions
+                  type: Link
+                  params:
+                    pageId: Descriptions
+            blocks:
+              - id: card_descriptions_label
+                type: Html
+                properties:
+                  html: '<b>Descriptions</b>'
+          - id: card_tag
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_tag
+                  type: Link
+                  params:
+                    pageId: Tag
+            blocks:
+              - id: card_tag_label
+                type: Html
+                properties:
+                  html: '<b>Tag</b>'
+          - id: card_calendar
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_calendar
+                  type: Link
+                  params:
+                    pageId: Calendar
+            blocks:
+              - id: card_calendar_label
+                type: Html
+                properties:
+                  html: '<b>Calendar</b>'
+          - id: card_progress
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_progress
+                  type: Link
+                  params:
+                    pageId: Progress
+            blocks:
+              - id: card_progress_label
+                type: Html
+                properties:
+                  html: '<b>Progress</b>'
+          - id: card_qrcode
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_qrcode
+                  type: Link
+                  params:
+                    pageId: QRCode
+            blocks:
+              - id: card_qrcode_label
+                type: Html
+                properties:
+                  html: '<b>QRCode</b>'
+      - id: section_layout_title
+        type: Title
+        properties:
+          content: Layout
+          level: 3
+      - id: section_layout_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Arrange content on the page.
+      - id: section_layout_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_box
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_box
+                  type: Link
+                  params:
+                    pageId: Box
+            blocks:
+              - id: card_box_label
+                type: Html
+                properties:
+                  html: '<b>Box</b>'
+          - id: card_flex
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_flex
+                  type: Link
+                  params:
+                    pageId: Flex
+            blocks:
+              - id: card_flex_label
+                type: Html
+                properties:
+                  html: '<b>Flex</b>'
+          - id: card_card
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_card
+                  type: Link
+                  params:
+                    pageId: Card
+            blocks:
+              - id: card_card_label
+                type: Html
+                properties:
+                  html: '<b>Card</b>'
+          - id: card_collapse
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_collapse
+                  type: Link
+                  params:
+                    pageId: Collapse
+            blocks:
+              - id: card_collapse_label
+                type: Html
+                properties:
+                  html: '<b>Collapse</b>'
+          - id: card_tabs
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_tabs
+                  type: Link
+                  params:
+                    pageId: Tabs
+            blocks:
+              - id: card_tabs_label
+                type: Html
+                properties:
+                  html: '<b>Tabs</b>'
+          - id: card_layout
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_layout
+                  type: Link
+                  params:
+                    pageId: Layout
+            blocks:
+              - id: card_layout_label
+                type: Html
+                properties:
+                  html: '<b>Layout</b>'
+          - id: card_divider
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_divider
+                  type: Link
+                  params:
+                    pageId: Divider
+            blocks:
+              - id: card_divider_label
+                type: Html
+                properties:
+                  html: '<b>Divider</b>'
+          - id: card_splitter
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_splitter
+                  type: Link
+                  params:
+                    pageId: Splitter
+            blocks:
+              - id: card_splitter_label
+                type: Html
+                properties:
+                  html: '<b>Splitter</b>'
+      - id: section_feedback_title
+        type: Title
+        properties:
+          content: Feedback
+          level: 3
+      - id: section_feedback_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Alerts, modals, and loading states.
+      - id: section_feedback_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_alert
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_alert
+                  type: Link
+                  params:
+                    pageId: Alert
+            blocks:
+              - id: card_alert_label
+                type: Html
+                properties:
+                  html: '<b>Alert</b>'
+          - id: card_message
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_message
+                  type: Link
+                  params:
+                    pageId: Message
+            blocks:
+              - id: card_message_label
+                type: Html
+                properties:
+                  html: '<b>Message</b>'
+          - id: card_notification
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_notification
+                  type: Link
+                  params:
+                    pageId: Notification
+            blocks:
+              - id: card_notification_label
+                type: Html
+                properties:
+                  html: '<b>Notification</b>'
+          - id: card_modal
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_modal
+                  type: Link
+                  params:
+                    pageId: Modal
+            blocks:
+              - id: card_modal_label
+                type: Html
+                properties:
+                  html: '<b>Modal</b>'
+          - id: card_confirmmodal
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_confirmmodal
+                  type: Link
+                  params:
+                    pageId: ConfirmModal
+            blocks:
+              - id: card_confirmmodal_label
+                type: Html
+                properties:
+                  html: '<b>ConfirmModal</b>'
+          - id: card_drawer
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_drawer
+                  type: Link
+                  params:
+                    pageId: Drawer
+            blocks:
+              - id: card_drawer_label
+                type: Html
+                properties:
+                  html: '<b>Drawer</b>'
+          - id: card_spinner
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_spinner
+                  type: Link
+                  params:
+                    pageId: Spinner
+            blocks:
+              - id: card_spinner_label
+                type: Html
+                properties:
+                  html: '<b>Spinner</b>'
+          - id: card_tour
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_tour
+                  type: Link
+                  params:
+                    pageId: Tour
+            blocks:
+              - id: card_tour_label
+                type: Html
+                properties:
+                  html: '<b>Tour</b>'
+      - id: section_navigation_title
+        type: Title
+        properties:
+          content: Navigation
+          level: 3
+      - id: section_navigation_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Menus, steps, and wayfinding.
+      - id: section_navigation_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_menu
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_menu
+                  type: Link
+                  params:
+                    pageId: Menu
+            blocks:
+              - id: card_menu_label
+                type: Html
+                properties:
+                  html: '<b>Menu</b>'
+          - id: card_breadcrumb
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_breadcrumb
+                  type: Link
+                  params:
+                    pageId: Breadcrumb
+            blocks:
+              - id: card_breadcrumb_label
+                type: Html
+                properties:
+                  html: '<b>Breadcrumb</b>'
+          - id: card_pagination
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_pagination
+                  type: Link
+                  params:
+                    pageId: Pagination
+            blocks:
+              - id: card_pagination_label
+                type: Html
+                properties:
+                  html: '<b>Pagination</b>'
+          - id: card_anchor
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_anchor
+                  type: Link
+                  params:
+                    pageId: Anchor
+            blocks:
+              - id: card_anchor_label
+                type: Html
+                properties:
+                  html: '<b>Anchor</b>'
+          - id: card_dropdownmenu
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_dropdownmenu
+                  type: Link
+                  params:
+                    pageId: DropdownMenu
+            blocks:
+              - id: card_dropdownmenu_label
+                type: Html
+                properties:
+                  html: '<b>DropdownMenu</b>'
+          - id: card_steps
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_steps
+                  type: Link
+                  params:
+                    pageId: Steps
+            blocks:
+              - id: card_steps_label
+                type: Html
+                properties:
+                  html: '<b>Steps</b>'
+          - id: card_floatbutton
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_floatbutton
+                  type: Link
+                  params:
+                    pageId: FloatButton
+            blocks:
+              - id: card_floatbutton_label
+                type: Html
+                properties:
+                  html: '<b>FloatButton</b>'
+      - id: section_media_title
+        type: Title
+        properties:
+          content: Media
+          level: 3
+      - id: section_media_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Images, maps, and files.
+      - id: section_media_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_img
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_img
+                  type: Link
+                  params:
+                    pageId: Img
+            blocks:
+              - id: card_img_label
+                type: Html
+                properties:
+                  html: '<b>Img</b>'
+          - id: card_avatar
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_avatar
+                  type: Link
+                  params:
+                    pageId: Avatar
+            blocks:
+              - id: card_avatar_label
+                type: Html
+                properties:
+                  html: '<b>Avatar</b>'
+          - id: card_carousel
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_carousel
+                  type: Link
+                  params:
+                    pageId: Carousel
+            blocks:
+              - id: card_carousel_label
+                type: Html
+                properties:
+                  html: '<b>Carousel</b>'
+          - id: card_googlemaps
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_googlemaps
+                  type: Link
+                  params:
+                    pageId: GoogleMaps
+            blocks:
+              - id: card_googlemaps_label
+                type: Html
+                properties:
+                  html: '<b>GoogleMaps</b>'
+          - id: card_s3download
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_s3download
+                  type: Link
+                  params:
+                    pageId: S3Download
+            blocks:
+              - id: card_s3download_label
+                type: Html
+                properties:
+                  html: '<b>S3Download</b>'
+      - id: section_text_title
+        type: Title
+        properties:
+          content: Text
+          level: 3
+      - id: section_text_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Titles, prose, and rich content.
+      - id: section_text_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_title
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_title
+                  type: Link
+                  params:
+                    pageId: Title
+            blocks:
+              - id: card_title_label
+                type: Html
+                properties:
+                  html: '<b>Title</b>'
+          - id: card_paragraph
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_paragraph
+                  type: Link
+                  params:
+                    pageId: Paragraph
+            blocks:
+              - id: card_paragraph_label
+                type: Html
+                properties:
+                  html: '<b>Paragraph</b>'
+          - id: card_markdown
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_markdown
+                  type: Link
+                  params:
+                    pageId: Markdown
+            blocks:
+              - id: card_markdown_label
+                type: Html
+                properties:
+                  html: '<b>Markdown</b>'
+          - id: card_markdownwithcode
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_markdownwithcode
+                  type: Link
+                  params:
+                    pageId: MarkdownWithCode
+            blocks:
+              - id: card_markdownwithcode_label
+                type: Html
+                properties:
+                  html: '<b>MarkdownWithCode</b>'
+          - id: card_html
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_html
+                  type: Link
+                  params:
+                    pageId: Html
+            blocks:
+              - id: card_html_label
+                type: Html
+                properties:
+                  html: '<b>Html</b>'
+          - id: card_icon
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_icon
+                  type: Link
+                  params:
+                    pageId: Icon
+            blocks:
+              - id: card_icon_label
+                type: Html
+                properties:
+                  html: '<b>Icon</b>'
+      - id: section_ai_title
+        type: Title
+        properties:
+          content: AI
+          level: 3
+      - id: section_ai_tagline
+        type: Paragraph
+        style:
+          color: var(--ant-color-text-secondary)
+        properties:
+          content: Agent chat interfaces, documented under Learn › AI Agents.
+      - id: section_ai_grid
+        type: Box
+        layout:
+          gap: 12
+        blocks:
+          - id: card_agentchat
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_agentchat
+                  type: Link
+                  params:
+                    pageId: AgentChat
+            blocks:
+              - id: card_agentchat_label
+                type: Html
+                properties:
+                  html: '<b>AgentChat</b>'
+          - id: card_agentconversations
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_agentconversations
+                  type: Link
+                  params:
+                    pageId: AgentConversations
+            blocks:
+              - id: card_agentconversations_label
+                type: Html
+                properties:
+                  html: '<b>AgentConversations</b>'
+

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AgentChat
     pageTitle: AgentChat
-    section: Agents
     filePath: agents/AgentChat.yaml
     content:
       - id: md1
@@ -547,10 +546,3 @@ _ref:
 
             The agent's `onFinish` hook handles server-side persistence. See [Server Hooks](/agent-server-hooks) for details.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Server Hooks
-            previous_page_id: agent-server-hooks
-            next_page_title: AgentConversations
-            next_page_id: AgentConversations

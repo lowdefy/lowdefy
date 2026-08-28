@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Skeleton
     pageTitle: Skeleton
-    section: Display Blocks
     filePath: blocks/display/Skeleton.yaml
     block_type: Skeleton
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/Skeleton

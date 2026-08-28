@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ParagraphInput
     pageTitle: ParagraphInput
-    section: Input Blocks
     filePath: blocks/input/ParagraphInput.yaml
     block_type: ParagraphInput
     antd_component: Typography

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MultipleSelector
     pageTitle: MultipleSelector
-    section: Input Blocks
     filePath: blocks/input/MultipleSelector.yaml
     block_type: MultipleSelector
     antd_component: Select

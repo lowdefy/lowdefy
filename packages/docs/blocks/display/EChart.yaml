@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: EChart
     pageTitle: EChart
-    section: Display Blocks
     filePath: blocks/display/EChart.yaml
     block_type: EChart
     github_path: packages/plugins/blocks/blocks-echarts/src/blocks/EChart

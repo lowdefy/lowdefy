@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: SkeletonInput
     pageTitle: SkeletonInput
-    section: Display Blocks
     filePath: blocks/display/SkeletonInput.yaml
     block_type: SkeletonInput
     github_path: packages/plugins/blocks/blocks-loaders/src/blocks/SkeletonInput

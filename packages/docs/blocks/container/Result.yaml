@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Result
     pageTitle: Result
-    section: Container Blocks
     filePath: blocks/container/Result.yaml
     block_type: Result
     antd_component: Result

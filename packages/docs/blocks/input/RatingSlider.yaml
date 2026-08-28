@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: RatingSlider
     pageTitle: RatingSlider
-    section: Input Blocks
     filePath: blocks/input/RatingSlider.yaml
     block_type: RatingSlider
     antd_component: Slider

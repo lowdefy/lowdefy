@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Span
     pageTitle: Span
-    section: Container Blocks
     filePath: blocks/container/Span.yaml
     block_type: Span
     github_path: packages/plugins/blocks/blocks-basic/src/blocks/Span

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: plugins-introduction
     pageTitle: Plugins
-    section: Plugins
     filePath: plugins/plugins-introduction.yaml
     content:
       - id: md1
@@ -52,10 +51,3 @@ _ref:
                 typePrefix: Other
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Vercel
-            previous_page_id: vercel
-            next_page_title: Developing Plugins
-            next_page_id: plugins-dev

@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: agent-endpoint-tools
     pageTitle: Endpoint Tools
-    section: Agents
     filePath: agents/endpoint-tools.yaml
     content:
       - id: md1
@@ -213,10 +212,3 @@ _ref:
                 confirm: true
             ```
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Agent Properties
-            previous_page_id: agent-properties
-            next_page_title: MCP Tools
-            next_page_id: agent-mcp-tools

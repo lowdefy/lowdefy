@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: next-auth-providers
     pageTitle: Next Auth Providers
-    section: User Authentication
     filePath: users/reference/next-auth-providers.yaml
     content:
       - id: content

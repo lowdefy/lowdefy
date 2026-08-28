@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Divider
     pageTitle: Divider
-    section: Display Blocks
     filePath: blocks/display/Divider.yaml
     block_type: Divider
     antd_component: Divider

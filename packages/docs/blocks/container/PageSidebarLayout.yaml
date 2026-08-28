@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: PageSidebarLayout
     pageTitle: PageSidebarLayout
-    section: Container Blocks
     filePath: blocks/container/PageSidebarLayout.yaml
     block_type: PageSidebarLayout
     antd_component: Layout

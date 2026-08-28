@@ -80,6 +80,7 @@ function SearchResults({
   const titleField = resultMapping?.title ?? 'title';
   const descField = resultMapping?.description;
   const iconField = resultMapping?.icon;
+  const breadcrumbField = resultMapping?.breadcrumb;
 
   let flatIndex = 0;
 
@@ -100,6 +101,7 @@ function SearchResults({
             const isSelected = currentIndex === selectedIndex;
             const title = item[titleField] ?? item.id;
             const desc = descField ? item[descField] : null;
+            const breadcrumb = breadcrumbField ? item[breadcrumbField] : null;
 
             return (
               <div
@@ -120,6 +122,18 @@ function SearchResults({
                   <FileOutlined />
                 </span>
                 <div className="lf-search-item-content">
+                  {Array.isArray(breadcrumb) && breadcrumb.length > 1 && (
+                    <div
+                      className={cn('lf-search-item-breadcrumb', classNames.itemBreadcrumb)}
+                      style={{
+                        fontSize: '0.75em',
+                        color: 'var(--ant-color-text-tertiary)',
+                        ...styles.itemBreadcrumb,
+                      }}
+                    >
+                      {breadcrumb.slice(0, -1).join(' › ')}
+                    </div>
+                  )}
                   <div
                     className={cn('lf-search-item-title', classNames.itemTitle)}
                     style={styles.itemTitle}

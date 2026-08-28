@@ -16,10 +16,24 @@
 
 import generateSitemap from './generateSitemap.js';
 import buildSearchIndex from './buildSearchIndex.js';
+import checkOrphans from './checkOrphans.js';
+import walkMenus from './walkMenus.js';
 
+/*
+  Full-build site assets, run as the `_ref` transformer on pages.yaml:
+  sitemap, search index (with per-hit section trails), and the orphan check.
+
+  Per-page navigation state (sidebar menuId, breadcrumb, prev/next, active
+  tab) is NOT written here — the dev server's JIT build resolves pages
+  individually and would never see it. That lives in general.yaml.njk via
+  menus.yaml refs transformed by templates/navFromMenus.js.
+*/
 function transformer(pages, vars) {
+  const { records, membershipCounts } = walkMenus(vars.menus);
+
+  checkOrphans({ pages, membershipCounts });
   generateSitemap(pages);
-  buildSearchIndex(pages, vars);
+  buildSearchIndex(pages, records);
   return pages;
 }
 

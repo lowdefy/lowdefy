@@ -8,30 +8,30 @@
 - _ref: tutorial/tutorial-display-data-page.yaml
 - _ref: tutorial/tutorial-next-steps.yaml
 
-- _ref: concepts/overview.yaml
-- _ref: concepts/lowdefy-schema.yaml
-- _ref: concepts/menus.yaml
-- _ref: concepts/references-and-templates.yaml
-- _ref: concepts/modules.yaml
-- _ref: concepts/module-authoring.yaml
-- _ref: concepts/page-and-app-state.yaml
-- _ref: concepts/selectors.yaml
-- _ref: concepts/blocks.yaml
-- _ref: concepts/layout-overview.yaml
-- _ref: concepts/connections-and-requests.yaml
-- _ref: concepts/events-and-actions.yaml
-- _ref: concepts/keyboard-shortcuts.yaml
-- _ref: concepts/i18n.yaml
-- _ref: concepts/operators.yaml
-- _ref: concepts/secrets.yaml
-- _ref: concepts/logger.yaml
-- _ref: concepts/lists.yaml
-- _ref: concepts/hosting-files.yaml
-- _ref: concepts/custom-html.yaml
-- _ref: concepts/custom-styling.yaml
-- _ref: concepts/theming.yaml
-- _ref: concepts/cli.yaml
-- _ref: concepts/api.yaml
+- _ref: concepts/core/overview.yaml
+- _ref: concepts/core/lowdefy-schema.yaml
+- _ref: concepts/advanced/menus.yaml
+- _ref: concepts/core/references-and-templates.yaml
+- _ref: concepts/advanced/modules.yaml
+- _ref: concepts/advanced/module-authoring.yaml
+- _ref: concepts/core/page-and-app-state.yaml
+- _ref: concepts/advanced/selectors.yaml
+- _ref: concepts/core/blocks.yaml
+- _ref: concepts/advanced/layout-overview.yaml
+- _ref: concepts/core/connections-and-requests.yaml
+- _ref: concepts/core/events-and-actions.yaml
+- _ref: concepts/advanced/keyboard-shortcuts.yaml
+- _ref: concepts/advanced/i18n.yaml
+- _ref: concepts/core/operators.yaml
+- _ref: concepts/advanced/secrets.yaml
+- _ref: concepts/advanced/logger.yaml
+- _ref: concepts/advanced/lists.yaml
+- _ref: concepts/advanced/hosting-files.yaml
+- _ref: concepts/advanced/custom-html.yaml
+- _ref: concepts/advanced/custom-styling.yaml
+- _ref: concepts/core/theming.yaml
+- _ref: concepts/advanced/cli.yaml
+- _ref: concepts/advanced/api.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
@@ -320,8 +320,20 @@
 - _ref: controls/try.yaml
 # - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
-- _ref: migration/upgrade-guide.yaml
-- _ref: migration/v3-to-v4.yaml
-- _ref: migration/v4-to-v5.yaml
+- _ref: upgrading/upgrade-guide.yaml
+- _ref: upgrading/v3-to-v4.yaml
+- _ref: upgrading/v4-to-v5.yaml
+
+- _ref: reference.yaml
+- _ref: blocks/index.yaml
+- _ref: operators/index.yaml
+- _ref: actions/index.yaml
+- _ref: connections/index.yaml
+- _ref: schema-reference.yaml
+- _ref: quickstart.yaml
+- _ref: concepts/core/four-primitives.yaml
+- _ref: showcase.yaml
+- _ref: recipes/index.yaml
+- _ref: plugins/index.yaml
 
 - _ref: 404.yaml

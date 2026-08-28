@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: users-introduction
     pageTitle: Introduction
-    section: User Authentication
     filePath: users/users-introduction.yaml
     content:
       - id: introduction
@@ -54,10 +53,3 @@ _ref:
 
             The `_user` operator can be used to access data in the user object received from the identity provider. The OpenID Connect standard claims (fields like `name` or `email`) are mapped to the user object by default and addition fields can be configured using the `userFields` configuration option.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Overview
-            previous_page_id: overview
-            next_page_title: Protected Pages and APIs
-            next_page_id: protected-pages-apis

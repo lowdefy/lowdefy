@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: TextInput
     pageTitle: TextInput
-    section: Input Blocks
     filePath: blocks/input/TextInput.yaml
     block_type: TextInput
     antd_component: Input

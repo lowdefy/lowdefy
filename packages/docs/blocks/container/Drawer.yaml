@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Drawer
     pageTitle: Drawer
-    section: Container Blocks
     filePath: blocks/container/Drawer.yaml
     block_type: Drawer
     antd_component: Drawer

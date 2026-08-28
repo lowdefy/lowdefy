@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Stripe
     pageTitle: Stripe
-    section: Connections
     filePath: connections/Stripe.yaml
     content:
       - id: markdown

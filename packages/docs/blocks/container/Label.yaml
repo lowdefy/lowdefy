@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Label
     pageTitle: Label
-    section: Container Blocks
     filePath: blocks/container/Label.yaml
     block_type: Label
     antd_component: Label

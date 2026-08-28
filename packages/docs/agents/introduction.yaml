@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: agents-introduction
     pageTitle: Agents
-    section: Agents
     filePath: agents/introduction.yaml
     content:
       - id: md1
@@ -131,10 +130,3 @@ _ref:
                 - [AgentChat](/AgentChat) — Configure the chat UI block.
                 - [AgentConversations](/AgentConversations) — Add a conversation history sidebar.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: The CLI
-            previous_page_id: cli
-            next_page_title: Agent Properties
-            next_page_id: agent-properties

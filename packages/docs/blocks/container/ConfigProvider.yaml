@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: ConfigProvider
     pageTitle: ConfigProvider
-    section: Container Blocks
     filePath: blocks/container/ConfigProvider.yaml
     block_type: ConfigProvider
     antd_component: ConfigProvider

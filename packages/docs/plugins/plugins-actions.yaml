@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: plugins-actions
     pageTitle: Action Plugins
-    section: Plugins
     filePath: plugins/plugins-actions.yaml
     content:
       - id: md1
@@ -102,11 +101,6 @@ _ref:
 
             export default Confetti;
             ```
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Developing Plugins
-            previous_page_id: plugins-dev
             # next_page_title: Blocks
             # next_page_id: plugins-blocks
             next_page_title: Connections # while blocks is in progress

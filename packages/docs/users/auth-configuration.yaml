@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: auth-configuration
     pageTitle: Auth Configuration
-    section: User Authentication
     filePath: users/auth-configuration.yaml
     content:
       - id: auth_configuration
@@ -143,10 +142,3 @@ _ref:
 
                 > **Note:** Auth must be configured (at least one provider) for mock users to work, since the mock user is processed through the NextAuth session callback.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: User Object
-            previous_page_id: user-object
-            next_page_title: Login and Logout
-            next_page_id: login-and-logout

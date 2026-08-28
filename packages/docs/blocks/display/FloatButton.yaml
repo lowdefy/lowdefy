@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: FloatButton
     pageTitle: FloatButton
-    section: Display Blocks
     filePath: blocks/display/FloatButton.yaml
     block_type: FloatButton
     antd_component: FloatButton

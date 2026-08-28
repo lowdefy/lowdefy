@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: plugins-connections
     pageTitle: Connection and Request Plugins
-    section: Plugins
     filePath: plugins/plugins-connections.yaml
     content:
       - id: md1
@@ -120,9 +119,6 @@ _ref:
 
             export default AxiosHttp;
             ```
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
             # previous_page_title: Blocks
             # previous_page_id: plugins-blocks
             previous_page_title: Actions # while blocks doesn't exist

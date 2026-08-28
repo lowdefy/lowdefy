@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Card
     pageTitle: Card
-    section: Container Blocks
     filePath: blocks/container/Card.yaml
     block_type: Card
     antd_component: Card

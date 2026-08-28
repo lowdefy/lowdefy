@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: AgGrid
     pageTitle: AgGrid
-    section: Display Blocks
     filePath: blocks/display/AgGrid.yaml
     block_type: AgGrid
     github_path: packages/plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy

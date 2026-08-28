@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: MasonryList
     pageTitle: MasonryList
-    section: List Blocks
     filePath: blocks/list/MasonryList.yaml
     block_type: MasonryList
     antd_component: List

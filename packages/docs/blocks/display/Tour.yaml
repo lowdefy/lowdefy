@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Tour
     pageTitle: Tour
-    section: Display Blocks
     filePath: blocks/display/Tour.yaml
     block_type: Tour
     antd_component: Tour

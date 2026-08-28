@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: Avatar
     pageTitle: Avatar
-    section: Display Blocks
     filePath: blocks/display/Avatar.yaml
     block_type: Avatar
     antd_component: Avatar

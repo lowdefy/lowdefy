@@ -17,7 +17,6 @@ _ref:
   vars:
     pageId: agent-properties
     pageTitle: Agent Properties
-    section: Agents
     filePath: agents/agent-properties.yaml
     content:
       - id: md1
@@ -197,10 +196,3 @@ _ref:
             - [OpenAI](/OpenAI-connection) — `OpenAIAgent` with `reasoningEffort` and `reasoningSummary`
             - [Google](/Google) — `GeminiAgent` with `thinkingConfig` and `safetySettings`
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Agents
-            previous_page_id: agents-introduction
-            next_page_title: Endpoint Tools
-            next_page_id: agent-endpoint-tools
