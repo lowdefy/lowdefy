@@ -1575,7 +1575,9 @@ describe('oauthProvider authorization server plugins', () => {
   test('configures the oauth-provider with the closed mcp scope vocabulary and JWT access tokens', () => {
     const options = getOAuthOptions();
     const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
-    expect(plugin.options.scopes).toEqual(['mcp:read', 'mcp:write']);
+    // offline_access is the refresh-token opt-in: without it the provider
+    // issues no refresh token and every MCP client re-consents hourly.
+    expect(plugin.options.scopes).toEqual(['mcp:read', 'mcp:write', 'offline_access']);
     expect(plugin.options.grantTypes).toEqual(['authorization_code', 'refresh_token']);
     // disableJwtPlugin false is the JWT access-token mode - opaque tokens off.
     expect(plugin.options.disableJwtPlugin).toBe(false);

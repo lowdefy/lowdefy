@@ -110,7 +110,7 @@ test('serves the RFC 8414 metadata document with the mcp scope vocabulary and no
   expect(metadata.jwks_uri).toBe(`${ORIGIN}/api/auth/jwks`);
   expect(metadata.introspection_endpoint).toBe(`${ORIGIN}/api/auth/oauth2/introspect`);
   expect(metadata.revocation_endpoint).toBe(`${ORIGIN}/api/auth/oauth2/revoke`);
-  expect(metadata.scopes_supported).toEqual(['mcp:read', 'mcp:write']);
+  expect(metadata.scopes_supported).toEqual(['mcp:read', 'mcp:write', 'offline_access']);
   expect(metadata.code_challenge_methods_supported).toEqual(['S256']);
   expect(metadata.grant_types_supported).toEqual(['authorization_code', 'refresh_token']);
   expect(metadata.client_id_metadata_document_supported).toBe(true);

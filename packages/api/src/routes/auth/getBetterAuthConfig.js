@@ -115,6 +115,11 @@ const ADMIN_PATHS_DISABLED = [
 // bridge a firing hook uses to invoke its InternalApi endpoint.
 // getAuth returns the constructed BetterAuth instance - the engine-tier
 // hooks resolve it lazily at fire time, after construction completes.
+// The scopes the authorization server offers MCP clients, and the vocabulary
+// the per-org protected-resource metadata advertises (RFC 9728
+// scopes_supported) - both read this list so they can never drift apart.
+const MCP_OAUTH_SCOPES = ['mcp:read', 'mcp:write', 'offline_access'];
+
 function getBetterAuthConfig({
   appMeta,
   authJson,
@@ -420,8 +425,11 @@ function getBetterAuthConfig({
         consentPage: `${baseUrlOrigin}${oauthPagesBasePath}${authConfig.oauthProvider.consentPage}`,
         // The closed MCP scope vocabulary. Without "openid" the OIDC surface
         // (id tokens, /oauth2/userinfo, /.well-known/openid-configuration)
-        // stays dormant.
-        scopes: ['mcp:read', 'mcp:write'],
+        // stays dormant. "offline_access" is the OAuth-standard opt-in for a
+        // refresh token: the oauth-provider issues one only when the grant
+        // carries it, so without it every MCP client is signed out the moment
+        // its access token lapses (hourly) and has to re-consent.
+        scopes: MCP_OAUTH_SCOPES,
         // No client_credentials - every access token is user-consented.
         grantTypes: ['authorization_code', 'refresh_token'],
         // Any registered client may request any enabled resource - access is
@@ -578,3 +586,4 @@ function getBetterAuthConfig({
 }
 
 export default getBetterAuthConfig;
+export { MCP_OAUTH_SCOPES };

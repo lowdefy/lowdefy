@@ -27,6 +27,7 @@ import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
+import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
 import {
   getAsIssuer,
   getMcpResourceMetadataUri,
@@ -73,6 +74,7 @@ export {
   getAsIssuer,
   getAuthStrategies,
   getBetterAuth,
+  MCP_OAUTH_SCOPES,
   getHomeAndMenus,
   getMcpResourceBinding,
   getMcpResourceMetadataUri,
