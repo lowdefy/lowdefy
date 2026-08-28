@@ -14,17 +14,6 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
+import createInputMeta from '../../createInputMeta.js';
 
-function serveBuildJs(relativePath) {
-  const filePath = path.join(process.cwd(), 'build', ...relativePath);
-  try {
-    return fs.readFileSync(filePath, 'utf8');
-  } catch {
-    // Empty default export if the file doesn't exist yet
-    return 'export default {};';
-  }
-}
-
-export default serveBuildJs;
+export default createInputMeta('AgGridLowdefyInput', { size: true });

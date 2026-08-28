@@ -14,17 +14,6 @@
   limitations under the License.
 */
 
-import serveBuildJs from '../lib/serveBuildJs.js';
+import createAgGridDisplayHelper from '../../createAgGridDisplayHelper.js';
 
-function jsEnvHandler(c) {
-  const env = c.req.param('env');
-  if (env !== 'client' && env !== 'server') {
-    return c.text('Invalid env parameter. Use "client" or "server".', 400);
-  }
-  const fileName = env === 'client' ? 'clientJsMap.js' : 'serverJsMap.js';
-  return c.body(serveBuildJs(['plugins', 'operators', fileName]), 200, {
-    'Content-Type': 'application/javascript',
-  });
-}
-
-export default jsEnvHandler;
+export default createAgGridDisplayHelper();

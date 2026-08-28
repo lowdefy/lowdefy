@@ -75,8 +75,9 @@ async function createLowdefyContext({ c }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
+  const rid = uuid();
   const context = {
-    rid: uuid(),
+    rid,
     agents,
     appMeta,
     buildDirectory,
@@ -91,10 +92,7 @@ async function createLowdefyContext({ c }) {
     i18n: i18nConfig,
     interpolateProperties,
     jsMap,
-    handleError: async (err) => {
-      console.error(err);
-    },
-    logger: console,
+    logger: createLogger(),
     notifications,
     operators,
     renderEmail,
@@ -106,7 +104,6 @@ async function createLowdefyContext({ c }) {
     secrets,
     websockets,
   };
-  context.logger = createLogger();
   context.handleError = createHandleError({ context });
   if (!c.req.path.includes('/api/auth')) {
     context.session = await getSession(c);

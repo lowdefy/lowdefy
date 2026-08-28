@@ -18,6 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
+import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import isUnauthenticatedHuman from './isUnauthenticatedHuman.js';
@@ -76,14 +77,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     routine: endpointConfig.routine,
   });
 
-  const success = !['error', 'reject'].includes(status);
-
-  return {
-    error: serializer.serialize(error),
-    response: serializer.serialize(response),
-    status: success ? 'success' : status,
-    success,
-  };
+  return buildEndpointResult(context, { error, response, status });
 }
 
 export default callEndpoint;

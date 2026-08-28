@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import parseUserParam from './parseUserParam.js';
 import screenshotPage from '../../../lib/docs/screenshotPage.js';
 
 // Parses a query param as a number, or undefined if absent/not a valid
@@ -55,7 +56,12 @@ async function docsScreenshotHandler(c) {
   const scrollX = queryNumber(c, 'scrollX') ?? 0;
   const scrollY = queryNumber(c, 'scrollY') ?? 0;
 
-  const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY });
+  const { user, error: userError } = parseUserParam({ value: c.req.query('user') });
+  if (userError) {
+    return c.json({ error: userError }, 400);
+  }
+
+  const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY, user });
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }

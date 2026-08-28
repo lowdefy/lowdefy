@@ -58,7 +58,11 @@ const testTypesMap = {
     Throw: { package: '@lowdefy/blocks-basic' },
     Title: { package: '@lowdefy/blocks-basic' },
   },
+  agents: {
+    ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
+  },
   connections: {
+    Anthropic: { package: '@lowdefy/connection-anthropic' },
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
   },

@@ -18,6 +18,19 @@ import { jest } from '@jest/globals';
 
 import createLink from '../src/createLink.js';
 
+// resolveTarget's url origin classification reads the window origin and basePath,
+// so url cases need a fixture that provides them (matching resolveTarget.test.js).
+function createLowdefy({ inputs = {}, home, basePath, origin = 'https://app.lowdefy.test' } = {}) {
+  const lowdefy = { inputs, _internal: { globals: { window: { location: { origin } } } } };
+  if (home !== undefined) {
+    lowdefy.home = home;
+  }
+  if (basePath !== undefined) {
+    lowdefy.basePath = basePath;
+  }
+  return lowdefy;
+}
+
 const mockBackLink = jest.fn();
 const mockDisabledLink = jest.fn();
 const mockNewOriginLink = jest.fn();
@@ -178,7 +191,7 @@ test('createLink, link with pageId with inputs', () => {
 });
 
 test('createLink, link with url and protocol', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = createLowdefy();
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -192,6 +205,8 @@ test('createLink, link with url and protocol', () => {
   expect(mockBackLink.mock.calls).toEqual([]);
   expect(mockDisabledLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
+  // The resolver returns a whole href for an external target with urlQuery
+  // already folded in, so the separate query arg is always empty.
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -202,8 +217,8 @@ test('createLink, link with url and protocol', () => {
       ],
       Array [
         Object {
-          "query": "p=3",
-          "url": "http://localhost:8080/test",
+          "query": "",
+          "url": "http://localhost:8080/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -215,7 +230,7 @@ test('createLink, link with url and protocol', () => {
 });
 
 test('createLink, link with url new tab and protocol', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = createLowdefy();
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -241,8 +256,8 @@ test('createLink, link with url new tab and protocol', () => {
       Array [
         Object {
           "newTab": true,
-          "query": "p=3",
-          "url": "http://localhost:8080/test",
+          "query": "",
+          "url": "http://localhost:8080/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -254,7 +269,7 @@ test('createLink, link with url new tab and protocol', () => {
 });
 
 test('createLink, link with url and no protocol', () => {
-  const lowdefy = { inputs: {} };
+  const lowdefy = createLowdefy();
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -280,8 +295,8 @@ test('createLink, link with url and no protocol', () => {
       Array [
         Object {
           "newTab": true,
-          "query": "p=3",
-          "url": "https://external.com/test",
+          "query": "",
+          "url": "https://external.com/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -290,6 +305,91 @@ test('createLink, link with url and no protocol', () => {
     ]
   `);
   expect(mockSameOriginLink.mock.calls).toEqual([]);
+});
+
+test('createLink, link with leading-slash url navigates to an in-app page', () => {
+  const lowdefy = createLowdefy();
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ url: '/foo' });
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "pathname": "/foo",
+          "query": "",
+          "setInput": [Function],
+          "url": "/foo",
+        },
+      ],
+    ]
+  `);
+  // A url names no page, so setInput is a no-op - it must never write
+  // inputs['page:undefined'].
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect(lowdefy.inputs).toEqual({});
+});
+
+test('createLink, link with same-origin absolute url is a soft in-app navigation', () => {
+  const lowdefy = createLowdefy();
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ url: 'https://app.lowdefy.test/reports?a=1' });
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "pathname": "/reports",
+          "query": "a=1",
+          "setInput": [Function],
+          "url": "https://app.lowdefy.test/reports?a=1",
+        },
+      ],
+    ]
+  `);
+  mockSameOriginLink.mock.calls[0][0].setInput();
+  expect(lowdefy.inputs).toEqual({});
+});
+
+test('createLink, link with off-origin url is an external navigation', () => {
+  const lowdefy = createLowdefy();
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ url: 'https://example.com/page' });
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([]);
+  expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
+    Array [
+      Array [
+        Object {
+          "query": "",
+          "url": "https://example.com/page",
+        },
+      ],
+    ]
+  `);
 });
 
 test('createLink, link with home, not configured', () => {
@@ -528,8 +628,8 @@ test('createLink, link with back', () => {
   expect(mockSameOriginLink.mock.calls).toEqual([]);
 });
 
-test('createLink, link with more than one parameter is invalid.', () => {
-  const lowdefy = { inputs: {} };
+test('createLink, more than one grammar key throws the resolver ambiguity error', () => {
+  const lowdefy = createLowdefy();
   const link = createLink({
     backLink: mockBackLink,
     disabledLink: mockDisabledLink,
@@ -538,7 +638,9 @@ test('createLink, link with more than one parameter is invalid.', () => {
     noLink: mockNoLink,
     sameOriginLink: mockSameOriginLink,
   });
-  expect(() => link({ back: true, home: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'href', 'pageId' or 'url' can be defined."`
+  expect(() =>
+    link({ pageId: 'page_1', url: 'https://example.com' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."`
   );
 });

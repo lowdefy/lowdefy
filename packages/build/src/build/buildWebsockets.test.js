@@ -71,6 +71,16 @@ test('buildWebsockets throws when websocket id contains invalid characters', () 
   );
 });
 
+test('buildWebsockets throws when websocket id is a reserved name', () => {
+  const context = createTestContext();
+  const components = {
+    websockets: [{ id: '__proto__', type: 'Channel' }],
+  };
+  expect(() => buildWebsockets({ components, context })).toThrow(
+    'Websocket id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('buildWebsockets throws on duplicate websocket ids', () => {
   const context = createTestContext();
   const components = {

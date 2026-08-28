@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["is a reserved name"],
+      "errorContains": [
+        "Page id \"__proto__\" is a reserved name and cannot be used as an id.",
+        "lowdefy.yaml:15"
+      ]
+    }
+  ]
+}

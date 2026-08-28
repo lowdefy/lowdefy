@@ -18,7 +18,7 @@ import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError } from '@lowdefy/errors';
-import { serializer, translate } from '@lowdefy/helpers';
+import { getKey, isReserved, serializer, setKey, translate } from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
@@ -35,7 +35,7 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
-function assertNotReserved(name, kind, i18n) {
+function assertNotPlatformToolName(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
     throw new ConfigError(
       translate({
@@ -70,25 +70,38 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
     const toolName = toolConfig.name ?? endpointId;
-    assertNotReserved(toolName, 'Endpoint tool', context.i18n);
+    assertNotPlatformToolName(toolName, 'Endpoint tool', context.i18n);
+    // A second, disjoint list: RESERVED_PLATFORM_TOOL_NAMES are the tools Lowdefy itself registers,
+    // isReserved are the prototype-pollution keys setKey refuses. A name can pass one gate and fail
+    // the other, so both checks are needed. The build rejects reserved key names, so this only fires
+    // for a stale or hand-edited build artifact. Skip the tool rather than fail the whole agent, as
+    // the MCP name cases below do.
+    if (isReserved(toolName)) {
+      console.warn(`Endpoint tool "${toolName}" uses a reserved key name — skipped.`);
+      continue;
+    }
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
-    tools[toolName] = tool({
-      description: endpointConfig.description,
-      inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-      ...(confirm && !autoApprove ? { needsApproval: true } : {}),
-      execute: async (input, { abortSignal } = {}) => {
-        const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
-        if (!result.success) {
-          const err = serializer.deserialize(result.error);
-          throw new Error(
-            err?.message ??
-              translate({ key: 'agent.runtime.toolExecutionFailed', i18n: context.i18n })
-          );
-        }
-        return cleanBuildArtifact(result.response);
-      },
-    });
+    setKey(
+      tools,
+      toolName,
+      tool({
+        description: endpointConfig.description,
+        inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
+        ...(confirm && !autoApprove ? { needsApproval: true } : {}),
+        execute: async (input, { abortSignal } = {}) => {
+          const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
+          if (!result.success) {
+            const err = serializer.deserialize(result.error);
+            throw new Error(
+              err?.message ??
+                translate({ key: 'agent.runtime.toolExecutionFailed', i18n: context.i18n })
+            );
+          }
+          return cleanBuildArtifact(result.response);
+        },
+      })
+    );
   }
 
   // Build MCP clients and merge their tools
@@ -134,18 +147,24 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
           );
           continue;
         }
-        if (tools[name]) {
+        // Same policy as the reserved-platform-name and collision cases above:
+        // MCP tool names are not under app control, so warn and skip.
+        if (isReserved(name)) {
+          console.warn(
+            `MCP tool "${name}" from ${source.url ?? source.command} ` +
+              `uses a reserved key name — skipped.`
+          );
+          continue;
+        }
+        if (getKey(tools, name)) {
           console.warn(
             `MCP tool "${name}" from ${source.url ?? source.command} ` +
               `conflicts with endpoint tool — skipped.`
           );
           continue;
         }
-        if (source.confirm && !autoApprove) {
-          tools[name] = { ...mcpTool, needsApproval: true };
-        } else {
-          tools[name] = mcpTool;
-        }
+        const needsApproval = source.confirm && !autoApprove;
+        setKey(tools, name, needsApproval ? { ...mcpTool, needsApproval: true } : mcpTool);
       }
     } catch (err) {
       const label = source.transport === 'stdio' ? source.command : source.url;
@@ -157,7 +176,13 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   // as endpoint tools (scoped agent ids contain '/').
   for (const subAgentRef of agent.agents ?? []) {
     const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
-    assertNotReserved(subAgentToolName, 'Sub-agent', context.i18n);
+    assertNotPlatformToolName(subAgentToolName, 'Sub-agent', context.i18n);
+    // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
+    // than fail the whole agent.
+    if (isReserved(subAgentToolName)) {
+      console.warn(`Sub-agent tool "${subAgentToolName}" uses a reserved key name — skipped.`);
+      continue;
+    }
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
     const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
@@ -194,23 +219,27 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
           required: ['task'],
         });
 
-    tools[subAgentToolName] = tool({
-      description,
-      inputSchema,
-      execute: async (input, { abortSignal }) => {
-        const prompt = input.task ?? JSON.stringify(input);
-        const result = await subAgent.generate({ prompt, abortSignal });
+    setKey(
+      tools,
+      subAgentToolName,
+      tool({
+        description,
+        inputSchema,
+        execute: async (input, { abortSignal }) => {
+          const prompt = input.task ?? JSON.stringify(input);
+          const result = await subAgent.generate({ prompt, abortSignal });
 
-        // Cleanup sub-agent's MCP clients
-        await Promise.all(subMcpClients.map(({ client }) => client.close().catch(() => {})));
+          // Cleanup sub-agent's MCP clients
+          await Promise.all(subMcpClients.map(({ client }) => client.close().catch(() => {})));
 
-        return { _subAgent: true, agentId: subAgentRef.agentId, text: result.text };
-      },
-      toModelOutput: ({ output }) => ({
-        type: 'text',
-        value: output.text ?? String(output),
-      }),
-    });
+          return { _subAgent: true, agentId: subAgentRef.agentId, text: result.text };
+        },
+        toModelOutput: ({ output }) => ({
+          type: 'text',
+          value: output.text ?? String(output),
+        }),
+      })
+    );
   }
 
   // Build fileSystem tools

@@ -365,9 +365,7 @@ test('buildAgentTools throws ConfigError when endpoint tool name collides with r
     callEndpoint: jest.fn(),
   };
 
-  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
-    /reserved platform tool name/i
-  );
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
 });
 
 test('buildAgentTools throws ConfigError when sub-agent id collides with reserved name', async () => {
@@ -382,9 +380,7 @@ test('buildAgentTools throws ConfigError when sub-agent id collides with reserve
     resolveMcpSources: jest.fn(),
   };
 
-  await expect(buildAgentTools({ agent, context })).rejects.toThrow(
-    /reserved platform tool name/i
-  );
+  await expect(buildAgentTools({ agent, context })).rejects.toThrow(/reserved platform tool name/i);
 });
 
 test('endpoint tool returns top-level marker-wrapped array as a plain array', async () => {
@@ -415,10 +411,7 @@ test('endpoint tool returns top-level marker-wrapped array as a plain array', as
   };
 
   const { tools } = await buildAgentTools({ agent, context });
-  const result = await tools['search-policies'].execute(
-    { query: 'leave' },
-    { abortSignal: null }
-  );
+  const result = await tools['search-policies'].execute({ query: 'leave' }, { abortSignal: null });
 
   expect(Array.isArray(result)).toBe(true);
   expect(result).toEqual([
@@ -635,4 +628,122 @@ test('buildAgentTools propagates autoApprove into recursive sub-agent tool build
 
   // First tool() call is the sub-agent's confirm endpoint tool.
   expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+});
+
+test('buildAgentTools warns and skips an endpoint tool whose name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const agent = {
+    tools: [{ endpointId: 'constructor' }, { endpointId: 'safe' }],
+    mcp: [],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'an endpoint',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(tools.safe).toBeDefined();
+  expect(warn).toHaveBeenCalledWith(
+    'Endpoint tool "constructor" uses a reserved key name — skipped.'
+  );
+  warn.mockRestore();
+});
+
+test('buildAgentTools warns and skips a sub-agent tool whose name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const subAgentConfig = {
+    agentId: 'researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [],
+    properties: { model: 'claude-haiku-4-5-20251001', instructions: 'You research topics.' },
+  };
+
+  const agent = {
+    tools: [],
+    mcp: [],
+    agents: [{ agentId: 'constructor' }, { agentId: 'researcher' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(tools.researcher).toBeDefined();
+  expect(context.getAgentConfig).not.toHaveBeenCalledWith({ agentId: 'constructor' });
+  expect(warn).toHaveBeenCalledWith(
+    'Sub-agent tool "constructor" uses a reserved key name — skipped.'
+  );
+  warn.mockRestore();
+});
+
+test('buildAgentTools warns and skips an MCP tool whose name is a reserved key', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ constructor: { description: 'polluting' } }),
+  });
+
+  const agent = {
+    tools: [],
+    mcp: [{ transport: 'http', url: 'https://mcp.example.com' }],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.hasOwn(tools, 'constructor')).toBe(false);
+  expect(warn).toHaveBeenCalledWith(expect.stringContaining('uses a reserved key name'));
+  warn.mockRestore();
+});
+
+test('buildAgentTools registers an MCP tool named after an inherited Object prototype member', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const mcpTool = { description: 'stringify things' };
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ toString: mcpTool }),
+  });
+
+  const agent = {
+    tools: [],
+    mcp: [{ transport: 'http', url: 'https://mcp.example.com' }],
+    agents: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(tools.toString).toBe(mcpTool);
 });

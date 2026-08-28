@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { set } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
+import { ReservedKeyError, set } from '@lowdefy/helpers';
 
 function controlSetState(context, routineContext, { control }) {
   const { logger, evaluateOperators } = context;
@@ -36,7 +37,17 @@ function controlSetState(context, routineContext, { control }) {
   });
 
   Object.entries(evaluatedSetState).forEach(([key, value]) => {
-    set(routineContext.state, key, value);
+    try {
+      set(routineContext.state, key, value);
+    } catch (error) {
+      if (error instanceof ReservedKeyError) {
+        throw new ConfigError(`Reserved key "${error.segment}" cannot be used in :set_state`, {
+          cause: error,
+          configKey: control['~k'],
+        });
+      }
+      throw error;
+    }
   });
 
   return { status: 'continue' };

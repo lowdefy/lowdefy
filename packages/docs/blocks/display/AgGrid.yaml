@@ -20,8 +20,16 @@ _ref:
     section: Display Blocks
     filePath: blocks/display/AgGrid.yaml
     block_type: AgGrid
-    github_path: packages/plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine
-    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/meta.js
-    gallery: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/gallery.yaml
+    github_path: packages/plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy
+    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy/meta.js
+    gallery: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridLowdefy/gallery.yaml
     description: >
-      Ag-Grid data table with sorting, filtering, and row selection. Available themes: AgGridAlpine, AgGridAlpineDark, AgGridBalham, AgGridBalhamDark, AgGridMaterial.
+      AG Grid data table with sorting, filtering, and row selection. Four display blocks share one
+      property schema and differ only in appearance: AgGridLowdefy, AgGridAlpine, AgGridBalham and
+      AgGridMaterial, each with an input counterpart. AgGridLowdefy is the recommended grid for
+      Lowdefy apps - it is themed from the app antd design tokens, follows light and dark mode
+      automatically, and takes a size property matching antd Table densities. To adopt it, change
+      `type: AgGridBalham` to `type: AgGridLowdefy`; every property carries over unchanged and the
+      grid will deliberately look different afterwards.
+    guide:
+      _ref: blocks/display/AgGridGuide.md

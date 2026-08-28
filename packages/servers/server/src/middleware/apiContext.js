@@ -66,8 +66,9 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
+    const rid = getRequestId(c);
     const context = {
-      rid: getRequestId(c),
+      rid,
       agents,
       appMeta,
       buildDirectory: path.join(process.cwd(), 'build'),
@@ -81,6 +82,7 @@ function apiContext() {
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,
+      logger: createLogger({ rid }),
       notifications,
       operators,
       renderEmail,
@@ -97,7 +99,6 @@ function apiContext() {
         globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(promise),
       websockets,
     };
-    context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
     if (!c.req.path.includes('/api/auth')) {
       context.session = await getSession(c);

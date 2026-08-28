@@ -16,23 +16,31 @@
 
 import evalOperatorInTab from './evalOperatorInTab.js';
 import evalOperatorHeadless from './evalOperatorHeadless.js';
-import tabAvailable from './tabAvailable.js';
+import resolveSource from './resolveSource.js';
 
-// Prefers a real, already-open browser tab over a fresh headless one - see
-// inspectState.js for the rationale. Falls back to headless whenever the tab
-// path isn't usable (no tab connected, or `source: 'tab'` was requested but
-// it errored) so agents always get an answer.
-async function evalOperator({ origin, pageId, expression, source }) {
-  const shouldTryTab = source === 'tab' || (source === undefined && tabAvailable({ pageId }));
+// resolveSource picks the tab or headless — including why `user` is
+// headless-only. Falls back to headless whenever the tab path isn't usable
+// (no tab connected, or `source: 'tab'` was requested but it errored) so
+// agents always get an answer.
+async function evalOperator({ origin, pageId, expression, source, user }) {
+  const { tryTab, error, invalidInput } = resolveSource({
+    name: 'evalOperator',
+    pageId,
+    source,
+    user,
+  });
+  if (error) {
+    return { error, invalidInput };
+  }
 
-  if (shouldTryTab) {
+  if (tryTab) {
     const result = await evalOperatorInTab({ pageId, expression });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await evalOperatorHeadless({ origin, pageId, expression });
+  const result = await evalOperatorHeadless({ origin, pageId, expression, user });
   return { ...result, source: 'headless' };
 }
 

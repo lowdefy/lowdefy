@@ -1081,3 +1081,60 @@ test('throw on :switch case with an unknown key', () => {
     'Control ":switch" case has invalid key ":default" on event "onClick" on block "block_1" on page "page_1".'
   );
 });
+
+test('event shortcut that is a reserved name throws a located error', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: {
+                shortcut: '__proto__',
+                try: [{ id: 'action_1', type: 'Reset' }],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Event shortcut "__proto__" on event "onClick" on block "block_1" on page "page_1" is a reserved name and cannot be used as a shortcut.'
+  );
+  try {
+    buildPages({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBeDefined();
+  }
+});
+
+test('event shortcut that only contains a reserved name as a modified key is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: {
+                shortcut: 'Ctrl+__proto__',
+                try: [{ id: 'action_1', type: 'Reset' }],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});

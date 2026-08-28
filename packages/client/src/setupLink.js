@@ -16,6 +16,8 @@
 
 import { createLink } from '@lowdefy/engine';
 
+import { createUrl } from './adapters/url.js';
+
 function setupLink(lowdefy) {
   const { router } = lowdefy._internal;
   const { window } = lowdefy._internal.globals;
@@ -48,7 +50,7 @@ function setupLink(lowdefy) {
     if (newTab) {
       return window
         .open(
-          `${window.location.origin}${lowdefy.basePath}${pathname}${query ? `?${query}` : ''}`,
+          `${window.location.origin}${createUrl({ basePath: lowdefy.basePath, pathname, query })}`,
           '_blank'
         )
         .focus();

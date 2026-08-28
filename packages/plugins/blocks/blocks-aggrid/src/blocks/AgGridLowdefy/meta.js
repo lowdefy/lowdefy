@@ -14,12 +14,6 @@
   limitations under the License.
 */
 
-import serveBuildJs from '../lib/serveBuildJs.js';
+import createDisplayMeta from '../../createDisplayMeta.js';
 
-function iconsDynamicHandler(c) {
-  return c.body(serveBuildJs(['plugins', 'iconsDynamic.js']), 200, {
-    'Content-Type': 'application/javascript',
-  });
-}
-
-export default iconsDynamicHandler;
+export default createDisplayMeta('AgGridLowdefy', { size: true });

@@ -24,7 +24,7 @@ import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, setKey, type } from '@lowdefy/helpers';
 import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
 import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
 import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
@@ -142,8 +142,17 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           const writable = {};
           const ignored = [];
           for (const [key, value] of Object.entries(updates)) {
-            if (allowedKeys.has(key)) writable[key] = value;
-            else ignored.push(key);
+            if (!allowedKeys.has(key)) {
+              ignored.push(key);
+              continue;
+            }
+            // Same policy as a non-allowlisted key: drop it and report it back
+            // so the model can self-correct on the next turn.
+            if (isReserved(key)) {
+              ignored.push(key);
+              continue;
+            }
+            setKey(writable, key, value);
           }
           if (Object.keys(writable).length > 0) {
             await methods.triggerEvent({ name: '__updatePageState', event: writable });
