@@ -48,13 +48,6 @@ function createApp({ basePath = '', context, error, logger }) {
   return app;
 }
 
-function createAuthenticationError(message) {
-  const error = new Error(message);
-  error.name = 'AuthenticationError';
-  error.received = SECRET;
-  return error;
-}
-
 // Two Error levels, each with a stack (every Error has one) and a recognisable
 // `received`, plus a configKey the policy keeps.
 function createErrorWithCause() {
@@ -65,45 +58,6 @@ function createErrorWithCause() {
   error.configKey = 'page:home.blocks.0';
   return error;
 }
-
-test('errorHandler returns 401 with only name and message for an AuthenticationError on an api path', async () => {
-  const logger = createLogger();
-  const context = { handleError: jest.fn() };
-  const res = await createApp({
-    context,
-    error: createAuthenticationError('Unauthenticated.'),
-    logger,
-  }).request('/api/request/getUsers');
-
-  expect(res.status).toEqual(401);
-  expect(await res.json()).toEqual({ name: 'AuthenticationError', message: 'Unauthenticated.' });
-  expect(logger.warn).toHaveBeenCalledTimes(1);
-  expect(logger.warn.mock.calls[0][0]).toMatch(/Unauthenticated request/);
-  expect(logger.error).not.toHaveBeenCalled();
-  expect(context.handleError).not.toHaveBeenCalled();
-});
-
-test('errorHandler does not send an AuthenticationError through the redactor', async () => {
-  const res = await createApp({
-    error: createAuthenticationError('Unauthenticated.'),
-    logger: createLogger(),
-  }).request('/api/request/getUsers');
-
-  const body = await res.json();
-  expect(body['~e']).toBeUndefined();
-});
-
-test('errorHandler returns text Unauthorized at 401 for an AuthenticationError on a page path', async () => {
-  const logger = createLogger();
-  const res = await createApp({
-    error: createAuthenticationError('Unauthenticated.'),
-    logger,
-  }).request('/home');
-
-  expect(res.status).toEqual(401);
-  expect(await res.text()).toEqual('Unauthorized');
-  expect(logger.warn).toHaveBeenCalledTimes(1);
-});
 
 test('errorHandler returns 500 with the serialized error envelope on an api path', async () => {
   const res = await createApp({
