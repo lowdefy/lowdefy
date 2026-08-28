@@ -242,7 +242,7 @@ isReserved('toString'); // returns false
 (segments: string[]): string
 ```
 
-Join segments into a dot-path, re-escaping literal dots inside a segment. Inverse of `splitPath`. Throws `TypeError` if `segments` is not an array. Non-string segments are coerced with `String`.
+Join segments into a dot-path, re-escaping literal backslashes (`\\\\`) and literal dots (`\\.`) inside a segment. Inverse of `splitPath`. Throws `TypeError` if `segments` is not an array. Non-string segments are coerced with `String`.
 
 ```js
 joinPath(['a.b', 'c']); // returns 'a\\.b.c'
@@ -390,7 +390,7 @@ Use `setKey` rather than `obj[userKey] = value` wherever the key is derived from
 (path: string): string[]
 ```
 
-Split a dot-path into segments. A trailing backslash escapes the dot that follows, so the escaped dot stays inside the segment. Throws `TypeError` if `path` is not a string. A trailing backslash with nothing after it is kept as a literal backslash.
+Split a dot-path into segments. `\\.` is a literal dot and `\\\\` a literal backslash; any other backslash is an ordinary character, so a key such as `a\\b` needs no escaping. Throws `TypeError` if `path` is not a string.
 
 ```js
 splitPath('a.b.c'); // returns ['a', 'b', 'c']

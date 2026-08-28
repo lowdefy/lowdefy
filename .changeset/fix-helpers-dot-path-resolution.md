@@ -37,7 +37,7 @@ Given a `Thing` class whose `derived` getter returns `'g'`, `get({ t: new Thing(
 `'g'` and is now the default. YAML config holds no class instances, so that shape reaches a path only
 from a custom plugin or connection.
 
-**A path no longer steps *through* a function value.** Given an `f` carrying an `f.z` of `3`,
+**A path no longer steps _through_ a function value.** Given an `f` carrying an `f.z` of `3`,
 `get({ f }, 'f.z')` was `3` and is now the default. Config data holds no functions, so this is
 reachable only from a custom plugin.
 
@@ -51,9 +51,16 @@ no-op. Nothing in Lowdefy passed any of these, so this too is a custom-plugin co
 
 **`unset` no longer skips a delete because the value looks empty, and no longer throws on a dotted
 key at depth.** Hiding a block clears its state field, so both are reachable from config. A hidden
-*nested* block whose value was an empty string or `undefined` used to keep its field —
+_nested_ block whose value was an empty string or `undefined` used to keep its field —
 `unset({ parent: { child: '' } }, 'parent.child')` left `child` in place and now removes it — so a
 cleared, hidden input no longer leaves a stale key behind in `_state`. The same applied to an empty
 `Map` or `Set`, an empty-source `RegExp`, and a blank-message `Error`. And a block id written with an
 escaped dot used to crash the delete: `unset({ 'a.b': { c: 1 } }, 'a\.b.c')` threw
 `TypeError: Cannot read properties of undefined` and now deletes `c`.
+
+**The dot-path escape grammar now covers the backslash itself.** `\.` remains a literal dot and `\\`
+is now a literal backslash, so `joinPath` can escape a segment that ends in a backslash — before, it
+only escaped dots, and `joinPath(['a\\', 'b'])` produced a path `splitPath` read back as the single
+key `a.b`. Any other backslash is still an ordinary character, so a key such as `a\b` needs no
+escaping. The one observable change is a doubled backslash directly before a dot:
+`splitPath('a\\\\.b')` used to yield `['a\\.b']` and now yields `['a\\', 'b']`.
