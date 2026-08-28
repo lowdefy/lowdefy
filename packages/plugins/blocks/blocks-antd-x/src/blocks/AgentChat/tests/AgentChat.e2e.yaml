@@ -1,0 +1,121 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: agent-chat
+type: PageHeaderMenu
+properties:
+  title: AgentChat
+blocks:
+  # Both chats are driven from the messages property, so nothing here calls the agent.
+  - id: chat_wired
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: wired
+      messageDisplay:
+        actions:
+          - feedback
+      messages:
+        - id: w1
+          role: assistant
+          parts:
+            - type: text
+              text: |
+                [in-app link](/agent-chat-target) and [external link](https://example.com)
+                and [**bold** link](/agent-chat-target?tab=two)
+    events:
+      onFeedback:
+        - id: record_rating
+          type: SetState
+          params:
+            last_rating:
+              _event: rating
+      onLinkClick:
+        - id: record_link_click
+          type: SetState
+          params:
+            last_href:
+              _event: href
+            last_text:
+              _event: text
+            click_count:
+              _sum:
+                - _if_none:
+                    - _state: click_count
+                    - 0
+                - 1
+
+  # Seeded from feedbackValues rather than from a click: what a reload or a conversation
+  # switch looks like to an app that stored the rating itself.
+  - id: chat_seeded
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: seeded
+      messageDisplay:
+        actions:
+          - feedback
+      feedbackValues:
+        s1: like
+      messages:
+        - id: s1
+          role: assistant
+          parts:
+            - type: text
+              text: A rated answer.
+    events:
+      onFeedback:
+        - id: record_seeded_rating
+          type: SetState
+          params:
+            seeded_rating:
+              _event: rating
+
+  - id: wired_readout
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <span id="readout_href">{{ href }}</span>
+            <span id="readout_text">{{ text }}</span>
+            <span id="readout_count">{{ count or 0 }}</span>
+            <span id="readout_rating">{{ rating }}</span>
+            <span id="readout_seeded_rating">{{ seeded_rating }}</span>
+          on:
+            href:
+              _state: last_href
+            text:
+              _state: last_text
+            count:
+              _state: click_count
+            rating:
+              _state: last_rating
+            seeded_rating:
+              _state: seeded_rating
+
+  - id: chat_unwired
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: unwired
+      messages:
+        - id: u1
+          role: assistant
+          parts:
+            - type: text
+              text: '[in-app link](/agent-chat-target) and [external link](https://example.com)'

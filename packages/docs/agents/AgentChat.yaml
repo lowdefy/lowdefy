@@ -92,6 +92,7 @@ _ref:
             | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
             | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
+            | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
             | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
             | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
             | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
@@ -322,7 +323,7 @@ _ref:
             | `onToolResult` | A tool returns a result. | `toolName`, `toolCallId`, `output`, `error` |
             | `onError` | A streaming error occurs. | `message` |
             | `onStop` | User stops generation. | `messages` |
-            | `onFeedback` | User clicks thumbs up/down. | `messageId`, `messageContent`, `rating` |
+            | `onFeedback` | User clicks thumbs up/down. `rating` is `like` or `dislike`, or `default` when the user clicks the selected thumb again to clear the rating — branch on it explicitly rather than treating anything that is not `like` as a dislike. | `messageId`, `messageContent`, `rating` |
             | `onRegenerate` | User clicks regenerate. | `messageId`, `messages` |
             | `onDeleteMessage` | User deletes a message. | `messageId`, `content`, `messages` |
             | `onEditMessage` | User edits and resubmits. | `messageId`, `originalContent`, `newContent`, `messages` |
@@ -330,6 +331,7 @@ _ref:
             | `onSwitchChange` | User toggles a sender switch. | `key`, `checked` |
             | `onTitleGenerated` | A `data-chat-title` data part arrives — emitted automatically when the agent's [`generateTitle`](/agent-properties) property is set, or manually from an `onFinish` hook. | `title` |
             | `onDataPart` | Any data part arrives from the server. | `type`, `data`, `id` |
+            | `onLinkClick` | User clicks a link in a message. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate. | `href`, `text` |
 
             ###### Validate messages before sending:
             ```yaml
@@ -359,6 +361,16 @@ _ref:
                   params:
                     content: Thanks for your feedback!
                     type: success
+            ```
+
+            Saving is only half of it — the block does not persist a rating, so a
+            reload or a conversation switch shows the message unrated again. Pass
+            what you stored back through `feedbackValues`, keyed by message id:
+
+            ```yaml
+            properties:
+              feedbackValues:
+                _request: saved_feedback_for_conversation
             ```
 
             ###### Adapt behavior based on sender switches:
