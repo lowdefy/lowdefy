@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import authorizeAgent from './authorizeAgent.js';
 import authorizeApiEndpoint from '../endpoints/authorizeApiEndpoint.js';
@@ -106,13 +107,7 @@ async function callAgent(
       const { error, response, status } = await runRoutine(context, routineContext, {
         routine: endpointConfig.routine,
       });
-      const success = !['error', 'reject'].includes(status);
-      return {
-        error: serializer.serialize(error),
-        response: serializer.serialize(response),
-        status: success ? 'success' : status,
-        success,
-      };
+      return buildEndpointResult(context, { error, response, status });
     },
     getEndpointConfig: async ({ endpointId }) => {
       return getEndpointConfig(context, { endpointId });
