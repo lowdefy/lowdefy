@@ -17,13 +17,14 @@
 import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
 import antdStyles from '../../ag-grid-antd.module.css';
+import { themeBalhamAntd, useGridTheme } from '../../theme/themeLowdefy.js';
 
 import AgGrid from '../../AgGrid.js';
 
 const AgGridBalham = ({ blockId, components, events, loading, methods, properties, styles }) => {
+  const theme = useGridTheme(themeBalhamAntd, properties.themeParams);
+
   return (
     <div
       id={blockId}
@@ -36,6 +37,7 @@ const AgGridBalham = ({ blockId, components, events, loading, methods, propertie
         loading={loading}
         methods={methods}
         properties={properties}
+        theme={theme}
       />
     </div>
   );
