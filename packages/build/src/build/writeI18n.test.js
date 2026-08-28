@@ -145,9 +145,7 @@ test('writeI18n warns when a declared locale has no messages', async () => {
     },
   };
   await writeI18n({ components, context });
-  expect(mockWarn).toHaveBeenCalledWith(
-    expect.stringContaining('no messages for locale "de-DE"')
-  );
+  expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('no messages for locale "de-DE"'));
 });
 
 test('writeI18n warns when messages reference an undeclared locale', async () => {

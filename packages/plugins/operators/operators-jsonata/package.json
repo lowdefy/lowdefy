@@ -42,7 +42,7 @@
   "dependencies": {
     "@lowdefy/helpers": "5.4.0",
     "@lowdefy/operators": "5.4.0",
-    "jsonata": "1.8.7"
+    "jsonata": "1.8.9"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

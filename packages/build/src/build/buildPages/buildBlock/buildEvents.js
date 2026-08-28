@@ -18,14 +18,7 @@ import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 
-const BROWSER_DEFAULT_SHORTCUTS = new Set([
-  'mod+n',
-  'mod+t',
-  'mod+w',
-  'mod+r',
-  'mod+q',
-  'mod+l',
-]);
+const BROWSER_DEFAULT_SHORTCUTS = new Set(['mod+n', 'mod+t', 'mod+w', 'mod+r', 'mod+q', 'mod+l']);
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 const ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS = ['id', 'skip', 'messages'];
