@@ -15,3 +15,9 @@ escaped literal dot, a single segment named "a.constructor") still builds.
 
 Apps using a reserved name as an id, or as a block id path segment, will now fail the build. Rename
 the id.
+
+`buildAuth` reaches page, endpoint and agent ids before `validateId` does, and keys plain-object role
+maps on them, so a reserved id there read through `Object.prototype` — silently marking the entity
+protected with `Object.prototype` as its roles, which then corrupted every plain object in the build.
+Those ids are now gated where `buildAuth` first touches them. Collected build errors are deduplicated
+on resolved source line plus message, so an id rejected by both gates reads as one error.
