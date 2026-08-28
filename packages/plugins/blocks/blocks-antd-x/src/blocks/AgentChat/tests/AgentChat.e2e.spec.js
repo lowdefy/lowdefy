@@ -140,4 +140,25 @@ test.describe('AgentChat feedback', () => {
     // Both thumbs are back, which is what unrated looks like.
     await expect(feedback.locator('[class*="dislike"]').first()).toBeVisible();
   });
+
+  // The block persists nothing, so a rating only survives a reload or a conversation switch
+  // if the app can hand back what it stored.
+  test('shows a rating supplied through feedbackValues', async ({ page }) => {
+    const feedback = getBlock(page, 'chat_seeded').locator('[class*="feedback"]').first();
+    await expect(feedback).toBeVisible();
+    // Selected on arrival, with no click: the opposite thumb is hidden, same as after a click.
+    await expect(feedback.locator('[class*="dislike"]').first()).toBeHidden();
+  });
+
+  // Clicking the thumb the supplied rating already selected CLEARS it, so `default` proves
+  // two things at once: the control was holding the supplied value, and the click outranked
+  // it. Were the stored value to win, withdrawing a rating would re-light the thumb and the
+  // withdrawal would look like it had failed.
+  test('a click this visit wins over the supplied rating', async ({ page }) => {
+    const feedback = getBlock(page, 'chat_seeded').locator('[class*="feedback"]').first();
+    await feedback.locator('[class*="like"]').first().click();
+
+    await expect(page.locator('#readout_seeded_rating')).toHaveText('default');
+    await expect(feedback.locator('[class*="dislike"]').first()).toBeVisible();
+  });
 });
