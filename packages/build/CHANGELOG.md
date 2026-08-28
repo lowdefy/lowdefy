@@ -1,5 +1,47 @@
 # Change Log
 
+## 5.5.1
+
+### Patch Changes
+
+- 33e062f: fix(build): resolve module page resolver/transformer paths against the module root in JIT dev builds.
+
+  A module page backed by a `resolver:` (or `transformer:`) declares its path relative to the module
+  (e.g. `resolvers/makeActionPages.js`). The full build rebases this against the module root in the ref
+  walker, but the JIT dev path (`buildPageJit`) rebuilt the page refDef directly from the un-rebased
+  authored `_ref` and called `getRefContent` without going through the walker — so the relative path was
+  resolved against the app config dir, producing a `ConfigError` (`Error importing resolvers/...`) when a
+  module page was rebuilt on request. `buildPageJit` now applies the same module-root rebasing to
+  `path`/`resolver`/`transformer` before resolving content. File-based module pages were unaffected.
+
+  - @lowdefy/operators@5.5.1
+  - @lowdefy/blocks-basic@5.5.1
+  - @lowdefy/blocks-loaders@5.5.1
+  - @lowdefy/operators-js@5.5.1
+  - @lowdefy/ai-utils@5.5.1
+  - @lowdefy/ajv@5.5.1
+  - @lowdefy/block-utils@5.5.1
+  - @lowdefy/errors@5.5.1
+  - @lowdefy/helpers@5.5.1
+  - @lowdefy/node-utils@5.5.1
+  - @lowdefy/nunjucks@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.0
+- @lowdefy/blocks-basic@5.5.0
+- @lowdefy/blocks-loaders@5.5.0
+- @lowdefy/operators-js@5.5.0
+- @lowdefy/ai-utils@5.5.0
+- @lowdefy/ajv@5.5.0
+- @lowdefy/block-utils@5.5.0
+- @lowdefy/errors@5.5.0
+- @lowdefy/helpers@5.5.0
+- @lowdefy/node-utils@5.5.0
+- @lowdefy/nunjucks@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

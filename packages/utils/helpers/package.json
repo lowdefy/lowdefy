@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/helpers",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,7 +37,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "5.4.0",
+    "@lowdefy/errors": "5.5.1",
     "intl-messageformat": "11.2.7"
   },
   "devDependencies": {

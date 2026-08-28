@@ -1,5 +1,29 @@
 # Change Log
 
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.1
+- @lowdefy/operators-js@5.5.1
+- @lowdefy/ajv@5.5.1
+- @lowdefy/errors@5.5.1
+- @lowdefy/helpers@5.5.1
+- @lowdefy/node-utils@5.5.1
+- @lowdefy/nunjucks@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.0
+- @lowdefy/operators-js@5.5.0
+- @lowdefy/ajv@5.5.0
+- @lowdefy/errors@5.5.0
+- @lowdefy/helpers@5.5.0
+- @lowdefy/node-utils@5.5.0
+- @lowdefy/nunjucks@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes
