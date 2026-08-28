@@ -19,6 +19,7 @@ import createAuthorize from '../context/createAuthorize.js';
 function testContext({
   appMeta = {},
   config = {},
+  configDirectory,
   connections = {},
   headers = {},
   logger = {
@@ -38,6 +39,7 @@ function testContext({
     appMeta,
     authorize: createAuthorize({ session }),
     config,
+    configDirectory,
     connections,
     // Mirrors the servers' createHandleError contract: the sink logs the error
     // and marks it handled, which is what runRoutine's guard and the client's
