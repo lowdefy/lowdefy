@@ -48,7 +48,7 @@ function removeStyleTag() {
 }
 
 // The feedback overlay owns clicks while it is open (its picking mode claims
-// them) — the Cmd/Ctrl+click shortcut stays out of the way until it closes.
+// them) — the Option/Alt+click shortcut stays out of the way until it closes.
 // :not() skips this component's own highlight portal, which carries
 // data-lowdefy-feedback purely for screenshot/picking exclusion.
 function feedbackOverlayOpen() {
@@ -57,7 +57,14 @@ function feedbackOverlayOpen() {
   );
 }
 
-// Dev-only: Cmd/Ctrl+click any element to open the YAML that defines its
+// Option (macOS) / Alt (Windows, Linux) alone is the shortcut. Cmd/Ctrl are left
+// to the browser (open link in new tab) and Shift to text selection, so any of
+// them held alongside means the developer wants the browser's behaviour.
+function isOpenModifier(event) {
+  return event.altKey && !event.metaKey && !event.ctrlKey && !event.shiftKey;
+}
+
+// Dev-only: Option/Alt+click any element to open the YAML that defines its
 // block in VS Code (vscode://file deep link, at the exact line). While the
 // modifier is held, the hovered block shows the same blue highlight box and
 // blockId chip as the annotation overlay's picking mode, and the cursor
@@ -138,7 +145,7 @@ function OpenInEditorListener({ basePath, pageId }) {
     function onPointerMove(event) {
       try {
         lastPointerRef.current = { x: event.clientX, y: event.clientY };
-        if (event.metaKey || event.ctrlKey) {
+        if (isOpenModifier(event)) {
           resolveHover();
         } else {
           clearHover();
@@ -151,18 +158,18 @@ function OpenInEditorListener({ basePath, pageId }) {
     // Modifier pressed/released while the mouse is stationary — pointermove
     // alone would leave the highlight stale.
     function onKeyDown(event) {
-      if (event.key === 'Meta' || event.key === 'Control') {
+      if (event.key === 'Alt') {
         resolveHover();
       }
     }
 
     function onKeyUp(event) {
-      if (event.key === 'Meta' || event.key === 'Control') {
+      if (event.key === 'Alt') {
         clearHover();
       }
     }
 
-    // Cmd+Tab away releases the modifier without a keyup reaching the page.
+    // Switching apps releases the modifier without a keyup reaching the page.
     function onBlur() {
       clearHover();
     }
@@ -199,7 +206,7 @@ function OpenInEditorListener({ basePath, pageId }) {
 
     function onClickCapture(event) {
       try {
-        if (!(event.metaKey || event.ctrlKey) || event.shiftKey || event.altKey) {
+        if (!isOpenModifier(event)) {
           return;
         }
         if (feedbackOverlayOpen()) {
@@ -210,7 +217,7 @@ function OpenInEditorListener({ basePath, pageId }) {
           return;
         }
         // Only claim the click once a block is under the cursor — plain
-        // Cmd/Ctrl+clicks elsewhere keep their default behaviour.
+        // Option/Alt+clicks elsewhere keep their default behaviour.
         event.preventDefault();
         event.stopPropagation();
         void openBlockInEditor({ candidates });
