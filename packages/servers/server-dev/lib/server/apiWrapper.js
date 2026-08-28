@@ -15,9 +15,8 @@
 */
 import fs from 'fs';
 import path from 'path';
-import { createApiContext } from '@lowdefy/api';
+import { createApiContext, redactErrorResponse } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
-import { serializer } from '@lowdefy/helpers';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
@@ -102,13 +101,7 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       await context.handleError(error);
-      const serialized = serializer.serialize(error);
-      if (serialized?.['~e']) {
-        delete serialized['~e'].received;
-        delete serialized['~e'].stack;
-        delete serialized['~e'].configKey;
-      }
-      res.status(500).json(serialized);
+      res.status(500).json(redactErrorResponse(context, error));
     }
   };
 }

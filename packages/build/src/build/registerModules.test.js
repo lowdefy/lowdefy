@@ -129,6 +129,33 @@ test('resolveLocalManifest throws when source is missing', async () => {
   ).rejects.toThrow("'source' is required and must be a string");
 });
 
+test('resolveLocalManifest throws a ConfigError when the entry id is a reserved key', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/proto/module.lowdefy.yaml',
+      content: `
+pages:
+  - id: users-page
+    type: Box
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await expect(
+    resolveLocalManifest({
+      entry: { id: '__proto__', source: 'file:../modules/proto', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/proto',
+        moduleRoot: '/modules/proto',
+        isLocal: true,
+      },
+      context,
+    })
+  ).rejects.toThrow('Module entry id "__proto__" is a reserved name.');
+});
+
 test('resolveLocalManifest throws for duplicate entry ids', async () => {
   const context = createTestContext();
   context.modules['team-users'] = { id: 'team-users' };
@@ -694,12 +721,7 @@ test('validateRequiredVars throws for undeclared namespace property', () => {
   };
 
   expect(() =>
-    validateRequiredVars(
-      varDefs,
-      { ui: { theme: 'dark', color: 'blue' } },
-      'my-mod',
-      'file:../mod'
-    )
+    validateRequiredVars(varDefs, { ui: { theme: 'dark', color: 'blue' } }, 'my-mod', 'file:../mod')
   ).toThrow('undeclared property "color"');
 });
 

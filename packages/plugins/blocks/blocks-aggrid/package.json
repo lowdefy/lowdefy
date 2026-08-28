@@ -52,14 +52,11 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "32.3.9",
-    "@ag-grid-community/core": "32.3.9",
-    "@ag-grid-community/csv-export": "32.3.9",
-    "@ag-grid-community/react": "32.3.9",
-    "@ag-grid-community/styles": "32.3.9",
     "@lowdefy/block-utils": "5.5.1",
     "@lowdefy/blocks-antd": "5.5.1",
-    "@lowdefy/helpers": "5.5.1"
+    "@lowdefy/helpers": "5.5.1",
+    "ag-grid-community": "33.3.2",
+    "ag-grid-react": "33.3.2"
   },
   "peerDependencies": {
     "@ant-design/icons": ">=6",

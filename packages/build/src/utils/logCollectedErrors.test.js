@@ -72,3 +72,62 @@ test('logCollectedErrors throws BuildError', () => {
     expect(err.message).toBe('Build failed with 2 error(s). See above for details.');
   }
 });
+
+test('logCollectedErrors reports one of two errors sharing a source line and a message', () => {
+  const keyMap = { pageKey: { key: 'root.pages[0:__proto__]' } };
+  const context = {
+    errors: [
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'pageKey' }),
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'pageKey' }),
+    ],
+    handleError: jest.fn(),
+    keyMap,
+  };
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 1 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+});
+
+test('logCollectedErrors reports both errors sharing a source line with different messages', () => {
+  const keyMap = { pageKey: { key: 'root.pages[0:home]' } };
+  const context = {
+    errors: [
+      new ConfigError('First problem.', { configKey: 'pageKey' }),
+      new ConfigError('Second problem.', { configKey: 'pageKey' }),
+    ],
+    handleError: jest.fn(),
+    keyMap,
+  };
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 2 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledTimes(2);
+});
+
+test('logCollectedErrors reports both unlocated errors sharing a message', () => {
+  const context = {
+    errors: [new Error('Something broke'), new Error('Something broke')],
+    handleError: jest.fn(),
+  };
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 2 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledTimes(2);
+});
+
+test('logCollectedErrors still logs when resolveErrorLocation throws', () => {
+  const configErr = new ConfigError('Bad config', { configKey: 'brokenKey' });
+  const context = {
+    errors: [configErr],
+    handleError: jest.fn(),
+    // A keyMap whose entry lookup throws - resolution reads author-supplied data.
+    get keyMap() {
+      throw new Error('keyMap read failed');
+    },
+  };
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 1 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledWith(configErr);
+});

@@ -18,7 +18,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
@@ -72,6 +72,16 @@ function buildAgents({ components, context }) {
   components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
+    // agent.id becomes agent.agentId, which keys the detectCycles graph and the
+    // runtime agent registry - both plain objects. Reject a reserved name here,
+    // where the config location is still in hand.
+    if (isReserved(agent.id)) {
+      throw new ConfigError(
+        `Agent id "${agent.id}" is a reserved name and cannot be used as an id.`,
+        { configKey }
+      );
+    }
+
     // Check duplicates
     checkDuplicateAgentId({ id: agent.id, configKey });
 
@@ -117,7 +127,11 @@ function buildAgents({ components, context }) {
     agent.tools.forEach((toolConfig) => {
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.endpointId)) {
         throw new ConfigError(
-          `Agent "${agent.id}" tool "${toolConfig.endpointId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.id}" tool "${
+            toolConfig.endpointId
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }
@@ -217,10 +231,10 @@ function buildAgents({ components, context }) {
     if (agent.properties?.fileSystem) {
       const basePath = agent.properties.fileSystem.basePath;
       if (!type.isString(basePath)) {
-        throw new ConfigError(
-          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
-          { received: basePath, configKey }
-        );
+        throw new ConfigError(`Agent "${agent.id}" fileSystem.basePath is not a string.`, {
+          received: basePath,
+          configKey,
+        });
       }
       const resolved = path.resolve(context.directories.config, basePath);
       if (!fs.existsSync(resolved)) {
@@ -258,7 +272,11 @@ function buildAgents({ components, context }) {
       // Reserved platform tool name guard for sub-agents
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(subAgentRef.agentId)) {
         throw new ConfigError(
-          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.agentId}" sub-agent "${
+            subAgentRef.agentId
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }

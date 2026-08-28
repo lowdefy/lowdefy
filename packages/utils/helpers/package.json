@@ -38,8 +38,7 @@
   },
   "dependencies": {
     "@lowdefy/errors": "5.5.1",
-    "intl-messageformat": "11.2.7",
-    "lodash.merge": "4.6.2"
+    "intl-messageformat": "11.2.7"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

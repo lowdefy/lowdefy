@@ -234,7 +234,10 @@ test('_payload operator in request properties', async () => {
       response: { _payload: 'value' },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { value: 'from_payload' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { value: 'from_payload' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({ test_request: 'from_payload' });
 });
@@ -280,7 +283,10 @@ test('_step operator accesses previous step result', async () => {
   ];
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
-  expect(routineContext.steps).toEqual({ first_request: 'first_value', second_request: 'first_value' });
+  expect(routineContext.steps).toEqual({
+    first_request: 'first_value',
+    second_request: 'first_value',
+  });
 });
 
 test('_secret operator in request properties', async () => {
@@ -330,25 +336,27 @@ test('_sum operator computes sum of payload values', async () => {
   expect(routineContext.steps).toEqual({ test_request: 15 });
 });
 
-test('catch sets error.handled and calls handleError once for a single thrown error', async () => {
+test('catch routes a single thrown error through handleError once and it comes back handled', async () => {
   // ':unknown' triggers handleControl to throw synchronously, exercising the
-  // catch in runRoutine. The catch should set error.handled and call
-  // context.handleError exactly once.
+  // catch in runRoutine. The catch should call context.handleError exactly once,
+  // and handleError is what marks the error handled.
   const routine = { ':unknown': {} };
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('error');
   expect(res.error.handled).toBe(true);
   // handleError in testContext calls logger.error(error). Filter by direct
   // error arg so we count handleError invocations, not other logger.error calls.
-  const handleErrorCalls = context.logger.error.mock.calls.filter(
-    (call) => call[0] === res.error
-  );
+  const handleErrorCalls = context.logger.error.mock.calls.filter((call) => call[0] === res.error);
   expect(handleErrorCalls.length).toBe(1);
 });
 
 test('handleError skipped when error.handled is already true', async () => {
   const { default: runRoutine } = await import('./runRoutine.js');
-  const handleError = jest.fn();
+  // The real sink (servers' createHandleError) marks the error handled once it
+  // has logged it; runRoutine's guard reads that flag rather than setting it.
+  const handleError = jest.fn(async (error) => {
+    error.handled = true;
+  });
   const context = { handleError };
   // First pass: null routine triggers `throw new Error('Invalid routine.')`
   // inside runRoutine's try block. The catch sets handled=true and calls
@@ -373,7 +381,10 @@ test('combined operators in request properties', async () => {
       },
     },
   };
-  const { res, context, routineContext } = await runTest({ routine, payload: { input: 'test_input' } });
+  const { res, context, routineContext } = await runTest({
+    routine,
+    payload: { input: 'test_input' },
+  });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({
     test_request: {

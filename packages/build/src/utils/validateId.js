@@ -15,13 +15,29 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { isReserved } from '@lowdefy/helpers';
 
 const validIdPattern = /^[A-Za-z0-9\-_/:]+$/;
 
 function validateId({ id, field, location, configKey }) {
   if (!validIdPattern.test(id)) {
     throw new ConfigError(
-      `${field} "${id}"${location ? ` at ${location}` : ''} contains invalid characters. IDs must only contain A-Z, a-z, 0-9, "-", "_", "/", and ":".`,
+      `${field} "${id}"${
+        location ? ` at ${location}` : ''
+      } contains invalid characters. IDs must only contain A-Z, a-z, 0-9, "-", "_", "/", and ":".`,
+      { configKey }
+    );
+  }
+  // The pattern above admits every reserved name - underscores and letters are in its allowed set.
+  // A reserved id re-parents the plain-object registries that key on it - the engine's `requests`
+  // and `requestConfig` maps, and the connection/websocket/notification/endpoint maps - so reject
+  // it here where the config location is still in hand. Block ids do not reach this gate: they are
+  // dot-paths, so the pattern above excludes them and they carry their own per-segment check.
+  if (isReserved(id)) {
+    throw new ConfigError(
+      `${field} "${id}"${
+        location ? ` at ${location}` : ''
+      } is a reserved name and cannot be used as an id.`,
       { configKey }
     );
   }

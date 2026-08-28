@@ -162,6 +162,10 @@
     "messages": {
       "type": "array"
     },
+    "feedbackValues": {
+      "type": "object",
+      "description": "Ratings already recorded, keyed by message id, each `like` or `dislike`. Restores the thumbs on a conversation the block did not rate this visit. A rating clicked this visit takes precedence."
+    },
     "conversationId": {
       "type": "string",
       "description": "Active conversation ID. When this value changes, messages are automatically cleared."
@@ -186,10 +190,17 @@
         "allowSpeech": { "type": "boolean", "default": false },
         "attachments": {
           "type": "object",
+          "description": "File attachments on the composer. When enabled, files can be picked with the paperclip, pasted from the clipboard (e.g. a screenshot) or dragged onto the composer; accept and maxSize apply to all three.",
           "properties": {
             "enabled": { "type": "boolean" },
-            "accept": { "type": "string" },
-            "maxSize": { "type": "number" },
+            "accept": {
+              "type": "string",
+              "description": "Comma-separated accept list, as for an <input type=\"file\"> — e.g. \"image/*,.pdf\". Applied to picked, pasted and dropped files alike."
+            },
+            "maxSize": {
+              "type": "number",
+              "description": "Maximum file size in bytes. Larger files are silently skipped."
+            },
             "s3PostPolicyRequestId": {
               "type": "string",
               "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."

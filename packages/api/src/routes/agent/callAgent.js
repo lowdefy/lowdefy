@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import authorizeAgent from './authorizeAgent.js';
 import authorizeApiEndpoint from '../endpoints/authorizeApiEndpoint.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import runRoutine from '../endpoints/runRoutine.js';
@@ -36,6 +38,7 @@ async function callAgent(
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
   const agentConfig = await getAgentConfig(context, { agentId });
+  authorizeAgent(context, { agentConfig });
 
   const agentContext = {
     conversationId: conversationId ?? undefined,
@@ -104,19 +107,15 @@ async function callAgent(
       const { error, response, status } = await runRoutine(context, routineContext, {
         routine: endpointConfig.routine,
       });
-      const success = !['error', 'reject'].includes(status);
-      return {
-        error: serializer.serialize(error),
-        response: serializer.serialize(response),
-        status: success ? 'success' : status,
-        success,
-      };
+      return buildEndpointResult(context, { error, response, status });
     },
     getEndpointConfig: async ({ endpointId }) => {
       return getEndpointConfig(context, { endpointId });
     },
     getAgentConfig: async ({ agentId }) => {
-      return getAgentConfig(context, { agentId });
+      const subAgentConfig = await getAgentConfig(context, { agentId });
+      authorizeAgent(context, { agentConfig: subAgentConfig });
+      return subAgentConfig;
     },
     getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
       const subConnectionConfig = await getConnectionConfig(context, {

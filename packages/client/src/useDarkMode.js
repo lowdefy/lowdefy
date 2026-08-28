@@ -114,12 +114,14 @@ function useDarkMode({ antd, configDarkMode }) {
     [isDark, sharedComponents, lightComponents, darkComponents]
   );
 
-  // Keep the <html> background in sync with the resolved mode. The _document.js
-  // inline script sets an initial background before hydration; this effect takes
-  // over once React is active and updates on every dark/light toggle.
+  // Keep the <html> background and color-scheme in sync with the resolved mode.
+  // The _document.js pre-hydration inline script sets initial values before
+  // hydration; this effect takes over once React is active and updates on every
+  // dark/light toggle.
   const darkBg = darkToken?.colorBgLayout;
   const lightBg = lightToken?.colorBgLayout;
   useEffect(() => {
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
     if (isDark) {
       document.documentElement.style.backgroundColor = darkBg ?? '#000';
     } else if (lightBg) {

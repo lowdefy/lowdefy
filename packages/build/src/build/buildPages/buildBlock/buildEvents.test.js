@@ -185,9 +185,7 @@ test('block events actions try not an array', () => {
       components,
       context,
     })
-  ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
-  );
+  ).toThrow('Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".');
 });
 
 test('block events actions not an array', () => {
@@ -456,4 +454,61 @@ test("don't throw on Duplicate separate block events action ids", () => {
     id: 'block:page_1:block_1:0',
     type: 'Input',
   });
+});
+
+test('event shortcut that is a reserved name throws a located error', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: {
+                shortcut: '__proto__',
+                try: [{ id: 'action_1', type: 'Reset' }],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Event shortcut "__proto__" on event "onClick" on block "block_1" on page "page_1" is a reserved name and cannot be used as a shortcut.'
+  );
+  try {
+    buildPages({ components, context });
+  } catch (e) {
+    expect(e.configKey).toBeDefined();
+  }
+});
+
+test('event shortcut that only contains a reserved name as a modified key is accepted', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: {
+                shortcut: 'Ctrl+__proto__',
+                try: [{ id: 'action_1', type: 'Reset' }],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
 });
