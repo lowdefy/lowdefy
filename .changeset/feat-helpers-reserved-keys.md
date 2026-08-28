@@ -6,7 +6,6 @@
 '@lowdefy/operators': patch
 '@lowdefy/ai-utils': patch
 '@lowdefy/node-utils': patch
-'@lowdefy/plugin-better-auth': patch
 '@lowdefy/server-dev': patch
 '@lowdefy/server-e2e': patch
 'lowdefy': patch
