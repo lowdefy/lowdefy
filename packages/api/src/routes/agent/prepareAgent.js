@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import buildEndpointResult from '../../response/buildEndpointResult.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 import getAgentConfig from './getAgentConfig.js';
@@ -84,13 +85,7 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
         payload,
         endpointDepth,
       });
-      const success = !['error', 'reject'].includes(status);
-      return {
-        error: serializer.serialize(error),
-        response: serializer.serialize(response),
-        status: success ? 'success' : status,
-        success,
-      };
+      return buildEndpointResult(context, { error, response, status });
     },
     getEndpointConfig: async ({ endpointId }) => {
       return getEndpointConfig(context, { endpointId });

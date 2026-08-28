@@ -69,9 +69,11 @@ async function runRoutine(context, routineContext, { routine }) {
     if (error.isReject) {
       return { status: 'reject', error };
     }
+    // handleError sets error.handled once it has logged - it is the single sink
+    // that owns the flag, so a nested runRoutine re-throwing this error does not
+    // log it again.
     if (!error.handled) {
       await context.handleError(error);
-      error.handled = true;
     }
     return { status: 'error', error };
   }

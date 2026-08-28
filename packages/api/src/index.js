@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
@@ -27,11 +28,13 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import redactErrorResponse from './response/redactErrorResponse.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 
 export {
+  buildEndpointResult,
   callAgent,
   callEndpoint,
   getEndpointConfig,
@@ -45,6 +48,7 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  redactErrorResponse,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
