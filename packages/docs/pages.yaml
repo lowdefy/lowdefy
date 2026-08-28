@@ -1,12 +1,12 @@
 - _ref: introduction.yaml
-- _ref: tutorial/tutorial-start.yaml
-- _ref: tutorial/tutorial-create-page.yaml
-- _ref: tutorial/tutorial-add-blocks.yaml
-- _ref: tutorial/tutorial-actions-operators.yaml
-- _ref: tutorial/tutorial-requests-api.yaml
-- _ref: tutorial/tutorial-requests-sql.yaml
-- _ref: tutorial/tutorial-display-data-page.yaml
-- _ref: tutorial/tutorial-next-steps.yaml
+- _ref: tutorials/ticketing-app/tutorial-start.yaml
+- _ref: tutorials/ticketing-app/tutorial-create-page.yaml
+- _ref: tutorials/ticketing-app/tutorial-add-blocks.yaml
+- _ref: tutorials/ticketing-app/tutorial-actions-operators.yaml
+- _ref: tutorials/ticketing-app/tutorial-requests-api.yaml
+- _ref: tutorials/ticketing-app/tutorial-requests-sql.yaml
+- _ref: tutorials/ticketing-app/tutorial-display-data-page.yaml
+- _ref: tutorials/ticketing-app/tutorial-next-steps.yaml
 
 - _ref: concepts/overview.yaml
 - _ref: concepts/lowdefy-schema.yaml

@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-deploy
     pageTitle: 6. Deploy to Netlify
-    section: Tutorial
-    filePath: tutorial/tutorial-deploy.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-deploy.yaml
     prefetchPages:
       - next-steps
     content:

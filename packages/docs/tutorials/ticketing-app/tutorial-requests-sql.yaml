@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-requests-sql
     pageTitle: 6. Saving data to SQL
-    section: Tutorial
-    filePath: tutorial/tutorial-requests-sql.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-requests-sql.yaml
     content:
       - id: body_sqlite
         type: MarkdownWithCode
@@ -96,7 +97,8 @@ _ref:
                     - id: knex
                       type: Knex
                       properties:
-                        client: sqlite
+                        client: better-sqlite3
+                        useNullAsDefault: true
                         connection:
                           filename:
                             _secret: SQLITE_FILENAME
@@ -122,7 +124,16 @@ _ref:
                     type: KnexRaw
                     connectionId: knex
                     payload:
-                      _state: true
+                      ticket_title:
+                        _state: ticket_title
+                      ticket_type:
+                        _state: ticket_type
+                      ticket_description:
+                        _state: ticket_description
+                      product:
+                        _state: product
+                      purchase_in_last_month:
+                        _state: purchase_in_last_month
                     properties:
                       query: |
                         INSERT INTO tickets (
@@ -201,7 +212,7 @@ _ref:
 
                 We set up the table and column names we will be using in our SQLite database. We need to do this to use the `SQLite` connection.
 
-                We defined the `Knex` connection, with the SQLite client.
+                We defined the `Knex` connection, using the `better-sqlite3` client.
 
                 We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button. This was done by making use of the `onCLick` event on the button to execute the [`Request`](/Request) action to make the API call.
 

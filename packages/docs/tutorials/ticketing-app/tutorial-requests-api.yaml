@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-requests-api
     pageTitle: 5. API / HTTP requests
-    section: Tutorial
-    filePath: tutorial/tutorial-requests-api.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-requests-api.yaml
     content:
       - id: body_axios
         type: MarkdownWithCode

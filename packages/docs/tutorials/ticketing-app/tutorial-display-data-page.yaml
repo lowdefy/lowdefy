@@ -17,8 +17,9 @@ _ref:
   vars:
     pageId: tutorial-display-data-page
     pageTitle: 7. Display ticket data
-    section: Tutorial
-    filePath: tutorial/tutorial-display-data-page.yaml
+    section: Tutorials
+    subSection: Ticketing App
+    filePath: tutorials/ticketing-app/tutorial-display-data-page.yaml
     content:
       - id: add_page
         type: MarkdownWithCode
