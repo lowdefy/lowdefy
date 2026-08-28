@@ -1,5 +1,56 @@
 # @lowdefy/blocks-antd-x
 
+## 5.6.0
+
+### Minor Changes
+
+- 3d59f5f: feat: AgentChat keeps a message's thumbs rating selected
+
+  The feedback control was write-only: it reported a rating and immediately forgot it, so the thumb un-highlighted on the next render and a rated message looked unrated. On a streaming chat that is the very next chunk.
+
+  `Actions.Feedback` is now given a `value`, held per message id for the life of the chat. Being controlled, it takes on that component's selected behaviour: the chosen thumb stays highlighted and the opposite one is hidden, and clicking the selected thumb again clears the rating and brings both back. A rating can therefore be changed, but not submitted twice by accident.
+
+  Note for apps already handling `onFeedback`: clearing a rating fires it with `rating: 'default'`. That value was unreachable before, because the control was never given one — so a handler that treats anything other than `like` as a dislike will now record a rejection for a rating the user has just withdrawn. Branch on the three values explicitly.
+
+  The block still persists nothing itself — storing a rating belongs to whatever stores the conversation — but it can now be told what was stored. The new `feedbackValues` property takes a map of message id to `like` or `dislike`, so a restored conversation comes back with its ratings showing instead of looking untouched. Without it, a reload or a conversation switch shows every message unrated even where the app recorded the rating, which reads as a lost write rather than a display gap.
+
+  A rating clicked during the visit takes precedence over the supplied one, so the thumb still responds immediately, and a rating the user has just withdrawn is not re-lit by a value fetched before the withdrawal. Ratings clicked in a conversation are dropped when `conversationId` changes: they are keyed by message id, and the incoming conversation supplies its own.
+
+- 3d59f5f: feat: AgentChat reports link clicks and routes in-app links client-side
+
+  Links in an agent's answer were rendered as plain anchors, so following a citation was a full browser navigation: the conversation was left behind, and an app had no way to do anything else with the click.
+
+  Markdown links now render through the app's `Link` component when the href is an in-app path, making them client-side routes rather than reloads. Links with a scheme open in a new tab, so the conversation stays on screen.
+
+  A new `onLinkClick` event reports the click with `href` and `text`. Wiring it suppresses the default navigation for plain left clicks, so an app can show the target in place — a guide in a modal, a record in a drawer — instead of navigating. Apps that do not wire it are unaffected. Modified and non-primary clicks (new tab, middle click) are never intercepted.
+
+### Patch Changes
+
+- 5b590c7: feat(blocks-antd-x): AgentChat attachments accept clipboard paste and drag-and-drop.
+
+  With `sender.attachments.enabled`, files could only be attached through the paperclip's
+  native picker — a pasted screenshot or a file dragged onto the composer went nowhere.
+  The composer now takes files from all three routes through one intake: the `accept` list
+  and `maxSize` cap apply to each, and pasted clipboard images (which every browser names
+  `image.png`) get a unique `pasted-<timestamp>` name so two pastes don't collide in the
+  attached list. A dashed outline marks the composer while a file drag is over it.
+
+- 7d97d03: fix: AgentChat sends under the current conversationId after a conversation switch
+
+  `useChat` was called without an `id`, so the AI SDK created its Chat instance once per mount and captured that transport — the transport rebuilt when the `conversationId` property changed was silently ignored. Every send in a page session therefore posted under the mount-time conversationId: selecting a saved conversation and continuing it persisted the whole restored transcript under the stale id, creating a duplicate conversation document (without the original's data parts).
+
+  `useChat` is now keyed by `id: effectiveConversationId`, so changing the conversation swaps the Chat instance and adopts the rebuilt transport. The existing clear-on-id-change and external-message-sync behaviour is unchanged.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/block-utils@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes
