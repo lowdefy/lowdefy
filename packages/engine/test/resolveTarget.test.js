@@ -172,12 +172,12 @@ test('resolveTarget classifies an absolute same-origin url inside basePath as a 
 
 test('resolveTarget classifies an absolute same-origin url outside basePath as external', () => {
   const lowdefy = createLowdefy({ basePath: '/app' });
-  expect(
-    resolveTarget({ lowdefy, target: { url: 'https://app.lowdefy.test/marketing' } })
-  ).toEqual({
-    kind: 'external',
-    href: 'https://app.lowdefy.test/marketing',
-  });
+  expect(resolveTarget({ lowdefy, target: { url: 'https://app.lowdefy.test/marketing' } })).toEqual(
+    {
+      kind: 'external',
+      href: 'https://app.lowdefy.test/marketing',
+    }
+  );
 });
 
 test('resolveTarget classifies a same-origin url as a page when no basePath is set', () => {
@@ -193,9 +193,7 @@ test('resolveTarget classifies a same-origin url as a page when no basePath is s
 
 test('resolveTarget classifies a different-origin url as external', () => {
   const lowdefy = createLowdefy();
-  expect(
-    resolveTarget({ lowdefy, target: { url: 'https://example.com/page' } })
-  ).toEqual({
+  expect(resolveTarget({ lowdefy, target: { url: 'https://example.com/page' } })).toEqual({
     kind: 'external',
     href: 'https://example.com/page',
   });
@@ -212,5 +210,40 @@ test('resolveTarget resolves a leading-slash url without a window (no origin nee
     kind: 'page',
     pathname: '/foo',
     query: '',
+  });
+});
+
+test('resolveTarget folds urlQuery into an external href', () => {
+  expect(
+    resolveTarget({ lowdefy: createLowdefy(), target: { url: 'example.com', urlQuery: { a: 1 } } })
+  ).toEqual({
+    kind: 'external',
+    href: 'https://example.com/?a=1',
+  });
+});
+
+test('resolveTarget combines an external url query with the target urlQuery', () => {
+  expect(
+    resolveTarget({
+      lowdefy: createLowdefy(),
+      target: { url: 'https://example.com/x?theme=dark#frag', urlQuery: { a: 1 } },
+    })
+  ).toEqual({
+    kind: 'external',
+    href: 'https://example.com/x?theme=dark&a=1#frag',
+  });
+});
+
+test('resolveTarget folds urlQuery into an absolute same-origin page url', () => {
+  const lowdefy = createLowdefy({ basePath: '/app' });
+  expect(
+    resolveTarget({
+      lowdefy,
+      target: { url: 'https://app.lowdefy.test/app/reports?theme=dark', urlQuery: { a: 1 } },
+    })
+  ).toEqual({
+    kind: 'page',
+    pathname: '/reports',
+    query: 'theme=dark&a=1',
   });
 });

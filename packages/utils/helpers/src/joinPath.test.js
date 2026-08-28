@@ -61,3 +61,12 @@ test('joinPath round-trips segments with a literal dot through splitPath', () =>
 test('joinPath round-trips plain segments through splitPath', () => {
   expect(splitPath(joinPath(['a', 'b', 'c']))).toEqual(['a', 'b', 'c']);
 });
+
+test('joinPath escapes a literal backslash inside a segment', () => {
+  expect(joinPath(['a\\', 'b'])).toEqual('a\\\\.b');
+  expect(joinPath(['a\\.b'])).toEqual('a\\\\\\.b');
+});
+
+test('joinPath round-trips a segment with a backslash and a dot through splitPath', () => {
+  expect(splitPath(joinPath(['a\\.b', 'c']))).toEqual(['a\\.b', 'c']);
+});

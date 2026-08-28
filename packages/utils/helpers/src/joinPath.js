@@ -22,7 +22,11 @@ function joinPath(segments) {
       `joinPath: segments must be an array. Received ${JSON.stringify(segments)}.`
     );
   }
-  return segments.map((segment) => String(segment).replace(/\./g, '\\.')).join('.');
+  // Escape the escape character first, then the separator, so a segment ending in a
+  // backslash cannot swallow the dot that follows it when splitPath reads it back.
+  return segments
+    .map((segment) => String(segment).replace(/\\/g, '\\\\').replace(/\./g, '\\.'))
+    .join('.');
 }
 
 export default joinPath;

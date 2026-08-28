@@ -102,6 +102,13 @@ function set(target, path, value) {
       }
     }
 
+    // Every segment was already rejected by isReserved above, but the assignments
+    // below are the prototype-pollution sinks, so the check also sits beside them
+    // on the resolved key, where it is local to the write.
+    if (prop === '__proto__' || prop === 'constructor' || prop === 'prototype') {
+      throw new ReservedKeyError(prop);
+    }
+
     if (next === len) {
       target[prop] = value;
       break;

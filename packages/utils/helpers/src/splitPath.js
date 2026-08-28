@@ -16,24 +16,39 @@
 
 import type from './type.js';
 
+// Dot-path grammar: `.` separates segments, `\.` is a literal dot and `\\` a
+// literal backslash. Any other backslash is an ordinary character, so keys such
+// as 'a\b' keep working unescaped. joinPath is the inverse.
 function splitPath(path) {
   if (!type.isString(path)) {
     throw new TypeError(`splitPath: path must be a string. Received ${JSON.stringify(path)}.`);
   }
-  const parts = path.split('.');
   const segments = [];
+  let segment = '';
   let i = 0;
-  while (i < parts.length) {
-    let segment = parts[i];
-    // A trailing backslash escapes the dot that follows, so the next part
-    // continues the current segment instead of starting a new one.
-    while (segment && segment.slice(-1) === '\\' && !type.isUndefined(parts[i + 1])) {
+  while (i < path.length) {
+    const char = path[i];
+    if (char === '\\') {
+      const next = path[i + 1];
+      if (next === '.' || next === '\\') {
+        segment += next;
+        i += 2;
+        continue;
+      }
+      segment += char;
       i += 1;
-      segment = `${segment.slice(0, -1)}.${parts[i]}`;
+      continue;
     }
-    segments.push(segment);
+    if (char === '.') {
+      segments.push(segment);
+      segment = '';
+      i += 1;
+      continue;
+    }
+    segment += char;
     i += 1;
   }
+  segments.push(segment);
   return segments;
 }
 
