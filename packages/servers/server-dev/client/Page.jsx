@@ -20,7 +20,6 @@ import Client from '@lowdefy/client';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
 import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
-import RestartingPage from '../lib/client/RestartingPage.jsx';
 import usePageConfig from '../lib/client/utils/usePageConfig.js';
 
 const Page = ({
@@ -62,9 +61,6 @@ const Page = ({
   }
   if (pageConfig.installing) {
     return <InstallingPluginsPage packages={pageConfig.packages} />;
-  }
-  if (resetContext.restarting) {
-    return <RestartingPage />;
   }
 
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
