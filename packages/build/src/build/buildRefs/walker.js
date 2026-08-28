@@ -699,7 +699,7 @@ async function resolveRef(node, ctx) {
     });
 
     // 14. Extract key
-    content = getKey({ input: content, refDef, filePath: fromFile });
+    content = getKey({ input: content, refDef, filePath: ctx.currentFile });
 
     // 15. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
