@@ -1,5 +1,23 @@
 # @lowdefy/blocks-tiptap
 
+## 5.6.0
+
+### Patch Changes
+
+- 5b4c305: fix(blocks-tiptap): Mentions with object options serialise a real identifier in `data-id` instead of `[object Object]`. `TiptapMentionInput` now renders `data-id` from the option's scalar identity (`value`, `value._id`/`value.id`, or the option's own `_id`/`id`) — or omits it when there is none — and always writes the display label to `data-label`, so saved html round-trips with a readable mention.
+- Updated dependencies [3ead269]
+- Updated dependencies [9399e4e]
+- Updated dependencies [79bbd84]
+- Updated dependencies [508708d]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/blocks-antd@5.6.0
+  - @lowdefy/block-utils@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes
