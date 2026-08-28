@@ -60,12 +60,9 @@ test.each([
   'valueOf',
   'constructor_',
   'Constructor',
-])(
-  'validateBlock allows the valid block id "%s"',
-  (id) => {
-    expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
-  }
-);
+])('validateBlock allows the valid block id "%s"', (id) => {
+  expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
+});
 
 test('validateBlock reserved name error carries the configKey', () => {
   try {
