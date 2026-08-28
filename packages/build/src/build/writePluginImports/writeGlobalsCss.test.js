@@ -107,6 +107,23 @@ test('writeGlobalsCss deep merges theme.tailwind overrides with defaults', async
   expect(css).toContain('--radius-DEFAULT: var(--ant-border-radius);');
 });
 
+test('writeGlobalsCss theme.tailwind overrides do not leak into a later build', async () => {
+  // The module-level BRIDGE_DEFAULTS are shared across builds. mergeObjects is
+  // non-mutating, so an override in one build must not survive into the next.
+  const overridden = createContext();
+  await writeGlobalsCss({
+    components: { theme: { tailwind: { color: { primary: '#ff0000' } } } },
+    context: overridden,
+  });
+  expect(overridden.writeBuildArtifact.mock.calls[0][1]).toContain('--color-primary: #ff0000;');
+
+  const plain = createContext();
+  await writeGlobalsCss({ components: {}, context: plain });
+  const css = plain.writeBuildArtifact.mock.calls[0][1];
+  expect(css).toContain('--color-primary: var(--ant-color-primary);');
+  expect(css).not.toContain('#ff0000');
+});
+
 test('writeGlobalsCss adds new tailwind entries alongside defaults', async () => {
   const context = createContext();
   const components = {

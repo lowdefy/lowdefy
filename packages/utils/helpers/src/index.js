@@ -19,19 +19,25 @@ import builtinMessages from './builtinMessages.js';
 import cachedPromises from './cachedPromises.js';
 import extractErrorProps from './extractErrorProps.js';
 import get from './get.js';
+import getKey from './getKey.js';
 import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
+import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
+import { ReservedKeyError } from './ReservedKeyError.js';
 import serializer from './serializer.js';
 import set from './set.js';
+import setKey from './setKey.js';
+import splitPath from './splitPath.js';
 import stableStringify from './stableStringify.js';
 import swap from './swap.js';
 import translate from './translate.js';
 import type from './type.js';
 import unset from './unset.js';
+import unsetKey from './unsetKey.js';
 import urlQuery from './urlQuery.js';
 import wait from './wait.js';
 
@@ -41,19 +47,25 @@ export {
   cachedPromises,
   extractErrorProps,
   get,
+  getKey,
   getLocaleDateFormat,
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
+  joinPath,
   LRUCache,
   mergeObjects,
   omit,
+  ReservedKeyError,
   serializer,
   set,
+  setKey,
+  splitPath,
   stableStringify,
   swap,
   translate,
   type,
   unset,
+  unsetKey,
   urlQuery,
   wait,
 };

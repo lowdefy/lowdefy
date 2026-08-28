@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { ReservedKeyError, setKey } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import fetchGitHubModule from './fetchGitHubModule.js';
@@ -34,6 +35,18 @@ function findGitRoot(startPath) {
   }
 }
 
+// Module ids come from the app's lowdefy.yaml, so they key this map from user
+// config. Surface a reserved id as the build's ConfigError rather than a bare
+// ReservedKeyError.
+function setResolvedPaths(resolved, id, paths) {
+  try {
+    setKey(resolved, id, paths);
+  } catch (error) {
+    if (!(error instanceof ReservedKeyError)) throw error;
+    throw new ConfigError(`Module entry id "${id}" is a reserved name.`, { cause: error });
+  }
+}
+
 async function fetchModules({ moduleEntries, context }) {
   const resolved = {};
 
@@ -47,11 +60,11 @@ async function fetchModules({ moduleEntries, context }) {
           `Module "${entry.id}": module.lowdefy.yaml not found at ${resolvedPath}`
         );
       }
-      resolved[entry.id] = {
+      setResolvedPaths(resolved, entry.id, {
         packageRoot: findGitRoot(resolvedPath) ?? resolvedPath,
         moduleRoot: resolvedPath,
         isLocal: true,
-      };
+      });
     } else if (source.type === 'github') {
       const cached = await fetchGitHubModule(source, context);
       const moduleRoot = source.path
@@ -64,11 +77,11 @@ async function fetchModules({ moduleEntries, context }) {
         );
       }
 
-      resolved[entry.id] = {
+      setResolvedPaths(resolved, entry.id, {
         packageRoot: cached.packageRoot,
         moduleRoot,
         isLocal: false,
-      };
+      });
     }
   }
 

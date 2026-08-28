@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ReservedKeyError, setKey } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import createLogger from './log/createLogger.js';
@@ -26,7 +27,16 @@ function getE2eSecrets() {
   const e2eOverrides = {};
   Object.keys(process.env).forEach((key) => {
     if (key.startsWith('LOWDEFY_E2E_SECRET_')) {
-      e2eOverrides[key.replace('LOWDEFY_E2E_SECRET_', '')] = process.env[key];
+      const name = key.replace('LOWDEFY_E2E_SECRET_', '');
+      try {
+        setKey(e2eOverrides, name, process.env[key]);
+      } catch (error) {
+        if (!(error instanceof ReservedKeyError)) throw error;
+        throw new Error(
+          `Environment variable "${key}" names a reserved secret "${name}". Rename the secret.`,
+          { cause: error }
+        );
+      }
     }
   });
 

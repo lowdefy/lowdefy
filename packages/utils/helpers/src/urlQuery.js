@@ -15,16 +15,28 @@
 */
 
 import serializer from './serializer.js';
+import setKey from './setKey.js';
 import type from './type.js';
+import { ReservedKeyError } from './ReservedKeyError.js';
 
 const parse = (str) => {
   const parsed = new URLSearchParams(str);
   const deserialized = {};
   parsed.forEach((value, key) => {
+    let resolved;
     try {
-      deserialized[key] = serializer.deserializeFromString(value);
+      resolved = serializer.deserializeFromString(value);
     } catch (error) {
-      deserialized[key] = value;
+      resolved = value;
+    }
+    try {
+      setKey(deserialized, key, resolved);
+    } catch (error) {
+      // URL keys are user-controlled: skip reserved-named keys (?__proto__=...) and keep parsing.
+      if (error instanceof ReservedKeyError) {
+        return;
+      }
+      throw error;
     }
   });
   return deserialized;

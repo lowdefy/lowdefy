@@ -13,21 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigError } from '@lowdefy/errors';
-import { ReservedKeyError, set } from '@lowdefy/helpers';
 
-function addStepResult(context, routineContext, { result, stepId }) {
-  const key = [stepId, ...routineContext.arrayIndices].join('.');
-  try {
-    set(routineContext.steps, key, result);
-  } catch (error) {
-    if (error instanceof ReservedKeyError) {
-      throw new ConfigError(`Reserved step id "${error.segment}" cannot be used`, {
-        cause: error,
-      });
-    }
-    throw error;
+import type from './type.js';
+
+function joinPath(segments) {
+  if (!type.isArray(segments)) {
+    throw new TypeError(
+      `joinPath: segments must be an array. Received ${JSON.stringify(segments)}.`
+    );
   }
+  return segments.map((segment) => String(segment).replace(/\./g, '\\.')).join('.');
 }
 
-export default addStepResult;
+export default joinPath;
