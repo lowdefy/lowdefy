@@ -362,9 +362,11 @@ test('extractErrorProps truncates plain objects nested beyond MAX_OBJECT_DEPTH',
   let depth = 1; // data itself is depth 1
   while (cursor && typeof cursor === 'object' && cursor.nested) {
     cursor = cursor.nested;
-    depth++;
+    depth += 1;
   }
   expect(cursor).toBe('[Truncated]');
+  // MAX_OBJECT_DEPTH is 5, so depth 6 is the first level that truncates
+  expect(depth).toBe(6);
   expect(() => JSON.stringify(props)).not.toThrow();
 });
 
