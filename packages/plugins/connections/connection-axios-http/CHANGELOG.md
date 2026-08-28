@@ -1,5 +1,61 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- 3ead269: fix(helpers): Deep merges replace arrays instead of merging them index-by-index.
+
+  Wherever Lowdefy deep-merges configuration — block property defaults, `AxiosHttp` connection
+  and request config, theme tokens, i18n message catalogs — an array value is now treated as a
+  single value. A later array replaces an earlier one; it no longer merges element-by-element
+  at matching indices.
+
+  This is what most overrides already assumed, and it matches a plain object spread. Two
+  places where the old behaviour was visible:
+
+  - `RatingSlider`'s `CheckboxInput.options` — overriding it previously inherited the default
+    element's `label: 'N/A'`. It no longer does; specify the full option object.
+  - The layout blocks (`PageHeaderMenu`, `PageSiderMenu`, `PageSidebarLayout`, `MobileMenu`) —
+    if you set the same array (`selectedKeys`, `defaultOpenKeys`, `links`) on both `menu` and a
+    breakpoint variant such as `menuLg` or `menuMd`, the breakpoint value now replaces the base
+    value outright rather than overlaying it index-by-index.
+
+  Two smaller semantic changes come with this. A later `undefined` now replaces an earlier value
+  instead of being skipped — `mergeObjects([{ a: 1 }, { a: undefined }])` was `{ a: 1 }` and is now
+  `{ a: undefined }`, so a caller that means "no override" must omit the key rather than set it to
+  `undefined`. And a single-object merge no longer passes its input through: `mergeObjects([x]) === x`
+  was `true` and is now `false`, so memoise at the call site if a stable reference is needed across
+  renders. Both are reachable only from code that calls `mergeObjects` — plugin and connection authors
+  — not from YAML, which has no `undefined`; a config `null` merges as it always did.
+
+  Also fixed: merging no longer mutates its inputs. `AxiosHttp` previously wrote merged request
+  config back into the shared connection config, leaking values such as the HTTP agent between
+  requests.
+
+  `lodash.merge`, the last remaining lodash dependency in Lowdefy, has been removed.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/helpers@5.5.0
+
 ## 5.4.0
 
 ### Patch Changes

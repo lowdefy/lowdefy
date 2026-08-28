@@ -1,5 +1,59 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Minor Changes
+
+- 9c93ab2: feat: Port MongoDB community plugin features into @lowdefy/connection-mongodb.
+
+  All features of `@lowdefy/community-plugin-mongodb` are now part of the core MongoDB connection, so apps can drop the community plugin.
+
+  **Change log auditing**
+
+  - New `changeLog` connection property (`collection`, `meta`). All write requests log a change record — request arguments, request context, timestamp, and either the driver response or before/after document snapshots (`MongoDBUpdateOne`, `MongoDBVersionedUpdateOne`, `MongoDBDeleteOne`) — to the log collection. Response shapes are the same with or without a log collection.
+
+  **MongoDBUpdateOne no-match error (behavior change)**
+
+  - `MongoDBUpdateOne` now throws `No matching record to update.` when no document matches the filter and `upsert` is not set. Set `disableNoMatchError: true` on the request to keep the previous silent behavior. Running `lowdefy upgrade` applies a codemod that adds the flag to existing requests, so upgraded apps behave exactly as before. Apps already using the community plugin are unaffected.
+
+  **New requests**
+
+  - `MongoDBVersionedUpdateOne`: updates a document while preserving the previous version as a copy under a new `_id`.
+  - `MongoDBInsertConsecutiveId` and `MongoDBInsertManyConsecutiveIds`: insert documents with sequential human-readable ids (for example `INV0001`), assigned inside a transaction (requires a replica set). Also fixes a community plugin bug where the id lookup ran outside the transaction.
+
+  **New auth adapter**
+
+  - `MultiAppMongoDBAdapter`: next-auth adapter for multiple apps sharing one `user-contacts` collection, with per-app membership, roles, and an invite-required sign up flow.
+
+  `MongoDBInsertMany` now also returns `insertedIds`, matching the community plugin response.
+
+### Patch Changes
+
+- 4c9227b: fix: Reuse the MongoDB client across requests instead of connecting per request.
+
+  MongoDBCollection requests previously created a new MongoDB client, performed a full connection handshake (DNS, TLS, auth), and closed the connection for every request. Requests now share one cached client per unique `databaseUri` and `options` combination, so multi-request pages and routines no longer pay a connection setup per request — an 8-request routine measured against MongoDB Atlas dropped from 4.3s to 0.2s (~95% faster). Connections now stay open between requests; the driver's connection pool can be tuned with standard client options like `maxPoolSize` and `maxIdleTimeMS` on the connection's `options` property.
+
+  - @lowdefy/helpers@5.5.0
+
 ## 5.4.0
 
 ### Patch Changes

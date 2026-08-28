@@ -1,5 +1,24 @@
 # @lowdefy/connection-openai
 
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [3ead269]
+  - @lowdefy/ai-utils@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/ai-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/ai-utils@5.5.0
+
 ## 5.4.0
 
 ### Patch Changes

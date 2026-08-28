@@ -1,5 +1,143 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- 3ead269: feat(helpers): Reject prototype-pollution key names in dot paths and key maps.
+
+  `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`,
+  `__lookupGetter__` and `__lookupSetter__` are no longer accepted as path segments or as keys
+  in maps built from user-supplied values.
+
+  Previously these names were silently _filtered_ on write, which was worse than rejecting
+  them: `SetState: { 'a.__proto__.b': 1 }` quietly wrote to `a.b` instead — a different
+  location than the one you asked for. Reads could also walk up the prototype chain.
+
+  What you will see now:
+
+  - `:set_state` and the `SetState` action raise a config error naming the offending key and
+    pointing at the line in your YAML.
+  - Data-reading operators (`_state`, `_get`, `_user`, `_payload`, ...) return their default
+    instead of a value.
+  - A module entry id, an agent or endpoint id, or a `LOWDEFY_SECRET_*` environment variable
+    using one of these names now fails at build or boot with a message naming it, instead of
+    silently vanishing.
+
+  Apps that do not use these names are unaffected. If you have a form field, state key, or API
+  response property named `constructor`, rename it.
+
+  Deep merges of configuration are hardened the same way, but skip reserved keys rather than
+  raising — a reserved name arriving inside a merged _value_ is dropped so a single poisoned
+  field can't abort an otherwise valid merge.
+
+  `@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can
+  test a key against this policy directly instead of catching a `ReservedKeyError`.
+
+- 9e19a21: fix: Anonymous calls to protected agents are rejected.
+
+  The `/api/agent` route ran agents without checking the session: on an app with `auth.api.protected: true`, a session-less caller could still execute any agent — tool calls failed endpoint auth, but the model call ran on the app's provider account. Agents now follow the `auth.api` config exactly like endpoints: `public`, `protected`, and `roles` patterns match agent ids, and unauthorized calls fail with the same error as an unknown agent id. Sub-agent invocations are authorized against the same session per call, matching how in-run endpoint tool calls are authorized.
+
+  Note for apps using wildcard patterns in `auth.api.public` or `auth.api.roles`: those patterns now also match agent ids.
+
+- 79bbd84: fix(api): Redact server internals from every client-bound error, not just the 500 response.
+
+  Errors sent to a browser or an API caller now have `received` and `stack` stripped at
+  **every** level of the error, and a non-`Error` `cause` dropped unless the error is a
+  `UserError`. Two live leaks are closed:
+
+  - The 500 handlers stripped fields from the outermost error only, so `cause.stack` — and
+    the absolute server paths in its frames — reached production browsers.
+  - An endpoint result body (`callEndpoint` and the agent route) and a request response body
+    (`callRequest`) were not redacted at all. They carried `received`, which on the request
+    path holds the **evaluated** request properties, so a `_secret` resolved into a request
+    header crossed the wire at HTTP 200.
+
+  `source` is now guaranteed config-relative (`pages/home.yaml:5`, never `/var/task/...`),
+  and `configKey` is kept again: the browser deduplicates errors on `message:configKey`, so
+  stripping it collapsed two different errors that happened to share a message and silently
+  dropped the second.
+
+  **Breaking for app config that reads `error.received`.** Server-originated errors no longer
+  carry it, so `_actions` and `_request_details` expose `received` as `undefined`, and the
+  browser console no longer prints the `Received: <json>` line for them. This is deliberate —
+  the field can contain your own resolved secrets. The error `message` is unchanged, and
+  server logs still record `received` and `stack` in full in every environment, including dev.
+
+  Also fixes internal errors being logged twice. A `LowdefyInternalError` never gets a
+  `source`, and the browser used `source` to decide whether the server had already logged an
+  error, so it POSTed every internal error back to `/api/client-error` for a second log. The
+  browser now reads the `handled` flag the server sets when it logs.
+
+- 824f4be: fix(helpers): Serialized errors mark the values they cannot carry instead of dropping them.
+
+  An error is turned into plain data in three places: the `err` field of a server log line, an error
+  sent to a browser or API caller, and — new in this release — a dot-path read of an error value from
+  config. That conversion used to lose fields silently and let a few live values through. Every own
+  field of an error now appears, with anything unserializable replaced by a marker string:
+
+  - A field holding a class instance no longer vanishes. A Node error carrying a `socket`, `agent` or
+    similar field had that key dropped from the log line altogether, which is indistinguishable from
+    the error not having the field; it now logs as `'[Object: Socket]'`. The instance's internals are
+    still never expanded.
+  - A field holding a function, a bigint or a symbol was passed through live. That leaked a closure
+    over server state into serialized output, and a bigint field made `JSON.stringify` of the result
+    throw `TypeError: Do not know how to serialize a BigInt`. These are now `'[Function: handler]'`,
+    `'[BigInt: 10]'` and `'[Symbol: s]'`.
+  - A circular `cause`, or an own field pointing back at the error itself, had its key dropped. Both
+    are now `'[Circular]'`.
+  - A `cause` chain longer than three levels ended with the fourth `cause` key simply absent. It is
+    now `'[Truncated]'`.
+
+  The markers are literal strings, so they show up wherever the serialized error does: a log line's
+  `err.agent` reads `[Object: Socket]`, and `_actions: someAction.error.someField` can now resolve to
+  `'[Object: Socket]'` rather than to the operator default.
+
+  `extractErrorProps` also takes a new `omit` option — `extractErrorProps(error, { omit: (error) =>
+['stack'] })`, called once per error node in the `cause` walk so a policy can key on the node it is
+  looking at. `serializer.serialize` accepts the same function as `omitErrorProps` and passes it down.
+  This is plugin and server API; app config is unaffected by it.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [6785e0e]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/operators@5.6.0
+  - @lowdefy/node-utils@5.6.0
+  - @lowdefy/operators-js@5.6.0
+  - @lowdefy/nunjucks@5.6.0
+  - @lowdefy/ajv@5.6.0
+  - @lowdefy/errors@5.6.0
+
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.1
+- @lowdefy/operators-js@5.5.1
+- @lowdefy/ajv@5.5.1
+- @lowdefy/errors@5.5.1
+- @lowdefy/helpers@5.5.1
+- @lowdefy/node-utils@5.5.1
+- @lowdefy/nunjucks@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/operators@5.5.0
+- @lowdefy/operators-js@5.5.0
+- @lowdefy/ajv@5.5.0
+- @lowdefy/errors@5.5.0
+- @lowdefy/helpers@5.5.0
+- @lowdefy/node-utils@5.5.0
+- @lowdefy/nunjucks@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes
