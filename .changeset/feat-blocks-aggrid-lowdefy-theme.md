@@ -5,7 +5,6 @@
 '@lowdefy/server-dev': patch
 '@lowdefy/server-e2e': patch
 '@lowdefy/docs': patch
-'@lowdefy/docs-content': patch
 ---
 
 feat(blocks-aggrid): Add `AgGridLowdefy`, upgrade to AG Grid v33, and theme every grid through the Theming API.
