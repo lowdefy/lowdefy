@@ -20,6 +20,7 @@
 function createDisplayMeta(blockName) {
   return {
     category: 'display',
+    static: true,
     icons: [],
     valueType: null,
     cssKeys: {

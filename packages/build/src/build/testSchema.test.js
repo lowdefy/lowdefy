@@ -93,6 +93,101 @@ test('invalid schema emits warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith('App "global" should be an object.');
 });
 
+test('valid report key emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'p1',
+        type: 'PageHeaderMenu',
+        report: {
+          title: { _string: { concat: ['Sales'] } },
+          size: 'A4',
+          orientation: 'portrait',
+          header: 'Sales report',
+          footer: 'Confidential',
+        },
+        blocks: [
+          {
+            id: 'grid1',
+            type: 'AgGrid',
+            report: { exclude: true, pageBreakBefore: true, sheetName: 'Regional Sales' },
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('report size outside the enum emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'p1', type: 'PageHeaderMenu', report: { size: 'A3' } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report.size" should be one of "A4" or "letter".'
+  );
+});
+
+test('report orientation outside the enum emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'p1', type: 'PageHeaderMenu', report: { orientation: 'sideways' } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report.orientation" should be one of "portrait" or "landscape".'
+  );
+});
+
+test('report sheetName with a forbidden character emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'p1',
+        type: 'PageHeaderMenu',
+        blocks: [{ id: 'g1', type: 'AgGrid', report: { sheetName: 'Q1/Q2' } }],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report.sheetName" may not contain any of the characters [ ] : * ? / \\.'
+  );
+});
+
+test('report sheetName longer than 31 characters emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'p1',
+        type: 'PageHeaderMenu',
+        blocks: [{ id: 'g1', type: 'AgGrid', report: { sheetName: 'x'.repeat(32) } }],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report.sheetName" may not be longer than 31 characters.'
+  );
+});
+
+test('unknown report property emits an additionalProperties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'p1', type: 'PageHeaderMenu', report: { margins: 10 } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".'
+  );
+});
+
 test('multiple schema issues emit multiple warnings', () => {
   const components = {
     lowdefy: '1.0.0',
@@ -190,10 +285,7 @@ test('null item in blocks array emits warning', () => {
       {
         id: 'page_1',
         type: 'PageHeaderMenu',
-        blocks: [
-          { id: 'valid', type: 'Box' },
-          null,
-        ],
+        blocks: [{ id: 'valid', type: 'Box' }, null],
       },
     ],
   };

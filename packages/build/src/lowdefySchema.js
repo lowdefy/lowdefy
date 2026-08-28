@@ -1194,6 +1194,65 @@ export default {
             type: 'Block "areas" should be an object.',
           },
         },
+        report: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            title: {},
+            header: {},
+            footer: {},
+            size: {
+              type: 'string',
+              enum: ['A4', 'letter'],
+              errorMessage: {
+                type: 'Block "report.size" should be a string.',
+                enum: 'Block "report.size" should be one of "A4" or "letter".',
+              },
+            },
+            orientation: {
+              type: 'string',
+              enum: ['portrait', 'landscape'],
+              errorMessage: {
+                type: 'Block "report.orientation" should be a string.',
+                enum: 'Block "report.orientation" should be one of "portrait" or "landscape".',
+              },
+            },
+            rendering: {
+              type: 'string',
+              errorMessage: {
+                type: 'Block "report.rendering" should be a string.',
+              },
+            },
+            exclude: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.exclude" should be a boolean.',
+              },
+            },
+            pageBreakBefore: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.pageBreakBefore" should be a boolean.',
+              },
+            },
+            sheetName: {
+              type: 'string',
+              pattern: '^[^\\[\\]:*?/\\\\]+$',
+              maxLength: 31,
+              errorMessage: {
+                type: 'Block "report.sheetName" should be a string.',
+                pattern:
+                  'Block "report.sheetName" may not contain any of the characters [ ] : * ? / \\.',
+                maxLength: 'Block "report.sheetName" may not be longer than 31 characters.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Block "report" should be an object.',
+            additionalProperties:
+              'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".',
+          },
+        },
       },
       errorMessage: {
         type: 'Block should be an object.',
@@ -2171,7 +2230,8 @@ export default {
             '~l': {},
             defaultLocale: {
               type: 'string',
-              description: 'BCP 47 locale code used when no user preference or browser match is available.',
+              description:
+                'BCP 47 locale code used when no user preference or browser match is available.',
             },
             locales: {
               type: 'array',
@@ -2194,7 +2254,8 @@ export default {
                   },
                   antd: {
                     type: 'string',
-                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                    description:
+                      'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
                   },
                   dayjs: {
                     type: 'string',
@@ -2205,7 +2266,8 @@ export default {
             },
             messages: {
               type: 'object',
-              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              description:
+                'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
               additionalProperties: {
                 type: 'object',
               },

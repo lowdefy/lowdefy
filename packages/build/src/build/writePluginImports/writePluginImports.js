@@ -29,6 +29,9 @@ import writeOperatorImports from './writeOperatorImports.js';
 import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
+import writeBlockStaticImports from './writeBlockStaticImports.js';
+import writeReportStyles from './writeReportStyles.js';
+import isReportsPluginDeclared from './isReportsPluginDeclared.js';
 
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
@@ -47,11 +50,20 @@ async function writePluginImports({ components, context }) {
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
 
+  // Always written so apiContext's static import resolves for every app; its
+  // content (the report renderer imports) is gated inside the step.
+  await writeBlockStaticImports({ components, context });
+
+  // The report stylesheet is read via readConfigFile (null when absent), never
+  // statically imported, so it is compiled only when the plugin is declared —
+  // an app that does not install it pays no Tailwind compile.
+  if (isReportsPluginDeclared({ context })) {
+    await writeReportStyles({ components, context });
+  }
+
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
-  const blockPackages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
-  ];
+  const blockPackages = [...new Set((components.imports.blocks ?? []).map((b) => b.package))];
   await context.writeBuildArtifact('blockPackages.json', JSON.stringify(blockPackages));
 }
 

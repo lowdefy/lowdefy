@@ -101,6 +101,53 @@ test('resolver argument bag includes callApi function', async () => {
   expect(received.requestId).toBe('req1');
 });
 
+test('app capability is passed only when the resolver declares meta.appAccess', async () => {
+  const context = createTestContext();
+
+  const withoutMeta = jest.fn(() => 'ok');
+  let received;
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: withoutMeta,
+  });
+  expect(withoutMeta.mock.calls[0][0].app).toBeUndefined();
+
+  const notOptedIn = jest.fn((args) => {
+    received = args;
+    return 'ok';
+  });
+  notOptedIn.meta = { checkRead: true };
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: notOptedIn,
+  });
+  expect(received.app).toBeUndefined();
+
+  const optedIn = jest.fn((args) => {
+    received = args;
+    return 'ok';
+  });
+  optedIn.meta = { appAccess: true };
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: optedIn,
+  });
+  expect(received.app).toBeDefined();
+  expect(received.app.getPageConfig).toBeInstanceOf(Function);
+  expect(received.app.callRequest).toBeInstanceOf(Function);
+  expect(received.app.readConfigFile).toBe(context.readConfigFile);
+  expect(received.app.user).toEqual({ id: 'user_1' });
+});
+
 test('callApi runs the target endpoint routine and returns the response', async () => {
   const context = createTestContext({
     endpointConfigs: {
