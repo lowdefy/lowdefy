@@ -1328,7 +1328,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.tooltipComponent` | object | - | Provide a custom tooltip component. See AG Grid tooltip component docs (https://www.ag-grid.com/react-data-grid/component-tooltip/). |
 | `columnDefs.$.ellipsis` | number | - | Line-clamp count for long text. Automatically enables `wrapText` and `autoHeight` and applies the `.lf-ellipsis-N` class (1–6). |
 | `columnDefs.$.cell` | object | - | Built-in cell renderer. Takes precedence over `cellRenderer` when `type` is set. Field-valued keys (e.g. `nameField`, `srcField`, `urlQuery.*`) are row-data paths. |
-| `columnDefs.$.cell.type` | string | - | The built-in renderer to use. Enum: `tag`, `avatar`, `link`, `date`, `boolean`, `progress`, `number`, `buttons`, `selector`, `multipleSelector`, `switch`, `textInput`, `paragraphInput`. |
+| `columnDefs.$.cell.type` | string | - | The built-in renderer to use. Enum: `tag`, `avatar`, `link`, `date`, `boolean`, `progress`, `number`, `buttons`, `menu`, `selector`, `multipleSelector`, `switch`, `textInput`, `paragraphInput`. |
 | `columnDefs.$.cell.colorMap` | object | - | Tag: map of cell value → color (antd tag color name or hex). Used when `cell.type: tag`. The cell value may be a single string or an array of strings; arrays render one tag per item. If neither `colorMap`, `colorFrom`, nor `default` is set, tag values are auto-coloured from a stable hash for consistency across rows. |
 | `columnDefs.$.cell.colorFrom` | string | - | Tag: row-data path to a color value. Takes precedence over `colorMap`. |
 | `columnDefs.$.cell.default` | string | - | Tag: fallback color for values not in `colorMap`. |
@@ -1388,6 +1388,19 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.buttons.$.hidden` | boolean | `false` | Hide the button entirely. |
 | `columnDefs.$.cell.buttons.$.hiddenField` | string | - | Row-data path → boolean. |
+| `columnDefs.$.cell.items` | array | - | Menu cell: items in the row action menu, rendered in a dropdown behind a single trigger button. Each item triggers its own block-level event (declared in `events:`). `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths. A hidden item is dropped, not disabled — a row on which every item is hidden renders no trigger at all. |
+| `columnDefs.$.cell.items.$.eventName` | string | - | Block-level event name to trigger on click. Event payload is `{ row, value, item: { eventName, title }, itemIndex }`. |
+| `columnDefs.$.cell.items.$.title` | string | - | Item label - supports html. |
+| `columnDefs.$.cell.items.$.titleField` | string | - | Row-data path for the label. |
+| `columnDefs.$.cell.items.$.icon` | string \| object | - | Name of a React-Icon or Icon block config. |
+| `columnDefs.$.cell.items.$.iconField` | string | - | Row-data path for the icon name or config. |
+| `columnDefs.$.cell.items.$.danger` | boolean | `false` | Render the item in the danger colour. |
+| `columnDefs.$.cell.items.$.disabled` | boolean | `false` |  |
+| `columnDefs.$.cell.items.$.disabledField` | string | - | Row-data path → boolean. |
+| `columnDefs.$.cell.items.$.hidden` | boolean | `false` | Hide the item entirely. |
+| `columnDefs.$.cell.items.$.hiddenField` | string | - | Row-data path → boolean. |
+| `columnDefs.$.cell.icon` | string \| object | `"AiOutlineMore"` | Menu cell: the trigger icon. Name of a React-Icon or Icon block config. The trigger is icon-only. |
+| `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
 | `columnDefs.$.cell.options` | array | - | Selector / Multiple selector cell: dropdown options. An array of primitives, or objects mirroring the `Selector` block options: `{ label, value, disabled, color, filterString, style }`. `label` supports html. |
 | `columnDefs.$.cell.valueKey` | string | - | Selector / Multiple selector: field on each option object to use as its value. Defaults to `value`. |
 | `columnDefs.$.cell.primaryKey` | string | - | Selector / Multiple selector: field used to match the cell value to an option (identity key for object values). |
@@ -1433,6 +1446,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `onSortChanged` | `{ rows, sort }` | Trigger event when the sort changes. |
 | `onCellLink` | `{ link, row, value }` | Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate. |
 | `onCellButton` | `{ row, value, button, buttonIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`). |
+| `onCellMenuItem` | `{ row, value, item, itemIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`). |
 
 | Key | Target |
 | --- | --- |
