@@ -77,3 +77,12 @@ test('splitPath throws a TypeError when path is undefined', () => {
 test('splitPath round-trips a path with an escaped dot through joinPath', () => {
   expect(joinPath(splitPath('a.b\\.c.d'))).toEqual('a.b\\.c.d');
 });
+
+test('splitPath treats a doubled backslash as one literal backslash', () => {
+  expect(splitPath('a\\\\.b')).toEqual(['a\\', 'b']);
+  expect(splitPath('a\\\\b')).toEqual(['a\\b']);
+});
+
+test('splitPath round-trips a segment ending in a backslash through joinPath', () => {
+  expect(splitPath(joinPath(['a\\', 'b']))).toEqual(['a\\', 'b']);
+});
