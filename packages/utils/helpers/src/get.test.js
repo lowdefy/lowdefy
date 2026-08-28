@@ -21,6 +21,7 @@
 
 import diff from 'jest-diff';
 import get from './get.js';
+import { ReservedKeyError } from './ReservedKeyError.js';
 
 const expectToEqual = (result, value) => {
   expect(result).toEqual(value);
@@ -179,33 +180,6 @@ test('should support using dot notation to get nested values', () => {
   expectToStrictEqual(get(fixture, 'c.locals.paths.2'), 'c.hbs');
 });
 
-test('should support a custom separator on options.separator', () => {
-  const fixture = { 'a.b': { c: { d: 'e' } } };
-  expectToStrictEqual(get(fixture, 'a.b/c/d', { separator: '/' }), 'e');
-  expectToStrictEqual(get(fixture, 'a\\.b.c.d', { separator: /\\?\./ }), 'e');
-});
-
-test('should support a custom split function', () => {
-  const fixture = { 'a.b': { c: { d: 'e' } } };
-  expectToStrictEqual(get(fixture, 'a.b/c/d', { split: (path) => path.split('/') }), 'e');
-  expectToStrictEqual(get(fixture, 'a\\.b.c.d', { split: (path) => path.split(/\\?\./) }), 'e');
-});
-
-test('should support a custom join character', () => {
-  const fixture = { 'a-b': { c: { d: 'e' } } };
-  const options = { joinChar: '-' };
-  expectToStrictEqual(get(fixture, 'a.b.c.d', options), 'e');
-});
-
-test('should support a custom join function', () => {
-  const fixture = { 'a-b': { c: { d: 'e' } } };
-  const options = {
-    split: (path) => path.split(/[-/]/),
-    join: (segs) => segs.join('-'),
-  };
-  expectToStrictEqual(get(fixture, 'a/b-c/d', options), 'e');
-});
-
 test('should support a default value as the last argument', () => {
   const fixture = { foo: { c: { d: 'e' } } };
   expectToEqual(get(fixture, 'foo.bar.baz', 'quz'), 'quz');
@@ -223,32 +197,13 @@ test('should support options.default', () => {
   expectDeepStrictEqual(get(fixture, 'foo.bar.baz', { default: { one: 'two' } }), { one: 'two' });
 });
 
-test('should support a custom function for validating the object', () => {
-  const isEnumerable = Object.prototype.propertyIsEnumerable;
-  const options = {
-    isValid(key, obj) {
-      return isEnumerable.call(obj, key);
-    },
-  };
-
-  const fixture = { 'a.b': { c: { d: 'e' } } };
-  expectToStrictEqual(get(fixture, 'a.b.c.d', options), 'e');
-});
-
-test('should support nested keys with dots', () => {
+test('should support nested keys with dots when the whole path is an own key', () => {
+  // An exact whole-path own key still wins via the top-level fast path.
   expectToStrictEqual(get({ 'a.b.c': 'd' }, 'a.b.c'), 'd');
-  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c'), 'd');
-  expectToStrictEqual(get({ 'a.b': { c: { d: 'e' } } }, 'a.b.c.d'), 'e');
-  expectToStrictEqual(get({ a: { b: { c: 'd' } } }, 'a.b.c'), 'd');
-  expectToStrictEqual(get({ a: { 'b.c': 'd' } }, 'a.b.c'), 'd');
   expectToStrictEqual(get({ 'a.b.c.d': 'e' }, 'a.b.c.d'), 'e');
   expectToStrictEqual(get({ 'a.b.c.d': 'e' }, 'a.b.c'), undefined);
-
   expectToStrictEqual(get({ 'a.b.c.d.e.f': 'g' }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b.c.d': { e: { f: 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b.c': { d: { e: { f: 'g' } } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b': { c: { d: { e: { f: 'g' } } } } }, 'a.b.c.d.e.f'), 'g');
+  expectToStrictEqual(get({ a: { b: { c: 'd' } } }, 'a.b.c'), 'd');
   expectToStrictEqual(get({ a: { b: { c: { d: { e: { f: 'g' } } } } } }, 'a.b.c.d.e.f'), 'g');
 
   expectDeepStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e'), {
@@ -264,43 +219,42 @@ test('should support nested keys with dots', () => {
   expectDeepStrictEqual(get({ a: { 'b.c.d.e.f': 'g' } }, 'a'), {
     'b.c.d.e.f': 'g',
   });
-
-  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b.c.d': { 'e.f': 'g' } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b.c': { 'd.e.f': 'g' } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b': { 'c.d.e.f': 'g' } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ a: { 'b.c.d.e.f': 'g' } }, 'a.b.c.d.e.f'), 'g');
-
-  expectToStrictEqual(get({ 'a.b': { 'c.d': { 'e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ 'a.b': { c: { 'd.e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ a: { 'b.c.d.e': { f: 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ a: { 'b.c.d': { 'e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ a: { 'b.c': { 'd.e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
-  expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c.d.e.f'), 'g');
 });
 
-test('should support return default when options.isValid returns false', () => {
-  const fixture = { foo: { bar: { baz: 'qux' }, 'a.b.c': 'xyx', yyy: 'zzz' } };
-  const options = (val) => ({
-    ...{
-      default: val,
-      isValid(key) {
-        return key !== 'bar' && key !== 'a.b.c';
-      },
-    },
-  });
+test('should support nested keys with dots when the literal dots are escaped', () => {
+  // A literal dot in a key must be escaped. However the dots are distributed
+  // between literal keys and nesting, the escaped path reaches the value.
+  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a\\.b.c'), 'd');
+  expectToStrictEqual(get({ 'a.b': { c: { d: 'e' } } }, 'a\\.b.c.d'), 'e');
+  expectToStrictEqual(get({ a: { 'b.c': 'd' } }, 'a.b\\.c'), 'd');
 
-  expectToEqual(get(fixture, 'foo.bar.baz', options('fez')), 'fez');
-  expectToEqual(get(fixture, 'foo.bar.baz', options(true)), true);
-  expectToEqual(get(fixture, 'foo.bar.baz', options(false)), false);
-  expectToEqual(get(fixture, 'foo.bar.baz', options(null)), null);
+  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a\\.b\\.c\\.d\\.e.f'), 'g');
+  expectToStrictEqual(get({ 'a.b.c.d': { e: { f: 'g' } } }, 'a\\.b\\.c\\.d.e.f'), 'g');
+  expectToStrictEqual(get({ 'a.b.c': { d: { e: { f: 'g' } } } }, 'a\\.b\\.c.d.e.f'), 'g');
+  expectToStrictEqual(get({ 'a.b': { c: { d: { e: { f: 'g' } } } } }, 'a\\.b.c.d.e.f'), 'g');
 
-  expectToEqual(get(fixture, 'foo.a.b.c', options('fez')), 'fez');
-  expectToEqual(get(fixture, 'foo.a.b.c', options(true)), true);
-  expectToEqual(get(fixture, 'foo.a.b.c', options(false)), false);
-  expectToEqual(get(fixture, 'foo.a.b.c', options(null)), null);
+  expectToStrictEqual(get({ 'a.b.c.d': { 'e.f': 'g' } }, 'a\\.b\\.c\\.d.e\\.f'), 'g');
+  expectToStrictEqual(get({ 'a.b.c': { 'd.e.f': 'g' } }, 'a\\.b\\.c.d\\.e\\.f'), 'g');
+  expectToStrictEqual(get({ 'a.b': { 'c.d.e.f': 'g' } }, 'a\\.b.c\\.d\\.e\\.f'), 'g');
+  expectToStrictEqual(get({ a: { 'b.c.d.e.f': 'g' } }, 'a.b\\.c\\.d\\.e\\.f'), 'g');
 
-  expectToEqual(get(fixture, 'foo.yyy', options('fez')), 'zzz');
+  expectToStrictEqual(get({ 'a.b': { 'c.d': { 'e.f': 'g' } } }, 'a\\.b.c\\.d.e\\.f'), 'g');
+  expectToStrictEqual(get({ 'a.b': { c: { 'd.e.f': 'g' } } }, 'a\\.b.c.d\\.e\\.f'), 'g');
+  expectToStrictEqual(get({ a: { 'b.c.d.e': { f: 'g' } } }, 'a.b\\.c\\.d\\.e.f'), 'g');
+  expectToStrictEqual(get({ a: { 'b.c.d': { 'e.f': 'g' } } }, 'a.b\\.c\\.d.e\\.f'), 'g');
+  expectToStrictEqual(get({ a: { 'b.c': { 'd.e.f': 'g' } } }, 'a.b\\.c.d\\.e\\.f'), 'g');
+  expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c\\.d\\.e\\.f'), 'g');
+});
+
+test('should return the default for an unescaped path over a literal dotted key', () => {
+  // The joined-segment retry loop is gone: an unescaped path no longer resolves
+  // against a literal dotted key by luck. Consistent with set/unset.
+  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c'), undefined);
+  expectToStrictEqual(get({ a: { 'b.c': 'd' } }, 'a.b.c'), undefined);
+  expectToStrictEqual(get({ 'a.b': { c: { d: 'e' } } }, 'a.b.c.d'), undefined);
+  expectToStrictEqual(get({ 'a.b.c.d.e': { f: 'g' } }, 'a.b.c.d.e.f'), undefined);
+  expectToStrictEqual(get({ a: { b: { 'c.d.e.f': 'g' } } }, 'a.b.c.d.e.f'), undefined);
+  expectToStrictEqual(get({ 'a.b': { c: 'd' } }, 'a.b.c', 'fallback'), 'fallback');
 });
 
 test('should get a value from an array', () => {
@@ -344,11 +298,11 @@ test('should get the specified property', () => {
   expectDeepStrictEqual(get({ locals: { a: 'a' }, options: { b: 'b' } }, 'locals'), { a: 'a' });
 });
 
-test('should support passing a property formatted as an array', () => {
-  expectDeepStrictEqual(get({ a: 'aaa', b: 'b' }, ['a']), 'aaa');
-  expectDeepStrictEqual(get({ a: { b: { c: 'd' } } }, ['a', 'b', 'c']), 'd');
-  expectDeepStrictEqual(get({ first: 'Harry', last: 'Potter' }, ['first']), 'Harry');
-  expectDeepStrictEqual(get({ locals: { a: 'a' }, options: { b: 'b' } }, ['locals']), { a: 'a' });
+test('should return the default value when the path is an array', () => {
+  // Array paths are no longer supported - only strings (and numbers, which are coerced).
+  expectDeepStrictEqual(get({ a: 'aaa', b: 'b' }, ['a']), undefined);
+  expectDeepStrictEqual(get({ a: { b: { c: 'd' } } }, ['a', 'b', 'c'], 'fallback'), 'fallback');
+  expectDeepStrictEqual(get({ locals: { a: 'a' } }, ['locals'], null), null);
 });
 
 test('should support escaped dots', () => {
@@ -403,22 +357,6 @@ describe('dot-prop tests:', () => {
     expectDeepStrictEqual(get(undefined, 'foo.bar', { default: false }), false);
   });
 
-  test('should use a custom options.isValid function', () => {
-    const isEnumerable = Object.prototype.propertyIsEnumerable;
-    const options = {
-      isValid: (key, obj) => isEnumerable.call(obj, key),
-    };
-
-    const target = {};
-    Object.defineProperty(target, 'foo', {
-      value: 'bar',
-      enumerable: false,
-    });
-
-    expectDeepStrictEqual(get(target, 'foo', options), undefined);
-    expectDeepStrictEqual(get({}, 'hasOwnProperty', options), undefined);
-  });
-
   test('should return a default value', () => {
     expectDeepStrictEqual(get({ foo: { bar: 'a' } }, 'foo.fake'), undefined);
     expectDeepStrictEqual(get({ foo: { bar: 'a' } }, 'foo.fake.fake2'), undefined);
@@ -459,12 +397,6 @@ describe('object-path .get tests', () => {
   test('should return the value using unicode key', () => {
     const obj = { '15\u00f8C': { '3\u0111': 1 } };
     expectToEqual(get(obj, '15\u00f8C.3\u0111'), 1);
-    expectToEqual(get(obj, ['15\u00f8C', '3\u0111']), 1);
-  });
-
-  test('should return the value using dot in key (with array of segments)', () => {
-    const obj = { 'a.b': { 'looks.like': 1 } };
-    expectToEqual(get(obj, ['a.b', 'looks.like']), 1);
   });
 
   test('should return the value of an empty array', () => {
@@ -472,16 +404,17 @@ describe('object-path .get tests', () => {
     expectToEqual(get(obj, 'a.b'), []);
   });
 
-  // object-path fails this test
+  // object-path fails this test. It pinned the unescaped lucky match, which is
+  // gone - the escaped form is now the way to address literal dotted keys.
   test('should return the value using dot in key', () => {
     const obj = { 'a.b': { 'looks.like': 1 } };
-    expectToEqual(get(obj, 'a.b.looks.like'), 1);
+    expectToEqual(get(obj, 'a\\.b.looks\\.like'), 1);
+    expectToEqual(get(obj, 'a.b.looks.like'), undefined);
   });
 
   test('should return the value under shallow object', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'a'), 'b');
-    expectToEqual(get(obj, ['a']), 'b');
   });
 
   test('should work with number path', () => {
@@ -493,43 +426,36 @@ describe('object-path .get tests', () => {
   test('should return the value under deep object', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'b.f'), 'i');
-    expectToEqual(get(obj, ['b', 'f']), 'i');
   });
 
   test('should return the value under array', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'b.d.0'), 'a');
-    expectToEqual(get(obj, ['b', 'd', 0]), 'a');
   });
 
   test('should return the value under array deep', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'b.e.1.f'), 'g');
-    expectToEqual(get(obj, ['b', 'e', 1, 'f']), 'g');
   });
 
   test('should return undefined for missing values under object', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'a.b'), undefined);
-    expectToEqual(get(obj, ['a', 'b']), undefined);
   });
 
   test('should return undefined for missing values under array', () => {
     const obj = getTestObj();
     expectToEqual(get(obj, 'b.d.5'), undefined);
-    expectToEqual(get(obj, ['b', 'd', '5']), undefined);
   });
 
   test('should return the value under integer-like key', () => {
     const obj = { '1a': 'foo' };
     expectToEqual(get(obj, '1a'), 'foo');
-    expectToEqual(get(obj, ['1a']), 'foo');
   });
 
   test('should return the default value when the key doesnt exist', () => {
     const obj = { '1a': 'foo' };
     expectToEqual(get(obj, '1b', null), null);
-    expectToEqual(get(obj, ['1b'], null), null);
   });
 
   // this test differs from behavior in object-path. I was unable to figure
@@ -537,8 +463,6 @@ describe('object-path .get tests', () => {
   test('should return the default value when path is empty', () => {
     const obj = { '1a': 'foo' };
     expectDeepStrictEqual(get(obj, '', null), null);
-    expectDeepStrictEqual(get(obj, []), undefined);
-    expectToEqual(get({}, ['1'], 'foo'), 'foo');
   });
 
   test('should return the default value when object is null or undefined', () => {
@@ -569,7 +493,7 @@ describe('object-path .get tests', () => {
 
     const extended = new Extended();
 
-    expectToEqual(get(extended, ['one', 'two']), true);
+    expectToEqual(get(extended, 'one.two'), true);
     extended.enabled = true;
 
     expectToEqual(get(extended, 'enabled'), true);
@@ -613,12 +537,6 @@ describe('deep-property unit tests', () => {
     expectToEqual(get(a, 'c.gorky.type'), undefined);
   });
 
-  // test('should get properties of Error', () => {
-  //   const e = new Error(403);
-  //   console.log(e.message);
-  //   expect(get(e, 'code')).toBe(403);
-  // });
-
   test('should get properties on non-objects', () => {
     const fn = function () {};
 
@@ -661,4 +579,158 @@ test('get should copy objects with copy option true', () => {
   expect(get(a, 'b.example', { copy: true })).toEqual(veg);
   expect(get(a, 'c.example', { copy: true })).not.toBe(min);
   expect(get(a, 'c.example', { copy: true })).toEqual(min);
+});
+
+describe('reserved key guard', () => {
+  test('get throws ReservedKeyError even when the reserved key is an own property', () => {
+    expect(() => get({ constructor: 1 }, 'constructor')).toThrow(ReservedKeyError);
+    expect(() => get({ prototype: 1 }, 'prototype')).toThrow('Reserved key "prototype"');
+    const nullProto = Object.create(null);
+    nullProto.__proto__ = 'own value';
+    expect(() => get(nullProto, '__proto__')).toThrow(ReservedKeyError);
+    expect(() => get({ a: { constructor: 1 } }, 'a.constructor')).toThrow(ReservedKeyError);
+  });
+
+  test('get throws ReservedKeyError when the path is a reserved key', () => {
+    expect(() => get({}, '__proto__')).toThrow(ReservedKeyError);
+    expect(() => get({}, '__proto__')).toThrow('Reserved key "__proto__"');
+  });
+
+  test('get throws ReservedKeyError carrying the offending segment', () => {
+    expect.assertions(2);
+    try {
+      get({}, 'a.__proto__.b');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ReservedKeyError);
+      expect(error.segment).toEqual('__proto__');
+    }
+  });
+
+  test('get throws on the first reserved segment of the path', () => {
+    expect.assertions(1);
+    try {
+      get({}, 'constructor.prototype');
+    } catch (error) {
+      expect(error.segment).toEqual('constructor');
+    }
+  });
+
+  test('get throws ReservedKeyError for accessor-installing Object.prototype methods', () => {
+    expect(() => get({}, '__defineGetter__')).toThrow(ReservedKeyError);
+    expect(() => get({}, '__defineSetter__')).toThrow(ReservedKeyError);
+    expect(() => get({}, '__lookupGetter__')).toThrow(ReservedKeyError);
+    expect(() => get({}, '__lookupSetter__')).toThrow(ReservedKeyError);
+  });
+
+  test('get throws ReservedKeyError even when a default is given', () => {
+    // A reserved key is illegal input, not a missing path, so the
+    // default-on-missing contract does not apply.
+    expect(() => get({ a: 1 }, '__proto__', { default: 'fallback' })).toThrow(ReservedKeyError);
+    expect(() => get({ a: 1 }, '__proto__', 'fallback')).toThrow(ReservedKeyError);
+  });
+
+  test('get does not treat a dotted literal key as reserved', () => {
+    // A re-joined key always contains a dot; no reserved key does.
+    expect(get({ '__pro.to__': 1 }, '__pro.to__')).toEqual(1);
+  });
+
+  test('get scans every segment for reserved keys regardless of descent depth', () => {
+    // The walk would stop at the missing "a", but the guard still fires.
+    expect(() => get({}, 'a.b.c.prototype')).toThrow(ReservedKeyError);
+  });
+
+  test('get resolves non-reserved Object.prototype member names', () => {
+    expect(get({}, 'hasOwnProperty')).toBe(Object.prototype.hasOwnProperty);
+    expect(get({}, 'toString')).toBe(Object.prototype.toString);
+  });
+});
+
+describe('descent into non-plain objects', () => {
+  class Instance {
+    constructor() {
+      this.own = 'ownValue';
+    }
+
+    foo() {
+      return 'bar';
+    }
+  }
+
+  test('get reads an own property off an Error target', () => {
+    expect(get(new Error('x'), 'message')).toEqual('x');
+  });
+
+  test('get reads a property one level inside an Error', () => {
+    expect(get({ e: new Error('x') }, 'e.message')).toEqual('x');
+  });
+
+  test('get descends through nested Error causes', () => {
+    const error = new Error('x', { cause: new Error('y') });
+    expect(get(error, 'cause.message')).toEqual('y');
+    expect(get({ error }, 'error.cause.message')).toEqual('y');
+  });
+
+  test('get returns the default for a missing key inside an Error', () => {
+    expect(get({ e: new Error('x') }, 'e.code', 'fallback')).toEqual('fallback');
+  });
+
+  test('get descends into a class instance and reads an own property', () => {
+    expect(get({ i: new Instance() }, 'i.own')).toEqual('ownValue');
+  });
+
+  test('get walks the prototype chain for an inherited method', () => {
+    // `prop in target` is kept as the in-walk existence check, so inherited
+    // members still resolve once the reserved-key guard has passed.
+    expect(get(new Instance(), 'foo')).toBe(Instance.prototype.foo);
+    expect(get({ i: new Instance() }, 'i.foo')).toBe(Instance.prototype.foo);
+    expect(get({ i: new Instance() }, 'i.foo')()).toEqual('bar');
+  });
+
+  test('get descends into a Date', () => {
+    const date = new Date(0);
+    expect(get({ date }, 'date.toISOString')).toBe(Date.prototype.toISOString);
+    expect(get(date, 'getTime')).toBe(Date.prototype.getTime);
+  });
+
+  test('get descends into a URL', () => {
+    const url = new URL('https://example.com/path?a=1');
+    expect(get(url, 'hostname')).toEqual('example.com');
+    expect(get({ url }, 'url.pathname')).toEqual('/path');
+  });
+
+  test('get descends into a Map', () => {
+    expect(get({ m: new Map([['a', 1]]) }, 'm.size')).toEqual(1);
+  });
+
+  test('get does not descend into null, undefined or primitives', () => {
+    expect(get({ a: null }, 'a.b', 'fallback')).toEqual('fallback');
+    expect(get({ a: undefined }, 'a.b', 'fallback')).toEqual('fallback');
+    expect(get({ a: 'str' }, 'a.length', 'fallback')).toEqual('fallback');
+    expect(get({ a: 1 }, 'a.toFixed', 'fallback')).toEqual('fallback');
+  });
+});
+
+describe('dotted key resolution', () => {
+  test('get resolves an escaped dot as a literal key character', () => {
+    expect(get({ a: { 'b.c': 1 } }, 'a.b\\.c')).toEqual(1);
+    expect(get({ 'a.b': { c: 1 } }, 'a\\.b.c')).toEqual(1);
+  });
+
+  test('get returns the default for an unescaped path over a literal dotted key', () => {
+    // The joined-segment retry loop is gone, so an unescaped path no longer
+    // resolves against a literal dotted key by luck.
+    expect(get({ 'a.b': { c: 1 } }, 'a.b.c')).toEqual(undefined);
+    expect(get({ 'a.b': { c: 1 } }, 'a.b.c', 'fallback')).toEqual('fallback');
+    expect(get({ a: { 'b.c': 1 } }, 'a.b.c')).toEqual(undefined);
+  });
+
+  test('get returns the default when a trailing backslash escapes nothing', () => {
+    expect(get({ a: 1 }, 'a.b\\', 'fallback')).toEqual('fallback');
+    expect(get({ 'b\\': 1 }, 'b\\')).toEqual(1);
+  });
+
+  test('get returns 1 for a simple nested read', () => {
+    expect(get({ a: { b: 1 } }, 'a.b')).toEqual(1);
+    expect(get({ a: { b: 1 } }, 'a.c', 'default')).toEqual('default');
+  });
 });

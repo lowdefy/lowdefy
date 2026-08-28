@@ -3049,9 +3049,6 @@ importers:
       intl-messageformat:
         specifier: 11.2.7
         version: 11.2.7
-      lodash.merge:
-        specifier: 4.6.2
-        version: 4.6.2
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
