@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { ConfigProvider, Radio, Space } from 'antd';
+import { Col, ConfigProvider, Radio, Row, Space, theme } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
@@ -39,14 +39,57 @@ const RadioSelector = ({
   value,
   methods,
 }) => {
+  const { token } = theme.useToken();
   const uniqueValueOptions = useSelectorOptions({ properties, methods });
   const selectedIndex = getSelectedIndex(value, uniqueValueOptions, { properties });
+  const grid = !type.isNone(properties.columns);
+  // Col takes spans, not counts, so a breakpoint map of counts converts per key.
+  const colProps = type.isObject(properties.columns)
+    ? Object.fromEntries(
+        Object.entries(properties.columns).map(([breakpoint, columns]) => [
+          breakpoint,
+          { span: 24 / columns },
+        ])
+      )
+    : { span: 24 / properties.columns };
+  const renderOption = (opt, i) => {
+    if (type.isPrimitive(opt)) {
+      return (
+        <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
+          {renderHtml({ html: `${opt}`, methods })}
+        </Radio>
+      );
+    }
+    const isSelected = `${i}` === selectedIndex;
+    const radio = (
+      <Radio
+        id={`${blockId}_${i}`}
+        key={i}
+        value={`${i}`}
+        disabled={opt.disabled}
+        style={{ ...opt.style, ...(isSelected && opt.color ? { color: opt.color } : {}) }}
+      >
+        {type.isNone(opt.label)
+          ? renderHtml({ html: `${opt.value}`, methods })
+          : renderHtml({ html: opt.label, methods })}
+      </Radio>
+    );
+    if (type.isNone(opt.color)) return radio;
+    // Per-option color: token override colors this radio's selected dot.
+    return (
+      <ConfigProvider key={i} theme={{ token: { colorPrimary: opt.color } }}>
+        {radio}
+      </ConfigProvider>
+    );
+  };
   const radioGroup = (
     <RadioGroup
       id={`${blockId}_input`}
       className={classNames.element}
       disabled={properties.disabled || loading}
-      style={styles.element}
+      // Radio.Group is inline-block and shrink-wraps, so the Row inside it can
+      // only fill a group that has been given a width.
+      style={grid ? { width: '100%', ...styles.element } : styles.element}
       onChange={(event) => {
         const val = type.isPrimitive(uniqueValueOptions[event.target.value])
           ? uniqueValueOptions[event.target.value]
@@ -56,42 +99,23 @@ const RadioSelector = ({
       }}
       value={`${getSelectedIndex(value, uniqueValueOptions, { properties })}`}
     >
-      <Space
-        direction={properties.direction}
-        wrap={type.isNone(properties.wrap) ? true : properties.wrap}
-        align={type.isNone(properties.align) ? 'start' : properties.align}
-      >
-        {uniqueValueOptions.map((opt, i) => {
-          if (type.isPrimitive(opt)) {
-            return (
-              <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
-                {renderHtml({ html: `${opt}`, methods })}
-              </Radio>
-            );
-          }
-          const isSelected = `${i}` === selectedIndex;
-          const radio = (
-            <Radio
-              id={`${blockId}_${i}`}
-              key={i}
-              value={`${i}`}
-              disabled={opt.disabled}
-              style={{ ...opt.style, ...(isSelected && opt.color ? { color: opt.color } : {}) }}
-            >
-              {type.isNone(opt.label)
-                ? renderHtml({ html: `${opt.value}`, methods })
-                : renderHtml({ html: opt.label, methods })}
-            </Radio>
-          );
-          if (type.isNone(opt.color)) return radio;
-          // Per-option color: token override colors this radio's selected dot.
-          return (
-            <ConfigProvider key={i} theme={{ token: { colorPrimary: opt.color } }}>
-              {radio}
-            </ConfigProvider>
-          );
-        })}
-      </Space>
+      {grid ? (
+        <Row gutter={type.isNone(properties.gutter) ? [token.paddingXS, 0] : properties.gutter}>
+          {uniqueValueOptions.map((opt, i) => (
+            <Col key={i} {...colProps}>
+              {renderOption(opt, i)}
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <Space
+          direction={properties.direction}
+          wrap={type.isNone(properties.wrap) ? true : properties.wrap}
+          align={type.isNone(properties.align) ? 'start' : properties.align}
+        >
+          {uniqueValueOptions.map(renderOption)}
+        </Space>
+      )}
     </RadioGroup>
   );
   return (
