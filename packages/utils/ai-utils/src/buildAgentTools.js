@@ -35,7 +35,7 @@ function cleanBuildArtifact(obj) {
   return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
-function assertNotReserved(name, kind, i18n) {
+function assertNotPlatformToolName(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {
     throw new ConfigError(
       translate({
@@ -65,9 +65,12 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   // Build endpoint tools
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
-    assertNotReserved(endpointId, 'Endpoint tool', context.i18n);
-    // The build rejects reserved tool names, so this only fires for a stale or hand-edited build
-    // artifact. Skip the tool rather than fail the whole agent, as the MCP name cases below do.
+    assertNotPlatformToolName(endpointId, 'Endpoint tool', context.i18n);
+    // A second, disjoint list: RESERVED_PLATFORM_TOOL_NAMES are the tools Lowdefy itself registers,
+    // isReserved are the prototype-pollution keys setKey refuses. A name can pass one gate and fail
+    // the other, so both checks are needed. The build rejects reserved key names, so this only fires
+    // for a stale or hand-edited build artifact. Skip the tool rather than fail the whole agent, as
+    // the MCP name cases below do.
     if (isReserved(endpointId)) {
       console.warn(`Endpoint tool "${endpointId}" uses a reserved key name — skipped.`);
       continue;
@@ -165,7 +168,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
 
   // Build sub-agent tools
   for (const subAgentRef of agent.agents ?? []) {
-    assertNotReserved(subAgentRef.agentId, 'Sub-agent', context.i18n);
+    assertNotPlatformToolName(subAgentRef.agentId, 'Sub-agent', context.i18n);
     // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
     // than fail the whole agent.
     if (isReserved(subAgentRef.agentId)) {
