@@ -179,9 +179,9 @@ test('deleteOne catch invalid options', async () => {
     write: true,
   };
   const res = await MongoDBDeleteOne({ request, connection });
+  // mongodb v7 returns no deletedCount for an unacknowledged write.
   expect(res).toEqual({
     acknowledged: false,
-    deletedCount: 0,
   });
 });
 

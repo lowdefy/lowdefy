@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigError, RequestError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, RequestError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 
@@ -70,6 +70,13 @@ const connections = {
       TestRequestCheckWrite: mockTestRequestCheckWrite,
     },
   },
+  TestTenantConnection: {
+    meta: { tenant: true },
+    schema: {},
+    requests: {
+      TestRequest: mockTestRequest,
+    },
+  },
 };
 
 const operators = {
@@ -98,7 +105,7 @@ const authenticatedContext = testContext({
   readConfigFile: mockReadConfigFile,
   operators,
   secrets,
-  session: { user: { id: 'id' } },
+  user: { id: 'id' },
 });
 
 const defaultParams = {
@@ -203,7 +210,7 @@ test('call request, protected auth with user', async () => {
   });
 });
 
-test('call request, protected auth without user', async () => {
+test('call request, protected auth without user throws AuthenticationError', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       requestConfig: {
@@ -220,8 +227,31 @@ test('call request, protected auth without user', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(AuthenticationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
+    'Authentication required for request "requestId".'
+  );
+});
+
+test('call request, protected auth with user missing the required roles stays opaque', async () => {
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      requestConfig: {
+        id: 'request:pageId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        auth: { public: false, roles: ['admin'] },
+        properties: {
+          requestProperty: 'requestProperty',
+        },
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(authenticatedContext, defaultParams)).rejects.toThrow(
     'Request "requestId" does not exist.'
   );
 });
@@ -371,9 +401,95 @@ test('deserialize inputs', async () => {
           payload: { date: new Date(0) },
           payloadDate: new Date(0),
         },
+        tenant: null,
       },
     ],
   ]);
+});
+
+test('tenant connection passes the tenant verdict to the resolver', async () => {
+  const organizationContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'tenant' },
+    secrets,
+    user: { id: 'id', organization_id: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await callRequest(organizationContext, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].tenant).toEqual({
+    field: 'organization_id',
+    value: 'org-1',
+  });
+});
+
+test('tenant connection without a caller organization throws AuthenticationError', async () => {
+  const orglessTenantContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'tenant' },
+    secrets,
+    user: { id: 'id' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await expect(callRequest(orglessTenantContext, defaultParams)).rejects.toThrow(
+    AuthenticationError
+  );
+  await expect(callRequest(orglessTenantContext, defaultParams)).rejects.toThrow(
+    'Request "requestId" reads tenant connection "testConnection" but no caller organization resolved.'
+  );
+});
+
+test('tenant connection resolves a null verdict under the pinned policy', async () => {
+  const pinnedContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'pinned' },
+    secrets,
+    user: { id: 'id', organization_id: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  await callRequest(pinnedContext, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].tenant).toBe(null);
 });
 
 test('evaluate request properties operators', async () => {

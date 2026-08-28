@@ -54,24 +54,16 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
-    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.callbacks : [],
-    store: typesMap.auth.callbacks,
-    packageName,
-    typePrefix,
-    version,
-  });
-
-  createTypeDefinitions({
-    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.events : [],
-    store: typesMap.auth.events,
-    packageName,
-    typePrefix,
-    version,
-  });
-
-  createTypeDefinitions({
     typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.providers : [],
     store: typesMap.auth.providers,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.strategies : [],
+    store: typesMap.auth.strategies,
     packageName,
     typePrefix,
     version,
@@ -110,8 +102,32 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
+    typeNames: packageTypes.notifications,
+    store: typesMap.notifications,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
     typeNames: packageTypes.requests,
     store: typesMap.requests,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: packageTypes.steps,
+    store: typesMap.steps,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
+    typeNames: packageTypes.websockets,
+    store: typesMap.websockets,
     packageName,
     typePrefix,
     version,
@@ -126,6 +142,19 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   if (type.isObject(packageTypes.blockMetas)) {
     Object.entries(packageTypes.blockMetas).forEach(([blockType, meta]) => {
       typesMap.blockMetas[`${typePrefix}${blockType}`] = meta;
+    });
+  }
+
+  // Connection capability metadata (eg. { tenant: true } for connection types
+  // that implement the tenant scoping contract). Same flow as blockMetas. The
+  // store is initialized here because typesMap skeletons predating the key
+  // exist in several packages.
+  if (type.isObject(packageTypes.connectionMetas)) {
+    if (!type.isObject(typesMap.connectionMetas)) {
+      typesMap.connectionMetas = {};
+    }
+    Object.entries(packageTypes.connectionMetas).forEach(([connectionType, meta]) => {
+      typesMap.connectionMetas[`${typePrefix}${connectionType}`] = meta;
     });
   }
 }

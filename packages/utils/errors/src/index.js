@@ -49,6 +49,16 @@
  *    - Caught: Caller of the action/resolver; signals "the called routine deliberately failed" as distinct from a system fault
  *    - Format: [User Error] message
  *
+ * 7. AuthenticationError - Unauthenticated request to a protected endpoint
+ *    - Thrown: API/request authorization when no caller resolved
+ *    - Caught: Server error handlers, before structured logging and Sentry (401)
+ *    - Format: [AuthenticationError] message
+ *
+ * 8. TwoFactorEnrolmentRequiredError - Authorized caller with no enrolled second factor
+ *    - Thrown: The authorization gate, when auth.twoFactor.required is set and the caller is unenrolled
+ *    - Caught: Server error handlers, before structured logging and Sentry (403)
+ *    - Format: [TwoFactorEnrolmentRequiredError] message
+ *
  * Location Resolution Utilities:
  *   resolveConfigLocation     - Sync: configKey → {source, config} via keyMap/refMap
  *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
@@ -57,6 +67,7 @@
  */
 
 import ActionError from './ActionError.js';
+import AuthenticationError from './AuthenticationError.js';
 import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
@@ -71,10 +82,12 @@ import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
 import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
+import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
 
 export {
   ActionError,
+  AuthenticationError,
   BlockError,
   BuildError,
   ConfigError,
@@ -89,6 +102,7 @@ export {
   resolveErrorLocation,
   ServiceError,
   shouldSuppressBuildCheck,
+  TwoFactorEnrolmentRequiredError,
   UserError,
   VALID_CHECK_SLUGS,
 };

@@ -242,9 +242,9 @@ test('deleteMany mongodb error', async () => {
     write: true,
   };
   const res = await MongoDBDeleteMany({ request, connection });
+  // mongodb v7 returns no deletedCount for an unacknowledged write.
   expect(res).toEqual({
     acknowledged: false,
-    deletedCount: 0,
   });
 });
 

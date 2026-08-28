@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,24 +28,34 @@ async function MongodbDeleteMany({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { filter } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.deleteMany(filter, options);
   if (logCollection) {
-    await logCollection.insertOne({
-      args: { filter, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      response,
-      timestamp: new Date(),
-      type: 'MongoDBDeleteMany',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          response,
+          timestamp: new Date(),
+          type: 'MongoDBDeleteMany',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   }
   const { acknowledged, deletedCount } = serialize(response);
   return { acknowledged, deletedCount };

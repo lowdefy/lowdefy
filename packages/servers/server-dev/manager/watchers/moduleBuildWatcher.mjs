@@ -56,7 +56,6 @@ function moduleBuildWatcher(context) {
             : 'Module skeleton files changed, running shallow rebuild.'
         );
         await context.lowdefyBuild();
-        await context.compileCss();
       } else {
         const invalidatePath = path.join(context.directories.build, 'invalidatePages');
         fs.writeFileSync(invalidatePath, String(Date.now()));

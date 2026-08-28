@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable react/jsx-props-no-spreading */
 
 function authNotConfigured() {
   throw new Error('Auth not configured.');
@@ -22,9 +21,31 @@ function authNotConfigured() {
 function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
+    user: null,
+    acceptInvitation: authNotConfigured,
+    addPasskey: authNotConfigured,
+    changePassword: authNotConfigured,
+    deletePasskey: authNotConfigured,
+    updatePasskey: authNotConfigured,
+    getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
-    signIn: authNotConfigured,
+    leaveOrganization: authNotConfigured,
+    requestPasswordReset: authNotConfigured,
+    resetPassword: authNotConfigured,
+    revokeOtherSessions: authNotConfigured,
+    sendVerificationEmail: authNotConfigured,
+    setActiveOrganization: authNotConfigured,
+    signInEmail: authNotConfigured,
+    signInMagicLink: authNotConfigured,
+    signInOauth2: authNotConfigured,
+    signInSocial: authNotConfigured,
     signOut: authNotConfigured,
+    signUpEmail: authNotConfigured,
+    twoFactorDisable: authNotConfigured,
+    twoFactorEnable: authNotConfigured,
+    twoFactorGenerateBackupCodes: authNotConfigured,
+    twoFactorVerifyBackupCode: authNotConfigured,
+    twoFactorVerifyTotp: authNotConfigured,
   };
 
   return children(auth);

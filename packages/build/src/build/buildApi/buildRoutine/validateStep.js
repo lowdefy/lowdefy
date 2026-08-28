@@ -18,8 +18,9 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
+import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
-function validateStep(step, { endpointId }) {
+function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -69,6 +70,78 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (step.type === 'CallAgent') {
+    if (type.isNone(step.properties?.agentId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" requires properties.agentId.`,
+        { configKey }
+      );
+    }
+    if (!type.isString(step.properties.agentId) && !type.isObject(step.properties.agentId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.agentId is not a string.`,
+        { received: step.properties.agentId, configKey }
+      );
+    }
+    if (type.isNone(step.properties?.prompt)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" requires properties.prompt.`,
+        { configKey }
+      );
+    }
+    if (!type.isString(step.properties.prompt) && !type.isObject(step.properties.prompt)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" properties.prompt is not a string.`,
+        { received: step.properties.prompt, configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `CallAgent step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
+  if (step.type === 'RenderNotification') {
+    if (type.isNone(step.properties?.notificationId)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" requires properties.notificationId.`,
+        { configKey }
+      );
+    }
+    if (
+      !type.isString(step.properties.notificationId) &&
+      !type.isObject(step.properties.notificationId)
+    ) {
+      throw new ConfigError(
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" properties.notificationId is not a string.`,
+        { received: step.properties.notificationId, configKey }
+      );
+    }
+    if (type.isNone(step.properties?.data)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" requires properties.data.`,
+        { configKey }
+      );
+    }
+    // One item per render — arrays are iterated with a :for control in the routine.
+    if (!type.isObject(step.properties.data)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" properties.data is not an object.`,
+        { received: step.properties.data, configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `RenderNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
   if (step.type === 'ValidateSchema') {
     if (type.isNone(step.properties?.schema)) {
       throw new ConfigError(
@@ -91,6 +164,28 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (stepTypes?.[step.type]) {
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.properties) && !type.isObject(step.properties)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" properties is not an object.`,
+        { received: step.properties, configKey }
+      );
+    }
+    if (!type.isNone(step.system) && !type.isBoolean(step.system)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" system must be a boolean.`,
+        { received: step.system, configKey }
+      );
+    }
+    return;
+  }
+
   if (type.isUndefined(step.connectionId)) {
     throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
       configKey,
@@ -102,6 +197,26 @@ function validateStep(step, { endpointId }) {
       configKey,
     });
   }
+  // Step-level tenant values are the exception sentinels — the wall itself is
+  // declared on the connection, never per step. "none" opts the step out of
+  // the wall (system context); "authored" declares the step authors its own
+  // tenant clause in a stage the wall can not scope mechanically, audited at
+  // runtime.
+  if (!type.isUndefined(step.tenant) && step.tenant !== 'none' && step.tenant !== 'authored') {
+    throw new ConfigError(
+      `Step "${step.id}" at endpoint "${endpointId}" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.`,
+      { received: step.tenant, configKey }
+    );
+  }
+
+  // Best-effort (literal pipelines only): a walled pipeline the wall can not
+  // scope mechanically must declare tenant: authored. Runtime re-checks.
+  validateTenantPipelineEntry({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    tenantConnectionIds,
+    configKey,
+  });
 }
 
 export default validateStep;

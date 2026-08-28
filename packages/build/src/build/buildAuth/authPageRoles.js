@@ -1,0 +1,36 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// The auth page roles an app (auth.authPages) or a module manifest
+// (auth.pages) may fill. Mirrors the authPages keys in lowdefySchema.js - a
+// role added there is added here too. Most also get a path default in
+// setAuthDefaults.js; acceptInvitation, twoFactor and twoFactorEnrol are the
+// exceptions (intentionally unset). twoFactorEnrol has no default because the
+// page is contributed by a module or hand-written - a default path pointing at
+// a nonexistent page would satisfy the required check while redirecting to /404.
+const authPageRoles = [
+  'signIn',
+  'signUp',
+  'error',
+  'forgotPassword',
+  'resetPassword',
+  'verifyEmail',
+  'twoFactor',
+  'twoFactorEnrol',
+  'acceptInvitation',
+];
+
+export default authPageRoles;

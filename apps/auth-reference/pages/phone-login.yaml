@@ -1,0 +1,150 @@
+id: phone-login
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: phone_login_title
+    type: Title
+    properties:
+      content: Phone sign-in
+      level: 2
+  - id: phone_number
+    type: TextInput
+    properties:
+      title: Phone number
+      placeholder: '+27831234567 (E.164 - spaced or local forms are rejected)'
+  # The captcha gate on the OTP send - /phone-number/send-otp converts
+  # anonymous requests into per-SMS spend, so it is in auth.captcha's
+  # protected endpoints. The block renders the provider widget (the test
+  # site key always passes) and writes the minted token into state under
+  # its blockId; provider and siteKey come from the projection, so this
+  # page needs no captcha wiring of its own.
+  - id: captcha
+    type: Captcha
+    visible:
+      _build.authConfig: captcha.enabled
+    properties:
+      provider:
+        _build.authConfig: captcha.provider
+      siteKey:
+        _build.authConfig: captcha.siteKey
+  - id: send_code_button
+    type: Button
+    properties:
+      title: Send code
+      block: true
+    events:
+      onClick:
+        try:
+          - id: send_otp
+            type: PhoneNumberSendOtp
+            params:
+              phoneNumber:
+                _state: phone_number
+              captchaToken:
+                _state: captcha
+          - id: code_sent
+            type: SetState
+            params:
+              code_sent: true
+              send_error_message: null
+        catch:
+          - id: show_send_error
+            type: SetState
+            params:
+              send_error_message:
+                _actions: send_otp.error.message
+          # Captcha tokens are single-use - the failed send consumed this
+          # one; mint a fresh token so the retry does not fail with a
+          # missing-response error.
+          - id: reset_captcha
+            type: CallMethod
+            params:
+              blockId: captcha
+              method: reset
+  - id: send_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: send_error_message
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ message }}</p>
+          on:
+            message:
+              _state: send_error_message
+  - id: code_sent_html
+    type: Html
+    visible:
+      _eq:
+        - _state: code_sent
+        - true
+    properties:
+      html: |
+        <p>Code sent. This walkthrough has no real SMS provider - read the
+        code from the <code>sms-outbox</code> collection in the auth
+        database.</p>
+  - id: otp_code
+    type: TextInput
+    visible:
+      _eq:
+        - _state: code_sent
+        - true
+    properties:
+      title: One-time code
+  - id: verify_button
+    type: Button
+    visible:
+      _eq:
+        - _state: code_sent
+        - true
+    properties:
+      title: Verify and sign in
+      block: true
+    events:
+      onClick:
+        try:
+          - id: verify
+            type: PhoneNumberVerify
+            params:
+              phoneNumber:
+                _state: phone_number
+              code:
+                _state: otp_code
+        catch:
+          - id: show_verify_error
+            type: SetState
+            params:
+              verify_error_message:
+                _actions: verify.error.message
+  - id: verify_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: verify_error_message
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ message }}</p>
+          on:
+            message:
+              _state: verify_error_message
+  - id: login_link
+    type: Button
+    properties:
+      title: Sign in with email instead
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_login
+          type: Link
+          params:
+            pageId: login

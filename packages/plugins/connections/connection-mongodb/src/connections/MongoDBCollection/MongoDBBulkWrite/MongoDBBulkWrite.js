@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
+import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request }) {
+async function MongodbBulkWrite({ connection, request, tenant }) {
   const deserializedRequest = deserialize(request);
-  const { operations, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { operations } = deserializedRequest;
+  if (tenant) {
+    operations = applyTenantToBulkOperations({ operations, tenant });
+  }
   const { collection } = await getCollection({ connection });
   const response = await collection.bulkWrite(operations, options);
   return serialize(response);

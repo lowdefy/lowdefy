@@ -1,0 +1,11 @@
+# Phase-8 error demo: this deployment runs the tenant policy, so there is no
+# single pinned organization for _organization to read - the operator fails
+# at evaluation with an error naming the policy. Compare with the pinned
+# auth-reference app, where the same endpoint returns { id, slug, name }.
+id: org-info
+type: Api
+routine:
+  - ':return':
+      organization:
+        id:
+          _organization: id

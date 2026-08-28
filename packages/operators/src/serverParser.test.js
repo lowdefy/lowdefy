@@ -125,6 +125,31 @@ test('lowdefyApp absent defaults to undefined in operator context', () => {
   expect(operatorContext.lowdefyApp).toBeUndefined();
 });
 
+test('forwards organization into operator context', () => {
+  const input = { a: { _test: { params: true } } };
+  const organization = {
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'default', name: 'default' },
+  };
+  const parser = new ServerParser({
+    operators,
+    secrets,
+    user,
+    organization,
+  });
+  parser.parse({ args, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.organization).toEqual(organization);
+});
+
+test('organization absent defaults to undefined in operator context', () => {
+  const input = { a: { _test: { params: true } } };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ args, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.organization).toBeUndefined();
+});
+
 test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new ServerParser({ operators, secrets, user });

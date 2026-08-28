@@ -17,11 +17,14 @@
 import { get } from '@lowdefy/helpers';
 
 function filterMenuList(context, { menuList }) {
-  const { authorize } = context;
+  const { authorizeOutcome } = context;
   const filtered = menuList
     .map((item) => {
       if (item.type === 'MenuLink') {
-        if (authorize(item)) {
+        // enrol_required keeps the link visible: the outcome means "authorised,
+        // pending enrolment", and hiding it would empty an unenrolled user's whole
+        // menu on the enrolment page they are sitting on. Only 'deny' hides.
+        if (authorizeOutcome(item) !== 'deny') {
           return item;
         }
         return null;

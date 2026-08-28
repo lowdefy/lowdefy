@@ -1,0 +1,381 @@
+# Admin surface on the phase-6 admin steps: every call below is a CallAPI to
+# a role-gated admin-* Api endpoint (auth.api.roles) whose routine runs the
+# step. The direct /api/auth/organization/* fetches this page used before
+# phase 6 are gone - under the pinned policy those routes are not mounted.
+#
+# Two unrelated authorities, two controls. The app roles control writes
+# member.appRoles (what a member may do inside the app - the field the page
+# and endpoint gates read). The org role control writes member.role (who
+# administers org-a). The user-admin app role gets a caller to this page;
+# whether any button below succeeds is decided by that caller's own member
+# row in org-a, which this page cannot show them and does not pretend to.
+id: members
+type: Box
+properties:
+  style:
+    maxWidth: 720
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_members
+      type: CallAPI
+      params:
+        endpointId: admin-list-members
+blocks:
+  - id: members_title
+    type: Title
+    properties:
+      content: Members (user-admin)
+      level: 2
+  - id: members_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for member in members %}
+              <li><b>{{ member.user.email }}</b> - member id: {{ member.id }},
+              appRoles: <code>{{ member.appRoles | dump }}</code>,
+              org role: <code>{{ member.role }}</code></li>
+            {% endfor %}
+            </ul>
+          on:
+            members:
+              _api: admin-list-members.response.members
+  - id: refresh_members_button
+    type: Button
+    properties:
+      title: Refresh members (ListMembers)
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: reload_members
+          type: CallAPI
+          params:
+            endpointId: admin-list-members
+  - id: invite_title
+    type: Title
+    properties:
+      content: Invite a member (InviteMember)
+      level: 4
+  - id: invite_email
+    type: TextInput
+    properties:
+      title: Email
+  # App roles ride the invitation and land on the minted member row. Nothing
+  # validates them, so "not-a-role" is offered deliberately: it is accepted,
+  # stored, and grants nothing.
+  - id: invite_app_roles
+    type: MultipleSelector
+    properties:
+      title: App roles (member.appRoles - optional)
+      options:
+        - user-admin
+        - auditor
+        - not-a-role
+  # The org tier the minted member row will hold. Only these three names
+  # exist; anything else is BetterAuth's ROLE_NOT_FOUND at the rail. Pick
+  # admin to invite someone who may administer org-a from their first session.
+  - id: invite_org_role
+    type: Selector
+    properties:
+      title: Org role (member.role - defaults to member when left empty)
+      options:
+        - member
+        - admin
+        - owner
+  - id: invite_contact_id
+    type: TextInput
+    properties:
+      title: Contact id (optional - set on the user's contact_id on accept)
+  - id: invite_button
+    type: Button
+    properties:
+      title: Send invitation
+      block: true
+    events:
+      onClick:
+        try:
+          - id: invite
+            type: CallAPI
+            params:
+              endpointId: admin-invite-member
+              payload:
+                email:
+                  _state: invite_email
+                appRoles:
+                  _state: invite_app_roles
+                orgRole:
+                  _state: invite_org_role
+                contactId:
+                  _state: invite_contact_id
+          - id: show_invite_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-invite-member.response
+              last_error: null
+        catch:
+          - id: show_invite_error
+            type: SetState
+            params:
+              last_error:
+                _actions: invite.error.message
+  - id: cancel_invitation_title
+    type: Title
+    properties:
+      content: Cancel a pending invitation (CancelInvitation)
+      level: 4
+  - id: cancel_invitation_id
+    type: TextInput
+    properties:
+      title: Invitation id (from the invite response above)
+  - id: cancel_invitation_button
+    type: Button
+    properties:
+      title: Cancel invitation
+      block: true
+    events:
+      onClick:
+        try:
+          - id: cancel_invitation
+            type: CallAPI
+            params:
+              endpointId: admin-cancel-invitation
+              payload:
+                invitationId:
+                  _state: cancel_invitation_id
+          - id: show_cancel_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-cancel-invitation.response
+              last_error: null
+        catch:
+          - id: show_cancel_error
+            type: SetState
+            params:
+              last_error:
+                _actions: cancel_invitation.error.message
+  - id: update_role_title
+    type: Title
+    properties:
+      content: Update a member's app roles (UpdateMemberRoles)
+      level: 4
+  - id: update_member_id
+    type: TextInput
+    properties:
+      title: Member id
+  - id: update_app_roles
+    type: MultipleSelector
+    properties:
+      title: App roles (member.appRoles - select nothing to clear them)
+      options:
+        - user-admin
+        - auditor
+        - not-a-role
+  - id: update_role_button
+    type: Button
+    properties:
+      title: Update member app roles
+      block: true
+    events:
+      onClick:
+        # A whole-field replace on member.appRoles, native array in and out.
+        # An empty selection sends [] and clears the member's app roles - the
+        # selector holds no value until it is touched, so the default fills
+        # the array in. member.role is untouched: the control below owns it.
+        try:
+          - id: update_member_roles
+            type: CallAPI
+            params:
+              endpointId: admin-update-member-roles
+              payload:
+                memberId:
+                  _state: update_member_id
+                appRoles:
+                  _if_none:
+                    - _state: update_app_roles
+                    - []
+          - id: show_update_roles_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-member-roles.response
+              last_error: null
+          - id: reload_after_update_roles
+            type: CallAPI
+            params:
+              endpointId: admin-list-members
+        catch:
+          - id: show_update_roles_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_member_roles.error.message
+  - id: update_org_role_title
+    type: Title
+    properties:
+      content: Update a member's org role (UpdateMemberOrgRole)
+      level: 4
+  - id: update_org_role_help
+    type: Html
+    properties:
+      html: |
+        <p>The grant surface for organization authority: this is what decides
+        whether a member's own admin writes land. It writes
+        <code>member.role</code> and nothing else - app roles are the control
+        above. <code>member</code> is the revoked value; there is no fourth
+        one. Demoting the organization's sole owner fails at the rail, which
+        is why the walkthrough bootstrap seeds an owner.</p>
+  - id: update_org_role
+    type: Selector
+    properties:
+      title: Org role (uses the member id above)
+      options:
+        - member
+        - admin
+        - owner
+  - id: update_org_role_button
+    type: Button
+    properties:
+      title: Update member org role
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_member_org_role
+            type: CallAPI
+            params:
+              endpointId: admin-update-member-org-role
+              payload:
+                memberId:
+                  _state: update_member_id
+                orgRole:
+                  _state: update_org_role
+          - id: show_update_org_role_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-member-org-role.response
+              last_error: null
+          - id: reload_after_update_org_role
+            type: CallAPI
+            params:
+              endpointId: admin-list-members
+        catch:
+          - id: show_update_org_role_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_member_org_role.error.message
+  - id: update_member_attributes_title
+    type: Title
+    properties:
+      content: Update a member's attributes (UpdateMemberAttributes)
+      level: 4
+  - id: member_attributes_json
+    type: TextInput
+    properties:
+      title: Attributes as JSON, e.g. {"branches":["a","b"]} (uses the member id above)
+  - id: update_member_attributes_button
+    type: Button
+    properties:
+      title: Update member attributes
+      block: true
+    events:
+      onClick:
+        try:
+          - id: update_member_attributes
+            type: CallAPI
+            params:
+              endpointId: admin-update-member-attributes
+              payload:
+                memberId:
+                  _state: update_member_id
+                attributes:
+                  _json.parse:
+                    _state: member_attributes_json
+          - id: show_update_attributes_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-update-member-attributes.response
+              last_error: null
+        catch:
+          - id: show_update_attributes_error
+            type: SetState
+            params:
+              last_error:
+                _actions: update_member_attributes.error.message
+  - id: remove_member_title
+    type: Title
+    properties:
+      content: Remove a member (RemoveMember)
+      level: 4
+  - id: remove_member_id_or_email
+    type: TextInput
+    properties:
+      title: Member id or email
+  - id: remove_member_button
+    type: Button
+    properties:
+      title: Remove member
+      type: danger
+      block: true
+    events:
+      onClick:
+        try:
+          - id: remove_member
+            type: CallAPI
+            params:
+              endpointId: admin-remove-member
+              payload:
+                memberIdOrEmail:
+                  _state: remove_member_id_or_email
+          - id: show_remove_response
+            type: SetState
+            params:
+              last_response:
+                _api: admin-remove-member.response
+              last_error: null
+          - id: reload_after_remove
+            type: CallAPI
+            params:
+              endpointId: admin-list-members
+        catch:
+          - id: show_remove_error
+            type: SetState
+            params:
+              last_error:
+                _actions: remove_member.error.message
+  - id: last_response_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: last_response
+  - id: last_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: last_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: last_error

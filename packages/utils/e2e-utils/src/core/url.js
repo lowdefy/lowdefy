@@ -14,40 +14,87 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
+import { type } from '@lowdefy/helpers';
 
-async function expectUrl(page, { url, timeout = 5000 }) {
-  if (!url) {
-    throw new Error('expectUrl requires a "url" parameter (string or RegExp).');
+import { waitForReady } from './navigation.js';
+
+// The client router's createUrl prepends basePath, so the pathname handed to it
+// must have basePath stripped or a basePath app receives it twice.
+function createTargetLocation({ basePath = '', href, key, value }) {
+  const url = new URL(href);
+  if (type.isNone(value)) {
+    url.searchParams.delete(key);
+  } else {
+    url.searchParams.set(key, value);
   }
-  await expect(page).toHaveURL(url, { timeout });
+  const pathname =
+    basePath && url.pathname.startsWith(basePath)
+      ? url.pathname.slice(basePath.length)
+      : url.pathname;
+  return { pathname, query: url.searchParams.toString() };
 }
 
-async function expectUrlQuery(page, { key, value, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const url = new URL(page.url());
-        return url.searchParams.get(key);
-      },
-      { timeout }
-    )
-    .toBe(value);
-}
-
+// Navigates through the app's own router rather than calling history.pushState
+// directly. A bare pushState updates the URL without notifying the router, so
+// the page config is never re-fetched and Dynamic pages keep serving content
+// resolved from the previous urlQuery. Routing through the router is what a
+// Link or SetUrlQuery action in the app does.
 async function setUrlQuery(page, { key, value }) {
-  await page.evaluate(
-    ({ k, v }) => {
-      const url = new URL(window.location.href);
-      if (v === null || v === undefined) {
-        url.searchParams.delete(k);
-      } else {
-        url.searchParams.set(k, v);
-      }
-      window.history.pushState({}, '', url);
-    },
-    { k: key, v: value }
-  );
+  const { basePath, dynamic, href } = await page.evaluate(() => {
+    const lowdefy = window.lowdefy;
+    const router = lowdefy?._internal?.router;
+    if (!router) {
+      throw new Error('Lowdefy client not initialized. Call goto() before setting urlQuery.');
+    }
+    return {
+      basePath: router.basePath ?? '',
+      dynamic: lowdefy.contexts[`page:${lowdefy.pageId}`]?._internal?.pageConfig?.dynamic === true,
+      href: window.location.href,
+    };
+  });
+
+  // A router navigation always re-fetches the page config, and blocks reading
+  // _url_query re-render only once that config is applied. Listening starts
+  // before the navigation so the response cannot be missed.
+  const pageConfigFetched = page
+    .waitForResponse((response) => response.url().includes('/api/page/'), { timeout: 30000 })
+    .catch((error) => {
+      // A response that never arrives must not hang the suite — fall through and
+      // let the test's own assertion report it. Anything else is a real fault.
+      if (error.name !== 'TimeoutError') throw error;
+    });
+
+  // A Dynamic page's content is resolved server-side from urlQuery, and the
+  // engine rebuilds its context whenever a new config object arrives (see
+  // getContext). Waiting for that rebuild proves the re-resolved content is in
+  // place; the response arriving only proves it is on its way. Static pages keep
+  // a memoized context, so there is no identity change to wait for.
+  const previousPageConfig = dynamic
+    ? await page.evaluateHandle(
+        () => window.lowdefy.contexts[`page:${window.lowdefy.pageId}`]._internal.pageConfig
+      )
+    : null;
+
+  await page.evaluate(({ pathname, query }) => {
+    // scroll: false keeps the viewport where it was — a query change is not a
+    // page navigation from the test's point of view.
+    window.lowdefy._internal.router.push({ pathname, query, scroll: false });
+  }, createTargetLocation({ basePath, href, key, value }));
+
+  await pageConfigFetched;
+
+  if (previousPageConfig) {
+    await page.waitForFunction(
+      (previous) =>
+        window.lowdefy.contexts[`page:${window.lowdefy.pageId}`]?._internal?.pageConfig !==
+        previous,
+      previousPageConfig,
+      { timeout: 30000 }
+    );
+    await previousPageConfig.dispose();
+  }
+
+  await waitForReady(page);
 }
 
-export { expectUrl, expectUrlQuery, setUrlQuery };
+export { createTargetLocation, setUrlQuery };

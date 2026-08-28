@@ -359,8 +359,8 @@ test('handleError skipped when error.handled is already true', async () => {
   });
   const context = { handleError };
   // First pass: null routine triggers `throw new Error('Invalid routine.')`
-  // inside runRoutine's try block. The catch sets handled=true and calls
-  // handleError once.
+  // inside runRoutine's try block. The catch calls handleError once, which sets
+  // handled=true.
   const res1 = await runRoutine(context, {}, { routine: null });
   expect(res1.status).toBe('error');
   expect(res1.error.handled).toBe(true);

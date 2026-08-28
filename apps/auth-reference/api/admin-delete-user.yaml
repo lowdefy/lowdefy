@@ -1,0 +1,17 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# DeleteUser cascades: the user row goes through the admin plugin's removeUser
+# (which also clears the user's session and account rows), then the step
+# deletes the user's member rows and pending invitations at the adapter
+# layer. The app-owned contact (user-contacts) is left untouched. Returns
+# { success, user, members, invitations } so the walkthrough can inspect what
+# was removed.
+id: admin-delete-user
+type: Api
+routine:
+  - id: delete_user
+    type: DeleteUser
+    properties:
+      userId:
+        _payload: userId
+  - ':return':
+      _step: delete_user

@@ -597,3 +597,154 @@ nested:
     expect(res.out.nested['~r']).toBe(templateRefId);
   });
 });
+
+describe('_build.app', () => {
+  afterEach(() => {
+    delete context.appMeta;
+  });
+
+  test('_build.app resolves an app metadata field during ref resolution', async () => {
+    context.appMeta = { slug: 'my-app', version: '1.2.3' };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+appVersion:
+  _build.app: version`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.appVersion).toBe('1.2.3');
+  });
+
+  test('_build.app: true resolves the whole app metadata object', async () => {
+    context.appMeta = { slug: 'my-app', version: '1.2.3' };
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+meta:
+  _build.app: true`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.meta).toEqual({ slug: 'my-app', version: '1.2.3' });
+  });
+
+  test('unknown _build operator collects a config error', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+oops:
+  _build.appp: version`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain('_build.appp');
+  });
+});
+
+describe('_build.authConfig', () => {
+  const projection = {
+    emailAndPassword: { enabled: true },
+    magicLink: { enabled: false },
+    twoFactor: { enabled: true },
+    passkey: { enabled: false },
+    providers: [{ id: 'google', type: 'Google' }],
+    organizations: { signup: 'invite-only' },
+  };
+
+  afterEach(() => {
+    delete context.authConfigProjection;
+  });
+
+  test('_build.authConfig resolves projection paths during ref resolution', async () => {
+    context.authConfigProjection = projection;
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+emailLogin:
+  _build.authConfig: emailAndPassword.enabled
+signup:
+  _build.authConfig: organizations.signup
+providers:
+  _build.authConfig: providers`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.emailLogin).toBe(true);
+    expect(res.signup).toBe('invite-only');
+    expect(res.providers).toEqual([{ id: 'google', type: 'Google' }]);
+  });
+
+  test('_build.authConfig resolves inside a refed page file', async () => {
+    context.authConfigProjection = projection;
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+pages:
+  - _ref: pages/login.yaml`,
+      },
+      {
+        path: 'pages/login.yaml',
+        content: `
+id: login
+type: Box
+properties:
+  showPasskey:
+    _build.authConfig: passkey.enabled`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res.pages[0].properties.showPasskey).toBe(false);
+  });
+
+  test('_build.authConfig with unknown path collects an error naming the readable paths', async () => {
+    context.authConfigProjection = projection;
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+oops:
+  _build.authConfig: authPages.signIn`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain('unreadable path "authPages.signIn"');
+    expect(context.errors[0].message).toContain(
+      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "twoFactor.required", "twoFactor.trustDevice", "passkey.enabled", "phoneNumber.enabled", "phoneNumber.signUpOnVerification", "captcha.enabled", "captcha.provider", "captcha.siteKey", "providers", "organizations.policy", "organizations.signup", "roles"'
+    );
+  });
+
+  test('_build.authConfig collects the self-reference error when no projection is on the context', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+oops:
+  _build.authConfig: providers`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await buildRefs({ context });
+    expect(context.errors).toHaveLength(1);
+    expect(context.errors[0].message).toContain(
+      '_build.authConfig is not available here.'
+    );
+  });
+});

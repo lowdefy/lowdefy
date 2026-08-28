@@ -1,5 +1,52 @@
 # @lowdefy/server-enterprise
 
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [59cae71]
+  - @lowdefy/blocks-antd@5.5.1
+  - @lowdefy/blocks-tiptap@5.5.1
+  - @lowdefy/api@5.5.1
+  - @lowdefy/client@5.5.1
+  - @lowdefy/layout@5.5.1
+  - @lowdefy/actions-core@5.5.1
+  - @lowdefy/blocks-antd-x@5.5.1
+  - @lowdefy/blocks-basic@5.5.1
+  - @lowdefy/blocks-loaders@5.5.1
+  - @lowdefy/operators-js@5.5.1
+  - @lowdefy/plugin-next-auth@5.5.1
+  - @lowdefy/block-utils@5.5.1
+  - @lowdefy/errors@5.5.1
+  - @lowdefy/helpers@5.5.1
+  - @lowdefy/logger@5.5.1
+  - @lowdefy/node-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [6dcdb6a]
+- Updated dependencies [b368e15]
+- Updated dependencies [f88fe33]
+- Updated dependencies [7ab09d6]
+  - @lowdefy/blocks-tiptap@5.5.0
+  - @lowdefy/blocks-antd-x@5.5.0
+  - @lowdefy/api@5.5.0
+  - @lowdefy/client@5.5.0
+  - @lowdefy/layout@5.5.0
+  - @lowdefy/actions-core@5.5.0
+  - @lowdefy/blocks-antd@5.5.0
+  - @lowdefy/blocks-basic@5.5.0
+  - @lowdefy/blocks-loaders@5.5.0
+  - @lowdefy/operators-js@5.5.0
+  - @lowdefy/plugin-next-auth@5.5.0
+  - @lowdefy/block-utils@5.5.0
+  - @lowdefy/errors@5.5.0
+  - @lowdefy/helpers@5.5.0
+  - @lowdefy/logger@5.5.0
+  - @lowdefy/node-utils@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

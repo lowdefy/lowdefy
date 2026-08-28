@@ -1,0 +1,17 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# An omitted organizationId defaults to the PINNED organization - the org
+# the engine ensures by slug at startup (org-a here) - for any caller,
+# including system: true invocations. An explicit organizationId always
+# wins (pass org-b's id to list its members); under the tenant policy
+# omission is a runtime error naming the fix.
+id: admin-list-members
+type: Api
+routine:
+  - id: list_members
+    type: ListMembers
+    properties:
+      limit: 100
+      organizationId:
+        _payload: organizationId
+  - ':return':
+      _step: list_members

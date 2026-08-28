@@ -1,0 +1,483 @@
+name: auth-reference
+lowdefy: local
+
+# Reference app for the BetterAuth engine (auth-upgrade phases 1-3).
+# Exercises: email/password signup with email verification, magic link,
+# OAuth (Google), protected/public/role-gated pages, sign out, sessions,
+# auth hooks (user.create.before, session.create.after, email.verified),
+# and organizations: this deployment pins org-a with open signup (auto-join
+# with the built-in member tier and no app roles), member-resolved app roles
+# and attributes, invitations, merge-on-signup against user-contacts, and
+# the pinned active-organization invariant.
+# The sibling apps auth-reference-b (pinned org-b, invite-only) and
+# auth-reference-tenant (tenant policy) share the same auth database.
+# Phase 6 adds the admin steps: role-gated admin-* Api endpoints drive the
+# user and member administration routines (/users and /members), and a
+# system: true step runs caller-less in the audit-login hook.
+# Phase 8 adds the user-admin platform asks: attributes stored as native
+# sub-documents (a native aggregation filters on attribute contents at
+# admin-members-by-attribute), invite-time member attributes with
+# re-invite-replaces/resend-re-sends semantics, org-scoped steps defaulting
+# organizationId to the pinned org, and the _organization server operator
+# (org-info).
+# Phase 9 adds the account asks: the self-service action catalog (password
+# change/reset, two-factor with TOTP + backup codes, passkeys, session
+# revocation, AcceptInvitation), user.profile self-service through
+# UpdateUserProfile, the per-step per-organization step floor, _user.roles
+# (member.appRoles) and _user.org_roles (member.role) as separate fields, the
+# UpdateMemberOrgRole grant surface, the account-kit local module
+# contributing auth wiring from its manifest, and the _build.authConfig
+# build operator (the module's login-methods page).
+# The two-factor-lifecycle phase turns two-factor into a floor
+# (auth.twoFactor.required): an unenrolled member is redirected to
+# authPages.twoFactorEnrol on every page and refused at every
+# request/endpoint/websocket with a 403 TwoFactorEnrolmentRequiredError, until
+# they enrol either a TOTP factor or a passkey. It exercises: that enrolment
+# floor and its callbackUrl redirect; two-factor-enrol as the ONE protected
+# auth page (session-holding but factor-less), calling no Lowdefy
+# request/endpoint because an unenrolled caller is refused at all of them;
+# _user.two_factor_enrolled resolving true once a factor is held; the two admin
+# recovery routines (ResetUserTwoFactor paired mandatorily with
+# RevokeUserSessions, and RevokeUserPasskeys with its optional passkeyId); and
+# the signed-out existence fork (a protected-by-default app sends an anonymous
+# caller to sign-in rather than /404, so a missing page never reveals its
+# non-existence).
+# See README.md for the full walkthrough and required environment variables.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  # Phase-9 self-service methods. Two-factor is TOTP + backup codes only;
+  # TwoFactorEnable returns the totpURI and codes the security page renders
+  # once. Passkeys run the WebAuthn ceremony inside PasskeyRegister - rpId
+  # must match the host the browser sees (localhost for the dev walkthrough;
+  # passkeys do not work on http://127.0.0.1).
+  #
+  # required: true makes enrolment a floor - a member who has not enrolled a
+  # second factor is redirected to authPages.twoFactorEnrol on every page and
+  # refused at every request/endpoint/websocket with a 403
+  # TwoFactorEnrolmentRequiredError until they enrol. A caller satisfies it with
+  # EITHER a TOTP enrolment OR a registered passkey (either plugin is a
+  # sufficient route, which is why validation refuses required: true only when
+  # both are off). Before turning this on for real: enrol more than one admin
+  # first - there is no escape hatch, and a locked-out sole admin's only way
+  # back is a direct database edit.
+  twoFactor:
+    enabled: true
+    required: true
+
+  passkey:
+    enabled: true
+    rpId: localhost
+    rpName: auth-reference
+
+  # Phone-number login: OTP sign-in/sign-up over SMS (the phone-login page).
+  # SMS dispatch is the send-otp-sms hook binding below - it writes codes to
+  # the sms-outbox collection, this walkthrough's Mailpit-for-SMS. The wire
+  # format is pinned to E.164 (+27831234567); spaced or local forms are
+  # rejected before any send. signUpOnVerification makes first verify create
+  # the account; the derived temp emails land on a reserved test domain that
+  # is never deliverable.
+  phoneNumber:
+    enabled: true
+    signUpOnVerification:
+      tempEmailDomain: phone.auth-reference.test
+
+  # Captcha on the spend endpoints: Cloudflare Turnstile with the documented
+  # always-pass test keys (site key 1x00000000000000000000AA, secret key
+  # 1x0000000000000000000000000000000AA - set as LOWDEFY_SECRET_
+  # TURNSTILE_SECRET_KEY). The explicit endpoints list scopes the gate to
+  # signup and the OTP send so the other walkthrough scenarios stay
+  # token-free; omit the key to protect the computed default set (every
+  # public initiate endpoint of the enabled methods). Pages feed the Captcha
+  # block from the _build.authConfig projection and thread the minted token
+  # through the captchaToken action param.
+  captcha:
+    enabled: true
+    provider: cloudflare-turnstile
+    siteKey: 1x00000000000000000000AA
+    secretKey:
+      _secret: TURNSTILE_SECRET_KEY
+    endpoints:
+      - /sign-up/email
+      - /phone-number/send-otp
+
+  # Local dev sending: run Mailpit (see README) and point the auth_email SMTP
+  # connection at it. auth.email only names the connection - the transport,
+  # the from address and the delivery filter live on the connection itself.
+  email:
+    connectionId: auth_email
+
+  providers:
+    - id: auth0
+      type: GenericOAuth
+      properties:
+        clientId:
+          _secret: AUTH0_CLIENT_ID
+        clientSecret:
+          _secret: AUTH0_CLIENT_SECRET
+        discoveryUrl:
+          _secret: AUTH0_DISCOVERY_URL
+        scopes:
+          - openid
+          - profile
+          - email
+
+  account:
+    accountLinking:
+      enabled: true
+      trustedProviders: [auth0, emailAndPassword]
+
+  session:
+    expiresIn: 604800
+    updateAge: 86400
+
+  # This deployment pins org-a as the active organization. Signup is open:
+  # a new signup auto-joins org-a with the built-in member tier and no app
+  # roles - it passes the membership wall while role-gated pages still gate
+  # it. Under pinned the organization's id IS this slug, and a session whose
+  # active organization is not org-a resolves unauthenticated here.
+  organizations:
+    policy: pinned
+    org: org-a
+    signup: open
+
+  # The app's role catalog. These are APP roles: they live on
+  # member.appRoles, reach config as _user.roles, and are the only source the
+  # page and endpoint gates below match against. They say nothing about who
+  # may administer an organization - that is member.role, BetterAuth's
+  # owner/admin/member tier, which reaches config as _user.org_roles and which
+  # no gate reads.
+  #
+  # There is no app-wide administering role to configure. Every auth step
+  # declares the authority it requires in meta.authority, and the engine
+  # enforces it per organization against the caller's member row in the
+  # TARGET organization, underneath the auth.api.roles gate below. Steps
+  # marked system: true run caller-less and are exempt.
+  #
+  # So user-admin below opens the admin UI and nothing more: the role gate
+  # alone is no longer sufficient for a write. The walkthrough admin also
+  # needs authority in org-a, which is data, not config - scripts/set-member.mjs
+  # seeds it with --org-role owner.
+  roles:
+    - id: user-admin
+      label: User administration
+      description: Opens the admin pages and the admin-* endpoints.
+    - id: auditor
+      label: Auditor
+      description: Opens the audit report pages.
+    - id: partner
+      label: Partner
+      description: Reaches the partner HTTP endpoints; granted to API strategy callers.
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+      # Phase-9 password reset pages and the 2FA challenge page all also hold
+      # authPages roles, which implies public - listing them here is
+      # redundant but harmless (getAlwaysPublicPageIds unions rather than
+      # conflicts). login-methods holds no role; it renders the
+      # _build.authConfig projection for anyone.
+      - forgot-password
+      - reset-password
+      - two-factor-challenge
+      - login-methods
+      # Phone OTP sign-in/sign-up - public like login and signup.
+      - phone-login
+    roles:
+      user-admin:
+        - admin
+        - members
+        - contacts
+        - users
+      auditor:
+        - audit-reports
+
+  # HTTP API authorization. admin-* and partner-data are role-gated; whoami
+  # is deliberately public - it echoes the resolved caller for the session-
+  # vs-strategy precedence scenarios (resolution runs on public endpoints
+  # too; only the authorization gate differs).
+  # This gate decides who reaches the routine: a caller without the
+  # user-admin app role gets the opaque endpoint-does-not-exist rejection
+  # before it runs. It does not decide whether the write lands - each step's
+  # own authority does, per organization.
+  api:
+    roles:
+      # The admin-* glob already gates every admin-* endpoint, including the
+      # two 2FA recovery endpoints added this phase (admin-reset-user-two-factor,
+      # admin-revoke-user-passkeys) - no per-id entry is needed here, and adding
+      # one would only duplicate the glob. The gate decides who reaches the
+      # routine; each step's org authority (user: [reset-two-factor] /
+      # [revoke-passkeys], target-user bounded) decides whether the write lands.
+      user-admin:
+        - 'admin-*'
+      partner:
+        - partner-data
+
+  # signIn is also claimed by the account-kit module manifest - the app's
+  # entry wins per key (app-wins), so /login stays the sign-in page and the
+  # module's login page remains an ordinary protected module page. The app
+  # does NOT set "error": the module's claim serves it (/account-kit/error),
+  # public automatically because it holds an authPages role.
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+    forgotPassword: /forgot-password
+    resetPassword: /reset-password
+    # The two 2FA pages have OPPOSITE public-ness on purpose. two-factor-challenge
+    # is PUBLIC (kept in auth.pages.public below): a challenged sign-in holds no
+    # session, only a BetterAuth cookie. two-factor-enrol is PROTECTED (absent
+    # from that list): the enrolling caller holds a valid session and is only
+    # missing a factor. Do not "fix" one to match the other.
+    twoFactor: /two-factor-challenge
+    # Required when twoFactor.required is true - the build fails without it, and
+    # every unenrolled member is redirected here with a ?callbackUrl= back to
+    # the page they were bounced from.
+    twoFactorEnrol: /two-factor-enrol
+
+  # Each entry binds an auth lifecycle point to an InternalApi endpoint.
+  # The endpoint's routine is the hook body; it runs in a system context
+  # (_user empty, subject in _payload, _secret working). Any number of
+  # bindings may share a point (phase 9) - they compose in tier order:
+  # engine hooks, then module-contributed bindings (the account-kit module
+  # binds session.create.after and email.verified too, and its bindings are
+  # placed before these), then the app's entries in array order.
+  # normalize-signup carries the merge-on-signup match for trusted-provider
+  # OAuth (arrives verified), and on-email-verified carries the
+  # email/password merge (verified only at this point).
+  hooks:
+    - id: normalize-signup
+      point: user.create.before
+      endpointId: normalize-signup
+    - id: audit-login
+      point: session.create.after
+      endpointId: audit-login
+    - id: on-email-verified
+      point: email.verified
+      endpointId: on-email-verified
+    # SMS dispatch for phone login. phoneNumber.enabled requires the
+    # phone.otp.send binding at build - there is no fallback SMS transport.
+    # One endpoint binds both send points (an app wanting different messages
+    # binds two endpoints); phone.passwordReset.send left unbound would make
+    # the phone reset request fail loudly naming the missing binding.
+    - id: send-otp-sms
+      point: phone.otp.send
+      endpointId: send-otp-sms
+    - id: send-reset-sms
+      point: phone.passwordReset.send
+      endpointId: send-otp-sms
+    # The phone analog of email.verified - a phone-first app runs
+    # merge-on-signup here; the walkthrough writes an audit row.
+    - id: on-phone-verified
+      point: phone.verified
+      endpointId: on-phone-verified
+    # Uncomment to hand invitation email dispatch to the invitation-send
+    # endpoint - the stock auth.email template then does NOT send; the hook
+    # owns dispatch (phase-6 walkthrough). Leave commented to exercise the
+    # stock-template fallback through Mailpit.
+    # - id: invitation-send
+    #   point: invitation.send
+    #   endpointId: invitation-send
+
+  # API auth strategies (phase 4) - external callers authenticate with a
+  # static API key or an HMAC-signed JWT. A logged-in session always wins
+  # over a presented credential, and strategy callers bypass the
+  # org-membership wall (they are members of no organization); their roles
+  # are deployment-global and check against auth.api.roles below.
+  strategies:
+    - id: partner-access
+      type: apiKey
+      properties:
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+      roles:
+        - partner
+      attributes:
+        branches: [north, east]
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        issuer: https://auth.example.test
+        audience: auth-reference-api
+        claimMapping:
+          id: sub
+          roles: roles
+      roles: []
+
+  # Uncomment to exercise the wrong-roles opaque /404 redirect and the
+  # pre-resolved dev caller (roles are authoritative; no engine runs):
+  # dev:
+  #   mockUser:
+  #     id: mock-user
+  #     email: mock@example.com
+  #     name: Mock User
+  #     roles: []
+
+# Phase-9 module gate: a local module that ships auth artifacts and declares
+# their wiring in its manifest (modules/account-kit/module.lowdefy.yaml) -
+# the build contributes the corresponding auth entries with scoped ids and
+# logs each contribution. account-kit claims two authPages roles (signIn,
+# which the app's own authPages entry overrides - app wins - and error,
+# which the app does not set, so the module page serves it), declares one
+# further public page (account-help), and binds its account-audit
+# InternalApi endpoint to session.create.after and email.verified - both
+# points the app also binds above, so each composed slot runs the module
+# binding first, then the app entry. (The _build.authConfig demo page,
+# login-methods, is app config: module content resolves before the
+# projection pre-pass, so module pages cannot read the projection today.)
+modules:
+  - id: account-kit
+    source: 'file:modules/account-kit'
+
+# The hooks write an audit trail here; the same database as auth so no
+# extra infrastructure is needed for the walkthrough. user-contacts is the
+# app-owned CRM contact collection the merge-on-signup hooks match against.
+connections:
+  # The transport auth.email sends through - Mailpit for the walkthrough.
+  - id: auth_email
+    type: SMTP
+    properties:
+      from: auth-reference@localhost
+      host:
+        _secret: SMTP_HOST
+      port: 1025
+      secure: false
+  - id: audit_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: hook-audit
+      write: true
+  - id: contacts_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: user-contacts
+      write: true
+  # Phase-8 native-read demo: reads of auth-owned collections may go native
+  # (steps for writes, connections for reads). Read-only - no write: true.
+  - id: members_read_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: user-members
+  # The phone OTP "SMS provider" for the walkthrough - the send-otp-sms hook
+  # routine writes codes here instead of calling a real provider; read the
+  # code from this collection to complete the phone-login flow.
+  - id: sms_outbox_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: AUTH_DATABASE_URI
+      collection: sms-outbox
+      write: true
+
+api:
+  - _ref: api/normalize-signup.yaml
+  - _ref: api/audit-login.yaml
+  - _ref: api/on-email-verified.yaml
+  # Phase-4 API strategy endpoints.
+  - _ref: api/partner-data.yaml
+  - _ref: api/whoami.yaml
+  # The invitation.send hook body - unreachable until its auth.hooks entry
+  # above is uncommented.
+  - _ref: api/invitation-send.yaml
+  # Phase-6 admin step endpoints - role-gated by auth.api.roles above.
+  - _ref: api/admin-list-users.yaml
+  - _ref: api/admin-ban-user.yaml
+  - _ref: api/admin-unban-user.yaml
+  - _ref: api/admin-revoke-user-sessions.yaml
+  # Two-factor lifecycle recovery endpoints - role-gated by the admin-* glob
+  # in auth.api.roles above. Reset pairs RevokeUserSessions mandatorily.
+  - _ref: api/admin-reset-user-two-factor.yaml
+  - _ref: api/admin-revoke-user-passkeys.yaml
+  - _ref: api/admin-delete-user.yaml
+  - _ref: api/admin-update-user-attributes.yaml
+  - _ref: api/admin-list-members.yaml
+  - _ref: api/admin-invite-member.yaml
+  - _ref: api/admin-cancel-invitation.yaml
+  - _ref: api/admin-remove-member.yaml
+  - _ref: api/admin-update-member-roles.yaml
+  - _ref: api/admin-update-member-org-role.yaml
+  - _ref: api/admin-update-member-attributes.yaml
+  - _ref: api/admin-create-organization.yaml
+  # Phase-8 endpoints: the _organization operator read and the native
+  # attribute-filtered aggregation over user-members.
+  - _ref: api/org-info.yaml
+  - _ref: api/admin-members-by-attribute.yaml
+  # Phase-9 endpoints. update-my-profile is deliberately NOT role-gated -
+  # UpdateUserProfile self-targeting (userId = the caller's own id) is exempt
+  # from the step floor, so a plain member saves their own profile.
+  # admin-update-user-profile is role-gated like the other admin-* endpoints.
+  # list-members-ungated is deliberately ungated too: the floor refuses a
+  # caller who holds no member:list authority in the target organization at
+  # the STEP, even through an endpoint with no auth.api.roles entry.
+  - _ref: api/update-my-profile.yaml
+  - _ref: api/admin-update-user-profile.yaml
+  - _ref: api/list-members-ungated.yaml
+  # Phone-number hook bodies: SMS dispatch and the phone.verified audit.
+  - _ref: api/send-otp-sms.yaml
+  - _ref: api/on-phone-verified.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/organizations.yaml
+  - _ref: pages/sessions.yaml
+  - _ref: pages/admin.yaml
+  - _ref: pages/users.yaml
+  - _ref: pages/members.yaml
+  - _ref: pages/contacts.yaml
+  - _ref: pages/audit-reports.yaml
+  - _ref: pages/hook-audit.yaml
+  # Phase-9 pages: the password round-trip, the account security surface
+  # (2FA, passkeys, session revocation, profile self-service), the 2FA
+  # sign-in challenge, and the _build.authConfig projection demo.
+  - _ref: pages/forgot-password.yaml
+  - _ref: pages/reset-password.yaml
+  - _ref: pages/security.yaml
+  - _ref: pages/two-factor-challenge.yaml
+  # The one PROTECTED auth page (deliberately NOT in auth.pages.public): the
+  # enrolment floor's exemption for a session-holding, factor-less caller.
+  - _ref: pages/two-factor-enrol.yaml
+  - _ref: pages/login-methods.yaml
+  # Phone OTP sign-in/sign-up with the captcha gate on the send.
+  - _ref: pages/phone-login.yaml

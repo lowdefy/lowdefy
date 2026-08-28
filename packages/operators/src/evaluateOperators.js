@@ -47,11 +47,21 @@ function hasDynamicMarker(value) {
   return hasDynChild(value);
 }
 
+// Build-time prefixes are '_build.' and its escaped forms ('__build.', '___build.', …)
+// produced when _function re-parses its body with `_${operatorPrefix}`. Runtime
+// prefixes ('_', '__', '___', …) never match. Escape depth does not change the
+// evaluation mode: any build prefix means the author asked for build-time evaluation.
+function isBuildPrefix(operatorPrefix) {
+  return /^_+build\.$/.test(operatorPrefix);
+}
+
 function evaluateOperators({
   input,
   operators,
   operatorPrefix = '_',
+  authConfig,
   env,
+  lowdefyApp,
   dynamicIdentifiers,
   typeNames,
   args,
@@ -65,6 +75,7 @@ function evaluateOperators({
 
   const resolvedDynamicIdentifiers = dynamicIdentifiers ?? new Set();
   const resolvedTypeNames = typeNames ?? new Set();
+  const isBuildTimePrefix = isBuildPrefix(operatorPrefix);
   const errors = [];
 
   const parser = {
@@ -73,7 +84,9 @@ function evaluateOperators({
         input: callInput,
         operators,
         operatorPrefix: callPrefix ?? operatorPrefix,
+        authConfig,
         env,
+        lowdefyApp,
         dynamicIdentifiers: resolvedDynamicIdentifiers,
         typeNames: resolvedTypeNames,
         args: callArgs,
@@ -117,7 +130,7 @@ function evaluateOperators({
 
     // Bubble up ~dyn from children (but not at type boundaries).
     // _build.* operators always evaluate even with dynamic params, so skip bubble-up for them.
-    const isBuildOperator = isOperatorObject && operatorPrefix === '_build.';
+    const isBuildOperator = isOperatorObject && isBuildTimePrefix;
     if (!isTypeBoundary && !isBuildOperator && hasDynamicMarker(node)) {
       return setDynamicMarker(node);
     }
@@ -132,19 +145,32 @@ function evaluateOperators({
 
     // Dynamic identifier check — skip for _build.* operators
     const fullIdentifier = methodName ? `${op}.${methodName}` : op;
-    if (operatorPrefix !== '_build.') {
+    if (!isBuildTimePrefix) {
       if (resolvedDynamicIdentifiers.has(fullIdentifier) || resolvedDynamicIdentifiers.has(op)) {
         return setDynamicMarker(node);
       }
     }
 
-    // Unknown operator — mark as dynamic
+    // Unknown operator. Under a runtime prefix an operator may be runtime-only,
+    // so it is deferred by marking it dynamic. Under a build prefix (at any escape
+    // depth) the author asked for build-time evaluation, so an unknown operator
+    // (typo, or a runtime-only operator misused at build time) is a config error.
     if (type.isUndefined(operators[op])) {
+      if (isBuildTimePrefix) {
+        const error = new ConfigError(`Operator "${key}" is not a valid _build operator.`, {
+          configKey: node['~k'],
+          received: { [key]: node[key] },
+        });
+        error.lineNumber = node['~l'];
+        error.refId = node['~r'];
+        errors.push(error);
+        return null;
+      }
       return setDynamicMarker(node);
     }
 
     // Dynamic params check — skip for _build.* operators (they always evaluate)
-    if (operatorPrefix !== '_build.') {
+    if (!isBuildTimePrefix) {
       if (hasDynamicMarker(node[key])) {
         return setDynamicMarker(node);
       }
@@ -159,7 +185,9 @@ function evaluateOperators({
       const result = operators[op]({
         args,
         arrayIndices: [],
+        authConfig,
         env,
+        lowdefyApp,
         methodName,
         operators,
         params,

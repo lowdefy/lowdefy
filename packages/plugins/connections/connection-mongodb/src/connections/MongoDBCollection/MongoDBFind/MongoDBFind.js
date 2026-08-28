@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbFind({ request, connection }) {
+async function MongodbFind({ request, connection, tenant }) {
   const deserializedRequest = deserialize(request);
-  const { query, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { query } = deserializedRequest;
+  if (tenant) {
+    query = applyTenantToFilter({ filter: query, tenant, position: 'a query' });
+  }
   const { collection } = await getCollection({ connection });
   const cursor = await collection.find(query, options);
   const res = await cursor.toArray();

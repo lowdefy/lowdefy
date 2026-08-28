@@ -1,5 +1,25 @@
 # @lowdefy/blocks-antd-x
 
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/block-utils@5.5.1
+- @lowdefy/helpers@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- b368e15: fix: AgentChat no longer replays events for restored conversation history
+
+  Loading a saved conversation into `AgentChat` (via `properties.messages` or the `setMessages` method) fired `onToolCall`, `onToolResult`, `onUserMessage`, and `onTitleGenerated` for every historical message — re-running side effects like state updates or requests that had already happened. Restored history is now recognized and those events are suppressed; only genuinely new activity triggers them.
+
+  Also, `onToolCall` now waits for the tool input to finish streaming before firing, so the event never carries a truncated input object.
+
+  - @lowdefy/block-utils@5.5.0
+  - @lowdefy/helpers@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

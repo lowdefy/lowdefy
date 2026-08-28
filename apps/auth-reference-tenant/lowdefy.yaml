@@ -1,0 +1,89 @@
+name: auth-reference-tenant
+lowdefy: local
+
+# Multi-tenant deployment of the auth-reference suite (auth-upgrade phase
+# 3): the tenant policy. An organization is a business, never a personal
+# workspace - a fresh signup mints its own organization lazily at first
+# session (as owner, set active); an invited signup joins the inviter's
+# tenant and mints nothing. Inherently open signup; the signup key does not
+# apply. Uses its own database so tenants do not mix with the pinned apps.
+# See ../auth-reference/README.md for the walkthrough.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: TENANT_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    # Lazy creation means no tenants for abandoned signups: an unverified
+    # signup never reaches session.create, so no org is minted until a
+    # login completes.
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  # Local dev sending: run Mailpit (see ../auth-reference/README.md) and point
+  # the auth_email SMTP connection at it. auth.email only names the connection -
+  # the transport, the from address and the delivery filter live on the
+  # connection itself.
+  email:
+    connectionId: auth_email
+
+  # tenant: active org = the user's business, oldest membership when they
+  # belong to several; the user switches with SetActiveOrganization.
+  organizations:
+    policy: tenant
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+# The transport auth.email sends through - Mailpit for the walkthrough.
+connections:
+  - id: auth_email
+    type: SMTP
+    properties:
+      from: auth-reference-tenant@localhost
+      host:
+        _secret: SMTP_HOST
+      port: 1025
+      secure: false
+
+# Phase-8 error demos: under the tenant policy there is no single implied
+# organization, so _organization fails at evaluation and an org-scoped step
+# with no organizationId fails naming the fix.
+api:
+  - _ref: api/org-info.yaml
+  - _ref: api/list-members-no-org.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/organizations.yaml
+  - _ref: pages/members.yaml

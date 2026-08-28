@@ -1,0 +1,103 @@
+# Public page (like login): the pending-invitation carve-out admits an
+# invitee's session, but with no member row every protected page treats them
+# as logged out - this page is where they land to accept. The accept runs
+# through the AcceptInvitation catalog action (phase 9; this page posted to
+# the endpoint directly before) - BetterAuth still gates it itself: the
+# session email must match the invitation.
+id: accept-invitation
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+events:
+  onInit:
+    - id: set_invitation_id
+      type: SetState
+      params:
+        invitationId:
+          _url_query: invitationId
+blocks:
+  - id: accept_title
+    type: Title
+    properties:
+      content: Accept invitation
+      level: 2
+  - id: accept_help
+    type: Html
+    properties:
+      html: |
+        <p>Sign in (or sign up) with the invited email address first, then
+        accept. Until you accept, protected pages treat you as logged out.</p>
+  - id: invitation_id_input
+    type: TextInput
+    properties:
+      title: Invitation id
+    value:
+      _state: invitationId
+  - id: accept_button
+    type: Button
+    properties:
+      title: Accept invitation
+      block: true
+    events:
+      onClick:
+        try:
+          - id: accept
+            type: AcceptInvitation
+            params:
+              invitationId:
+                _state: invitation_id_input
+          - id: refresh_after_accept
+            type: UpdateSession
+          - id: accept_result
+            type: SetState
+            params:
+              accept_response:
+                _actions: accept.response
+        catch:
+          - id: show_accept_error
+            type: SetState
+            params:
+              accept_error:
+                _actions: accept.error.message
+  - id: accept_result_html
+    type: Html
+    visible:
+      _ne:
+        - _state: accept_response
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <pre>{{ response | dump(2) }}</pre>
+          on:
+            response:
+              _state: accept_response
+  - id: accept_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: accept_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: accept_error
+  - id: to_dashboard
+    type: Button
+    properties:
+      title: Go to dashboard
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: link_dashboard
+          type: Link
+          params:
+            pageId: dashboard

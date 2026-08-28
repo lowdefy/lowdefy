@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,15 +39,15 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "5.4.0",
-    "ajv": "8.12.0",
+    "@lowdefy/nunjucks": "5.5.1",
+    "ajv": "8.20.0",
     "ajv-errors": "3.0.0",
     "ajv-formats": "2.1.1",
     "ajv-keywords": "5.1.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "jest": "28.1.3"
   },

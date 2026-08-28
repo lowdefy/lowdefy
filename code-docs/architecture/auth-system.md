@@ -1,13 +1,19 @@
 # Auth System Architecture
 
+> **STALE — describes the removed Auth.js engine.** The auth system moved to
+> BetterAuth (`@lowdefy/plugin-better-auth`, `packages/api/src/routes/auth/`,
+> `packages/build/src/build/buildAuth/`); providers, strategies, hooks, steps
+> and organizations replaced the callback/event pipeline documented below.
+> Read the code (and `apps/auth-reference/`) as the source of truth until this
+> document is rewritten via `/l-docs-architecture`.
+
 How authentication integrates with Lowdefy.
 
 ## Overview
 
-Lowdefy authentication is built on Auth.js (NextAuth.js) and provides:
+Lowdefy authentication is built on [Auth.js](https://authjs.dev) v5 (`@auth/core`), wired into the Hono server via `@hono/auth-js`, and provides:
 
 - OAuth/OIDC providers (Google, GitHub, Auth0, etc.)
-- Credentials authentication
 - Database adapters for session storage
 - Role-based access control
 - Protected pages and API endpoints
@@ -65,11 +71,10 @@ auth:
 ```javascript
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
+  validateAuthConfig({ components, context });
   components.auth.configured = configured;
-
-  validateAuthConfig({ components });
-  buildApiAuth({ components }); // API endpoint protection
-  buildPageAuth({ components }); // Page protection
+  buildApiAuth({ components, context }); // API endpoint protection
+  buildPageAuth({ components, context }); // Page protection
   buildAuthPlugins({ components, context });
 
   return components;
@@ -118,39 +123,64 @@ function buildApiAuth({ components }) {
 }
 ```
 
-## NextAuth Configuration
+## Auth.js Configuration
 
 ### Config Translation
 
-**File:** `packages/api/src/routes/auth/getNextAuthConfig.js`
+**File:** `packages/api/src/routes/auth/getAuthConfig.js` (replaces `getNextAuthConfig.js`)
+
+Assembled once per process (module-scoped cache) and consumed by the `initAuthConfig` middleware from `@hono/auth-js`, which the servers mount app-wide when `authJson.configured` is true (`src/app.js`). Each server wraps it (`lib/server/auth/getAuthConfig.js`) to inject the build auth plugins and env secrets.
 
 ```javascript
-function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
-  // Parse operators (_secret support)
+const authConfigCache = {};
+let initialized = false;
+
+function getAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
+  if (initialized) return authConfigCache;
+
+  // Parse operators (_app and _secret support)
   const operatorsParser = new ServerParser({
-    operators: { _secret },
+    lowdefyApp: appMeta,
+    operators: { _app, _secret },
     secrets,
+    user: {},
   });
 
-  const { output: authConfig } = operatorsParser.parse({
+  const { output: authConfig, errors: operatorErrors } = operatorsParser.parse({
     input: authJson,
     location: 'auth',
+    payload: {},
   });
+  if (operatorErrors.length > 0) {
+    throw operatorErrors[0];
+  }
 
-  // Build NextAuth options
-  return {
-    adapter: createAdapter({ authConfig, plugins }),
-    callbacks: createCallbacks({ authConfig, plugins }),
-    events: createEvents({ authConfig, plugins }),
-    providers: createProviders({ authConfig, plugins }),
-    pages: authConfig.authPages,
-    session: authConfig.session,
-    theme: authConfig.theme,
-    cookies: authConfig?.advanced?.cookies,
-    debug: authConfig.debug,
-  };
+  // Build Auth.js options
+  authConfigCache.adapter = createAdapter({ authConfig, logger, plugins });
+  authConfigCache.callbacks = createCallbacks({ authConfig, logger, plugins });
+  authConfigCache.events = createEvents({ authConfig, logger, plugins });
+  authConfigCache.logger = createLogger({ logger });
+  authConfigCache.providers = createProviders({ authConfig, logger, plugins });
+  authConfigCache.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
+  authConfigCache.pages = authConfig.authPages;
+  authConfigCache.session = authConfig.session;
+  authConfigCache.theme = authConfig.theme;
+  authConfigCache.cookies = authConfig?.advanced?.cookies;
+  // Auth.js v5 reads AUTH_SECRET from env but not NEXTAUTH_SECRET — map the
+  // v4 variable here so existing deployments keep working without env changes.
+  authConfigCache.secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+  // Self-hosted servers run behind arbitrary proxies; derive URLs from request
+  // headers (v4 derived them from NEXTAUTH_URL, aliased to AUTH_URL at startup).
+  authConfigCache.trustHost = true;
+  authConfigCache.basePath = '/api/auth';
+  initialized = true;
+  return authConfigCache;
 }
 ```
+
+`createLogger.js` adapts Lowdefy's logger to the Auth.js v5 logger contract: `error(error)`, `warn(code)`, `debug(message, metadata)`.
+
+**Environment variables:** `AUTH_SECRET` and `AUTH_URL` are the preferred names. The `NEXTAUTH_*` variables are still honored for compatibility — `getAuthConfig` maps `NEXTAUTH_SECRET` into `secret`, and `src/index.js` aliases `NEXTAUTH_URL` → `AUTH_URL` at startup before any auth config loads.
 
 ### Provider Creation
 
@@ -171,12 +201,14 @@ function createProviders({ authConfig, plugins }) {
 
 **File:** `packages/plugins/plugins/plugin-next-auth/src/auth/providers.js`
 
-60+ providers including:
+62 providers, re-exported directly from `@auth/core/providers/*` (provider type names unchanged from v4):
 
 - OAuth: Google, GitHub, Discord, LinkedIn, Twitter
 - Enterprise: Okta, Azure AD, Keycloak, Auth0
 - SAML: BoxyHQ SAML
-- Custom: OpenIDConnectProvider, CredentialsProvider
+- Custom: OpenIDConnectProvider (built on the Auth.js v5 `type: 'oidc'` provider type — discovery and ID token handling are built in, so the v4 `idToken: true` flag is gone)
+
+The package keeps the name `@lowdefy/plugin-next-auth` for this release even though the engine is Auth.js.
 
 ## Callback Pipeline
 
@@ -321,7 +353,8 @@ function createAuthorize({ session }) {
     });
   }
 
-  function authorize({ auth }) {
+  function authorize(config) {
+    const { auth } = config;
     if (auth.public === true) return true;
 
     if (auth.public === false) {
@@ -349,11 +382,12 @@ function createAuthorize({ session }) {
 
 ```javascript
 async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
+  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
 
   if (pageConfig && authorize(pageConfig)) {
     const { auth, ...rest } = pageConfig; // Remove auth metadata
-    return { ...rest };
+    // serializer.serialize re-enumerates ~k keys for JSON transfer to client
+    return serializer.serialize(rest);
   }
 
   return null; // 404 for unauthorized
@@ -365,48 +399,63 @@ async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
 **File:** `packages/api/src/routes/endpoints/authorizeApiEndpoint.js`
 
 ```javascript
-function authorizeApiEndpoint({ authorize }, { endpointConfig }) {
+function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
   if (!authorize(endpointConfig)) {
-    throw new ConfigurationError('Not authorized');
+    // "does not exist" rather than "not authorized" — hides endpoint existence
+    throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }
 }
 ```
 
 ## Session Injection
 
-### Server-Side Props
+### Server-Side Context
 
-**File:** `packages/servers/server/lib/server/serverSidePropsWrapper.js`
+**Files:** `packages/servers/server/src/middleware/apiContext.js`, `packages/servers/server/lib/server/auth/session.js`
+
+The `apiContext` middleware (mounted on `/api/*` and the page routes, replaces `serverSidePropsWrapper`) builds the request context, fetches the session, and stores everything on the Hono context:
 
 ```javascript
-function serverSidePropsWrapper(handler) {
-  return async function wrappedHandler(nextContext) {
-    const context = { ... };
+if (!c.req.path.includes('/api/auth')) {
+  context.session = await getSession(c);
+}
+createApiContext(context); // adds user + authorize
+c.set('lowdefyContext', context);
+```
 
-    // Initialize auth options
-    context.authOptions = getAuthOptions(context);
+`getSession` (replaces `getServerSession.js`) reads the session that the app-wide `initAuthConfig` middleware resolved onto the Hono context:
 
-    // Fetch server session
-    context.session = await getServerSession(context);
+```javascript
+import { getAuthUser } from '@hono/auth-js';
 
-    // Create API context with authorization
-    createApiContext(context);
-
-    return handler({ context, nextContext });
-  };
+async function getSession(c) {
+  if (authJson.configured !== true) {
+    return undefined;
+  }
+  const authUser = await getAuthUser(c);
+  return authUser?.session ?? undefined;
 }
 ```
 
+Page renders embed the session in the HTML shell: `src/html/renderPage.js` includes `session` in the `__LOWDEFY_CONFIG__` JSON script, so the client hydrates with the server session without an extra fetch.
+
 ### Client-Side Context
 
-**File:** `packages/servers/server/lib/client/auth/AuthConfigured.js`
+**File:** `packages/servers/server/lib/client/auth/AuthConfigured.jsx`
+
+`SessionProvider`, `useSession`, `getSession`, `signIn`, and `signOut` come from `@hono/auth-js/react`. Fetch paths are configured through the module-level `authConfigManager` instead of `SessionProvider` props:
 
 ```javascript
+import { authConfigManager, getSession, SessionProvider, signIn, signOut, useSession } from '@hono/auth-js/react';
+
+if (lowdefyConfig.basePath) {
+  authConfigManager.setConfig({ basePath: `${lowdefyConfig.basePath}/api/auth` });
+}
+
 function AuthConfigured({ authConfig, children, serverSession }) {
   const auth = { authConfig, getSession, signIn, signOut };
-
   return (
-    <SessionProvider session={serverSession} basePath={basePath}>
+    <SessionProvider session={serverSession}>
       <Session>
         {(session) => {
           auth.session = session;
@@ -422,8 +471,13 @@ function AuthConfigured({ authConfig, children, serverSession }) {
 
 **File:** `packages/plugins/operators/operators-js/src/operators/shared/user.js`
 
+The `user` object is `session.user` (`lowdefy.user = auth?.session?.user ?? null` in `initLowdefyContext`). Plain params read from it via `getFromObject`; the `hasRole`, `hasSomeRoles`, and `hasAllRoles` methods check `user.roles`:
+
 ```javascript
-function _user({ arrayIndices, location, params, user }) {
+function _user({ arrayIndices, location, methodName, params, user }) {
+  if (methodName === 'hasRole') { /* userRoles.includes(role) */ }
+  if (methodName === 'hasSomeRoles') { /* required.some(...) */ }
+  if (methodName === 'hasAllRoles') { /* required.every(...) */ }
   return getFromObject({
     arrayIndices,
     location,
@@ -441,31 +495,32 @@ function _user({ arrayIndices, location, params, user }) {
 content:
   _string:
     - 'Welcome, '
-    - _user: session.user.name
+    - _user: name
 
-# In request authorization
+# Role checks
 visible:
-  _eq:
-    - _user: session.user.role
-    - admin
+  _user.hasRole: admin
 ```
 
-## API Route
+## Auth Routes
 
-**File:** `packages/servers/server/pages/api/auth/[...nextauth].js`
+**File:** `packages/servers/server/src/routes/auth.js`
+
+A Hono middleware mounted at `/api/auth/*` (replaces `pages/api/auth/[...nextauth].js`). The `initAuthConfig(() => getAuthConfig({ logger }))` middleware is mounted app-wide in `src/app.js` when auth is configured; the route itself delegates to `authHandler()` from `@hono/auth-js`. The corporate-email HEAD pre-check branches **inside** the middleware because Hono routes HEAD requests through GET handlers — a separate HEAD route would never match:
 
 ```javascript
-async function handler({ context, req, res }) {
-  if (authJson.configured !== true) {
-    return res.status(404).json({ message: 'Auth not configured' });
-  }
-
-  // Corporate email link check
-  if (req.method === 'HEAD') {
-    return res.status(200).end();
-  }
-
-  return NextAuth(req, res, context.authOptions);
+function authMiddleware() {
+  const handler = authJson.configured === true ? authHandler() : null;
+  return async function auth(c, next) {
+    if (authJson.configured !== true) {
+      return c.json({ message: 'Auth not configured' }, 404);
+    }
+    // Corporate email link check
+    if (c.req.method === 'HEAD') {
+      return c.body(null, 200);
+    }
+    return handler(c, next);
+  };
 }
 ```
 
@@ -505,25 +560,28 @@ buildAuth() [BUILD TIME]
     ↓
 auth.json
     ↓
-[RUNTIME - PAGE REQUEST]
+[RUNTIME - REQUEST]
     ↓
-serverSidePropsWrapper()
-    ├→ getAuthOptions() → getNextAuthConfig()
-    │   ├→ createProviders()
-    │   ├→ createCallbacks()
-    │   ├→ createEvents()
-    │   └→ createAdapter()
-    │
-    ├→ getServerSession()
-    │
+initAuthConfig (app-wide, when configured)
+    └→ getAuthConfig() [cached per process]
+        ├→ createProviders()
+        ├→ createCallbacks()
+        ├→ createEvents()
+        ├→ createAdapter()
+        └→ createLogger()
+    ↓
+apiContext middleware
+    ├→ getSession() → getAuthUser(c)
     └→ createApiContext() → createAuthorize(session)
     ↓
-Page Handler
-    └→ getPageConfig() → authorize(pageConfig)
+/api/auth/* → authHandler()    Page/API routes
+                                └→ getPageConfig() → authorize(pageConfig)
     ↓
-_app.js [CLIENT]
+renderPage embeds session in __LOWDEFY_CONFIG__
     ↓
-Auth Component (SessionProvider)
+client App.jsx [CLIENT]
+    ↓
+Auth Component (SessionProvider from @hono/auth-js/react)
     ↓
 Page Component
     ├→ auth.session
@@ -533,18 +591,20 @@ Page Component
 
 ## Key Files
 
-| Component         | File                                                                   |
-| ----------------- | ---------------------------------------------------------------------- |
-| Config Validation | `packages/build/src/build/buildAuth/validateAuthConfig.js`             |
-| Page Protection   | `packages/build/src/build/buildAuth/buildPageAuth.js`                  |
-| API Protection    | `packages/build/src/build/buildAuth/buildApiAuth.js`                   |
-| NextAuth Config   | `packages/api/src/routes/auth/getNextAuthConfig.js`                    |
-| Providers         | `packages/api/src/routes/auth/createProviders.js`                      |
-| Session Callback  | `packages/api/src/routes/auth/callbacks/createSessionCallback.js`      |
-| JWT Callback      | `packages/api/src/routes/auth/callbacks/createJWTCallback.js`          |
-| Authorization     | `packages/api/src/context/createAuthorize.js`                          |
-| \_user Operator   | `packages/plugins/operators/operators-js/src/operators/shared/user.js` |
-| API Route         | `packages/servers/server/pages/api/auth/[...nextauth].js`              |
+| Component         | File                                                                    |
+| ----------------- | ----------------------------------------------------------------------- |
+| Config Validation | `packages/build/src/build/buildAuth/validateAuthConfig.js`              |
+| Page Protection   | `packages/build/src/build/buildAuth/buildPageAuth.js`                   |
+| API Protection    | `packages/build/src/build/buildAuth/buildApiAuth.js`                    |
+| Auth.js Config    | `packages/api/src/routes/auth/getAuthConfig.js`                         |
+| Providers         | `packages/api/src/routes/auth/createProviders.js`                       |
+| Session Callback  | `packages/api/src/routes/auth/callbacks/createSessionCallback.js`       |
+| JWT Callback      | `packages/api/src/routes/auth/callbacks/createJWTCallback.js`           |
+| Authorization     | `packages/api/src/context/createAuthorize.js`                           |
+| \_user Operator   | `packages/plugins/operators/operators-js/src/operators/shared/user.js`  |
+| Auth Routes       | `packages/servers/server/src/routes/auth.js`                            |
+| Session Lookup    | `packages/servers/server/lib/server/auth/session.js`                    |
+| Client Auth       | `packages/servers/server/lib/client/auth/AuthConfigured.jsx`            |
 
 ## Mock User for Testing (Dev Server Only)
 
@@ -563,8 +623,8 @@ LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"
 ```yaml
 auth:
   providers:
-    - id: credentials
-      type: CredentialsProvider
+    - id: google
+      type: GoogleProvider
       # ...
   dev:
     mockUser:
@@ -586,12 +646,15 @@ async function getMockSession() {
 
   if (!mockUser) return undefined;
 
-  // 2. Validate auth is configured
+  // 2. Deserialize to restore arrays from ~arr markers and remove build markers
+  mockUser = serializer.deserialize(mockUser);
+
+  // 3. Validate auth is configured
   if (authJson.configured !== true) {
     throw new Error('Mock user configured but auth is not configured');
   }
 
-  // 3. Transform through session callback (userFields, custom callbacks apply)
+  // 4. Transform through session callback (userFields, custom callbacks apply)
   const sessionCallback = createSessionCallback({ authConfig: authJson, plugins: { callbacks } });
   const session = await sessionCallback({
     session: { user: {} },
@@ -605,19 +668,17 @@ async function getMockSession() {
 
 ### Integration Points
 
-1. **Server-side requests:** `getServerSession.js` returns mock session before calling NextAuth
-2. **Client-side session:** `[...nextauth].js` returns mock session for `/api/auth/session` requests
-3. **Startup warning:** `checkMockUserWarning.js` logs "Mock user active - login bypassed"
+1. **Server-side requests:** `server-dev/lib/server/auth/session.js` returns the mock session before calling `getAuthUser(c)` — the mock applies everywhere `context.session` is used (page, request, endpoint, and agent authorization)
+2. **Startup warning:** `manager/processes/checkMockUserWarning.mjs` logs "Mock user active - login bypassed"
 
 ### Key Files
 
-| File                                                 | Purpose                        |
-| ---------------------------------------------------- | ------------------------------ |
-| `server-dev/lib/server/auth/getMockSession.js`       | Core mock session logic        |
-| `server-dev/lib/server/auth/checkMockUserWarning.js` | Startup warning                |
-| `server-dev/lib/server/auth/getServerSession.js`     | Server-side integration        |
-| `server-dev/pages/api/auth/[...nextauth].js`         | Client-side integration        |
-| `build/src/lowdefySchema.js`                         | Schema for `auth.dev.mockUser` |
+| File                                                   | Purpose                                          |
+| ------------------------------------------------------ | ------------------------------------------------ |
+| `server-dev/lib/server/auth/getMockSession.js`         | Core mock session logic                          |
+| `server-dev/lib/server/auth/session.js`                | Server-side integration (mock before `getAuthUser`) |
+| `server-dev/manager/processes/checkMockUserWarning.mjs` | Startup warning                                  |
+| `build/src/lowdefySchema.js`                           | Schema for `auth.dev.mockUser`                   |
 
 ### Security Note
 
@@ -641,13 +702,13 @@ The e2e server (`@lowdefy/server-e2e`) provides a separate auth mechanism for Pl
 ### How It Works
 
 1. **Test sets cookie:** `ldf.user({ id, roles })` → `base64(JSON)` → `lowdefy_e2e_user` cookie via `browserContext.addCookies()`
-2. **Server reads cookie:** `getServerSession({ req })` parses the cookie → returns `{ user }`
+2. **Server reads cookie:** `lib/server/auth/session.js` `getSession(c)` parses the cookie → returns `{ user }`
 3. **Authorization runs normally:** `createAuthorize(session)` → `authorize(pageConfig)` — same as production
-4. **Client receives session:** `AuthE2E` passes session from SSR props to `lowdefy.user`
+4. **Client receives session:** `renderPage` embeds the session in `__LOWDEFY_CONFIG__`; the client `Auth` component passes it through to `lowdefy.user`
 
-### Client Auth: AuthE2E
+### Client Auth
 
-Replaces NextAuth's `SessionProvider`. The `signIn` and `signOut` methods throw:
+`lib/client/auth/Auth.jsx` replaces the `@hono/auth-js/react` integration — there is no Auth.js engine in server-e2e. `getSession` fetches `/api/auth/session` (served by `src/routes/sessionMock.js`, which returns `context.session ?? {}` and doubles as the e2e harness health check). The `signIn` and `signOut` methods throw:
 
 ```javascript
 function e2eNotSupported() {
@@ -655,26 +716,19 @@ function e2eNotSupported() {
 }
 ```
 
-### Auth Redirect
+### Unauthorized Pages
 
-Since NextAuth middleware doesn't exist in server-e2e, page handlers check auth explicitly:
-
-```javascript
-if (authJson.configured && !session) {
-  const loginPage = authJson.pages?.public?.[0] ?? '404';
-  return { redirect: { destination: `/${loginPage}`, permanent: false } };
-}
-```
+Protected pages follow the production flow: `getPageConfig` returns `null` for unauthorized pages, and `renderPage` redirects to `/404` (302).
 
 ### Key Files
 
-| File                                             | Purpose                           |
-| ------------------------------------------------ | --------------------------------- |
-| `server-e2e/lib/server/auth/getServerSession.js` | Reads cookie, returns `{ user }`  |
-| `server-e2e/lib/client/auth/AuthE2E.js`          | Client auth (no NextAuth)         |
-| `server-e2e/pages/api/auth/session.js`           | Returns `context.session ?? {}`   |
-| `e2e-utils/src/core/userCookie.js`               | Sets/clears cookie via Playwright |
-| `e2e-utils/src/proxy/createPageManager.js`       | Exposes `ldf.user()` API          |
+| File                                       | Purpose                           |
+| ------------------------------------------ | --------------------------------- |
+| `server-e2e/lib/server/auth/session.js`    | Reads cookie, returns `{ user }`  |
+| `server-e2e/lib/client/auth/Auth.jsx`      | Client auth (no Auth.js)          |
+| `server-e2e/src/routes/sessionMock.js`     | Returns `context.session ?? {}`   |
+| `e2e-utils/src/core/userCookie.js`         | Sets/clears cookie via Playwright |
+| `e2e-utils/src/proxy/createPageManager.js` | Exposes `ldf.user()` API          |
 
 See [server-e2e.md](../servers/server-e2e.md) for full server architecture.
 
@@ -686,4 +740,4 @@ See [server-e2e.md](../servers/server-e2e.md) for full server architecture.
 4. **Roles Validation**: `validateSessionRoles` in the session callback throws `ConfigError` if `session.user.roles` is not an array of strings. Without this, a misconfigured string value (e.g., `roles: "admin"`) causes `String.prototype.includes` to do substring matching — a silent authorization bypass. `createAuthorize` has a defense-in-depth guard for the same check.
 5. **Secret Operator**: `_secret` for credentials in config
 6. **PKCE & State**: OAuth security via Auth.js
-7. **Cookie Security**: Configurable via `auth.advanced.cookies`
+7. **Cookie Security**: Session cookies use the Auth.js v5 `authjs.*` prefix; configurable via `auth.advanced.cookies`

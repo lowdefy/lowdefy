@@ -1,0 +1,49 @@
+# The caller's organization, read-only. This deployment is pinned, so the
+# organization plugin's client HTTP surface is off: SetActiveOrganization
+# cannot be wired here (the build refuses it) and /organization/list is not
+# mounted, so the page reads the pinned organization through the org-info
+# endpoint instead. Switching is a tenant-policy affordance -
+# auth-reference-tenant's own copy of this page carries the switch.
+id: organizations
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_org
+      type: CallAPI
+      params:
+        endpointId: org-info
+blocks:
+  - id: organizations_title
+    type: Title
+    properties:
+      content: My organization
+      level: 2
+  - id: organization_details
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>pinned organization:</b> {{ org.name }} (slug:
+            {{ org.slug }}, id: <code>{{ org.id }}</code>) - under the pinned
+            policy the id IS the slug.</p>
+          on:
+            org:
+              _api: org-info.response.organization
+  - id: current_user
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>active_organization_id:</b> <code>{{ user.active_organization_id }}</code><br/>
+            <b>roles</b> (app roles, member.appRoles): {{ user.roles | dump }}<br/>
+            <b>org_roles</b> (the org tier, member.role): {{ user.org_roles | dump }}<br/>
+            <b>attributes:</b> {{ user.attributes | dump }}</p>
+          on:
+            user:
+              _user: true

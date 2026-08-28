@@ -1,0 +1,26 @@
+id: verify-email
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: verify_email_result
+    type: Result
+    properties:
+      status: success
+      title: Email verified
+      subTitle: Your email address is confirmed - you can now log in.
+    areas:
+      extra:
+        blocks:
+          - id: to_login_button
+            type: Button
+            properties:
+              title: Log in
+            events:
+              onClick:
+                - id: to_login
+                  type: Link
+                  params:
+                    pageId: login

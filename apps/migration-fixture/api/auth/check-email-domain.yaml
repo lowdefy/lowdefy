@@ -1,0 +1,19 @@
+# Migration stub for the old `check-email-domain` signIn callback
+# (local plugin CheckEmailDomainCallback, meta.type: 'signIn' → hook point: session.create.before).
+# Old plugin properties: allowedDomains: [fixture.example.com]
+# TODO(migration): port the plugin's allow/deny logic into this routine.
+# In a `before` hook, `:reject` vetoes the sign-in (surfaces as an error on the login page);
+# a plain `:return <record>` replaces the record being written.
+# The hook payload is read with `_payload` (`_user` is empty inside a hook).
+id: auth/check-email-domain
+type: InternalApi
+routine:
+  - ':if':
+      # TODO(migration): replace this placeholder test with the real domain check,
+      # e.g. test that the domain of `_payload: user.email` is in allowedDomains
+      # (fixture.example.com). Placeholder never rejects.
+      _eq:
+        - true
+        - false
+    ':then':
+      - ':reject': Email domain not allowed.

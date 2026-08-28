@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
+import createAcceptInvitation from './createAcceptInvitation.js';
 import createCallMethod from './createCallMethod.js';
 import createCallAPI from './createCallAPI.js';
+import createChangePassword from './createChangePassword.js';
 import createGetActions from './createGetActions.js';
 import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
@@ -27,23 +29,47 @@ import createGetRequestDetails from './createGetRequestDetails.js';
 import createGetState from './createGetState.js';
 import createGetUrlQuery from './createGetUrlQuery.js';
 import createGetUser from './createGetUser.js';
+import createLeaveOrganization from './createLeaveOrganization.js';
 import createLink from './createLink.js';
+import createListOrganizations from './createListOrganizations.js';
 import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
 import createDisplayMessage from './createDisplayMessage.js';
+import createOauth2Consent from './createOauth2Consent.js';
+import createPasskeyDelete from './createPasskeyDelete.js';
+import createPasskeyRegister from './createPasskeyRegister.js';
+import createPasskeySignIn from './createPasskeySignIn.js';
+import createPasskeyUpdate from './createPasskeyUpdate.js';
+import createPhoneNumberSendOtp from './createPhoneNumberSendOtp.js';
+import createPhoneNumberVerify from './createPhoneNumberVerify.js';
+import createPublish from './createPublish.js';
 import createRequest from './createRequest.js';
+import createRequestPasswordReset from './createRequestPasswordReset.js';
 import createReset from './createReset.js';
+import createResetPassword from './createResetPassword.js';
 import createResetValidation from './createResetValidation.js';
+import createRevokeOtherSessions from './createRevokeOtherSessions.js';
+import createSendVerificationEmail from './createSendVerificationEmail.js';
+import createSetActiveOrganization from './createSetActiveOrganization.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createSignUp from './createSignUp.js';
+import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
+import createTwoFactorDisable from './createTwoFactorDisable.js';
+import createTwoFactorEnable from './createTwoFactorEnable.js';
+import createTwoFactorGenerateBackupCodes from './createTwoFactorGenerateBackupCodes.js';
+import createTwoFactorVerify from './createTwoFactorVerify.js';
+import createUnsubscribe from './createUnsubscribe.js';
 import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
 
 function getActionMethods(props) {
   return {
+    acceptInvitation: createAcceptInvitation(props),
     callAPI: createCallAPI(props),
     callMethod: createCallMethod(props),
+    changePassword: createChangePassword(props),
     displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),
     getBlockId: createGetBlockId(props),
@@ -56,15 +82,37 @@ function getActionMethods(props) {
     getState: createGetState(props),
     getUrlQuery: createGetUrlQuery(props),
     getUser: createGetUser(props),
+    leaveOrganization: createLeaveOrganization(props),
     link: createLink(props),
+    listOrganizations: createListOrganizations(props),
     login: createLogin(props),
     logout: createLogout(props),
+    oauth2Consent: createOauth2Consent(props),
+    passkeyDelete: createPasskeyDelete(props),
+    passkeyRegister: createPasskeyRegister(props),
+    passkeySignIn: createPasskeySignIn(props),
+    passkeyUpdate: createPasskeyUpdate(props),
+    phoneNumberSendOtp: createPhoneNumberSendOtp(props),
+    phoneNumberVerify: createPhoneNumberVerify(props),
+    publish: createPublish(props),
     request: createRequest(props),
+    requestPasswordReset: createRequestPasswordReset(props),
     reset: createReset(props),
+    resetPassword: createResetPassword(props),
     resetValidation: createResetValidation(props),
+    revokeOtherSessions: createRevokeOtherSessions(props),
+    sendVerificationEmail: createSendVerificationEmail(props),
+    setActiveOrganization: createSetActiveOrganization(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    signUp: createSignUp(props),
+    subscribe: createSubscribe(props),
     translate: createTranslate(props),
+    twoFactorDisable: createTwoFactorDisable(props),
+    twoFactorEnable: createTwoFactorEnable(props),
+    twoFactorGenerateBackupCodes: createTwoFactorGenerateBackupCodes(props),
+    twoFactorVerify: createTwoFactorVerify(props),
+    unsubscribe: createUnsubscribe(props),
     updateSession: createUpdateSession(props),
     validate: createValidate(props),
   };

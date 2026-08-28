@@ -1,0 +1,34 @@
+id: sessions
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: sessions_title
+    type: Title
+    properties:
+      content: Sessions (protected)
+      level: 2
+  - id: sessions_text
+    type: Html
+    properties:
+      html: |
+        <p>Session management runs through the mounted BetterAuth endpoints.
+        There are no session-management actions in phase 1, so list and
+        revoke from the browser console on this page:</p>
+        <pre>
+        // List your sessions
+        await fetch('/api/auth/list-sessions', { credentials: 'include' })
+          .then((r) => r.json());
+
+        // Revoke one (token from the list above)
+        await fetch('/api/auth/revoke-session', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: '&lt;token&gt;' }),
+        }).then((r) => r.json());
+        </pre>
+        <p>A revoked session is dead on its next request - revoking the
+        current session then navigating redirects to the login page.</p>

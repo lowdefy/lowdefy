@@ -15,10 +15,10 @@ Errors sent to a browser or an API caller now have `received` and `stack` stripp
 
 - The 500 handlers stripped fields from the outermost error only, so `cause.stack` — and
   the absolute server paths in its frames — reached production browsers.
-- An endpoint result body (`callEndpoint` and the agent route) and a request response body
-  (`callRequest`) were not redacted at all. They carried `received`, which on the request
-  path holds the **evaluated** request properties, so a `_secret` resolved into a request
-  header crossed the wire at HTTP 200.
+- An endpoint result body (`callEndpoint`, and the cron, webhook, detached and agent
+  routes) was not redacted at all. It carried `received`, which on the request path holds
+  the **evaluated** request properties, so a `_secret` resolved into a request header
+  crossed the wire at HTTP 200.
 
 `source` is now guaranteed config-relative (`pages/home.yaml:5`, never `/var/task/...`),
 and `configKey` is kept again: the browser deduplicates errors on `message:configKey`, so

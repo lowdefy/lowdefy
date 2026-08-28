@@ -85,7 +85,7 @@ function createTextContext() {
     logger,
     readConfigFile: mockReadConfigFile,
     secrets,
-    session: { user: { id: 'id' } },
+    user: { id: 'id', roles: [] },
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';

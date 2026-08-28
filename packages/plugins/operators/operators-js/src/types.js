@@ -72,6 +72,7 @@ export default {
       '_uri',
       '_url_query',
       '_user',
+      '_websocket',
     ],
     server: [
       '_and',
@@ -105,6 +106,7 @@ export default {
       '_object',
       '_operator',
       '_or',
+      '_organization',
       '_payload',
       '_product',
       '_random',

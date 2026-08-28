@@ -21,10 +21,13 @@ import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
@@ -35,6 +38,9 @@ function buildPages({ components, context }) {
   // Initialize action ref collections across all pages
   context.linkActionRefs = [];
   context.callApiActionRefs = [];
+  context.websocketActionRefs = [];
+  context.dynamicBlockRefs = [];
+  context.orgClientActionRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -79,6 +85,27 @@ function buildPages({ components, context }) {
   validateCallApiRefs({
     callApiActionRefs: context.callApiActionRefs,
     endpointConfigs,
+    context,
+  });
+
+  // Fail the build when a per-org client action is wired under the "pinned"
+  // organizations policy (the endpoints are disabled there).
+  validateOrgClientActionRefs({
+    orgClientActionRefs: context.orgClientActionRefs,
+    policy: components.auth?.organizations?.policy ?? 'pinned',
+  });
+
+  // Validate that Dynamic blocks reference existing endpoints
+  validateDynamicBlockRefs({
+    dynamicBlockRefs: context.dynamicBlockRefs,
+    endpointConfigs,
+    context,
+  });
+
+  // Validate that Subscribe/Unsubscribe/Publish actions reference defined websockets
+  validateWebsocketRefs({
+    websocketActionRefs: context.websocketActionRefs,
+    websocketIds: context.websocketIds ?? new Set(),
     context,
   });
 

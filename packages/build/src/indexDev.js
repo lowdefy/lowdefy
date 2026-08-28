@@ -16,8 +16,12 @@
 
 export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
+export { default as generateClientJsModule } from './build/buildJs/generateClientJsModule.js';
+export { default as iconPackages } from './build/buildImports/iconPackages.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as createContext } from './createContext.js';
 export { default as makeId } from './utils/makeId.js';
+export { default as serializeBuildException } from './utils/serializeBuildException.js';
+export { hydrateDeferredRecords } from './build/buildRefs/deferredRegistry.js';

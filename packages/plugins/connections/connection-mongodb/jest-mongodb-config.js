@@ -1,5 +1,6 @@
-// @shelf/jest-mongodb loads this file with require(), which on Node >=22 returns the
-// module namespace for ESM files, so options must be a named export (not default).
+// Named export (not default): @shelf/jest-mongodb loads this file with require()
+// and destructures { mongodbMemoryServerOptions } — under Node >=22.12 require(esm)
+// resolves, so only a named ESM export is visible to it.
 // A single-node replica set is used instead of a standalone server because the
 // consecutive id requests use transactions, which require a replica set. The
 // instance block is still required — the preset reads instance.dbName even in
@@ -15,3 +16,5 @@ export const mongodbMemoryServerOptions = {
   },
   autoStart: false,
 };
+
+export default { mongodbMemoryServerOptions };

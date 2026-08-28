@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -19,22 +17,25 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function validateMutualExclusivity({ components, context, entity }) {
-  const configKey = components.auth[entity]?.['~k'] || components.auth?.['~k'];
+function validateMutualExclusivity({ components, entity }) {
+  const entityConfig = components.auth[entity];
+  if (type.isNone(entityConfig)) {
+    return;
+  }
+  const configKey = entityConfig['~k'] ?? components.auth?.['~k'];
   if (
-    (components.auth[entity].protected === true && components.auth[entity].public === true) ||
-    (type.isArray(components.auth[entity].protected) &&
-      type.isArray(components.auth[entity].public))
+    (entityConfig.protected === true && entityConfig.public === true) ||
+    (type.isArray(entityConfig.protected) && type.isArray(entityConfig.public))
   ) {
     throw new ConfigError(
       `Protected and public ${entity} are mutually exclusive. When protected ${entity} are listed, all unlisted ${entity} are public by default and vice versa.`,
       { configKey }
     );
   }
-  if (components.auth[entity].protected === false) {
+  if (entityConfig.protected === false) {
     throw new ConfigError(`Protected ${entity} can not be set to false.`, { configKey });
   }
-  if (components.auth[entity].public === false) {
+  if (entityConfig.public === false) {
     throw new ConfigError(`Public ${entity} can not be set to false.`, { configKey });
   }
 }

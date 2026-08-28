@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/logger",
-  "version": "5.4.0",
+  "version": "5.5.1",
   "license": "Apache-2.0",
   "description": "Lowdefy logging utilities for node, cli, and browser",
   "homepage": "https://lowdefy.com",
@@ -43,15 +43,15 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests"
   },
   "dependencies": {
-    "@lowdefy/errors": "5.4.0",
-    "@lowdefy/helpers": "5.4.0",
+    "@lowdefy/errors": "5.5.1",
+    "@lowdefy/helpers": "5.5.1",
     "ora": "7.0.1",
-    "pino": "8.16.2"
+    "pino": "10.3.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "jest": "28.1.3"
   },

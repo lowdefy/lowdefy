@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
+import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
@@ -58,6 +59,31 @@ function buildRequest(request, pageContext) {
     }
   }
 
+  // Request-level tenant values are the exception sentinels — the wall itself
+  // is declared on the connection, never per request. "none" opts the request
+  // out of the wall (system context); "authored" declares the request authors
+  // its own tenant clause in a stage the wall can not scope mechanically,
+  // audited at runtime.
+  if (
+    !type.isUndefined(request.tenant) &&
+    request.tenant !== 'none' &&
+    request.tenant !== 'authored'
+  ) {
+    throw new ConfigError(
+      `Request "${request.id}" at page "${pageId}" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.`,
+      { received: request.tenant, configKey }
+    );
+  }
+
+  // Best-effort (literal pipelines only): a walled pipeline the wall can not
+  // scope mechanically must declare tenant: authored. Runtime re-checks.
+  validateTenantPipelineEntry({
+    config: request,
+    location: `Request "${request.id}" at page "${pageId}"`,
+    tenantConnectionIds: context.tenantConnectionIds,
+    configKey,
+  });
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {
@@ -75,6 +101,15 @@ function buildRequest(request, pageContext) {
 }
 
 function buildRequests(block, pageContext) {
+  // Runtime-resolved dynamic content cannot define requests — request
+  // artifacts are written at build time, so a runtime request would have no
+  // server-side properties to execute.
+  if (pageContext.forbidRequests === true && !type.isNone(block.requests)) {
+    throw new ConfigError(
+      `Dynamic content must not define requests — found "requests" on block "${block.blockId}" on page "${pageContext.pageId}". Reference requests defined statically on the page instead.`,
+      { received: block.requests, configKey: block['~k'] }
+    );
+  }
   (block.requests || []).forEach((request) => {
     buildRequest(request, pageContext);
   });

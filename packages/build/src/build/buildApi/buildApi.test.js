@@ -223,3 +223,72 @@ test('valid api endpoint', () => {
     ],
   });
 });
+
+test('api endpoint schedules pass through to the artifact', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [
+          { cron: '0 6 * * *', payload: { mode: 'full' } },
+          { cron: '*/15 * * * *', payload: { mode: 'incremental' } },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual([
+    { cron: '0 6 * * *', payload: { mode: 'full' } },
+    { cron: '*/15 * * * *', payload: { mode: 'incremental' } },
+  ]);
+});
+
+test('api endpoint with invalid cron expression throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 6 * * MON' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 0 cron "0 6 * * MON" is invalid at "scheduled_api"'
+  );
+});
+
+test('api endpoint with duplicate cron expressions throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 6 * * *' }, { cron: '0 6 * * *' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 1 has duplicate cron "0 6 * * *" at "scheduled_api".'
+  );
+});
+
+test('api endpoint schedules is not an array throws', () => {
+  const components = {
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: { cron: '0 6 * * *' },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules is not an array at "scheduled_api".'
+  );
+});

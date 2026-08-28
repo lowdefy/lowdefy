@@ -14,15 +14,37 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-function authorizeRequest({ authorize, logger }, { requestConfig }) {
-  if (!authorize(requestConfig)) {
+function authorizeRequest(
+  { authorizeOutcome: authorize, logger, pageId, user },
+  { requestConfig }
+) {
+  const outcome = authorize(requestConfig, { pageId });
+  if (outcome !== 'allow') {
     logger.debug({
       event: 'debug_request_authorize',
       authorized: false,
+      outcome,
       auth_config: requestConfig.auth,
     });
+    if (outcome === 'enrol_required') {
+      // Reached only after the role check passed, so the caller is authorised and
+      // this reveals nothing about what exists (Decision 6). A distinct code, not
+      // a 401 - a 401 reads to the client as a dead session and bounces the user
+      // to sign-in, which is the loop by another route.
+      throw new TwoFactorEnrolmentRequiredError(
+        `Two-factor enrolment required for request "${requestConfig.requestId}".`
+      );
+    }
+    // Unauthenticated on a protected request - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(
+        `Authentication required for request "${requestConfig.requestId}".`
+      );
+    }
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
     throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {
       configKey: requestConfig['~k'],

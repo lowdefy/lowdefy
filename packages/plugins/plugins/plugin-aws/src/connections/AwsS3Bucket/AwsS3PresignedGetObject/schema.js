@@ -35,6 +35,15 @@ export default {
         type: 'AwsS3PresignedGetObject request property "key" should be a string.',
       },
     },
+    public: {
+      type: 'boolean',
+      default: false,
+      description:
+        'Return a stable, non-expiring public URL instead of a signed URL. The object must be publicly readable (e.g. uploaded with acl "public-read") — public is author-declared and never checked at runtime.',
+      errorMessage: {
+        type: 'AwsS3PresignedGetObject request property "public" should be a boolean.',
+      },
+    },
     responseContentDisposition: {
       type: 'string',
       description: 'Sets the Content-Disposition header of the response.',

@@ -27,7 +27,7 @@ A lookup on an error reads the error's serializable form, which brings that form
 - A non-enumerable own property is not readable. `AggregateError`'s `errors` array is
   non-enumerable, so `_actions: x.error.errors` returns the default.
 
-An error that is the _end_ of the path is unchanged — `_actions: x.error` still hands over the error
+An error that is the *end* of the path is unchanged — `_actions: x.error` still hands over the error
 itself, not its extracted form. This entry only adds readable values; for the reads that this
 release does change, see the dot-path resolution entry.
 

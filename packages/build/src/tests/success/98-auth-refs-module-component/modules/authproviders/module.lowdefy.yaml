@@ -1,0 +1,8 @@
+name: Auth Providers Module
+description: Exports an OAuth providers array as a component
+
+components:
+  - id: oauth-providers
+    type: Component
+    component:
+      _ref: components/providers.yaml

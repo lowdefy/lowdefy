@@ -1,0 +1,49 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import callPluginEndpoint from './support/callPluginEndpoint.js';
+
+// organizationId is part of the authored property surface even though sessions
+// belong to the person rather than to an organization: the floor reads it to
+// resolve the organization the caller's session:revoke authority and the target's
+// membership are checked in. It defaults to the pinned organization, so without
+// it a second admin surface's Sign-out control would ask whether the caller holds
+// session: [revoke] in the wrong organization.
+async function RevokeUserSessions({ acting, auth, properties }) {
+  const { userId } = properties;
+  if (type.isNone(userId)) {
+    throw new Error('RevokeUserSessions requires a "userId" property.');
+  }
+  return callPluginEndpoint({
+    acting,
+    auth,
+    body: { userId },
+    endpointKey: 'revokeUserSessions',
+    pluginId: 'admin',
+  });
+}
+
+// Sessions belong to the person, not to an organization, so revoking them on
+// the caller's org authority alone would let an administrator of any
+// organization sign out any user at all. targetUser makes the floor require the
+// target to hold a member row in the organization the caller administers.
+RevokeUserSessions.meta = {
+  authority: { scope: 'org', permissions: { session: ['revoke'] }, targetUser: 'userId' },
+};
+
+export default RevokeUserSessions;

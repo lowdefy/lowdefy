@@ -54,7 +54,7 @@ function createTestContext({ endpointConfigs = {} } = {}) {
       error: jest.fn(),
     },
     readConfigFile: createMockReadConfigFile(endpointConfigs),
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';

@@ -1,0 +1,25 @@
+# 92: API endpoint with schedules
+# Verifies schedules pass through to the endpoint artifact and that build/schedules.json is emitted.
+lowdefy: local
+name: Api Schedules Test
+
+api:
+  - id: purge-stale
+    type: Api
+    payloadSchema:
+      type: object
+      properties:
+        mode:
+          type: string
+    schedules:
+      - cron: '0 6 * * *'
+        payload:
+          mode: full
+      - cron: '*/15 * * * *'
+        payload:
+          mode: incremental
+    routine: []
+
+pages:
+  - id: home
+    type: Box

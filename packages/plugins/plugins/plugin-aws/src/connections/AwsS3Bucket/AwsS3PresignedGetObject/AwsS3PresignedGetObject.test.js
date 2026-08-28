@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject.js';
 
 const mockGetSignedUrl = jest.fn();
 const mockS3ClientConstructor = jest.fn();
 
-jest.mock('@aws-sdk/client-s3', () => ({
+jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation((...args) => {
     mockS3ClientConstructor(...args);
     return {};
@@ -29,9 +28,11 @@ jest.mock('@aws-sdk/client-s3', () => ({
   GetObjectCommand: jest.fn().mockImplementation((params) => params),
 }));
 
-jest.mock('@aws-sdk/s3-request-presigner', () => ({
+jest.unstable_mockModule('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: (...args) => mockGetSignedUrl(...args),
 }));
+
+const { default: AwsS3PresignedGetObject } = await import('./AwsS3PresignedGetObject.js');
 
 const schema = AwsS3PresignedGetObject.schema;
 const { checkRead, checkWrite } = AwsS3PresignedGetObject.meta;
@@ -108,6 +109,94 @@ test('AwsS3PresignedGetObject options', async () => {
   });
   expect(mockGetSignedUrl.mock.calls[0][2]).toEqual({ expiresIn: 1 });
   expect(res).toEqual('res');
+});
+
+test('AwsS3PresignedGetObject passes endpoint and forcePathStyle to the S3 client', async () => {
+  const request = { key: 'key' };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'auto',
+    bucket: 'bucket',
+    endpoint: 'https://account.r2.cloudflarestorage.com',
+    forcePathStyle: true,
+  };
+  await AwsS3PresignedGetObject({ request, connection });
+  expect(mockS3ClientConstructor.mock.calls).toEqual([
+    [
+      {
+        credentials: {
+          accessKeyId: 'accessKeyId',
+          secretAccessKey: 'secretAccessKey',
+        },
+        region: 'auto',
+        endpoint: 'https://account.r2.cloudflarestorage.com',
+        forcePathStyle: true,
+      },
+    ],
+  ]);
+});
+
+test('AwsS3PresignedGetObject returns virtual-hosted public URL when request is public', async () => {
+  const request = { key: 'folder/my file.pdf', public: true };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'eu-west-1',
+    bucket: 'bucket',
+  };
+  const res = await AwsS3PresignedGetObject({ request, connection });
+  expect(res).toEqual('https://bucket.s3.eu-west-1.amazonaws.com/folder/my%20file.pdf');
+  expect(mockGetSignedUrl).not.toHaveBeenCalled();
+});
+
+test('AwsS3PresignedGetObject returns path-style public URL on a custom endpoint', async () => {
+  const request = { key: 'key', public: true };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'auto',
+    bucket: 'bucket',
+    endpoint: 'https://account.r2.cloudflarestorage.com/',
+  };
+  const res = await AwsS3PresignedGetObject({ request, connection });
+  expect(res).toEqual('https://account.r2.cloudflarestorage.com/bucket/key');
+  expect(mockGetSignedUrl).not.toHaveBeenCalled();
+});
+
+test('AwsS3PresignedGetObject public URL uses publicUrlBase override', async () => {
+  const request = { key: 'key', public: true };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'auto',
+    bucket: 'bucket',
+    endpoint: 'https://account.r2.cloudflarestorage.com',
+    publicUrlBase: 'https://cdn.example.com/',
+  };
+  const res = await AwsS3PresignedGetObject({ request, connection });
+  expect(res).toEqual('https://cdn.example.com/key');
+  expect(mockGetSignedUrl).not.toHaveBeenCalled();
+});
+
+test('AwsS3PresignedGetObject signs the URL when public is false', async () => {
+  const request = { key: 'key', public: false };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'region',
+    bucket: 'bucket',
+  };
+  const res = await AwsS3PresignedGetObject({ request, connection });
+  expect(mockGetSignedUrl).toHaveBeenCalled();
+  expect(res).toEqual('res');
+});
+
+test('Request public not a boolean', async () => {
+  const request = { key: 'key', public: 'public' };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'AwsS3PresignedGetObject request property "public" should be a boolean.'
+  );
 });
 
 test('checkRead should be true', async () => {

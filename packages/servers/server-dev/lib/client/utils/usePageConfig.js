@@ -13,7 +13,12 @@
 
 import useSWR from 'swr';
 
-import { getReloadVersion } from './useMutateCache.js';
+import { getNavVersion, getReloadVersion } from './useMutateCache.js';
+
+// URLs whose config is server-resolved per request — learned from the fetched
+// config's dynamic flag, so the first visit caches like a static page and
+// every later navigation refetches.
+const dynamicUrls = new Set();
 
 function parseJsModule(text) {
   const fn = new Function('exports', text.replace('export default', 'exports.default ='));
@@ -22,32 +27,41 @@ function parseJsModule(text) {
   return mod.default ?? {};
 }
 
-async function fetchJsEntries(basePath) {
+export async function fetchPageConfig(url) {
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
+  // A stalled request (server restart mid-request, exhausted sockets) must
+  // become a visible error, never an eternal Suspense fallback — the reload
+  // recovery path cannot fire while the page tree is suspended.
+  let res;
   try {
-    const res = await fetch(`${basePath}/api/js/client`);
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
+    res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(30_000),
+    });
+  } catch (error) {
+    if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+      throw new Error(
+        `Page config request "${url}" timed out - the dev server may be restarting. Reload the page.`
+      );
+    }
+    throw error;
   }
-}
-
-async function fetchDynamicIcons(basePath) {
-  try {
-    const res = await fetch(`${basePath}/api/icons/dynamic`);
-    if (!res.ok) return {};
-    return parseJsModule(await res.text());
-  } catch {
-    return {};
-  }
-}
-
-async function fetchPageConfig(url) {
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json' },
-  });
   if (res.status === 404) {
     return null;
+  }
+  if (res.status === 401 || res.status === 403) {
+    // 401: logged-out navigation to a protected page. 403: authorised but second
+    // factor not yet enrolled. Page renders a redirect screen and full-loads to
+    // the destination so it can return here afterwards. Returning a settled value
+    // (never a parked promise) keeps the SWR key healthy: if the navigation is
+    // dropped, the tab still recovers on the next reload event or via the manual
+    // link on the redirect screen.
+    const { redirect } = await res.json();
+    const authRedirect = redirect ?? `${basePath}/404`;
+    console.warn(
+      `Lowdefy dev: "${url}" returned ${res.status} - redirecting to "${authRedirect}".`
+    );
+    return { authRedirect };
   }
   const data = await res.json();
   if (data?.buildError) {
@@ -60,34 +74,37 @@ async function fetchPageConfig(url) {
     throw new Error(data.message || 'Request error');
   }
 
-  // Fetch jsMap and dynamic icons after page build completes
-  // (JIT build may have added new entries).
-  // Extract basePath from the URL to construct the endpoints.
-  const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const [jsEntries, dynamicIcons] = await Promise.all([
-    fetchJsEntries(basePath),
-    fetchDynamicIcons(basePath),
-  ]);
-  data._jsEntries = jsEntries;
-  data._dynamicIcons = dynamicIcons;
+  // The JIT build folds this page's _js entries and dynamic icons into the
+  // response, so first paint needs no secondary fetch. _jsEntries arrives as
+  // module text — compile it to the { hash: fn } object Page expects.
+  // _dynamicIcons is already plain data — leave it for Page to inject.
+  if (data._jsEntries) data._jsEntries = parseJsModule(data._jsEntries);
 
-  // Bust CSS cache so the browser picks up newly compiled Tailwind classes
-  const cssLink = document.getElementById('tailwind-jit-css');
-  if (cssLink) {
-    cssLink.href = `${basePath}/tailwind-jit.css?v=${Date.now()}`;
+  if (data?.dynamic === true) {
+    dynamicUrls.add(url);
   }
 
   return data;
 }
 
 function usePageConfig(pageId, basePath) {
-  const url = `${basePath}/api/page/${pageId}`;
+  // Forward the current query string so server-side Dynamic block resolution
+  // sees the same urlQuery as an initial HTML load. Including it in the SWR
+  // key also caches dynamic pages per query string.
+  const url = `${basePath}/api/page/${pageId}${window.location.search}`;
   // Include reloadVersion in the SWR key so that after a config reload,
-  // previously cached page data is not reused. The fetcher receives
-  // [url, version] but only uses url — the version just busts the cache.
-  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
-    suspense: true,
-  });
+  // previously cached page data is not reused. Dynamic pages also key on the
+  // navigation version — server-resolved content must re-resolve on every
+  // navigation, never serve from the SWR cache. The fetcher receives
+  // [url, ...versions] but only uses url — the versions just bust the cache.
+  const navVersion = dynamicUrls.has(url) ? getNavVersion() : 0;
+  const { data } = useSWR(
+    [url, getReloadVersion(), navVersion],
+    ([fetchUrl]) => fetchPageConfig(fetchUrl),
+    {
+      suspense: true,
+    }
+  );
   return { data };
 }
 

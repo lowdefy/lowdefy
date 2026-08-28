@@ -26,7 +26,13 @@ function walkValue(value, strings) {
     return;
   }
   if (value && typeof value === 'object') {
-    for (const v of Object.values(value)) {
+    for (const [key, v] of Object.entries(value)) {
+      // Build marker values (~k keys regenerate on every JIT rebuild) are
+      // never tailwind candidates — including them would make the collected
+      // content differ between byte-identical page builds.
+      if (key === '~k' || key === '~r' || key === '~l') {
+        continue;
+      }
       walkValue(v, strings);
     }
   }

@@ -23,36 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/success');
 
-// Set NEXTAUTH_SECRET for auth-related tests
-process.env.NEXTAUTH_SECRET = 'test-secret-for-snapshot-tests';
-
-// Mock buildApp to return constant gitSha
-jest.unstable_mockModule('./build/buildApp.js', () => ({
-  default: ({ components }) => {
-    if (!components.app) {
-      components.app = {};
-    }
-    if (!components.app.html) {
-      components.app.html = {};
-    }
-    if (!components.app.html.appendBody) {
-      components.app.html.appendBody = '';
-    }
-    if (!components.app.html.appendHead) {
-      components.app.html.appendHead = '';
-    }
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha-for-snapshots',
-    };
-    return components;
-  },
-}));
+// Pin gitSha so buildAppMeta produces a deterministic appMeta in snapshots.
+process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';
 
 // Mock writeBuildArtifact to capture artifacts instead of writing to disk
 const mockWriteBuildArtifact = jest.fn();

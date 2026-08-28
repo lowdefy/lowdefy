@@ -1,0 +1,106 @@
+name: auth-reference-b
+lowdefy: local
+
+# Second deployment of the auth-reference suite (auth-upgrade phase 3):
+# pins org-b with the default invite-only signup, sharing the same auth
+# database as auth-reference (org-a). Exercises the hard membership wall
+# between deployments: a member of org-a signing in here is rejected at
+# session-create with the inline MEMBERSHIP_REQUIRED code, and membership
+# in org-b is granted only by invitation.
+# The list-members-step/list-members-system endpoints demonstrate the
+# per-step authority floor: a user-initiated admin step (ListMembers) is
+# floored on member:['list'] in the target org, so a caller without org
+# authority in org-b is refused, while the same step as a system routine
+# still passes. The /members page here drives the org plugin's own APIs
+# (owner/admin AC), which the step floor does not touch.
+# See ../auth-reference/README.md for the walkthrough.
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+    minPasswordLength: 8
+
+  magicLink:
+    enabled: true
+    expiresIn: 300
+
+  # Local dev sending: run Mailpit (see ../auth-reference/README.md) and point
+  # the auth_email SMTP connection at it. auth.email only names the connection -
+  # the transport, the from address and the delivery filter live on the
+  # connection itself.
+  email:
+    connectionId: auth_email
+
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+
+  # org-b, invite-only (the default and the safe choice for internal apps):
+  # a signup with no member row and no pending invitation is rejected at
+  # session-create - exactly the "you have not been granted access" flow.
+  organizations:
+    policy: pinned
+    org: org-b
+
+  pages:
+    protected: true
+    public:
+      - login
+      - signup
+      - check-email
+      - verify-email
+      - accept-invitation
+      - home
+    roles:
+      admin:
+        - members
+
+  authPages:
+    signIn: /login
+    signUp: /signup
+    verifyEmail: /verify-email
+
+# The transport auth.email sends through - Mailpit for the walkthrough.
+connections:
+  - id: auth_email
+    type: SMTP
+    properties:
+      from: auth-reference-b@localhost
+      host:
+        _secret: SMTP_HOST
+      port: 1025
+      secure: false
+
+# Per-step floor demos: a user-initiated admin step is floored on the
+# caller's org authority and refuses without it; the same step as
+# system: true still works. Both endpoints are deliberately ungated - the
+# refusal is the step's floor, not an endpoint gate.
+api:
+  - _ref: api/list-members-step.yaml
+  - _ref: api/list-members-system.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/signup.yaml
+  - _ref: pages/check-email.yaml
+  - _ref: pages/verify-email.yaml
+  - _ref: pages/accept-invitation.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/members.yaml

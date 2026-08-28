@@ -14,16 +14,25 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
 import { translate } from '@lowdefy/helpers';
 
-function authorizeAgent({ authorize, i18n, logger }, { agentConfig }) {
-  if (!authorize(agentConfig)) {
+function authorizeAgent({ authorizeOutcome, i18n, logger }, { agentConfig }) {
+  const outcome = authorizeOutcome(agentConfig);
+  if (outcome !== 'allow') {
     logger.debug({
       event: 'debug_agent_authorize',
       authorized: false,
+      outcome,
       auth_config: agentConfig.auth,
     });
+    if (outcome === 'enrol_required') {
+      // Reached only after the role check passed, so the caller is authorised and
+      // this reveals nothing about which agents exist.
+      throw new TwoFactorEnrolmentRequiredError(
+        `Two-factor enrolment required for agent "${agentConfig.agentId}".`
+      );
+    }
     // Same message as an unknown agentId so responses do not reveal which agents exist.
     throw new ConfigError(
       translate({

@@ -1,0 +1,31 @@
+# T5: Reserved Auth Provider ID
+# =============================
+# Tests that an auth provider id which is a reserved name fails the build with
+# a located ConfigError. The provider id becomes the GenericOAuth providerId
+# and keys the trusted-provider map at runtime, a plain object.
+#
+# Expected error:
+#   [Config Error] Auth provider id "__proto__" is a reserved name and cannot
+#   be used as an id.
+#
+# The error points to line 23 where the provider is defined.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: __proto__
+      type: GenericOAuth
+      properties:
+        clientId: test-client-id
+        clientSecret: test-client-secret
+
+pages:
+  - id: home
+    type: Box

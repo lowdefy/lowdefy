@@ -1,0 +1,19 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# appRoles is an array of the app's own role strings and replaces whatever the
+# member row carried; an empty array clears them. Names are NOT checked
+# against auth.roles - an unrecognised entry is stored and grants nothing, so
+# an admin's save never fails because of a stale role they never touched.
+# This never touches member.role, the owner/admin/member org tier -
+# admin-update-member-org-role owns that field.
+id: admin-update-member-roles
+type: Api
+routine:
+  - id: update_member_roles
+    type: UpdateMemberRoles
+    properties:
+      memberId:
+        _payload: memberId
+      appRoles:
+        _payload: appRoles
+  - ':return':
+      _step: update_member_roles

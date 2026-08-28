@@ -81,7 +81,7 @@ function buildReadConfigFile({ endpointConfigs = {}, requestConfig, connectionCo
   });
 }
 
-function createContext({ endpointConfigs = {}, session, logger } = {}) {
+function createContext({ endpointConfigs = {}, user, logger } = {}) {
   return testContext({
     connections,
     operators,
@@ -93,7 +93,7 @@ function createContext({ endpointConfigs = {}, session, logger } = {}) {
       error: jest.fn(),
     },
     readConfigFile: buildReadConfigFile({ endpointConfigs }),
-    session: session ?? { user: { id: 'user_1' } },
+    user: user ?? { id: 'user_1' },
   });
 }
 
@@ -477,7 +477,7 @@ test('9.3c raw error from target propagates as RequestError', async () => {
         },
       },
     }),
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   outerResolver.mockImplementation(async ({ callApi }) =>
     callApi({ endpointId: 'inner', payload: {} })

@@ -20,12 +20,16 @@ import dateFilter from './dateFilter.js';
 import uniqueFilter from './uniqueFilter.js';
 import urlQueryFilter from './urlQueryFilter.js';
 
-// dateFilter.setDefaultFormat('YYYY-MM-DD');
-export const nunjucksEnv = new nunjucks.Environment();
+export const createEnvironment = ({ autoescape = true } = {}) => {
+  const environment = new nunjucks.Environment(null, { autoescape });
+  environment.addFilter('date', dateFilter);
+  environment.addFilter('unique', uniqueFilter);
+  environment.addFilter('urlQuery', urlQueryFilter);
+  return environment;
+};
 
-nunjucksEnv.addFilter('date', dateFilter);
-nunjucksEnv.addFilter('unique', uniqueFilter);
-nunjucksEnv.addFilter('urlQuery', urlQueryFilter);
+// dateFilter.setDefaultFormat('YYYY-MM-DD');
+export const nunjucksEnv = createEnvironment();
 
 const nunjucksTemplates = new LRUCache({ maxSize: 500 });
 // slow

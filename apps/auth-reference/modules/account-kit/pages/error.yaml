@@ -1,0 +1,44 @@
+# The module's auth error page, claimed as the error authPages role in the
+# manifest. The app does NOT set auth.authPages.error, so the contribution
+# stands: auth.json carries authPages.error: /account-kit/error, and the
+# page is public automatically - a page holding an authPages role is never
+# behind the wall - without appearing on any public list.
+id: error
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+events:
+  onInit:
+    - id: set_error_code
+      type: SetState
+      params:
+        error_code:
+          _url_query: error
+blocks:
+  - id: module_error_result
+    type: Result
+    properties:
+      status: error
+      title: Authentication error
+      subTitle:
+        _nunjucks:
+          template: |
+            Something went wrong signing you in{% if code %} (code: {{ code }}){% endif %}. Try again from the login page.
+          on:
+            code:
+              _state: error_code
+    slots:
+      extra:
+        blocks:
+          - id: error_to_login_button
+            type: Button
+            properties:
+              title: Back to log in
+            events:
+              onClick:
+                - id: error_to_login
+                  type: Link
+                  params:
+                    pageId: login

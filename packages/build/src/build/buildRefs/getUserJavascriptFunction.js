@@ -27,7 +27,7 @@ async function getUserJavascriptFunction({ context, filePath }) {
     // when bundling server-dev API routes — otherwise webpack rewrites import()
     // into __webpack_require__() which can't handle file:// URLs for loading
     // user-provided resolver/transformer JS files from the config directory.
-    return (await import(/* webpackIgnore: true */ fileUrl.href)).default;
+    return (await import(/* webpackIgnore: true */ /* @vite-ignore */ fileUrl.href)).default;
   } catch (error) {
     throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
   }

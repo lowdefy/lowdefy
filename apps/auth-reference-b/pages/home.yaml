@@ -1,0 +1,41 @@
+id: home
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: home_title
+    type: Title
+    properties:
+      content: auth-reference-b (org-b, invite-only)
+      level: 2
+  - id: home_body
+    type: Html
+    properties:
+      html: |
+        <p>This deployment pins <b>org-b</b> with invite-only signup. A user
+        who belongs only to org-a is rejected at sign-in with the inline
+        "not granted access" message; membership here is granted by
+        invitation from the members page.</p>
+  - id: to_login
+    type: Button
+    properties:
+      title: Log in
+    events:
+      onClick:
+        - id: link_login
+          type: Link
+          params:
+            pageId: login
+  - id: to_dashboard
+    type: Button
+    properties:
+      title: Dashboard (protected)
+      type: default
+    events:
+      onClick:
+        - id: link_dashboard
+          type: Link
+          params:
+            pageId: dashboard

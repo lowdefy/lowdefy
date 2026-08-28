@@ -1,0 +1,17 @@
+# Per-step floor demo: a USER-INITIATED admin step (ListMembers) is
+# authorized by the engine floor against the caller's member row in the
+# target org - member:['list'], which owner/admin hold and a plain member
+# does not - so a caller without org authority in org-b is refused. The
+# endpoint is deliberately ungated (no auth.api.roles entry): the refusal
+# comes from the step's floor, not an endpoint gate. Compare
+# list-members-system.yaml - the same step as a caller-less system routine
+# bypasses the floor and still works.
+id: list-members-step
+type: Api
+routine:
+  - id: list_members
+    type: ListMembers
+    properties:
+      limit: 10
+  - ':return':
+      _step: list_members

@@ -14,28 +14,32 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy.js';
 
 const mockCreatePresignedPost = jest.fn();
 const mockS3ClientConstructor = jest.fn();
 
-jest.mock('@aws-sdk/client-s3', () => ({
+jest.unstable_mockModule('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation((...args) => {
     mockS3ClientConstructor(...args);
     return {};
   }),
 }));
 
-jest.mock('@aws-sdk/s3-presigned-post', () => ({
+jest.unstable_mockModule('@aws-sdk/s3-presigned-post', () => ({
   createPresignedPost: (...args) => mockCreatePresignedPost(...args),
 }));
+
+const { default: AwsS3PresignedPostPolicy } = await import('./AwsS3PresignedPostPolicy.js');
 
 const schema = AwsS3PresignedPostPolicy.schema;
 const { checkRead, checkWrite } = AwsS3PresignedPostPolicy.meta;
 
-const createPresignedPostMockImp = () => 'res';
+const createPresignedPostMockImp = () => ({
+  url: 'https://bucket.s3.region.amazonaws.com/',
+  fields: { key: 'key', policy: 'policy' },
+});
 
 beforeEach(() => {
   mockCreatePresignedPost.mockReset();
@@ -43,7 +47,7 @@ beforeEach(() => {
   mockCreatePresignedPost.mockImplementation(createPresignedPostMockImp);
 });
 
-test('AwsS3PresignedPostPolicy', async () => {
+test('AwsS3PresignedPostPolicy returns a POST descriptor with top-level key and bucket', async () => {
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -74,7 +78,13 @@ test('AwsS3PresignedPostPolicy', async () => {
       },
     ],
   ]);
-  expect(res).toEqual('res');
+  expect(res).toEqual({
+    url: 'https://bucket.s3.region.amazonaws.com/',
+    fields: { key: 'key', policy: 'policy' },
+    bucket: 'bucket',
+    key: 'key',
+    method: 'POST',
+  });
 });
 
 test('AwsS3PresignedPostPolicy options', async () => {
@@ -117,7 +127,40 @@ test('AwsS3PresignedPostPolicy options', async () => {
       },
     ],
   ]);
-  expect(res).toEqual('res');
+  expect(res).toEqual({
+    url: 'https://bucket.s3.region.amazonaws.com/',
+    fields: { key: 'key', policy: 'policy' },
+    bucket: 'bucket',
+    key: 'key',
+    method: 'POST',
+  });
+});
+
+test('AwsS3PresignedPostPolicy passes endpoint and forcePathStyle to the S3 client', async () => {
+  const request = { key: 'key' };
+  const connection = {
+    accessKeyId: 'accessKeyId',
+    secretAccessKey: 'secretAccessKey',
+    region: 'auto',
+    write: true,
+    bucket: 'bucket',
+    endpoint: 'https://account.r2.cloudflarestorage.com',
+    forcePathStyle: true,
+  };
+  await AwsS3PresignedPostPolicy({ request, connection });
+  expect(mockS3ClientConstructor.mock.calls).toEqual([
+    [
+      {
+        credentials: {
+          accessKeyId: 'accessKeyId',
+          secretAccessKey: 'secretAccessKey',
+        },
+        region: 'auto',
+        endpoint: 'https://account.r2.cloudflarestorage.com',
+        forcePathStyle: true,
+      },
+    ],
+  ]);
 });
 
 test('AwsS3PresignedPostPolicy URL-encodes x-amz-meta-* fields but passes other fields through', async () => {

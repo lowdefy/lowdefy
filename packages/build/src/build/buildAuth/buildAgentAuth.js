@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getAgentRoles from './getAgentRoles.js';
 import getProtectedAgents from './getProtectedAgents.js';
@@ -24,6 +24,18 @@ import { isInPatternList } from './matchPattern.js';
 
 // Agents are served from the API surface, so auth.api patterns match agent ids too.
 function buildAgentAuth({ components, context }) {
+  // buildAuth runs before buildAgents validates these ids, so this is where an
+  // agent id is first accepted as an object key (getAgentRoles' map). Reject a
+  // reserved id here with the same message validateId gives, matching
+  // buildEntityAuth, so the developer sees one located error either way.
+  (components.agents ?? []).forEach((agent) => {
+    if (isReserved(agent.id)) {
+      throw new ConfigError(
+        `Agent id "${agent.id}" is a reserved name and cannot be used as an id.`,
+        { configKey: agent['~k'] }
+      );
+    }
+  });
   const protectedAgents = getProtectedAgents({ components });
   const agentRoles = getAgentRoles({ components });
   let configPublicApi = [];

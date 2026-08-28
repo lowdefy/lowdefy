@@ -27,6 +27,31 @@ async function writeConnections({ components, context }) {
       serializer.serializeToString(connection)
     );
   });
+  // Index of scoped connections, read by the server's tenant preflight
+  // (resolveTenantPreflight) - connection artifacts are one file per id, so
+  // without an index the server can not enumerate the walled set. Under the
+  // inverted default (amendment-3) that set is every connection whose type
+  // implements the scoping contract and which does not declare
+  // tenant: shared. Written under both policies to keep the build
+  // policy-deterministic; the preflight only consults it under
+  // policy: tenant.
+  const connectionMetas = context.typesMap?.connectionMetas ?? {};
+  const tenantConnections = components.connections
+    .filter(
+      (connection) =>
+        connectionMetas[connection.type]?.tenant === true && connection.tenant !== 'shared'
+    )
+    .map((connection) => ({
+      connectionId: connection.connectionId,
+      type: connection.type,
+      tenant: connection.tenant,
+    }));
+  writePromises.push(
+    context.writeBuildArtifact(
+      'tenantConnections.json',
+      serializer.serializeToString(tenantConnections)
+    )
+  );
   return Promise.all(writePromises);
 }
 

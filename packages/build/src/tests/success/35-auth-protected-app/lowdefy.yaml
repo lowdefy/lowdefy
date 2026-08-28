@@ -3,9 +3,15 @@ lowdefy: local
 name: Protected App
 
 auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: protected_app_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
   providers:
     - id: google
-      type: GoogleProvider
+      type: Google
       properties:
         clientId:
           _secret: GOOGLE_CLIENT_ID
@@ -17,15 +23,7 @@ auth:
       - login
       - public-page
   session:
-    maxAge: 86400
-  theme:
-    colorScheme: auto
-    brandColor: '#1890ff'
-  userFields:
-    id: sub
-    name: name
-    email: email
-    image: picture
+    expiresIn: 86400
 
 menus:
   - id: default

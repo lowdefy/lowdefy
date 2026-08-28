@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
+import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
+import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -26,24 +29,35 @@ async function MongodbUpdateMany({
   payload,
   request,
   requestId,
+  tenant,
 }) {
   const deserializedRequest = deserialize(request);
-  const { filter, update, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { filter, update } = deserializedRequest;
+  if (tenant) {
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+  }
   const { collection, logCollection } = await getCollection({ connection });
   const response = await collection.updateMany(filter, update, options);
   if (logCollection) {
-    await logCollection.insertOne({
-      args: { filter, update, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      response,
-      timestamp: new Date(),
-      type: 'MongoDBUpdateMany',
-      meta: connection.changeLog?.meta,
-    });
+    await logCollection.insertOne(
+      stampTenantOnLogRecord({
+        record: {
+          args: { filter, update, options },
+          blockId,
+          connectionId,
+          pageId,
+          payload,
+          requestId,
+          response,
+          timestamp: new Date(),
+          type: 'MongoDBUpdateMany',
+          meta: connection.changeLog?.meta,
+        },
+        tenant,
+      })
+    );
   }
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };

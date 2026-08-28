@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "_build.authConfig is not available here."
+      ],
+      "errorContains": [
+        "_build.authConfig is not available here. The auth config projection is computed from the app's auth: block, so the operator can not resolve inside that block itself (a self-reference), nor in app metadata (app:), which resolves earlier."
+      ]
+    }
+  ]
+}

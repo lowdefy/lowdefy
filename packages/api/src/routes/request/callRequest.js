@@ -25,6 +25,7 @@ import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestConfig from './getRequestConfig.js';
 import getRequestResolver from './getRequestResolver.js';
+import resolveTenant from './resolveTenant.js';
 import validateSchemas from './validateSchemas.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -49,6 +50,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -83,6 +85,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestConfig,
     requestProperties,
     requestResolver,
+    tenant,
   });
   return {
     id: requestConfig.id,

@@ -18,6 +18,8 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
+import monthSelector from '../e2e.js';
+
 // Helper to get the month input
 const getInput = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
 
@@ -36,7 +38,7 @@ test.describe('MonthSelector Block', () => {
   test('renders with default placeholder', async ({ page }) => {
     const input = getInput(page, 'ms_basic');
     await expect(input).toBeVisible();
-    await expect(input).toHaveAttribute('placeholder', 'Select Month');
+    await expect(input).toHaveAttribute('placeholder', 'Select month');
   });
 
   test('can display selected month value', async ({ page }) => {
@@ -189,5 +191,56 @@ test.describe('MonthSelector Block', () => {
 
     await page.keyboard.press('Escape');
     await expect(dropdown).toBeHidden();
+  });
+});
+
+test.describe('MonthSelector Block presets', () => {
+  // Pinned to a negative offset, where a preset date lands a day early without the UTC conversion.
+  test.use({ timezoneId: 'America/New_York' });
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'monthselector');
+  });
+
+  test('lists presets next to the calendar', async ({ page }) => {
+    await monthSelector.do.open(page, 'ms_presets');
+
+    await monthSelector.expect.presetLabels(page, 'ms_presets', [
+      'March 2024',
+      'Month of mid 2024',
+    ]);
+  });
+
+  test('selects the month of a preset given as a date string', async ({ page }) => {
+    await monthSelector.do.selectPreset(page, 'ms_presets', 'March 2024');
+
+    await monthSelector.expect.closed(page, 'ms_presets');
+    await monthSelector.expect.value(page, 'ms_presets', '2024-03');
+  });
+
+  test('selects the month a preset given as a _date object falls in', async ({ page }) => {
+    await monthSelector.do.selectPreset(page, 'ms_presets', 'Month of mid 2024');
+
+    await monthSelector.expect.closed(page, 'ms_presets');
+    await monthSelector.expect.value(page, 'ms_presets', '2024-06');
+  });
+});
+
+// Pinned to a positive UTC offset and to a moment where the local and UTC months differ: 21:30 UTC
+// on 30 June is 09:30 on 1 July in Auckland. A relative preset that resolves to an instant instead
+// of a local calendar date selects June here.
+test.describe('MonthSelector Block presets in a timezone ahead of UTC', () => {
+  test.use({ timezoneId: 'Pacific/Auckland' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-06-30T21:30:00.000Z'));
+    await navigateToTestPage(page, 'monthselector');
+  });
+
+  test('selects the local month for a relative preset', async ({ page }) => {
+    await monthSelector.do.selectPreset(page, 'ms_presets_this_month', 'This month');
+
+    await monthSelector.expect.closed(page, 'ms_presets_this_month');
+    await monthSelector.expect.value(page, 'ms_presets_this_month', '2026-07');
   });
 });

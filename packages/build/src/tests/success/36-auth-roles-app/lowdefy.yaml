@@ -3,18 +3,18 @@ lowdefy: local
 name: Role-based App
 
 auth:
-  providers:
-    - id: credentials
-      type: CredentialsProvider
-      properties:
-        name: credentials
-        credentials:
-          email:
-            label: Email
-            type: email
-          password:
-            label: Password
-            type: password
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: roles_app_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: admin
+    - id: manager
+    - id: user
   pages:
     protected: true
     public:
@@ -29,11 +29,6 @@ auth:
       user:
         - dashboard
         - profile
-  callbacks:
-    - id: jwt
-      type: JwtCallback
-    - id: session
-      type: SessionCallback
 
 pages:
   - id: login

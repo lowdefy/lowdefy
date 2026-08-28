@@ -1,0 +1,12 @@
+# Role-gated HTTP endpoint (auth.api.roles: partner) for the phase-4
+# strategy scenarios. A partner API key reaches it; a caller without the
+# partner role gets the opaque "does not exist"; no credentials gets 401.
+id: partner-data
+type: Api
+routine:
+  - ':return':
+      data: partner-report
+      caller:
+        _user: id
+      branches:
+        _user: attributes.branches

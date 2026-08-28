@@ -16,6 +16,12 @@
 
 export default {
   connections: ['Elasticsearch'],
+  // Non-scopable: the tenant wall is MongoDB-only, so Elasticsearch data
+  // sits outside the wall by this declaration - organization scoping, where
+  // a deployment needs it, is authored in the requests themselves.
+  connectionMetas: {
+    Elasticsearch: { tenant: false },
+  },
   requests: [
     'ElasticsearchDelete',
     'ElasticsearchDeleteByQuery',

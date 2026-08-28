@@ -97,7 +97,7 @@ const PageHeaderMenu = ({
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
                             classNames.logo ??
-                            'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 sm:w-[130px]'
+                            'mx-1.5 sm:mx-2.5 md:mx-4 lg:mx-[30px] shrink w-10 min-[577px]:w-[130px]'
                           }
                           style={styles.logo}
                         />

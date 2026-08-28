@@ -1,0 +1,50 @@
+# Public page (auth.pages.public) rendered method-driven from
+# _build.authConfig - the build-only projection of the app's auth block
+# (six curated paths; an unknown path fails the build naming the readable
+# ones). The values are baked in at build time: none of this evaluates at
+# runtime, and none of the auth block itself ships to the client. Note this
+# is APP config: module content resolves before the projection pre-pass, so
+# a module page cannot read _build.authConfig today - the account-kit
+# module ships static pages only.
+id: login-methods
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: login_methods_title
+    type: Title
+    properties:
+      content: Login methods (from _build.authConfig)
+      level: 2
+  - id: login_methods_html
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+              <li><b>emailAndPassword.enabled:</b> {{ emailAndPassword }}</li>
+              <li><b>magicLink.enabled:</b> {{ magicLink }}</li>
+              <li><b>twoFactor.enabled:</b> {{ twoFactor }}</li>
+              <li><b>passkey.enabled:</b> {{ passkey }}</li>
+              <li><b>providers:</b> {{ providers | dump }}</li>
+              <li><b>organizations.signup:</b> {{ signup }}</li>
+            </ul>
+            <p>A page can gate its UI on the app's configured methods - the
+            projection resolves in a scoped pre-pass before the main build
+            walk, so these are literals by the time the page ships.</p>
+          on:
+            emailAndPassword:
+              _build.authConfig: emailAndPassword.enabled
+            magicLink:
+              _build.authConfig: magicLink.enabled
+            twoFactor:
+              _build.authConfig: twoFactor.enabled
+            passkey:
+              _build.authConfig: passkey.enabled
+            providers:
+              _build.authConfig: providers
+            signup:
+              _build.authConfig: organizations.signup

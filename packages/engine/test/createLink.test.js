@@ -205,8 +205,8 @@ test('createLink, link with url and protocol', () => {
   expect(mockBackLink.mock.calls).toEqual([]);
   expect(mockDisabledLink.mock.calls).toEqual([]);
   expect(mockNoLink.mock.calls).toEqual([]);
-  // The resolver folds any query into the page branch and returns a whole href
-  // for an external target, so query is empty even when urlQuery is set.
+  // The resolver returns a whole href for an external target with urlQuery
+  // already folded in, so the separate query arg is always empty.
   expect(mockNewOriginLink.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -218,7 +218,7 @@ test('createLink, link with url and protocol', () => {
       Array [
         Object {
           "query": "",
-          "url": "http://localhost:8080/test",
+          "url": "http://localhost:8080/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -257,7 +257,7 @@ test('createLink, link with url new tab and protocol', () => {
         Object {
           "newTab": true,
           "query": "",
-          "url": "http://localhost:8080/test",
+          "url": "http://localhost:8080/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -296,7 +296,7 @@ test('createLink, link with url and no protocol', () => {
         Object {
           "newTab": true,
           "query": "",
-          "url": "https://external.com/test",
+          "url": "https://external.com/test?p=3",
           "urlQuery": Object {
             "p": 3,
           },
@@ -559,6 +559,43 @@ test('createLink, link with home with inputs, not configured', () => {
   expect(lowdefy.inputs).toEqual({
     'page:home': { a: 1 },
   });
+});
+
+test('createLink, link with home calls noLink when the home config names no page', () => {
+  // What getHomeAndMenus returns for an app with no homePageId and no menu link
+  // to fall back on. Unguarded this pushed "/undefined" into history.
+  const lowdefy = { inputs: {}, home: { configured: false, pageId: null } };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ home: true });
+  expect(mockBackLink.mock.calls).toEqual([]);
+  expect(mockDisabledLink.mock.calls).toEqual([]);
+  expect(mockNewOriginLink.mock.calls).toEqual([]);
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([[{ home: true }]]);
+  expect(lowdefy.inputs).toEqual({});
+});
+
+test('createLink, link with home calls noLink when there is no home config at all', () => {
+  const lowdefy = { inputs: {} };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ home: true, input: { a: 1 } });
+  expect(mockSameOriginLink.mock.calls).toEqual([]);
+  expect(mockNoLink.mock.calls).toEqual([[{ home: true, input: { a: 1 } }]]);
+  expect(lowdefy.inputs).toEqual({});
 });
 
 test('createLink, no params calls noLink', () => {

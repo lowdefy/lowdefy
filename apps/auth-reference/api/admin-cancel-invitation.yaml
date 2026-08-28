@@ -1,0 +1,11 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+id: admin-cancel-invitation
+type: Api
+routine:
+  - id: cancel_invitation
+    type: CancelInvitation
+    properties:
+      invitationId:
+        _payload: invitationId
+  - ':return':
+      _step: cancel_invitation

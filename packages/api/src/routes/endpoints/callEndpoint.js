@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { serializer, type } from '@lowdefy/helpers';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import scheduleBackground from './scheduleBackground.js';
 
 async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   const { logger } = context;
@@ -34,9 +35,17 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  // Block HTTP access to InternalApi endpoints — same error as missing endpoint
+  // Block HTTP access to InternalApi endpoints - same error as a missing
+  // endpoint, including the guarded unauthenticated fork, so an internal
+  // endpoint is indistinguishable from one that does not exist on both paths.
   if (endpointConfig.type === 'InternalApi') {
-    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
+    const unauthenticatedHuman =
+      type.isNone(context.user) &&
+      !type.isNone(context.authEnforcement) &&
+      context.system !== true;
+    const err = unauthenticatedHuman
+      ? new AuthenticationError(`Authentication required for API endpoint "${endpointId}".`)
+      : new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }
@@ -51,6 +60,21 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     state: {},
     endpointDepth: 0,
   };
+
+  // async: true — acknowledge now, run the routine in the background.
+  // Auth was already checked above; the outcome lands in logs (scheduleBackground)
+  // and in whatever the routine itself records.
+  if (endpointConfig.async === true) {
+    scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
+      runRoutine(context, routineContext, { routine: endpointConfig.routine })
+    );
+    return {
+      error: null,
+      response: serializer.serialize({ accepted: true }),
+      status: 'accepted',
+      success: true,
+    };
+  }
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,

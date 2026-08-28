@@ -50,7 +50,10 @@ function findWorkspacePackage(workspaceRoot, packageName) {
     }
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
-      if (entry.name === 'node_modules' || entry.name === '.next') continue;
+      // Skip hidden directories: .git, .worktrees (stale package copies),
+      // .lowdefy (generated server workspaces).
+      if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'dist')
+        continue;
       const entryPath = path.join(dir, entry.name);
       const pkgJsonPath = path.join(entryPath, 'package.json');
       if (fs.existsSync(pkgJsonPath)) {

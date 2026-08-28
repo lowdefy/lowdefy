@@ -1,0 +1,19 @@
+# Overview
+
+A Lowdefy app is a [Hono](https://hono.dev) server with a [Vite](https://vite.dev)-built React client, that interprets / evaluates Lowdefy config. Lowdefy apps are written as YAML configuration files, which are easy to read, write and understand - and can be managed in source control. This makes Lowdefy quick to learn, maintain and pick up where others left off.
+
+Lowdefy can be considered as another level of abstraction on top of the web stack. The Lowdefy schema is designed to be a standardized, declarative and flexible expression of application parameters and logic. This allows developers to focus on translating the business problem into configuration.
+
+The Lowdefy schema abstracts app definitions into 5 categories:
+- [**Blocks**](/blocks): The building blocks of the UI, the client-side React component to render. Blocks are usually stateless since all app state is managed by the Lowdefy engine.
+- [**Operators**](/operators): The application logic is defined using operator functions, which can be used both server-side and client-side. These are synchronous methods, which are continuously evaluated every time the app state changes.
+- [**Actions**](/events-and-actions): Asynchronous client-side methods triggered by events, such as clicking a button or initializing the page state. These methods usually apply an action like setting state, using the [SetState](/SetState) action, or calling a request, using the [Request](/Request) action.
+- [**Connections and Requests**](/connections-and-requests): Server-side methods, which allow a Lowdefy app to make server requests to other services like APIs or databases. Requests are evoked by the [Request](/Request) action, and are only called after all user authentication and authorization checks have passed. Requests consume a payload from the client, and have access to server-side secrets like passwords and API keys.
+- [**Auth Providers and Adapters**](/users-introduction): Lowdefy implements [Auth.js](https://authjs.dev) for authentication. Auth.js allows for the configuration of a wide range of authentication providers and adapters, which can be configured in Lowdefy apps.
+
+The diagram below provides an overview of the Lowdefy app schematic:
+![Lowdefy App Diagram](/images/lowdefy_app_schema.png)
+
+Lowdefy offers a large number of default actions, blocks, operators, connections, and auth integrations - but also provides a [plugin interface](/plugins) for the extension of new types. All plugins are installed as [npm](https://www.npmjs.com/) modules, which means you can extend your Lowdefy application by any existing npm module - enabling developers to make use of anything that is available in the Javascript ecosystem.
+
+Since Lowdefy apps are self-hosted Node.js applications, they do not ship with a built in data store and typically connect to one or more APIs or databases. Server instances are also stateless, which simplifies deployment. You can deploy your app using Docker or any hosting provider that runs Node.js servers.

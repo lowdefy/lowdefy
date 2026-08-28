@@ -29,7 +29,7 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                The OpenIDConnectProvider can be used to authenticate with a OpenID Connect compliant identity provider that is not already included as a default Next-Auth provider, without the need to develop a custom provider plugin.
+                The OpenIDConnectProvider can be used to authenticate with a OpenID Connect compliant identity provider that is not already included as a default Auth.js provider, without the need to develop a custom provider plugin.
 
                 #### Properties
 
@@ -48,7 +48,7 @@ _ref:
                   - `allowDangerousEmailAccountLinking: boolean`
                   - `style: object`
 
-                ###### See the [Next-Auth OAuth provider options](https://next-auth.js.org/configuration/providers/oauth#options) for more details on provider properties.
+                ###### See the [Auth.js OAuth provider guide](https://authjs.dev/guides/configuring-oauth-providers) for more details on provider properties.
 
                 #### Examples
 

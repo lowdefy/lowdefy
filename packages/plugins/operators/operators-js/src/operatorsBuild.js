@@ -15,6 +15,7 @@
 */
 
 import _and from './operators/shared/and.js';
+import _app from './operators/shared/app.js';
 import _args from './operators/shared/args.js';
 import _array from './operators/shared/array.js';
 import _boolean from './operators/shared/boolean.js';
@@ -52,12 +53,15 @@ import _uri from './operators/shared/uri.js';
 import _base64 from './operators/server/base64.js';
 import _hash from './operators/server/hash.js';
 
+import _authConfig from './operators/build/authConfig.js';
 import _env from './operators/build/env.js';
 
 export default {
   _and,
+  _app,
   _args,
   _array,
+  _authConfig,
   _base64,
   _boolean,
   _date,

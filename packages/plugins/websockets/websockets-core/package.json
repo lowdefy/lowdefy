@@ -1,0 +1,58 @@
+{
+  "name": "@lowdefy/websockets-core",
+  "version": "5.5.1",
+  "license": "Apache-2.0",
+  "description": "Core websocket types for Lowdefy.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy websockets",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./websockets": "./dist/websockets.js",
+    "./schemas": "./dist/schemas.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
+    "clean": "rm -rf dist",
+    "e2e": "playwright test --config e2e/playwright.config.js",
+    "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "5.5.1"
+  },
+  "devDependencies": {
+    "@jest/globals": "28.1.3",
+    "@lowdefy/block-dev-e2e": "5.5.1",
+    "@lowdefy/e2e-utils": "5.5.1",
+    "@playwright/test": "1.59.1",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
+    "@swc/jest": "0.2.39",
+    "jest": "28.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

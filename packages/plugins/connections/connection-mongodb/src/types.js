@@ -16,6 +16,14 @@
 
 export default {
   connections: ['MongoDBCollection'],
+  // MongoDBCollection implements the tenant scoping contract: under
+  // auth.organizations.policy: tenant its connections are scoped by default -
+  // enforced across all its request types and the change stream - and a
+  // connection opts out only with tenant: shared. Declaring tenant: on a
+  // connection whose type lacks this meta is a build error.
+  connectionMetas: {
+    MongoDBCollection: { tenant: true },
+  },
   requests: [
     'MongoDBAggregation',
     'MongoDBBulkWrite',
@@ -32,6 +40,7 @@ export default {
     'MongoDBVersionedUpdateOne',
   ],
   auth: {
-    adapters: ['MongoDBAdapter', 'MultiAppMongoDBAdapter'],
+    adapters: ['MongoDBAuthAdapter'],
   },
+  websockets: ['MongoDBChangeStream'],
 };

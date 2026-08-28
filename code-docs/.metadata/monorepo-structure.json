@@ -72,7 +72,7 @@
     ]
   },
   "architecture": {
-    "framework": "Next.js",
+    "framework": "Hono + Vite",
     "auth": "Auth.js (via plugin-next-auth)",
     "configFormat": ["YAML", "JSON", "JSON5"],
     "runtime": "Node.js >= 18"

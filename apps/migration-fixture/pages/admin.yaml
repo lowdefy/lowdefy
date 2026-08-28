@@ -1,0 +1,31 @@
+# Seeded old-attribute reads (class B). `roles` is kept — not reported.
+id: admin
+type: Box
+blocks:
+  - id: admin_title
+    type: Title
+    properties:
+      content: Admin
+  - id: branch
+    type: Html
+    properties:
+      html:
+        _user: app_attributes.branch # B → _user.attributes.branch
+  - id: tier
+    type: Html
+    properties:
+      html:
+        _user: global_attributes.tier # B → _user.attributes.tier
+  - id: attribute_dump
+    type: Html
+    properties:
+      html:
+        _json.stringify:
+          - _user:
+              key: app_attributes # B (object form, bare) → _user.attributes
+  - id: roles_list
+    type: Html
+    properties:
+      html:
+        _json.stringify:
+          - _user: roles # kept — not reported

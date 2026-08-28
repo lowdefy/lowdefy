@@ -1,0 +1,164 @@
+id: login
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: login_title
+    type: Title
+    properties:
+      content: Log in
+      level: 2
+  - id: email
+    type: TextInput
+    properties:
+      title: Email
+  - id: password
+    type: PasswordInput
+    properties:
+      title: Password
+  - id: login_button
+    type: Button
+    properties:
+      title: Log in
+      block: true
+    events:
+      onClick:
+        # The sign-in call returns its error inline - no ?error= redirect.
+        # The engine's session.create policy hook rejects a non-member with
+        # the distinct MEMBERSHIP_REQUIRED code (403); the page reads the
+        # code off the thrown error and renders its own message.
+        try:
+          # A 2FA-enrolled user gets a challenge instead of a session, and
+          # Login navigates to auth.authPages.twoFactor itself - so this page
+          # carries no routing branch to forget, and no enrolled user is left
+          # clicking Log in to no effect. The response still carries
+          # twoFactorRedirect and twoFactorMethods for an app that reads them.
+          - id: login
+            type: Login
+            params:
+              email:
+                _state: email
+              password:
+                _state: password
+        catch:
+          - id: show_login_error
+            type: SetState
+            params:
+              login_error_code:
+                _actions: login.error.cause.code
+              login_error_message:
+                _actions: login.error.message
+  - id: membership_required_html
+    type: Html
+    visible:
+      _eq:
+        - _state: login_error_code
+        - MEMBERSHIP_REQUIRED
+    properties:
+      html: |
+        <p style="color:red">You have not been granted access to this
+        application. Ask an administrator to invite you.</p>
+  - id: login_error_html
+    type: Html
+    visible:
+      _and:
+        - _ne:
+            - _state: login_error_code
+            - null
+        - _ne:
+            - _state: login_error_code
+            - MEMBERSHIP_REQUIRED
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ message }} (code: {{ code }})</p>
+          on:
+            message:
+              _state: login_error_message
+            code:
+              _state: login_error_code
+  - id: magic_link_button
+    type: Button
+    properties:
+      title: Email me a sign-in link
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: magic_link
+          type: Login
+          params:
+            magicLink: true
+            email:
+              _state: email
+        - id: magic_link_sent
+          type: Link
+          params:
+            pageId: check-email
+  - id: auth0_button
+    type: Button
+    properties:
+      title: Continue with Auth0
+      type: default
+      block: true
+    events:
+      onClick:
+        - id: auth0_login
+          type: Login
+          params:
+            providerId: auth0
+  - id: phone_login_link
+    type: Button
+    properties:
+      title: Sign in with a phone number
+      type: link
+      block: true
+    events:
+      onClick:
+        # The unauthenticated bounce puts ?callbackUrl= on this page, and
+        # PhoneNumberVerify reads it from the page it runs on - one hop further.
+        # Without carrying it the SMS path loses the deep link the password path
+        # keeps. The _if is needed because urlQuery serialises a null value
+        # rather than dropping the key, which would send a direct visitor to
+        # /phone-login?callbackUrl=null.
+        - id: to_phone_login
+          type: Link
+          params:
+            pageId: phone-login
+            urlQuery:
+              _if:
+                test:
+                  _eq:
+                    - _url_query: callbackUrl
+                    - null
+                then: null
+                else:
+                  callbackUrl:
+                    _url_query: callbackUrl
+  - id: forgot_password_link
+    type: Button
+    properties:
+      title: Forgot password?
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_forgot_password
+          type: Link
+          params:
+            pageId: forgot-password
+  - id: signup_link
+    type: Button
+    properties:
+      title: Create an account
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_signup
+          type: Link
+          params:
+            pageId: signup

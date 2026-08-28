@@ -1,0 +1,24 @@
+# Role-gated native-read endpoint (phase-8 walkthrough). A read-only
+# aggregation over the auth-owned user-members collection filtering on
+# attribute CONTENTS - possible because attributes are stored as native
+# sub-documents (the adapter's supportsJSON opt-in), not JSON strings.
+# Reads of auth collections may go native (steps for writes, connections
+# for reads); writes still go through the admin steps.
+id: admin-members-by-attribute
+type: Api
+routine:
+  - id: members_by_attribute
+    type: MongoDBAggregation
+    connectionId: members_read_db
+    properties:
+      pipeline:
+        - $match:
+            attributes.region:
+              _payload: region
+        - $project:
+            organization_id: 1
+            user_id: 1
+            role: 1
+            attributes: 1
+  - ':return':
+      _step: members_by_attribute

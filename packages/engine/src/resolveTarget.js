@@ -18,6 +18,12 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import getHomePathname from './getHomePathname.js';
 
+// The target's own urlQuery combines with any query the url string already
+// carries, matching the grammar semantics createLink resolved before.
+function combineQuery(ownQuery, query) {
+  return [ownQuery, query].filter((part) => part !== '').join('&');
+}
+
 // Classifies a `url` grammar value into a page or external target. basePath is
 // stripped here, never applied - the single application boundary is createUrl.
 function classifyUrl({ lowdefy, url, query }) {
@@ -28,10 +34,7 @@ function classifyUrl({ lowdefy, url, query }) {
     const questionMark = url.indexOf('?');
     const pathname = questionMark === -1 ? url : url.slice(0, questionMark);
     const ownQuery = questionMark === -1 ? '' : url.slice(questionMark + 1);
-    // The target's own urlQuery combines with any query the string carries,
-    // matching the grammar semantics createLink resolves today.
-    const combined = [ownQuery, query].filter((part) => part !== '').join('&');
-    return { kind: 'page', pathname, query: combined };
+    return { kind: 'page', pathname, query: combineQuery(ownQuery, query) };
   }
 
   // A colon-less value like `example.com` is a schemeless hostname, not a path -
@@ -58,13 +61,28 @@ function classifyUrl({ lowdefy, url, query }) {
       const pathname = parsed.pathname.startsWith(basePath)
         ? parsed.pathname.slice(basePath.length)
         : parsed.pathname;
-      return { kind: 'page', pathname, query: parsed.search.replace(/^\?/, '') };
+      return {
+        kind: 'page',
+        pathname,
+        query: combineQuery(parsed.search.replace(/^\?/, ''), query),
+      };
     }
     // Same origin but outside basePath (a marketing page at the origin root while
     // the app lives at `/app`) is a whole URL - routing it would 404 in `/app`.
-    return { kind: 'external', href: parsed.href };
+    return externalTarget({ parsed, query });
   }
-  return { kind: 'external', href: parsed.href };
+  return externalTarget({ parsed, query });
+}
+
+// An external target is handed on as one finished href, so the target's own
+// urlQuery has to be folded in here - the consumer has no separate query to
+// append once the value is a whole URL.
+function externalTarget({ parsed, query }) {
+  const search = combineQuery(parsed.search.replace(/^\?/, ''), query);
+  const href = `${parsed.origin}${parsed.pathname}${search === '' ? '' : `?${search}`}${
+    parsed.hash
+  }`;
+  return { kind: 'external', href };
 }
 
 // The single resolver of the navigation grammar { home, pageId, url, urlQuery }
@@ -98,9 +116,12 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
   if (type.isString(pageId)) {
     return { kind: 'page', pathname: `/${pageId}`, query };
   }
-  if (type.isString(url)) {
+  if (type.isString(url) && url !== '') {
     return classifyUrl({ lowdefy, url, query });
   }
+  // An empty url string is absence of a target, not the origin root: it is
+  // already excluded from the ambiguity check above, and classifying '' would
+  // dereference `new URL('https://', origin)` into a throw.
   return undefined;
 }
 

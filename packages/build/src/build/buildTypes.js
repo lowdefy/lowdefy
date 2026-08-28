@@ -70,13 +70,15 @@ function buildTypes({ components, context }) {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
+      strategies: {},
     },
     blocks: {},
     connections: {},
+    notifications: {},
     requests: {},
+    steps: {},
+    websockets: {},
     api: {},
     operators: {
       client: {},
@@ -106,24 +108,17 @@ function buildTypes({ components, context }) {
   });
 
   buildTypeClass(context, {
-    counter: typeCounters.auth.callbacks,
-    definitions: context.typesMap.auth.callbacks,
-    store: components.types.auth.callbacks,
-    typeClass: 'Auth callback',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.events,
-    definitions: context.typesMap.auth.events,
-    store: components.types.auth.events,
-    typeClass: 'Auth event',
-  });
-
-  buildTypeClass(context, {
     counter: typeCounters.auth.providers,
     definitions: context.typesMap.auth.providers,
     store: components.types.auth.providers,
     typeClass: 'Auth provider',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.auth.strategies,
+    definitions: context.typesMap.auth.strategies,
+    store: components.types.auth.strategies,
+    typeClass: 'Auth strategy',
   });
 
   buildTypeClass(context, {
@@ -141,10 +136,31 @@ function buildTypes({ components, context }) {
   });
 
   buildTypeClass(context, {
+    counter: typeCounters.notifications,
+    definitions: context.typesMap.notifications,
+    store: components.types.notifications,
+    typeClass: 'Notification',
+  });
+
+  buildTypeClass(context, {
     counter: typeCounters.requests,
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.steps,
+    definitions: context.typesMap.steps,
+    store: components.types.steps,
+    typeClass: 'Step',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.websockets,
+    definitions: context.typesMap.websockets,
+    store: components.types.websockets,
+    typeClass: 'Websocket',
   });
 
   buildTypeClass(context, {

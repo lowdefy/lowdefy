@@ -30,13 +30,13 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('authorizeAgent allows a public agent without a session', () => {
+test('authorizeAgent allows a public agent without a user', () => {
   const context = testContext({ logger });
   const agentConfig = { agentId: 'my-agent', auth: { public: true } };
   expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
 });
 
-test('authorizeAgent rejects a protected agent without a session', () => {
+test('authorizeAgent rejects a protected agent without a user using the not-found message', () => {
   const context = testContext({ logger });
   const agentConfig = { agentId: 'my-agent', auth: { public: false } };
   expect(() => authorizeAgent(context, { agentConfig })).toThrow(
@@ -44,17 +44,14 @@ test('authorizeAgent rejects a protected agent without a session', () => {
   );
 });
 
-test('authorizeAgent allows a protected agent with a session', () => {
-  const context = testContext({ logger, session: { user: { id: 'user_1' } } });
+test('authorizeAgent allows a protected agent with a user', () => {
+  const context = testContext({ logger, user: { id: 'user_1' } });
   const agentConfig = { agentId: 'my-agent', auth: { public: false } };
   expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
 });
 
 test('authorizeAgent rejects a role-protected agent when the user lacks the role', () => {
-  const context = testContext({
-    logger,
-    session: { user: { id: 'user_1', roles: ['user'] } },
-  });
+  const context = testContext({ logger, user: { id: 'user_1', roles: ['user'] } });
   const agentConfig = { agentId: 'my-agent', auth: { public: false, roles: ['admin'] } };
   expect(() => authorizeAgent(context, { agentConfig })).toThrow(
     'Agent "my-agent" does not exist.'
@@ -62,10 +59,25 @@ test('authorizeAgent rejects a role-protected agent when the user lacks the role
 });
 
 test('authorizeAgent allows a role-protected agent when the user has the role', () => {
-  const context = testContext({
-    logger,
-    session: { user: { id: 'user_1', roles: ['admin'] } },
-  });
+  const context = testContext({ logger, user: { id: 'user_1', roles: ['admin'] } });
   const agentConfig = { agentId: 'my-agent', auth: { public: false, roles: ['admin'] } };
   expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
+});
+
+test('authorizeAgent allows any agent in a system context', () => {
+  const context = testContext({ logger, system: true });
+  const agentConfig = { agentId: 'my-agent', auth: { public: false, roles: ['admin'] } };
+  expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
+});
+
+test('authorizeAgent throws TwoFactorEnrolmentRequiredError on enrol_required, not the not-found message', () => {
+  const context = { authorizeOutcome: () => 'enrol_required', logger, user: { id: 'user_1' } };
+  const agentConfig = { agentId: 'my-agent', auth: { public: false } };
+  expect.assertions(2);
+  try {
+    authorizeAgent(context, { agentConfig });
+  } catch (e) {
+    expect(e.name).toBe('TwoFactorEnrolmentRequiredError');
+    expect(e.message).toBe('Two-factor enrolment required for agent "my-agent".');
+  }
 });

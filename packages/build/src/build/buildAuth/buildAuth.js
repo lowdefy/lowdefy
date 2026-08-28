@@ -16,22 +16,44 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAgentAuth from './buildAgentAuth.js';
-import buildApiAuth from './buildApiAuth.js';
-import buildPageAuth from './buildPageAuth.js';
-import rejectReservedEntityIds from './rejectReservedEntityIds.js';
+import buildAuthStrategies from './buildAuthStrategies.js';
+import buildEntityAuth from './buildEntityAuth.js';
+import buildRoleCatalog from './buildRoleCatalog.js';
+import buildTrustedProviders from './buildTrustedProviders.js';
+import buildTwoFactorTrustedProviders from './buildTwoFactorTrustedProviders.js';
+import { getEntityDefaultProtected } from './getProtectedEntities.js';
+import setAuthConfigured from './setAuthConfigured.js';
+import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
-  const configured = !type.isNone(components.auth);
   validateAuthConfig({ components, context });
-  rejectReservedEntityIds({ components });
-  components.auth.configured = configured;
-  buildApiAuth({ components, context });
+  setAuthConfigured({ components, context });
+  setAuthDefaults({ components, context });
+  buildRoleCatalog({ components, context });
+  buildTrustedProviders({ components, context });
+  buildTwoFactorTrustedProviders({ components, context });
+  buildAuthHooks({ components, context });
+  buildAuthStrategies({ components, context });
+  buildEntityAuth({ components, context, entity: 'api' });
+  buildEntityAuth({ components, context, entity: 'websockets' });
+  buildEntityAuth({ components, context, entity: 'pages' });
+  // Agents are served from the API surface, so auth.api patterns match agent ids too.
   buildAgentAuth({ components, context });
-  buildPageAuth({ components, context });
+
+  // The protection an unlisted page id inherits, resolved once for the runtime -
+  // the signed-out page fork reads it instead of consulting page existence
+  // (Decision 7). Pages only: the request and endpoint surfaces need no such
+  // default - a session-less human gets 401 for every id in an auth'd app,
+  // present or absent, with no per-entity boolean.
+  components.auth.pagesProtectedByDefault = getEntityDefaultProtected({
+    components,
+    entity: 'pages',
+  });
+
   buildAuthPlugins({ components, context });
 
   return components;

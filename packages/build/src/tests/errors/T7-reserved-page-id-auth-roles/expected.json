@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "The reserved page id is reported by the buildEntityAuth gate and again by validateId in buildPages, at the same source line with the same message, so logCollectedErrors collapses the pair and it is reported once. It is a located ConfigError and no LowdefyInternalError is raised.",
+      "errorCount": 1,
+      "errors": ["is a reserved name"],
+      "errorContains": [
+        "Page id \"__proto__\" is a reserved name and cannot be used as an id.",
+        "lowdefy.yaml:36"
+      ],
+      "noErrors": ["LowdefyInternalError", "itemRoles"]
+    }
+  ]
+}

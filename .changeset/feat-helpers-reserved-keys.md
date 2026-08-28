@@ -6,6 +6,7 @@
 '@lowdefy/operators': patch
 '@lowdefy/ai-utils': patch
 '@lowdefy/node-utils': patch
+'@lowdefy/plugin-better-auth': patch
 '@lowdefy/server-dev': patch
 '@lowdefy/server-e2e': patch
 'lowdefy': patch
@@ -17,7 +18,7 @@ feat(helpers): Reject prototype-pollution key names in dot paths and key maps.
 `__lookupGetter__` and `__lookupSetter__` are no longer accepted as path segments or as keys
 in maps built from user-supplied values.
 
-Previously these names were silently _filtered_ on write, which was worse than rejecting
+Previously these names were silently *filtered* on write, which was worse than rejecting
 them: `SetState: { 'a.__proto__.b': 1 }` quietly wrote to `a.b` instead — a different
 location than the one you asked for. Reads could also walk up the prototype chain.
 
@@ -35,7 +36,7 @@ Apps that do not use these names are unaffected. If you have a form field, state
 response property named `constructor`, rename it.
 
 Deep merges of configuration are hardened the same way, but skip reserved keys rather than
-raising — a reserved name arriving inside a merged _value_ is dropped so a single poisoned
+raising — a reserved name arriving inside a merged *value* is dropped so a single poisoned
 field can't abort an otherwise valid merge.
 
 `@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can

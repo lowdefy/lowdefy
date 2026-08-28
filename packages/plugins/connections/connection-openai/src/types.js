@@ -16,5 +16,11 @@
 
 export default {
   connections: ['OpenAI'],
+  // Non-scopable: the tenant wall does not cover this type, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    OpenAI: { tenant: false },
+  },
   agents: ['OpenAIAgent'],
+  requests: ['GenerateObject', 'GenerateText'],
 };

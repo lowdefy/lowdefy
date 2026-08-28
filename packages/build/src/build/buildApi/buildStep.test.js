@@ -157,6 +157,144 @@ test('connectionId is not a string', () => {
     'Step connectionId is not a string at endpoint "test_no_connectionId".'
   );
 });
+test('request step tenant none is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_none',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+test('request step tenant authored is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'connection',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
+test('request step tenant true throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_true',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request step tenant with another string throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_string',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'off',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('a literal $search step pipeline on a walled connection without tenant authored throws at build', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_search_unauthored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_graphlookup_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $graphLookup: { from: 'walled' } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
 test('valid routine step config nested array', () => {
   const context = testContext({ logger });
   const components = {
@@ -555,5 +693,505 @@ test('count steps', () => {
     MongoDBInsertOne: 2,
     MongoDBUpdateOne: 1,
     MongoDBAggregation: 1,
+  });
+});
+
+test('CallAgent step builds with agent prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Summarize the signups.',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_callagent_step',
+        endpointId: 'test_callagent_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'agent:test_callagent_step:run_agent',
+            endpointId: 'test_callagent_step',
+            stepId: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: 'research_agent',
+              prompt: 'Summarize the signups.',
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('CallAgent step allows operator objects for agentId and prompt', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: {
+              agentId: { _payload: 'agent' },
+              prompt: { _payload: 'instruction' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('CallAgent step without properties.agentId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_agent',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_no_agent" requires properties.agentId.'
+  );
+});
+
+test('CallAgent step without properties.prompt throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_prompt',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_no_prompt" requires properties.prompt.'
+  );
+});
+
+test('CallAgent step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            connectionId: 'test_connection',
+            properties: { agentId: 'research_agent', prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'CallAgent step "run_agent" at endpoint "test_callagent_with_connection" should not have a connectionId.'
+  );
+});
+
+test('CallAgent step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_callagent_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'run_agent',
+            type: 'CallAgent',
+            properties: { agentId: 'research_agent', prompt: 'Go.' },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+});
+
+test('Auth step builds with auth prefix', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_auth_step',
+        endpointId: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'auth:test_auth_step:ban_user',
+            endpointId: 'test_auth_step',
+            stepId: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('Auth step with connectionId throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_connection',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', connectionId: 'test_connection' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_connection" should not have a connectionId.'
+  );
+});
+
+test('Auth step with non-object properties throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_properties',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', properties: 'not-an-object' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_properties" properties is not an object.'
+  );
+});
+
+test('Auth step with non-boolean system throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: 'yes' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_system" system must be a boolean.'
+  );
+});
+
+test('Auth step with boolean system does not throw', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system_valid',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: true }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('Auth step is counted in typeCounters.steps and not typeCounters.requests', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_count',
+        type: 'Api',
+        routine: [
+          { id: 'db_step', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          { id: 'ban_user', type: 'BanUser', properties: { userId: 'user_1' } },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+  expect(context.typeCounters.steps.getCounts()).toEqual({
+    BanUser: 1,
+  });
+});
+
+test('RenderNotification step builds with notification prefix', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_rendernotification_step',
+        endpointId: 'test_rendernotification_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'notification:test_rendernotification_step:render',
+            endpointId: 'test_rendernotification_step',
+            stepId: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: { _step: 'get_data' },
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('RenderNotification step allows operator objects for notificationId and data', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_operators',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: { _payload: 'notificationId' },
+              data: { _payload: 'item' },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('RenderNotification step without properties.notificationId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_id',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_id" requires properties.notificationId.'
+  );
+});
+
+test('RenderNotification step without properties.data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_no_data" requires properties.data.'
+  );
+});
+
+test('RenderNotification step with string data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_bad_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned', data: 'data' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_bad_data" properties.data is not an object.'
+  );
+});
+
+test('RenderNotification step with array data throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_array_data',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: {
+              notificationId: 'task-assigned',
+              data: [{ contact: { _id: 'UC-1' } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_array_data" properties.data is not an object.'
+  );
+});
+
+test('RenderNotification step with connectionId throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_with_connection',
+        type: 'Api',
+        routine: [
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            connectionId: 'test_connection',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'RenderNotification step "render" at endpoint "test_rendernotification_with_connection" should not have a connectionId.'
+  );
+});
+
+test('RenderNotification step is not counted in typeCounters.requests', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_rendernotification_no_count',
+        type: 'Api',
+        routine: [
+          {
+            id: 'db_step',
+            type: 'MongoDBInsertOne',
+            connectionId: 'connection',
+          },
+          {
+            id: 'render',
+            type: 'RenderNotification',
+            properties: { notificationId: 'task-assigned', data: {} },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
   });
 });

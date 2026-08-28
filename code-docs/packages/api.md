@@ -19,7 +19,7 @@ import {
   callRequest, // Execute data requests
   createApiContext, // Create server context with auth info
   getHomeAndMenus, // Fetch menu configuration
-  getNextAuthConfig, // Auth.js configuration
+  getAuthConfig, // Auth.js configuration
   getPageConfig, // Fetch page configuration
   getRootConfig, // Fetch app root configuration
   logClientError, // Process client errors with schema validation
@@ -202,6 +202,7 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 | `callEndpoint.js`         | HTTP entry point for endpoint execution; blocks `InternalApi` |
 | `runRoutine.js`           | Dispatch steps by ID prefix: `request:`, `endpoint:`, control. Catch sets `error.handled = true` so a single error crossing multiple `runRoutine` boundaries (e.g. a deep `callApi` chain) triggers `context.handleError` exactly once. |
 | `handleRequest.js`        | Execute a database/API request step                           |
+| `handleRenderNotification.js` | Execute a `RenderNotification` step: interpolate + validate + resolve links + render one notification to `{ subject, title, preview, html, text, data }`. Does not store or send. See [Notification Rendering](../architecture/notifications.md). |
 | `handleEndpointCall.js`   | Execute a `CallApi` step. Evaluates operator-form `endpointId` / `payload`, calls `invokeEndpoint`, then maps the returned envelope (`addStepResult` + status mapping). |
 | `invokeEndpoint.js`       | Shared helper: depth check → load config → authorize → build child `routineContext` → `runRoutine`. Used by `handleEndpointCall` (routine `CallApi` step) and `callApi` (resolver-side, constructed in `callRequestResolver`). |
 | `addStepResult.js`        | Store step results in `routineContext.steps`                  |
@@ -219,7 +220,7 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 
 ### `/routes/auth/`
 
-Handles Auth.js (NextAuth) configuration retrieval.
+Handles Auth.js configuration retrieval.
 
 | Module                                | Purpose                                                     |
 | ------------------------------------- | ----------------------------------------------------------- |
@@ -274,7 +275,7 @@ Each request gets a fresh connection context. Connections are:
 
 - **@lowdefy/build**: Consumes build output files (pages, requests, connections)
 - **@lowdefy/operators**: Uses ServerParser for operator evaluation
-- **plugin-next-auth**: Provides auth session and configuration
+- **plugin-better-auth**: Provides auth providers, API strategies and admin steps
 - **Connection plugins**: Provides request resolvers (MongoDB, HTTP, etc.)
 
 ## Error Handling

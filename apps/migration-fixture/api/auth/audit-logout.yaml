@@ -1,0 +1,20 @@
+# Migration stub for the old `audit-logout` event
+# (local plugin AuditLogoutEvent, meta.type: 'signOut' → hook point: session.delete.after).
+# TODO(migration): port the plugin's audit logic into this routine.
+# Read the hook payload with `_payload` (`_user` is empty inside a hook).
+# `after` points are fire-and-forget — wrap side effects in `:try`.
+id: auth/audit-logout
+type: InternalApi
+routine:
+  - :try:
+      # TODO(migration): verify collection/shape against the old plugin's behaviour.
+      - id: record_logout
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          doc:
+            event: logout
+            userId:
+              _payload: user.id
+            at:
+              _date: now
