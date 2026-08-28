@@ -17,8 +17,8 @@ the offending value. Checks on derived names run on the derived value: a sub-age
 still yields the tool name `a____proto__`, while an endpoint id `/proto__` — which derives
 `__proto__` — is rejected. A shortcut like `Ctrl+__proto__` is still valid.
 
-Collected build errors are now deduplicated the way warnings already were: two errors that resolve to
-the same source line with the same message are reported once. An id rejected by two build steps
-therefore reads as a single error rather than two identical ones.
+Collected build errors are now deduplicated: two errors that resolve to the same source line with
+the same message are reported once. An id rejected by two build steps therefore reads as a single
+error rather than two identical ones.
 
 Apps using a reserved name for one of these identifiers will now fail the build. Rename the identifier.
