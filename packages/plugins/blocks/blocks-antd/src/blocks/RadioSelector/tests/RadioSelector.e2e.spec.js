@@ -91,6 +91,90 @@ test.describe('RadioSelector Block', () => {
     await expect(space).toHaveClass(/ant-space-horizontal/);
   });
 
+  // ============================================
+  // COLUMNS (GRID LAYOUT) TESTS
+  // ============================================
+
+  test('renders a grid instead of the flow layout when columns is set', async ({ page }) => {
+    const group = getRadioGroup(page, 'rs_columns_2');
+    await expect(group.locator('.ant-row')).toHaveCount(1);
+    await expect(group.locator('.ant-space')).toHaveCount(0);
+  });
+
+  test('keeps the flow layout when columns is not set', async ({ page }) => {
+    const group = getRadioGroup(page, 'rs_basic');
+    await expect(group.locator('.ant-space')).toHaveCount(1);
+    await expect(group.locator('.ant-row')).toHaveCount(0);
+  });
+
+  test('stretches the group to full width in grid mode', async ({ page }) => {
+    // The group is inline-block, so without an explicit width the row inside it
+    // sizes to its content instead of filling the container.
+    const group = getRadioGroup(page, 'rs_columns_2');
+    const [groupWidth, parentWidth] = await group.evaluate((el) => [
+      el.getBoundingClientRect().width,
+      el.parentElement.getBoundingClientRect().width,
+    ]);
+    expect(Math.round(groupWidth)).toBe(Math.round(parentWidth));
+  });
+
+  test('renders two even columns as span 12', async ({ page }) => {
+    const group = getRadioGroup(page, 'rs_columns_2');
+    const cols = group.locator('.ant-row > .ant-col');
+    await expect(cols).toHaveCount(4);
+    for (let i = 0; i < 4; i += 1) {
+      await expect(cols.nth(i)).toHaveClass(/ant-col-12/);
+    }
+  });
+
+  test('renders three even columns as span 8', async ({ page }) => {
+    const group = getRadioGroup(page, 'rs_columns_3');
+    const cols = group.locator('.ant-row > .ant-col');
+    await expect(cols).toHaveCount(6);
+    await expect(cols.first()).toHaveClass(/ant-col-8/);
+  });
+
+  test('renders a responsive column count per breakpoint', async ({ page }) => {
+    const col = getRadioGroup(page, 'rs_columns_responsive').locator('.ant-row > .ant-col').first();
+    await expect(col).toHaveClass(/ant-col-xs-24/);
+    await expect(col).toHaveClass(/ant-col-md-8/);
+  });
+
+  test('applies an explicit gutter to the grid', async ({ page }) => {
+    const col = getRadioGroup(page, 'rs_columns_gutter').locator('.ant-row > .ant-col').first();
+    await expect(col).toHaveCSS('padding-left', '12px');
+    await expect(col).toHaveCSS('padding-right', '12px');
+  });
+
+  test('falls back to content width for a column count that does not divide 24', async ({
+    page,
+  }) => {
+    // 24/5 is 4.8, so the class name carries a decimal and antd has no rule for it —
+    // the column gets no flex-basis and keeps its content width. A supported count
+    // resolves to a percentage, which is the contrast being asserted here.
+    const unsupported = getRadioGroup(page, 'rs_columns_unsupported')
+      .locator('.ant-row > .ant-col')
+      .first();
+    await expect(unsupported).toHaveCSS('flex-basis', 'auto');
+
+    const supported = getRadioGroup(page, 'rs_columns_2').locator('.ant-row > .ant-col').first();
+    await expect(supported).toHaveCSS('flex-basis', '50%');
+  });
+
+  test('renders option labels at normal size inside the grid', async ({ page }) => {
+    // The radio group sets font-size 0 as an inline-block whitespace trick; an
+    // intervening column must not leave the labels at that size.
+    const label = getRadioGroup(page, 'rs_columns_2').locator('.ant-radio-wrapper').first();
+    const fontSize = await label.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(fontSize).toBeGreaterThan(0);
+  });
+
+  test('nests the column outside a per-option color provider', async ({ page }) => {
+    const cols = getRadioGroup(page, 'rs_columns_color').locator('.ant-row > .ant-col');
+    await expect(cols).toHaveCount(2);
+    await expect(cols.nth(1).locator('.ant-radio-wrapper')).toHaveCount(1);
+  });
+
   test('renders with title', async ({ page }) => {
     const block = getBlock(page, 'rs_with_title');
     const label = block.locator('.ant-form-item-label');

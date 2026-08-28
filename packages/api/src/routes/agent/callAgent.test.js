@@ -56,6 +56,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -129,6 +130,7 @@ test('callAgent throws ConfigError when agent does not exist', async () => {
 
 test('callAgent throws ConfigError when agent type not found in registry', async () => {
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'UnknownAgent',
@@ -171,6 +173,7 @@ test('callAgent throws ConfigError when agent type not found in registry', async
 
 test('callAgent throws when connection type not found in registry', async () => {
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -218,6 +221,7 @@ test('callAgent resolver context callEndpoint executes endpoint routine', async 
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -280,6 +284,7 @@ test('callAgent resolver context getEndpointConfig returns endpoint config', asy
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -343,6 +348,7 @@ test('callAgent resolver context callEndpoint allows InternalApi endpoints', asy
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -402,6 +408,7 @@ test('callAgent propagates error when connection.create throws', async () => {
   });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -441,6 +448,7 @@ test('callAgent propagates error when resolver throws', async () => {
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -484,6 +492,7 @@ test('callAgent resolver context callEndpoint returns error when routine fails',
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -545,6 +554,7 @@ test('callAgent resolver context getEndpointConfig throws for missing endpoint',
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -586,6 +596,7 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -634,6 +645,7 @@ test('callAgent passes userId from context.user.id when sub is not present', asy
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -674,6 +686,7 @@ test('callAgent passes null userId when no user session', async () => {
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -713,6 +726,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -721,6 +735,7 @@ test('callAgent passes getAgentConfig in resolver context', async () => {
     properties: { model: 'claude-3-5-sonnet' },
   };
   const subAgentConfig = {
+    auth: { public: true },
     agentId: 'sub-agent',
     id: 'agent:sub-agent',
     type: 'ClaudeAgent',
@@ -766,6 +781,7 @@ test('callAgent passes getConnectionForAgent in resolver context', async () => {
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -814,6 +830,7 @@ test('callAgent evaluates operators in agent properties before passing to resolv
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -856,6 +873,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
   const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -916,6 +934,7 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
   const mockMcpCreate = jest.fn().mockReturnValue({ url: 'http://mcp.test', transport: 'http' });
 
   const agentConfig = {
+    auth: { public: true },
     agentId: 'my-agent',
     id: 'agent:my-agent',
     type: 'ClaudeAgent',
@@ -958,4 +977,109 @@ test('callAgent passes resolveMcpSources in resolver context', async () => {
 
   const resolverContext = mockResolver.mock.calls[0][0].context;
   expect(resolverContext.resolveMcpSources).toBeDefined();
+});
+
+test('callAgent rejects a protected agent when there is no session', async () => {
+  const mockResolver = jest.fn();
+  const agentConfig = {
+    auth: { public: false },
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const readConfigFile = createMockReadConfigFile({ agentConfig });
+  const context = testContext({ logger, readConfigFile });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await expect(
+    callAgent(context, { agentId: 'my-agent', pageId: 'page1', messages: [] })
+  ).rejects.toThrow('Agent "my-agent" does not exist.');
+  expect(mockResolver).not.toHaveBeenCalled();
+});
+
+test('callAgent runs a protected agent when a session exists', async () => {
+  const mockStream = { toUIMessageStreamResponse: jest.fn() };
+  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const agentConfig = {
+    auth: { public: false },
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-test' },
+  };
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: { Anthropic: { create: mockCreate, requests: {} } },
+    user: { id: 'user_1' },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, { agentId: 'my-agent', pageId: 'page1', messages: [] });
+  expect(mockResolver).toHaveBeenCalled();
+});
+
+test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the session', async () => {
+  const mockStream = { toUIMessageStreamResponse: jest.fn() };
+  const mockResolver = jest.fn().mockResolvedValue({ response: mockStream });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+  const agentConfig = {
+    auth: { public: true },
+    agentId: 'parent-agent',
+    id: 'agent:parent-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const protectedSubAgentConfig = {
+    auth: { public: false },
+    agentId: 'protected-sub',
+    id: 'agent:protected-sub',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: { apiKey: 'sk-test' },
+  };
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'agents/parent-agent.json') return agentConfig;
+    if (path === 'agents/protected-sub.json') return protectedSubAgentConfig;
+    if (path === 'connections/my-anthropic.json') return connectionConfig;
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: { Anthropic: { create: mockCreate, requests: {} } },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, { agentId: 'parent-agent', pageId: 'page1', messages: [] });
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+
+  await expect(resolverContext.getAgentConfig({ agentId: 'protected-sub' })).rejects.toThrow(
+    'Agent "protected-sub" does not exist.'
+  );
+  await expect(resolverContext.getAgentConfig({ agentId: 'parent-agent' })).resolves.toEqual(
+    agentConfig
+  );
 });
