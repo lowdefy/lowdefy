@@ -599,6 +599,220 @@ test('list block with visible', async () => {
   expect(context.state).toEqual({ list: [{ a: 'a' }], swtch: true });
 });
 
+test('list of display blocks in a hidden container restores its items in state when revealed', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            visible: true,
+            object: { list: [{ value: 'a' }, { value: 'b' }, { value: 'c' }] },
+          },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Switch',
+        id: 'visible',
+      },
+      {
+        type: 'Box',
+        id: 'box',
+        visible: { _state: 'visible' },
+        blocks: [
+          {
+            type: 'List',
+            id: 'object.list',
+            blocks: [
+              {
+                type: 'Paragraph',
+                id: 'object.list.$.value',
+                properties: { content: { _state: 'object.list.$.value' } },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const visible = context._internal.RootSlots.map['visible'];
+  const list = context._internal.RootSlots.map['object.list'];
+  const initialState = {
+    visible: true,
+    object: { list: [{ value: 'a' }, { value: 'b' }, { value: 'c' }] },
+  };
+
+  expect(context.state).toEqual(initialState);
+
+  visible.setValue(false);
+  expect(context.state).toEqual({ visible: false });
+  expect(list.subSlots.length).toEqual(3);
+
+  visible.setValue(true);
+  expect(context.state).toEqual(initialState);
+  expect(list.subSlots.length).toEqual(3);
+  expect(context._internal.RootSlots.map['object.list.2.value'].eval.properties).toEqual({
+    content: 'c',
+  });
+});
+
+test('list of display blocks restores its items in state when revealed by SetState', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            show: false,
+            list: [{ value: 'a' }, { value: 'b' }],
+          },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'box',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'List',
+            id: 'list',
+            blocks: [
+              {
+                type: 'Paragraph',
+                id: 'list.$.value',
+                properties: { content: { _state: 'list.$.value' } },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'hide',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: false } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { reveal, hide } = context._internal.RootSlots.map;
+
+  expect(context.state).toEqual({ show: false });
+
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: true, list: [{ value: 'a' }, { value: 'b' }] });
+
+  await hide.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: false });
+
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: true, list: [{ value: 'a' }, { value: 'b' }] });
+});
+
+test('list items changed by SetState while hidden take precedence over the preserved items', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            show: true,
+            list: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
+          },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'Box',
+        id: 'box',
+        visible: { _state: 'show' },
+        blocks: [
+          {
+            type: 'List',
+            id: 'list',
+            blocks: [
+              {
+                type: 'Paragraph',
+                id: 'list.$.value',
+                properties: { content: { _state: 'list.$.value' } },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'hide',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: false } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'replace',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { list: [{ value: 'x' }] } }],
+        },
+      },
+      {
+        type: 'Button',
+        id: 'reveal',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { show: true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { hide, replace, reveal } = context._internal.RootSlots.map;
+
+  expect(context.state).toEqual({
+    show: true,
+    list: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
+  });
+
+  await hide.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: false });
+
+  await replace.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: false });
+
+  await reveal.triggerEvent({ name: 'onClick' });
+  expect(context.state).toEqual({ show: true, list: [{ value: 'x' }] });
+});
+
 test('toggle list object field visibility with index', async () => {
   const pageConfig = {
     id: 'root',
