@@ -1,5 +1,80 @@
 # Change Log
 
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [33e062f]
+- Updated dependencies [59cae71]
+  - @lowdefy/build@5.5.1
+  - @lowdefy/blocks-antd@5.5.1
+  - @lowdefy/engine@5.5.1
+  - @lowdefy/blocks-aggrid@5.5.1
+  - @lowdefy/blocks-tiptap@5.5.1
+  - @lowdefy/api@5.5.1
+  - @lowdefy/client@5.5.1
+  - @lowdefy/layout@5.5.1
+  - @lowdefy/actions-core@5.5.1
+  - @lowdefy/blocks-antd-x@5.5.1
+  - @lowdefy/blocks-basic@5.5.1
+  - @lowdefy/blocks-echarts@5.5.1
+  - @lowdefy/blocks-loaders@5.5.1
+  - @lowdefy/blocks-markdown@5.5.1
+  - @lowdefy/connection-axios-http@5.5.1
+  - @lowdefy/operators-change-case@5.5.1
+  - @lowdefy/operators-dayjs@5.5.1
+  - @lowdefy/operators-diff@5.5.1
+  - @lowdefy/operators-js@5.5.1
+  - @lowdefy/operators-mql@5.5.1
+  - @lowdefy/operators-nunjucks@5.5.1
+  - @lowdefy/operators-uuid@5.5.1
+  - @lowdefy/operators-yaml@5.5.1
+  - @lowdefy/plugin-next-auth@5.5.1
+  - @lowdefy/block-utils@5.5.1
+  - @lowdefy/errors@5.5.1
+  - @lowdefy/helpers@5.5.1
+  - @lowdefy/logger@5.5.1
+  - @lowdefy/node-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [c5cc340]
+- Updated dependencies [6dcdb6a]
+- Updated dependencies [b368e15]
+- Updated dependencies [f88fe33]
+- Updated dependencies [7ab09d6]
+  - @lowdefy/blocks-aggrid@5.5.0
+  - @lowdefy/blocks-tiptap@5.5.0
+  - @lowdefy/blocks-antd-x@5.5.0
+  - @lowdefy/build@5.5.0
+  - @lowdefy/api@5.5.0
+  - @lowdefy/client@5.5.0
+  - @lowdefy/engine@5.5.0
+  - @lowdefy/layout@5.5.0
+  - @lowdefy/actions-core@5.5.0
+  - @lowdefy/blocks-antd@5.5.0
+  - @lowdefy/blocks-basic@5.5.0
+  - @lowdefy/blocks-echarts@5.5.0
+  - @lowdefy/blocks-loaders@5.5.0
+  - @lowdefy/blocks-markdown@5.5.0
+  - @lowdefy/connection-axios-http@5.5.0
+  - @lowdefy/operators-change-case@5.5.0
+  - @lowdefy/operators-dayjs@5.5.0
+  - @lowdefy/operators-diff@5.5.0
+  - @lowdefy/operators-js@5.5.0
+  - @lowdefy/operators-mql@5.5.0
+  - @lowdefy/operators-nunjucks@5.5.0
+  - @lowdefy/operators-uuid@5.5.0
+  - @lowdefy/operators-yaml@5.5.0
+  - @lowdefy/plugin-next-auth@5.5.0
+  - @lowdefy/block-utils@5.5.0
+  - @lowdefy/errors@5.5.0
+  - @lowdefy/helpers@5.5.0
+  - @lowdefy/logger@5.5.0
+  - @lowdefy/node-utils@5.5.0
+
 ## 5.4.0
 
 ### Minor Changes

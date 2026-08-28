@@ -1,5 +1,17 @@
 # @lowdefy/connection-anthropic
 
+## 5.5.1
+
+### Patch Changes
+
+- @lowdefy/ai-utils@5.5.1
+
+## 5.5.0
+
+### Patch Changes
+
+- @lowdefy/ai-utils@5.5.0
+
 ## 5.4.0
 
 ### Patch Changes
