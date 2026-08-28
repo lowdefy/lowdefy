@@ -35,6 +35,7 @@ function buildImportsProd({ components, context }) {
       callbacks: buildImportClassProd(components.types.auth.callbacks),
       events: buildImportClassProd(components.types.auth.events),
       providers: buildImportClassProd(components.types.auth.providers),
+      strategies: buildImportClassProd(components.types.auth.strategies),
     },
     blocks,
     connections: buildImportClassProd(components.types.connections),

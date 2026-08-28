@@ -58,6 +58,7 @@ import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
 import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpHandler from './routes/mcp.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
@@ -147,6 +148,7 @@ function createApp() {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.

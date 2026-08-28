@@ -28,6 +28,7 @@ import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
+import getStrategyCaller from './auth/strategies.js';
 import i18nConfig from '../build/i18n.js';
 import logRequest from './log/logRequest.js';
 import notifications, {
@@ -106,6 +107,12 @@ async function createLowdefyContext({ c }) {
   context.handleError = createHandleError({ context });
   if (!c.req.path.includes('/api/auth')) {
     context.session = await getSession(c);
+    if (!context.session?.user) {
+      const caller = await getStrategyCaller(c, context.logger);
+      if (caller) {
+        context.session = { user: caller };
+      }
+    }
   }
   createApiContext(context);
   logRequest({ context });

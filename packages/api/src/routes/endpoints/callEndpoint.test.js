@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -93,7 +93,7 @@ test('Api endpoint proceeds normally', async () => {
   expect(result.status).toBe('success');
 });
 
-test('unauthenticated call to a protected endpoint throws masked does-not-exist error', async () => {
+test('unauthenticated call to a protected endpoint throws an authentication-required error', async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/protected_ep.json') {
       return {
@@ -106,6 +106,33 @@ test('unauthenticated call to a protected endpoint throws masked does-not-exist 
     return null;
   });
   const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'protected_ep',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow('Authentication required for API endpoint "protected_ep".');
+});
+
+test('authenticated call with the wrong role throws a masked does-not-exist error', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/protected_ep.json') {
+      return {
+        endpointId: 'protected_ep',
+        type: 'Api',
+        auth: { public: false, roles: ['admin'] },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    session: { user: { id: 'user_1', roles: ['viewer'] } },
+  });
   await expect(
     callEndpoint(context, {
       blockId: 'blockId',
@@ -219,4 +246,40 @@ test('InternalApi error matches missing endpoint error message', async () => {
     expect(err.message).toBe(expectedMessage);
     expect(err).toBeInstanceOf(ConfigError);
   }
+});
+
+test('InternalApi endpoint answers an anonymous caller on an auth-configured app with the same authentication-required error as a protected endpoint', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'auth.json') return { configured: true };
+    if (path === 'api/internal_ep.json') {
+      return {
+        endpointId: 'internal_ep',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: { ':return': 'secret' },
+      };
+    }
+    if (path === 'api/protected_ep.json') {
+      return {
+        endpointId: 'protected_ep',
+        type: 'Api',
+        auth: { public: false },
+        routine: { ':return': 'secret' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  const call = (endpointId) =>
+    callEndpoint(context, { blockId: 'blockId', endpointId, pageId: 'pageId', payload: {} });
+  await expect(call('internal_ep')).rejects.toThrow(
+    'Authentication required for API endpoint "internal_ep".'
+  );
+  await expect(call('protected_ep')).rejects.toThrow(
+    'Authentication required for API endpoint "protected_ep".'
+  );
+  await expect(call('missing_ep')).rejects.toThrow(
+    'Authentication required for API endpoint "missing_ep".'
+  );
+  await expect(call('internal_ep')).rejects.toBeInstanceOf(AuthenticationError);
 });

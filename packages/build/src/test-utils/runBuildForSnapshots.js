@@ -181,6 +181,10 @@ const snapshotTypesMap = {
       CredentialsProvider: { package: '@lowdefy/plugin-next-auth' },
       EmailProvider: { package: '@lowdefy/plugin-next-auth' },
     },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-next-auth' },
+      jwt: { package: '@lowdefy/plugin-next-auth' },
+    },
   },
   operators: {
     client: {

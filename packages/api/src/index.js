@@ -21,10 +21,13 @@ import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
+import createMcpServer from './routes/mcp/createMcpServer.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
 import getAuthConfig from './routes/auth/getAuthConfig.js';
+import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
+import resolveStrategyCaller from './context/resolveStrategyCaller.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
@@ -42,15 +45,18 @@ export {
   callRequest,
   createApiContext,
   createChannelRegistry,
+  createMcpServer,
   createSessionCallback,
   createWebSocketConnection,
   getAuthConfig,
+  getAuthStrategies,
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,
   logClientError,
   redactErrorResponse,
   redactResponse,
+  resolveStrategyCaller,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,

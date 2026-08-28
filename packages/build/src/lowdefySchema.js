@@ -881,6 +881,65 @@ export default {
         session: {
           type: 'object',
         },
+        strategies: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "strategies" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "properties" should be an object.',
+                },
+              },
+              roles: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth strategy "roles" should be an array of role names.',
+                  },
+                },
+                errorMessage: {
+                  type: 'Auth strategy "roles" should be an array of role names.',
+                },
+              },
+              attributes: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "attributes" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth strategy should be an object.',
+              required: {
+                id: 'Auth strategy should have required property "id".',
+                type: 'Auth strategy should have required property "type".',
+              },
+            },
+          },
+        },
         theme: {
           type: 'object',
         },
@@ -2171,7 +2230,8 @@ export default {
             '~l': {},
             defaultLocale: {
               type: 'string',
-              description: 'BCP 47 locale code used when no user preference or browser match is available.',
+              description:
+                'BCP 47 locale code used when no user preference or browser match is available.',
             },
             locales: {
               type: 'array',
@@ -2194,7 +2254,8 @@ export default {
                   },
                   antd: {
                     type: 'string',
-                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                    description:
+                      'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
                   },
                   dayjs: {
                     type: 'string',
@@ -2205,7 +2266,8 @@ export default {
             },
             messages: {
               type: 'object',
-              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              description:
+                'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
               additionalProperties: {
                 type: 'object',
               },
@@ -2278,6 +2340,108 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+        additionalProperties:
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        // Server branding advertised in the initialize result's serverInfo
+        // (MCP Implementation: title, websiteUrl, icons). Clients that render
+        // a connector card prefer these over guessing from the host's favicon.
+        title: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "title" should be a string.',
+          },
+        },
+        websiteUrl: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "websiteUrl" should be a string.',
+          },
+        },
+        icons: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['src'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              src: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "src" should be a string.',
+                },
+              },
+              mimeType: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "mimeType" should be a string.',
+                },
+              },
+              sizes: {
+                type: 'array',
+                items: { type: 'string' },
+                errorMessage: {
+                  type: 'MCP icon "sizes" should be an array of strings like "512x512".',
+                },
+              },
+              theme: {
+                type: 'string',
+                enum: ['light', 'dark'],
+                errorMessage: {
+                  type: 'MCP icon "theme" should be a string.',
+                  enum: 'MCP icon "theme" should be "light" or "dark".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "icons" items should be objects with a "src" property.',
+              required: {
+                src: 'MCP icon should have required property "src".',
+              },
+              additionalProperties:
+                'MCP icon contains an unknown property. The known properties are "src", "mimeType", "sizes" and "theme".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "icons" should be an array.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Api endpoint ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array of endpoint id strings.',
+          },
+        },
       },
     },
     websockets: {

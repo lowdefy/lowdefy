@@ -44,6 +44,7 @@ async function writeAvailableTypes({ context }) {
       callbacks: filterInstalled({ store: typesMap.auth.callbacks, installedPackages }),
       events: filterInstalled({ store: typesMap.auth.events, installedPackages }),
       providers: filterInstalled({ store: typesMap.auth.providers, installedPackages }),
+      strategies: filterInstalled({ store: typesMap.auth.strategies, installedPackages }),
     },
     blocks: filterInstalled({ store: typesMap.blocks, installedPackages }),
     connections: filterInstalled({ store: typesMap.connections, installedPackages }),
