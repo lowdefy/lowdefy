@@ -63,17 +63,19 @@ test('an href is navigated to verbatim', () => {
   expect(lowdefy.calls.assign).toEqual(['/reports?report_id=1']);
 });
 
-test('an href is not given a protocol, the way a url is', () => {
-  // `url` means an external address, so createLink prefixes https:// when the
-  // value has no scheme. That makes a root-relative `url` resolve to a HOST, and
-  // `href` the prop for a target that must be passed through as written.
+test('an href is passed through as written, where a url is resolved', () => {
+  // `href` is an HTML-attribute passthrough: it never enters the navigation
+  // grammar, so it reaches window.location.assign exactly as written. The same
+  // string as a `url` is classified — a leading slash makes it an app page, so
+  // it routes rather than navigating away.
   const withHref = createFakeLowdefy();
   setupLink(withHref)({ href: '/reports' });
   expect(withHref.calls.assign).toEqual(['/reports']);
 
   const withUrl = createFakeLowdefy();
   setupLink(withUrl)({ url: '/reports' });
-  expect(withUrl.calls.assign).toEqual(['https:///reports']);
+  expect(withUrl.calls.assign).toEqual([]);
+  expect(withUrl.calls.push).toEqual([{ pathname: '/reports', query: '' }]);
 });
 
 test('an href opens in a new tab', () => {
@@ -99,7 +101,7 @@ test('urlQuery is appended to a url', () => {
 
   setupLink(lowdefy)({ url: 'https://lowdefy.com', urlQuery: { a: 1 } });
 
-  expect(lowdefy.calls.assign).toEqual(['https://lowdefy.com?a=1']);
+  expect(lowdefy.calls.assign).toEqual(['https://lowdefy.com/?a=1']);
 });
 
 test('a blocked popup reports itself instead of throwing', () => {
