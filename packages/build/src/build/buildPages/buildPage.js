@@ -103,7 +103,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   });
 
   // Warn on duplicate shortcuts within the page
-  const seenShortcuts = {};
+  const seenShortcuts = Object.create(null);
   shortcutRefs.forEach(({ shortcut, blockId, eventId, configKey }) => {
     if (seenShortcuts[shortcut]) {
       context.handleWarning(

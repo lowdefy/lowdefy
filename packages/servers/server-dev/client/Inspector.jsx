@@ -112,7 +112,7 @@ async function bootstrapFromCheckpoint({ basePath, pageId, checkpointName, isCan
     context._internal.update();
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Failed to load checkpoint "${checkpointName}":`, error);
+    console.error('Failed to load checkpoint "%s":', checkpointName, error);
   }
 }
 
