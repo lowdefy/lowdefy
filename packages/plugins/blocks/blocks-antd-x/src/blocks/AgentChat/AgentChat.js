@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useChat } from '@ai-sdk/react';
 import {
   lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -37,7 +37,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageId, properties }) {
   const {
     agentId,
     urlQuery,
@@ -46,6 +46,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     messageDisplay,
     sender,
     conversationId,
+    feedbackValues: storedFeedbackValues,
     messages: externalMessages,
     display,
     drawer: drawerConfig,
@@ -56,6 +57,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
+  // Controlled composer value, so a starter prompt (or the setInput method) can
+  // fill the box, and a send can leave typed text in place when it is rejected.
+  const [inputValue, setInputValue] = useState('');
   // Mirror the operator-evaluated sharedState object into a ref so transport.body()
   // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
@@ -193,6 +197,20 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     },
   });
 
+  // The control is otherwise write-only: it reports a rating and immediately forgets it,
+  // so the thumb un-highlights on the next render and the message looks unrated. This holds
+  // what was clicked THIS visit; the block still persists nothing itself.
+  const [feedbackValues, setFeedbackValues] = useState({});
+
+  // Ratings the app already knows about, keyed by message id — what a reload or a
+  // conversation switch would otherwise lose, since the block stores nothing. A click this
+  // visit wins over the stored value, so the thumb responds immediately and a rating the
+  // user has just withdrawn is not re-lit by a stale prop.
+  // Not memoised: the property arrives from operators that rebuild it every render, so a
+  // dependency on it would miss every time — the same reason the message sync below
+  // compares by count and id rather than by reference.
+  const effectiveFeedbackValues = { ...(storedFeedbackValues ?? {}), ...feedbackValues };
+
   // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
   const prevConversationIdRef = useRef(effectiveConversationId);
@@ -200,6 +218,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     if (effectiveConversationId !== prevConversationIdRef.current) {
       prevConversationIdRef.current = effectiveConversationId;
       setMessages([]);
+      // Ratings clicked in the thread being left must not carry over: they are keyed by
+      // message id, and the incoming conversation supplies its own through feedbackValues.
+      setFeedbackValues({});
     }
   }, [effectiveConversationId, setMessages]);
 
@@ -242,6 +263,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           ...(args.metadata ? { metadata: args.metadata } : {}),
         });
       }
+    });
+    methods.registerMethod('setInput', (args) => {
+      setInputValue(typeof args?.text === 'string' ? args.text : '');
     });
     methods.registerMethod('clearMessages', () => {
       setMessages([]);
@@ -431,7 +455,12 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     } else {
       sendMessage({ text });
     }
-    senderRef.current?.clear();
+    // Empty the composer here, after the sends and downstream of both the
+    // onBeforeSend cancellation return and the upload await, so a send that was
+    // rejected or failed to upload leaves the user's text in the box. Resetting
+    // from the Sender's onSubmit handler instead would silently lose typed input
+    // on every rejected send.
+    setInputValue('');
   }
 
   function handleStop() {
@@ -444,6 +473,13 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
+  }
+
+  // A two-track welcome starter fills the composer instead of sending, so a
+  // generic shipped default is an editable first draft rather than a message the
+  // user never meant to send. Reuses the controlled Sender value.
+  function handleWelcomePromptFill(text) {
+    setInputValue(typeof text === 'string' ? text : '');
   }
 
   function handleSuggestionClick(suggestion) {
@@ -473,7 +509,41 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const activeSuggestions = agentSuggestions ?? suggestions;
 
+  // A link in an answer was a plain anchor: a full browser navigation out of the
+  // conversation, with no way for an app to do anything else with it. Default is only
+  // prevented when the app actually handles onLinkClick — otherwise the link keeps
+  // navigating, so wiring nothing changes nothing.
+  //
+  // Modified and non-primary clicks are never intercepted: open-in-new-tab is a
+  // reasonable thing to do with a citation, and preventing it would be a regression.
+  const interceptLinks = Boolean(events?.onLinkClick);
+
+  // Stable identity: MessageBubble memoises its markdown component map on this, and the map
+  // is rebuilt on every streaming chunk otherwise — remounting every link in the answer as
+  // it streams.
+  const handleLinkClick = useCallback(
+    ({ href, text, domEvent }) => {
+      if (
+        !interceptLinks ||
+        domEvent.defaultPrevented ||
+        domEvent.button !== 0 ||
+        domEvent.metaKey ||
+        domEvent.ctrlKey ||
+        domEvent.shiftKey ||
+        domEvent.altKey
+      ) {
+        return;
+      }
+      // Prevented synchronously: Link checks defaultPrevented immediately after calling
+      // this, and an external anchor's default fires before any async work could run.
+      domEvent.preventDefault();
+      methods.triggerEvent({ name: 'onLinkClick', event: { href, text } });
+    },
+    [interceptLinks, methods]
+  );
+
   function handleFeedback({ messageId, rating }) {
+    setFeedbackValues((prev) => ({ ...prev, [messageId]: rating }));
     const message = messages.find((msg) => msg.id === messageId);
     const messageContent =
       message?.parts
@@ -533,7 +603,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       }}
     >
       <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty ? (
+        {isEmpty && !welcome?.tracks ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
           <MessageList
@@ -541,8 +611,13 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             messages={messages}
             isStreaming={isBusy}
             config={messageDisplay}
+            welcome={welcome}
+            onWelcomePromptFill={handleWelcomePromptFill}
             addToolApprovalResponse={addToolApprovalResponse}
             onFeedback={handleFeedback}
+            onLinkClick={handleLinkClick}
+            Link={Link}
+            feedbackValues={effectiveFeedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
@@ -635,6 +710,8 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
         )}
         <Sender
           ref={senderRef}
+          value={inputValue}
+          onChange={setInputValue}
           placeholder={sender?.placeholder ?? methods.translate('agent.sender.placeholder')}
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}

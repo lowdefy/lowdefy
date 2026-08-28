@@ -19,6 +19,7 @@ import {
   createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  generateId,
   generateText,
   pruneMessages,
   validateUIMessages,
@@ -155,6 +156,9 @@ async function handleAgentChat({ connection, properties, context }) {
         });
         agentStream = result.toUIMessageStream({
           originalMessages: validatedMessages,
+          // Without a generator the assistant message reaches onFinish with
+          // id: '' — see the createAgentUIStream call below.
+          generateMessageId: generateId,
           onFinish: captureMessages,
         });
       } else {
@@ -165,6 +169,18 @@ async function handleAgentChat({ connection, properties, context }) {
           agent: agentInstance,
           uiMessages: messages,
           ...timeoutConfig,
+          // The AI SDK only ids the assistant message it builds when the caller
+          // supplies a generator: toUIMessageStream derives responseMessageId
+          // only if generateMessageId != null, and handleUIMessageStreamFinish
+          // then seeds the streaming state with `messageId ?? ''`, with no
+          // messageId on the start chunk to override it. Without this every
+          // assistant message an onFinish hook persists carries id: '', so a
+          // saved transcript has them all sharing one id — and a UI that keys
+          // its bubbles by message id (AgentChat does) renders the last reply in
+          // every assistant bubble when the conversation is reloaded. The client
+          // generates its own id while streaming, so the damage only shows up
+          // after a reload.
+          generateMessageId: generateId,
           onStepFinish: collectStep,
           onFinish: captureMessages,
         });

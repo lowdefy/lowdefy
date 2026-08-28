@@ -51,7 +51,8 @@
     "better-auth": "1.7.0",
     "change-case": "5.4.0",
     "mongodb": "7.2.0",
-    "saslprep": "1.0.3"
+    "saslprep": "1.0.3",
+    "uuid": "13.0.0"
   },
   "devDependencies": {
     "@lowdefy/ajv": "5.5.1",
