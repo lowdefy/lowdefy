@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import getAgentRoles from './getAgentRoles.js';
 import getProtectedAgents from './getProtectedAgents.js';
@@ -24,6 +24,20 @@ import { isInPatternList } from './matchPattern.js';
 
 // Agents are served from the API surface, so auth.api patterns match agent ids too.
 function buildAgentAuth({ components, context }) {
+  // buildAuth runs before buildAgents, so this is the first step to read an
+  // agent id - and both helpers below key plain objects on it. A reserved id
+  // resolves through Object.prototype: `agentRoles.__proto__` is truthy for
+  // every app, so the agent is stamped with Object.prototype as its roles and
+  // the whole build writes through the global prototype from there. Gate before
+  // either helper runs - buildAgents' own gate never gets the chance.
+  (components.agents ?? []).forEach((agent) => {
+    if (isReserved(agent.id)) {
+      throw new ConfigError(
+        `Agent id "${agent.id}" is a reserved name and cannot be used as an id.`,
+        { configKey: agent['~k'] }
+      );
+    }
+  });
   const protectedAgents = getProtectedAgents({ components });
   const agentRoles = getAgentRoles({ components });
   let configPublicApi = [];

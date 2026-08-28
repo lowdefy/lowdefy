@@ -22,3 +22,9 @@ the same message are reported once. An id rejected by two build steps therefore 
 error rather than two identical ones.
 
 Apps using a reserved name for one of these identifiers will now fail the build. Rename the identifier.
+
+The agent auth build gates the agent id too. `buildAuth` runs before `buildAgents`, and
+`buildAgentAuth` keys its roles map on the agent id — so `agentRoles.__proto__` read back truthy for
+every app and the agent was stamped with `Object.prototype` as its `roles`, which the rest of the
+build then wrote through. The gate has to sit there rather than at `buildAgents`, which never gets
+the chance.
