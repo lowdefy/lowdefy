@@ -117,8 +117,11 @@ const labelLogic = ({
     'ldf-feedback-icon': true,
   });
 
+  const hasFeedback = properties.hasFeedback !== false;
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
-  const showFeedback = validation.status === 'warning' || validation.status === 'error';
+  const showFeedback =
+    hasFeedback && (validation.status === 'warning' || validation.status === 'error');
+  const showFeedbackIcon = hasFeedback && !type.isNone(validation.status);
   return {
     extraClassName,
     extraStyle,
@@ -135,6 +138,7 @@ const labelLogic = ({
     rowStyle,
     showExtra,
     showFeedback,
+    showFeedbackIcon,
     wrapperCol,
   };
 };

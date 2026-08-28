@@ -73,7 +73,9 @@ async function fetchModules({ moduleEntries, context }) {
 
       if (!fs.existsSync(path.join(moduleRoot, 'module.lowdefy.yaml'))) {
         throw new ConfigError(
-          `Module "${entry.id}": module.lowdefy.yaml not found at path "${source.path || '/'}" in ${source.owner}/${source.repo}@${source.ref}`
+          `Module "${entry.id}": module.lowdefy.yaml not found at path "${source.path || '/'}" in ${
+            source.owner
+          }/${source.repo}@${source.ref}`
         );
       }
 
