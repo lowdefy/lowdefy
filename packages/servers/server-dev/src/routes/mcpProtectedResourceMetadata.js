@@ -14,7 +14,12 @@
   limitations under the License.
 */
 
-import { getAsIssuer, getMcpResourceUri, isWellFormedOrgSegment } from '@lowdefy/api';
+import {
+  getAsIssuer,
+  getMcpResourceUri,
+  isWellFormedOrgSegment,
+  MCP_OAUTH_SCOPES,
+} from '@lowdefy/api';
 
 import lowdefyConfig from '../../lib/build/config.js';
 
@@ -31,7 +36,10 @@ function mcpProtectedResourceMetadataHandler(c) {
   return c.json({
     resource: getMcpResourceUri({ config: lowdefyConfig, orgId }),
     authorization_servers: [getAsIssuer({ config: lowdefyConfig })],
-    scopes_supported: ['mcp:read', 'mcp:write'],
+    // The same list the authorization server offers, so a client that requests
+    // exactly what is advertised (the MCP spec's guidance) gets offline_access
+    // and with it a refresh token - otherwise it re-consents every hour.
+    scopes_supported: MCP_OAUTH_SCOPES,
     bearer_methods_supported: ['header'],
   });
 }
