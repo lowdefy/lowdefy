@@ -37,6 +37,7 @@ import buildLogger from './build/buildLogger.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
+import buildOverlay from './build/buildOverlay.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import collectPageContent from './build/collectPageContent.js';
@@ -110,6 +111,7 @@ async function build(options) {
     tryBuildStep(buildApp, 'buildApp', { components, context });
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(buildOverlay, 'buildOverlay', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });

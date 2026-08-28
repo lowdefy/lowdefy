@@ -1,0 +1,57 @@
+/* eslint-disable no-param-reassign */
+
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { serializer, type } from '@lowdefy/helpers';
+
+// Prepend the resolved app overlay blocks (see buildOverlay) onto a single
+// page's blocks, so the overlay renders on every page. Called before buildPage
+// runs, so the injected blocks go through the normal block build (id scoping,
+// plugin/icon/operator detection) like any other page block.
+//
+// A page opts out by listing its pageId in `overlay.exclude`.
+function injectOverlayBlocks({ page, context }) {
+  const overlayBlocks = context.overlayBlocks ?? [];
+  if (overlayBlocks.length === 0) return;
+  if (!type.isObject(page)) return;
+
+  // At injection time buildPage hasn't run yet, so the raw page id is `page.id`
+  // (pageId is set later); fall back to pageId for callers that set it first.
+  const pageId = page.pageId ?? page.id;
+  if (context.overlayExclude?.has(pageId)) return;
+
+  // Deep-clone per page so each page owns its block instances — buildBlock
+  // assigns ids/keys independently when it processes each page.
+  const clones = overlayBlocks.map((block) => serializer.copy(block));
+
+  // Prepend the overlay to the page's content. A page expresses content either
+  // as the top-level `blocks` shorthand or via explicit `slots`. Injecting into
+  // `page.blocks` when the page uses slots would clobber the slot content (the
+  // `blocks` shorthand wins over `slots.content` in buildBlock), so inject into
+  // the default content slot in that case.
+  if (type.isArray(page.blocks)) {
+    page.blocks = [...clones, ...page.blocks];
+  } else if (type.isObject(page.slots)) {
+    const content = type.isObject(page.slots.content) ? page.slots.content : {};
+    content.blocks = [...clones, ...(type.isArray(content.blocks) ? content.blocks : [])];
+    page.slots.content = content;
+  } else {
+    page.blocks = clones;
+  }
+}
+
+export default injectOverlayBlocks;

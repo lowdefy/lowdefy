@@ -1,0 +1,42 @@
+# 92: App overlay blocks
+# overlay.blocks are prepended to every page, except pageIds in overlay.exclude.
+lowdefy: local
+
+overlay:
+  exclude:
+    - excluded
+  blocks:
+    - id: overlay_banner
+      type: Box
+      blocks:
+        - id: overlay_message
+          type: Title
+          properties:
+            content: App-wide banner
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Welcome
+  - id: excluded
+    type: Box
+    blocks:
+      - id: excluded_heading
+        type: Title
+        properties:
+          content: No overlay here
+  # Page authored via explicit slots — overlay must inject into the content slot
+  # without clobbering the page's own slot content.
+  - id: slots_page
+    type: Box
+    slots:
+      content:
+        blocks:
+          - id: slots_heading
+            type: Title
+            properties:
+              content: Slots page

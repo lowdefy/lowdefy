@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import injectOverlayBlocks from '../../utils/injectOverlayBlocks.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
@@ -42,6 +43,9 @@ function buildPages({ components, context }) {
   // Wrap each page build to collect errors instead of stopping on first error
   pages.forEach((page, index) => {
     try {
+      // Prepend app overlay blocks so they render on every page, before the
+      // page is built (so the injected blocks go through normal block build).
+      injectOverlayBlocks({ page, context });
       const result = buildPage({ page, index, context, checkDuplicatePageId });
       // buildPage returns { failed: true } when validation fails
       if (result?.failed) {

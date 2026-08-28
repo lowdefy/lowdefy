@@ -36,6 +36,7 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
 import buildModules from '../buildModules.js';
+import buildOverlay from '../buildOverlay.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import buildTypes from '../buildTypes.js';
 import cleanBuildDirectory from '../cleanBuildDirectory.js';
@@ -59,6 +60,7 @@ import writeTheme from '../writeTheme.js';
 import writeMaps from '../writeMaps.js';
 import updateServerPackageJson from '../full/updateServerPackageJson.js';
 import writeMenus from '../writeMenus.js';
+import writeOverlay from './writeOverlay.js';
 import writePageRegistry from './writePageRegistry.js';
 import writePluginImports from '../writePluginImports/writePluginImports.js';
 
@@ -124,6 +126,7 @@ async function shallowBuild(options) {
     tryBuildStep(buildApp, 'buildApp', { components, context });
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(buildOverlay, 'buildOverlay', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
@@ -206,6 +209,7 @@ async function shallowBuild(options) {
       JSON.stringify(components.imports.icons)
     );
     await writePageRegistry({ pageRegistry, context });
+    await writeOverlay({ context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
 

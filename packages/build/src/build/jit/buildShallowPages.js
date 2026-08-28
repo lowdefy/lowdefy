@@ -19,6 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 import buildPage from '../buildPages/buildPage.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import injectOverlayBlocks from '../../utils/injectOverlayBlocks.js';
 import createPageRegistry from './createPageRegistry.js';
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
@@ -48,6 +49,11 @@ function buildShallowPages({ components, context }) {
     const entry = pageRegistry.get(page.id);
     // Skip pages with a source file (JIT-resolved) and resolver pages (JIT re-run)
     if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
+
+    // Inline/sourceless pages are built here at skeleton time (not via
+    // buildPageJit), so inject the overlay here too. context.overlayBlocks was
+    // resolved by buildOverlay earlier in the skeleton build.
+    injectOverlayBlocks({ page, context });
 
     buildPage({ page, index, context });
 
