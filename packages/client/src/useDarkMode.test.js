@@ -138,7 +138,7 @@ test('merges lightComponents over shared components in light mode', () => {
   });
 });
 
-test('sets <html> background to darkToken.colorBgLayout in dark mode', () => {
+test('sets <html> background and color-scheme to darkToken.colorBgLayout in dark mode', () => {
   renderHook(() =>
     useDarkMode({
       antd: { darkToken: { colorBgLayout: '#0f1117' } },
@@ -146,6 +146,7 @@ test('sets <html> background to darkToken.colorBgLayout in dark mode', () => {
     })
   );
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
+  expect(document.documentElement.style.colorScheme).toBe('dark');
 });
 
 test('falls back to #000 in dark mode when no darkToken is set', () => {
@@ -153,7 +154,7 @@ test('falls back to #000 in dark mode when no darkToken is set', () => {
   expect(document.documentElement.style.backgroundColor).toBe('rgb(0, 0, 0)');
 });
 
-test('sets <html> background to lightToken.colorBgLayout in light mode', () => {
+test('sets <html> background and color-scheme to lightToken.colorBgLayout in light mode', () => {
   renderHook(() =>
     useDarkMode({
       antd: { lightToken: { colorBgLayout: '#fafafa' } },
@@ -161,6 +162,7 @@ test('sets <html> background to lightToken.colorBgLayout in light mode', () => {
     })
   );
   expect(document.documentElement.style.backgroundColor).toBe('rgb(250, 250, 250)');
+  expect(document.documentElement.style.colorScheme).toBe('light');
 });
 
 test('leaves <html> background unset when no lightToken.colorBgLayout is configured', () => {
@@ -168,7 +170,13 @@ test('leaves <html> background unset when no lightToken.colorBgLayout is configu
   expect(document.documentElement.style.backgroundColor).toBe('');
 });
 
-test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/background', () => {
+test('sets <html> color-scheme to light in a light app on a dark OS', () => {
+  setupMatchMedia(true);
+  renderHook(() => useDarkMode({ antd: {}, configDarkMode: 'light' }));
+  expect(document.documentElement.style.colorScheme).toBe('light');
+});
+
+test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/background/color-scheme', () => {
   const { result, rerender } = renderHook(() =>
     useDarkMode({
       antd: {
@@ -182,6 +190,7 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
 
   // system + OS light → light mode
   expect(result.current.token.colorBgLayout).toBe('#fafafa');
+  expect(document.documentElement.style.colorScheme).toBe('light');
 
   act(() => {
     window.__lowdefy_setDarkMode('dark');
@@ -190,4 +199,5 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
 
   expect(result.current.token.colorBgLayout).toBe('#0f1117');
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
+  expect(document.documentElement.style.colorScheme).toBe('dark');
 });
