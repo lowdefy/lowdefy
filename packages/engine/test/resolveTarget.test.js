@@ -172,12 +172,12 @@ test('resolveTarget classifies an absolute same-origin url inside basePath as a 
 
 test('resolveTarget classifies an absolute same-origin url outside basePath as external', () => {
   const lowdefy = createLowdefy({ basePath: '/app' });
-  expect(
-    resolveTarget({ lowdefy, target: { url: 'https://app.lowdefy.test/marketing' } })
-  ).toEqual({
-    kind: 'external',
-    href: 'https://app.lowdefy.test/marketing',
-  });
+  expect(resolveTarget({ lowdefy, target: { url: 'https://app.lowdefy.test/marketing' } })).toEqual(
+    {
+      kind: 'external',
+      href: 'https://app.lowdefy.test/marketing',
+    }
+  );
 });
 
 test('resolveTarget classifies a same-origin url as a page when no basePath is set', () => {
@@ -193,9 +193,7 @@ test('resolveTarget classifies a same-origin url as a page when no basePath is s
 
 test('resolveTarget classifies a different-origin url as external', () => {
   const lowdefy = createLowdefy();
-  expect(
-    resolveTarget({ lowdefy, target: { url: 'https://example.com/page' } })
-  ).toEqual({
+  expect(resolveTarget({ lowdefy, target: { url: 'https://example.com/page' } })).toEqual({
     kind: 'external',
     href: 'https://example.com/page',
   });

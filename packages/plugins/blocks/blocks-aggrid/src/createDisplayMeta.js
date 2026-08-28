@@ -384,7 +384,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',
@@ -566,7 +567,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   },
                   checkedIcon: {
                     type: ['string', 'object'],
-                    description: 'Switch: icon shown when on (React-Icon name or Icon block config).',
+                    description:
+                      'Switch: icon shown when on (React-Icon name or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   uncheckedIcon: {

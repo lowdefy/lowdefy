@@ -721,12 +721,7 @@ test('validateRequiredVars throws for undeclared namespace property', () => {
   };
 
   expect(() =>
-    validateRequiredVars(
-      varDefs,
-      { ui: { theme: 'dark', color: 'blue' } },
-      'my-mod',
-      'file:../mod'
-    )
+    validateRequiredVars(varDefs, { ui: { theme: 'dark', color: 'blue' } }, 'my-mod', 'file:../mod')
   ).toThrow('undeclared property "color"');
 });
 

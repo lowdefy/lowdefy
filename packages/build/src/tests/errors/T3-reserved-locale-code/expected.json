@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "is a reserved name"
-      ],
+      "errors": ["is a reserved name"],
       "errorContains": [
         "Locale code \"__proto__\" in \"config.i18n.locales\" is a reserved name and cannot be used as a locale code.",
         "lowdefy.yaml:20"

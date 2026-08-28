@@ -638,7 +638,9 @@ test('createLink, more than one grammar key throws the resolver ambiguity error'
     noLink: mockNoLink,
     sameOriginLink: mockSameOriginLink,
   });
-  expect(() => link({ pageId: 'page_1', url: 'https://example.com' })).toThrowErrorMatchingInlineSnapshot(
+  expect(() =>
+    link({ pageId: 'page_1', url: 'https://example.com' })
+  ).toThrowErrorMatchingInlineSnapshot(
     `"Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."`
   );
 });

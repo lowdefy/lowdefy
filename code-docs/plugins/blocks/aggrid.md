@@ -6,12 +6,12 @@
 
 Eight blocks share two internal cores — `AgGrid.js` (display) and `AgGridInput.js` (input). Every block passes a Theming API theme object built in `src/theme/themeLowdefy.js`. **No row has a stylesheet:** the package is on AG Grid v33, where the Theming API is the default and class-based file themes are gone.
 
-| Display block    | Input block          | Base theme      | Params                          | Wrapper class       | `size` |
-| ---------------- | -------------------- | --------------- | ------------------------------- | ------------------- | ------ |
-| `AgGridLowdefy`  | `AgGridLowdefyInput` | `themeQuartz`   | `antdParams` + `lowdefyParams` + the size variant | —                   | yes    |
-| `AgGridAlpine`   | `AgGridInputAlpine`  | `themeAlpine`   | `antdParams`                    | `ag-theme-alpine`   | no     |
-| `AgGridBalham`   | `AgGridInputBalham`  | `themeBalham`   | `antdParams`                    | `ag-theme-balham`   | no     |
-| `AgGridMaterial` | `AgGridInputMaterial`| `themeMaterial` | `antdParams` + `primaryColor`   | `ag-theme-material` | no     |
+| Display block    | Input block           | Base theme      | Params                                            | Wrapper class       | `size` |
+| ---------------- | --------------------- | --------------- | ------------------------------------------------- | ------------------- | ------ |
+| `AgGridLowdefy`  | `AgGridLowdefyInput`  | `themeQuartz`   | `antdParams` + `lowdefyParams` + the size variant | —                   | yes    |
+| `AgGridAlpine`   | `AgGridInputAlpine`   | `themeAlpine`   | `antdParams`                                      | `ag-theme-alpine`   | no     |
+| `AgGridBalham`   | `AgGridInputBalham`   | `themeBalham`   | `antdParams`                                      | `ag-theme-balham`   | no     |
+| `AgGridMaterial` | `AgGridInputMaterial` | `themeMaterial` | `antdParams` + `primaryColor`                     | `ag-theme-material` | no     |
 
 The `ag-theme-*` class on the six original blocks is **purely a styling hook now, not a theming mechanism** — the module's per-theme avatar rules key on it, and apps may target it in their own CSS. It no longer themes anything.
 
@@ -49,18 +49,18 @@ One module builds every theme in the package. All theme objects are created **on
 
 **Why the split is load-bearing.** `withParams` appends a part and later parts win outright; worse, setting a parameter in the default mode **deletes** it from every non-default mode, erasing the base theme's light/dark variants for those names. So a single map applied to all four bases is not additive — it overwrites whatever the base set. Each prebuilt base defines its identity precisely through the parameters a naive shared map would carry (Balham: `fontSize: 12`, `borderRadius: 2`, `headerFontWeight: 'bold'`; Alpine: 13 / 3 / `700`; Material: `borderRadius: 0`, Roboto). Flatten those and `AgGridBalham` becomes `AgGridLowdefy` with Balham icons.
 
-The line is drawn at *what the antd overlay already imposed*, not at colour-versus-structure. `fontFamily` and `fontSize` stay in the shared map because the overlay's doubled `.antdTheme.antdTheme` selector already outspecified `.ag-theme-balham` — dropping them would revert Balham to 12px and Material to Roboto, which no user has seen since the overlay landed. `oddRowBackgroundColor` stays in the shared map at the overlay's value for the same reason (v33 defaults it to `backgroundColor`, i.e. no stripe), and `transparent` moves to `lowdefyParams`.
+The line is drawn at _what the antd overlay already imposed_, not at colour-versus-structure. `fontFamily` and `fontSize` stay in the shared map because the overlay's doubled `.antdTheme.antdTheme` selector already outspecified `.ag-theme-balham` — dropping them would revert Balham to 12px and Material to Roboto, which no user has seen since the overlay landed. `oddRowBackgroundColor` stays in the shared map at the overlay's value for the same reason (v33 defaults it to `backgroundColor`, i.e. no stripe), and `transparent` moves to `lowdefyParams`.
 
 **Material's `primaryColor` carve-out.** `themeMaterial`'s `styleMaterial` part sets `primaryColor: '#3f51b5'` and refs it for the tab underline, button text, input focus border and cell-editing border. `antdParams` sets `accentColor`, a different parameter, so without the addition those stay Material indigo. `primaryColor` exists only on Material's parameter type, so the shared map cannot carry it — hence the per-base extra.
 
 **The four fallback chains.** antd v6 in cssVar mode only emits a `--ant-*` variable when a rendered antd component references that token. Four tokens have a single common emitter a given page might not render, so they chain rather than resolving to nothing:
 
-| Parameter | Chain | Sole common emitter |
-| --- | --- | --- |
-| `wrapperBorderRadius` | `--ant-border-radius-lg` → `--ant-border-radius` → `8px` | Card |
-| `tooltipBackgroundColor` | `--ant-color-bg-spotlight` → `--ant-color-bg-container` | Tooltip |
-| `modalOverlayBackgroundColor` | `--ant-color-bg-mask` → `--ant-color-bg-container` | Modal / Drawer |
-| `menuBackgroundColor` | `--ant-color-bg-elevated` → `--ant-color-bg-container` | Dropdown / Popover / Select |
+| Parameter                     | Chain                                                    | Sole common emitter         |
+| ----------------------------- | -------------------------------------------------------- | --------------------------- |
+| `wrapperBorderRadius`         | `--ant-border-radius-lg` → `--ant-border-radius` → `8px` | Card                        |
+| `tooltipBackgroundColor`      | `--ant-color-bg-spotlight` → `--ant-color-bg-container`  | Tooltip                     |
+| `modalOverlayBackgroundColor` | `--ant-color-bg-mask` → `--ant-color-bg-container`       | Modal / Drawer              |
+| `menuBackgroundColor`         | `--ant-color-bg-elevated` → `--ant-color-bg-container`   | Dropdown / Popover / Select |
 
 Never a hardcoded colour — a static literal would render wrong in the opposite mode. `tooltipTextColor` is the deliberate exception: its fallback is a literal `#fff`, because antd always pairs `colorBgSpotlight` with `colorTextLightSolid`, which is `#fff` in both modes. In practice antd emits its whole alias token set on `.lowdefy`, so these chains are defensive, not load-bearing.
 
@@ -86,12 +86,12 @@ The `--ag-* : var(--ant-*)` overlay in `ag-grid-antd.module.css` is what coloure
 
 **Re-pointed to a different antd token (4)** — the visible colour changes on the six original blocks:
 
-| Overlay | `antdParams` | Visible effect |
-| --- | --- | --- |
-| `--ag-row-hover-color: var(--ant-color-primary-bg-hover)` | `rowHoverColor: var(--ant-color-fill-tertiary)` | hover goes from a primary tint to a neutral fill |
-| `--ag-border-color: var(--ant-color-border)` | `borderColor: var(--ant-color-border-secondary)` | lighter grid/row/wrapper borders |
-| `--ag-checkbox-unchecked-color: var(--ant-color-text-quaternary)` | `checkboxUncheckedBorderColor: var(--ant-color-border)` | checkbox outline tone |
-| `--ag-popup-shadow: var(--ant-box-shadow)` | `popupShadow: var(--ant-box-shadow-secondary)` | lighter popup elevation |
+| Overlay                                                           | `antdParams`                                            | Visible effect                                   |
+| ----------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------ |
+| `--ag-row-hover-color: var(--ant-color-primary-bg-hover)`         | `rowHoverColor: var(--ant-color-fill-tertiary)`         | hover goes from a primary tint to a neutral fill |
+| `--ag-border-color: var(--ant-color-border)`                      | `borderColor: var(--ant-color-border-secondary)`        | lighter grid/row/wrapper borders                 |
+| `--ag-checkbox-unchecked-color: var(--ant-color-text-quaternary)` | `checkboxUncheckedBorderColor: var(--ant-color-border)` | checkbox outline tone                            |
+| `--ag-popup-shadow: var(--ant-box-shadow)`                        | `popupShadow: var(--ant-box-shadow-secondary)`          | lighter popup elevation                          |
 
 These four are accepted deliberately: applying one shared map uniformly is what keeps the six originals looking like antd rather than restoring per-block-family colour values.
 
@@ -99,14 +99,14 @@ The remaining 17 declarations are dropped, in four distinct ways.
 
 **Dropped because v33 derives them from a parameter that is set (6).** Each still tracks the app's antd theme and dark mode through the parameter it refs:
 
-| Overlay | v33 parameter covering it | Derives from |
-| --- | --- | --- |
-| `--ag-secondary-foreground-color` | `subtleTextColor` (renamed) | `{ ref: textColor }` → `foregroundColor` |
-| `--ag-header-cell-moving-background-color` | `headerCellMovingBackgroundColor` | `{ ref: headerCellHoverBackgroundColor }` |
-| `--ag-column-hover-color` | `columnHoverColor` | `accentMix(0.05)` → `accentColor` |
-| `--ag-checkbox-background-color` | `checkboxUncheckedBackgroundColor` | `backgroundColor` |
-| `--ag-input-disabled-background-color` | `inputDisabledBackgroundColor` | foreground/background mix |
-| `--ag-input-disabled-border-color` | `inputDisabledBorder` (folded) | `{ ref: inputBorder }` → `borderColor` |
+| Overlay                                    | v33 parameter covering it          | Derives from                              |
+| ------------------------------------------ | ---------------------------------- | ----------------------------------------- |
+| `--ag-secondary-foreground-color`          | `subtleTextColor` (renamed)        | `{ ref: textColor }` → `foregroundColor`  |
+| `--ag-header-cell-moving-background-color` | `headerCellMovingBackgroundColor`  | `{ ref: headerCellHoverBackgroundColor }` |
+| `--ag-column-hover-color`                  | `columnHoverColor`                 | `accentMix(0.05)` → `accentColor`         |
+| `--ag-checkbox-background-color`           | `checkboxUncheckedBackgroundColor` | `backgroundColor`                         |
+| `--ag-input-disabled-background-color`     | `inputDisabledBackgroundColor`     | foreground/background mix                 |
+| `--ag-input-disabled-border-color`         | `inputDisabledBorder` (folded)     | `{ ref: inputBorder }` → `borderColor`    |
 
 **Dropped deliberately — AG Grid Enterprise (3).** `--ag-range-selection-border-color`, `--ag-range-selection-background-color` and `--ag-range-selection-highlight-color` style **Enterprise** cell selection, which these community blocks cannot render. All three survive in v33 as parameters and all three already derive from `accentColor`, which the map sets, so nothing is lost by leaving them alone.
 
@@ -118,16 +118,16 @@ The remaining 17 declarations are dropped, in four distinct ways.
 
 AG Grid's prebuilt themes approximate the file themes rather than reproducing them. Measured against a running app, Balham / Alpine / Material shifted:
 
-| | v32 file theme | v33 prebuilt + `antdParams` |
-| --- | --- | --- |
-| row height | 28 / 42 / 48 px | **29** / 42 / 48 px |
-| header height | 32 / 48 / 56 px | unchanged |
-| cell horizontal padding | 12 / 18 / 24 px | **8** / **16** / 24 px |
-| wrapper radius | 6 px on all six (forced by the since-deleted `.ag-root-wrapper` rule) | **Balham 2 / Alpine 3 / Material 0** |
-| header font-weight | 600 / 700 / 600 | **700** / 700 / 600 |
-| icons | shared `ag-icon` font | each base's own SVG icon set — glyph shapes differ |
+|                         | v32 file theme                                                        | v33 prebuilt + `antdParams`                        |
+| ----------------------- | --------------------------------------------------------------------- | -------------------------------------------------- |
+| row height              | 28 / 42 / 48 px                                                       | **29** / 42 / 48 px                                |
+| header height           | 32 / 48 / 56 px                                                       | unchanged                                          |
+| cell horizontal padding | 12 / 18 / 24 px                                                       | **8** / **16** / 24 px                             |
+| wrapper radius          | 6 px on all six (forced by the since-deleted `.ag-root-wrapper` rule) | **Balham 2 / Alpine 3 / Material 0**               |
+| header font-weight      | 600 / 700 / 600                                                       | **700** / 700 / 600                                |
+| icons                   | shared `ag-icon` font                                                 | each base's own SVG icon set — glyph shapes differ |
 
-One behavioural change comes with it: **row height now tracks the app's antd font size, above the icon size.** v33's `rowHeight` is `calc: max(iconSize, dataFontSize) + spacing * 3.25` (Material uses `* 3.75`), `dataFontSize` refs `fontSize`, and `antdParams` points `fontSize` at `var(--ant-font-size)` — so a larger app font makes rows taller, but only once it passes `iconSize`, which is 16 on the core and 18 on Material. At antd's default 14px nothing changes; the drift is real at 18px or 20px. v32's file themes were font-size-independent at any size. Alpine is immune at every size, but not because it pins a row height — it does not set `rowHeight` at all. It pins the *input*: `themeAlpine` sets `dataFontSize: 14`, which `antdParams` never overrides (the map sets `fontSize`, and an explicit `dataFontSize` wins over the `{ ref: fontSize }` default).
+One behavioural change comes with it: **row height now tracks the app's antd font size, above the icon size.** v33's `rowHeight` is `calc: max(iconSize, dataFontSize) + spacing * 3.25` (Material uses `* 3.75`), `dataFontSize` refs `fontSize`, and `antdParams` points `fontSize` at `var(--ant-font-size)` — so a larger app font makes rows taller, but only once it passes `iconSize`, which is 16 on the core and 18 on Material. At antd's default 14px nothing changes; the drift is real at 18px or 20px. v32's file themes were font-size-independent at any size. Alpine is immune at every size, but not because it pins a row height — it does not set `rowHeight` at all. It pins the _input_: `themeAlpine` sets `dataFontSize: 14`, which `antdParams` never overrides (the map sets `fontSize`, and an explicit `dataFontSize` wins over the `{ ref: fontSize }` default).
 
 Zebra striping, fonts and overall density are preserved, which is what splitting `lowdefyParams` off the shared map buys.
 
@@ -141,9 +141,9 @@ Zebra striping, fonts and overall density are preserved, which is what splitting
 
 **`size` loses to an explicit height.** `size` sets the theme parameters `rowHeight` and `headerHeight`, but both are also AG Grid grid options that pass straight through, and a grid option beats a theme parameter (`_getRowHeightForNode` reads `gos.get('rowHeight')` and falls back to the theme default only when absent). So `size: large` with `rowHeight: 30` gives 30px rows under a 54px header. This is documented rather than prevented: stripping the two options from the spread would remove legitimate capabilities to protect a cosmetic property.
 
-**`themeParams`** — an object of AG Grid Theming API parameter names merged onto the block's theme, added **unconditionally** in both meta factories because it is meaningful on all eight blocks. Merged by the shared `useGridTheme` hook; it *merges onto* the block's theme rather than replacing it.
+**`themeParams`** — an object of AG Grid Theming API parameter names merged onto the block's theme, added **unconditionally** in both meta factories because it is meaningful on all eight blocks. Merged by the shared `useGridTheme` hook; it _merges onto_ the block's theme rather than replacing it.
 
-There is **no Lowdefy-side allow-list**, and the reason is not that AG Grid validates the names — it does not. `paramValueToCss` dispatches on `getParamType`, which matches the key's *suffix* against a fixed list (`color`, `length`, `border`, `shadow`, `fontFamily`, …) and falls back to `'length'` for anything matching none of them. Either way the key is typed, converted and emitted: `{ headrBackgroundColor: 'red' }` still ends in `color`, so it types as a colour and emits `--ag-headr-background-color: red`; a key matching no suffix at all, `{ headerBackgrund: '4px' }`, takes the `'length'` fallback and emits `--ag-header-backgrund: 4px`. Neither warns. AG Grid's `_error(107)` fires only when a *value* cannot be converted for the inferred type. No allow-list is added because there is no authoritative list to copy (`getParamDocs` is exported only from `private-theming-api.ts`) and a hand-maintained one would go stale every release while blocking parameters we never thought of.
+There is **no Lowdefy-side allow-list**, and the reason is not that AG Grid validates the names — it does not. `paramValueToCss` dispatches on `getParamType`, which matches the key's _suffix_ against a fixed list (`color`, `length`, `border`, `shadow`, `fontFamily`, …) and falls back to `'length'` for anything matching none of them. Either way the key is typed, converted and emitted: `{ headrBackgroundColor: 'red' }` still ends in `color`, so it types as a colour and emits `--ag-headr-background-color: red`; a key matching no suffix at all, `{ headerBackgrund: '4px' }`, takes the `'length'` fallback and emits `--ag-header-backgrund: 4px`. Neither warns. AG Grid's `_error(107)` fires only when a _value_ cannot be converted for the inferred type. No allow-list is added because there is no authoritative list to copy (`getParamDocs` is exported only from `private-theming-api.ts`) and a hand-maintained one would go stale every release while blocking parameters we never thought of.
 
 **The user-facing consequence: an unrecognised `themeParams` key is a silent no-op** — nothing at build time or run time flags it. The docs point at AG Grid's theming parameter reference as the place to check spelling.
 
@@ -201,21 +201,21 @@ All other ag-grid props pass through unchanged via `{...someProperties}`. Users 
 
 Define `cell` on a column to opt into a Lowdefy-managed renderer. The build registry lives in `src/cellRenderers/index.js`:
 
-| `cell.type` | Renders                          | Triggers       |
-| ----------- | -------------------------------- | -------------- |
-| `tag`       | antd `Tag` with color mapping    | —              |
-| `avatar`    | antd `Avatar` (initials/image)   | `onCellLink` * |
-| `link`      | `<a>` with row-data-substituted href | `onCellLink` |
-| `date`      | dayjs-formatted date             | —              |
-| `boolean`   | true/false labels with colors    | —              |
-| `progress`  | progress bar with thresholds     | —              |
-| `number`    | `Intl.NumberFormat` (currency, percent, etc.) | — |
-| `buttons`   | list of antd `Button`s, one event per button  | per-button `eventName:` |
-| `selector`  | antd `Select` (single) per row                 | `eventName:` on change  |
-| `multipleSelector` | antd `Select` (multiple) per row        | `eventName:` on change  |
-| `switch`    | antd `Switch` (boolean) per row                | `eventName:` on toggle  |
-| `textInput` | antd `Input` per row                           | `eventName:` on blur / Enter |
-| `paragraphInput` | antd `Typography.Paragraph` with inline edit | `eventName:` on edit confirm |
+| `cell.type`        | Renders                                       | Triggers                     |
+| ------------------ | --------------------------------------------- | ---------------------------- |
+| `tag`              | antd `Tag` with color mapping                 | —                            |
+| `avatar`           | antd `Avatar` (initials/image)                | `onCellLink` \*              |
+| `link`             | `<a>` with row-data-substituted href          | `onCellLink`                 |
+| `date`             | dayjs-formatted date                          | —                            |
+| `boolean`          | true/false labels with colors                 | —                            |
+| `progress`         | progress bar with thresholds                  | —                            |
+| `number`           | `Intl.NumberFormat` (currency, percent, etc.) | —                            |
+| `buttons`          | list of antd `Button`s, one event per button  | per-button `eventName:`      |
+| `selector`         | antd `Select` (single) per row                | `eventName:` on change       |
+| `multipleSelector` | antd `Select` (multiple) per row              | `eventName:` on change       |
+| `switch`           | antd `Switch` (boolean) per row               | `eventName:` on toggle       |
+| `textInput`        | antd `Input` per row                          | `eventName:` on blur / Enter |
+| `paragraphInput`   | antd `Typography.Paragraph` with inline edit  | `eventName:` on edit confirm |
 
 \* Avatar emits `onCellLink` only when given a `link` config.
 
@@ -298,13 +298,13 @@ properties:
   rowData:
     - id: r1
       name: Task one
-      priority: { _state: { key: priorities.r1, default: high } }   # bound to state
+      priority: { _state: { key: priorities.r1, default: high } } # bound to state
   columnDefs:
     - { field: name }
     - field: priority
       cell:
         type: selector
-        eventName: onPriorityChange     # block-level event fired on change
+        eventName: onPriorityChange # block-level event fired on change
         options:
           - { label: Low, value: low, color: green }
           - { label: Medium, value: medium, color: orange }
@@ -315,7 +315,7 @@ properties:
         eventName: onLabelsChange
         options: [bug, feature, docs, urgent]
 events:
-  onPriorityChange:                     # persist: write newValue back into the bound state
+  onPriorityChange: # persist: write newValue back into the bound state
     - id: save
       type: SetState
       params:
@@ -335,7 +335,9 @@ events:
 **Event payload.**
 
 ```js
-{ row: data, value, newValue }   // value = previous cell value; newValue is an array for multipleSelector
+{
+  row: data, value, newValue;
+} // value = previous cell value; newValue is an array for multipleSelector
 ```
 
 ### `cell.type: switch` / `textInput` / `paragraphInput` — input cells
@@ -347,7 +349,9 @@ The same event-only model as the selector cells: each renders an antd input boun
 - `paragraphInput` — `Typography.Paragraph` with inline editing; commits when the edit is confirmed (blur / Enter). Config: `editable` (false → read-only), `maxLength`, `autoSize`, `editTooltip`, `copyable`, `ellipsis`, and text styling (`code`, `strong`, `italic`, `underline`, `delete`, `mark`, `textType`).
 
 ```js
-{ row: data, value, newValue }   // newValue: boolean (switch) | string (textInput / paragraphInput)
+{
+  row: data, value, newValue;
+} // newValue: boolean (switch) | string (textInput / paragraphInput)
 ```
 
 > `textInput`/`paragraphInput` commit once (on blur/confirm) rather than per keystroke — committing per keystroke would re-render the grid, remount the cell, and lose input focus.
@@ -385,17 +389,17 @@ Without this plumbing, `components.Icon` is `undefined` inside cell renderers an
 
 ## Events Catalogue
 
-| Event                 | Triggered by                                         | Payload                                                                |
-| --------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
-| `onRowClick`          | Click anywhere on a row (non-bubble-suppressed)      | `{ row, selected, rowIndex }`                                          |
-| `onCellClick`         | Click anywhere in a cell                             | `{ cell: { column, value }, colId, row, rowIndex, selected }`          |
-| `onRowSelected`       | Row checkbox / selection changes (selection only)    | `{ row, rowIndex, selected }`                                          |
-| `onSelectionChanged`  | Multi-row selection set changed                      | `{ selected }`                                                         |
-| `onFilterChanged`     | User changed any filter                              | `{ rows, filter }` (rows = currently displayed)                        |
-| `onSortChanged`       | User changed sort                                    | `{ rows, sort }`                                                       |
-| `onCellLink`          | Click on a `cell.type: link` (or avatar with `link`) | `{ link, row, value }` — wire to `Link` action with `params: { _event: link }` |
-| user-defined          | Click on a `cell.type: buttons` button               | `{ row, value, button: { eventName, title }, buttonIndex }` — name is the button's `eventName:` string |
-| user-defined          | Change on a `cell.type: selector` / `multipleSelector` | `{ row, value, newValue }` — name is the cell's `eventName:` string (`newValue` is an array for `multipleSelector`) |
+| Event                | Triggered by                                           | Payload                                                                                                             |
+| -------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `onRowClick`         | Click anywhere on a row (non-bubble-suppressed)        | `{ row, selected, rowIndex }`                                                                                       |
+| `onCellClick`        | Click anywhere in a cell                               | `{ cell: { column, value }, colId, row, rowIndex, selected }`                                                       |
+| `onRowSelected`      | Row checkbox / selection changes (selection only)      | `{ row, rowIndex, selected }`                                                                                       |
+| `onSelectionChanged` | Multi-row selection set changed                        | `{ selected }`                                                                                                      |
+| `onFilterChanged`    | User changed any filter                                | `{ rows, filter }` (rows = currently displayed)                                                                     |
+| `onSortChanged`      | User changed sort                                      | `{ rows, sort }`                                                                                                    |
+| `onCellLink`         | Click on a `cell.type: link` (or avatar with `link`)   | `{ link, row, value }` — wire to `Link` action with `params: { _event: link }`                                      |
+| user-defined         | Click on a `cell.type: buttons` button                 | `{ row, value, button: { eventName, title }, buttonIndex }` — name is the button's `eventName:` string              |
+| user-defined         | Change on a `cell.type: selector` / `multipleSelector` | `{ row, value, newValue }` — name is the cell's `eventName:` string (`newValue` is an array for `multipleSelector`) |
 
 The buttons-cell entry intentionally lists "user-defined" because each button declares its own block-level event name. The meta files include a documentation-only `onCellButton` entry describing the payload shape.
 
@@ -406,7 +410,7 @@ The buttons-cell entry intentionally lists "user-defined" because each button de
 - The antd cell wrapper (`display: flex`, `align-items: center`, `overflow: hidden`, `min-width: 0`) so flex-based cell content (icons + text, multiple buttons, progress bars) clips inside the ag-grid cell rather than overflowing the column width. The `min-width: 0` is the canonical fix for flex children that would otherwise push the parent cell wider than its column.
 - The `.lf-ellipsis-N` line clamps (1–6).
 - The paragraph-input inline-edit offset fix.
-- `.ag-overlay-no-rows-wrapper` text colour — **this one stays**, because AG Grid's *empty* overlay is the one the blocks actually use and the empty-grid specs assert it.
+- `.ag-overlay-no-rows-wrapper` text colour — **this one stays**, because AG Grid's _empty_ overlay is the one the blocks actually use and the empty-grid specs assert it.
 - The per-legacy-theme avatar variables, keyed on `ag-theme-balham` / `-alpine` / `-material`. They keep working because those six blocks keep their class and their density is fixed; `AgGridLowdefy` sets the same variables inline from `SIZES` instead.
 
 ### Three rule groups were deleted in the v33 move
@@ -442,6 +446,7 @@ ag-grid's `cellRenderer` accepts a string (registered name) or React component. 
 ### Why Per-Button Event Names (Buttons Cell)?
 
 Three options were considered:
+
 1. **One shared event with id-dispatch.** User writes `_if` ladders inside the action chain.
 2. **Per-button `onClick:` action chains inline.** Buttons would carry their own action arrays.
 3. **Per-button `eventName:` → block-level event lookup.** Chosen.

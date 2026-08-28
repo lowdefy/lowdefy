@@ -85,7 +85,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -556,7 +565,7 @@ async function resolveRef(node, ctx) {
       if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
         refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
       }
-    }),
+    })
   );
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
@@ -593,7 +602,6 @@ async function resolveRef(node, ctx) {
       { filePath: ctx.currentFile, lineNumber: ctx.currentFile ? lineNumber : null }
     );
   }
-
 
   // Steps 8-16: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
@@ -742,7 +750,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -766,7 +774,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 5. _var — substitution (children already resolved)

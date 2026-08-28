@@ -24,10 +24,7 @@ function createAgGridInputHelper() {
     locator,
     do: {
       clickRow: (page, blockId, rowIndex) =>
-        locator(page, blockId)
-          .locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`)
-          .first()
-          .click(),
+        locator(page, blockId).locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`).first().click(),
       clickHeader: (page, blockId, colIndex) =>
         locator(page, blockId).locator('.ag-header-cell-text').nth(colIndex).click(),
       editCell: (page, blockId, rowIndex, colIndex) =>
@@ -56,9 +53,7 @@ function createAgGridInputHelper() {
         expect(locator(page, blockId).locator('.ag-header-cell-text')).toHaveCount(count),
       cellText: (page, blockId, rowIndex, colIndex, text) =>
         expect(
-          locator(page, blockId)
-            .locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`)
-            .nth(colIndex)
+          locator(page, blockId).locator(`.ag-row[row-index="${rowIndex}"] .ag-cell`).nth(colIndex)
         ).toHaveText(text),
       emptyOverlay: (page, blockId) =>
         expect(locator(page, blockId).locator('.ag-overlay-no-rows-center')).toBeVisible(),

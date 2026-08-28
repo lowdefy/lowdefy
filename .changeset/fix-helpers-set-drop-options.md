@@ -16,7 +16,7 @@ nested twin: `set({'a.b': {c: 1}}, 'a.b.c', 2)` writes `{'a.b': {c: 2}}`. The st
 wins when present.
 
 One write that resolved before now resolves differently, and the old behaviour was a prototype
-pollution bug: a path whose segment named an inherited member wrote *through* it onto the prototype.
+pollution bug: a path whose segment named an inherited member wrote _through_ it onto the prototype.
 `set({}, 'toString.x', 1)` left the target empty and set `x` on `Object.prototype.toString`, visible
 on every object in the process. It now writes `{toString: {x: 1}}` on the target and touches no
 prototype.

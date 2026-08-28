@@ -127,7 +127,11 @@ function buildAgents({ components, context }) {
     agent.tools.forEach((toolConfig) => {
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.endpointId)) {
         throw new ConfigError(
-          `Agent "${agent.id}" tool "${toolConfig.endpointId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.id}" tool "${
+            toolConfig.endpointId
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }
@@ -227,10 +231,10 @@ function buildAgents({ components, context }) {
     if (agent.properties?.fileSystem) {
       const basePath = agent.properties.fileSystem.basePath;
       if (!type.isString(basePath)) {
-        throw new ConfigError(
-          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
-          { received: basePath, configKey }
-        );
+        throw new ConfigError(`Agent "${agent.id}" fileSystem.basePath is not a string.`, {
+          received: basePath,
+          configKey,
+        });
       }
       const resolved = path.resolve(context.directories.config, basePath);
       if (!fs.existsSync(resolved)) {
@@ -268,7 +272,11 @@ function buildAgents({ components, context }) {
       // Reserved platform tool name guard for sub-agents
       if (RESERVED_PLATFORM_TOOL_NAMES.includes(subAgentRef.agentId)) {
         throw new ConfigError(
-          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          `Agent "${agent.agentId}" sub-agent "${
+            subAgentRef.agentId
+          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
+            ', '
+          )}.`,
           { configKey }
         );
       }

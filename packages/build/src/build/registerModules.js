@@ -46,7 +46,9 @@ function validateRequiredVars(varDefs, consumerVars, entryId, source, prefix = '
         if (!varDef.properties[key]) {
           throw new ConfigError(
             `Module "${entryId}" (${source}) var "${fullName}" has undeclared ` +
-              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(', ')}.`
+              `property "${key}". Declared properties: ${Object.keys(varDef.properties).join(
+                ', '
+              )}.`
           );
         }
       }
@@ -97,9 +99,7 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     );
   }
   if (!entry.source || !type.isString(entry.source)) {
-    throw new ConfigError(
-      `Module entry "${entry.id}": 'source' is required and must be a string.`
-    );
+    throw new ConfigError(`Module entry "${entry.id}": 'source' is required and must be a string.`);
   }
 
   if (Object.hasOwn(context.modules, entry.id)) {
