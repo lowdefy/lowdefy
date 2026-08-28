@@ -29,12 +29,25 @@ const VERIFY_KEY_COUNT = 3;
 //   - 'headless': drives a headless page to the checkpoint's pageId/urlQuery,
 //     injects its recorded state directly into the live context, and verifies
 //     a few keys round-tripped. Good for an agent verifying its own change.
+//     Takes a `user` so a checkpoint captured on a role-gated page restores
+//     into a page that actually renders (see resolveHeadlessUser.js).
 //   - 'registry-only': just returns a URL a human can open in a real browser
 //     tab — client/Inspector.jsx's `?_checkpoint=` bootstrap does the state
 //     injection client-side once that tab loads.
-async function loadState({ origin, name, mode = 'headless' }) {
+async function loadState({ origin, name, mode = 'headless', user }) {
   if (type.isNone(name) || !type.isString(name)) {
     return { error: `loadState requires a "name" string. Received ${JSON.stringify(name)}.` };
+  }
+
+  // `user` only reaches a page this function opens itself. In 'registry-only'
+  // mode the developer opens the returned URL in their own browser, carrying
+  // their own session, so an injected caller would be silently dropped.
+  if (!type.isNone(user) && mode === 'registry-only') {
+    return {
+      error:
+        'loadState cannot apply "user" in "registry-only" mode — the developer opens the returned URL in their own browser, carrying their own session. Use the default "headless" mode.',
+      invalidInput: true,
+    };
   }
 
   let checkpoint;
@@ -93,7 +106,7 @@ async function loadState({ origin, name, mode = 'headless' }) {
     // as a plain string, so folding the query string into the pageId segment
     // reproduces the checkpoint's exact URL without needing a query-aware
     // variant of openPage.
-    const opened = await openPage({ browser, origin, pageId: `${pageId}${urlQuery}` });
+    const opened = await openPage({ browser, origin, pageId: `${pageId}${urlQuery}`, user });
     context = opened.context;
     const { page } = opened;
 
