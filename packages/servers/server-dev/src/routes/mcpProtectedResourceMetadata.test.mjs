@@ -54,7 +54,7 @@ test('metadata handler serves the static template for an org', async () => {
   expect(await res.json()).toEqual({
     resource: 'https://app.test.com/api/mcp/org_1',
     authorization_servers: ['https://app.test.com/api/auth'],
-    scopes_supported: ['mcp:read', 'mcp:write'],
+    scopes_supported: ['mcp:read', 'mcp:write', 'offline_access'],
     bearer_methods_supported: ['header'],
   });
 });
