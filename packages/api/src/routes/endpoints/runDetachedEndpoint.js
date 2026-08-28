@@ -42,6 +42,7 @@ async function runDetachedEndpoint(context, { endpointId, payload }) {
   // was already authorized at the transport layer), not re-gated on a user session.
   context.session = undefined;
   context.user = undefined;
+  context.system = true;
   context.authorize = createAuthorize({ session: undefined, system: true });
 
   const routineContext = {

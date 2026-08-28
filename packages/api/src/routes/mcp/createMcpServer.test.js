@@ -206,6 +206,24 @@ test('tools/call returns an error result for an unknown tool', async () => {
   expect(result.content[0].text).toBe('Unknown tool "nope".');
 });
 
+test('tools/call answers an unknown tool like a gated one for an anonymous caller on an auth-configured app', async () => {
+  const context = createContext({
+    session: null,
+    configs: {
+      'auth.json': { configured: true },
+      'api/get-customer.json': { ...endpointConfig, auth: { public: false } },
+    },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const unknown = await client.callTool({ name: 'nope', arguments: {} });
+  const gated = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(unknown.isError).toBe(true);
+  expect(unknown.content[0].text).toBe('Authentication required for API endpoint "nope".');
+  expect(gated.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
+});
+
 test('tools/call returns a 401-shaped error result for an unauthenticated caller', async () => {
   const context = createContext({
     session: null,

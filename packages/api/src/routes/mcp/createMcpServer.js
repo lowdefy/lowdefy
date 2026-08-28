@@ -16,9 +16,11 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { AuthenticationError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 import callEndpoint from '../endpoints/callEndpoint.js';
+import isUnauthenticatedHuman from '../endpoints/isUnauthenticatedHuman.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
 function toToolName(id) {
@@ -104,6 +106,12 @@ async function createMcpServer({ context }) {
         return {
           content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
         };
+      }
+      // An unknown tool answers like a gated one for an anonymous caller on an
+      // auth'd app, so tools/call cannot be used to enumerate tool names that
+      // tools/list already hides from that caller.
+      if (await isUnauthenticatedHuman(context)) {
+        throw new AuthenticationError(`Authentication required for API endpoint "${name}".`);
       }
       return {
         content: [{ type: 'text', text: `Unknown tool "${name}".` }],
