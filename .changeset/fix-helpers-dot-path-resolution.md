@@ -57,3 +57,10 @@ cleared, hidden input no longer leaves a stale key behind in `_state`. The same 
 `Map` or `Set`, an empty-source `RegExp`, and a blank-message `Error`. And a block id written with an
 escaped dot used to crash the delete: `unset({ 'a.b': { c: 1 } }, 'a\.b.c')` threw
 `TypeError: Cannot read properties of undefined` and now deletes `c`.
+
+**The dot-path escape grammar now covers the backslash itself.** `\.` remains a literal dot and `\\`
+is now a literal backslash, so `joinPath` can escape a segment that ends in a backslash — before, it
+only escaped dots, and `joinPath(['a\\', 'b'])` produced a path `splitPath` read back as the single
+key `a.b`. Any other backslash is still an ordinary character, so a key such as `a\b` needs no
+escaping. The one observable change is a doubled backslash directly before a dot:
+`splitPath('a\\\\.b')` used to yield `['a\\.b']` and now yields `['a\\', 'b']`.
