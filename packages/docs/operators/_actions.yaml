@@ -43,7 +43,7 @@ _ref:
       ```
     arguments: |
       ###### string
-      If the `_actions` operator is called with a string equal to a preceding action id in the same event list, the action response object returned. If a string is passed which does not match preceding action id in the same event list, `null` is returned. Dot notation is supported.
+      If the `_actions` operator is called with a string equal to a preceding action id in the same event list, the action response object returned. If a string is passed which does not match preceding action id in the same event list, `null` is returned. Dot notation is supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
 
       ###### boolean
       If the `_actions` operator is called with boolean argument `true`, an object with all the preceding action id responses in the same event list is returned.

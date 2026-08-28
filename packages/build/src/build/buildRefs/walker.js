@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import { get, serializer, type } from '@lowdefy/helpers';
+import { get, ReservedKeyError, serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
@@ -85,7 +85,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -238,19 +247,36 @@ function evaluateBuildOperator(node, ctx) {
   return output;
 }
 
+// _var keys are author-written YAML, so a reserved name (e.g. "constructor") is a config
+// mistake, not a missing var. Wraps both call shapes for that check. The object form call
+// site below passes no `options` argument at all, so a missing key comes back from `get` as
+// `undefined` instead of a default — resolveVar relies on that `undefined` to tell "var not
+// provided" apart from "var provided as null".
+function readVar(key, ctx, options) {
+  try {
+    return get(ctx.vars, key, options);
+  } catch (error) {
+    if (!(error instanceof ReservedKeyError)) throw error;
+    throw new ConfigError(`_var key "${key}" is a reserved name.`, {
+      cause: error,
+      filePath: ctx.currentFile,
+    });
+  }
+}
+
 // Resolve a _var node
 function resolveVar(node, ctx) {
   const varDef = node._var;
 
   // String form: { _var: "key" }
   if (type.isString(varDef)) {
-    const value = get(ctx.vars, varDef, { default: null });
+    const value = readVar(varDef, ctx, { default: null });
     return cloneVarValue(value, ctx.sourceRefId);
   }
 
   // Object form: { _var: { key, default } }
   if (type.isObject(varDef) && type.isString(varDef.key)) {
-    const varFromParent = get(ctx.vars, varDef.key);
+    const varFromParent = readVar(varDef.key, ctx);
 
     // Var provided (even if null) → use parent's sourceRefId for location
     if (!type.isUndefined(varFromParent)) {
@@ -539,7 +565,7 @@ async function resolveRef(node, ctx) {
       if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
         refDef.vars[varKey] = await resolve(refDef.vars[varKey], ctx);
       }
-    }),
+    })
   );
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneForResolve(refDef.key), ctx);
@@ -576,7 +602,6 @@ async function resolveRef(node, ctx) {
       { filePath: ctx.currentFile, lineNumber: ctx.currentFile ? lineNumber : null }
     );
   }
-
 
   // Steps 8-16: File operations that can fail independently per ref.
   // Errors are collected so the walker can continue processing sibling refs,
@@ -682,7 +707,7 @@ async function resolveRef(node, ctx) {
     });
 
     // 14. Extract key
-    content = getKey({ input: content, refDef });
+    content = getKey({ input: content, refDef, filePath: ctx.currentFile });
 
     // 15. Tag all nodes with ~r for provenance
     tagRefDeep(content, refDef.id);
@@ -725,7 +750,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -749,7 +774,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 5. _var — substitution (children already resolved)

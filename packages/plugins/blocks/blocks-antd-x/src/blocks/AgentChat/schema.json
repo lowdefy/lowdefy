@@ -190,10 +190,17 @@
         "allowSpeech": { "type": "boolean", "default": false },
         "attachments": {
           "type": "object",
+          "description": "File attachments on the composer. When enabled, files can be picked with the paperclip, pasted from the clipboard (e.g. a screenshot) or dragged onto the composer; accept and maxSize apply to all three.",
           "properties": {
             "enabled": { "type": "boolean" },
-            "accept": { "type": "string" },
-            "maxSize": { "type": "number" },
+            "accept": {
+              "type": "string",
+              "description": "Comma-separated accept list, as for an <input type=\"file\"> — e.g. \"image/*,.pdf\". Applied to picked, pasted and dropped files alike."
+            },
+            "maxSize": {
+              "type": "number",
+              "description": "Maximum file size in bytes. Larger files are silently skipped."
+            },
             "s3PostPolicyRequestId": {
               "type": "string",
               "description": "Request ID of type AwsS3PresignedPostPolicy. When set, files are uploaded to S3 and their URLs are sent to the LLM instead of base64 data."

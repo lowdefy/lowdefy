@@ -93,6 +93,77 @@ test('Api endpoint proceeds normally', async () => {
   expect(result.status).toBe('success');
 });
 
+test('callEndpoint strips stack and the internal control config cause from the error it returns', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/failing_ep.json') {
+      return {
+        endpointId: 'failing_ep',
+        type: 'Api',
+        auth: { public: true },
+        // An unrecognised control makes handleControl throw with the control
+        // config as a non-Error cause - server-only config the client must not
+        // receive. This endpoint result body reaches a browser at HTTP 200.
+        routine: { ':unknown': { internalDetail: 'server-only-config' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'failing_ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+
+  expect(result.status).toBe('error');
+  expect(result.success).toBe(false);
+  expect(result.error['~e'].message).toBe('Unexpected control.');
+  expect(result.error['~e'].stack).toBeUndefined();
+  expect(result.error['~e'].received).toBeUndefined();
+  expect(result.error['~e'].cause).toBeUndefined();
+  expect(JSON.stringify(result)).not.toContain('server-only-config');
+});
+
+test('callEndpoint keeps an author-written UserError cause and metaData from a :throw control', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/throwing_ep.json') {
+      return {
+        endpointId: 'throwing_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: { ':throw': 'Order rejected.', ':cause': { reason: 'out of stock' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'throwing_ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+
+  expect(result.status).toBe('error');
+  expect(result.error['~e'].name).toBe('UserError');
+  expect(result.error['~e'].message).toBe('Order rejected.');
+  // UserError is the one class whose non-Error cause the author wrote for the
+  // client, so it survives while its stack still does not.
+  expect(result.error['~e'].cause).toEqual({ reason: 'out of stock' });
+  expect(result.error['~e'].stack).toBeUndefined();
+});
+
 test('InternalApi error matches missing endpoint error message', async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/internal_ep.json') {

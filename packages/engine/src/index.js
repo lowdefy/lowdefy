@@ -19,9 +19,11 @@ import Slots from './Slots.js';
 import createLink from './createLink.js';
 import Events from './Events.js';
 import getContext from './getContext.js';
+import getHomePathname from './getHomePathname.js';
 import Requests from './Requests.js';
+import resolveTarget from './resolveTarget.js';
 import State from './State.js';
 
-export { Actions, Slots, createLink, Events, Requests, State };
+export { Actions, Slots, createLink, Events, getHomePathname, Requests, resolveTarget, State };
 
 export default getContext;

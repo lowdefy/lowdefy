@@ -67,11 +67,10 @@ function createModuleEntry(consumerVars = {}, varDefs = {}, overrides = {}) {
     varDefs,
     resolvedVarCache: {},
     moduleDependencies: overrides.moduleDependencies ?? {},
-    refDef:
-      overrides.refDef ?? {
-        id: 'test:module.lowdefy.yaml:0',
-        path: '/modules/test/module.lowdefy.yaml',
-      },
+    refDef: overrides.refDef ?? {
+      id: 'test:module.lowdefy.yaml:0',
+      path: '/modules/test/module.lowdefy.yaml',
+    },
     connections: overrides.connections ?? {},
   };
 }
@@ -300,10 +299,7 @@ describe('_module.pageId resolution', () => {
       moduleEntry: testModuleEntry,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.pageId': { id: 'event-log', module: 'events' } },
-      ctx
-    );
+    const result = await resolve({ '_module.pageId': { id: 'event-log', module: 'events' } }, ctx);
     expect(result).toBe('events-entry/event-log');
   });
 
@@ -312,10 +308,7 @@ describe('_module.pageId resolution', () => {
       moduleEntry: testModuleEntry,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.pageId': { id: 'any-id', module: 'events' } },
-      ctx
-    );
+    const result = await resolve({ '_module.pageId': { id: 'any-id', module: 'events' } }, ctx);
     expect(result).toBe('events-entry/any-id');
   });
 
@@ -555,10 +548,7 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
-    const result = await resolve(
-      { '_module.id': { module: 'events-entry' } },
-      ctx
-    );
+    const result = await resolve({ '_module.id': { module: 'events-entry' } }, ctx);
     expect(result).toBe('events-entry');
   });
 
@@ -579,9 +569,7 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       moduleEntry: null,
       buildContext: createModuleBuildContext(),
     });
-    await expect(
-      resolve({ '_module.id': { module: 'nonexistent' } }, ctx)
-    ).rejects.toThrow(
+    await expect(resolve({ '_module.id': { module: 'nonexistent' } }, ctx)).rejects.toThrow(
       '_module.id { module: "nonexistent" } references module "nonexistent" but no module with that entry id was registered.'
     );
   });
@@ -739,14 +727,44 @@ describe('_var object form with operator in default (bottom-up)', () => {
   });
 });
 
+describe('_var reserved key handling', () => {
+  test('{ _var: "constructor" } (string form) throws a ConfigError naming the key', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: 'constructor' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].name).toBe('ConfigError');
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "constructor" is a reserved name.');
+  });
+
+  test('{ _var: { key: "__proto__", default: 1 } } (object form) throws a ConfigError naming the key, not the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: '__proto__', default: 1 } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].message).toBe('_var key "__proto__" is a reserved name.');
+  });
+
+  test('regression: { _var: { key: "missing", default: 1 } } still returns the default', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: 'missing', default: 1 } }, ctx);
+    expect(result).toBe(1);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('regression: { _var: { key: "provided", default: "fallback" } } with a null value returns null, not the default', async () => {
+    const ctx = createWalkContext({ vars: { provided: null } });
+    const result = await resolve({ _var: { key: 'provided', default: 'fallback' } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
 describe('_module.var with computed name (bottom-up)', () => {
   test('_build.string.concat computes module variable name', async () => {
     const entry = createModuleEntry({ theme: 'dark' });
     const ctx = createWalkContext({ moduleEntry: entry });
-    const result = await resolve(
-      { '_module.var': { '_build.string.concat': ['the', 'me'] } },
-      ctx
-    );
+    const result = await resolve({ '_module.var': { '_build.string.concat': ['the', 'me'] } }, ctx);
     expect(result).toBe('dark');
   });
 
@@ -848,10 +866,7 @@ describe('_module.var lazy resolution', () => {
 describe('regression — existing compositions still work', () => {
   test('_build.string.concat with _var argument', async () => {
     const ctx = createWalkContext({ vars: { prefix: 'admin' } });
-    const result = await resolve(
-      { '_build.string.concat': [{ _var: 'prefix' }, '-page'] },
-      ctx
-    );
+    const result = await resolve({ '_build.string.concat': [{ _var: 'prefix' }, '-page'] }, ctx);
     expect(result).toBe('admin-page');
   });
 

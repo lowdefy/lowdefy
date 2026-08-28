@@ -148,6 +148,22 @@ test('request id contains invalid characters', () => {
   );
 });
 
+test('request id is a reserved name', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'constructor', type: 'Request' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Request id "constructor" at page "page_1" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('request type is not a string', () => {
   const components = {
     pages: [

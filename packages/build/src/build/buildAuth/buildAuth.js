@@ -21,11 +21,13 @@ import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAgentAuth from './buildAgentAuth.js';
 import buildApiAuth from './buildApiAuth.js';
 import buildPageAuth from './buildPageAuth.js';
+import rejectReservedEntityIds from './rejectReservedEntityIds.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
   validateAuthConfig({ components, context });
+  rejectReservedEntityIds({ components });
   components.auth.configured = configured;
   buildApiAuth({ components, context });
   buildAgentAuth({ components, context });

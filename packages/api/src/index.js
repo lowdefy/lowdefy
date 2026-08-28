@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
@@ -24,8 +25,11 @@ import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import redactErrorResponse from './response/redactErrorResponse.js';
+import redactResponse from './response/redactResponse.js';
 
 export {
+  buildEndpointResult,
   callAgent,
   callEndpoint,
   callRequest,
@@ -36,4 +40,6 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  redactErrorResponse,
+  redactResponse,
 };

@@ -1,0 +1,21 @@
+# N3: Deduplication of Errors
+# ===========================
+# A reserved page id is reported by two build steps - the rejectReservedEntityIds
+# gate in buildAuth (buildAuth runs before buildPages) and validateId in
+# buildPages - with the same message at the same source line. logCollectedErrors
+# collapses that pair, so the developer reads it once.
+#
+# The second page carries a genuinely distinct error, proving the dedup only
+# collapses entries that share both source line and message.
+#
+# Expected:
+#   2 errors - the reserved page id once (not twice) on line 18, and the
+#   undefined block type on line 20
+
+lowdefy: local
+
+pages:
+  - id: __proto__
+    type: Box
+  - id: home
+    type: Buton

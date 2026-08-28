@@ -106,3 +106,252 @@ test('merge objects with null', () => {
   expect(mergeObjects([obj, null])).toEqual(obj);
   expect(mergeObjects([null, obj])).toEqual(obj);
 });
+
+test('mergeObjects does not mutate any of its inputs', () => {
+  const obj1 = { a: 1, nested: { x: 1, deep: { p: 1 } }, arr: [1, 2] };
+  const obj2 = { a: 2, nested: { y: 2, deep: { q: 2 } }, arr: [9] };
+  const snapshot1 = JSON.parse(JSON.stringify(obj1));
+  const snapshot2 = JSON.parse(JSON.stringify(obj2));
+  mergeObjects([obj1, obj2]);
+  expect(obj1).toEqual(snapshot1);
+  expect(obj2).toEqual(snapshot2);
+});
+
+test('mergeObjects returns a new object that shares no plain-object or array reference with its inputs', () => {
+  const obj1 = { nested: { x: 1 } };
+  const obj2 = { nested: { y: 2 } };
+  const merged = mergeObjects([obj1, obj2]);
+  merged.nested.x = 'changed';
+  expect(obj1.nested.x).toBe(1);
+});
+
+test('mergeObjects replaces arrays wholesale instead of merging them by index', () => {
+  expect(mergeObjects([{ a: [1, 2, 3] }, { a: [9] }])).toEqual({ a: [9] });
+});
+
+test('mergeObjects replaces arrays of objects wholesale', () => {
+  expect(
+    mergeObjects([{ options: [{ value: true }, { value: null }] }, { options: [{ value: false }] }])
+  ).toEqual({ options: [{ value: false }] });
+});
+
+test('mergeObjects merges disjoint nested keys from both sources', () => {
+  expect(mergeObjects([{ a: { b: { c: 1 } } }, { a: { b: { d: 2 }, e: 3 } }])).toEqual({
+    a: { b: { c: 1, d: 2 }, e: 3 },
+  });
+});
+
+test('mergeObjects treats a Date value as a leaf and replaces it', () => {
+  const early = new Date('2020-01-01T00:00:00.000Z');
+  const late = new Date('2024-06-01T00:00:00.000Z');
+  const merged = mergeObjects([{ at: early }, { at: late }]);
+  expect(merged.at).toBe(late);
+});
+
+test('mergeObjects treats a RegExp value as a leaf and replaces it', () => {
+  const merged = mergeObjects([{ pattern: /a/g }, { pattern: /b/i }]);
+  expect(merged.pattern).toEqual(/b/i);
+});
+
+test('mergeObjects replaces a plain object with a non-plain value', () => {
+  const date = new Date('2024-06-01T00:00:00.000Z');
+  expect(mergeObjects([{ a: { b: 1 } }, { a: date }])).toEqual({ a: date });
+});
+
+test('mergeObjects replaces a function value as a leaf', () => {
+  const fn = () => 'transformed';
+  const merged = mergeObjects([{ transformRequest: undefined }, { transformRequest: fn }]);
+  expect(merged.transformRequest).toBe(fn);
+});
+
+test('mergeObjects skips a __proto__ key in a merged value without polluting Object.prototype', () => {
+  const merged = mergeObjects([{}, JSON.parse('{"__proto__":{"polluted":true}}')]);
+  expect(Object.prototype.hasOwnProperty.call(merged, 'polluted')).toBe(false);
+  expect(merged.polluted).toBeUndefined();
+  expect({}.polluted).toBeUndefined();
+  expect(Object.prototype.polluted).toBeUndefined();
+});
+
+test('mergeObjects skips a constructor key in a merged value', () => {
+  const merged = mergeObjects([{ a: 1 }, JSON.parse('{"constructor":{"polluted":true}}')]);
+  expect(Object.prototype.hasOwnProperty.call(merged, 'constructor')).toBe(false);
+  expect(merged.constructor).toBe(Object);
+  expect(merged).toEqual({ a: 1 });
+});
+
+test('mergeObjects skips a prototype key in a merged value', () => {
+  const merged = mergeObjects([{ a: 1 }, JSON.parse('{"prototype":{"polluted":true}}')]);
+  expect(Object.prototype.hasOwnProperty.call(merged, 'prototype')).toBe(false);
+  expect(merged).toEqual({ a: 1 });
+});
+
+test('mergeObjects skips reserved keys nested inside a merged value', () => {
+  const merged = mergeObjects([
+    { a: { b: 1 } },
+    JSON.parse('{"a":{"__proto__":{"polluted":true},"c":2}}'),
+  ]);
+  expect(merged).toEqual({ a: { b: 1, c: 2 } });
+  expect({}.polluted).toBeUndefined();
+});
+
+test('mergeObjects copies a plain object that only the target holds', () => {
+  const obj1 = { x: { y: 1 } };
+  const merged = mergeObjects([obj1, { z: 2 }]);
+  expect(merged.x).not.toBe(obj1.x);
+  merged.x.y = 9;
+  expect(obj1.x.y).toBe(1);
+});
+
+test('mergeObjects copies a plain object that only the source holds', () => {
+  const obj2 = { x: { y: 1 } };
+  const merged = mergeObjects([{ z: 2 }, obj2]);
+  expect(merged.x).not.toBe(obj2.x);
+  merged.x.y = 9;
+  expect(obj2.x.y).toBe(1);
+});
+
+test('mergeObjects copies the keys of a single input object', () => {
+  const obj1 = { x: { y: 1 } };
+  const merged = mergeObjects([obj1]);
+  expect(merged.x).not.toBe(obj1.x);
+  merged.x.y = 9;
+  expect(obj1.x.y).toBe(1);
+});
+
+test('mergeObjects copies arrays and their object elements', () => {
+  const obj1 = { list: [{ y: 1 }] };
+  const merged = mergeObjects([obj1]);
+  expect(merged.list).not.toBe(obj1.list);
+  expect(merged.list[0]).not.toBe(obj1.list[0]);
+  merged.list[0].y = 9;
+  expect(obj1.list[0].y).toBe(1);
+});
+
+test('mergeObjects copies an array that replaces an earlier array', () => {
+  const obj2 = { list: [{ y: 2 }] };
+  const merged = mergeObjects([{ list: [{ y: 1 }] }, obj2]);
+  expect(merged.list).not.toBe(obj2.list);
+  expect(merged.list[0]).not.toBe(obj2.list[0]);
+  merged.list[0].y = 9;
+  expect(obj2.list[0].y).toBe(2);
+});
+
+test('mergeObjects shares no reference three levels down', () => {
+  const obj1 = { a: { b: { c: { d: 1 } } } };
+  const merged = mergeObjects([obj1, { z: 2 }]);
+  expect(merged.a).not.toBe(obj1.a);
+  expect(merged.a.b).not.toBe(obj1.a.b);
+  expect(merged.a.b.c).not.toBe(obj1.a.b.c);
+  merged.a.b.c.d = 9;
+  expect(obj1.a.b.c.d).toBe(1);
+});
+
+test('mergeObjects returns a fresh subtree when both sides hold plain objects', () => {
+  const obj1 = { a: { b: 1 } };
+  const obj2 = { a: { c: 2 } };
+  const merged = mergeObjects([obj1, obj2]);
+  expect(merged.a).not.toBe(obj1.a);
+  expect(merged.a).not.toBe(obj2.a);
+  merged.a.b = 9;
+  merged.a.c = 9;
+  expect(obj1.a.b).toBe(1);
+  expect(obj2.a.c).toBe(2);
+});
+
+test('mergeObjects shares Date, RegExp, Map and web-platform built-ins by reference', () => {
+  const obj1 = {
+    date: new Date('2024-06-01T00:00:00.000Z'),
+    regExp: /a/g,
+    map: new Map([['a', 1]]),
+    instance: new URL('https://lowdefy.com/docs'),
+    fn: () => 'result',
+  };
+  const merged = mergeObjects([obj1, { other: 1 }]);
+  expect(merged.date).toBe(obj1.date);
+  expect(merged.regExp).toBe(obj1.regExp);
+  expect(merged.map).toBe(obj1.map);
+  expect(merged.instance).toBe(obj1.instance);
+  expect(merged.fn).toBe(obj1.fn);
+});
+
+test('mergeObjects copies a class instance that type.isObject reports as a plain object', () => {
+  class Widget {
+    constructor() {
+      this.id = 'widget';
+    }
+    greet() {
+      return 'hi';
+    }
+  }
+  const obj1 = { instance: new Widget() };
+  const merged = mergeObjects([obj1, { other: 1 }]);
+  expect(merged.instance).not.toBe(obj1.instance);
+  expect(merged.instance).not.toBeInstanceOf(Widget);
+  expect(Object.getPrototypeOf(merged.instance)).toBe(Object.prototype);
+  expect(merged.instance.greet).toBeUndefined();
+});
+
+test('mergeObjects skips a reserved key nested in the only input object', () => {
+  const merged = mergeObjects([{ a: JSON.parse('{"__proto__":{"polluted":true},"b":1}') }]);
+  expect(merged).toEqual({ a: { b: 1 } });
+  expect(Object.prototype.hasOwnProperty.call(merged.a, '__proto__')).toBe(false);
+  expect({}.polluted).toBeUndefined();
+});
+
+test('mergeObjects skips a reserved key nested inside an array element', () => {
+  const merged = mergeObjects([{ a: JSON.parse('[{"__proto__":{"polluted":true},"b":1}]') }]);
+  expect(merged).toEqual({ a: [{ b: 1 }] });
+  expect(Object.prototype.hasOwnProperty.call(merged.a[0], '__proto__')).toBe(false);
+  expect({}.polluted).toBeUndefined();
+});
+
+test('mergeObjects overwrites an earlier value with a later undefined', () => {
+  const merged = mergeObjects([{ a: 1 }, { a: undefined }]);
+  expect(merged).toEqual({ a: undefined });
+  expect('a' in merged).toBe(true);
+});
+
+test('mergeObjects keeps a later value when an earlier value is undefined', () => {
+  expect(mergeObjects([{ a: undefined }, { a: 1 }])).toEqual({ a: 1 });
+});
+
+test('mergeObjects overwrites a nested object with a later undefined', () => {
+  const merged = mergeObjects([{ a: { b: 1 } }, { a: undefined }]);
+  expect(merged).toEqual({ a: undefined });
+  expect('a' in merged).toBe(true);
+});
+
+test('mergeObjects preserves an earlier value when a later object omits the key', () => {
+  expect(mergeObjects([{ a: 1 }, {}])).toEqual({ a: 1 });
+});
+
+test('mergeObjects([x]) does not return x by identity', () => {
+  const x = { a: 1, nested: { b: 2 } };
+  const merged = mergeObjects([x]);
+  expect(merged).not.toBe(x);
+  expect(merged).toEqual(x);
+});
+
+test('mergeObjects([x]) called twice returns two distinct objects', () => {
+  const x = { a: 1, nested: { b: 2 } };
+  const first = mergeObjects([x]);
+  const second = mergeObjects([x]);
+  expect(first).not.toBe(second);
+  expect(first).toEqual(second);
+});
+
+test('mergeObjects returns non-array input unchanged', () => {
+  expect(mergeObjects('foo')).toBe('foo');
+  expect(mergeObjects(undefined)).toBeUndefined();
+  expect(mergeObjects(null)).toBeNull();
+  expect(mergeObjects(1)).toBe(1);
+});
+
+test('mergeObjects filters out entries that are not plain objects', () => {
+  expect(mergeObjects([null, 1, 'a', [1, 2], undefined, { a: 1 }, new Date()])).toEqual({ a: 1 });
+});
+
+test('mergeObjects returns an empty object when no entry is a plain object', () => {
+  expect(mergeObjects([])).toEqual({});
+  expect(mergeObjects([null, undefined])).toEqual({});
+});
