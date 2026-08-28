@@ -234,6 +234,101 @@ test('unknown _build.* operator — pushes a ConfigError instead of ~dyn', () =>
   expect(res.errors[0].message).toContain('_build.appp');
 });
 
+test('escaped build prefix — dynamic identifier is evaluated, not deferred', () => {
+  const _function = jest.fn(() => 'evaluated');
+  const ops = { _function };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = { a: { '__build.function': 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+    dynamicIdentifiers,
+  });
+  expect(_function).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: 'evaluated' });
+  expect(res.errors).toEqual([]);
+});
+
+test('escape depth 3 build prefix — dynamic identifier is evaluated, not deferred', () => {
+  const _function = jest.fn(() => 'evaluated');
+  const ops = { _function };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = { a: { '___build.function': 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '___build.',
+    dynamicIdentifiers,
+  });
+  expect(_function).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: 'evaluated' });
+  expect(res.errors).toEqual([]);
+});
+
+test('escaped build prefix — operator with ~dyn params still evaluates and does not bubble up', () => {
+  const _echo = jest.fn(({ params }) => params);
+  const ops = { _echo };
+  const input = { a: { '__build.echo': { nested: 'value' } } };
+  // Manually set ~dyn on the params object (configurable so setDynamicMarker can redefine)
+  Object.defineProperty(input.a['__build.echo'], '~dyn', {
+    value: true,
+    enumerable: false,
+    configurable: true,
+  });
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+  });
+  expect(_echo).toHaveBeenCalled();
+  expect(res.output.a).toEqual({ nested: 'value' });
+});
+
+test('unknown operator under escaped build prefix — pushes a ConfigError instead of ~dyn', () => {
+  const input = { a: { '__build.appp': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    operatorPrefix: '__build.',
+  });
+  expect(res.output.a).toBeNull();
+  expect(res.errors).toHaveLength(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toContain('__build.appp');
+});
+
+test('escaped runtime prefix — dynamic identifier still defers with ~dyn', () => {
+  const _state = jest.fn(() => 'state');
+  const ops = { ...mockOperators, _state };
+  const dynamicIdentifiers = new Set(['_state']);
+  const input = { a: { __state: 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__',
+    dynamicIdentifiers,
+  });
+  expect(_state).not.toHaveBeenCalled();
+  expect(res.output.a['~dyn']).toBe(true);
+});
+
+test('runtime operator inside an escaped build prefix parse is left untouched', () => {
+  const _state = jest.fn(() => 'state');
+  const ops = { ...mockOperators, _state };
+  const dynamicIdentifiers = new Set(['_state']);
+  const input = { a: { _state: 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+    dynamicIdentifiers,
+  });
+  expect(_state).not.toHaveBeenCalled();
+  expect(res.output).toEqual({ a: { _state: 'value' } });
+  expect(res.output.a['~dyn']).toBeUndefined();
+});
+
 test('unknown operator under default prefix — still gets ~dyn (not an error)', () => {
   const input = { a: { _unknown: 'params' } };
   const res = evaluateOperators({ input, operators: mockOperators });

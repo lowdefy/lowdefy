@@ -109,9 +109,7 @@ Values are CSS strings and may reference antd tokens. Neither Lowdefy nor AG Gri
 
 - `exportDataAsCsv`: When called, table data will be downloaded in csv format.
 - `sizeColumnsToFit`: When called, size table column widths to fit all columns to table width.
-- `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`.
-      - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns.
-      - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
+- `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`. - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns. - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
 - `setFilterModel`: When called, apply filter model to table. See https://www.ag-grid.com/javascript-data-grid/filter-api/ for model details.
 - `setQuickFilter`: When called, pass a quick filter text into the grid for filtering. See https://www.ag-grid.com/javascript-data-grid/filter-quick/ for details.
 

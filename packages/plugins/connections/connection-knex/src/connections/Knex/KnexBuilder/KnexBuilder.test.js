@@ -20,6 +20,7 @@ import { validate } from '@lowdefy/ajv';
 const mockKnexClient = jest.fn(() => mockKnexClient);
 const mockKnex = jest.fn(() => mockKnexClient);
 
+mockKnexClient.client = { connectionSettings: {} };
 mockKnexClient.select = jest.fn(() => mockKnexClient);
 mockKnexClient.from = jest.fn(() => mockKnexClient);
 mockKnexClient.where = jest.fn(() => mockKnexClient);

@@ -24,6 +24,7 @@ const mockRaw = jest.fn(() => {
 jest.unstable_mockModule('knex', () => {
   return {
     default: jest.fn(() => ({
+      client: { connectionSettings: {} },
       raw: mockRaw,
     })),
   };
