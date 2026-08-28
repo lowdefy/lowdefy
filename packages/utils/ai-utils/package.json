@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ai-utils",
-  "version": "5.5.1",
+  "version": "5.6.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "@ai-sdk/mcp": "1.0.41",
-    "@lowdefy/errors": "5.5.1",
-    "@lowdefy/helpers": "5.5.1",
+    "@lowdefy/errors": "5.6.0",
+    "@lowdefy/helpers": "5.6.0",
     "ai": "6.0.176",
     "glob": "13.0.6"
   },
