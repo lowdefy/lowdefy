@@ -18,6 +18,7 @@
 
 import buildAuthHooks from './buildAuthHooks.js';
 import buildAuthPlugins from './buildAuthPlugins.js';
+import buildAgentAuth from './buildAgentAuth.js';
 import buildAuthStrategies from './buildAuthStrategies.js';
 import buildEntityAuth from './buildEntityAuth.js';
 import buildRoleCatalog from './buildRoleCatalog.js';
@@ -40,6 +41,8 @@ function buildAuth({ components, context }) {
   buildEntityAuth({ components, context, entity: 'api' });
   buildEntityAuth({ components, context, entity: 'websockets' });
   buildEntityAuth({ components, context, entity: 'pages' });
+  // Agents are served from the API surface, so auth.api patterns match agent ids too.
+  buildAgentAuth({ components, context });
 
   // The protection an unlisted page id inherits, resolved once for the runtime -
   // the signed-out page fork reads it instead of consulting page existence

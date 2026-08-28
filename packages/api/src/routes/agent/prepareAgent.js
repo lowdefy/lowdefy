@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import authorizeAgent from './authorizeAgent.js';
 import getAgentConfig from './getAgentConfig.js';
 import getAgentResolver from './getAgentResolver.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
@@ -32,6 +33,7 @@ import getConnection from '../connections/getConnection.js';
 // and hook endpoint calls.
 async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0, mode = 'chat' }) {
   const agentConfig = await getAgentConfig(context, { agentId });
+  authorizeAgent(context, { agentConfig });
 
   // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
   agentConfig.properties = context.evaluateOperators({
@@ -91,7 +93,9 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
       return getEndpointConfig(context, { endpointId });
     },
     getAgentConfig: async ({ agentId: subAgentId }) => {
-      return getAgentConfig(context, { agentId: subAgentId });
+      const subAgentConfig = await getAgentConfig(context, { agentId: subAgentId });
+      authorizeAgent(context, { agentConfig: subAgentConfig });
+      return subAgentConfig;
     },
     getConnectionForAgent: async ({ agentConfig: subAgentConfig }) => {
       const subConnectionConfig = await getConnectionConfig(context, {
