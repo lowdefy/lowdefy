@@ -52,6 +52,31 @@ test('buildMcp keeps explicit name and version and sets configured', () => {
   });
 });
 
+test('buildMcp keeps serverInfo branding (title, websiteUrl, icons)', () => {
+  const context = testContext();
+  const icons = [
+    { src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] },
+  ];
+  const components = {
+    api: [endpoint],
+    mcp: {
+      name: 'my-tools',
+      title: 'My Tools',
+      websiteUrl: 'https://example.com',
+      icons,
+      endpoints: ['get-customer'],
+    },
+  };
+  const res = buildMcp({ components, context });
+  expect(res.mcp).toMatchObject({
+    name: 'my-tools',
+    title: 'My Tools',
+    websiteUrl: 'https://example.com',
+    icons,
+    configured: true,
+  });
+});
+
 test('buildMcp throws when an endpoint reference does not exist', () => {
   const context = testContext();
   const components = { mcp: { endpoints: ['missing'] } };

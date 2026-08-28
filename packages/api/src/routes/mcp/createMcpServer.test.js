@@ -74,6 +74,44 @@ test('createMcpServer returns null when mcp is not configured', async () => {
   expect(server).toBe(null);
 });
 
+test('createMcpServer advertises configured branding in serverInfo, stripping build markers', async () => {
+  // As read from the build artifact: ~arr already unwrapped, ~k keys still present.
+  const iconsArtifact = [
+    {
+      src: 'https://example.com/icon-512.png',
+      mimeType: 'image/png',
+      sizes: ['512x512'],
+      '~k': 'm1',
+    },
+  ];
+  const context = createContext({
+    configs: {
+      'mcp.json': {
+        ...mcpJson,
+        title: 'Test Tools',
+        websiteUrl: 'https://example.com',
+        icons: iconsArtifact,
+      },
+    },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  expect(client.getServerVersion()).toEqual({
+    name: 'test-tools',
+    version: '1.0.0',
+    title: 'Test Tools',
+    websiteUrl: 'https://example.com',
+    icons: [{ src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] }],
+  });
+});
+
+test('createMcpServer omits branding keys that are not configured', async () => {
+  const context = createContext();
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  expect(client.getServerVersion()).toEqual({ name: 'test-tools', version: '1.0.0' });
+});
+
 test('tools/list returns endpoint tools for an authorized caller', async () => {
   const context = createContext();
   const server = await createMcpServer({ context });
@@ -180,9 +218,7 @@ test('tools/call returns a 401-shaped error result for an unauthenticated caller
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(result.content[0].text).toBe(
-    'Authentication required for API endpoint "get-customer".'
-  );
+  expect(result.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
   expect(logger.warn).toHaveBeenCalledWith('Unauthenticated MCP tool call: get-customer');
   expect(logger.error).not.toHaveBeenCalled();
 });
