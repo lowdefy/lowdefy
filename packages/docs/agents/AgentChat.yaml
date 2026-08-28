@@ -92,6 +92,7 @@ _ref:
             | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
             | `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
             | `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
+            | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
             | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
             | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
             | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
@@ -111,6 +112,31 @@ _ref:
                 - `label: string`: Button label (sent as message when clicked).
                 - `description: string`: Button description.
                 - `icon`: Button icon.
+              - `tracks: object[]`: An alternative to `prompts` for a teaching empty state — two or more labelled columns of starters, e.g. one track to ask a question and another to build a report. A `tracks` welcome renders **in-flow** as the leading item of the transcript (rather than centred and swapped out on the first send), so it scrolls up with the conversation and stays reachable by scrolling back. A track starter **fills the composer** instead of sending, so a suggested prompt becomes an editable first draft rather than a message the user never meant to send. Each track:
+                - `label: string`: Track heading.
+                - `prompts: (string | object)[]`: Starters — a plain string, or `{ label }`. The text fills the composer on click.
+
+            When `tracks` is set, `prompts` is ignored.
+
+            ###### Two-track welcome (ask a question / build a report):
+            ```yaml
+            - id: chat
+              type: AgentChat
+              properties:
+                agentId: assistant
+                welcome:
+                  title: Ask about your data
+                  description: I can see your orders, customers, and activity.
+                  tracks:
+                    - label: Get a quick answer
+                      prompts:
+                        - Which region has the highest total sales?
+                        - How many activities were logged last month?
+                    - label: Build a report
+                      prompts:
+                        - Build a report showing trends over time.
+                        - Build a report comparing categories side by side.
+            ```
 
             ### Suggestions
 
@@ -325,7 +351,7 @@ _ref:
             | `onToolResult` | A tool returns a result. | `toolName`, `toolCallId`, `output`, `error` |
             | `onError` | A streaming error occurs. | `message` |
             | `onStop` | User stops generation. | `messages` |
-            | `onFeedback` | User clicks thumbs up/down. | `messageId`, `messageContent`, `rating` |
+            | `onFeedback` | User clicks thumbs up/down. `rating` is `like` or `dislike`, or `default` when the user clicks the selected thumb again to clear the rating — branch on it explicitly rather than treating anything that is not `like` as a dislike. | `messageId`, `messageContent`, `rating` |
             | `onRegenerate` | User clicks regenerate. | `messageId`, `messages` |
             | `onDeleteMessage` | User deletes a message. | `messageId`, `content`, `messages` |
             | `onEditMessage` | User edits and resubmits. | `messageId`, `originalContent`, `newContent`, `messages` |
@@ -333,6 +359,7 @@ _ref:
             | `onSwitchChange` | User toggles a sender switch. | `key`, `checked` |
             | `onTitleGenerated` | A `data-chat-title` data part arrives — emitted automatically when the agent's [`generateTitle`](/agent-properties) property is set, or manually from an `onFinish` hook. | `title` |
             | `onDataPart` | Any data part arrives from the server. | `type`, `data`, `id` |
+            | `onLinkClick` | User clicks a link in a message. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate. | `href`, `text` |
 
             ###### Validate messages before sending:
             ```yaml
@@ -364,6 +391,16 @@ _ref:
                     type: success
             ```
 
+            Saving is only half of it — the block does not persist a rating, so a
+            reload or a conversation switch shows the message unrated again. Pass
+            what you stored back through `feedbackValues`, keyed by message id:
+
+            ```yaml
+            properties:
+              feedbackValues:
+                _request: saved_feedback_for_conversation
+            ```
+
             ###### Adapt behavior based on sender switches:
             ```yaml
             events:
@@ -382,6 +419,7 @@ _ref:
             | Method | Arguments | Description |
             | --- | --- | --- |
             | `sendMessage` | `{ text, files?, metadata? }` | Send a message programmatically. |
+            | `setInput` | `{ text }` | Set the composer's text without sending — seed or clear the input box. Omit `text` to clear. |
             | `regenerate` | `{ messageId? }` | Regenerate the last (or a specific) assistant message. |
             | `setMessages` | `{ messages }` | Replace all messages with a new array. |
             | `clearMessages` | | Clear all messages. |
@@ -405,6 +443,23 @@ _ref:
                       method: sendMessage
                       args:
                         - text: Please summarize the current page content.
+            ```
+
+            ###### Prefill the composer without sending:
+            ```yaml
+            - id: draft_reply
+              type: Button
+              properties:
+                title: Draft a reply
+              events:
+                onClick:
+                  - id: prefill
+                    type: CallMethod
+                    params:
+                      blockId: chat
+                      method: setInput
+                      args:
+                        - text: Please draft a polite reply to the last message.
             ```
 
             ###### New conversation button:

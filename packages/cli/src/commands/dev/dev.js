@@ -17,6 +17,7 @@
 import { findAvailablePort } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import installServer from '../../utils/installServer.js';
 import runDevServer from './runDevServer.js';
 import getServer from '../../utils/getServer.js';
@@ -37,6 +38,7 @@ async function dev({ context }) {
   // `lowdefy build` recomputes the complete set, and getServer replaces
   // package.json when the lowdefy version changes.
   await addCustomPluginsAsDeps({ context, directory });
+  await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });
   context.sendTelemetry();
   await runDevServer({ context, directory });

@@ -87,6 +87,31 @@ Shown when the chat has no messages. Clicking a prompt sends the `label` as a me
     - `label: string`: Button label (sent as message when clicked).
     - `description: string`: Button description.
     - `icon`: Button icon.
+  - `tracks: object[]`: An alternative to `prompts` for a teaching empty state — two or more labelled columns of starters, e.g. one track to ask a question and another to build a report. A `tracks` welcome renders **in-flow** as the leading item of the transcript (rather than centred and swapped out on the first send), so it scrolls up with the conversation and stays reachable by scrolling back. A track starter **fills the composer** instead of sending, so a suggested prompt becomes an editable first draft rather than a message the user never meant to send. Each track:
+    - `label: string`: Track heading.
+    - `prompts: (string | object)[]`: Starters — a plain string, or `{ label }`. The text fills the composer on click.
+
+When `tracks` is set, `prompts` is ignored.
+
+###### Two-track welcome (ask a question / build a report):
+```yaml
+- id: chat
+  type: AgentChat
+  properties:
+    agentId: assistant
+    welcome:
+      title: Ask about your data
+      description: I can see your orders, customers, and activity.
+      tracks:
+        - label: Get a quick answer
+          prompts:
+            - Which region has the highest total sales?
+            - How many activities were logged last month?
+        - label: Build a report
+          prompts:
+            - Build a report showing trends over time.
+            - Build a report comparing categories side by side.
+```
 
 ### Suggestions
 
@@ -358,6 +383,7 @@ Control the chat programmatically using [`CallMethod`](/CallMethod):
 | Method | Arguments | Description |
 | --- | --- | --- |
 | `sendMessage` | `{ text, files?, metadata? }` | Send a message programmatically. |
+| `setInput` | `{ text }` | Set the composer's text without sending — seed or clear the input box. Omit `text` to clear. |
 | `regenerate` | `{ messageId? }` | Regenerate the last (or a specific) assistant message. |
 | `setMessages` | `{ messages }` | Replace all messages with a new array. |
 | `clearMessages` | | Clear all messages. |
@@ -381,6 +407,23 @@ Control the chat programmatically using [`CallMethod`](/CallMethod):
           method: sendMessage
           args:
             - text: Please summarize the current page content.
+```
+
+###### Prefill the composer without sending:
+```yaml
+- id: draft_reply
+  type: Button
+  properties:
+    title: Draft a reply
+  events:
+    onClick:
+      - id: prefill
+        type: CallMethod
+        params:
+          blockId: chat
+          method: setInput
+          args:
+            - text: Please draft a polite reply to the last message.
 ```
 
 ###### New conversation button:

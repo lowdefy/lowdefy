@@ -20,10 +20,13 @@ import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
 import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
+import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
+import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds/MongoDBInsertManyConsecutiveIds.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
+import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import schema from './schema.js';
 
 export default {
@@ -35,9 +38,12 @@ export default {
     MongoDBDeleteOne,
     MongoDBFind,
     MongoDBFindOne,
+    MongoDBInsertConsecutiveId,
     MongoDBInsertMany,
+    MongoDBInsertManyConsecutiveIds,
     MongoDBInsertOne,
     MongoDBUpdateMany,
     MongoDBUpdateOne,
+    MongoDBVersionedUpdateOne,
   },
 };

@@ -367,3 +367,58 @@ test('Error count below cap is returned in full', () => {
   expect(result.valid).toBe(false);
   expect(result.errors).toHaveLength(3);
 });
+
+test('A oneOf branch still matches when earlier branches exhaust the error cap', () => {
+  // The shape every Lowdefy selector's `options` uses: a list of primitives, or
+  // a list of label/value objects. Each branch that rejects the data spends one
+  // error per entry, so a list long enough to exhaust the cap on the earlier
+  // branches alone must still be judged on the branch that fits it.
+  const schema = {
+    type: 'object',
+    properties: {
+      options: {
+        oneOf: [
+          { type: 'array', items: { type: 'string' } },
+          { type: 'array', items: { type: 'number' } },
+          {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: { label: { type: 'string' }, value: { type: 'string' } },
+            },
+          },
+        ],
+      },
+    },
+  };
+  const long = (make) => Array.from({ length: MAX_VALIDATION_ERRORS * 5 }, (_, i) => make(i));
+
+  expect(validate({ schema, data: { options: long((i) => `option ${i}`) } })).toEqual({
+    valid: true,
+  });
+  expect(validate({ schema, data: { options: long((i) => i) } })).toEqual({ valid: true });
+  expect(
+    validate({
+      schema,
+      data: { options: long((i) => ({ label: `option ${i}`, value: `${i}` })) },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('A oneOf that no branch satisfies still fails, with errors capped', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      options: {
+        oneOf: [
+          { type: 'array', items: { type: 'string' } },
+          { type: 'array', items: { type: 'number' } },
+        ],
+      },
+    },
+  };
+  const data = { options: Array.from({ length: MAX_VALIDATION_ERRORS * 5 }, () => true) };
+  const result = validate({ schema, data, returnErrors: true });
+  expect(result.valid).toBe(false);
+  expect(result.errors.length).toBeLessThanOrEqual(MAX_VALIDATION_ERRORS);
+});
