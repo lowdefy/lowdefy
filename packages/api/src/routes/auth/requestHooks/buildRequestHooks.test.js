@@ -19,7 +19,12 @@ import { jest } from '@jest/globals';
 // Each slot is wrapped in createAuthMiddleware; mock it to identity so the unit
 // test can invoke a slot with a plain endpoint context.
 jest.unstable_mockModule('better-auth/api', () => ({
+  // The post-login hook's module graph reaches buildOauthPostLogin, which
+  // imports APIError; the hook itself reads the session through
+  // getSessionFromCtx. Neither is exercised here.
+  APIError: class APIError extends Error {},
   createAuthMiddleware: (handler) => handler,
+  getSessionFromCtx: jest.fn(),
 }));
 
 // beginTwoFactorChallenge is exercised against a fake endpoint context in its
