@@ -316,6 +316,23 @@ _ref:
 
             Two consequences. A `pinned` app never had these actions working in the first place — every organization route is disabled under `pinned` — so this reads as a removal only for `tenant` apps. And the step path is what makes cross-organization administration possible at all: a client action forwards no organization id, so it could only ever act on the session's active organization.
 
+            ## Exposing MCP tools to assistants
+
+            New in this release: a Lowdefy app can be an **OAuth 2.1 authorization server** and expose its API endpoints as authenticated tools to MCP clients (Claude, ChatGPT, IDE assistants). There is one MCP resource at `/api/mcp`; the organization a call acts in is a token claim chosen at authorization, not a URL segment. Enable it with `auth.oauthProvider` and tag endpoints in the `mcp` block. This is entirely additive — an app with no `mcp` endpoints and no `auth.oauthProvider` is unaffected.
+
+            **One rule to internalise before you ship it: never list an MCP endpoint id in `auth.api.public`.** A single public tool suppresses the OAuth challenge for the whole route, so a newly connected assistant reports "connected" and never authenticates. The full model — the flow, the `organization_id` claim, `mcp:read` / `mcp:write` scopes, the consent and organization-picker pages, and switching or disconnecting with `RevokeMcpGrant` — is on the [MCP Server & OAuth](/mcp-oauth) page.
+
+            The `mcp.agents` config key is removed; MCP agent tools are not supported.
+
+            ## Where the details now live
+
+            This guide is the migration path; the current behaviour is documented on the dedicated pages:
+
+            - [Organizations & Multi-Tenancy](/organizations) — the `pinned` / `tenant` policies and the tenant wall.
+            - [Auth Steps](/auth-steps) — the per-step authority model and every step's scope and permission.
+            - [MCP Server & OAuth](/mcp-oauth) — the authenticated MCP surface.
+            - [User Object](/user-object) — the fixed `_user` shape.
+
             ## What you don't need to change
 
             - **Page and API authorization** — `auth.pages` and `auth.api` (`protected` / `public` / `roles`) keep their shape and semantics.

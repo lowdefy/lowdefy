@@ -343,6 +343,21 @@
           pageId: roles
           properties:
             title: Roles
+        - id: organizations
+          type: MenuLink
+          pageId: organizations
+          properties:
+            title: Organizations & Multi-Tenancy
+        - id: auth-steps
+          type: MenuLink
+          pageId: auth-steps
+          properties:
+            title: Auth Steps
+        - id: mcp-oauth
+          type: MenuLink
+          pageId: mcp-oauth
+          properties:
+            title: MCP Server & OAuth
         - id: user-object
           type: MenuLink
           pageId: user-object
