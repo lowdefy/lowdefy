@@ -15,6 +15,7 @@
 */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { jest } from '@jest/globals';
 
 // The handler is byte-identical to `server-dev`'s and `server-e2e`'s apart from
@@ -205,6 +206,24 @@ test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on 
   expect(await res.text()).toEqual('Two-factor enrolment required');
   expect(logger.warn).toHaveBeenCalledTimes(1);
   expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler sends an HTTPException response as-is with one warning and no error log', async () => {
+  const logger = createLogger();
+  const error = new HTTPException(404, {
+    res: Response.json(
+      { jsonrpc: '2.0', error: { code: -32000, message: 'Unsupported protocol version' } },
+      { status: 404 }
+    ),
+  });
+  const res = await createApp({ error, logger }).request('/api/mcp', { method: 'POST' });
+  expect(res.status).toEqual(404);
+  expect(await res.json()).toEqual({
+    jsonrpc: '2.0',
+    error: { code: -32000, message: 'Unsupported protocol version' },
+  });
+  expect(logger.warn).toHaveBeenCalledWith('404 answered by the route: POST /api/mcp');
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('errorHandler returns 500 with the serialized error envelope on an api path', async () => {
