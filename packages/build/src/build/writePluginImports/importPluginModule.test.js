@@ -81,3 +81,15 @@ test('importPluginModule returns undefined when the package does not export the 
   });
   expect(result).toBe(undefined);
 });
+
+// A legacy package with no "exports" map resolves `pkg/connections` to the
+// dist directory itself, which ESM refuses (ERR_UNSUPPORTED_DIR_IMPORT). That
+// is a resolution miss like any other, not a broken plugin.
+test('importPluginModule returns undefined when the subpath resolves to a directory', async () => {
+  const connectionsDir = path.join(tempDirectory, 'legacy-plugin', 'connections');
+  fs.mkdirSync(connectionsDir, { recursive: true });
+  fs.writeFileSync(path.join(connectionsDir, 'S3.js'), 'export default {};\n');
+  const context = { directories: { server: tempDirectory } };
+  const result = await importPluginModule({ context, specifier: connectionsDir });
+  expect(result).toBe(undefined);
+});
