@@ -57,3 +57,27 @@ test('importPluginModule rethrows when a resolvable module fails to load', async
     'plugin module is broken'
   );
 });
+
+// Every subpath this function imports is optional - a plugin that ships no
+// `./schemas` entry in its exports map is the normal case, not a broken plugin.
+test('importPluginModule returns undefined when the package does not export the subpath', async () => {
+  const serverDir = path.join(tempDirectory, 'server');
+  const pkgDir = path.join(serverDir, 'node_modules', '@lowdefy', 'plugin-no-schemas');
+  fs.mkdirSync(pkgDir, { recursive: true });
+  fs.writeFileSync(path.join(serverDir, 'package.json'), '{ "name": "server" }\n');
+  fs.writeFileSync(
+    path.join(pkgDir, 'package.json'),
+    JSON.stringify({
+      name: '@lowdefy/plugin-no-schemas',
+      type: 'module',
+      exports: { './blocks': './blocks.js' },
+    })
+  );
+  fs.writeFileSync(path.join(pkgDir, 'blocks.js'), 'export default {};\n');
+  const context = { directories: { server: serverDir } };
+  const result = await importPluginModule({
+    context,
+    specifier: '@lowdefy/plugin-no-schemas/schemas',
+  });
+  expect(result).toBe(undefined);
+});

@@ -18,11 +18,20 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 // A module that cannot be found is the expected miss this function degrades
-// on; any other failure means the module exists but does not load (a syntax
-// error, a throwing top-level import), which must surface here instead of
-// resurfacing later as "type X is not defined".
+// on. That includes a package that exists but does not export the requested
+// subpath (ERR_PACKAGE_PATH_NOT_EXPORTED): every subpath here is optional, and
+// a plugin that ships no `./schemas` is the normal case, not a broken plugin.
+// Any other failure means the module exists but does not load (a syntax error,
+// a throwing top-level import), which must surface here instead of resurfacing
+// later as "type X is not defined".
+const NOT_FOUND_CODES = new Set([
+  'ERR_MODULE_NOT_FOUND',
+  'MODULE_NOT_FOUND',
+  'ERR_PACKAGE_PATH_NOT_EXPORTED',
+]);
+
 function isModuleNotFound(error) {
-  return error?.code === 'ERR_MODULE_NOT_FOUND' || error?.code === 'MODULE_NOT_FOUND';
+  return NOT_FOUND_CODES.has(error?.code);
 }
 
 // Import a plugin module (e.g. `${pkg}/schemas`, `${pkg}/connections`) for
