@@ -18,6 +18,7 @@ import { createAuthMiddleware } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
 import createMagicLinkSendGate from '../organizations/createMagicLinkSendGate.js';
+import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
 import matchOAuthCallback from './matchOAuthCallback.js';
@@ -55,6 +56,18 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         getAuth,
         organizations: authConfig.organizations,
       }),
+    });
+  }
+
+  // The post-login organization choice (buildOauthPostLogin): stamps the
+  // request's cached session when /oauth2/continue confirms the choice, so the
+  // authorize call it re-enters with does not send the member back to the
+  // picker. Registered with the authorization server itself.
+  if (!type.isNone(authConfig.oauthProvider)) {
+    before.push({
+      id: 'oauthPostLogin',
+      matches: (path) => path === '/oauth2/continue',
+      handler: createOauthPostLoginHook(),
     });
   }
 

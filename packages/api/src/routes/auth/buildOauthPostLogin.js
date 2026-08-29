@@ -29,12 +29,24 @@ import { type } from '@lowdefy/helpers';
 //
 // Under the tenant policy the member chooses on the configured page (the page
 // runs SetActiveOrganization for the chosen organization, then OAuthContinue),
-// and shouldRedirect is unconditional so the choice is made on every
-// authorization - a one-organization member sees a single preselected row.
-// Under the pinned policy there is one organization and nothing to choose:
-// the redirect is skipped and the reference is the pinned organization, whose
-// id is its slug. The page is still required by the plugin option shape, so
-// the consent page stands in - it is never redirected to.
+// and the choice is made on every authorization - a one-organization member
+// sees a single preselected row. The plugin asks shouldRedirect on every
+// authorize call, including the one /oauth2/continue re-enters with after the
+// choice, and only its CONSENT redirect carries the "post-login done" marker
+// (ba_pl) - so an unconditional true would loop back to the picker forever.
+// The request hook on /oauth2/continue (createOauthPostLoginHook) stamps the
+// session object cached on that request instead, and shouldRedirect reads the
+// stamp: true until the choice has been posted, false on the authorize call
+// that carries it. Under the pinned policy there is one organization and
+// nothing to choose: the redirect is skipped and the reference is the pinned
+// organization, whose id is its slug. The page is still required by the
+// plugin option shape, so the consent page stands in - it is never redirected
+// to.
+//
+// The marker lives on the in-request session object only - never persisted -
+// so it cannot outlive the request that made the choice.
+const OAUTH_POST_LOGIN_CONFIRMED = 'oauthPostLoginConfirmed';
+
 function buildOauthPostLogin({ authConfig, baseUrlOrigin, basePath }) {
   if (authConfig.organizations?.policy === 'pinned') {
     return {
@@ -45,7 +57,7 @@ function buildOauthPostLogin({ authConfig, baseUrlOrigin, basePath }) {
   }
   return {
     page: `${baseUrlOrigin}${basePath}${authConfig.oauthProvider.postLoginPage}`,
-    shouldRedirect: () => true,
+    shouldRedirect: ({ session }) => session?.[OAUTH_POST_LOGIN_CONFIRMED] !== true,
     consentReferenceId: ({ session }) => {
       const organizationId = session?.activeOrganizationId;
       // The plugin's contract: fail here when the reference is missing rather
@@ -63,4 +75,5 @@ function buildOauthPostLogin({ authConfig, baseUrlOrigin, basePath }) {
   };
 }
 
+export { OAUTH_POST_LOGIN_CONFIRMED };
 export default buildOauthPostLogin;

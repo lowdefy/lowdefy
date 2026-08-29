@@ -16,7 +16,7 @@
 
 import { APIError } from 'better-auth/api';
 
-import buildOauthPostLogin from './buildOauthPostLogin.js';
+import buildOauthPostLogin, { OAUTH_POST_LOGIN_CONFIRMED } from './buildOauthPostLogin.js';
 
 const baseUrlOrigin = 'https://app.example.com';
 
@@ -31,6 +31,23 @@ test('buildOauthPostLogin redirects to the post-login page on every authorizatio
   });
   expect(postLogin.page).toBe('https://app.example.com/base/oauth-select-organization');
   expect(postLogin.shouldRedirect({ session: { activeOrganizationId: 'org_1' } })).toBe(true);
+  expect(postLogin.shouldRedirect({})).toBe(true);
+});
+
+test('buildOauthPostLogin skips the redirect on the authorize call that carries the confirmed choice', () => {
+  const postLogin = buildOauthPostLogin({
+    authConfig: {
+      organizations: { policy: 'tenant' },
+      oauthProvider: { consentPage: '/oauth-consent', postLoginPage: '/oauth-select-organization' },
+    },
+    baseUrlOrigin,
+    basePath: '',
+  });
+  expect(
+    postLogin.shouldRedirect({
+      session: { activeOrganizationId: 'org_1', [OAUTH_POST_LOGIN_CONFIRMED]: true },
+    })
+  ).toBe(false);
 });
 
 test('buildOauthPostLogin references the session active organization under the tenant policy', () => {
