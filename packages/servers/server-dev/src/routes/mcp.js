@@ -19,6 +19,7 @@ import { createMcpServer, getMcpResourceMetadataUri, getMcpResourceUri } from '@
 import { type } from '@lowdefy/helpers';
 
 import authJson from '../../lib/build/auth.js';
+import normalizeMcpProtocolVersionHeader from './normalizeMcpProtocolVersionHeader.js';
 
 // The RFC 6750 challenge for the MCP resource, pointing at its RFC 9728
 // metadata. The invalid_token extension exists for the two failures a client
@@ -65,6 +66,7 @@ function isOriginAllowed({ c, context }) {
 // boundary a role or scope shortfall stays opaque inside the tool surface,
 // never a 403 or insufficient_scope.
 async function mcpHandler(c) {
+  normalizeMcpProtocolVersionHeader({ request: c.req.raw });
   const context = c.get('lowdefyContext');
   const mcpConfig = await context.readConfigFile('mcp.json');
   if (type.isNone(mcpConfig) || mcpConfig.configured !== true) {
