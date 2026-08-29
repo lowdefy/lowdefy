@@ -128,7 +128,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -207,7 +216,6 @@ function tagRefDeep(node, refId) {
     }
   }
 }
-
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
@@ -399,9 +407,7 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     // stay raw in varDefs and need no walk.
     const defaultRecordId = getPlaceholderId(varDef.default);
     result =
-      defaultRecordId !== undefined
-        ? await resolveDeferred(ctx, defaultRecordId)
-        : varDef.default;
+      defaultRecordId !== undefined ? await resolveDeferred(ctx, defaultRecordId) : varDef.default;
   } else {
     result = null;
   }
@@ -648,9 +654,7 @@ async function resolveModuleIdOperator(node, ctx) {
           refId: ctx.refId,
           configKey: configKey ?? null,
         },
-        slot: nested
-          ? null
-          : { entryId: ctx.entryId, section, path: ctx.path },
+        slot: nested ? null : { entryId: ctx.entryId, section, path: ctx.path },
       });
       return makePlaceholder(recordId);
     }
@@ -710,7 +714,7 @@ async function prepareRef(node, ctx) {
           ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
         refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
       }
-    }),
+    })
   );
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneWithMarkers(refDef.key), ctx);
@@ -734,7 +738,10 @@ async function prepareRef(node, ctx) {
         !value.startsWith(ctx.packageRoot + '/') &&
         value !== ctx.packageRoot
       ) {
-        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`);
+        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`, {
+          filePath: ctx.currentFile,
+          lineNumber: ctx.currentFile ? lineNumber : null,
+        });
       }
     }
   }
@@ -971,7 +978,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -1025,7 +1032,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 6. _var — substitution (children already resolved)
@@ -1056,7 +1063,9 @@ async function resolve(node, ctx) {
           { filePath: ctx.currentFile }
         );
       }
-      throw new ConfigError('_module.var cannot be used at the app level.');
+      throw new ConfigError('_module.var cannot be used at the app level.', {
+        filePath: ctx.currentFile,
+      });
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
   }

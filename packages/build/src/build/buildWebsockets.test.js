@@ -308,3 +308,33 @@ test('buildWebsockets counts server operators in websocket properties', () => {
     _secret: 2,
   });
 });
+
+test('buildWebsockets collects an error per invalid websocket and still builds the valid ones', () => {
+  const context = createTestContext();
+  context.errors = [];
+  const components = {
+    websockets: [
+      { type: 'Channel', '~k': 'k1' },
+      { id: 'ws2', type: 'Channel', connectionId: 'missing', '~k': 'k2' },
+      { id: 'ws3', type: 'Channel', '~k': 'k3' },
+    ],
+  };
+  buildWebsockets({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toBe('Websocket id missing at websocket 0.');
+  expect(context.errors[0].configKey).toBe('k1');
+  expect(context.errors[1].checkSlug).toBe('connection-refs');
+  expect(context.websocketIds).toEqual(new Set(['ws3']));
+});
+
+test('buildWebsockets names the config root when websockets is not an array', () => {
+  const context = createTestContext();
+  const components = { websockets: 'websockets', '~k': 'root' };
+  let thrown;
+  try {
+    buildWebsockets({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.configKey).toBe('root');
+});

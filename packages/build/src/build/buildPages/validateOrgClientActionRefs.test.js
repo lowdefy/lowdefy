@@ -36,55 +36,56 @@ test('ORG_CLIENT_ACTION_TYPES covers all per-org client actions', () => {
 });
 
 test.each(ORG_CLIENT_ACTION_TYPES)(
-  'validateOrgClientActionRefs throws a ConfigError under pinned naming %s, page, and policy',
+  'validateOrgClientActionRefs collects a ConfigError under pinned naming %s, page, and policy',
   (actionType) => {
-    const orgClientActionRefs = [makeRef(actionType)];
-    let thrown;
-    try {
-      validateOrgClientActionRefs({ orgClientActionRefs, policy: 'pinned' });
-    } catch (error) {
-      thrown = error;
-    }
-    expect(thrown).toBeInstanceOf(ConfigError);
-    expect(thrown.message).toBe(
+    const context = { errors: [] };
+    validateOrgClientActionRefs({
+      orgClientActionRefs: [makeRef(actionType)],
+      policy: 'pinned',
+      context,
+    });
+    expect(context.errors.length).toBe(1);
+    expect(context.errors[0]).toBeInstanceOf(ConfigError);
+    expect(context.errors[0].message).toBe(
       `${actionType} action on page "page1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.`
     );
-    expect(thrown.configKey).toBe('pages.page1.events.onClick.0');
+    expect(context.errors[0].configKey).toBe('pages.page1.events.onClick.0');
   }
 );
 
-test('validateOrgClientActionRefs throws on the first ref when multiple are wired under pinned', () => {
+test('validateOrgClientActionRefs collects an error for every ref wired under pinned', () => {
   const first = makeRef('SetActiveOrganization');
   const second = makeRef('LeaveOrganization');
   second.sourcePageId = 'page2';
   second.action['~k'] = 'pages.page2.events.onClick.0';
-  let thrown;
-  try {
-    validateOrgClientActionRefs({ orgClientActionRefs: [first, second], policy: 'pinned' });
-  } catch (error) {
-    thrown = error;
-  }
-  expect(thrown).toBeInstanceOf(ConfigError);
-  expect(thrown.message).toContain('SetActiveOrganization action on page "page1"');
-  expect(thrown.configKey).toBe('pages.page1.events.onClick.0');
+  const context = { errors: [] };
+  validateOrgClientActionRefs({ orgClientActionRefs: [first, second], policy: 'pinned', context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toContain('SetActiveOrganization action on page "page1"');
+  expect(context.errors[0].configKey).toBe('pages.page1.events.onClick.0');
+  expect(context.errors[1].message).toContain('LeaveOrganization action on page "page2"');
+  expect(context.errors[1].configKey).toBe('pages.page2.events.onClick.0');
 });
 
 test('validateOrgClientActionRefs is a no-op under the tenant policy', () => {
   const orgClientActionRefs = ORG_CLIENT_ACTION_TYPES.map((actionType) => makeRef(actionType));
-  expect(() =>
-    validateOrgClientActionRefs({ orgClientActionRefs, policy: 'tenant' })
-  ).not.toThrow();
+  const context = { errors: [] };
+  validateOrgClientActionRefs({ orgClientActionRefs, policy: 'tenant', context });
+  expect(context.errors).toEqual([]);
 });
 
 test('validateOrgClientActionRefs is a no-op for any non-pinned policy', () => {
-  const orgClientActionRefs = [makeRef()];
-  expect(() =>
-    validateOrgClientActionRefs({ orgClientActionRefs, policy: 'something-else' })
-  ).not.toThrow();
+  const context = { errors: [] };
+  validateOrgClientActionRefs({
+    orgClientActionRefs: [makeRef()],
+    policy: 'something-else',
+    context,
+  });
+  expect(context.errors).toEqual([]);
 });
 
 test('validateOrgClientActionRefs is a no-op when no refs are collected under pinned', () => {
-  expect(() =>
-    validateOrgClientActionRefs({ orgClientActionRefs: [], policy: 'pinned' })
-  ).not.toThrow();
+  const context = { errors: [] };
+  validateOrgClientActionRefs({ orgClientActionRefs: [], policy: 'pinned', context });
+  expect(context.errors).toEqual([]);
 });

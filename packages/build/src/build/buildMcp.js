@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../utils/collectExceptions.js';
 import lowdefySchema from '../lowdefySchema.js';
 
 // Strict subtree validation - the root testSchema pass only warns, but a bad
@@ -63,7 +64,7 @@ function validateSchema({ mcp, configKey }) {
 // the same dual id/endpointId match buildApi uses. Referenced endpoints must
 // carry the metadata an MCP client needs: a description and a payloadSchema
 // (the tool inputSchema).
-function buildMcp({ components }) {
+function buildMcp({ components, context }) {
   if (type.isNone(components.mcp)) {
     components.mcp = {};
   }
@@ -97,44 +98,68 @@ function buildMcp({ components }) {
   mcp.endpoints.forEach((tool) => {
     const toolConfigKey = tool['~k'] ?? configKey;
     if (seen.has(tool.id)) {
-      throw new ConfigError(`Duplicate MCP tool "${tool.id}".`, { configKey: toolConfigKey });
+      collectExceptions(
+        context,
+        new ConfigError(`Duplicate MCP tool "${tool.id}".`, { configKey: toolConfigKey })
+      );
+      return;
     }
     seen.add(tool.id);
     const endpoint = (components.api ?? []).find(
       (e) => e.id === tool.id || e.endpointId === tool.id
     );
     if (type.isNone(endpoint)) {
-      throw new ConfigError(
-        `MCP endpoint "${tool.id}" does not reference a defined api endpoint.`,
-        { configKey: toolConfigKey }
+      collectExceptions(
+        context,
+        new ConfigError(`MCP endpoint "${tool.id}" does not reference a defined api endpoint.`, {
+          configKey: toolConfigKey,
+        })
       );
+      return;
     }
     // MCP is an external transport - InternalApi endpoints are not addressable
     // from outside the server, matching the HTTP endpoint route.
     if (endpoint.type === 'InternalApi') {
-      throw new ConfigError(
-        `MCP endpoint "${tool.id}" is an InternalApi endpoint. Only "Api" endpoints can be exposed as MCP tools.`,
-        { configKey: toolConfigKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP endpoint "${tool.id}" is an InternalApi endpoint. Only "Api" endpoints can be exposed as MCP tools.`,
+          { configKey: toolConfigKey }
+        )
       );
+      return;
     }
     if (type.isNone(endpoint.description)) {
-      throw new ConfigError(
-        `Endpoint "${tool.id}" is exposed as an MCP tool but does not have a "description".`,
-        { configKey: endpoint['~k'] ?? configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Endpoint "${tool.id}" is exposed as an MCP tool but does not have a "description".`,
+          { configKey: endpoint['~k'] ?? configKey }
+        )
       );
+      return;
     }
     if (type.isNone(endpoint.payloadSchema)) {
-      throw new ConfigError(
-        `Endpoint "${tool.id}" is exposed as an MCP tool but does not have a "payloadSchema".`,
-        { configKey: endpoint['~k'] ?? configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Endpoint "${tool.id}" is exposed as an MCP tool but does not have a "payloadSchema".`,
+          { configKey: endpoint['~k'] ?? configKey }
+        )
       );
+      return;
     }
     if (endpoint.auth?.public === true) {
       hasPublicTool = true;
-    } else if (!oauthProviderConfigured) {
-      throw new ConfigError(
-        `MCP endpoint "${tool.id}" is protected or role-gated, but "auth.oauthProvider" is not configured. Protected MCP tools require the app's OAuth authorization server, or make the endpoint public.`,
-        { configKey: toolConfigKey }
+      return;
+    }
+    if (!oauthProviderConfigured) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP endpoint "${tool.id}" is protected or role-gated, but "auth.oauthProvider" is not configured. Protected MCP tools require the app's OAuth authorization server, or make the endpoint public.`,
+          { configKey: toolConfigKey }
+        )
       );
     }
   });
