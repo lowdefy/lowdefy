@@ -295,6 +295,25 @@ test('tools/call answers an anonymous caller on a gated tool exactly like an unk
   expect(logger.error).not.toHaveBeenCalled();
 });
 
+test('tools/call warns once instead of logging an error when the endpoint gate refuses', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  // Visible to the tool listing, refused by the endpoint's own gate - the
+  // shape that reaches the handler's catch as an AuthorizationError.
+  context.authorizeOutcome = jest.fn().mockReturnValueOnce('allow').mockReturnValue('deny');
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - API Endpoint "get-customer" does not exist.'
+  );
+});
+
 test('tools/call answers a role shortfall exactly like an unknown tool', async () => {
   const context = createContext({
     user: { id: 'user_1', roles: ['viewer'] },

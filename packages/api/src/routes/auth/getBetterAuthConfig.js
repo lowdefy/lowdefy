@@ -35,6 +35,7 @@ import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 import createAuthLogger from './createAuthLogger.js';
+import createOnAPIError from './createOnAPIError.js';
 import createSendEmail from './createSendEmail.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
@@ -528,7 +529,7 @@ function getBetterAuthConfig({
   // otherwise the stock InvitationEmail renders branded with no CTA button.
   async function sendInvitationEmail({ email, organization, invitation }) {
     if (type.isNone(authConfig.email)) {
-      throw new Error('Cannot send the invitation email. Configure "auth.email".');
+      throw new ConfigError('Cannot send the invitation email. Configure "auth.email".');
     }
     const acceptPath = authConfig.authPages?.acceptInvitation;
     const canBuildAcceptUrl = type.isString(baseUrlOrigin) && type.isString(acceptPath);
@@ -580,6 +581,10 @@ function getBetterAuthConfig({
     ...(type.isNone(authConfig.oauthProvider) ? [] : ['/token']),
   ];
 
+  // Own the logging of auth API errors so a rejected attempt (4xx) is a warn
+  // line, not an error - see createOnAPIError.
+  options.onAPIError = { onError: createOnAPIError({ logger }) };
+
   // Decision 5: default every redirect-style auth error - chiefly an OAuth
   // failure - to the resolved authPages.error page, instead of BetterAuth's
   // bare built-in ${baseURL}/error. BetterAuth uses errorURL verbatim in the
@@ -590,9 +595,9 @@ function getBetterAuthConfig({
   // resolves errorURL ?? onAPIError.errorURL).
   if (type.isString(authConfig.authPages?.error)) {
     const errorPath = `${config.basePath ?? ''}${authConfig.authPages.error}`;
-    options.onAPIError = {
-      errorURL: type.isString(baseUrlOrigin) ? `${baseUrlOrigin}${errorPath}` : errorPath,
-    };
+    options.onAPIError.errorURL = type.isString(baseUrlOrigin)
+      ? `${baseUrlOrigin}${errorPath}`
+      : errorPath;
   }
 
   return options;

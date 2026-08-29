@@ -15,7 +15,7 @@
 */
 
 import { APIError } from 'better-auth/api';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
 import createUserAfterHook from './createUserAfterHook.js';
 import createUserBeforeHook from './createUserBeforeHook.js';
@@ -88,4 +88,33 @@ test('after hook maps :reject to an APIError and rethrows routine errors', async
   });
   await expect(rejected({ id: 's1' })).rejects.toThrow(APIError);
   await expect(errored({ id: 's1' })).rejects.toBe(routineError);
+});
+
+test('before hook keeps the rejecting error as the APIError cause', async () => {
+  const rejectError = new UserError('blocked');
+  const userHook = createUserBeforeHook({
+    dispatch: async () => ({ status: 'reject', error: rejectError }),
+    hook,
+  });
+  let thrown;
+  try {
+    await userHook({ name: 'A' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.cause).toBe(rejectError);
+});
+
+test('after hook keeps the rejecting error as the APIError cause', async () => {
+  const rejectError = new UserError('no');
+  const userHook = createUserAfterHook({
+    dispatch: async () => ({ status: 'reject', error: rejectError }),
+  });
+  let thrown;
+  try {
+    await userHook({ id: 's1' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.cause).toBe(rejectError);
 });

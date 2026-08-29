@@ -417,6 +417,7 @@ test('AuthStep step refuses an org-scoped step when the caller holds only the me
   const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
 
   expect(res.status).toBe('error');
+  expect(res.error.name).toBe('AuthorizationError');
   expect(res.error.message).toBe(
     'Auth step "run_step" refused - the caller does not hold member: [update] in organization "org_pinned".'
   );
@@ -616,6 +617,7 @@ test('AuthStep step refuses a targetUser step when the target holds no member ro
   });
 
   expect(res.status).toBe('error');
+  expect(res.error.name).toBe('AuthorizationError');
   expect(res.error.message).toBe(
     'Auth step "run_step" refused - user "user_outsider" is not a member of organization "org_pinned".'
   );

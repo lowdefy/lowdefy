@@ -72,7 +72,17 @@ function createWebSocketConnection(context, { registry, send }) {
       await handleFrame(frame);
     } catch (error) {
       logger.debug({ err: error }, error.message);
-      context.handleError(error);
+      // Authentication and authorization refusals are expected traffic - one
+      // warn line, no error log or Sentry report, but the client is still told.
+      if (
+        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
+          error.name
+        )
+      ) {
+        logger.warn({ event: 'ws_refused', frameType: frame.type }, error.message);
+      } else {
+        context.handleError(error);
+      }
       sendError({
         message: error.message,
         requestId: frame.requestId,

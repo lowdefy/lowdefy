@@ -37,7 +37,12 @@ function createUserBeforeHook({ dispatch, hook }) {
       return { data: result.response };
     }
     if (result.status === 'reject') {
-      throw new APIError('BAD_REQUEST', { message: result.error.message });
+      // Keep the rejecting UserError as the cause so the server-side trace still
+      // names the routine control that refused the write.
+      throw new APIError('BAD_REQUEST', {
+        cause: result.error,
+        message: result.error.message,
+      });
     }
     if (result.status === 'error') {
       throw result.error;

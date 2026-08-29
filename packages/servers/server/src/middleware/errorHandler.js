@@ -35,6 +35,16 @@ function createErrorHandler({ basePath = '', logger }) {
       }
       return c.text('Unauthorized', 401);
     }
+    // An authenticated caller whose roles do not permit the resource. Expected
+    // traffic, not a fault: one warning line, no structured error log and no
+    // Sentry capture.
+    if (error.name === 'AuthorizationError') {
+      logger.warn(`Forbidden: ${c.req.method} ${c.req.path}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 403);
+      }
+      return c.text('Forbidden', 403);
+    }
     // An authorized caller who has not enrolled a second factor under
     // auth.twoFactor.required. 403, not 401 - a 401 reads to the client as a dead
     // session and bounces the user to sign-in, which is the loop the gate exists to
@@ -49,12 +59,14 @@ function createErrorHandler({ basePath = '', logger }) {
     }
     const context = c.get('lowdefyContext');
     if (context) {
+      // context.handleError already captures to Sentry (createHandleError ->
+      // captureSentryError), so capturing here too would report the fault twice.
       await context.handleError(error);
     } else {
       logger.error(error);
-    }
-    if (process.env.SENTRY_DSN) {
-      Sentry.captureException(error);
+      if (process.env.SENTRY_DSN) {
+        Sentry.captureException(error);
+      }
     }
     if (path.startsWith('/api/')) {
       return c.json(redactErrorResponse(context, error), 500);

@@ -136,3 +136,20 @@ test('throws a ServiceError with service SMTP when send fails', async () => {
   expect(thrown.service).toBe('SMTP');
   expect(thrown.cause).toBe(sendError);
 });
+
+test('rethrows a non-service send failure unwrapped', async () => {
+  const context = makeContext();
+  getConnectionConfig.mockResolvedValueOnce({ properties: {} });
+  const sendError = new Error('Invalid login: 535 Authentication credentials invalid');
+  send.mockRejectedValueOnce(sendError);
+
+  const sendEmail = createSendEmail({ connectionId: 'email' });
+  let thrown;
+  try {
+    await sendEmail({ to: 'user@example.com', subject: 's', html: 'h', text: 't', context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBe(sendError);
+  expect(thrown).not.toBeInstanceOf(ServiceError);
+});

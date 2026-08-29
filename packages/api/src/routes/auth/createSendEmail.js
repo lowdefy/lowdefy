@@ -33,10 +33,15 @@ function createSendEmail({ connectionId }) {
     try {
       return await send({ connection, mail: { to, subject, html, text } });
     } catch (error) {
-      throw new ServiceError(undefined, {
-        cause: error,
-        service: 'SMTP',
-      });
+      // Only an unreachable or faulty SMTP host is a service outage - a rejected
+      // login or a refused recipient is the deployment's own configuration.
+      if (ServiceError.isServiceError(error)) {
+        throw new ServiceError(undefined, {
+          cause: error,
+          service: 'SMTP',
+        });
+      }
+      throw error;
     }
   };
 }

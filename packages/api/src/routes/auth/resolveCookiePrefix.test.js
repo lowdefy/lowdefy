@@ -36,9 +36,9 @@ test('falls back to appMeta.name in dev when slug is not set', () => {
 });
 
 test('prefers appMeta.slug over appMeta.name in dev', () => {
-  expect(
-    resolveCookiePrefix({ appMeta: { slug: 'the-slug', name: 'The Name' }, dev: true })
-  ).toBe('lowdefy-the-slug');
+  expect(resolveCookiePrefix({ appMeta: { slug: 'the-slug', name: 'The Name' }, dev: true })).toBe(
+    'lowdefy-the-slug'
+  );
 });
 
 test('slugifies non-alphanumeric characters in dev', () => {

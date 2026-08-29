@@ -16,7 +16,7 @@
 
 import {
   AuthenticationError,
-  ConfigError,
+  AuthorizationError,
   TwoFactorEnrolmentRequiredError,
 } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
@@ -46,7 +46,7 @@ function authorizeApiEndpoint({ authorizeOutcome: authorize, logger, user }, { e
         `Authentication required for API endpoint "${endpointConfig.endpointId}".`
       );
     }
-    throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
+    throw new AuthorizationError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }
   logger.debug({
     event: 'debug_api_authorize',

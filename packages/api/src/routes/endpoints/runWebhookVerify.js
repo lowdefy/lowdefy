@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { AuthenticationError } from '@lowdefy/errors';
+import { ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import callRequestResolver from '../request/callRequestResolver.js';
@@ -67,7 +67,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     // the unauthenticated webhook sender as an error body. Config errors
     // (tenant declared on a type without the contract) still throw: a
     // misconfigured verifier breaks loudly, per the contract above.
-    if (!(error instanceof AuthenticationError)) {
+    if (error.name !== 'AuthenticationError') {
       throw error;
     }
     context.logger.debug({ event: 'debug_webhook_verify_error', err: error }, error.message);
@@ -93,6 +93,11 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     });
     return response === true || (type.isObject(response) && response.verified === true);
   } catch (error) {
+    // An unreachable verification service is an outage, not a failed signature -
+    // swallowing it into a false verdict would report a forged webhook.
+    if (ServiceError.isServiceError(error) || error.name === 'ServiceError') {
+      throw error;
+    }
     context.logger.debug({ event: 'debug_webhook_verify_error', err: error }, error.message);
     return false;
   }

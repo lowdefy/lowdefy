@@ -16,7 +16,7 @@
 
 import {
   AuthenticationError,
-  ConfigError,
+  AuthorizationError,
   TwoFactorEnrolmentRequiredError,
 } from '@lowdefy/errors';
 
@@ -42,16 +42,16 @@ test('authorizeApiEndpoint throws AuthenticationError on deny when the caller is
   throw new Error('Expected AuthenticationError to be thrown');
 });
 
-test('authorizeApiEndpoint throws opaque ConfigError on deny when the caller is authenticated', () => {
+test('authorizeApiEndpoint throws opaque AuthorizationError on deny when the caller is authenticated', () => {
   const context = { authorizeOutcome: () => 'deny', logger, user: { sub: 'sub' } };
   try {
     authorizeApiEndpoint(context, { endpointConfig });
   } catch (e) {
-    expect(e).toBeInstanceOf(ConfigError);
+    expect(e).toBeInstanceOf(AuthorizationError);
     expect(e.message).toBe('API Endpoint "ep" does not exist.');
     return;
   }
-  throw new Error('Expected ConfigError to be thrown');
+  throw new Error('Expected AuthorizationError to be thrown');
 });
 
 test('authorizeApiEndpoint throws TwoFactorEnrolmentRequiredError on enrol_required, not AuthenticationError', () => {

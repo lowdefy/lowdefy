@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 function authNotConfigured() {
-  throw new Error('Auth not configured.');
+  throw new ConfigError(
+    'Auth is not configured. Add an "auth" section to lowdefy.yaml to use auth actions.'
+  );
 }
 
+// Every key AuthConfigured exposes must be present here, or an auth action in an
+// app without an auth section fails with "auth.x is not a function" instead of
+// the ConfigError that names the missing config.
 function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
@@ -26,10 +33,17 @@ function AuthNotConfigured({ authConfig, children }) {
     addPasskey: authNotConfigured,
     changePassword: authNotConfigured,
     deletePasskey: authNotConfigured,
-    updatePasskey: authNotConfigured,
     getResolvedUser: authNotConfigured,
     getSession: authNotConfigured,
     leaveOrganization: authNotConfigured,
+    listOrganizations: authNotConfigured,
+    oauth2Consent: authNotConfigured,
+    oauth2Continue: authNotConfigured,
+    phoneNumberRequestPasswordReset: authNotConfigured,
+    phoneNumberResetPassword: authNotConfigured,
+    phoneNumberSendOtp: authNotConfigured,
+    phoneNumberVerify: authNotConfigured,
+    refreshSession: authNotConfigured,
     requestPasswordReset: authNotConfigured,
     resetPassword: authNotConfigured,
     revokeOtherSessions: authNotConfigured,
@@ -38,14 +52,19 @@ function AuthNotConfigured({ authConfig, children }) {
     signInEmail: authNotConfigured,
     signInMagicLink: authNotConfigured,
     signInOauth2: authNotConfigured,
+    signInPasskey: authNotConfigured,
+    signInPhoneNumber: authNotConfigured,
     signInSocial: authNotConfigured,
     signOut: authNotConfigured,
     signUpEmail: authNotConfigured,
+    suppressSignOutReload: authNotConfigured,
     twoFactorDisable: authNotConfigured,
     twoFactorEnable: authNotConfigured,
     twoFactorGenerateBackupCodes: authNotConfigured,
     twoFactorVerifyBackupCode: authNotConfigured,
     twoFactorVerifyTotp: authNotConfigured,
+    updatePasskey: authNotConfigured,
+    updateResolvedUser: authNotConfigured,
   };
 
   return children(auth);

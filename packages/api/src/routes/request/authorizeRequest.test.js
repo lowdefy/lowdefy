@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
 
 import authorizeRequest from './authorizeRequest.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
@@ -39,17 +43,16 @@ test('authorizeRequest throws AuthenticationError on deny when the caller is una
   throw new Error('Expected AuthenticationError to be thrown');
 });
 
-test('authorizeRequest throws opaque ConfigError on deny when the caller is authenticated', () => {
+test('authorizeRequest throws opaque AuthorizationError on deny when the caller is authenticated', () => {
   const context = { authorizeOutcome: () => 'deny', logger, user: { sub: 'sub' } };
   try {
     authorizeRequest(context, { requestConfig });
   } catch (e) {
-    expect(e).toBeInstanceOf(ConfigError);
+    expect(e).toBeInstanceOf(AuthorizationError);
     expect(e.message).toBe('Request "req" does not exist.');
-    expect(e.configKey).toBe('requests[0].auth');
     return;
   }
-  throw new Error('Expected ConfigError to be thrown');
+  throw new Error('Expected AuthorizationError to be thrown');
 });
 
 test('authorizeRequest throws TwoFactorEnrolmentRequiredError on enrol_required, not AuthenticationError', () => {
