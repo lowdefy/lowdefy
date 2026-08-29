@@ -15,6 +15,7 @@
 */
 
 import { redactErrorResponse } from '@lowdefy/api';
+import { HTTPException } from 'hono/http-exception';
 
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them. API routes get the serialized error
@@ -54,6 +55,17 @@ function createErrorHandler({ basePath = '', logger }) {
         return c.json({ name: error.name, message: error.message }, 403);
       }
       return c.text('Two-factor enrolment required', 403);
+    }
+    // A route or transport that has already decided its own HTTP answer - hono's
+    // HTTPException carries the response to send. The MCP transport refuses an
+    // unsupported protocol-version header this way (a 404 with a JSON-RPC body
+    // that the client SDK falls back on to negotiate a version both sides
+    // know). Not a fault: send its response and log one warning line, no
+    // structured error log and no Sentry capture. Turning it into a 500 would
+    // hide the status the client acts on.
+    if (error instanceof HTTPException) {
+      logger.warn(`${error.status} answered by the route: ${c.req.method} ${c.req.path}`);
+      return error.getResponse();
     }
     const context = c.get('lowdefyContext');
     if (context) {
