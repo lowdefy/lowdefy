@@ -68,21 +68,32 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class            | Purpose                        | Thrown By                 | Stack in CLI      |
-| ---------------------- | ------------------------------ | ------------------------- | ----------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`          | Config validation errors       | Build validation          | No (use source)   |
-| `ConfigWarning`        | Config inconsistencies         | Build validation          | No (use source)   |
-| `BuildError`           | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
-| `PluginError`          | Base class (not used directly) | —                         | —                 |
-| `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
-| `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
-| `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
-| `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
-| `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
+| Error Class                       | Purpose                                                   | Thrown By                                                | Stack in CLI      |
+| --------------------------------- | --------------------------------------------------------- | -------------------------------------------------------- | ----------------- |
+| `LowdefyInternalError`            | Internal Lowdefy bugs                                     | Anywhere inside Lowdefy                                  | Yes (bugs)        |
+| `ConfigError`                     | Config validation errors                                  | Build validation                                         | No (use source)   |
+| `ConfigWarning`                   | Config inconsistencies                                    | Build validation                                         | No (use source)   |
+| `BuildError`                      | Summary after errors logged                               | `logCollectedErrors`                                     | No (summary)      |
+| `PluginError`                     | Base class (not used directly)                            | —                                                        | —                 |
+| `OperatorError`                   | Operator failures                                         | Operator parsers                                         | No (use received) |
+| `ActionError`                     | Action failures                                           | Action runner (engine)                                   | No (use received) |
+| `RequestError`                    | Request/connection failures                               | Request handler (API)                                    | No (use received) |
+| `BlockError`                      | Block rendering failures                                  | ErrorBoundary (client)                                   | No (use received) |
+| `ServiceError`                    | External service failures                                 | Plugin interface layer                                   | No (use service)  |
+| `AuthenticationError`             | Unauthenticated request (401)                             | API authorization gates                                  | No (warn line)    |
+| `AuthorizationError`              | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent gates                             | No (warn line)    |
+| `UserError`                       | Expected user-interaction outcome                         | Validate, Throw, `:throw`/`:reject`                      | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
+
+### Faults vs. expected outcomes
+
+Every error is one of two things, and the class says which:
+
+- **A fault** — something a developer (config) or Lowdefy (internal) or an operator (service) has to fix. `ConfigError`, `LowdefyInternalError`, `ServiceError` and the `PluginError` subclasses are faults. They are logged at error level, resolved to a config location where one exists, captured to Sentry, and a browser-originated one is POSTed to `/api/client-error` so the server can log it with its source line.
+- **An expected outcome** — the system worked and said no. `UserError` (validation failed, the author's `Throw`, a rejected sign-in), `AuthenticationError` (no credentials, 401), `AuthorizationError` (authenticated but wrong roles, 403 — the gate's message may stay deliberately generic so it does not reveal what exists) are expected. They still surface to the caller — the message displays, `catch:` actions run, the HTTP status is right — but they log as one warn line on the server or to the browser console only, never at error level, never to Sentry, never against a config location.
+
+The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 

@@ -57,6 +57,15 @@ test('VALID_CHECK_SLUGS exports valid check slugs', () => {
   expect(VALID_CHECK_SLUGS['schema']).toBeDefined();
 });
 
+test('VALID_CHECK_SLUGS includes every slug the build emits', () => {
+  expect(VALID_CHECK_SLUGS['connection-refs']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['callapi-refs']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['callapi-internal-refs']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['dynamic-endpoint-refs']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['websocket-refs']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['icons']).toBeDefined();
+});
+
 test('returns false for missing configKey', () => {
   expect(shouldSuppressBuildCheck({ configKey: null }, keyMap)).toBe(false);
   expect(shouldSuppressBuildCheck({ configKey: undefined }, keyMap)).toBe(false);
