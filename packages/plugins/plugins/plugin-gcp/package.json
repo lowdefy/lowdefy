@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "7.21.0",
+    "@lowdefy/errors": "5.5.1",
     "@lowdefy/helpers": "5.5.1"
   },
   "devDependencies": {

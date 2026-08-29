@@ -26,6 +26,11 @@ export const VALID_CHECK_SLUGS = {
   'link-refs': 'Invalid Link action page reference warnings',
   'request-refs': 'Invalid Request action reference warnings',
   'connection-refs': 'Nonexistent connection ID references',
+  'callapi-refs': 'Invalid CallAPI action endpoint reference warnings',
+  'callapi-internal-refs': 'CallAPI actions targeting InternalApi endpoints',
+  'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
+  'websocket-refs': 'Invalid websocket action reference warnings',
+  icons: 'Unresolvable icon name warnings',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
 };

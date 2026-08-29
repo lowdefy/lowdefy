@@ -15,6 +15,7 @@
 */
 
 import { resolveTarget, stopChain } from '@lowdefy/engine';
+import { ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import { createUrl } from '../adapters/url.js';
@@ -76,7 +77,7 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
   if (!type.isNone(home)) {
     return home;
   }
-  throw new Error(
+  throw new ConfigError(
     'Invalid callbackUrl: no destination resolved. The app has no resolvable home page - set homePageId, give an explicit callbackUrl, or use "callbackUrl: false" to stay on the page.'
   );
 }
@@ -91,7 +92,7 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
 // home default contradicts an explicit instruction.
 function assertCallbackUrlNavigable({ callbackUrl, method }) {
   if (callbackUrl === false) {
-    throw new Error(
+    throw new ConfigError(
       `Invalid callbackUrl: "false" is not valid for ${method}, which redirects through an external hop. Give a destination.`
     );
   }
@@ -112,15 +113,53 @@ function captchaFetchOptions(captchaToken) {
 
 // BetterAuth client calls resolve with { data, error } instead of throwing -
 // rethrow so action onError chains fire on failed sign-in attempts.
+//
+// A 4xx is the auth server rejecting the attempt: a wrong password, an expired
+// or already-used link, an invalid code, a stale OAuth authorization query.
+// That is an expected outcome of the user's interaction, not a fault in the
+// page config, so it is a UserError - the chain's catch actions still run and
+// the message still displays, but it logs to the browser console only instead
+// of being posted to /api/client-error and logged on the server as an
+// ActionError against the action's config location. Anything else (a network
+// failure, a 5xx) is thrown plain so the action runner wraps it as an
+// ActionError and reports it. The auth server's code and status ride along as
+// metaData so page config can branch on them.
 async function unwrap(promise) {
   const { data, error } = await promise;
   if (error) {
-    const authError = new Error(error.message ?? error.statusText ?? 'Authentication failed.');
+    const message = error.message ?? error.statusText ?? 'Authentication failed.';
+    if (type.isInt(error.status) && error.status >= 400 && error.status < 500) {
+      throw new UserError(message, { metaData: { code: error.code, status: error.status } });
+    }
+    const authError = new Error(message);
     authError.code = error.code;
     authError.status = error.status;
     throw authError;
   }
   return data;
+}
+
+// The BetterAuth passkey client runs the WebAuthn ceremony in the browser
+// itself, so it rejects with a DOMException when the user dismisses or aborts
+// the prompt, the authenticator is already enrolled, or the prompt times out.
+// Those are expected outcomes of the user's interaction, not config or system
+// faults, so they surface as UserError. Anything else propagates.
+const WEB_AUTHN_USER_ERROR_NAMES = new Set([
+  'AbortError',
+  'InvalidStateError',
+  'NotAllowedError',
+  'TimeoutError',
+]);
+
+async function runWebAuthnCeremony(promise) {
+  try {
+    return await promise;
+  } catch (error) {
+    if (WEB_AUTHN_USER_ERROR_NAMES.has(error?.name)) {
+      throw new UserError(error.message, { cause: error, metaData: { code: error.name } });
+    }
+    throw error;
+  }
 }
 
 function createAuthMethods(lowdefy, auth) {
@@ -276,7 +315,7 @@ function createAuthMethods(lowdefy, auth) {
       assertCallbackUrlNavigable({ callbackUrl, method: 'Login with a provider' });
       const provider = providers.find((configured) => configured.id === providerId);
       if (type.isNone(provider)) {
-        throw new Error(`Login provider "${providerId}" is not a configured auth provider.`);
+        throw new ConfigError(`Login provider "${providerId}" is not a configured auth provider.`);
       }
       if (provider.type === 'GenericOAuth') {
         return unwrap(
@@ -458,7 +497,7 @@ function createAuthMethods(lowdefy, auth) {
     const session = await unwrap(auth.getSession());
     const organizationId = session?.session?.activeOrganizationId;
     if (type.isNone(organizationId)) {
-      throw new Error('LeaveOrganization requires an active organization on the session.');
+      throw new UserError('LeaveOrganization requires an active organization on the session.');
     }
     return unwrap(auth.leaveOrganization({ organizationId }));
   }
@@ -538,7 +577,7 @@ function createAuthMethods(lowdefy, auth) {
   // itself - it fetches the registration options, prompts the authenticator
   // and verifies the result - so the ceremony runs inside the action.
   async function passkeyRegister(params = {}) {
-    return unwrap(auth.addPasskey(params));
+    return runWebAuthnCeremony(unwrap(auth.addPasskey(params)));
   }
 
   // Passkey sign-in: the BetterAuth client method runs the whole WebAuthn
@@ -549,7 +588,7 @@ function createAuthMethods(lowdefy, auth) {
   // two-factor challenge - so there is no twoFactorRedirect branch.
   async function passkeySignIn({ callbackUrl } = {}) {
     const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
-    const data = await unwrap(auth.signInPasskey());
+    const data = await runWebAuthnCeremony(unwrap(auth.signInPasskey()));
     const window = lowdefy._internal?.globals?.window;
     if (callbackTarget && window) {
       navigateToTarget(callbackTarget);

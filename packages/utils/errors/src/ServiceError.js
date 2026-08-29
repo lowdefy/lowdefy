@@ -84,7 +84,9 @@ class ServiceError extends Error {
     this.service = service;
     this.code = errorCode;
     this.statusCode = errorStatusCode;
-    this.configKey = configKey ?? null;
+    // Extract from the wrapped error like PluginError does, so a ServiceError
+    // wrapped around an error that already resolved its config location keeps it.
+    this.configKey = configKey ?? cause?.configKey ?? null;
   }
 
   /**
@@ -100,8 +102,15 @@ class ServiceError extends Error {
       return true;
     }
 
-    // Check HTTP status codes (5xx = server error)
-    const statusCode = error.statusCode ?? error.status ?? error.response?.status;
+    // Check HTTP status codes (5xx = server error). AWS SDK v3 errors carry the
+    // status on $metadata.httpStatusCode; @google-cloud errors carry the numeric
+    // HTTP status as `code`.
+    const statusCode =
+      error.statusCode ??
+      error.status ??
+      error.response?.status ??
+      error.$metadata?.httpStatusCode ??
+      (Number.isInteger(error.code) ? error.code : undefined);
     if (statusCode && statusCode >= 500 && statusCode < 600) {
       return true;
     }

@@ -18,6 +18,8 @@
 
 import {
   ActionError,
+  AuthenticationError,
+  AuthorizationError,
   BlockError,
   BuildError,
   ConfigError,
@@ -27,6 +29,7 @@ import {
   PluginError,
   RequestError,
   ServiceError,
+  TwoFactorEnrolmentRequiredError,
   UserError,
 } from '@lowdefy/errors';
 
@@ -36,6 +39,8 @@ import stableStringify from './stableStringify.js';
 
 const lowdefyErrorTypes = {
   ActionError,
+  AuthenticationError,
+  AuthorizationError,
   BlockError,
   BuildError,
   ConfigError,
@@ -45,6 +50,7 @@ const lowdefyErrorTypes = {
   PluginError,
   RequestError,
   ServiceError,
+  TwoFactorEnrolmentRequiredError,
   UserError,
 };
 

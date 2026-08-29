@@ -47,6 +47,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
+    "@lowdefy/errors": "5.5.1",
     "@lowdefy/helpers": "5.5.1",
     "better-auth": "1.7.0",
     "change-case": "5.4.0",
