@@ -117,6 +117,16 @@ async function handleAuthStep(context, routineContext, { step }) {
     );
   }
 
+  // A caller-scoped step acts only on rows the caller owns (their own MCP
+  // grant), so it needs no organization authority - but it has no meaning
+  // without a caller, and the system has no rows of its own to act on.
+  if (authority.scope === 'caller' && acting.system === true) {
+    throw new ConfigError(
+      `Auth step "${step.stepId}" acts on the caller's own records and cannot run as the system. Remove system: true, or run it from a caller's routine.`,
+      { configKey: step['~k'] }
+    );
+  }
+
   // Resolved for every org-scoped step, including the ones acting as the
   // system: the step is told which organization it writes in rather than
   // working it out again, so the organization the floor authorized and the
@@ -198,9 +208,13 @@ async function handleAuthStep(context, routineContext, { step }) {
   // organization is the retained organizations state ({ policy, pinned }) -
   // steps read policy for their own messages. organizationId is the resolved
   // target, which is what a step scopes its write to.
+  // mcp is the MCP route's token outcome (client, organization, scopes) for a
+  // caller that arrived over /api/mcp, null on every other surface - the
+  // caller-scoped grant steps read it to find the grant behind the call.
   const result = await stepFn({
     acting,
     auth: context.auth,
+    mcp: context.mcpAuth ?? null,
     organization: context.organization ?? null,
     organizationId,
     properties: evaluatedProperties,

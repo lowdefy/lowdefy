@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
-import { isWellFormedOrgSegment } from '@lowdefy/api';
-
-// Mounted ahead of the api context so a malformed org segment is refused
-// before any authentication or database work runs, and arbitrary path input
-// is never reflected into a resource URI.
-async function mcpOrgGuard(c, next) {
-  if (!isWellFormedOrgSegment(c.req.param('org'))) {
-    return c.json({ error: 'Not found.' }, 404);
-  }
-  return next();
-}
-
-export default mcpOrgGuard;
+export default {
+  type: 'object',
+  params: {
+    type: 'object',
+    description:
+      'Parameters for resuming the pending OAuth authorization after the post-login organization choice. The signed authorization query the page was redirected with is read from the page URL automatically, so the action must be called while the page still holds it. Run SetActiveOrganization for the chosen organization first.',
+    properties: {},
+  },
+};

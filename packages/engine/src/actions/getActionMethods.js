@@ -36,6 +36,7 @@ import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
 import createDisplayMessage from './createDisplayMessage.js';
 import createOauth2Consent from './createOauth2Consent.js';
+import createOauth2Continue from './createOauth2Continue.js';
 import createPasskeyDelete from './createPasskeyDelete.js';
 import createPasskeyRegister from './createPasskeyRegister.js';
 import createPasskeySignIn from './createPasskeySignIn.js';
@@ -88,6 +89,7 @@ function getActionMethods(props) {
     login: createLogin(props),
     logout: createLogout(props),
     oauth2Consent: createOauth2Consent(props),
+    oauth2Continue: createOauth2Continue(props),
     passkeyDelete: createPasskeyDelete(props),
     passkeyRegister: createPasskeyRegister(props),
     passkeySignIn: createPasskeySignIn(props),

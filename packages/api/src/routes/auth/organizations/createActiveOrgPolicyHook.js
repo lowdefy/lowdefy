@@ -17,7 +17,6 @@
 import { APIError } from 'better-auth/api';
 import { getOrgAdapter } from 'better-auth/plugins';
 
-import { ensureOauthResourceRow } from '../../mcp/oauthResourceLifecycle.js';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
@@ -170,10 +169,6 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
       organizationId: organization.id,
       role: 'owner',
     });
-    // The lazy mint writes through the adapter layer, so no organizationHooks
-    // fire - the org's MCP resource row is ensured here instead. Never throws
-    // into the session mint; a failure logs and the reconcile self-heals it.
-    await ensureOauthResourceRow({ auth, logger, organizationId: organization.id });
     return { data: { ...session, activeOrganizationId: organization.id } };
   }
 

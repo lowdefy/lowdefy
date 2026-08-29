@@ -495,6 +495,18 @@ function createAuthMethods(lowdefy, auth) {
     return unwrap(auth.oauth2Consent({ accept, ...params }));
   }
 
+  // Resumes the pending authorization after the post-login organization
+  // choice. Same contract as oauth2Consent: the signed query rides from
+  // window.location.search via the auth client's oauth-provider fetch plugin,
+  // and the session cookie carries the identity - so the page must call this
+  // before navigating, after SetActiveOrganization has recorded the chosen
+  // organization on the session. Resolves with { redirect: true, url } - the
+  // consent page, or the OAuth client's redirect URI when consent for that
+  // organization already stands.
+  async function oauth2Continue() {
+    return unwrap(auth.oauth2Continue({ postLogin: true }));
+  }
+
   async function changePassword({ currentPassword, newPassword, revokeOtherSessions } = {}) {
     if (!type.isString(currentPassword) || !type.isString(newPassword)) {
       throw new Error('ChangePassword requires "currentPassword" and "newPassword" params.');
@@ -725,6 +737,7 @@ function createAuthMethods(lowdefy, auth) {
     login,
     logout,
     oauth2Consent,
+    oauth2Continue,
     passkeyDelete,
     passkeyRegister,
     passkeySignIn,

@@ -20,7 +20,7 @@ import { type } from '@lowdefy/helpers';
 import authJson from '../../lib/build/auth.js';
 import mcpProtectedResourceMetadataHandler from './mcpProtectedResourceMetadata.js';
 
-// OAuth discovery for the per-org MCP resources. Both documents are public,
+// OAuth discovery for the MCP resource. Both documents are public,
 // unauthenticated and constant per deployment, so they mount outside the api
 // context. Nothing mounts when the app is not an authorization server - the
 // build then guaranteed an all-public tool surface with nothing to discover.
@@ -28,10 +28,7 @@ function mountOauthDiscovery({ app, auth }) {
   if (type.isNone(authJson.oauthProvider)) {
     return;
   }
-  app.get(
-    '/.well-known/oauth-protected-resource/api/mcp/:org',
-    mcpProtectedResourceMetadataHandler
-  );
+  app.get('/.well-known/oauth-protected-resource/api/mcp', mcpProtectedResourceMetadataHandler);
   // The auth instance is absent only in dev mock mode, which runs no auth
   // engine - the static resource document above still serves there.
   if (type.isNone(auth)) {

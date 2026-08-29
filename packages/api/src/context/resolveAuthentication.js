@@ -21,7 +21,7 @@ import { normalizeCaller, type } from '@lowdefy/helpers';
 
 import findPendingInvitation from '../routes/auth/organizations/findPendingInvitation.js';
 import { getRegisteredOrganization } from '../routes/auth/organizations/getOrganizationBinding.js';
-import { getAsIssuer, getMcpResourceUri, getMcpUriPrefix } from '../routes/mcp/getMcpUri.js';
+import { getAsIssuer, getMcpResourceUri } from '../routes/mcp/getMcpUri.js';
 import getMcpJwks from '../routes/mcp/getMcpJwks.js';
 import resolveStrategyCaller from './resolveStrategyCaller.js';
 
@@ -32,11 +32,11 @@ import resolveStrategyCaller from './resolveStrategyCaller.js';
 // re-admitted by an apiKey/jwt strategy carrying config-granted roles. API
 // strategies are tried, in config order, only when no session resolves.
 //
-// The third branch is the MCP bearer branch, gated on the resource option
-// only the /api/mcp/:org route passes - see resolveMcpCaller below. It is
-// disjoint the same way: an MCP request never resolves a session or a
-// strategy caller, and the general path refuses any bearer whose audience is
-// an MCP resource URI before the strategies run.
+// The third branch is the MCP bearer branch, gated on the mcp option only
+// the /api/mcp route passes - see resolveMcpCaller below. It is disjoint the
+// same way: an MCP request never resolves a session or a strategy caller, and
+// the general path refuses any bearer whose audience is the MCP resource URI
+// before the strategies run.
 //
 // The active member row is the hard membership wall and the role source in
 // one indexed read ({ userId, organizationId } on the member model), live on
@@ -193,7 +193,7 @@ function readBearerToken({ headers }) {
 // grantedScopes never carries a foreign scope string downstream.
 const MCP_SCOPES = ['mcp:read', 'mcp:write'];
 
-// An access token minted for an MCP resource must never re-enter the general
+// An access token minted for the MCP resource must never re-enter the general
 // /api/* surface as a strategy caller - even a jwt strategy misconfigured to
 // point at the app's own JWKS would otherwise accept it with the strategy's
 // config-granted roles. Tested on the decoded aud alone, unverified:
@@ -205,8 +205,8 @@ function hasMcpAudienceBearer({ context, headers }) {
   if (token === null) {
     return false;
   }
-  const uriPrefix = getMcpUriPrefix({ config: context.config });
-  if (uriPrefix === null) {
+  const resourceUri = getMcpResourceUri({ config: context.config });
+  if (resourceUri === null) {
     return false;
   }
   let aud;
@@ -216,31 +216,34 @@ function hasMcpAudienceBearer({ context, headers }) {
     return false;
   }
   const audiences = type.isArray(aud) ? aud : [aud];
-  const rejected = audiences.some((value) => type.isString(value) && value.startsWith(uriPrefix));
+  const rejected = audiences.some((value) => value === resourceUri);
   if (rejected) {
     context.logger.debug(
       { event: 'auth_mcp_audience_bearer_rejected' },
-      'Bearer token carrying an MCP resource audience rejected on the general API surface - resolved unauthenticated.'
+      'Bearer token carrying the MCP resource audience rejected on the general API surface - resolved unauthenticated.'
     );
   }
   return rejected;
 }
 
-// The MCP bearer branch. The org comes from the URL (under pinned that is the
-// slug), and this route accepts exactly one credential kind: an access token
-// this app's authorization server minted for this org's resource URI - a
-// session cookie or a strategy credential never authenticates here. The token
-// is verified in-process with jose against the AS's own signing keys; the
-// audience check is what binds the token to this org, so no org claim is
-// needed. context.mcpAuth records the token outcome for the route layer's
-// challenge decisions; context.user stays the only caller surface.
-async function resolveMcpCaller(context, { auth, headers, resource }) {
-  const orgId = resource.orgId;
+// The MCP bearer branch. The route accepts exactly one credential kind: an
+// access token this app's authorization server minted for the MCP resource -
+// a session cookie or a strategy credential never authenticates here. The
+// token is verified in-process with jose against the AS's own signing keys.
+// The organization the token acts in is its organization_id claim - the
+// consent referenceId the member chose at authorization, stamped by the AS
+// (buildOauthPostLogin) - never a path segment or a request parameter. The
+// claim alone is not enough: the consent row for (client, user, organization)
+// must still exist, so a grant the member gave up (RevokeMcpGrant, a consent
+// deleted in the app) stops working at once instead of at the token's expiry.
+// context.mcpAuth records the token outcome for the route layer's challenge
+// decisions; context.user stays the only caller surface.
+async function resolveMcpCaller(context, { auth, headers }) {
   const token = readBearerToken({ headers });
   if (token === null) {
     // The anonymous caller - public tools only, never a challenge here.
     context.user = null;
-    context.mcpAuth = { orgId, tokenStatus: 'none', parseableJwt: true };
+    context.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
     return;
   }
   let payload;
@@ -248,11 +251,12 @@ async function resolveMcpCaller(context, { auth, headers, resource }) {
     ({ payload } = await jwtVerify(token, getMcpJwks({ auth }), {
       issuer: getAsIssuer({ config: context.config }),
       // jose matches an array aud containing the value, so RFC 8707
-      // multi-resource grants verify against this org's canonical URI.
-      audience: getMcpResourceUri({ config: context.config, orgId }),
-      // A token without a subject cannot source a caller - rejected as
+      // multi-resource grants verify against the canonical resource URI.
+      audience: getMcpResourceUri({ config: context.config }),
+      // A token without a subject cannot source a caller, and one without an
+      // organization has nothing to be a member of - both are rejected as
       // invalid rather than half-resolved.
-      requiredClaims: ['sub'],
+      requiredClaims: ['sub', 'organization_id'],
     }));
   } catch (error) {
     let parseableJwt = true;
@@ -262,11 +266,51 @@ async function resolveMcpCaller(context, { auth, headers, resource }) {
       parseableJwt = false;
     }
     context.logger.debug(
-      { event: 'auth_mcp_token_rejected', err: error, orgId },
-      `MCP bearer token rejected for organization "${orgId}": ${error.message}`
+      { event: 'auth_mcp_token_rejected', err: error },
+      `MCP bearer token rejected: ${error.message}`
     );
     context.user = null;
-    context.mcpAuth = { orgId, tokenStatus: 'invalid', parseableJwt };
+    context.mcpAuth = { tokenStatus: 'invalid', parseableJwt };
+    return;
+  }
+  const organizationId = payload.organization_id;
+  // client_id and azp are both stamped by the AS on every access token it
+  // mints; azp is the fallback for a token minted before client_id was.
+  const clientId = payload.client_id ?? payload.azp;
+  if (!type.isString(organizationId) || !type.isString(clientId)) {
+    context.logger.debug(
+      { event: 'auth_mcp_token_rejected' },
+      'MCP bearer token rejected: organization_id or client_id claim is not a string.'
+    );
+    context.user = null;
+    context.mcpAuth = { tokenStatus: 'invalid', parseableJwt: true };
+    return;
+  }
+  const { adapter } = await auth.$context;
+  // The live grant. The AS keys consent per (client, user, organization) -
+  // the referenceId - so this one indexed read answers whether the grant the
+  // token was minted under still stands.
+  const consent = await adapter.findOne({
+    model: 'oauthConsent',
+    where: [
+      { field: 'clientId', value: clientId },
+      { field: 'userId', value: payload.sub },
+      { field: 'referenceId', value: organizationId },
+    ],
+  });
+  if (type.isNone(consent)) {
+    context.logger.debug(
+      { event: 'auth_mcp_grant_revoked', clientId, organizationId },
+      `MCP bearer token rejected: no consent stands for client "${clientId}" in organization "${organizationId}" - the grant was revoked.`
+    );
+    context.user = null;
+    context.mcpAuth = {
+      clientId,
+      organizationId,
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      revoked: true,
+    };
     return;
   }
   // The scope claim reduced to the closed MCP vocabulary. Recorded before the
@@ -275,19 +319,24 @@ async function resolveMcpCaller(context, { auth, headers, resource }) {
   const grantedScopes = (type.isString(payload.scope) ? payload.scope : '')
     .split(' ')
     .filter((scope) => MCP_SCOPES.includes(scope));
-  context.mcpAuth = { orgId, tokenStatus: 'valid', parseableJwt: true, grantedScopes };
+  context.mcpAuth = {
+    clientId,
+    organizationId,
+    tokenStatus: 'valid',
+    parseableJwt: true,
+    grantedScopes,
+  };
   // The same pinned wall the session branch applies: a pinned app serves one
-  // organization, so a token for any other resource URI - verifiable or not -
+  // organization, so a token referencing any other - verifiable or not -
   // never reaches the member read.
   const registered = getRegisteredOrganization({ auth });
-  if (registered?.policy === 'pinned' && orgId !== registered.slug) {
+  if (registered?.policy === 'pinned' && organizationId !== registered.slug) {
     context.logger.debug(
-      `MCP request for organization "${orgId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
+      `MCP token for organization "${organizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
     );
     context.user = null;
     return;
   }
-  const { adapter } = await auth.$context;
   // The bearer carries only sub - the caller's user fields are read live, so a
   // deleted user degrades to the anonymous caller exactly like a revoked member.
   const user = await adapter.findOne({
@@ -301,24 +350,22 @@ async function resolveMcpCaller(context, { auth, headers, resource }) {
     context.user = null;
     return;
   }
-  context.user = await resolveMemberCaller(context, {
-    adapter,
-    auth,
-    organizationId: orgId,
-    user,
-  });
+  const member = await resolveMemberCaller(context, { adapter, auth, organizationId, user });
+  // auth_method names the surface the caller arrived on, symmetric with
+  // strategy callers - app config reads it to label MCP-authored writes.
+  context.user = type.isNone(member) ? null : { ...member, auth_method: 'mcp' };
 }
 
-async function resolveAuthentication(context, { auth, headers, strategies, resource }) {
+async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {
   if (type.isNone(auth)) {
     context.user = null;
     return;
   }
-  // Only the /api/mcp/:org route passes resource - its callers authenticate
-  // by access token alone, so the session and strategy branches are skipped
-  // outright rather than tried and out-prioritized.
-  if (!type.isNone(resource)) {
-    await resolveMcpCaller(context, { auth, headers, resource });
+  // Only the /api/mcp route passes mcp - its callers authenticate by access
+  // token alone, so the session and strategy branches are skipped outright
+  // rather than tried and out-prioritized.
+  if (mcp === true) {
+    await resolveMcpCaller(context, { auth, headers });
     return;
   }
   const session = await auth.api.getSession({ headers });

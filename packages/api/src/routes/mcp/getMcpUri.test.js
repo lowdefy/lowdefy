@@ -14,13 +14,7 @@
   limitations under the License.
 */
 
-import {
-  getAsIssuer,
-  getMcpResourceMetadataUri,
-  getMcpResourceUri,
-  getMcpUriPrefix,
-  isWellFormedOrgSegment,
-} from './getMcpUri.js';
+import { getAsIssuer, getMcpResourceMetadataUri, getMcpResourceUri } from './getMcpUri.js';
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 
@@ -32,74 +26,53 @@ afterEach(() => {
   }
 });
 
-describe('getMcpUriPrefix', () => {
-  test('getMcpUriPrefix returns prefix without basePath', () => {
-    process.env.BETTER_AUTH_URL = 'https://app.example.com';
-    expect(getMcpUriPrefix({ config: {} })).toEqual('https://app.example.com/api/mcp/');
-  });
-
-  test('getMcpUriPrefix includes basePath and strips trailing slash on BETTER_AUTH_URL', () => {
-    process.env.BETTER_AUTH_URL = 'https://app.example.com/';
-    expect(getMcpUriPrefix({ config: { basePath: '/base' } })).toEqual(
-      'https://app.example.com/base/api/mcp/'
-    );
-  });
-
-  test('getMcpUriPrefix trims whitespace on BETTER_AUTH_URL', () => {
-    process.env.BETTER_AUTH_URL = '  https://app.example.com  ';
-    expect(getMcpUriPrefix({ config: {} })).toEqual('https://app.example.com/api/mcp/');
-  });
-
-  test('getMcpUriPrefix returns null when BETTER_AUTH_URL is unset', () => {
-    delete process.env.BETTER_AUTH_URL;
-    expect(getMcpUriPrefix({ config: {} })).toEqual(null);
-  });
-
-  test('getMcpUriPrefix returns null when BETTER_AUTH_URL is empty or whitespace', () => {
-    process.env.BETTER_AUTH_URL = '   ';
-    expect(getMcpUriPrefix({ config: {} })).toEqual(null);
-  });
-});
-
 describe('getMcpResourceUri', () => {
-  test('getMcpResourceUri appends orgId to the prefix', () => {
+  test('getMcpResourceUri returns the single resource without basePath', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
-    expect(getMcpResourceUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(
-      'https://app.example.com/api/mcp/org_8f2k1x'
+    expect(getMcpResourceUri({ config: {} })).toEqual('https://app.example.com/api/mcp');
+  });
+
+  test('getMcpResourceUri includes basePath and strips trailing slash on BETTER_AUTH_URL', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com/';
+    expect(getMcpResourceUri({ config: { basePath: '/base' } })).toEqual(
+      'https://app.example.com/base/api/mcp'
     );
   });
 
-  test('getMcpResourceUri includes basePath with trailing slash on BETTER_AUTH_URL', () => {
-    process.env.BETTER_AUTH_URL = 'https://app.example.com/';
-    expect(getMcpResourceUri({ config: { basePath: '/base' }, orgId: 'acme' })).toEqual(
-      'https://app.example.com/base/api/mcp/acme'
-    );
+  test('getMcpResourceUri trims whitespace on BETTER_AUTH_URL', () => {
+    process.env.BETTER_AUTH_URL = '  https://app.example.com  ';
+    expect(getMcpResourceUri({ config: {} })).toEqual('https://app.example.com/api/mcp');
   });
 
   test('getMcpResourceUri returns null when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
-    expect(getMcpResourceUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(null);
+    expect(getMcpResourceUri({ config: {} })).toEqual(null);
+  });
+
+  test('getMcpResourceUri returns null when BETTER_AUTH_URL is empty or whitespace', () => {
+    process.env.BETTER_AUTH_URL = '   ';
+    expect(getMcpResourceUri({ config: {} })).toEqual(null);
   });
 });
 
 describe('getMcpResourceMetadataUri', () => {
   test('getMcpResourceMetadataUri inserts the well-known segment ahead of the resource path', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
-    expect(getMcpResourceMetadataUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(
-      'https://app.example.com/.well-known/oauth-protected-resource/api/mcp/org_8f2k1x'
+    expect(getMcpResourceMetadataUri({ config: {} })).toEqual(
+      'https://app.example.com/.well-known/oauth-protected-resource/api/mcp'
     );
   });
 
   test('getMcpResourceMetadataUri places the well-known segment after the basePath', () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com/';
-    expect(getMcpResourceMetadataUri({ config: { basePath: '/base' }, orgId: 'acme' })).toEqual(
-      'https://app.example.com/base/.well-known/oauth-protected-resource/api/mcp/acme'
+    expect(getMcpResourceMetadataUri({ config: { basePath: '/base' } })).toEqual(
+      'https://app.example.com/base/.well-known/oauth-protected-resource/api/mcp'
     );
   });
 
   test('getMcpResourceMetadataUri returns null when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
-    expect(getMcpResourceMetadataUri({ config: {}, orgId: 'org_8f2k1x' })).toEqual(null);
+    expect(getMcpResourceMetadataUri({ config: {} })).toEqual(null);
   });
 });
 
@@ -119,48 +92,5 @@ describe('getAsIssuer', () => {
   test('getAsIssuer returns null when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
     expect(getAsIssuer({ config: {} })).toEqual(null);
-  });
-});
-
-describe('isWellFormedOrgSegment', () => {
-  test('isWellFormedOrgSegment accepts a BetterAuth generated org id', () => {
-    expect(isWellFormedOrgSegment('vXk9qLmT2sHwZ8fRAnB1c4dE7gYjKpQu')).toEqual(true);
-  });
-
-  test('isWellFormedOrgSegment accepts a pinned-policy slug', () => {
-    expect(isWellFormedOrgSegment('acme-corp')).toEqual(true);
-    expect(isWellFormedOrgSegment('org_8f2k1x')).toEqual(true);
-  });
-
-  test('isWellFormedOrgSegment rejects the empty string', () => {
-    expect(isWellFormedOrgSegment('')).toEqual(false);
-  });
-
-  test('isWellFormedOrgSegment rejects segments longer than 64 characters', () => {
-    expect(isWellFormedOrgSegment('a'.repeat(64))).toEqual(true);
-    expect(isWellFormedOrgSegment('a'.repeat(65))).toEqual(false);
-  });
-
-  test('isWellFormedOrgSegment rejects path separators and dots', () => {
-    expect(isWellFormedOrgSegment('a/b')).toEqual(false);
-    expect(isWellFormedOrgSegment('a.b')).toEqual(false);
-    expect(isWellFormedOrgSegment('..')).toEqual(false);
-  });
-
-  test('isWellFormedOrgSegment rejects percent-encoding', () => {
-    expect(isWellFormedOrgSegment('%2e')).toEqual(false);
-    expect(isWellFormedOrgSegment('a%2fb')).toEqual(false);
-  });
-
-  test('isWellFormedOrgSegment rejects whitespace and unicode', () => {
-    expect(isWellFormedOrgSegment('a b')).toEqual(false);
-    expect(isWellFormedOrgSegment('örg')).toEqual(false);
-    expect(isWellFormedOrgSegment('org\u200b')).toEqual(false);
-  });
-
-  test('isWellFormedOrgSegment rejects non-string input', () => {
-    expect(isWellFormedOrgSegment(undefined)).toEqual(false);
-    expect(isWellFormedOrgSegment(null)).toEqual(false);
-    expect(isWellFormedOrgSegment(42)).toEqual(false);
   });
 });

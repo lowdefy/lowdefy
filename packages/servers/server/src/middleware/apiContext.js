@@ -17,8 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
-  isWellFormedOrgSegment,
-  reconcileOauthResources,
+  ensureMcpOauthResource,
   resolveAuthentication,
   resolvePinnedOrganization,
   resolveTenantPreflight,
@@ -63,22 +62,11 @@ function getRequestId(c) {
   return uuid();
 }
 
-// The per-org MCP route authenticates by access token alone - the resource
-// option switches resolveAuthentication onto its bearer branch, so it is
-// derived only for MCP paths. Every other path yields undefined and
-// authentication behaves as before. The route guard has already 404'd
-// malformed segments before this runs.
-function getMcpResource(path) {
-  const marker = '/api/mcp/';
-  const markerIndex = path.indexOf(marker);
-  if (markerIndex === -1) {
-    return undefined;
-  }
-  const orgId = path.slice(markerIndex + marker.length);
-  if (!isWellFormedOrgSegment(orgId)) {
-    return undefined;
-  }
-  return { orgId };
+// The MCP route authenticates by access token alone - the mcp option switches
+// resolveAuthentication onto its bearer branch, so it is set only for the MCP
+// path. Every other path leaves it false and authentication behaves as before.
+function isMcpPath(path) {
+  return path.endsWith('/api/mcp');
 }
 
 // Replaces lib/server/apiWrapper.js. Builds the request context consumed by
@@ -135,18 +123,18 @@ function apiContext() {
     // otherwise race the startup pinned-org ensure - await the memoized
     // resolve so createApiContext reads a retained binding.
     await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
-    // One insert-missing pass over pre-existing organizations per process so
-    // every org's MCP endpoint is a valid token audience - memoized like the
-    // pinned resolve above; a failure retries on the next request. No-op when
-    // the app is not an authorization server.
-    await reconcileOauthResources({ auth: context.auth, logger: context.logger });
+    // The one oauthResource row the MCP token audience validates against -
+    // ensured once per process, memoized like the pinned resolve above; a
+    // failure retries on the next request. No-op when the app is not an
+    // authorization server.
+    await ensureMcpOauthResource({ auth: context.auth, logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
       // resolveAuthentication is the single writer of context.user.
       await resolveAuthentication(context, {
         auth: context.auth,
         headers: c.req.raw.headers,
         strategies: getStrategies({ logger: context.logger }),
-        resource: getMcpResource(c.req.path),
+        mcp: isMcpPath(c.req.path),
       });
       // Set Sentry user context for authenticated requests
       setSentryUser({

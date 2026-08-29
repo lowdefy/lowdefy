@@ -77,6 +77,12 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
+    oauth2Continue: jest.fn(() =>
+      Promise.resolve({
+        data: { redirect: true, url: 'https://app.example.com/oauth-consent?client_id=abc' },
+        error: null,
+      })
+    ),
     phoneNumberRequestPasswordReset: jest.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
     ),
@@ -585,6 +591,17 @@ test('oauth2Consent accepts and returns the authorization redirect', async () =>
   expect(data).toEqual({
     redirect: true,
     url: 'https://client.example.com/callback?code=auth-code',
+  });
+});
+
+test('oauth2Continue confirms the post-login choice and returns the next redirect', async () => {
+  const { auth, lowdefy } = setup();
+  const { oauth2Continue } = createAuthMethods(lowdefy, auth);
+  const data = await oauth2Continue();
+  expect(auth.oauth2Continue.mock.calls).toEqual([[{ postLogin: true }]]);
+  expect(data).toEqual({
+    redirect: true,
+    url: 'https://app.example.com/oauth-consent?client_id=abc',
   });
 });
 

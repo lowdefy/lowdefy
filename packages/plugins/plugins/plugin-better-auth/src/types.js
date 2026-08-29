@@ -66,6 +66,7 @@ export default {
     'ListUsers',
     'RemoveMember',
     'ResetUserTwoFactor',
+    'RevokeMcpGrant',
     'RevokeUserPasskeys',
     'RevokeUserSessions',
     'UnbanUser',

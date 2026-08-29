@@ -29,10 +29,7 @@ const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 
 function createApp() {
   const app = new Hono();
-  app.get(
-    '/.well-known/oauth-protected-resource/api/mcp/:org',
-    mcpProtectedResourceMetadataHandler
-  );
+  app.get('/.well-known/oauth-protected-resource/api/mcp', mcpProtectedResourceMetadataHandler);
   return app;
 }
 
@@ -48,32 +45,21 @@ afterAll(() => {
   }
 });
 
-test('metadata handler serves the static template for an org', async () => {
-  const res = await createApp().request('/.well-known/oauth-protected-resource/api/mcp/org_1');
+test('metadata handler serves the single MCP resource document', async () => {
+  const res = await createApp().request('/.well-known/oauth-protected-resource/api/mcp');
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({
-    resource: 'https://app.test.com/api/mcp/org_1',
+    resource: 'https://app.test.com/api/mcp',
     authorization_servers: ['https://app.test.com/api/auth'],
     scopes_supported: ['mcp:read', 'mcp:write', 'offline_access'],
     bearer_methods_supported: ['header'],
   });
 });
 
-test('metadata handler serves the same-shaped document for a fabricated org id', async () => {
-  const app = createApp();
-  const realRes = await app.request('/.well-known/oauth-protected-resource/api/mcp/org_1');
-  const fakeRes = await app.request('/.well-known/oauth-protected-resource/api/mcp/no_such_org');
-  expect(fakeRes.status).toEqual(200);
-  const real = await realRes.json();
-  const fake = await fakeRes.json();
-  expect(fake).toEqual({
-    ...real,
-    resource: 'https://app.test.com/api/mcp/no_such_org',
-  });
-});
-
-test('metadata handler returns 404 for a malformed org segment', async () => {
-  const res = await createApp().request('/.well-known/oauth-protected-resource/api/mcp/a%20b');
-  expect(res.status).toEqual(404);
-  expect(await res.json()).toEqual({ error: 'Not found.' });
+test('metadata handler derives the resource from BETTER_AUTH_URL, never the request host', async () => {
+  const res = await createApp().request(
+    'http://evil.example.com/.well-known/oauth-protected-resource/api/mcp'
+  );
+  expect(res.status).toEqual(200);
+  expect((await res.json()).resource).toEqual('https://app.test.com/api/mcp');
 });

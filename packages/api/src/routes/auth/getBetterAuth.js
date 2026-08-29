@@ -18,7 +18,7 @@ import { betterAuth } from 'better-auth';
 
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
-import { getMcpUriPrefix } from '../mcp/getMcpUri.js';
+import { getMcpResourceUri } from '../mcp/getMcpUri.js';
 import { registerAuthEnforcement } from './getAuthEnforcement.js';
 import { registerMcpResourceBinding } from '../mcp/getMcpResourceBinding.js';
 import { registerOrganizationBinding } from './organizations/getOrganizationBinding.js';
@@ -70,12 +70,12 @@ function getBetterAuth({
     });
   }
 
-  // Retain the MCP resource URI prefix per instance - the /api/mcp/:org
-  // bearer-token guard reads it to test token audiences against the
-  // deployment's canonical prefix. getBetterAuthConfig has already failed
-  // startup when BETTER_AUTH_URL is unset, so the prefix resolves here.
+  // Retain the MCP resource URI per instance - the /api/mcp bearer-token
+  // guard reads it as the audience a token must carry, and the resource-row
+  // ensure reads it as the row identifier. getBetterAuthConfig has already
+  // failed startup when BETTER_AUTH_URL is unset, so the URI resolves here.
   if (authJson.oauthProvider) {
-    registerMcpResourceBinding({ auth: instance, uriPrefix: getMcpUriPrefix({ config }) });
+    registerMcpResourceBinding({ auth: instance, resourceUri: getMcpResourceUri({ config }) });
   }
 
   // Ensure the pinned organization exists at startup - created if missing,

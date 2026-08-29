@@ -28,6 +28,7 @@ const authorities = {
   ListMembers: { scope: 'org', permissions: { member: ['list'] } },
   ListUsers: { scope: 'system' },
   RemoveMember: { scope: 'org', permissions: { member: ['delete'] } },
+  RevokeMcpGrant: { scope: 'caller' },
   ResetUserTwoFactor: {
     scope: 'org',
     permissions: { user: ['reset-two-factor'] },
@@ -70,7 +71,7 @@ test.each(stepNames)('%s declares exactly the authority the map gives it', (step
 test.each(stepNames)('%s declares an authority the floor can read', (stepName) => {
   const authority = steps[stepName].meta.authority;
   expect(typeof authority).toBe('object');
-  expect(['org', 'system']).toContain(authority.scope);
+  expect(['caller', 'org', 'system']).toContain(authority.scope);
   if (authority.scope === 'org') {
     expect(Object.keys(authority.permissions).length).toBeGreaterThan(0);
     Object.values(authority.permissions).forEach((actions) => {
@@ -79,8 +80,9 @@ test.each(stepNames)('%s declares an authority the floor can read', (stepName) =
     });
     return;
   }
-  // A system step is authorized by being caller-less, so a permission on it
-  // would be a permission nothing ever checks.
+  // A system step is authorized by being caller-less, and a caller step acts
+  // only on the caller's own rows - a permission on either would be a
+  // permission nothing ever checks.
   expect(authority.permissions).toBeUndefined();
 });
 
