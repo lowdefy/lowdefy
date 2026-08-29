@@ -33,11 +33,7 @@ async function UpdateUserAttributes({ auth, properties }) {
     throw new Error('UpdateUserAttributes requires a "userId" property.');
   }
   if (!type.isObject(attributes)) {
-    throw new Error(
-      `UpdateUserAttributes requires an "attributes" object. Received ${JSON.stringify(
-        attributes
-      )}.`
-    );
+    throw new Error('UpdateUserAttributes requires an "attributes" object.');
   }
   const { adapter } = await auth.$context;
   const user = await adapter.update({

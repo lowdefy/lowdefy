@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import getCollection from '../getCollection.js';
 import injectTenantIntoPipeline from '../tenant/injectTenantIntoPipeline.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -23,7 +25,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   if (connection.write !== true) {
     pipeline.forEach((stage) => {
       if (stage.$out != null || stage.$merge != null) {
-        throw new Error(
+        throw new ConfigError(
           'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
         );
       }

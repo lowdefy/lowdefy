@@ -30,11 +30,7 @@ async function UpdateMemberAttributes({ auth, organizationId, properties }) {
     throw new Error('UpdateMemberAttributes requires a "memberId" property.');
   }
   if (!type.isObject(attributes)) {
-    throw new Error(
-      `UpdateMemberAttributes requires an "attributes" object. Received ${JSON.stringify(
-        attributes
-      )}.`
-    );
+    throw new Error('UpdateMemberAttributes requires an "attributes" object.');
   }
   const { adapter } = await auth.$context;
   const member = await adapter.update({

@@ -129,9 +129,7 @@ test('UpdateMemberOrgRole throws when orgRole property is missing', async () => 
   const { auth } = createMockAuth();
   await expect(
     UpdateMemberOrgRole({ acting, auth, organizationId, properties: { memberId: 'member-1' } })
-  ).rejects.toThrow(
-    'UpdateMemberOrgRole requires an "orgRole" string property. Received undefined.'
-  );
+  ).rejects.toThrow('UpdateMemberOrgRole requires an "orgRole" string property.');
 });
 
 test('UpdateMemberOrgRole throws naming the value when orgRole is not a string', async () => {
@@ -143,9 +141,7 @@ test('UpdateMemberOrgRole throws naming the value when orgRole is not a string',
       organizationId,
       properties: { memberId: 'member-1', orgRole: ['admin'] },
     })
-  ).rejects.toThrow(
-    'UpdateMemberOrgRole requires an "orgRole" string property. Received ["admin"].'
-  );
+  ).rejects.toThrow('UpdateMemberOrgRole requires an "orgRole" string property.');
 });
 
 test('UpdateMemberOrgRole surfaces the endpoint rejection of an unregistered role name', async () => {

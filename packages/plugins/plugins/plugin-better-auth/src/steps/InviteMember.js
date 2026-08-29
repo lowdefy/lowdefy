@@ -36,27 +36,19 @@ async function InviteMember({ acting, auth, organizationId, properties }) {
   // roles. Absent is fine - an invitation carrying no app roles is legitimate
   // and common.
   if (!type.isNone(appRoles) && !type.isArray(appRoles)) {
-    throw new Error(
-      `InviteMember "appRoles" is not an array. Received ${JSON.stringify(appRoles)}.`
-    );
+    throw new Error('InviteMember "appRoles" is not an array.');
   }
   if (!type.isNone(orgRole) && !type.isString(orgRole)) {
-    throw new Error(`InviteMember "orgRole" is not a string. Received ${JSON.stringify(orgRole)}.`);
+    throw new Error('InviteMember "orgRole" is not a string.');
   }
   if (!type.isNone(attributes) && !type.isObject(attributes)) {
-    throw new Error(
-      `InviteMember "attributes" is not an object. Received ${JSON.stringify(attributes)}.`
-    );
+    throw new Error('InviteMember "attributes" is not an object.');
   }
   if (!type.isNone(profile) && !type.isObject(profile)) {
-    throw new Error(
-      `InviteMember "profile" is not an object. Received ${JSON.stringify(profile)}.`
-    );
+    throw new Error('InviteMember "profile" is not an object.');
   }
   if (!type.isNone(contactId) && !type.isString(contactId)) {
-    throw new Error(
-      `InviteMember "contactId" is not a string. Received ${JSON.stringify(contactId)}.`
-    );
+    throw new Error('InviteMember "contactId" is not a string.');
   }
   // An omitted orgRole must still send something: createInvitation's body
   // schema declares role as required, so undefined fails the zod body, and ''

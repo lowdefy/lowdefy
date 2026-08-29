@@ -70,5 +70,5 @@ test('UpdateMemberAttributes throws when attributes is not a plain object', asyn
       organizationId,
       properties: { memberId: 'member-1', attributes: null },
     })
-  ).rejects.toThrow('UpdateMemberAttributes requires an "attributes" object. Received null.');
+  ).rejects.toThrow('UpdateMemberAttributes requires an "attributes" object.');
 });

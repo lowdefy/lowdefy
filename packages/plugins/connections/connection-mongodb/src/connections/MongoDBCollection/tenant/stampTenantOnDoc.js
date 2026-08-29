@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
 // The server owns the tenant field on every written document: authored values
@@ -24,7 +26,7 @@ function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
   if (tenant.authored === true) {
     // See applyTenantToFilter - the shared refusal of the authored sentinel
     // on non-aggregation operations.
-    throw new Error(
+    throw new ConfigError(
       '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this request mechanically. Remove "tenant: authored".'
     );
   }

@@ -65,7 +65,13 @@ test('handleGenerateObject calls generateText with an Output.object spec and ret
   });
   expect(mockGenerateText).toHaveBeenCalledWith({
     model,
-    output: { outputSpec: { schema: { wrapped: schema }, name: 'ticket_classification', description: 'A support ticket classification.' } },
+    output: {
+      outputSpec: {
+        schema: { wrapped: schema },
+        name: 'ticket_classification',
+        description: 'A support ticket classification.',
+      },
+    },
     prompt: 'Classify this ticket.',
   });
   expect(result).toEqual({

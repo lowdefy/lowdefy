@@ -15,6 +15,7 @@
 */
 
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createS3Client from '../createS3Client.js';
@@ -38,7 +39,7 @@ async function AwsS3PresignedPostPolicy({ request, connection }) {
     params.Fields.acl = acl;
   }
   if (type.isObject(fields) === false) {
-    throw new Error(`properties.fields must be an object. Received ${JSON.stringify(fields)}.`);
+    throw new ConfigError('AwsS3PresignedPostPolicy request "fields" must be an object.');
   }
   Object.keys(fields).forEach((field) => {
     if (fields[field]) {

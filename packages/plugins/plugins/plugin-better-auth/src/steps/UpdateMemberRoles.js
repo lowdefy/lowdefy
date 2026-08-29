@@ -46,9 +46,7 @@ async function UpdateMemberRoles({ auth, organizationId, properties }) {
   // in the one place an author reads about roles. An empty array is valid - it
   // clears the member's app roles.
   if (!type.isArray(appRoles)) {
-    throw new Error(
-      `UpdateMemberRoles requires an "appRoles" array. Received ${JSON.stringify(appRoles)}.`
-    );
+    throw new Error('UpdateMemberRoles requires an "appRoles" array.');
   }
   const { adapter } = await auth.$context;
   const member = await adapter.update({

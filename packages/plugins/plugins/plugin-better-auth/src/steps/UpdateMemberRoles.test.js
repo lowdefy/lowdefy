@@ -110,7 +110,7 @@ test('UpdateMemberRoles throws when appRoles property is missing', async () => {
   const { auth } = createMockAuth();
   await expect(
     UpdateMemberRoles({ auth, organizationId, properties: { memberId: 'member-1' } })
-  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array. Received undefined.');
+  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array.');
 });
 
 test('UpdateMemberRoles throws when appRoles is a comma-separated string', async () => {
@@ -121,5 +121,5 @@ test('UpdateMemberRoles throws when appRoles is a comma-separated string', async
       organizationId,
       properties: { memberId: 'member-1', appRoles: 'a,b' },
     })
-  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array. Received "a,b".');
+  ).rejects.toThrow('UpdateMemberRoles requires an "appRoles" array.');
 });

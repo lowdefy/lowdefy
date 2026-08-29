@@ -54,7 +54,7 @@ test('UpdateUserAttributes throws when attributes is not a plain object', async 
   const { auth } = createMockAuth();
   await expect(
     UpdateUserAttributes({ auth, properties: { userId: 'user-2', attributes: 'pro' } })
-  ).rejects.toThrow('UpdateUserAttributes requires an "attributes" object. Received "pro".');
+  ).rejects.toThrow('UpdateUserAttributes requires an "attributes" object.');
   await expect(
     UpdateUserAttributes({ auth, properties: { userId: 'user-2', attributes: ['pro'] } })
   ).rejects.toThrow('UpdateUserAttributes requires an "attributes" object.');

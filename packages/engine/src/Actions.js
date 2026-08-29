@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
+import { ActionError, ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isStopChain } from './stopChain.js';
@@ -49,8 +49,9 @@ class Actions {
     }
     this.loggedActionErrors.add(errorKey);
 
-    // User-facing errors log to browser console only, never to terminal
-    if (error instanceof UserError) {
+    // User-facing errors log to browser console only, never to terminal.
+    // Matched by name, not instanceof: plugins bundle their own @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
       this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
@@ -436,15 +437,23 @@ class Actions {
         progress();
       }
     } catch (err) {
-      const error = err.isLowdefyError
-        ? err
-        : new ActionError(err.message, {
-            cause: err,
-            typeName: action.type,
-            received: parsedAction.params,
-            location: block.blockId,
-            configKey: action['~k'],
-          });
+      let error;
+      if (err.isLowdefyError) {
+        error = err;
+        // Plugins may throw ConfigError or UserError without a location - the interface
+        // layer owns location resolution.
+        if (type.isNone(error.configKey)) {
+          error.configKey = action['~k'];
+        }
+      } else {
+        error = new ActionError(err.message, {
+          cause: err,
+          typeName: action.type,
+          received: parsedAction.params,
+          location: block.blockId,
+          configKey: action['~k'],
+        });
+      }
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({

@@ -174,7 +174,7 @@ test('convertWhereClause throws on unsupported operators', () => {
       model: 'member',
       where: [{ field: 'role', value: 'admin', operator: 'like' }],
     })
-  ).toThrow('MongoDB auth adapter received an unsupported where operator. Received "like".');
+  ).toThrow('MongoDB auth adapter received an unsupported where operator.');
 });
 
 test('serializeId throws on non-string non-id values for id fields', () => {
@@ -185,7 +185,7 @@ test('serializeId throws on non-string non-id values for id fields', () => {
     useUUIDs: false,
   });
   expect(() => serializeId({ field: '_id', model: 'member', value: 42 })).toThrow(
-    'MongoDB auth adapter received an invalid id value. Received 42.'
+    'MongoDB auth adapter received an invalid id value.'
   );
 });
 

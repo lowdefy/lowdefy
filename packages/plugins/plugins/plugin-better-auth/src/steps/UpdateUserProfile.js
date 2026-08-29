@@ -48,22 +48,16 @@ async function UpdateUserProfile({ auth, organizationId, properties }) {
     throw new Error('UpdateUserProfile requires a "userId" property.');
   }
   if (!type.isNone(profile) && !type.isObject(profile)) {
-    throw new Error(
-      `UpdateUserProfile "profile" is not an object. Received ${JSON.stringify(profile)}.`
-    );
+    throw new Error('UpdateUserProfile "profile" is not an object.');
   }
   if (!type.isNone(name) && !type.isString(name)) {
-    throw new Error(`UpdateUserProfile "name" is not a string. Received ${JSON.stringify(name)}.`);
+    throw new Error('UpdateUserProfile "name" is not a string.');
   }
   if (!type.isNone(image) && !type.isString(image)) {
-    throw new Error(
-      `UpdateUserProfile "image" is not a string. Received ${JSON.stringify(image)}.`
-    );
+    throw new Error('UpdateUserProfile "image" is not a string.');
   }
   if (!type.isNone(contactId) && !type.isString(contactId)) {
-    throw new Error(
-      `UpdateUserProfile "contactId" is not a string. Received ${JSON.stringify(contactId)}.`
-    );
+    throw new Error('UpdateUserProfile "contactId" is not a string.');
   }
   if (type.isNone(profile) && type.isNone(contactId) && type.isNone(name) && type.isNone(image)) {
     throw new Error(

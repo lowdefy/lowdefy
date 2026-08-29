@@ -17,7 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ActionError, OperatorError } from '@lowdefy/errors';
+import { ActionError, ConfigError, OperatorError, UserError } from '@lowdefy/errors';
 
 import stopChain from '../src/stopChain.js';
 import testContext from './testContext.js';
@@ -1654,4 +1654,88 @@ test('call 2 actions, first with async: null', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+});
+
+test('a plugin ConfigError without a configKey is located at the action config key', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  actions.ActionConfigError = jest.fn(() => {
+    throw new ConfigError('Action config is wrong.');
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionConfigError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error.configKey).toBe('action_key');
+});
+
+test('a plugin ConfigError that carries its own configKey keeps it', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  actions.ActionConfigError = jest.fn(() => {
+    throw new ConfigError('Action config is wrong.', { configKey: 'own_key' });
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionConfigError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.error.error.configKey).toBe('own_key');
+});
+
+test('a UserError logs to the browser console only, never through handleError', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const handleError = jest.fn();
+  const loggerError = jest.fn();
+  const actions = getActions();
+  actions.ActionUserError = jest.fn(() => {
+    throw new UserError('Not allowed.');
+  });
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  context._internal.lowdefy._internal.handleError = handleError;
+  context._internal.lowdefy._internal.logger = { error: loggerError };
+  const Actions = context._internal.Actions;
+  await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionUserError', params: {}, '~k': 'action_key' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(loggerError).toHaveBeenCalled();
+  expect(handleError).not.toHaveBeenCalled();
 });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { get, type } from '@lowdefy/helpers';
 
 // The curated catalog of readable projection paths. Extending it is a
@@ -48,12 +49,12 @@ function _authConfig({ authConfig, params }) {
     // in app metadata (app:), which resolves earlier and is never re-walked.
     // Walks whose output IS re-walked post-projection (module entry vars,
     // deferred-record bodies) defer the fold instead of reaching this throw.
-    throw new Error(
+    throw new ConfigError(
       "_build.authConfig is not available here. The auth config projection is computed from the app's auth: block, so the operator can not resolve inside that block itself (a self-reference), nor in app metadata (app:), which resolves earlier."
     );
   }
   if (!readablePaths.includes(params)) {
-    throw new Error(
+    throw new ConfigError(
       `_build.authConfig received an unreadable path ${JSON.stringify(
         params
       )}. Readable paths are: ${readablePaths.map((path) => `"${path}"`).join(', ')}.`

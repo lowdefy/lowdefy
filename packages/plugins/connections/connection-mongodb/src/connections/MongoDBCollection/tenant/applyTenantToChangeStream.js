@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
 // A change stream is a read on a separate execution path and is scoped like
@@ -29,7 +31,7 @@ function applyTenantToChangeStream({ pipeline, tenant }) {
     // Change-stream pipelines never carry the first-stage-only stages the
     // authored sentinel exists for - refuse it here (build also rejects it
     // on websockets).
-    throw new Error(
+    throw new ConfigError(
       '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this change stream mechanically. Remove "tenant: authored".'
     );
   }

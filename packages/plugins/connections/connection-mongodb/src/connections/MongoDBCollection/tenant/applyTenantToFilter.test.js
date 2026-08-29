@@ -56,6 +56,12 @@ test('throws when the tenant field is authored at the top level', () => {
   );
 });
 
+test('an authored tenant field is refused as a ConfigError so the location resolves to the YAML', () => {
+  expect(() => applyTenantToFilter({ filter: { organization_id: 'org_b' }, tenant })).toThrow(
+    expect.objectContaining({ name: 'ConfigError', isLowdefyError: true })
+  );
+});
+
 test('throws when the tenant field is authored nested in $or', () => {
   expect(() =>
     applyTenantToFilter({ filter: { $or: [{ a: 1 }, { organization_id: 'org_b' }] }, tenant })
@@ -76,11 +82,11 @@ test('uses the position in the error message', () => {
 
 test('uses the custom tenant field name', () => {
   const customTenant = { field: 'tenantId', value: 't_1' };
-  expect(applyTenantToFilter({ filter: { organization_id: 'kept' }, tenant: customTenant })).toEqual(
-    {
-      $and: [{ organization_id: 'kept' }, { tenantId: 't_1' }],
-    }
-  );
+  expect(
+    applyTenantToFilter({ filter: { organization_id: 'kept' }, tenant: customTenant })
+  ).toEqual({
+    $and: [{ organization_id: 'kept' }, { tenantId: 't_1' }],
+  });
   expect(() => applyTenantToFilter({ filter: { tenantId: 't_2' }, tenant: customTenant })).toThrow(
     'Tenant field "tenantId" can not be set in a filter'
   );

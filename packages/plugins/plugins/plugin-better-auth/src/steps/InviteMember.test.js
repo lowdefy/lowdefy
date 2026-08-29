@@ -121,7 +121,7 @@ test('InviteMember throws when appRoles is a comma-separated string', async () =
       organizationId,
       properties: { email: 'new@example.com', appRoles: 'a,b' },
     })
-  ).rejects.toThrow('InviteMember "appRoles" is not an array. Received "a,b".');
+  ).rejects.toThrow('InviteMember "appRoles" is not an array.');
 });
 
 test('InviteMember throws when orgRole is not a string', async () => {
@@ -133,7 +133,7 @@ test('InviteMember throws when orgRole is not a string', async () => {
       organizationId,
       properties: { email: 'new@example.com', orgRole: ['admin'] },
     })
-  ).rejects.toThrow('InviteMember "orgRole" is not a string. Received ["admin"].');
+  ).rejects.toThrow('InviteMember "orgRole" is not a string.');
 });
 
 test('InviteMember scopes the invitation to the organizationId passed by the floor', async () => {
@@ -194,7 +194,7 @@ test('InviteMember throws when attributes is not a plain object', async () => {
         attributes: 'not-an-object',
       },
     })
-  ).rejects.toThrow('InviteMember "attributes" is not an object. Received "not-an-object".');
+  ).rejects.toThrow('InviteMember "attributes" is not an object.');
 });
 
 test('InviteMember carries profile as undefined in the body when omitted', async () => {
@@ -221,7 +221,7 @@ test('InviteMember throws when profile is not a plain object', async () => {
         profile: 'not-an-object',
       },
     })
-  ).rejects.toThrow('InviteMember "profile" is not an object. Received "not-an-object".');
+  ).rejects.toThrow('InviteMember "profile" is not an object.');
 });
 
 test('InviteMember forwards contactId in the createInvitation body', async () => {
@@ -260,5 +260,5 @@ test('InviteMember throws when contactId is not a string', async () => {
         contactId: { id: 'contact-1' },
       },
     })
-  ).rejects.toThrow('InviteMember "contactId" is not a string. Received {"id":"contact-1"}.');
+  ).rejects.toThrow('InviteMember "contactId" is not a string.');
 });
