@@ -752,13 +752,75 @@ Radio group for selecting a single option.
     valueKey: id
 ```
 
+```yaml
+- id: radio_columns_two
+  type: RadioSelector
+  properties:
+    title: Two columns
+    columns: 2
+    options:
+      - Weekday mornings
+      - Weekday afternoons
+      - Weekday evenings
+      - Weekend mornings
+      - Weekend afternoons
+      - Weekend evenings
+- id: radio_columns_responsive
+  type: RadioSelector
+  properties:
+    title: One column below md, three from md up
+    columns:
+      xs: 1
+      md: 3
+    options:
+      - Email
+      - SMS
+      - Push notification
+      - Webhook
+      - In-app message
+      - Weekly digest
+- id: radio_columns_gutter
+  type: RadioSelector
+  properties:
+    title: Wider gutter
+    columns: 2
+    gutter:
+      - 24
+      - 12
+    options:
+      - Read only
+      - Read and write
+      - Administer
+      - No access
+- id: radio_columns_per_option_color
+  type: RadioSelector
+  properties:
+    title: Coloured options in a grid
+    columns: 2
+    options:
+      - label: Low
+        value: low
+        color: "#16a34a"
+      - label: Medium
+        value: medium
+        color: "#d97706"
+      - label: High
+        value: high
+        color: "#dc2626"
+      - label: Critical
+        value: critical
+        color: "#7e22ce"
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `align` | string | `"start"` | Align options. Enum: `start`, `end`, `center`, `baseline`. |
+| `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
 | `color` | string | - | Selected radio color. |
+| `columns` | integer \| object | - | Number of columns to lay the options out in, or a responsive breakpoint object. Use a count that divides 24 evenly. |
 | `disabled` | boolean | `false` | Disable the block if true. |
-| `direction` | string | `"horizontal"` | List options horizontally or vertical. Enum: `horizontal`, `vertical`. |
-| `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. |
+| `direction` | string | `"horizontal"` | List options horizontally or vertical. Ignored when 'columns' is set. Enum: `horizontal`, `vertical`. |
+| `gutter` | number \| array | - | Gap between options in the grid. Number or [horizontal, vertical] array. Applies when 'columns' is set. |
+| `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

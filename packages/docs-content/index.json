@@ -290,6 +290,30 @@
       "path": "content/user-authentication/two-factor.md"
     },
     {
+      "slug": "user-authentication/organizations",
+      "title": "Organizations &amp; Multi-Tenancy",
+      "section": "User Authentication",
+      "path": "content/user-authentication/organizations.md"
+    },
+    {
+      "slug": "user-authentication/auth-steps",
+      "title": "Auth Steps",
+      "section": "User Authentication",
+      "path": "content/user-authentication/auth-steps.md"
+    },
+    {
+      "slug": "user-authentication/mcp-oauth",
+      "title": "MCP Server &amp; OAuth",
+      "section": "User Authentication",
+      "path": "content/user-authentication/mcp-oauth.md"
+    },
+    {
+      "slug": "user-authentication/user-object",
+      "title": "User Object",
+      "section": "User Authentication",
+      "path": "content/user-authentication/user-object.md"
+    },
+    {
       "slug": "other/next-auth-providers",
       "title": "next-auth-providers",
       "section": "Other",
