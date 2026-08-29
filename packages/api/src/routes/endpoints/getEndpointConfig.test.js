@@ -39,7 +39,7 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('getEndpointConfig returns the config for an existing endpoint when unauthenticated on an auth\'d app', async () => {
+test("getEndpointConfig returns the config for an existing endpoint when unauthenticated on an auth'd app", async () => {
   const context = testContext({
     logger,
     readConfigFile,
@@ -61,7 +61,7 @@ test('getEndpointConfig returns the config for an existing endpoint when authent
   expect(config).toBe(endpointConfig);
 });
 
-test('getEndpointConfig throws AuthenticationError on a miss for an anonymous human on an auth\'d app', async () => {
+test("getEndpointConfig throws AuthenticationError on a miss for an anonymous human on an auth'd app", async () => {
   const context = testContext({
     logger,
     readConfigFile,

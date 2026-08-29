@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -155,7 +155,14 @@ async function runPreflight(context) {
   }
   const failures = results.filter((result) => result.error);
   if (failures.length > 0) {
-    throw failures[0].error;
+    const { error, target } = failures[0];
+    // A probe that could not reach the datastore is an outage, not a refusal -
+    // typing it keeps it out of the memoized-refusal path below, so the next
+    // request retries.
+    if (ServiceError.isServiceError(error)) {
+      throw new ServiceError(undefined, { cause: error, service: target.connectionIds[0] });
+    }
+    throw error;
   }
   context.logger.info(
     `Tenant preflight passed - ${targets.size} walled ${

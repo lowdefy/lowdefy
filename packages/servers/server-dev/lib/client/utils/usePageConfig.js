@@ -13,6 +13,8 @@
 
 import useSWR from 'swr';
 
+import { serializer } from '@lowdefy/helpers';
+
 import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 
 // URLs whose config is server-resolved per request — learned from the fetched
@@ -71,6 +73,11 @@ export async function fetchPageConfig(url) {
     return data;
   }
   if (!res.ok) {
+    // A Lowdefy error envelope is revived rather than flattened to its message,
+    // so the class, configKey and source survive to the error handler.
+    if (data?.['~e']) {
+      throw serializer.deserialize(data);
+    }
     throw new Error(data.message || 'Request error');
   }
 

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 async function invokeEndpoint({ endpoint, input }) {
@@ -23,6 +24,13 @@ async function invokeEndpoint({ endpoint, input }) {
     // Surface BetterAuth APIError rail messages (validation, ROLE_NOT_FOUND, etc.)
     // verbatim - the step interface layer wraps further.
     if (!type.isNone(error.status) && !type.isNone(error.body)) {
+      // better-call's APIError carries the numeric HTTP status on statusCode -
+      // `status` is its string name ('INTERNAL_SERVER_ERROR'). A 5xx is the auth
+      // server failing, not a rejected call.
+      const statusCode = error.statusCode ?? error.status;
+      if (type.isInt(statusCode) && statusCode >= 500 && statusCode < 600) {
+        throw new ServiceError(undefined, { cause: error, service: 'BetterAuth' });
+      }
       throw new Error(error.body?.message ?? error.body?.code ?? error.message, { cause: error });
     }
     throw error;

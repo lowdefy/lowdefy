@@ -68,21 +68,35 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class            | Purpose                        | Thrown By                 | Stack in CLI      |
-| ---------------------- | ------------------------------ | ------------------------- | ----------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`          | Config validation errors       | Build validation          | No (use source)   |
-| `ConfigWarning`        | Config inconsistencies         | Build validation          | No (use source)   |
-| `BuildError`           | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
-| `PluginError`          | Base class (not used directly) | —                         | —                 |
-| `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
-| `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
-| `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
-| `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
-| `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
+| Error Class                       | Purpose                                                   | Thrown By                                                | Stack in CLI      |
+| --------------------------------- | --------------------------------------------------------- | -------------------------------------------------------- | ----------------- |
+| `LowdefyInternalError`            | Internal Lowdefy bugs                                     | Anywhere inside Lowdefy                                  | Yes (bugs)        |
+| `ConfigError`                     | Config validation errors                                  | Build validation                                         | No (use source)   |
+| `ConfigWarning`                   | Config inconsistencies                                    | Build validation                                         | No (use source)   |
+| `BuildError`                      | Summary after errors logged                               | `logCollectedErrors`                                     | No (summary)      |
+| `PluginError`                     | Base class (not used directly)                            | —                                                        | —                 |
+| `OperatorError`                   | Operator failures                                         | Operator parsers                                         | No (use received) |
+| `ActionError`                     | Action failures                                           | Action runner (engine)                                   | No (use received) |
+| `RequestError`                    | Request/connection failures                               | Request handler (API)                                    | No (use received) |
+| `BlockError`                      | Block rendering failures                                  | ErrorBoundary (client)                                   | No (use received) |
+| `ServiceError`                    | External service failures                                 | Plugin interface layer                                   | No (use service)  |
+| `AuthenticationError`             | Unauthenticated request (401)                             | API authorization gates                                  | No (warn line)    |
+| `TwoFactorEnrolmentRequiredError` | Unenrolled caller under `twoFactor.required` (403)        | Authorization gate                                       | No (warn line)    |
+| `AuthorizationError`              | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent/websocket/auth-step gates         | No (warn line)    |
+| `UserError`                       | Expected user-interaction outcome                         | Validate, Throw, `:throw`/`:reject`, client auth methods | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
+
+### Faults vs. expected outcomes
+
+Every error is one of two things, and the class says which:
+
+- **A fault** — something a developer (config) or Lowdefy (internal) or an operator (service) has to fix. `ConfigError`, `LowdefyInternalError`, `ServiceError` and the `PluginError` subclasses are faults. They are logged at error level, resolved to a config location where one exists, captured to Sentry, and a browser-originated one is POSTed to `/api/client-error` so the server can log it with its source line.
+- **An expected outcome** — the system worked and said no. `UserError` (validation failed, the author's `Throw`, a rejected sign-in), `AuthenticationError` (no credentials, 401), `AuthorizationError` (authenticated but wrong roles, 403 — the gate's message may stay deliberately generic so it does not reveal what exists) and `TwoFactorEnrolmentRequiredError` (403) are expected. They still surface to the caller — the message displays, `catch:` actions run, the HTTP status is right — but they log as one warn line on the server or to the browser console only, never at error level, never to Sentry, never against a config location.
+
+The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
+
+**Auth server rejections are expected outcomes.** BetterAuth's client resolves `{ data, error }`; `unwrap` in `packages/client/src/auth/createAuthMethods.js` rethrows an `error.status` in the 4xx range as a `UserError` (with `metaData: { code, status }` for page config to branch on) and anything else — a 5xx or network failure — as a plain `Error`, which the action runner wraps as an `ActionError` and reports. Server-side, `options.onAPIError.onError` (`packages/api/src/routes/auth/createOnAPIError.js`) owns BetterAuth's API-error logging: a 4xx `APIError` is one warn line, everything else is `logger.error(error)`. Without it BetterAuth's router logged every 4xx at error level whenever the logger level was `warn` or `debug`, so a wrong password or an expired magic link produced an `ERROR [Better Auth]` line on every attempt.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 

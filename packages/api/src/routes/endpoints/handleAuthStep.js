@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthorizationError, ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
@@ -170,11 +170,10 @@ async function handleAuthStep(context, routineContext, { step }) {
         type.isNone(callerMember) ||
         !authorizeRole({ permissions: authority.permissions, role: callerMember.role })
       ) {
-        throw new ConfigError(
+        throw new AuthorizationError(
           `Auth step "${step.stepId}" refused - the caller does not hold ${describePermissions(
             authority.permissions
-          )} in organization "${organizationId}".`,
-          { configKey: step['~k'] }
+          )} in organization "${organizationId}".`
         );
       }
       // A step that writes the user row reaches a row shared by the whole
@@ -196,9 +195,8 @@ async function handleAuthStep(context, routineContext, { step }) {
           ],
         });
         if (type.isNone(targetMember)) {
-          throw new ConfigError(
-            `Auth step "${step.stepId}" refused - user "${targetId}" is not a member of organization "${organizationId}".`,
-            { configKey: step['~k'] }
+          throw new AuthorizationError(
+            `Auth step "${step.stepId}" refused - user "${targetId}" is not a member of organization "${organizationId}".`
           );
         }
       }

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
 import escapeForMongoRegex from './escapeForMongoRegex.js';
 import insensitiveContains from './insensitiveContains.js';
 import insensitiveEndsWith from './insensitiveEndsWith.js';
@@ -120,10 +122,8 @@ function createConvertWhereClause({ getFieldAttributes, getFieldName, serializeI
           }
           break;
         default:
-          throw new Error(
-            `MongoDB auth adapter received an unsupported where operator. Received ${JSON.stringify(
-              operator
-            )}.`
+          throw new LowdefyInternalError(
+            'MongoDB auth adapter received an unsupported where operator.'
           );
       }
       return { condition, connector };

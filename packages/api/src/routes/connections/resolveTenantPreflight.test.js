@@ -218,6 +218,30 @@ test('a probe failure does not memoize - the next request retries', async () => 
   expect(mockProbe).toHaveBeenCalledTimes(2);
 });
 
+test('a probe failure that is a service outage throws a ServiceError naming the connection', async () => {
+  mockReadConfigFile.mockImplementation(readConfigImp());
+  const cause = new Error('connection refused');
+  mockProbe.mockRejectedValueOnce(cause);
+  const context = createTestContext();
+  let thrown;
+  try {
+    await resolveTenantPreflight(context);
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('ServiceError');
+  expect(thrown.service).toBe('walled');
+  expect(thrown.cause).toBe(cause);
+});
+
+test('a probe failure that is not a service outage is rethrown unwrapped', async () => {
+  mockReadConfigFile.mockImplementation(readConfigImp());
+  const cause = new Error('Probe returned an unexpected shape.');
+  mockProbe.mockRejectedValueOnce(cause);
+  const context = createTestContext();
+  await expect(resolveTenantPreflight(context)).rejects.toBe(cause);
+});
+
 test('a success memoizes - later requests do not re-probe', async () => {
   mockReadConfigFile.mockImplementation(readConfigImp());
   mockProbe.mockResolvedValue({ ok: true });

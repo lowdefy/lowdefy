@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { Actions } from '@lowdefy/engine';
+import { UserError } from '@lowdefy/errors';
 import createAuthMethods from './createAuthMethods.js';
 import { createUrl } from '../adapters/url.js';
 
@@ -457,6 +458,39 @@ test('passkeyRegister surfaces a cancelled WebAuthn ceremony as an error', async
   await expect(passkeyRegister()).rejects.toThrow('Registration cancelled.');
 });
 
+test('passkeyRegister surfaces a DOMException from the WebAuthn ceremony as a UserError', async () => {
+  const { auth, lowdefy } = setup();
+  const domError = new Error('The operation either timed out or was not allowed.');
+  domError.name = 'NotAllowedError';
+  auth.addPasskey = jest.fn(() => Promise.reject(domError));
+  const { passkeyRegister } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyRegister()).rejects.toMatchObject({
+    name: 'UserError',
+    metaData: { code: 'NotAllowedError' },
+    cause: domError,
+  });
+});
+
+test('passkeyRegister propagates a non-ceremony rejection unchanged', async () => {
+  const { auth, lowdefy } = setup();
+  const networkError = new Error('Network down.');
+  auth.addPasskey = jest.fn(() => Promise.reject(networkError));
+  const { passkeyRegister } = createAuthMethods(lowdefy, auth);
+  await expect(passkeyRegister()).rejects.toBe(networkError);
+});
+
+test('passkeySignIn surfaces a DOMException from the WebAuthn ceremony as a UserError', async () => {
+  const { auth, lowdefy } = setup();
+  const domError = new Error('The operation was aborted.');
+  domError.name = 'AbortError';
+  auth.signInPasskey = jest.fn(() => Promise.reject(domError));
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  await expect(passkeySignIn()).rejects.toMatchObject({
+    name: 'UserError',
+    metaData: { code: 'AbortError' },
+  });
+});
+
 test('passkeySignIn navigates to callbackURL on a session-bearing success', async () => {
   const { auth, lowdefy, assign } = setup({ signInResult: { session: {}, user: {} } });
   const { passkeySignIn } = createAuthMethods(lowdefy, auth);
@@ -605,6 +639,72 @@ test('oauth2Continue confirms the post-login choice and returns the next redirec
   });
 });
 
+test('oauth2Continue surfaces a stale authorization query (4xx) as a UserError carrying code and status', async () => {
+  const { auth, lowdefy } = setup();
+  auth.oauth2Continue = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: {
+        message: 'Bad Request',
+        code: 'INVALID_REQUEST',
+        status: 400,
+        statusText: 'Bad Request',
+      },
+    })
+  );
+  const { oauth2Continue } = createAuthMethods(lowdefy, auth);
+  let thrown;
+  try {
+    await oauth2Continue();
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(UserError);
+  expect(thrown.message).toBe('Bad Request');
+  expect(thrown.metaData).toEqual({ code: 'INVALID_REQUEST', status: 400 });
+});
+
+test('login surfaces a rejected password (401) as a UserError, not a plain error', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInEmail = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: {
+        message: 'Invalid email or password',
+        code: 'INVALID_EMAIL_OR_PASSWORD',
+        status: 401,
+      },
+    })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  await expect(login({ email: 'a@b.c', password: 'wrong' })).rejects.toBeInstanceOf(UserError);
+});
+
+test('a 5xx or network failure from the auth server is thrown plain so the action runner reports it', async () => {
+  const { auth, lowdefy } = setup();
+  auth.signInEmail = jest.fn(() =>
+    Promise.resolve({
+      data: null,
+      error: { message: 'Internal Server Error', status: 500, statusText: 'Internal Server Error' },
+    })
+  );
+  const { login } = createAuthMethods(lowdefy, auth);
+  let thrown;
+  try {
+    await login({ email: 'a@b.c', password: 'pw' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).not.toBeInstanceOf(UserError);
+  expect(thrown.message).toBe('Internal Server Error');
+  expect(thrown.status).toBe(500);
+
+  auth.signInEmail = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Failed to fetch', status: 0 } })
+  );
+  await expect(login({ email: 'a@b.c', password: 'pw' })).rejects.not.toBeInstanceOf(UserError);
+});
+
 test('oauth2Consent passes narrowing params through to the consent call', async () => {
   const { auth, lowdefy } = setup();
   const { oauth2Consent } = createAuthMethods(lowdefy, auth);
@@ -668,9 +768,10 @@ test('leaveOrganization throws when the session has no active organization', asy
     Promise.resolve({ data: { session: {}, user: {} }, error: null })
   );
   const { leaveOrganization } = createAuthMethods(lowdefy, auth);
-  await expect(leaveOrganization()).rejects.toThrow(
-    'LeaveOrganization requires an active organization on the session.'
-  );
+  await expect(leaveOrganization()).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'LeaveOrganization requires an active organization on the session.',
+  });
   expect(auth.leaveOrganization).not.toHaveBeenCalled();
 });
 

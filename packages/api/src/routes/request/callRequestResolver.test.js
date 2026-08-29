@@ -16,12 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
-import {
-  ConfigError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import { ConfigError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import callRequestResolver from './callRequestResolver.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -151,8 +146,7 @@ test('callApi works with module endpoint id (slash in id)', async () => {
 
 test('callApi throws ConfigError when endpoint is missing', async () => {
   const context = createTestContext();
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'missing', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'missing', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -174,8 +168,7 @@ test('callApi throws UserError on :throw in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -197,8 +190,7 @@ test('callApi throws UserError on :reject in target routine', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -220,8 +212,7 @@ test('depth cap throws ConfigError at depth >= 10', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await expect(
     callRequestResolver(context, {
       connectionProperties: {},
@@ -267,8 +258,7 @@ test('debug events emitted on success: start and end', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,
@@ -310,8 +300,7 @@ test('debug end event NOT emitted when callApi throws', async () => {
       },
     },
   });
-  const requestResolver = async ({ callApi }) =>
-    callApi({ endpointId: 'target', payload: {} });
+  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
   await callRequestResolver(context, {
     connectionProperties: {},
     endpointDepth: 0,

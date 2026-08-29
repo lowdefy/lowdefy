@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { LowdefyInternalError } from '@lowdefy/errors';
+
 // The Vite manifest is read once at startup — deploys start a new server
 // process after `vite build` completes, so assets never change at runtime.
 // In-place deploys must build before restarting (documented).
@@ -30,7 +32,7 @@ function getAssets() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   const entry = manifest['client/main.jsx'];
   if (!entry) {
-    throw new Error(
+    throw new LowdefyInternalError(
       'Vite manifest has no "client/main.jsx" entry. Run the client build before starting the server.'
     );
   }

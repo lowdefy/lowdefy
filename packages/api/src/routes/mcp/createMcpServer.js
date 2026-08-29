@@ -157,10 +157,14 @@ async function createMcpServer({ context }) {
         content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
       };
     } catch (error) {
-      // Unauthenticated calls to gated tools are expected probing traffic -
-      // a warn line and the 401-shaped message, not a structured error log.
-      if (error.name === 'AuthenticationError') {
-        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
+      // Refused calls to gated tools are expected traffic - a warn line and the
+      // refusal message, not a structured error log.
+      if (
+        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
+          error.name
+        )
+      ) {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
         context.logger.error(error);
       }

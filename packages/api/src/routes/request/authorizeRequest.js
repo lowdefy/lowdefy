@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function authorizeRequest(
@@ -46,9 +50,7 @@ function authorizeRequest(
       );
     }
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
-    throw new ConfigError(`Request "${requestConfig.requestId}" does not exist.`, {
-      configKey: requestConfig['~k'],
-    });
+    throw new AuthorizationError(`Request "${requestConfig.requestId}" does not exist.`);
   }
   logger.debug({
     event: 'debug_request_authorize',

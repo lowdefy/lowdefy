@@ -16,6 +16,8 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../utils/collectExceptions.js';
+
 // The per-org client actions ride the organization plugin's client HTTP
 // endpoints, which are disabled under the "pinned" organizations policy - a
 // wired instance can only 404 at runtime there, and per-org self-service is
@@ -25,19 +27,19 @@ import { ConfigError } from '@lowdefy/errors';
 // only fails prod).
 export const ORG_CLIENT_ACTION_TYPES = ['LeaveOrganization', 'SetActiveOrganization'];
 
-function validateOrgClientActionRefs({ orgClientActionRefs, policy }) {
+function validateOrgClientActionRefs({ orgClientActionRefs, policy, context }) {
   if (policy !== 'pinned') {
     return;
   }
-  const [firstRef] = orgClientActionRefs;
-  if (!firstRef) {
-    return;
-  }
-  const { action, sourcePageId } = firstRef;
-  throw new ConfigError(
-    `${action.type} action on page "${sourcePageId}" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.`,
-    { configKey: action['~k'] }
-  );
+  (orgClientActionRefs ?? []).forEach(({ action, sourcePageId }) => {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `${action.type} action on page "${sourcePageId}" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.`,
+        { configKey: action['~k'] }
+      )
+    );
+  });
 }
 
 export default validateOrgClientActionRefs;

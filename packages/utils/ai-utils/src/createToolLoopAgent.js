@@ -45,7 +45,7 @@ const hookMapping = {
   onStepFinish: 'onStepFinish',
 };
 
-function createHookCallbacks({ hooks, callEndpoint, locale }) {
+function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
   if (!hooks) return {};
 
   const callbacks = {};
@@ -56,7 +56,9 @@ function createHookCallbacks({ hooks, callEndpoint, locale }) {
     callbacks[sdkKey] = (event) => {
       const payload = { ...cleanHookEvent(event), locale };
       for (const endpointId of endpointIds) {
-        callEndpoint(endpointId, { payload }).catch(() => {});
+        callEndpoint(endpointId, { payload }).catch((error) =>
+          logger.warn({ err: error, endpointId }, 'Agent hook endpoint failed.')
+        );
       }
     };
   }
@@ -79,9 +81,10 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
 
   const locale = context.i18n?.active;
   const hookCallbacks = createHookCallbacks({
-    hooks: agent.hooks,
     callEndpoint: context.callEndpoint,
+    hooks: agent.hooks,
     locale,
+    logger: context.logger,
   });
 
   // Prepend page context to instructions when pageContext is enabled

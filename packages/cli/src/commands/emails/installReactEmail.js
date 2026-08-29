@@ -47,7 +47,7 @@ async function installReactEmail({ context, directory }) {
     });
   } catch (error) {
     context.logger.info({ spin: 'fail' }, 'Installing the react-email preview server.');
-    throw new Error('react-email installation failed.');
+    throw new Error('react-email installation failed.', { cause: error });
   }
   context.logger.info('react-email preview server installed.');
 }

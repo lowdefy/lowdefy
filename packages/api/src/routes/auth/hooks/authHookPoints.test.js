@@ -75,15 +75,17 @@ test('session and account points hand the record plus the fetched subject user',
   const session = { id: 's1', userId: 'u1' };
   const account = { id: 'acc1', userId: 'u1', providerId: 'google' };
 
-  await expect(
-    authHookPoints['session.create.before'].buildPayload(session, ctx)
-  ).resolves.toEqual({ session, user });
-  await expect(authHookPoints['session.delete.after'].buildPayload(session, ctx)).resolves.toEqual(
+  await expect(authHookPoints['session.create.before'].buildPayload(session, ctx)).resolves.toEqual(
     { session, user }
   );
-  await expect(
-    authHookPoints['account.create.after'].buildPayload(account, ctx)
-  ).resolves.toEqual({ account, user });
+  await expect(authHookPoints['session.delete.after'].buildPayload(session, ctx)).resolves.toEqual({
+    session,
+    user,
+  });
+  await expect(authHookPoints['account.create.after'].buildPayload(account, ctx)).resolves.toEqual({
+    account,
+    user,
+  });
 });
 
 test('verification points hand { verification } and email.verified hands { user }', () => {

@@ -92,7 +92,10 @@ test('ignores session updates from every other endpoint - the explicit switch st
 test('ignores accept-route session writes that do not set an active organization', async () => {
   const hook = createAcceptActiveOrgGuardHook({ logger: mockLogger() });
 
-  const result = await hook({ activeTeamId: 'team_1' }, acceptCtx({ activeOrganizationId: 'org_a' }));
+  const result = await hook(
+    { activeTeamId: 'team_1' },
+    acceptCtx({ activeOrganizationId: 'org_a' })
+  );
 
   expect(result).toBeUndefined();
 });

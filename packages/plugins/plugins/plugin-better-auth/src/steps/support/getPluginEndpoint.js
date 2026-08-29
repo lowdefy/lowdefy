@@ -14,16 +14,21 @@
   limitations under the License.
 */
 
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function getPluginEndpoint({ authContext, endpointKey, pluginId }) {
   const plugin = (authContext.options.plugins ?? []).find((p) => p.id === pluginId);
   if (type.isNone(plugin)) {
-    throw new Error(`BetterAuth plugin "${pluginId}" is not configured on the auth instance.`);
+    throw new ConfigError(
+      `BetterAuth plugin "${pluginId}" is not configured on the auth instance.`
+    );
   }
   const endpoint = (plugin.endpoints ?? {})[endpointKey];
   if (type.isNone(endpoint)) {
-    throw new Error(`BetterAuth plugin "${pluginId}" has no endpoint "${endpointKey}".`);
+    throw new LowdefyInternalError(
+      `BetterAuth plugin "${pluginId}" has no endpoint "${endpointKey}".`
+    );
   }
   return endpoint;
 }

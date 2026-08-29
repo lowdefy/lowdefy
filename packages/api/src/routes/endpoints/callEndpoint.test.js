@@ -248,7 +248,7 @@ test('InternalApi error matches missing endpoint error message', async () => {
   }
 });
 
-test('InternalApi endpoint throws AuthenticationError for an anonymous human on an auth\'d app', async () => {
+test("InternalApi endpoint throws AuthenticationError for an anonymous human on an auth'd app", async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {
@@ -284,7 +284,7 @@ test('InternalApi endpoint throws AuthenticationError for an anonymous human on 
   ).rejects.toThrow('Authentication required for API endpoint "internal_ep".');
 });
 
-test('InternalApi endpoint throws ConfigError for a resolved user on an auth\'d app', async () => {
+test("InternalApi endpoint throws ConfigError for a resolved user on an auth'd app", async () => {
   const mockReadConfigFile = jest.fn((path) => {
     if (path === 'api/internal_ep.json') {
       return {

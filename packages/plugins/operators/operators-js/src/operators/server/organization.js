@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { getFromObject } from '@lowdefy/operators';
 import { type } from '@lowdefy/helpers';
 
@@ -23,17 +24,17 @@ import { type } from '@lowdefy/helpers';
 // startup, so no build-time operator or config var can carry it.
 function _organization({ location, organization, params }) {
   if (type.isNone(organization)) {
-    throw new Error(
+    throw new ConfigError(
       '_organization requires auth organizations to be configured - no organizations state is available.'
     );
   }
   if (organization.policy === 'tenant') {
-    throw new Error(
+    throw new ConfigError(
       '_organization cannot resolve under the "tenant" organizations policy - there is no single pinned organization. Pass an explicit organization id instead.'
     );
   }
   if (type.isNone(organization.pinned)) {
-    throw new Error(
+    throw new LowdefyInternalError(
       'The pinned organization has not been resolved - the startup ensure has not completed or failed.'
     );
   }

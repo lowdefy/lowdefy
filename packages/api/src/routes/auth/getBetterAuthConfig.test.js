@@ -1339,7 +1339,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.onAPIError).toEqual({ errorURL: 'https://app.example.com/base/auth/error' });
+    expect(options.onAPIError.errorURL).toBe('https://app.example.com/base/auth/error');
   });
 
   test('falls back to the app-relative error path when the origin is not pinned', () => {
@@ -1352,7 +1352,7 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.onAPIError).toEqual({ errorURL: '/auth/error' });
+    expect(options.onAPIError.errorURL).toBe('/auth/error');
   });
 
   test('honours a custom authPages.error path', () => {
@@ -1367,7 +1367,62 @@ describe('onAPIError.errorURL default landing page (Decision 5)', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.onAPIError).toEqual({ errorURL: 'https://app.example.com/oops' });
+    expect(options.onAPIError.errorURL).toBe('https://app.example.com/oops');
+  });
+});
+
+describe('onAPIError.onError owns auth API error logging', () => {
+  test('always installs an onError handler, with no errorURL when authPages.error is unset', () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ authPages: { signIn: '/login' } }),
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(typeof options.onAPIError.onError).toBe('function');
+    expect(options.onAPIError.errorURL).toBeUndefined();
+  });
+
+  test('logs a rejected auth attempt (4xx) as a single warn line, not an error', () => {
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const apiError = new Error('Invalid email or password');
+    apiError.statusCode = 401;
+    apiError.body = { code: 'INVALID_EMAIL_OR_PASSWORD' };
+    options.onAPIError.onError(apiError);
+    expect(logger.error).not.toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith(
+      { event: 'auth_engine', code: 'INVALID_EMAIL_OR_PASSWORD', status: 401 },
+      'Auth request rejected (401): Invalid email or password'
+    );
+  });
+
+  test('logs a 5xx or non-API error at error level with the error object', () => {
+    const logger = createLogger();
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson(),
+      getAuth,
+      logger,
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const adapterError = new Error('connection closed');
+    options.onAPIError.onError(adapterError);
+    expect(logger.warn).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining('Auth request rejected')
+    );
+    expect(logger.error).toHaveBeenCalledWith(adapterError);
   });
 });
 

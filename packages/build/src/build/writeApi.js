@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { type, serializer } from '@lowdefy/helpers';
 
 async function writeEndpoint({ endpoint, context }) {
@@ -45,7 +46,7 @@ async function writeSchedulesManifest({ components, context }) {
 async function writeApi({ components, context }) {
   if (type.isNone(components.api)) return;
   if (!type.isArray(components.api)) {
-    throw new Error(`Api is not an array.`);
+    throw new LowdefyInternalError('Api is not an array.');
   }
   const writePromises = components.api.map((endpoint) => writeEndpoint({ endpoint, context }));
   await Promise.all(writePromises);

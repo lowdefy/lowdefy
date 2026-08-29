@@ -14,9 +14,14 @@
   limitations under the License.
 */
 
-import { ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-function authorizeWebsocket({ authorizeOutcome: authorize, logger }, { websocketConfig }) {
+function authorizeWebsocket({ authorizeOutcome: authorize, logger, user }, { websocketConfig }) {
   const outcome = authorize(websocketConfig);
   if (outcome !== 'allow') {
     logger.debug({
@@ -34,8 +39,15 @@ function authorizeWebsocket({ authorizeOutcome: authorize, logger }, { websocket
         `Two-factor enrolment required for websocket "${websocketConfig.websocketId}".`
       );
     }
+    // Unauthenticated on a protected websocket - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(
+        `Authentication required for websocket "${websocketConfig.websocketId}".`
+      );
+    }
     // Same message as a missing websocket so channel existence does not leak.
-    throw new ConfigError(`Websocket "${websocketConfig.websocketId}" does not exist.`);
+    throw new AuthorizationError(`Websocket "${websocketConfig.websocketId}" does not exist.`);
   }
 }
 

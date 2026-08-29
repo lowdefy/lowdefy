@@ -49,25 +49,17 @@ async function UpdateOrganization({ acting, auth, organizationId, properties }) 
     throw new Error(
       'UpdateOrganization refuses a "slug" property - under the "pinned" organizations policy the ' +
         'organization id is its slug, so changing it strands every member row and invitation ' +
-        `pointing at the old value. Received ${JSON.stringify(slug)}.`
+        'pointing at the old value.'
     );
   }
   if (!type.isNone(name) && !type.isString(name)) {
-    throw new Error(
-      `UpdateOrganization requires a "name" string property. Received ${JSON.stringify(name)}.`
-    );
+    throw new Error('UpdateOrganization requires a "name" string property.');
   }
   if (!type.isNone(logo) && !type.isString(logo)) {
-    throw new Error(
-      `UpdateOrganization requires a "logo" string property. Received ${JSON.stringify(logo)}.`
-    );
+    throw new Error('UpdateOrganization requires a "logo" string property.');
   }
   if (!type.isNone(metadata) && !type.isObject(metadata)) {
-    throw new Error(
-      `UpdateOrganization requires a "metadata" object property. Received ${JSON.stringify(
-        metadata
-      )}.`
-    );
+    throw new Error('UpdateOrganization requires a "metadata" object property.');
   }
 
   const data = {};

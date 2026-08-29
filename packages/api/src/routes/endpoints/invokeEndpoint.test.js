@@ -231,10 +231,7 @@ test('child routine sees fresh state — caller state not visible', async () => 
       target: {
         endpointId: 'target',
         type: 'Api',
-        routine: [
-          { ':set_state': { x: 1 } },
-          { ':return': { _state: 'x' } },
-        ],
+        routine: [{ ':set_state': { x: 1 } }, { ':return': { _state: 'x' } }],
       },
     },
   });

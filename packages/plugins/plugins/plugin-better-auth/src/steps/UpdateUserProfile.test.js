@@ -227,24 +227,24 @@ test('UpdateUserProfile throws when profile is not a plain object', async () => 
   const { auth } = createMockAuth();
   await expect(
     UpdateUserProfile({ auth, properties: { userId: 'user-1', profile: 'not-an-object' } })
-  ).rejects.toThrow('UpdateUserProfile "profile" is not an object. Received "not-an-object".');
+  ).rejects.toThrow('UpdateUserProfile "profile" is not an object.');
 });
 
 test('UpdateUserProfile throws when name or image is not a string', async () => {
   const { auth } = createMockAuth();
   await expect(
     UpdateUserProfile({ auth, properties: { userId: 'user-1', name: 7 } })
-  ).rejects.toThrow('UpdateUserProfile "name" is not a string. Received 7.');
+  ).rejects.toThrow('UpdateUserProfile "name" is not a string.');
   await expect(
     UpdateUserProfile({ auth, properties: { userId: 'user-1', image: 7 } })
-  ).rejects.toThrow('UpdateUserProfile "image" is not a string. Received 7.');
+  ).rejects.toThrow('UpdateUserProfile "image" is not a string.');
 });
 
 test('UpdateUserProfile throws when contactId is not a string', async () => {
   const { auth } = createMockAuth();
   await expect(
     UpdateUserProfile({ auth, properties: { userId: 'user-1', contactId: { id: 'contact-1' } } })
-  ).rejects.toThrow('UpdateUserProfile "contactId" is not a string. Received {"id":"contact-1"}.');
+  ).rejects.toThrow('UpdateUserProfile "contactId" is not a string.');
 });
 
 test('UpdateUserProfile throws when no profile, contactId, name, or image is provided', async () => {

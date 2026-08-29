@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import getHomePathname from './getHomePathname.js';
@@ -97,7 +98,7 @@ function resolveTarget({ lowdefy, target, name = 'Link' }) {
 
   const defined = [home, pageId, url].filter((value) => value);
   if (defined.length > 1) {
-    throw new Error(
+    throw new ConfigError(
       `Invalid ${name}: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
     );
   }

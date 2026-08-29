@@ -101,9 +101,7 @@ test('validateCallAgentSteps skips dynamic (operator) agentIds', () => {
     api: [
       {
         endpointId: 'my_endpoint',
-        routine: [
-          callAgentStep({ properties: { agentId: { _payload: 'agent' }, prompt: 'Go.' } }),
-        ],
+        routine: [callAgentStep({ properties: { agentId: { _payload: 'agent' }, prompt: 'Go.' } })],
       },
     ],
   };
@@ -118,10 +116,7 @@ test('validateCallAgentSteps warns when the referenced agent has confirm tools',
     agents: [
       {
         agentId: 'research_agent',
-        tools: [
-          { endpointId: 'lookup-data' },
-          { endpointId: 'create-ticket', confirm: true },
-        ],
+        tools: [{ endpointId: 'lookup-data' }, { endpointId: 'create-ticket', confirm: true }],
       },
     ],
   };
@@ -150,4 +145,25 @@ test('validateCallAgentSteps is a no-op when there are no CallAgent steps', () =
   };
   expect(() => validateCallAgentSteps({ components, context })).not.toThrow();
   expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateCallAgentSteps collects an error for every unknown agent reference', () => {
+  const context = testContext();
+  context.errors = [];
+  context.agentIds = new Set();
+  const components = {
+    api: [
+      {
+        endpointId: 'e1',
+        routine: [
+          { type: 'CallAgent', stepId: 's1', properties: { agentId: 'a1' }, '~k': 'k1' },
+          { type: 'CallAgent', stepId: 's2', properties: { agentId: 'a2' }, '~k': 'k2' },
+        ],
+      },
+    ],
+  };
+  validateCallAgentSteps({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].configKey).toBe('k1');
+  expect(context.errors[1].configKey).toBe('k2');
 });

@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-import { ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
-import { translate } from '@lowdefy/helpers';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
+import { translate, type } from '@lowdefy/helpers';
 
-function authorizeAgent({ authorizeOutcome, i18n, logger }, { agentConfig }) {
+function authorizeAgent({ authorizeOutcome, i18n, logger, user }, { agentConfig }) {
   const outcome = authorizeOutcome(agentConfig);
   if (outcome !== 'allow') {
     logger.debug({
@@ -33,8 +37,13 @@ function authorizeAgent({ authorizeOutcome, i18n, logger }, { agentConfig }) {
         `Two-factor enrolment required for agent "${agentConfig.agentId}".`
       );
     }
+    // Unauthenticated on a protected agent - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(`Authentication required for agent "${agentConfig.agentId}".`);
+    }
     // Same message as an unknown agentId so responses do not reveal which agents exist.
-    throw new ConfigError(
+    throw new AuthorizationError(
       translate({
         key: 'agent.runtime.agentNotFound',
         values: { agentId: agentConfig.agentId },

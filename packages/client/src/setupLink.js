@@ -15,6 +15,7 @@
 */
 
 import { createLink } from '@lowdefy/engine';
+import { ConfigError } from '@lowdefy/errors';
 
 import { createUrl } from './adapters/url.js';
 
@@ -23,6 +24,20 @@ function setupLink(lowdefy) {
   const { window } = lowdefy._internal.globals;
   const backLink = () => router.back();
   const disabledLink = () => {};
+  // window.open returns null when the browser blocks the popup - tell the user
+  // rather than throwing a TypeError on the null handle.
+  const openNewTab = (target) => {
+    const handle = window.open(target, '_blank');
+    if (!handle) {
+      lowdefy._internal.displayMessage({
+        content: lowdefy._internal.translate('client.popupBlocked'),
+        status: 'info',
+        duration: 10,
+      });
+      return;
+    }
+    return handle.focus();
+  };
   // `href` wins over `url`, and is used verbatim — the same precedence the anchor
   // renderer applies (createLinkComponent.js). createLink only ever sets one of
   // them, and it gives `url` a protocol before we see it while leaving `href`
@@ -33,37 +48,24 @@ function setupLink(lowdefy) {
   const newOriginLink = ({ href, url, query, newTab }) => {
     const target = href ?? `${url}${query ? `?${query}` : ''}`;
     if (newTab) {
-      const handle = window.open(target, '_blank');
-      if (!handle) {
-        lowdefy._internal.displayMessage({
-          content: lowdefy._internal.translate('client.popupBlocked'),
-          status: 'info',
-          duration: 10,
-        });
-        return;
-      }
-      return handle.focus();
+      return openNewTab(target);
     }
     return window.location.assign(target);
   };
   const sameOriginLink = ({ newTab, pathname, query, setInput }) => {
     if (newTab) {
-      return window
-        .open(
-          `${window.location.origin}${createUrl({ basePath: lowdefy.basePath, pathname, query })}`,
-          '_blank'
-        )
-        .focus();
-    } else {
-      setInput();
-      return router.push({
-        pathname,
-        query,
-      });
+      return openNewTab(
+        `${window.location.origin}${createUrl({ basePath: lowdefy.basePath, pathname, query })}`
+      );
     }
+    setInput();
+    return router.push({
+      pathname,
+      query,
+    });
   };
   const noLink = () => {
-    throw new Error(`Invalid Link.`);
+    throw new ConfigError('Invalid Link: no target resolved.');
   };
   return createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink });
 }

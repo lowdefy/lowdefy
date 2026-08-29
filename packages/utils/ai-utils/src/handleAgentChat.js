@@ -130,7 +130,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             })
             .catch((error) => {
-              console.warn(`generateTitle failed: ${error.message}`);
+              context.logger.warn({ err: error }, 'generateTitle failed.');
             });
         }
       }
@@ -197,6 +197,9 @@ async function handleAgentChat({ connection, properties, context }) {
           writer.write(value);
         }
       } catch (error) {
+        // The client only ever sees the redacted error text, so the fault is
+        // logged server-side before it is written to the stream.
+        context.logger.error({ err: error }, 'Agent stream failed.');
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.
@@ -227,7 +230,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+            context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
           }
         }
       }

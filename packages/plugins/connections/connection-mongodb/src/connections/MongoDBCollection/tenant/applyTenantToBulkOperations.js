@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import applyTenantToFilter from './applyTenantToFilter.js';
 import applyTenantToUpdate from './applyTenantToUpdate.js';
 import stampTenantOnDoc from './stampTenantOnDoc.js';
@@ -67,7 +69,7 @@ function applyTenantToBulkOperations({ operations, tenant }) {
           },
         };
       default:
-        throw new Error(`Unsupported bulkWrite operation "${kind}" on a tenant connection.`);
+        throw new ConfigError(`Unsupported bulkWrite operation "${kind}" on a tenant connection.`);
     }
   });
 }

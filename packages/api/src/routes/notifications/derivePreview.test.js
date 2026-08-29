@@ -17,9 +17,9 @@
 import derivePreview from './derivePreview.js';
 
 test('derivePreview returns the explicit preview when set', () => {
-  expect(
-    derivePreview({ properties: { preview: 'Custom preview', message: '**Ignored**' } })
-  ).toBe('Custom preview');
+  expect(derivePreview({ properties: { preview: 'Custom preview', message: '**Ignored**' } })).toBe(
+    'Custom preview'
+  );
 });
 
 test('derivePreview returns null when neither preview nor message is set', () => {
@@ -37,7 +37,9 @@ test('derivePreview strips emphasis and inline code from the message', () => {
 test('derivePreview strips links and images keeping their text', () => {
   expect(
     derivePreview({
-      properties: { message: 'See [the docs](https://docs.example) and ![logo](https://cdn/x.png)' },
+      properties: {
+        message: 'See [the docs](https://docs.example) and ![logo](https://cdn/x.png)',
+      },
     })
   ).toBe('See the docs and logo');
 });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
@@ -85,12 +86,12 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       return stage;
     }
     if (stage.$out !== undefined || stage.$merge !== undefined) {
-      throw new Error(
+      throw new ConfigError(
         'Aggregation pipelines on a tenant connection can not contain "$out" or "$merge" - they write whole collections outside the tenant stamp path.'
       );
     }
     if (stage.$collStats !== undefined || stage.$indexStats !== undefined) {
-      throw new Error(
+      throw new ConfigError(
         'Aggregation pipelines on a tenant connection can not contain "$collStats" or "$indexStats" - collection-level statistics can not be tenant-scoped.'
       );
     }
@@ -187,7 +188,7 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
 
   const result = injectEntry(pipeline ?? []);
   if (authored && authoredSites === 0) {
-    throw new Error(
+    throw new ConfigError(
       'Request declares "tenant: authored" but its pipeline contains no stage that requires an authored tenant clause - the tenant wall scopes this pipeline mechanically. Remove "tenant: authored".'
     );
   }

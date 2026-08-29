@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import { AuthenticationError, ConfigError, TwoFactorEnrolmentRequiredError } from '@lowdefy/errors';
+import {
+  AuthenticationError,
+  AuthorizationError,
+  TwoFactorEnrolmentRequiredError,
+} from '@lowdefy/errors';
 
 import authorizeWebsocket from './authorizeWebsocket.js';
 
@@ -22,24 +26,36 @@ const logger = { debug: () => {} };
 const websocketConfig = { websocketId: 'ws', auth: { public: false } };
 
 test('authorizeWebsocket returns without throwing when the outcome is allow', () => {
-  const context = { authorizeOutcome: () => 'allow', logger };
+  const context = { authorizeOutcome: () => 'allow', logger, user: { sub: 'sub' } };
   expect(() => authorizeWebsocket(context, { websocketConfig })).not.toThrow();
 });
 
-test('authorizeWebsocket throws opaque ConfigError on deny', () => {
-  const context = { authorizeOutcome: () => 'deny', logger };
+test('authorizeWebsocket throws AuthenticationError on deny when the caller is unauthenticated', () => {
+  const context = { authorizeOutcome: () => 'deny', logger, user: null };
   try {
     authorizeWebsocket(context, { websocketConfig });
   } catch (e) {
-    expect(e).toBeInstanceOf(ConfigError);
+    expect(e).toBeInstanceOf(AuthenticationError);
+    expect(e.message).toBe('Authentication required for websocket "ws".');
+    return;
+  }
+  throw new Error('Expected AuthenticationError to be thrown');
+});
+
+test('authorizeWebsocket throws opaque AuthorizationError on deny when the caller is authenticated', () => {
+  const context = { authorizeOutcome: () => 'deny', logger, user: { sub: 'sub' } };
+  try {
+    authorizeWebsocket(context, { websocketConfig });
+  } catch (e) {
+    expect(e).toBeInstanceOf(AuthorizationError);
     expect(e.message).toBe('Websocket "ws" does not exist.');
     return;
   }
-  throw new Error('Expected ConfigError to be thrown');
+  throw new Error('Expected AuthorizationError to be thrown');
 });
 
 test('authorizeWebsocket throws TwoFactorEnrolmentRequiredError on enrol_required, not AuthenticationError', () => {
-  const context = { authorizeOutcome: () => 'enrol_required', logger };
+  const context = { authorizeOutcome: () => 'enrol_required', logger, user: { sub: 'sub' } };
   try {
     authorizeWebsocket(context, { websocketConfig });
   } catch (e) {

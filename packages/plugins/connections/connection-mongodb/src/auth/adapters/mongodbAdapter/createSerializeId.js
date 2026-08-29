@@ -15,6 +15,7 @@
 */
 
 import { ObjectId, UUID } from 'mongodb';
+import { LowdefyInternalError } from '@lowdefy/errors';
 
 // Coerces string id values in where clauses to the BSON id type used in the
 // database (ObjectId, or UUID when generateId is 'uuid'), so lookups match
@@ -76,14 +77,10 @@ function createSerializeId({ customIdGenerator, getDefaultModelName, schema, use
         if (isIdInstance(item)) {
           return item;
         }
-        throw new Error(
-          `MongoDB auth adapter received an invalid id value. Received ${JSON.stringify(item)}.`
-        );
+        throw new LowdefyInternalError('MongoDB auth adapter received an invalid id value.');
       });
     }
-    throw new Error(
-      `MongoDB auth adapter received an invalid id value. Received ${JSON.stringify(value)}.`
-    );
+    throw new LowdefyInternalError('MongoDB auth adapter received an invalid id value.');
   };
 }
 

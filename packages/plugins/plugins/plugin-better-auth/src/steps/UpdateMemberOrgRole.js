@@ -54,11 +54,7 @@ async function UpdateMemberOrgRole({ acting, auth, organizationId, properties })
     throw new Error('UpdateMemberOrgRole requires a "memberId" property.');
   }
   if (type.isNone(orgRole) || !type.isString(orgRole)) {
-    throw new Error(
-      `UpdateMemberOrgRole requires an "orgRole" string property. Received ${JSON.stringify(
-        orgRole
-      )}.`
-    );
+    throw new Error('UpdateMemberOrgRole requires an "orgRole" string property.');
   }
   return callPluginEndpoint({
     acting,

@@ -15,10 +15,13 @@
 */
 
 import {
+  AuthenticationError,
+  AuthorizationError,
   ConfigError,
   LowdefyInternalError,
   OperatorError,
   ServiceError,
+  TwoFactorEnrolmentRequiredError,
   UserError,
 } from '@lowdefy/errors';
 
@@ -1404,4 +1407,19 @@ test('omitErrorProps is applied to typed Lowdefy errors and the class is preserv
   expect(result.configKey).toBe('key-1');
   expect(result.secret).toBeUndefined();
   expect(result.stack).toBeUndefined();
+});
+
+test('deserialize revives the auth gate errors as their own classes', () => {
+  const revived = serializer.deserialize(
+    serializer.serialize({
+      authentication: new AuthenticationError('Sign in.'),
+      authorization: new AuthorizationError('Request "x" does not exist.'),
+      twoFactor: new TwoFactorEnrolmentRequiredError(),
+    })
+  );
+  expect(revived.authentication).toBeInstanceOf(AuthenticationError);
+  expect(revived.authentication.message).toBe('Sign in.');
+  expect(revived.authorization).toBeInstanceOf(AuthorizationError);
+  expect(revived.authorization.name).toBe('AuthorizationError');
+  expect(revived.twoFactor).toBeInstanceOf(TwoFactorEnrolmentRequiredError);
 });

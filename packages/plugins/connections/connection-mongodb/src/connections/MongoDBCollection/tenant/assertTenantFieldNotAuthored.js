@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The tenant field may be read, but never authored in a write or filter
@@ -41,7 +42,7 @@ function walk({ node, field, position }) {
   }
   Object.entries(node).forEach(([key, value]) => {
     if (key === field || key.startsWith(`${field}.`)) {
-      throw new Error(
+      throw new ConfigError(
         `Tenant field "${field}" can not be set in ${position} on a tenant connection - the tenant wall stamps and filters it mechanically.`
       );
     }

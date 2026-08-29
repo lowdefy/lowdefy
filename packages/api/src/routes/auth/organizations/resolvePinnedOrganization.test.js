@@ -16,9 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import getOrganizationBinding, {
-  registerOrganizationBinding,
-} from './getOrganizationBinding.js';
+import getOrganizationBinding, { registerOrganizationBinding } from './getOrganizationBinding.js';
 import OrganizationKeyError from './OrganizationKeyError.js';
 import resolvePinnedOrganization from './resolvePinnedOrganization.js';
 

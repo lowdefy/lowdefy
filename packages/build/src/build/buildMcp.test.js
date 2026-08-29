@@ -276,3 +276,28 @@ test('buildMcp throws on duplicate endpoint tool ids', () => {
   };
   expect(() => buildMcp({ components, context })).toThrow('Duplicate MCP tool "get-customer".');
 });
+
+test('buildMcp collects an error per invalid mcp endpoint', () => {
+  const context = testContext();
+  context.errors = [];
+  const components = {
+    api: [publicEndpoint],
+    auth: { oauthProvider: { consentPage: '/oauth/consent' } },
+    mcp: {
+      endpoints: [
+        { id: 'missing-one', scope: 'mcp:read' },
+        { id: 'missing-two', scope: 'mcp:read' },
+        { id: 'get-customer', scope: 'mcp:read' },
+      ],
+    },
+  };
+  buildMcp({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toBe(
+    'MCP endpoint "missing-one" does not reference a defined api endpoint.'
+  );
+  expect(context.errors[1].message).toBe(
+    'MCP endpoint "missing-two" does not reference a defined api endpoint.'
+  );
+  expect(components.mcp.hasPublicTool).toBe(true);
+});

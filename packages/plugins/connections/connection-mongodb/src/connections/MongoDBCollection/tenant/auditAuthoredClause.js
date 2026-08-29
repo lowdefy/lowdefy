@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The audit half of `tenant: authored` (amendment-1): the wall never rewrites
@@ -42,7 +43,7 @@ function auditSearchCompound({ body, field, value, stage }) {
       clause.equals.value === value
   );
   if (!found) {
-    throw new Error(
+    throw new ConfigError(
       `Request declares "tenant: authored", but its "${stage}" stage has no "compound.filter" equals clause on tenant field "${field}" matching the caller's organization. The request was not run. Author the clause inside the stage:
   compound:
     filter:
@@ -78,7 +79,7 @@ function mqlHasTenantEquality({ query, field, value }) {
 
 function auditMqlEquality({ query, field, value, stage, position }) {
   if (!mqlHasTenantEquality({ query, field, value })) {
-    throw new Error(
+    throw new ConfigError(
       `Request declares "tenant: authored", but its "${stage}" stage has no "${position}" equality on tenant field "${field}" matching the caller's organization. The request was not run. Author the clause inside the stage:
   ${position}:
     ${field}:

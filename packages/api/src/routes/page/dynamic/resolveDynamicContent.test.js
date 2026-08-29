@@ -248,7 +248,7 @@ test('resolveDynamicContent renders empty content on failure without a fallback 
   expect(dynamicBlock.slots.content.blocks).toEqual([]);
 });
 
-test('resolveDynamicContent throws when a required Dynamic block fails', async () => {
+test('resolveDynamicContent rethrows a typed Lowdefy error when a required Dynamic block fails', async () => {
   const dynamicBlock = makeDynamicBlock({
     properties: { endpointId: 'missing_endpoint', required: true },
   });
@@ -258,7 +258,7 @@ test('resolveDynamicContent throws when a required Dynamic block fails', async (
     ConfigError
   );
   await expect(() => resolveDynamicContent(context, { pageConfig, urlQuery: {} })).rejects.toThrow(
-    'Dynamic block "section_1" on page "page1" failed to resolve'
+    'API Endpoint "missing_endpoint" does not exist.'
   );
 });
 

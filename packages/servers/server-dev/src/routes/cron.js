@@ -24,7 +24,9 @@ import getPathSegments from '../lib/getPathSegments.js';
 // expression in the `x-vercel-cron-schedule` header. Fails closed if CRON_SECRET is unset.
 async function cronHandler(c) {
   if (c.req.method !== 'GET') {
-    throw new Error('Only GET requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
 

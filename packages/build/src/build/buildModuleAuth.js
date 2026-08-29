@@ -86,7 +86,8 @@ function buildModuleAuth({ components, context, moduleEntries }) {
       }
       if (!type.isNone(roleClaims[role])) {
         throw new ConfigError(
-          `Modules "${roleClaims[role]}" and "${entryId}" both claim authPages role "${role}" and the app does not set it. Set "auth.authPages.${role}" in the app to choose one.`
+          `Modules "${roleClaims[role]}" and "${entryId}" both claim authPages role "${role}" and the app does not set it. Set "auth.authPages.${role}" in the app to choose one.`,
+          { configKey: components.auth.authPages?.['~k'] ?? components.auth['~k'] }
         );
       }
       roleClaims[role] = entryId;

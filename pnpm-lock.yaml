@@ -1586,6 +1586,9 @@ importers:
 
   packages/plugins/connections/connection-mongodb:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 5.5.1
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.5.1
         version: link:../../../utils/helpers
@@ -2183,6 +2186,9 @@ importers:
 
   packages/plugins/plugins/plugin-better-auth:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 5.5.1
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.5.1
         version: link:../../../utils/helpers
@@ -2241,6 +2247,9 @@ importers:
       '@google-cloud/storage':
         specifier: 7.21.0
         version: 7.21.0(encoding@0.1.13)
+      '@lowdefy/errors':
+        specifier: 5.5.1
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.5.1
         version: link:../../../utils/helpers

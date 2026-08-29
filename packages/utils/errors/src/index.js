@@ -44,9 +44,13 @@
  *    - Extends ConfigError with name override
  *    - Format: source:line\n[ConfigWarning] message
  *
- * 6. UserError - User-authored deliberate failure
- *    - Thrown: Client-side Throw action; server-side controlThrow (routine :throw) and controlReject (routine :reject)
- *    - Caught: Caller of the action/resolver; signals "the called routine deliberately failed" as distinct from a system fault
+ * 6. UserError - An expected outcome of user interaction, never a config or system fault
+ *    - Thrown: Client-side Throw and Validate actions; server-side controlThrow (routine :throw)
+ *      and controlReject (routine :reject); client auth methods when the auth server rejects
+ *      the attempt (4xx: wrong password, expired or used link, invalid code, stale OAuth query)
+ *    - Caught: Caller of the action/resolver; the message is shown to the user and catch actions
+ *      run, but it logs to the browser console only - never posted to /api/client-error, never
+ *      logged on the server at error level, never resolved to a config location
  *    - Format: [User Error] message
  *
  * 7. AuthenticationError - Unauthenticated request to a protected endpoint
@@ -59,6 +63,11 @@
  *    - Caught: Server error handlers, before structured logging and Sentry (403)
  *    - Format: [TwoFactorEnrolmentRequiredError] message
  *
+ * 9. AuthorizationError - Authenticated caller refused by an authorization gate (wrong roles)
+ *    - Thrown: Request, endpoint, agent, websocket and auth-step authorization gates
+ *    - Caught: Server error handlers, before structured logging and Sentry (403)
+ *    - Format: [AuthorizationError] message
+ *
  * Location Resolution Utilities:
  *   resolveConfigLocation     - Sync: configKey → {source, config} via keyMap/refMap
  *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
@@ -68,6 +77,7 @@
 
 import ActionError from './ActionError.js';
 import AuthenticationError from './AuthenticationError.js';
+import AuthorizationError from './AuthorizationError.js';
 import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
@@ -88,6 +98,7 @@ import UserError from './UserError.js';
 export {
   ActionError,
   AuthenticationError,
+  AuthorizationError,
   BlockError,
   BuildError,
   ConfigError,

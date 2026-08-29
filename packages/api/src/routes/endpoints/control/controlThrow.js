@@ -42,8 +42,8 @@ async function controlThrow(context, routineContext, { control }) {
   // Log under `err` — the pino error serializer (createNodeLogger) is registered
   // for the `err` key only; an Error passed as `error` is JSON-dumped without its
   // non-enumerable `message`/`stack`, producing a log line with no message.
-  context.logger.error({
-    event: 'error_control_throw',
+  context.logger.warn({
+    event: 'warn_control_throw',
     err: error,
   });
 

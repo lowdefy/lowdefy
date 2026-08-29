@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
 // Merge the tenant equality into a find/update/delete selector:
@@ -27,7 +29,7 @@ function applyTenantToFilter({ filter, tenant, position = 'a filter' }) {
     // Every non-aggregation operation reaches the wall through this helper or
     // stampTenantOnDoc, so the authored sentinel is refused here once rather
     // than in each operation file.
-    throw new Error(
+    throw new ConfigError(
       '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this request mechanically. Remove "tenant: authored".'
     );
   }

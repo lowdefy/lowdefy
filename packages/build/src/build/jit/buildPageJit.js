@@ -348,6 +348,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       validateOrgClientActionRefs({
         orgClientActionRefs: buildContext.orgClientActionRefs,
         policy: policy ?? 'pinned',
+        context: buildContext,
       });
     }
     validateDynamicBlockRefs({

@@ -132,3 +132,21 @@ test('organization throws when the pinned organization has not been resolved', a
     `"The pinned organization has not been resolved - the startup ensure has not completed or failed."`
   );
 });
+
+test('organization throws a ConfigError when organizations are not configured', async () => {
+  const organization = (await import('./organization.js')).default;
+  expect(() =>
+    organization({ location: 'location', organization: undefined, params: 'id' })
+  ).toThrow(expect.objectContaining({ name: 'ConfigError' }));
+});
+
+test('organization throws a LowdefyInternalError when the pinned organization is unresolved', async () => {
+  const organization = (await import('./organization.js')).default;
+  expect(() =>
+    organization({
+      location: 'location',
+      organization: { policy: 'pinned', pinned: null },
+      params: 'id',
+    })
+  ).toThrow(expect.objectContaining({ name: 'LowdefyInternalError' }));
+});

@@ -15,6 +15,7 @@
 */
 
 import { MongoClient } from 'mongodb';
+import { ConfigError } from '@lowdefy/errors';
 
 import mongodbAdapter from '../mongodbAdapter/mongodbAdapter.js';
 
@@ -31,7 +32,7 @@ import mongodbAdapter from '../mongodbAdapter/mongodbAdapter.js';
 // migration).
 function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
-    throw new Error('MongoDBAuthAdapter requires "uri" property.');
+    throw new ConfigError('MongoDBAuthAdapter requires "uri" property.');
   }
   // Process-lifetime singleton by design: getBetterAuth memoizes the engine
   // (and this adapter with it), the driver connects lazily and pools, and

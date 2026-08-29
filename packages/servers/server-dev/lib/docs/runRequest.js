@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import { callRequest } from '@lowdefy/api';
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import readBuildArtifact from './readBuildArtifact.js';
@@ -58,10 +59,12 @@ function truncateResponse(result) {
 // returned as data so an agent can reason about them.
 async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
-    throw new Error(`run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`);
+    throw new ConfigError(
+      `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
+    );
   }
   if (type.isUndefined(requestId) || !type.isString(requestId)) {
-    throw new Error(
+    throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
     );
   }

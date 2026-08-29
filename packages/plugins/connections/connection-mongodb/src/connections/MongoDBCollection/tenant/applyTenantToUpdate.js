@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 
 // Guard and stamp an update document on a tenant connection.
@@ -45,7 +47,7 @@ function assertUnsetDoesNotDropTenantField({ stage, field }) {
   const paths = Array.isArray(unset) ? unset : [unset];
   paths.forEach((path) => {
     if (typeof path === 'string' && (path === field || path.startsWith(`${field}.`))) {
-      throw new Error(
+      throw new ConfigError(
         `Tenant field "${field}" can not be set in an update on a tenant connection - the tenant wall stamps and filters it mechanically.`
       );
     }
@@ -59,7 +61,7 @@ function assertRenameDoesNotTargetTenantField({ update, field }) {
   if (rename === undefined || rename === null || typeof rename !== 'object') return;
   Object.values(rename).forEach((target) => {
     if (typeof target === 'string' && (target === field || target.startsWith(`${field}.`))) {
-      throw new Error(
+      throw new ConfigError(
         `Tenant field "${field}" can not be set in an update on a tenant connection - the tenant wall stamps and filters it mechanically.`
       );
     }

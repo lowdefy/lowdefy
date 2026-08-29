@@ -244,3 +244,29 @@ describe('ServiceError.enhanceMessage', () => {
     expect(enhanced).toBe('Unknown error');
   });
 });
+
+test('ServiceError takes configKey from the cause when none is given', () => {
+  const cause = new Error('boom');
+  cause.configKey = 'key-from-cause';
+  const error = new ServiceError(undefined, { cause });
+  expect(error.configKey).toBe('key-from-cause');
+  const explicit = new ServiceError(undefined, { cause, configKey: 'explicit' });
+  expect(explicit.configKey).toBe('explicit');
+});
+
+test('isServiceError reads the AWS SDK v3 $metadata.httpStatusCode', () => {
+  const error = new Error('Service Unavailable');
+  error.$metadata = { httpStatusCode: 503 };
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  const denied = new Error('Access Denied');
+  denied.$metadata = { httpStatusCode: 403 };
+  expect(ServiceError.isServiceError(denied)).toBe(false);
+});
+
+test('isServiceError treats a numeric 5xx code as an HTTP status', () => {
+  const error = new Error('Backend Error');
+  error.code = 503;
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  error.code = 404;
+  expect(ServiceError.isServiceError(error)).toBe(false);
+});

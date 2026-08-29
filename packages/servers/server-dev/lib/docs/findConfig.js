@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { resolveConfigLocation } from '@lowdefy/errors';
+import { ConfigError, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
@@ -182,7 +182,7 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope 
 // "no matches" as a normal result and try another id or pageId.
 async function findConfig({ id, pageId }) {
   if (type.isNone(id) || !type.isString(id)) {
-    throw new Error(
+    throw new ConfigError(
       `findConfig requires an "id" string. Received ${JSON.stringify(id)}. ` +
         'Use GET /lowdefy-docs/find/:id.'
     );

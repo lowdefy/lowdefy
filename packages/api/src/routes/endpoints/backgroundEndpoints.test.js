@@ -181,6 +181,40 @@ test('detached: true without CRON_SECRET throws a ConfigError', async () => {
   expect(result.error).toBeTruthy();
 });
 
+test('detached: true without a request origin on context is a LowdefyInternalError', async () => {
+  process.env.CRON_SECRET = 'cron-secret';
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/parent_ep.json') {
+      return {
+        endpointId: 'parent_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'endpoint:parent_ep:spawn',
+            stepId: 'spawn',
+            type: 'CallApi',
+            properties: { endpointId: 'child_ep', detached: true },
+          },
+        ],
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  // context.origin is written by the server middleware - its absence is an
+  // invariant violation, not the app developer's config.
+  delete context.origin;
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'parent_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(false);
+  expect(serializer.deserialize(result.error).name).toBe('LowdefyInternalError');
+});
+
 test('webhook endpoints: gated on webhook: true, payload is { body, query, headers }', async () => {
   const { default: runWebhookEndpoint } = await import('./runWebhookEndpoint.js');
   const mockReadConfigFile = jest.fn((path) => {
@@ -301,6 +335,14 @@ const verifierConnections = {
       StubVerify: ({ request }) => request.token === 'good',
     },
   },
+  StubVerifyOutageConnection: {
+    schema: true,
+    requests: {
+      StubVerify: () => {
+        throw new Error('connection refused');
+      },
+    },
+  },
 };
 
 function createWebhookReadConfigFile({ parent }) {
@@ -321,6 +363,14 @@ function createWebhookReadConfigFile({ parent }) {
         id: 'connection:verifier',
         type: 'StubVerifyConnection',
         connectionId: 'verifier',
+        properties: {},
+      };
+    }
+    if (path === 'connections/outage_verifier.json') {
+      return {
+        id: 'connection:outage_verifier',
+        type: 'StubVerifyOutageConnection',
+        connectionId: 'outage_verifier',
         properties: {},
       };
     }
@@ -418,6 +468,41 @@ test('webhook whose verify gate fails returns unauthorized and never runs the ro
   expect(result.success).toBe(false);
   // The routine never ran - the child endpoint config was never read.
   expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
+});
+
+test('webhook whose verifier is unreachable errors instead of reporting a failed verification', async () => {
+  const readConfigFile = createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'parent_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: {
+        verify: { ...stubVerify, connectionId: 'outage_verifier' },
+      },
+      routine: nestedCallRoutine('parent_hook'),
+    },
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: verifierConnections,
+    readConfigFile,
+  });
+  // A verifier outage must not be swallowed into a false verdict - that would
+  // report an unreachable service as a forged webhook.
+  let thrown;
+  try {
+    await runWebhookEndpoint(context, {
+      endpointId: 'parent_hook',
+      body: {},
+      query: { token: 'good' },
+      headers: {},
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.name).toBe('ServiceError');
+  expect(thrown.service).toBe('outage_verifier');
 });
 
 test('webhook whose verify gate passes blanket-passes a nested protected CallApi', async () => {
