@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 async function request({ url, method = 'GET', body }) {
   const res = await fetch(url, {
     method,
@@ -27,7 +29,12 @@ async function request({ url, method = 'GET', body }) {
   }
   if (!res.ok) {
     const body = await res.json();
-    throw new Error(body?.['~e']?.message ?? body?.message ?? 'Request error');
+    // A Lowdefy error envelope is revived rather than flattened to its message,
+    // so the class, configKey and source survive to the error handler.
+    if (body?.['~e']) {
+      throw serializer.deserialize(body);
+    }
+    throw new Error(body?.message ?? 'Request error');
   }
   return res.json();
 }

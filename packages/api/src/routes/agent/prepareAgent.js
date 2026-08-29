@@ -72,6 +72,7 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
   const resolverContext = {
     agentContext,
     i18n: context.i18n,
+    logger: context.logger,
     mode,
     evaluateOperators: (input) =>
       context.evaluateOperators({

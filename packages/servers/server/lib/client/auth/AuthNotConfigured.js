@@ -16,8 +16,12 @@
 
 /* eslint-disable react/jsx-props-no-spreading */
 
+import { ConfigError } from '@lowdefy/errors';
+
 function authNotConfigured() {
-  throw new Error('Auth not configured.');
+  throw new ConfigError(
+    'Auth is not configured. Add an "auth" section to lowdefy.yaml to use auth actions.'
+  );
 }
 
 // A dev mock user reaches the browser through this component: an app whose

@@ -15,14 +15,15 @@
 */
 
 import { Hono } from 'hono';
-import { HTTPException } from 'hono/http-exception';
 import { jest } from '@jest/globals';
 
-import createErrorHandler from './errorHandler.js';
+// The handler is byte-identical to `server-dev`'s and `server-e2e`'s apart from
+// the Sentry capture tested at the bottom of this file. Keep the three in sync
+// when changing any of them.
+const captureException = jest.fn();
+jest.unstable_mockModule('@sentry/node', () => ({ captureException }));
 
-// The handler here is byte-identical to its `server-e2e` counterpart (and to
-// `server`'s apart from the Sentry capture, which `server` tests separately).
-// Keep the three in sync when changing any of them.
+const { default: createErrorHandler } = await import('./errorHandler.js');
 
 // A string that must never reach a client. It is put on `received` at every
 // level of the cause chain, so a single JSON.stringify search over the body
@@ -83,24 +84,6 @@ test('errorHandler returns text Unauthorized at 401 for an AuthenticationError o
   expect(res.status).toEqual(401);
   expect(await res.text()).toEqual('Unauthorized');
   expect(logger.warn).toHaveBeenCalledTimes(1);
-});
-
-test('errorHandler sends an HTTPException response as-is with one warning and no error log', async () => {
-  const logger = createLogger();
-  const error = new HTTPException(404, {
-    res: Response.json(
-      { jsonrpc: '2.0', error: { code: -32000, message: 'Unsupported protocol version' } },
-      { status: 404 }
-    ),
-  });
-  const res = await createApp({ error, logger }).request('/api/mcp', { method: 'POST' });
-  expect(res.status).toEqual(404);
-  expect(await res.json()).toEqual({
-    jsonrpc: '2.0',
-    error: { code: -32000, message: 'Unsupported protocol version' },
-  });
-  expect(logger.warn).toHaveBeenCalledWith('404 answered by the route: POST /api/mcp');
-  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('errorHandler returns 403 with only name and message for an AuthorizationError on an api path', async () => {
@@ -271,4 +254,39 @@ test('errorHandler treats a basePath prefixed page path as a page path', async (
 
   expect(res.status).toEqual(500);
   expect(await res.text()).toEqual('Internal Server Error');
+});
+
+// context.handleError captures to Sentry itself (createHandleError ->
+// captureSentryError), so the handler must not capture the same fault again.
+test('errorHandler does not capture to Sentry when a lowdefyContext handled the error', async () => {
+  process.env.SENTRY_DSN = 'https://key@example.ingest.sentry.io/1';
+  const context = { handleError: jest.fn() };
+  await createApp({
+    context,
+    error: createErrorWithCause(),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(captureException).not.toHaveBeenCalled();
+  delete process.env.SENTRY_DSN;
+});
+
+test('errorHandler captures to Sentry when there is no lowdefyContext to handle the error', async () => {
+  process.env.SENTRY_DSN = 'https://key@example.ingest.sentry.io/1';
+  const error = createErrorWithCause();
+  await createApp({ error, logger: createLogger() }).request('/api/request/getUsers');
+
+  expect(captureException).toHaveBeenCalledTimes(1);
+  expect(captureException).toHaveBeenCalledWith(error);
+  delete process.env.SENTRY_DSN;
+});
+
+test('errorHandler does not capture to Sentry when SENTRY_DSN is unset', async () => {
+  delete process.env.SENTRY_DSN;
+  await createApp({ error: createErrorWithCause(), logger: createLogger() }).request(
+    '/api/request/getUsers'
+  );
+
+  expect(captureException).not.toHaveBeenCalled();
 });

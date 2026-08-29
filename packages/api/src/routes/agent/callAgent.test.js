@@ -994,9 +994,10 @@ test('callAgent rejects a protected agent when there is no session', async () =>
   const context = testContext({ logger, readConfigFile });
   context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
 
+  // No session on a protected agent is a 401, not the opaque not-found refusal.
   await expect(
     callAgent(context, { agentId: 'my-agent', pageId: 'page1', messages: [] })
-  ).rejects.toThrow('Agent "my-agent" does not exist.');
+  ).rejects.toThrow('Authentication required for agent "my-agent".');
   expect(mockResolver).not.toHaveBeenCalled();
 });
 
@@ -1077,7 +1078,7 @@ test('callAgent resolverContext.getAgentConfig authorizes sub-agents against the
   const resolverContext = mockResolver.mock.calls[0][0].context;
 
   await expect(resolverContext.getAgentConfig({ agentId: 'protected-sub' })).rejects.toThrow(
-    'Agent "protected-sub" does not exist.'
+    'Authentication required for agent "protected-sub".'
   );
   await expect(resolverContext.getAgentConfig({ agentId: 'parent-agent' })).resolves.toEqual(
     agentConfig

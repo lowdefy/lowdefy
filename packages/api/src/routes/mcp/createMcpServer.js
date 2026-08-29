@@ -126,15 +126,13 @@ async function createMcpServer({ context }) {
         isError: true,
       };
     } catch (error) {
-      // Unauthenticated calls to gated tools and payloads that miss the
-      // payloadSchema (UserError) are expected traffic - a warn line and the
-      // message the model needs to retry, not a structured error log.
+      // Refused calls to gated tools (unauthenticated or wrong roles) and payloads
+      // that miss the payloadSchema (UserError) are expected traffic - a warn line
+      // and the message the model needs to retry, not a structured error log.
       // Everything else goes through the server's error sink, which resolves
       // the config source, logs it and collects it for the dev feedback
       // channel.
-      if (error.name === 'AuthenticationError') {
-        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
-      } else if (error.name === 'UserError') {
+      if (['AuthenticationError', 'AuthorizationError', 'UserError'].includes(error.name)) {
         context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
         await context.handleError(error);

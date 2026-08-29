@@ -15,7 +15,7 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
 import invokeEndpoint from './invokeEndpoint.js';
@@ -53,7 +53,9 @@ async function handleEndpointCall(context, routineContext, { step }) {
       );
     }
     if (!context.origin) {
-      throw new ConfigError('Detached endpoint calls require the request origin on context.');
+      throw new LowdefyInternalError(
+        'Detached endpoint calls require the request origin on context.'
+      );
     }
     const targetEndpointId = evaluatedProperties.endpointId;
     scheduleBackground(context, { event: 'detached_dispatch', endpointId: targetEndpointId }, () =>

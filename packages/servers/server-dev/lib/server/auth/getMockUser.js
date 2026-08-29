@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import authJson from '../../build/auth.js';
@@ -34,7 +35,9 @@ function getMockUser() {
     try {
       mockUser = JSON.parse(mockUserJson);
     } catch (error) {
-      throw new Error('Invalid JSON in LOWDEFY_DEV_USER environment variable.', { cause: error });
+      throw new ConfigError('Invalid JSON in LOWDEFY_DEV_USER environment variable.', {
+        cause: error,
+      });
     }
   } else {
     mockUser = authJson.dev?.mockUser;

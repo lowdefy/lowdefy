@@ -367,6 +367,36 @@ test('handleError skipped when error.handled is already true', async () => {
   expect(handleError).toHaveBeenCalledTimes(1);
 });
 
+test('an invalid routine throws a LowdefyInternalError', async () => {
+  const { default: runRoutine } = await import('./runRoutine.js');
+  const handleError = jest.fn();
+  const res = await runRoutine({ handleError }, {}, { routine: null });
+  expect(res.status).toBe('error');
+  expect(res.error.name).toBe('LowdefyInternalError');
+  expect(res.error.message).toBe('Invalid routine.');
+});
+
+test('a UserError is returned as an error status without going through handleError', async () => {
+  const { default: runRoutine } = await import('./runRoutine.js');
+  const { UserError } = await import('@lowdefy/errors');
+  const handleError = jest.fn();
+  const error = new UserError('Nested throw.');
+  const routine = {
+    id: 'endpoint:nested',
+    stepId: 'call_nested',
+  };
+  const context = {
+    handleError,
+    logger: { debug: jest.fn() },
+    evaluateOperators: () => {
+      throw error;
+    },
+  };
+  const res = await runRoutine(context, {}, { routine });
+  expect(res).toEqual({ status: 'error', error });
+  expect(handleError).not.toHaveBeenCalled();
+});
+
 test('combined operators in request properties', async () => {
   const routine = {
     stepId: 'test_request',

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import { UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The client-bound error policy: which fields of an error may cross the wire.
@@ -50,7 +49,9 @@ function omitErrorProps(error) {
   // `Caused by: MongoServerError: <raw text>` in the server terminal.
   if (error.name === 'ServiceError') return OMITTED_WITH_CAUSE;
   if (type.isError(error.cause)) return ALWAYS_OMITTED;
-  if (error instanceof UserError) return ALWAYS_OMITTED;
+  // Keyed on the name, not instanceof - the error may cross a package boundary
+  // or a serializer round trip and still be a UserError.
+  if (error.name === 'UserError') return ALWAYS_OMITTED;
   return OMITTED_WITH_CAUSE;
 }
 

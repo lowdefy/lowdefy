@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import parseUserParam from './parseUserParam.js';
 import runRequest from '../../../lib/docs/runRequest.js';
 
 // Refusals and request errors are returned as 200 data (see runRequest.js) —
-// only malformed input (missing pageId/requestId) is a 400.
+// only malformed input (missing pageId/requestId, thrown as a ConfigError) is a
+// 400. Anything else is a fault and propagates to the error handler.
 async function docsRunRequestHandler(c) {
   // Parse the body from a clone: runRequest builds a Lowdefy context whose
   // getSession(c) → getAuthUser(c) reconstructs a Request from c.req.raw,
@@ -40,7 +43,10 @@ async function docsRunRequestHandler(c) {
     });
     return c.json(result);
   } catch (error) {
-    return c.json({ error: error.message }, 400);
+    if (error instanceof ConfigError) {
+      return c.json({ error: error.message }, 400);
+    }
+    throw error;
   }
 }
 

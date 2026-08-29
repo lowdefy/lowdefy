@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import { callRequest } from '@lowdefy/api';
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import readBuildArtifact from './readBuildArtifact.js';
@@ -42,16 +43,18 @@ function getRequestType({ pageId, requestId }) {
 // returned as data so an agent can reason about them.
 async function runRequest({ pageId, requestId, payload = {}, user, honoContext }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
-    throw new Error(`run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`);
+    throw new ConfigError(
+      `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
+    );
   }
   if (type.isUndefined(requestId) || !type.isString(requestId)) {
-    throw new Error(
+    throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
     );
   }
 
   if (!type.isNone(user) && !type.isObject(user)) {
-    throw new Error(
+    throw new ConfigError(
       `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
         user
       )}.`
