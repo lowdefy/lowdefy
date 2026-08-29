@@ -14,16 +14,10 @@
   limitations under the License.
 */
 
-import { isWellFormedOrgSegment } from '@lowdefy/api';
-
-// Mounted ahead of the api context so a malformed org segment is refused
-// before any authentication or database work runs, and arbitrary path input
-// is never reflected into a resource URI.
-async function mcpOrgGuard(c, next) {
-  if (!isWellFormedOrgSegment(c.req.param('org'))) {
-    return c.json({ error: 'Not found.' }, 404);
-  }
-  return next();
+function createOauth2Continue({ context }) {
+  return function oauth2Continue(params) {
+    return context._internal.lowdefy._internal.auth.oauth2Continue(params);
+  };
 }
 
-export default mcpOrgGuard;
+export default createOauth2Continue;

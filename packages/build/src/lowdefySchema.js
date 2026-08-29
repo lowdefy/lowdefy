@@ -924,6 +924,14 @@ export default {
                 type: 'Auth "oauthProvider.dynamicClientRegistration" should be a boolean.',
               },
             },
+            postLoginPage: {
+              type: 'string',
+              description:
+                'Lowdefy page id of the page where a signed-in user chooses the organization an MCP authorization acts in. Shown after login and before consent; required under the "tenant" organizations policy.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.postLoginPage" should be a string.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "oauthProvider" should be an object.',
@@ -931,7 +939,7 @@ export default {
               consentPage: 'Auth "oauthProvider" should have required property "consentPage".',
             },
             additionalProperties:
-              'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage" and "dynamicClientRegistration".',
+              'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage", "postLoginPage" and "dynamicClientRegistration".',
           },
         },
         passkey: {

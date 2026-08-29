@@ -29,7 +29,7 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
 }));
 
 jest.unstable_mockModule('./mcpProtectedResourceMetadata.js', () => ({
-  default: (c) => c.json({ resource: c.req.param('org') }),
+  default: (c) => c.json({ resource: 'mcp' }),
 }));
 
 const mockAuthJson = { configured: true };
@@ -46,7 +46,7 @@ beforeEach(() => {
 test('mountOauthDiscovery mounts nothing when oauthProvider is not configured', async () => {
   const app = new Hono();
   mountOauthDiscovery({ app, auth: { api: {} } });
-  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp/org_1');
+  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp');
   expect(resourceRes.status).toEqual(404);
   const asRes = await app.request('/.well-known/oauth-authorization-server/api/auth');
   expect(asRes.status).toEqual(404);
@@ -58,9 +58,9 @@ test('mountOauthDiscovery mounts both discovery documents when oauthProvider is 
   const app = new Hono();
   const auth = { api: {} };
   mountOauthDiscovery({ app, auth });
-  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp/org_1');
+  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp');
   expect(resourceRes.status).toEqual(200);
-  expect(await resourceRes.json()).toEqual({ resource: 'org_1' });
+  expect(await resourceRes.json()).toEqual({ resource: 'mcp' });
   const asRes = await app.request('/.well-known/oauth-authorization-server/api/auth');
   expect(asRes.status).toEqual(200);
   expect(await asRes.json()).toEqual({ issuer: 'https://app.test.com/api/auth' });
@@ -71,7 +71,7 @@ test('mountOauthDiscovery serves only the static resource document without an au
   mockAuthJson.oauthProvider = { consentPage: '/oauth/consent' };
   const app = new Hono();
   mountOauthDiscovery({ app, auth: null });
-  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp/org_1');
+  const resourceRes = await app.request('/.well-known/oauth-protected-resource/api/mcp');
   expect(resourceRes.status).toEqual(200);
   const asRes = await app.request('/.well-known/oauth-authorization-server/api/auth');
   expect(asRes.status).toEqual(404);

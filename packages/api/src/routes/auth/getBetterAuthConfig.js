@@ -30,6 +30,7 @@ import buildAdminPlugin from './buildAdminPlugin.js';
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
 import buildOrganizationPlugin from './organizations/buildOrganizationPlugin.js';
+import buildOauthPostLogin from './buildOauthPostLogin.js';
 import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
@@ -400,14 +401,14 @@ function getBetterAuthConfig({
     options.plugins.push(buildCaptchaPlugin({ authConfig }));
   }
 
-  // The app is its own OAuth 2.1 authorization server for the per-org MCP
-  // endpoints. The AS issuer and every per-org resource URI derive from the
+  // The app is its own OAuth 2.1 authorization server for the MCP endpoint.
+  // The AS issuer and the MCP resource URI derive from the
   // canonical origin - a Host-derived issuer would let a spoofed Host header
   // steer where tokens are honoured, so an unpinned origin is a startup error.
   if (!type.isNone(authConfig.oauthProvider)) {
     if (!type.isString(baseUrlOrigin)) {
       throw new ConfigError(
-        'Auth "oauthProvider" requires the BETTER_AUTH_URL environment variable to be set to the app\'s canonical origin. The authorization server issuer and every per-org MCP resource URI derive from it.'
+        'Auth "oauthProvider" requires the BETTER_AUTH_URL environment variable to be set to the app\'s canonical origin. The authorization server issuer and the MCP resource URI derive from it.'
       );
     }
     const oauthPagesBasePath = config.basePath ?? '';
@@ -423,6 +424,18 @@ function getBetterAuthConfig({
       oauthProvider({
         loginPage: `${baseUrlOrigin}${oauthPagesBasePath}${authConfig.authPages.signIn}`,
         consentPage: `${baseUrlOrigin}${oauthPagesBasePath}${authConfig.oauthProvider.consentPage}`,
+        // Which organization a grant acts in is chosen after login and before
+        // consent, and travels as the consent referenceId - see
+        // buildOauthPostLogin. Every access token carries it as the
+        // organization_id claim the /api/mcp route resolves the member from;
+        // the refresh grant re-stamps the same reference, so a refreshed
+        // token keeps its organization.
+        postLogin: buildOauthPostLogin({
+          authConfig,
+          baseUrlOrigin,
+          basePath: oauthPagesBasePath,
+        }),
+        customAccessTokenClaims: ({ referenceId }) => ({ organization_id: referenceId }),
         // The closed MCP scope vocabulary. Without "openid" the OIDC surface
         // (id tokens, /oauth2/userinfo, /.well-known/openid-configuration)
         // stays dormant. "offline_access" is the OAuth-standard opt-in for a
@@ -435,8 +448,8 @@ function getBetterAuthConfig({
         // Any registered client may request any enabled resource - access is
         // decided by user consent and org membership, not client-resource links.
         enforcePerClientResources: false,
-        // Resource rows are owned by the app (one per organization), never
-        // administered over HTTP.
+        // The one resource row is owned by the app, never administered over
+        // HTTP.
         resourcePrivileges: () => false,
         ...(authConfig.oauthProvider.dynamicClientRegistration === true
           ? {

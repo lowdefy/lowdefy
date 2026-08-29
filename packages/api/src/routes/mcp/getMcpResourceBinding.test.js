@@ -16,11 +16,11 @@
 
 import getMcpResourceBinding, { registerMcpResourceBinding } from './getMcpResourceBinding.js';
 
-test('getMcpResourceBinding returns the registered uriPrefix for an auth instance', () => {
+test('getMcpResourceBinding returns the registered resourceUri for an auth instance', () => {
   const auth = {};
-  registerMcpResourceBinding({ auth, uriPrefix: 'https://app.example.com/api/mcp/' });
+  registerMcpResourceBinding({ auth, resourceUri: 'https://app.example.com/api/mcp' });
   expect(getMcpResourceBinding({ auth })).toEqual({
-    uriPrefix: 'https://app.example.com/api/mcp/',
+    resourceUri: 'https://app.example.com/api/mcp',
   });
 });
 
@@ -36,8 +36,8 @@ test('getMcpResourceBinding returns null when auth is null or undefined', () => 
 test('bindings are scoped per auth instance', () => {
   const authA = {};
   const authB = {};
-  registerMcpResourceBinding({ auth: authA, uriPrefix: 'https://a.example.com/api/mcp/' });
-  registerMcpResourceBinding({ auth: authB, uriPrefix: 'https://b.example.com/api/mcp/' });
-  expect(getMcpResourceBinding({ auth: authA }).uriPrefix).toBe('https://a.example.com/api/mcp/');
-  expect(getMcpResourceBinding({ auth: authB }).uriPrefix).toBe('https://b.example.com/api/mcp/');
+  registerMcpResourceBinding({ auth: authA, resourceUri: 'https://a.example.com/api/mcp' });
+  registerMcpResourceBinding({ auth: authB, resourceUri: 'https://b.example.com/api/mcp' });
+  expect(getMcpResourceBinding({ auth: authA }).resourceUri).toBe('https://a.example.com/api/mcp');
+  expect(getMcpResourceBinding({ auth: authB }).resourceUri).toBe('https://b.example.com/api/mcp');
 });

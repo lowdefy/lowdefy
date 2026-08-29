@@ -63,7 +63,7 @@ function createApp() {
     });
     await next();
   });
-  app.all('/api/mcp/:org', mcpHandler);
+  app.all('/api/mcp', mcpHandler);
   return app;
 }
 
@@ -87,44 +87,60 @@ afterAll(() => {
 
 test('mcpHandler returns 404 when mcp is not configured', async () => {
   mockReadConfigFile.mockResolvedValue({ configured: false });
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(404);
   expect(await res.json()).toEqual({ error: 'MCP is not configured.' });
   expect(mockCreateMcpServer).not.toHaveBeenCalled();
 });
 
 test('mcpHandler challenges an invalid token with the resource metadata pointer', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: true };
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  contextOverrides.mcpAuth = { tokenStatus: 'invalid', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(401);
   expect(res.headers.get('WWW-Authenticate')).toEqual(
-    'Bearer resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp/org_1"'
+    'Bearer resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp"'
   );
   expect(mockCreateMcpServer).not.toHaveBeenCalled();
 });
 
 test('mcpHandler extends the challenge with invalid_token when the bearer is not a JWT', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: false };
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  contextOverrides.mcpAuth = { tokenStatus: 'invalid', parseableJwt: false };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(401);
   expect(res.headers.get('WWW-Authenticate')).toEqual(
-    'Bearer error="invalid_token", error_description="The access token is not a JWT. Connect with a client that sends the RFC 8707 resource parameter.", resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp/org_1"'
+    'Bearer error="invalid_token", error_description="The access token is not a JWT. Connect with a client that sends the RFC 8707 resource parameter.", resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp"'
   );
+});
+
+test('mcpHandler tells a revoked grant to reconnect and choose an organization', async () => {
+  contextOverrides.mcpAuth = {
+    clientId: 'client_1',
+    organizationId: 'org_1',
+    tokenStatus: 'invalid',
+    parseableJwt: true,
+    revoked: true,
+  };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
+  expect(res.status).toEqual(401);
+  expect(res.headers.get('WWW-Authenticate')).toEqual(
+    'Bearer error="invalid_token", error_description="This connection was disconnected. Reconnect to choose the organization to work in.", resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp"'
+  );
+  expect(mockCreateMcpServer).not.toHaveBeenCalled();
 });
 
 test('mcpHandler challenges an anonymous request when the surface has no public tool', async () => {
   mockReadConfigFile.mockResolvedValue({ configured: true, hasPublicTool: false, endpoints: [] });
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(401);
   expect(res.headers.get('WWW-Authenticate')).toEqual(
-    'Bearer resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp/org_1"'
+    'Bearer resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp"'
   );
 });
 
 test('mcpHandler serves an anonymous request when the surface has a public tool', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({ served: true });
 });
@@ -132,19 +148,18 @@ test('mcpHandler serves an anonymous request when the surface has a public tool'
 test('mcpHandler serves a valid-token request and never challenges past the boundary', async () => {
   mockReadConfigFile.mockResolvedValue({ configured: true, hasPublicTool: false, endpoints: [] });
   contextOverrides.mcpAuth = {
-    orgId: 'org_1',
     tokenStatus: 'valid',
     parseableJwt: true,
     grantedScopes: ['mcp:read'],
   };
-  const res = await createApp().request('/api/mcp/org_1', { method: 'POST' });
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({ served: true });
 });
 
 test('mcpHandler refuses a foreign Origin with a 403', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
-  const res = await createApp().request('/api/mcp/org_1', {
+  contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', {
     method: 'POST',
     headers: { Origin: 'https://evil.test' },
   });
@@ -154,8 +169,8 @@ test('mcpHandler refuses a foreign Origin with a 403', async () => {
 });
 
 test('mcpHandler accepts the pinned canonical origin', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
-  const res = await createApp().request('/api/mcp/org_1', {
+  contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
+  const res = await createApp().request('/api/mcp', {
     method: 'POST',
     headers: { Origin: 'https://app.test.com' },
   });
@@ -163,9 +178,9 @@ test('mcpHandler accepts the pinned canonical origin', async () => {
 });
 
 test('mcpHandler accepts an origin registered on BetterAuth trustedOrigins', async () => {
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
+  contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
   contextOverrides.auth = { options: { trustedOrigins: ['https://studio.test.com'] } };
-  const res = await createApp().request('/api/mcp/org_1', {
+  const res = await createApp().request('/api/mcp', {
     method: 'POST',
     headers: { Origin: 'https://studio.test.com' },
   });
@@ -174,8 +189,8 @@ test('mcpHandler accepts an origin registered on BetterAuth trustedOrigins', asy
 
 test('mcpHandler serves openly with no envelope when oauthProvider is not configured', async () => {
   delete mockAuthJson.oauthProvider;
-  contextOverrides.mcpAuth = { orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: false };
-  const res = await createApp().request('/api/mcp/org_1', {
+  contextOverrides.mcpAuth = { tokenStatus: 'invalid', parseableJwt: false };
+  const res = await createApp().request('/api/mcp', {
     method: 'POST',
     headers: { Origin: 'https://evil.test' },
   });

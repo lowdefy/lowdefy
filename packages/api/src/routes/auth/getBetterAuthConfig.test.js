@@ -1582,8 +1582,9 @@ describe('oauthProvider authorization server plugins', () => {
     // disableJwtPlugin false is the JWT access-token mode - opaque tokens off.
     expect(plugin.options.disableJwtPlugin).toBe(false);
     expect(plugin.options.enforcePerClientResources).toBe(false);
-    expect(plugin.options.customAccessTokenClaims).toBeUndefined();
-    expect(plugin.options.postLogin).toBeUndefined();
+    expect(plugin.options.customAccessTokenClaims({ referenceId: 'org_1' })).toEqual({
+      organization_id: 'org_1',
+    });
     expect(plugin.options.resources).toBeUndefined();
     expect(plugin.options.dpop).toBeUndefined();
   });
@@ -1601,6 +1602,56 @@ describe('oauthProvider authorization server plugins', () => {
     const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
     expect(plugin.options.consentPage).toBe('https://app.example.com/base/oauth/consent');
     expect(plugin.options.loginPage).toBe('https://app.example.com/base/login');
+  });
+
+  test('skips the post-login organization choice under the pinned policy and references the pinned org', () => {
+    const options = getOAuthOptions();
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.postLogin.shouldRedirect({ session: {} })).toBe(false);
+    expect(plugin.options.postLogin.consentReferenceId({ session: {} })).toBe('default');
+    // Never redirected to under pinned, but the plugin requires a page.
+    expect(plugin.options.postLogin.page).toBe('https://app.example.com/oauth/consent');
+  });
+
+  test('redirects every authorization to the post-login page and references the active org under the tenant policy', () => {
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        organizations: { policy: 'tenant', signup: 'open', create: 'auto' },
+        oauthProvider: {
+          consentPage: '/oauth/consent',
+          postLoginPage: '/oauth/select-organization',
+          dynamicClientRegistration: false,
+        },
+      }),
+      config: { basePath: '/base' },
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const plugin = options.plugins.find((p) => p.id === 'oauth-provider');
+    expect(plugin.options.postLogin.page).toBe(
+      'https://app.example.com/base/oauth/select-organization'
+    );
+    expect(
+      plugin.options.postLogin.shouldRedirect({ session: { activeOrganizationId: 'org_1' } })
+    ).toBe(true);
+    expect(
+      plugin.options.postLogin.consentReferenceId({ session: { activeOrganizationId: 'org_1' } })
+    ).toBe('org_1');
+    let error;
+    try {
+      plugin.options.postLogin.consentReferenceId({ session: {} });
+    } catch (thrown) {
+      error = thrown;
+    }
+    expect(error.body).toEqual({
+      error: 'invalid_request',
+      error_description:
+        'No organization was selected for this authorization. Choose an organization and try again.',
+    });
   });
 
   test('leaves dynamic client registration disabled by default', () => {

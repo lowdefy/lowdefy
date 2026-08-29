@@ -25,14 +25,15 @@ import testContext from '../../test/testContext.js';
 
 // The credential-model integration: the MCP surface accepts exactly one
 // credential kind - an access token this app's own authorization server
-// minted for the org's resource URI. A session cookie and an apiKey/jwt
-// strategy credential authenticate elsewhere but resolve anonymous here,
-// which the per-request MCP server then limits to public tools.
+// minted for the MCP resource, carrying the organization the member chose at
+// authorization as its organization_id claim. A session cookie and an
+// apiKey/jwt strategy credential authenticate elsewhere but resolve anonymous
+// here, which the per-request MCP server then limits to public tools.
 
 const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
 
 const issuer = 'https://app.test.com/api/auth';
-const orgResourceUri = 'https://app.test.com/api/mcp/org_1';
+const resourceUri = 'https://app.test.com/api/mcp';
 
 const files = {
   'mcp.json': {
@@ -98,13 +99,16 @@ afterAll(() => {
   }
 });
 
-function mockAuth({ member, session, user } = {}) {
+function mockAuth({ consent = { id: 'consent_1' }, member, session, user } = {}) {
   const findOne = jest.fn(async ({ model }) => {
     if (model === 'user') {
       return user ?? null;
     }
     if (model === 'member') {
       return member ?? null;
+    }
+    if (model === 'oauthConsent') {
+      return consent;
     }
     return null;
   });
@@ -116,27 +120,37 @@ function mockAuth({ member, session, user } = {}) {
   };
 }
 
-async function mintToken({ key = privateKey, scope = 'mcp:read', sub = 'user_1' } = {}) {
-  return new SignJWT({ scope })
+async function mintToken({
+  key = privateKey,
+  organizationId = 'org_1',
+  scope = 'mcp:read',
+  sub = 'user_1',
+} = {}) {
+  return new SignJWT({
+    scope,
+    organization_id: organizationId,
+    client_id: 'client_1',
+    azp: 'client_1',
+  })
     .setProtectedHeader({ alg: 'EdDSA', kid: 'kid_1' })
     .setIssuedAt()
     .setExpirationTime('5m')
     .setIssuer(issuer)
-    .setAudience(orgResourceUri)
+    .setAudience(resourceUri)
     .setSubject(sub)
     .sign(key);
 }
 
-// The chain the /api/mcp/:org route runs: resolveAuthentication with the
-// route's resource binding writes context.user and context.mcpAuth, and the
-// per-request MCP server is built over that resolved context.
+// The chain the /api/mcp route runs: resolveAuthentication on its MCP branch
+// writes context.user and context.mcpAuth, and the per-request MCP server is
+// built over that resolved context.
 async function createMcpContext({ auth, headers, strategies = [] }) {
   const authContext = { config: {}, logger };
   await resolveAuthentication(authContext, {
     auth,
     headers,
     strategies,
-    resource: { orgId: 'org_1' },
+    mcp: true,
   });
   const context = testContext({
     logger,
@@ -251,9 +265,15 @@ test('an app-AS bearer resolves the member and serves the gated tool', async () 
   });
   const client = await connectClient(await createMcpServer({ context }));
 
-  expect(context.user).toMatchObject({ id: 'user_1', roles: ['partner'] });
+  expect(context.user).toMatchObject({
+    id: 'user_1',
+    roles: ['partner'],
+    organization_id: 'org_1',
+    auth_method: 'mcp',
+  });
   expect(context.mcpAuth).toEqual({
-    orgId: 'org_1',
+    clientId: 'client_1',
+    organizationId: 'org_1',
     tokenStatus: 'valid',
     parseableJwt: true,
     grantedScopes: ['mcp:read'],
@@ -265,4 +285,45 @@ test('an app-AS bearer resolves the member and serves the gated tool', async () 
   const result = await client.callTool({ name: 'partner-data', arguments: {} });
   expect(result.isError).toBeFalsy();
   expect(JSON.parse(result.content[0].text)).toEqual({ data: 'partner-report' });
+});
+
+test('an app-AS bearer whose grant was revoked resolves invalid and gets public tools only', async () => {
+  const auth = mockAuth({
+    consent: null,
+    user: { id: 'user_1', email: 'user@example.com' },
+    member: { id: 'member_1', role: 'member', appRoles: ['partner'] },
+  });
+  const token = await mintToken({ scope: 'mcp:read' });
+  const context = await createMcpContext({
+    auth,
+    headers: new Headers({ authorization: `Bearer ${token}` }),
+  });
+  const client = await connectClient(await createMcpServer({ context }));
+
+  expect(context.user).toBe(null);
+  expect(context.mcpAuth).toEqual({
+    clientId: 'client_1',
+    organizationId: 'org_1',
+    tokenStatus: 'invalid',
+    parseableJwt: true,
+    revoked: true,
+  });
+
+  const { tools } = await client.listTools();
+  expect(tools.map((tool) => tool.name)).toEqual(['health']);
+});
+
+test('the organization a bearer acts in is its claim - the same subject resolves in another org', async () => {
+  const auth = mockAuth({
+    user: { id: 'user_1', email: 'user@example.com' },
+    member: { id: 'member_2', role: 'member', appRoles: ['partner'] },
+  });
+  const token = await mintToken({ organizationId: 'org_2' });
+  const context = await createMcpContext({
+    auth,
+    headers: new Headers({ authorization: `Bearer ${token}` }),
+  });
+
+  expect(context.user).toMatchObject({ id: 'user_1', organization_id: 'org_2' });
+  expect(context.mcpAuth.organizationId).toBe('org_2');
 });

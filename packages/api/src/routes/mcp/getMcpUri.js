@@ -14,16 +14,13 @@
   limitations under the License.
 */
 
-// The four OAuth URI templates for the per-org MCP protected resources live
-// together here so the resource identifiers, the aud checks, the RFC 9728
-// metadata, and the WWW-Authenticate challenge can never drift apart.
+// The OAuth URI templates for the MCP protected resource live together here
+// so the resource identifier, the aud check, the RFC 9728 metadata, and the
+// WWW-Authenticate challenge can never drift apart. There is ONE MCP resource
+// per deployment - the organization a token acts in is a claim the
+// authorization server stamps at consent time, not a path segment.
 // The origin always comes from the pinned BETTER_AUTH_URL - never a Host
 // header, which is caller-controlled.
-
-// One path segment, sane charset, bounded length. Covers BetterAuth generated
-// org ids and pinned-policy slugs; excludes '/', '.', '%' and whitespace so
-// arbitrary input is never reflected into a metadata resource value.
-const orgSegmentRegex = /^[A-Za-z0-9_-]{1,64}$/;
 
 function getCanonicalUrl() {
   const canonicalUrl = process.env.BETTER_AUTH_URL?.trim();
@@ -33,28 +30,19 @@ function getCanonicalUrl() {
   return canonicalUrl.replace(/\/$/, '');
 }
 
-// The prefix is the boundary the /api/* aud-rejection tests against: any
-// accepted aud must extend it by exactly one well-formed org segment.
-function getMcpUriPrefix({ config }) {
+// The resource identifier (RFC 8707) every MCP access token is minted for,
+// and the audience the /api/mcp route verifies against.
+function getMcpResourceUri({ config }) {
   const canonicalUrl = getCanonicalUrl();
   if (canonicalUrl === null) {
     return null;
   }
-  return `${canonicalUrl}${config.basePath ?? ''}/api/mcp/`;
-}
-
-// Under the pinned organization policy the org id is the slug.
-function getMcpResourceUri({ config, orgId }) {
-  const prefix = getMcpUriPrefix({ config });
-  if (prefix === null) {
-    return null;
-  }
-  return `${prefix}${orgId}`;
+  return `${canonicalUrl}${config.basePath ?? ''}/api/mcp`;
 }
 
 // The authorization server's issuer identifier - what it stamps on iss and
 // its metadata issuer. Carries the /api/auth suffix (BetterAuth baseURL +
-// auth basePath), distinct from the MCP resource prefix, and not the bare
+// auth basePath), distinct from the MCP resource URI, and not the bare
 // origin.
 function getAsIssuer({ config }) {
   const canonicalUrl = getCanonicalUrl();
@@ -64,28 +52,16 @@ function getAsIssuer({ config }) {
   return `${canonicalUrl}${config.basePath ?? ''}/api/auth`;
 }
 
-// The RFC 9728 metadata location for an org's resource - the well-known
-// segment sits after the app basePath, where the servers mount the metadata
-// route. Both the WWW-Authenticate challenge and the served document derive
-// from here, so the pointer and its target cannot drift apart.
-function getMcpResourceMetadataUri({ config, orgId }) {
+// The RFC 9728 metadata location for the resource - the well-known segment
+// sits after the app basePath, where the servers mount the metadata route.
+// Both the WWW-Authenticate challenge and the served document derive from
+// here, so the pointer and its target cannot drift apart.
+function getMcpResourceMetadataUri({ config }) {
   const canonicalUrl = getCanonicalUrl();
   if (canonicalUrl === null) {
     return null;
   }
-  return `${canonicalUrl}${
-    config.basePath ?? ''
-  }/.well-known/oauth-protected-resource/api/mcp/${orgId}`;
+  return `${canonicalUrl}${config.basePath ?? ''}/.well-known/oauth-protected-resource/api/mcp`;
 }
 
-function isWellFormedOrgSegment(segment) {
-  return typeof segment === 'string' && orgSegmentRegex.test(segment);
-}
-
-export {
-  getMcpUriPrefix,
-  getMcpResourceUri,
-  getMcpResourceMetadataUri,
-  getAsIssuer,
-  isWellFormedOrgSegment,
-};
+export { getMcpResourceUri, getMcpResourceMetadataUri, getAsIssuer };

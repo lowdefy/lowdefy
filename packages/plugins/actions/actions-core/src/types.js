@@ -30,6 +30,7 @@ export default {
     'Login',
     'Logout',
     'OAuthConsent',
+    'OAuthContinue',
     'PasskeyDelete',
     'PasskeyRegister',
     'PasskeySignIn',

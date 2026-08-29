@@ -14,31 +14,18 @@
   limitations under the License.
 */
 
-import {
-  getAsIssuer,
-  getMcpResourceUri,
-  isWellFormedOrgSegment,
-  MCP_OAUTH_SCOPES,
-} from '@lowdefy/api';
+import { getAsIssuer, getMcpResourceUri, MCP_OAUTH_SCOPES } from '@lowdefy/api';
 
 import lowdefyConfig from '../../lib/build/config.js';
 
-// RFC 9728 protected-resource metadata for an org's MCP endpoint. Every field
-// is constant except the echoed org segment - deliberately no organization
-// lookup, so a fabricated org id gets the same-shaped document and the public
-// route is no existence oracle. The URIs derive from the pinned
-// BETTER_AUTH_URL, never a Host header.
+// RFC 9728 protected-resource metadata for the MCP endpoint. Constant per
+// deployment: the URIs derive from the pinned BETTER_AUTH_URL, never a Host
+// header. The organization a token acts in is not part of the resource - it is
+// chosen at authorization and carried as a token claim.
 function mcpProtectedResourceMetadataHandler(c) {
-  const orgId = c.req.param('org');
-  if (!isWellFormedOrgSegment(orgId)) {
-    return c.json({ error: 'Not found.' }, 404);
-  }
   return c.json({
-    resource: getMcpResourceUri({ config: lowdefyConfig, orgId }),
+    resource: getMcpResourceUri({ config: lowdefyConfig }),
     authorization_servers: [getAsIssuer({ config: lowdefyConfig })],
-    // The same list the authorization server offers, so a client that requests
-    // exactly what is advertised (the MCP spec's guidance) gets offline_access
-    // and with it a refresh token - otherwise it re-consents every hour.
     scopes_supported: MCP_OAUTH_SCOPES,
     bearer_methods_supported: ['header'],
   });

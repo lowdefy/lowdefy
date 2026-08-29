@@ -19,10 +19,6 @@ import { organization } from 'better-auth/plugins';
 import createAfterAcceptInvitationHook from './createAfterAcceptInvitationHook.js';
 import modelNames from '../modelNames.js';
 import { ac, roles } from './organizationAccessControl.js';
-import {
-  disableOauthResourceRow,
-  ensureOauthResourceRow,
-} from '../../mcp/oauthResourceLifecycle.js';
 
 // Organizations are always on - the membership and boundary mechanism for every
 // app. member.role carries BetterAuth's org-authority tier and nothing else, so
@@ -49,7 +45,7 @@ import {
 // creator-protection guards, which key on the member's role string. With app
 // roles out of that field and the fabricated acting member claiming "owner"
 // itself, there is nothing left to defend against.
-function buildOrganizationPlugin({ authConfig = {}, getAuth, logger, sendInvitationEmail }) {
+function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail }) {
   const options = {
     ac,
     roles,
@@ -123,31 +119,6 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, logger, sendInvitat
     },
     organizationHooks: {
       afterAcceptInvitation: createAfterAcceptInvitationHook({ getAuth }),
-      // The org ⇔ enabled-oauthResource-row invariant, endpoint side: every
-      // endpoint-driven creation gets its MCP resource row here. Adapter-layer
-      // writers (the tenant lazy mint, the pinned seed) bypass
-      // organizationHooks and carry their own ensure calls; the creator-less
-      // CreateOrganization step invokes this hook directly for the same
-      // reason. Both calls never throw - a failed row write must not fail the
-      // organization write it follows.
-      afterCreateOrganization: async ({ organization: createdOrganization }) => {
-        await ensureOauthResourceRow({
-          auth: getAuth(),
-          logger,
-          organizationId: createdOrganization.id,
-        });
-      },
-      // Deletion stays vendor behaviour (/organization/delete); the row is
-      // disabled, not deleted, so the org's MCP URI stops being a valid token
-      // audience while the row remains as a tombstone the reconcile pass will
-      // never re-enable.
-      afterDeleteOrganization: async ({ organization: deletedOrganization }) => {
-        await disableOauthResourceRow({
-          auth: getAuth(),
-          logger,
-          organizationId: deletedOrganization.id,
-        });
-      },
     },
     sendInvitationEmail,
   };

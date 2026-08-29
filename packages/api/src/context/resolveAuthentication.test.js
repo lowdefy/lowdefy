@@ -763,7 +763,7 @@ test('a tenant member removed mid-session stays unauthenticated', async () => {
 describe('MCP bearer branch and the general-path audience invariant', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
   const issuer = 'https://app.test.com/api/auth';
-  const orgResourceUri = (orgId) => `https://app.test.com/api/mcp/${orgId}`;
+  const resourceUri = 'https://app.test.com/api/mcp';
 
   let privateKey;
   let jwksRows;
@@ -794,13 +794,25 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     }
   });
 
-  function mockMcpAuth({ count = 0, member, passkey, session, user } = {}) {
+  // consent defaults to a standing row - the grant the token was minted under
+  // is live unless a test revokes it with consent: null.
+  function mockMcpAuth({
+    consent = { id: 'consent_1' },
+    count = 0,
+    member,
+    passkey,
+    session,
+    user,
+  } = {}) {
     const findOne = jest.fn(async ({ model }) => {
       if (model === 'user') {
         return user ?? null;
       }
       if (model === 'member') {
         return member ?? null;
+      }
+      if (model === 'oauthConsent') {
+        return consent;
       }
       return null;
     });
@@ -821,12 +833,23 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
   }
 
   async function mintToken({
-    aud = orgResourceUri('org_1'),
+    aud = resourceUri,
+    clientId = 'client_1',
     iss = issuer,
+    organizationId = 'org_1',
     scope = 'mcp:read',
     sub = 'user_1',
   } = {}) {
-    return new SignJWT({ scope })
+    // null omits the claim - the parameter default would swallow undefined.
+    const claims = { scope };
+    if (organizationId !== null) {
+      claims.organization_id = organizationId;
+    }
+    if (clientId !== null) {
+      claims.client_id = clientId;
+      claims.azp = clientId;
+    }
+    return new SignJWT(claims)
       .setProtectedHeader({ alg: 'EdDSA', kid: 'kid_1' })
       .setIssuedAt()
       .setExpirationTime('5m')
@@ -844,14 +867,10 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const { auth, findOne } = mockMcpAuth();
     const context = mcpContext();
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: new Headers({}),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: new Headers({}), mcp: true });
 
     expect(context.user).toBe(null);
-    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'none', parseableJwt: true });
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'none', parseableJwt: true });
     expect(findOne).not.toHaveBeenCalled();
   });
 
@@ -868,7 +887,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     await resolveAuthentication(context, {
       auth,
       headers: new Headers({ cookie: 'better-auth.session_token=abc' }),
-      resource: { orgId: 'org_1' },
+      mcp: true,
     });
 
     expect(context.user).toBe(null);
@@ -877,26 +896,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     expect(findOne).not.toHaveBeenCalled();
   });
 
-  test('a token minted for another org resolves invalid on the audience check with no member lookup', async () => {
-    const { auth, findOne } = mockMcpAuth({
-      user: { id: 'user_1' },
-      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
-    });
-    const context = mcpContext();
-    const token = await mintToken({ aud: orgResourceUri('org_x') });
-
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_y' },
-    });
-
-    expect(context.user).toBe(null);
-    expect(context.mcpAuth).toEqual({ orgId: 'org_y', tokenStatus: 'invalid', parseableJwt: true });
-    expect(findOne).not.toHaveBeenCalled();
-  });
-
-  test('a validly signed token with a foreign-service audience resolves invalid', async () => {
+  test('a validly signed token with a foreign-service audience resolves invalid with no lookup', async () => {
     const { auth, findOne } = mockMcpAuth({
       user: { id: 'user_1' },
       member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
@@ -904,14 +904,25 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const context = mcpContext();
     const token = await mintToken({ aud: 'https://other-service.example.com/api' });
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
-    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: true });
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a token minted for the retired per-org resource URI resolves invalid', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ aud: `${resourceUri}/org_1` });
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: true });
     expect(findOne).not.toHaveBeenCalled();
   });
 
@@ -924,18 +935,44 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     // The bare origin is not the AS issuer - the issuer carries /api/auth.
     const token = await mintToken({ iss: 'https://app.test.com' });
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
-    expect(context.mcpAuth).toEqual({ orgId: 'org_1', tokenStatus: 'invalid', parseableJwt: true });
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: true });
     expect(findOne).not.toHaveBeenCalled();
   });
 
-  test('a valid token with a live member resolves the member caller', async () => {
+  test('a token without an organization_id claim resolves invalid with no lookup', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ organizationId: null });
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a token whose organization_id claim is not a string resolves invalid', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ organizationId: 42 });
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: true });
+    expect(findOne).not.toHaveBeenCalled();
+  });
+
+  test('a valid token with a live member resolves the member caller with auth_method mcp', async () => {
     const { auth, findOne } = mockMcpAuth({
       user: { id: 'user_1', email: 'user@example.com', attributes: { region: 'global' } },
       member: {
@@ -948,11 +985,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const context = mcpContext();
     const token = await mintToken({ scope: 'mcp:read mcp:write offline_access' });
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toEqual({
       id: 'user_1',
@@ -963,12 +996,23 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
       active_organization_id: 'org_1',
       organization_id: 'org_1',
       two_factor_enrolled: false,
+      auth_method: 'mcp',
     });
     expect(context.mcpAuth).toEqual({
-      orgId: 'org_1',
+      clientId: 'client_1',
+      organizationId: 'org_1',
       tokenStatus: 'valid',
       parseableJwt: true,
       grantedScopes: ['mcp:read', 'mcp:write'],
+    });
+    // The live grant is read before the member wall.
+    expect(findOne).toHaveBeenCalledWith({
+      model: 'oauthConsent',
+      where: [
+        { field: 'clientId', value: 'client_1' },
+        { field: 'userId', value: 'user_1' },
+        { field: 'referenceId', value: 'org_1' },
+      ],
     });
     expect(findOne).toHaveBeenCalledWith({
       model: 'member',
@@ -977,6 +1021,51 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
         { field: 'organizationId', value: 'org_1' },
       ],
     });
+  });
+
+  test('the organization comes from the token claim - two tokens for one subject resolve two members', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: [] },
+    });
+    const context = mcpContext();
+    const token = await mintToken({ organizationId: 'org_2' });
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user.organization_id).toBe('org_2');
+    expect(context.mcpAuth.organizationId).toBe('org_2');
+    expect(findOne).toHaveBeenCalledWith({
+      model: 'member',
+      where: [
+        { field: 'userId', value: 'user_1' },
+        { field: 'organizationId', value: 'org_2' },
+      ],
+    });
+  });
+
+  test('a valid token whose grant was revoked resolves invalid and marks the revocation', async () => {
+    const { auth, findOne } = mockMcpAuth({
+      consent: null,
+      user: { id: 'user_1' },
+      member: { id: 'member_1', role: 'member', appRoles: ['auditor'] },
+    });
+    const context = mcpContext();
+    const token = await mintToken();
+
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
+
+    expect(context.user).toBe(null);
+    expect(context.mcpAuth).toEqual({
+      clientId: 'client_1',
+      organizationId: 'org_1',
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      revoked: true,
+    });
+    // No user or member read follows a revoked grant.
+    expect(findOne).toHaveBeenCalledTimes(1);
+    expect(findOne.mock.calls[0][0].model).toBe('oauthConsent');
   });
 
   test('a bearer-resolved member computes two_factor_enrolled from the passkey count', async () => {
@@ -989,11 +1078,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const context = mcpContext();
     const token = await mintToken();
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user.two_factor_enrolled).toBe(true);
     expect(count).toHaveBeenCalledWith({
@@ -1007,15 +1092,12 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const context = mcpContext();
     const token = await mintToken();
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
     expect(context.mcpAuth).toEqual({
-      orgId: 'org_1',
+      clientId: 'client_1',
+      organizationId: 'org_1',
       tokenStatus: 'valid',
       parseableJwt: true,
       grantedScopes: ['mcp:read'],
@@ -1030,11 +1112,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     const context = mcpContext();
     const token = await mintToken({ sub: 'user_deleted' });
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'org_1' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
     expect(context.mcpAuth.tokenStatus).toBe('valid');
@@ -1047,17 +1125,15 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     });
     registerOrganizationBinding({ auth, organizations: { policy: 'pinned', org: 'team' } });
     const context = mcpContext();
-    const token = await mintToken({ aud: orgResourceUri('other-org') });
+    const token = await mintToken({ organizationId: 'other-org' });
 
-    await resolveAuthentication(context, {
-      auth,
-      headers: bearerHeaders(token),
-      resource: { orgId: 'other-org' },
-    });
+    await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
     expect(context.mcpAuth.tokenStatus).toBe('valid');
-    expect(findOne).not.toHaveBeenCalled();
+    // Only the grant read ran - no user or member lookup for a foreign org.
+    expect(findOne).toHaveBeenCalledTimes(1);
+    expect(findOne.mock.calls[0][0].model).toBe('oauthConsent');
   });
 
   test('an unparseable bearer resolves invalid with parseableJwt false', async () => {
@@ -1067,19 +1143,15 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     await resolveAuthentication(context, {
       auth,
       headers: bearerHeaders('not-a-jwt'),
-      resource: { orgId: 'org_1' },
+      mcp: true,
     });
 
     expect(context.user).toBe(null);
-    expect(context.mcpAuth).toEqual({
-      orgId: 'org_1',
-      tokenStatus: 'invalid',
-      parseableJwt: false,
-    });
+    expect(context.mcpAuth).toEqual({ tokenStatus: 'invalid', parseableJwt: false });
     expect(findOne).not.toHaveBeenCalled();
   });
 
-  test('the general path refuses a bearer with an MCP-prefixed audience before the strategies run', async () => {
+  test('the general path refuses a bearer with the MCP resource audience before the strategies run', async () => {
     const { auth } = mockMcpAuth();
     const context = mcpContext();
     const token = await mintToken();
@@ -1097,7 +1169,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     expect(strategies[0].verify).not.toHaveBeenCalled();
     expect(context.logger.debug).toHaveBeenCalledWith(
       { event: 'auth_mcp_audience_bearer_rejected' },
-      'Bearer token carrying an MCP resource audience rejected on the general API surface - resolved unauthenticated.'
+      'Bearer token carrying the MCP resource audience rejected on the general API surface - resolved unauthenticated.'
     );
   });
 

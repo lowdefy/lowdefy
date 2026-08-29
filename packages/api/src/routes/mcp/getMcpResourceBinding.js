@@ -16,16 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The engine retains the MCP resource URI prefix per auth instance. The
-// /api/mcp/:org bearer-token guard reads it synchronously at request time to
-// test that a presented token's audience extends the deployment's prefix by
-// exactly one org segment. Registered at startup only when the app is
-// configured as an authorization server (auth.oauthProvider), so a null
-// binding means the per-org MCP surface is off.
+// The engine retains the MCP resource URI per auth instance. The /api/mcp
+// bearer-token guard reads it synchronously at request time as the audience
+// a presented token must carry, and the resource-row ensure reads it as the
+// row identifier. Registered at startup only when the app is configured as an
+// authorization server (auth.oauthProvider), so a null binding means the MCP
+// OAuth surface is off.
 const bindingByAuth = new WeakMap();
 
-function registerMcpResourceBinding({ auth, uriPrefix }) {
-  bindingByAuth.set(auth, { uriPrefix });
+function registerMcpResourceBinding({ auth, resourceUri }) {
+  bindingByAuth.set(auth, { resourceUri });
 }
 
 function getMcpResourceBinding({ auth }) {
@@ -36,7 +36,7 @@ function getMcpResourceBinding({ auth }) {
   if (type.isNone(binding)) {
     return null;
   }
-  return { uriPrefix: binding.uriPrefix };
+  return { resourceUri: binding.resourceUri };
 }
 
 export { registerMcpResourceBinding };

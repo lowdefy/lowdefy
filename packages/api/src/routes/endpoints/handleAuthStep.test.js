@@ -131,6 +131,7 @@ test('AuthStep step runs the step function and stores the result in steps', asyn
   expect(stepFn).toHaveBeenCalledWith({
     acting: { system: false, user: { id: 'user_1' } },
     auth: context.auth,
+    mcp: null,
     organization: pinnedOrganization,
     organizationId: 'org_pinned',
     properties: { name: 'ci key' },
@@ -147,6 +148,7 @@ test('AuthStep step does not pass a userAdminRole key to the step function', asy
   expect(Object.keys(stepFn.mock.calls[0][0]).sort()).toEqual([
     'acting',
     'auth',
+    'mcp',
     'organization',
     'organizationId',
     'properties',
@@ -177,6 +179,54 @@ test('AuthStep step passes null organization and null organizationId for a syste
 
   expect(stepFn.mock.calls[0][0].organization).toBeNull();
   expect(stepFn.mock.calls[0][0].organizationId).toBeNull();
+});
+
+test('AuthStep step runs a caller-scoped step for a caller with no org authority and passes the MCP token outcome', async () => {
+  const stepFn = createStepFn({ scope: 'caller' });
+  // No member row anywhere - a caller-scoped step needs none.
+  const { context } = createTestContext({ members: [], steps: { TestAuthStep: stepFn } });
+  context.mcpAuth = {
+    clientId: 'client_1',
+    organizationId: 'org_1',
+    tokenStatus: 'valid',
+    parseableJwt: true,
+    grantedScopes: ['mcp:read'],
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).not.toBe('error');
+  expect(stepFn.mock.calls[0][0]).toMatchObject({
+    acting: { system: false, user: { id: 'user_1' } },
+    mcp: context.mcpAuth,
+    organizationId: null,
+  });
+});
+
+test('AuthStep step passes null mcp to a step for a caller that did not arrive over MCP', async () => {
+  const stepFn = createStepFn({ scope: 'caller' });
+  const { context } = createTestContext({ members: [], steps: { TestAuthStep: stepFn } });
+  const routineContext = createRoutineContext();
+
+  await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(stepFn.mock.calls[0][0].mcp).toBeNull();
+});
+
+test('AuthStep step refuses a caller-scoped step running as the system', async () => {
+  const stepFn = createStepFn({ scope: 'caller' });
+  const { context } = createTestContext({ steps: { TestAuthStep: stepFn }, user: null });
+  context.system = true;
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, { routine: createStepRoutine() });
+
+  expect(res.status).toBe('error');
+  expect(res.error.message).toBe(
+    'Auth step "run_step" acts on the caller\'s own records and cannot run as the system. Remove system: true, or run it from a caller\'s routine.'
+  );
+  expect(stepFn).not.toHaveBeenCalled();
 });
 
 test('AuthStep step returns error status when the auth step type is not defined', async () => {

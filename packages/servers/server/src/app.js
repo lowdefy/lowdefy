@@ -35,7 +35,6 @@ import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
-import mcpOrgGuard from './middleware/mcpOrgGuard.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
@@ -108,7 +107,6 @@ function createApp({ serveStaticAssets = true } = {}) {
     auth: authJson.configured === true ? getAuth({ logger }) : null,
   });
 
-  app.use('/api/mcp/:org', mcpOrgGuard);
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
@@ -120,7 +118,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
-  app.all('/api/mcp/:org', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
   app.get('/api/user', userHandler);

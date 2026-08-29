@@ -60,7 +60,6 @@ import getMockUser from '../lib/server/auth/getMockUser.js';
 import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
-import mcpOrgGuard from './middleware/mcpOrgGuard.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
@@ -143,7 +142,6 @@ function createApp() {
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
-  app.use('/api/mcp/:org', mcpOrgGuard);
   app.use('/api/*', apiContext());
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
   // caller into context.user on every path, so read it here rather than
@@ -168,7 +166,7 @@ function createApp() {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
-  app.all('/api/mcp/:org', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/user', userHandler);
 

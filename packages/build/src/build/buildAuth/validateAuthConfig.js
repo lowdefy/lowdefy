@@ -228,6 +228,21 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  // Under the tenant policy an MCP authorization has to ask which of the
+  // member's organizations the grant acts in - the post-login page is where
+  // that choice is made, so the authorization server cannot start without it.
+  // Under pinned there is one organization and nothing to choose.
+  if (
+    !type.isNone(auth.oauthProvider) &&
+    auth.organizations?.policy === 'tenant' &&
+    type.isNone(auth.oauthProvider.postLoginPage)
+  ) {
+    throw new ConfigError(
+      'Auth "oauthProvider.postLoginPage" is required when "organizations.policy" is "tenant". Set the page where a user chooses the organization an MCP authorization acts in.',
+      { configKey: auth.oauthProvider['~k'] ?? configKey }
+    );
+  }
+
   validateMutualExclusivity({ components, entity: 'api' });
   validateMutualExclusivity({ components, entity: 'pages' });
   validateMutualExclusivity({ components, entity: 'websockets' });

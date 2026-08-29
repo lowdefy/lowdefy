@@ -1173,6 +1173,61 @@ test('validateAuthConfig throws when oauthProvider contains an unknown property'
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage" and "dynamicClientRegistration".'
+    'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage", "postLoginPage" and "dynamicClientRegistration".'
   );
+});
+
+test('validateAuthConfig throws when oauthProvider.postLoginPage is not a string', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      oauthProvider: { consentPage: '/oauth/consent', postLoginPage: 7 },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider.postLoginPage" should be a string.'
+  );
+});
+
+test('validateAuthConfig requires oauthProvider.postLoginPage under the tenant organizations policy', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant' },
+      oauthProvider: { consentPage: '/oauth/consent' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "oauthProvider.postLoginPage" is required when "organizations.policy" is "tenant".'
+  );
+});
+
+test('validateAuthConfig accepts oauthProvider with postLoginPage under the tenant organizations policy', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'tenant' },
+      oauthProvider: { consentPage: '/oauth/consent', postLoginPage: '/oauth/select-organization' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require oauthProvider.postLoginPage under the pinned organizations policy', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      organizations: { policy: 'pinned', org: 'acme' },
+      oauthProvider: { consentPage: '/oauth/consent' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
 });
