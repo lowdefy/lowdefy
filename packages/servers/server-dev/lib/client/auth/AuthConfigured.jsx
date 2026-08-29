@@ -188,6 +188,11 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     // the page still holds the query the oauth-provider redirect arrived
     // with.
     oauth2Consent: (params) => authClient.oauth2.consent(params),
+    // POST /oauth2/continue - resumes the authorization after the post-login
+    // organization choice (the page runs SetActiveOrganization first). Same
+    // oauth_query contract as oauth2Consent: the signed query rides from
+    // window.location.search, so the call must run before any navigation.
+    oauth2Continue: (params) => authClient.oauth2.continue(params),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
