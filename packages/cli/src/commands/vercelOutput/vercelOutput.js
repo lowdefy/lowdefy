@@ -70,6 +70,11 @@ async function vercelOutput({ context }) {
       throw new Error(`Cannot trace "${entrypoint}" — run "lowdefy build" first.`);
     }
   });
+  if (!fs.existsSync(clientDirectory)) {
+    throw new Error(
+      `Cannot find built client at "${clientDirectory}" — run "lowdefy build" first.`
+    );
+  }
 
   // The function preserves paths relative to the trace base (the pnpm workspace root when the
   // server directory is a workspace member), so the server's relative node_modules symlinks still
