@@ -25,6 +25,7 @@ import controlSetState from './controlSetState.js';
 import controlSwitch from './controlSwitch.js';
 import controlThrow from './controlThrow.js';
 import controlTry from './controlTry.js';
+import controlWhile from './controlWhile.js';
 
 const controlHandlers = {
   ':for': controlFor,
@@ -38,7 +39,7 @@ const controlHandlers = {
   ':switch': controlSwitch,
   ':throw': controlThrow,
   ':try': controlTry,
-  // ':while': notImplemented,
+  ':while': controlWhile,
 };
 
 async function handleControl(context, routineContext, { control }) {
