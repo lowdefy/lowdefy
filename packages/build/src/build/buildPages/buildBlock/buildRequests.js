@@ -91,6 +91,7 @@ function buildRequest(request, pageContext) {
     location: `Request "${request.id}" at page "${pageId}"`,
     tenantConnections: context.tenantConnections,
     tenantCollectionMap: context.tenantCollectionMap,
+    collections: context.collections,
     configKey,
   });
 

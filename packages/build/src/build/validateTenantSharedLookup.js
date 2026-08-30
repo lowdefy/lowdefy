@@ -34,6 +34,13 @@ import { ConfigError } from '@lowdefy/errors';
 // authored exempts only the entry stages and $graphLookup, and the rest of
 // an authored pipeline - every $lookup/$unionWith sub-pipeline - is still
 // walled mechanically, so the empty join happens regardless.
+//
+// Sharedness has two sources. The app-level collections: declaration
+// (context.collections, build/collections.json) is authoritative when it
+// names the collection - a collection declared tenant: shared is shared even
+// when no connection for it exists in this app. The connection-derived
+// tenantCollectionMap is the fallback, so apps without collections: behave
+// exactly as before.
 
 function collectCollectionStages(pipeline, found) {
   if (!type.isArray(pipeline)) {
@@ -74,6 +81,7 @@ function validateTenantSharedLookup({
   location,
   tenantConnections,
   tenantCollectionMap,
+  collections,
   configKey,
 }) {
   if (config.tenant === 'none') {
@@ -89,21 +97,51 @@ function validateTenantSharedLookup({
   const found = [];
   collectCollectionStages(pipeline, found);
   found.forEach(({ collection, stageKey }) => {
+    const declared = collections?.[collection];
+    if (!type.isUndefined(declared?.tenant)) {
+      if (declared.tenant !== 'shared') {
+        return;
+      }
+      const sharedConnectionId = declared.connections.find(
+        (joined) => joined.tenant === 'shared'
+      )?.connectionId;
+      const owner = type.isUndefined(sharedConnectionId)
+        ? 'is declared tenant: shared in collections:'
+        : `is declared tenant: shared in collections: and belongs to connection "${sharedConnectionId}"`;
+      throw new ConfigError(
+        `${location} uses "${stageKey}" on collection "${collection}" over tenant connection "${
+          config.connectionId
+        }". Collection "${collection}" ${owner}, so it carries no tenant field. The wall prepends a tenant $match into every $lookup/$unionWith sub-pipeline, so this stage will match nothing and the join returns []. ${fixMessage(
+          { config, sharedConnectionId }
+        )}`,
+        { configKey, checkSlug: 'tenant-lookup' }
+      );
+    }
     const shared = tenantCollectionMap?.[collection]?.shared ?? [];
     if (shared.length === 0) {
       return;
     }
     const [sharedConnectionId, ...rest] = shared;
     const also = rest.length > 0 ? ` (also declared on: ${rest.join(', ')})` : '';
-    const fix =
-      config.tenant === 'authored'
-        ? `Move this stage onto "${sharedConnectionId}" and pass the organization facts in through the request payload — "tenant: authored" exempts only entry stages and $graphLookup, not $lookup sub-pipelines.`
-        : `Run the pipeline on "${sharedConnectionId}" and pass the organization facts in through the request payload, or declare tenant: authored on this request and author the organization clause yourself.`;
     throw new ConfigError(
-      `${location} uses "${stageKey}" on collection "${collection}" over tenant connection "${config.connectionId}". Collection "${collection}" belongs to connection "${sharedConnectionId}"${also}, which is declared tenant: shared, so it carries no tenant field. The wall prepends a tenant $match into every $lookup/$unionWith sub-pipeline, so this stage will match nothing and the join returns []. ${fix}`,
+      `${location} uses "${stageKey}" on collection "${collection}" over tenant connection "${
+        config.connectionId
+      }". Collection "${collection}" belongs to connection "${sharedConnectionId}"${also}, which is declared tenant: shared, so it carries no tenant field. The wall prepends a tenant $match into every $lookup/$unionWith sub-pipeline, so this stage will match nothing and the join returns []. ${fixMessage(
+        { config, sharedConnectionId }
+      )}`,
       { configKey, checkSlug: 'tenant-lookup' }
     );
   });
+}
+
+function fixMessage({ config, sharedConnectionId }) {
+  const target = type.isUndefined(sharedConnectionId)
+    ? 'a tenant: shared connection for it'
+    : `"${sharedConnectionId}"`;
+  if (config.tenant === 'authored') {
+    return `Move this stage onto ${target} and pass the organization facts in through the request payload — "tenant: authored" exempts only entry stages and $graphLookup, not $lookup sub-pipelines.`;
+  }
+  return `Run the pipeline on ${target} and pass the organization facts in through the request payload, or declare tenant: authored on this request and author the organization clause yourself.`;
 }
 
 export default validateTenantSharedLookup;

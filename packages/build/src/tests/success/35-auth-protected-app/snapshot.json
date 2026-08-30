@@ -149,6 +149,7 @@
     "@lowdefy/blocks-basic",
     "@lowdefy/blocks-loaders"
   ],
+  "collections.json": {},
   "config.json": {
     "~k": "2z"
   },

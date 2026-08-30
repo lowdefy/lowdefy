@@ -367,6 +367,7 @@ _ref:
             | `websocket-refs` | Invalid websocket action reference warnings |
             | `icons` | Unresolvable icon name warnings |
             | `tenant-lookup` | Build error for a tenant-scoped aggregation that joins a `tenant: shared` collection |
+            | `collections` | The [`collections:`](/collections) declaration - tenancy agreement between a collection and its connections, and the check-only notes on undeclared, operator-named and untenanted connections |
             | `types` | All type validation - unknown blocks, operators, actions, requests, connections, steps, agents, notifications and websockets. Since v8 an unknown operator is a build error, so this slug is what suppresses a key that only looks like an operator. |
             | `events` | Block event name validation |
             | `block-properties` | Block `properties` validation against the block type's schema (unknown or mistyped properties) |

@@ -64,6 +64,7 @@ _ref:
             - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
             - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
             - `collection: string`: __Required__ - The name of the MongoDB collection.
+              Declare what the collection holds - tenancy, fields, relations, indexes - under the app-level [`collections:`](/collections) key; the build joins every connection to its collection by this name.
             - `changeLog: object`: Log all changes made by write requests to a log collection.
               - `collection: string`: __Required__ - The name of the collection change log records are written to.
               - `meta: object`: Additional data to include in every change log record, for example the user making the change.

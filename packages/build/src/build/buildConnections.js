@@ -158,6 +158,13 @@ function validateTenant(connection, context, { tenantPolicy }) {
   }
 }
 
+function literalBoolean(value, fallback) {
+  if (type.isBoolean(value)) {
+    return value;
+  }
+  return fallback;
+}
+
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
@@ -179,6 +186,15 @@ function buildConnections({ components, context }) {
   // tenantConnections - the wall does not engage under pinned. Small and
   // internal by design: the collections: declaration supersedes it.
   context.tenantCollectionMap = {};
+  // Every connection's collection binding, for buildCollections to join the
+  // app-level collections: declaration onto - { connectionId, type,
+  // collection, dynamicCollection, tenant, read, write, configKey }. Under
+  // every policy and for every type: any connection type that names a
+  // collection string participates in the declaration. A collection named
+  // by an operator can not be joined (connection properties are never
+  // evaluated at build) and is recorded as dynamicCollection for the
+  // check-only rule that reports it.
+  context.connectionCollections = [];
   const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
@@ -232,6 +248,19 @@ function buildConnections({ components, context }) {
         );
       }
     }
+    const collectionName = connection.properties?.collection;
+    context.connectionCollections.push({
+      connectionId: connection.connectionId,
+      type: connection.type,
+      collection: type.isString(collectionName) ? collectionName : undefined,
+      dynamicCollection: type.isObject(collectionName),
+      tenant: connection.tenant,
+      // MongoDBCollection defaults: read on, write off. Only a literal boolean
+      // is judged; an operator-valued flag keeps the default.
+      read: literalBoolean(connection.properties?.read, true),
+      write: literalBoolean(connection.properties?.write, false),
+      configKey,
+    });
     connection.id = `connection:${connection.id}`;
 
     // Count operators in connection properties

@@ -98,6 +98,11 @@
           pageId: connections-and-requests
           properties:
             title: Connections and Requests
+        - id: collections
+          type: MenuLink
+          pageId: collections
+          properties:
+            title: Collections
         - id: page-and-app-state
           type: MenuLink
           pageId: page-and-app-state
