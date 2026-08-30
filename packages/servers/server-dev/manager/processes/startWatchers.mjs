@@ -15,6 +15,7 @@
 */
 
 import envWatcher from '../watchers/envWatcher.mjs';
+import jsModuleWatcher from '../watchers/jsModuleWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
 import moduleBuildWatcher from '../watchers/moduleBuildWatcher.mjs';
 import pluginSourceWatcher from '../watchers/pluginSourceWatcher.mjs';
@@ -25,6 +26,7 @@ function startWatchers(context) {
   return async () => {
     await Promise.all([
       envWatcher(context),
+      jsModuleWatcher(context),
       lowdefyBuildWatcher(context),
       moduleBuildWatcher(context),
       pluginSourceWatcher(context),

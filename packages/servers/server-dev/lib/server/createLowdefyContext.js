@@ -71,7 +71,7 @@ function isMcpPath(path) {
 // renderer's cookie user is.
 async function createLowdefyContext({ c, user }) {
   const buildDirectory = path.join(process.cwd(), 'build');
-  const jsMap = loadDynamicJsMap(buildDirectory);
+  const jsMap = await loadDynamicJsMap(buildDirectory);
 
   const rid = uuid();
   const context = {
