@@ -45,6 +45,7 @@ function createBrowser() {
   };
   const context = {
     addCookies,
+    close: jest.fn().mockResolvedValue(undefined),
     newPage: jest.fn().mockResolvedValue(page),
   };
   return {
@@ -138,4 +139,25 @@ test('openPage resolves with ready false when the readiness wait times out', asy
 
   expect(opened.ready).toBe(false);
   expect(opened.page).toBe(page);
+});
+
+test('openPage closes the context it created when both navigation attempts fail', async () => {
+  const { browser, context, page } = createBrowser();
+  page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Timeout 15000ms exceeded.');
+  expect(page.goto).toHaveBeenCalledTimes(2);
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('openPage closes the context it created when opening a page fails', async () => {
+  const { browser, context } = createBrowser();
+  context.newPage.mockRejectedValue(new Error('Browser crashed.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Browser crashed.');
+  expect(context.close).toHaveBeenCalledTimes(1);
 });

@@ -87,36 +87,45 @@ async function openPage({
   // orphaned context behind.
   const injectedUser = resolveHeadlessUser({ user });
   const context = await browser.newContext({ viewport: { width, height } });
-  // Inject an authenticated user so auth-protected pages don't 404 for the
-  // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
-  // `origin` so it rides along on the same-origin /api/* fetches.
-  await context.addCookies([
-    {
-      name: HEADLESS_USER_COOKIE,
-      value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
-      url: origin,
-    },
-  ]);
-  const page = await context.newPage();
+  // From here a failure must close the context before rethrowing: callers only
+  // learn about the context from the return value, so an error thrown mid-open
+  // (a navigation that times out on both waits, a crashed page) would otherwise
+  // leak a browser context — and its renderer process — on every failed call.
   try {
-    await page.goto(url, { waitUntil: 'networkidle', timeout });
-  } catch {
-    // Pages with long-polling/SSE connections (reload, websockets) never
-    // go network-idle — fall back to 'load' rather than failing outright.
-    await page.goto(url, { waitUntil: 'load', timeout });
+    // Inject an authenticated user so auth-protected pages don't 404 for the
+    // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
+    // `origin` so it rides along on the same-origin /api/* fetches.
+    await context.addCookies([
+      {
+        name: HEADLESS_USER_COOKIE,
+        value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
+        url: origin,
+      },
+    ]);
+    const page = await context.newPage();
+    try {
+      await page.goto(url, { waitUntil: 'networkidle', timeout });
+    } catch {
+      // Pages with long-polling/SSE connections (reload, websockets) never
+      // go network-idle — fall back to 'load' rather than failing outright.
+      await page.goto(url, { waitUntil: 'load', timeout });
+    }
+    // The engine builds the page context (and runs onInit + initial requests)
+    // after the bundle loads — 'load'/'networkidle' fire before that. Every
+    // caller (screenshot, inspect, eval, checkpoint load) needs the app's async
+    // lifecycle to have settled, not just the bundle to have loaded, so wait on
+    // isPageReady. Tolerant: on timeout proceed with ready: false and let the
+    // caller surface what it finds — a snapshot of a hung page is still useful
+    // signal, and a far better answer than a tool failure.
+    let ready = true;
+    await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {
+      ready = false;
+    });
+    return { context, page, ready, url };
+  } catch (error) {
+    await context.close().catch(() => {});
+    throw error;
   }
-  // The engine builds the page context (and runs onInit + initial requests)
-  // after the bundle loads — 'load'/'networkidle' fire before that. Every
-  // caller (screenshot, inspect, eval, checkpoint load) needs the app's async
-  // lifecycle to have settled, not just the bundle to have loaded, so wait on
-  // isPageReady. Tolerant: on timeout proceed with ready: false and let the
-  // caller surface what it finds — a snapshot of a hung page is still useful
-  // signal, and a far better answer than a tool failure.
-  let ready = true;
-  await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {
-    ready = false;
-  });
-  return { context, page, ready, url };
 }
 
 export { getBrowser, openPage, buildPageUrl };
