@@ -43,8 +43,11 @@ import getMockUser from './getMockUser.js';
 // runs, a day keeps polling calm.
 const DEV_SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
-async function getDevSession(c) {
-  const user = getMockUser() ?? getHeadlessUser(c);
+// An explicit `user` is a per-call caller (createLowdefyContext's `user`
+// option, used by the headless agent tools): it wins over the ambient mock
+// user and headless cookie, and runs through the same session pipeline.
+async function getDevSession(c, { user: injectedUser } = {}) {
+  const user = injectedUser ?? getMockUser() ?? getHeadlessUser(c);
   if (!user) {
     return undefined;
   }
