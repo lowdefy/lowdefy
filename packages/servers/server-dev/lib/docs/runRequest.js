@@ -57,7 +57,7 @@ function truncateResponse(result) {
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
 // returned as data so an agent can reason about them.
-async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
+async function runRequest({ pageId, requestId, payload = {}, user, honoContext }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
     throw new ConfigError(
       `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
@@ -66,6 +66,14 @@ async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
   if (type.isUndefined(requestId) || !type.isString(requestId)) {
     throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
+    );
+  }
+
+  if (!type.isNone(user) && !type.isObject(user)) {
+    throw new ConfigError(
+      `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
+        user
+      )}.`
     );
   }
 
@@ -119,8 +127,8 @@ async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext });
-  context.logger.info({ event: 'agent_run_request', pageId, requestId });
+  const context = await createLowdefyContext({ c: honoContext, user });
+  context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
 
   try {
     const result = await callRequest(context, {

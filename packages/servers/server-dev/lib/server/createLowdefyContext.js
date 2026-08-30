@@ -23,6 +23,7 @@ import {
   resolvePinnedOrganization,
   resolveTenantPreflight,
 } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -46,6 +47,7 @@ import notifications, {
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -63,8 +65,10 @@ function isMcpPath(path) {
 // middleware (src/middleware/apiContext.js) so run_request
 // (lib/docs/runRequest.js) can build an identical context outside the Hono
 // middleware chain, to call callRequest directly for agent-driven request
-// execution.
-async function createLowdefyContext({ c }) {
+// execution. A `user` option injects a per-call caller (agent tools that run
+// outside a browser, e.g. run_request), resolved the same way the headless
+// renderer's cookie user is.
+async function createLowdefyContext({ c, user }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
@@ -101,7 +105,14 @@ async function createLowdefyContext({ c }) {
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
   const headlessUser = getHeadlessUser(c);
-  if (mockUser) {
+  if (!type.isNone(user)) {
+    // An explicit per-call user wins over the ambient auth.dev.mockUser: the
+    // caller named an identity for this call, so honour it. Merged over the
+    // roleless headless default by resolveHeadlessUser, exactly as the
+    // headless page tools' `user` param is.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(resolveHeadlessUser({ user }));
+  } else if (mockUser) {
     // The mock user is a pre-resolved caller - it substitutes for the
     // whole resolveAuthentication step and its roles are authoritative.
     // No auth engine runs while dev.mockUser is active (see src/app.js),
