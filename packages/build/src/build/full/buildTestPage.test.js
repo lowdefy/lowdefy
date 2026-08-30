@@ -93,3 +93,15 @@ test('buildTestPage', () => {
     },
   });
 });
+
+test('buildTestPage throws the first collected build error instead of returning a half-built page', () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      { id: 'dup', type: 'Switch' },
+      { id: 'dup', type: 'Switch' },
+    ],
+  };
+  expect(() => buildTestPage({ pageConfig })).toThrow('Duplicate blockId "dup"');
+});

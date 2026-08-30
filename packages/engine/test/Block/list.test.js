@@ -877,14 +877,8 @@ test('primitive list block no init', async () => {
         id: 'list',
         blocks: [
           {
-            type: 'List',
-            id: 'list',
-            blocks: [
-              {
-                type: 'NumberInput',
-                id: 'list.$',
-              },
-            ],
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
