@@ -23,6 +23,7 @@ import { jest } from '@jest/globals';
 const mockInspectStateFromTab = jest.fn();
 const mockInspectStateHeadless = jest.fn();
 const mockTabAvailable = jest.fn();
+const mockReadPageArtifact = jest.fn();
 
 jest.unstable_mockModule('./inspectStateFromTab.js', () => ({
   default: mockInspectStateFromTab,
@@ -33,11 +34,15 @@ jest.unstable_mockModule('./inspectStateHeadless.js', () => ({
 jest.unstable_mockModule('./tabAvailable.js', () => ({
   default: mockTabAvailable,
 }));
+jest.unstable_mockModule('./readPageArtifact.js', () => ({
+  default: mockReadPageArtifact,
+}));
 
 const { default: inspectState } = await import('./inspectState.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockReadPageArtifact.mockReturnValue({ id: 'page:home' });
 });
 
 test('inspectState uses the tab when source is "tab" and it succeeds', async () => {
@@ -137,4 +142,62 @@ test('inspectState errors when a user is combined with source "tab"', async () =
   expect(result.invalidInput).toBe(true);
   expect(mockInspectStateFromTab).not.toHaveBeenCalled();
   expect(mockInspectStateHeadless).not.toHaveBeenCalled();
+});
+
+const stateSchema = {
+  'data.status': { enum: ['draft', 'submitted'] },
+  count: { type: 'number' },
+};
+
+test('inspectState attaches an empty stateSchemaDrift when state conforms to the page contract', async () => {
+  mockReadPageArtifact.mockReturnValue({ id: 'page:home', stateSchema });
+  mockInspectStateHeadless.mockResolvedValue({ state: { data: { status: 'draft' }, count: 1 } });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'headless',
+  });
+
+  expect(mockReadPageArtifact).toHaveBeenCalledWith({ pageId: 'home' });
+  expect(result).toEqual({
+    state: { data: { status: 'draft' }, count: 1 },
+    source: 'headless',
+    stateSchemaDrift: [],
+  });
+});
+
+test('inspectState reports stateSchemaDrift entries when live state violates the contract', async () => {
+  mockReadPageArtifact.mockReturnValue({ id: 'page:home', stateSchema });
+  mockInspectStateFromTab.mockResolvedValue({ state: { data: { status: 'nope' }, count: '1' } });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'tab',
+  });
+
+  expect(result.source).toEqual('tab');
+  expect(result.stateSchemaDrift).toEqual([
+    { path: 'count', message: 'must be number', declared: { type: 'number' }, received: '1' },
+    {
+      path: 'data.status',
+      message: 'must be equal to one of the allowed values',
+      declared: { enum: ['draft', 'submitted'] },
+      received: 'nope',
+    },
+  ]);
+});
+
+test('inspectState omits stateSchemaDrift when the page declares no contract', async () => {
+  mockInspectStateHeadless.mockResolvedValue({ state: { a: 1 } });
+
+  const result = await inspectState({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    source: 'headless',
+  });
+
+  expect(result).toEqual({ state: { a: 1 }, source: 'headless' });
+  expect(result).not.toHaveProperty('stateSchemaDrift');
 });
