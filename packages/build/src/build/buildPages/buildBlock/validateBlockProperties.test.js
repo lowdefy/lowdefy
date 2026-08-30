@@ -169,6 +169,106 @@ test('validateBlockProperties names the nested path for a nested unknown propert
   );
 });
 
+test('validateBlockProperties allows title on the page root block as the browser tab title', () => {
+  const context = createContext();
+  const components = {
+    pages: [{ id: 'page_1', type: 'NumberInput', auth, properties: { title: 'My Page', min: 1 } }],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('validateBlockProperties still validates title on the page root block when the schema declares it', () => {
+  const context = createContext();
+  const components = {
+    pages: [{ id: 'page_1', type: 'Button', auth, properties: { title: 7 } }],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block "page_1" of type "Button": properties.title must be string. Received 7.'
+  );
+});
+
+test('validateBlockProperties rejects title on a nested block whose schema lacks it', () => {
+  const context = createContext();
+  const components = componentsWithBlock({
+    id: 'qty',
+    type: 'NumberInput',
+    properties: { title: 'Quantity' },
+  });
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block "qty" of type "NumberInput": unknown property "title".'
+  );
+});
+
+test('validateBlockProperties treats a null property value as not set', () => {
+  const context = createContext();
+  const components = componentsWithBlock({
+    id: 'submit',
+    type: 'Button',
+    properties: { title: null, disabled: null },
+  });
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('validateBlockProperties omits an array with an operator element instead of checking its length', () => {
+  const context = createContext();
+  context.blockSchemas = {
+    Range: {
+      properties: {
+        properties: {
+          type: 'object',
+          properties: {
+            value: { type: 'array', minItems: 2, maxItems: 2, items: { type: 'string' } },
+          },
+        },
+      },
+    },
+  };
+  const components = componentsWithBlock({
+    id: 'range',
+    type: 'Range',
+    properties: { value: [{ _date: 'now' }, { _date: 'now' }] },
+  });
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('validateBlockProperties reports only the oneOf error for a value that matches no branch', () => {
+  const context = createContext();
+  context.blockSchemas = {
+    Choice: {
+      properties: {
+        properties: {
+          type: 'object',
+          properties: {
+            options: {
+              oneOf: [
+                { type: 'array', items: { type: 'string' } },
+                {
+                  type: 'array',
+                  items: { type: 'object', properties: { label: { type: 'string' } } },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  };
+  const components = componentsWithBlock({
+    id: 'choice',
+    type: 'Choice',
+    properties: { options: [{ label: 5 }] },
+  });
+  let error;
+  try {
+    buildPages({ components, context });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message.split('\n')).toEqual([
+    'Block "choice" of type "Choice": properties.options must match exactly one schema in oneOf. Received [{"label":5}].',
+  ]);
+});
+
 test('validateBlockProperties passes when an operator supplies a required field', () => {
   const context = createContext();
   const components = componentsWithBlock({

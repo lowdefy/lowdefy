@@ -22,14 +22,23 @@ import findSimilarString from '../../../utils/findSimilarString.js';
 
 const MAX_LISTED_PROPERTIES = 10;
 
+// Marks a node that cannot be judged before the app runs.
+const OMIT = Symbol('omit');
+
 // An operator's result cannot be judged before it runs, so operator-valued
-// nodes are left out of the data that is validated. ~-prefixed keys (~r, ~l)
-// are build metadata the plugin schemas do not allow.
+// nodes are left out of the data that is validated, and so is a null value,
+// which in config means "not set" (a build-time _var or _if resolves to null
+// when it has nothing to give). An array with an operator element is left out
+// whole: its length is unknown until the operator runs, so minItems or a
+// positional schema would fail on a literal that is fine. ~-prefixed keys
+// (~r, ~l) are build metadata the plugin schemas do not allow.
 function copyLiteralNodes(node) {
+  if (node === null) return OMIT;
+  if (getOperatorType(node) !== null) return OMIT;
   if (type.isArray(node)) {
-    return node
-      .filter((item) => getOperatorType(item) === null)
-      .map((item) => copyLiteralNodes(item));
+    const items = node.map((item) => copyLiteralNodes(item));
+    if (items.includes(OMIT)) return OMIT;
+    return items;
   }
   if (!type.isObject(node)) {
     return node;
@@ -37,11 +46,27 @@ function copyLiteralNodes(node) {
   const copy = {};
   for (const key of Object.keys(node)) {
     if (key.startsWith('~')) continue;
-    const value = node[key];
-    if (getOperatorType(value) !== null) continue;
-    copy[key] = copyLiteralNodes(value);
+    const value = copyLiteralNodes(node[key]);
+    if (value === OMIT) continue;
+    copy[key] = value;
   }
   return copy;
+}
+
+// Ajv reports a oneOf/anyOf failure together with every branch's own errors.
+// The branch errors describe schemas the data was never meant to match, so
+// only the shallowest oneOf/anyOf error at a path is kept.
+function collapseBranchErrors(errors) {
+  const branchPaths = errors
+    .filter((error) => error.keyword === 'oneOf' || error.keyword === 'anyOf')
+    .map((error) => error.instancePath);
+  return errors.filter((error) => {
+    const isBranchError = error.keyword === 'oneOf' || error.keyword === 'anyOf';
+    return !branchPaths.some((branchPath) => {
+      if (isBranchError && branchPath === error.instancePath) return false;
+      return error.instancePath === branchPath || error.instancePath.startsWith(`${branchPath}/`);
+    });
+  });
 }
 
 // An operator may have supplied a required field, so required is not checked.
@@ -108,6 +133,12 @@ function getSchemaAtPath({ schema, schemaPath }) {
   return segments.reduce((node, segment) => node?.[segment], schema);
 }
 
+// buildPage sets pageId on the page object before it is built as the root
+// block; nested blocks never carry it.
+function isPageRootBlock(block) {
+  return !type.isNone(block.pageId);
+}
+
 function validateBlockProperties(block, pageContext) {
   const { context } = pageContext;
   if (type.isNone(block.properties)) return;
@@ -118,8 +149,15 @@ function validateBlockProperties(block, pageContext) {
 
   const { schema, validate } = getValidator({ blockType: block.type, propertiesSchema, context });
   const data = copyLiteralNodes(block.properties);
-  const { valid, errors } = validate(data);
-  if (valid) return;
+  // properties.title on a page's root block sets the browser tab title
+  // (client Head.js), whatever the block type. It is only a block property
+  // when the block's own schema declares one.
+  if (isPageRootBlock(block) && type.isUndefined(schema.properties?.title)) {
+    delete data.title;
+  }
+  const result = validate(data);
+  if (result.valid) return;
+  const errors = collapseBranchErrors(result.errors);
 
   const prefix = `Block "${block.blockId}" of type "${block.type}": `;
   const lines = errors.map((error) => {
