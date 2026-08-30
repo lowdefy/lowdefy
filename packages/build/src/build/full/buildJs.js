@@ -20,19 +20,26 @@ function buildJs({ components, context }) {
   components.pages = components.pages.map((page) => {
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
-    const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
-    const cleanRequests = jsMapParser({ input: pageRequests, jsMap: context.jsMap, env: 'server' });
+    const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client', context });
+    const cleanRequests = jsMapParser({
+      input: pageRequests,
+      jsMap: context.jsMap,
+      env: 'server',
+      context,
+    });
     return { ...cleanPage, requests: cleanRequests };
   });
   components.api = jsMapParser({
     input: components.api,
     jsMap: context.jsMap,
     env: 'server',
+    context,
   });
   components.connections = jsMapParser({
     input: components.connections,
     jsMap: context.jsMap,
     env: 'server',
+    context,
   });
 }
 

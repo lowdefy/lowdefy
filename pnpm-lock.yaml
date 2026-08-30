@@ -166,6 +166,12 @@ importers:
       ajv:
         specifier: 8.20.0
         version: 8.20.0
+      eslint-scope:
+        specifier: 7.2.2
+        version: 7.2.2
+      espree:
+        specifier: 9.6.1
+        version: 9.6.1
       json5:
         specifier: 2.2.3
         version: 2.2.3
@@ -2366,6 +2372,9 @@ importers:
       '@lowdefy/client':
         specifier: 5.5.1
         version: link:../../client
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../../utils/errors

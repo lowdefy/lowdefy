@@ -53,11 +53,12 @@ function buildShallowPages({ components, context }) {
 
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
-    const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
+    const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client', context });
     const cleanRequests = jsMapParser({
       input: pageRequests,
       jsMap: context.jsMap,
       env: 'server',
+      context,
     });
     const builtPage = { ...cleanPage, requests: cleanRequests };
 

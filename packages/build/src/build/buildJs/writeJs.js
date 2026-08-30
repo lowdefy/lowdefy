@@ -16,6 +16,7 @@
 
 import generateClientJsModule from './generateClientJsModule.js';
 import generateJsFile from './generateJsFile.js';
+import { serverJsPrototype } from './jsFunctionPrototypes.js';
 
 async function writeJs({ context }) {
   await context.writeBuildArtifact(
@@ -26,7 +27,7 @@ async function writeJs({ context }) {
     'plugins/operators/serverJsMap.js',
     generateJsFile({
       map: context.jsMap.server,
-      functionPrototype: `{ args, item, lowdefyApp, payload, secret, state, step, user }`,
+      functionPrototype: serverJsPrototype(),
     })
   );
 }

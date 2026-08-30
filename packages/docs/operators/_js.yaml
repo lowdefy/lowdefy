@@ -29,6 +29,21 @@ _ref:
       The `_js` operator enables the use of custom JavaScript logic within Lowdefy configuration where operators are evaluated. The purpose of this operator is to facilitate quick implementation of fast, synchronous functions. Like other operators, these functions are evaluated during page render, thus slow functions can impact app performance.
       For more advanced logic, or when the use of external dependencies is necessary, instead develop a [custom plugin](/plugins-introduction).
 
+      #### Bodies are checked at build
+      Every `_js` body is parsed and name-checked when the app builds, so a typo is a build error rather than a `ReferenceError` at the user's click. A body may only reference its own declarations, the parameters of the prototype it runs with, and the JavaScript standard library:
+
+        - A reference to any other name is a **build error** - for example `unlinked` in `const unlinkedRec = state('rec'); return unlinked.stamp;`.
+        - A declaration that is never used (a `const`, `let`, or `function` the body never reads) is a **build warning**.
+        - A body that does not parse is a **build error** naming the line of the syntax error.
+
+      Which prototype a body gets depends on where it sits in the config. Bodies inside `blocks`, `events`, and other page config run on the client; bodies inside `requests`, `api`, and `connections` run on the server, where browser globals such as `document` and `window` do not exist and are reported as undefined.
+
+      | Client bodies | Server bodies |
+      |---------------|---------------|
+      | `actions`, `args`, `event`, `input`, `location`, `lowdefyApp`, `lowdefyGlobal`, `request`, `state`, `urlQuery`, `user` | `args`, `item`, `lowdefyApp`, `payload`, `secret`, `state`, `step`, `user` |
+
+      If a body must reference a name the check cannot see (for example a global injected by a custom script), suppress the check with `~ignoreBuildChecks: [js-lint]` on the operator or any parent object. See [Lowdefy Schema](/lowdefy-schema) for how `~ignoreBuildChecks` cascades.
+
       #### Using Lowdefy operators in JavaScript
       Certain Lowdefy operators can be used inside of the JavaScript function block. These operators are available as functions and will take their standard arguments.
 

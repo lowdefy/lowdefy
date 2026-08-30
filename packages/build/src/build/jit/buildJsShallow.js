@@ -23,6 +23,7 @@ function buildJsShallow({ components, context }) {
       input: components.api,
       jsMap: context.jsMap,
       env: 'server',
+      context,
     });
   }
   if (components.connections) {
@@ -30,6 +31,7 @@ function buildJsShallow({ components, context }) {
       input: components.connections,
       jsMap: context.jsMap,
       env: 'server',
+      context,
     });
   }
 

@@ -34,6 +34,7 @@ export const VALID_CHECK_SLUGS = {
   icons: 'Unresolvable icon name warnings',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
+  'js-lint': 'Unresolved and unused names in _js bodies',
 };
 
 /**
