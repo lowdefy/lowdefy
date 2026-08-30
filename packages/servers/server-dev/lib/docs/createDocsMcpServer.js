@@ -43,6 +43,7 @@ import runEndpoint from './runEndpoint.js';
 import runCheck from './runCheck.js';
 import runJourney from './runJourney.js';
 import runRequest from './runRequest.js';
+import seedFixture from './seedFixture.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
 import createLogger from '../server/log/createLogger.js';
@@ -56,7 +57,7 @@ const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project
 
 Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
 
-Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
+Push events: build results, server restarts, browser/server errors and fixture seeds arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error, fixture_seeded; a build event carries status, errors, warnings and stale; a fixture_seeded event names the fixture and the collections it wrote so you know the data changed under you). Act on them without polling — lowdefy_build_status remains the full picture.
 
 Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
@@ -233,6 +234,26 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     },
     async ({ endpointId, payload, user, explain }) =>
       textResult(await runEndpoint({ endpointId, payload, user, explain, honoContext }))
+  );
+
+  server.registerTool(
+    'lowdefy_seed_fixture',
+    {
+      description:
+        "Load a named fixture (fixtures/<name>.yaml in the app, keyed by connectionId) into the dev database through the connection layer, so a page has data to show while you build it. Writes to the developer's real dev database, so it is refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml). By default documents are added on top of what is there; reset: true first empties every collection the fixture names (only those - the result lists them with the deleted count). Documents are inserted exactly as written, never tenant-stamped: a fixture must carry its own tenant fields. The same fixtures back `fixtures:` in request tests, so seed with the fixture a test uses to see the tested data live.",
+      inputSchema: {
+        name: z
+          .string()
+          .describe('The fixture name: fixtures/<name>.yaml under the config directory.'),
+        reset: z
+          .boolean()
+          .optional()
+          .describe(
+            'Empty every collection the fixture names before inserting (default false: layer onto existing data).'
+          ),
+      },
+    },
+    async ({ name, reset }) => textResult(await seedFixture({ name, reset, honoContext }))
   );
 
   server.registerTool(

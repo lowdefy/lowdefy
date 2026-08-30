@@ -27,8 +27,8 @@ import readBuildArtifact from './readBuildArtifact.js';
 // unbuffered: a subscriber that missed an event polls build_status, which is
 // derived from the same build/buildStatus.json this bus watches, so the two
 // always agree. Event shape is { type, timestamp, ...entry } with type one of
-// build | client_error | server_error | restart.
-const EVENT_TYPES = ['build', 'client_error', 'server_error', 'restart'];
+// build | client_error | server_error | restart | fixture_seeded.
+const EVENT_TYPES = ['build', 'client_error', 'server_error', 'restart', 'fixture_seeded'];
 
 // The Hono process boots once per (re)start, so module load time is the
 // restart time — subscribers receive it as a restart event on connect.

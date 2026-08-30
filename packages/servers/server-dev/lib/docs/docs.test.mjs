@@ -33,8 +33,10 @@ process.chdir(fixtureDir);
 // present in this checkout) — mock both so runRequest can be unit tested
 // without a real server build.
 const mockCallRequest = jest.fn();
+const mockCallConnectionRequest = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
+  callConnectionRequest: mockCallConnectionRequest,
 }));
 const mockCreateLowdefyContext = jest.fn(async () => ({
   logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
@@ -67,6 +69,7 @@ const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
 const { default: runRequest } = await import('./runRequest.js');
+const { default: seedFixture } = await import('./seedFixture.js');
 const { default: getAppMap } = await import('./getAppMap.js');
 
 test('listTypes returns all available blocks with used flag and category', () => {
@@ -538,4 +541,60 @@ test('getAppMap includes connections, endpoints, agents, menus and websockets', 
       links: [{ menuItemId: 'home', type: 'MenuLink', pageId: 'home', title: 'Home' }],
     },
   ]);
+});
+
+test('seedFixture is refused with howToEnable while cli.agentTools.allowWriteRequests is absent', async () => {
+  fs.mkdirSync(path.join(fixtureDir, 'fixtures'), { recursive: true });
+  fs.writeFileSync(
+    path.join(fixtureDir, 'fixtures', 'base.yaml'),
+    "axios:\n  - { _id: c1, created_at: { '~d': '2026-01-01T00:00:00.000Z' } }\n"
+  );
+  const result = await seedFixture({ name: 'base', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toEqual('Seeding writes to the dev database.');
+  expect(result.howToEnable).toEqual(
+    'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).'
+  );
+  expect(mockCallConnectionRequest).not.toHaveBeenCalled();
+});
+
+test('seedFixture seeds through the connection layer once cli.agentTools.allowWriteRequests is set', async () => {
+  fs.writeFileSync(
+    path.join(fixtureDir, 'lowdefy.yaml'),
+    'lowdefy: 5.0.0\ncli:\n  agentTools:\n    allowWriteRequests: true\n'
+  );
+  mockCallConnectionRequest.mockResolvedValue({ response: { insertedCount: 1 } });
+  try {
+    const result = await seedFixture({ name: 'base', honoContext: {} });
+    expect(result.refused).toBe(false);
+    expect(result.seeded).toEqual([
+      { connectionId: 'axios', collection: null, deleted: 0, inserted: 1 },
+    ]);
+    expect(mockCallConnectionRequest).toHaveBeenCalledTimes(1);
+    const [, params] = mockCallConnectionRequest.mock.calls[0];
+    expect(params.type).toEqual('MongoDBInsertMany');
+    expect(params.tenant).toBeNull();
+    expect(params.properties.docs[0].created_at).toBeInstanceOf(Date);
+  } finally {
+    fs.writeFileSync(path.join(fixtureDir, 'lowdefy.yaml'), 'lowdefy: 5.0.0\n');
+  }
+});
+
+test('seedFixture returns a missing fixture as data once writes are allowed', async () => {
+  fs.writeFileSync(
+    path.join(fixtureDir, 'lowdefy.yaml'),
+    'lowdefy: 5.0.0\ncli:\n  agentTools:\n    allowWriteRequests: true\n'
+  );
+  try {
+    const result = await seedFixture({ name: 'nope', honoContext: {} });
+    expect(result).toEqual({
+      refused: false,
+      error: {
+        name: 'ConfigError',
+        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
+      },
+    });
+  } finally {
+    fs.writeFileSync(path.join(fixtureDir, 'lowdefy.yaml'), 'lowdefy: 5.0.0\n');
+  }
 });
