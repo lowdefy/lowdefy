@@ -1266,9 +1266,9 @@
         - id: :try
           type: MenuLink
           pageId: :try
-        # - id: :while # TODO: Add back when while control implemented
-        #   type: MenuLink
-        #   pageId: :while
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: migration
       type: MenuGroup
       properties:
