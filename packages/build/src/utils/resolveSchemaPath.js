@@ -64,11 +64,19 @@ function stepInto({ schema, segment }) {
     return { resolved: true, schema: schema.additionalProperties };
   }
   if (schema.type === 'array' || !type.isUndefined(schema.items)) {
+    // `.length` is a valid read on any array (as it is in the expression grammar).
+    if (segment === 'length') {
+      return { resolved: true, schema: { type: 'integer' } };
+    }
     // A List template addresses its item as `$`; a literal index is a number.
     if (!/^\d+$/.test(segment) && segment !== '$') {
       return { resolved: false };
     }
     return { resolved: true, schema: type.isObject(schema.items) ? schema.items : undefined };
+  }
+  // `.length` is likewise a valid read on a string.
+  if (schema.type === 'string' && segment === 'length') {
+    return { resolved: true, schema: { type: 'integer' } };
   }
   const primitive = ['string', 'number', 'integer', 'boolean', 'null'];
   if (primitive.includes(schema.type)) {

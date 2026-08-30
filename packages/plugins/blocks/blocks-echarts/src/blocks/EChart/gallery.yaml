@@ -38,7 +38,7 @@
           yAxis:
             type: value
             axisLabel:
-              formatter: '${value}'
+              formatter: '$${value}'
           series:
             - name: Revenue
               type: bar
