@@ -45,8 +45,9 @@ function waitForExit(child) {
 }
 
 // Boots @lowdefy/server-dev headless in .lowdefy/dev, exactly as `lowdefy dev` does but
-// without opening a browser, and resolves once GET /api/ping answers.
-async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 120000 }) {
+// without opening a browser, and resolves once GET /api/ping answers. `env` is merged
+// into the child's environment (the request suite passes its connection overrides).
+async function startDevServer({ context, env = {}, pollIntervalMs = 250, bootTimeoutMs = 120000 }) {
   const directory = context.directories.dev;
   const port = await findAvailablePort({ port: context.options.port ?? 3000 });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
@@ -84,6 +85,7 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
         LOWDEFY_LOG_LEVEL: context.options.logLevel,
         LOWDEFY_SERVER_DEV_OPEN_BROWSER: false,
         PORT: port,
+        ...env,
       },
     },
   });

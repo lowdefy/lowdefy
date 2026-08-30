@@ -116,6 +116,23 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(killedGroups).toEqual([{ pid: -CHILD_PID, signal: 'SIGTERM' }]);
 });
 
+test('startDevServer merges an env object into the child environment', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockGet.mockResolvedValue({ data: {} });
+  const server = await startDevServer({
+    context,
+    env: { LOWDEFY_TEST_CONNECTION_OVERRIDES: '{"controls":{"databaseUri":"mongodb://x/"}}' },
+    pollIntervalMs: 1,
+    bootTimeoutMs: 1000,
+  });
+  const env = mockSpawnProcess.mock.calls[0][0].processOptions.env;
+  expect(env.LOWDEFY_TEST_CONNECTION_OVERRIDES).toEqual(
+    '{"controls":{"databaseUri":"mongodb://x/"}}'
+  );
+  expect(env.PORT).toEqual(3228);
+  await server.stop();
+});
+
 test('startDevServer throws with the last captured output lines when ping never answers', async () => {
   const { default: startDevServer } = await import('./startDevServer.js');
   mockGet.mockRejectedValue(new Error('ECONNREFUSED'));
