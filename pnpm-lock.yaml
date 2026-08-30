@@ -516,6 +516,9 @@ importers:
 
   packages/engine:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../utils/errors
@@ -2502,6 +2505,9 @@ importers:
       '@lowdefy/actions-core':
         specifier: 5.5.1
         version: link:../../plugins/actions/actions-core
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../../utils/ajv
       '@lowdefy/api':
         specifier: 5.5.1
         version: link:../../api
@@ -2874,6 +2880,9 @@ importers:
 
   packages/utils/ajv:
     dependencies:
+      '@lowdefy/helpers':
+        specifier: 5.5.1
+        version: link:../helpers
       '@lowdefy/nunjucks':
         specifier: 5.5.1
         version: link:../nunjucks

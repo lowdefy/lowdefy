@@ -16,5 +16,8 @@
 
 import validate from './validate.js';
 import compile from './compile.js';
+import getSchemaAtPath from './getSchemaAtPath.js';
+import nestSchemaPaths from './nestSchemaPaths.js';
+import splitSchemaPath from './splitSchemaPath.js';
 
-export { validate, compile };
+export { validate, compile, getSchemaAtPath, nestSchemaPaths, splitSchemaPath };
