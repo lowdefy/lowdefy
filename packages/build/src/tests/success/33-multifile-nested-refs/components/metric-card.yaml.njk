@@ -1,11 +1,11 @@
-id: '{{ id }}_metric'
+id: {{ card_id }}_metric
 type: Card
 layout:
   span: 12
 properties:
-  title: '{{ title }}'
+  title: {{ title }}
 blocks:
-  - id: '{{ id }}_value'
+  - id: {{ card_id }}_value
     type: Statistic
     properties:
       value: '{{ value }}'

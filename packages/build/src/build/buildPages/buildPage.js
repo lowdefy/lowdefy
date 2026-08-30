@@ -61,6 +61,10 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     callApiActionRefs: context.callApiActionRefs ?? [],
     websocketActionRefs: context.websocketActionRefs ?? [],
     dynamicBlockRefs: context.dynamicBlockRefs ?? [],
+    checkDuplicateBlockId: createCheckDuplicateId({
+      message:
+        'Duplicate blockId "{{ id }}" on page "{{ pageId }}". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.',
+    }),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

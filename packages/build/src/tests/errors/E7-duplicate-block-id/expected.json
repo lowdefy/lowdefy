@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Duplicate blockId"],
+      "errorContains": [
+        "Duplicate blockId \"email\" on page \"home\". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.",
+        "lowdefy.yaml:25"
+      ]
+    }
+  ]
+}

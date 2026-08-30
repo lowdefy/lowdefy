@@ -865,7 +865,7 @@ test('user defined skeleton', () => {
   });
 });
 
-test('create unique block ids', () => {
+test('buildPages throws when a page has duplicate block ids', () => {
   const components = {
     pages: [
       {
@@ -879,63 +879,6 @@ test('create unique block ids', () => {
           },
           {
             id: 'block',
-            type: 'Display',
-          },
-          {
-            id: 'block',
-            type: 'Display',
-          },
-        ],
-      },
-    ],
-  };
-  const res = buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        pageId: 'page_1',
-        blockId: 'page_1',
-        type: 'Container',
-        subscriptions: [],
-        requests: [],
-        slots: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:block:0',
-                blockId: 'block',
-                type: 'Display',
-              },
-              {
-                id: 'block:page_1:block:1',
-                blockId: 'block',
-                type: 'Display',
-              },
-              {
-                id: 'block:page_1:block:2',
-                blockId: 'block',
-                type: 'Display',
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
-});
-
-test('block with same id as page throws', () => {
-  const components = {
-    pages: [
-      {
-        id: 'box',
-        type: 'Container',
-        auth,
-        blocks: [
-          {
-            id: 'box',
             type: 'Display',
           },
         ],
@@ -943,11 +886,11 @@ test('block with same id as page throws', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Block id "box" on page "box" collides with the page id. A block cannot have the same id as its page.'
+    'Duplicate blockId "block" on page "page_1". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.'
   );
 });
 
-test('different blockId counter for each page', () => {
+test('same block id may be used on different pages', () => {
   const components = {
     pages: [
       {
@@ -955,10 +898,6 @@ test('different blockId counter for each page', () => {
         type: 'Container',
         auth,
         blocks: [
-          {
-            id: 'block',
-            type: 'Display',
-          },
           {
             id: 'block',
             type: 'Display',
@@ -974,10 +913,6 @@ test('different blockId counter for each page', () => {
             id: 'block',
             type: 'Display',
           },
-          {
-            id: 'block',
-            type: 'Display',
-          },
         ],
       },
     ],
@@ -998,11 +933,6 @@ test('different blockId counter for each page', () => {
             blocks: [
               {
                 id: 'block:page_1:block:0',
-                blockId: 'block',
-                type: 'Display',
-              },
-              {
-                id: 'block:page_1:block:1',
                 blockId: 'block',
                 type: 'Display',
               },
@@ -1023,11 +953,6 @@ test('different blockId counter for each page', () => {
             blocks: [
               {
                 id: 'block:page_2:block:0',
-                blockId: 'block',
-                type: 'Display',
-              },
-              {
-                id: 'block:page_2:block:1',
                 blockId: 'block',
                 type: 'Display',
               },

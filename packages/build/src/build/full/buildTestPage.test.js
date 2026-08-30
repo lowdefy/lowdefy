@@ -33,7 +33,7 @@ test('buildTestPage', () => {
         type: 'Box',
         blocks: [
           { id: 'input', type: 'TextInput' },
-          { id: 'box', type: 'Box' },
+          { id: 'innerBox', type: 'Box' },
         ],
       },
     ],
@@ -76,8 +76,8 @@ test('buildTestPage', () => {
                   },
 
                   {
-                    blockId: 'box',
-                    id: 'block:page:box:1',
+                    blockId: 'innerBox',
+                    id: 'block:page:innerBox:0',
                     type: 'Box',
                   },
                 ],

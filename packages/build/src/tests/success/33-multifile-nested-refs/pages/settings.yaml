@@ -9,14 +9,14 @@ blocks:
     properties:
       title: User Settings
     blocks:
-      - _ref: components/form-field.yaml
-        vars:
-          id: username
-          label: Username
-          type: text
-      - _ref: components/form-field.yaml
-        vars:
-          id: email
-          label: Email
-          type: email
+      - _ref:
+          path: components/form-field.yaml.njk
+          vars:
+            field_id: username
+            label: Username
+      - _ref:
+          path: components/form-field.yaml.njk
+          vars:
+            field_id: email
+            label: Email
   - _ref: blocks/page-footer.yaml

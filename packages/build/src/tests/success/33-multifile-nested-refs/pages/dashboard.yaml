@@ -7,14 +7,16 @@ blocks:
   - id: metrics
     type: Box
     blocks:
-      - _ref: components/metric-card.yaml
-        vars:
-          id: users
-          title: Total Users
-          value: '1,234'
-      - _ref: components/metric-card.yaml
-        vars:
-          id: orders
-          title: Total Orders
-          value: '5,678'
+      - _ref:
+          path: components/metric-card.yaml.njk
+          vars:
+            card_id: users
+            title: Total Users
+            value: '1,234'
+      - _ref:
+          path: components/metric-card.yaml.njk
+          vars:
+            card_id: orders
+            title: Total Orders
+            value: '5,678'
   - _ref: blocks/page-footer.yaml
