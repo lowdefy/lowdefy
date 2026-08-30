@@ -21,12 +21,19 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
 
+import { jest } from '@jest/globals';
+
 import setupTestFixtures from './setupTestFixtures.mjs';
 
 // The docs service reads build artifacts from process.cwd() — point it at the
 // fixture server before the modules are imported.
 const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
+
+// runJourney needs a browser; mocked so the tool's result shaping (JSON text
+// followed by image blocks) can be asserted without one.
+const mockRunJourney = jest.fn();
+jest.unstable_mockModule('./runJourney.js', () => ({ default: mockRunJourney }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
@@ -46,6 +53,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_get_page_config',
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
+  'lowdefy_run_journey',
   'lowdefy_scaffold_page',
   'lowdefy_inspect_state',
   'lowdefy_eval_operator',
@@ -150,6 +158,7 @@ test('MCP tools that render a page headless advertise an optional user parameter
 
   [
     'lowdefy_screenshot_page',
+    'lowdefy_run_journey',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
     'lowdefy_load_state',
@@ -288,4 +297,67 @@ test('MCP tools/call prepends a STALE notice while the last build failed', async
   } finally {
     fs.writeFileSync(statusPath, okStatus);
   }
+
+test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one image per screenshot', async () => {
+  mockRunJourney.mockResolvedValue({
+    pageId: 'form',
+    passed: false,
+    steps: [{ index: 0, step: { screenshot: 'before' }, status: 'ok', durationMs: 3 }],
+    failure: { index: 1, step: { click: 'nope' }, expected: 'x', actual: 'y', message: 'm' },
+    screenshots: [
+      { name: 'before', data: 'AAAA', mimeType: 'image/png' },
+      { name: 'after', data: 'BBBB', mimeType: 'image/png' },
+    ],
+    state: { saved: false },
+  });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      pageId: 'form',
+      steps: [{ screenshot: 'before' }, { click: 'nope' }],
+      user: { roles: ['admin'] },
+      urlQuery: { id: '1' },
+    },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledWith({
+    origin: 'http://localhost:3000',
+    pageId: 'form',
+    steps: [{ screenshot: 'before' }, { click: 'nope' }],
+    user: { roles: ['admin'] },
+    urlQuery: { id: '1' },
+  });
+  expect(result.content).toHaveLength(3);
+  const summary = JSON.parse(result.content[0].text);
+  expect(summary.passed).toBe(false);
+  expect(summary.failure.index).toBe(1);
+  expect(summary.state).toEqual({ saved: false });
+  expect(summary.screenshots).toEqual([{ name: 'before' }, { name: 'after' }]);
+  expect(result.content[1]).toEqual({ type: 'image', data: 'AAAA', mimeType: 'image/png' });
+  expect(result.content[2]).toEqual({ type: 'image', data: 'BBBB', mimeType: 'image/png' });
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_run_journey reports a runner error as a tool error', async () => {
+  mockRunJourney.mockResolvedValue({ error: 'Step 0: Unknown journey step "hover".' });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'form', steps: [{ hover: 'a' }] },
+  });
+
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toEqual('Step 0: Unknown journey step "hover".');
+  await client.close();
+});
+
+test('MCP instructions teach lowdefy_run_journey as the way to verify behaviour', async () => {
+  const client = await connectClient();
+  const instructions = client.getInstructions();
+  expect(instructions).toContain('lowdefy_run_journey');
+  expect(instructions).toContain('verify behaviour');
+  await client.close();
 });

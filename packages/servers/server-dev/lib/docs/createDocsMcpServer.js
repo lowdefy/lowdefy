@@ -40,6 +40,7 @@ import loadState from './loadState.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
 import runEndpoint from './runEndpoint.js';
+import runJourney from './runJourney.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -60,7 +61,9 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure.
 
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
+Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text or url. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
+
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
@@ -435,6 +438,46 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         return notFoundResult(result.error);
       }
       return { content: [{ type: 'image', data: result.data, mimeType: result.mimeType }] };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_run_journey',
+    {
+      description:
+        'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId. A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Always returns the final page state and any screenshots taken (as images after the JSON text).',
+      inputSchema: {
+        pageId: z.string().describe('The page id to open.'),
+        steps: z
+          .array(z.record(z.any()))
+          .describe(
+            'Ordered steps, one key each: {"click": blockId} | {"fill": {"blockId", "value"}} | {"select": {"blockId", "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": blockId} | {"text": {"blockId", "contains"}} | {"url": {"contains"}}}. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
+          ),
+        user: userSchema,
+        urlQuery: z
+          .record(z.any())
+          .optional()
+          .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+      },
+    },
+    async ({ pageId, steps, user, urlQuery }) => {
+      if (!origin) {
+        return notFoundResult('Journey unavailable: server origin unknown for this transport.');
+      }
+      const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
+      // returns) so an MCP client renders them; the JSON keeps only their names.
+      const { screenshots, ...rest } = result;
+      const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
+      return {
+        content: [
+          { type: 'text', text: JSON.stringify(summary, null, 2) },
+          ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+        ],
+      };
     }
   );
 

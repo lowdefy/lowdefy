@@ -42,6 +42,7 @@ import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
 import docsInspectStateHandler from './routes/docs/inspectState.js';
+import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
@@ -137,6 +138,7 @@ function createApp() {
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
