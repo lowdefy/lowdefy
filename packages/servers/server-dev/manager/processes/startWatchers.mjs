@@ -17,6 +17,8 @@
 import envWatcher from '../watchers/envWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
 import moduleBuildWatcher from '../watchers/moduleBuildWatcher.mjs';
+import pluginSourceWatcher from '../watchers/pluginSourceWatcher.mjs';
+import restartRequestWatcher from '../watchers/restartRequestWatcher.mjs';
 import serverArtifactWatcher from '../watchers/serverArtifactWatcher.mjs';
 
 function startWatchers(context) {
@@ -25,6 +27,8 @@ function startWatchers(context) {
       envWatcher(context),
       lowdefyBuildWatcher(context),
       moduleBuildWatcher(context),
+      pluginSourceWatcher(context),
+      restartRequestWatcher(context),
       serverArtifactWatcher(context),
     ]);
   };

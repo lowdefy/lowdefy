@@ -81,6 +81,7 @@ function getOverview() {
     '4. **Understand the app**: `GET /lowdefy-docs/app-map` — or `lowdefy_app_map`. Every page, menu, connection, endpoint, agent, and websocket in one call.',
     '5. **Config checkpoints**: `POST /lowdefy-docs/checkpoints` `{label}` / `POST /lowdefy-docs/checkpoints/revert` `{id}` — or `lowdefy_checkpoint` / `lowdefy_revert_checkpoint`. Snapshot config files before risky changes; revert instantly.',
     "6. **State checkpoints**: `POST /lowdefy-docs/state-checkpoints/snapshot` `{pageId, name}` captures live page state + request responses into .lowdefy/state-checkpoints/<name>/ (gitignored — checkpoints contain user/session data); `POST /lowdefy-docs/state-checkpoints/load` `{name, mode}` restores it — 'registry-only' mode returns a ?_checkpoint URL a human can open to test the app in that exact state. `lowdefy_checkpoint_to_mocks` converts one into e2e mocks.yaml fixtures.",
+    "7. **Restart the server**: `POST /lowdefy-docs/restart` `{reason}` — or `lowdefy_restart`. After editing a local plugin's server-side implementation, or when build-status looks stale. Answers before the restart lands: wait ~2s, then poll `GET /lowdefy-docs/build-status`. Local plugin server-side sources are also watched and restart the server automatically.",
     '',
     '## Visual feedback (annotation helper)',
     '',
@@ -108,6 +109,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/app-map` | Whole-app graph: pages, menus, connections, endpoints, agents |',
     '| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints: list, create, revert |',
     '| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints: capture/restore live app state |',
+    '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; poll build-status) |',
     '| `POST /lowdefy-feedback` | Annotation helper: enrich + format a feedback batch (overlay → clipboard) |',
     '| `ALL /lowdefy-docs/mcp` | MCP endpoint (streamable HTTP) exposing all of the above as tools |',
   ];
