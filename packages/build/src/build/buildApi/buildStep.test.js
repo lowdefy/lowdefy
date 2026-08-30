@@ -249,7 +249,7 @@ test('request step tenant with another string throws', () => {
 
 test('a literal $search step pipeline on a walled connection without tenant authored throws at build', () => {
   const context = testContext({ logger });
-  context.tenantConnectionIds.add('walled');
+  context.tenantConnections.set('walled', { type: 'MongoDBCollection', field: 'organization_id' });
   const components = {
     api: [
       {
@@ -273,7 +273,7 @@ test('a literal $search step pipeline on a walled connection without tenant auth
 
 test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
   const context = testContext({ logger });
-  context.tenantConnectionIds.add('walled');
+  context.tenantConnections.set('walled', { type: 'MongoDBCollection', field: 'organization_id' });
   const components = {
     api: [
       {

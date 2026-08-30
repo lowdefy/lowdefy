@@ -81,7 +81,7 @@ function buildRequest(request, pageContext) {
   validateTenantPipelineEntry({
     config: request,
     location: `Request "${request.id}" at page "${pageId}"`,
-    tenantConnectionIds: context.tenantConnectionIds,
+    tenantConnections: context.tenantConnections,
     configKey,
   });
   // Best-effort (literal pipelines only): a walled pipeline that joins a
@@ -89,7 +89,7 @@ function buildRequest(request, pageContext) {
   validateTenantSharedLookup({
     config: request,
     location: `Request "${request.id}" at page "${pageId}"`,
-    tenantConnectionIds: context.tenantConnectionIds,
+    tenantConnections: context.tenantConnections,
     tenantCollectionMap: context.tenantCollectionMap,
     configKey,
   });

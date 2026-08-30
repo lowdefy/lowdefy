@@ -16,7 +16,9 @@
 
 import validateTenantSharedLookup from './validateTenantSharedLookup.js';
 
-const tenantConnectionIds = new Set(['org_scope']);
+const tenantConnections = new Map([
+  ['org_scope', { type: 'MongoDBCollection', field: 'organization_id' }],
+]);
 const tenantCollectionMap = {
   controls: { shared: [], scoped: ['org_scope'] },
   catalogue: { shared: ['frameworks'], scoped: [] },
@@ -31,7 +33,7 @@ function run(options) {
     validateTenantSharedLookup({
       config: { connectionId, tenant, properties: { pipeline } },
       location,
-      tenantConnectionIds: hasIds ? options.ids : tenantConnectionIds,
+      tenantConnections: hasIds ? options.ids : tenantConnections,
       tenantCollectionMap,
       configKey: 'k1',
     });
@@ -166,7 +168,7 @@ test('a request on a connection outside the wall passes', () => {
 
 test('nothing runs when the policy is not tenant (no tenant connection ids)', () => {
   expect(run({ pipeline: [sharedLookup], ids: undefined })).not.toThrow();
-  expect(run({ pipeline: [sharedLookup], ids: new Set() })).not.toThrow();
+  expect(run({ pipeline: [sharedLookup], ids: new Map() })).not.toThrow();
 });
 
 test('a pipeline that is not a literal array passes', () => {

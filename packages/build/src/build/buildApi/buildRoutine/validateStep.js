@@ -21,7 +21,7 @@ import validateId from '../../../utils/validateId.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
 
-function validateStep(step, { endpointId, stepTypes, tenantConnectionIds, tenantCollectionMap }) {
+function validateStep(step, { endpointId, stepTypes, tenantConnections, tenantCollectionMap }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -214,7 +214,7 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds, tenant
   validateTenantPipelineEntry({
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
-    tenantConnectionIds,
+    tenantConnections,
     configKey,
   });
   // Best-effort (literal pipelines only): a walled pipeline that joins a
@@ -222,7 +222,7 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds, tenant
   validateTenantSharedLookup({
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
-    tenantConnectionIds,
+    tenantConnections,
     tenantCollectionMap,
     configKey,
   });

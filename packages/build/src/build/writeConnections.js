@@ -62,7 +62,7 @@ async function writeConnections({ components, context }) {
     context.writeBuildArtifact(
       'tenantCollections.json',
       serializer.serializeToString({
-        tenantConnectionIds: [...(context.tenantConnectionIds ?? [])],
+        tenantConnections: Object.fromEntries(context.tenantConnections ?? new Map()),
         tenantCollectionMap: context.tenantCollectionMap ?? {},
       })
     )
