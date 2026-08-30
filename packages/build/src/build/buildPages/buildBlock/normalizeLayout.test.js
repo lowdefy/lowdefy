@@ -107,11 +107,28 @@ test('normalizeLayout does not overwrite existing new key with deprecated value'
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
 });
 
-test('normalizeLayout leaves layout.align untouched (ambiguous at build time)', () => {
+test('normalizeLayout renames contentAlign to align and warns', () => {
   const pageContext = createPageContext();
-  const block = { blockId: 'b1', layout: { align: 'center' } };
+  const block = { blockId: 'b1', layout: { contentAlign: 'middle' } };
   normalizeLayout(block, pageContext);
-  expect(block.layout).toEqual({ align: 'center' });
+  expect(block.layout).toEqual({ align: 'middle' });
+  expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain(
+    'layout.contentAlign is deprecated'
+  );
+  expect(pageContext.context.handleWarning.mock.calls[0][0].message).toContain('layout.align');
+});
+
+test('normalizeLayout leaves layout.align untouched, with or without layout.selfAlign', () => {
+  const pageContext = createPageContext();
+  const alignOnly = { blockId: 'b1', layout: { align: 'middle' } };
+  normalizeLayout(alignOnly, pageContext);
+  expect(alignOnly.layout).toEqual({ align: 'middle' });
+
+  const bothSet = { blockId: 'b2', layout: { align: 'middle', selfAlign: 'top' } };
+  normalizeLayout(bothSet, pageContext);
+  expect(bothSet.layout).toEqual({ align: 'middle', selfAlign: 'top' });
+
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 

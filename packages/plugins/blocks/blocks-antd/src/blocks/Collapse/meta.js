@@ -57,7 +57,7 @@ export default {
       destroyInactivePanel: {
         type: 'boolean',
         default: false,
-        description: 'Destroy inactive panel.',
+        description: "Destroy inactive panel. Maps to antd's `destroyOnHidden`.",
       },
       expandIcon: {
         type: ['string', 'object'],
