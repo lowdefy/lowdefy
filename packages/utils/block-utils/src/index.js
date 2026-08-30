@@ -23,6 +23,7 @@ import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
 import extractEventPayloads from './extractEventPayloads.js';
 import HtmlComponent from './HtmlComponent.js';
+import { PLUGIN_API_VERSION, REMOVED_BLOCK_METHODS } from './pluginApi.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
 
@@ -36,6 +37,8 @@ export {
   extractBlockTypes,
   extractEventPayloads,
   HtmlComponent,
+  PLUGIN_API_VERSION,
+  REMOVED_BLOCK_METHODS,
   renderHtml,
   withBlockDefaults,
 };
