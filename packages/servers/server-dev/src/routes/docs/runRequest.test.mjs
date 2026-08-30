@@ -95,3 +95,24 @@ test('docsRunRequestHandler passes an undefined user when the body omits it', as
     honoContext: c,
   });
 });
+
+test('docsRunRequestHandler passes explain: true through to runRequest and returns its explain', async () => {
+  mockRunRequest.mockResolvedValue({
+    refused: false,
+    response: [],
+    explain: { caller: { id: 'u_1', organization_id: 'org_1', roles: [] }, rewritten: [] },
+  });
+  const c = createContext({ pageId: 'home', requestId: 'get_rows', explain: true });
+
+  const result = await docsRunRequestHandler(c);
+
+  expect(mockRunRequest).toHaveBeenCalledWith({
+    pageId: 'home',
+    requestId: 'get_rows',
+    payload: undefined,
+    user: undefined,
+    explain: true,
+    honoContext: c,
+  });
+  expect(result.data.explain.caller).toEqual({ id: 'u_1', organization_id: 'org_1', roles: [] });
+});

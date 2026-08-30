@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import resolveDevUser from '../server/auth/resolveDevUser.js';
+import formatExplainTrace from './formatExplainTrace.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import truncateResponse from './truncateResponse.js';
 
@@ -31,7 +32,12 @@ import truncateResponse from './truncateResponse.js';
 // or :throw in the routine, and faults that escape callEndpoint (auth
 // refusals, missing connections, InternalApi endpoints) all come back as data.
 // Only malformed input throws, as a ConfigError.
-async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
+//
+// `explain: true` allocates a trace collector that callEndpoint fills with one
+// entry per request step (control steps contribute nothing) and adds an
+// `explain` array to the result, each entry carrying its stepId. Without it
+// nothing is allocated and the result is unchanged.
+async function runEndpoint({ endpointId, payload = {}, user, explain = false, honoContext }) {
   if (type.isUndefined(endpointId) || !type.isString(endpointId)) {
     throw new ConfigError(
       `run_endpoint requires an "endpointId" string. Received ${JSON.stringify(endpointId)}.`
@@ -81,6 +87,15 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
 
   context.logger.info({ event: 'agent_run_endpoint', endpointId, user });
 
+  const trace = explain === true ? [] : undefined;
+  const formatExplain = () =>
+    trace.map((stepTrace) =>
+      formatExplainTrace({
+        trace: stepTrace,
+        requestType: stepTrace.connection?.type ?? 'unknown',
+        user: context.user,
+      })
+    );
   try {
     // callEndpoint refuses InternalApi endpoints and enforces the endpoint's
     // auth and payloadSchema exactly as the HTTP route does. A :reject or
@@ -91,10 +106,14 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
       endpointId,
       pageId: undefined,
       payload,
+      trace,
     });
+    if (trace) {
+      return { refused: false, ...truncateResponse(result), explain: formatExplain() };
+    }
     return { refused: false, ...truncateResponse(result) };
   } catch (error) {
-    return {
+    const failure = {
       refused: false,
       error: {
         name: error.name,
@@ -103,6 +122,10 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
         configKey: error.configKey,
       },
     };
+    if (trace) {
+      failure.explain = formatExplain();
+    }
+    return failure;
   }
 }
 
