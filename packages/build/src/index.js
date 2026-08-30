@@ -18,10 +18,13 @@
 
 import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
+import check from './check.js';
+import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
+import serializeBuildException from './utils/serializeBuildException.js';
 import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
@@ -192,11 +195,17 @@ async function build(options) {
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(runChecks, 'checks', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
+
+    // `lowdefy check` stops here: every validation has run and nothing is written.
+    if (context.validateOnly) {
+      return { errors: [], warnings: (context.warnings ?? []).map(serializeBuildException) };
+    }
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
@@ -243,6 +252,6 @@ async function build(options) {
   }
 }
 
-export { createPluginTypesMap };
+export { check, createPluginTypesMap };
 
 export default build;

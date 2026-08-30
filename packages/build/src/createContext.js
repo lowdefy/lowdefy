@@ -32,6 +32,7 @@ function createContext({
   logger,
   refResolver,
   stage = 'prod',
+  validateOnly = false,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
@@ -41,6 +42,7 @@ function createContext({
     websocketIds: new Set(),
     directories,
     errors: [],
+    jsBodies: [],
     jsMap: {},
     warnings: [],
     keyMap: {},
@@ -53,6 +55,7 @@ function createContext({
     unresolvedRefVars: {},
     seenSourceLines: new Set(),
     stage,
+    validateOnly,
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),
@@ -75,8 +78,15 @@ function createContext({
     },
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
-    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
+
+  // A check run must never touch the build directory. The no-op makes that
+  // structural instead of relying on every validation step to stay write-free.
+  if (validateOnly) {
+    context.writeBuildArtifact = async () => {};
+  } else {
+    context.writeBuildArtifact = createWriteBuildArtifact({ directories });
+  }
 
   context.blockMetas = context.typesMap.blockMetas ?? {};
 

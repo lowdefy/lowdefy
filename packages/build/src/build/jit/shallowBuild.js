@@ -23,6 +23,7 @@ import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
 import makeId from '../../utils/makeId.js';
 import tryBuildStep from '../../utils/tryBuildStep.js';
+import runChecks from '../../checks/index.js';
 
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
@@ -107,7 +108,6 @@ async function shallowBuild(options) {
     // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
     // that the projection exists (matches the full build in index.js).
     await resolveModuleManifests({ context });
-
 
     let components;
     try {
@@ -204,6 +204,7 @@ async function shallowBuild(options) {
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(runChecks, 'checks', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     logCollectedErrors(context);
@@ -279,10 +280,7 @@ async function shallowBuild(options) {
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against
     // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact(
-      'iconImports.json',
-      JSON.stringify(components.imports.icons)
-    );
+    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });

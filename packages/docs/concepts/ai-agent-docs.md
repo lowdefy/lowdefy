@@ -41,6 +41,7 @@ It provides these tools:
 | `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status`               |
 | `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                 |
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                         |
+| `lowdefy_check`          | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 
 ## Hazards — what the schema cannot tell you
 
@@ -114,6 +115,8 @@ So while the last build is failing, every answer says so:
 Nothing is refused — the last-known-good schema or page config is often exactly what you need while fixing the build. The flag disappears as soon as a build succeeds. Call `lowdefy_build_status` (or `GET /lowdefy-docs/build-status`) for the errors.
 
 Some build warnings are only warnings in `lowdefy dev` — they fail `lowdefy build`. Those carry `"prodError": true` in `lowdefy_build_status`, are printed in the dev terminal as `[ConfigWarning · fails in prod] …`, and are badged **fails in prod** on a dark-orange bar in the browser error bar. Treat them as errors: the production build will not pass until they are fixed.
+
+`lowdefy_build_status` reports what the dev build saw; `lowdefy_check` reports what a production build would say. Run `lowdefy_check` (or `lowdefy check --json` in a terminal) before declaring a change done — it runs the prod-stage validation without producing a build, so the `prodError` warnings above come back as errors.
 
 ## Live state — the agent sees what you see
 

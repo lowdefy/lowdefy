@@ -37,6 +37,7 @@ import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
+import jsLint from '../../checks/jsLint.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
@@ -115,6 +116,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
+  buildContext.jsBodies = [];
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -393,6 +395,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       context: buildContext,
     });
     const finalPage = { ...cleanPage, requests: cleanRequests };
+    // The page pipeline has no checks step, so the js-lint rule is run directly
+    // on the bodies the two jsMapParser calls above queued.
+    jsLint.run({ components: finalPage, context: buildContext });
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {

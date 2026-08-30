@@ -62,6 +62,7 @@ function testContext({
     readConfigFile: readConfigFile || (() => {}),
     refMap: {},
     keyMap: {},
+    jsBodies: [],
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),

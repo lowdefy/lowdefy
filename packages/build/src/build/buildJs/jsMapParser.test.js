@@ -19,7 +19,7 @@ import { jest } from '@jest/globals';
 import jsMapParser from './jsMapParser.js';
 
 function createContext({ keyMap } = {}) {
-  return { errors: [], keyMap: keyMap ?? {}, handleWarning: jest.fn() };
+  return { errors: [], jsBodies: [], keyMap: keyMap ?? {}, handleWarning: jest.fn() };
 }
 
 function withKey(obj, key) {
@@ -140,93 +140,18 @@ test('jsMapParser initializes jsMap env bucket when missing', () => {
   expect(Object.keys(jsMap.client)).toHaveLength(1);
 });
 
-test('jsMapParser reports an undefined name as a ConfigError carrying the node configKey and js-lint slug', () => {
-  const jsMap = {};
-  const context = createContext();
-  const input = { x: withKey({ _js: 'return unlinked.stamp;' }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'client', context });
-
-  expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].name).toBe('ConfigError');
-  expect(context.errors[0].message).toBe(
-    '_js body references "unlinked", which is not defined, at line 1. Available: actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user, and the JavaScript standard library.'
-  );
-  expect(context.errors[0].configKey).toBe('k1');
-  expect(context.errors[0].checkSlug).toBe('js-lint');
-  expect(context.errors[0].received).toBe('return unlinked.stamp;');
-});
-
-test('jsMapParser names the server prototype and browser globals for a server body using document', () => {
-  const jsMap = {};
-  const context = createContext();
-  const input = { x: withKey({ _js: { fn: 'return document.title;' } }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'server', context });
-
-  expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toBe(
-    '_js body references "document", which is not defined, at line 1. Available: args, item, lowdefyApp, payload, secret, state, step, user, and the JavaScript standard library. This body runs on the server — browser globals such as "document" and "window" are not available.'
-  );
-});
-
-test('jsMapParser reports a syntax error as a ConfigError', () => {
-  const jsMap = {};
-  const context = createContext();
-  const input = { x: withKey({ _js: 'return (1;' }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'client', context });
-
-  expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toBe(
-    '_js body has a syntax error at line 1: Unexpected token ;.'
-  );
-  expect(context.errors[0].configKey).toBe('k1');
-  expect(context.errors[0].checkSlug).toBe('js-lint');
-});
-
-test('jsMapParser reports an unused declaration as a ConfigWarning', () => {
-  const jsMap = {};
-  const context = createContext();
-  const input = { x: withKey({ _js: 'const stampAt = 1;\nreturn 2;' }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'client', context });
-
-  expect(context.errors).toHaveLength(0);
-  expect(context.handleWarning).toHaveBeenCalledTimes(1);
-  const warning = context.handleWarning.mock.calls[0][0];
-  expect(warning.name).toBe('ConfigWarning');
-  expect(warning.message).toBe('_js body declares "stampAt" but never uses it, at line 1.');
-  expect(warning.configKey).toBe('k1');
-  expect(warning.checkSlug).toBe('js-lint');
-});
-
-test('jsMapParser reports the same body at two configKeys twice', () => {
+test('jsMapParser queues every hashed body on context.jsBodies for the js-lint rule', () => {
   const jsMap = {};
   const context = createContext();
   const input = {
-    a: withKey({ _js: 'return nope;' }, 'ka'),
-    b: withKey({ _js: 'return nope;' }, 'kb'),
+    a: withKey({ _js: 'return 1;' }, 'ka'),
+    b: withKey({ _js: { fn: 'return 2;', args: {} } }, 'kb'),
   };
-  jsMapParser({ input, jsMap, env: 'client', context });
+  jsMapParser({ input, jsMap, env: 'server', context });
 
-  expect(Object.keys(jsMap.client)).toHaveLength(1);
-  expect(context.errors.map((e) => e.configKey)).toEqual(['ka', 'kb']);
-});
-
-test('jsMapParser ~ignoreBuildChecks js-lint suppresses lint errors', () => {
-  const jsMap = {};
-  const context = createContext({
-    keyMap: { parent: { '~ignoreBuildChecks': ['js-lint'] }, k1: { '~k_parent': 'parent' } },
-  });
-  const input = { x: withKey({ _js: 'return nope;' }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'client', context });
-
+  expect(context.jsBodies).toEqual([
+    { env: 'server', hash: expect.any(String), body: 'return 1;', configKey: 'ka' },
+    { env: 'server', hash: expect.any(String), body: 'return 2;', configKey: 'kb' },
+  ]);
   expect(context.errors).toHaveLength(0);
-});
-
-test('jsMapParser does not lint a clean body into errors or warnings', () => {
-  const jsMap = {};
-  const context = createContext();
-  const input = { x: withKey({ _js: 'const a = state("a");\nreturn a * 2;' }, 'k1') };
-  jsMapParser({ input, jsMap, env: 'client', context });
-
-  expect(context.errors).toHaveLength(0);
-  expect(context.handleWarning).not.toHaveBeenCalled();
 });

@@ -19,6 +19,7 @@ import { Command, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
+import check from './commands/check/check.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
@@ -119,6 +120,18 @@ program
   )
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: build }));
+
+program
+  .command('check')
+  .description('Validate a Lowdefy app against production rules without building it.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .option('--json', 'Print the { errors, warnings } report as JSON and nothing else.')
+  .addOption(options.logLevel)
+  .addOption(options.refResolver)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: check }));
 
 program
   .command('dev')

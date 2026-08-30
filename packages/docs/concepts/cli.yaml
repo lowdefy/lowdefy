@@ -66,6 +66,31 @@ _ref:
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
+            ## check
+
+            The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules such as the `_js` lint, and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.
+
+            The check always runs with the production rules. Some build warnings are only warnings in `lowdefy dev` but fail `lowdefy build` — those are reported by `check` as errors, exactly as a production build would. Warnings never fail a check.
+
+            The first run in a fresh clone prepares the server directory (`.lowdefy/server`) the same way `lowdefy build` does, so the app's own plugins are known; every later run reuses it. Running `check` while `lowdefy dev` is running is safe.
+
+            The options are:
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. Use this from scripts and AI coding agents.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
+
+            The human-readable output groups problems by source file, one line per problem with its line number, the error name, the message and the check slug in parentheses, and ends with a `N errors, M warnings` summary (or `No problems found.`). A check slug can be used in `~ignoreBuildChecks` to suppress that check on a config node.
+
+            Exit codes:
+
+            - `0`: no errors (warnings may have been reported).
+            - `1`: one or more errors, or the check itself failed to run.
+
+            Compared to `lowdefy build`: `build` validates and then writes the production app to the server directory and bundles the client; `check` runs the same validation and stops. `check` is the right command to answer "would `lowdefy build` refuse this?" without waiting for a build.
 
             ## dev
 
