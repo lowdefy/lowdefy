@@ -17,6 +17,7 @@
 import applyArrayIndices from './applyArrayIndices.js';
 import builtinMessages from './builtinMessages.js';
 import cachedPromises from './cachedPromises.js';
+import cleanBuildArtifact from './cleanBuildArtifact.js';
 import extractErrorProps from './extractErrorProps.js';
 import get from './get.js';
 import getKey from './getKey.js';
@@ -47,6 +48,7 @@ export {
   applyArrayIndices,
   builtinMessages,
   cachedPromises,
+  cleanBuildArtifact,
   extractErrorProps,
   get,
   getKey,

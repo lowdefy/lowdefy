@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -241,4 +241,34 @@ test('child routine sees fresh state — caller state not visible', async () => 
     endpointDepth: 0,
   });
   expect(result.response).toBe(1);
+});
+
+test('invokeEndpoint rejects a payload that violates the target payloadSchema with a UserError', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'Api',
+        payloadSchema: {
+          type: 'object',
+          properties: { key: { type: 'string' } },
+          required: ['key'],
+        },
+        routine: { ':return': { _payload: 'key' } },
+      },
+    },
+  });
+  await expect(
+    invokeEndpoint(context, { endpointId: 'target', payload: { key: 1 }, endpointDepth: 0 })
+  ).rejects.toThrow(UserError);
+  // A missing payload is validated as {} - the same value the routine would receive.
+  await expect(invokeEndpoint(context, { endpointId: 'target', endpointDepth: 0 })).rejects.toThrow(
+    'Payload for endpoint "target" does not match its payloadSchema at (root): must have required property \'key\'.'
+  );
+  const result = await invokeEndpoint(context, {
+    endpointId: 'target',
+    payload: { key: 'hi' },
+    endpointDepth: 0,
+  });
+  expect(result.response).toBe('hi');
 });

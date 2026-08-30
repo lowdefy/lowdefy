@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import validatePayload from './validatePayload.js';
 
 async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
   if (endpointDepth >= 10) {
@@ -30,9 +31,12 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
   const endpointConfig = await getEndpointConfig(context, { endpointId });
   authorizeApiEndpoint(context, { endpointConfig });
 
+  const childPayload = payload ?? {};
+  validatePayload({ endpointConfig, payload: childPayload });
+
   const childRoutineContext = {
     steps: {},
-    payload: payload ?? {},
+    payload: childPayload,
     arrayIndices: [],
     items: {},
     state: {},

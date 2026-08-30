@@ -98,6 +98,16 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
     );
   }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });
+  // A webhook routine's payload is the transport envelope { body, query, headers },
+  // never the payloadSchema shape, so the two together can only be a mistake -
+  // and silently skipping validation is the failure mode payloadSchema removes.
+  const isWebhook = !type.isNone(endpoint.webhook) && endpoint.webhook !== false;
+  if (isWebhook && !type.isNone(endpoint.payloadSchema)) {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" declares both "webhook" and "payloadSchema". A webhook routine receives { body, query, headers }, not the payloadSchema shape. Validate the body with a ValidateSchema step instead.`,
+      { configKey }
+    );
+  }
   validateSchedules({ endpoint, configKey });
 }
 
