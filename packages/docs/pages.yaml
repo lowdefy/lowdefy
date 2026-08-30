@@ -200,6 +200,7 @@
 - _ref: blocks/container/Splitter.yaml
 - _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml
+- _ref: blocks/container/Template.yaml
 - _ref: blocks/container/Tooltip.yaml
 - _ref: blocks/container/Watermark.yaml
 

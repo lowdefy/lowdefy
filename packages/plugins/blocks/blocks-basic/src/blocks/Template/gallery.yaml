@@ -1,0 +1,143 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Template
+  blocks:
+    - id: basic_plain
+      type: Template
+      properties:
+        context:
+          name: Lowdefy
+        template: '<p>Hello <strong>{{ name }}</strong> from a Template block.</p>'
+    - id: basic_primitive_context
+      type: Template
+      properties:
+        context: 42
+        template: '<p>A primitive context is available as <code>value</code>: {{ value }}</p>'
+    - id: basic_conditional
+      type: Template
+      properties:
+        context:
+          status: active
+        template: |
+          {% if status == "active" %}<p>Status is <strong>active</strong>.</p>{% else %}<p>Inactive.</p>{% endif %}
+
+- title: Escaping
+  blocks:
+    - id: escaping_default
+      type: Template
+      properties:
+        context:
+          untrusted: '<img src=x onerror=alert(1)><b>bold?</b>'
+        template: '<p>Escaped by default: {{ untrusted }}</p>'
+    - id: escaping_safe
+      type: Template
+      properties:
+        context:
+          markup: 'Trusted <b>bold</b> and <em>italic</em> markup'
+        template: '<p>With <code>| safe</code>: {{ markup | safe }}</p>'
+
+- title: Loops
+  blocks:
+    - id: loop_rows
+      type: Template
+      properties:
+        context:
+          rows:
+            - label: Name
+              value: Ada Lovelace
+            - label: Born
+              value: 1815
+            - label: Field
+              value: Mathematics
+        css: |
+          .row { display: flex; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--ant-color-border); }
+          .row .label { color: var(--ant-color-text-secondary); min-width: 60px; }
+        template: |
+          {% for row in rows %}
+          <div class="row"><span class="label">{{ row.label }}</span><span>{{ row.value }}</span></div>
+          {% endfor %}
+    - id: loop_list
+      type: Template
+      properties:
+        context:
+          items: [alpha, beta, gamma]
+        template: |
+          <ol>{% for item in items %}<li>{{ loop.index }}. {{ item }}</li>{% endfor %}</ol>
+
+- title: Scoped Style
+  blocks:
+    - id: scoped_style_red
+      type: Template
+      properties:
+        css: |
+          color: var(--ant-color-error);
+          .tag { background: var(--ant-color-error-bg); padding: 2px 6px; border-radius: 4px; }
+        template: '<p>This block has a red <span class="tag">tag</span> style.</p>'
+    - id: scoped_style_sibling
+      type: Template
+      properties:
+        template: '<p>This sibling block shares the <span class="tag">tag</span> class but is not styled by the block above.</p>'
+
+- title: Tailwind Classes
+  blocks:
+    - id: tailwind_card
+      type: Template
+      properties:
+        context:
+          title: Tailwind in a template
+        template: |
+          <div class="rounded-lg border border-gray-300 p-4 shadow-sm">
+            <h3 class="text-lg font-semibold">{{ title }}</h3>
+            <p class="text-sm text-gray-500">Classes written in the template are scanned by Tailwind at build.</p>
+          </div>
+
+- title: Slots
+  blocks:
+    - id: slot_card
+      type: Template
+      properties:
+        context:
+          title: Answer card
+          summary: A templated card with a real Button in its footer slot.
+        css: |
+          .card { border: 1px solid var(--ant-color-border); border-radius: 8px; padding: 16px; }
+          .footer { margin-top: 12px; display: flex; justify-content: flex-end; }
+        template: |
+          <div class="card">
+            <h3>{{ title }}</h3>
+            <p>{{ summary }}</p>
+            <div class="footer">{% slot "footer" %}</div>
+          </div>
+      slots:
+        footer:
+          blocks:
+            - id: slot_card_approve
+              type: Button
+              properties:
+                title: Approve
+              events:
+                onClick:
+                  - id: set_approved
+                    type: SetState
+                    params:
+                      slot_card_approved: true
+    - id: slot_card_result
+      type: Template
+      properties:
+        context:
+          approved:
+            _state: slot_card_approved
+        template: |
+          <p>Approved: <strong>{{ approved | default(false, true) }}</strong></p>

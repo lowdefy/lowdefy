@@ -261,3 +261,17 @@ test('collectPageContent collects class strings inside an operator under the blo
   expect(result).toContain('bg-red-500');
   expect(result).toContain('bg-blue-500');
 });
+
+test('collectPageContent collects tailwind classes inside a Template block template string', () => {
+  const result = collectPageContent([
+    {
+      id: 'card',
+      type: 'Template',
+      properties: {
+        template: '<div class="rounded-lg border p-4">{{ title }}</div>',
+        context: { title: { _state: 'title' } },
+      },
+    },
+  ]);
+  expect(result).toContain('rounded-lg border p-4');
+});

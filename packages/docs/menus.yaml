@@ -815,6 +815,9 @@
         - id: Tabs
           type: MenuLink
           pageId: Tabs
+        - id: Template
+          type: MenuLink
+          pageId: Template
         - id: Tooltip
           type: MenuLink
           pageId: Tooltip
