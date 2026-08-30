@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 
 import findSimilarString from '../../utils/findSimilarString.js';
 
-function validateTypeClass({ context, counter, definitions, typeClass, warnIfMissing = false }) {
+function validateTypeClass({ counter, definitions, typeClass }) {
   const counts = counter.getCounts();
   const definedTypes = Object.keys(definitions);
   for (const typeName of Object.keys(counts)) {
@@ -29,11 +29,7 @@ function validateTypeClass({ context, counter, definitions, typeClass, warnIfMis
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      if (warnIfMissing) {
-        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
-        continue;
-      }
-      throw new ConfigError(message, { configKey });
+      throw new ConfigError(message, { configKey, checkSlug: 'types' });
     }
   }
 }
@@ -42,33 +38,27 @@ function validatePageTypes({ context }) {
   const { typeCounters, typesMap } = context;
 
   validateTypeClass({
-    context,
     counter: typeCounters.blocks,
     definitions: typesMap.blocks,
     typeClass: 'Block',
   });
 
   validateTypeClass({
-    context,
     counter: typeCounters.actions,
     definitions: typesMap.actions,
     typeClass: 'Action',
   });
 
   validateTypeClass({
-    context,
     counter: typeCounters.operators.client,
     definitions: typesMap.operators.client,
     typeClass: 'Operator',
-    warnIfMissing: true,
   });
 
   validateTypeClass({
-    context,
     counter: typeCounters.operators.server,
     definitions: typesMap.operators.server,
     typeClass: 'Operator',
-    warnIfMissing: true,
   });
 }
 

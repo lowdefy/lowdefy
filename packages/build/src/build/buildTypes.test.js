@@ -99,3 +99,66 @@ test('buildTypes resolves the organization step types that no action type shares
     expect(components.types.actions[typeName]).toBeUndefined();
   });
 });
+
+test('buildTypes collects an error for an unknown client operator', () => {
+  const context = createTypesMapContext({
+    operators: { client: createDefinitions(['_not', '_type', '_state']), server: {} },
+  });
+  context.errors = [];
+  context.typeCounters.operators.client.increment('_stat', 'configKey1');
+  const components = {};
+  buildTypes({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toEqual(
+    'Operator type "_stat" was used but is not defined. Did you mean "_state"?'
+  );
+  expect(context.errors[0].checkSlug).toEqual('types');
+  expect(context.errors[0].configKey).toEqual('configKey1');
+  expect(components.types.operators.client._stat).toBeUndefined();
+});
+
+test('buildTypes collects an error for an unknown server operator', () => {
+  const context = createTypesMapContext({
+    operators: {
+      client: createDefinitions(['_not', '_type']),
+      server: createDefinitions(['_secret']),
+    },
+  });
+  context.errors = [];
+  context.typeCounters.operators.server.increment('_secrt', 'configKey1');
+  const components = {};
+  buildTypes({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toEqual(
+    'Operator type "_secrt" was used but is not defined. Did you mean "_secret"?'
+  );
+  expect(context.errors[0].checkSlug).toEqual('types');
+});
+
+test('buildTypes reports every unknown type in one build', () => {
+  const context = createTypesMapContext({
+    operators: { client: createDefinitions(['_not', '_type', '_state']), server: {} },
+  });
+  context.errors = [];
+  context.typeCounters.operators.client.increment('_stat', 'configKey1');
+  context.typeCounters.operators.client.increment('_ifNot', 'configKey2');
+  const components = {};
+  buildTypes({ components, context });
+  expect(context.errors).toHaveLength(2);
+  expect(context.errors.map((error) => error.configKey)).toEqual(['configKey1', 'configKey2']);
+});
+
+test('buildTypes suppresses an unknown operator under ~ignoreBuildChecks types', () => {
+  const context = createTypesMapContext({
+    operators: { client: createDefinitions(['_not', '_type', '_state']), server: {} },
+  });
+  context.errors = [];
+  context.keyMap = {
+    configKey1: { '~k_parent': 'blockKey' },
+    blockKey: { '~ignoreBuildChecks': ['types'] },
+  };
+  context.typeCounters.operators.client.increment('_stat', 'configKey1');
+  const components = {};
+  buildTypes({ components, context });
+  expect(context.errors).toEqual([]);
+});
