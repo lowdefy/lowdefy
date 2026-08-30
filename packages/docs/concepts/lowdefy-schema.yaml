@@ -361,7 +361,12 @@ _ref:
             | `link-refs` | Invalid Link action page reference warnings |
             | `request-refs` | Invalid Request action reference warnings |
             | `connection-refs` | Nonexistent connection ID references |
-            | `types` | All type validation (blocks, operators, actions, requests, connections) |
+            | `callapi-refs` | Invalid CallAPI action endpoint reference warnings |
+            | `callapi-internal-refs` | CallAPI actions targeting InternalApi endpoints |
+            | `dynamic-endpoint-refs` | Invalid Dynamic block endpoint reference warnings |
+            | `websocket-refs` | Invalid websocket action reference warnings |
+            | `icons` | Unresolvable icon name warnings |
+            | `types` | All type validation - unknown blocks, operators, actions, requests, connections, steps, agents, notifications and websockets. Since v8 an unknown operator is a build error, so this slug is what suppresses a key that only looks like an operator. |
             | `schema` | JSON schema validation errors |
 
             ### Example: Dynamic State
