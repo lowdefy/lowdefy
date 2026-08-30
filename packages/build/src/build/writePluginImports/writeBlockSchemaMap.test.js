@@ -58,7 +58,7 @@ test('writeBlockSchemaMap writes only the schemas of the used block types', asyn
   });
   await writeBlockSchemaMap({ components, context });
   expect(written('plugins/blockSchemas.json')).toEqual({ Box: boxSchema });
-  expect(written('plugins/blockMetas.json')).toEqual({ Box: { category: 'container' } });
+  expect(written('plugins/blockMetas.json')).toEqual({ Box: { category: 'container', hazards: [] } });
 });
 
 test('writeBlockSchemaMap writes valueType and initValue from the plugin meta', async () => {
@@ -73,7 +73,7 @@ test('writeBlockSchemaMap writes valueType and initValue from the plugin meta', 
   });
   await writeBlockSchemaMap({ components, context });
   expect(written('plugins/blockMetas.json')).toEqual({
-    Span: { category: 'display', valueType: 'string', initValue: '' },
+    Span: { category: 'display', valueType: 'string', initValue: '', hazards: [] },
   });
 });
 
@@ -90,7 +90,7 @@ test('writeBlockSchemaMap typesMap blockMetas take priority over plugin metas', 
   });
   await writeBlockSchemaMap({ components, context });
   expect(written('plugins/blockMetas.json')).toEqual({
-    Box: { category: 'input', valueType: 'object' },
+    Box: { category: 'input', valueType: 'object', hazards: [] },
   });
 });
 
