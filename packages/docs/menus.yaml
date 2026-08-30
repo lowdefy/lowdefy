@@ -429,6 +429,11 @@
           pageId: config-tests
           properties:
             title: Config Tests
+        - id: fixtures
+          type: MenuLink
+          pageId: fixtures
+          properties:
+            title: Fixtures
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction

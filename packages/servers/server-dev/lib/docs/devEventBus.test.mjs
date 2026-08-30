@@ -107,7 +107,7 @@ test('publish keeps the entry timestamp when the entry carries one', () => {
 
 test('publish rejects an unknown event type', () => {
   expect(() => publish({ type: 'nope' })).toThrow(
-    'devEventBus event type must be one of build, client_error, server_error, restart. Received "nope".'
+    'devEventBus event type must be one of build, client_error, server_error, restart, fixture_seeded. Received "nope".'
   );
 });
 

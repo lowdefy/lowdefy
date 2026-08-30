@@ -17,6 +17,8 @@ import { jest } from '@jest/globals';
 
 const mockLoadMemoryMongo = jest.fn();
 jest.unstable_mockModule('./loadMemoryMongo.js', () => ({ default: mockLoadMemoryMongo }));
+const mockReadFixture = jest.fn();
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({ readFixture: mockReadFixture }));
 
 const mockServerStop = jest.fn();
 const mockClientConnect = jest.fn();
@@ -35,6 +37,11 @@ class MongoClient {
 let context;
 
 beforeEach(() => {
+  mockReadFixture.mockReset();
+  mockReadFixture.mockImplementation(async ({ name }) => ({
+    name,
+    connections: [{ connectionId: `${name}_connection`, docs: [{ _id: 1 }] }],
+  }));
   constructedUris = [];
   context = {
     directories: { config: '/app' },
@@ -106,4 +113,40 @@ test('prepareRequestTests surfaces the install hint when the memory server is no
   await expect(
     prepareRequestTests({ context, items: [{ test: { name: 'a', seed: { controls: [] } } }] })
   ).rejects.toThrow('Install it: pnpm add -D mongodb-memory-server mongodb');
+});
+
+test('prepareRequestTests loads fixtures and redirects the connections they seed too', async () => {
+  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+  const session = await prepareRequestTests({
+    context,
+    items: [
+      { test: { name: 'a', fixtures: ['base'], seed: { answers: [] } } },
+      { test: { name: 'b', fixtures: ['base', 'org-a'] } },
+    ],
+  });
+  expect(mockReadFixture).toHaveBeenCalledTimes(2);
+  expect(JSON.parse(session.env.LOWDEFY_TEST_CONNECTION_OVERRIDES)).toEqual({
+    answers: { databaseUri: 'mongodb://127.0.0.1:27999/' },
+    base_connection: { databaseUri: 'mongodb://127.0.0.1:27999/' },
+    'org-a_connection': { databaseUri: 'mongodb://127.0.0.1:27999/' },
+  });
+  expect(session.fixtures.get('base').fixture.name).toEqual('base');
+  expect(session.fixtures.get('org-a').fixture.name).toEqual('org-a');
+  await session.stop();
+});
+
+test('prepareRequestTests starts no memory server when the only fixture failed to load', async () => {
+  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+  mockReadFixture.mockRejectedValue(
+    new Error('Fixture "nope" not found. Expected fixtures/nope.yaml.')
+  );
+  const session = await prepareRequestTests({
+    context,
+    items: [{ test: { name: 'a', fixtures: ['nope'] } }],
+  });
+  expect(mockLoadMemoryMongo).not.toHaveBeenCalled();
+  expect(session.client).toBeNull();
+  expect(session.fixtures.get('nope')).toEqual({
+    error: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
+  });
 });

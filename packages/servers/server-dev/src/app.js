@@ -50,6 +50,7 @@ import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
 import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
 import docsRunRequestHandler from './routes/docs/runRequest.js';
+import docsSeedFixtureHandler from './routes/docs/seedFixture.js';
 import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
 import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
 import docsPluginDocHandler from './routes/docs/pluginDoc.js';
@@ -117,7 +118,7 @@ function createApp() {
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
   // they read build artifacts and node_modules directly — but run-request,
-  // run-endpoint and eval-operator build a full Lowdefy context (createLowdefyContext),
+  // run-endpoint, seed-fixture and eval-operator build a full Lowdefy context (createLowdefyContext),
   // which resolves the caller from the request headers via resolveAuthentication.
   // The MCP transport is registered before staleFlag on purpose: hono
   // dispatches in registration order, so the stale middleware never sees a
@@ -142,6 +143,7 @@ function createApp() {
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
   app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
+  app.post('/lowdefy-docs/seed-fixture', docsSeedFixtureHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
   app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);

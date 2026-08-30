@@ -23,6 +23,7 @@ import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPortAvailable from './isPortAvailable.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
+import readFixture from './readFixture.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 
@@ -37,6 +38,7 @@ export {
   isPortAvailable,
   spawnProcess,
   readFile,
+  readFixture,
   writeFile,
   writeFileIfChanged,
 };

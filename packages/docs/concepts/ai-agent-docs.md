@@ -44,6 +44,7 @@ It provides these tools:
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                         |
 | `lowdefy_check`          | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout |
+| `lowdefy_seed_fixture`           | Load a named fixture (`fixtures/<name>.yaml`) into the dev database through the connection layer so a page has data to show (needs `allowWriteRequests`; `reset` empties first)                                                                                         |
 
 ## Hazards — what the schema cannot tell you
 
@@ -92,14 +93,15 @@ The dev server pushes what changed instead of waiting to be asked. Two channels 
 - **MCP clients** receive them as `notifications/message` from logger `lowdefy` on the standalone GET stream of `/lowdefy-docs/mcp` (the server declares the `logging` capability, so any MCP client surfaces them). Failed builds arrive at level `error`, everything else at `info`.
 - **Everything else** uses `GET /lowdefy-docs/events`, a Server-Sent Events stream — `curl -N http://localhost:3000/lowdefy-docs/events` — with one frame per event, named by the event type.
 
-Every event carries `type` and an ISO `timestamp`. The four types:
+Every event carries `type` and an ISO `timestamp`. The five types:
 
-| Type           | When                                                                    | Carries                                                                                                   |
-| -------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `restart`      | First event on every connection                                          | `bootedAt` — the dev server process start time, so a reconnecting client can tell a restart from a dropped connection |
-| `build`        | Every time a rebuild finishes, success or failure                        | `status`, `errorCount`, `warningCount`, `errors`, `warnings`, and `stale` / `staleSince` (see below)     |
-| `client_error` | A browser reports a runtime error                                        | The same entry `lowdefy_build_status` lists under `clientErrors`                                          |
-| `server_error` | A request, endpoint, MCP tool or agent tool fails on the server          | The same entry `lowdefy_build_status` lists under `serverErrors`                                          |
+| Type             | When                                                            | Carries                                                                                                                                               |
+| ---------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `restart`        | First event on every connection                                 | `bootedAt` — the dev server process start time, so a reconnecting client can tell a restart from a dropped connection                                 |
+| `build`          | Every time a rebuild finishes, success or failure               | `status`, `errorCount`, `warningCount`, `errors`, `warnings`, and `stale` / `staleSince` (see below)                                                  |
+| `client_error`   | A browser reports a runtime error                               | The same entry `lowdefy_build_status` lists under `clientErrors`                                                                                      |
+| `server_error`   | A request, endpoint, MCP tool or agent tool fails on the server | The same entry `lowdefy_build_status` lists under `serverErrors`                                                                                      |
+| `fixture_seeded` | `lowdefy_seed_fixture` wrote a fixture into the dev database    | `name`, `reset` and `seeded` — per connection the `collection`, `deleted` and `inserted` counts — so a watching agent knows the data changed under it |
 
 Events are not buffered: a client that connects after an event missed it, and should call `lowdefy_build_status` — which is derived from the same `build/buildStatus.json` — for the current picture. Act on a `build` event with `status: "error"` immediately; `lowdefy_build_status` remains the full report.
 
@@ -194,6 +196,16 @@ Endpoints are not classified read-only — a routine has no `checkWrite` meta, a
 The result is the same `{ error, response, status, success }` object the HTTP endpoint route returns. A `:reject` or `:throw` in the routine is not a tool failure: it comes back as `success: false` with `status: "reject"` or `"error"` and the routine's own `error`, so the agent can assert on the shape it designed. `InternalApi` endpoints are refused with the same message HTTP callers get, an unknown `endpointId` answers `refused: true`, and faults that escape the routine (an auth refusal, a missing connection) come back as `error: { name, message, source, configKey }`. Only malformed input — a missing `endpointId` or a non-object `user` — is a `400`.
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
+
+## Seeding fixtures
+
+A list page cannot be seen to work while its collection is empty. `lowdefy_seed_fixture` (or `POST /lowdefy-docs/seed-fixture`) loads a named [fixture](/fixtures) — `fixtures/<name>.yaml` in the app, documents keyed by `connectionId`, the same files request tests use — into the dev database:
+
+```json
+{ "name": "base", "reset": true }
+```
+
+It writes to the developer's real dev database, so it is refused unless `cli.agentTools.allowWriteRequests: true` is set, answering `refused: true` with the reason and how to enable it. Every key is written through the connection layer as a `MongoDBInsertMany`, so operator-valued connection properties resolve and a connection without `write: true` refuses with its normal error. `reset` defaults to `false` — documents are added on top of what is there; `reset: true` first empties every collection the fixture names, and only those. Documents are inserted exactly as written, never tenant-stamped, so a fixture carries its own tenant fields. The result lists `seeded: [{ connectionId, collection, deleted, inserted }]`, or `error: { name, message }` with what was seeded before the failure. Every seed is logged as `agent_seed_fixture` and pushed as a `fixture_seeded` event.
 
 ## Journeys — verify behaviour, not just layout
 
@@ -372,36 +384,36 @@ This writes three things into your project (merging safely if they exist): `.mcp
 
 Beside `lowdefy-config`, which teaches the lookup workflow, `agent-setup` installs 28 topic skills. Each is a Claude Code skill (`.claude/skills/<name>/SKILL.md`) an agent loads when the task matches its description, with a **Reference** section generated from the docs and plugin schemas of the installed Lowdefy version and a hand-written **Recipe** section: the order to build things in, the traps, which MCP tool supersedes it, and how to verify.
 
-| Skill | Use when |
-| --- | --- |
-| `lowdefy-aggregations` | grouped, counted or joined data from MongoDB behind a request |
-| `lowdefy-aggrid-tables` | a data table with AgGrid |
-| `lowdefy-api-routines` | server-side logic as an `Api` endpoint routine |
-| `lowdefy-block-plugins` | a custom React block plugin |
-| `lowdefy-change-stamps` | created/updated audit fields on records |
-| `lowdefy-charts` | a chart from request data with `EChart` |
-| `lowdefy-contact-fields` | names, email, phone and address fields on a form |
-| `lowdefy-data-schema` | designing a collection's document shape |
-| `lowdefy-detail-pages` | a page that shows one record |
-| `lowdefy-edit-pages` | a create/edit form page |
-| `lowdefy-enums` | a field with a fixed set of values |
-| `lowdefy-events` | wiring events to action chains |
-| `lowdefy-file-structure` | laying out a project's files and `_ref`s |
-| `lowdefy-filters` | filter controls over a list or table |
-| `lowdefy-form-validation` | `required`, `validate` rules and the `Validate` action |
-| `lowdefy-js-operator` | the `_js` escape hatch and when to use an operator instead |
-| `lowdefy-layout` | arranging blocks with the grid, `Box` and `Flex` |
-| `lowdefy-list-pages` | a page that lists records from a request |
-| `lowdefy-lists` | repeating blocks over an array with `List`/`ControlledList` |
-| `lowdefy-loading-skeletons` | skeletons while requests run |
-| `lowdefy-modules` | installing or authoring a module |
-| `lowdefy-notifications` | user feedback after an action |
-| `lowdefy-operators` | writing operator expressions |
-| `lowdefy-page-layouts` | the page frame: sidebar, header and menus |
-| `lowdefy-pagination` | paging a long list |
-| `lowdefy-status-enums` | a record that moves through statuses |
-| `lowdefy-status-fields` | tags, badges and switches for status values |
-| `lowdefy-styling` | `style`, `class`, theme tokens and custom CSS |
+| Skill                       | Use when                                                      |
+| --------------------------- | ------------------------------------------------------------- |
+| `lowdefy-aggregations`      | grouped, counted or joined data from MongoDB behind a request |
+| `lowdefy-aggrid-tables`     | a data table with AgGrid                                      |
+| `lowdefy-api-routines`      | server-side logic as an `Api` endpoint routine                |
+| `lowdefy-block-plugins`     | a custom React block plugin                                   |
+| `lowdefy-change-stamps`     | created/updated audit fields on records                       |
+| `lowdefy-charts`            | a chart from request data with `EChart`                       |
+| `lowdefy-contact-fields`    | names, email, phone and address fields on a form              |
+| `lowdefy-data-schema`       | designing a collection's document shape                       |
+| `lowdefy-detail-pages`      | a page that shows one record                                  |
+| `lowdefy-edit-pages`        | a create/edit form page                                       |
+| `lowdefy-enums`             | a field with a fixed set of values                            |
+| `lowdefy-events`            | wiring events to action chains                                |
+| `lowdefy-file-structure`    | laying out a project's files and `_ref`s                      |
+| `lowdefy-filters`           | filter controls over a list or table                          |
+| `lowdefy-form-validation`   | `required`, `validate` rules and the `Validate` action        |
+| `lowdefy-js-operator`       | the `_js` escape hatch and when to use an operator instead    |
+| `lowdefy-layout`            | arranging blocks with the grid, `Box` and `Flex`              |
+| `lowdefy-list-pages`        | a page that lists records from a request                      |
+| `lowdefy-lists`             | repeating blocks over an array with `List`/`ControlledList`   |
+| `lowdefy-loading-skeletons` | skeletons while requests run                                  |
+| `lowdefy-modules`           | installing or authoring a module                              |
+| `lowdefy-notifications`     | user feedback after an action                                 |
+| `lowdefy-operators`         | writing operator expressions                                  |
+| `lowdefy-page-layouts`      | the page frame: sidebar, header and menus                     |
+| `lowdefy-pagination`        | paging a long list                                            |
+| `lowdefy-status-enums`      | a record that moves through statuses                          |
+| `lowdefy-status-fields`     | tags, badges and switches for status values                   |
+| `lowdefy-styling`           | `style`, `class`, theme tokens and custom CSS                 |
 
 Choose which to install with `--skills`:
 
@@ -522,6 +534,8 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
 | `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
 | `POST /lowdefy-docs/restart`        | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s) |
+| `POST /lowdefy-docs/seed-fixture`                                 | Load `fixtures/{name}.yaml` into the dev database through the connection layer (`{name, reset}`; needs `allowWriteRequests`) |
+| `POST /lowdefy-docs/seed-fixture`                                 | Load `fixtures/{name}.yaml` into the dev database through the connection layer (`{name, reset}`; needs `allowWriteRequests`) |
 
 ## Local plugins
 

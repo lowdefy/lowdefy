@@ -79,6 +79,7 @@
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
 - _ref: testing/config-tests.yaml
+- _ref: testing/fixtures.yaml
 - _ref: testing/e2e-introduction.yaml
 - _ref: testing/e2e-getting-started.yaml
 - _ref: testing/e2e-writing-tests.yaml

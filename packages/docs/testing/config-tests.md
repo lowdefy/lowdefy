@@ -116,6 +116,7 @@ my-app/
 | `endpointId` | One of   | Instead of `pageId` and `requestId`: the Api endpoint routine to run, through the `run-endpoint` route. Routines are never classified read-only, so this needs `cli.agentTools.allowWriteRequests: true` in `lowdefy.yaml`. |
 | `user`       | No       | The caller: the name of a dev user fixture defined in `auth.dev.users`, or an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run signed out.                                                     |
 | `payload`    | No       | The request or endpoint payload. Defaults to `{}`.                                                                                                                                                                          |
+| `fixtures`   | No       | Names of shared fixtures (`fixtures/<name>.yaml`) to load before the test runs, in order, before `seed`. See [Fixtures](/fixtures).                                                                                         |
 | `seed`       | No       | Documents to load before the test runs, keyed by `connectionId`. See below.                                                                                                                                                 |
 | `expect`     | Yes      | What the response must look like: a literal subset, or `{ schema }`.                                                                                                                                                        |
 
@@ -136,6 +137,8 @@ Without them a run that contains a seeded test exits `1` with that install line 
 The collection a seed targets is read from the connection's build artifact, so the connection's `collection` (and `databaseName`, if set) must be **literal strings**. A connection that resolves its collection with an operator cannot be seeded; the test fails with `Connection "<id>" resolves its collection with an operator, so a seed cannot target it. Use a literal "collection" property, or seed through a request.` The connection's `databaseUri` may stay `{ _secret: MONGODB_URI }` — the runner overrides it.
 
 Dates are written with the `~d` marker, exactly as Lowdefy serializes them: `created_at: { '~d': '2026-01-01T00:00:00.000Z' }` is inserted as a `Date`, and the same marker in `expect` compares as a date.
+
+Documents that several tests share belong in a [fixture](/fixtures): `fixtures/base.yaml` is keyed by `connectionId` exactly like `seed`, and a test loads it with `fixtures: [base]`. Before each test the runner drops every collection named by its fixtures and its `seed` once, inserts the fixtures in list order, then inserts `seed`, so a test layers its specifics on a shared base.
 
 Seeded tests need a server the command started; `--url` fails with `Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.`
 

@@ -34,6 +34,10 @@ process.chdir(fixtureDir);
 // followed by image blocks) can be asserted without one.
 const mockRunJourney = jest.fn();
 jest.unstable_mockModule('./runJourney.js', () => ({ default: mockRunJourney }));
+// seedFixture builds a Lowdefy context against a running server; mocked so the
+// tool's pass-through of its result can be asserted.
+const mockSeedFixture = jest.fn();
+jest.unstable_mockModule('./seedFixture.js', () => ({ default: mockSeedFixture }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
@@ -60,6 +64,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_eval_operator',
   'lowdefy_run_request',
   'lowdefy_run_endpoint',
+  'lowdefy_seed_fixture',
   'lowdefy_restart',
   'lowdefy_app_map',
   'lowdefy_data_model',
@@ -194,6 +199,29 @@ test('MCP tools that take a user accept a dev user fixture name as well as an ob
     expect(tool.inputSchema.properties.user.description).toMatch(/auth\.dev\.users/);
   });
 
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_seed_fixture passes name and reset through and returns the seedFixture object', async () => {
+  const seeded = {
+    refused: false,
+    seeded: [{ connectionId: 'controls', collection: 'controls', deleted: 3, inserted: 2 }],
+  };
+  mockSeedFixture.mockResolvedValue(seeded);
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_seed_fixture',
+    arguments: { name: 'base', reset: true },
+  });
+  expect(mockSeedFixture).toHaveBeenCalledWith(
+    expect.objectContaining({ name: 'base', reset: true })
+  );
+  expect(JSON.parse(result.content[0].text)).toEqual(seeded);
+  const { tools } = await client.listTools();
+  const tool = tools.find((entry) => entry.name === 'lowdefy_seed_fixture');
+  expect(tool.description).toContain('cli.agentTools.allowWriteRequests');
+  expect(tool.description).toContain('reset: true');
+  expect(tool.inputSchema.required).toEqual(['name']);
   await client.close();
 });
 

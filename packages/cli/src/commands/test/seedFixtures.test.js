@@ -142,3 +142,83 @@ test('seedFixtures reports a connection that is not in the build', async () => {
     'Connection "missing" was not found in the build. Seeds are keyed by connectionId.'
   );
 });
+
+test('seedFixtures drops every collection once, then inserts fixtures in list order before seed', async () => {
+  writeConnection({ connectionId: 'organizations', properties: { collection: 'orgs' } });
+  writeConnection({ connectionId: 'controls', properties: { collection: 'controls' } });
+  writeConnection({ connectionId: 'answers', properties: { collection: 'answers' } });
+  const createdAt = new Date('2026-01-01T00:00:00.000Z');
+  await seedFixtures({
+    client,
+    devDirectory,
+    fixtures: [
+      {
+        name: 'base',
+        connections: [
+          { connectionId: 'organizations', docs: [{ _id: 'org_a', created_at: createdAt }] },
+          { connectionId: 'controls', docs: [{ _id: 'c1' }] },
+        ],
+      },
+      {
+        name: 'org-a',
+        connections: [{ connectionId: 'controls', docs: [{ _id: 'c2' }] }],
+      },
+    ],
+    seed: {
+      answers: [{ _id: 'a1', at: { '~d': '2026-02-01T00:00:00.000Z' } }],
+      controls: [{ _id: 'c3' }],
+    },
+  });
+  expect(calls.map((call) => `${call.op}:${call.collection}`)).toEqual([
+    'drop:orgs',
+    'drop:controls',
+    'drop:answers',
+    'insertMany:orgs',
+    'insertMany:controls',
+    'insertMany:controls',
+    'insertMany:answers',
+    'insertMany:controls',
+  ]);
+  expect(calls[3].documents[0].created_at).toBe(createdAt);
+  expect(calls[4].documents).toEqual([{ _id: 'c1' }]);
+  expect(calls[5].documents).toEqual([{ _id: 'c2' }]);
+  expect(calls[6].documents[0].at).toBeInstanceOf(Date);
+  expect(calls[7].documents).toEqual([{ _id: 'c3' }]);
+});
+
+test('seedFixtures works with fixtures and no seed', async () => {
+  writeConnection({ connectionId: 'users', properties: { collection: 'users' } });
+  await seedFixtures({
+    client,
+    devDirectory,
+    fixtures: [{ name: 'base', connections: [{ connectionId: 'users', docs: [{ _id: 'u1' }] }] }],
+  });
+  expect(calls.map((call) => call.op)).toEqual(['drop', 'insertMany']);
+  expect(calls[1].documents).toEqual([{ _id: 'u1' }]);
+});
+
+test('seedFixtures fails a fixture on an operator-valued collection before touching the database', async () => {
+  writeConnection({ connectionId: 'users', properties: { collection: 'users' } });
+  writeConnection({
+    connectionId: 'controls',
+    properties: { collection: { _state: 'collection' } },
+  });
+  await expect(
+    seedFixtures({
+      client,
+      devDirectory,
+      fixtures: [
+        {
+          name: 'base',
+          connections: [
+            { connectionId: 'users', docs: [{ _id: 'u1' }] },
+            { connectionId: 'controls', docs: [{ _id: 'c1' }] },
+          ],
+        },
+      ],
+    })
+  ).rejects.toThrow(
+    'Connection "controls" resolves its collection with an operator, so a seed cannot target it. Use a literal "collection" property, or seed through a request.'
+  );
+  expect(calls).toEqual([]);
+});

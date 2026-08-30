@@ -18,6 +18,7 @@ import buildEndpointResult from './response/buildEndpointResult.js';
 import callAgent from './routes/agent/callAgent.js';
 import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
+import callConnectionRequest from './routes/request/callConnectionRequest.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
@@ -54,6 +55,7 @@ import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 export {
   buildEndpointResult,
   callAgent,
+  callConnectionRequest,
   callEndpoint,
   getEndpointConfig,
   callRequest,

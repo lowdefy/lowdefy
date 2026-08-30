@@ -43,7 +43,8 @@
   "dependencies": {
     "@lowdefy/errors": "5.5.1",
     "@lowdefy/helpers": "5.5.1",
-    "fs-extra": "11.3.4"
+    "fs-extra": "11.3.4",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "@swc/cli": "0.8.1",
