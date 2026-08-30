@@ -19,10 +19,7 @@ import { callRequest } from '@lowdefy/api';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import readBuildArtifact from './readBuildArtifact.js';
-
-// Cap the serialized response so a large request result can't blow out an
-// agent's context window.
-const MAX_RESPONSE_CHARS = 100_000;
+import truncateResponse from './truncateResponse.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -35,19 +32,6 @@ function getRequestType({ pageId, requestId }) {
     deserialize: true,
   });
   return requestConfig?.type ?? null;
-}
-
-function truncateResponse(result) {
-  const json = JSON.stringify(result.response);
-  if (json.length <= MAX_RESPONSE_CHARS) {
-    return result;
-  }
-  return {
-    ...result,
-    response: json.slice(0, MAX_RESPONSE_CHARS),
-    truncated: true,
-    note: `Response truncated to ${MAX_RESPONSE_CHARS} characters (original serialized size: ${json.length} characters).`,
-  };
 }
 
 // Executes a page request the same way POST /api/request/<pageId>/<requestId>
