@@ -56,6 +56,7 @@ const snapshotTypesMap = {
     List: { package: '@lowdefy/blocks-basic' },
     Paragraph: { package: '@lowdefy/blocks-basic' },
     Span: { package: '@lowdefy/blocks-basic' },
+    Template: { package: '@lowdefy/blocks-basic' },
     Throw: { package: '@lowdefy/blocks-basic' },
     Title: { package: '@lowdefy/blocks-basic' },
     // Loaders

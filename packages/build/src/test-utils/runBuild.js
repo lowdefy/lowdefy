@@ -55,6 +55,7 @@ const testTypesMap = {
     SkeletonInput: { package: '@lowdefy/blocks-loaders' },
     SkeletonParagraph: { package: '@lowdefy/blocks-loaders' },
     Span: { package: '@lowdefy/blocks-basic' },
+    Template: { package: '@lowdefy/blocks-basic' },
     Spinner: { package: '@lowdefy/blocks-loaders' },
     TextInput: { package: '@lowdefy/blocks-antd' },
     Throw: { package: '@lowdefy/blocks-basic' },
