@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
+import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
@@ -52,6 +53,8 @@ const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
 Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
+
+Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
 Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
@@ -104,7 +107,7 @@ const userSchema = z
 function createDocsMcpServer({ origin, honoContext } = {}) {
   const server = new McpServer(
     { name: 'lowdefy-docs', version: '1.0.0' },
-    { instructions: INSTRUCTIONS }
+    { capabilities: { logging: {} }, instructions: INSTRUCTIONS }
   );
 
   // Debug-log every tool call (name + args, never the response) so agent
@@ -603,4 +606,19 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
   return server;
 }
 
+// Forwards dev events to one connected MCP client as notifications/message
+// (the only server→client notification MCP clients surface generically; it
+// needs the logging capability declared above). Build failures go out at
+// error level so clients that filter by level still see them.
+function subscribeMcpServerToDevEvents(server) {
+  return subscribeToDevEvents((event) =>
+    server.server.sendLoggingMessage({
+      level: event.type === 'build' && event.status === 'error' ? 'error' : 'info',
+      logger: 'lowdefy',
+      data: event,
+    })
+  );
+}
+
+export { subscribeMcpServerToDevEvents };
 export default createDocsMcpServer;
