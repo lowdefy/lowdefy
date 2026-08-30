@@ -175,3 +175,61 @@ test('a pipeline that is not a literal array passes', () => {
   expect(run({ pipeline: { _payload: 'pipeline' } })).not.toThrow();
   expect(run({ pipeline: undefined })).not.toThrow();
 });
+
+test('a collection declared tenant: shared in collections: alone makes the $lookup an error', () => {
+  let error;
+  try {
+    validateTenantSharedLookup({
+      config: { connectionId: 'org_scope', properties: { pipeline: [sharedLookup] } },
+      location,
+      tenantConnections,
+      tenantCollectionMap: {},
+      collections: { catalogue: { tenant: 'shared', connections: [] } },
+      configKey: 'k1',
+    });
+  } catch (e) {
+    error = e;
+  }
+  expect(error).toBeDefined();
+  expect(error.message).toBe(
+    'Request "search" at page "home" uses "$lookup" on collection "catalogue" over tenant connection "org_scope". Collection "catalogue" is declared tenant: shared in collections:, so it carries no tenant field. The wall prepends a tenant $match into every $lookup/$unionWith sub-pipeline, so this stage will match nothing and the join returns []. Run the pipeline on a tenant: shared connection for it and pass the organization facts in through the request payload, or declare tenant: authored on this request and author the organization clause yourself.'
+  );
+  expect(error.checkSlug).toBe('tenant-lookup');
+});
+
+test('collections: naming the shared connection points the fix at it', () => {
+  expect(() =>
+    validateTenantSharedLookup({
+      config: { connectionId: 'org_scope', properties: { pipeline: [sharedLookup] } },
+      location,
+      tenantConnections,
+      tenantCollectionMap: {},
+      collections: {
+        catalogue: {
+          tenant: 'shared',
+          connections: [{ connectionId: 'frameworks', read: true, write: true, tenant: 'shared' }],
+        },
+      },
+      configKey: 'k1',
+    })
+  ).toThrow('belongs to connection "frameworks", so it carries no tenant field');
+});
+
+test('a collection declared with a tenant field is authoritative over a shared connection', () => {
+  expect(
+    validateTenantSharedLookup({
+      config: { connectionId: 'org_scope', properties: { pipeline: [sharedLookup] } },
+      location,
+      tenantConnections,
+      tenantCollectionMap,
+      collections: { catalogue: { tenant: { field: 'organization_id' }, connections: [] } },
+      configKey: 'k1',
+    })
+  ).toBeUndefined();
+});
+
+test('an undeclared collection falls back to the connection-derived map', () => {
+  expect(run({ pipeline: [sharedLookup] })).toThrow(
+    'belongs to connection "frameworks", which is declared tenant: shared'
+  );
+});

@@ -57,6 +57,7 @@
     "@lowdefy/blocks-loaders",
     "@lowdefy/blocks-antd"
   ],
+  "collections.json": {},
   "config.json": {
     "~k": "v"
   },

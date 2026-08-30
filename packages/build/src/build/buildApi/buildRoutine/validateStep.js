@@ -22,7 +22,10 @@ import validateRunAs from '../validateRunAs.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
 
-function validateStep(step, { endpointId, stepTypes, tenantConnections, tenantCollectionMap }) {
+function validateStep(
+  step,
+  { endpointId, stepTypes, tenantConnections, tenantCollectionMap, collections }
+) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -251,6 +254,7 @@ function validateStep(step, { endpointId, stepTypes, tenantConnections, tenantCo
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnections,
     tenantCollectionMap,
+    collections,
     configKey,
   });
 }

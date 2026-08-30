@@ -103,6 +103,7 @@ function getBuildContext(buildDirectory, configDirectory) {
     tenantConnections: {},
     tenantCollectionMap: {},
   };
+  const collections = readJsonFile(path.join(buildDirectory, 'collections.json')) ?? {};
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
@@ -138,6 +139,9 @@ function getBuildContext(buildDirectory, configDirectory) {
     Object.entries(tenantCollections.tenantConnections ?? {})
   );
   cachedBuildContext.tenantCollectionMap = tenantCollections.tenantCollectionMap ?? {};
+  // The collections: declaration is the first source of sharedness for the
+  // same check; buildCollections only runs in the skeleton build.
+  cachedBuildContext.collections = collections;
 
   // Load installed packages snapshot from skeleton build for missing-package detection
   const installedPluginPackages =

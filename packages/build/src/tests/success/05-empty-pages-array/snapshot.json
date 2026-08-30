@@ -57,6 +57,7 @@
     "@lowdefy/blocks-basic",
     "@lowdefy/blocks-loaders"
   ],
+  "collections.json": {},
   "config.json": {
     "~k": "q"
   },
