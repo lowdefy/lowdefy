@@ -103,6 +103,24 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     await loadBlockSchemas({ components: {}, context: buildContext });
   }
 
+  // Restore the skeleton-built collections map so a page archetype
+  // (expandArchetype) can resolve its columns/filters against collections: in
+  // the JIT page build, the same way authConfigProjection is restored above.
+  if (
+    type.isNone(buildContext.collections) &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const collectionsPath = path.join(buildContext.directories.build, 'collections.json');
+    try {
+      const content = await fs.promises.readFile(collectionsPath, 'utf8');
+      // writeCollections writes plain JSON (JSON.stringify), so parse plainly.
+      buildContext.collections = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+      buildContext.collections = {};
+    }
+  }
+
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
     : pageRegistry[pageId];

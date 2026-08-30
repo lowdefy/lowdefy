@@ -16,6 +16,7 @@
 
 import buildDynamicBlock from './buildDynamicBlock.js';
 import buildEvents from './buildEvents.js';
+import expandArchetype from '../../archetypes/expandArchetype.js';
 import expandComponent from './expandComponent.js';
 import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
@@ -32,9 +33,11 @@ import validateBlockProperties from './validateBlockProperties.js';
 import validateSlots from './validateSlots.js';
 
 function buildBlock(block, pageContext, parentConfigKey) {
-  // Runs first: a component-instance block is rewritten into a Box wrapper
-  // carrying its expanded body, so every block validation below and
-  // buildSubBlocks' recursion apply to the expansion unchanged.
+  // Archetype and component expansion run first: a page-root archetype or a
+  // component-instance block is rewritten into an ordinary block tree, so every
+  // block validation below and buildSubBlocks' recursion apply to the expansion
+  // unchanged.
+  expandArchetype(block, pageContext);
   expandComponent(block, pageContext);
   validateBlock(block, pageContext, parentConfigKey);
   setBlockId(block, pageContext);
