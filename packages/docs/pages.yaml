@@ -20,6 +20,7 @@
 - _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/collections.yaml
+- _ref: concepts/archetypes.yaml
 - _ref: concepts/migrations.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/keyboard-shortcuts.yaml
