@@ -6162,7 +6162,11 @@
     },
     "Title": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {}
+      }
     },
     "Box": {
       "category": "container",
@@ -6253,7 +6257,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "List": {
       "category": "list",
@@ -6265,7 +6272,23 @@
     },
     "Paragraph": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {},
+        "onTextSelection": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selection": {
+                "type": "string",
+                "description": "The selected text."
+              }
+            }
+          }
+        }
+      }
     },
     "Tag": {
       "category": "display",
@@ -12246,7 +12269,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                  "description": "Trigger action when text is selected."
                 }
               }
             }

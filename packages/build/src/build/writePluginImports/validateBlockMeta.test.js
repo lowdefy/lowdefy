@@ -44,6 +44,10 @@ const validMeta = {
   events: {
     onChange: 'Triggered on change.',
     onSelect: { description: 'Triggered on select.', event: { value: 'The selected value.' } },
+    onSubmit: {
+      description: 'Triggered on submit.',
+      payload: { type: 'object', properties: { value: { type: 'string' } } },
+    },
   },
   hazards: [{ id: 'trims-value', message: 'The value is trimmed.', see: null }],
   dynamicEvents: false,
@@ -170,6 +174,20 @@ test('validateBlockMeta reports an event definition that is neither a string nor
   expect(context.errors[0].message).toContain('Received {"event":{"value":"x"}}.');
   expect(context.errors[1].message).toContain('meta.events.onBlur must be a description string');
   expect(context.errors[1].message).toContain('Received 42.');
+});
+
+test('validateBlockMeta reports an event payload that is not a JSON Schema object', () => {
+  const { valid, context } = validate({
+    category: 'display',
+    events: { onSubmit: { description: 'Fine.', payload: 'value' } },
+  });
+  expect(valid).toBe(false);
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain('meta.events.onSubmit must be a description string');
+  expect(context.errors[0].message).toContain('payload?: <JSON Schema object>');
+  expect(context.errors[0].message).toContain(
+    'Received {"description":"Fine.","payload":"value"}.'
+  );
 });
 
 test('validateBlockMeta reports malformed hazards and dynamicEvents', () => {

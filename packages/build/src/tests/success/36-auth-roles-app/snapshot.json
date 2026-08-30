@@ -2303,7 +2303,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Box": {
       "category": "container",
@@ -2326,7 +2329,11 @@
     },
     "Title": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {}
+      }
     },
     "Anchor": {
       "category": "display",

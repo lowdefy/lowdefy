@@ -1292,7 +1292,11 @@
     },
     "Title": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {}
+      }
     },
     "Result": {
       "category": "container",
@@ -1300,7 +1304,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Anchor": {
       "category": "display",

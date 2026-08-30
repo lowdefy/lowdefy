@@ -12,19 +12,19 @@ import { PLUGIN_API_VERSION } from '@lowdefy/block-utils';
 
 Every block ships a `meta.js` — plain data, no React or CSS imports — re-exported from the package's `./metas` module as `{ [typeName]: meta }`. The build imports every installed block package's metas once and validates each block's meta before anything reads it. Every violation is a build error naming the block type, the package, the field, the expected shape and the value it received; all violations of one meta are reported together.
 
-| Key             | Required | Shape                                                                                                                    |
-| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `category`      | yes      | one of `display`, `input`, `input-container`, `container`, `list`                                                        |
-| `valueType`     | no       | `null`, or one of `any`, `array`, `boolean`, `date`, `number`, `object`, `primitive`, `string`                           |
-| `initValue`     | no       | the value an input block starts with; requires a non-null `valueType`                                                    |
-| `icons`         | no       | array of icon names the block renders                                                                                    |
-| `properties`    | no       | JSON Schema for the block's `properties` — the build validates literal config against it                                 |
-| `cssKeys`       | no       | `{ cssKey: description }` — one entry per element a config author may target with `class` and `style`                    |
-| `slots`         | no       | `{ slotName: description }`, an array of names, or `false` for dynamic slot names                                        |
-| `methods`       | no       | `{ methodName: description }` — the methods the block registers for `CallMethod`                                         |
-| `events`        | no       | `{ eventName: description }` or `{ eventName: { description, event: { field: description } } }`                          |
-| `dynamicEvents` | no       | `true` when the block triggers event names not listed in `events`                                                        |
-| `hazards`       | no       | `[{ id, message, see }]` — behaviours the schema cannot express, returned to AI agents by the dev server's docs endpoint |
+| Key             | Required | Shape                                                                                                                                                              |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `category`      | yes      | one of `display`, `input`, `input-container`, `container`, `list`                                                                                                  |
+| `valueType`     | no       | `null`, or one of `any`, `array`, `boolean`, `date`, `number`, `object`, `primitive`, `string`                                                                     |
+| `initValue`     | no       | the value an input block starts with; requires a non-null `valueType`                                                                                              |
+| `icons`         | no       | array of icon names the block renders                                                                                                                              |
+| `properties`    | no       | JSON Schema for the block's `properties` — the build validates literal config against it                                                                           |
+| `cssKeys`       | no       | `{ cssKey: description }` — one entry per element a config author may target with `class` and `style`                                                              |
+| `slots`         | no       | `{ slotName: description }`, an array of names, or `false` for dynamic slot names                                                                                  |
+| `methods`       | no       | `{ methodName: description }` — the methods the block registers for `CallMethod`                                                                                   |
+| `events`        | no       | `{ eventName: description }` or `{ eventName: { description, payload } }` where `payload` is a JSON Schema for the event object the block passes to `triggerEvent` |
+| `dynamicEvents` | no       | `true` when the block triggers event names not listed in `events`                                                                                                  |
+| `hazards`       | no       | `[{ id, message, see }]` — behaviours the schema cannot express, returned to AI agents by the dev server's docs endpoint                                           |
 
 Any other top-level key is a build warning listing the known keys; unknown keys are allowed and ignored.
 
@@ -42,7 +42,11 @@ export default {
     onChange: 'Triggered when the value changes.',
     onSelect: {
       description: 'Triggered when an option is chosen.',
-      event: { value: 'The selected value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { value: { type: 'string', description: 'The selected value.' } },
+      },
     },
   },
   properties: {

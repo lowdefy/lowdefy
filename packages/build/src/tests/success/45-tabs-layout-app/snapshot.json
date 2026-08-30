@@ -1851,7 +1851,11 @@
     },
     "Title": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {}
+      }
     },
     "Tabs": {
       "category": "container",
@@ -1885,7 +1889,23 @@
     },
     "Paragraph": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {},
+        "onTextSelection": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selection": {
+                "type": "string",
+                "description": "The selected text."
+              }
+            }
+          }
+        }
+      }
     },
     "Statistic": {
       "category": "display",
@@ -2027,7 +2047,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Anchor": {
       "category": "display",
@@ -3910,7 +3933,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                  "description": "Trigger action when text is selected."
                 }
               }
             }

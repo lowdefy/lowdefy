@@ -1134,7 +1134,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Anchor": {
       "category": "display",

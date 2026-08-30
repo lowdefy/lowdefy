@@ -43,10 +43,14 @@ function isObjectOfStrings(value) {
   return type.isObject(value) && Object.values(value).every((v) => type.isString(v));
 }
 
+// Mirrors extractEventPayloads in block-utils: a description string, or
+// { description, payload: <JSON Schema> }; the legacy { description, event:
+// { key: description } } form is still normalised to a payload there.
 function isEventDefinition(value) {
   if (type.isString(value)) return true;
   if (!type.isObject(value)) return false;
   if (!type.isString(value.description)) return false;
+  if (!type.isUndefined(value.payload) && !type.isObject(value.payload)) return false;
   return type.isUndefined(value.event) || isObjectOfStrings(value.event);
 }
 
@@ -145,7 +149,7 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
     if (!type.isUndefined(meta.events)) {
       if (!type.isObject(meta.events)) {
         fail(
-          `meta.events must be an object of { eventName: description | { description, event } }. Received ${received(
+          `meta.events must be an object of { eventName: description | { description, payload } }. Received ${received(
             meta.events
           )}.`,
           meta.events
@@ -154,7 +158,7 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
         Object.entries(meta.events).forEach(([name, definition]) => {
           if (!isEventDefinition(definition)) {
             fail(
-              `meta.events.${name} must be a description string or { description: string, event?: { field: description } }. Received ${received(
+              `meta.events.${name} must be a description string or { description: string, payload?: <JSON Schema object> }. Received ${received(
                 definition
               )}.`,
               definition

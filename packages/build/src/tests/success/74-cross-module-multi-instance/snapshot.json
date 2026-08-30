@@ -1594,7 +1594,11 @@
     },
     "Title": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onExpand": {},
+        "onCopy": {}
+      }
     },
     "Anchor": {
       "category": "display",
@@ -1609,7 +1613,10 @@
     },
     "Button": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "DangerousHtml": {
       "category": "display",
