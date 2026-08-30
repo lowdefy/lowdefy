@@ -44,6 +44,7 @@ It provides these tools:
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                         |
 | `lowdefy_check`          | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout |
+| `lowdefy_snapshot`               | Golden snapshot of a page as a named user under deterministic browser settings: the viewport PNG, the app root DOM, the page state and the page's `~snapshotIgnore` paths — what `lowdefy snapshot --check` diffs |
 | `lowdefy_seed_fixture`           | Load a named fixture (`fixtures/<name>.yaml`) into the dev database through the connection layer so a page has data to show (needs `allowWriteRequests`; `reset` empties first)                                                                                         |
 
 ## Hazards — what the schema cannot tell you
@@ -486,56 +487,35 @@ operator expressions against real state, and `lowdefy_snapshot_state` /
 
 Everything the MCP tools serve is also available as plain GET routes — useful for `curl`, scripts, or agents without MCP support:
 
-| Route                                                             | Purpose                                                                                                             |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `GET /lowdefy-docs`                                               | Overview and route index                                                                                            |
-| `GET /lowdefy-docs/{kind}`                                        | List all available types of a kind, e.g. `/lowdefy-docs/blocks`                                                     |
-| `GET /lowdefy-docs/plugins`                                       | Installed plugin packages and the types each provides                                                               |
-| `GET /lowdefy-docs/schema/{kind}/{type}`                          | JSON schema for a type, e.g. `/lowdefy-docs/schema/blocks/Button`                                                   |
-| `GET /lowdefy-docs/examples/{type}`                               | Example YAML for a block type                                                                                       |
-| `GET /lowdefy-docs/content/{slug}`                                | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`                                                |
-| `GET /lowdefy-docs/search?q={query}`                              | Search the docs                                                                                                     |
-| `GET /lowdefy-docs/plugin-doc/{package}`                          | Markdown shipped inside a plugin package                                                                            |
-| `GET /lowdefy-docs/build-status`                                  | Current build errors/warnings + recent browser runtime errors                                                       |
-| `GET /lowdefy-docs/page-config/{pageId}`                          | Fully built page config, or its build errors                                                                        |
-| `GET /lowdefy-docs/screenshot/{pageId}`                           | PNG screenshot of the rendered page                                                                                 |
-| `POST /lowdefy-docs/journey`                                      | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64             |
-| `GET /lowdefy-docs/find/{id}?pageId=`                             | Locate where a page/block/request id is defined                                                                     |
-| `GET /lowdefy-docs/app-map`                                       | Whole-app graph: pages, menus, connections, endpoints, agents                                                       |
-| `GET /lowdefy-docs/data-model`                                    | Data layer: collections, fields, relations, tenant verdicts, connections, readers and writers, `unresolved`         |
-| `GET /lowdefy-docs/inspect-state/{pageId}`                        | Live state/requests/eventLog of a running page (tab or headless)                                                    |
-| `POST /lowdefy-docs/eval-operator`                                | Evaluate an operator expression against live page state                                                             |
-| `POST /lowdefy-docs/run-request`                                  | Execute a request with a test payload (read-only unless opted in)                                                   |
-| `POST /lowdefy-docs/run-endpoint`                                 | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data) |
-| `GET/POST /lowdefy-docs/checkpoints` + `/revert`                  | Config-file checkpoints                                                                                             |
-| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints                                                                                            |
-| `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s)                                 |
-| Route                       | Purpose                                                        |
-| --------------------------- | -------------------------------------------------------------- |
-| `GET /lowdefy-docs`                 | Overview and route index                                        |
-| `GET /lowdefy-docs/{kind}`          | List all available types of a kind, e.g. `/lowdefy-docs/blocks`         |
-| `GET /lowdefy-docs/plugins`         | Installed plugin packages and the types each provides           |
-| `GET /lowdefy-docs/schema/{kind}/{type}` | JSON schema for a type, e.g. `/lowdefy-docs/schema/blocks/Button` |
-| `GET /lowdefy-docs/examples/{type}` | Example YAML for a block type                                   |
-| `GET /lowdefy-docs/content/{slug}`  | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`    |
-| `GET /lowdefy-docs/search?q={query}`| Search the docs                                                 |
-| `GET /lowdefy-docs/plugin-doc/{package}` | Markdown shipped inside a plugin package                   |
-| `GET /lowdefy-docs/build-status`    | Current build errors/warnings + recent browser runtime errors   |
-| `GET /lowdefy-docs/events`          | SSE stream of `restart`, `build`, `client_error` and `server_error` events |
-| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
-| `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
-| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
-| `GET /lowdefy-docs/app-map`         | Whole-app graph: pages, menus, connections, endpoints, agents   |
-| `GET /lowdefy-docs/data-model`                                    | Data layer: collections, fields, relations, tenant verdicts, connections, readers and writers, `unresolved`         |
-| `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
-| `POST /lowdefy-docs/eval-operator`  | Evaluate an operator expression against live page state         |
-| `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |
-| `POST /lowdefy-docs/run-endpoint`   | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data) |
-| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
-| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
-| `POST /lowdefy-docs/restart`        | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s) |
-| `POST /lowdefy-docs/seed-fixture`                                 | Load `fixtures/{name}.yaml` into the dev database through the connection layer (`{name, reset}`; needs `allowWriteRequests`) |
-| `POST /lowdefy-docs/seed-fixture`                                 | Load `fixtures/{name}.yaml` into the dev database through the connection layer (`{name, reset}`; needs `allowWriteRequests`) |
+| Route                                                             | Purpose                                                                                                                       |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `GET /lowdefy-docs`                                               | Overview and route index                                                                                                      |
+| `GET /lowdefy-docs/{kind}`                                        | List all available types of a kind, e.g. `/lowdefy-docs/blocks`                                                               |
+| `GET /lowdefy-docs/plugins`                                       | Installed plugin packages and the types each provides                                                                         |
+| `GET /lowdefy-docs/schema/{kind}/{type}`                          | JSON schema for a type, e.g. `/lowdefy-docs/schema/blocks/Button`                                                             |
+| `GET /lowdefy-docs/examples/{type}`                               | Example YAML for a block type                                                                                                 |
+| `GET /lowdefy-docs/content/{slug}`                                | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`                                                          |
+| `GET /lowdefy-docs/search?q={query}`                              | Search the docs                                                                                                               |
+| `GET /lowdefy-docs/plugin-doc/{package}`                          | Markdown shipped inside a plugin package                                                                                      |
+| `GET /lowdefy-docs/build-status`                                  | Current build errors/warnings + recent browser runtime errors                                                                 |
+| `GET /lowdefy-docs/events`                                        | SSE stream of `restart`, `build`, `client_error`, `server_error` and `fixture_seeded` events                                  |
+| `GET /lowdefy-docs/page-config/{pageId}`                          | Fully built page config, or its build errors                                                                                  |
+| `GET /lowdefy-docs/screenshot/{pageId}`                           | PNG screenshot of the rendered page                                                                                           |
+| `GET /lowdefy-docs/snapshot/{pageId}`                             | Golden snapshot under deterministic browser settings: screenshot, DOM, state and the page's `~snapshotIgnore` paths           |
+| `GET /lowdefy-docs/dev-users`                                     | Names of the `auth.dev.users` fixtures headless tools can render as                                                           |
+| `POST /lowdefy-docs/journey`                                      | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64                       |
+| `GET /lowdefy-docs/find/{id}?pageId=`                             | Locate where a page/block/request id is defined                                                                               |
+| `GET /lowdefy-docs/inspect-state/{pageId}`                        | Live state/requests/eventLog of a running page (tab or headless)                                                              |
+| `POST /lowdefy-docs/eval-operator`                                | Evaluate an operator expression against live page state                                                                       |
+| `POST /lowdefy-docs/run-request`                                  | Execute a request with a test payload (read-only unless opted in)                                                             |
+| `POST /lowdefy-docs/run-endpoint`                                 | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data)           |
+| `POST /lowdefy-docs/seed-fixture`                                 | Load `fixtures/{name}.yaml` into the dev database through the connection layer (`{name, reset}`; needs `allowWriteRequests`)  |
+| `GET /lowdefy-docs/app-map`                                       | Whole-app graph: pages, menus, connections, endpoints, agents                                                                 |
+| `GET /lowdefy-docs/data-model`                                    | Data layer: collections, fields, relations, tenant verdicts, connections, readers and writers, `unresolved`                   |
+| `GET/POST /lowdefy-docs/checkpoints` + `/revert`                  | Config-file checkpoints                                                                                                       |
+| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints                                                                                                      |
+| `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s)                                           |
+| `ALL /lowdefy-docs/mcp`                                           | The MCP endpoint (streamable HTTP) exposing all of the above as tools                                                         |
 
 ## Local plugins
 
