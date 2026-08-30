@@ -362,6 +362,7 @@ _ref:
             | `request-refs` | Invalid Request action reference warnings |
             | `connection-refs` | Nonexistent connection ID references |
             | `tenant-lookup` | Build error for a tenant-scoped aggregation that joins a `tenant: shared` collection |
+            | `block-properties` | Block `properties` validation against the block type's schema (unknown or mistyped properties) |
             | `types` | All type validation (blocks, operators, actions, requests, connections) |
             | `schema` | JSON schema validation errors |
 

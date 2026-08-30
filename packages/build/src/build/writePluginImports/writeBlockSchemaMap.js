@@ -14,54 +14,22 @@
   limitations under the License.
 */
 
-import { buildBlockSchema } from '@lowdefy/block-utils';
-
-import importPluginModule from './importPluginModule.js';
-
+// Writes plugins/blockSchemas.json and plugins/blockMetas.json for the block
+// types the app uses. The schema and meta maps are built for every installed
+// type by loadBlockSchemas before the pages are built.
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
-  const allMetas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
-
-  const blocksByPackage = {};
-  for (const block of components.imports.blocks) {
-    if (!blocksByPackage[block.package]) {
-      blocksByPackage[block.package] = [];
-    }
-    blocksByPackage[block.package].push(block);
-  }
-
-  for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
-    let packageMetas = await importPluginModule({ context, specifier: `${packageName}/metas` });
-    if (!packageMetas) {
-      packageMetas = await importPluginModule({ context, specifier: `${packageName}/schemas` });
-    }
-    for (const block of blocks) {
-      const meta = packageMetas?.[block.originalTypeName];
-      if (typesMapSchemas[block.typeName]) {
-        schemas[block.typeName] = typesMapSchemas[block.typeName];
-      } else if (meta) {
-        schemas[block.typeName] = buildBlockSchema(meta);
-      }
-      if (meta) {
-        allMetas[block.typeName] = meta;
-      }
-    }
-  }
-
   const blockMetas = {};
+  const blockSchemas = context.blockSchemas ?? {};
+  const blockPluginMetas = context.blockPluginMetas ?? {};
   const typesMapBlockMetas = context.typesMap.blockMetas ?? {};
+
   for (const block of components.imports.blocks) {
-    const typesMapMeta = typesMapBlockMetas[block.typeName];
-    const meta = allMetas[block.typeName];
-    if (typesMapMeta) {
-      blockMetas[block.typeName] = {
-        category: typesMapMeta.category,
-        ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
-        ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
-      };
-    } else if (meta) {
+    if (blockSchemas[block.typeName]) {
+      schemas[block.typeName] = blockSchemas[block.typeName];
+    }
+    const meta = typesMapBlockMetas[block.typeName] ?? blockPluginMetas[block.typeName];
+    if (meta) {
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(meta.valueType != null && { valueType: meta.valueType }),

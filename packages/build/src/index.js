@@ -43,6 +43,7 @@ import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
+import loadBlockSchemas from './build/loadBlockSchemas.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
@@ -174,6 +175,8 @@ async function build(options) {
       components,
       context,
     });
+    // Block schemas must be in context before any block is built (validateBlockProperties).
+    await loadBlockSchemas({ components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
