@@ -73,3 +73,26 @@ test('errorToDisplayString returns String(null) for null input', () => {
 test('errorToDisplayString returns String(undefined) for undefined input', () => {
   expect(errorToDisplayString(undefined)).toBe('undefined');
 });
+
+test('errorToDisplayString marks a prod-gated warning in the name segment', () => {
+  const warning = {
+    name: 'ConfigWarning',
+    message: '_state is not available in request properties.',
+    prodError: true,
+  };
+  expect(errorToDisplayString(warning)).toBe(
+    '[ConfigWarning \u00b7 fails in prod] _state is not available in request properties.'
+  );
+});
+
+test('errorToDisplayString leaves the name segment plain when prodError is false', () => {
+  const warning = { name: 'ConfigWarning', message: 'Duplicate shortcut key.', prodError: false };
+  expect(errorToDisplayString(warning)).toBe('[ConfigWarning] Duplicate shortcut key.');
+});
+
+test('errorToDisplayString appends received to a prod-gated warning', () => {
+  const warning = { name: 'ConfigWarning', message: 'bad ref', prodError: true, received: 'x' };
+  expect(errorToDisplayString(warning)).toBe(
+    '[ConfigWarning \u00b7 fails in prod] bad ref Received: "x"'
+  );
+});

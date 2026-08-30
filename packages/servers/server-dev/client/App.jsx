@@ -88,6 +88,7 @@ function App({ config, router }) {
         message: error.message,
         source: error.source,
         stack: error.stack,
+        prodError: error.prodError === true,
       },
     ]);
   }, []);
