@@ -31,6 +31,7 @@ The schema for a Lowdefy API is:
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
+- `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
@@ -125,6 +126,47 @@ Each schedule item has:
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
+
+## Payload Schema
+
+An endpoint can declare a `payloadSchema` — a [JSON Schema](https://json-schema.org/) describing the payload it accepts. A declared schema is a contract, not documentation: **every** payload is validated against it before the routine starts, whatever the caller is — the [`CallAPI`](/CallAPI) action from a page, an MCP `tools/call`, an [agent tool call](/ai-agent-docs), a nested `CallApi` from another endpoint, or a scheduled run's `schedule.payload`. Every `_payload` read in the routine can then rely on the shape.
+
+```yaml
+api:
+  - id: create_order
+    type: Api
+    payloadSchema:
+      type: object
+      required: [sku, quantity]
+      properties:
+        sku: { type: string }
+        quantity: { type: number, minimum: 1 }
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: orders
+        properties:
+          doc:
+            sku:
+              _payload: sku
+            quantity:
+              _payload: quantity
+```
+
+A payload that does not match is refused before the routine runs, with a message naming the endpoint, the failing location and the reason, for example:
+
+```
+Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.
+```
+
+- A REST call (`POST /api/endpoints/<endpointId>`) answers `400` with `{ name: 'UserError', message }`.
+- An MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
+- An agent tool call surfaces the message to the model as a tool error.
+- A scheduled run fails with the message — an authored `schedule.payload` that breaks its own endpoint's contract is a bug, not something to skip silently.
+
+A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
+
+There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
 
 ## Async Endpoints
 

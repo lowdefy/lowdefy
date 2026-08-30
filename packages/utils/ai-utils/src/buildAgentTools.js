@@ -18,22 +18,20 @@ import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
-import { getKey, isReserved, serializer, setKey, translate } from '@lowdefy/helpers';
+import {
+  cleanBuildArtifact,
+  getKey,
+  isReserved,
+  serializer,
+  setKey,
+  translate,
+} from '@lowdefy/helpers';
 
 import listFiles from './fileSystem/listFiles.js';
 import readFile from './fileSystem/readFile.js';
 import searchFiles from './fileSystem/searchFiles.js';
 import statFile from './fileSystem/statFile.js';
 import RESERVED_PLATFORM_TOOL_NAMES from './reservedToolNames.js';
-
-// Build artifacts carry serializer markers (~k, ~r, ~l) and wrap location-marked
-// arrays as { '~arr': [...], '~k': '...' }. serializer.deserialize un-wraps
-// ~arr back to a plain array and demotes markers to non-enumerable properties;
-// the subsequent JSON round-trip drops those non-enumerable markers, leaving a
-// clean structure for the AI SDK.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
-}
 
 function assertNotPlatformToolName(name, kind, i18n) {
   if (RESERVED_PLATFORM_TOOL_NAMES.includes(name)) {

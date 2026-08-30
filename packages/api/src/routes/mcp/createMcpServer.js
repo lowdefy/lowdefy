@@ -16,7 +16,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { serializer, type } from '@lowdefy/helpers';
+import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
 import callEndpoint from '../endpoints/callEndpoint.js';
 
@@ -39,15 +39,6 @@ function scopeCovers({ grantedScopes, endpointScope }) {
     return grantedScopes.includes('mcp:write');
   }
   return grantedScopes.includes('mcp:read') || grantedScopes.includes('mcp:write');
-}
-
-// Twin of cleanBuildArtifact in packages/utils/ai-utils/src/buildAgentTools.js -
-// duplicated here rather than shared, since pulling in @lowdefy/ai-utils would
-// add the ai SDK and MCP client deps to api just for this. Strips build-artifact
-// serializer markers (~k, ~r, ~l) and unwraps { '~arr': [...] } back to a plain
-// array, so payloadSchema reaches MCP clients as plain JSON Schema.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
 // A stateless per-request MCP server exposing the configured api endpoints
@@ -157,12 +148,16 @@ async function createMcpServer({ context }) {
         content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
       };
     } catch (error) {
-      // Refused calls to gated tools are expected traffic - a warn line and the
-      // refusal message, not a structured error log.
+      // Refused calls to gated tools and payloads that miss the payloadSchema
+      // (UserError) are expected traffic - a warn line and the message the
+      // model needs to retry, not a structured error log.
       if (
-        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
-          error.name
-        )
+        [
+          'AuthenticationError',
+          'AuthorizationError',
+          'TwoFactorEnrolmentRequiredError',
+          'UserError',
+        ].includes(error.name)
       ) {
         context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {

@@ -292,3 +292,35 @@ test('api endpoint schedules is not an array throws', () => {
     'Endpoint schedules is not an array at "scheduled_api".'
   );
 });
+
+test('api endpoint declaring both webhook and payloadSchema throws', () => {
+  const message =
+    'Endpoint "hook" declares both "webhook" and "payloadSchema". A webhook routine receives { body, query, headers }, not the payloadSchema shape. Validate the body with a ValidateSchema step instead.';
+  const withFlag = {
+    api: [
+      { id: 'hook', type: 'Api', routine: [], webhook: true, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components: withFlag, context })).toThrow(message);
+  const withVerify = {
+    api: [
+      {
+        id: 'hook',
+        type: 'Api',
+        routine: [],
+        webhook: { verify: { type: 'StripeVerify' } },
+        payloadSchema: { type: 'object' },
+      },
+    ],
+  };
+  expect(() => buildApi({ components: withVerify, context })).toThrow(message);
+});
+
+test('api endpoint with webhook false and a payloadSchema is valid', () => {
+  const components = {
+    api: [
+      { id: 'plain', type: 'Api', routine: [], webhook: false, payloadSchema: { type: 'object' } },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});

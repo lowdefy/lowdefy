@@ -56,6 +56,19 @@ function createErrorHandler({ basePath = '', logger }) {
       }
       return c.text('Two-factor enrolment required', 403);
     }
+    // A caller whose payload does not match the endpoint's declared payloadSchema
+    // (or any other UserError raised before a routine starts). The caller's own
+    // request is wrong, not the config or the server: a 400 with the message the
+    // caller needs, one warning line, no structured error log and no Sentry
+    // capture. A UserError raised inside a routine never gets here - it returns
+    // 200 with success: false through buildEndpointResult.
+    if (error.name === 'UserError') {
+      logger.warn(`Bad request: ${c.req.method} ${c.req.path} - ${error.message}`);
+      if (path.startsWith('/api/')) {
+        return c.json({ name: error.name, message: error.message }, 400);
+      }
+      return c.text('Bad Request', 400);
+    }
     // A route or transport that has already decided its own HTTP answer - hono's
     // HTTPException carries the response to send. The MCP transport refuses an
     // unsupported protocol-version header this way (a 404 with a JSON-RPC body
