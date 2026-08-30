@@ -45,7 +45,9 @@ export default {
         'Trigger actions when a search result is selected. Result item stored fields are spread into the event object.',
       payload: {
         type: 'object',
-        additionalProperties: false,
+        // The selected result's stored fields (pageId, title, ...) are spread
+        // into the event, so _event paths beyond query/resultCount are valid.
+        additionalProperties: true,
         properties: {
           query: { type: 'string', description: 'The search term.' },
           resultCount: { type: 'integer', description: 'Total results for the query.' },
