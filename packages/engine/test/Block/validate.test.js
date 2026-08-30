@@ -1197,3 +1197,111 @@ test('user specified required message', async () => {
     warnings: [],
   });
 });
+
+test('required on an input whose declared state type is number passes on 0 and fails on null', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: { count: { type: 'number' } },
+    blocks: [{ type: 'NumberInput', id: 'count', required: true }],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const { count } = context._internal.RootSlots.map;
+  expect(context._internal.RootSlots.validate(match)).toEqual([
+    {
+      blockId: 'count',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+  count.setValue(0);
+  expect(context._internal.RootSlots.validate(match)).toEqual([]);
+});
+
+test('required on an input whose declared state type is boolean passes on false', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: { agree: { type: 'boolean' } },
+    blocks: [{ type: 'Switch', id: 'agree', required: true }],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const { agree } = context._internal.RootSlots.map;
+  agree.setValue(false);
+  expect(context._internal.RootSlots.validate(match)).toEqual([]);
+});
+
+test('required on an input whose declared state type is string fails on an empty string', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: { 'data.name': { type: 'string' } },
+    blocks: [{ type: 'TextInput', id: 'data.name', required: true }],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const block = context._internal.RootSlots.map['data.name'];
+  block.setValue('');
+  expect(context._internal.RootSlots.validate(match)).toEqual([
+    {
+      blockId: 'data.name',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+  block.setValue('a');
+  expect(context._internal.RootSlots.validate(match)).toEqual([]);
+});
+
+test('required on an input whose declared state type is array fails on an empty array', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: { tags: { type: 'array', items: { type: 'string' } } },
+    blocks: [{ type: 'MultipleSelector', id: 'tags', required: true }],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const { tags } = context._internal.RootSlots.map;
+  tags.setValue([]);
+  expect(context._internal.RootSlots.validate(match)).toEqual([
+    {
+      blockId: 'tags',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+  tags.setValue(['a']);
+  expect(context._internal.RootSlots.validate(match)).toEqual([]);
+});
+
+test('required without a declared type keeps 0 and false as non-empty but empty string as empty', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      { type: 'NumberInput', id: 'count', required: true },
+      { type: 'TextInput', id: 'text', required: true },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const { count, text } = context._internal.RootSlots.map;
+  count.setValue(0);
+  text.setValue('');
+  expect(context._internal.RootSlots.validate(match)).toEqual([
+    {
+      blockId: 'text',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+});
+
+test('required reads the declared type from the page state contract rather than the block value type', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: { tags: { type: 'object' } },
+    blocks: [{ type: 'MultipleSelector', id: 'tags', required: true }],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const { tags } = context._internal.RootSlots.map;
+  // Without the contract an empty array is empty; the declared object type
+  // only treats null and undefined as empty.
+  tags.setValue([]);
+  expect(context._internal.RootSlots.validate(match)).toEqual([]);
+});

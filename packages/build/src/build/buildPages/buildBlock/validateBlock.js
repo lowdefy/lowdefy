@@ -72,6 +72,13 @@ function validateBlock(block, { pageId }, parentConfigKey) {
       { configKey }
     );
   }
+  // The page state contract is extracted before block building for the same reason.
+  if (!type.isNone(block.state)) {
+    throw new ConfigError(
+      `State contracts are only allowed on the page, not on block "${block.id}" on page "${pageId}".`,
+      { configKey }
+    );
+  }
 }
 
 export default validateBlock;

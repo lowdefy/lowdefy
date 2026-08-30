@@ -150,7 +150,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_inspect_state',
     {
       description:
-        "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like.",
+        "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like. When the page declares a `state:` contract the result also carries `stateSchemaDrift`: an empty array when the live state conforms, otherwise one entry per violation with the state path, the ajv message, the declared fragment and the received value (the key is absent for a page with no contract).",
       inputSchema: {
         pageId: z.string().describe('The page id to inspect.'),
         source: z

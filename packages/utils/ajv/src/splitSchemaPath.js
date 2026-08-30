@@ -16,18 +16,21 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The full dotted path an operator reference reads, for both forms:
-// `_state: 'user.name'` and `_state: { key: 'user.name' }`. Null when the
-// value is not a path (an `all: true` read, or an operator computing the key).
-function extractOperatorPath({ operatorValue }) {
-  if (type.isString(operatorValue)) {
-    return operatorValue === '' ? null : operatorValue;
+// Splits a dotted state path into segments, treating `[n]` and `.n` the same
+// way: `a.b[0].c` and `a.b.0.c` both give ['a', 'b', '0', 'c']. A `$` segment
+// is the engine's list-item placeholder and is kept as a segment so schema
+// navigation can map it onto `items`.
+function splitSchemaPath(path) {
+  if (type.isArray(path)) {
+    return path.map((segment) => String(segment));
   }
-  if (type.isObject(operatorValue)) {
-    const path = operatorValue.key ?? operatorValue.path;
-    return type.isString(path) && path !== '' ? path : null;
+  if (!type.isString(path) || path === '') {
+    return [];
   }
-  return null;
+  return path
+    .replace(/\[(\d+)\]/g, '.$1')
+    .split('.')
+    .filter((segment) => segment !== '');
 }
 
-export default extractOperatorPath;
+export default splitSchemaPath;

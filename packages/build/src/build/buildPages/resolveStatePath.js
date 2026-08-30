@@ -14,10 +14,15 @@
   limitations under the License.
 */
 
-import validate from './validate.js';
-import compile from './compile.js';
-import getSchemaAtPath from './getSchemaAtPath.js';
-import nestSchemaPaths from './nestSchemaPaths.js';
-import splitSchemaPath from './splitSchemaPath.js';
+import { getSchemaAtPath } from '@lowdefy/ajv';
 
-export { validate, compile, getSchemaAtPath, nestSchemaPaths, splitSchemaPath };
+// Resolves a state path against a page's state contract, nested into one root
+// schema with nestSchemaPaths from the dotted declaration on page.stateSchema.
+// Returns the governing sub-schema, or null when the contract does not cover
+// the path. Exported through collectStateUsage.js for other checks that type
+// state reads against the contract.
+function resolveStatePath({ stateSchema, path }) {
+  return getSchemaAtPath({ schema: stateSchema, path });
+}
+
+export default resolveStatePath;
