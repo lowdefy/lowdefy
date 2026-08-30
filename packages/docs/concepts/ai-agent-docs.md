@@ -33,6 +33,7 @@ It provides these tools:
 | `lowdefy_inspect_state`  | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless |
 | `lowdefy_eval_operator`  | Evaluate any operator expression against live page state — a REPL for config |
 | `lowdefy_run_request`    | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in) |
+| `lowdefy_run_endpoint`   | Execute an Api endpoint routine with a test payload, as a given `user`, to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data) |
 | `lowdefy_snapshot_state` | Capture live page state + request responses into a committable checkpoint folder |
 | `lowdefy_load_state`     | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing |
 | `lowdefy_list_state_checkpoints` | List saved state checkpoints |
@@ -97,7 +98,7 @@ A headless capture waits for the page's full async lifecycle before it reads any
 
 The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of bouncing to the sign-in page. That default user carries **no roles**, so a page or request gated on a role still comes back refused or empty.
 
-To act as a specific caller, pass `user` — every tool that renders a page headless accepts it, as does `lowdefy_run_request`: `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_load_state` and `lowdefy_run_request`:
+To act as a specific caller, pass `user` — every tool that renders a page headless accepts it, as do `lowdefy_run_request` and `lowdefy_run_endpoint`: `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_load_state`, `lowdefy_run_request` and `lowdefy_run_endpoint`:
 
 ```json
 { "pageId": "users", "user": { "roles": ["admin"] } }
@@ -105,7 +106,7 @@ To act as a specific caller, pass `user` — every tool that renders a page head
 
 It is merged over the default user, so `{"roles": [...]}` is usually all you need. No auth engine runs for an injected caller, so nothing derives the rest of the record — include `email`, `profile` or `attributes` in the object if the page reads them. Every call opens its own browser context, so one call can act as an admin and the next as a plain member.
 
-`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load` and `POST /lowdefy-docs/run-request`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
+`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load`, `POST /lowdefy-docs/run-request` and `POST /lowdefy-docs/run-endpoint`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
 
 To bypass login for the whole dev server — your own browser included — start it with a mock user instead: `lowdefy dev --mock-user '{"id":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 
@@ -139,6 +140,18 @@ cli:
   agentTools:
     allowWriteRequests: true
 ```
+
+## Running endpoints
+
+`lowdefy_run_endpoint` (or `POST /lowdefy-docs/run-endpoint`) executes an `Api` endpoint routine headlessly with a test payload, so the agent can verify what a routine returns, rejects or throws without clicking through the page that calls it:
+
+```json
+{ "endpointId": "create_order", "payload": { "sku": "A1" }, "user": { "roles": ["admin"] } }
+```
+
+Endpoints are not classified read-only — a routine has no `checkWrite` meta, and a single routine can read, write, call other endpoints and send notifications — so running one always requires the same `cli.agentTools.allowWriteRequests: true` opt-in as write requests. Without it the tool answers `refused: true` with the reason and how to enable it, and nothing runs.
+
+The result is the same `{ error, response, status, success }` object the HTTP endpoint route returns. A `:reject` or `:throw` in the routine is not a tool failure: it comes back as `success: false` with `status: "reject"` or `"error"` and the routine's own `error`, so the agent can assert on the shape it designed. `InternalApi` endpoints are refused with the same message HTTP callers get, an unknown `endpointId` answers `refused: true`, and faults that escape the routine (an auth refusal, a missing connection) come back as `error: { name, message, source, configKey }`. Only malformed input — a missing `endpointId` or a non-object `user` — is a `400`.
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
@@ -229,6 +242,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
 | `POST /lowdefy-docs/eval-operator`  | Evaluate an operator expression against live page state         |
 | `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |
+| `POST /lowdefy-docs/run-endpoint`   | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data) |
 | `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
 | `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
 | `POST /lowdefy-docs/restart`        | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s) |

@@ -45,6 +45,7 @@ import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
+import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
 import docsRunRequestHandler from './routes/docs/runRequest.js';
 import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
 import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
@@ -114,8 +115,8 @@ function createApp() {
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
-  // they read build artifacts and node_modules directly — but run-request
-  // and eval-operator build a full Lowdefy context (createLowdefyContext),
+  // they read build artifacts and node_modules directly — but run-request,
+  // run-endpoint and eval-operator build a full Lowdefy context (createLowdefyContext),
   // which resolves the caller from the request headers via resolveAuthentication.
   // The MCP transport is registered before staleFlag on purpose: hono
   // dispatches in registration order, so the stale middleware never sees a
@@ -135,6 +136,7 @@ function createApp() {
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
+  app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
