@@ -29,6 +29,7 @@ It provides these tools:
 | `lowdefy_build_status`   | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit |
 | `lowdefy_get_page_config`| The fully built config for a page, or its structured build errors        |
 | `lowdefy_screenshot_page`| PNG screenshot of a rendered page (headless Chromium) for visual verification |
+| `lowdefy_run_journey`    | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout |
 | `lowdefy_find_config`    | Which yaml file (and line) defines a given page, block, or request id    |
 | `lowdefy_scaffold_page`  | Create a new page yaml file with a canonical minimal structure           |
 | `lowdefy_app_map`        | The whole-app graph: every page, menu, connection, endpoint, and agent in one call |
@@ -80,7 +81,7 @@ When you have a page open in your browser, the agent can read its **actual live 
 
 The headless renderer behind `lowdefy_screenshot_page` and `lowdefy_inspect_state` authenticates as a signed-in user, so pages with `auth.public: false` render for the agent instead of bouncing to the sign-in page. That default user carries **no roles**, so a page or request gated on a role still comes back refused or empty.
 
-To act as a specific caller, pass `user` — every tool that renders a page headless accepts it: `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator` and `lowdefy_load_state`:
+To act as a specific caller, pass `user` — every tool that renders a page headless accepts it: `lowdefy_screenshot_page`, `lowdefy_run_journey`, `lowdefy_inspect_state`, `lowdefy_eval_operator` and `lowdefy_load_state`:
 
 ```json
 { "pageId": "users", "user": { "roles": ["admin"] } }
@@ -88,7 +89,7 @@ To act as a specific caller, pass `user` — every tool that renders a page head
 
 It is merged over the default user, so `{"roles": [...]}` is usually all you need. No auth engine runs for an injected caller, so nothing derives the rest of the record — include `email`, `profile` or `attributes` in the object if the page reads them. Every call opens its own browser context, so one call can act as an admin and the next as a plain member.
 
-`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/eval-operator` and `POST /lowdefy-docs/state-checkpoints/load`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
+`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/journey`, `POST /lowdefy-docs/eval-operator` and `POST /lowdefy-docs/state-checkpoints/load`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
 
 To bypass login for the whole dev server — your own browser included — start it with a mock user instead: `lowdefy dev --mock-user '{"id":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 
@@ -122,6 +123,90 @@ cli:
 ```
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
+
+## Journeys — verify behaviour, not just layout
+
+A screenshot shows what rendered; it cannot tell the agent whether the form submits, the modal opens or the filter works. `lowdefy_run_journey` (or `POST /lowdefy-docs/journey`) opens a page headless and drives it through a declarative list of steps — a tiny Playwright — then reports what happened as data. Blocks are addressed by their `blockId`, through the same `#bl-<blockId>` DOM contract `@lowdefy/e2e-utils` uses, so a journey reads like the config it tests:
+
+```json
+{
+  "pageId": "new_customer",
+  "user": { "roles": ["admin"] },
+  "urlQuery": { "ref": "campaign-1" },
+  "steps": [
+    { "fill": { "blockId": "name", "value": "Ada Lovelace" } },
+    { "select": { "blockId": "country", "value": "United Kingdom" } },
+    { "click": "submit" },
+    { "wait": { "request": "create_customer" } },
+    { "expect": { "state": { "path": "created", "equals": true } } },
+    { "expect": { "visible": "success_modal" } },
+    { "expect": { "text": { "blockId": "success_message", "contains": "Ada Lovelace" } } },
+    { "screenshot": "after-submit" },
+    { "press": "Escape" },
+    { "click": "go_to_list" },
+    { "expect": { "url": { "contains": "/customers" } } }
+  ]
+}
+```
+
+Every step is an object with exactly one key:
+
+| Step                                              | What it does                                                                                                                                                                     |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{ "click": blockId }`                            | Clicks the block — its interactive control (button, link, input, checkbox…) when it has one, otherwise the block itself                                                          |
+| `{ "fill": { blockId, value } }`                  | Fills the block's `input` or `textarea` with `value` (converted to a string)                                                                                                     |
+| `{ "select": { blockId, value } }`                | Opens the block's dropdown and clicks the option whose text is exactly `value`; a native `<select>` inside the block is set by label instead                                     |
+| `{ "press": key }`                                | Presses a key or chord, e.g. `"Enter"`, `"Escape"`, `"Mod+k"` — `Mod` becomes `Meta` or `Control` for the platform the page reports, the same way the app's shortcuts resolve it |
+| `{ "wait": { "ms": n } }`                         | Sleeps `n` milliseconds                                                                                                                                                          |
+| `{ "wait": { "request": requestId } }`            | Waits until the request has finished loading                                                                                                                                     |
+| `{ "wait": { "state": path } }`                   | Waits until the state path is defined                                                                                                                                            |
+| `{ "screenshot": name? }`                         | Captures a PNG of the viewport; returned with the result (`true`, `null` or a missing name defaults to `step-<index>`)                                                           |
+| `{ "expect": { "state": { path, equals } } }`     | The state at `path` structurally equals `equals` (key order does not matter)                                                                                                     |
+| `{ "expect": { "visible": blockId } }`            | The block is visible                                                                                                                                                             |
+| `{ "expect": { "text": { blockId, contains } } }` | The block's text contains the string                                                                                                                                             |
+| `{ "expect": { "url": { contains } } }`           | The page url contains the string                                                                                                                                                 |
+
+Each step gets 5 seconds (Playwright's own auto-waiting — a `click` waits for the block to be attached, visible and enabled; nothing is retried). After an interaction the runner waits for the page to settle — the event the interaction fired, the requests it called — using the same readiness check the page open uses, so the next `expect` asserts against the outcome instead of racing it. The page opens with the same headless `user` and `urlQuery` handling as the other tools.
+
+A step that fails **stops the journey and comes back as data**, never as a tool error — a failed journey is the answer, not a fault:
+
+```json
+{
+  "pageId": "new_customer",
+  "passed": false,
+  "steps": [
+    {
+      "index": 0,
+      "step": { "fill": { "blockId": "name", "value": "Ada Lovelace" } },
+      "status": "ok",
+      "durationMs": 18
+    },
+    { "index": 1, "step": { "click": "submit" }, "status": "ok", "durationMs": 71 },
+    {
+      "index": 2,
+      "step": { "expect": { "state": { "path": "created", "equals": true } } },
+      "status": "failed",
+      "durationMs": 1
+    },
+    { "index": 3, "step": { "screenshot": "after-submit" }, "status": "skipped", "durationMs": 0 }
+  ],
+  "failure": {
+    "index": 2,
+    "step": { "expect": { "state": { "path": "created", "equals": true } } },
+    "expected": true,
+    "actual": null,
+    "message": "Expected state \"created\" to equal true but found undefined."
+  },
+  "screenshots": [],
+  "state": { "name": "Ada Lovelace", "country": null }
+}
+```
+
+`expected` and `actual` hold the compared values for an `expect` step, and for an interaction step what the runner needed (`block "submit" to be actionable`, `option "Chile" in the dropdown of block "country"`) against Playwright's own message. The remaining steps are marked `skipped`. A passing journey returns `passed: true` and no `failure`. The final page `state` is always included, pass or fail — it is what the agent needs to write the next assertion. Screenshots taken before the failure are kept: over MCP they arrive as image content after the JSON (with the JSON listing only their names); over HTTP they are base64 in the JSON body.
+
+Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
+
+Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
 
 ## Setting up a project — one command
 
@@ -205,6 +290,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/build-status`    | Current build errors/warnings + recent browser runtime errors   |
 | `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
 | `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
+| `POST /lowdefy-docs/journey`        | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64 |
 | `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
 | `GET /lowdefy-docs/app-map`         | Whole-app graph: pages, menus, connections, endpoints, agents   |
 | `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
