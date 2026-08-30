@@ -42,6 +42,14 @@ It provides these tools:
 | `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
 | `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
 
+## Hazards — what the schema cannot tell you
+
+A hazard is a behaviour of a type that its schema does not show, but that an agent must know before writing config: the `Html` block sanitises its content, so a `<style>` tag is stripped; closing a `Modal` keeps the state of the blocks inside it, while `visible: false` prunes it; `_state` inside a request's `properties` is always `undefined`; a `_ref` to a `.njk` file renders at build time. Each hazard is `{ id, message, see }` — a stable kebab-case `id`, one or two sentences saying what happens and what to do instead, and a docs slug (or `null`) for `lowdefy_get_doc`.
+
+`lowdefy_get_schema`, `lowdefy_get_doc` (when looked up by kind and type) and `lowdefy_find_config` (per match) return `hazards` alongside their normal result — `lowdefy_get_doc` appends them as a `## Hazards` section of the markdown. Some hazards are contextual: `tenant-wall-lookup` is only returned for a request whose connection is tenant-walled, so `find_config` on that request explains the wall's `$lookup` injection while the same request over a `tenant: shared` connection stays quiet.
+
+Hazards come from two places. Framework-level hazards ship with `@lowdefy/docs-content` (`hazards.json`). Type-attached hazards are declared by the plugin: a block sets `meta.hazards`, a request sets `meta.hazards` on the request function, and an operator package exports a `./metas` module with `{ hazards }` per operator — see [Plugins](/plugins-introduction). Local plugins in your project use the same channel, so your own blocks can warn an agent about their own surprises.
+
 ## Annotate your app — point, draw, copy, paste
 
 Press **Cmd+/** (macOS) or **Ctrl+/** (Windows/Linux) on any page of your running dev app. An overlay appears: hover to highlight blocks, click to select one, draw rectangles/arrows/freehand, type a comment, and batch several annotations. Hitting **Copy** (or just pressing Enter) puts an agent-readable feedback block on your clipboard — each annotation enriched with the **blockId and the exact yaml file and line** that defines it, plus **an annotated PNG screenshot of the page with your drawings on it** (saved under `.lowdefy/annotations/`, its path included in the block so the agent can view it; untick "Include annotated screenshot" to skip).

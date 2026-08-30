@@ -52,6 +52,21 @@ _ref:
                 typePrefix: Other
             ```
 
+            ## Plugin meta
+
+            Every plugin type can describe itself to the build and to AI coding agents through a `meta` object. For blocks it is the `meta.js` next to the block (`category`, `valueType`, `initValue`, `cssKeys`, `events`, `properties`, ...), for requests it is the `meta` property on the request function (`checkRead`, `checkWrite`), and for operators a package may export a `./metas` module with one object per operator, mirroring `./schemas`.
+
+            All three accept `meta.hazards`: a list of behaviours of the type that its schema cannot express, which the dev server's docs and MCP endpoint return to agents alongside the schema (see [AI agent docs](/ai-agent-docs)). Each hazard is:
+
+            ```yaml
+            hazards:
+              - id: html-style-stripped # kebab-case, unique within the type
+                message: Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed. Use DangerousHtml for a trusted <style> block.
+                see: display-blocks/html # a docs slug, or null
+            ```
+
+            The `message` is one or two plain sentences saying what happens and what to do instead. Only add a hazard for a behaviour that is verified in the plugin's code — an agent will rely on it.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
