@@ -29,6 +29,7 @@ import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
 import getPluginDoc from './getPluginDoc.js';
 import getSchema from './getSchema.js';
+import getStaleStatus from './getStaleStatus.js';
 import inspectState from './inspectState.js';
 import listConfigCheckpoints from './listConfigCheckpoints.js';
 import listPlugins from './listPlugins.js';
@@ -49,7 +50,7 @@ const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project
 
 Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations) plus recent browser runtime errors. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations) plus recent browser runtime errors. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes).
 
@@ -98,7 +99,24 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       } catch {
         // Logging must never break a tool call.
       }
-      return handler(args, extra);
+      const result = await handler(args, extra);
+      try {
+        const stale = getStaleStatus();
+        // Prepended rather than merged so it covers textResult, notFoundResult
+        // and any future result shape without parsing the tool's own payload.
+        if (stale && Array.isArray(result?.content)) {
+          result.content.unshift({
+            type: 'text',
+            text: `STALE: ${stale.staleReason} ${JSON.stringify({
+              stale: true,
+              staleSince: stale.staleSince,
+            })}`,
+          });
+        }
+      } catch {
+        // A missing or half-written artifact must never break a tool call.
+      }
+      return result;
     });
 
   server.registerTool(

@@ -61,6 +61,8 @@ function getOverview() {
     '5. **Search**: `GET /lowdefy-docs/search?q=...` — or `lowdefy_search_docs`.',
     '6. **Plugin packages**: `GET /lowdefy-docs/plugins` lists every installed plugin; `GET /lowdefy-docs/plugin-doc/{package}` returns markdown a plugin ships itself (READMEs, guides).',
     '',
+    'A `stale` field on a JSON response, a `> STALE:` banner on markdown, or an `X-Lowdefy-Stale` header means the last build FAILED and the served build is behind the source — this answer predates your latest edits. Call `GET /lowdefy-docs/build-status` and fix the errors before trusting anything else.',
+    '',
     '## The feedback loop (after every edit)',
     '',
     'The dev server rebuilds automatically when config files change. After EVERY edit:',

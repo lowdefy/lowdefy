@@ -70,6 +70,19 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status`, so problems that only show at runtime still reach the agent.
 
+### When a build fails, answers are marked stale
+
+A failed rebuild does not take the dev server down — it keeps serving the last build that succeeded, so you can carry on looking at the app while you fix the error. That means every tool can keep answering from a build that predates the latest edits, which is a trap for an agent.
+
+So while the last build is failing, every answer says so:
+
+- MCP tool results start with a `STALE: ...` text item.
+- JSON responses from `/lowdefy-docs` carry `stale: true`, `staleSince` and `staleReason`.
+- Markdown responses are prefixed with a `> STALE: ...` banner.
+- Every `/lowdefy-docs` response carries the `X-Lowdefy-Stale` and `X-Lowdefy-Stale-Since` headers.
+
+Nothing is refused — the last-known-good schema or page config is often exactly what you need while fixing the build. The flag disappears as soon as a build succeeds. Call `lowdefy_build_status` (or `GET /lowdefy-docs/build-status`) for the errors.
+
 Some build warnings are only warnings in `lowdefy dev` — they fail `lowdefy build`. Those carry `"prodError": true` in `lowdefy_build_status`, are printed in the dev terminal as `[ConfigWarning · fails in prod] …`, and are badged **fails in prod** on a dark-orange bar in the browser error bar. Treat them as errors: the production build will not pass until they are fixed.
 
 ## Live state — the agent sees what you see
