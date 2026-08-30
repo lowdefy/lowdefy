@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError, UserError } from '@lowdefy/errors';
+import { ConfigError, ServiceError, UserError } from '@lowdefy/errors';
 
 import omitErrorProps from './omitErrorProps.js';
 
@@ -39,4 +39,18 @@ test('omitErrorProps identifies a UserError by name across a package boundary', 
   const error = new Error('Invalid input.', { cause: { errors: ['too short'] } });
   error.name = 'UserError';
   expect(omitErrorProps(error)).toEqual(['received', 'stack']);
+});
+
+test('omitErrorProps prunes the cause of a ServiceError so raw driver text stays server side', () => {
+  const error = new ServiceError('Duplicate key on collection "orders".', {
+    cause: new Error('E11000 duplicate key error dup key: { ref: "ORD-1" }'),
+    service: 'MongoDB',
+  });
+  expect(omitErrorProps(error)).toEqual(['received', 'stack', 'cause']);
+});
+
+test('omitErrorProps identifies a ServiceError by name across a package boundary', () => {
+  const error = new Error('MongoDB: Duplicate key.', { cause: new Error('E11000') });
+  error.name = 'ServiceError';
+  expect(omitErrorProps(error)).toEqual(['received', 'stack', 'cause']);
 });

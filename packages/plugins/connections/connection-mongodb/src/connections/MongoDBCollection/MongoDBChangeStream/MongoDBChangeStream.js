@@ -16,6 +16,7 @@
 
 import applyTenantToChangeStream from '../tenant/applyTenantToChangeStream.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -38,9 +39,14 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
   if (signal.aborted) {
     return;
   }
-  const stream = collection.watch(pipeline ?? [], {
-    fullDocument: fullDocument ?? 'updateLookup',
-  });
+  let stream;
+  try {
+    stream = collection.watch(pipeline ?? [], {
+      fullDocument: fullDocument ?? 'updateLookup',
+    });
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
+  }
   signal.addEventListener(
     'abort',
     () => {
@@ -57,7 +63,7 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
   } catch (error) {
     // Closing the stream on abort surfaces as an error on the iterator.
     if (!signal.aborted) {
-      throw error;
+      throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
     }
   } finally {
     await stream.close().catch(() => {

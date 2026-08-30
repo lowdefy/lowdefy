@@ -63,8 +63,10 @@ class ServiceError extends Error {
    * @param {string} [options.code] - Error code (e.g., 'ECONNREFUSED')
    * @param {number} [options.statusCode] - HTTP status code if applicable
    * @param {string} [options.configKey] - Config key for location resolution
+   * @param {string} [options.hint] - A sentence telling the developer what to do about the
+   *   failure. Enumerable, so it survives serialization to the client.
    */
-  constructor(message, { cause, service, code, statusCode, configKey } = {}) {
+  constructor(message, { cause, service, code, statusCode, configKey, hint } = {}) {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
     const errorStatusCode =
@@ -83,6 +85,7 @@ class ServiceError extends Error {
     this._message = baseMessage;
     this.service = service;
     this.code = errorCode;
+    this.hint = hint ?? cause?.hint ?? null;
     this.statusCode = errorStatusCode;
     // Extract from the wrapped error like PluginError does, so a ServiceError
     // wrapped around an error that already resolved its config location keeps it.
