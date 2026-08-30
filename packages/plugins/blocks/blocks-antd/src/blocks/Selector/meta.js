@@ -192,7 +192,8 @@ export default {
       showArrow: {
         type: 'boolean',
         default: true,
-        description: 'Show the suffix icon at the drop-down position of the selector.',
+        description:
+          'Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon.',
       },
       showSearch: {
         type: 'boolean',
