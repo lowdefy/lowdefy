@@ -98,6 +98,11 @@ export default defineConfig(({ mode }) => ({
     dedupe: ['react', 'react-dom'],
   },
   server: {
+    fs: {
+      // clientJsMap.js imports _js modules in place under the app's config
+      // directory, so Vite must be allowed to serve (and hot-replace) them.
+      allow: [process.cwd(), process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()],
+    },
     watch: {
       // Tailwind scan inputs are rewritten by JIT page builds, and Vite
       // full-reloads the browser on any watched .html change — killing

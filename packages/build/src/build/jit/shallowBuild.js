@@ -65,6 +65,7 @@ import writeApi from '../writeApi.js';
 import writeMcp from '../writeMcp.js';
 import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
+import copyJsModules from '../buildJs/copyJsModules.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
 import writeLogger from '../writeLogger.js';
@@ -247,6 +248,9 @@ async function shallowBuild(options) {
     await writeTypes({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    // JIT page builds (separate process) restore this so serverJsMap.js keeps
+    // importing the modules the skeleton build discovered.
+    await context.writeBuildArtifact('jsModules.json', JSON.stringify(context.jsModules));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
     await context.writeBuildArtifact(
       'customTypesMap.json',
@@ -284,6 +288,7 @@ async function shallowBuild(options) {
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
+    await copyJsModules({ context });
 
     return { components, pageRegistry, context };
   } catch (err) {

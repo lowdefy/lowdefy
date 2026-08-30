@@ -44,6 +44,7 @@ function createContext({
     errors: [],
     jsBodies: [],
     jsMap: {},
+    jsModules: { client: {}, server: {} },
     warnings: [],
     keyMap: {},
     logger,

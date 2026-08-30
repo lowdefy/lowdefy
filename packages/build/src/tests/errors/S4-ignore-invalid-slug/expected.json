@@ -6,7 +6,7 @@
         "Invalid check slug(s)"
       ],
       "errorContains": [
-        "Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, tenant-lookup, callapi-refs, callapi-internal-refs, dynamic-endpoint-refs, websocket-refs, block-properties, icons, events, types, schema, js-lint, tenant",
+        "Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, tenant-lookup, callapi-refs, callapi-internal-refs, dynamic-endpoint-refs, websocket-refs, block-properties, icons, events, types, schema, js-lint, tenant, js-modules",
         "lowdefy.yaml:10"
       ],
       "expectThrow": true

@@ -1,0 +1,27 @@
+id: home
+type: Box
+requests:
+  - id: get_rows
+    type: AxiosHttp
+    connectionId: things
+    properties:
+      url:
+        _js:
+          fn: ../lib/url.js#default
+          args:
+            page: 1
+blocks:
+  - id: rows
+    type: Html
+    properties:
+      html:
+        _js:
+          fn: ./lib/rows.js#buildRows
+          args:
+            docs:
+              _request: get_rows
+  - id: inline
+    type: Html
+    properties:
+      html:
+        _js: return 'inline';

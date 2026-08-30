@@ -133,3 +133,19 @@ test('js execution error names the original JavaScript error and not the functio
   expect(thrown.message).not.toContain('return unlinked.value');
   expect(thrown.cause).toBeInstanceOf(ReferenceError);
 });
+
+// A _js module reference is bound into the map as the imported function itself
+// (generateJsFile: `'<hash>': m0`), so it is called exactly like an inline body.
+test('js calls a module export bound to a hash with the server prototype and args', () => {
+  function buildRows({ args, item }) {
+    return { docs: args.docs, hasPrototype: typeof item === 'function' };
+  }
+  const jsMap = { 'mod-hash': buildRows };
+  const result = js({
+    jsMap,
+    operators: {},
+    location: rootLocation,
+    params: { fn: 'mod-hash', args: { docs: [1, 2] } },
+  });
+  expect(result).toEqual({ docs: [1, 2], hasPrototype: true });
+});

@@ -155,3 +155,90 @@ test('jsMapParser queues every hashed body on context.jsBodies for the js-lint r
   ]);
   expect(context.errors).toHaveLength(0);
 });
+
+describe('module references', () => {
+  let configDirectory;
+
+  beforeEach(async () => {
+    const fs = await import('fs');
+    const os = await import('os');
+    const path = await import('path');
+    configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-js-map-parser-'));
+    fs.mkdirSync(path.join(configDirectory, 'pages/lib'), { recursive: true });
+    fs.writeFileSync(
+      path.join(configDirectory, 'pages/lib/rows.js'),
+      "import { esc } from './esc.js';\nexport function buildRows({ args }) { return esc(args.docs); }"
+    );
+  });
+
+  afterEach(async () => {
+    const fs = await import('fs');
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  });
+
+  function moduleContext() {
+    const context = createContext();
+    context.directories = { config: configDirectory };
+    context.jsModules = { client: {}, server: {} };
+    context.refMap = { r1: { path: 'pages/home.yaml' } };
+    return context;
+  }
+
+  function withRef(obj, key, refId) {
+    withKey(obj, key);
+    Object.defineProperty(obj, '~r', { value: refId, enumerable: false });
+    return obj;
+  }
+
+  test('jsMapParser routes a ./ fn through resolveJsModule and keeps it out of jsMap and jsBodies', () => {
+    const jsMap = {};
+    const context = moduleContext();
+    const node = withRef(
+      { _js: { fn: './lib/rows.js#buildRows', args: { docs: [1] } } },
+      'k1',
+      'r1'
+    );
+    const result = jsMapParser({ input: { x: node }, jsMap, env: 'client', context });
+
+    const hash = result.x._js.fn;
+    expect(result.x._js.args).toEqual({ docs: [1] });
+    expect(context.jsModules.client[hash]).toMatchObject({
+      exportName: 'buildRows',
+      relativePath: 'pages/lib/rows.js',
+      configKey: 'k1',
+    });
+    // The module is a real file the author's own tooling lints — its import
+    // statement must never reach the inline-body lint.
+    expect(jsMap.client).toEqual({});
+    expect(context.jsBodies).toEqual([]);
+  });
+
+  test('jsMapParser throws a js-modules ConfigError for a malformed module reference', () => {
+    const context = moduleContext();
+    const node = withRef({ _js: { fn: '../lib/rows.js' } }, 'k1', 'r1');
+    let error;
+    try {
+      jsMapParser({ input: { x: node }, jsMap: {}, env: 'client', context });
+    } catch (e) {
+      error = e;
+    }
+    expect(error.message).toBe(
+      '_js module reference must be "<relative path to a .js file>#<exportName>". Received "../lib/rows.js".'
+    );
+    expect(error.configKey).toBe('k1');
+    expect(error.checkSlug).toBe('js-modules');
+  });
+
+  test('jsMapParser treats a string-form _js starting with ./ as source text', () => {
+    const jsMap = {};
+    const context = moduleContext();
+    const result = jsMapParser({
+      input: { x: { _js: './not/a/module.js#x' } },
+      jsMap,
+      env: 'client',
+      context,
+    });
+    expect(jsMap.client[result.x._js]).toBe('./not/a/module.js#x');
+    expect(context.jsModules.client).toEqual({});
+  });
+});

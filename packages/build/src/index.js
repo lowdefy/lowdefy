@@ -74,6 +74,7 @@ import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
 import writeI18n from './build/writeI18n.js';
 import writeTheme from './build/writeTheme.js';
+import copyJsModules from './build/buildJs/copyJsModules.js';
 import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
@@ -234,6 +235,7 @@ async function build(options) {
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
+    await copyJsModules({ context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

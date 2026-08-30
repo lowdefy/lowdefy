@@ -56,6 +56,7 @@ export default {
   'D': ({ args, item, lowdefyApp, payload, secret, state, step, user }) => { return 1; },
   };`,
     ],
+    ['js/serverModules.json', '[]'],
   ]);
 });
 
@@ -102,6 +103,7 @@ export default {
       console.log(array); },
   };`,
     ],
+    ['js/serverModules.json', '[]'],
   ]);
 });
 
@@ -125,5 +127,63 @@ export default {
 export default {
   };`,
     ],
+    ['js/serverModules.json', '[]'],
   ]);
+});
+
+test('writeJs imports modules in place in dev and from the server copy in prod, and lists server modules', async () => {
+  context.directories = { config: '/app', build: '/srv/build', server: '/srv' };
+  context.jsMap = { client: { A: 'return 1;' }, server: {} };
+  context.jsModules = {
+    client: {
+      H1: {
+        absolutePath: '/app/pages/lib/rows.js',
+        exportName: 'buildRows',
+        relativePath: 'pages/lib/rows.js',
+      },
+    },
+    server: {
+      H2: { absolutePath: '/app/lib/x.js', exportName: 'default', relativePath: 'lib/x.js' },
+      H0: { absolutePath: '/app/lib/a.js', exportName: 'a', relativePath: 'lib/a.js' },
+    },
+  };
+
+  context.stage = 'dev';
+  await writeJs({ context });
+  expect(mockWriteBuildArtifact.mock.calls[0][1]).toBe(`
+import { buildRows as m0 } from '../../../../app/pages/lib/rows.js';
+
+export default {
+  'A': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
+  'H1': m0,
+  };`);
+  expect(mockWriteBuildArtifact.mock.calls[1][1]).toBe(`
+import { a as m0 } from '../../../../app/lib/a.js';
+import m1 from '../../../../app/lib/x.js';
+
+export default {
+  'H0': m0,
+  'H2': m1,
+  };`);
+  expect(mockWriteBuildArtifact.mock.calls[2]).toEqual([
+    'js/serverModules.json',
+    JSON.stringify(['/app/lib/a.js', '/app/lib/x.js']),
+  ]);
+
+  mockWriteBuildArtifact.mockReset();
+  context.stage = 'prod';
+  await writeJs({ context });
+  expect(mockWriteBuildArtifact.mock.calls[0][1]).toContain(
+    "import { buildRows as m0 } from '../../../pages/lib/rows.js';"
+  );
+  expect(mockWriteBuildArtifact.mock.calls[1][1]).toContain("import m1 from '../../../lib/x.js';");
+  context.stage = 'test';
+  context.directories = { config: '', build: 'build', server: '' };
+});
+
+test('writeJs always writes js/serverModules.json, as [] when there are no server modules', async () => {
+  context.jsMap = { client: {}, server: {} };
+  context.jsModules = { client: {}, server: {} };
+  await writeJs({ context });
+  expect(mockWriteBuildArtifact.mock.calls[2]).toEqual(['js/serverModules.json', '[]']);
 });

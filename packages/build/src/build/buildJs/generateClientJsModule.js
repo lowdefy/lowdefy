@@ -19,8 +19,8 @@ import { clientJsPrototype } from './jsFunctionPrototypes.js';
 
 // Both the full build (writeJs) and the dev server's per-page fold
 // (getPageJitEnrichment) generate client jsMap module text through here.
-function generateClientJsModule(map) {
-  return generateJsFile({ map, functionPrototype: clientJsPrototype() });
+function generateClientJsModule(map, modules = {}) {
+  return generateJsFile({ map, modules, functionPrototype: clientJsPrototype() });
 }
 
 export default generateClientJsModule;

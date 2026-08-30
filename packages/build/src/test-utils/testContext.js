@@ -36,6 +36,7 @@ function testContext({
     blockMetas,
     directories: {
       config: configDirectory || '',
+      build: 'build',
       server: '',
     },
     typeCounters: {
@@ -64,6 +65,7 @@ function testContext({
     keyMap: {},
     jsBodies: [],
     jsMap: {},
+    jsModules: { client: {}, server: {} },
     agentIds: new Set(),
     connectionIds: new Set(),
     tenantConnections: new Map(),

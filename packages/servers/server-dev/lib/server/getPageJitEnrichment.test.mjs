@@ -19,8 +19,12 @@ import { getPageJitEnrichment } from './jitPageBuilder.js';
 // A stub of cachedBuildContext. getPageJitEnrichment reads jsMap.client and
 // dynamicIconData off it; production omits buildContext so it defaults to the
 // module-private cachedBuildContext.
-function buildContext({ client = {}, dynamicIconData = {} } = {}) {
-  return { jsMap: { client, server: {} }, dynamicIconData };
+function buildContext({ client = {}, modules = {}, dynamicIconData = {} } = {}) {
+  return {
+    jsMap: { client, server: {} },
+    jsModules: { client: modules, server: {} },
+    dynamicIconData,
+  };
 }
 
 test('getPageJitEnrichment scopes string-form, object-form, and args-nested _js hashes', () => {
@@ -102,4 +106,60 @@ test('getPageJitEnrichment omits both fields when the page has no dynamic _js or
   });
 
   expect(enrichment).toEqual({ jsEntries: undefined, dynamicIcons: undefined });
+});
+
+test('getPageJitEnrichment emits an await import preamble for module hashes and plain entries otherwise', () => {
+  const client = { hashInline: 'return 1;' };
+  const modules = {
+    hashZ: { absolutePath: '/app/lib/z.js', exportName: 'default', relativePath: 'lib/z.js' },
+    hashA: {
+      absolutePath: '/app/pages/lib/rows.js',
+      exportName: 'buildRows',
+      relativePath: 'pages/lib/rows.js',
+    },
+    hashUnused: { absolutePath: '/app/lib/u.js', exportName: 'u', relativePath: 'lib/u.js' },
+  };
+  const pageConfig = {
+    id: 'p',
+    blocks: [
+      { properties: { a: { _js: 'hashInline' } } },
+      { properties: { b: { _js: { fn: 'hashA', args: { c: { _js: { fn: 'hashZ' } } } } } } },
+    ],
+  };
+
+  const { jsEntries } = getPageJitEnrichment({
+    pageConfig,
+    buildContext: buildContext({ client, modules }),
+  });
+
+  expect(jsEntries).toBe(`const m0 = await import('/@fs/app/pages/lib/rows.js');
+const m1 = await import('/@fs/app/lib/z.js');
+export default {
+  'hashInline': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
+  'hashA': m0.buildRows,
+  'hashZ': m1.default,
+  };`);
+});
+
+test('getPageJitEnrichment emits module entries when the page has no inline bodies', () => {
+  const modules = {
+    hashA: { absolutePath: '/app/lib/a.js', exportName: 'a', relativePath: 'lib/a.js' },
+  };
+  const { jsEntries } = getPageJitEnrichment({
+    pageConfig: { id: 'p', blocks: [{ properties: { a: { _js: { fn: 'hashA' } } } }] },
+    buildContext: buildContext({ modules }),
+  });
+  expect(jsEntries).toBe(`const m0 = await import('/@fs/app/lib/a.js');
+export default {
+  'hashA': m0.a,
+  };`);
+});
+
+test('getPageJitEnrichment emits no preamble when the page references no module', () => {
+  const { jsEntries } = getPageJitEnrichment({
+    pageConfig: { id: 'p', blocks: [{ properties: { a: { _js: 'hashInline' } } }] },
+    buildContext: buildContext({ client: { hashInline: 'return 1;' } }),
+  });
+  expect(jsEntries).not.toContain('await import');
+  expect(jsEntries).toContain("'hashInline'");
 });

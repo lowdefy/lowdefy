@@ -22,10 +22,14 @@ import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 // every later navigation refetches.
 const dynamicUrls = new Set();
 
-function parseJsModule(text) {
-  const fn = new Function('exports', text.replace('export default', 'exports.default ='));
+// _js module references arrive as an `await import('/@fs/...')` preamble
+// (getPageJitEnrichment), so the compiled text runs as an async function.
+const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+
+async function parseJsModule(text) {
+  const fn = new AsyncFunction('exports', text.replace('export default', 'exports.default ='));
   const mod = {};
-  fn(mod);
+  await fn(mod);
   return mod.default ?? {};
 }
 
@@ -85,7 +89,7 @@ export async function fetchPageConfig(url) {
   // response, so first paint needs no secondary fetch. _jsEntries arrives as
   // module text — compile it to the { hash: fn } object Page expects.
   // _dynamicIcons is already plain data — leave it for Page to inject.
-  if (data._jsEntries) data._jsEntries = parseJsModule(data._jsEntries);
+  if (data._jsEntries) data._jsEntries = await parseJsModule(data._jsEntries);
 
   if (data?.dynamic === true) {
     dynamicUrls.add(url);

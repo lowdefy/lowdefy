@@ -29,7 +29,8 @@ export default {
         properties: {
           fn: {
             type: 'string',
-            description: 'Hash identifier of the pre-built JavaScript function to execute.',
+            description:
+              'Hash identifier of the pre-built JavaScript function to execute. In config this is either the function body, or a module reference "./lib/file.js#exportName" naming an exported function in a real .js file (resolved relative to the containing config file); the build replaces both with a hash.',
           },
           args: {
             description: 'Pre-resolved values injected into the JavaScript function as `args`.',
