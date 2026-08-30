@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -115,6 +116,7 @@ function buildPages({ components, context }) {
     validateStateReferences({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
+    validateActionResponsePaths({ page, endpointConfigs, context });
   });
 
   return components;

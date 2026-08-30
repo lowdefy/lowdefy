@@ -38,6 +38,7 @@ export const VALID_CHECK_SLUGS = {
   schema: 'JSON schema validation errors',
   'js-lint': 'Unresolved and unused names in _js bodies',
   tenant: 'Tenant wall audits on walled requests and steps',
+  'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
 };
 
 /**

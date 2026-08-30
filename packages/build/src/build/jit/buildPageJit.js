@@ -23,6 +23,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
+import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -373,6 +374,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateStateReferences({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
+    validateActionResponsePaths({ page: processed, endpointConfigs, context: buildContext });
 
     // Collect Tailwind class candidates before _js extraction — jsMapParser
     // replaces _js source with hashes, so classes used only inside _js source

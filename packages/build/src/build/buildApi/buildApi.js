@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import buildEndpoint from './buildEndpoint.js';
+import validateStepResponsePaths from './validateStepResponsePaths.js';
 
 function buildApi({ components, context }) {
   if (components.api && !type.isArray(components.api)) {
@@ -34,10 +35,7 @@ function buildApi({ components, context }) {
       buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId });
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (
-        error instanceof ConfigError &&
-        shouldSuppressBuildCheck(error, context.keyMap)
-      ) {
+      if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
@@ -47,6 +45,14 @@ function buildApi({ components, context }) {
         throw error;
       }
     }
+  });
+
+  // Runs after every endpoint is built so a step can read from an endpoint
+  // declared later in the array; a step reads _step.<id>.<path> straight off
+  // the target endpoint's :return value.
+  api.forEach((endpoint) => {
+    if (type.isUndefined(endpoint.endpointId)) return;
+    validateStepResponsePaths({ endpoint, endpointConfigs: api, context });
   });
 
   return components;
