@@ -18,6 +18,7 @@ import importPluginModule from './importPluginModule.js';
 
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
+  const metas = {};
 
   const typesMapSchemas = context.typesMap.schemas?.operators ?? {};
 
@@ -42,16 +43,27 @@ async function writeOperatorSchemaMap({ components, context }) {
       context,
       specifier: `${packageName}/schemas`,
     });
+    // Operators have no meta beyond hazards, so `./metas` is optional for a
+    // package — most ship schemas only and contribute nothing here.
+    const packageMetas = await importPluginModule({
+      context,
+      specifier: `${packageName}/metas`,
+    });
     for (const op of operators) {
       if (typesMapSchemas[op.typeName]) {
         schemas[op.typeName] = typesMapSchemas[op.typeName];
       } else if (packageSchemas?.[op.originalTypeName]) {
         schemas[op.typeName] = packageSchemas[op.originalTypeName];
       }
+      const meta = packageMetas?.[op.originalTypeName];
+      if (meta) {
+        metas[op.typeName] = { hazards: meta.hazards ?? [] };
+      }
     }
   }
 
-  return context.writeBuildArtifact('plugins/operatorSchemas.json', JSON.stringify(schemas));
+  await context.writeBuildArtifact('plugins/operatorSchemas.json', JSON.stringify(schemas));
+  await context.writeBuildArtifact('plugins/operatorMetas.json', JSON.stringify(metas));
 }
 
 export default writeOperatorSchemaMap;

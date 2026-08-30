@@ -395,61 +395,61 @@
       "~l": 38
     },
     "30": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query",
       "~k_parent": "2z",
       "~r": "pages.1",
       "~l": 15
     },
     "31": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and",
       "~k_parent": "30",
       "~r": "pages.1",
       "~l": 16
     },
     "32": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0]",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0]",
       "~k_parent": "31",
       "~r": "pages.1",
       "~l": 17
     },
     "33": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or",
       "~k_parent": "32",
       "~r": "pages.1",
       "~l": 17
     },
     "34": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0]",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[0]",
       "~k_parent": "33",
       "~r": "pages.1",
       "~l": 18
     },
     "35": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0].name",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[0].name",
       "~k_parent": "34",
       "~r": "pages.1",
       "~l": 18
     },
     "36": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0].name.$regex",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[0].name.$regex",
       "~k_parent": "35",
       "~r": "pages.1",
       "~l": 19
     },
     "37": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1]",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[1]",
       "~k_parent": "33",
       "~r": "pages.1",
       "~l": 22
     },
     "38": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1].email",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[1].email",
       "~k_parent": "37",
       "~r": "pages.1",
       "~l": 22
     },
     "39": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1].email.$regex",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[0].$or[1].email.$regex",
       "~k_parent": "38",
       "~r": "pages.1",
       "~l": 23
@@ -575,13 +575,13 @@
       "~l": 1
     },
     "60": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.updatedAt",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.updatedAt",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 48
     },
     "61": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.options",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.options",
       "~k_parent": "5q",
       "~r": "pages.2",
       "~l": 50
@@ -1066,13 +1066,13 @@
       "~l": 5
     },
     "1q": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp]",
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:getStats:AxiosHttp]",
       "~k_parent": "1p",
       "~r": "pages.0",
       "~l": 6
     },
     "1r": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].properties",
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:getStats:AxiosHttp].properties",
       "~k_parent": "1q",
       "~r": "pages.0",
       "~l": 9
@@ -1252,79 +1252,79 @@
       "~l": 5
     },
     "2v": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind]",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind]",
       "~k_parent": "2u",
       "~r": "pages.1",
       "~l": 6
     },
     "2w": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].payload",
       "~k_parent": "2v",
       "~r": "pages.1",
       "~l": 9
     },
     "2x": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload.search",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].payload.search",
       "~k_parent": "2w",
       "~r": "pages.1",
       "~l": 10
     },
     "2y": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload.status",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].payload.status",
       "~k_parent": "2w",
       "~r": "pages.1",
       "~l": 12
     },
     "2z": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties",
       "~k_parent": "2v",
       "~r": "pages.1",
       "~l": 14
     },
     "3a": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1]",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1]",
       "~k_parent": "31",
       "~r": "pages.1",
       "~l": 26
     },
     "3b": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1].status",
       "~k_parent": "3a",
       "~r": "pages.1",
       "~l": 26
     },
     "3c": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1].status._if",
       "~k_parent": "3b",
       "~r": "pages.1",
       "~l": 27
     },
     "3d": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.test",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1].status._if.test",
       "~k_parent": "3c",
       "~r": "pages.1",
       "~l": 28
     },
     "3e": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.then",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1].status._if.then",
       "~k_parent": "3c",
       "~r": "pages.1",
       "~l": 30
     },
     "3f": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.else",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.query.$and[1].status._if.else",
       "~k_parent": "3c",
       "~r": "pages.1",
       "~l": 32
     },
     "3g": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.options",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.options",
       "~k_parent": "2z",
       "~r": "pages.1",
       "~l": 34
     },
     "3h": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.options.sort",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].properties.options.sort",
       "~k_parent": "3g",
       "~r": "pages.1",
       "~l": 35
@@ -1606,145 +1606,145 @@
       "~l": 5
     },
     "5c": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne]",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne]",
       "~k_parent": "5b",
       "~r": "pages.2",
       "~l": 6
     },
     "5d": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].payload",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].payload",
       "~k_parent": "5c",
       "~r": "pages.2",
       "~l": 9
     },
     "5e": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].payload.id",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].payload.id",
       "~k_parent": "5d",
       "~r": "pages.2",
       "~l": 10
     },
     "5f": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].properties",
       "~k_parent": "5c",
       "~r": "pages.2",
       "~l": 12
     },
     "5g": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties.query",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].properties.query",
       "~k_parent": "5f",
       "~r": "pages.2",
       "~l": 13
     },
     "5h": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties.query._id",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].properties.query._id",
       "~k_parent": "5g",
       "~r": "pages.2",
       "~l": 14
     },
     "5i": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne]",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne]",
       "~k_parent": "5b",
       "~r": "pages.2",
       "~l": 16
     },
     "5j": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload",
       "~k_parent": "5i",
       "~r": "pages.2",
       "~l": 19
     },
     "5k": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.id",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.id",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 20
     },
     "5l": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.name",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.name",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 22
     },
     "5m": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.email",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.email",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 24
     },
     "5n": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.phone",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.phone",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 26
     },
     "5o": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.status",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.status",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 28
     },
     "5p": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.notes",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].payload.notes",
       "~k_parent": "5j",
       "~r": "pages.2",
       "~l": 30
     },
     "5q": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties",
       "~k_parent": "5i",
       "~r": "pages.2",
       "~l": 32
     },
     "5r": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.filter",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.filter",
       "~k_parent": "5q",
       "~r": "pages.2",
       "~l": 33
     },
     "5s": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.filter._id",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.filter._id",
       "~k_parent": "5r",
       "~r": "pages.2",
       "~l": 34
     },
     "5t": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update",
       "~k_parent": "5q",
       "~r": "pages.2",
       "~l": 36
     },
     "5u": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set",
       "~k_parent": "5t",
       "~r": "pages.2",
       "~l": 37
     },
     "5v": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.name",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.name",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 38
     },
     "5w": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.email",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.email",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 40
     },
     "5x": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.phone",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.phone",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 42
     },
     "5y": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.status",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.status",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 44
     },
     "5z": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.notes",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].properties.update.$set.notes",
       "~k_parent": "5u",
       "~r": "pages.2",
       "~l": 46
@@ -2562,11 +2562,11 @@
       "~k_parent": "b3"
     },
     "bj": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].payload",
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:getStats:AxiosHttp].payload",
       "~k_parent": "1q"
     },
     "bk": {
-      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].auth",
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:getStats:AxiosHttp].auth",
       "~k_parent": "1q"
     },
     "bl": {
@@ -2650,11 +2650,11 @@
       "~k_parent": "bl"
     },
     "c5": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].auth",
       "~k_parent": "2v"
     },
     "c6": {
-      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth.roles",
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:getCustomers:MongoDBFind].auth.roles",
       "~k_parent": "c5"
     },
     "c7": {
@@ -2718,19 +2718,19 @@
       "~k_parent": "c7"
     },
     "cm": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].auth",
       "~k_parent": "5c"
     },
     "cn": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth.roles",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:getCustomer:MongoDBFindOne].auth.roles",
       "~k_parent": "cm"
     },
     "co": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].auth",
       "~k_parent": "5i"
     },
     "cp": {
-      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth.roles",
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:saveCustomer:MongoDBUpdateOne].auth.roles",
       "~k_parent": "co"
     },
     "cq": {
@@ -6035,101 +6035,148 @@
   "plugins/auth/strategies.js": "export default {\n  };",
   "plugins/blockMetas.json": {
     "PageHeaderMenu": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Box": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Card": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Statistic": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "TextInput": {
       "category": "input",
-      "valueType": "string"
+      "valueType": "string",
+      "hazards": []
     },
     "Selector": {
       "category": "input",
-      "valueType": "any"
+      "valueType": "any",
+      "hazards": []
     },
     "List": {
       "category": "list",
-      "valueType": "array"
+      "valueType": "array",
+      "hazards": []
     },
     "Tag": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "TextArea": {
       "category": "input",
-      "valueType": "string"
+      "valueType": "string",
+      "hazards": []
     },
     "NumberInput": {
       "category": "input",
-      "valueType": "number"
+      "valueType": "number",
+      "hazards": []
     },
     "Switch": {
       "category": "input",
-      "valueType": "boolean"
+      "valueType": "boolean",
+      "hazards": []
     },
     "Result": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Divider": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "PasswordInput": {
       "category": "input",
-      "valueType": "string"
+      "valueType": "string",
+      "hazards": []
     },
     "Anchor": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "DangerousHtml": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "dangerous-html-unsanitised",
+          "message": "Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.",
+          "see": "display-blocks/dangeroushtml"
+        },
+        {
+          "id": "dompurify-options-first-render",
+          "message": "DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.",
+          "see": "display-blocks/dangeroushtml"
+        }
+      ]
     },
     "Dynamic": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Html": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "html-style-stripped",
+          "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
+          "see": "display-blocks/html"
+        }
+      ]
     },
     "Icon": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Img": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Span": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Throw": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "ProgressBar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Skeleton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonAvatar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonButton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonInput": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonParagraph": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Spinner": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Message": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     }
   },
   "plugins/blockSchemas.json": {
@@ -17818,6 +17865,7 @@
   "plugins/connections.js": "import { AxiosHttp as AxiosHttp } from '@lowdefy/connection-axios-http/connections';\nimport { MongoDBCollection as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  AxiosHttp,\n  MongoDBCollection,\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineDashboard, AiOutlineTeam, AiOutlineShoppingCart, AiOutlineBarChart, AiOutlineSetting, AiOutlineSearch, AiOutlinePlus, AiOutlineGoogle, AiOutlineFileSearch } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineDashboard,\n  AiOutlineTeam,\n  AiOutlineShoppingCart,\n  AiOutlineBarChart,\n  AiOutlineSetting,\n  AiOutlineSearch,\n  AiOutlinePlus,\n  AiOutlineGoogle,\n  AiOutlineFileSearch,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
+  "plugins/operatorMetas.json": {},
   "plugins/operatorSchemas.json": {
     "_user": {
       "type": "object",

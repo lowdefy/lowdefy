@@ -132,19 +132,19 @@
       "~l": 11
     },
     "15": {
-      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:client-users/users-db:MongoDBFind]",
+      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind]",
       "~k_parent": "14",
       "~r": "5",
       "~l": 12
     },
     "16": {
-      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:client-users/users-db:MongoDBFind].properties",
+      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].properties",
       "~k_parent": "15",
       "~r": "5",
       "~l": 16
     },
     "17": {
-      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:client-users/users-db:MongoDBFind].properties.query",
+      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].properties.query",
       "~k_parent": "16",
       "~r": "5",
       "~l": 17
@@ -222,11 +222,11 @@
       "~k_parent": "2z"
     },
     "35": {
-      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:client-users/users-db:MongoDBFind].payload",
+      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].payload",
       "~k_parent": "15"
     },
     "36": {
-      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:client-users/users-db:MongoDBFind].auth",
+      "key": "root.pages[3:client-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].auth",
       "~k_parent": "15"
     },
     "37": {
@@ -503,19 +503,19 @@
       "~l": 11
     },
     "l": {
-      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:team-users/users-db:MongoDBFind]",
+      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind]",
       "~k_parent": "k",
       "~r": "pages.0",
       "~l": 12
     },
     "m": {
-      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:team-users/users-db:MongoDBFind].properties",
+      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].properties",
       "~k_parent": "l",
       "~r": "pages.0",
       "~l": 16
     },
     "n": {
-      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:team-users/users-db:MongoDBFind].properties.query",
+      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].properties.query",
       "~k_parent": "m",
       "~r": "pages.0",
       "~l": 17
@@ -779,11 +779,11 @@
       "~k_parent": "2j"
     },
     "2p": {
-      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:team-users/users-db:MongoDBFind].payload",
+      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].payload",
       "~k_parent": "l"
     },
     "2q": {
-      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:team-users/users-db:MongoDBFind].auth",
+      "key": "root.pages[1:team-users/users-list:Box].blocks[1:users-table:Box].requests[0:get-users:MongoDBFind].auth",
       "~k_parent": "l"
     },
     "2r": {
@@ -1958,66 +1958,103 @@
   "plugins/auth/strategies.js": "export default {\n  };",
   "plugins/blockMetas.json": {
     "Box": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "TextInput": {
       "category": "input",
-      "valueType": "string"
+      "valueType": "string",
+      "hazards": []
     },
     "Result": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Anchor": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "DangerousHtml": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "dangerous-html-unsanitised",
+          "message": "Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.",
+          "see": "display-blocks/dangeroushtml"
+        },
+        {
+          "id": "dompurify-options-first-render",
+          "message": "DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.",
+          "see": "display-blocks/dangeroushtml"
+        }
+      ]
     },
     "Dynamic": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Html": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "html-style-stripped",
+          "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
+          "see": "display-blocks/html"
+        }
+      ]
     },
     "Icon": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Img": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "List": {
       "category": "list",
-      "valueType": "array"
+      "valueType": "array",
+      "hazards": []
     },
     "Span": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Throw": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "ProgressBar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Skeleton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonAvatar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonButton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonInput": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonParagraph": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Spinner": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Message": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     }
   },
   "plugins/blockSchemas.json": {
@@ -7421,6 +7458,7 @@
   "plugins/connections.js": "import { MongoDBCollection as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  MongoDBCollection,\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
+  "plugins/operatorMetas.json": {},
   "plugins/operatorSchemas.json": {
     "_not": {
       "type": "object",

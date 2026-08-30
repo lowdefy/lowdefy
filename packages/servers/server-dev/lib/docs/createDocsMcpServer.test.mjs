@@ -113,6 +113,40 @@ test('MCP tools/call lowdefy_get_schema returns a block schema', async () => {
   await client.close();
 });
 
+test('MCP get_schema, get_doc and find_config describe and return hazards', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  for (const name of ['lowdefy_get_schema', 'lowdefy_get_doc', 'lowdefy_find_config']) {
+    expect(tools.find((tool) => tool.name === name).description).toContain(
+      'Results include `hazards`'
+    );
+  }
+
+  const schema = await client.callTool({
+    name: 'lowdefy_get_schema',
+    arguments: { kind: 'blocks', type: 'TestBlock' },
+  });
+  expect(JSON.parse(schema.content[0].text).hazards[0].id).toEqual('test-block-hazard');
+
+  const doc = await client.callTool({
+    name: 'lowdefy_get_doc',
+    arguments: { kind: 'operator', type: '_get' },
+  });
+  expect(doc.content[0].text).toContain('## Hazards');
+  expect(doc.content[0].text).toContain(
+    '**get-fixture-hazard**: _get fixture hazard. (see `operators/_get`)'
+  );
+
+  const found = await client.callTool({
+    name: 'lowdefy_find_config',
+    arguments: { id: 'my_button' },
+  });
+  expect(JSON.parse(found.content[0].text).matches[0].hazards[0].id).toEqual(
+    'visible-false-prunes-state'
+  );
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_build_status returns build status with client errors', async () => {
   const client = await connectClient();
   const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });

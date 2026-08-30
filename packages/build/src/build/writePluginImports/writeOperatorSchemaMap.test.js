@@ -194,3 +194,46 @@ test('writeOperatorSchemaMap groups multiple operators from same package', async
   expect(written._if).toBeDefined();
   expect(written._eq).toBeDefined();
 });
+
+test('writeOperatorSchemaMap writes operatorMetas with hazards from a package metas export', async () => {
+  const components = {
+    imports: {
+      operators: {
+        client: [
+          { package: '@lowdefy/operators-js', typeName: '_js', originalTypeName: '_js' },
+          { package: '@lowdefy/operators-js', typeName: '_if', originalTypeName: '_if' },
+        ],
+        server: [{ package: '@lowdefy/operators-js', typeName: '_js', originalTypeName: '_js' }],
+      },
+    },
+  };
+  const context = {
+    typesMap: { schemas: { operators: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeOperatorSchemaMap({ components, context });
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/operatorMetas.json'
+  );
+  const metas = JSON.parse(metasCall[1]);
+  expect(metas._js.hazards.map((hazard) => hazard.id)).toEqual(['js-two-prototypes']);
+  // Operators without a meta contribute nothing rather than an empty entry.
+  expect(metas._if).toBeUndefined();
+});
+
+test('writeOperatorSchemaMap writes an empty operatorMetas map when no package exports metas', async () => {
+  const components = {
+    imports: {
+      operators: {
+        client: [{ package: 'non-existent-package', typeName: '_fake', originalTypeName: '_fake' }],
+        server: [],
+      },
+    },
+  };
+  const context = {
+    typesMap: { schemas: { operators: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeOperatorSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/operatorMetas.json', '{}');
+});

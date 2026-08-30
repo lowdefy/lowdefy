@@ -198,17 +198,17 @@
       "~l": 15
     },
     "10": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[0:admin]",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[0:admin]",
       "~k_parent": "z",
       "~r": "pages.0"
     },
     "11": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[1:editor]",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[1:editor]",
       "~k_parent": "z",
       "~r": "pages.0"
     },
     "12": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[2:viewer]",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles[2:viewer]",
       "~k_parent": "z",
       "~r": "pages.0"
     },
@@ -582,37 +582,37 @@
       "~l": 13
     },
     "u": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate]",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate]",
       "~k_parent": "t",
       "~r": "pages.0",
       "~l": 14
     },
     "v": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties",
       "~k_parent": "u",
       "~r": "pages.0",
       "~l": 18
     },
     "w": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline",
       "~k_parent": "v",
       "~r": "pages.0",
       "~l": 19
     },
     "x": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0]",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0]",
       "~k_parent": "w",
       "~r": "pages.0",
       "~l": 20
     },
     "y": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0].$addFields",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0].$addFields",
       "~k_parent": "x",
       "~r": "pages.0",
       "~l": 20
     },
     "z": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].properties.pipeline[0].$addFields.availableRoles",
       "~k_parent": "y",
       "~r": "pages.0",
       "~l": 21
@@ -774,11 +774,11 @@
       "~k_parent": "2i"
     },
     "2o": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].payload",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].payload",
       "~k_parent": "u"
     },
     "2p": {
-      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:authmod/authmod_db:MongoDBAggregate].auth",
+      "key": "root.pages[1:authmod/panel:Box].blocks[0:load-btn:Button].requests[0:load-records:MongoDBAggregate].auth",
       "~k_parent": "u"
     },
     "2q": {
@@ -1615,62 +1615,98 @@
   "plugins/auth/strategies.js": "export default {\n  };",
   "plugins/blockMetas.json": {
     "Box": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Result": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Anchor": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "DangerousHtml": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "dangerous-html-unsanitised",
+          "message": "Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.",
+          "see": "display-blocks/dangeroushtml"
+        },
+        {
+          "id": "dompurify-options-first-render",
+          "message": "DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.",
+          "see": "display-blocks/dangeroushtml"
+        }
+      ]
     },
     "Dynamic": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Html": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "html-style-stripped",
+          "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
+          "see": "display-blocks/html"
+        }
+      ]
     },
     "Icon": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Img": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "List": {
       "category": "list",
-      "valueType": "array"
+      "valueType": "array",
+      "hazards": []
     },
     "Span": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Throw": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "ProgressBar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Skeleton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonAvatar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonButton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonInput": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonParagraph": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Spinner": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Message": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     }
   },
   "plugins/blockSchemas.json": {
@@ -6294,6 +6330,7 @@
   "plugins/connections.js": "import { MongoDBCollection as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  MongoDBCollection,\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
+  "plugins/operatorMetas.json": {},
   "plugins/operatorSchemas.json": {
     "_not": {
       "type": "object",

@@ -21,6 +21,20 @@ export default {
   cssKeys: {
     element: 'The DangerousHtml element.',
   },
+  hazards: [
+    {
+      id: 'dangerous-html-unsanitised',
+      message:
+        'Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.',
+      see: 'display-blocks/dangeroushtml',
+    },
+    {
+      id: 'dompurify-options-first-render',
+      message:
+        'DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.',
+      see: 'display-blocks/dangeroushtml',
+    },
+  ],
   properties: {
     type: 'object',
     additionalProperties: false,
