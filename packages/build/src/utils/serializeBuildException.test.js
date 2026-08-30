@@ -30,6 +30,7 @@ test('serializeBuildException extracts message, name and location fields', () =>
     config: 'root.pages[0:home]',
     configKey: 'abc123',
     checkSlug: 'my-check',
+    prodError: false,
   });
 });
 
@@ -43,6 +44,7 @@ test('serializeBuildException defaults unresolved location fields to null', () =
     config: null,
     configKey: null,
     checkSlug: null,
+    prodError: false,
   });
 });
 
@@ -65,4 +67,20 @@ test('serializeBuildException does not include received, stack or cause', () => 
   expect(serialized.received).toBeUndefined();
   expect(serialized.stack).toBeUndefined();
   expect(serialized.cause).toBeUndefined();
+});
+
+test('serializeBuildException carries prodError true for a prod-gated warning', () => {
+  const warning = new ConfigWarning('_state is not available in request properties.', {
+    configKey: 'abc123',
+    prodError: true,
+    checkSlug: 'state-refs',
+  });
+
+  expect(serializeBuildException(warning).prodError).toBe(true);
+});
+
+test('serializeBuildException carries prodError false for a plain warning', () => {
+  const warning = new ConfigWarning('Duplicate shortcut key.', { configKey: 'abc123' });
+
+  expect(serializeBuildException(warning).prodError).toBe(false);
 });

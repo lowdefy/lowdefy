@@ -25,7 +25,8 @@ function validateDynamicBlockRefs({ dynamicBlockRefs, endpointConfigs, context }
     if (!existingEndpointIds.has(endpointId)) {
       context.handleWarning(
         new ConfigWarning(
-          `Dynamic block "${block.blockId}" on page "${sourcePageId}" references non-existent endpoint "${endpointId}".`,
+          `Dynamic block "${block.blockId}" on page "${sourcePageId}" references non-existent endpoint "${endpointId}". ` +
+            `Check the endpointId for typos, or add an Api endpoint with id "${endpointId}".`,
           { configKey: block['~k'], prodError: true, checkSlug: 'dynamic-endpoint-refs' }
         )
       );
