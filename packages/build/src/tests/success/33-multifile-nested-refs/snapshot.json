@@ -489,73 +489,73 @@
       "~l": 9
     },
     "k": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card]",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card]",
       "~k_parent": "j",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 1
     },
     "l": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].layout",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].layout",
       "~k_parent": "k",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 3
     },
     "m": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].properties",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].properties",
       "~k_parent": "k",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 5
     },
     "n": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].blocks",
       "~k_parent": "k",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 7
     },
     "o": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic]",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].blocks[0:users_value:Statistic]",
       "~k_parent": "n",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 8
     },
     "p": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic].properties",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].blocks[0:users_value:Statistic].properties",
       "~k_parent": "o",
       "~r": "pages.0.blocks.1.blocks.0",
       "~l": 10
     },
     "q": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card]",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card]",
       "~k_parent": "j",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 1
     },
     "r": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].layout",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].layout",
       "~k_parent": "q",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 3
     },
     "s": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].properties",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].properties",
       "~k_parent": "q",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 5
     },
     "t": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].blocks",
       "~k_parent": "q",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 7
     },
     "u": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic]",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].blocks[0:orders_value:Statistic]",
       "~k_parent": "t",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 8
     },
     "v": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].blocks[0:{{ id }}_value:Statistic].properties",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].blocks[0:orders_value:Statistic].properties",
       "~k_parent": "u",
       "~r": "pages.0.blocks.1.blocks.1",
       "~l": 10
@@ -609,25 +609,25 @@
       "~l": 11
     },
     "1e": {
-      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[0:{{ id }}_field:TextInput]",
+      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[0:username_field:TextInput]",
       "~k_parent": "1d",
       "~r": "pages.1.blocks.1.blocks.0",
       "~l": 1
     },
     "1f": {
-      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[0:{{ id }}_field:TextInput].properties",
+      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[0:username_field:TextInput].properties",
       "~k_parent": "1e",
       "~r": "pages.1.blocks.1.blocks.0",
       "~l": 3
     },
     "1g": {
-      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[1:{{ id }}_field:TextInput]",
+      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[1:email_field:TextInput]",
       "~k_parent": "1d",
       "~r": "pages.1.blocks.1.blocks.1",
       "~l": 1
     },
     "1h": {
-      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[1:{{ id }}_field:TextInput].properties",
+      "key": "root.pages[1:settings:Box].blocks[1:settingsForm:Card].blocks[1:email_field:TextInput].properties",
       "~k_parent": "1g",
       "~r": "pages.1.blocks.1.blocks.1",
       "~l": 3
@@ -747,19 +747,19 @@
       "~k_parent": "2h"
     },
     "2j": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].slots",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].slots",
       "~k_parent": "k"
     },
     "2k": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:{{ id }}_metric:Card].slots.content",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[0:users_metric:Card].slots.content",
       "~k_parent": "2j"
     },
     "2l": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].slots",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].slots",
       "~k_parent": "q"
     },
     "2m": {
-      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:{{ id }}_metric:Card].slots.content",
+      "key": "root.pages[0:dashboard:Box].blocks[1:metrics:Box].blocks[1:orders_metric:Card].slots.content",
       "~k_parent": "2l"
     },
     "2n": {
@@ -1541,29 +1541,29 @@
                   "blocks": {
                     "~arr": [
                       {
-                        "id": "block:dashboard:{{ id }}_metric:0",
+                        "id": "block:dashboard:users_metric:0",
                         "type": "Card",
                         "layout": {
                           "span": 12,
                           "~k": "l"
                         },
                         "properties": {
-                          "title": "{{ title }}",
+                          "title": "Total Users",
                           "~k": "m"
                         },
-                        "blockId": "{{ id }}_metric",
+                        "blockId": "users_metric",
                         "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
                                 {
-                                  "id": "block:dashboard:{{ id }}_value:0",
+                                  "id": "block:dashboard:users_value:0",
                                   "type": "Statistic",
                                   "properties": {
-                                    "value": "{{ value }}",
+                                    "value": "1,234",
                                     "~k": "p"
                                   },
-                                  "blockId": "{{ id }}_value",
+                                  "blockId": "users_value",
                                   "~k": "o"
                                 }
                               ],
@@ -1576,29 +1576,29 @@
                         "~k": "k"
                       },
                       {
-                        "id": "block:dashboard:{{ id }}_metric:1",
+                        "id": "block:dashboard:orders_metric:0",
                         "type": "Card",
                         "layout": {
                           "span": 12,
                           "~k": "r"
                         },
                         "properties": {
-                          "title": "{{ title }}",
+                          "title": "Total Orders",
                           "~k": "s"
                         },
-                        "blockId": "{{ id }}_metric",
+                        "blockId": "orders_metric",
                         "slots": {
                           "content": {
                             "blocks": {
                               "~arr": [
                                 {
-                                  "id": "block:dashboard:{{ id }}_value:1",
+                                  "id": "block:dashboard:orders_value:0",
                                   "type": "Statistic",
                                   "properties": {
-                                    "value": "{{ value }}",
+                                    "value": "5,678",
                                     "~k": "v"
                                   },
-                                  "blockId": "{{ id }}_value",
+                                  "blockId": "orders_value",
                                   "~k": "u"
                                 }
                               ],
@@ -1746,23 +1746,23 @@
                   "blocks": {
                     "~arr": [
                       {
-                        "id": "block:settings:{{ id }}_field:0",
+                        "id": "block:settings:username_field:0",
                         "type": "TextInput",
                         "properties": {
-                          "title": "{{ label }}",
+                          "title": "Username",
                           "~k": "1f"
                         },
-                        "blockId": "{{ id }}_field",
+                        "blockId": "username_field",
                         "~k": "1e"
                       },
                       {
-                        "id": "block:settings:{{ id }}_field:1",
+                        "id": "block:settings:email_field:0",
                         "type": "TextInput",
                         "properties": {
-                          "title": "{{ label }}",
+                          "title": "Email",
                           "~k": "1h"
                         },
-                        "blockId": "{{ id }}_field",
+                        "blockId": "email_field",
                         "~k": "1g"
                       }
                     ],
@@ -8687,26 +8687,6 @@
       "lineNumber": 13,
       "path": "pages/settings.yaml"
     },
-    "pages.0.blocks.0": {
-      "parent": "pages.0",
-      "lineNumber": 6,
-      "path": "blocks/page-header.yaml"
-    },
-    "pages.0.blocks.1.blocks.0": {
-      "parent": "pages.0",
-      "lineNumber": 10,
-      "path": "components/metric-card.yaml"
-    },
-    "pages.0.blocks.1.blocks.1": {
-      "parent": "pages.0",
-      "lineNumber": 15,
-      "path": "components/metric-card.yaml"
-    },
-    "pages.0.blocks.2": {
-      "parent": "pages.0",
-      "lineNumber": 20,
-      "path": "blocks/page-footer.yaml"
-    },
     "pages.1.blocks.0": {
       "parent": "pages.1",
       "lineNumber": 6,
@@ -8715,15 +8695,35 @@
     "pages.1.blocks.1.blocks.0": {
       "parent": "pages.1",
       "lineNumber": 12,
-      "path": "components/form-field.yaml"
+      "path": "components/form-field.yaml.njk"
     },
     "pages.1.blocks.1.blocks.1": {
       "parent": "pages.1",
       "lineNumber": 17,
-      "path": "components/form-field.yaml"
+      "path": "components/form-field.yaml.njk"
     },
     "pages.1.blocks.2": {
       "parent": "pages.1",
+      "lineNumber": 22,
+      "path": "blocks/page-footer.yaml"
+    },
+    "pages.0.blocks.0": {
+      "parent": "pages.0",
+      "lineNumber": 6,
+      "path": "blocks/page-header.yaml"
+    },
+    "pages.0.blocks.1.blocks.0": {
+      "parent": "pages.0",
+      "lineNumber": 10,
+      "path": "components/metric-card.yaml.njk"
+    },
+    "pages.0.blocks.1.blocks.1": {
+      "parent": "pages.0",
+      "lineNumber": 16,
+      "path": "components/metric-card.yaml.njk"
+    },
+    "pages.0.blocks.2": {
+      "parent": "pages.0",
       "lineNumber": 22,
       "path": "blocks/page-footer.yaml"
     }

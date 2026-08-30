@@ -348,100 +348,100 @@
       "~l": 6
     },
     "c": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box]",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box]",
       "~k_parent": "9",
       "~r": "pages.0.blocks.1",
       "~l": 1
     },
     "d": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].properties",
       "~k_parent": "c",
+      "~r": "pages.0.blocks.1",
+      "~l": 3
+    },
+    "e": {
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].properties.style",
+      "~k_parent": "d",
       "~r": "pages.0.blocks.1",
       "~l": 4
     },
-    "e": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].properties.style",
-      "~k_parent": "d",
-      "~r": "pages.0.blocks.1",
-      "~l": 5
-    },
     "f": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].blocks",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].blocks",
       "~k_parent": "c",
+      "~r": "pages.0.blocks.1",
+      "~l": 6
+    },
+    "g": {
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].blocks[0:total_users_label:Paragraph]",
+      "~k_parent": "f",
       "~r": "pages.0.blocks.1",
       "~l": 7
     },
-    "g": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].blocks[0:label:Paragraph]",
-      "~k_parent": "f",
-      "~r": "pages.0.blocks.1",
-      "~l": 8
-    },
     "h": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].blocks[0:label:Paragraph].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].blocks[0:total_users_label:Paragraph].properties",
       "~k_parent": "g",
       "~r": "pages.0.blocks.1",
-      "~l": 10
+      "~l": 9
     },
     "i": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].blocks[1:value:Title]",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].blocks[1:total_users_value:Title]",
       "~k_parent": "f",
       "~r": "pages.0.blocks.1",
-      "~l": 13
+      "~l": 12
     },
     "j": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].blocks[1:value:Title].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].blocks[1:total_users_value:Title].properties",
       "~k_parent": "i",
       "~r": "pages.0.blocks.1",
-      "~l": 15
+      "~l": 14
     },
     "k": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box]",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box]",
       "~k_parent": "9",
       "~r": "pages.0.blocks.2",
       "~l": 1
     },
     "l": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].properties",
       "~k_parent": "k",
+      "~r": "pages.0.blocks.2",
+      "~l": 3
+    },
+    "m": {
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].properties.style",
+      "~k_parent": "l",
       "~r": "pages.0.blocks.2",
       "~l": 4
     },
-    "m": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].properties.style",
-      "~k_parent": "l",
-      "~r": "pages.0.blocks.2",
-      "~l": 5
-    },
     "n": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].blocks",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].blocks",
       "~k_parent": "k",
+      "~r": "pages.0.blocks.2",
+      "~l": 6
+    },
+    "o": {
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].blocks[0:active_today_label:Paragraph]",
+      "~k_parent": "n",
       "~r": "pages.0.blocks.2",
       "~l": 7
     },
-    "o": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].blocks[0:label:Paragraph]",
-      "~k_parent": "n",
-      "~r": "pages.0.blocks.2",
-      "~l": 8
-    },
     "p": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].blocks[0:label:Paragraph].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].blocks[0:active_today_label:Paragraph].properties",
       "~k_parent": "o",
       "~r": "pages.0.blocks.2",
-      "~l": 10
+      "~l": 9
     },
     "q": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].blocks[1:value:Title]",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].blocks[1:active_today_value:Title]",
       "~k_parent": "n",
       "~r": "pages.0.blocks.2",
-      "~l": 13
+      "~l": 12
     },
     "r": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].blocks[1:value:Title].properties",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].blocks[1:active_today_value:Title].properties",
       "~k_parent": "q",
       "~r": "pages.0.blocks.2",
-      "~l": 15
+      "~l": 14
     },
     "t": {
       "key": "root.pages",
@@ -520,27 +520,27 @@
       "~k_parent": "1l"
     },
     "1n": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].style",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].style",
       "~k_parent": "c"
     },
     "1o": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].slots",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].slots",
       "~k_parent": "c"
     },
     "1p": {
-      "key": "root.pages[1:dash/overview:Box].blocks[1:Total Users:Box].slots.content",
+      "key": "root.pages[1:dash/overview:Box].blocks[1:total_users:Box].slots.content",
       "~k_parent": "1o"
     },
     "1q": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].style",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].style",
       "~k_parent": "k"
     },
     "1r": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].slots",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].slots",
       "~k_parent": "k"
     },
     "1s": {
-      "key": "root.pages[1:dash/overview:Box].blocks[2:Active Today:Box].slots.content",
+      "key": "root.pages[1:dash/overview:Box].blocks[2:active_today:Box].slots.content",
       "~k_parent": "1r"
     },
     "1t": {
@@ -1184,12 +1184,12 @@
               "~k": "a"
             },
             {
-              "id": "block:dash/overview:Total Users:0",
+              "id": "block:dash/overview:total_users:0",
               "type": "Box",
               "properties": {
                 "~k": "d"
               },
-              "blockId": "Total Users",
+              "blockId": "total_users",
               "style": {
                 "element": {
                   "padding": 16,
@@ -1202,23 +1202,23 @@
                   "blocks": {
                     "~arr": [
                       {
-                        "id": "block:dash/overview:label:0",
+                        "id": "block:dash/overview:total_users_label:0",
                         "type": "Paragraph",
                         "properties": {
                           "content": "Total Users",
                           "~k": "h"
                         },
-                        "blockId": "label",
+                        "blockId": "total_users_label",
                         "~k": "g"
                       },
                       {
-                        "id": "block:dash/overview:value:0",
+                        "id": "block:dash/overview:total_users_value:0",
                         "type": "Title",
                         "properties": {
                           "content": "1,234",
                           "~k": "j"
                         },
-                        "blockId": "value",
+                        "blockId": "total_users_value",
                         "~k": "i"
                       }
                     ],
@@ -1231,12 +1231,12 @@
               "~k": "c"
             },
             {
-              "id": "block:dash/overview:Active Today:0",
+              "id": "block:dash/overview:active_today:0",
               "type": "Box",
               "properties": {
                 "~k": "l"
               },
-              "blockId": "Active Today",
+              "blockId": "active_today",
               "style": {
                 "element": {
                   "padding": 16,
@@ -1249,23 +1249,23 @@
                   "blocks": {
                     "~arr": [
                       {
-                        "id": "block:dash/overview:label:1",
+                        "id": "block:dash/overview:active_today_label:0",
                         "type": "Paragraph",
                         "properties": {
                           "content": "Active Today",
                           "~k": "p"
                         },
-                        "blockId": "label",
+                        "blockId": "active_today_label",
                         "~k": "o"
                       },
                       {
-                        "id": "block:dash/overview:value:1",
+                        "id": "block:dash/overview:active_today_value:0",
                         "type": "Title",
                         "properties": {
                           "content": "56",
                           "~k": "r"
                         },
-                        "blockId": "value",
+                        "blockId": "active_today_value",
                         "~k": "q"
                       }
                     ],
@@ -6121,12 +6121,12 @@
     "pages.0.blocks.1": {
       "parent": "pages.0",
       "lineNumber": 9,
-      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml"
+      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml.njk"
     },
     "pages.0.blocks.2": {
       "parent": "pages.0",
-      "lineNumber": 14,
-      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml"
+      "lineNumber": 15,
+      "path": "<CONFIG_DIR>/modules/dashboard/shared/stat-card.yaml.njk"
     }
   },
   "tailwind-candidates.css": "/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n",

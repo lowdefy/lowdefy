@@ -1,0 +1,26 @@
+# E7: Duplicate Block ID
+# ======================
+# Tests that two blocks on the same page sharing an id fail the build.
+# A block id is the page state key, so two blocks with one id write and read
+# a single state value — a copy-pasted `id: email` silently binds two inputs
+# to one field. The build must reject it instead.
+#
+# Expected error:
+#   [Config Error] Duplicate blockId "email" on page "home". Block ids are the
+#   page state keys, so two blocks with one id share a single state value.
+#   Rename one of them.
+#
+# The error points to the line where the second block is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: email
+        type: TextInput
+      - id: name
+        type: TextInput
+      - id: email
+        type: TextInput

@@ -37,6 +37,8 @@ _ref:
 
                 Every [`input` category block](/blocks) inside the page will have a value in the `state` object, with their `id` as the key in the `state` object. If the block is not visible the input value is removed from the state object.
 
+                Because a block's `id` is its key in `state`, block ids must be unique within a page — two blocks sharing an id would share a single state value. Duplicate block ids on a page are a build error.
+
                 The [`_state`](/_state) operator can be used to read from `state` and the [`SetState`](/SetState) action can be used to modify or add new values in `state` object in the same page from which `SetState` is called.
 
                 > See [`operators`](/operators) and [`events-and-actions`](/events-and-actions) for more details.

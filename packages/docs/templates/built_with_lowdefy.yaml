@@ -26,7 +26,7 @@ blocks:
         properties:
           src: /images/logo_white_40.png
           height: 16
-      - id: tag
+      - id: tag_text
         type: Html
         layout:
           flex: 1 0 auto
