@@ -30,6 +30,7 @@ It provides these tools:
 | `lowdefy_find_config`            | Which yaml file (and line) defines a given page, block, or request id                                                                                                          |
 | `lowdefy_scaffold_page`          | Create a new page yaml file with a canonical minimal structure                                                                                                                 |
 | `lowdefy_app_map`                | The whole-app graph: every page, menu, connection, endpoint, and agent in one call                                                                                             |
+| `lowdefy_data_model`             | The app's data layer in one call: every collection with fields, relations, indexes, tenant verdict, connections, and which requests/steps/websockets read or write it          |
 | `lowdefy_inspect_state`          | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless                                                      |
 | `lowdefy_eval_operator`          | Evaluate any operator expression against live page state — a REPL for config                                                                                                   |
 | `lowdefy_run_request`            | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in)                                                                     |
@@ -317,6 +318,48 @@ For an endpoint, `explain` is an array with one entry per request step, each car
 
 When a request returns an empty or unexpected result on a multi-tenant app, re-run it with `explain: true` before changing config — the wall's injected clauses are the usual cause, and the `rewritten` entries name the exact stage.
 
+## Data model — `lowdefy_data_model`
+
+Answering "what is in the `answers` collection, who reads it, who writes it, and which field points at `evidence`" used to mean opening every page, endpoint and connection file. `lowdefy_data_model` (or `GET /lowdefy-docs/data-model`) assembles the answer from the build artifacts in one call — offline, no database introspection, no row counts.
+
+The collection set starts from the app's [`collections:` declaration](/collections) and adds every collection a connection names with a literal `properties.collection`, plus any collection a literal aggregation pipeline joins or writes — so the tool is useful in an app that declares nothing. Each collection reports:
+
+- `declared` — whether `collections:` declares it. `fields`, `relations` and `indexes` come straight from the declaration and are empty when undeclared.
+- `tenant` — the declared value when there is one; otherwise the connections' tenant verdict when they agree; otherwise `{ conflict: [...] }` naming the disagreeing connections. An undeclared connection under `auth.organizations.policy: tenant` reads as scoped on the default field, as the build resolved it.
+- `connections` — `{ connectionId, type, read, write, tenant }` for every connection addressing it (`read` defaults `true`, `write` defaults `false`, matching `MongoDBCollection`).
+- `readers` and `writers` — every page request, routine step (however deeply nested in `:if` / `:try` / `:for`) and websocket that touches it, each as `{ kind, pageId?, requestId?, endpointId?, stepId?, websocketId?, type, connectionId, via, source }`, where `source` is the `file:line` that defines it.
+
+```json
+{
+  "collections": {
+    "answers": {
+      "declared": true,
+      "tenant": { "field": "organization_id" },
+      "fields": { "test_id": { "type": "string" } },
+      "relations": { "test_id": { "collection": "tests", "field": "_id" } },
+      "indexes": [],
+      "connections": [
+        { "connectionId": "answers_rw", "type": "MongoDBCollection", "read": true, "write": true, "tenant": { "field": "organization_id" } }
+      ],
+      "readers": [
+        { "kind": "request", "pageId": "answers", "requestId": "get_answers", "type": "MongoDBFind", "connectionId": "answers_rw", "via": "request", "source": "pages/answers.yaml:42" }
+      ],
+      "writers": [
+        { "kind": "step", "endpointId": "submit_answer", "stepId": "insert", "type": "MongoDBInsertOne", "connectionId": "answers_rw", "via": "step", "source": "api/submit.yaml:12" }
+      ]
+    }
+  },
+  "unresolved": [],
+  "note": "No collections: declared in lowdefy.yaml — fields and relations are empty. See /lowdefy-docs/content/concepts/collections."
+}
+```
+
+**How readers and writers are classified.** The request type's own `meta` (`checkRead` / `checkWrite`, the same flags `lowdefy_run_request` uses to gate writes) decides: `checkWrite: true` is a writer, otherwise `checkRead: true` is a reader — no list of type names that could go stale. On top of that, literal aggregation pipelines are scanned: `$lookup.from`, `$graphLookup.from` and `$unionWith` add read edges on the named collections with `via: "$lookup"`; `$merge.into` and `$out` add write edges with `via: "$merge"`. An aggregation is `checkRead: true, checkWrite: false`, so without the scan a `$merge` writer would be reported as a reader. A websocket is always a reader (`via: "websocket"`).
+
+**Nothing is dropped silently.** Anything that could not be joined lands in `unresolved` with a reason — a connection whose `collection` is an operator, a request with no `connectionId`, a request on a connection that does not exist, a pipeline stage whose target is not a literal — because a missing edge reads as "nothing writes this collection", which is worse than saying so. `unbuiltPages` names pages whose requests could not be read yet (pages are built on first visit in dev), and `note` appears only when the app declares no `collections:` at all.
+
+Like every other dev response, the result carries `stale: true` while the last build failed.
+
 ## Setting up a project — one command
 
 ```bash
@@ -447,6 +490,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `POST /lowdefy-docs/journey`                                      | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64             |
 | `GET /lowdefy-docs/find/{id}?pageId=`                             | Locate where a page/block/request id is defined                                                                     |
 | `GET /lowdefy-docs/app-map`                                       | Whole-app graph: pages, menus, connections, endpoints, agents                                                       |
+| `GET /lowdefy-docs/data-model`                                    | Data layer: collections, fields, relations, tenant verdicts, connections, readers and writers, `unresolved`         |
 | `GET /lowdefy-docs/inspect-state/{pageId}`                        | Live state/requests/eventLog of a running page (tab or headless)                                                    |
 | `POST /lowdefy-docs/eval-operator`                                | Evaluate an operator expression against live page state                                                             |
 | `POST /lowdefy-docs/run-request`                                  | Execute a request with a test payload (read-only unless opted in)                                                   |
@@ -470,6 +514,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
 | `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
 | `GET /lowdefy-docs/app-map`         | Whole-app graph: pages, menus, connections, endpoints, agents   |
+| `GET /lowdefy-docs/data-model`                                    | Data layer: collections, fields, relations, tenant verdicts, connections, readers and writers, `unresolved`         |
 | `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
 | `POST /lowdefy-docs/eval-operator`  | Evaluate an operator expression against live page state         |
 | `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |

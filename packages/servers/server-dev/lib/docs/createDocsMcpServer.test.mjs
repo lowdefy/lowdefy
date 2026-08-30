@@ -62,6 +62,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_run_endpoint',
   'lowdefy_restart',
   'lowdefy_app_map',
+  'lowdefy_data_model',
   'lowdefy_checkpoint',
   'lowdefy_revert_checkpoint',
   'lowdefy_snapshot_state',

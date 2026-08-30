@@ -24,6 +24,7 @@ import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
+import getDataModel from './getDataModel.js';
 import getBuildStatus from './getBuildStatus.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
@@ -58,7 +59,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
@@ -262,6 +263,16 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {},
     },
     () => textResult(getAppMap())
+  );
+
+  server.registerTool(
+    'lowdefy_data_model',
+    {
+      description:
+        "The app's data layer in one call: every collection (declared under collections: in lowdefy.yaml, or discovered from a connection or a literal aggregation pipeline) with its fields, relations, indexes and tenant verdict, the connections addressing it (read/write/tenant), and every page request, routine step and websocket that reads or writes it with the yaml file:line that defines it. Readers and writers are classified by the request type's own checkRead/checkWrite meta plus $lookup/$unionWith/$graphLookup (read) and $merge/$out (write) in literal pipelines. Anything that could not be joined is listed under `unresolved` with a reason — never dropped. Call this before writing a query, a request or a migration.",
+      inputSchema: {},
+    },
+    () => textResult(getDataModel())
   );
 
   server.registerTool(
