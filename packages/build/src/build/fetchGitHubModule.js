@@ -14,34 +14,16 @@
   limitations under the License.
 */
 
-import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { createGunzip } from 'node:zlib';
-import { promisify } from 'node:util';
 
 import { Unpack } from 'tar';
 import { ConfigError } from '@lowdefy/errors';
 
-const execFileAsync = promisify(execFile);
-
-function isImmutableRef(ref) {
-  // Full or abbreviated commit SHAs
-  if (/^[0-9a-f]{7,40}$/.test(ref)) return true;
-  // Semver-like tags: v1.0.0, v1, 1.2.3, v1.0.0-beta.1, etc.
-  if (/^v?\d+(\.\d+)*(-[\w.]+)?$/.test(ref)) return true;
-  return false;
-}
-
-async function getGhToken() {
-  try {
-    const { stdout } = await execFileAsync('gh', ['auth', 'token']);
-    return stdout.trim() || null;
-  } catch {
-    return null;
-  }
-}
+import getGitHubHeaders, { getGhToken } from './getGitHubHeaders.js';
+import isImmutableRef from './isImmutableRef.js';
 
 async function extractTarball(body, destDir) {
   // Ensure destination exists and is clean
@@ -70,13 +52,7 @@ async function fetchGitHubModule(source, context) {
 
   // Fetch tarball from GitHub API
   const url = `https://api.github.com/repos/${source.owner}/${source.repo}/tarball/${source.ref}`;
-  const headers = { Accept: 'application/vnd.github+json' };
-
-  // Auth: GITHUB_TOKEN env var, then gh CLI token
-  const token = process.env.GITHUB_TOKEN || (await getGhToken());
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+  const headers = await getGitHubHeaders();
 
   const response = await fetch(url, { headers, redirect: 'follow' });
   if (!response.ok) {

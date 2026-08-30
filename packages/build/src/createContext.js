@@ -33,6 +33,7 @@ function createContext({
   refResolver,
   stage = 'prod',
   validateOnly = false,
+  writeModuleLock,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
@@ -57,6 +58,9 @@ function createContext({
     seenSourceLines: new Set(),
     stage,
     validateOnly,
+    // Production builds never write into the config directory. "lowdefy modules
+    // update" opts in so it can rewrite the entries it invalidated.
+    writeModuleLock: writeModuleLock ?? stage !== 'prod',
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),

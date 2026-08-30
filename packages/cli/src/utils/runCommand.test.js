@@ -68,6 +68,7 @@ test('runCommand calls startUp', async () => {
         "context": Object {
           "cliVersion": "cliVersion",
         },
+        "params": Array [],
       },
     ]
   `);
@@ -138,4 +139,33 @@ test('Catch error asynchronous function', async () => {
     ]
   `);
   expect(mockExit).toHaveBeenCalledWith(1);
+});
+
+test('runCommand passes positional arguments to the handler as params', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const handler = jest.fn(({ params }) => params);
+  const wrapped = runCommand({ cliVersion, handler });
+  const res = await wrapped('team-users', options, command);
+  expect(res).toEqual(['team-users']);
+});
+
+test('runCommand passes an empty params array when there are no positional arguments', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const handler = jest.fn(({ params }) => params);
+  const wrapped = runCommand({ cliVersion, handler });
+  const res = await wrapped(options, command);
+  expect(res).toEqual([]);
+});
+
+test('runCommand still calls startUp with the options and command when params are passed', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const { default: startUp } = await import('./startUp.js');
+  const handler = jest.fn(() => 'done');
+  const wrapped = runCommand({ cliVersion, handler });
+  await wrapped('team-users', options, command);
+  expect(startUp).toHaveBeenCalledWith({
+    context: { cliVersion },
+    options,
+    command,
+  });
 });

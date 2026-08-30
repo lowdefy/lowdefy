@@ -18,11 +18,16 @@ import errorHandler from './errorHandler.js';
 import startUp from './startUp.js';
 
 const runCommand = ({ cliVersion, handler }) => {
-  async function run(options, command) {
+  // Commander calls the action handler with the positional arguments first,
+  // then the options object and the command.
+  async function run(...args) {
+    const command = args[args.length - 1];
+    const options = args[args.length - 2];
+    const params = args.slice(0, -2);
     const context = { cliVersion };
     try {
       await startUp({ context, options, command });
-      const res = await handler({ context });
+      const res = await handler({ context, params });
       return res;
     } catch (error) {
       await errorHandler({ context, error });
