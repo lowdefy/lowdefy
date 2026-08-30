@@ -68,7 +68,7 @@ _ref:
 
             ## check
 
-            The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules such as the `_js` lint, and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.
+            The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules — the `_js` lint and the [tenant wall audits](/organizations#audits) (`tenant: none` reads with no tenant clause, tenant values taken from the caller, unstamped writes, and the inventory of every unscoped request and step) — and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.
 
             The check always runs with the production rules. Some build warnings are only warnings in `lowdefy dev` but fail `lowdefy build` — those are reported by `check` as errors, exactly as a production build would. Warnings never fail a check.
 

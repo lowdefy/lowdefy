@@ -17,10 +17,23 @@ import { jest } from '@jest/globals';
 
 import runChecks, { rules } from './index.js';
 import jsLint from './jsLint.js';
+import tenantRules from './tenant/index.js';
 
 test('runChecks registers the js-lint rule first so normal builds lint _js bodies', () => {
   expect(rules[0]).toBe(jsLint);
   expect(rules[0].checkOnly).toBe(false);
+});
+
+test('runChecks registers the five tenant rules after js-lint, F1 for builds and the rest check-only', () => {
+  expect(rules.slice(1, 6)).toEqual(tenantRules);
+  expect(tenantRules.map((rule) => rule.slug)).toEqual([
+    'tenant',
+    'tenant',
+    'tenant',
+    'tenant',
+    'tenant',
+  ]);
+  expect(tenantRules.map((rule) => rule.checkOnly)).toEqual([false, true, true, true, true]);
 });
 
 test('runChecks runs a checkOnly rule under check and skips it during a build', () => {
