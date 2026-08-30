@@ -18,6 +18,7 @@ import { chromium } from 'playwright-core';
 import { type } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
+import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 
@@ -106,22 +107,16 @@ async function openPage({
   }
   // The engine builds the page context (and runs onInit + initial requests)
   // after the bundle loads — 'load'/'networkidle' fire before that. Every
-  // caller (screenshot, inspect, eval, checkpoint load) needs the app
-  // actually mounted, so wait for the context and for initial requests to
-  // settle. Tolerant: on timeout proceed and let the caller surface what it
-  // finds — a screenshot of a hung page is still useful signal.
-  await page
-    .waitForFunction(
-      (id) => {
-        const pageContext = window.lowdefy?.contexts?.[`page:${id}`];
-        if (!pageContext) return false;
-        return !Object.values(pageContext.requests ?? {}).some((calls) => calls?.[0]?.loading);
-      },
-      pageId,
-      { timeout }
-    )
-    .catch(() => {});
-  return { context, page, url };
+  // caller (screenshot, inspect, eval, checkpoint load) needs the app's async
+  // lifecycle to have settled, not just the bundle to have loaded, so wait on
+  // isPageReady. Tolerant: on timeout proceed with ready: false and let the
+  // caller surface what it finds — a snapshot of a hung page is still useful
+  // signal, and a far better answer than a tool failure.
+  let ready = true;
+  await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {
+    ready = false;
+  });
+  return { context, page, ready, url };
 }
 
 export { getBrowser, openPage, buildPageUrl };
