@@ -27,6 +27,8 @@ auth:
 pages:
   - id: login
     type: Box
+    ~ignoreBuildChecks:
+      - block-properties
     properties:
       providers:
         _build.authConfig: providers

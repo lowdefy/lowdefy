@@ -108,7 +108,7 @@ pages:
           - id: innerTabs
             type: Tabs
             properties:
-              type: card
+              tabType: card
             areas:
               tab1:
                 blocks:

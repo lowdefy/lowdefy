@@ -1437,6 +1437,742 @@
         }
       }
     },
+    "Badge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "string",
+              "description": "Customize Badge dot color.",
+              "docs": {
+                "displayType": "color"
+              }
+            },
+            "count": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "description": "Text to show in badge.",
+              "docs": {
+                "displayType": "string"
+              }
+            },
+            "dot": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to display a red dot instead of count."
+            },
+            "size": {
+              "type": "string",
+              "default": "default",
+              "enum": [
+                "default",
+                "small"
+              ],
+              "description": "Sets the size of badge if count is set."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in badge.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "offset": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Set offset of the badge dot, array of numbers for x and y offset ([x,y])."
+            },
+            "overflowCount": {
+              "type": "number",
+              "default": 99,
+              "description": "Max count to show"
+            },
+            "showZero": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to show badge when count is zero."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "processing",
+                "default",
+                "error",
+                "warning"
+              ],
+              "default": null,
+              "description": "Set Badge as a status dot."
+            },
+            "text": {
+              "type": "string",
+              "description": "If status is set, text sets the display text of the status dot."
+            },
+            "title": {
+              "type": "string",
+              "description": "Text to show when hovering over the badge."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/badge#design-token"
+              },
+              "properties": {
+                "indicatorHeight": {
+                  "type": "number",
+                  "default": 20,
+                  "description": "Height of the badge indicator."
+                },
+                "indicatorHeightSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Height of the badge indicator in small size."
+                },
+                "dotSize": {
+                  "type": "number",
+                  "default": 6,
+                  "description": "Size of the dot badge."
+                },
+                "textFontSize": {
+                  "type": "number",
+                  "default": 12,
+                  "description": "Font size for badge count text."
+                },
+                "textFontSizeSM": {
+                  "type": "number",
+                  "default": 12,
+                  "description": "Font size for badge count text in small size."
+                },
+                "textFontWeight": {
+                  "type": "string",
+                  "default": "normal",
+                  "description": "Font weight for badge count text."
+                },
+                "textLineHeight": {
+                  "type": "number",
+                  "description": "Line height for badge count text."
+                },
+                "statusSize": {
+                  "type": "number",
+                  "default": 6,
+                  "description": "Size of the status dot."
+                },
+                "indicatorZIndex": {
+                  "type": [
+                    "number",
+                    "string"
+                  ],
+                  "default": "auto",
+                  "description": "Z-index of the badge indicator."
+                },
+                "colorBorderBg": {
+                  "type": "string",
+                  "description": "Background color of the badge border (gap between badge and wrapped element)."
+                },
+                "colorError": {
+                  "type": "string",
+                  "description": "Color of the badge indicator (default red)."
+                },
+                "colorErrorHover": {
+                  "type": "string",
+                  "description": "Hover color of the badge indicator."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Badge element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Badge."
+                },
+                ".indicator": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Badge indicator."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Badge element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Badge."
+                },
+                ".indicator": {
+                  "type": "object",
+                  "description": "The Badge indicator."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "404",
+                "403",
+                "500"
+              ],
+              "default": "info",
+              "description": "Status of the result. Determines image and color."
+            },
+            "subTitle": {
+              "type": "string",
+              "description": "Result subtitle or secondary text - supports html."
+            },
+            "title": {
+              "type": "string",
+              "description": "Result title or primary text - supports html."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/result#design-token"
+              },
+              "properties": {
+                "titleFontSize": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Font size of the result title."
+                },
+                "subtitleFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the result subtitle."
+                },
+                "iconFontSize": {
+                  "type": "number",
+                  "default": 72,
+                  "description": "Font size of the result status icon."
+                },
+                "extraMargin": {
+                  "type": "string",
+                  "default": "24px 0 0 0",
+                  "description": "Margin applied to the extra content area."
+                },
+                "colorSuccess": {
+                  "type": "string",
+                  "description": "Color used for the success status icon."
+                },
+                "colorError": {
+                  "type": "string",
+                  "description": "Color used for the error status icon."
+                },
+                "colorInfo": {
+                  "type": "string",
+                  "description": "Color used for the info status icon."
+                },
+                "colorWarning": {
+                  "type": "string",
+                  "description": "Color used for the warning status icon."
+                },
+                "colorTextHeading": {
+                  "type": "string",
+                  "description": "Color of the result title text."
+                },
+                "colorTextDescription": {
+                  "type": "string",
+                  "description": "Color of the result subtitle text."
+                },
+                "paddingLG": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Large padding value applied to the result container."
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "default": 1.5714285714285714,
+                  "description": "Line height used for result text content."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Result."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Result element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Result."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
     "Anchor": {
       "type": "object",
       "additionalProperties": false,
@@ -3602,1038 +4338,6 @@
         }
       }
     },
-    "Badge": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "color": {
-              "type": "string",
-              "description": "Customize Badge dot color.",
-              "docs": {
-                "displayType": "color"
-              }
-            },
-            "count": {
-              "type": [
-                "number",
-                "string"
-              ],
-              "description": "Text to show in badge.",
-              "docs": {
-                "displayType": "string"
-              }
-            },
-            "dot": {
-              "type": "boolean",
-              "default": false,
-              "description": "Whether to display a red dot instead of count."
-            },
-            "size": {
-              "type": "string",
-              "default": "default",
-              "enum": [
-                "default",
-                "small"
-              ],
-              "description": "Sets the size of badge if count is set."
-            },
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in badge.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "offset": {
-              "type": "array",
-              "items": {
-                "type": "number"
-              },
-              "description": "Set offset of the badge dot, array of numbers for x and y offset ([x,y])."
-            },
-            "overflowCount": {
-              "type": "number",
-              "default": 99,
-              "description": "Max count to show"
-            },
-            "showZero": {
-              "type": "boolean",
-              "default": false,
-              "description": "Whether to show badge when count is zero."
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "success",
-                "processing",
-                "default",
-                "error",
-                "warning"
-              ],
-              "default": null,
-              "description": "Set Badge as a status dot."
-            },
-            "text": {
-              "type": "string",
-              "description": "If status is set, text sets the display text of the status dot."
-            },
-            "title": {
-              "type": "string",
-              "description": "Text to show when hovering over the badge."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/badge#design-token"
-              },
-              "properties": {
-                "indicatorHeight": {
-                  "type": "number",
-                  "default": 20,
-                  "description": "Height of the badge indicator."
-                },
-                "indicatorHeightSM": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Height of the badge indicator in small size."
-                },
-                "dotSize": {
-                  "type": "number",
-                  "default": 6,
-                  "description": "Size of the dot badge."
-                },
-                "textFontSize": {
-                  "type": "number",
-                  "default": 12,
-                  "description": "Font size for badge count text."
-                },
-                "textFontSizeSM": {
-                  "type": "number",
-                  "default": 12,
-                  "description": "Font size for badge count text in small size."
-                },
-                "textFontWeight": {
-                  "type": "string",
-                  "default": "normal",
-                  "description": "Font weight for badge count text."
-                },
-                "textLineHeight": {
-                  "type": "number",
-                  "description": "Line height for badge count text."
-                },
-                "statusSize": {
-                  "type": "number",
-                  "default": 6,
-                  "description": "Size of the status dot."
-                },
-                "indicatorZIndex": {
-                  "type": [
-                    "number",
-                    "string"
-                  ],
-                  "default": "auto",
-                  "description": "Z-index of the badge indicator."
-                },
-                "colorBorderBg": {
-                  "type": "string",
-                  "description": "Background color of the badge border (gap between badge and wrapped element)."
-                },
-                "colorError": {
-                  "type": "string",
-                  "description": "Color of the badge indicator (default red)."
-                },
-                "colorErrorHover": {
-                  "type": "string",
-                  "description": "Hover color of the badge indicator."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Badge element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Badge."
-                },
-                ".indicator": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Badge indicator."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Badge element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Badge."
-                },
-                ".indicator": {
-                  "type": "object",
-                  "description": "The Badge indicator."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "Result": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "success",
-                "error",
-                "info",
-                "warning",
-                "404",
-                "403",
-                "500"
-              ],
-              "default": "info",
-              "description": "Status of the result. Determines image and color."
-            },
-            "subTitle": {
-              "type": "string",
-              "description": "Result subtitle or secondary text - supports html."
-            },
-            "title": {
-              "type": "string",
-              "description": "Result title or primary text - supports html."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/result#design-token"
-              },
-              "properties": {
-                "titleFontSize": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Font size of the result title."
-                },
-                "subtitleFontSize": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Font size of the result subtitle."
-                },
-                "iconFontSize": {
-                  "type": "number",
-                  "default": 72,
-                  "description": "Font size of the result status icon."
-                },
-                "extraMargin": {
-                  "type": "string",
-                  "default": "24px 0 0 0",
-                  "description": "Margin applied to the extra content area."
-                },
-                "colorSuccess": {
-                  "type": "string",
-                  "description": "Color used for the success status icon."
-                },
-                "colorError": {
-                  "type": "string",
-                  "description": "Color used for the error status icon."
-                },
-                "colorInfo": {
-                  "type": "string",
-                  "description": "Color used for the info status icon."
-                },
-                "colorWarning": {
-                  "type": "string",
-                  "description": "Color used for the warning status icon."
-                },
-                "colorTextHeading": {
-                  "type": "string",
-                  "description": "Color of the result title text."
-                },
-                "colorTextDescription": {
-                  "type": "string",
-                  "description": "Color of the result subtitle text."
-                },
-                "paddingLG": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Large padding value applied to the result container."
-                },
-                "lineHeight": {
-                  "type": "number",
-                  "default": 1.5714285714285714,
-                  "description": "Line height used for result text content."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Result element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Result."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Result element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Result."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "Message": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "content": {
-              "type": "string",
-              "description": "The content of the message - supports html."
-            },
-            "duration": {
-              "type": "number",
-              "default": 4.5,
-              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
-            },
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "success",
-                "error",
-                "info",
-                "warning",
-                "loading"
-              ],
-              "default": "info",
-              "description": "Message status type."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/message#design-token"
-              },
-              "properties": {
-                "zIndexPopup": {
-                  "type": "number",
-                  "default": 1080,
-                  "description": "Z-index of the message popup."
-                },
-                "contentBg": {
-                  "type": "string",
-                  "description": "Background color of the message content."
-                },
-                "contentPadding": {
-                  "type": "string",
-                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Message."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Message."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClose": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when message is closed."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
     "ProgressBar": {
       "type": "object",
       "additionalProperties": false,
@@ -4700,6 +4404,21 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "progress": {
+              "type": "number",
+              "default": 30,
+              "description": "Progress percentage to show, from 0 to 100."
+            },
+            "shadow": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the glowing shadow at the head of the bar."
+            },
+            "transitionTime": {
+              "type": "number",
+              "default": 1000,
+              "description": "Width transition duration in milliseconds."
+            },
             "height": {
               "type": [
                 "number",
@@ -5344,6 +5063,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "shape": {
+              "type": "string",
+              "default": "default",
+              "description": "Shape of the skeleton; round gives fully rounded ends.",
+              "enum": [
+                "default",
+                "round"
+              ]
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -5561,6 +5289,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "label": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the label skeleton. Set to false for an input without a label."
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -6048,13 +5781,11 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": "string",
-              "description": "Size of the icon spinner.",
-              "enum": [
-                "small",
-                "medium",
-                "large"
-              ]
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
         },
@@ -6182,6 +5913,302 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The content of the message - supports html."
+            },
+            "duration": {
+              "type": "number",
+              "default": 4.5,
+              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
+              "default": "info",
+              "description": "Message status type."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/message#design-token"
+              },
+              "properties": {
+                "zIndexPopup": {
+                  "type": "number",
+                  "default": 1080,
+                  "description": "Z-index of the message popup."
+                },
+                "contentBg": {
+                  "type": "string",
+                  "description": "Background color of the message content."
+                },
+                "contentPadding": {
+                  "type": "string",
+                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClose": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when message is closed."
+                }
+              }
             }
           ]
         }

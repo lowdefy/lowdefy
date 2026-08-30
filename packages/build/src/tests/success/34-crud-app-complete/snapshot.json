@@ -3775,6 +3775,1602 @@
         }
       }
     },
+    "Card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bordered": {
+              "type": "boolean",
+              "default": true,
+              "description": "Toggles rendering of the border around the card."
+            },
+            "hoverable": {
+              "type": "boolean",
+              "default": false,
+              "description": "Lift up when hovering card."
+            },
+            "inner": {
+              "type": "boolean",
+              "default": false,
+              "description": "Change the card style to inner."
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "default",
+                "small"
+              ],
+              "default": "default",
+              "description": "Size of the card."
+            },
+            "title": {
+              "type": "string",
+              "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/card#design-token"
+              },
+              "properties": {
+                "headerBg": {
+                  "type": "string",
+                  "default": "transparent",
+                  "description": "Background color of the card header."
+                },
+                "headerFontSize": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size of the card header title."
+                },
+                "headerFontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the card header title for small cards."
+                },
+                "headerHeight": {
+                  "type": "number",
+                  "default": 56,
+                  "description": "Height of the card header."
+                },
+                "headerHeightSM": {
+                  "type": "number",
+                  "default": 38,
+                  "description": "Height of the card header for small cards."
+                },
+                "actionsBg": {
+                  "type": "string",
+                  "default": "#ffffff",
+                  "description": "Background color of the card actions area."
+                },
+                "actionsLiMargin": {
+                  "type": "string",
+                  "default": "12px 0",
+                  "description": "Margin of each action item in the card actions area."
+                },
+                "tabsMarginBottom": {
+                  "type": "number",
+                  "default": -17,
+                  "description": "Bottom margin adjustment for tabs in the card."
+                },
+                "extraColor": {
+                  "type": "string",
+                  "default": "rgba(0,0,0,0.88)",
+                  "description": "Text color for the extra content area in the header."
+                },
+                "bodyPadding": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Padding of the card body."
+                },
+                "bodyPaddingSM": {
+                  "type": "number",
+                  "default": 12,
+                  "description": "Padding of the card body for small cards."
+                },
+                "headerPadding": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Horizontal padding of the card header."
+                },
+                "headerPaddingSM": {
+                  "type": "number",
+                  "default": 12,
+                  "description": "Horizontal padding of the card header for small cards."
+                },
+                "borderRadiusLG": {
+                  "type": "number",
+                  "default": 8,
+                  "description": "Border radius of the card."
+                },
+                "colorBorderSecondary": {
+                  "type": "string",
+                  "description": "Border color of the card."
+                },
+                "colorBgContainer": {
+                  "type": "string",
+                  "description": "Background color of the card body."
+                },
+                "colorText": {
+                  "type": "string",
+                  "description": "Text color inside the card."
+                },
+                "colorTextHeading": {
+                  "type": "string",
+                  "description": "Color of the card header title text."
+                },
+                "boxShadowTertiary": {
+                  "type": "string",
+                  "description": "Shadow applied to the card on hover when hoverable is true."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card element."
+                },
+                ".header": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card header."
+                },
+                ".body": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card body."
+                },
+                ".cover": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card cover."
+                },
+                ".actions": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card actions."
+                },
+                ".extra": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card extra content."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Card element."
+                },
+                ".header": {
+                  "type": "object",
+                  "description": "The Card header."
+                },
+                ".body": {
+                  "type": "object",
+                  "description": "The Card body."
+                },
+                ".cover": {
+                  "type": "object",
+                  "description": "The Card cover."
+                },
+                ".actions": {
+                  "type": "object",
+                  "description": "The Card actions."
+                },
+                ".extra": {
+                  "type": "object",
+                  "description": "The Card extra content."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the Card is clicked."
+                }
+              }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "TextInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "allowClear": {
+              "type": "boolean",
+              "description": "Allow the user to clear their input.",
+              "default": false
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "text",
+                "number",
+                "password",
+                "tel",
+                "email",
+                "url"
+              ],
+              "default": "text",
+              "description": "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>)."
+            },
+            "autoFocus": {
+              "type": "boolean",
+              "default": false,
+              "description": "Autofocus to the block on page load."
+            },
+            "bordered": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether or not the text input has a border style."
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the block if true."
+            },
+            "maxLength": {
+              "type": "integer",
+              "description": "The max number of input characters."
+            },
+            "placeholder": {
+              "type": "string",
+              "description": "Placeholder text inside the block before user types input."
+            },
+            "prefix": {
+              "type": "string",
+              "description": "Prefix text for the block, priority over $prefix_con."
+            },
+            "prefixIcon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "label": {
+              "type": "object",
+              "description": "Label properties.",
+              "additionalProperties": false,
+              "properties": {
+                "align": {
+                  "type": "string",
+                  "enum": [
+                    "left",
+                    "right"
+                  ],
+                  "default": "left",
+                  "description": "Align label left or right when inline."
+                },
+                "colon": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Append label with colon."
+                },
+                "extra": {
+                  "type": "string",
+                  "description": "Extra text to display beneath the content - supports html."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Label title - supports html."
+                },
+                "tooltip": {
+                  "description": "Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "Tooltip text shown on hover - supports html."
+                        },
+                        "icon": {
+                          "type": "string",
+                          "default": "AiOutlineQuestionCircle",
+                          "description": "Name of the icon to show beside the label."
+                        },
+                        "color": {
+                          "type": "string",
+                          "description": "Color of the tooltip icon.",
+                          "docs": {
+                            "displayType": "color"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "span": {
+                  "type": "number",
+                  "description": "Label inline span."
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Hide input label."
+                },
+                "hasFeedback": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Display feedback extra from validation, this does not disable validation."
+                },
+                "inline": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Render input and label inline."
+                }
+              }
+            },
+            "replaceInput": {
+              "type": "object",
+              "description": "Regex used to sanitize input.",
+              "properties": {
+                "pattern": {
+                  "type": "string",
+                  "description": "The regular expression pattern to use to sanitize input."
+                },
+                "flags": {
+                  "type": "string",
+                  "description": "The regex flags to use. The default value is 'gm'."
+                },
+                "replacement": {
+                  "type": "string",
+                  "description": "The string used to replace the input that matches the pattern. The default value is ''."
+                }
+              },
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "small",
+                "middle",
+                "large"
+              ],
+              "default": "middle",
+              "description": "Size of the block."
+            },
+            "showCount": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show text character count"
+            },
+            "suffix": {
+              "type": "string",
+              "description": "Suffix text for the block, priority over suffixIcon."
+            },
+            "suffixIcon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "title": {
+              "type": "string",
+              "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "outlined",
+                "filled",
+                "borderless"
+              ],
+              "description": "Input visual variant. When set, takes precedence over bordered."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/input#design-token"
+              },
+              "properties": {
+                "activeBorderColor": {
+                  "type": "string",
+                  "description": "Border color when the input is focused."
+                },
+                "activeShadow": {
+                  "type": "string",
+                  "description": "Box shadow when the input is focused."
+                },
+                "addonBg": {
+                  "type": "string",
+                  "default": "rgba(0, 0, 0, 0.02)",
+                  "description": "Background color of addon elements."
+                },
+                "borderRadius": {
+                  "type": "number",
+                  "default": 6,
+                  "description": "Border radius of the input."
+                },
+                "borderRadiusLG": {
+                  "type": "number",
+                  "default": 8,
+                  "description": "Border radius for large inputs."
+                },
+                "borderRadiusSM": {
+                  "type": "number",
+                  "default": 4,
+                  "description": "Border radius for small inputs."
+                },
+                "colorBgContainer": {
+                  "type": "string",
+                  "description": "Background color of the input."
+                },
+                "colorBorder": {
+                  "type": "string",
+                  "description": "Border color of the input."
+                },
+                "colorError": {
+                  "type": "string",
+                  "description": "Color used for error status."
+                },
+                "colorFillTertiary": {
+                  "type": "string",
+                  "description": "Background fill color for the filled variant."
+                },
+                "colorPrimary": {
+                  "type": "string",
+                  "description": "Primary color override."
+                },
+                "colorText": {
+                  "type": "string",
+                  "description": "Text color of the input value."
+                },
+                "colorTextDisabled": {
+                  "type": "string",
+                  "description": "Text color when input is disabled."
+                },
+                "colorTextPlaceholder": {
+                  "type": "string",
+                  "description": "Color of the placeholder text."
+                },
+                "colorWarning": {
+                  "type": "string",
+                  "description": "Color used for warning status."
+                },
+                "controlHeight": {
+                  "type": "number",
+                  "default": 32,
+                  "description": "Height of the input."
+                },
+                "controlHeightLG": {
+                  "type": "number",
+                  "default": 40,
+                  "description": "Height for large inputs."
+                },
+                "controlHeightSM": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Height for small inputs."
+                },
+                "errorActiveShadow": {
+                  "type": "string",
+                  "default": "0 0 0 2px rgba(255, 38, 5, 0.06)",
+                  "description": "Box shadow when the input has error status and is focused."
+                },
+                "fontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input."
+                },
+                "fontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size for large inputs."
+                },
+                "fontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size for small inputs."
+                },
+                "hoverBorderColor": {
+                  "type": "string",
+                  "description": "Border color when the input is hovered."
+                },
+                "hoverBg": {
+                  "type": "string",
+                  "description": "Background color when the input is hovered."
+                },
+                "activeBg": {
+                  "type": "string",
+                  "description": "Background color when the input is focused."
+                },
+                "lineWidth": {
+                  "type": "number",
+                  "default": 1,
+                  "description": "Border width."
+                },
+                "paddingBlock": {
+                  "type": "number",
+                  "default": 4,
+                  "description": "Vertical padding."
+                },
+                "paddingBlockLG": {
+                  "type": "number",
+                  "default": 7,
+                  "description": "Vertical padding for large inputs."
+                },
+                "paddingBlockSM": {
+                  "type": "number",
+                  "default": 0,
+                  "description": "Vertical padding for small inputs."
+                },
+                "paddingInline": {
+                  "type": "number",
+                  "default": 11,
+                  "description": "Horizontal padding."
+                },
+                "paddingInlineLG": {
+                  "type": "number",
+                  "default": 11,
+                  "description": "Horizontal padding for large inputs."
+                },
+                "paddingInlineSM": {
+                  "type": "number",
+                  "default": 7,
+                  "description": "Horizontal padding for small inputs."
+                },
+                "warningActiveShadow": {
+                  "type": "string",
+                  "default": "0 0 0 2px rgba(255, 215, 5, 0.1)",
+                  "description": "Box shadow when the input has warning status and is focused."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The TextInput element."
+                },
+                ".label": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The TextInput label."
+                },
+                ".extra": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The TextInput extra content."
+                },
+                ".feedback": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The TextInput validation feedback."
+                },
+                ".prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the TextInput."
+                },
+                ".suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the TextInput."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The TextInput element."
+                },
+                ".label": {
+                  "type": "object",
+                  "description": "The TextInput label."
+                },
+                ".extra": {
+                  "type": "object",
+                  "description": "The TextInput extra content."
+                },
+                ".feedback": {
+                  "type": "object",
+                  "description": "The TextInput validation feedback."
+                },
+                ".prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the TextInput."
+                },
+                ".suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the TextInput."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onBlur": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action event occurs when text input loses focus."
+                },
+                "onChange": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger action when text input is changed.",
+                    "event": {
+                      "value": "The current input value."
+                    }
+                  }
+                },
+                "onFocus": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when text input gets focus."
+                },
+                "onPressEnter": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when enter is pressed while text input is focused."
+                },
+                "onTooltipClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the tooltip icon is clicked."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "404",
+                "403",
+                "500"
+              ],
+              "default": "info",
+              "description": "Status of the result. Determines image and color."
+            },
+            "subTitle": {
+              "type": "string",
+              "description": "Result subtitle or secondary text - supports html."
+            },
+            "title": {
+              "type": "string",
+              "description": "Result title or primary text - supports html."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/result#design-token"
+              },
+              "properties": {
+                "titleFontSize": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Font size of the result title."
+                },
+                "subtitleFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the result subtitle."
+                },
+                "iconFontSize": {
+                  "type": "number",
+                  "default": 72,
+                  "description": "Font size of the result status icon."
+                },
+                "extraMargin": {
+                  "type": "string",
+                  "default": "24px 0 0 0",
+                  "description": "Margin applied to the extra content area."
+                },
+                "colorSuccess": {
+                  "type": "string",
+                  "description": "Color used for the success status icon."
+                },
+                "colorError": {
+                  "type": "string",
+                  "description": "Color used for the error status icon."
+                },
+                "colorInfo": {
+                  "type": "string",
+                  "description": "Color used for the info status icon."
+                },
+                "colorWarning": {
+                  "type": "string",
+                  "description": "Color used for the warning status icon."
+                },
+                "colorTextHeading": {
+                  "type": "string",
+                  "description": "Color of the result title text."
+                },
+                "colorTextDescription": {
+                  "type": "string",
+                  "description": "Color of the result subtitle text."
+                },
+                "paddingLG": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Large padding value applied to the result container."
+                },
+                "lineHeight": {
+                  "type": "number",
+                  "default": 1.5714285714285714,
+                  "description": "Line height used for result text content."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Result."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Result element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Result."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
     "Anchor": {
       "type": "object",
       "additionalProperties": false,
@@ -5702,1898 +7298,6 @@
         }
       }
     },
-    "Card": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "bordered": {
-              "type": "boolean",
-              "default": true,
-              "description": "Toggles rendering of the border around the card."
-            },
-            "hoverable": {
-              "type": "boolean",
-              "default": false,
-              "description": "Lift up when hovering card."
-            },
-            "inner": {
-              "type": "boolean",
-              "default": false,
-              "description": "Change the card style to inner."
-            },
-            "size": {
-              "type": "string",
-              "enum": [
-                "default",
-                "small"
-              ],
-              "default": "default",
-              "description": "Size of the card."
-            },
-            "title": {
-              "type": "string",
-              "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/card#design-token"
-              },
-              "properties": {
-                "headerBg": {
-                  "type": "string",
-                  "default": "transparent",
-                  "description": "Background color of the card header."
-                },
-                "headerFontSize": {
-                  "type": "number",
-                  "default": 16,
-                  "description": "Font size of the card header title."
-                },
-                "headerFontSizeSM": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Font size of the card header title for small cards."
-                },
-                "headerHeight": {
-                  "type": "number",
-                  "default": 56,
-                  "description": "Height of the card header."
-                },
-                "headerHeightSM": {
-                  "type": "number",
-                  "default": 38,
-                  "description": "Height of the card header for small cards."
-                },
-                "actionsBg": {
-                  "type": "string",
-                  "default": "#ffffff",
-                  "description": "Background color of the card actions area."
-                },
-                "actionsLiMargin": {
-                  "type": "string",
-                  "default": "12px 0",
-                  "description": "Margin of each action item in the card actions area."
-                },
-                "tabsMarginBottom": {
-                  "type": "number",
-                  "default": -17,
-                  "description": "Bottom margin adjustment for tabs in the card."
-                },
-                "extraColor": {
-                  "type": "string",
-                  "default": "rgba(0,0,0,0.88)",
-                  "description": "Text color for the extra content area in the header."
-                },
-                "bodyPadding": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Padding of the card body."
-                },
-                "bodyPaddingSM": {
-                  "type": "number",
-                  "default": 12,
-                  "description": "Padding of the card body for small cards."
-                },
-                "headerPadding": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Horizontal padding of the card header."
-                },
-                "headerPaddingSM": {
-                  "type": "number",
-                  "default": 12,
-                  "description": "Horizontal padding of the card header for small cards."
-                },
-                "borderRadiusLG": {
-                  "type": "number",
-                  "default": 8,
-                  "description": "Border radius of the card."
-                },
-                "colorBorderSecondary": {
-                  "type": "string",
-                  "description": "Border color of the card."
-                },
-                "colorBgContainer": {
-                  "type": "string",
-                  "description": "Background color of the card body."
-                },
-                "colorText": {
-                  "type": "string",
-                  "description": "Text color inside the card."
-                },
-                "colorTextHeading": {
-                  "type": "string",
-                  "description": "Color of the card header title text."
-                },
-                "boxShadowTertiary": {
-                  "type": "string",
-                  "description": "Shadow applied to the card on hover when hoverable is true."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card element."
-                },
-                ".header": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card header."
-                },
-                ".body": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card body."
-                },
-                ".cover": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card cover."
-                },
-                ".actions": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card actions."
-                },
-                ".extra": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Card extra content."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Card element."
-                },
-                ".header": {
-                  "type": "object",
-                  "description": "The Card header."
-                },
-                ".body": {
-                  "type": "object",
-                  "description": "The Card body."
-                },
-                ".cover": {
-                  "type": "object",
-                  "description": "The Card cover."
-                },
-                ".actions": {
-                  "type": "object",
-                  "description": "The Card actions."
-                },
-                ".extra": {
-                  "type": "object",
-                  "description": "The Card extra content."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when the Card is clicked."
-                }
-              }
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "TextInput": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "allowClear": {
-              "type": "boolean",
-              "description": "Allow the user to clear their input.",
-              "default": false
-            },
-            "type": {
-              "type": "string",
-              "enum": [
-                "text",
-                "number",
-                "password",
-                "tel",
-                "email",
-                "url"
-              ],
-              "default": "text",
-              "description": "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>)."
-            },
-            "autoFocus": {
-              "type": "boolean",
-              "default": false,
-              "description": "Autofocus to the block on page load."
-            },
-            "bordered": {
-              "type": "boolean",
-              "default": true,
-              "description": "Whether or not the text input has a border style."
-            },
-            "disabled": {
-              "type": "boolean",
-              "default": false,
-              "description": "Disable the block if true."
-            },
-            "maxLength": {
-              "type": "integer",
-              "description": "The max number of input characters."
-            },
-            "placeholder": {
-              "type": "string",
-              "description": "Placeholder text inside the block before user types input."
-            },
-            "prefix": {
-              "type": "string",
-              "description": "Prefix text for the block, priority over $prefix_con."
-            },
-            "prefixIcon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "label": {
-              "type": "object",
-              "description": "Label properties.",
-              "additionalProperties": false,
-              "properties": {
-                "align": {
-                  "type": "string",
-                  "enum": [
-                    "left",
-                    "right"
-                  ],
-                  "default": "left",
-                  "description": "Align label left or right when inline."
-                },
-                "colon": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "Append label with colon."
-                },
-                "extra": {
-                  "type": "string",
-                  "description": "Extra text to display beneath the content - supports html."
-                },
-                "title": {
-                  "type": "string",
-                  "description": "Label title - supports html."
-                },
-                "tooltip": {
-                  "description": "Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon.",
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "object",
-                      "additionalProperties": false,
-                      "properties": {
-                        "title": {
-                          "type": "string",
-                          "description": "Tooltip text shown on hover - supports html."
-                        },
-                        "icon": {
-                          "type": "string",
-                          "default": "AiOutlineQuestionCircle",
-                          "description": "Name of the icon to show beside the label."
-                        },
-                        "color": {
-                          "type": "string",
-                          "description": "Color of the tooltip icon.",
-                          "docs": {
-                            "displayType": "color"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                },
-                "span": {
-                  "type": "number",
-                  "description": "Label inline span."
-                },
-                "disabled": {
-                  "type": "boolean",
-                  "default": false,
-                  "description": "Hide input label."
-                },
-                "hasFeedback": {
-                  "type": "boolean",
-                  "default": true,
-                  "description": "Display feedback extra from validation, this does not disable validation."
-                },
-                "inline": {
-                  "type": "boolean",
-                  "default": false,
-                  "description": "Render input and label inline."
-                }
-              }
-            },
-            "replaceInput": {
-              "type": "object",
-              "description": "Regex used to sanitize input.",
-              "properties": {
-                "pattern": {
-                  "type": "string",
-                  "description": "The regular expression pattern to use to sanitize input."
-                },
-                "flags": {
-                  "type": "string",
-                  "description": "The regex flags to use. The default value is 'gm'."
-                },
-                "replacement": {
-                  "type": "string",
-                  "description": "The string used to replace the input that matches the pattern. The default value is ''."
-                }
-              },
-              "docs": {
-                "displayType": "yaml"
-              }
-            },
-            "size": {
-              "type": "string",
-              "enum": [
-                "small",
-                "middle",
-                "large"
-              ],
-              "default": "middle",
-              "description": "Size of the block."
-            },
-            "showCount": {
-              "type": "boolean",
-              "default": false,
-              "description": "Show text character count"
-            },
-            "suffix": {
-              "type": "string",
-              "description": "Suffix text for the block, priority over suffixIcon."
-            },
-            "suffixIcon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "title": {
-              "type": "string",
-              "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
-            },
-            "variant": {
-              "type": "string",
-              "enum": [
-                "outlined",
-                "filled",
-                "borderless"
-              ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/input#design-token"
-              },
-              "properties": {
-                "activeBorderColor": {
-                  "type": "string",
-                  "description": "Border color when the input is focused."
-                },
-                "activeShadow": {
-                  "type": "string",
-                  "description": "Box shadow when the input is focused."
-                },
-                "addonBg": {
-                  "type": "string",
-                  "default": "rgba(0, 0, 0, 0.02)",
-                  "description": "Background color of addon elements."
-                },
-                "borderRadius": {
-                  "type": "number",
-                  "default": 6,
-                  "description": "Border radius of the input."
-                },
-                "borderRadiusLG": {
-                  "type": "number",
-                  "default": 8,
-                  "description": "Border radius for large inputs."
-                },
-                "borderRadiusSM": {
-                  "type": "number",
-                  "default": 4,
-                  "description": "Border radius for small inputs."
-                },
-                "colorBgContainer": {
-                  "type": "string",
-                  "description": "Background color of the input."
-                },
-                "colorBorder": {
-                  "type": "string",
-                  "description": "Border color of the input."
-                },
-                "colorError": {
-                  "type": "string",
-                  "description": "Color used for error status."
-                },
-                "colorFillTertiary": {
-                  "type": "string",
-                  "description": "Background fill color for the filled variant."
-                },
-                "colorPrimary": {
-                  "type": "string",
-                  "description": "Primary color override."
-                },
-                "colorText": {
-                  "type": "string",
-                  "description": "Text color of the input value."
-                },
-                "colorTextDisabled": {
-                  "type": "string",
-                  "description": "Text color when input is disabled."
-                },
-                "colorTextPlaceholder": {
-                  "type": "string",
-                  "description": "Color of the placeholder text."
-                },
-                "colorWarning": {
-                  "type": "string",
-                  "description": "Color used for warning status."
-                },
-                "controlHeight": {
-                  "type": "number",
-                  "default": 32,
-                  "description": "Height of the input."
-                },
-                "controlHeightLG": {
-                  "type": "number",
-                  "default": 40,
-                  "description": "Height for large inputs."
-                },
-                "controlHeightSM": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Height for small inputs."
-                },
-                "errorActiveShadow": {
-                  "type": "string",
-                  "default": "0 0 0 2px rgba(255, 38, 5, 0.06)",
-                  "description": "Box shadow when the input has error status and is focused."
-                },
-                "fontSize": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Font size of the input."
-                },
-                "fontSizeLG": {
-                  "type": "number",
-                  "default": 16,
-                  "description": "Font size for large inputs."
-                },
-                "fontSizeSM": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Font size for small inputs."
-                },
-                "hoverBorderColor": {
-                  "type": "string",
-                  "description": "Border color when the input is hovered."
-                },
-                "hoverBg": {
-                  "type": "string",
-                  "description": "Background color when the input is hovered."
-                },
-                "activeBg": {
-                  "type": "string",
-                  "description": "Background color when the input is focused."
-                },
-                "lineWidth": {
-                  "type": "number",
-                  "default": 1,
-                  "description": "Border width."
-                },
-                "paddingBlock": {
-                  "type": "number",
-                  "default": 4,
-                  "description": "Vertical padding."
-                },
-                "paddingBlockLG": {
-                  "type": "number",
-                  "default": 7,
-                  "description": "Vertical padding for large inputs."
-                },
-                "paddingBlockSM": {
-                  "type": "number",
-                  "default": 0,
-                  "description": "Vertical padding for small inputs."
-                },
-                "paddingInline": {
-                  "type": "number",
-                  "default": 11,
-                  "description": "Horizontal padding."
-                },
-                "paddingInlineLG": {
-                  "type": "number",
-                  "default": 11,
-                  "description": "Horizontal padding for large inputs."
-                },
-                "paddingInlineSM": {
-                  "type": "number",
-                  "default": 7,
-                  "description": "Horizontal padding for small inputs."
-                },
-                "warningActiveShadow": {
-                  "type": "string",
-                  "default": "0 0 0 2px rgba(255, 215, 5, 0.1)",
-                  "description": "Box shadow when the input has warning status and is focused."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The TextInput element."
-                },
-                ".label": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The TextInput label."
-                },
-                ".extra": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The TextInput extra content."
-                },
-                ".feedback": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The TextInput validation feedback."
-                },
-                ".prefixIcon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The prefix icon in the TextInput."
-                },
-                ".suffixIcon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The suffix icon in the TextInput."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The TextInput element."
-                },
-                ".label": {
-                  "type": "object",
-                  "description": "The TextInput label."
-                },
-                ".extra": {
-                  "type": "object",
-                  "description": "The TextInput extra content."
-                },
-                ".feedback": {
-                  "type": "object",
-                  "description": "The TextInput validation feedback."
-                },
-                ".prefixIcon": {
-                  "type": "object",
-                  "description": "The prefix icon in the TextInput."
-                },
-                ".suffixIcon": {
-                  "type": "object",
-                  "description": "The suffix icon in the TextInput."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onBlur": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger action event occurs when text input loses focus."
-                },
-                "onChange": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": {
-                    "description": "Trigger action when text input is changed.",
-                    "event": {
-                      "value": "The current input value."
-                    }
-                  }
-                },
-                "onFocus": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger action when text input gets focus."
-                },
-                "onPressEnter": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger action when enter is pressed while text input is focused."
-                },
-                "onTooltipClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when the tooltip icon is clicked."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "Result": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "success",
-                "error",
-                "info",
-                "warning",
-                "404",
-                "403",
-                "500"
-              ],
-              "default": "info",
-              "description": "Status of the result. Determines image and color."
-            },
-            "subTitle": {
-              "type": "string",
-              "description": "Result subtitle or secondary text - supports html."
-            },
-            "title": {
-              "type": "string",
-              "description": "Result title or primary text - supports html."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/result#design-token"
-              },
-              "properties": {
-                "titleFontSize": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Font size of the result title."
-                },
-                "subtitleFontSize": {
-                  "type": "number",
-                  "default": 14,
-                  "description": "Font size of the result subtitle."
-                },
-                "iconFontSize": {
-                  "type": "number",
-                  "default": 72,
-                  "description": "Font size of the result status icon."
-                },
-                "extraMargin": {
-                  "type": "string",
-                  "default": "24px 0 0 0",
-                  "description": "Margin applied to the extra content area."
-                },
-                "colorSuccess": {
-                  "type": "string",
-                  "description": "Color used for the success status icon."
-                },
-                "colorError": {
-                  "type": "string",
-                  "description": "Color used for the error status icon."
-                },
-                "colorInfo": {
-                  "type": "string",
-                  "description": "Color used for the info status icon."
-                },
-                "colorWarning": {
-                  "type": "string",
-                  "description": "Color used for the warning status icon."
-                },
-                "colorTextHeading": {
-                  "type": "string",
-                  "description": "Color of the result title text."
-                },
-                "colorTextDescription": {
-                  "type": "string",
-                  "description": "Color of the result subtitle text."
-                },
-                "paddingLG": {
-                  "type": "number",
-                  "default": 24,
-                  "description": "Large padding value applied to the result container."
-                },
-                "lineHeight": {
-                  "type": "number",
-                  "default": 1.5714285714285714,
-                  "description": "Line height used for result text content."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Result element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Result."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Result element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Result."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "Message": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "content": {
-              "type": "string",
-              "description": "The content of the message - supports html."
-            },
-            "duration": {
-              "type": "number",
-              "default": 4.5,
-              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
-            },
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "status": {
-              "type": "string",
-              "enum": [
-                "success",
-                "error",
-                "info",
-                "warning",
-                "loading"
-              ],
-              "default": "info",
-              "description": "Message status type."
-            },
-            "theme": {
-              "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/message#design-token"
-              },
-              "properties": {
-                "zIndexPopup": {
-                  "type": "number",
-                  "default": 1080,
-                  "description": "Z-index of the message popup."
-                },
-                "contentBg": {
-                  "type": "string",
-                  "description": "Background color of the message content."
-                },
-                "contentPadding": {
-                  "type": "string",
-                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Message."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Message."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClose": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when message is closed."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
     "ProgressBar": {
       "type": "object",
       "additionalProperties": false,
@@ -7660,6 +7364,21 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "progress": {
+              "type": "number",
+              "default": 30,
+              "description": "Progress percentage to show, from 0 to 100."
+            },
+            "shadow": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the glowing shadow at the head of the bar."
+            },
+            "transitionTime": {
+              "type": "number",
+              "default": 1000,
+              "description": "Width transition duration in milliseconds."
+            },
             "height": {
               "type": [
                 "number",
@@ -8304,6 +8023,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "shape": {
+              "type": "string",
+              "default": "default",
+              "description": "Shape of the skeleton; round gives fully rounded ends.",
+              "enum": [
+                "default",
+                "round"
+              ]
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -8521,6 +8249,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "label": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the label skeleton. Set to false for an input without a label."
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -9008,13 +8741,11 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": "string",
-              "description": "Size of the icon spinner.",
-              "enum": [
-                "small",
-                "medium",
-                "large"
-              ]
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
         },
@@ -9142,6 +8873,302 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The content of the message - supports html."
+            },
+            "duration": {
+              "type": "number",
+              "default": 4.5,
+              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
+              "default": "info",
+              "description": "Message status type."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/message#design-token"
+              },
+              "properties": {
+                "zIndexPopup": {
+                  "type": "number",
+                  "default": 1080,
+                  "description": "Z-index of the message popup."
+                },
+                "contentBg": {
+                  "type": "string",
+                  "description": "Background color of the message content."
+                },
+                "contentPadding": {
+                  "type": "string",
+                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClose": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when message is closed."
+                }
+              }
             }
           ]
         }

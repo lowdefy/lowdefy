@@ -2236,2171 +2236,6 @@
         }
       }
     },
-    "Anchor": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "ariaLabel": {
-              "type": "string",
-              "description": "Arial-label to apply to link tag."
-            },
-            "back": {
-              "type": "boolean",
-              "description": "When the link is clicked, trigger the browser back."
-            },
-            "home": {
-              "type": "boolean",
-              "description": "When the link is clicked, route to the home page."
-            },
-            "input": {
-              "type": "object",
-              "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
-              "docs": {
-                "displayType": "yaml"
-              }
-            },
-            "urlQuery": {
-              "type": "object",
-              "description": "When the link is clicked, pass data as a url query to the next page.",
-              "docs": {
-                "displayType": "yaml"
-              }
-            },
-            "disabled": {
-              "type": "boolean",
-              "default": false,
-              "description": "Disable the anchor if true."
-            },
-            "icon": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
-              "docs": {
-                "displayType": "icon"
-              }
-            },
-            "pageId": {
-              "type": "string",
-              "description": "When the link is clicked, route to the provided Lowdefy page."
-            },
-            "href": {
-              "type": "string",
-              "description": "The href to link to when the anchor link is clicked."
-            },
-            "url": {
-              "type": "string",
-              "description": "External url to link to when the anchor link is clicked."
-            },
-            "rel": {
-              "type": "string",
-              "default": "noopener noreferrer",
-              "description": "The relationship of the linked URL as space-separated link types."
-            },
-            "newTab": {
-              "type": "boolean",
-              "default": false,
-              "description": "Open link in a new tab when the anchor link is clicked."
-            },
-            "replace": {
-              "type": "boolean",
-              "default": false,
-              "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
-            },
-            "scroll": {
-              "type": "boolean",
-              "default": false,
-              "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
-            },
-            "title": {
-              "type": "string",
-              "description": "Text to display in the anchor."
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The anchor element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Anchor."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The anchor element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Anchor."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Called when Anchor is clicked. Renders a shortcut badge when a shortcut is configured."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "DangerousHtml": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "html": {
-              "type": "string",
-              "description": "Content to be rendered as Html.",
-              "docs": {
-                "displayType": "text-area"
-              }
-            },
-            "DOMPurifyOptions": {
-              "type": "object",
-              "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
-              "docs": {
-                "displayType": "yaml"
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The DangerousHtml element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The DangerousHtml element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        }
-      }
-    },
-    "Dynamic": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "endpointId": {
-              "type": "string",
-              "description": "Required. The api endpoint that resolves this block content at page get. InternalApi endpoints are recommended."
-            },
-            "params": {
-              "type": "object",
-              "description": "Static values passed to the endpoint payload as params. Operators are not allowed — read runtime values in the endpoint routine with _payload, _user or _secret."
-            },
-            "required": {
-              "type": "boolean",
-              "default": false,
-              "description": "When true, a resolution failure fails the whole page request instead of rendering the fallback slot."
-            },
-            "types": {
-              "type": "object",
-              "description": "Extra block, action and operator types the endpoint may return, so build includes them in the client bundle.",
-              "additionalProperties": false,
-              "properties": {
-                "blocks": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Block types the endpoint may return."
-                },
-                "actions": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Action types the endpoint may return."
-                },
-                "operators": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "Client operator types the endpoint may return."
-                }
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Dynamic element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Dynamic element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when the Dynamic container is clicked."
-                }
-              }
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "Html": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "html": {
-              "type": "string",
-              "description": "Content to be rendered as Html.",
-              "docs": {
-                "displayType": "text-area"
-              }
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Html element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Html element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onTextSelection": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger action when text is selected and pass selected text to the event object."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "Icon": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "color": {
-              "type": "string",
-              "description": "Primary icon color.",
-              "docs": {
-                "displayType": "color"
-              }
-            },
-            "name": {
-              "type": "string",
-              "default": "AiOutlineCloseCircle",
-              "description": "Name of icon to be displayed."
-            },
-            "rotate": {
-              "type": "number",
-              "description": "Number of degrees to rotate the icon."
-            },
-            "size": {
-              "type": [
-                "string",
-                "number"
-              ],
-              "description": "Size of the icon.",
-              "docs": {
-                "displayType": "number"
-              }
-            },
-            "spin": {
-              "type": "boolean",
-              "default": false,
-              "description": "Continuously spin icon with animation."
-            },
-            "title": {
-              "type": "string",
-              "description": "Icon hover title for accessibility."
-            },
-            "disableLoadingIcon": {
-              "type": "boolean",
-              "default": false,
-              "description": "While loading after the icon has been clicked, don't render the loading icon."
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Icon element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Icon element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when icon is clicked."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "Img": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "src"
-          ],
-          "properties": {
-            "src": {
-              "type": "string",
-              "description": "The image URL."
-            },
-            "alt": {
-              "type": "string",
-              "description": "Alternative text description of the image."
-            },
-            "crossOrigin": {
-              "type": "string",
-              "enum": [
-                "anonymous",
-                "use-credentials"
-              ],
-              "description": "Indicates if the fetching of the image must be done using a CORS request."
-            },
-            "decoding": {
-              "type": "string",
-              "enum": [
-                "sync",
-                "async",
-                "auto"
-              ],
-              "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
-            },
-            "height": {
-              "type": "number",
-              "description": "Height of the image."
-            },
-            "loading": {
-              "type": "string",
-              "enum": [
-                "eager",
-                "lazy"
-              ],
-              "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
-            },
-            "sizes": {
-              "type": "string",
-              "description": "Indicating a set of source sizes of strings separated by commas."
-            },
-            "srcSet": {
-              "type": "string",
-              "description": "Possible image sources for the user agent to use, strings separated by commas.",
-              "docs": {
-                "displayType": "text-area"
-              }
-            },
-            "width": {
-              "type": "number",
-              "description": "Width of the image."
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Img element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Img element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        }
-      }
-    },
-    "List": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "direction": {
-              "type": "string",
-              "enum": [
-                "row",
-                "column",
-                "row-reverse",
-                "column-reverse"
-              ],
-              "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
-            },
-            "wrap": {
-              "type": "string",
-              "enum": [
-                "wrap",
-                "nowrap",
-                "wrap-reverse"
-              ],
-              "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
-            },
-            "scroll": {
-              "type": "boolean",
-              "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set."
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The List element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The List element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when the List is clicked."
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "Span": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "content": {
-              "type": "string",
-              "description": "Span content string. Overrides the \"content\" content area."
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The Span element."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                },
-                ".element": {
-                  "type": "object",
-                  "description": "The Span element."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "onClick": {
-                  "oneOf": [
-                    {
-                      "type": "array"
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "Trigger actions when the Span is clicked."
-                }
-              }
-            }
-          ]
-        },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "areas": {
-          "type": "object"
-        }
-      }
-    },
-    "Throw": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "id",
-        "type"
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "layout": {
-          "oneOf": [
-            {
-              "type": "object"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "visible": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "required": {
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            }
-          ]
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "Error message to throw.",
-              "default": "Intentional error thrown by Throw block"
-            }
-          }
-        },
-        "class": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The block layout wrapper."
-                }
-              }
-            }
-          ]
-        },
-        "style": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                ".block": {
-                  "type": "object",
-                  "description": "The block layout wrapper."
-                }
-              }
-            },
-            {
-              "type": "object",
-              "patternProperties": {
-                "^(?!_)(?!\\.)": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1
-            }
-          ]
-        },
-        "events": {
-          "oneOf": [
-            {
-              "type": "object",
-              "patternProperties": {
-                "^_": {}
-              },
-              "additionalProperties": false,
-              "minProperties": 1,
-              "maxProperties": 1
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {}
-            }
-          ]
-        }
-      }
-    },
     "Card": {
       "type": "object",
       "additionalProperties": false,
@@ -7901,7 +5736,7 @@
         }
       }
     },
-    "Message": {
+    "Anchor": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -7967,57 +5802,574 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "content": {
+            "ariaLabel": {
               "type": "string",
-              "description": "The content of the message - supports html."
+              "description": "Arial-label to apply to link tag."
             },
-            "duration": {
-              "type": "number",
-              "default": 4.5,
-              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            "back": {
+              "type": "boolean",
+              "description": "When the link is clicked, trigger the browser back."
+            },
+            "home": {
+              "type": "boolean",
+              "description": "When the link is clicked, route to the home page."
+            },
+            "input": {
+              "type": "object",
+              "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "urlQuery": {
+              "type": "object",
+              "description": "When the link is clicked, pass data as a url query to the next page.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the anchor if true."
             },
             "icon": {
               "type": [
                 "string",
                 "object"
               ],
-              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
               "docs": {
                 "displayType": "icon"
               }
             },
-            "status": {
+            "pageId": {
               "type": "string",
-              "enum": [
-                "success",
-                "error",
-                "info",
-                "warning",
-                "loading"
-              ],
-              "default": "info",
-              "description": "Message status type."
+              "description": "When the link is clicked, route to the provided Lowdefy page."
             },
-            "theme": {
+            "href": {
+              "type": "string",
+              "description": "The href to link to when the anchor link is clicked."
+            },
+            "url": {
+              "type": "string",
+              "description": "External url to link to when the anchor link is clicked."
+            },
+            "rel": {
+              "type": "string",
+              "default": "noopener noreferrer",
+              "description": "The relationship of the linked URL as space-separated link types."
+            },
+            "newTab": {
+              "type": "boolean",
+              "default": false,
+              "description": "Open link in a new tab when the anchor link is clicked."
+            },
+            "replace": {
+              "type": "boolean",
+              "default": false,
+              "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+            },
+            "scroll": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
+            },
+            "title": {
+              "type": "string",
+              "description": "Text to display in the anchor."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
-              "docs": {
-                "displayType": "yaml",
-                "link": "https://ant.design/components/message#design-token"
+              "patternProperties": {
+                "^_": {}
               },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
               "properties": {
-                "zIndexPopup": {
-                  "type": "number",
-                  "default": 1080,
-                  "description": "Z-index of the message popup."
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
                 },
-                "contentBg": {
-                  "type": "string",
-                  "description": "Background color of the message content."
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The anchor element."
                 },
-                "contentPadding": {
-                  "type": "string",
-                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Anchor."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The anchor element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Anchor."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Called when Anchor is clicked. Renders a shortcut badge when a shortcut is configured."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DangerousHtml": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "html": {
+              "type": "string",
+              "description": "Content to be rendered as Html.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            },
+            "DOMPurifyOptions": {
+              "type": "object",
+              "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The DangerousHtml element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The DangerousHtml element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Dynamic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "endpointId": {
+              "type": "string",
+              "description": "Required. The api endpoint that resolves this block content at page get. InternalApi endpoints are recommended."
+            },
+            "params": {
+              "type": "object",
+              "description": "Static values passed to the endpoint payload as params. Operators are not allowed — read runtime values in the endpoint routine with _payload, _user or _secret."
+            },
+            "required": {
+              "type": "boolean",
+              "default": false,
+              "description": "When true, a resolution failure fails the whole page request instead of rendering the fallback slot."
+            },
+            "types": {
+              "type": "object",
+              "description": "Extra block, action and operator types the endpoint may return, so build includes them in the client bundle.",
+              "additionalProperties": false,
+              "properties": {
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Block types the endpoint may return."
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Action types the endpoint may return."
+                },
+                "operators": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Client operator types the endpoint may return."
                 }
               }
             }
@@ -8091,30 +6443,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "patternProperties": {
-                        "^_": {}
-                      },
-                      "additionalProperties": false,
-                      "minProperties": 1,
-                      "maxProperties": 1
-                    }
-                  ],
-                  "description": "The icon in the Message."
+                  "description": "The Dynamic element."
                 }
               }
             }
@@ -8141,11 +6470,7 @@
                 },
                 ".element": {
                   "type": "object",
-                  "description": "The Message element."
-                },
-                ".icon": {
-                  "type": "object",
-                  "description": "The icon in the Message."
+                  "description": "The Dynamic element."
                 }
               }
             },
@@ -8174,7 +6499,7 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "onClose": {
+                "onClick": {
                   "oneOf": [
                     {
                       "type": "array"
@@ -8189,9 +6514,1388 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger actions when message is closed."
+                  "description": "Trigger actions when the Dynamic container is clicked."
                 }
               }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "Html": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "html": {
+              "type": "string",
+              "description": "Content to be rendered as Html.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Html element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Html element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onTextSelection": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Icon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "string",
+              "description": "Primary icon color.",
+              "docs": {
+                "displayType": "color"
+              }
+            },
+            "name": {
+              "type": "string",
+              "default": "AiOutlineCloseCircle",
+              "description": "Name of icon to be displayed."
+            },
+            "rotate": {
+              "type": "number",
+              "description": "Number of degrees to rotate the icon."
+            },
+            "size": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon.",
+              "docs": {
+                "displayType": "number"
+              }
+            },
+            "spin": {
+              "type": "boolean",
+              "default": false,
+              "description": "Continuously spin icon with animation."
+            },
+            "title": {
+              "type": "string",
+              "description": "Icon hover title for accessibility."
+            },
+            "disableLoadingIcon": {
+              "type": "boolean",
+              "default": false,
+              "description": "While loading after the icon has been clicked, don't render the loading icon."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Icon element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Icon element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when icon is clicked."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Img": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "src"
+          ],
+          "properties": {
+            "src": {
+              "type": "string",
+              "description": "The image URL."
+            },
+            "alt": {
+              "type": "string",
+              "description": "Alternative text description of the image."
+            },
+            "crossOrigin": {
+              "type": "string",
+              "enum": [
+                "anonymous",
+                "use-credentials"
+              ],
+              "description": "Indicates if the fetching of the image must be done using a CORS request."
+            },
+            "decoding": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async",
+                "auto"
+              ],
+              "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
+            },
+            "height": {
+              "type": "number",
+              "description": "Height of the image."
+            },
+            "loading": {
+              "type": "string",
+              "enum": [
+                "eager",
+                "lazy"
+              ],
+              "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
+            },
+            "sizes": {
+              "type": "string",
+              "description": "Indicating a set of source sizes of strings separated by commas."
+            },
+            "srcSet": {
+              "type": "string",
+              "description": "Possible image sources for the user agent to use, strings separated by commas.",
+              "docs": {
+                "displayType": "text-area"
+              }
+            },
+            "width": {
+              "type": "number",
+              "description": "Width of the image."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Img element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Img element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "List": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "direction": {
+              "type": "string",
+              "enum": [
+                "row",
+                "column",
+                "row-reverse",
+                "column-reverse"
+              ],
+              "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
+            },
+            "wrap": {
+              "type": "string",
+              "enum": [
+                "wrap",
+                "nowrap",
+                "wrap-reverse"
+              ],
+              "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
+            },
+            "scroll": {
+              "type": "boolean",
+              "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The List element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The List element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the List is clicked."
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "Span content string. Overrides the \"content\" content area."
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Span element."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Span element."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the Span is clicked."
+                }
+              }
+            }
+          ]
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "areas": {
+          "type": "object"
+        }
+      }
+    },
+    "Throw": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Error message to throw.",
+              "default": "Intentional error thrown by Throw block"
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {}
             }
           ]
         }
@@ -8263,6 +7967,21 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "progress": {
+              "type": "number",
+              "default": 30,
+              "description": "Progress percentage to show, from 0 to 100."
+            },
+            "shadow": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the glowing shadow at the head of the bar."
+            },
+            "transitionTime": {
+              "type": "number",
+              "default": 1000,
+              "description": "Width transition duration in milliseconds."
+            },
             "height": {
               "type": [
                 "number",
@@ -8907,6 +8626,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "shape": {
+              "type": "string",
+              "default": "default",
+              "description": "Shape of the skeleton; round gives fully rounded ends.",
+              "enum": [
+                "default",
+                "round"
+              ]
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -9124,6 +8852,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "label": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the label skeleton. Set to false for an input without a label."
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -9611,13 +9344,11 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": "string",
-              "description": "Size of the icon spinner.",
-              "enum": [
-                "small",
-                "medium",
-                "large"
-              ]
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
         },
@@ -9745,6 +9476,302 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {}
+            }
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The content of the message - supports html."
+            },
+            "duration": {
+              "type": "number",
+              "default": 4.5,
+              "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
+              "default": "info",
+              "description": "Message status type."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/message#design-token"
+              },
+              "properties": {
+                "zIndexPopup": {
+                  "type": "number",
+                  "default": 1080,
+                  "description": "Z-index of the message popup."
+                },
+                "contentBg": {
+                  "type": "string",
+                  "description": "Background color of the message content."
+                },
+                "contentPadding": {
+                  "type": "string",
+                  "description": "Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Message."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Message element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Message."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClose": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when message is closed."
+                }
+              }
             }
           ]
         }

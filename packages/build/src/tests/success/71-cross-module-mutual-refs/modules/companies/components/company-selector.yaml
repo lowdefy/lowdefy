@@ -1,4 +1,5 @@
 id: company-picker
 type: Selector
 properties:
-  label: Select Company
+  label:
+    title: Select Company
