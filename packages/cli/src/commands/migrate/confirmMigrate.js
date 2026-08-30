@@ -16,12 +16,13 @@
 
 import readline from 'node:readline/promises';
 
-// A migration writes to a real database (design D13). A dry run and a
-// --json/--yes run never prompt; every other interactive run asks first,
-// against whichever database the environment points at. A non-interactive run
-// (CI, a pipe) with neither --yes nor --dry-run refuses rather than guessing.
+// A migration writes to a real database (design D13). A dry run and a --yes
+// run never prompt; every other interactive run asks first, against whichever
+// database the environment points at. --json is an output format, not consent
+// — it never stands in for --yes. A non-interactive run (CI, a pipe) with
+// neither --yes nor --dry-run refuses rather than guessing.
 async function confirmMigrate({ context, options, input = process.stdin, output = process.stdout }) {
-  if (options.dryRun === true || options.yes === true || options.json === true) {
+  if (options.dryRun === true || options.yes === true) {
     return true;
   }
   if (!input.isTTY) {
