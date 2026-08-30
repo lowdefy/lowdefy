@@ -589,6 +589,7 @@ test('GET /lowdefy-docs/data-model serves the same object as getDataModel', () =
   expect(body.collections.answers.declared).toBe(true);
   expect(body.collections.answers.writers.map((writer) => writer.stepId)).toEqual(['insert']);
   expect(Array.isArray(body.unresolved)).toBe(true);
+});
 
 test('seedFixture is refused with howToEnable while cli.agentTools.allowWriteRequests is absent', async () => {
   fs.mkdirSync(path.join(fixtureDir, 'fixtures'), { recursive: true });
