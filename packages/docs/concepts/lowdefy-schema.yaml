@@ -371,6 +371,7 @@ _ref:
             | `events` | Block event name validation |
             | `block-properties` | Block `properties` validation against the block type's schema (unknown or mistyped properties) |
             | `schema` | JSON schema validation errors |
+            | `state-schema` | Page `state:` contract violations - a block id, `SetState` key or `_state` path the declared contract does not cover, or a fragment that is not a valid JSON schema |
             | `js-lint` | `_js` body analysis - a reference to a name that is not a parameter, not declared in the body and not in the JavaScript standard library is a build error; a declaration that is never used is a warning |
             | `tenant` | Tenant wall audits on requests and steps over a walled connection - an authored tenant field is a build error; the `tenant: none` audits (no tenant field, a caller-supplied tenant value, an unstamped write) and the unscoped inventory run under `lowdefy check` |
 
