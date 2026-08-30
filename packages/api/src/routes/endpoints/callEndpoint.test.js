@@ -502,3 +502,67 @@ test('a walled step fails closed for a caller with no organization when the endp
   expect(result.status).toBe('error');
   expect(logger.error).toHaveBeenCalled();
 });
+
+test('callEndpoint reports a :return that misses the responseSchema as a dev notice and still returns it', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_ep.json') {
+      return {
+        endpointId: 'typed_ep',
+        type: 'Api',
+        auth: { public: true },
+        responseSchema: { type: 'object', properties: { total: { type: 'integer' } } },
+        routine: { ':return': { total: 'three' } },
+        '~k': 'k_typed',
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile, user: { id: 'u' } });
+  context.handleDevNotice = jest.fn();
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'typed_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ total: 'three' });
+  expect(context.handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(context.handleDevNotice.mock.calls[0][0]).toMatchObject({
+    name: 'ResponseSchemaWarning',
+    configKey: 'k_typed',
+    details: { endpointId: 'typed_ep', instancePath: '/total' },
+  });
+});
+
+test('callEndpoint records no notice for a conforming :return or without the dev hook', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_ep.json') {
+      return {
+        endpointId: 'typed_ep',
+        type: 'Api',
+        auth: { public: true },
+        responseSchema: { type: 'object', properties: { total: { type: 'integer' } } },
+        routine: { ':return': { total: 3 } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile, user: { id: 'u' } });
+  context.handleDevNotice = jest.fn();
+  await callEndpoint(context, { blockId: 'b', endpointId: 'typed_ep', pageId: 'p', payload: {} });
+  expect(context.handleDevNotice).not.toHaveBeenCalled();
+
+  const prodContext = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'u' },
+  });
+  const result = await callEndpoint(prodContext, {
+    blockId: 'b',
+    endpointId: 'typed_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+});

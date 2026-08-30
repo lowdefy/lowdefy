@@ -471,3 +471,31 @@ test('tools/call routes an unexpected failure through handleError and reports it
   expect(result.content[0].text).toEqual('Authorization exploded. (at api/get-customer.yaml:2)');
   expect(logger.warn).not.toHaveBeenCalled();
 });
+
+test('createMcpServer publishes outputSchema and structuredContent only for endpoints with a responseSchema', async () => {
+  const responseSchema = {
+    type: 'object',
+    properties: { ok: { type: 'boolean' } },
+    '~k': 'k_schema',
+  };
+  const context = createContext({
+    configs: { 'api/health.json': { ...healthConfig, responseSchema } },
+    user: { id: 'u', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  const { tools } = await client.listTools();
+  const health = tools.find((tool) => tool.name === 'health');
+  const getCustomer = tools.find((tool) => tool.name === 'get-customer');
+  expect(health.outputSchema).toEqual({ type: 'object', properties: { ok: { type: 'boolean' } } });
+  expect(getCustomer.outputSchema).toBeUndefined();
+
+  const typed = await client.callTool({ name: 'health', arguments: {} });
+  expect(typed.structuredContent).toEqual({ ok: true });
+  expect(typed.content).toEqual([{ type: 'text', text: '{"ok":true}' }]);
+
+  const untyped = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(untyped.structuredContent).toBeUndefined();
+  expect(untyped.content).toEqual([{ type: 'text', text: '{"name":"Ada"}' }]);
+});
