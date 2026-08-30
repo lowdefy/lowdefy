@@ -1,0 +1,28 @@
+# 103: Runtime components with typed props
+lowdefy: local
+
+components:
+  - _ref: components/answer-pill.yaml
+
+pages:
+  - id: controls
+    type: Box
+    blocks:
+      - id: pill_a
+        type: AnswerPill
+        props:
+          result:
+            _state: answer_a
+          tone: positive
+        slots:
+          footer:
+            blocks:
+              - id: approve_a
+                type: Button
+                properties:
+                  title: Approve
+      - id: pill_b
+        type: AnswerPill
+        props:
+          result:
+            _state: answer_b
