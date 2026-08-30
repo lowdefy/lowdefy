@@ -185,9 +185,7 @@ test('block events actions try not an array', () => {
       components,
       context,
     })
-  ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
-  );
+  ).toThrow('Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".');
 });
 
 test('block events actions not an array', () => {
@@ -1310,4 +1308,146 @@ test('event shortcut that only contains a reserved name as a modified key is acc
     ],
   };
   expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+const blockMetas = {
+  Button: { category: 'display', events: ['onClick'] },
+  Container: { category: 'container' },
+  TextInput: { category: 'input', events: ['onChange', 'onEnterKeyPress'] },
+  AgGrid: { category: 'display' },
+  Tabs: { category: 'container', dynamicEvents: true, events: ['onChange'] },
+};
+
+const metaContext = testContext({ blockMetas, logger });
+
+function pageWithBlockEvents(events, { blockType = 'Button' } = {}) {
+  return {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: blockType,
+            events,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+test('buildEvents throws on an event name the block type does not declare', () => {
+  const components = pageWithBlockEvents({
+    onHover: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onHover" is not an event of block type "Button" at block "block_1" on page "page_1". Block type "Button" has events: onClick. Every block also accepts onMount and onMountAsync, and any event name that declares a shortcut.'
+  );
+});
+
+test('buildEvents suggests the closest declared event name', () => {
+  const components = pageWithBlockEvents({
+    onClik: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onClik" is not an event of block type "Button" at block "block_1" on page "page_1". Did you mean "onClick"? Block type "Button" has events: onClick.'
+  );
+});
+
+test('buildEvents throws with checkSlug events', () => {
+  const components = pageWithBlockEvents({
+    onHover: [{ id: 'action_1', type: 'Reset' }],
+  });
+  try {
+    buildPages({ components, context: metaContext });
+    throw new Error('Expected buildPages to throw.');
+  } catch (error) {
+    expect(error.checkSlug).toBe('events');
+  }
+});
+
+test('buildEvents allows onMount and onMountAsync on any block', () => {
+  const components = pageWithBlockEvents({
+    onMount: [{ id: 'action_1', type: 'Reset' }],
+    onMountAsync: [{ id: 'action_2', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents allows onInit on the page root block', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        events: {
+          onInit: [{ id: 'action_1', type: 'Reset' }],
+          onInitAsync: [{ id: 'action_2', type: 'Reset' }],
+        },
+        blocks: [],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents throws on onInit on a nested block', () => {
+  const components = pageWithBlockEvents({
+    onInit: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onInit" only fires on the page\'s root block, not on block "block_1" on page "page_1". Move it to the page\'s own events, or use onMount, which fires on every block.'
+  );
+});
+
+test('buildEvents allows any event name that declares a shortcut', () => {
+  const components = pageWithBlockEvents({
+    cmd_k_search: {
+      shortcut: 'mod+k',
+      try: [{ id: 'action_1', type: 'Reset' }],
+    },
+  });
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type whose meta declares no events', () => {
+  const components = pageWithBlockEvents(
+    { onRowClick: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'AgGrid' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type that is not in blockMetas', () => {
+  const components = pageWithBlockEvents(
+    { onAnything: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'LocalPluginBlock' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents suppresses the error under ~ignoreBuildChecks events', () => {
+  const suppressContext = testContext({ blockMetas, logger });
+  suppressContext.keyMap = {
+    event_key: { key: 'pages.0.blocks.0.events.onHover', '~ignoreBuildChecks': ['events'] },
+  };
+  const components = pageWithBlockEvents({
+    onHover: {
+      '~k': 'event_key',
+      try: [{ id: 'action_1', type: 'Reset' }],
+    },
+  });
+  expect(() => buildPages({ components, context: suppressContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type that declares dynamicEvents', () => {
+  const components = pageWithBlockEvents(
+    { onApprove: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'Tabs' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
 });

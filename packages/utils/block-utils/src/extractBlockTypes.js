@@ -26,6 +26,8 @@ function extractBlockTypes(metas) {
     if (meta.initValue !== undefined) entry.initValue = meta.initValue;
     if (meta.slots !== undefined) entry.slots = meta.slots;
     if (meta.cssKeys) entry.cssKeys = Object.keys(meta.cssKeys);
+    if (meta.events) entry.events = Object.keys(meta.events);
+    if (meta.dynamicEvents) entry.dynamicEvents = true;
     blockMetas[name] = entry;
   }
   return { blocks, icons, blockMetas };

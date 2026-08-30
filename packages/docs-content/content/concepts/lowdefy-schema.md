@@ -293,6 +293,8 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 | `link-refs` | Invalid Link action page reference warnings |
 | `request-refs` | Invalid Request action reference warnings |
 | `connection-refs` | Nonexistent connection ID references |
+| `tenant-lookup` | Build error for a tenant-scoped aggregation that joins a `tenant: shared` collection |
+| `events` | Block event name validation |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |
 

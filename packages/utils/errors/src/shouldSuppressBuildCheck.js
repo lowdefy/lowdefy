@@ -32,6 +32,7 @@ export const VALID_CHECK_SLUGS = {
   'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
   'websocket-refs': 'Invalid websocket action reference warnings',
   icons: 'Unresolvable icon name warnings',
+  events: 'Block event name validation',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
   'js-lint': 'Unresolved and unused names in _js bodies',

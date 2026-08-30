@@ -368,6 +368,7 @@ _ref:
             | `icons` | Unresolvable icon name warnings |
             | `tenant-lookup` | Build error for a tenant-scoped aggregation that joins a `tenant: shared` collection |
             | `types` | All type validation - unknown blocks, operators, actions, requests, connections, steps, agents, notifications and websockets. Since v8 an unknown operator is a build error, so this slug is what suppresses a key that only looks like an operator. |
+            | `events` | Block event name validation |
             | `schema` | JSON schema validation errors |
             | `js-lint` | `_js` body analysis - a reference to a name that is not a parameter, not declared in the body and not in the JavaScript standard library is a build error; a declaration that is never used is a warning |
 

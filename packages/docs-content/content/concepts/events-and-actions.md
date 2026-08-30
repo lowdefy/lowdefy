@@ -237,6 +237,38 @@ The `onMount` event is triggered every time a block is rendered on a page. This 
 
 The `onMountAsync` event is triggered every time a block is mounted, but does not render the block in loading.
 
+## Event names are validated at build
+
+Every block type documents the events it fires — the `onClick` on a [`Button`](/Button), the `onChange` on a [`TextInput`](/TextInput). The build checks each event name on a block against that list, so a misspelled `onClik` is a build error instead of an event that never fires:
+
+```
+Event "onClik" is not an event of block type "Button" at block "submit" on page "form".
+Did you mean "onClick"? Block type "Button" has events: onClick. Every block also accepts
+onMount and onMountAsync, and any event name that declares a shortcut.
+```
+
+The rules are:
+
+- `onMount` and `onMountAsync` are accepted on every block.
+- `onInit` and `onInitAsync` are accepted on the page's own block only — they never fire on a nested block. Move the event to the page, or use `onMount`.
+- An event that declares a `shortcut` may use any name, since the shortcut binds the event by name regardless of the block type. `cmd_k_search: { shortcut: mod+K, try: [...] }` is valid on any block.
+- A block type that declares no events in its meta is not checked. Custom and local plugin blocks that do not list their events keep working unchanged.
+- A few block types fire event names authored in their own properties — a [`Tabs`](/Tabs) tab's `eventName`, an AgGrid cell button's `eventName`, a [`DropdownButton`](/DropdownButton) item's `eventName`. These types declare `dynamicEvents` in their meta and are not checked.
+
+To suppress the check — for example on a custom block whose events the build cannot see — use the `events` check slug:
+
+```yaml
+events:
+  onSomethingCustom:
+    ~ignoreBuildChecks:
+      - events
+    try:
+      - id: do_it
+        type: SetState
+        params:
+          done: true
+```
+
 ## Action types
 
 The following actions can be used:
@@ -269,3 +301,4 @@ See additional action type available under the Actions tab in the menu.
 - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
 - The `onMount` events is triggered the every time a block is mounted and keeps the block in loading until all actions have finished.
 - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
+- Event names are validated at build against the block type's declared events. `onMount`/`onMountAsync` are accepted everywhere, `onInit`/`onInitAsync` on the page's own block only, and an event with a `shortcut` may use any name. Suppress with `~ignoreBuildChecks: [events]`.

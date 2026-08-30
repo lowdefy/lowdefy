@@ -77,6 +77,8 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
   };
+  // The page's own block is the only block that receives onInit/onInitAsync.
+  pageContext.rootBlockId = page.pageId;
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
