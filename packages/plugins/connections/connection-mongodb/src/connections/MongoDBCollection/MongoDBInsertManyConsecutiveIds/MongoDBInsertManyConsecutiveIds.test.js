@@ -160,3 +160,34 @@ test('request options not an object', async () => {
     'MongoDBInsertManyConsecutiveIds request property "options" should be an object.'
   );
 });
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('insertManyConsecutiveIds with a collectionSchema throws a contract violation before claiming ids', async () => {
+  const contractCollection = 'insertManyConsecutiveIdsContract';
+  await clearTestMongoDb({ collection: contractCollection });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBInsertManyConsecutiveIds({
+      request: { docs: [{ result: 'pass' }, { created_at: 'yesterday' }], prefix: 'M', length: 3 },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "created_at" in an insert document (docs[1]) for collection "answers" does not match the declared contract: must be a Date. Received "yesterday".'
+  );
+  const res = await MongoDBInsertManyConsecutiveIds({
+    request: { docs: [{ result: 'pass' }, { result: 'fail' }], prefix: 'M', length: 3 },
+    connection,
+    collectionSchema,
+  });
+  expect(res.insertedIds).toEqual({ 0: 'M001', 1: 'M002' });
+});

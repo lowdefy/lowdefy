@@ -141,6 +141,9 @@ _ref:
               - MongoDBUpdateOne
               - MongoDBVersionedUpdateOne
 
+            ##### Validation on write
+
+            When the app declares the collection a connection addresses under the root [`collections`](/collections) object with `fields`, every write request type on that connection validates what it writes against those fields before calling the driver: the insert types check each document, the update types check the values of `$set` and `$setOnInsert`, and `MongoDBBulkWrite` checks each operation by kind. Undeclared fields pass. A violation is a request error naming the field, the expected type and the received value. Nothing is validated when the collection is not declared or declares no `fields`. See [Collections - Validation on write](/collections#validation-on-write) for the rules and the reasons this runs in the connection rather than as a `$jsonSchema` collection validator.
 
             ### MongoDBAggregation
 

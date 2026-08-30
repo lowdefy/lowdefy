@@ -473,3 +473,61 @@ test('replaceOne', async () => {
     upsertedIds: {},
   });
 });
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('bulkWrite with a collectionSchema rejects a violating operation and writes nothing', async () => {
+  const contractCollection = 'bulkWriteContract';
+  await populateTestMongoDb({
+    collection: contractCollection,
+    documents: [{ _id: 'b1', result: 'pass' }],
+  });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBBulkWrite({
+      request: {
+        operations: [
+          { insertOne: { document: { _id: 'b2', result: 'pass' } } },
+          { updateOne: { filter: { _id: 'b1' }, update: { $set: { result: 'Pass' } } } },
+        ],
+      },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "result" in $set of an update (operations[1]) for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Pass".'
+  );
+  await expect(
+    MongoDBBulkWrite({
+      request: {
+        operations: [{ replaceOne: { filter: { _id: 'b1' }, replacement: { test_id: 1 } } }],
+      },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "test_id" in a replacement document (operations[0]) for collection "answers" does not match the declared contract: must be string. Received 1.'
+  );
+  const res = await MongoDBBulkWrite({
+    request: {
+      operations: [
+        { insertOne: { document: { _id: 'b2', result: 'pass', extra: 1 } } },
+        { updateOne: { filter: { _id: 'b1' }, update: { $set: { result: 'fail' } } } },
+        { replaceOne: { filter: { _id: 'b2' }, replacement: { test_id: 't2' } } },
+        { deleteOne: { filter: { _id: 'none' } } },
+      ],
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res.insertedCount).toEqual(1);
+  expect(res.modifiedCount).toEqual(2);
+});

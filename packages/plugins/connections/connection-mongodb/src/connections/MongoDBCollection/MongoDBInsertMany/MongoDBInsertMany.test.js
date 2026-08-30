@@ -15,6 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { MongoClient } from 'mongodb';
 import MongoDBInsertMany from './MongoDBInsertMany.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
 import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
@@ -221,4 +222,56 @@ test('request options not an object', async () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertMany request property "options" should be an object.'
   );
+});
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('insertMany with a collectionSchema throws for a violating document and writes nothing', async () => {
+  const violationCollection = 'insertManyContractViolation';
+  await clearTestMongoDb({ collection: violationCollection });
+  const connection = { databaseUri, databaseName, collection: violationCollection, write: true };
+  await expect(
+    MongoDBInsertMany({
+      request: {
+        docs: [
+          { _id: 'v1', test_id: 't1', result: 'pass' },
+          { _id: 'v2', test_id: 2, result: 'pass' },
+        ],
+      },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "test_id" in an insert document (docs[1]) for collection "answers" does not match the declared contract: must be string. Received 2.'
+  );
+  const client = new MongoClient(databaseUri);
+  await client.connect();
+  const written = await client.db().collection(violationCollection).find({}).toArray();
+  await client.close();
+  expect(written).toEqual([]);
+});
+
+test('insertMany with a collectionSchema writes conforming documents', async () => {
+  const okCollection = 'insertManyContractOk';
+  await clearTestMongoDb({ collection: okCollection });
+  const connection = { databaseUri, databaseName, collection: okCollection, write: true };
+  const res = await MongoDBInsertMany({
+    request: {
+      docs: [
+        { _id: 'ok1', test_id: 't1', result: 'pass', extra: true },
+        { _id: 'ok2', test_id: 't2', created_at: { '~d': '2026-01-01T00:00:00.000Z' } },
+      ],
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res.insertedCount).toEqual(2);
 });

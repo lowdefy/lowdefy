@@ -17,6 +17,8 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import validateDocFields from '../collectionSchema/validateDocFields.js';
+import validateUpdateFields from '../collectionSchema/validateUpdateFields.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -24,6 +26,7 @@ import schema from './schema.js';
 
 async function MongoDBVersionedUpdateOne({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -48,6 +51,9 @@ async function MongoDBVersionedUpdateOne({
       trace,
     });
   }
+  if (collectionSchema) {
+    validateUpdateFields({ update, collectionSchema });
+  }
   if (trace) {
     trace.effective = serialize({ filter, update, options });
   }
@@ -70,6 +76,9 @@ async function MongoDBVersionedUpdateOne({
       // scan, which would reject the field the document legitimately holds)
       // keeps the version copy stamped by construction rather than by trust.
       document[tenant.field] = tenant.value;
+    }
+    if (collectionSchema) {
+      validateDocFields({ doc: document, collectionSchema, position: 'a version copy' });
     }
     try {
       insertedDocument = await collection.insertOne(document, { ...insertOptions });

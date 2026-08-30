@@ -497,3 +497,43 @@ test('request options not an object', async () => {
     'MongoDBUpdateMany request property "options" should be an object.'
   );
 });
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('updateMany with a collectionSchema rejects a violating $set and applies a conforming one', async () => {
+  const contractCollection = 'updateManyContract';
+  await populateTestMongoDb({
+    collection: contractCollection,
+    documents: [
+      { _id: 'm1', result: 'pass' },
+      { _id: 'm2', result: 'pass' },
+    ],
+  });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBUpdateMany({
+      request: { filter: {}, update: { $set: { created_at: '2026' } } },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "created_at" in $set of an update for collection "answers" does not match the declared contract: must be a Date. Received "2026".'
+  );
+  const res = await MongoDBUpdateMany({
+    request: {
+      filter: {},
+      update: { $set: { created_at: { '~d': '2026-01-01T00:00:00.000Z' }, result: 'na' } },
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res.modifiedCount).toEqual(2);
+});
