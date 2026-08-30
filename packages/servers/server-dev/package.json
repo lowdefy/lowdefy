@@ -68,6 +68,7 @@
     "@lowdefy/connection-axios-http": "5.5.1",
     "@lowdefy/connection-mongodb": "5.5.1",
     "@lowdefy/docs-content": "5.5.1",
+    "@lowdefy/e2e-utils": "5.5.1",
     "@lowdefy/engine": "5.5.1",
     "@lowdefy/errors": "5.5.1",
     "@lowdefy/helpers": "5.5.1",

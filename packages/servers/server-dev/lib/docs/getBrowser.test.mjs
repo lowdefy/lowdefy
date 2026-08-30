@@ -31,7 +31,7 @@ fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({
 fs.writeFileSync(path.join(fixtureDir, 'build', 'auth.json'), JSON.stringify({}));
 process.chdir(fixtureDir);
 
-const { openPage } = await import('./getBrowser.js');
+const { openPage, buildPageUrl } = await import('./getBrowser.js');
 const { default: isPageReady } = await import('./isPageReady.js');
 
 afterAll(() => {
@@ -151,4 +151,37 @@ test('openPage resolves with ready false when the readiness wait times out', asy
 
   expect(opened.ready).toBe(false);
   expect(opened.page).toBe(page);
+});
+
+test('buildPageUrl returns the bare page route without a urlQuery', () => {
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home' })).toEqual(
+    'http://localhost:3001/home'
+  );
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home', urlQuery: {} })).toEqual(
+    'http://localhost:3001/home'
+  );
+});
+
+test('buildPageUrl appends urlQuery the way the engine serializes Link urlQuery', () => {
+  expect(
+    buildPageUrl({
+      origin: 'http://localhost:3001',
+      pageId: 'detail',
+      urlQuery: { id: 'abc 1', page: 2, filter: { open: true } },
+    })
+  ).toEqual('http://localhost:3001/detail?id=abc+1&page=2&filter=%7B%22open%22%3Atrue%7D');
+});
+
+test('openPage opens the page at the urlQuery it was given', async () => {
+  const { browser, page } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'detail',
+    urlQuery: { id: '1' },
+  });
+
+  expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
+  expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });
