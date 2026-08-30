@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
+import { compile } from '@lowdefy/ajv';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import callRequest from './callRequest.js';
@@ -404,6 +405,7 @@ test('deserialize inputs', async () => {
         requestId: 'requestId',
         blockId: 'contextId',
         payload: { date: new Date(0) },
+        collectionSchema: null,
         request: {
           payload: { date: new Date(0) },
           payloadDate: new Date(0),
@@ -1071,5 +1073,153 @@ test('callRequest with trace collects the connection, the tenant verdict and the
     properties: { org: 'org-1', q: 'x' },
     effective: { query: { q: 'x', organization_id: 'org-1' } },
     rewritten: [],
+  });
+});
+
+// Write validation: the field contract from build/collections.json is
+// resolved from the evaluated connection collection and handed to the
+// resolver as collectionSchema, beside tenant.
+const collectionsArtifact = {
+  answers: {
+    fields: {
+      test_id: { type: 'string' },
+      result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    },
+    relations: {},
+    indexes: [],
+    connections: [],
+  },
+  controls: { tenant: 'shared', relations: {}, indexes: [], connections: [] },
+};
+
+const collectionsReadConfigImp =
+  ({ connectionConfig }) =>
+  (path) => {
+    if (path === 'collections.json') {
+      return collectionsArtifact;
+    }
+    return defaultReadConfigImp({ connectionConfig })(path);
+  };
+
+test('callRequest resolves collectionSchema from the evaluated connection collection', async () => {
+  mockReadConfigFile.mockImplementation(
+    collectionsReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: { collection: { _payload: 'collection' } },
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  await callRequest(context, { ...defaultParams, payload: { collection: 'answers' } });
+  expect(mockTestRequest.mock.calls[0][0].collectionSchema).toEqual({
+    name: 'answers',
+    fields: collectionsArtifact.answers.fields,
+  });
+  expect(mockTestRequest.mock.calls[0][0].connection).toEqual({ collection: 'answers' });
+});
+
+test('callRequest passes a null collectionSchema when the collection is undeclared or declares no fields', async () => {
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  for (const collection of ['controls', 'unknown']) {
+    mockReadConfigFile.mockImplementation(
+      collectionsReadConfigImp({
+        connectionConfig: {
+          id: 'connection:testConnection',
+          type: 'TestConnection',
+          connectionId: 'testConnection',
+          properties: { collection },
+        },
+      })
+    );
+    await callRequest(context, defaultParams);
+  }
+  expect(mockTestRequest.mock.calls[0][0].collectionSchema).toBe(null);
+  expect(mockTestRequest.mock.calls[1][0].collectionSchema).toBe(null);
+});
+
+test('callRequest passes a null collectionSchema when the connection names no collection', async () => {
+  mockReadConfigFile.mockImplementation(collectionsReadConfigImp({}));
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  await callRequest(context, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].collectionSchema).toBe(null);
+  expect(mockReadConfigFile).not.toHaveBeenCalledWith('collections.json');
+});
+
+// End to end through callRequest: a resolver that enforces the contract the
+// way the MongoDB write types do - validate the declared fields of the
+// written doc, throw a ConfigError naming field, expectation and value.
+function contractEnforcingResolver({ collectionSchema, request }) {
+  if (collectionSchema) {
+    Object.keys(collectionSchema.fields).forEach((fieldName) => {
+      if (!(fieldName in request.doc)) return;
+      const { valid, errors } = compile({ schema: collectionSchema.fields[fieldName] })(
+        request.doc[fieldName]
+      );
+      if (!valid) {
+        throw new ConfigError(
+          `Field "${fieldName}" in an insert document for collection "${
+            collectionSchema.name
+          }" does not match the declared contract: ${errors[0].message}. Received ${JSON.stringify(
+            request.doc[fieldName]
+          )}.`
+        );
+      }
+    });
+  }
+  return { acknowledged: true };
+}
+
+test('callRequest runs a conforming and a violating write through the resolver with the resolved contract', async () => {
+  const requestConfig = {
+    id: 'request:pageId:requestId',
+    type: 'TestRequestCheckWrite',
+    requestId: 'requestId',
+    pageId: 'pageId',
+    connectionId: 'testConnection',
+    auth: { public: true },
+    properties: { doc: { _payload: 'doc' } },
+    '~k': 'request_key',
+  };
+  const connectionConfig = {
+    id: 'connection:testConnection',
+    type: 'TestConnection',
+    connectionId: 'testConnection',
+    properties: { collection: 'answers', write: true },
+  };
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'collections.json') return collectionsArtifact;
+    if (path === 'connections/testConnection.json') return connectionConfig;
+    if (path === 'pages/pageId/requests/requestId.json') return requestConfig;
+    return null;
+  });
+  mockTestRequestCheckWrite.mockImplementation(contractEnforcingResolver);
+
+  const ok = await callRequest(context, {
+    ...defaultParams,
+    payload: { doc: { test_id: 't1', result: 'pass', reviewed_by: 'u1' } },
+  });
+  expect(ok.response).toEqual({ acknowledged: true });
+
+  let thrown;
+  try {
+    await callRequest(context, {
+      ...defaultParams,
+      payload: { doc: { test_id: 't1', result: 'Pass' } },
+    });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toEqual(
+    'Field "result" in an insert document for collection "answers" does not match the declared contract: must be equal to one of the allowed values. Received "Pass".'
+  );
+  expect(thrown.configKey).toEqual('request_key');
+  expect(mockTestRequestCheckWrite).toHaveBeenCalledTimes(2);
+  expect(mockTestRequestCheckWrite.mock.calls[1][0].collectionSchema).toEqual({
+    name: 'answers',
+    fields: collectionsArtifact.answers.fields,
   });
 });

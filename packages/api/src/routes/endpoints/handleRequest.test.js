@@ -255,3 +255,66 @@ test('a CallApi child runs under its own runAs declaration, not the parent scope
   expect(res.status).toBe('error');
   expect(res.error).toBeInstanceOf(AuthenticationError);
 });
+
+// Write validation: a routine step resolves the collection contract from the
+// evaluated connection collection and hands it to the resolver, like a page
+// request does.
+test('a step resolves collectionSchema from the evaluated connection collection', async () => {
+  const collectionsArtifact = {
+    answers: {
+      fields: { test_id: { type: 'string' } },
+      relations: {},
+      indexes: [],
+      connections: [],
+    },
+    controls: { tenant: 'shared', relations: {}, indexes: [], connections: [] },
+  };
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'collections.json') return collectionsArtifact;
+    if (path === 'connections/answers.json') {
+      return {
+        id: 'connection:answers',
+        type: 'TestTenantConnection',
+        connectionId: 'answers',
+        properties: { collection: { _secret: 'COLLECTION' } },
+        '~k': 'connection.1',
+      };
+    }
+    if (path === 'connections/controls.json') {
+      return {
+        id: 'connection:controls',
+        type: 'TestTenantConnection',
+        connectionId: 'controls',
+        properties: { collection: 'controls' },
+        '~k': 'connection.2',
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    connections,
+    logger,
+    operators: operatorsServer,
+    organization: { policy: 'tenant' },
+    readConfigFile,
+    secrets: { COLLECTION: 'answers' },
+    system: true,
+  });
+  context.endpointId = 'jobs';
+  context.evaluateOperators = createEvaluateOperators(context);
+  const { res } = await run(context, {
+    routine: [
+      requestStep('write', { connectionId: 'answers' }),
+      requestStep('read', { connectionId: 'controls' }),
+    ],
+    runAs: { organizationId: 'org-9', configKey: 'endpoint.1', source: 'endpoint' },
+  });
+  expect(res.status).toBe('continue');
+  expect(mockTenantRequest).toHaveBeenCalledTimes(2);
+  expect(mockTenantRequest.mock.calls[0][0].connection).toEqual({ collection: 'answers' });
+  expect(mockTenantRequest.mock.calls[0][0].collectionSchema).toEqual({
+    name: 'answers',
+    fields: collectionsArtifact.answers.fields,
+  });
+  expect(mockTenantRequest.mock.calls[1][0].collectionSchema).toBe(null);
+});

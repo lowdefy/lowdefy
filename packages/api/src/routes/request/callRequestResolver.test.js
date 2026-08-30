@@ -452,3 +452,26 @@ test('configKey attached when missing', async () => {
   }
   expect(caught.configKey).toBe('request_key');
 });
+
+test('resolver argument bag carries collectionSchema and defaults it to null', async () => {
+  const context = createTestContext();
+  const requestResolver = jest.fn(() => 'ok');
+  const collectionSchema = { name: 'answers', fields: { test_id: { type: 'string' } } };
+  await callRequestResolver(context, {
+    collectionSchema,
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver,
+  });
+  expect(requestResolver.mock.calls[0][0].collectionSchema).toBe(collectionSchema);
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver,
+  });
+  expect(requestResolver.mock.calls[1][0].collectionSchema).toBe(null);
+});

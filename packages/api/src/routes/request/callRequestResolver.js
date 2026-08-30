@@ -21,6 +21,7 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 async function callRequestResolver(
   context,
   {
+    collectionSchema,
     connectionProperties,
     endpointDepth,
     requestConfig,
@@ -68,6 +69,11 @@ async function callRequestResolver(
     const response = await requestResolver({
       blockId,
       callApi,
+      // The field contract ({ name, fields } or null) resolved by
+      // resolveCollectionSchema from build/collections.json - connection types
+      // that implement write validation check insert documents and $set /
+      // $setOnInsert values against it before touching the database.
+      collectionSchema: collectionSchema ?? null,
       connection: connectionProperties,
       connectionId: requestConfig.connectionId,
       endpointId,
