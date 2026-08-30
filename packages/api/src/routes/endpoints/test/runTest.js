@@ -94,7 +94,7 @@ function createTextContext() {
 
   return context;
 }
-async function runTest({ routine, payload = {} }) {
+async function runTest({ routine, payload = {}, trace }) {
   const context = createTextContext();
   const routineContext = {
     steps: {},
@@ -103,6 +103,7 @@ async function runTest({ routine, payload = {} }) {
     arrayIndices: [],
     state: {},
     endpointDepth: 0,
+    trace,
   };
   const res = await runRoutine(context, routineContext, { routine });
   return { res, context, routineContext };

@@ -31,7 +31,11 @@ import validateSchemas from './validateSchemas.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import redactResponse from '../../response/redactResponse.js';
 
-async function callRequest(context, { blockId, pageId, payload, requestId }) {
+// `trace` is an optional dev-only collector (the `explain` flag of the dev
+// tools). When present it records the tenancy verdict and the evaluated
+// properties, and is handed to the resolver so it can report the effective
+// query. Absent, nothing is allocated and the result is unchanged.
+async function callRequest(context, { blockId, pageId, payload, requestId, trace }) {
   const { logger } = context;
 
   context.blockId = blockId;
@@ -51,6 +55,13 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
   const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
+  if (trace) {
+    trace.connection = {
+      id: connectionConfig.connectionId,
+      type: connectionConfig.type,
+      tenant: tenant ?? null,
+    };
+  }
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -59,6 +70,9 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     state: {},
     steps: {},
   });
+  if (trace) {
+    trace.properties = requestProperties;
+  }
 
   checkConnectionRead(context, {
     connectionConfig,
@@ -86,6 +100,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestProperties,
     requestResolver,
     tenant,
+    trace,
   });
   return {
     id: requestConfig.id,
