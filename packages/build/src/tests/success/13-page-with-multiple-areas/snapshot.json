@@ -1187,7 +1187,55 @@
   "plugins/blockMetas.json": {
     "PageHeaderMenu": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onBreadcrumbClick": {},
+        "onClose": {},
+        "onMenuItemClick": {},
+        "onMenuItemSelect": {},
+        "onOpen": {},
+        "onProfileMenuClick": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "The menu item key (id)."
+              },
+              "keyPath": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The key path of the menu item."
+              },
+              "pageId": {
+                "type": "string",
+                "description": "The page id of the menu item."
+              },
+              "url": {
+                "type": "string",
+                "description": "The url of the menu item."
+              }
+            }
+          }
+        },
+        "onProfileMenuOpen": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "open": {
+                "type": "boolean",
+                "description": "Whether the dropdown is open."
+              }
+            }
+          }
+        },
+        "onToggleDrawer": {},
+        "onToggleMenuGroup": {}
+      }
     },
     "Result": {
       "category": "container",
@@ -1195,11 +1243,29 @@
     },
     "Anchor": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Box": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {},
+        "onPaste": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The pasted plain text."
+              }
+            }
+          }
+        }
+      }
     },
     "DangerousHtml": {
       "category": "display",
@@ -1218,7 +1284,10 @@
     },
     "Dynamic": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Html": {
       "category": "display",
@@ -1228,11 +1297,28 @@
           "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
           "see": "display-blocks/html"
         }
-      ]
+      ],
+      "events": {
+        "onTextSelection": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selection": {
+                "type": "string",
+                "description": "The selected text."
+              }
+            }
+          }
+        }
+      }
     },
     "Icon": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Img": {
       "category": "display",
@@ -1241,11 +1327,17 @@
     "List": {
       "category": "list",
       "valueType": "array",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Span": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Throw": {
       "category": "display",
@@ -1281,7 +1373,10 @@
     },
     "Message": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClose": {}
+      }
     }
   },
   "plugins/blockSchemas.json": {
@@ -2510,15 +2605,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": {
-                    "description": "Trigger action when a profile dropdown menu item is clicked.",
-                    "event": {
-                      "key": "The menu item key (id).",
-                      "keyPath": "The key path of the menu item.",
-                      "pageId": "The page id of the menu item.",
-                      "url": "The url of the menu item."
-                    }
-                  }
+                  "description": "Trigger action when a profile dropdown menu item is clicked."
                 },
                 "onProfileMenuOpen": {
                   "oneOf": [
@@ -2535,12 +2622,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": {
-                    "description": "Trigger action when the profile dropdown opens or closes.",
-                    "event": {
-                      "open": "Whether the dropdown is open."
-                    }
-                  }
+                  "description": "Trigger action when the profile dropdown opens or closes."
                 },
                 "onToggleDrawer": {
                   "oneOf": [
@@ -4174,7 +4256,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                  "description": "Trigger action when text is selected."
                 }
               }
             }
