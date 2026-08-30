@@ -19,6 +19,7 @@ import {
   createApiContext,
   ensureMcpOauthResource,
   resolveAuthentication,
+  resolveMigrationPreflight,
   resolvePinnedOrganization,
   resolveTenantPreflight,
 } from '@lowdefy/api';
@@ -147,6 +148,11 @@ function apiContext() {
     // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
     // probe failure retries next request). No-op under pinned.
     await resolveTenantPreflight(context);
+    // Refuse to serve while any built migration is unapplied (lazily-run-once;
+    // a refusal memoizes until restart, a connectivity or in-progress failure
+    // retries next request). No-op when config.migrations.preflight is false or
+    // no migrations are built.
+    await resolveMigrationPreflight(context);
     c.set('lowdefyContext', context);
     // Echo the request id so clients and proxies can quote it when reporting
     // a failure, and it can be matched to the rid on the server log lines.

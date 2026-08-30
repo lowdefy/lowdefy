@@ -103,6 +103,11 @@
           pageId: collections
           properties:
             title: Collections
+        - id: migrations
+          type: MenuLink
+          pageId: migrations
+          properties:
+            title: Migrations
         - id: page-and-app-state
           type: MenuLink
           pageId: page-and-app-state

@@ -42,6 +42,7 @@
     "build:client": "vite build",
     "build:lowdefy": "node lowdefy/build.mjs",
     "check:lowdefy": "node lowdefy/check.mjs",
+    "migrate:lowdefy": "node lowdefy/migrate.mjs",
     "prepublishOnly": "pnpm build",
     "start": "node src/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

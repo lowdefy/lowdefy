@@ -1064,6 +1064,7 @@
     ],
     "~k": "2a"
   },
+  "migrations.json": [],
   "pages/404.json": {
     "id": "page:404",
     "type": "Result",

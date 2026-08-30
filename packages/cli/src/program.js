@@ -28,6 +28,7 @@ import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import modulesUpdate from './commands/modules/modulesUpdate.js';
 import snapshot from './commands/snapshot/snapshot.js';
+import migrate from './commands/migrate/migrate.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
@@ -221,6 +222,24 @@ modules
   .addOption(options.logLevel)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: modulesUpdate }));
+
+program
+  .command('migrate')
+  .description('Run pending database migrations (migrations/*.yaml) against the app database.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .option('--dry-run', 'List the migrations that would run, in order, without applying anything.')
+  .addOption(new Option('--to <id>', 'Apply pending migrations up to and including this id.'))
+  .option('--yes', 'Skip the confirmation prompt (required in non-interactive environments).')
+  .option(
+    '--allow-checksum-mismatch',
+    'Proceed when an applied migration file has changed since it was applied (use only for a known no-op edit).'
+  )
+  .option('--json', 'Print the run report as JSON and nothing else.')
+  .addOption(options.logLevel)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: migrate }));
 
 program
   .command('vercel-output')

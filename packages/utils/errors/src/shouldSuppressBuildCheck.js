@@ -43,6 +43,7 @@ export const VALID_CHECK_SLUGS = {
   'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
   collections: 'Collections declaration: undeclared, dynamic and untenanted connections',
   'event-payload': '_event paths checked against the block event payload schema',
+  migrations: 'Migration file discovery, routine validation and tenant audits',
 };
 
 /**

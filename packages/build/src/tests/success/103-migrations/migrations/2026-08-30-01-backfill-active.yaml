@@ -1,0 +1,12 @@
+name: Default active:true on frameworks missing the field
+routine:
+  - id: backfill
+    type: MongoDBUpdateMany
+    connectionId: frameworks
+    tenant: none
+    properties:
+      filter:
+        active: { $exists: false }
+      update:
+        $set:
+          active: true

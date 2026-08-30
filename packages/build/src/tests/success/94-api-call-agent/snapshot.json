@@ -1292,6 +1292,7 @@
     ],
     "~k": "2o"
   },
+  "migrations.json": [],
   "pages/404.json": {
     "id": "page:404",
     "type": "Result",
