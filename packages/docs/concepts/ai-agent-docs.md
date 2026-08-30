@@ -70,6 +70,19 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status`, so problems that only show at runtime still reach the agent.
 
+### When a build fails, answers are marked stale
+
+A failed rebuild does not take the dev server down — it keeps serving the last build that succeeded, so you can carry on looking at the app while you fix the error. That means every tool can keep answering from a build that predates the latest edits, which is a trap for an agent.
+
+So while the last build is failing, every answer says so:
+
+- MCP tool results start with a `STALE: ...` text item.
+- JSON responses from `/lowdefy-docs` carry `stale: true`, `staleSince` and `staleReason`.
+- Markdown responses are prefixed with a `> STALE: ...` banner.
+- Every `/lowdefy-docs` response carries the `X-Lowdefy-Stale` and `X-Lowdefy-Stale-Since` headers.
+
+Nothing is refused — the last-known-good schema or page config is often exactly what you need while fixing the build. The flag disappears as soon as a build succeeds. Call `lowdefy_build_status` (or `GET /lowdefy-docs/build-status`) for the errors.
+
 ## Live state — the agent sees what you see
 
 When you have a page open in your browser, the agent can read its **actual live state** — page state, request results, and the event log of recent actions — via `lowdefy_inspect_state`. Reproduce a problem by clicking through the app, then ask the agent to look: it inspects your exact tab, not a guess. `lowdefy_eval_operator` then evaluates any operator expression (like `{"_state": "customer.name"}`) against that same live context, so `_state`/`_request` binding bugs get debugged against real data. With no tab open, both tools run the page headless instead.

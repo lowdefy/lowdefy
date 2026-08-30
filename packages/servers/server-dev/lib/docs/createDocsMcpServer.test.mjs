@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
+
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
@@ -138,4 +141,35 @@ test('MCP tools/call with an unknown type returns isError with guidance', async 
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toContain('lowdefy_list_types');
   await client.close();
+});
+
+// The dev server keeps serving the previous build when a rebuild fails, so
+// every tool result must announce that its answer predates the caller's edits.
+test('MCP tools/call prepends a STALE notice while the last build failed', async () => {
+  const statusPath = path.join(fixtureDir, 'build', 'buildStatus.json');
+  const okStatus = fs.readFileSync(statusPath, 'utf8');
+  fs.writeFileSync(
+    statusPath,
+    JSON.stringify({
+      status: 'error',
+      timestamp: '2026-02-03T04:05:06.000Z',
+      errors: [{ message: 'Block type "Buton" not found.' }],
+      warnings: [],
+    })
+  );
+  try {
+    const client = await connectClient();
+    const result = await client.callTool({
+      name: 'lowdefy_get_schema',
+      arguments: { kind: 'blocks', type: 'Button' },
+    });
+    expect(result.content[0].text.startsWith('STALE: ')).toBe(true);
+    expect(result.content[0].text).toContain('"staleSince":"2026-02-03T04:05:06.000Z"');
+    // The tool's own payload is untouched, just no longer first.
+    const parsed = JSON.parse(result.content[1].text);
+    expect(parsed.schema.properties.title).toBeDefined();
+    await client.close();
+  } finally {
+    fs.writeFileSync(statusPath, okStatus);
+  }
 });
