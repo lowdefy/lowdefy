@@ -69,3 +69,26 @@ test('formatErrorsForCopy with only tenant none notices has no leading blank sec
     ])
   ).toBe('Unscoped reads (tenant: none):\nran unscoped\n  Source: a.yaml:1');
 });
+
+test('formatErrorsForCopy lists runAs scope notices under their own heading after unscoped reads', () => {
+  expect(
+    formatErrorsForCopy([
+      {
+        type: 'RunAsScope',
+        level: 'info',
+        message: 'Step "rows" ran scoped to organization "org-9" (runAs).',
+        source: 'api/jobs.yaml:8',
+      },
+      {
+        type: 'TenantNoneNotice',
+        level: 'info',
+        message: 'Request "sync" ran unscoped on tenant connection "app_data" (tenant: none).',
+      },
+    ])
+  ).toBe(
+    'Unscoped reads (tenant: none):\n' +
+      'Request "sync" ran unscoped on tenant connection "app_data" (tenant: none).\n\n' +
+      'Scoped runs (runAs):\n' +
+      'Step "rows" ran scoped to organization "org-9" (runAs).\n  Source: api/jobs.yaml:8'
+  );
+});

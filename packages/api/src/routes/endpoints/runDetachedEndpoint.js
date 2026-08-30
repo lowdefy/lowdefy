@@ -21,6 +21,7 @@ import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 
 // Runs an endpoint invoked through the detached route (a CallApi step with
@@ -72,6 +73,15 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
     state: {},
     endpointDepth: 0,
   };
+  // The endpoint's runAs scopes every walled step of this run (a step-level
+  // runAs overrides it). Resolved against the fresh routine context, so it can
+  // read _user, _secret or a literal, never a step result or the payload.
+  routineContext.runAs = resolveRunAs(context, routineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,

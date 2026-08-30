@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import validatePayload from './validatePayload.js';
 
@@ -42,6 +43,17 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
     state: {},
     endpointDepth: endpointDepth + 1,
   };
+  // The child endpoint's own runAs declaration, evaluated in the child's fresh
+  // context - not the parent's scope. Like the caller identity, the parent's
+  // runAs does not flow into a CallApi child: each endpoint declares the
+  // organization it runs as, so the same endpoint is scoped identically over
+  // every transport.
+  childRoutineContext.runAs = resolveRunAs(context, childRoutineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
   return runRoutine(context, childRoutineContext, {
     routine: endpointConfig.routine,

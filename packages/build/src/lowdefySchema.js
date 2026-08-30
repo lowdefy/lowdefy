@@ -2178,6 +2178,25 @@ export default {
             _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
           },
         },
+        runAs: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['organizationId'],
+          properties: {
+            // Any type: a literal id or an operator (_step, _user, _secret, ...).
+            // The build refuses _payload and _state sources (validateRunAs).
+            organizationId: {},
+          },
+          description:
+            'Run this endpoint scoped to an organization. The tenant wall filters and stamps as if a member of that organization made the call, so caller-less chains (schedules, detached calls, webhooks) stay walled instead of needing tenant: none.',
+          errorMessage: {
+            type: 'Api endpoint "runAs" should be an object with an "organizationId".',
+            required: {
+              organizationId: 'Api endpoint "runAs" should be an object with an "organizationId".',
+            },
+            additionalProperties: 'Api endpoint "runAs" only accepts "organizationId".',
+          },
+        },
         schedules: {
           type: 'array',
           items: {

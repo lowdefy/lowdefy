@@ -138,7 +138,7 @@ test('docsJourneyHandler returns 400 when user is malformed', async () => {
   const result = await docsJourneyHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/must be JSON/);
+  expect(result.data.error).toMatch(/No dev users are declared/);
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 

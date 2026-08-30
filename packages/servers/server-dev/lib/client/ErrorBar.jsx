@@ -92,7 +92,7 @@ const ErrorBar = ({ errors }) => {
   const latest = errors[errors.length - 1];
   // tenant: none notices are counted as their own group beside the error
   // count, so an unscoped read never hides inside an error total.
-  const { entries, tenantNotices } = groupNotices(errors);
+  const { entries, tenantNotices, runAsNotices } = groupNotices(errors);
   const count = entries.length;
 
   return (
@@ -148,6 +148,20 @@ const ErrorBar = ({ errors }) => {
             }}
           >
             unscoped reads ({tenantNotices.length})
+          </span>
+        )}
+        {runAsNotices.length > 0 && (
+          <span
+            title="Steps that ran scoped to an organization declared with runAs"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            scoped runs ({runAsNotices.length})
           </span>
         )}
         <button

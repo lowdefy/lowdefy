@@ -22,15 +22,26 @@ test('groupNotices splits tenant none notices from errors and warnings in order'
   expect(groupNotices([notice, error, warning])).toEqual({
     entries: [error, warning],
     tenantNotices: [notice],
+    runAsNotices: [],
   });
 });
 
 test('groupNotices returns empty groups for no entries', () => {
-  expect(groupNotices([])).toEqual({ entries: [], tenantNotices: [] });
-  expect(groupNotices(undefined)).toEqual({ entries: [], tenantNotices: [] });
+  expect(groupNotices([])).toEqual({ entries: [], tenantNotices: [], runAsNotices: [] });
+  expect(groupNotices(undefined)).toEqual({ entries: [], tenantNotices: [], runAsNotices: [] });
 });
 
 test('groupNotices keeps other info-level entries with the errors', () => {
   const info = { type: 'OtherNotice', level: 'info', message: 'fyi' };
-  expect(groupNotices([info])).toEqual({ entries: [info], tenantNotices: [] });
+  expect(groupNotices([info])).toEqual({ entries: [info], tenantNotices: [], runAsNotices: [] });
+});
+
+test('groupNotices splits runAs scope notices into their own group', () => {
+  const notice = { type: 'RunAsScope', level: 'info', message: 'ran scoped' };
+  const error = { type: 'ConfigError', message: 'Bad type.' };
+  expect(groupNotices([notice, error])).toEqual({
+    entries: [error],
+    tenantNotices: [],
+    runAsNotices: [notice],
+  });
 });
