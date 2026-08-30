@@ -1828,6 +1828,52 @@
               "type": "string"
             },
             "description": "An array of blockIds to validate."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "blockIds": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "A blockId or an array of blockIds to validate."
+              },
+              "regex": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "description": "A regex string pattern or an array of regex patterns matched against blockIds to select the blocks to validate."
+              },
+              "schema": {
+                "oneOf": [
+                  {
+                    "const": true
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "description": "Validate the page state against the state contract declared in the page \"state\" property. true checks the whole contract; a dotted state path checks the fragment declared at that path. Runs in addition to the blocks selected by blockIds or regex. Errors at a path that is a block on the page are shown on that block."
+              }
+            },
+            "description": "Select blocks to validate by blockIds or regex, and/or validate state against the page state contract."
           }
         ]
       }
