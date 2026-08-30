@@ -133,6 +133,26 @@ blocks:
       {% endif %}
 ```
 
+### Required and optional vars
+
+A `_var` read written as a string — `_var: title` — requires the var. If the `_ref` that loads the file does not supply `title`, the build fails with an error naming the var, the file that reads it, and the `_ref` that should have supplied it, together with the var names that `_ref` did supply. This catches a typo in a var name, which used to render the template with a silently missing value.
+
+To read a var that a caller may legitimately leave out, write the object form with a `default`:
+
+```yaml
+properties:
+  title:
+    _var: title # required - the _ref must supply it
+  subtitle:
+    _var:
+      key: subtitle
+      default: null # optional - null when not supplied
+```
+
+Writing a `default` key is what makes a var optional, including `default: null`. `_var: { key: subtitle }` with no `default` key is required, exactly like the string form.
+
+A var supplied as `null` (`vars: { subtitle: null }`) counts as supplied and does not fail the build — only a var the `_ref` never wrote at all is missing.
+
 ## Custom JavaScript Functions
 
 The `_ref` operator can also be extended with custom JavaScript functions. A `resolver` function can be specified, which can overwrite the default way configuration files are read from the filesystem. A `transformer` function can be used to transform the value returned by the `_ref` operator.

@@ -238,13 +238,12 @@ function evaluateBuildOperator(node, ctx) {
 }
 
 // _var keys are author-written YAML, so a reserved name (e.g. "constructor") is a config
-// mistake, not a missing var. Wraps both call shapes for that check. The object form call
-// site below passes no `options` argument at all, so a missing key comes back from `get` as
-// `undefined` instead of a default — resolveVar relies on that `undefined` to tell "var not
-// provided" apart from "var provided as null".
-function readVar(key, ctx, options) {
+// mistake, not a missing var. Wraps both call shapes for that check. No `default` option is
+// passed, so a missing key comes back from `get` as `undefined` — resolveVar relies on that
+// `undefined` to tell "var not provided" apart from "var provided as null".
+function readVar(key, ctx) {
   try {
-    return get(ctx.vars, key, options);
+    return get(ctx.vars, key);
   } catch (error) {
     if (!(error instanceof ReservedKeyError)) throw error;
     throw new ConfigError(`_var key "${key}" is a reserved name.`, {
@@ -254,13 +253,44 @@ function readVar(key, ctx, options) {
   }
 }
 
+// Build the error message for a var that is read but never supplied. Every part of the ref
+// chain may be absent in a JIT or synthetic walk, so each is resolved defensively and the
+// message degrades to the parts that are known.
+function missingVarMessage(key, ctx) {
+  const refEntry = ctx.refMap?.[ctx.refId];
+  const refPath = refEntry?.path;
+  const referringFile = ctx.refMap?.[refEntry?.parent]?.path;
+  const lineNumber = refEntry?.lineNumber;
+  const optionalForm = `{ _var: { key: ${key}, default: null } }`;
+
+  let message;
+  if (referringFile) {
+    message =
+      `_var "${key}" is not supplied. It is read in "${ctx.currentFile}", which is loaded by the ` +
+      `_ref at "${referringFile}:${lineNumber}" resolving to "${refPath}". ` +
+      `Add "${key}" to that _ref's vars, or write ${optionalForm} to make it optional.`;
+  } else {
+    message =
+      `_var "${key}" is not supplied. It is read in "${ctx.currentFile}". ` +
+      `Add it to the vars of the _ref that loads this file, or write ${optionalForm} to make it optional.`;
+  }
+
+  if (type.isObject(ctx.vars) && Object.keys(ctx.vars).length > 0) {
+    message += ` Supplied vars: ${Object.keys(ctx.vars).join(', ')}.`;
+  }
+  return message;
+}
+
 // Resolve a _var node
 function resolveVar(node, ctx) {
   const varDef = node._var;
 
-  // String form: { _var: "key" }
+  // String form: { _var: "key" } — the var is required.
   if (type.isString(varDef)) {
-    const value = readVar(varDef, ctx, { default: null });
+    const value = readVar(varDef, ctx);
+    if (type.isUndefined(value)) {
+      throw new ConfigError(missingVarMessage(varDef, ctx), { filePath: ctx.currentFile });
+    }
     return cloneWithMarkers(value, { assignRefId: ctx.sourceRefId });
   }
 
@@ -273,9 +303,14 @@ function resolveVar(node, ctx) {
       return cloneWithMarkers(varFromParent, { assignRefId: ctx.sourceRefId });
     }
 
-    // Not provided → use default, preserve template's ~r
-    const defaultValue = type.isNone(varDef.default) ? null : varDef.default;
-    return cloneWithMarkers(defaultValue);
+    // Not provided → the var is only optional if a `default` key was written. Key presence,
+    // not the value, so { key, default: null } stays a null default.
+    if (!Object.prototype.hasOwnProperty.call(varDef, 'default')) {
+      throw new ConfigError(missingVarMessage(varDef.key, ctx), { filePath: ctx.currentFile });
+    }
+
+    // Use the default, preserving the template's ~r
+    return cloneWithMarkers(varDef.default);
   }
 
   throw new ConfigError('_var operator takes a string or object with "key" field as arguments.', {

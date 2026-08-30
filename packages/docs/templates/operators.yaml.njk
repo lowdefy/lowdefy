@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 methods:
-  _var: methods
+  _var:
+    key: methods
+    default: null
 page:
   _ref:
     path: templates/general.yaml.njk
@@ -28,22 +30,30 @@ page:
           visible:
             _not:
               _not:
-                _var: warning
+                _var:
+                  key: warning
+                  default: null
           properties:
             message:
-              _var: warning
+              _var:
+                key: warning
+                default: null
             type: warning
         - id: environment
           type: Alert
           visible:
             _not:
               _not:
-                _var: env
+                _var:
+                  key: env
+                  default: null
           properties:
             message:
               _string.concat:
                 - 'Environment: '
-                - _var: env
+                - _var:
+                    key: env
+                    default: null
             type: info
         {% if experimental %}
         - id: experimental
@@ -58,12 +68,16 @@ page:
             fontSize: 14px
           properties:
             content:
-              _var: types
+              _var:
+                key: types
+                default: null
         - id: description
           type: MarkdownWithCode
           properties:
             content:
-              _var: description
+              _var:
+                key: description
+                default: null
         {% if build %}
         - id: build_operator
           type: Markdown
