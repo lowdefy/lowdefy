@@ -98,7 +98,9 @@ test('findOne mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(MongoDBFindOne({ request, connection })).rejects.toThrow('unknown operator: $badOp');
+  await expect(MongoDBFindOne({ request, connection })).rejects.toThrow(
+    'MongoDB: MongoDB rejected the MongoDBFindOne command on collection "findOne" as malformed.'
+  );
 });
 
 test('checkRead should be true', async () => {
