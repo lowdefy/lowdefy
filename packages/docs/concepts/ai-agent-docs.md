@@ -81,6 +81,24 @@ The dev server rebuilds automatically when config changes, so an agent works in 
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
 5. Server-side failures appear beside them under `serverErrors` — a request whose database filter is malformed, an endpoint step that throws, an MCP tool call or an agent tool call that fails — each with the yaml `source` (`file:line`) and `config` path that produced it, plus the `endpointId`, `requestId` and `pageId` where known. The store holds the last 50 errors and is cleared on dev server restart.
 
+### Events are pushed — no need to poll
+
+The dev server pushes what changed instead of waiting to be asked. Two channels carry the same events:
+
+- **MCP clients** receive them as `notifications/message` from logger `lowdefy` on the standalone GET stream of `/lowdefy-docs/mcp` (the server declares the `logging` capability, so any MCP client surfaces them). Failed builds arrive at level `error`, everything else at `info`.
+- **Everything else** uses `GET /lowdefy-docs/events`, a Server-Sent Events stream — `curl -N http://localhost:3000/lowdefy-docs/events` — with one frame per event, named by the event type.
+
+Every event carries `type` and an ISO `timestamp`. The four types:
+
+| Type           | When                                                                    | Carries                                                                                                   |
+| -------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `restart`      | First event on every connection                                          | `bootedAt` — the dev server process start time, so a reconnecting client can tell a restart from a dropped connection |
+| `build`        | Every time a rebuild finishes, success or failure                        | `status`, `errorCount`, `warningCount`, `errors`, `warnings`, and `stale` / `staleSince` (see below)     |
+| `client_error` | A browser reports a runtime error                                        | The same entry `lowdefy_build_status` lists under `clientErrors`                                          |
+| `server_error` | A request, endpoint, MCP tool or agent tool fails on the server          | The same entry `lowdefy_build_status` lists under `serverErrors`                                          |
+
+Events are not buffered: a client that connects after an event missed it, and should call `lowdefy_build_status` — which is derived from the same `build/buildStatus.json` — for the current picture. Act on a `build` event with `status: "error"` immediately; `lowdefy_build_status` remains the full report.
+
 ### When a build fails, answers are marked stale
 
 A failed rebuild does not take the dev server down — it keeps serving the last build that succeeded, so you can carry on looking at the app while you fix the error. That means every tool can keep answering from a build that predates the latest edits, which is a trap for an agent.
@@ -243,6 +261,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET /lowdefy-docs/search?q={query}`| Search the docs                                                 |
 | `GET /lowdefy-docs/plugin-doc/{package}` | Markdown shipped inside a plugin package                   |
 | `GET /lowdefy-docs/build-status`    | Current build errors/warnings + recent browser runtime errors   |
+| `GET /lowdefy-docs/events`          | SSE stream of `restart`, `build`, `client_error` and `server_error` events |
 | `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
 | `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
 | `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |

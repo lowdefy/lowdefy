@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { publish } from './devEventBus.js';
+
 // Module-level ring buffer of recent server-side errors (request, endpoint, MCP
 // and agent tool failures) — feeds the getBuildStatus feedback endpoint so
 // agents can see server errors, with their config source, without tailing
@@ -27,6 +30,7 @@ function push(entry) {
   if (entries.length > MAX_ENTRIES) {
     entries.shift();
   }
+  publish({ type: 'server_error', ...entry });
 }
 
 function list() {

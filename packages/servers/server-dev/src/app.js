@@ -37,6 +37,7 @@ import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
 import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
 import docsContentHandler from './routes/docs/content.js';
 import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
+import docsEventsHandler from './routes/docs/events.js';
 import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
@@ -130,6 +131,9 @@ function createApp() {
   app.use('/lowdefy-docs/*', staleFlag());
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  // Push channel for non-MCP clients. Must sit above the `/lowdefy-docs/:kind`
+  // catch-all, which would otherwise treat "events" as a type kind.
+  app.get('/lowdefy-docs/events', docsEventsHandler);
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);

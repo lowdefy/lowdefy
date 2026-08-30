@@ -19,6 +19,7 @@ import path from 'path';
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import setupTestFixtures from './setupTestFixtures.mjs';
 
@@ -27,7 +28,10 @@ import setupTestFixtures from './setupTestFixtures.mjs';
 const fixtureDir = setupTestFixtures();
 process.chdir(fixtureDir);
 
-const { default: createDocsMcpServer } = await import('./createDocsMcpServer.js');
+const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
+  './createDocsMcpServer.js'
+);
+const { publish } = await import('./devEventBus.js');
 
 const EXPECTED_TOOLS = [
   'lowdefy_overview',
@@ -58,13 +62,71 @@ const EXPECTED_TOOLS = [
 ];
 
 async function connectClient() {
+  const { client } = await connectPair();
+  return client;
+}
+
+async function connectPair() {
   const server = createDocsMcpServer({ origin: 'http://localhost:3000' });
   const client = new Client({ name: 'test-client', version: '1.0.0' });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
   await client.connect(clientTransport);
-  return client;
+  return { client, server };
 }
+
+test('MCP server declares the logging capability and teaches the push channel', async () => {
+  const client = await connectClient();
+  expect(client.getServerCapabilities().logging).toEqual({});
+  const instructions = client.getInstructions();
+  expect(instructions).toContain('notifications/message');
+  expect(instructions).toContain('logger "lowdefy"');
+  await client.close();
+});
+
+test('subscribeMcpServerToDevEvents forwards bus events as notifications/message from logger lowdefy', async () => {
+  const { client, server } = await connectPair();
+  const received = [];
+  client.setNotificationHandler(
+    LoggingMessageNotificationSchema,
+    (notification) => void received.push(notification.params)
+  );
+  const unsubscribe = subscribeMcpServerToDevEvents(server);
+
+  publish({ type: 'client_error', timestamp: '2026-01-01T00:00:00.000Z', message: 'boom' });
+  publish({ type: 'build', timestamp: '2026-01-01T00:00:01.000Z', status: 'error', errorCount: 1 });
+  publish({ type: 'build', timestamp: '2026-01-01T00:00:02.000Z', status: 'ok', errorCount: 0 });
+  await new Promise((resolve) => setTimeout(resolve, 20));
+
+  expect(received).toEqual([
+    {
+      level: 'info',
+      logger: 'lowdefy',
+      data: { type: 'client_error', timestamp: '2026-01-01T00:00:00.000Z', message: 'boom' },
+    },
+    {
+      level: 'error',
+      logger: 'lowdefy',
+      data: {
+        type: 'build',
+        timestamp: '2026-01-01T00:00:01.000Z',
+        status: 'error',
+        errorCount: 1,
+      },
+    },
+    {
+      level: 'info',
+      logger: 'lowdefy',
+      data: { type: 'build', timestamp: '2026-01-01T00:00:02.000Z', status: 'ok', errorCount: 0 },
+    },
+  ]);
+
+  unsubscribe();
+  publish({ type: 'client_error', message: 'after unsubscribe' });
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(received).toHaveLength(3);
+  await client.close();
+});
 
 test('MCP server exposes instructions teaching the feedback loop', async () => {
   const client = await connectClient();
