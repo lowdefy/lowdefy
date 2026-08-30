@@ -18,6 +18,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
+import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
@@ -140,7 +141,14 @@ async function createMcpServer({ context }) {
       if (!success) {
         const deserialized = serializer.deserialize(error);
         return {
-          content: [{ type: 'text', text: deserialized?.message ?? 'Endpoint failed.' }],
+          content: [
+            {
+              type: 'text',
+              text: type.isNone(deserialized)
+                ? 'Endpoint failed.'
+                : formatErrorForAgent(context, deserialized),
+            },
+          ],
           isError: true,
         };
       }
@@ -150,21 +158,22 @@ async function createMcpServer({ context }) {
     } catch (error) {
       // Refused calls to gated tools and payloads that miss the payloadSchema
       // (UserError) are expected traffic - a warn line and the message the
-      // model needs to retry, not a structured error log.
+      // model needs to retry, not a structured error log. Everything else
+      // goes through the server's error sink, which resolves the config
+      // source, logs it and collects it for the dev feedback channel.
       if (
-        [
-          'AuthenticationError',
-          'AuthorizationError',
-          'TwoFactorEnrolmentRequiredError',
-          'UserError',
-        ].includes(error.name)
+        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
+          error.name
+        )
       ) {
         context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
+      } else if (error.name === 'UserError') {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
-        context.logger.error(error);
+        await context.handleError(error);
       }
       return {
-        content: [{ type: 'text', text: error.message }],
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,
       };
     }

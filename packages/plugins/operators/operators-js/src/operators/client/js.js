@@ -40,7 +40,7 @@ function js(operatorContext) {
       user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(`_js function execution error. Function: ${jsMap[hash].toString()}`, {
+    throw new Error(`_js function execution error. ${error.name}: ${error.message}`, {
       cause: error,
     });
   }
