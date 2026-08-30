@@ -33,7 +33,15 @@ process.chdir(fixtureDir);
 // runJourney needs a browser; mocked so the tool's result shaping (JSON text
 // followed by image blocks) can be asserted without one.
 const mockRunJourney = jest.fn();
-jest.unstable_mockModule('./runJourney.js', () => ({ default: mockRunJourney }));
+jest.unstable_mockModule('./runJourney.js', () => ({
+  default: mockRunJourney,
+  runSteps: jest.fn(),
+}));
+
+// snapshotPage needs a browser as well; mocked to assert the tool's result
+// shaping (JSON without the PNG, followed by the PNG as an image block).
+const mockSnapshotPage = jest.fn();
+jest.unstable_mockModule('./snapshotPage.js', () => ({ default: mockSnapshotPage }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
@@ -55,6 +63,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
   'lowdefy_run_journey',
+  'lowdefy_snapshot',
   'lowdefy_scaffold_page',
   'lowdefy_inspect_state',
   'lowdefy_eval_operator',
@@ -160,6 +169,7 @@ test('MCP tools that render a page headless advertise an optional user parameter
   [
     'lowdefy_screenshot_page',
     'lowdefy_run_journey',
+    'lowdefy_snapshot',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
     'lowdefy_load_state',
@@ -361,6 +371,58 @@ test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one
   expect(summary.screenshots).toEqual([{ name: 'before' }, { name: 'after' }]);
   expect(result.content[1]).toEqual({ type: 'image', data: 'AAAA', mimeType: 'image/png' });
   expect(result.content[2]).toEqual({ type: 'image', data: 'BBBB', mimeType: 'image/png' });
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_snapshot returns the JSON without the PNG followed by the PNG as an image', async () => {
+  mockSnapshotPage.mockResolvedValue({
+    pageId: 'home',
+    screenshot: 'AAAA',
+    dom: '<div id="root"></div>',
+    state: { a: 1 },
+    snapshotIgnore: ['a'],
+  });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_snapshot',
+    arguments: {
+      pageId: 'home',
+      user: 'admin',
+      urlQuery: { id: '1' },
+      journey: [{ click: 'open' }],
+    },
+  });
+
+  expect(mockSnapshotPage).toHaveBeenCalledWith({
+    origin: 'http://localhost:3000',
+    pageId: 'home',
+    user: 'admin',
+    urlQuery: { id: '1' },
+    journey: [{ click: 'open' }],
+  });
+  expect(result.content).toHaveLength(2);
+  expect(JSON.parse(result.content[0].text)).toEqual({
+    pageId: 'home',
+    dom: '<div id="root"></div>',
+    state: { a: 1 },
+    snapshotIgnore: ['a'],
+  });
+  expect(result.content[1]).toEqual({ type: 'image', data: 'AAAA', mimeType: 'image/png' });
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_snapshot reports a renderer error as a tool error', async () => {
+  mockSnapshotPage.mockResolvedValue({ error: 'Invalid journey: Step 0: nope' });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_snapshot',
+    arguments: { pageId: 'home', journey: [{ hover: 'a' }] },
+  });
+
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toEqual('Invalid journey: Step 0: nope');
   await client.close();
 });
 

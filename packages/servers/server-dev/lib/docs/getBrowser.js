@@ -76,10 +76,23 @@ function buildPageUrl({ origin, pageId, urlQuery }) {
   return `${url}?${query}`;
 }
 
+// Browser context settings that pin down everything the rendered page could
+// otherwise pick up from the machine it runs on — motion, colour scheme,
+// locale and timezone — so two renders of unchanged config produce the same
+// pixels, DOM and formatted dates. Used by snapshotPage; any caller can pass
+// them (or its own) as `contextOptions` to openPage.
+const deterministicContextOptions = {
+  reducedMotion: 'reduce',
+  colorScheme: 'light',
+  locale: 'en-US',
+  timezoneId: 'UTC',
+};
+
 // Opens a fresh browser context + page at the app's pageId route. Callers
 // obtain `browser` via getBrowser() themselves so they can map a launch
 // failure to their own "no browser available" error message, separate from
-// navigation failures.
+// navigation failures. `contextOptions` are Playwright newContext options
+// merged over the viewport.
 async function openPage({
   browser,
   origin,
@@ -89,12 +102,13 @@ async function openPage({
   width = 1280,
   height = 800,
   timeout = 15000,
+  contextOptions = {},
 }) {
   const url = buildPageUrl({ origin, pageId, urlQuery });
   // Resolved before the context is created so an invalid `user` can't leave an
   // orphaned context behind.
   const injectedUser = resolveHeadlessUser({ user });
-  const context = await browser.newContext({ viewport: { width, height } });
+  const context = await browser.newContext({ viewport: { width, height }, ...contextOptions });
   // Inject an authenticated user so auth-protected pages don't 404 for the
   // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
   // `origin` so it rides along on the same-origin /api/* fetches.
@@ -127,4 +141,4 @@ async function openPage({
   return { context, page, ready, url };
 }
 
-export { getBrowser, openPage, buildPageUrl };
+export { getBrowser, openPage, buildPageUrl, deterministicContextOptions };

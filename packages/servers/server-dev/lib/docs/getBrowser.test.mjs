@@ -185,3 +185,30 @@ test('openPage opens the page at the urlQuery it was given', async () => {
   expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
   expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });
+
+test('openPage merges contextOptions over the viewport when creating the context', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    width: 1024,
+    height: 768,
+    contextOptions: { colorScheme: 'light', locale: 'en-US' },
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1024, height: 768 },
+    colorScheme: 'light',
+    locale: 'en-US',
+  });
+});
+
+test('openPage creates a plain viewport context when no contextOptions are given', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(browser.newContext).toHaveBeenCalledWith({ viewport: { width: 1280, height: 800 } });
+});

@@ -106,6 +106,8 @@ function getOverview() {
     '| `GET /lowdefy-docs/events` | SSE push channel: `restart` on connect, then `build`, `client_error`, `server_error` events as they happen (build events carry `stale`) |',
     '| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors |',
     '| `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page |',
+    '| `GET /lowdefy-docs/snapshot/{pageId}?user=&urlQuery=&journey=` | Golden snapshot under deterministic browser settings: `{ screenshot (base64 png), dom, state, snapshotIgnore }` — what `lowdefy snapshot` diffs |',
+    '| `GET /lowdefy-docs/dev-users` | Names of the `auth.dev.users` fixtures headless tools can render as |',
     '| `POST /lowdefy-docs/journey` | Drive a page headless through declarative steps (click, fill, select, press, wait, screenshot, expect) and assert state, visibility, text or url; screenshots returned as base64 |',
     '| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined |',
     '| `GET /lowdefy-docs/inspect-state/{pageId}?source=` | Live state/requests/eventLog of a running page (tab or headless) |',
