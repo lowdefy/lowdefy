@@ -29,6 +29,7 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
+import applyConnectionOverrides from './applyConnectionOverrides.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
@@ -154,6 +155,9 @@ async function createLowdefyContext({ c, user }) {
     }
   }
   createApiContext(context);
+  // `lowdefy test` redirects seeded connections (LOWDEFY_TEST_CONNECTION_OVERRIDES)
+  // by wrapping the readConfigFile createApiContext just installed. No-op otherwise.
+  applyConnectionOverrides({ context });
   // Dev-only notice sink (tenant: none executions) - needs context.readConfigFile,
   // which createApiContext just set, to resolve the notice's config source.
   context.handleDevNotice = createHandleDevNotice({ context });

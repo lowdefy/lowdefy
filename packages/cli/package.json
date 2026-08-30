@@ -54,6 +54,18 @@
     "uuid": "14.0.0",
     "yaml": "2.9.0"
   },
+  "peerDependencies": {
+    "mongodb": ">=6",
+    "mongodb-memory-server": ">=10"
+  },
+  "peerDependenciesMeta": {
+    "mongodb": {
+      "optional": true
+    },
+    "mongodb-memory-server": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@jest/globals": "28.1.3",
     "@swc/cli": "0.8.1",

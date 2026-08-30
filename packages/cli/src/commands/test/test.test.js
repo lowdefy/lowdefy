@@ -30,6 +30,22 @@ jest.unstable_mockModule('./startDevServer.js', () => ({
   default: mockStartDevServer,
 }));
 
+const mockLoadMemoryMongo = jest.fn();
+jest.unstable_mockModule('./loadMemoryMongo.js', () => ({ default: mockLoadMemoryMongo }));
+
+const mockSeedFixtures = jest.fn();
+jest.unstable_mockModule('./seedFixtures.js', () => ({ default: mockSeedFixtures }));
+
+const mockMemoryServerStop = jest.fn();
+const mockClientClose = jest.fn();
+class MockMongoClient {
+  constructor(uri) {
+    this.uri = uri;
+  }
+  async connect() {}
+  close = mockClientClose;
+}
+
 let configDirectory;
 let context;
 let logs;
@@ -43,6 +59,23 @@ function writeJourneyFile(fileName, content) {
 
 function journeyYaml({ name, steps = '  - click: submit\n' }) {
   return `name: ${name}\npageId: form\nsteps:\n${steps}`;
+}
+
+function writeRequestTestFile(fileName, content) {
+  const directory = path.join(configDirectory, 'tests', 'requests');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, fileName), content);
+}
+
+function requestTestYaml({ name, extra = '' }) {
+  return `name: ${name}\npageId: controls\nrequestId: get_controls\nexpect:\n  - title: A\n${extra}`;
+}
+
+function postForRoute(handlers) {
+  mockPost.mockImplementation((url) => {
+    const route = url.slice(url.indexOf('/lowdefy-docs/'));
+    return Promise.resolve(handlers[route]());
+  });
 }
 
 beforeEach(() => {
@@ -63,6 +96,16 @@ beforeEach(() => {
   mockStop.mockResolvedValue();
   mockStartDevServer.mockResolvedValue({ url: 'http://localhost:3228', stop: mockStop });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
+  mockSeedFixtures.mockResolvedValue();
+  mockLoadMemoryMongo.mockResolvedValue({
+    MongoMemoryServer: {
+      create: async () => ({
+        getUri: () => 'mongodb://127.0.0.1:27999/',
+        stop: mockMemoryServerStop,
+      }),
+    },
+    MongoClient: MockMongoClient,
+  });
 });
 
 afterEach(() => {
@@ -75,7 +118,9 @@ test('test exits 0 with a note when no journeys exist and does not boot a server
   await test({ context });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockPost).not.toHaveBeenCalled();
-  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/*.yaml.']);
+  expect(logs.warn).toEqual([
+    'No tests found. Add journeys to tests/journeys/*.yaml or request tests to tests/requests/*.test.yaml.',
+  ]);
   expect(process.exitCode).toBeUndefined();
   expect(context.sendTelemetry).toHaveBeenCalled();
 });
@@ -85,12 +130,12 @@ test('test boots a dev server, runs every journey and exits 0 when all pass', as
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'second journey' }));
   await test({ context });
-  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context, env: {} });
   expect(mockPost).toHaveBeenCalledTimes(2);
   expect(mockPost.mock.calls[0][0]).toEqual('http://localhost:3228/lowdefy-docs/journey');
   expect(mockStop).toHaveBeenCalledTimes(1);
   expect(logs.info.filter((line) => line.startsWith('PASS'))).toHaveLength(2);
-  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 tests');
   expect(process.exitCode).toBeUndefined();
 });
 
@@ -126,7 +171,7 @@ test('test exits 1 and prints the failing step, expected and actual when a journ
     '      expected: done',
     '      actual:   draft',
     '      Expected state at "title" to equal "done".',
-    '1 passed, 1 failed of 2 journeys',
+    '1 passed, 1 failed of 2 tests',
   ]);
   expect(mockStop).toHaveBeenCalledTimes(1);
 });
@@ -139,7 +184,7 @@ test('test --filter narrows the journeys case-insensitively', async () => {
   context.options.filter = 'CONTROL';
   await test({ context });
   expect(mockPost).toHaveBeenCalledTimes(2);
-  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys');
+  expect(logs.info).toContain('2 passed, 0 failed of 2 tests');
   expect(process.exitCode).toBeUndefined();
 });
 
@@ -177,7 +222,7 @@ test('test reports a malformed journey file as a failure and still runs the othe
   expect(logs.info.some((line) => /^PASS  valid journey  \(1 steps, \d+ms\)$/.test(line))).toBe(
     true
   );
-  expect(logs.error[logs.error.length - 1]).toEqual('1 passed, 1 failed of 2 journeys');
+  expect(logs.error[logs.error.length - 1]).toEqual('1 passed, 1 failed of 2 tests');
   expect(process.exitCode).toEqual(1);
 });
 
@@ -204,4 +249,127 @@ test('test logs the captured server output and rethrows when the dev server fail
   );
   expect(logs.error).toEqual(['line one', 'line two']);
   expect(mockPost).not.toHaveBeenCalled();
+});
+
+test('test runs journeys and request tests together with one combined summary', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  writeRequestTestFile('controls.test.yaml', requestTestYaml({ name: 'lists controls' }));
+  postForRoute({
+    '/lowdefy-docs/journey': () => ({ data: { passed: true, steps: [] } }),
+    '/lowdefy-docs/run-request': () => ({
+      data: { refused: false, success: true, response: [{ title: 'A', extra: 1 }] },
+    }),
+  });
+  await test({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context, env: {} });
+  expect(mockLoadMemoryMongo).not.toHaveBeenCalled();
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  expect(mockPost.mock.calls[1][0]).toEqual('http://localhost:3228/lowdefy-docs/run-request');
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toHaveLength(2);
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 tests');
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --filter selects across both suites', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'member creates a control' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'guest signs up' }));
+  writeRequestTestFile('a.test.yaml', requestTestYaml({ name: 'get_controls lists controls' }));
+  writeRequestTestFile('b.test.yaml', requestTestYaml({ name: 'get_users lists users' }));
+  postForRoute({
+    '/lowdefy-docs/journey': () => ({ data: { passed: true, steps: [] } }),
+    '/lowdefy-docs/run-request': () => ({
+      data: { refused: false, success: true, response: [{ title: 'A' }] },
+    }),
+  });
+  context.options.filter = 'Control';
+  await test({ context });
+  const routes = mockPost.mock.calls.map(([url]) => url.slice(url.indexOf('/lowdefy-docs/')));
+  expect(routes).toEqual(['/lowdefy-docs/journey', '/lowdefy-docs/run-request']);
+  expect(logs.info).toContain('2 passed, 0 failed of 2 tests');
+});
+
+test('test starts a memory MongoDB for seeded request tests, passes the overrides env and stops it', async () => {
+  const { default: test } = await import('./test.js');
+  writeRequestTestFile(
+    'controls.test.yaml',
+    requestTestYaml({
+      name: 'lists seeded controls',
+      extra: 'seed:\n  controls:\n    - _id: c1\n      title: A\n',
+    })
+  );
+  postForRoute({
+    '/lowdefy-docs/run-request': () => ({
+      data: { refused: false, success: true, response: [{ title: 'A' }] },
+    }),
+  });
+  await test({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({
+    context,
+    env: {
+      LOWDEFY_TEST_CONNECTION_OVERRIDES: JSON.stringify({
+        controls: { databaseUri: 'mongodb://127.0.0.1:27999/' },
+      }),
+    },
+  });
+  expect(mockSeedFixtures).toHaveBeenCalledTimes(1);
+  expect(mockSeedFixtures.mock.calls[0][0].client).toBeInstanceOf(MockMongoClient);
+  expect(mockSeedFixtures.mock.calls[0][0].seed).toEqual({ controls: [{ _id: 'c1', title: 'A' }] });
+  expect(logs.info).toContain('Starting in-memory MongoDB for seeded request tests.');
+  expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 tests');
+  expect(mockStop).toHaveBeenCalledTimes(1);
+  expect(mockClientClose).toHaveBeenCalledTimes(1);
+  expect(mockMemoryServerStop).toHaveBeenCalledTimes(1);
+});
+
+test('test exits 1 with the install hint when seeded tests run without mongodb-memory-server', async () => {
+  const { default: test } = await import('./test.js');
+  writeRequestTestFile(
+    'controls.test.yaml',
+    requestTestYaml({ name: 'seeded', extra: 'seed:\n  controls: []\n' })
+  );
+  const hint =
+    'Request tests with "seed" need an in-memory MongoDB. Install it: pnpm add -D mongodb-memory-server mongodb';
+  mockLoadMemoryMongo.mockRejectedValue(new Error(hint));
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([hint]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test exits 1 and refuses seeded request tests against --url', async () => {
+  const { default: test } = await import('./test.js');
+  writeRequestTestFile(
+    'controls.test.yaml',
+    requestTestYaml({ name: 'seeded', extra: 'seed:\n  controls: []\n' })
+  );
+  context.options.url = 'http://localhost:3000';
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    'Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.',
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test prints the mismatch path for a failing request test and exits 1', async () => {
+  const { default: test } = await import('./test.js');
+  writeRequestTestFile('controls.test.yaml', requestTestYaml({ name: 'lists controls' }));
+  postForRoute({
+    '/lowdefy-docs/run-request': () => ({
+      data: { refused: false, success: true, response: [{ title: 'B' }] },
+    }),
+  });
+  await test({ context });
+  expect(logs.error).toEqual([
+    'FAIL  lists controls',
+    `      file: ${path.join(configDirectory, 'tests', 'requests', 'controls.test.yaml')}`,
+    '      at: response.0.title',
+    '      expected: A',
+    '      actual:   B',
+    '0 passed, 1 failed of 1 tests',
+  ]);
+  expect(process.exitCode).toEqual(1);
 });
