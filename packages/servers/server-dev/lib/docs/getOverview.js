@@ -55,7 +55,7 @@ function getOverview() {
     '## How to use this (recommended order)',
     '',
     '1. **List what exists**: `GET /lowdefy-docs/blocks`, `/lowdefy-docs/operators`, `/lowdefy-docs/actions`, `/lowdefy-docs/connections`, `/lowdefy-docs/requests` — or the `lowdefy_list_types` MCP tool. Each entry links to its schema, examples, and doc.',
-    '2. **Get the exact contract**: `GET /lowdefy-docs/schema/{kind}/{type}` (e.g. `/lowdefy-docs/schema/blocks/Button`) — or `lowdefy_get_schema`. JSON Schema of all properties.',
+    '2. **Get the exact contract**: `GET /lowdefy-docs/schema/{kind}/{type}` (e.g. `/lowdefy-docs/schema/blocks/Button`) — or `lowdefy_get_schema`. JSON Schema of all properties; for a block, `meta.events.<name>.payload` is the JSON Schema of the object `_event` reads in that event.',
     '3. **See real usage**: `GET /lowdefy-docs/examples/{type}` — or `lowdefy_get_examples`. YAML examples for block types.',
     '4. **Read concept docs**: `GET /lowdefy-docs/content/{slug}` (e.g. `/lowdefy-docs/content/operators/_get`) — or `lowdefy_get_doc`. Start with `concepts/lowdefy-schema`, `concepts/blocks`, `concepts/events-and-actions`, `concepts/connections-and-requests`, `concepts/operators`.',
     '5. **Search**: `GET /lowdefy-docs/search?q=...` — or `lowdefy_search_docs`.',

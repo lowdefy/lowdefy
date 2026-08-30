@@ -116,10 +116,20 @@ function setupTestFixtures() {
     TestBlock: { type: 'object', properties: {} },
   });
   write('build/plugins/blockMetas.json', {
-    Button: { category: 'display', hazards: [] },
+    Button: { category: 'display', hazards: [], events: { onClick: {} } },
     TestBlock: {
       category: 'input',
       valueType: 'string',
+      events: {
+        onChange: {
+          payload: {
+            type: 'object',
+            additionalProperties: false,
+            properties: { value: { type: 'string', description: 'The current value.' } },
+          },
+        },
+        onBlur: {},
+      },
       hazards: [
         { id: 'test-block-hazard', message: 'TestBlock does something surprising.', see: null },
         // Same id as a framework hazard — getHazards must de-duplicate, keeping
