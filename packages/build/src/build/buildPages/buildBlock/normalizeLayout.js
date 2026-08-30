@@ -20,6 +20,7 @@ import { ConfigWarning } from '@lowdefy/errors';
 const DEPRECATED_LAYOUT_KEYS = {
   contentGutter: 'gap',
   contentGap: 'gap',
+  contentAlign: 'align',
   contentJustify: 'justify',
   contentDirection: 'direction',
   contentWrap: 'wrap',
