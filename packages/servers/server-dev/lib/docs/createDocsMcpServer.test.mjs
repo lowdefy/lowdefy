@@ -165,6 +165,28 @@ test('MCP tools that render a page headless advertise an optional user parameter
   await client.close();
 });
 
+test('MCP tools that take a user accept a dev user fixture name as well as an object', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+
+  [
+    'lowdefy_screenshot_page',
+    'lowdefy_inspect_state',
+    'lowdefy_eval_operator',
+    'lowdefy_load_state',
+    'lowdefy_run_request',
+    'lowdefy_run_endpoint',
+  ].forEach((name) => {
+    const tool = tools.find((candidate) => candidate.name === name);
+    // A union of a fixture name and an inline caller object.
+    const types = (tool.inputSchema.properties.user.anyOf ?? []).map((option) => option.type);
+    expect(types).toEqual(['string', 'object']);
+    expect(tool.inputSchema.properties.user.description).toMatch(/auth\.dev\.users/);
+  });
+
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_get_schema returns a block schema', async () => {
   const client = await connectClient();
   const result = await client.callTool({

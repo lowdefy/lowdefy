@@ -27,6 +27,8 @@ const originalCwd = process.cwd();
 const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-get-browser-test-'));
 fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
+// getDevUsers.js (auth.dev.users fixtures) reads build/auth.json the same way.
+fs.writeFileSync(path.join(fixtureDir, 'build', 'auth.json'), JSON.stringify({}));
 process.chdir(fixtureDir);
 
 const { openPage } = await import('./getBrowser.js');
@@ -116,8 +118,19 @@ test('openPage rejects an invalid user before opening a browser context', async 
   const { browser } = createBrowser();
 
   await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: ['admin'] })
+  ).rejects.toThrow('Headless "user" must be a dev user name or an object. Received ["admin"].');
+  expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage rejects a dev user name the app does not declare', async () => {
+  const { browser } = createBrowser();
+
+  await expect(
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'admin' })
-  ).rejects.toThrow('Headless "user" must be an object. Received "admin".');
+  ).rejects.toThrow(
+    'No dev users are declared. Add auth.dev.users to lowdefy.yaml, or pass an inline user object.'
+  );
   expect(browser.newContext).not.toHaveBeenCalled();
 });
 

@@ -134,9 +134,17 @@ To act as a specific caller, pass `user` — every tool that renders a page head
 { "pageId": "users", "user": { "roles": ["admin"] } }
 ```
 
-It is merged over the default user, so `{"roles": [...]}` is usually all you need. No auth engine runs for an injected caller, so nothing derives the rest of the record — include `email`, `profile` or `attributes` in the object if the page reads them. Every call opens its own browser context, so one call can act as an admin and the next as a plain member.
+A caller you use often is better declared once as a named fixture under `auth.dev.users` in `lowdefy.yaml`, and then named by any tool's `user`:
 
-`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param: `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load`, `POST /lowdefy-docs/run-request` and `POST /lowdefy-docs/run-endpoint`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
+```json
+{ "pageId": "users", "user": "admin" }
+```
+
+A name that is not declared is a `400` (an MCP error result), listing the names that are declared — never a silent fall back to the roleless default, which renders an empty page that reads like a working one. See [Auth Configuration](/auth-configuration#named-dev-users-dev-server-only).
+
+An inline object is merged over the default user, so `{"roles": [...]}` is usually all you need. No auth engine runs for an injected caller, so nothing derives the rest of the record — include `email`, `profile` or `attributes` in the object if the page reads them. Every call opens its own browser context, so one call can act as an admin and the next as a plain member.
+
+`user` applies to the headless renderer only — it is never applied to a page you open in your own browser, which carries your real session and cannot be re-identified. `lowdefy_inspect_state` and `lowdefy_eval_operator` normally prefer your open tab, so passing `user` selects the headless source instead; combining it with `source: "tab"` is an error rather than a silently ignored role, as is combining it with `lowdefy_load_state`'s `mode: "registry-only"` (that mode hands you a URL to open yourself). The plain HTTP routes take the same param, name or object: `?user=admin` or `?user={"roles":["admin"]}` on the GET routes, a `user` key in the body of `POST /lowdefy-docs/eval-operator`, `POST /lowdefy-docs/state-checkpoints/load`, `POST /lowdefy-docs/run-request` and `POST /lowdefy-docs/run-endpoint`. They answer a malformed or contradictory `user` with a `400`, distinct from the `502` a failed render returns.
 
 To bypass login for the whole dev server — your own browser included — start it with a mock user instead: `lowdefy dev --mock-user '{"id":"dev","roles":["admin"]}'` (or configure `auth.dev.mockUser`). See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 

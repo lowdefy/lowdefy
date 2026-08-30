@@ -231,6 +231,41 @@ _ref:
 
                 > **Note:** `dev.mockUser` bypasses the auth engine rather than exercising it — a config whose only auth substance is `dev.mockUser` still fails the "no auth mechanism" build check, and [auth steps](/auth-steps) (which need the running auth engine) are unavailable under a mock user.
 
+                ## Named Dev Users (Dev Server Only)
+
+                `auth.dev.users` declares named caller fixtures for the dev server's headless tools. Each key is a name, each value a user object:
+
+                ###### Declare named dev users
+                ```yaml
+                lowdefy: {{ version }}
+
+                auth:
+                  dev:
+                    users:
+                      admin:
+                        id: dev-admin
+                        roles:
+                          - admin
+                        organization_id: org_1
+                      member:
+                        id: dev-member
+                        roles:
+                          - member
+                        organization_id: org_1
+                ```
+
+                Every dev tool that takes a `user` — `lowdefy_screenshot_page`, `lowdefy_inspect_state`, `lowdefy_eval_operator`, `lowdefy_load_state`, `lowdefy_run_request` and `lowdefy_run_endpoint`, and the matching `/lowdefy-docs` routes — accepts one of these names in place of an inline user object, so a caller is written once instead of repeated on every call:
+
+                ```
+                GET /lowdefy-docs/screenshot/users?user=admin
+                ```
+
+                A name that is not declared is refused with a `400` that lists the declared names. It never falls back to the default roleless caller, which would render an empty page that looks like a working one.
+
+                > **Note:** Fixtures do not bypass login. They only name the caller a dev tool acts as — the developer's own browser still signs in normally. Use `dev.mockUser` above to bypass login for the whole dev server.
+
+                > **Note:** Named dev users only work with the development server (`lowdefy dev`). The production server ignores them.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

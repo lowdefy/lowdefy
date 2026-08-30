@@ -34,6 +34,8 @@ const originalCwd = process.cwd();
 const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-screenshot-test-'));
 fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
+// getDevUsers.js (auth.dev.users fixtures) reads build/auth.json the same way.
+fs.writeFileSync(path.join(fixtureDir, 'build', 'auth.json'), JSON.stringify({}));
 process.chdir(fixtureDir);
 
 const { default: screenshotPage } = await import('./screenshotPage.js');

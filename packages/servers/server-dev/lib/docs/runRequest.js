@@ -18,6 +18,7 @@ import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import resolveDevUser from '../server/auth/resolveDevUser.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import truncateResponse from './truncateResponse.js';
@@ -53,12 +54,14 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
     );
   }
 
-  if (!type.isNone(user) && !type.isObject(user)) {
-    throw new ConfigError(
-      `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
-      )}.`
-    );
+  // A fixture name declared under auth.dev.users, or an inline caller object -
+  // resolveDevUser is the single place a `user` value becomes a caller, and an
+  // unknown name names the fix rather than falling back to a roleless caller.
+  let caller;
+  try {
+    caller = resolveDevUser({ user });
+  } catch (error) {
+    throw new ConfigError(error.message, { cause: error });
   }
 
   let requestType = getRequestType({ pageId, requestId });
@@ -111,7 +114,7 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user });
+  const context = await createLowdefyContext({ c: honoContext, user: caller });
   context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
 
   try {

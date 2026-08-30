@@ -100,11 +100,10 @@ function notFoundResult(message) {
 // admin and the next as a plain member — each headless call gets its own browser
 // context, so they never share an identity.
 const userSchema = z
-  .object({})
-  .passthrough()
+  .union([z.string(), z.object({}).passthrough()])
   .optional()
   .describe(
-    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
+    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. A string names a fixture declared under `auth.dev.users` in `lowdefy.yaml`; an object is an inline caller merged over the default. An unknown name is an error, never a fallback. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
   );
 
 function createDocsMcpServer({ origin, honoContext } = {}) {

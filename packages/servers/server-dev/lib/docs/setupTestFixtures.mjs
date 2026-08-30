@@ -34,6 +34,9 @@ function setupTestFixtures() {
   // lib/build/config.js reads this at import time (screenshotPage → basePath).
   write('build/config.json', {});
 
+  // lib/build/auth.js reads this at import time (getDevUsers → auth.dev.users).
+  write('build/auth.json', {});
+
   write('build/plugins/availableTypes.json', {
     actions: {
       SetState: {

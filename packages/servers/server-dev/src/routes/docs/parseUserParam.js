@@ -16,9 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
+import resolveDevUser from '../../../lib/server/auth/resolveDevUser.js';
+
 // The docs routes take the headless caller as a JSON string on the GET routes
 // (query params are always strings) and as an object in the POST bodies, so both
-// arrive here and every route answers a bad `user` with the same message.
+// arrive here and every route answers a bad `user` with the same message. A
+// string that does not start with `{` is a fixture name declared under
+// auth.dev.users, resolved here so the routes only ever see a caller object.
 // Returns { user } or { error }.
 function parseUserParam({ value }) {
   if (type.isNone(value)) {
@@ -26,7 +30,7 @@ function parseUserParam({ value }) {
   }
 
   let user = value;
-  if (type.isString(value)) {
+  if (type.isString(value) && value.trimStart().startsWith('{')) {
     try {
       user = JSON.parse(value);
     } catch {
@@ -38,15 +42,13 @@ function parseUserParam({ value }) {
     }
   }
 
-  if (!type.isObject(user)) {
-    return {
-      error: `The "user" param must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
-      )}.`,
-    };
+  // resolveDevUser returns a caller object or throws - a name it does not know,
+  // and any value that is neither a name nor an object, become the 400 message.
+  try {
+    return { user: resolveDevUser({ user }) };
+  } catch (error) {
+    return { error: error.message };
   }
-
-  return { user };
 }
 
 export default parseUserParam;

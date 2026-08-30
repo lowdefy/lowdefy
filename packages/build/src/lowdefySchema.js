@@ -1611,6 +1611,20 @@ export default {
               description:
                 'Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
             },
+            users: {
+              type: 'object',
+              additionalProperties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth "dev.users" entries should be objects.',
+                },
+              },
+              description:
+                'Named user fixtures for dev tooling. Each key is a name that the dev server\'s headless tools accept as their "user" parameter. Dev server only.',
+              errorMessage: {
+                type: 'Auth "dev.users" should be an object.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "dev" should be an object.',

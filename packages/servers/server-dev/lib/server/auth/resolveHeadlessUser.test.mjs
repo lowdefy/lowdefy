@@ -14,8 +14,23 @@
   limitations under the License.
 */
 
-import resolveHeadlessUser from './resolveHeadlessUser.js';
-import { headlessUser } from './headlessUser.js';
+import { jest } from '@jest/globals';
+
+const mockGetDevUsers = jest.fn();
+
+jest.unstable_mockModule('./getDevUsers.js', () => ({
+  default: mockGetDevUsers,
+}));
+
+const { default: resolveHeadlessUser } = await import('./resolveHeadlessUser.js');
+const { headlessUser } = await import('./headlessUser.js');
+
+beforeEach(() => {
+  mockGetDevUsers.mockReturnValue({
+    admin: { id: 'dev-admin', roles: ['admin'], organization_id: 'org_1' },
+    member: { id: 'dev-member', roles: ['member'] },
+  });
+});
 
 test('resolveHeadlessUser returns the default roleless user when no user is given', () => {
   expect(resolveHeadlessUser({})).toEqual({
@@ -61,14 +76,23 @@ test('resolveHeadlessUser does not mutate the default user between calls', () =>
   });
 });
 
-test('resolveHeadlessUser throws when user is not an object', () => {
-  expect(() => resolveHeadlessUser({ user: 'admin' })).toThrow(
-    'Headless "user" must be an object. Received "admin".'
+test('resolveHeadlessUser merges a named dev user fixture over the default', () => {
+  expect(resolveHeadlessUser({ user: 'admin' })).toEqual({
+    id: 'dev-admin',
+    name: 'Lowdefy Headless',
+    roles: ['admin'],
+    organization_id: 'org_1',
+  });
+});
+
+test('resolveHeadlessUser throws when the dev user name is not declared', () => {
+  expect(() => resolveHeadlessUser({ user: 'adin' })).toThrow(
+    'Unknown dev user "adin". Declare it under auth.dev.users in lowdefy.yaml, or pass an inline user object. Declared: admin, member.'
   );
 });
 
 test('resolveHeadlessUser throws when user is an array', () => {
   expect(() => resolveHeadlessUser({ user: ['admin'] })).toThrow(
-    'Headless "user" must be an object. Received ["admin"].'
+    'Headless "user" must be a dev user name or an object. Received ["admin"].'
   );
 });
