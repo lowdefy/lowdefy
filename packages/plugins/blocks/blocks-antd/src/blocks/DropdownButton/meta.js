@@ -27,6 +27,9 @@ export default {
     itemIcon: 'Icon within menu items.',
     arrow: 'Dropdown arrow indicator.',
   },
+  // Each menu item declares its own eventName, so the event names a
+  // DropdownButton fires are authored in its properties.
+  dynamicEvents: true,
   events: {
     onClick:
       'Trigger action when the button is clicked (split mode). Renders a shortcut badge when a shortcut is configured on the event.',
