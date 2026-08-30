@@ -85,7 +85,7 @@ export default {
       primaryKey,
       options: {
         default: [],
-        oneOf: [
+        anyOf: [
           {
             type: 'array',
             description:

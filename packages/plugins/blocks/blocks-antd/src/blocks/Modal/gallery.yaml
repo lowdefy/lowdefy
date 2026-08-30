@@ -528,13 +528,14 @@
       type: Modal
       properties:
         title: Wrapper Style Modal
-        wrapperStyle:
+      style:
+        .wrapper:
           overflow: hidden
       blocks:
         - id: modal_wrapper_style_content
           type: Paragraph
           properties:
-            content: The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
+            content: The `.wrapper` style key applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 - title: Custom Z-Index
   blocks:
@@ -870,8 +871,7 @@
               properties:
                 icon: AiOutlineUser
                 size: 72
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: modal_profile_info
               type: Box
               layout:

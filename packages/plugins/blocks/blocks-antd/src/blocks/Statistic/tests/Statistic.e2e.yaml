@@ -124,8 +124,6 @@ blocks:
       title: Positive Change
       value: 11.28
       suffix: '%'
-      valueStyle:
-        color: '#3f8600'
 
   - id: statistic_negative_style
     type: Statistic
@@ -133,5 +131,3 @@ blocks:
       title: Negative Change
       value: -9.26
       suffix: '%'
-      valueStyle:
-        color: '#cf1322'

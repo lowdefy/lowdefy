@@ -13,7 +13,8 @@ blocks:
   - id: name-input
     type: TextInput
     properties:
-      label: Name
+      label:
+        title: Name
   - id: module-label
     type: Title
     properties:

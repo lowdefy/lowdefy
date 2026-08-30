@@ -14,63 +14,32 @@
   limitations under the License.
 */
 
-import { buildBlockSchema } from '@lowdefy/block-utils';
-
-import importPluginModule from './importPluginModule.js';
-
+// Writes plugins/blockSchemas.json and plugins/blockMetas.json for the block
+// types the app uses. The schema and meta maps are built for every installed
+// type by loadBlockSchemas before the pages are built.
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
-  const allMetas = {};
-
-  const typesMapSchemas = context.typesMap.schemas?.blocks ?? {};
-
-  const blocksByPackage = {};
-  for (const block of components.imports.blocks) {
-    if (!blocksByPackage[block.package]) {
-      blocksByPackage[block.package] = [];
-    }
-    blocksByPackage[block.package].push(block);
-  }
-
-  for (const [packageName, blocks] of Object.entries(blocksByPackage)) {
-    let packageMetas = await importPluginModule({ context, specifier: `${packageName}/metas` });
-    if (!packageMetas) {
-      packageMetas = await importPluginModule({ context, specifier: `${packageName}/schemas` });
-    }
-    for (const block of blocks) {
-      const meta = packageMetas?.[block.originalTypeName];
-      if (typesMapSchemas[block.typeName]) {
-        schemas[block.typeName] = typesMapSchemas[block.typeName];
-      } else if (meta) {
-        schemas[block.typeName] = buildBlockSchema(meta);
-      }
-      if (meta) {
-        allMetas[block.typeName] = meta;
-      }
-    }
-  }
-
   const blockMetas = {};
+  const blockSchemas = context.blockSchemas ?? {};
+  const blockPluginMetas = context.blockPluginMetas ?? {};
   const typesMapBlockMetas = context.typesMap.blockMetas ?? {};
+
   for (const block of components.imports.blocks) {
+    if (blockSchemas[block.typeName]) {
+      schemas[block.typeName] = blockSchemas[block.typeName];
+    }
     const typesMapMeta = typesMapBlockMetas[block.typeName];
-    const meta = allMetas[block.typeName];
-    if (typesMapMeta) {
+    const pluginMeta = blockPluginMetas[block.typeName];
+    const meta = typesMapMeta ?? pluginMeta;
+    if (meta) {
       // typesMap block metas come from extractBlockTypes (block-utils), which
-      // keeps only what the client needs — hazards are read from the plugin's
+      // keeps only what the client needs - hazards are read from the plugin's
       // own meta module, the same source as the schema.
-      blockMetas[block.typeName] = {
-        category: typesMapMeta.category,
-        ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
-        ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
-        hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
-      };
-    } else if (meta) {
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(meta.valueType != null && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
-        hazards: meta.hazards ?? [],
+        hazards: typesMapMeta?.hazards ?? pluginMeta?.hazards ?? [],
       };
     }
   }

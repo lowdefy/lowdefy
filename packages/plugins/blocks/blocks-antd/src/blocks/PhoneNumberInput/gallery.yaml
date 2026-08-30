@@ -636,7 +636,6 @@
           required: true
           properties:
             title: Password
-            prefixIcon: AiOutlineLock
             placeholder: At least 8 characters
             label:
               colon: false

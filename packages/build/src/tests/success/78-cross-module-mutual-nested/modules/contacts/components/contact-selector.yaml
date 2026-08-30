@@ -1,4 +1,5 @@
 id: contact-picker
 type: Selector
 properties:
-  label: Select Contact
+  label:
+    title: Select Contact

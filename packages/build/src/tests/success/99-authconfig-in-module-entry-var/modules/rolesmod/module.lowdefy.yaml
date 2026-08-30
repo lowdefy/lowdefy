@@ -8,6 +8,8 @@ vars:
 pages:
   - id: roles-view
     type: Box
+    ~ignoreBuildChecks:
+      - block-properties
     properties:
       catalog:
         _module.var: role_catalog

@@ -178,7 +178,7 @@
                   properties:
                     content:
                       _state: ml_team.$.initials
-                    backgroundColor:
+                    color:
                       _state: ml_team.$.bg
                 - id: ml_team.$.name_block
                   type: Title

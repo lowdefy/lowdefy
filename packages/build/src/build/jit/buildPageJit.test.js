@@ -42,6 +42,9 @@ function createTestContext() {
   context.errors = [];
   context.typesMap = snapshotTypesMap;
   context.unresolvedRefVars = {};
+  // The page templates below carry arbitrary properties to exercise the JIT
+  // machinery; an empty schema map keeps block property validation out of them.
+  context.blockSchemas = {};
   return context;
 }
 
@@ -108,6 +111,47 @@ type: PageHeaderMenu
   expect(result.id).toBe('page:home');
   expect(result.auth).toEqual(expect.objectContaining({ public: true }));
   expect(result.type).toBe('PageHeaderMenu');
+});
+
+test('buildPageJit loads the block schemas when the context has none and reports a misspelt property', async () => {
+  const context = createTestContext();
+  delete context.blockSchemas;
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+properties:
+  contnet: Hello
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'home',
+      pageRegistry,
+      context,
+    })
+  ).rejects.toMatchObject({
+    message: 'Block "home" of type "Box": unknown property "contnet". Did you mean "content"?',
+    checkSlug: 'block-properties',
+  });
+  expect(context.blockSchemas.Box).toBeDefined();
 });
 
 test('buildPageJit writes tailwind candidate file with classes from _js source, not the extracted hash', async () => {

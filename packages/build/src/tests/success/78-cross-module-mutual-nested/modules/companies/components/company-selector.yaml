@@ -4,7 +4,8 @@ blocks:
   - id: company-dropdown
     type: Selector
     properties:
-      label: Select Company
+      label:
+        title: Select Company
   - _ref:
       module: contacts
       component: contact-selector

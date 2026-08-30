@@ -26,7 +26,6 @@ blocks:
       span: 12
     properties:
       block: true
-      hideActionLoading: true
       icon: AiOutlineArrowLeft
       size: large
       title:
@@ -52,7 +51,6 @@ blocks:
       span: 12
     properties:
       block: true
-      hideActionLoading: true
       icon: AiOutlineArrowRight
       size: large
       title:

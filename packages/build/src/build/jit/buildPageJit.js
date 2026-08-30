@@ -42,6 +42,7 @@ import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
+import loadBlockSchemas from '../loadBlockSchemas.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -91,6 +92,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     } catch (err) {
       if (err.code !== 'ENOENT') throw err;
     }
+  }
+
+  // The dev server's JIT context is created in a separate process, so the block
+  // schemas loaded by shallowBuild are not on it; load them once and reuse.
+  if (type.isUndefined(buildContext.blockSchemas)) {
+    await loadBlockSchemas({ components: {}, context: buildContext });
   }
 
   const pageEntry = type.isFunction(pageRegistry.get)

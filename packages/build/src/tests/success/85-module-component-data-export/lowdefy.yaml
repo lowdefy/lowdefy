@@ -19,6 +19,8 @@ pages:
       # Full change_stamp (uses default — no app override)
       - id: save-section
         type: Box
+        ~ignoreBuildChecks:
+          - block-properties
         properties:
           stamp:
             _ref:

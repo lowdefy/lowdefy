@@ -34,6 +34,7 @@ import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
+import loadBlockSchemas from '../loadBlockSchemas.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
@@ -186,6 +187,8 @@ async function shallowBuild(options) {
       context,
     });
 
+    // Block schemas must be in context before any block is built (validateBlockProperties).
+    await loadBlockSchemas({ components, context });
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });

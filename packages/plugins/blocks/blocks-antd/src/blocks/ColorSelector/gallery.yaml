@@ -450,9 +450,9 @@
       type: ColorSelector
       layout:
         flex: 0 0 auto
+      class: rounded-lg shadow-sm
       properties:
         showText: true
-        class: rounded-lg shadow-sm
     - id: style_large_swatch
       type: ColorSelector
       layout:
