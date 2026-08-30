@@ -16,6 +16,7 @@
 
 import {
   createEnvironment,
+  createTemplateFunction,
   nunjucksString,
   nunjucksFunction,
   validNunjucksString,
@@ -163,4 +164,40 @@ test('createEnvironment registers date, unique and urlQuery filters', () => {
     '/page?a=1'
   );
   expect(env.getFilter('date')).toBeDefined();
+});
+
+test('createTemplateFunction renders slot markers unescaped and escapes interpolated values', () => {
+  const temp = createTemplateFunction('<b>{{ x }}</b>{% slot "footer" %}');
+  expect(temp({ x: '<i>' })).toEqual('<b>&lt;i&gt;</b><div data-ldf-slot="footer"></div>');
+});
+
+test('createTemplateFunction does not escape values passed through the safe filter', () => {
+  const temp = createTemplateFunction('{{ x | safe }}');
+  expect(temp({ x: '<i>raw</i>' })).toEqual('<i>raw</i>');
+});
+
+test('createTemplateFunction exposes a primitive value as "value"', () => {
+  const temp = createTemplateFunction('$ {{ value }}');
+  expect(temp(100)).toEqual('$ 100');
+});
+
+test('createTemplateFunction returns the same compiled function for the same source', () => {
+  const a = createTemplateFunction('{{ cached }}');
+  const b = createTemplateFunction('{{ cached }}');
+  expect(a).toBe(b);
+  expect(a).not.toBe(createTemplateFunction('{{ other }}'));
+});
+
+test('createTemplateFunction throws on a malformed slot tag', () => {
+  expect(() => createTemplateFunction('{% slot footer %}')).toThrow(
+    'slot tag expects a quoted slot name'
+  );
+});
+
+test('createTemplateFunction does not register slot in the shared environment', () => {
+  expect(() => nunjucksFunction('{% slot "a" %}')).toThrow('unknown block tag: slot');
+});
+
+test('createTemplateFunction returns a function yielding the input for non-string templates', () => {
+  expect(createTemplateFunction(5)()).toEqual(5);
 });
