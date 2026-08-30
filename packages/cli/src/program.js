@@ -26,6 +26,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import start from './commands/start/start.js';
+import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
 import vercelOutput from './commands/vercelOutput/vercelOutput.js';
 import runCommand from './utils/runCommand.js';
@@ -209,6 +210,30 @@ program
   .addOption(options.port)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: start }));
+
+program
+  .command('test')
+  .description("Run the app's config tests (tests/journeys/*.yaml).")
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(
+    new Option(
+      '--filter <name>',
+      'Only run tests whose name contains this string (case-insensitive).'
+    )
+  )
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run tests against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action(runCommand({ cliVersion, handler: test }));
 
 program
   .command('upgrade')
