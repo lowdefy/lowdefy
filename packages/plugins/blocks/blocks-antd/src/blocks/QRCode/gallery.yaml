@@ -413,7 +413,7 @@
         - id: ticket_qr_row
           type: Box
           layout:
-            contentAlign: center
+            align: center
             gap: 8
           blocks:
             - id: ticket_qr
@@ -444,7 +444,7 @@
         - id: wifi_qr_row
           type: Box
           layout:
-            contentAlign: center
+            align: center
             gap: 8
           blocks:
             - id: wifi_qr
