@@ -16,6 +16,12 @@
 
 import { jest } from '@jest/globals';
 
+// parseUserParam resolves dev user fixtures, which read build/auth.json from a
+// running server directory - the artifact is mocked as an app without fixtures.
+jest.unstable_mockModule('../../../lib/build/auth.js', () => ({
+  default: {},
+}));
+
 const mockRunJourney = jest.fn();
 
 jest.unstable_mockModule('../../../lib/docs/runJourney.js', () => ({
