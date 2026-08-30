@@ -372,6 +372,7 @@ _ref:
             | `block-properties` | Block `properties` validation against the block type's schema (unknown or mistyped properties) |
             | `schema` | JSON schema validation errors |
             | `js-lint` | `_js` body analysis - a reference to a name that is not a parameter, not declared in the body and not in the JavaScript standard library is a build error; a declaration that is never used is a warning |
+            | `js-modules` | `_js` module references (`fn: ./lib/file.js#name`) - the file must exist inside the config directory, parse, and have the named export |
 
             ### Example: Dynamic State
 
