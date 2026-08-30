@@ -164,6 +164,22 @@ _ref:
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+            ## migrate
+
+            The `migrate` command applies the app's [migrations](/migrations) — the files in the `migrations/` directory — against the live database. It reads the ordered build index and the `migrations` ledger collection, computes the pending set, prints the ledger connection id and database name it will write to, confirms (unless `--yes`), acquires an advisory lock, and applies each pending migration in filename order, appending one ledger document per migration as it completes. It stops at the first failing migration, names the migration id, the failing step id and the error, and exits non-zero; migrations that completed stay applied. Migrations are forward-only — there are no down migrations. See [Migrations](/migrations).
+
+            The command takes no connection string of its own: the ledger connection and every step's connection are named in config and read their properties (including secrets) from the environment the command runs in, so targeting staging versus production is a matter of which environment `migrate` runs against. The deploy pipeline runs `lowdefy migrate --yes` after `lowdefy build` and before traffic shifts; a serving preflight refuses to serve while any migration is still pending.
+
+            - `--allow-checksum-mismatch`: Downgrade a checksum mismatch (an already-applied migration file was edited) from an error to a warning, and update the stored checksum. For a whitespace- or comment-only edit you know is a no-op.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--dry-run`: Report which migrations would run, in order, and for each request step the evaluated request properties, with no writes and no ledger changes. Properties that depend on a previous step's result are annotated as unresolved rather than fabricated, because no step runs in a dry run.
+            - `--json`: Print a machine-readable report and nothing else on stdout, mirroring `lowdefy check --json`.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
+            - `--to <id>`: Apply pending migrations up to and including `<id>`. Omit to apply all pending.
+            - `--yes`: Skip the confirmation prompt. Required in CI.
+
             ## test
 
             The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
