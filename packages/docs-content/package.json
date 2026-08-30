@@ -20,11 +20,13 @@
   "type": "module",
   "exports": {
     "./index.json": "./index.json",
+    "./hazards.json": "./hazards.json",
     "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
     "./content/*": "./content/*"
   },
   "files": [
     "content/**",
+    "hazards.json",
     "index.json",
     "scripts/*"
   ],
