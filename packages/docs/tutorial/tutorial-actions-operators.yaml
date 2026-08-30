@@ -326,7 +326,7 @@ _ref:
             layout:
               gap: 16
             blocks:
-              - id: page_heading
+              - id: example_3_page_heading
                 type: Title
                 required: true
                 properties:
@@ -372,7 +372,7 @@ _ref:
                   options:
                     - Yes
                     - No
-              - id: reset_button
+              - id: example_3_reset_button
                 type: Button
                 layout:
                   span: 12 # Set the size of the button (span 12 of 24 columns)
@@ -385,7 +385,7 @@ _ref:
                   onClick:
                     - id: reset
                       type: Reset
-              - id: submit_button
+              - id: example_3_submit_button
                 type: Button
                 layout:
                   span: 12

@@ -35,7 +35,7 @@ _ref:
           showIcon: false
           message: The Lowdefy plugin system is under active development and breaking changes might be made in a minor version update.
 
-      - id: md1
+      - id: md2
         type: MarkdownWithCode
         properties:
           content: |

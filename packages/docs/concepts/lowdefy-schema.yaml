@@ -132,7 +132,7 @@ _ref:
 
             See more about how menu objects are used and defined [here](/menus).
 
-      - id: md3
+      - id: md4
         type: MarkdownWithCode
         properties:
           content: |
@@ -148,7 +148,7 @@ _ref:
 
             See the [APIs documentation](/lowdefy-api) for more information on how to use and define them.
 
-      - id: md3
+      - id: md5
         type: MarkdownWithCode
         properties:
           content: |
@@ -315,7 +315,7 @@ _ref:
                                   content: This is a paragraph on Page 2.
                     ```
 
-      - id: md3
+      - id: md6
         type: MarkdownWithCode
         properties:
           content: |

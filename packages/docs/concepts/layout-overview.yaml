@@ -186,7 +186,7 @@ _ref:
             style:
               border: '1px dashed #eb2f96'
             blocks:
-              - id: ex_areas_b1
+              - id: ex_overwrite_b1
                 type: Html
                 style:
                   textAlign: center
