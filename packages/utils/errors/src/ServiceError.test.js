@@ -244,3 +244,23 @@ describe('ServiceError.enhanceMessage', () => {
     expect(enhanced).toBe('Unknown error');
   });
 });
+
+test('ServiceError stores a hint', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(error.hint).toBe('Insert with upsert: true.');
+});
+
+test('ServiceError hint is enumerable so it survives serialization to the client', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(Object.keys(error)).toContain('hint');
+});
+
+test('ServiceError takes the hint from the cause when none is given', () => {
+  const cause = new Error('inner');
+  cause.hint = 'Check the index.';
+  expect(new ServiceError('Failed', { cause }).hint).toBe('Check the index.');
+});
+
+test('ServiceError hint defaults to null', () => {
+  expect(new ServiceError('Failed').hint).toBe(null);
+});

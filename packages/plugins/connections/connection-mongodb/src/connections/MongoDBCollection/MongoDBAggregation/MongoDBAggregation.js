@@ -15,6 +15,7 @@
 */
 
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -35,8 +36,13 @@ async function MongodbAggregation({ request, connection }) {
   const { pipeline, options } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
   const { collection } = await getCollection({ connection });
-  const cursor = await collection.aggregate(pipeline, options);
-  const res = await cursor.toArray();
+  let res;
+  try {
+    const cursor = await collection.aggregate(pipeline, options);
+    res = await cursor.toArray();
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation' });
+  }
   return serialize(res);
 }
 

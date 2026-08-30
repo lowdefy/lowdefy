@@ -165,7 +165,7 @@ test('insertOne mongodb error', async () => {
   };
   await MongoDBInsertOne({ request, connection });
   await expect(MongoDBInsertOne({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error'
+    'MongoDB: Duplicate key on collection "insertOne".'
   );
 });
 
@@ -210,6 +210,41 @@ test('insertOne insert a date', async () => {
     _id: 'insertOneDate',
     date: new Date('2020-01-01'),
   });
+});
+
+test('insertOne throws a ServiceError with a hint when a unique index is violated', async () => {
+  const uniqueCollection = 'insertOneUniqueIndex';
+  const client = new MongoClient(databaseUri);
+  await client.connect();
+  try {
+    await client
+      .db(databaseName)
+      .collection(uniqueCollection)
+      .createIndex({ ref: 1 }, { unique: true });
+  } finally {
+    await client.close();
+  }
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection: uniqueCollection,
+    write: true,
+  };
+  await MongoDBInsertOne({ request: { doc: { ref: 'ORD-1' } }, connection });
+  await expect(
+    MongoDBInsertOne({ request: { doc: { ref: 'ORD-1' } }, connection })
+  ).rejects.toThrow('MongoDB: Duplicate key on collection "insertOneUniqueIndex".');
+  const error = await MongoDBInsertOne({
+    request: { doc: { ref: 'ORD-1' } },
+    connection,
+  }).catch((e) => e);
+  expect(error.name).toBe('ServiceError');
+  expect(error.code).toBe(11000);
+  expect(error.hint).toBe(
+    'A unique index on ref already has a document with these values. Insert with MongoDBUpdateOne and upsert: true, or remove the existing document first.'
+  );
+  expect(error.message).not.toContain('ORD-1');
+  expect(error.cause.name).toBe('MongoServerError');
 });
 
 test('request not an object', async () => {
