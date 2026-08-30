@@ -25,6 +25,7 @@ const mockGetEndpointConfig = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockCreateLowdefyContext = jest.fn();
 const mockLoggerInfo = jest.fn();
+const mockGetDevUsers = jest.fn();
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
@@ -35,6 +36,9 @@ jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
 }));
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
+}));
+jest.unstable_mockModule('../server/auth/getDevUsers.js', () => ({
+  default: mockGetDevUsers,
 }));
 
 const { ConfigError } = await import('@lowdefy/errors');
@@ -49,6 +53,7 @@ beforeEach(() => {
   mockIsWriteRequestsAllowed.mockResolvedValue(true);
   mockCreateLowdefyContext.mockResolvedValue(context);
   mockGetEndpointConfig.mockResolvedValue({ id: 'endpoint:create_order', type: 'Api' });
+  mockGetDevUsers.mockReturnValue({ admin: { id: 'dev-admin', roles: ['admin'] } });
   mockCallEndpoint.mockResolvedValue({
     error: null,
     response: { orderId: 'o_1' },
@@ -73,13 +78,31 @@ test('runEndpoint throws a ConfigError when endpointId is not a string', async (
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 
-test('runEndpoint throws a ConfigError when user is not an object', async () => {
+test('runEndpoint resolves a dev user fixture name to the declared caller', async () => {
+  mockIsWriteRequestsAllowed.mockResolvedValue(true);
+
+  await runEndpoint({ endpointId: 'create_order', user: 'admin', honoContext });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: { id: 'dev-admin', roles: ['admin'] },
+  });
+});
+
+test('runEndpoint throws a ConfigError when the dev user name is not declared', async () => {
   await expect(
-    runEndpoint({ endpointId: 'create_order', user: 'admin', honoContext })
+    runEndpoint({ endpointId: 'create_order', user: 'adin', honoContext })
   ).rejects.toThrow(ConfigError);
   await expect(
+    runEndpoint({ endpointId: 'create_order', user: 'adin', honoContext })
+  ).rejects.toThrow(/Unknown dev user "adin"/);
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError when user is neither a name nor an object', async () => {
+  await expect(
     runEndpoint({ endpointId: 'create_order', user: ['admin'], honoContext })
-  ).rejects.toThrow(/run_endpoint "user" must be an object/);
+  ).rejects.toThrow(/must be a dev user name or an object/);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 

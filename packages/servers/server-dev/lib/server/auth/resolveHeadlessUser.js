@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { headlessUser } from './headlessUser.js';
+import resolveDevUser from './resolveDevUser.js';
 
 // The default headless caller is roleless, so role-gated pages and requests are
 // refused for it. A per-call `user` merges over that default, which keeps the
@@ -24,15 +25,14 @@ import { headlessUser } from './headlessUser.js';
 // full caller (email, profile, attributes) for config that reads those - nothing
 // derives them for an injected caller, since no auth engine runs. Each headless
 // call gets its own browser context and cookie jar, so callers do not share an
-// identity.
+// identity. The `user` may also name a fixture declared under auth.dev.users -
+// resolveDevUser turns either form into the caller object merged here.
 function resolveHeadlessUser({ user }) {
-  if (type.isNone(user)) {
+  const resolved = resolveDevUser({ user });
+  if (type.isNone(resolved)) {
     return headlessUser;
   }
-  if (!type.isObject(user)) {
-    throw new Error(`Headless "user" must be an object. Received ${JSON.stringify(user)}.`);
-  }
-  return { ...headlessUser, ...user };
+  return { ...headlessUser, ...resolved };
 }
 
 export default resolveHeadlessUser;

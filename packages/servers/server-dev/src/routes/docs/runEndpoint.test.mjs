@@ -18,6 +18,11 @@ import { jest } from '@jest/globals';
 
 const mockRunEndpoint = jest.fn();
 
+// parseUserParam resolves dev user fixtures, which read build/auth.json from a
+// running server directory - the artifact is mocked as an app without fixtures.
+jest.unstable_mockModule('../../../lib/build/auth.js', () => ({
+  default: {},
+}));
 jest.unstable_mockModule('../../../lib/docs/runEndpoint.js', () => ({
   default: mockRunEndpoint,
 }));
@@ -68,13 +73,23 @@ test('docsRunEndpointHandler leaves the original request body readable', async (
   await expect(c.req.raw.json()).resolves.toEqual({ endpointId: 'create_order' });
 });
 
-test('docsRunEndpointHandler returns 400 when user is malformed', async () => {
-  const c = createContext({ endpointId: 'create_order', user: 'nope' });
+test('docsRunEndpointHandler returns 400 when user is malformed JSON', async () => {
+  const c = createContext({ endpointId: 'create_order', user: '{"roles":' });
 
   const result = await docsRunEndpointHandler(c);
 
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch(/The "user" param must be JSON/);
+  expect(mockRunEndpoint).not.toHaveBeenCalled();
+});
+
+test('docsRunEndpointHandler returns 400 when user names an undeclared dev user', async () => {
+  const c = createContext({ endpointId: 'create_order', user: 'nope' });
+
+  const result = await docsRunEndpointHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch(/No dev users are declared/);
   expect(mockRunEndpoint).not.toHaveBeenCalled();
 });
 

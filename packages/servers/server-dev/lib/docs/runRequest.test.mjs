@@ -24,6 +24,7 @@ const mockReadBuildArtifact = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockCreateLowdefyContext = jest.fn();
 const mockLoggerInfo = jest.fn();
+const mockGetDevUsers = jest.fn();
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
@@ -36,6 +37,9 @@ jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
 }));
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
+}));
+jest.unstable_mockModule('../server/auth/getDevUsers.js', () => ({
+  default: mockGetDevUsers,
 }));
 
 const { ConfigError } = await import('@lowdefy/errors');
@@ -54,6 +58,7 @@ beforeEach(() => {
   mockIsWriteRequestsAllowed.mockResolvedValue(false);
   mockCreateLowdefyContext.mockResolvedValue({ logger: { info: mockLoggerInfo } });
   mockCallRequest.mockResolvedValue({ id: 'requests', response: [{ _id: 1 }] });
+  mockGetDevUsers.mockReturnValue({ admin: { id: 'dev-admin', roles: ['admin'] } });
 });
 
 test('runRequest passes a user object to createLowdefyContext', async () => {
@@ -84,13 +89,29 @@ test('runRequest logs the user it ran the request as', async () => {
   });
 });
 
-test('runRequest throws a ConfigError when user is not an object', async () => {
+test('runRequest resolves a dev user fixture name to the declared caller', async () => {
+  await runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
+    c: honoContext,
+    user: { id: 'dev-admin', roles: ['admin'] },
+  });
+});
+
+test('runRequest throws a ConfigError when the dev user name is not declared', async () => {
   await expect(
-    runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext })
+    runRequest({ pageId: 'home', requestId: 'get_rows', user: 'adin', honoContext })
   ).rejects.toThrow(ConfigError);
   await expect(
+    runRequest({ pageId: 'home', requestId: 'get_rows', user: 'adin', honoContext })
+  ).rejects.toThrow(/Unknown dev user "adin"/);
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runRequest throws a ConfigError when user is neither a name nor an object', async () => {
+  await expect(
     runRequest({ pageId: 'home', requestId: 'get_rows', user: ['admin'], honoContext })
-  ).rejects.toThrow(/run_request "user" must be an object/);
+  ).rejects.toThrow(/must be a dev user name or an object/);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 

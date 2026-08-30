@@ -18,6 +18,7 @@ import { callEndpoint, getEndpointConfig } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import resolveDevUser from '../server/auth/resolveDevUser.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import truncateResponse from './truncateResponse.js';
 
@@ -37,12 +38,14 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
     );
   }
 
-  if (!type.isNone(user) && !type.isObject(user)) {
-    throw new ConfigError(
-      `run_endpoint "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
-        user
-      )}.`
-    );
+  // A fixture name declared under auth.dev.users, or an inline caller object -
+  // resolveDevUser is the single place a `user` value becomes a caller, and an
+  // unknown name names the fix rather than falling back to a roleless caller.
+  let caller;
+  try {
+    caller = resolveDevUser({ user });
+  } catch (error) {
+    throw new ConfigError(error.message, { cause: error });
   }
 
   const allowed = await isWriteRequestsAllowed();
@@ -60,7 +63,7 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user });
+  const context = await createLowdefyContext({ c: honoContext, user: caller });
 
   // getEndpointConfig needs the context's readConfigFile, so the endpoint is
   // resolved after the context is built. Its not-found ConfigError is answered
