@@ -13,19 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+// Splits the ErrorBar's entries into errors/warnings and the tenant: none
+// notices, which the bar renders as their own "unscoped reads" group and the
+// copy text lists under their own heading.
+const TENANT_NONE_NOTICE = 'TenantNoneNotice';
 
-// Three severities: a real error is red, a warning that fails the production
-// build is dark orange, and a plain warning is yellow. An info-level entry (a
-// dev notice such as an unscoped tenant: none read) is not an error - an app
-// with only notices shows the amber bar.
-function isError(error) {
-  return error.level !== 'info' && error.type !== 'ConfigWarning';
+function groupNotices(errors) {
+  const entries = [];
+  const tenantNotices = [];
+  (errors ?? []).forEach((error) => {
+    if (error.type === TENANT_NONE_NOTICE) {
+      tenantNotices.push(error);
+    } else {
+      entries.push(error);
+    }
+  });
+  return { entries, tenantNotices };
 }
 
-function getErrorBarColor(errors) {
-  if (errors.some(isError)) return '#cf1322';
-  if (errors.some((error) => error.prodError === true)) return '#ad4e00';
-  return '#d48806';
-}
-
-export default getErrorBarColor;
+export default groupNotices;

@@ -62,6 +62,7 @@ const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
 const { default: serverErrorStore } = await import('./serverErrorStore.js');
+const { default: devNoticeStore } = await import('./devNoticeStore.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
@@ -201,14 +202,35 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client and server errors', () => {
+test('getBuildStatus returns the build artifact plus reported client and server errors and tenant notices', () => {
   serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
+  const notice = {
+    timestamp: '2026-01-01T00:00:00.000Z',
+    name: 'TenantNoneNotice',
+    level: 'info',
+    message: 'Request "list_all" ran unscoped on tenant connection "app_data" (tenant: none).',
+    source: 'pages/a.yaml:9',
+    config: 'pages.0.requests.0',
+    details: {
+      connectionId: 'app_data',
+      requestId: 'list_all',
+      stepId: null,
+      field: 'organization_id',
+    },
+    configKey: 'request.1',
+  };
+  devNoticeStore.push(notice);
   const result = getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
   expect(result.serverErrors).toEqual([
     { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
   ]);
+  expect(result.tenantNotices).toEqual([notice]);
+});
+
+test('getBuildStatus returns an empty tenantNotices list shape when no tenant none request ran', () => {
+  expect(Array.isArray(getBuildStatus().tenantNotices)).toBe(true);
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {

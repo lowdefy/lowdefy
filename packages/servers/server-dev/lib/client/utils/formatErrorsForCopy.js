@@ -14,17 +14,29 @@
   limitations under the License.
 */
 
+import groupNotices from './groupNotices.js';
+
+function formatEntry(error) {
+  const prefix = error.prodError === true ? `[${error.type}] (fails in prod)` : `[${error.type}]`;
+  let text = `${prefix} ${error.message}`;
+  if (error.source) text += `\n  Source: ${error.source}`;
+  if (error.stack) text += `\n${error.stack}`;
+  return text;
+}
+
+// Errors and warnings first, then the tenant: none notices under their own
+// heading with their source lines, so a pasted bar reads as two lists.
 function formatErrorsForCopy(errors) {
-  return errors
-    .map((error) => {
-      const prefix =
-        error.prodError === true ? `[${error.type}] (fails in prod)` : `[${error.type}]`;
-      let text = `${prefix} ${error.message}`;
-      if (error.source) text += `\n  Source: ${error.source}`;
-      if (error.stack) text += `\n${error.stack}`;
-      return text;
-    })
-    .join('\n\n');
+  const { entries, tenantNotices } = groupNotices(errors);
+  const sections = [entries.map(formatEntry).join('\n\n')];
+  if (tenantNotices.length > 0) {
+    const lines = tenantNotices.map((notice) => {
+      const source = notice.source ? `\n  Source: ${notice.source}` : '';
+      return `${notice.message}${source}`;
+    });
+    sections.push(`Unscoped reads (tenant: none):\n${lines.join('\n')}`);
+  }
+  return sections.filter((section) => section !== '').join('\n\n');
 }
 
 export default formatErrorsForCopy;

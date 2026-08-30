@@ -32,3 +32,16 @@ test('getErrorBarColor returns yellow when every entry is a plain warning', () =
     getErrorBarColor([{ type: 'ConfigWarning' }, { type: 'ConfigWarning', prodError: false }])
   ).toBe('#d48806');
 });
+
+test('getErrorBarColor treats info-level notices as non-errors and shows the amber bar', () => {
+  expect(getErrorBarColor([{ type: 'TenantNoneNotice', level: 'info' }])).toBe('#d48806');
+  expect(
+    getErrorBarColor([{ type: 'TenantNoneNotice', level: 'info' }, { type: 'ConfigWarning' }])
+  ).toBe('#d48806');
+});
+
+test('getErrorBarColor stays red when an error sits beside info-level notices', () => {
+  expect(
+    getErrorBarColor([{ type: 'TenantNoneNotice', level: 'info' }, { type: 'OperatorError' }])
+  ).toBe('#cf1322');
+});
