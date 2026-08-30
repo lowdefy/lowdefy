@@ -45,6 +45,22 @@ test('writeAuth empty auth', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', '{}']]);
 });
 
+test('writeAuth writes the dev user fixtures into the artifact', async () => {
+  const components = {
+    auth: {
+      dev: {
+        users: {
+          admin: { id: 'dev-admin', roles: ['admin'] },
+        },
+      },
+    },
+  };
+  await writeAuth({ components, context });
+  expect(JSON.parse(mockWriteBuildArtifact.mock.calls[0][1])).toEqual({
+    dev: { users: { admin: { id: 'dev-admin', roles: ['admin'] } } },
+  });
+});
+
 test('writeConfig config undefined', async () => {
   const components = {};
   await writeAuth({ components, context });
