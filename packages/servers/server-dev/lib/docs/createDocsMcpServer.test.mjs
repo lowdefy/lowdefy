@@ -297,6 +297,7 @@ test('MCP tools/call prepends a STALE notice while the last build failed', async
   } finally {
     fs.writeFileSync(statusPath, okStatus);
   }
+});
 
 test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one image per screenshot', async () => {
   mockRunJourney.mockResolvedValue({
