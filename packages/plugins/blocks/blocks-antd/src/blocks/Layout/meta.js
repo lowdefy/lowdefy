@@ -28,6 +28,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      hasSider: {
+        type: 'boolean',
+        default: false,
+        description: 'Lay the child blocks out in a row when the layout contains a Sider.',
+      },
       theme: {
         type: 'object',
         description:

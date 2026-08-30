@@ -25,6 +25,12 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      shape: {
+        type: 'string',
+        default: 'default',
+        description: 'Shape of the skeleton; round gives fully rounded ends.',
+        enum: ['default', 'round'],
+      },
       size: {
         type: 'string',
         default: 'medium',

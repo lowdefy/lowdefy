@@ -90,7 +90,8 @@ function createInputMeta(blockName, { size = false } = {}) {
     },
     properties: {
       type: 'object',
-      additionalProperties: false,
+      // Undeclared properties are passed through to AgGrid as grid options.
+      additionalProperties: true,
       properties: {
         ...(size
           ? {
@@ -192,7 +193,7 @@ function createInputMeta(blockName, { size = false } = {}) {
                 description: 'Initial width in pixels for the cell.',
               },
               cellStyle: {
-                type: 'number',
+                type: 'object',
                 description:
                   'An object of css values returning an object of css values for a particular cell.',
               },
@@ -233,7 +234,19 @@ function createInputMeta(blockName, { size = false } = {}) {
                 properties: {
                   type: {
                     type: 'string',
-                    enum: ['tag', 'avatar', 'link', 'date', 'boolean', 'progress', 'number'],
+                    enum: [
+                      'tag',
+                      'avatar',
+                      'link',
+                      'date',
+                      'boolean',
+                      'progress',
+                      'number',
+                      'textInput',
+                      'paragraphInput',
+                      'selector',
+                      'switch',
+                    ],
                     description: 'The built-in renderer to use.',
                   },
                   colorMap: {
