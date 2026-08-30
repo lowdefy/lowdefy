@@ -44,6 +44,7 @@ import docsInspectStateHandler from './routes/docs/inspectState.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsRestartHandler from './routes/docs/restart.js';
 import docsRunRequestHandler from './routes/docs/runRequest.js';
 import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
 import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
@@ -141,6 +142,7 @@ function createApp() {
   app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
   app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
   app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
+  app.post('/lowdefy-docs/restart', docsRestartHandler);
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs
   // and serves checkpoint parts for the ?_checkpoint bootstrap.

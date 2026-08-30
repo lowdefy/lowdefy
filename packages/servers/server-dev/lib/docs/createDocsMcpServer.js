@@ -36,6 +36,7 @@ import listPlugins from './listPlugins.js';
 import listTypes from './listTypes.js';
 import loadState from './loadState.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
+import requestRestart from './requestRestart.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -179,6 +180,25 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     },
     async ({ pageId, requestId, payload, user }) =>
       textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
+  );
+
+  server.registerTool(
+    'lowdefy_restart',
+    {
+      description:
+        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing.",
+      inputSchema: {
+        reason: z
+          .string()
+          .optional()
+          .describe('Why the restart is needed (logged by the manager).'),
+      },
+    },
+    ({ reason }) =>
+      textResult({
+        ...requestRestart({ reason }),
+        note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+      })
   );
 
   server.registerTool(

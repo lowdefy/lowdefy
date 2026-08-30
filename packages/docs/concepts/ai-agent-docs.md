@@ -37,6 +37,7 @@ It provides these tools:
 | `lowdefy_load_state`     | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing |
 | `lowdefy_list_state_checkpoints` | List saved state checkpoints |
 | `lowdefy_checkpoint_to_mocks` | Convert a state checkpoint into e2e `mocks.yaml` fixtures |
+| `lowdefy_restart`        | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status` |
 | `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
 | `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
 
@@ -229,6 +230,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |
 | `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
 | `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
+| `POST /lowdefy-docs/restart`        | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s) |
 
 ## Local plugins
 
@@ -238,6 +240,7 @@ Your project's own plugins (declared under `plugins:` in `lowdefy.yaml`) are inc
 - Block schemas are derived from each block's `meta`, and connection/request schemas from the `schema` property on your connection and request definitions.
 - Ship a `gallery.yaml` or `examples.yaml` next to a block in your plugin's `dist/blocks/{BlockName}/` and it is served by `lowdefy_get_examples`.
 - A `README.md` or `docs/*.md` files in your plugin package are served by `lowdefy_get_plugin_doc`.
+- Editing a local plugin's server-side source (connections, requests, server operators, agents, websockets, notifications, auth) under its `src/` restarts the dev server automatically, so the new implementation is what runs. Block, action and client-operator edits hot-reload through Vite without a restart. If the server still looks stale, call `lowdefy_restart` or `POST /lowdefy-docs/restart`.
 
 ## Docs for crawling agents
 
