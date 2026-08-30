@@ -88,7 +88,11 @@ const typesMap = {
 // Packages that would be installed in a real dev server using these blocks/actions.
 // Set on the hydrated context so detectMissingPluginPackages doesn't short-circuit
 // buildPageJit into "installing" mode.
-const installedPluginPackages = new Set(['@lowdefy/blocks-basic', '@lowdefy/actions-core']);
+const installedPluginPackages = new Set([
+  '@lowdefy/blocks-basic',
+  '@lowdefy/blocks-antd',
+  '@lowdefy/actions-core',
+]);
 
 function callApiPage(id, endpointId) {
   return `id: ${id}

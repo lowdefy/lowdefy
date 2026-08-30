@@ -22,6 +22,7 @@ import InputContainer from './InputContainer.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
+import createBlockMethods from './createBlockMethods.js';
 import resolveClassNames from './resolveClassNames.js';
 
 const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
@@ -78,13 +79,18 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(block.methods, {
-              getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-              registerEvent: block.registerEvent,
-              registerMethod: block.registerMethod,
-              setValue: block.setValue,
-              translate: lowdefy._internal.translate,
-              triggerEvent: block.triggerEvent,
+            methods={createBlockMethods({
+              blockId: block.blockId,
+              blockType: block.type,
+              configKey: block.eval?.configKey,
+              methods: Object.assign(block.methods, {
+                getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+                registerEvent: block.registerEvent,
+                registerMethod: block.registerMethod,
+                setValue: block.setValue,
+                translate: lowdefy._internal.translate,
+                triggerEvent: block.triggerEvent,
+              }),
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}
@@ -123,12 +129,17 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           layout={block.eval.layout}
         >
           <Component
-            methods={Object.assign(block.methods, {
-              getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-              registerEvent: block.registerEvent,
-              registerMethod: block.registerMethod,
-              translate: lowdefy._internal.translate,
-              triggerEvent: block.triggerEvent,
+            methods={createBlockMethods({
+              blockId: block.blockId,
+              blockType: block.type,
+              configKey: block.eval?.configKey,
+              methods: Object.assign(block.methods, {
+                getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+                registerEvent: block.registerEvent,
+                registerMethod: block.registerMethod,
+                translate: lowdefy._internal.translate,
+                triggerEvent: block.triggerEvent,
+              }),
             })}
             basePath={lowdefy.basePath}
             blockId={block.blockId}

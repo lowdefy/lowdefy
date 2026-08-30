@@ -20,9 +20,11 @@ areas:
         type: Title
         properties:
           content:
-            _nunjucks: 'Welcome back, {{ user.name }}!'
-            user:
-              _user: true
+            _nunjucks:
+              template: 'Welcome back, {{ user.name }}!'
+              on:
+                user:
+                  _user: true
       - id: statsRow
         type: Box
         blocks:

@@ -17,6 +17,7 @@
 import { buildBlockSchema } from '@lowdefy/block-utils';
 
 import importPluginModule from './writePluginImports/importPluginModule.js';
+import validateBlockMeta from './writePluginImports/validateBlockMeta.js';
 
 // Builds context.blockSchemas ({ [typeName]: full block schema }) and
 // context.blockPluginMetas ({ [typeName]: plugin meta }) for every installed
@@ -42,15 +43,25 @@ async function loadBlockSchemas({ components, context }) {
       packageMetas = await importPluginModule({ context, specifier: `${packageName}/schemas` });
     }
     for (const { typeName, definition } of types) {
-      const meta = packageMetas?.[definition.originalTypeName ?? typeName];
       if (typesMapSchemas[typeName]) {
         blockSchemas[typeName] = typesMapSchemas[typeName];
-      } else if (meta) {
+      }
+      // A package whose metas module cannot be resolved is not installed yet:
+      // the first build of an app that adds a plugin runs before installServer
+      // fetches it, and the CLI and dev manager build again afterwards. Only a
+      // package that does export metas is held to the meta contract.
+      if (!packageMetas) {
+        continue;
+      }
+      const meta = packageMetas[definition.originalTypeName ?? typeName];
+      const valid = validateBlockMeta({ meta, typeName, packageName, context });
+      if (!valid) {
+        continue;
+      }
+      if (!typesMapSchemas[typeName]) {
         blockSchemas[typeName] = buildBlockSchema(meta);
       }
-      if (meta) {
-        blockPluginMetas[typeName] = meta;
-      }
+      blockPluginMetas[typeName] = meta;
     }
   }
 

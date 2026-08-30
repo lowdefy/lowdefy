@@ -38,7 +38,7 @@ const testTypesMap = {
   blocks: {
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
-    Button: { package: '@lowdefy/blocks-basic' },
+    Button: { package: '@lowdefy/blocks-antd' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
     Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
@@ -46,7 +46,7 @@ const testTypesMap = {
     Img: { package: '@lowdefy/blocks-basic' },
     List: { package: '@lowdefy/blocks-basic' },
     Message: { package: '@lowdefy/blocks-antd' },
-    Paragraph: { package: '@lowdefy/blocks-basic' },
+    Paragraph: { package: '@lowdefy/blocks-antd' },
     ProgressBar: { package: '@lowdefy/blocks-loaders' },
     Result: { package: '@lowdefy/blocks-antd' },
     Skeleton: { package: '@lowdefy/blocks-loaders' },
@@ -59,7 +59,7 @@ const testTypesMap = {
     Spinner: { package: '@lowdefy/blocks-loaders' },
     TextInput: { package: '@lowdefy/blocks-antd' },
     Throw: { package: '@lowdefy/blocks-basic' },
-    Title: { package: '@lowdefy/blocks-basic' },
+    Title: { package: '@lowdefy/blocks-antd' },
   },
   agents: {
     ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
