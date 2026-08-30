@@ -23,8 +23,20 @@ import { BlockError } from '@lowdefy/errors';
 // otherwise report. Every other key, and has/set/ownKeys, pass straight
 // through to the underlying bag, so blocks that register their own methods
 // under a removed name keep working.
+//
+// One proxy per bag: the render sites call this on every render over the same
+// engine methods object (Object.assign mutates and returns it), and before the
+// proxy that same object WAS the `methods` prop — referentially stable across
+// renders. Caching on the bag keeps that identity contract, so React.memo
+// blocks and plugin effects with `methods` in their deps behave as before.
+const proxyCache = new WeakMap();
+
 function createBlockMethods({ blockId, blockType, configKey, methods }) {
-  return new Proxy(methods, {
+  const cached = proxyCache.get(methods);
+  if (cached) {
+    return cached;
+  }
+  const proxy = new Proxy(methods, {
     get(target, key, receiver) {
       if (typeof key === 'string' && key in REMOVED_BLOCK_METHODS && !(key in target)) {
         throw new BlockError(
@@ -35,6 +47,8 @@ function createBlockMethods({ blockId, blockType, configKey, methods }) {
       return Reflect.get(target, key, receiver);
     },
   });
+  proxyCache.set(methods, proxy);
+  return proxy;
 }
 
 export default createBlockMethods;
