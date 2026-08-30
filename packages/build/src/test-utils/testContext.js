@@ -66,7 +66,7 @@ function testContext({
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),
-    tenantConnectionIds: new Set(),
+    tenantConnections: new Map(),
     tenantCollectionMap: {},
     websocketIds: new Set(),
   };

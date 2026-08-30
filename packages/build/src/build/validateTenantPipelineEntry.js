@@ -28,11 +28,11 @@ import { ConfigError } from '@lowdefy/errors';
 // `lowdefy build` and CI catch it before deploy.
 const AUTHORED_ENTRY_STAGES = ['$search', '$searchMeta', '$vectorSearch', '$geoNear'];
 
-function validateTenantPipelineEntry({ config, location, tenantConnectionIds, configKey }) {
+function validateTenantPipelineEntry({ config, location, tenantConnections, configKey }) {
   if (config.tenant === 'none' || config.tenant === 'authored') {
     return;
   }
-  if (!tenantConnectionIds || !tenantConnectionIds.has(config.connectionId)) {
+  if (!tenantConnections || !tenantConnections.has(config.connectionId)) {
     return;
   }
   const pipeline = config.properties?.pipeline;

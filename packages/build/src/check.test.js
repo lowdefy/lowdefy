@@ -25,7 +25,7 @@ import { snapshotTypesMap } from './test-utils/runBuildForSnapshots.js';
 
 const silentLogger = { info() {}, log() {}, warn() {}, error() {}, debug() {}, succeed() {} };
 
-function createApp({ lowdefyYaml }) {
+function createApp({ lowdefyYaml, customTypesMap = snapshotTypesMap }) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-check-test-'));
   const configDirectory = path.join(root, 'config');
   const serverDirectory = path.join(root, '.lowdefy', 'server');
@@ -44,7 +44,7 @@ function createApp({ lowdefyYaml }) {
     root,
     buildDirectory,
     options: {
-      customTypesMap: snapshotTypesMap,
+      customTypesMap,
       directories: { build: buildDirectory, config: configDirectory, server: serverDirectory },
       logger: silentLogger,
     },
@@ -88,6 +88,67 @@ pages:
           html:
             _js: return unlinked.stamp;
 `;
+
+const tenantApp = `
+lowdefy: 0.0.0-test
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+connections:
+  - id: controls_db
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+api:
+  - id: nightly_sync
+    type: Api
+    routine:
+      - id: read_all_controls
+        type: MongoDBFind
+        connectionId: controls_db
+        tenant: none
+        properties:
+          query:
+            status: active
+      - id: read_controls
+        type: MongoDBFind
+        connectionId: controls_db
+        tenant: none
+        properties:
+          query:
+            organization_id:
+              _payload: organization_id
+      - id: write_control
+        type: MongoDBInsertOne
+        connectionId: controls_db
+        tenant: none
+        properties:
+          doc:
+            name: x
+pages:
+  - id: controls
+    type: Box
+    requests:
+      - id: get_controls
+        type: MongoDBFind
+        connectionId: controls_db
+        properties:
+          query:
+            organization_id:
+              _user: organization_id
+`;
+
+// The snapshot types map carries no connectionMetas; the tenant policy needs
+// the MongoDB connection type to declare it implements the wall.
+const tenantTypesMap = {
+  ...snapshotTypesMap,
+  connectionMetas: { MongoDBCollection: { tenant: true } },
+};
 
 const created = [];
 afterAll(() => {

@@ -479,7 +479,7 @@ test('buildConnections passes under the tenant policy when the type declares non
   };
   const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: false } } });
   buildConnections({ components, context: buildContext });
-  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+  expect([...buildContext.tenantConnections]).toEqual([]);
 });
 
 test('buildConnections passes under the pinned policy when the type declares no capability', () => {
@@ -546,7 +546,7 @@ test('count operators', () => {
   });
 });
 
-test('buildConnections populates tenantConnectionIds with the inverted set under the tenant policy', () => {
+test('buildConnections populates tenantConnections with each walled connection and its tenant field under the tenant policy', () => {
   const components = {
     auth: { organizations: { policy: 'tenant' } },
     connections: [
@@ -557,7 +557,7 @@ test('buildConnections populates tenantConnectionIds with the inverted set under
       {
         id: 'walled-custom-field',
         type: 'TestType',
-        tenant: { field: 'organization_id' },
+        tenant: { field: 'tenant_id' },
       },
       {
         id: 'shared',
@@ -574,9 +574,9 @@ test('buildConnections populates tenantConnectionIds with the inverted set under
     connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
   });
   buildConnections({ components, context: buildContext });
-  expect([...buildContext.tenantConnectionIds]).toEqual([
-    'walled-by-default',
-    'walled-custom-field',
+  expect([...buildContext.tenantConnections]).toEqual([
+    ['walled-by-default', { type: 'TestType', field: 'organization_id' }],
+    ['walled-custom-field', { type: 'TestType', field: 'tenant_id' }],
   ]);
 });
 
@@ -627,7 +627,7 @@ test('buildConnections leaves tenantCollectionMap empty under the pinned policy'
   expect(buildContext.tenantCollectionMap).toEqual({});
 });
 
-test('buildConnections leaves tenantConnectionIds empty under the pinned policy', () => {
+test('buildConnections leaves tenantConnections empty under the pinned policy', () => {
   const components = {
     auth: { organizations: { policy: 'pinned' } },
     connections: [
@@ -639,10 +639,10 @@ test('buildConnections leaves tenantConnectionIds empty under the pinned policy'
   };
   const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
   buildConnections({ components, context: buildContext });
-  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+  expect([...buildContext.tenantConnections]).toEqual([]);
 });
 
-test('buildConnections leaves tenantConnectionIds empty when auth declares no policy', () => {
+test('buildConnections leaves tenantConnections empty when auth declares no policy', () => {
   const components = {
     connections: [
       {
@@ -653,7 +653,7 @@ test('buildConnections leaves tenantConnectionIds empty when auth declares no po
   };
   const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
   buildConnections({ components, context: buildContext });
-  expect([...buildContext.tenantConnectionIds]).toEqual([]);
+  expect([...buildContext.tenantConnections]).toEqual([]);
 });
 
 test('buildConnections still validates the tenant contract under the pinned policy', () => {

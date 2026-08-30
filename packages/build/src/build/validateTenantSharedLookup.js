@@ -72,14 +72,14 @@ function collectCollectionStages(pipeline, found) {
 function validateTenantSharedLookup({
   config,
   location,
-  tenantConnectionIds,
+  tenantConnections,
   tenantCollectionMap,
   configKey,
 }) {
   if (config.tenant === 'none') {
     return;
   }
-  if (!tenantConnectionIds || !tenantConnectionIds.has(config.connectionId)) {
+  if (!tenantConnections || !tenantConnections.has(config.connectionId)) {
     return;
   }
   const pipeline = config.properties?.pipeline;

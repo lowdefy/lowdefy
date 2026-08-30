@@ -46,7 +46,7 @@ test('writeConnections write connection', async () => {
       '{"id":"connection:connection1","connectionId":"connection1","properties":{"prop":"val"}}',
     ],
     ['tenantConnections.json', '[]'],
-    ['tenantCollections.json', '{"tenantConnectionIds":[],"tenantCollectionMap":{}}'],
+    ['tenantCollections.json', '{"tenantConnections":{},"tenantCollectionMap":{}}'],
   ]);
 });
 
@@ -74,7 +74,7 @@ test('writeConnections multiple connection', async () => {
       '{"id":"connection:connection2","connectionId":"connection2"}',
     ],
     ['tenantConnections.json', '[]'],
-    ['tenantCollections.json', '{"tenantConnectionIds":[],"tenantCollectionMap":{}}'],
+    ['tenantCollections.json', '{"tenantConnections":{},"tenantCollectionMap":{}}'],
   ]);
 });
 
@@ -120,7 +120,9 @@ test('writeConnections writes the inverted tenant connections index', async () =
 
 test('writeConnections writes the tenant indexes for the dev JIT page build', async () => {
   const indexContext = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
-  indexContext.tenantConnectionIds = new Set(['walled']);
+  indexContext.tenantConnections = new Map([
+    ['walled', { type: 'MongoDBCollection', field: 'organization_id' }],
+  ]);
   indexContext.tenantCollectionMap = {
     records: { shared: [], scoped: ['walled'] },
     countries: { shared: ['shared'], scoped: [] },
@@ -131,7 +133,7 @@ test('writeConnections writes the tenant indexes for the dev JIT page build', as
   await writeConnections({ components, context: indexContext });
   expect(mockWriteBuildArtifact.mock.calls[2]).toEqual([
     'tenantCollections.json',
-    '{"tenantConnectionIds":["walled"],"tenantCollectionMap":{"records":{"shared":[],"scoped":["walled"]},"countries":{"shared":["shared"],"scoped":[]}}}',
+    '{"tenantConnections":{"walled":{"type":"MongoDBCollection","field":"organization_id"}},"tenantCollectionMap":{"records":{"shared":[],"scoped":["walled"]},"countries":{"shared":["shared"],"scoped":[]}}}',
   ]);
 });
 
@@ -142,7 +144,7 @@ test('writeConnections no connections', async () => {
   await writeConnections({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     ['tenantConnections.json', '[]'],
-    ['tenantCollections.json', '{"tenantConnectionIds":[],"tenantCollectionMap":{}}'],
+    ['tenantCollections.json', '{"tenantConnections":{},"tenantCollectionMap":{}}'],
   ]);
 });
 

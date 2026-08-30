@@ -100,7 +100,7 @@ function getBuildContext(buildDirectory, configDirectory) {
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
   const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
   const tenantCollections = readJsonFile(path.join(buildDirectory, 'tenantCollections.json')) ?? {
-    tenantConnectionIds: [],
+    tenantConnections: {},
     tenantCollectionMap: {},
   };
 
@@ -134,7 +134,9 @@ function getBuildContext(buildDirectory, configDirectory) {
   // The skeleton build ran buildConnections; the JIT page build does not, so
   // without this restore the tenant pipeline checks on page requests are
   // silently inert in dev.
-  cachedBuildContext.tenantConnectionIds = new Set(tenantCollections.tenantConnectionIds ?? []);
+  cachedBuildContext.tenantConnections = new Map(
+    Object.entries(tenantCollections.tenantConnections ?? {})
+  );
   cachedBuildContext.tenantCollectionMap = tenantCollections.tenantCollectionMap ?? {};
 
   // Load installed packages snapshot from skeleton build for missing-package detection
