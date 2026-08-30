@@ -41,13 +41,25 @@ export default {
     onBlur: 'Trigger action event occurs when selector loses focus.',
     onChange: {
       description: 'Trigger actions when selection is changed.',
-      event: { value: 'The selected value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The selected value.' },
+        },
+      },
     },
     onFocus: 'Trigger action when an selector gets focus.',
     onClear: 'Trigger action when selector gets cleared.',
     onSearch: {
       description: 'Called when searching items.',
-      event: { value: 'The search input value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The search input value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

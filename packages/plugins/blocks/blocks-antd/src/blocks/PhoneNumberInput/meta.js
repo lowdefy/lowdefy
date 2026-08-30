@@ -47,8 +47,21 @@ export default {
     onCodeChange: 'Trigger action when the selector is changed.',
     onChange: {
       description: 'Trigger action when the number is changed.',
-      event: {
-        value: 'The phone number value object with input, region, and phone_number fields.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: {
+            type: 'object',
+            properties: {
+              input: { type: 'string' },
+              region: { type: 'string' },
+              phone_number: { type: 'string' },
+            },
+            description:
+              'The phone number value object with input, region, and phone_number fields.',
+          },
+        },
       },
     },
     onBlur: 'Trigger action event occurs when input loses focus.',

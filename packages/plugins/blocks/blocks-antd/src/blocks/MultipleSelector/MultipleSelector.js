@@ -129,7 +129,11 @@ const MultipleSelector = ({
               }
               size={properties.size}
               status={validation.status}
-              value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
+              value={
+                loading
+                  ? []
+                  : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
+              }
               suffixIcon={
                 get(properties, 'showArrow', { default: true }) === false
                   ? null
@@ -180,7 +184,7 @@ const MultipleSelector = ({
                   );
                 });
                 methods.setValue(val);
-                methods.triggerEvent({ name: 'onChange' });
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });

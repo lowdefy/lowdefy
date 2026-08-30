@@ -34,7 +34,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger action when rating is changed.',
-      event: { value: 'The selected rating value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'number', description: 'The selected rating value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

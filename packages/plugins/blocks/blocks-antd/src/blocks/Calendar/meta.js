@@ -26,25 +26,45 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when the selected date changes.',
-      event: {
-        value: 'The selected Date object.',
-        date: 'The selected date as YYYY-MM-DD string.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected Date object.' },
+          date: { type: 'string', description: 'The selected date as YYYY-MM-DD string.' },
+        },
       },
     },
     onSelect: {
       description: 'Trigger actions when a date cell is clicked.',
-      event: {
-        value: 'The selected Date object.',
-        date: 'The selected date as YYYY-MM-DD string.',
-        source: 'The source of the selection (date, month, year).',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected Date object.' },
+          date: { type: 'string', description: 'The selected date as YYYY-MM-DD string.' },
+          source: {
+            type: 'string',
+            enum: ['date', 'month', 'year'],
+            description: 'The source of the selection (date, month, year).',
+          },
+        },
       },
     },
     onPanelChange: {
       description: 'Trigger actions when the calendar panel mode or date changes.',
-      event: {
-        value: 'The panel Date object.',
-        date: 'The panel date as YYYY-MM-DD string.',
-        mode: 'The panel mode (month or year).',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The panel Date object.' },
+          date: { type: 'string', description: 'The panel date as YYYY-MM-DD string.' },
+          mode: {
+            type: 'string',
+            enum: ['month', 'year'],
+            description: 'The panel mode (month or year).',
+          },
+        },
       },
     },
   },

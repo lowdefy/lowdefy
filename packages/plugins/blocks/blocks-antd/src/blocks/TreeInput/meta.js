@@ -29,7 +29,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger action when selection is changed.',
-      event: { value: 'The selected value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected value.' },
+        },
+      },
     },
   },
   properties: {

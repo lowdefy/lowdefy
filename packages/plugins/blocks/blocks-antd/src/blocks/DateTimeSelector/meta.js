@@ -43,7 +43,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when selection is changed.',
-      event: { value: 'The selected date-time value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected date-time value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

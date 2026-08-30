@@ -38,7 +38,13 @@ export default {
     onBlur: 'Trigger action event occurs when number input loses focus.',
     onChange: {
       description: 'Trigger action when number input is changed.',
-      event: { value: 'The current number value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'number', description: 'The current number value.' },
+        },
+      },
     },
     onFocus: 'Trigger action when number input gets focus.',
     onPressEnter: 'Trigger actions when input is focused and enter is pressed.',

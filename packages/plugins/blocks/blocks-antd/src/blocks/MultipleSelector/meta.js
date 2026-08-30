@@ -44,13 +44,28 @@ export default {
     suffixIcon: 'The suffix icon in the MultipleSelector.',
   },
   events: {
-    onChange: 'Trigger actions when selection is changed.',
+    onChange: {
+      description: 'Trigger actions when selection is changed.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'array', description: 'The array of selected values.' },
+        },
+      },
+    },
     onBlur: 'Trigger action event occurs when selector loses focus.',
     onFocus: 'Trigger action when selector gets focus.',
     onClear: 'Trigger action when selector gets cleared.',
     onSearch: {
       description: 'Trigger actions when input is changed.',
-      event: { value: 'The search input value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The search input value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
