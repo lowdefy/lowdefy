@@ -44,9 +44,9 @@ export default {
         },
       },
       pending: {
-        type: 'boolean',
+        type: ['boolean', 'string'],
         default: false,
-        description: "Set the last ghost node's existence or its content.",
+        description: "Set the last ghost node's existence, or its content as a string.",
       },
       reverse: {
         type: 'boolean',
