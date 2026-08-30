@@ -167,6 +167,16 @@ function buildConnections({ components, context }) {
   // the wall does not engage under pinned, so demanding an authored clause
   // there would be a false alarm for a filter that never runs.
   context.tenantConnectionIds = new Set();
+  // Collection name -> { shared: [connectionId], scoped: [connectionId] } for
+  // every scoping-capable connection with a literal properties.collection.
+  // A pipeline names collections, connections name collections; joining the
+  // two at build is what lets validateTenantSharedLookup refuse a scoped
+  // pipeline that $lookups a tenant: shared collection the injected $match
+  // can never satisfy. An operator-valued collection name is unknowable here
+  // and is left out rather than guessed. Same policy guard as
+  // tenantConnectionIds - the wall does not engage under pinned. Small and
+  // internal by design: the collections: declaration supersedes it.
+  context.tenantCollectionMap = {};
   const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
@@ -204,12 +214,18 @@ function buildConnections({ components, context }) {
     if (tenantCapability === true || tenantCapability === false) {
       connection.tenantCapability = tenantCapability;
     }
-    if (
-      tenantPolicy &&
-      context.typesMap?.connectionMetas?.[connection.type]?.tenant === true &&
-      connection.tenant !== 'shared'
-    ) {
-      context.tenantConnectionIds.add(connection.connectionId);
+    if (tenantPolicy && tenantCapability === true) {
+      const shared = connection.tenant === 'shared';
+      if (!shared) {
+        context.tenantConnectionIds.add(connection.connectionId);
+      }
+      const collection = connection.properties?.collection;
+      if (type.isString(collection)) {
+        context.tenantCollectionMap[collection] ??= { shared: [], scoped: [] };
+        context.tenantCollectionMap[collection][shared ? 'shared' : 'scoped'].push(
+          connection.connectionId
+        );
+      }
     }
     connection.id = `connection:${connection.id}`;
 

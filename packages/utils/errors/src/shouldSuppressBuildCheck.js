@@ -26,6 +26,7 @@ export const VALID_CHECK_SLUGS = {
   'link-refs': 'Invalid Link action page reference warnings',
   'request-refs': 'Invalid Request action reference warnings',
   'connection-refs': 'Nonexistent connection ID references',
+  'tenant-lookup': 'Tenant pipeline lookups into shared collections',
   'callapi-refs': 'Invalid CallAPI action endpoint reference warnings',
   'callapi-internal-refs': 'CallAPI actions targeting InternalApi endpoints',
   'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',

@@ -580,6 +580,53 @@ test('buildConnections populates tenantConnectionIds with the inverted set under
   ]);
 });
 
+test('buildConnections indexes collections by tenant scope under the tenant policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      { id: 'org_scope', type: 'TestType', properties: { collection: 'controls' } },
+      {
+        id: 'frameworks',
+        type: 'TestType',
+        tenant: 'shared',
+        properties: { collection: 'catalogue' },
+      },
+      {
+        id: 'frameworks_2',
+        type: 'TestType',
+        tenant: 'shared',
+        properties: { collection: 'catalogue' },
+      },
+      { id: 'archive', type: 'TestType', properties: { collection: 'catalogue' } },
+      // An operator-valued collection name is unknowable at build - left out.
+      { id: 'dynamic', type: 'TestType', properties: { collection: { _secret: 'COLL' } } },
+      { id: 'no_collection', type: 'TestType', properties: {} },
+      { id: 'mail', type: 'PlainType', properties: { collection: 'ignored' } },
+    ],
+  };
+  const buildContext = tenantContext({
+    connectionMetas: { TestType: { tenant: true }, PlainType: { tenant: false } },
+  });
+  buildConnections({ components, context: buildContext });
+  expect(buildContext.tenantCollectionMap).toEqual({
+    controls: { shared: [], scoped: ['org_scope'] },
+    catalogue: { shared: ['frameworks', 'frameworks_2'], scoped: ['archive'] },
+  });
+});
+
+test('buildConnections leaves tenantCollectionMap empty under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      { id: 'walled', type: 'TestType', properties: { collection: 'records' } },
+      { id: 'shared', type: 'TestType', tenant: 'shared', properties: { collection: 'countries' } },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect(buildContext.tenantCollectionMap).toEqual({});
+});
+
 test('buildConnections leaves tenantConnectionIds empty under the pinned policy', () => {
   const components = {
     auth: { organizations: { policy: 'pinned' } },
