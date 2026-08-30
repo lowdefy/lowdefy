@@ -91,6 +91,7 @@ const ButtonBlock = ({
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
+      iconPosition={properties.iconPosition}
       icon={
         properties.icon && (
           <Icon

@@ -148,7 +148,29 @@ test('validateBlockMeta reports cssKeys, slots and methods that are not objects 
   expect(messages[1]).toContain(
     'meta.cssKeys must be an object of { name: description } strings. Received ["element"].'
   );
-  expect(messages[2]).toContain('meta.methods must be an object of { name: description } strings.');
+  expect(messages[2]).toContain(
+    'meta.methods must be an object of { methodName: description | { description, params } }.'
+  );
+});
+
+test('validateBlockMeta accepts rich method definitions and reports malformed ones', () => {
+  const ok = validate({
+    category: 'container',
+    methods: {
+      focus: 'Focus the input.',
+      setOpen: { description: 'Open or close.', params: { open: 'Whether to open.' } },
+    },
+  });
+  expect(ok.valid).toBe(true);
+
+  const bad = validate({
+    category: 'container',
+    methods: { setOpen: { params: { open: 'Missing description.' } } },
+  });
+  expect(bad.valid).toBe(false);
+  expect(bad.context.errors[0].message).toContain(
+    'meta.methods.setOpen must be a description string or { description: string, params?: { name: description } strings }.'
+  );
 });
 
 test('validateBlockMeta accepts slots: false for dynamic slots and an array of slot names', () => {

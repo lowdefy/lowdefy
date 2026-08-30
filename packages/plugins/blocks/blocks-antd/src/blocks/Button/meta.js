@@ -82,9 +82,15 @@ export default {
         enum: ['circle', 'round', 'square'],
         description: 'Shape of the button.',
       },
+      iconPosition: {
+        type: 'string',
+        enum: ['start', 'end'],
+        default: 'start',
+        description: 'Position of the icon relative to the button title.',
+      },
       size: {
         type: 'string',
-        enum: ['small', 'default', 'large'],
+        enum: ['small', 'middle', 'default', 'large'],
         default: 'default',
         description: 'Size of the button.',
       },

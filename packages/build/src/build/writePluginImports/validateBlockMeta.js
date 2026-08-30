@@ -54,6 +54,15 @@ function isEventDefinition(value) {
   return type.isUndefined(value.event) || isObjectOfStrings(value.event);
 }
 
+// A description string, or { description, params: { name: description } } —
+// the params object documents the method's arguments for docs and agents.
+function isMethodDefinition(value) {
+  if (type.isString(value)) return true;
+  if (!type.isObject(value)) return false;
+  if (!type.isString(value.description)) return false;
+  return type.isUndefined(value.params) || isObjectOfStrings(value.params);
+}
+
 function isHazard(value) {
   return type.isObject(value) && type.isString(value.id) && type.isString(value.message);
 }
@@ -136,16 +145,35 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
         meta.slots
       );
     }
-    ['cssKeys', 'methods'].forEach((key) => {
-      if (!type.isUndefined(meta[key]) && !isObjectOfStrings(meta[key])) {
+    if (!type.isUndefined(meta.cssKeys) && !isObjectOfStrings(meta.cssKeys)) {
+      fail(
+        `meta.cssKeys must be an object of { name: description } strings. Received ${received(
+          meta.cssKeys
+        )}.`,
+        meta.cssKeys
+      );
+    }
+    if (!type.isUndefined(meta.methods)) {
+      if (!type.isObject(meta.methods)) {
         fail(
-          `meta.${key} must be an object of { name: description } strings. Received ${received(
-            meta[key]
+          `meta.methods must be an object of { methodName: description | { description, params } }. Received ${received(
+            meta.methods
           )}.`,
-          meta[key]
+          meta.methods
         );
+      } else {
+        Object.entries(meta.methods).forEach(([name, definition]) => {
+          if (!isMethodDefinition(definition)) {
+            fail(
+              `meta.methods.${name} must be a description string or { description: string, params?: { name: description } strings }. Received ${received(
+                definition
+              )}.`,
+              definition
+            );
+          }
+        });
       }
-    });
+    }
     if (!type.isUndefined(meta.events)) {
       if (!type.isObject(meta.events)) {
         fail(

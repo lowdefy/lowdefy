@@ -15,7 +15,7 @@
 */
 
 export default {
-  oneOf: [
+  anyOf: [
     {
       type: 'array',
       description: 'List of breadcrumb links.',

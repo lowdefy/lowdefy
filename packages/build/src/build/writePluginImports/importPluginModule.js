@@ -41,24 +41,27 @@ function isResolutionError(error) {
 }
 
 // Import a plugin module (e.g. `${pkg}/schemas`, `${pkg}/connections`) for
-// schema collection. Default packages resolve from the build package itself;
-// custom plugins only exist in the server's node_modules, so fall back to
-// resolving from the server directory. Returns undefined when unresolvable —
-// callers degrade gracefully.
+// schema collection. The server's node_modules is tried FIRST: it pins the
+// exact plugin versions the app installed, while resolving from the build
+// package can land on a different (stale) copy of a default plugin through a
+// package manager's hoist directory when several versions coexist in the
+// store. The bare import stays as the fallback for contexts with no server
+// directory. Returns undefined when unresolvable — callers degrade gracefully.
 async function importPluginModule({ context, specifier }) {
+  const serverDir = context.directories?.server;
+  if (serverDir) {
+    try {
+      const require = createRequire(path.join(serverDir, 'package.json'));
+      return await import(
+        /* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier)
+      );
+    } catch (error) {
+      // Not resolvable from the server — try the build package's own tree.
+      if (!isResolutionError(error)) throw error;
+    }
+  }
   try {
     return await import(/* webpackIgnore: true */ /* @vite-ignore */ specifier);
-  } catch (error) {
-    // Not resolvable from the build package — try the server's node_modules.
-    if (!isResolutionError(error)) throw error;
-  }
-  const serverDir = context.directories?.server;
-  if (!serverDir) {
-    return undefined;
-  }
-  try {
-    const require = createRequire(path.join(serverDir, 'package.json'));
-    return await import(/* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier));
   } catch (error) {
     if (!isResolutionError(error)) throw error;
     return undefined;
