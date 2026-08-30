@@ -95,6 +95,21 @@ function createMongoLedger(context, { connectionId, lockTimeoutMs = 900000 } = {
     });
   }
 
+  // --allow-checksum-mismatch tolerates an edit to an applied migration and
+  // records the current checksum (design D3), so the warning does not repeat
+  // on every subsequent run.
+  async function updateChecksum({ id, checksum }) {
+    await callLedgerRequest(context, {
+      connectionId,
+      stepId: 'update_checksum',
+      type: 'MongoDBUpdateOne',
+      properties: {
+        filter: { _id: id },
+        update: { $set: { checksum } },
+      },
+    });
+  }
+
   function isHeld(lock) {
     if (type.isNone(lock) || type.isNone(lock.expiresAt)) {
       return false;
@@ -184,7 +199,16 @@ function createMongoLedger(context, { connectionId, lockTimeoutMs = 900000 } = {
     });
   }
 
-  return { readApplied, readLock, insertEntry, acquireLock, refreshLock, releaseLock, isHeld };
+  return {
+    readApplied,
+    readLock,
+    insertEntry,
+    updateChecksum,
+    acquireLock,
+    refreshLock,
+    releaseLock,
+    isHeld,
+  };
 }
 
 export { LOCK_ID };

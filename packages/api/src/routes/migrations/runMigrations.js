@@ -75,6 +75,13 @@ async function runMigrations(context, { options = {}, deps = {} } = {}) {
     context.logger.warn(
       `Checksum mismatch on applied migration(s) ${list} — proceeding because --allow-checksum-mismatch was set.`
     );
+    if (!dryRun) {
+      // Record the current checksum (design D3) so the tolerated edit does not
+      // warn again on every subsequent run.
+      for (const mismatch of mismatches) {
+        await ledger.updateChecksum({ id: mismatch.id, checksum: mismatch.builtChecksum });
+      }
+    }
   }
   missingFiles.forEach((id) => {
     context.logger.warn(

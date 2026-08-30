@@ -105,7 +105,7 @@ _ref:
             lowdefy migrate [--dry-run] [--to <id>] [--yes] [--allow-checksum-mismatch] [--json]
             ```
 
-            The runner reads the ordered build index and the ledger, computes the plan (index minus already-applied, honouring `--to`), prints the target it will write to, confirms unless `--yes`, acquires a lock, then applies each pending migration in order. Each migration's routine runs on a fresh routine context; on success the runner appends a ledger entry and prints one progress line:
+            The runner reads the ordered build index and the ledger, computes the plan (index minus already-applied, honouring `--to`), confirms unless `--yes`, prints the ledger connection it will write through, acquires a lock, then applies each pending migration in order. Each migration's routine runs on a fresh routine context; on success the runner appends a ledger entry and prints one progress line:
 
             ```
             applied 2026-08-30-01-derive-slug (3 steps, 412ms, 9,812 documents)
@@ -115,7 +115,7 @@ _ref:
 
             The flags:
 
-            - `--dry-run`: Report which migrations would run, in order, and for each **request** step the evaluated request properties — with no writes and no ledger changes. Dry-run is a plan, not a simulation: because no step actually runs, a property that depends on a previous step's result cannot be resolved, and is annotated `unresolved — depends on step "<id>" not executed in --dry-run` rather than printed as a fabricated value.
+            - `--dry-run`: Report which migrations would run, in order — with no writes, no lock, and no ledger changes. Dry-run is a plan, not a simulation: no step runs and no step properties are evaluated.
             - `--to <id>`: Apply pending migrations up to and including `<id>`. Omit to apply all pending.
             - `--yes`: Skip the confirmation prompt. Required in CI.
             - `--allow-checksum-mismatch`: Downgrade a checksum mismatch from an error to a warning, and update the stored checksum. For the rare whitespace- or comment-only edit to an already-applied file that you know is a no-op.
@@ -181,7 +181,7 @@ _ref:
 
             ## Environments and secrets
 
-            The runner reads `.env` and the process environment exactly as the build and server do; `_secret` values resolve identically. `lowdefy migrate` takes **no connection string of its own** — the ledger connection and every step's connection are named in config and read their properties (including secrets) from the environment the command runs in. Targeting staging versus production is therefore purely which environment the command runs against: set `MONGODB_URI` (or whatever the connection reads) for the environment you are deploying to. Before applying anything the runner prints the resolved ledger connection id and the database name it will write to, and, without `--yes`, asks for confirmation — so a human at a terminal sees the target and confirms, while CI passes `--yes`.
+            The runner reads `.env` and the process environment exactly as the build and server do; `_secret` values resolve identically. `lowdefy migrate` takes **no connection string of its own** — the ledger connection and every step's connection are named in config and read their properties (including secrets) from the environment the command runs in. Targeting staging versus production is therefore purely which environment the command runs against: set `MONGODB_URI` (or whatever the connection reads) for the environment you are deploying to. Without `--yes` the command asks for confirmation before running anything, and the runner prints the ledger connection id it writes through — so a human at a terminal confirms against the environment the command runs in, while CI passes `--yes`.
 
             ## Worked examples
 
