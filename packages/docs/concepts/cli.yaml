@@ -156,6 +156,22 @@ _ref:
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+            ## modules update
+
+            The `modules update` command refetches the GitHub refs of your [modules](/modules) and rewrites `lowdefy-modules.lock.yaml`. It deletes the lock entries you name, runs a Lowdefy build so the build re-resolves each ref to the commit it currently points at, and prints one line per module showing what moved. Pass a module entry `id` to update a single module, or no name to update all of them. The client bundle is not rebuilt.
+
+            ```
+            lowdefy modules update
+            lowdefy modules update team-users
+            ```
+
+            Commit the updated `lowdefy-modules.lock.yaml`. See [Locking GitHub module versions](/modules#locking-github-module-versions).
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
             ## init-vercel
 
             The `init-vercel` command initializes the installation scripts needed to deploy an app on [Vercel](https://vercel.com). It creates a directory called deploy, and a script called vercel.install.sh. It also creates a README file with instructions on how to configure Vercel.
