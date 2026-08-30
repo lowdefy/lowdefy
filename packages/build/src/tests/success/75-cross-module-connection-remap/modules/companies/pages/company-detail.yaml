@@ -5,7 +5,10 @@ blocks:
     type: Title
     properties:
       content: Company Detail
-      connectionRef:
+  - id: connection-id
+    type: Paragraph
+    properties:
+      content:
         _module.connectionId:
           id: contacts-db
           module: contacts

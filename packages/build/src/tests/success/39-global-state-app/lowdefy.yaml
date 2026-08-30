@@ -34,16 +34,20 @@ pages:
         type: Paragraph
         properties:
           content:
-            _nunjucks: 'Current theme: {{ theme }}'
-            theme:
-              _global: theme
+            _nunjucks:
+              template: 'Current theme: {{ theme }}'
+              on:
+                theme:
+                  _global: theme
       - id: langDisplay
         type: Paragraph
         properties:
           content:
-            _nunjucks: 'Language: {{ lang }}'
-            lang:
-              _global: language
+            _nunjucks:
+              template: 'Language: {{ lang }}'
+              on:
+                lang:
+                  _global: language
   - id: settings
     type: Box
     properties:

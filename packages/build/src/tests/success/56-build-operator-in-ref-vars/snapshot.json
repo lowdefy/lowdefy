@@ -1197,6 +1197,10 @@
         }
       }
     },
+    "Button": {
+      "category": "display",
+      "hazards": []
+    },
     "Result": {
       "category": "container",
       "hazards": []
@@ -1578,6 +1582,446 @@
         },
         "areas": {
           "type": "object"
+        }
+      }
+    },
+    "Button": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "layout": {
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "visible": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "required": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            }
+          ]
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "block": {
+              "type": "boolean",
+              "description": "Fit the button's span to its parent container span.",
+              "default": false
+            },
+            "color": {
+              "type": "string",
+              "description": "Button color. Preset values: default, primary, danger, blue, purple, cyan, green, magenta, pink, red, orange, yellow, volcano, geekblue, lime, gold. Also accepts custom hex color strings.",
+              "docs": {
+                "displayType": "color"
+              }
+            },
+            "danger": {
+              "type": "boolean",
+              "description": "Set button style to danger.",
+              "default": false
+            },
+            "disabled": {
+              "type": "boolean",
+              "description": "Disable the button if true.",
+              "default": false
+            },
+            "ghost": {
+              "type": "boolean",
+              "description": "Make the button's background transparent when true.",
+              "default": false
+            },
+            "hideTitle": {
+              "type": "boolean",
+              "description": "Hide the button's title.",
+              "default": false
+            },
+            "href": {
+              "type": "string",
+              "description": "The URL to redirect to when the button is clicked. Useful when used with a type link button."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use icon in button.",
+              "docs": {
+                "displayType": "icon"
+              }
+            },
+            "shape": {
+              "type": "string",
+              "default": "square",
+              "enum": [
+                "circle",
+                "round",
+                "square"
+              ],
+              "description": "Shape of the button."
+            },
+            "size": {
+              "type": "string",
+              "enum": [
+                "small",
+                "default",
+                "large"
+              ],
+              "default": "default",
+              "description": "Size of the button."
+            },
+            "title": {
+              "type": "string",
+              "description": "Title text on the button - supports html."
+            },
+            "type": {
+              "type": "string",
+              "default": "primary",
+              "enum": [
+                "primary",
+                "default",
+                "dashed",
+                "link",
+                "text"
+              ],
+              "description": "Deprecated - use color and variant instead. The button type."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "solid",
+                "outlined",
+                "dashed",
+                "filled",
+                "text",
+                "link"
+              ],
+              "description": "Button visual variant. When set, takes precedence over type."
+            },
+            "theme": {
+              "type": "object",
+              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "docs": {
+                "displayType": "yaml",
+                "link": "https://ant.design/components/button#design-token"
+              },
+              "properties": {
+                "borderRadius": {
+                  "type": "number",
+                  "default": 6,
+                  "description": "Border radius of the button."
+                },
+                "borderRadiusLG": {
+                  "type": "number",
+                  "default": 8,
+                  "description": "Border radius for large buttons."
+                },
+                "borderRadiusSM": {
+                  "type": "number",
+                  "default": 4,
+                  "description": "Border radius for small buttons."
+                },
+                "controlHeight": {
+                  "type": "number",
+                  "default": 32,
+                  "description": "Height of the button."
+                },
+                "controlHeightLG": {
+                  "type": "number",
+                  "default": 40,
+                  "description": "Height for large buttons."
+                },
+                "controlHeightSM": {
+                  "type": "number",
+                  "default": 24,
+                  "description": "Height for small buttons."
+                },
+                "fontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size."
+                },
+                "fontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size for large buttons."
+                },
+                "fontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size for small buttons."
+                },
+                "lineWidth": {
+                  "type": "number",
+                  "default": 1,
+                  "description": "Border width."
+                },
+                "paddingInline": {
+                  "type": "number",
+                  "default": 15,
+                  "description": "Horizontal padding."
+                },
+                "paddingInlineLG": {
+                  "type": "number",
+                  "default": 15,
+                  "description": "Horizontal padding for large buttons."
+                },
+                "paddingInlineSM": {
+                  "type": "number",
+                  "default": 7,
+                  "description": "Horizontal padding for small buttons."
+                },
+                "paddingBlock": {
+                  "type": "number",
+                  "default": 0,
+                  "description": "Vertical padding."
+                },
+                "colorPrimary": {
+                  "type": "string",
+                  "description": "Primary color override."
+                },
+                "colorPrimaryHover": {
+                  "type": "string",
+                  "description": "Primary hover color."
+                },
+                "colorPrimaryActive": {
+                  "type": "string",
+                  "description": "Primary active color."
+                },
+                "colorBgContainer": {
+                  "type": "string",
+                  "description": "Background color for default buttons."
+                },
+                "colorText": {
+                  "type": "string",
+                  "description": "Text color for default buttons."
+                },
+                "colorBorder": {
+                  "type": "string",
+                  "description": "Border color for outlined and dashed buttons."
+                }
+              }
+            }
+          }
+        },
+        "class": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Button element."
+                },
+                ".icon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The icon in the Button."
+                }
+              }
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                ".block": {
+                  "type": "object",
+                  "description": "The block layout wrapper."
+                },
+                ".element": {
+                  "type": "object",
+                  "description": "The Button element."
+                },
+                ".icon": {
+                  "type": "object",
+                  "description": "The icon in the Button."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^(?!_)(?!\\.)": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1
+            }
+          ]
+        },
+        "events": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^_": {}
+              },
+              "additionalProperties": false,
+              "minProperties": 1,
+              "maxProperties": 1
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when button is clicked. Renders a shortcut badge when a shortcut is configured."
+                }
+              }
+            }
+          ]
         }
       }
     },
@@ -6178,7 +6622,7 @@
       }
     }
   },
-  "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Template as Template } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Button,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Template,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Button as Button } from '@lowdefy/blocks-antd/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Template as Template } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Button,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Template,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
   "plugins/connections.js": "export default {\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
@@ -6325,7 +6769,7 @@
       },
       "Button": {
         "originalTypeName": "Button",
-        "package": "@lowdefy/blocks-basic",
+        "package": "@lowdefy/blocks-antd",
         "count": 2,
         "~k": "2a"
       },
