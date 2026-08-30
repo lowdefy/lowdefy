@@ -30,6 +30,7 @@ fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({
 process.chdir(fixtureDir);
 
 const { openPage } = await import('./getBrowser.js');
+const { default: isPageReady } = await import('./isPageReady.js');
 
 afterAll(() => {
   process.chdir(originalCwd);
@@ -50,6 +51,7 @@ function createBrowser() {
     browser: { newContext: jest.fn().mockResolvedValue(context) },
     addCookies,
     context,
+    page,
   };
 }
 
@@ -117,4 +119,23 @@ test('openPage rejects an invalid user before opening a browser context', async 
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'admin' })
   ).rejects.toThrow('Headless "user" must be an object. Received "admin".');
   expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage waits on the isPageReady predicate for the page it opened', async () => {
+  const { browser } = createBrowser();
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, 'home', { timeout: 15000 });
+  expect(opened.ready).toBe(true);
+});
+
+test('openPage resolves with ready false when the readiness wait times out', async () => {
+  const { browser, page } = createBrowser();
+  page.waitForFunction.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(opened.ready).toBe(false);
+  expect(opened.page).toBe(page);
 });
