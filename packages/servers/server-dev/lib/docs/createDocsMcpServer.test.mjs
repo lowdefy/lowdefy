@@ -46,6 +46,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_inspect_state',
   'lowdefy_eval_operator',
   'lowdefy_run_request',
+  'lowdefy_restart',
   'lowdefy_app_map',
   'lowdefy_checkpoint',
   'lowdefy_revert_checkpoint',
@@ -129,6 +130,22 @@ test('MCP tools/call lowdefy_find_config locates a block by id', async () => {
   expect(parsed.pageId).toEqual('home');
   expect(parsed.file).toEqual('pages/home.yaml');
   expect(parsed.matches[0].location.source).toContain('pages/home.yaml');
+  await client.close();
+});
+
+test('MCP tools/call lowdefy_restart writes the restart sentinel and tells the caller to poll', async () => {
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_restart',
+    arguments: { reason: 'edited a request plugin' },
+  });
+  const body = JSON.parse(result.content[0].text);
+  expect(body.requested).toBe(true);
+  expect(body.reason).toBe('edited a request plugin');
+  expect(body.note).toContain('build-status');
+  const sentinelPath = path.join(fixtureDir, 'build', '.restart');
+  expect(JSON.parse(fs.readFileSync(sentinelPath, 'utf8')).reason).toBe('edited a request plugin');
+  fs.rmSync(sentinelPath, { force: true });
   await client.close();
 });
 

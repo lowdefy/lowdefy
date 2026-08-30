@@ -43,7 +43,7 @@ function setupWatcher({
     configWatcher.on('add', (...args) => batchChanges.newChange(...args));
     configWatcher.on('change', (...args) => batchChanges.newChange(...args));
     configWatcher.on('unlink', (...args) => batchChanges.newChange(...args));
-    configWatcher.on('ready', () => resolve());
+    configWatcher.on('ready', () => resolve(configWatcher));
   });
 }
 
