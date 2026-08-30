@@ -18,6 +18,7 @@ import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -45,7 +46,12 @@ async function MongoDBVersionedUpdateOne({
 
   // The matched document is re-inserted under a new _id so the previous
   // version is preserved, then the update is applied to the new copy.
-  const document = await collection.findOne(filter, { ...findOptions });
+  let document;
+  try {
+    document = await collection.findOne(filter, { ...findOptions });
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
+  }
   let insertedDocument;
   if (document) {
     delete document._id;
@@ -56,20 +62,29 @@ async function MongoDBVersionedUpdateOne({
       // keeps the version copy stamped by construction rather than by trust.
       document[tenant.field] = tenant.value;
     }
-    insertedDocument = await collection.insertOne(document, { ...insertOptions });
+    try {
+      insertedDocument = await collection.insertOne(document, { ...insertOptions });
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
+    }
   }
 
   let response;
   if (logCollection) {
-    const result = await collection.findOneAndUpdate(
-      insertedDocument ? { _id: insertedDocument.insertedId } : filter,
-      update,
-      {
-        ...updateOptions,
-        includeResultMetadata: true,
-        returnDocument: 'after',
-      }
-    );
+    let result;
+    try {
+      result = await collection.findOneAndUpdate(
+        insertedDocument ? { _id: insertedDocument.insertedId } : filter,
+        update,
+        {
+          ...updateOptions,
+          includeResultMetadata: true,
+          returnDocument: 'after',
+        }
+      );
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
+    }
     const after = result.value ?? null;
     const upsertedId = result.lastErrorObject?.upserted ?? null;
     const matched = result.lastErrorObject?.updatedExisting ? 1 : 0;
@@ -81,33 +96,43 @@ async function MongoDBVersionedUpdateOne({
       upsertedCount: upsertedId ? 1 : 0,
     };
     // Throw before writing the log record so a no-match update never logs.
+    // Not a driver error - a Lowdefy check, deliberately outside the mapping.
     if (!disableNoMatchError && !updateOptions?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    await logCollection.insertOne(
-      stampTenantOnLogRecord({
-        record: {
-          args: { filter, update, options },
-          blockId,
-          connectionId,
-          pageId,
-          payload,
-          requestId,
-          before: document,
-          after,
-          timestamp: new Date(),
-          type: 'MongoDBVersionedUpdateOne',
-          meta: connection.changeLog?.meta,
-        },
-        tenant,
-      })
-    );
+    try {
+      await logCollection.insertOne(
+        stampTenantOnLogRecord({
+          record: {
+            args: { filter, update, options },
+            blockId,
+            connectionId,
+            pageId,
+            payload,
+            requestId,
+            before: document,
+            after,
+            timestamp: new Date(),
+            type: 'MongoDBVersionedUpdateOne',
+            meta: connection.changeLog?.meta,
+          },
+          tenant,
+        })
+      );
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
+    }
   } else {
-    response = await collection.updateOne(
-      insertedDocument ? { _id: insertedDocument.insertedId } : filter,
-      update,
-      { ...updateOptions }
-    );
+    try {
+      response = await collection.updateOne(
+        insertedDocument ? { _id: insertedDocument.insertedId } : filter,
+        update,
+        { ...updateOptions }
+      );
+    } catch (error) {
+      throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
+    }
+    // Not a driver error - a Lowdefy check, deliberately outside the mapping.
     if (!disableNoMatchError && !updateOptions?.upsert && response.matchedCount === 0) {
       throw new Error('No matching record to update.');
     }

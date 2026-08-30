@@ -493,7 +493,7 @@ test('updateOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBUpdateOne({ request, connection })).rejects.toThrow(
-    'Unknown modifier: $badOp'
+    'MongoDB: MongoDB rejected the MongoDBUpdateOne command on collection "updateOne" as malformed.'
   );
 });
 

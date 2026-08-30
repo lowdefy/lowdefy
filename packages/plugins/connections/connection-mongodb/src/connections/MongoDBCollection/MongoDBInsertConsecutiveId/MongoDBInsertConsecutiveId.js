@@ -16,6 +16,7 @@
 
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -74,6 +75,8 @@ async function MongoDBInsertConsecutiveId({
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertConsecutiveId' });
   } finally {
     await session.endSession();
   }
