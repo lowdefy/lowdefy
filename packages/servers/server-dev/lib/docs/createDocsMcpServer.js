@@ -39,6 +39,7 @@ import loadState from './loadState.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
 import runEndpoint from './runEndpoint.js';
+import runCheck from './runCheck.js';
 import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
@@ -53,7 +54,7 @@ const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project
 
 Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else. lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure.
 
@@ -350,6 +351,16 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {},
     },
     () => textResult(getBuildStatus())
+  );
+
+  server.registerTool(
+    'lowdefy_check',
+    {
+      description:
+        'Run every production build check offline — including the prod-only checks lowdefy dev hides — plus the check-only rules (js lint, tenant audits, contracts). Returns located errors and warnings. Call before telling the developer a change is done.',
+      inputSchema: {},
+    },
+    async () => textResult(await runCheck())
   );
 
   server.registerTool(

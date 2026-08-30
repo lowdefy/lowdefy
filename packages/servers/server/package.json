@@ -41,6 +41,7 @@
     "build": "cp package.json package.original.json || copy package.json package.original.json",
     "build:client": "vite build",
     "build:lowdefy": "node lowdefy/build.mjs",
+    "check:lowdefy": "node lowdefy/check.mjs",
     "prepublishOnly": "pnpm build",
     "start": "node src/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

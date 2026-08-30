@@ -25,6 +25,7 @@ It provides these tools:
 | `lowdefy_search_docs`    | Keyword search over the Lowdefy docs                                     |
 | `lowdefy_get_plugin_doc` | Markdown (READMEs, guides) shipped inside an installed plugin package    |
 | `lowdefy_build_status`   | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit |
+| `lowdefy_check`          | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 | `lowdefy_get_page_config`| The fully built config for a page, or its structured build errors        |
 | `lowdefy_screenshot_page`| PNG screenshot of a rendered page (headless Chromium) for visual verification |
 | `lowdefy_find_config`    | Which yaml file (and line) defines a given page, block, or request id    |
@@ -95,6 +96,8 @@ So while the last build is failing, every answer says so:
 Nothing is refused — the last-known-good schema or page config is often exactly what you need while fixing the build. The flag disappears as soon as a build succeeds. Call `lowdefy_build_status` (or `GET /lowdefy-docs/build-status`) for the errors.
 
 Some build warnings are only warnings in `lowdefy dev` — they fail `lowdefy build`. Those carry `"prodError": true` in `lowdefy_build_status`, are printed in the dev terminal as `[ConfigWarning · fails in prod] …`, and are badged **fails in prod** on a dark-orange bar in the browser error bar. Treat them as errors: the production build will not pass until they are fixed.
+
+`lowdefy_build_status` reports what the dev build saw; `lowdefy_check` reports what a production build would say. Run `lowdefy_check` (or `lowdefy check --json` in a terminal) before declaring a change done — it runs the prod-stage validation without producing a build, so the `prodError` warnings above come back as errors.
 
 ## Live state — the agent sees what you see
 

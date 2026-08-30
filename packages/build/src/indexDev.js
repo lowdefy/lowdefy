@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+export { default as check } from './check.js';
 export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
 export { default as generateClientJsModule } from './build/buildJs/generateClientJsModule.js';

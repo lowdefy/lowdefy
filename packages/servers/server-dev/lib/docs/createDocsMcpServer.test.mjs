@@ -39,6 +39,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_search_docs',
   'lowdefy_get_plugin_doc',
   'lowdefy_build_status',
+  'lowdefy_check',
   'lowdefy_get_page_config',
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
