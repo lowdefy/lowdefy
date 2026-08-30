@@ -28,15 +28,37 @@ export default {
   events: {
     onSelect: {
       description: 'Trigger action when menu item is selected.',
-      event: { key: 'The selected menu item key.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The selected menu item key.' },
+        },
+      },
     },
     onClick: {
       description: 'Trigger action when menu item is clicked.',
-      event: { key: 'The clicked menu item key.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The clicked menu item key.' },
+        },
+      },
     },
     onToggleMenuGroup: {
       description: 'Trigger action when mobile menu group is opened.',
-      event: { openKeys: 'The keys of currently open menu groups.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          openKeys: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'The keys of currently open menu groups.',
+          },
+        },
+      },
     },
   },
   properties: {

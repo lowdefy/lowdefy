@@ -95,22 +95,41 @@ function buildPropertiesTable(properties) {
   )}`;
 }
 
+function formatSchemaType(schema) {
+  if (Array.isArray(schema.type)) return schema.type.join(' | ');
+  if (typeof schema.type === 'string') return schema.type;
+  return 'any';
+}
+
+// A payload schema renders as `{ key: type, … }` from its properties; a payload
+// that declares no properties renders as its own type.
+function formatPayload(payload) {
+  if (!payload.properties) return `\`${formatSchemaType(payload)}\``;
+  const keys = Object.entries(payload.properties).map(
+    ([key, schema]) => `${key}: ${formatSchemaType(schema)}`
+  );
+  return `\`{ ${keys.join(', ')} }\``;
+}
+
 function buildEventsTable(events) {
   if (!events) return 'No events defined.';
   // meta.js string format: { onClick: 'description' }
-  // meta.js object format: { onChange: { description: '...', event: { value: '...' } } }
+  // meta.js payload format: { onChange: { description: '...', payload: <JSON Schema> } }
+  // meta.js legacy format (third-party blocks): { onChange: { description: '...', event: { value: '...' } } }
   // old schema.js format: { properties: { onClick: { description: '...' } } }
   const entries = events.properties
-    ? Object.entries(events.properties).map(([name, def]) => [name, def.description ?? '', null])
+    ? Object.entries(events.properties).map(([name, def]) => [name, def.description ?? '', '\\-'])
     : Object.entries(events).map(([name, def]) => {
-        if (typeof def === 'string') return [name, def, null];
-        return [name, def.description ?? '', def.event ?? null];
+        if (typeof def === 'string') return [name, def, '\\-'];
+        if (def.payload) return [name, def.description ?? '', formatPayload(def.payload)];
+        if (def.event)
+          return [name, def.description ?? '', `\`{ ${Object.keys(def.event).join(', ')} }\``];
+        return [name, def.description ?? '', '\\-'];
       });
   if (entries.length === 0) return 'No events defined.';
-  const rows = entries.map(([name, desc, eventData]) => {
-    const dataCell = eventData ? `\`{ ${Object.keys(eventData).join(', ')} }\`` : '\\-';
-    return `| \`${name}\` | ${dataCell} | ${escapeMarkdownCell(desc ?? '')} |`;
-  });
+  const rows = entries.map(
+    ([name, desc, dataCell]) => `| \`${name}\` | ${dataCell} | ${escapeMarkdownCell(desc ?? '')} |`
+  );
   return `| Event | Event Data | Description |\n| --- | --- | --- |\n${rows.join('\n')}`;
 }
 

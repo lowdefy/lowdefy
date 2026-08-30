@@ -115,6 +115,22 @@ test('getSchema returns block schema with meta', () => {
   expect(result.meta.category).toEqual('display');
 });
 
+test('getSchema returns a block event payload schema under meta.events', () => {
+  const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
+  expect(result.meta.events).toEqual({
+    onChange: {
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { value: { type: 'string', description: 'The current value.' } },
+      },
+    },
+    onBlur: {},
+  });
+  // The JSON Schema itself carries only the event description, never the payload.
+  expect(result.schema.properties.events?.payload).toBeUndefined();
+});
+
 test('getSchema returns hazards for a block: type-attached first, then framework-level', () => {
   const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
   expect(result.hazards.map((hazard) => hazard.id)).toEqual([

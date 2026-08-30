@@ -30,27 +30,44 @@ export default {
   events: {
     onChange: {
       description: 'Triggered when the selection changes (only fires when `selectable` is true).',
-      event: {
-        value:
-          'The newly selected value — the `valueKey` field when set, otherwise the whole data item; null when the selection is cleared.',
-        index: 'Zero-based index of the clicked card.',
-        item: 'The data item bound to the clicked card.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: {
+            description:
+              'The newly selected value — the `valueKey` field when set, otherwise the whole data item; null when the selection is cleared.',
+          },
+          index: { type: 'integer', description: 'Zero-based index of the clicked card.' },
+          item: { description: 'The data item bound to the clicked card.' },
+        },
       },
     },
     onClick: {
       description: 'Triggered when a card is clicked.',
-      event: {
-        index: 'Zero-based index of the clicked card.',
-        item: 'The data item bound to the clicked card.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          index: { type: 'integer', description: 'Zero-based index of the clicked card.' },
+          item: { description: 'The data item bound to the clicked card.' },
+        },
       },
     },
     onSearch: {
       description:
         'Triggered when the debounced search query changes (only fires when the `search` property is set).',
-      event: {
-        value: 'The current debounced search query string.',
-        resultCount:
-          'Number of items currently visible. Equals data.length when the query is empty or below `minLength`.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The current debounced search query string.' },
+          resultCount: {
+            type: 'integer',
+            description:
+              'Number of items currently visible. Equals data.length when the query is empty or below `minLength`.',
+          },
+        },
       },
     },
   },

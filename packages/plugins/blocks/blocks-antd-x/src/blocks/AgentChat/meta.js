@@ -23,11 +23,38 @@ export default {
     onToolCall: 'Trigger when a tool is invoked.',
     onToolResult: 'Trigger when a tool completes.',
     onUserMessage: 'Trigger when the user sends a message.',
-    onConversationStart:
-      'Trigger once when a conversation starts, on its first user message. Event contains the conversationId (auto-minted when no conversationId property is set).',
+    onConversationStart: {
+      description: 'Trigger once when a conversation starts, on its first user message.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          conversationId: {
+            type: 'string',
+            description:
+              'The conversation id (auto-minted when no conversationId property is set).',
+          },
+        },
+      },
+    },
     onError: 'Trigger on stream error.',
-    onFeedback:
-      'Trigger when the user clicks thumbs up or down on a message. Event contains messageId, messageContent and rating, where rating is `like`, `dislike`, or `default` when the user clicks the selected thumb again to clear the rating.',
+    onFeedback: {
+      description: 'Trigger when the user clicks thumbs up or down on a message.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          messageId: { type: 'string', description: 'The id of the rated message.' },
+          messageContent: { type: 'string', description: 'The text content of the rated message.' },
+          rating: {
+            type: 'string',
+            enum: ['like', 'dislike', 'default'],
+            description:
+              'The rating; `default` when the user clicks the selected thumb again to clear it.',
+          },
+        },
+      },
+    },
     onRegenerate: 'Trigger when the user clicks regenerate on a message.',
     onDeleteMessage: 'Trigger when the user deletes a message.',
     onEditMessage: 'Trigger when the user edits and resubmits a message.',
@@ -36,10 +63,30 @@ export default {
     onSuggestionClick: 'Trigger when the user clicks a follow-up suggestion.',
     onTitleGenerated: 'Trigger when the agent generates a conversation title.',
     onSwitchChange: 'Trigger when the user toggles a sender switch.',
-    onDataPart:
-      'Trigger when the agent sends a custom data part. Event contains type, data, and id.',
-    onLinkClick:
-      'Trigger when the user clicks a link in a message. Event contains href and text. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate.',
+    onDataPart: {
+      description: 'Trigger when the agent sends a custom data part.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          type: { type: 'string', description: 'The data part type.' },
+          data: { description: 'The data part content.' },
+          id: { type: 'string', description: 'The data part id.' },
+        },
+      },
+    },
+    onLinkClick: {
+      description:
+        'Trigger when the user clicks a link in a message. Wiring this event suppresses the default navigation for plain left clicks, so the app can open the target in place; modified clicks (new tab, middle click) always navigate.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          href: { type: 'string', description: 'The link href.' },
+          text: { type: 'string', description: 'The link text.' },
+        },
+      },
+    },
   },
   methods: {
     regenerate:

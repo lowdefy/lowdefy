@@ -32,25 +32,47 @@ export default {
   events: {
     onClick: {
       description: 'Trigger action when a menu item is clicked.',
-      event: {
-        key: 'The menu item key.',
-        keyPath: 'The key path of the menu item.',
-        pageId: 'The page id of the menu item.',
-        url: 'The url of the menu item.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The menu item key.' },
+          keyPath: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'The key path of the menu item.',
+          },
+          pageId: { type: 'string', description: 'The page id of the menu item.' },
+          url: { type: 'string', description: 'The url of the menu item.' },
+        },
       },
     },
     onSelect: {
       description: 'Trigger action when a menu item is selected.',
-      event: {
-        key: 'The selected menu item key.',
-        selectedKeys: 'All selected menu item keys.',
-        pageId: 'The page id of the selected item.',
-        url: 'The url of the selected item.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The selected menu item key.' },
+          selectedKeys: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'All selected menu item keys.',
+          },
+          pageId: { type: 'string', description: 'The page id of the selected item.' },
+          url: { type: 'string', description: 'The url of the selected item.' },
+        },
       },
     },
     onOpenChange: {
       description: 'Trigger action when dropdown opens or closes.',
-      event: { open: 'Whether the dropdown is open.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          open: { type: 'boolean', description: 'Whether the dropdown is open.' },
+        },
+      },
     },
   },
   properties: {

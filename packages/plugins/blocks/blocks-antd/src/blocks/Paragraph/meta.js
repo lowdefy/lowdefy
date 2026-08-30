@@ -25,8 +25,16 @@ export default {
   events: {
     onExpand: 'Trigger action when ellipse expand is clicked.',
     onCopy: 'Trigger action when copy text is clicked.',
-    onTextSelection:
-      'Trigger action when text is selected and pass selected text to the event object.',
+    onTextSelection: {
+      description: 'Trigger action when text is selected.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          selection: { type: 'string', description: 'The selected text.' },
+        },
+      },
+    },
   },
   properties: {
     type: 'object',

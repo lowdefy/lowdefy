@@ -42,23 +42,30 @@ function stepInto({ schema, segment }) {
   if (branches) {
     const results = branches.map((branch) => stepInto({ schema: branch, segment }));
     const resolved = results.find((result) => result.resolved);
-    return resolved ?? { resolved: false };
+    // When no branch has room for the segment, report the first branch's
+    // candidates so the suggestion still names something the author can use.
+    return resolved ?? results[0] ?? { resolved: false };
   }
   if (type.isObject(schema.properties)) {
     if (segment in schema.properties) {
       return { resolved: true, schema: schema.properties[segment] };
     }
-    const open =
-      schema.additionalProperties === true ||
-      type.isObject(schema.additionalProperties) ||
-      type.isObject(schema.patternProperties);
-    if (open) {
+    // An additionalProperties sub-schema shapes every undeclared key, so the
+    // path is checked against it; `true` or patternProperties leave it open.
+    if (type.isObject(schema.additionalProperties)) {
+      return { resolved: true, schema: schema.additionalProperties };
+    }
+    if (schema.additionalProperties === true || type.isObject(schema.patternProperties)) {
       return { resolved: true, schema: undefined };
     }
     return { resolved: false, candidates: Object.keys(schema.properties).sort() };
   }
+  if (type.isObject(schema.additionalProperties)) {
+    return { resolved: true, schema: schema.additionalProperties };
+  }
   if (schema.type === 'array' || !type.isUndefined(schema.items)) {
-    if (!/^\d+$/.test(segment)) {
+    // A List template addresses its item as `$`; a literal index is a number.
+    if (!/^\d+$/.test(segment) && segment !== '$') {
       return { resolved: false };
     }
     return { resolved: true, schema: type.isObject(schema.items) ? schema.items : undefined };

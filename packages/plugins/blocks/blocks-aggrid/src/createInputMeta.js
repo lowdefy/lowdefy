@@ -32,62 +32,153 @@ function createInputMeta(blockName, { size = false } = {}) {
     events: {
       onCellClick: {
         description: 'Trigger event when a cell is clicked.',
-        event: {
-          cell: 'The clicked cell with column and value.',
-          colId: 'The column id.',
-          row: 'The row data.',
-          rowIndex: 'The row index.',
-          selected: 'All selected rows.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            cell: { type: 'object', description: 'The clicked cell with column and value.' },
+            colId: { type: 'string', description: 'The column id.' },
+            row: { type: 'object', description: 'The row data.' },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
         },
       },
       onFilterChanged: {
         description: 'Trigger event when the filter changes.',
-        event: { rows: 'The displayed rows after filtering.', filter: 'The filter model.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            rows: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The displayed rows after filtering.',
+            },
+            filter: { type: 'object', description: 'The filter model.' },
+          },
+        },
       },
       onRowClick: {
         description: 'Trigger event when a row is clicked.',
-        event: { row: 'The row data.', selected: 'All selected rows.', rowIndex: 'The row index.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+          },
+        },
       },
       onRowSelected: {
         description: 'Trigger event when a row is selected.',
-        event: { row: 'The row data.', rowIndex: 'The row index.', selected: 'All selected rows.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
+        },
       },
       onSelectionChanged: {
         description: 'Triggered when the selected rows are changed.',
-        event: { selected: 'All selected rows.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
+        },
       },
       onSortChanged: {
         description: 'Trigger event when the sort changes.',
-        event: { rows: 'The displayed rows after sorting.', sort: 'The sort column state.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            rows: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The displayed rows after sorting.',
+            },
+            sort: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The sort column state.',
+            },
+          },
+        },
       },
       onCellValueChanged: {
         description: 'Triggered when a cell value is changed on the grid.',
-        event: {
-          field: 'The column field name.',
-          newRowData: 'All row data after the change.',
-          newValue: 'The new cell value.',
-          oldValue: 'The previous cell value.',
-          rowData: 'The changed row data.',
-          rowIndex: 'The row index.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            field: { type: 'string', description: 'The column field name.' },
+            newRowData: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All row data after the change.',
+            },
+            newValue: { description: 'The new cell value.' },
+            oldValue: { description: 'The previous cell value.' },
+            rowData: { type: 'object', description: 'The changed row data.' },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+          },
         },
       },
       onRowDragEnd: {
         description: 'Triggered when a row is dragged to another position in the grid.',
-        event: {
-          fromData: 'The dragged row data.',
-          toData: 'The target row data.',
-          fromIndex: 'The original row index.',
-          toIndex: 'The new row index.',
-          newRowData: 'All row data after reorder.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            fromData: { type: 'object', description: 'The dragged row data.' },
+            toData: { type: 'object', description: 'The target row data.' },
+            fromIndex: { type: 'integer', description: 'The original row index.' },
+            toIndex: { type: 'integer', description: 'The new row index.' },
+            newRowData: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All row data after reorder.',
+            },
+          },
         },
       },
       onCellLink: {
         description:
           'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
-        event: {
-          link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
-          row: 'The row data.',
-          value: 'The cell value.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            link: {
+              type: 'object',
+              description: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+            },
+            row: { type: 'object', description: 'The row data.' },
+            value: { description: 'The cell value.' },
+          },
         },
       },
     },

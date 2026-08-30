@@ -21,6 +21,7 @@ import cn from './cn.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
+import extractEventPayloads from './extractEventPayloads.js';
 import HtmlComponent from './HtmlComponent.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
@@ -33,6 +34,7 @@ export {
   ErrorBoundary,
   ErrorPage,
   extractBlockTypes,
+  extractEventPayloads,
   HtmlComponent,
   renderHtml,
   withBlockDefaults,

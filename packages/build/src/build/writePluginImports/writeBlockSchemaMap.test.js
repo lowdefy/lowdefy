@@ -58,7 +58,9 @@ test('writeBlockSchemaMap writes only the schemas of the used block types', asyn
   });
   await writeBlockSchemaMap({ components, context });
   expect(written('plugins/blockSchemas.json')).toEqual({ Box: boxSchema });
-  expect(written('plugins/blockMetas.json')).toEqual({ Box: { category: 'container', hazards: [] } });
+  expect(written('plugins/blockMetas.json')).toEqual({
+    Box: { category: 'container', hazards: [] },
+  });
 });
 
 test('writeBlockSchemaMap writes valueType and initValue from the plugin meta', async () => {
@@ -120,7 +122,11 @@ test('writeBlockSchemaMap handles a context without loaded maps', async () => {
 });
 
 test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to an empty list', async () => {
-  const hazard = { id: 'html-style-stripped', message: 'Html strips <style>.', see: 'display-blocks/html' };
+  const hazard = {
+    id: 'html-style-stripped',
+    message: 'Html strips <style>.',
+    see: 'display-blocks/html',
+  };
   const components = {
     imports: {
       blocks: [
@@ -137,7 +143,9 @@ test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to a
       Box: { category: 'container' },
     },
     typesMap: {
-      blockMetas: { Custom: { category: 'display', hazards: [{ id: 'custom', message: 'm', see: 's' }] } },
+      blockMetas: {
+        Custom: { category: 'display', hazards: [{ id: 'custom', message: 'm', see: 's' }] },
+      },
     },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
@@ -149,4 +157,57 @@ test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to a
   expect(blockMetas.Html.hazards).toEqual([hazard]);
   expect(blockMetas.Box.hazards).toEqual([]);
   expect(blockMetas.Custom.hazards.map((h) => h.id)).toEqual(['custom']);
+});
+
+test('writeBlockSchemaMap carries events with payloads into blockMetas', async () => {
+  const payload = {
+    type: 'object',
+    additionalProperties: false,
+    properties: { value: { type: 'string', description: 'The current input value.' } },
+  };
+  const components = {
+    imports: {
+      blocks: [
+        { package: '@lowdefy/blocks-antd', typeName: 'TextInput', originalTypeName: 'TextInput' },
+        { package: '@lowdefy/blocks-antd', typeName: 'Selector', originalTypeName: 'Selector' },
+        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
+        { package: 'custom-plugin', typeName: 'Custom', originalTypeName: 'Custom' },
+      ],
+    },
+  };
+  const context = createContext({
+    blockPluginMetas: {
+      TextInput: {
+        category: 'input',
+        events: {
+          onChange: { description: 'Trigger action when the input value changes.', payload },
+          onBlur: 'Trigger action when the input loses focus.',
+        },
+      },
+      Selector: {
+        category: 'input',
+        events: {
+          onChange: {
+            description: 'Trigger action when selection is changed.',
+            event: { value: 'The selected value.' },
+          },
+        },
+      },
+      Box: { category: 'container' },
+    },
+    typesMap: {
+      blockMetas: { Custom: { category: 'display', events: { onCustom: { payload } } } },
+    },
+  });
+  await writeBlockSchemaMap({ components, context });
+  const blockMetas = written('plugins/blockMetas.json');
+  expect(blockMetas.TextInput.events).toEqual({ onChange: { payload }, onBlur: {} });
+  expect(JSON.stringify(blockMetas.TextInput.events)).not.toContain('Trigger action');
+  expect(blockMetas.Selector.events).toEqual({
+    onChange: {
+      payload: { type: 'object', properties: { value: { description: 'The selected value.' } } },
+    },
+  });
+  expect('events' in blockMetas.Box).toBe(false);
+  expect(blockMetas.Custom.events).toEqual({ onCustom: { payload } });
 });

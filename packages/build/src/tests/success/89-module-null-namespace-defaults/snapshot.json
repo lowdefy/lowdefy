@@ -1573,7 +1573,22 @@
   "plugins/blockMetas.json": {
     "Box": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {},
+        "onPaste": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The pasted plain text."
+              }
+            }
+          }
+        }
+      }
     },
     "Result": {
       "category": "container",
@@ -1581,7 +1596,10 @@
     },
     "Anchor": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "DangerousHtml": {
       "category": "display",
@@ -1600,7 +1618,10 @@
     },
     "Dynamic": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Html": {
       "category": "display",
@@ -1610,11 +1631,28 @@
           "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
           "see": "display-blocks/html"
         }
-      ]
+      ],
+      "events": {
+        "onTextSelection": {
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selection": {
+                "type": "string",
+                "description": "The selected text."
+              }
+            }
+          }
+        }
+      }
     },
     "Icon": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Img": {
       "category": "display",
@@ -1623,11 +1661,17 @@
     "List": {
       "category": "list",
       "valueType": "array",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Span": {
       "category": "container",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClick": {}
+      }
     },
     "Template": {
       "category": "container",
@@ -1678,7 +1722,10 @@
     },
     "Message": {
       "category": "display",
-      "hazards": []
+      "hazards": [],
+      "events": {
+        "onClose": {}
+      }
     }
   },
   "plugins/blockSchemas.json": {
@@ -3265,7 +3312,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger action when text is selected and pass selected text to the event object."
+                  "description": "Trigger action when text is selected."
                 }
               }
             }

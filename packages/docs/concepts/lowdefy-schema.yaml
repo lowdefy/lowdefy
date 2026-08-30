@@ -377,6 +377,7 @@ _ref:
             | `tenant` | Tenant wall audits on requests and steps over a walled connection - an authored tenant field is a build error; the `tenant: none` audits (no tenant field, a caller-supplied tenant value, an unstamped write) and the unscoped inventory run under `lowdefy check` |
             | `js-modules` | `_js` module references (`fn: ./lib/file.js#name`) - the file must exist inside the config directory, parse, and have the named export |
             | `response-schema` | Endpoint `responseSchema` checks - a `_actions.<id>.response.response.<path>` or `_step.<id>.<path>` read that the target endpoint's `responseSchema` does not declare, and an endpoint `payloadSchema` or `responseSchema` that is not a valid JSON Schema |
+            | `event-payload` | `_event` paths checked against the payload schema the block type declares for that event (`meta.events.<name>.payload`) - a path the payload has no room for is a build error; events without a declared payload are never checked |
 
             ### Example: Dynamic State
 

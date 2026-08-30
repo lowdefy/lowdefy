@@ -19,6 +19,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 import findSimilarString from '../../../utils/findSimilarString.js';
 import { ORG_CLIENT_ACTION_TYPES } from '../validateOrgClientActionRefs.js';
+import checkEventPayloadRefs from './checkEventPayloadRefs.js';
 
 const BROWSER_DEFAULT_SHORTCUTS = new Set(['mod+n', 'mod+t', 'mod+w', 'mod+r', 'mod+q', 'mod+l']);
 
@@ -290,9 +291,10 @@ function checkEventName(key, block, pageContext, configKey) {
   // A block type that fires event names authored in its own properties (a Tabs
   // tab's eventName, an AgGrid cell button's eventName) cannot enumerate them.
   if (blockMeta?.dynamicEvents === true) return;
-  const declared = blockMeta?.events;
+  // Declared events are a name -> { payload? } map (see extractBlockTypes).
   // A block type that declares no events tells the build nothing - do not guess.
-  if (!type.isArray(declared)) return;
+  if (!type.isObject(blockMeta?.events)) return;
+  const declared = Object.keys(blockMeta.events);
   if (declared.includes(key)) return;
   const suggestion = findSimilarString({ input: key, candidates: declared });
   const didYouMean = suggestion ? ` Did you mean "${suggestion}"?` : '';
@@ -363,6 +365,17 @@ function buildEvents(block, pageContext) {
       };
       checkActionList(block.events[key].try, actionContext);
       checkActionList(block.events[key].catch, actionContext);
+
+      const payload = pageContext.context?.blockMetas?.[block.type]?.events?.[key]?.payload;
+      if (type.isObject(payload)) {
+        checkEventPayloadRefs({
+          block,
+          event: block.events[key],
+          eventConfigKey,
+          eventName: key,
+          payload,
+        });
+      }
 
       // Validate shortcut strings and collect refs for duplicate detection
       if (type.isObject(block.events[key]) && !type.isNone(block.events[key].shortcut)) {

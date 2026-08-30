@@ -47,13 +47,25 @@ export default {
     onBlur: 'Trigger action when the selector loses focus.',
     onChange: {
       description: 'Trigger action when selection is changed.',
-      event: { value: 'The selected values (array).' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'array', description: 'The selected values (array).' },
+        },
+      },
     },
     onFocus: 'Trigger action when the selector gains focus.',
     onClear: 'Trigger action when the selector is cleared.',
     onSearch: {
       description: 'Trigger action when the search input changes.',
-      event: { value: 'The search input value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The search input value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

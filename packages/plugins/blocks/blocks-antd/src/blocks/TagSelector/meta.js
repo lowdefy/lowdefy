@@ -32,7 +32,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when the selection is changed.',
-      event: { value: 'The selected value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

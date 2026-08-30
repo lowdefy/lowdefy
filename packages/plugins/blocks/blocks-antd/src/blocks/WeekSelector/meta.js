@@ -43,7 +43,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger action when week is changed.',
-      event: { value: 'The selected week value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected week value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

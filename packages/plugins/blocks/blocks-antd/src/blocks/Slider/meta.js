@@ -29,7 +29,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger action when the slider value changes.',
-      event: { value: 'The current slider value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: ['number', 'array'], description: 'The current slider value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

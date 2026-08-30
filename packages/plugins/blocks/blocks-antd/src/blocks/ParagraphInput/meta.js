@@ -27,11 +27,23 @@ export default {
     onExpand: 'Trigger action when ellipse expand is clicked.',
     onCopy: {
       description: 'Trigger action when copy text is clicked.',
-      event: { value: 'The copied text value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The copied text value.' },
+        },
+      },
     },
     onChange: {
       description: 'Trigger action when paragraph is changed.',
-      event: { value: 'The new paragraph value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The new paragraph value.' },
+        },
+      },
     },
   },
   properties: {

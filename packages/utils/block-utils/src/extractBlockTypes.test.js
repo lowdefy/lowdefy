@@ -51,7 +51,7 @@ test('extractBlockTypes carries category, valueType, initValue, slots and cssKey
   });
 });
 
-test('extractBlockTypes sets events to the event key list', () => {
+test('extractBlockTypes maps string-form events to empty entries', () => {
   const { blockMetas } = extractBlockTypes({
     Button: {
       category: 'display',
@@ -61,7 +61,60 @@ test('extractBlockTypes sets events to the event key list', () => {
       },
     },
   });
-  expect(blockMetas.Button.events).toEqual(['onClick', 'onDoubleClick']);
+  expect(blockMetas.Button.events).toEqual({ onClick: {}, onDoubleClick: {} });
+});
+
+test('extractBlockTypes carries a declared payload schema and drops the description', () => {
+  const payload = {
+    type: 'object',
+    additionalProperties: false,
+    properties: { value: { type: 'string', description: 'The current input value.' } },
+  };
+  const { blockMetas } = extractBlockTypes({
+    TextInput: {
+      category: 'input',
+      events: {
+        onChange: { description: 'Trigger action when the input value changes.', payload },
+        onBlur: 'Trigger action when the input loses focus.',
+      },
+    },
+  });
+  expect(blockMetas.TextInput.events).toEqual({ onChange: { payload }, onBlur: {} });
+  expect(JSON.stringify(blockMetas.TextInput.events)).not.toContain(
+    'Trigger action when the input value changes.'
+  );
+});
+
+test('extractBlockTypes normalises the legacy event map to a description-only payload', () => {
+  const { blockMetas } = extractBlockTypes({
+    Selector: {
+      category: 'input',
+      events: {
+        onChange: {
+          description: 'Trigger action when selection is changed.',
+          event: { value: 'The selected value.' },
+        },
+      },
+    },
+  });
+  expect(blockMetas.Selector.events).toEqual({
+    onChange: {
+      payload: {
+        type: 'object',
+        properties: { value: { description: 'The selected value.' } },
+      },
+    },
+  });
+});
+
+test('extractBlockTypes treats an object event without payload or event map as having no payload', () => {
+  const { blockMetas } = extractBlockTypes({
+    Upload: {
+      category: 'input',
+      events: { onChange: { description: 'Triggered when the upload state is changing.' } },
+    },
+  });
+  expect(blockMetas.Upload.events).toEqual({ onChange: {} });
 });
 
 test('extractBlockTypes omits events when the meta declares none', () => {

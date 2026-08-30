@@ -25,7 +25,13 @@ export default {
   events: {
     onChange: {
       description: 'Triggered when a step is clicked.',
-      event: { current: 'The index of the clicked step.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          current: { type: 'integer', description: 'The index of the clicked step.' },
+        },
+      },
     },
   },
   properties: {

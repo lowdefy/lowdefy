@@ -27,7 +27,14 @@ export default {
   events: {
     onClick: {
       description: 'Triggered when breadcrumb item is clicked.',
-      event: { link: 'The clicked breadcrumb link.', index: 'The index of the clicked item.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          link: { type: 'object', description: 'The clicked breadcrumb link.' },
+          index: { type: 'integer', description: 'The index of the clicked item.' },
+        },
+      },
     },
   },
   properties: {

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 const operatorSchema = {
   type: 'object',
   patternProperties: {
@@ -25,11 +27,7 @@ const operatorSchema = {
 };
 
 const classValueSchema = {
-  oneOf: [
-    { type: 'string' },
-    { type: 'array', items: { type: 'string' } },
-    operatorSchema,
-  ],
+  oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }, operatorSchema],
 };
 
 const styleValueSchema = { type: 'object' };
@@ -38,6 +36,15 @@ const eventValueSchema = {
   oneOf: [{ type: 'array' }, operatorSchema],
 };
 
+// An event meta is a description string or { description, payload | event }.
+// Only the description belongs in the JSON Schema - a payload schema has no
+// place in a description node and is carried separately by extractBlockTypes.
+function getEventDescription(def) {
+  if (type.isString(def)) return def;
+  if (type.isObject(def) && type.isString(def.description)) return def.description;
+  return '';
+}
+
 function buildBlockSchema(meta) {
   const cssEntries = Object.entries({
     block: 'The block layout wrapper.',
@@ -45,23 +52,17 @@ function buildBlockSchema(meta) {
   });
 
   const classProperties = Object.fromEntries(
-    cssEntries.map(([key, desc]) => [
-      `.${key}`,
-      { ...classValueSchema, description: desc },
-    ])
+    cssEntries.map(([key, desc]) => [`.${key}`, { ...classValueSchema, description: desc }])
   );
 
   const styleProperties = Object.fromEntries(
-    cssEntries.map(([key, desc]) => [
-      `.${key}`,
-      { ...styleValueSchema, description: desc },
-    ])
+    cssEntries.map(([key, desc]) => [`.${key}`, { ...styleValueSchema, description: desc }])
   );
 
   const eventProperties = Object.fromEntries(
-    Object.entries(meta.events ?? {}).map(([name, desc]) => [
+    Object.entries(meta.events ?? {}).map(([name, def]) => [
       name,
-      { ...eventValueSchema, description: desc },
+      { ...eventValueSchema, description: getEventDescription(def) },
     ])
   );
 

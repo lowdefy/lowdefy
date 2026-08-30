@@ -27,18 +27,26 @@ export default {
   events: {
     onSizeChange: {
       description: 'Triggered when page size is changed.',
-      event: {
-        current: 'The current page number.',
-        pageSize: 'The page size.',
-        skip: 'The number of items to skip.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          current: { type: 'integer', description: 'The current page number.' },
+          pageSize: { type: 'integer', description: 'The page size.' },
+          skip: { type: 'integer', description: 'The number of items to skip.' },
+        },
       },
     },
     onChange: {
       description: 'Triggered when current page is changed.',
-      event: {
-        current: 'The current page number.',
-        pageSize: 'The page size.',
-        skip: 'The number of items to skip.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          current: { type: 'integer', description: 'The current page number.' },
+          pageSize: { type: 'integer', description: 'The page size.' },
+          skip: { type: 'integer', description: 'The number of items to skip.' },
+        },
       },
     },
   },

@@ -28,7 +28,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when collapse item is toggled.',
-      event: { activeKey: 'The key of the active panel.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          activeKey: { type: ['string', 'array'], description: 'The key of the active panel.' },
+        },
+      },
     },
   },
   properties: {

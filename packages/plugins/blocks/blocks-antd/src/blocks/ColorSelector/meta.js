@@ -31,20 +31,44 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when the color is changed.',
-      event: { value: 'The selected color hex value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The selected color hex value.' },
+        },
+      },
     },
     onChangeComplete: {
       description: 'Trigger actions when the color change is complete.',
-      event: { value: 'The final color hex value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The final color hex value.' },
+        },
+      },
     },
     onClear: 'Trigger actions when the color is cleared.',
     onFormatChange: {
       description: 'Trigger actions when the color format is changed.',
-      event: { format: 'The new color format.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          format: { type: 'string', description: 'The new color format.' },
+        },
+      },
     },
     onOpenChange: {
       description: 'Trigger actions when the color picker popup open state changes.',
-      event: { open: 'Whether the popup is open.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          open: { type: 'boolean', description: 'Whether the popup is open.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

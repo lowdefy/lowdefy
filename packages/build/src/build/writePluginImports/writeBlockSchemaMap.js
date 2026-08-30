@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { extractEventPayloads } from '@lowdefy/block-utils';
+
 // Writes plugins/blockSchemas.json and plugins/blockMetas.json for the block
 // types the app uses. The schema and meta maps are built for every installed
 // type by loadBlockSchemas before the pages are built.
@@ -41,6 +43,14 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
         hazards: typesMapMeta?.hazards ?? pluginMeta?.hazards ?? [],
       };
+      // The events map is the same name -> { payload? } shape the build checks
+      // _event paths against, so the dev docs/MCP endpoint returns the payload
+      // schemas under meta.events. typesMap metas already carry the map; a plugin
+      // meta module carries the raw events and is reduced here.
+      const events = typesMapMeta?.events ?? extractEventPayloads(pluginMeta?.events ?? {});
+      if (Object.keys(events).length > 0) {
+        blockMetas[block.typeName].events = events;
+      }
     }
   }
 
