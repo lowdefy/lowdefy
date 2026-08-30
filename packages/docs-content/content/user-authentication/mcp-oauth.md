@@ -137,7 +137,7 @@ Both pages are ordinary Lowdefy pages that read the authorization request from t
 
 | Action | What it does |
 | ------ | ------------ |
-| [`ListOrganizations`](/actions) | Returns the caller's organization memberships — the rows the picker renders. |
+| `ListOrganizations` | Returns the caller's organization memberships — the rows the picker renders. |
 | `SetActiveOrganization` | Sets the caller's active organization. The picker calls it for the chosen organization. |
 | `OAuthContinue` | Continues the authorization after the organization is chosen (`POST /api/auth/oauth2/continue`). Returns `{ url }` to redirect to. |
 | `OAuthConsent` | Approves (`accept: true`) or denies (`accept: false`) the client. Returns `{ url }` to redirect to. |
