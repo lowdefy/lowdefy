@@ -55,9 +55,9 @@ cssKeys: {
 
 ```javascript
 // OLD
-<div className={methods.makeCssClass([styles.wrapper, properties.style])}>
+<div className={methods.makeCssClass([wrapperStyle, properties.style])}>
 // NEW
-<div className={classNames.element} style={{ ...styles.wrapper, ...styles?.element }}>
+<div className={classNames.element} style={{ ...wrapperStyle, ...styles?.element }}>
 ```
 
 **(b) The style is purely internal (a hover colour, a fixed width) with no author-facing hook → inline `style` object.**

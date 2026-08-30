@@ -113,3 +113,27 @@ test('createBlockMethods passes through symbol keys without throwing', () => {
   });
   expect(methods[Symbol.iterator]).toBeUndefined();
 });
+
+test('createBlockMethods keeps the methods prop referentially stable across renders', () => {
+  const bag = createMethods();
+  const first = createBlockMethods({
+    blockId: 'b1',
+    blockType: 'Button',
+    configKey: 'k-1',
+    methods: bag,
+  });
+  const second = createBlockMethods({
+    blockId: 'b1',
+    blockType: 'Button',
+    configKey: 'k-1',
+    methods: bag,
+  });
+  expect(second).toBe(first);
+  const other = createBlockMethods({
+    blockId: 'b2',
+    blockType: 'Button',
+    configKey: 'k-2',
+    methods: createMethods(),
+  });
+  expect(other).not.toBe(first);
+});

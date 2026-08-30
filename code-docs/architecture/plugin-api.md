@@ -145,6 +145,7 @@ Each request is a resolver function with `schema` and `meta` (`{ checkRead, chec
 await requestResolver({
   blockId,
   callApi, // ({ endpointId, payload }) => response — invoke an endpoint from inside a request
+  collectionSchema, // the field contract ({ name, fields }) from build/collections.json, or null
   connection, // the evaluated connection properties
   connectionId,
   endpointId,
@@ -152,7 +153,8 @@ await requestResolver({
   payload,
   request, // the evaluated request properties
   requestId, // stepId for endpoint steps, requestId for page requests
-  tenant, // the tenant verdict ({ field, value }) or null/undefined
+  tenant, // the tenant verdict ({ field, value }) or null
+  trace, // optional dev-only collector (the `explain` flag); resolvers may ignore it
 });
 ```
 
