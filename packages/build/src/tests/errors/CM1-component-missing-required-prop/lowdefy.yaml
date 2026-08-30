@@ -1,0 +1,18 @@
+lowdefy: local
+components:
+  - id: Pill
+    props:
+      result:
+        type: string
+        required: true
+    blocks:
+      - id: root
+        type: Box
+        properties:
+          content: { _prop: result }
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: p
+        type: Pill

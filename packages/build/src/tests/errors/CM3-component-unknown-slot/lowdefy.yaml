@@ -1,0 +1,18 @@
+lowdefy: local
+components:
+  - id: Pill
+    slots: [footer]
+    blocks:
+      - id: root
+        type: Box
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: p
+        type: Pill
+        slots:
+          foot:
+            blocks:
+              - id: b
+                type: Box

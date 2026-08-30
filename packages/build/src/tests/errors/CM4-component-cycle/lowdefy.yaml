@@ -1,0 +1,12 @@
+lowdefy: local
+components:
+  - id: Rec
+    blocks:
+      - id: inner
+        type: Rec
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: r
+        type: Rec

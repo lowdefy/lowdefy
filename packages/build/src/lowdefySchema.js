@@ -1898,6 +1898,12 @@ export default {
         properties: {
           type: 'object',
         },
+        props: {
+          type: 'object',
+          errorMessage: {
+            type: 'Block "props" should be an object mapping component prop names to values.',
+          },
+        },
         layout: {
           type: 'object',
           errorMessage: {
@@ -2188,6 +2194,49 @@ export default {
         required: {
           id: 'Block should have required property "id".',
           type: 'Block should have required property "type".',
+        },
+      },
+    },
+    component: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Component "id" should be a string.',
+          },
+        },
+        props: {
+          type: 'object',
+          errorMessage: {
+            type: 'Component "props" should be an object mapping prop names to prop definitions ({ type, required, default, description }).',
+          },
+        },
+        slots: {
+          type: 'array',
+          items: { type: 'string' },
+          errorMessage: {
+            type: 'Component "slots" should be an array of slot name strings.',
+          },
+        },
+        blocks: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/block',
+          },
+          errorMessage: {
+            type: 'Component "blocks" should be an array.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Component should be an object.',
+        required: {
+          id: 'Component should have required property "id".',
         },
       },
     },
@@ -3669,6 +3718,15 @@ export default {
       },
       errorMessage: {
         type: 'App "pages" should be an array.',
+      },
+    },
+    components: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/component',
+      },
+      errorMessage: {
+        type: 'App "components" should be an array.',
       },
     },
     modules: {

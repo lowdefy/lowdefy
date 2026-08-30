@@ -91,6 +91,11 @@ function createContext({
 
   context.blockMetas = context.typesMap.blockMetas ?? {};
 
+  // Registry of runtime component definitions, keyed by component type name.
+  // Populated by buildComponents from the top-level components: list and
+  // consumed by expandComponent during buildBlock.
+  context.componentDefs = {};
+
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });
 

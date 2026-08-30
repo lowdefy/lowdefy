@@ -34,6 +34,7 @@ import buildApp from './build/buildApp.js';
 import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildCollections from './build/buildCollections.js';
+import buildComponents from './build/buildComponents.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
@@ -133,6 +134,12 @@ async function build(options) {
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
+
+    // Phase 3.1: Extract runtime component definitions into context.componentDefs
+    // before operator precompute/validation runs, so component bodies (which
+    // carry _prop and _slot markers) never reach the unknown-operator or
+    // precompute passes. Expansion re-inserts them per use site in buildBlock.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
 
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after

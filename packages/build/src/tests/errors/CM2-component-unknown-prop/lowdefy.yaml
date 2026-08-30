@@ -1,0 +1,17 @@
+lowdefy: local
+components:
+  - id: Pill
+    props:
+      result:
+        type: string
+    blocks:
+      - id: root
+        type: Box
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: p
+        type: Pill
+        props:
+          reslt: hello
