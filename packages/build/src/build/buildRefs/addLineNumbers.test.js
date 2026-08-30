@@ -55,11 +55,23 @@ test('does not compile inside a _nunjucks template', () => {
   expect(result.label._nunjucks.template).toBe('${ not compiled }');
 });
 
-test('$${ … } is a literal string, not an expression', () => {
-  // isExpression rejects the $$ escape; the scalar stays a literal. The
-  // one-$ unescaping is documented but the raw string is preserved here.
+test('$${ … } is the literal escape: it yields the literal ${ … } string', () => {
+  // isExpression rejects the $$ escape; the pre-pass removes the leading $
+  // so the author gets the literal ${ … } text (design §7).
   const result = parse('label: "$${ state.x }"\n');
-  expect(result.label).toBe('$${ state.x }');
+  expect(result.label).toBe('${ state.x }');
+});
+
+test('$$ that is not a leading escape is untouched', () => {
+  const result = parse('label: "cost is $$5 and $$ more"\n');
+  expect(result.label).toBe('cost is $$5 and $$ more');
+});
+
+test('$${ … } inside a _js subtree stays fully literal, escape included', () => {
+  // Raw-operator subtrees are owned by the other language; the escape only
+  // applies where compilation would otherwise trigger.
+  const result = parse('handler:\n  _js:\n    code: "$${ state.x }"\n');
+  expect(result.handler._js.code).toBe('$${ state.x }');
 });
 
 test('a plain string is untouched', () => {
