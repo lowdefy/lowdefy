@@ -53,7 +53,7 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes).
 
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_inspect_state, lowdefy_eval_operator or lowdefy_load_state to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see.
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state or lowdefy_run_request to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
 
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
@@ -78,7 +78,7 @@ const userSchema = z
   .passthrough()
   .optional()
   .describe(
-    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role.'
+    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request it sets the caller the request runs as.'
   );
 
 function createDocsMcpServer({ origin, honoContext } = {}) {
@@ -156,10 +156,11 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         pageId: z.string().describe('The page the request is defined on.'),
         requestId: z.string().describe('The request id.'),
         payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
+        user: userSchema,
       },
     },
-    async ({ pageId, requestId, payload }) =>
-      textResult(await runRequest({ pageId, requestId, payload, honoContext }))
+    async ({ pageId, requestId, payload, user }) =>
+      textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
   );
 
   server.registerTool(
