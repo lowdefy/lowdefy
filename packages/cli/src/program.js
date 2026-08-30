@@ -26,6 +26,7 @@ import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import modulesUpdate from './commands/modules/modulesUpdate.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
@@ -207,6 +208,18 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: initVercel }));
+
+const modules = program.command('modules').description('Manage Lowdefy modules.');
+
+modules
+  .command('update [name]')
+  .description('Refetch GitHub module refs and rewrite lowdefy-modules.lock.yaml.')
+  .usage('[name] [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: modulesUpdate }));
 
 program
   .command('vercel-output')

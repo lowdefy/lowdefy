@@ -17,7 +17,7 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
-async function runLowdefyBuild({ context, directory }) {
+async function runLowdefyBuild({ context, directory, env = {} }) {
   context.logger.info({ spin: 'start' }, 'Running Lowdefy build.');
   try {
     await spawnProcess({
@@ -33,6 +33,7 @@ async function runLowdefyBuild({ context, directory }) {
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
           LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
           LOWDEFY_LOG_LEVEL: context.options.logLevel,
+          ...env,
         },
       },
     });
