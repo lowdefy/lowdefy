@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "tenant connection \"org_scope\""
+      ],
+      "errorContains": [
+        "Request \"search_controls\" at page \"home\" uses \"$lookup\" on collection \"catalogue\" over tenant connection \"org_scope\". Collection \"catalogue\" belongs to connection \"frameworks\", which is declared tenant: shared, so it carries no tenant field. The wall prepends a tenant $match into every $lookup/$unionWith sub-pipeline, so this stage will match nothing and the join returns []. Run the pipeline on \"frameworks\" and pass the organization facts in through the request payload, or declare tenant: authored on this request and author the organization clause yourself.",
+        "lowdefy.yaml:37"
+      ]
+    },
+    {
+      "mode": "dev",
+      "errors": [
+        "tenant connection \"org_scope\""
+      ]
+    }
+  ]
+}

@@ -66,8 +66,14 @@ const testTypesMap = {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
   },
+  connectionMetas: {
+    Anthropic: { tenant: false },
+    AxiosHttp: { tenant: false },
+    MongoDBCollection: { tenant: true },
+  },
   requests: {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    MongoDBAggregation: { package: '@lowdefy/connection-mongodb' },
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
   },
   auth: {

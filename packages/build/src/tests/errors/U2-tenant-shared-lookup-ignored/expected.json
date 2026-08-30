@@ -1,0 +1,8 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "noErrors": ["tenant connection \"org_scope\""]
+    }
+  ]
+}

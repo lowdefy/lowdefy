@@ -19,8 +19,9 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
+import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
 
-function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
+function validateStep(step, { endpointId, stepTypes, tenantConnectionIds, tenantCollectionMap }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -36,10 +37,9 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
   }
   validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
-    throw new ConfigError(
-      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.type)) {
     throw new ConfigError(
@@ -215,6 +215,15 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnectionIds,
+    configKey,
+  });
+  // Best-effort (literal pipelines only): a walled pipeline that joins a
+  // tenant: shared collection gets an injected $match it can never satisfy.
+  validateTenantSharedLookup({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    tenantConnectionIds,
+    tenantCollectionMap,
     configKey,
   });
 }
