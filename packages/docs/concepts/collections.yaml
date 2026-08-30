@@ -111,6 +111,6 @@ _ref:
             ## What consumes it
 
             - The `tenant-lookup` build check reads `tenant` to refuse scoped pipelines that join shared collections.
-            - The dev server's `lowdefy_data_model` tool prints collections, fields, relations and which connections read or write each.
+            - The dev server's `lowdefy_data_model` MCP tool (`GET /lowdefy-docs/data-model`) prints every collection with its fields, relations, indexes and tenant verdict, the connections addressing it, and every request, routine step and websocket that reads or writes it — see [Docs for AI Agents](/ai-agent-docs#data-model-lowdefy_data_model). It works without a declaration too, but only a declaration gives it fields and relations to print.
             - Write validation checks documents against `fields` at the write.
             - `lowdefy migrate` creates the declared `indexes` and migrates data toward the declared shape.

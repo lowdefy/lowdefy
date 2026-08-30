@@ -68,6 +68,8 @@ const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
 const { default: runRequest } = await import('./runRequest.js');
 const { default: getAppMap } = await import('./getAppMap.js');
+const { default: getDataModel } = await import('./getDataModel.js');
+const { default: docsDataModelHandler } = await import('../../src/routes/docs/dataModel.js');
 
 test('listTypes returns all available blocks with used flag and category', () => {
   const blocks = listTypes({ kind: 'blocks' });
@@ -518,6 +520,11 @@ test('getAppMap includes built page detail and a note for unbuilt pages', () => 
     { id: 'req-read', type: 'ReadOnlyRequest' },
     { id: 'req-write', type: 'WriteRequest' },
     { id: 'req-unknown', type: 'UnknownMetaRequest' },
+    { id: 'get_answers', type: 'MongoDBFind' },
+    { id: 'answers_report', type: 'MongoDBAggregation' },
+    { id: 'req-orphan', type: 'MongoDBFind' },
+    { id: 'req-dynamic', type: 'MongoDBFind' },
+    { id: 'req-ghost', type: 'MongoDBFind' },
   ]);
 
   const unbuilt = map.pages.find((page) => page.pageId === 'unbuilt');
@@ -528,14 +535,39 @@ test('getAppMap includes built page detail and a note for unbuilt pages', () => 
 
 test('getAppMap includes connections, endpoints, agents, menus and websockets', () => {
   const map = getAppMap();
-  expect(map.connections).toEqual([{ id: 'axios', type: 'AxiosHttp' }]);
-  expect(map.endpoints).toEqual([{ id: 'resolve_greeting', type: 'InternalApi' }]);
+  expect(map.connections).toEqual([
+    { id: 'axios', type: 'AxiosHttp' },
+    { id: 'answers_rw', type: 'MongoDBCollection' },
+    { id: 'answers_ro', type: 'MongoDBCollection' },
+    { id: 'evidence', type: 'MongoDBCollection' },
+    { id: 'audit_log', type: 'MongoDBCollection' },
+    { id: 'audit_log_scoped', type: 'MongoDBCollection' },
+    { id: 'dynamic_collection', type: 'MongoDBCollection' },
+  ]);
+  expect(map.endpoints).toEqual([
+    { id: 'resolve_greeting', type: 'InternalApi' },
+    { id: 'submit_answer', type: 'Api' },
+  ]);
   expect(map.agents).toEqual([{ id: 'assistant', type: 'OpenAiAgent' }]);
-  expect(map.websockets).toEqual([]);
+  expect(map.websockets).toEqual(['answers_stream', 'chat']);
   expect(map.menus).toEqual([
     {
       menuId: 'default',
       links: [{ menuItemId: 'home', type: 'MenuLink', pageId: 'home', title: 'Home' }],
     },
   ]);
+});
+
+test('GET /lowdefy-docs/data-model serves the same object as getDataModel', () => {
+  let body;
+  docsDataModelHandler({
+    json: (data) => {
+      body = data;
+      return data;
+    },
+  });
+  expect(body).toEqual(getDataModel());
+  expect(body.collections.answers.declared).toBe(true);
+  expect(body.collections.answers.writers.map((writer) => writer.stepId)).toEqual(['insert']);
+  expect(Array.isArray(body.unresolved)).toBe(true);
 });

@@ -31,6 +31,7 @@ import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
+import docsDataModelHandler from './routes/docs/dataModel.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
 import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
 import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
@@ -142,6 +143,7 @@ function createApp() {
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
   app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
   app.post('/lowdefy-docs/checkpoints/revert', docsCheckpointsRevertHandler);
