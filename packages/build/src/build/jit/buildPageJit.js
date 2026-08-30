@@ -367,6 +367,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         message: w.message,
         source: w.source ?? null,
         stack: w.stack ?? null,
+        prodError: w.prodError === true,
       }));
     }
 
