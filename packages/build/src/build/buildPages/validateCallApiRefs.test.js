@@ -121,7 +121,8 @@ test('CallAPI targeting non-existent endpoint produces warning', () => {
   const warning = mockHandleWarning.mock.calls[0][0];
   expect(warning).toBeInstanceOf(ConfigWarning);
   expect(warning.message).toBe(
-    'CallAPI action on page "page1" references non-existent endpoint "missing_api".'
+    'CallAPI action on page "page1" references non-existent endpoint "missing_api". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "missing_api".'
   );
   expect(warning.configKey).toBe('pages.page1.events.onClick.0');
   expect(warning.prodError).toBe(true);

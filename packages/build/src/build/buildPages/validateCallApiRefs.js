@@ -32,7 +32,8 @@ function validateCallApiRefs({ callApiActionRefs, endpointConfigs, context }) {
     if (!existingEndpointIds.has(endpointId)) {
       context.handleWarning(
         new ConfigWarning(
-          `CallAPI action on page "${sourcePageId}" references non-existent endpoint "${endpointId}".`,
+          `CallAPI action on page "${sourcePageId}" references non-existent endpoint "${endpointId}". ` +
+            `Check the endpointId for typos, or add an Api endpoint with id "${endpointId}".`,
           { configKey: action['~k'], prodError: true, checkSlug: 'callapi-refs' }
         )
       );
@@ -42,7 +43,9 @@ function validateCallApiRefs({ callApiActionRefs, endpointConfigs, context }) {
     if (internalEndpoints.has(endpointId)) {
       context.handleWarning(
         new ConfigWarning(
-          `CallAPI action on page "${sourcePageId}" targets InternalApi endpoint "${endpointId}". InternalApi endpoints are not accessible from client pages.`,
+          `CallAPI action on page "${sourcePageId}" targets InternalApi endpoint "${endpointId}". ` +
+            `InternalApi endpoints are not accessible from client pages. ` +
+            `Change the endpoint type to Api, or call it from another endpoint using a :call_api step.`,
           { configKey: action['~k'], prodError: true, checkSlug: 'callapi-internal-refs' }
         )
       );

@@ -72,6 +72,9 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     if (warning.prodError && context.stage === 'prod') {
       throw new Error(warning.message);
     }
+    if (context.warnings) {
+      context.warnings.push(warning);
+    }
     context.logger.warn(warning.message);
   };
 
