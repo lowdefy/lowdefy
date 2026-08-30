@@ -1,0 +1,48 @@
+# 104: ListPage archetype
+# =======================
+# A page whose root type is the ListPage archetype. At build, expandArchetype
+# rewrites it into a layout block carrying the generated blocks (header, filter
+# row, List with a row link, Result empty state and a skeleton) plus one list
+# request read from build/collections.json. The 30-line archetype expands to the
+# lowdefy-list-pages recipe with one way to be right.
+
+lowdefy: local
+
+collections:
+  controls:
+    tenant: shared
+    fields:
+      _id: string
+      title: string
+      description: string
+      framework_id: string
+      status: { enum: [draft, active, retired, na] }
+
+connections:
+  - id: controls
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+
+pages:
+  - id: controls
+    type: ListPage
+    properties:
+      collection: controls
+      columns: [title, framework_id, status]
+      filters: [framework_id, status]
+      search: [title, description]
+      rowLink: { pageId: control, urlQuery: { id: $_id } }
+      actions:
+        - id: new
+          type: Button
+          properties:
+            title: New control
+  - id: control
+    type: Box
+    blocks:
+      - id: control_title
+        type: Paragraph
+        properties:
+          content: Control detail

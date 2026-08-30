@@ -108,6 +108,11 @@
           pageId: collections
           properties:
             title: Collections
+        - id: archetypes
+          type: MenuLink
+          pageId: archetypes
+          properties:
+            title: Page archetypes
         - id: migrations
           type: MenuLink
           pageId: migrations
