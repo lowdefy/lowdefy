@@ -46,6 +46,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_inspect_state',
   'lowdefy_eval_operator',
   'lowdefy_run_request',
+  'lowdefy_run_endpoint',
   'lowdefy_restart',
   'lowdefy_app_map',
   'lowdefy_checkpoint',
@@ -90,6 +91,8 @@ test('MCP tools that render a page headless advertise an optional user parameter
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
     'lowdefy_load_state',
+    'lowdefy_run_request',
+    'lowdefy_run_endpoint',
   ].forEach((name) => {
     const tool = tools.find((candidate) => candidate.name === name);
     expect(tool.inputSchema.properties.user).toBeDefined();
