@@ -105,8 +105,8 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Developing Plugins
-            previous_page_id: plugins-dev
+            previous_page_title: Plugin API Versioning
+            previous_page_id: plugin-api-versioning
             # next_page_title: Blocks
             # next_page_id: plugins-blocks
             next_page_title: Connections # while blocks is in progress

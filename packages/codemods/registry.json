@@ -3,12 +3,17 @@
     {
       "version": "8.0.0",
       "from": ">=7.0.0 <8.0.0",
-      "description": "An unsupplied string-form _var is a build error; { _var: { key, default: null } } is the optional form",
+      "description": "An unsupplied string-form _var is a build error; plugin API v1: removed block methods throw a located BlockError and block meta is validated at build",
       "codemods": [
         {
           "id": "var-default-null",
           "description": "Rewrite _var reads that no _ref supplies: add the var to the naming _ref's vars where the name is a typo, or convert the read to { _var: { key, default: null } } where the surrounding config handles null. Reports every site with the rewrite chosen.",
           "path": "v8-0-0/01-var-default-null.md"
+        },
+        {
+          "id": "removed-block-methods",
+          "description": "Replace methods.makeCssClass in local block plugins with classNames.<cssKey> (adding cssKeys to meta.js where the element needs an author-facing hook) or an inline style object, and drop methods from sub-components that only received it for this. Standalone, re-runnable step 5b of v5-0-0/21.",
+          "path": "v8-0-0/02-removed-block-methods.md"
         }
       ]
     },

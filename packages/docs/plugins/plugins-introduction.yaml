@@ -87,6 +87,8 @@ _ref:
 
             Declaring a `payload` is what lets the build check `_event` paths in an app's config against the block (see [Events and actions](/events-and-actions)), lets the docs gallery print the event's data shape, and lets an AI agent read it from `lowdefy_get_schema`. Use the string form for an event that carries no data - an event without a payload is never checked, so a wrong or missing declaration in a third-party block cannot break an app. The older `{ description, event: { key: 'description' } }` form is still accepted and is read as a payload whose properties have descriptions but no types. Event names are checked against `meta.events` too; a block that fires names authored in its own properties (a tab's `eventName`) sets `dynamicEvents: true`.
 
+            The build validates the shape of every block meta (`category`, `valueType`, `cssKeys`, `events`, ...) and reports each bad field as a build error. The meta shape, the props and methods a block receives, and how a member of the plugin API is deprecated and removed are described in [Plugin API Versioning](/plugin-api-versioning).
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
