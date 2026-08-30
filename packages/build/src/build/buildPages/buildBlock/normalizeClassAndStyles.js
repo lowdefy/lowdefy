@@ -91,6 +91,14 @@ function normalizeStyle(block, pageContext) {
 }
 
 function normalizeClass(block, pageContext) {
+  // An operator at the root of `class` computes the block's classes at runtime.
+  // Its result reaches cn() (clsx + twMerge), so a string, an array of strings,
+  // or a { className: boolean } object all work. Returning early skips the
+  // cssKeys check and the dot-prefix strip, which would corrupt the operator.
+  if (type.isObject(block.class) && isOperator(block.class)) {
+    block.class = { block: block.class };
+    return;
+  }
   if (type.isString(block.class) || type.isArray(block.class)) {
     block.class = { block: block.class };
     return;

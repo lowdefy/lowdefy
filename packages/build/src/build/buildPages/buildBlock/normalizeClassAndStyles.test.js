@@ -602,3 +602,102 @@ test('class dot-prefixed keys are always stripped', () => {
     header: 'bg-red',
   });
 });
+
+// ── Operator values in class ──
+
+test('normalizeClass moves a root operator under the block slot', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Box',
+            class: { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
+    block: { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] },
+  });
+});
+
+test('normalizeClass does not run the cssKeys check on a root operator', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: { _get: { key: 'element', from: { _state: true } } },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithMetas });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
+    block: { _get: { key: 'element', from: { _state: true } } },
+  });
+});
+
+test('normalizeClass keeps an operator under a slot key', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            class: {
+              '.element': { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] },
+              '.header': 'bg-gray-100',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithMetas });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({
+    element: { _if: [{ _state: 'x' }, 'bg-red-500', 'bg-blue-500'] },
+    header: 'bg-gray-100',
+  });
+});
+
+test('normalizeClass still handles a string, an array and a plain slot map', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          { id: 'block_1', type: 'Box', class: 'p-4 shadow' },
+          { id: 'block_2', type: 'Box', class: ['p-4', 'shadow'] },
+          { id: 'block_3', type: 'Input', class: { '.element': 'p-4', '.body': 'shadow' } },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithMetas });
+  expect(get(res, 'pages.0.slots.content.blocks.0.class')).toEqual({ block: 'p-4 shadow' });
+  expect(get(res, 'pages.0.slots.content.blocks.1.class')).toEqual({ block: ['p-4', 'shadow'] });
+  expect(get(res, 'pages.0.slots.content.blocks.2.class')).toEqual({
+    element: 'p-4',
+    body: 'shadow',
+  });
+});
