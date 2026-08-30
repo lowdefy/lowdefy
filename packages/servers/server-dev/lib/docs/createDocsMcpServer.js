@@ -16,6 +16,7 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { type } from '@lowdefy/helpers';
 
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
@@ -63,6 +64,22 @@ Safety: lowdefy_checkpoint snapshots the config files before risky multi-file ch
 Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
 State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
+
+const HAZARDS_NOTE =
+  ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
+
+// get_doc returns markdown rather than JSON, so hazards resolved for the
+// requested type are appended as a section instead of a sibling key.
+function appendHazards(doc) {
+  if (type.isNone(doc.hazards) || doc.hazards.length === 0) {
+    return doc.markdown;
+  }
+  const lines = doc.hazards.map((hazard) => {
+    const see = type.isNone(hazard.see) ? '' : ` (see \`${hazard.see}\`)`;
+    return `- **${hazard.id}**: ${hazard.message}${see}`;
+  });
+  return `${doc.markdown}\n\n## Hazards\n\n${lines.join('\n')}\n`;
+}
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -359,7 +376,8 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_find_config',
     {
       description:
-        'Find where a config entity is defined: pass a page, block, or request id and get the source yaml file (and line where available). For block/request ids also pass the owning pageId so the page is built first.',
+        'Find where a config entity is defined: pass a page, block, or request id and get the source yaml file (and line where available). For block/request ids also pass the owning pageId so the page is built first.' +
+        HAZARDS_NOTE,
       inputSchema: {
         id: z.string().describe('The id to find, e.g. a pageId, blockId, or requestId.'),
         pageId: z
@@ -483,7 +501,8 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_schema',
     {
       description:
-        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. Use the exact type name from lowdefy_list_types.',
+        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. Use the exact type name from lowdefy_list_types.' +
+        HAZARDS_NOTE,
       inputSchema: {
         kind: z
           .enum(['blocks', 'operators', 'actions', 'connections', 'requests'])
@@ -526,7 +545,8 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_doc',
     {
       description:
-        'Get a core Lowdefy documentation page as markdown. Look up by slug (e.g. "concepts/lowdefy-schema", "operators/_get") or by kind + type name. Key concept slugs: concepts/lowdefy-schema, concepts/blocks, concepts/events-and-actions, concepts/connections-and-requests, concepts/operators, concepts/page-and-app-state.',
+        'Get a core Lowdefy documentation page as markdown. Look up by slug (e.g. "concepts/lowdefy-schema", "operators/_get") or by kind + type name. Key concept slugs: concepts/lowdefy-schema, concepts/blocks, concepts/events-and-actions, concepts/connections-and-requests, concepts/operators, concepts/page-and-app-state.' +
+        HAZARDS_NOTE,
       inputSchema: {
         slug: z.string().optional().describe('Doc slug, e.g. "operators/_get".'),
         kind: z
@@ -545,7 +565,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           }. Use lowdefy_search_docs to find the right slug.`
         );
       }
-      return textResult(doc.markdown);
+      return textResult(appendHazards(doc));
     }
   );
 

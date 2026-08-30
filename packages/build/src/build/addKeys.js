@@ -49,13 +49,16 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     if (type.isObject(item)) {
       let path = `${arrayKey}[${index}]`;
       // TODO: Convert all artifacts to not modify id.
+      // Keys are added to the raw config, where a page request still carries
+      // its own `id` next to `connectionId` — the request id must win, or the
+      // key path names the connection instead of the request.
       const id =
         item.blockId ??
         item.menuId ??
         item.menuItemId ??
         item.requestId ??
-        item.connectionId ??
-        item.id;
+        item.id ??
+        item.connectionId;
       if (id) {
         path = `${path.slice(0, -1)}:${id}]`;
       }
@@ -114,7 +117,9 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
           collectExceptions(
             context,
             new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(
+                ', '
+              )}`,
               { configKey: keyMapId }
             )
           );
