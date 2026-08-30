@@ -27,6 +27,7 @@ import validatePayloadReferences from '../buildPages/validatePayloadReferences.j
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateStateSchema from '../buildPages/validateStateSchema.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
 function buildPages({ components, context }) {
@@ -113,6 +114,7 @@ function buildPages({ components, context }) {
   pages.forEach((page, index) => {
     if (failedPageIndices.has(index)) return;
     validateStateReferences({ page, context });
+    validateStateSchema({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
   });

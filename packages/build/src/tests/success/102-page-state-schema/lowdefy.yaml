@@ -1,0 +1,45 @@
+# 102: Page State Contract
+# Tests that a page-level `state:` declaration is validated and written to the
+# page artifact as `stateSchema`.
+lowdefy: local
+name: Page State Schema
+
+pages:
+  - id: answer-detail
+    type: Box
+    state:
+      data.address:
+        type: object
+        properties:
+          formatted_address: { type: string }
+        required: [formatted_address]
+      data.status: { enum: [draft, submitted, approved] }
+      evidence_ids: { type: array, items: { type: string } }
+    blocks:
+      - id: data.address.formatted_address
+        type: TextInput
+        required: true
+        properties:
+          title: Address
+      - id: status
+        type: Paragraph
+        properties:
+          content:
+            _state: data.status
+      - id: first_evidence
+        type: Paragraph
+        properties:
+          content:
+            _state: evidence_ids[0]
+      - id: save
+        type: Button
+        events:
+          onClick:
+            - id: set_status
+              type: SetState
+              params:
+                data.status: submitted
+            - id: validate
+              type: Validate
+              params:
+                schema: true

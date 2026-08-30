@@ -30,6 +30,7 @@ import validatePayloadReferences from '../buildPages/validatePayloadReferences.j
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateStateSchema from '../buildPages/validateStateSchema.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectPageContent from '../collectPageContent.js';
@@ -371,6 +372,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });
+    validateStateSchema({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
 

@@ -30,10 +30,7 @@ import validateRequestReferences from './validateRequestReferences.js';
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    collectExceptions(
-      context,
-      new ConfigError(`Page id missing at page ${index}.`, { configKey })
-    );
+    collectExceptions(context, new ConfigError(`Page id missing at page ${index}.`, { configKey }));
     return { failed: true };
   }
   if (!type.isString(page.id)) {
@@ -55,6 +52,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
+  // The state contract is likewise page-only: validateBlock rejects `state` on
+  // nested blocks, so it moves to page.stateSchema before the root block builds.
+  if (!type.isNone(page.state)) {
+    page.stateSchema = page.state;
+  }
+  delete page.state;
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
