@@ -26,6 +26,9 @@ function createInputMeta(blockName, { size = false } = {}) {
     cssKeys: {
       element: `The ${blockName} element.`,
     },
+    // Editable cells declare their own eventName, so the event names this
+    // block fires are authored in its properties.
+    dynamicEvents: true,
     events: {
       onCellClick: {
         description: 'Trigger event when a cell is clicked.',
