@@ -15,7 +15,7 @@
 */
 
 import { chromium } from 'playwright-core';
-import { type } from '@lowdefy/helpers';
+import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
@@ -63,10 +63,17 @@ async function getBrowser() {
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
 // build/config.json (the same source app.js uses to mount the app) so
-// callers only need to pass the bare origin.
-function buildPageUrl({ origin, pageId }) {
+// callers only need to pass the bare origin. `urlQuery` (an object) is
+// appended as a query string, serialized by the same helper the engine uses
+// for Link urlQuery, so a page reads it back through _url_query unchanged.
+function buildPageUrl({ origin, pageId, urlQuery }) {
   const basePath = lowdefyConfig.basePath ?? '';
-  return `${origin}${basePath}/${pageId}`;
+  const url = `${origin}${basePath}/${pageId}`;
+  const query = urlQueryFn.stringify(urlQuery);
+  if (query === '') {
+    return url;
+  }
+  return `${url}?${query}`;
 }
 
 // Opens a fresh browser context + page at the app's pageId route. Callers
@@ -78,11 +85,12 @@ async function openPage({
   origin,
   pageId,
   user,
+  urlQuery,
   width = 1280,
   height = 800,
   timeout = 15000,
 }) {
-  const url = buildPageUrl({ origin, pageId });
+  const url = buildPageUrl({ origin, pageId, urlQuery });
   // Resolved before the context is created so an invalid `user` can't leave an
   // orphaned context behind.
   const injectedUser = resolveHeadlessUser({ user });
