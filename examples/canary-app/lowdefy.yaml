@@ -1,0 +1,100 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The downstream canary app. CI copies this directory, rewrites `lowdefy:` to the
+# candidate version it just published, and runs `lowdefy build`, `lowdefy check`
+# and `lowdefy test` against it from npm. See README.md.
+name: canary-app
+lowdefy: 0.0.0-canary
+license: Apache-2.0
+
+cli:
+  disableTelemetry: true
+  agentTools:
+    # The save_item endpoint test runs through the dev server's run-endpoint
+    # route, which refuses routines unless writes are allowed.
+    allowWriteRequests: true
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: MONGODB_URI
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  # Named caller fixtures for journeys and request tests (dev server only).
+  dev:
+    users:
+      admin:
+        id: dev-admin
+        roles:
+          - admin
+        organization_id: org_1
+      member:
+        id: dev-member
+        roles:
+          - member
+        organization_id: org_1
+
+collections:
+  items:
+    tenant: organization_id
+    fields:
+      _id: string
+      name: string
+      category: { enum: [hardware, software, service] }
+      quantity: integer
+      due_date: date
+      organization_id: string
+      created_at: date
+    relations:
+      category: catalogue._id
+  catalogue:
+    tenant: shared
+    fields:
+      _id: string
+      label: string
+
+connections:
+  - id: items
+    type: MongoDBCollection
+    tenant:
+      field: organization_id
+    properties:
+      collection: items
+      databaseUri:
+        _secret: MONGODB_URI
+      read: true
+      write: true
+  - id: catalogue
+    type: MongoDBCollection
+    tenant: shared
+    properties:
+      collection: catalogue
+      databaseUri:
+        _secret: MONGODB_URI
+      read: true
+      write: false
+
+api:
+  - _ref: api/save-item.yaml
+
+pages:
+  - _ref: pages/form.yaml
+  - _ref: pages/list.yaml
+  - _ref: pages/detail.yaml

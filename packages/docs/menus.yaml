@@ -304,6 +304,11 @@
           pageId: vercel
           properties:
             title: Vercel
+        - id: framework-versions
+          type: MenuLink
+          pageId: framework-versions
+          properties:
+            title: Framework versions
 
     - id: plugins_group
       type: MenuGroup

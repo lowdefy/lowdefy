@@ -1,0 +1,212 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: list
+type: PageHeaderMenu
+properties:
+  title: Items
+
+requests:
+  - id: get_items
+    type: MongoDBAggregation
+    connectionId: items
+    # The request declares its payload keys explicitly (so `lowdefy check` can match
+    # every `_payload` reference) and reads them from page state, so every caller
+    # (mount, search, pagination) triggers it the same way: `params: get_items`.
+    # The pagination maths lives in `properties` (server side).
+    payload:
+      filter:
+        _state: filter
+      page:
+        _state: page
+    properties:
+      pipeline:
+        - $match:
+            name:
+              $regex:
+                _payload: filter
+              $options: i
+        - $sort:
+            created_at: -1
+        - $facet:
+            rows:
+              - $skip:
+                  _product:
+                    - _sum:
+                        - _payload: page.current
+                        - -1
+                    - _payload: page.pageSize
+              - $limit:
+                  _payload: page.pageSize
+            total:
+              - $count: count
+  - id: get_catalogue
+    type: MongoDBFind
+    connectionId: catalogue
+    properties:
+      query: {}
+      options:
+        sort:
+          label: 1
+
+events:
+  onInit:
+    - id: init_page
+      type: SetState
+      params:
+        filter: ''
+        page:
+          current: 1
+          pageSize: 5
+  onMount:
+    - id: load_catalogue
+      type: Request
+      params: get_catalogue
+    - id: load
+      type: Request
+      params: get_items
+    - id: set_items
+      type: SetState
+      params:
+        items:
+          _request: get_items.0.rows
+        total:
+          _get:
+            key: 0.total.0.count
+            from:
+              _request: get_items
+            default: 0
+
+blocks:
+  - id: catalogue
+    type: Template
+    properties:
+      context:
+        entries:
+          _request: get_catalogue
+      template: |
+        <p>Catalogue:
+        {% for entry in entries %}<span class="entry">{{ entry.label }}</span>{% else %}<em>empty</em>{% endfor %}
+        </p>
+      css: |
+        .entry { display: inline-block; margin-right: 8px; padding: 2px 8px; border: 1px solid var(--ant-color-border); border-radius: 12px; }
+  - id: filter
+    type: TextInput
+    layout:
+      span: 16
+    properties:
+      title: Filter by name
+      placeholder: Type part of a name
+  - id: search
+    type: Button
+    layout:
+      span: 8
+    properties:
+      title: Search
+    events:
+      onClick:
+        - id: reset_page
+          type: SetState
+          params:
+            page:
+              current: 1
+              pageSize:
+                _state: page.pageSize
+        - id: search_items
+          type: Request
+          params: get_items
+        - id: set_items
+          type: SetState
+          params:
+            items:
+              _request: get_items.0.rows
+            total:
+              _get:
+                key: 0.total.0.count
+                from:
+                  _request: get_items
+                default: 0
+  - id: count
+    type: Paragraph
+    properties:
+      content:
+        _js:
+          fn: ../lib/items.js#countLabel
+          args:
+            total:
+              _state: total
+  - id: empty_state
+    type: Alert
+    visible:
+      _eq:
+        - _state: total
+        - 0
+    properties:
+      type: info
+      message: No items match the filter.
+  - id: items
+    type: List
+    blocks:
+      - id: items.$.row
+        type: Card
+        properties:
+          size: small
+        blocks:
+          - id: items.$.summary
+            type: Paragraph
+            layout:
+              span: 18
+            properties:
+              content:
+                _js:
+                  fn: ../lib/items.js#summarizeItem
+                  args:
+                    item:
+                      _state: items.$
+          - id: items.$.open
+            type: Button
+            layout:
+              span: 6
+            properties:
+              title: Open
+              size: small
+            events:
+              onClick:
+                - id: open_detail
+                  type: Link
+                  params:
+                    pageId: detail
+                    urlQuery:
+                      id:
+                        _state: items.$._id
+  - id: page
+    type: Pagination
+    properties:
+      showSizeChanger: false
+    events:
+      onChange:
+        - id: page_items
+          type: Request
+          params: get_items
+        - id: set_items
+          type: SetState
+          params:
+            items:
+              _request: get_items.0.rows
+            total:
+              _get:
+                key: 0.total.0.count
+                from:
+                  _request: get_items
+                default: 0

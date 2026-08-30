@@ -61,3 +61,6 @@ log.txt
 temp.md
 
 _server
+
+# Canary workflow app copies (scripts/canary/prepareApp.mjs)
+.canary/

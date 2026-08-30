@@ -1,0 +1,205 @@
+name: Canary
+
+# Publishes a nightly experimental candidate to npm, installs it from npm into the
+# docs app and the example app exactly the way a downstream app does, and runs
+# build/check/test against it. A passing nightly candidate is recorded with a
+# `canary-green-<version>` tag; the weekly job promotes the newest green candidate
+# by moving the `known-good` dist-tag onto it.
+#
+# Setup required before the weekly promotion can run: create an `NPM_TOKEN` secret
+# in the `publish` environment with write access to the `@lowdefy` scope. OIDC
+# trusted publishing covers `npm publish` only; moving a dist-tag needs a granular
+# write token.
+
+on:
+  schedule:
+    - cron: '15 2 * * *' # nightly candidate + canary
+    - cron: '15 4 * * 1' # weekly promotion
+  workflow_dispatch:
+
+concurrency: canary
+
+jobs:
+  publish-candidate:
+    name: Publish candidate
+    runs-on: ubuntu-latest
+    # Nightly cron and manual dispatch only; the weekly cron promotes, it does not publish.
+    if: github.repository == 'lowdefy/lowdefy' && github.event.schedule != '15 4 * * 1'
+    environment: publish
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: pnpm i --frozen-lockfile
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Version the candidate
+        run: pnpm release:version-canary
+
+      - name: Read candidate version
+        id: version
+        run: |
+          VERSION=$(node -e "console.log(require('./packages/cli/package.json').version)")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing candidate $VERSION"
+
+      - name: Publish the candidate
+        run: pnpm release:publish-canary
+        env:
+          NPM_CONFIG_PROVENANCE: 'true'
+
+  canary:
+    name: Canary (${{ matrix.app }})
+    needs: publish-candidate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: docs
+            path: packages/docs
+          - app: canary-app
+            path: examples/canary-app
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+    env:
+      VERSION: ${{ needs.publish-candidate.outputs.version }}
+      LOWDEFY_DISABLE_TELEMETRY: '1'
+      # Lowdefy reads a `_secret: NAME` reference from the env var LOWDEFY_SECRET_NAME.
+      # The example app's journeys and request tests connect to the service MongoDB.
+      LOWDEFY_SECRET_MONGODB_URI: mongodb://localhost:27017/canary
+      LOWDEFY_SECRET_BETTER_AUTH_SECRET: canary-placeholder-secret-canary-placeholder
+      # The docs app declares these secrets on its connections. Placeholder values
+      # are enough for build and check; its journeys are not run (no tests/ dir).
+      LOWDEFY_SECRET_DISCORD_WEBHOOK: https://discord.com/api/webhooks/0/placeholder
+      LOWDEFY_SECRET_UPLOADS_S3_ACCESS_KEY_ID: placeholder
+      LOWDEFY_SECRET_UPLOADS_S3_SECRET_ACCESS_KEY: placeholder
+      LOWDEFY_SECRET_UPLOADS_S3_REGION: us-east-1
+      LOWDEFY_SECRET_UPLOADS_S3_BUCKET: placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Playwright browser
+        run: npx --yes playwright install --with-deps chromium
+
+      - name: Prepare the app pinned to the candidate
+        run: >
+          node scripts/canary/prepareApp.mjs
+          --app ${{ matrix.path }}
+          --out .canary/${{ matrix.app }}
+          --version "$VERSION"
+
+      - name: Install app dependencies for seeding
+        working-directory: .canary/${{ matrix.app }}
+        # Only apps with a tests/ directory run seeded request tests, and only they
+        # need mongodb + mongodb-memory-server, which the runner resolves from the
+        # app directory. The docs leg stops after check, so it installs nothing here.
+        run: |
+          if [ -d tests ] && [ -f package.json ]; then
+            npm install --no-audit --no-fund
+          else
+            echo "No tests/ directory; nothing to install."
+          fi
+
+      - name: Build
+        working-directory: .canary/${{ matrix.app }}
+        run: npx --yes lowdefy@$VERSION build --log-level warn
+
+      - name: Check
+        working-directory: .canary/${{ matrix.app }}
+        run: npx --yes lowdefy@$VERSION check --json | tee check-report.json
+
+      - name: Test
+        working-directory: .canary/${{ matrix.app }}
+        # Only the example app ships a tests/ directory; the docs leg stops after check.
+        run: |
+          if [ -d tests ]; then
+            npx --yes lowdefy@$VERSION test
+          else
+            echo "No tests/ directory; skipping lowdefy test for ${{ matrix.app }}."
+          fi
+
+      - name: Upload reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canary-${{ matrix.app }}-reports
+          path: |
+            .canary/${{ matrix.app }}/check-report.json
+            .canary/${{ matrix.app }}/.lowdefy/tests/**
+          if-no-files-found: ignore
+
+  record-green:
+    name: Record green candidate
+    needs: [publish-candidate, canary]
+    runs-on: ubuntu-latest
+    # Nightly only: a passing nightly candidate earns a green tag. The weekly job never reaches here.
+    if: success() && github.event.schedule != '15 4 * * 1'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag the candidate as green
+        env:
+          VERSION: ${{ needs.publish-candidate.outputs.version }}
+        run: |
+          TAG="canary-green-$VERSION"
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "Recorded $TAG on $(git rev-parse HEAD)"
+
+  promote:
+    name: Promote known-good
+    runs-on: ubuntu-latest
+    # Weekly cron only.
+    if: github.repository == 'lowdefy/lowdefy' && github.event.schedule == '15 4 * * 1'
+    environment: publish
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Promote the newest green candidate
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git fetch --tags --force
+          TAG=$(git tag --list 'canary-green-*' --sort=-creatordate | head -n1)
+          if [ -z "$TAG" ]; then
+            echo "::error::No canary-green-* tag exists. No candidate has passed the canary since the last promotion."
+            exit 1
+          fi
+          VERSION="${TAG#canary-green-}"
+          COMMIT=$(git rev-list -n1 "$TAG")
+          echo "Promoting $VERSION (from $TAG at $COMMIT)"
+
+          KNOWN_GOOD_TAG="experimental-known-good-$(date -u +%Y%m%d)"
+          git tag -a "$KNOWN_GOOD_TAG" "$COMMIT" -m "Known-good experimental build $VERSION"
+          git push origin "$KNOWN_GOOD_TAG"
+
+          node scripts/canary/moveDistTag.mjs --version "$VERSION" --tag known-good

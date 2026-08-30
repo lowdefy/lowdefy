@@ -54,6 +54,7 @@
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
 - _ref: deployment/vercel.yaml
+- _ref: deployment/framework-versions.yaml
 
 - _ref: plugins/plugins-introduction.yaml
 - _ref: plugins/plugins-dev.yaml
