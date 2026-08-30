@@ -92,8 +92,7 @@ const DrawerBlock = ({
       extra={content.extra && content.extra()}
       footer={content.footer && content.footer()}
       getContainer={properties.getContainer}
-      mask={properties.mask}
-      maskClosable={properties.maskClosable}
+      mask={properties.mask === false ? false : { closable: properties.maskClosable }}
       title={properties.title}
       open={openState}
       width={properties.width}
