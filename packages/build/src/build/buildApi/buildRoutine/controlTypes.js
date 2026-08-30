@@ -34,7 +34,13 @@ const controlTypes = {
     optional: [],
   },
   ':parallel_for': { required: [':parallel_for', ':in', ':do'], routine: [':do'], optional: [] },
-  ':reject': { required: [':reject'], routine: [], optional: [':cause'] },
+  ':reject': {
+    required: [':reject'],
+    routine: [],
+    optional: [':cause'],
+    description:
+      'Ends the routine with a reject status. Not caught by :try/:catch — use :throw for failures a :catch should handle.',
+  },
   ':return': { required: [':return'], routine: [], optional: [] },
   ':set_state': { required: [':set_state'], routine: [], optional: [] },
   ':switch': {
@@ -42,11 +48,18 @@ const controlTypes = {
     routine: [':default', ':then'],
     optional: [':default'],
   },
-  ':throw': { required: [':throw'], routine: [], optional: [':cause'] },
+  ':throw': {
+    required: [':throw'],
+    routine: [],
+    optional: [':cause'],
+    description: 'Throws a system error. Caught by an enclosing :try/:catch.',
+  },
   ':try': {
     required: [':try'],
     routine: [':try', ':catch', ':finally'],
     optional: [':catch', ':finally'],
+    description:
+      'Runs a routine, running :catch on a thrown error. A :reject is not caught; :finally still runs.',
   },
 
   ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },

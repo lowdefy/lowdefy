@@ -289,7 +289,7 @@ Control structures allow you to implement complex logic flows within your API ro
 - [`:log`](/log) - Output messages to the server console.
 - [`:parallel`](/parallel) - Execute multiple routines simultaneously.
 - [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
-- [`:reject`](/reject) - Return a user-facing error response.
+- [`:reject`](/reject) - Return a user-facing error response. Not caught by [`:try`](/try)/`:catch` — it flows past every enclosing `:catch`, though `:finally` still runs.
 - [`:return`](/return) - Return a successful response with data.
 - [`:set_state`](/set_state) - Set values in server-side state.
 - [`:switch`](/switch) - Handle multiple conditions with different outcomes.
@@ -955,3 +955,4 @@ api:
 - The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
 - Server-side execution provides access to secrets, connections, and server operators.
 - Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
+- A [`:reject`](/:reject) is a reply, not an exception, and is never caught by [`:try`](/:try)/`:catch`; [`:throw`](/:throw) is.
