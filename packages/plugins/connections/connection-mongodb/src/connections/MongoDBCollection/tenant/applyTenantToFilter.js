@@ -23,7 +23,12 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // authored filter shape (including one that already uses $and/$or at the
 // top level), and MongoDB extracts the nested equality clause when building
 // an upserted document, which is what carries the tenant field onto upserts.
-function applyTenantToFilter({ filter, tenant, position = 'a filter' }) {
+//
+// `trace` is an optional dev-only collector: when present the merged clause is
+// recorded on trace.rewritten as { at, injected }, where `at` names the
+// authored property ('query', 'filter', 'operations[2].filter'). Nothing here
+// reads it to decide anything.
+function applyTenantToFilter({ filter, tenant, position = 'a filter', trace, at = 'filter' }) {
   const { field, value } = tenant;
   if (tenant.authored === true) {
     // Every non-aggregation operation reaches the wall through this helper or
@@ -34,6 +39,9 @@ function applyTenantToFilter({ filter, tenant, position = 'a filter' }) {
     );
   }
   assertTenantFieldNotAuthored({ value: filter, field, position });
+  if (trace) {
+    trace.rewritten.push({ at, injected: { [field]: value } });
+  }
   if (filter == null || Object.keys(filter).length === 0) {
     return { [field]: value };
   }

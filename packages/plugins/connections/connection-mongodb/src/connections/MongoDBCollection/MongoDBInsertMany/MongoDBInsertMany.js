@@ -30,12 +30,16 @@ async function MongodbInsertMany({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { docs } = deserializedRequest;
   if (tenant) {
-    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+    docs = docs.map((doc, index) => stampTenantOnDoc({ doc, tenant, trace, at: `docs[${index}]` }));
+  }
+  if (trace) {
+    trace.effective = serialize({ docs, options });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;

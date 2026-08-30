@@ -31,12 +31,16 @@ async function MongoDBInsertManyConsecutiveIds({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, prefix, length } = deserializedRequest;
   let { docs } = deserializedRequest;
   if (tenant) {
-    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+    docs = docs.map((doc, index) => stampTenantOnDoc({ doc, tenant, trace, at: `docs[${index}]` }));
+  }
+  if (trace) {
+    trace.effective = serialize({ docs, options });
   }
   const { client, collection, logCollection } = await getCollection({ connection });
 

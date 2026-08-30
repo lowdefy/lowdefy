@@ -43,6 +43,16 @@ import { auditSearchCompound, auditMqlEquality } from './auditAuthoredClause.js'
 // The contract this enforces: every collection reachable from a tenant
 // connection carries the tenant field - a collection without it fails closed
 // (the injected filter matches nothing).
+//
+// `trace` is an optional dev-only collector (the `explain` flag of the dev
+// tools). When present, every rewrite pushes an entry onto trace.rewritten:
+// { at, injected } for a prepended $match and { at, audited: true } for an
+// audited authored stage. `at` is a path into the authored pipeline -
+// '$match[0]' for the root prepend, '$lookup[<i>].pipeline' /
+// '$unionWith[<i>].pipeline' / '$facet.<branch>' composed as the recursion
+// descends, and '<stage>[<i>]' for an audited stage. Nothing reads trace to
+// decide anything: the wall's moves, refusals and audits are identical
+// without it.
 
 // Entry stages MongoDB requires to be a pipeline's first stage, which the
 // prepended $match therefore can not scope. Each maps to the position the
@@ -73,7 +83,7 @@ then declare "tenant: authored" on the request to confirm it owns its organizati
   );
 }
 
-function injectTenantIntoPipeline({ pipeline, tenant }) {
+function injectTenantIntoPipeline({ pipeline, tenant, trace }) {
   const { field, value } = tenant;
   const authored = tenant.authored === true;
   const tenantMatch = () => ({ $match: { [field]: value } });
@@ -81,7 +91,22 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
   // pipeline with nothing to author is refused rather than silently accepted.
   let authoredSites = 0;
 
-  function transformStage(stage) {
+  function recordInjected({ at }) {
+    if (trace) {
+      trace.rewritten.push({ at, injected: { $match: { [field]: value } } });
+    }
+  }
+
+  function recordAudited({ at }) {
+    if (trace) {
+      trace.rewritten.push({ at, audited: true });
+    }
+  }
+
+  // `at` is the path of the containing pipeline in the authored properties -
+  // '' for the root, '$lookup[2].pipeline.' for a sub-pipeline - so a nested
+  // rewrite names the exact stage it happened under.
+  function transformStage(stage, index, at) {
     if (!type.isObject(stage)) {
       return stage;
     }
@@ -104,17 +129,32 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       // A localField/foreignField lookup gains a pipeline (valid since
       // MongoDB 5.0 - it filters the joined docs in addition to the equality
       // match); a pipeline-form lookup gets the injection at its entry.
-      return { ...stage, $lookup: { ...lookup, pipeline: injectEntry(lookup.pipeline ?? []) } };
+      return {
+        ...stage,
+        $lookup: {
+          ...lookup,
+          pipeline: injectEntry(lookup.pipeline ?? [], `${at}$lookup[${index}].pipeline`),
+        },
+      };
     }
     if (stage.$unionWith !== undefined) {
       const unionWith = stage.$unionWith;
       if (typeof unionWith === 'string') {
-        return { ...stage, $unionWith: { coll: unionWith, pipeline: injectEntry([]) } };
+        return {
+          ...stage,
+          $unionWith: {
+            coll: unionWith,
+            pipeline: injectEntry([], `${at}$unionWith[${index}].pipeline`),
+          },
+        };
       }
       if (type.isObject(unionWith)) {
         return {
           ...stage,
-          $unionWith: { ...unionWith, pipeline: injectEntry(unionWith.pipeline ?? []) },
+          $unionWith: {
+            ...unionWith,
+            pipeline: injectEntry(unionWith.pipeline ?? [], `${at}$unionWith[${index}].pipeline`),
+          },
         };
       }
       return stage;
@@ -138,6 +178,7 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
         stage: '$graphLookup',
         position: 'restrictSearchWithMatch',
       });
+      recordAudited({ at: `${at}$graphLookup[${index}]` });
       return stage;
     }
     if (type.isObject(stage.$facet)) {
@@ -147,7 +188,11 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       // forbids $out/$merge and $search inside $facet.)
       const facet = {};
       Object.entries(stage.$facet).forEach(([key, subPipeline]) => {
-        facet[key] = Array.isArray(subPipeline) ? subPipeline.map(transformStage) : subPipeline;
+        facet[key] = Array.isArray(subPipeline)
+          ? subPipeline.map((subStage, subIndex) =>
+              transformStage(subStage, subIndex, `${at}$facet.${key}.`)
+            )
+          : subPipeline;
       });
       return { ...stage, $facet: facet };
     }
@@ -156,8 +201,10 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
 
   // Injection at a pipeline's entry - the root pipeline and every sub-pipeline
   // that reads a collection ($lookup, $unionWith).
-  function injectEntry(stages) {
-    const transformed = (stages ?? []).map(transformStage);
+  function injectEntry(stages, at) {
+    const transformed = (stages ?? []).map((stage, index) =>
+      transformStage(stage, index, at === '' ? '' : `${at}.`)
+    );
     const first = transformed[0];
     const entryKey =
       type.isObject(first) &&
@@ -181,12 +228,14 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
       }
       // No prepend before (invalid - the stage must be first) and no trailing
       // $match after: the audited authored clause is the enforcement.
+      recordAudited({ at: `${at === '' ? '' : `${at}.`}${entryKey}[0]` });
       return transformed;
     }
+    recordInjected({ at: at === '' ? '$match[0]' : at });
     return [tenantMatch(), ...transformed];
   }
 
-  const result = injectEntry(pipeline ?? []);
+  const result = injectEntry(pipeline ?? [], '');
   if (authored && authoredSites === 0) {
     throw new ConfigError(
       'Request declares "tenant: authored" but its pipeline contains no stage that requires an authored tenant clause - the tenant wall scopes this pipeline mechanically. Remove "tenant: authored".'

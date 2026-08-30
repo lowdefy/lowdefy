@@ -189,3 +189,22 @@ test('uses the custom tenant field name', () => {
     })
   ).toEqual([{ insertOne: { document: { a: 1, tenantId: 't_1' } } }]);
 });
+
+test('trace names the operation each rewrite happened in', () => {
+  const trace = { rewritten: [] };
+  applyTenantToBulkOperations({
+    operations: [
+      { insertOne: { document: { a: 1 } } },
+      { updateOne: { filter: { a: 1 }, update: { $set: { b: 2 } }, upsert: true } },
+      { deleteMany: { filter: {} } },
+    ],
+    tenant,
+    trace,
+  });
+  expect(trace.rewritten).toEqual([
+    { at: 'operations[0].insertOne.document', injected: { organization_id: 'org_a' } },
+    { at: 'operations[1].updateOne.filter', injected: { organization_id: 'org_a' } },
+    { at: 'operations[1].updateOne.update.$setOnInsert', injected: { organization_id: 'org_a' } },
+    { at: 'operations[2].deleteMany.filter', injected: { organization_id: 'org_a' } },
+  ]);
+});

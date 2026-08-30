@@ -31,13 +31,17 @@ async function MongodbUpdateOne({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, disableNoMatchError } = deserializedRequest;
   let { filter, update } = deserializedRequest;
   if (tenant) {
-    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
-    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter', trace });
+    update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true, trace });
+  }
+  if (trace) {
+    trace.effective = serialize({ filter, update, options });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;
