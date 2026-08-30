@@ -16,6 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import parseUserParam from './parseUserParam.js';
 import runRequest from '../../../lib/docs/runRequest.js';
 
 // Refusals and request errors are returned as 200 data (see runRequest.js) —
@@ -25,9 +26,19 @@ async function docsRunRequestHandler(c) {
   // Parse the body from a clone: runRequest builds a Lowdefy context whose
   // resolveAuthentication reads c.req.raw (headers) to resolve the caller,
   // so leave the original request body intact and read our own copy here.
-  const { pageId, requestId, payload } = await c.req.raw.clone().json();
+  const { pageId, requestId, payload, user } = await c.req.raw.clone().json();
+  const { user: parsedUser, error: userError } = parseUserParam({ value: user });
+  if (userError) {
+    return c.json({ error: userError }, 400);
+  }
   try {
-    const result = await runRequest({ pageId, requestId, payload, honoContext: c });
+    const result = await runRequest({
+      pageId,
+      requestId,
+      payload,
+      user: parsedUser,
+      honoContext: c,
+    });
     return c.json(result);
   } catch (error) {
     if (error instanceof ConfigError) {
