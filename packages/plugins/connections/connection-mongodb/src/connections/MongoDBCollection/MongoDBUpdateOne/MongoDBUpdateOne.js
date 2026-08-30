@@ -17,6 +17,7 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import validateUpdateFields from '../collectionSchema/validateUpdateFields.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -24,6 +25,7 @@ import schema from './schema.js';
 
 async function MongodbUpdateOne({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -39,6 +41,9 @@ async function MongodbUpdateOne({
   if (tenant) {
     filter = applyTenantToFilter({ filter, tenant, position: 'a filter', trace });
     update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true, trace });
+  }
+  if (collectionSchema) {
+    validateUpdateFields({ update, collectionSchema });
   }
   if (trace) {
     trace.effective = serialize({ filter, update, options });

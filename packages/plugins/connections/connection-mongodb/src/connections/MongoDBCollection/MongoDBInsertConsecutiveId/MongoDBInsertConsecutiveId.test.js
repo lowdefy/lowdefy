@@ -184,3 +184,34 @@ test('request options not an object', async () => {
     'MongoDBInsertConsecutiveId request property "options" should be an object.'
   );
 });
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('insertConsecutiveId with a collectionSchema throws a contract violation before claiming an id', async () => {
+  const contractCollection = 'insertConsecutiveIdContract';
+  await clearTestMongoDb({ collection: contractCollection });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBInsertConsecutiveId({
+      request: { doc: { result: 'Pass' }, prefix: 'C', length: 3 },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "result" in an insert document for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Pass".'
+  );
+  const res = await MongoDBInsertConsecutiveId({
+    request: { doc: { result: 'pass', other: 1 }, prefix: 'C', length: 3 },
+    connection,
+    collectionSchema,
+  });
+  expect(res).toEqual({ acknowledged: true, insertedId: 'C001' });
+});

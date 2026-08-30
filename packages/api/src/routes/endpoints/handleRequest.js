@@ -25,6 +25,7 @@ import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import resolveRunAs from './resolveRunAs.js';
+import resolveCollectionSchema from '../request/resolveCollectionSchema.js';
 import resolveTenant from '../request/resolveTenant.js';
 import validateSchemas from '../request/validateSchemas.js';
 
@@ -84,6 +85,9 @@ async function handleRequest(context, routineContext, { request }) {
   if (trace) {
     trace.properties = requestProperties;
   }
+  const collectionSchema = await resolveCollectionSchema(context, {
+    collectionName: connectionProperties.collection,
+  });
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,
@@ -104,6 +108,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
   });
   const result = await callRequestResolver(context, {
+    collectionSchema,
     connectionProperties,
     endpointDepth: routineContext.endpointDepth,
     requestConfig,

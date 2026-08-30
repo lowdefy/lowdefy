@@ -1610,6 +1610,9 @@ importers:
 
   packages/plugins/connections/connection-mongodb:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../../../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../../../utils/errors
@@ -1632,9 +1635,6 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
     devDependencies:
-      '@lowdefy/ajv':
-        specifier: 5.5.1
-        version: link:../../../utils/ajv
       '@shelf/jest-mongodb':
         specifier: 4.3.2
         version: 4.3.2(jest-environment-node@28.1.3)(mongodb@7.2.0)

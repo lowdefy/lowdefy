@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import validateDocFields from '../collectionSchema/validateDocFields.js';
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
 import mapMongoError from '../mapMongoError.js';
@@ -24,6 +25,7 @@ import schema from './schema.js';
 
 async function MongoDBInsertManyConsecutiveIds({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -38,6 +40,11 @@ async function MongoDBInsertManyConsecutiveIds({
   let { docs } = deserializedRequest;
   if (tenant) {
     docs = docs.map((doc, index) => stampTenantOnDoc({ doc, tenant, trace, at: `docs[${index}]` }));
+  }
+  if (collectionSchema) {
+    docs.forEach((doc, index) =>
+      validateDocFields({ doc, collectionSchema, position: `an insert document (docs[${index}])` })
+    );
   }
   if (trace) {
     trace.effective = serialize({ docs, options });

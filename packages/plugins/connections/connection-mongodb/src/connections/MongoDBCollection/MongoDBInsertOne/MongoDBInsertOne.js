@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import validateDocFields from '../collectionSchema/validateDocFields.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
@@ -23,6 +24,7 @@ import schema from './schema.js';
 
 async function MongodbInsertOne({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -37,6 +39,9 @@ async function MongodbInsertOne({
   let { doc } = deserializedRequest;
   if (tenant) {
     doc = stampTenantOnDoc({ doc, tenant, trace, at: 'doc' });
+  }
+  if (collectionSchema) {
+    validateDocFields({ doc, collectionSchema });
   }
   if (trace) {
     trace.effective = serialize({ doc, options });

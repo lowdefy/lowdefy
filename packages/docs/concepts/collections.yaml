@@ -108,9 +108,37 @@ _ref:
 
             Each joined connection records its `read` and `write` flags (the connection's literal `read` / `write` properties, defaulting like `MongoDBCollection` to read on and write off) and its own `tenant` declaration.
 
+            ## Validation on write
+
+            When a collection declares `fields`, every MongoDB write request on a connection addressing that collection is checked against them before the driver is called. The check runs in the connection: the API layer resolves the contract from `build/collections.json` by the *evaluated* `properties.collection` of the connection - so a collection named by an operator is still covered - and hands it to the request type beside the tenant verdict. There is no caller opt-in and nothing to configure; declaring `fields` turns it on, and a collection without `fields` (or one that is not declared) is written exactly as before.
+
+            What is validated:
+
+            - `MongoDBInsertOne`, `MongoDBInsertMany`, `MongoDBInsertConsecutiveId` and `MongoDBInsertManyConsecutiveIds` check each inserted document.
+            - `MongoDBUpdateOne`, `MongoDBUpdateMany` and `MongoDBVersionedUpdateOne` check the values of `$set` and `$setOnInsert` only, resolving dotted keys (`evidence_ids.0`, `tags.$[el]`) into the field's `items`. Other update operators (`$inc`, `$push`, `$unset`, `$rename`, ...) express deltas over the stored value rather than the shape it will hold, and an aggregation-pipeline update is opaque, so they are not checked. `MongoDBVersionedUpdateOne` also checks the version copy it re-inserts.
+            - `MongoDBBulkWrite` checks each operation by kind: `insertOne` documents and `replaceOne` replacements as documents, `updateOne` and `updateMany` as updates. Deletes carry no shape.
+
+            Rules:
+
+            - **Undeclared fields pass.** A declaration describes the fields it knows about; rejecting the rest would break every write that adds a field before the declaration catches up. There is no `additionalProperties: false`.
+            - `null` passes for any field that is not `required` - it is how a field is cleared (`$set: { closed_at: null }`), and the shorthand has no way to say `[string, null]`.
+            - A field declared `required: true` must be present and non-null in an insert or replacement document. Presence is not checked on updates. The tenant wall stamps its field before validation runs, so a contract may declare the tenant field required.
+            - A `date` field passes on a real `Date` - the request is deserialized (`~d` markers restored) before the check. There is no `objectId` type; an `ObjectId` instance passes a field declared `object`.
+            - Reads are not validated. A document already in the database that violates the contract is a migration concern, not a request error.
+
+            A violation is a request error naming the field, the expectation and the value, so the write that is wrong (or the declaration that is) can be fixed without reading the collection:
+
+            ```
+            Field "result" in an insert document for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Pass".
+            ```
+
+            #### Why ajv in the connection and not a `$jsonSchema` validator
+
+            MongoDB can hold a `$jsonSchema` validator on the collection itself. Lowdefy deliberately does not use it. A collection validator needs `collMod` privileges the app user may not have on a managed cluster, and it cannot be applied from a build. It also polices writes made outside Lowdefy, which sounds attractive but surfaces as an opaque `DocumentFailedValidation` driver error that names neither the field nor the value, so an agent (or a person) cannot act on it. Validating in the connection needs no database privileges, keeps the error text Lowdefy's - field, expectation, received value, and the config location of the request - and mirrors the tenant wall exactly: one place, every write, no caller opt-in. Because a violation never reaches the driver, it never overlaps with the driver error mapping.
+
             ## What consumes it
 
             - The `tenant-lookup` build check reads `tenant` to refuse scoped pipelines that join shared collections.
             - The dev server's `lowdefy_data_model` tool prints collections, fields, relations and which connections read or write each.
-            - Write validation checks documents against `fields` at the write.
+            - Every MongoDB write request checks documents and `$set` / `$setOnInsert` values against `fields` before the driver is called (see [Validation on write](#validation-on-write)).
             - `lowdefy migrate` creates the declared `indexes` and migrates data toward the declared shape.
