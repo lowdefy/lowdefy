@@ -61,6 +61,7 @@ const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
+const { default: serverErrorStore } = await import('./serverErrorStore.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
@@ -200,10 +201,14 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client errors', () => {
+test('getBuildStatus returns the build artifact plus reported client and server errors', () => {
+  serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
   const result = getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
+  expect(result.serverErrors).toEqual([
+    { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
+  ]);
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
