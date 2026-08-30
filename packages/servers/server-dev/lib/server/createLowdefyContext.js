@@ -32,6 +32,7 @@ import appMeta from '../build/appMeta.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
+import createHandleDevNotice from '../docs/createHandleDevNotice.js';
 import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
@@ -153,6 +154,9 @@ async function createLowdefyContext({ c, user }) {
     }
   }
   createApiContext(context);
+  // Dev-only notice sink (tenant: none executions) - needs context.readConfigFile,
+  // which createApiContext just set, to resolve the notice's config source.
+  context.handleDevNotice = createHandleDevNotice({ context });
   if (!context.auth && authJson.organizations) {
     // Mock and headless callers run no auth engine, so createApiContext
     // retains no organization binding. Derive the policy from the built auth

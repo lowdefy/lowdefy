@@ -37,3 +37,35 @@ test('formatErrorsForCopy appends source and stack and joins entries with a blan
     ])
   ).toBe('[ConfigError] Bad type.\n  Source: home.yaml:3\n\n[BlockError] Render failed.\nat Block');
 });
+
+test('formatErrorsForCopy lists tenant none notices under their own heading after the errors', () => {
+  expect(
+    formatErrorsForCopy([
+      {
+        type: 'TenantNoneNotice',
+        level: 'info',
+        message: 'Request "list_all" ran unscoped on tenant connection "app_data" (tenant: none).',
+        source: 'pages/admin.yaml:12',
+      },
+      { type: 'ConfigError', message: 'Bad type.', source: 'home.yaml:3' },
+      {
+        type: 'TenantNoneNotice',
+        level: 'info',
+        message: 'Request "sync" ran unscoped on tenant connection "app_data" (tenant: none).',
+      },
+    ])
+  ).toBe(
+    '[ConfigError] Bad type.\n  Source: home.yaml:3\n\n' +
+      'Unscoped reads (tenant: none):\n' +
+      'Request "list_all" ran unscoped on tenant connection "app_data" (tenant: none).\n  Source: pages/admin.yaml:12\n' +
+      'Request "sync" ran unscoped on tenant connection "app_data" (tenant: none).'
+  );
+});
+
+test('formatErrorsForCopy with only tenant none notices has no leading blank section', () => {
+  expect(
+    formatErrorsForCopy([
+      { type: 'TenantNoneNotice', level: 'info', message: 'ran unscoped', source: 'a.yaml:1' },
+    ])
+  ).toBe('Unscoped reads (tenant: none):\nran unscoped\n  Source: a.yaml:1');
+});

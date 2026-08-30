@@ -18,6 +18,7 @@ import React, { useCallback, useState } from 'react';
 
 import formatErrorsForCopy from './utils/formatErrorsForCopy.js';
 import getErrorBarColor from './utils/getErrorBarColor.js';
+import groupNotices from './utils/groupNotices.js';
 
 function getBarStyle(errors) {
   return {
@@ -89,7 +90,10 @@ const ErrorBar = ({ errors }) => {
   if (!errors || errors.length === 0) return null;
 
   const latest = errors[errors.length - 1];
-  const count = errors.length;
+  // tenant: none notices are counted as their own group beside the error
+  // count, so an unscoped read never hides inside an error total.
+  const { entries, tenantNotices } = groupNotices(errors);
+  const count = entries.length;
 
   return (
     <div style={getBarStyle(errors)}>
@@ -130,6 +134,20 @@ const ErrorBar = ({ errors }) => {
             }}
           >
             {count}
+          </span>
+        )}
+        {tenantNotices.length > 0 && (
+          <span
+            title="Requests that ran with tenant: none read and write rows of every organization"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            unscoped reads ({tenantNotices.length})
           </span>
         )}
         <button

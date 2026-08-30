@@ -15,14 +15,17 @@
 */
 
 import clientErrorStore from './clientErrorStore.js';
+import devNoticeStore from './devNoticeStore.js';
 import serverErrorStore from './serverErrorStore.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
 // Feedback loop for agents: build status (written by the build manager to
 // build/buildStatus.json) plus recent browser errors reported via
 // POST /api/client-error, plus recent server errors (request, endpoint, MCP and
-// agent tool failures) collected by createHandleError. Lets an agent check "did my last edit work?"
-// without tailing terminal logs.
+// agent tool failures) collected by createHandleError, plus every `tenant: none`
+// execution seen this session (unscoped reads, one per config site) collected by
+// createHandleDevNotice. Lets an agent check "did my last edit work?" without
+// tailing terminal logs.
 function getBuildStatus() {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
@@ -34,6 +37,7 @@ function getBuildStatus() {
     build,
     clientErrors: clientErrorStore.list(),
     serverErrors: serverErrorStore.list(),
+    tenantNotices: devNoticeStore.list(),
   };
 }
 

@@ -50,6 +50,19 @@ const Reload = ({ children, basePath, lowdefy }) => {
       }, 600);
     });
 
+    // Dev notices (lib/docs/devNoticeChannel.js) - not errors, but things the
+    // developer should see while building, e.g. a tenant: none request that
+    // ran unscoped. Shown by the ErrorBar at info level.
+    sse.addEventListener('dev-notice', (event) => {
+      const entry = JSON.parse(event.data);
+      lowdefy._runtimeErrorCallback?.({
+        type: entry.name,
+        level: 'info',
+        message: entry.message,
+        source: entry.source,
+      });
+    });
+
     sse.onerror = () => {
       setRestarting(true);
       console.log('Rebuilding Lowdefy App.');
