@@ -96,7 +96,7 @@ function transformer(obj) {
     }
     if (method.examples) {
       contentArray.push({
-        id: `${method.name}_arguments_title`,
+        id: `${method.name}_examples_title`,
         type: 'Markdown',
         properties: {
           content: '#### Examples',
