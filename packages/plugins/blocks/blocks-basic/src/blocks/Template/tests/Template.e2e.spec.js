@@ -1,0 +1,67 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { test, expect } from '@playwright/test';
+import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { escapeId } from '@lowdefy/e2e-utils';
+
+// Structure: #bl-{blockId} (wrapper) > #{blockId} > [style] > div (rendered template)
+const getTemplateElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
+
+test.describe('Template Block', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'template');
+  });
+
+  test('renders template with context values', async ({ page }) => {
+    await expect(getBlock(page, 'template_basic')).toBeAttached();
+    await expect(getTemplateElement(page, 'template_basic').locator('p')).toHaveText('Hello World');
+  });
+
+  test('escapes interpolated values by default', async ({ page }) => {
+    const el = getTemplateElement(page, 'template_escaped');
+    await expect(el.locator('p')).toHaveText('<b>bold</b>');
+    expect(await el.locator('b').count()).toBe(0);
+  });
+
+  test('renders markup through the safe filter', async ({ page }) => {
+    await expect(getTemplateElement(page, 'template_safe').locator('p b')).toHaveText('bold');
+  });
+
+  test('renders for loops', async ({ page }) => {
+    await expect(getTemplateElement(page, 'template_loop').locator('li')).toHaveCount(3);
+  });
+
+  test('scopes style to the block', async ({ page }) => {
+    await expect(getTemplateElement(page, 'template_scoped_style').locator('p')).toHaveCSS(
+      'color',
+      'rgb(255, 0, 0)'
+    );
+    await expect(
+      getTemplateElement(page, 'template_scoped_style_sibling').locator('p')
+    ).not.toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
+  test('renders slotted blocks whose events fire', async ({ page }) => {
+    const slot = getTemplateElement(page, 'template_slot').locator('[data-ldf-slot="footer"]');
+    const button = slot.locator('button');
+    await expect(button).toHaveText('Approve');
+    await button.click();
+    await expect(getTemplateElement(page, 'template_slot_result').locator('p')).toHaveText(
+      'Clicked: yes'
+    );
+  });
+});

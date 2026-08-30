@@ -19,6 +19,7 @@ import { LRUCache, type } from '@lowdefy/helpers';
 import dateFilter from './dateFilter.js';
 import uniqueFilter from './uniqueFilter.js';
 import urlQueryFilter from './urlQueryFilter.js';
+import SlotExtension from './SlotExtension.js';
 
 export const createEnvironment = ({ autoescape = true } = {}) => {
   const environment = new nunjucks.Environment(null, { autoescape });
@@ -72,5 +73,30 @@ export const nunjucksFunction = (templateString) => {
     return template.render(value);
   };
   nunjucksTemplates.set(templateString, render);
+  return render;
+};
+
+// Templates for the Template block: autoescaped, with the {% slot %} tag registered. Kept apart
+// from nunjucksEnv so the extension never changes how the rest of Lowdefy renders strings.
+const templateEnv = createEnvironment({ autoescape: true });
+templateEnv.addExtension('SlotExtension', new SlotExtension());
+
+const compiledTemplates = new LRUCache({ maxSize: 500 });
+export const createTemplateFunction = (templateString) => {
+  if (!type.isString(templateString)) return () => templateString;
+
+  const cached = compiledTemplates.get(templateString);
+  if (cached) return cached;
+
+  const template = nunjucks.compile(templateString, templateEnv);
+  // Execute once to surface template errors at compile time.
+  template.render({});
+  const render = (value) => {
+    if (type.isPrimitive(value)) {
+      return template.render({ value });
+    }
+    return template.render(value);
+  };
+  compiledTemplates.set(templateString, render);
   return render;
 };

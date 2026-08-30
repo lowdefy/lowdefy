@@ -23,4 +23,5 @@ export { default as Icon } from './blocks/Icon/e2e.js';
 export { default as Img } from './blocks/Img/e2e.js';
 export { default as List } from './blocks/List/e2e.js';
 export { default as Span } from './blocks/Span/e2e.js';
+export { default as Template } from './blocks/Template/e2e.js';
 export { default as Throw } from './blocks/Throw/e2e.js';

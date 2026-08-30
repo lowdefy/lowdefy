@@ -23,4 +23,5 @@ export { default as Icon } from './blocks/Icon/meta.js';
 export { default as Img } from './blocks/Img/meta.js';
 export { default as List } from './blocks/List/meta.js';
 export { default as Span } from './blocks/Span/meta.js';
+export { default as Template } from './blocks/Template/meta.js';
 export { default as Throw } from './blocks/Throw/meta.js';

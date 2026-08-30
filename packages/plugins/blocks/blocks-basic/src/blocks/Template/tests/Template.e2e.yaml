@@ -1,0 +1,82 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: template
+type: Box
+
+blocks:
+  - id: template_basic
+    type: Template
+    properties:
+      context:
+        name: World
+      template: '<p>Hello {{ name }}</p>'
+
+  - id: template_escaped
+    type: Template
+    properties:
+      context:
+        html: '<b>bold</b>'
+      template: '<p>{{ html }}</p>'
+
+  - id: template_safe
+    type: Template
+    properties:
+      context:
+        html: '<b>bold</b>'
+      template: '<p>{{ html | safe }}</p>'
+
+  - id: template_loop
+    type: Template
+    properties:
+      context:
+        items: [one, two, three]
+      template: '<ul>{% for item in items %}<li>{{ item }}</li>{% endfor %}</ul>'
+
+  - id: template_scoped_style
+    type: Template
+    properties:
+      css: '.row { color: rgb(255, 0, 0); }'
+      template: '<p class="row">Red row</p>'
+
+  - id: template_scoped_style_sibling
+    type: Template
+    properties:
+      template: '<p class="row">Not red row</p>'
+
+  - id: template_slot
+    type: Template
+    properties:
+      template: '<div class="card"><p>Card</p>{% slot "footer" %}</div>'
+    slots:
+      footer:
+        blocks:
+          - id: template_slot_button
+            type: Button
+            properties:
+              title: Approve
+            events:
+              onClick:
+                - id: set_clicked
+                  type: SetState
+                  params:
+                    template_clicked: yes
+
+  - id: template_slot_result
+    type: Template
+    properties:
+      context:
+        clicked:
+          _state: template_clicked
+      template: '<p>Clicked: {{ clicked | default("no", true) }}</p>'

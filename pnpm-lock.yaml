@@ -933,6 +933,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.5.1
         version: link:../../../utils/helpers
+      '@lowdefy/nunjucks':
+        specifier: 5.5.1
+        version: link:../../../utils/nunjucks
       dompurify:
         specifier: 3.4.2
         version: 3.4.2

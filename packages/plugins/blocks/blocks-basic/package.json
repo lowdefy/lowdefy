@@ -52,6 +52,7 @@
   "dependencies": {
     "@lowdefy/block-utils": "5.5.1",
     "@lowdefy/helpers": "5.5.1",
+    "@lowdefy/nunjucks": "5.5.1",
     "dompurify": "3.4.2"
   },
   "peerDependencies": {
