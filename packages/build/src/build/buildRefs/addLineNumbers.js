@@ -17,11 +17,45 @@
 /* eslint-disable no-param-reassign */
 
 import { isMap, isSeq, isPair, isScalar } from 'yaml';
+import { compileExpression, isExpression, stampPosition } from '@lowdefy/operators';
 
-import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
+import getColumnNumber from './getColumnNumber.js';
 import getLineNumber from './getLineNumber.js';
+import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 
-function addLineNumbers(node, content, result) {
+// Keys whose value subtree is a raw string owned by another language and must
+// never be scanned for ${ … } (§6.6): a _js body is JavaScript (its ${…} are
+// template literals) and a _nunjucks template uses {{ }} but may contain
+// literal ${ text.
+const RAW_OPERATOR_KEYS = new Set(['_js', '_nunjucks']);
+
+// Resolves a scalar to a JS value, compiling a ${ … } expression to an operator
+// tree with source positions stamped, unless it sits inside a raw-operator
+// subtree. Compilation happens here — the single point holding the YAML scalar
+// node (line and column) together with the raw file content — so every later
+// build check sees ordinary operators (§6).
+function resolveScalar({ scalar, content, filePath, insideRawOperator }) {
+  const value = scalar.value;
+  if (insideRawOperator || !isExpression(value)) {
+    return value;
+  }
+  const offset = scalar.range ? scalar.range[0] : null;
+  const line = getLineNumber(content, offset);
+  const column = getColumnNumber(content, offset);
+  const tree = compileExpression({
+    expression: value,
+    filePath,
+    lineNumber: line,
+    columnNumber: column,
+  });
+  // A ${ … } that folds to a bare literal (e.g. ${ 5 }) has no node to stamp.
+  if (typeof tree !== 'object' || tree === null) {
+    return tree;
+  }
+  return stampPosition({ tree, line, column, expression: value.trim() });
+}
+
+function addLineNumbers(node, content, result, { filePath, insideRawOperator = false } = {}) {
   if (isMap(node)) {
     const obj = result || {};
     if (node.range) {
@@ -31,24 +65,41 @@ function addLineNumbers(node, content, result) {
       if (isPair(pair) && isScalar(pair.key)) {
         const key = pair.key.value;
         const value = pair.value;
+        const childRaw = insideRawOperator || RAW_OPERATOR_KEYS.has(key);
         // Use key's line number for the value's ~l (more useful for error messages)
         const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
         if (isMap(value)) {
-          const mapResult = addLineNumbers(value, content, {});
+          const mapResult = addLineNumbers(
+            value,
+            content,
+            {},
+            {
+              filePath,
+              insideRawOperator: childRaw,
+            }
+          );
           // Override ~l with key's line number if available
           if (keyLineNumber) {
             setNonEnumerableProperty(mapResult, '~l', keyLineNumber);
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
-          const arrResult = addLineNumbers(value, content, []);
+          const arrResult = addLineNumbers(value, content, [], {
+            filePath,
+            insideRawOperator: childRaw,
+          });
           // Override ~l with key's line number if available
           if (keyLineNumber) {
             setNonEnumerableProperty(arrResult, '~l', keyLineNumber);
           }
           obj[key] = arrResult;
         } else if (isScalar(value)) {
-          obj[key] = value.value;
+          obj[key] = resolveScalar({
+            scalar: value,
+            content,
+            filePath,
+            insideRawOperator: childRaw,
+          });
         } else {
           obj[key] = value?.toJSON?.() ?? value;
         }
@@ -64,11 +115,11 @@ function addLineNumbers(node, content, result) {
     }
     for (const item of node.items) {
       if (isMap(item)) {
-        arr.push(addLineNumbers(item, content, {}));
+        arr.push(addLineNumbers(item, content, {}, { filePath, insideRawOperator }));
       } else if (isSeq(item)) {
-        arr.push(addLineNumbers(item, content, []));
+        arr.push(addLineNumbers(item, content, [], { filePath, insideRawOperator }));
       } else if (isScalar(item)) {
-        arr.push(item.value);
+        arr.push(resolveScalar({ scalar: item, content, filePath, insideRawOperator }));
       } else {
         arr.push(item?.toJSON?.() ?? item);
       }
@@ -77,7 +128,7 @@ function addLineNumbers(node, content, result) {
   }
 
   if (isScalar(node)) {
-    return node.value;
+    return resolveScalar({ scalar: node, content, filePath, insideRawOperator });
   }
 
   return node?.toJSON?.() ?? node;

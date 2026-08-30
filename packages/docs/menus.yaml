@@ -93,6 +93,11 @@
           pageId: operators
           properties:
             title: Operators
+        - id: expression-syntax
+          type: MenuLink
+          pageId: expression-syntax
+          properties:
+            title: Expression Syntax
         - id: connections-and-requests
           type: MenuLink
           pageId: connections-and-requests

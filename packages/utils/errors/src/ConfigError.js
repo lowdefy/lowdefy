@@ -50,7 +50,10 @@ class ConfigError extends Error {
    * @param {string} [options.checkSlug] - The build check that triggered this error
    * @param {*} [options.received] - The input that caused the error
    */
-  constructor(message, { cause, configKey, filePath, lineNumber, checkSlug, received } = {}) {
+  constructor(
+    message,
+    { cause, configKey, filePath, lineNumber, columnNumber, checkSlug, received } = {}
+  ) {
     const resolvedMessage = message ?? cause?.message;
 
     super(resolvedMessage, { cause });
@@ -62,9 +65,12 @@ class ConfigError extends Error {
     // For logger formatting
     this.received = received !== undefined ? received : cause?.received;
 
-    // Raw file location for pre-addKeys errors (resolved by handleError/handleWarning)
+    // Raw file location for pre-addKeys errors (resolved by handleError/handleWarning).
+    // columnNumber is set for ${ … } expression compile errors, which know the
+    // scalar's column but have no ~k yet (they throw before addKeys).
     this.filePath = filePath ?? null;
     this.lineNumber = lineNumber ?? null;
+    this.columnNumber = columnNumber ?? null;
 
     // Location outputs (set by handlers via resolveErrorLocation, not at construction)
     this.source = null;

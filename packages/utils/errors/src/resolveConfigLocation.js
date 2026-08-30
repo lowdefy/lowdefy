@@ -64,6 +64,7 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   const keyEntry = keyMap[configKey];
   const refId = keyEntry['~r'];
   const lineNumber = keyEntry['~l'];
+  const columnNumber = keyEntry['~c'];
   const filePath = resolveRefPath({ refId, refMap });
 
   // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
@@ -74,7 +75,13 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   if (configDirectory) {
     resolvedPath = path.resolve(configDirectory, filePath);
   }
-  const source = lineNumber ? `${resolvedPath}:${lineNumber}` : resolvedPath;
+  let source = resolvedPath;
+  if (lineNumber) {
+    source += `:${lineNumber}`;
+    // A column is only meaningful with a line; it points at a ${ … } expression
+    // scalar compiled to operators.
+    if (columnNumber) source += `:${columnNumber}`;
+  }
 
   return {
     source,

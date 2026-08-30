@@ -1,0 +1,12 @@
+# X1: an unknown identifier root in a ${ … } expression fails the build.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Welcome
+        visible: "${ stat.answer == 'ai' }"

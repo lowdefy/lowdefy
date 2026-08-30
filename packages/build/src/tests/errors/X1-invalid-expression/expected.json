@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errorContains": [
+        "Expression error: unknown identifier \"stat\"",
+        "in ${ stat.answer == 'ai' }.",
+        "{{fixturesDir}}/X1-invalid-expression/lowdefy.yaml:12:18"
+      ]
+    }
+  ]
+}

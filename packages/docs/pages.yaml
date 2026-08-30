@@ -25,6 +25,7 @@
 - _ref: concepts/keyboard-shortcuts.yaml
 - _ref: concepts/i18n.yaml
 - _ref: concepts/operators.yaml
+- _ref: concepts/expression-syntax.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/logger.yaml
 - _ref: concepts/lists.yaml

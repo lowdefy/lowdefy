@@ -44,6 +44,7 @@ export const VALID_CHECK_SLUGS = {
   collections: 'Collections declaration: undeclared, dynamic and untenanted connections',
   'event-payload': '_event paths checked against the block event payload schema',
   migrations: 'Migration file discovery, routine validation and tenant audits',
+  expression: 'Errors compiling ${ … } expression syntax to operators',
 };
 
 /**
