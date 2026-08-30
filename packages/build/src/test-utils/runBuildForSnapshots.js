@@ -22,6 +22,7 @@ import path from 'path';
  */
 const snapshotTypesMap = {
   actions: {
+    CallAPI: { package: '@lowdefy/actions-core' },
     CallMethod: { package: '@lowdefy/actions-core' },
     CopyToClipboard: { package: '@lowdefy/actions-core' },
     DisplayMessage: { package: '@lowdefy/actions-core' },

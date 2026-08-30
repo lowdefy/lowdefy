@@ -32,6 +32,7 @@ The schema for a Lowdefy API is:
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
 - `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
+- `responseSchema: object`: **Optional** - A JSON Schema describing the value the routine's `:return` produces. Declaring it turns on build-time checks of every `_actions` and `_step` read of the response, dev-time notices when the real response misses it, and publishes it as the MCP tool's `outputSchema`. See [Response Schema](#response-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
 - `runAs: object`: **Optional** - `{ organizationId }`: run the routine scoped to that organization under the `tenant` organizations policy. The tenant wall filters and stamps as if a member of that organization made the call, so caller-less runs (schedules, detached calls, webhooks) stay walled instead of needing `tenant: none`. `organizationId` may be a literal or an operator (`_step`, `_user`, `_secret`, ...) but never `_payload` or `_state`. Steps accept the same key. See [Running as an organization](/organizations#running-a-routine-as-an-organization-runas).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
@@ -168,6 +169,70 @@ Payload for endpoint "create_order" does not match its payloadSchema at /quantit
 A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
 
 There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
+
+## Response Schema
+
+An endpoint can declare a `responseSchema` — a [JSON Schema](https://json-schema.org/) describing what its routine's `:return` produces. It is the output half of the endpoint's contract, the counterpart of `payloadSchema`:
+
+```yaml
+api:
+  - id: search_controls
+    type: Api
+    payloadSchema:
+      type: object
+      properties:
+        query: { type: string }
+    responseSchema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              title: { type: string }
+        total: { type: integer }
+      required: [results, total]
+    routine:
+      # ...
+      ':return':
+        results:
+          _step: find.results
+        total:
+          _step: count.total
+```
+
+Declaring it does three things:
+
+- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the api record, whose own `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields one level up — `_actions.<actionId>.response.status`, `success`, `error`, `responseTime` — are not the endpoint's and are never checked. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
+
+  ```yaml
+  events:
+    onClick:
+      - id: search
+        type: CallAPI
+        params:
+          endpointId: search_controls
+          payload:
+            query:
+              _state: q
+      - id: store
+        type: SetState
+        params:
+          results:
+            _actions: search.response.response.results # checked
+          total:
+            _actions: search.response.response.totl # build error: Did you mean "total"?
+          ok:
+            _actions: search.response.success # action record, untouched
+  ```
+
+- **Dev notices.** The dev server validates the real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — against the schema. A mismatch is reported as a `ResponseSchemaWarning` in `build_status` and the ErrorBar with the endpoint's config location and the failing path. It is a notice, not a failure: the response is still returned. Production performs no response validation — a mismatch there is the app's data changing, not a config fault the framework should turn into a 500.
+
+- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content, so an MCP client can rely on the shape.
+
+Both `payloadSchema` and `responseSchema` are compiled at build, so a schema that is not valid JSON Schema is a build error naming the endpoint.
 
 ## Async Endpoints
 
@@ -770,7 +835,7 @@ blocks:
           type: SetState
           params:
             user_data:
-              _actions: call_user_api.response.user
+              _actions: call_user_api.response.response.user
 
   - id: user_display
     type: Descriptions
@@ -803,7 +868,7 @@ events:
         type: SetState
         params:
           result:
-            _actions: call_process_data_api.response
+            _actions: call_process_data_api.response.response
 
     catch:
       - id: update_state

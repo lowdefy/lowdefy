@@ -20,6 +20,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
+import validateEndpointResponse from './validateEndpointResponse.js';
 import validatePayload from './validatePayload.js';
 
 async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
@@ -55,9 +56,13 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
     source: 'endpoint',
   });
 
-  return runRoutine(context, childRoutineContext, {
+  const result = await runRoutine(context, childRoutineContext, {
     routine: endpointConfig.routine,
   });
+  if (result.status === 'return') {
+    validateEndpointResponse(context, { endpointConfig, response: result.response });
+  }
+  return result;
 }
 
 export default invokeEndpoint;

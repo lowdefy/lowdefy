@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { compile } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
+import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 
 import validateId from '../../utils/validateId.js';
 import validateCronExpression from '../../utils/validateCronExpression.js';
@@ -68,6 +69,21 @@ function validateSchedules({ endpoint, configKey }) {
   });
 }
 
+// A declared schema is compiled once here so an invalid one is a located build
+// error, not a runtime throw on the first call that reaches it.
+function validateJsonSchema({ endpoint, field, configKey }) {
+  const schema = endpoint[field];
+  if (type.isNone(schema)) return;
+  try {
+    compile({ schema: cleanBuildArtifact(schema) });
+  } catch (error) {
+    throw new ConfigError(
+      `Api endpoint "${endpoint.id}" ${field} is not a valid JSON schema: ${error.message}.`,
+      { received: schema, configKey, checkSlug: 'response-schema' }
+    );
+  }
+}
+
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
@@ -110,6 +126,8 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
     );
   }
   validateSchedules({ endpoint, configKey });
+  validateJsonSchema({ endpoint, field: 'payloadSchema', configKey });
+  validateJsonSchema({ endpoint, field: 'responseSchema', configKey });
   validateRunAs({ runAs: endpoint.runAs, location: `Api endpoint "${endpoint.id}"`, configKey });
 }
 

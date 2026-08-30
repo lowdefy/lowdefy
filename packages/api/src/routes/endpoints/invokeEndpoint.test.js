@@ -272,3 +272,30 @@ test('invokeEndpoint rejects a payload that violates the target payloadSchema wi
   });
   expect(result.response).toBe('hi');
 });
+
+test('invokeEndpoint reports a child :return that misses the responseSchema as a dev notice', async () => {
+  const context = createTestContext({
+    endpointConfigs: {
+      target: {
+        endpointId: 'target',
+        type: 'InternalApi',
+        responseSchema: { type: 'object', properties: { value: { type: 'string' } } },
+        routine: { ':return': { value: 42 } },
+        '~k': 'k_target',
+      },
+    },
+  });
+  context.handleDevNotice = jest.fn();
+  const result = await invokeEndpoint(context, {
+    endpointId: 'target',
+    payload: {},
+    endpointDepth: 0,
+  });
+  expect(result).toEqual({ status: 'return', response: { value: 42 } });
+  expect(context.handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(context.handleDevNotice.mock.calls[0][0]).toMatchObject({
+    name: 'ResponseSchemaWarning',
+    configKey: 'k_target',
+    details: { endpointId: 'target', instancePath: '/value' },
+  });
+});

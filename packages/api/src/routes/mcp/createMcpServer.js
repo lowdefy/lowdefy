@@ -97,11 +97,16 @@ async function createMcpServer({ context }) {
       if (type.isNone(endpointConfig)) {
         continue;
       }
-      tools.push({
+      const tool = {
         name: toToolName(id),
         description: endpointConfig.description,
         inputSchema: cleanBuildArtifact(endpointConfig.payloadSchema),
-      });
+      };
+      // A declared outputSchema obliges tools/call to return structuredContent.
+      if (!type.isNone(endpointConfig.responseSchema)) {
+        tool.outputSchema = cleanBuildArtifact(endpointConfig.responseSchema);
+      }
+      tools.push(tool);
     }
     return { tools };
   });
@@ -152,9 +157,14 @@ async function createMcpServer({ context }) {
           isError: true,
         };
       }
-      return {
-        content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
+      const deserializedResponse = serializer.deserialize(response);
+      const result = {
+        content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }],
       };
+      if (!type.isNone(endpointConfig.responseSchema)) {
+        result.structuredContent = deserializedResponse;
+      }
+      return result;
     } catch (error) {
       // Refused calls to gated tools and payloads that miss the payloadSchema
       // (UserError) are expected traffic - a warn line and the message the

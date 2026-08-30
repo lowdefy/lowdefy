@@ -39,6 +39,7 @@ export const VALID_CHECK_SLUGS = {
   'js-lint': 'Unresolved and unused names in _js bodies',
   tenant: 'Tenant wall audits on walled requests and steps',
   'js-modules': '_js module reference resolution and export checks',
+  'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
 };
 
 /**

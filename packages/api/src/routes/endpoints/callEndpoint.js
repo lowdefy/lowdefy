@@ -24,6 +24,7 @@ import getEndpointConfig from './getEndpointConfig.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
+import validateEndpointResponse from './validateEndpointResponse.js';
 import validatePayload from './validatePayload.js';
 
 // `trace` is an optional dev-only collector (the `explain` flag of
@@ -97,6 +98,9 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload, tra
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
   });
+  if (status === 'return') {
+    validateEndpointResponse(context, { endpointConfig, response });
+  }
 
   return buildEndpointResult(context, { error, response, status });
 }
