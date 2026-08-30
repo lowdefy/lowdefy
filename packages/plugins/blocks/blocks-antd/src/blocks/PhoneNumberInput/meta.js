@@ -60,6 +60,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      showFlags: {
+        type: 'boolean',
+        default: true,
+        description: 'Show country flags in the country selector and input.',
+      },
       allowClear: { ...allowClear, default: false },
       allowedRegions: {
         type: 'array',

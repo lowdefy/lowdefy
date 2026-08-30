@@ -15,7 +15,8 @@
 */
 
 import LabelMeta from '../Label/meta.js';
-import { allowClear } from '../../schemas/inputProperties.js';
+import label from '../../schemas/label.js';
+import { allowClear, inputTitle } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -65,6 +66,8 @@ export default {
         enum: ['small', 'middle', 'large'],
         description: 'Size of the color picker.',
       },
+      label,
+      title: inputTitle,
       disabled: {
         type: 'boolean',
         default: false,
