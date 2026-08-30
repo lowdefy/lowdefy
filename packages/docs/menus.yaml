@@ -419,6 +419,11 @@
         title: Testing
         icon: AiOutlineExperiment
       links:
+        - id: config-tests
+          type: MenuLink
+          pageId: config-tests
+          properties:
+            title: Config Tests
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction
