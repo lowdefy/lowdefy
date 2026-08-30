@@ -594,3 +594,97 @@ test('authored audit uses the custom tenant field name', () => {
     })
   ).toThrow('has no "compound.filter" equals clause on tenant field "tenantId"');
 });
+
+test('does not touch the result when no trace is given', () => {
+  const pipeline = [{ $lookup: { from: 'o', as: 'j', pipeline: [{ $limit: 1 }] } }];
+  expect(injectTenantIntoPipeline({ pipeline, tenant })).toEqual(
+    injectTenantIntoPipeline({ pipeline, tenant, trace: { rewritten: [] } })
+  );
+});
+
+test('trace records the root prepend as $match[0]', () => {
+  const trace = { rewritten: [] };
+  injectTenantIntoPipeline({ pipeline: [{ $sort: { _id: 1 } }], tenant, trace });
+  expect(trace.rewritten).toEqual([{ at: '$match[0]', injected: tenantMatch }]);
+});
+
+test('trace records a $lookup sub-pipeline prepend with the stage index in at', () => {
+  const trace = { rewritten: [] };
+  injectTenantIntoPipeline({
+    pipeline: [
+      { $match: { status: 'open' } },
+      { $sort: { _id: 1 } },
+      { $lookup: { from: 'other', as: 'j', pipeline: [{ $limit: 1 }] } },
+    ],
+    tenant,
+    trace,
+  });
+  expect(trace.rewritten).toEqual([
+    { at: '$lookup[2].pipeline', injected: tenantMatch },
+    { at: '$match[0]', injected: tenantMatch },
+  ]);
+});
+
+test('trace records a $unionWith prepend and a nested $lookup inside a $facet branch', () => {
+  const trace = { rewritten: [] };
+  injectTenantIntoPipeline({
+    pipeline: [
+      { $unionWith: 'archive' },
+      {
+        $facet: {
+          byStatus: [{ $lookup: { from: 'other', as: 'j', pipeline: [] } }],
+          count: [{ $count: 'n' }],
+        },
+      },
+    ],
+    tenant,
+    trace,
+  });
+  expect(trace.rewritten).toEqual([
+    { at: '$unionWith[0].pipeline', injected: tenantMatch },
+    { at: '$facet.byStatus.$lookup[0].pipeline', injected: tenantMatch },
+    { at: '$match[0]', injected: tenantMatch },
+  ]);
+});
+
+test('trace records an audited $search stage as audited with no injected clause', () => {
+  const trace = { rewritten: [] };
+  injectTenantIntoPipeline({
+    pipeline: [
+      {
+        $search: {
+          compound: { filter: [equalsClause], must: [{ text: { query: 'q', path: 'n' } }] },
+        },
+      },
+      { $limit: 5 },
+    ],
+    tenant: authoredTenant,
+    trace,
+  });
+  expect(trace.rewritten).toEqual([{ at: '$search[0]', audited: true }]);
+});
+
+test('trace records an audited $graphLookup by its stage index', () => {
+  const trace = { rewritten: [] };
+  injectTenantIntoPipeline({
+    pipeline: [
+      { $limit: 5 },
+      {
+        $graphLookup: {
+          from: 'tree',
+          startWith: '$parent',
+          connectFromField: 'parent',
+          connectToField: '_id',
+          as: 'ancestors',
+          restrictSearchWithMatch: { organization_id: 'org_a' },
+        },
+      },
+    ],
+    tenant: authoredTenant,
+    trace,
+  });
+  expect(trace.rewritten).toEqual([
+    { at: '$graphLookup[1]', audited: true },
+    { at: '$match[0]', injected: tenantMatch },
+  ]);
+});

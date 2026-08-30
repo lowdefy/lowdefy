@@ -140,3 +140,17 @@ test('docsRunEndpointHandler rethrows faults that are not ConfigErrors', async (
 
   await expect(docsRunEndpointHandler(c)).rejects.toThrow('boom');
 });
+
+test('docsRunEndpointHandler passes explain: true through to runEndpoint', async () => {
+  const c = createContext({ endpointId: 'create_order', explain: true });
+
+  await docsRunEndpointHandler(c);
+
+  expect(mockRunEndpoint).toHaveBeenCalledWith({
+    endpointId: 'create_order',
+    payload: undefined,
+    user: undefined,
+    explain: true,
+    honoContext: c,
+  });
+});

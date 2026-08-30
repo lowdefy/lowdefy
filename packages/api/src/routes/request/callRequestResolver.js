@@ -20,7 +20,15 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
   context,
-  { connectionProperties, endpointDepth, requestConfig, requestProperties, requestResolver, tenant }
+  {
+    connectionProperties,
+    endpointDepth,
+    requestConfig,
+    requestProperties,
+    requestResolver,
+    tenant,
+    trace,
+  }
 ) {
   const { blockId, endpointId, logger, pageId, payload } = context;
   // stepId for endpoint steps (after build), requestId for page requests
@@ -71,6 +79,12 @@ async function callRequestResolver(
       // resolveTenant - connection types implementing the scoping contract
       // enforce it (stamp writes, merge filters, inject pipeline matches).
       tenant: tenant ?? null,
+      // Optional dev-only collector, allocated by the dev tools' `explain`
+      // flag and undefined otherwise. A resolver that supports it sets
+      // trace.effective to the value it sends to its driver and hands trace to
+      // its tenant helpers so they can record each rewrite on
+      // trace.rewritten. A resolver that ignores it behaves exactly as before.
+      trace,
     });
     return response;
   } catch (error) {

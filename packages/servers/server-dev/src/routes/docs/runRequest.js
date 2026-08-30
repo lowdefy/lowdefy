@@ -26,7 +26,7 @@ async function docsRunRequestHandler(c) {
   // Parse the body from a clone: runRequest builds a Lowdefy context whose
   // resolveAuthentication reads c.req.raw (headers) to resolve the caller,
   // so leave the original request body intact and read our own copy here.
-  const { pageId, requestId, payload, user } = await c.req.raw.clone().json();
+  const { pageId, requestId, payload, user, explain } = await c.req.raw.clone().json();
   const { user: parsedUser, error: userError } = parseUserParam({ value: user });
   if (userError) {
     return c.json({ error: userError }, 400);
@@ -37,6 +37,7 @@ async function docsRunRequestHandler(c) {
       requestId,
       payload,
       user: parsedUser,
+      explain,
       honoContext: c,
     });
     return c.json(result);

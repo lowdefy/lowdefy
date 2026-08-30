@@ -424,3 +424,51 @@ test('combined operators in request properties', async () => {
     },
   });
 });
+
+test('routineContext.trace gains one entry per request step, carrying its stepId', async () => {
+  const routine = [
+    {
+      stepId: 'first',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:first',
+      connectionId: 'test',
+      properties: { response: 1 },
+    },
+    { ':set_state': { a: 1 } },
+    {
+      stepId: 'second',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:second',
+      connectionId: 'test',
+      properties: { response: 2 },
+    },
+  ];
+  const { res, routineContext } = await runTest({ routine, trace: [] });
+  expect(res).toEqual({ status: 'continue' });
+  expect(routineContext.trace).toEqual([
+    {
+      stepId: 'first',
+      rewritten: [],
+      connection: { id: 'test', type: 'TestConnection', tenant: null },
+      properties: { response: 1 },
+    },
+    {
+      stepId: 'second',
+      rewritten: [],
+      connection: { id: 'test', type: 'TestConnection', tenant: null },
+      properties: { response: 2 },
+    },
+  ]);
+});
+
+test('a routine without trace leaves routineContext.trace undefined', async () => {
+  const routine = {
+    stepId: 'only',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:only',
+    connectionId: 'test',
+    properties: { response: 1 },
+  };
+  const { routineContext } = await runTest({ routine });
+  expect(routineContext.trace).toBeUndefined();
+});

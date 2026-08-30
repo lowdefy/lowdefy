@@ -28,9 +28,18 @@ import resolveRunAs from './resolveRunAs.js';
 import resolveTenant from '../request/resolveTenant.js';
 import validateSchemas from '../request/validateSchemas.js';
 
+// routineContext.trace is an optional dev-only collector (the `explain` flag of
+// lowdefy_run_endpoint): an array that gains one entry per request step,
+// carrying the step id, the tenancy verdict, the evaluated properties, the
+// effective query and the wall's rewrites. Absent, nothing is allocated.
 async function handleRequest(context, routineContext, { request }) {
   const { logger } = context;
   const { items } = routineContext;
+  let trace;
+  if (routineContext.trace) {
+    trace = { stepId: request.stepId, rewritten: [] };
+    routineContext.trace.push(trace);
+  }
 
   logger.debug({
     event: 'debug_start_request',
@@ -56,6 +65,13 @@ async function handleRequest(context, routineContext, { request }) {
         source: 'step',
       });
   const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig, runAs });
+  if (trace) {
+    trace.connection = {
+      id: connectionConfig.connectionId,
+      type: connectionConfig.type,
+      tenant: tenant ?? null,
+    };
+  }
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -65,6 +81,9 @@ async function handleRequest(context, routineContext, { request }) {
     state: routineContext.state,
     steps: routineContext.steps,
   });
+  if (trace) {
+    trace.properties = requestProperties;
+  }
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,
@@ -91,6 +110,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
     requestResolver,
     tenant,
+    trace,
   });
 
   addStepResult(context, routineContext, { result, stepId: request.stepId });

@@ -62,7 +62,7 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
-Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure.
+Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. When a request returns an empty or unexpected result on a multi-tenant app, re-run it with explain: true BEFORE changing config — it returns the caller, the connection tenancy, the properties after operator evaluation, the effective query the driver received and every clause the tenant wall injected (rewritten); the wall's injected clauses are the usual cause.
 
 Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text or url. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
 
@@ -202,10 +202,16 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         requestId: z.string().describe('The request id.'),
         payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
         user: userSchema,
+        explain: z
+          .boolean()
+          .optional()
+          .describe(
+            'Return the effective request: the caller, the connection tenancy, the properties after operator evaluation, what the driver received, and every clause the tenant wall injected. Non-behavioural.'
+          ),
       },
     },
-    async ({ pageId, requestId, payload, user }) =>
-      textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
+    async ({ pageId, requestId, payload, user, explain }) =>
+      textResult(await runRequest({ pageId, requestId, payload, user, explain, honoContext }))
   );
 
   server.registerTool(
@@ -217,10 +223,16 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         endpointId: z.string().describe('The Api endpoint id.'),
         payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
         user: userSchema,
+        explain: z
+          .boolean()
+          .optional()
+          .describe(
+            'Return the effective request: the caller, the connection tenancy, the properties after operator evaluation, what the driver received, and every clause the tenant wall injected. Non-behavioural.'
+          ),
       },
     },
-    async ({ endpointId, payload, user }) =>
-      textResult(await runEndpoint({ endpointId, payload, user, honoContext }))
+    async ({ endpointId, payload, user, explain }) =>
+      textResult(await runEndpoint({ endpointId, payload, user, explain, honoContext }))
   );
 
   server.registerTool(

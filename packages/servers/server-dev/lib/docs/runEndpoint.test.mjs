@@ -265,3 +265,71 @@ test('runEndpoint truncates an oversized response', async () => {
   expect(result.note).toMatch(/Response truncated to/);
   expect(result.status).toBe('success');
 });
+
+test('runEndpoint without explain passes no trace and returns no explain key', async () => {
+  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(mockCallEndpoint.mock.calls[0][1].trace).toBeUndefined();
+  expect(result).not.toHaveProperty('explain');
+});
+
+test('runEndpoint with explain: true returns one explain entry per request step, each carrying its stepId', async () => {
+  mockCreateLowdefyContext.mockResolvedValue({
+    ...context,
+    user: { id: 'u_1', organization_id: 'org_1', roles: ['admin'], email: 'a@b.c' },
+  });
+  mockCallEndpoint.mockImplementation(async (ctx, { trace }) => {
+    trace.push({
+      stepId: 'find_order',
+      rewritten: [{ at: 'query', injected: { organization_id: 'org_1' } }],
+      connection: {
+        id: 'orders',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id', value: 'org_1' },
+      },
+      properties: { query: { sku: 'A1' } },
+      effective: {
+        query: { $and: [{ sku: 'A1' }, { organization_id: 'org_1' }] },
+        options: undefined,
+      },
+    });
+    trace.push({
+      stepId: 'notify',
+      rewritten: [],
+      connection: { id: 'mail', type: 'SendGridMail', tenant: null },
+      properties: { to: 'a@b.c' },
+    });
+    return { error: null, response: { ok: true }, status: 'success', success: true };
+  });
+
+  const result = await runEndpoint({ endpointId: 'create_order', explain: true, honoContext });
+
+  expect(mockCallEndpoint.mock.calls[0][1].trace).toEqual(expect.any(Array));
+  expect(result.success).toBe(true);
+  expect(result.explain).toEqual([
+    {
+      stepId: 'find_order',
+      caller: { id: 'u_1', organization_id: 'org_1', roles: ['admin'] },
+      connection: {
+        id: 'orders',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id', value: 'org_1' },
+      },
+      properties: { query: { sku: 'A1' } },
+      effective: {
+        query: { $and: [{ sku: 'A1' }, { organization_id: 'org_1' }] },
+        options: undefined,
+      },
+      rewritten: [{ at: 'query', injected: { organization_id: 'org_1' } }],
+    },
+    {
+      stepId: 'notify',
+      caller: { id: 'u_1', organization_id: 'org_1', roles: ['admin'] },
+      connection: { id: 'mail', type: 'SendGridMail', tenant: null },
+      properties: { to: 'a@b.c' },
+      effective: null,
+      rewritten: [],
+      note: 'Request type SendGridMail does not report an effective query.',
+    },
+  ]);
+});

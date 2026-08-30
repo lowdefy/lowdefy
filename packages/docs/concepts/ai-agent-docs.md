@@ -278,6 +278,45 @@ Malformed steps are answered before a browser opens — an unknown key returns `
 
 Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
 
+## Explaining a request — `explain: true`
+
+Between the YAML you write and the query the database runs, two invisible transformations happen: operators in the connection and request properties are evaluated, and on a [tenant-walled](/organizations#the-tenant-wall) connection the wall rewrites what it received — a `$match` prepended at the root of an aggregation and inside every `$lookup` / `$unionWith` sub-pipeline, find/update/delete selectors merged with the tenant equality, written documents stamped. A request that returns `[]` for no visible reason is usually one of these.
+
+Pass `explain: true` to `lowdefy_run_request` or `lowdefy_run_endpoint` (or in the body of `POST /lowdefy-docs/run-request` / `POST /lowdefy-docs/run-endpoint`) and the result gains an `explain` key. It is non-behavioural: the request runs exactly as it would without the flag, and without the flag nothing is collected.
+
+```json
+{ "pageId": "search", "requestId": "search_records", "user": "org_admin", "explain": true }
+```
+
+```json
+"explain": {
+  "caller": { "id": "u_1", "organization_id": "org_1", "roles": ["admin"] },
+  "connection": { "id": "app_data", "type": "MongoDBCollection", "tenant": { "field": "organization_id", "value": "org_1" } },
+  "properties": { "pipeline": [{ "$match": { "status": "open" } }, { "$lookup": { "from": "controls", "as": "c", "pipeline": [] } }] },
+  "effective": {
+    "pipeline": [
+      { "$match": { "organization_id": "org_1" } },
+      { "$match": { "status": "open" } },
+      { "$lookup": { "from": "controls", "as": "c", "pipeline": [{ "$match": { "organization_id": "org_1" } }] } }
+    ]
+  },
+  "rewritten": [
+    { "at": "$lookup[1].pipeline", "injected": { "$match": { "organization_id": "org_1" } } },
+    { "at": "$match[0]", "injected": { "$match": { "organization_id": "org_1" } } }
+  ]
+}
+```
+
+- `caller` — exactly `id`, `organization_id` and `roles` of the user the request ran as. Nothing else from the session is ever included.
+- `connection` — the connection id and type, and the tenant verdict the wall applied (`{ field, value }`, `{ field, value, authored: true }` for a `tenant: authored` request, or `null` when the request is unscoped).
+- `properties` — the request `properties` after operator evaluation: what the resolver received.
+- `effective` — what the driver received. MongoDB request types report `{ pipeline, options }` (aggregation), `{ query, options }` (find), `{ filter, update, options }` (updates), `{ filter, options }` (deletes), `{ doc, options }` / `{ docs, options }` (inserts) and `{ operations, options }` (bulk write). A request type that does not report one yields `effective: null` and a `note` saying so.
+- `rewritten` — one entry per clause the tenant wall injected. `at` is a path into the properties you wrote: `$match[0]` for the root prepend, `$lookup[<i>].pipeline`, `$unionWith[<i>].pipeline` and `$facet.<branch>` composed as the wall descends, and the property name (`query`, `filter`, `doc`, `docs[<i>]`, `update.$setOnInsert`, `operations[<i>].updateOne.filter`) for selectors and documents. An audited `tenant: authored` stage records `{ at: "$search[0]", audited: true }` instead of `injected`. An empty array on a walled connection means the wall changed nothing.
+
+For an endpoint, `explain` is an array with one entry per request step, each carrying its `stepId`; control steps (`:if`, `:set_state`, …) contribute nothing. When a request run fails, the trace collected up to the failure is still returned beside `error`.
+
+When a request returns an empty or unexpected result on a multi-tenant app, re-run it with `explain: true` before changing config — the wall's injected clauses are the usual cause, and the `rewritten` entries name the exact stage.
+
 ## Setting up a project — one command
 
 ```bash

@@ -146,3 +146,123 @@ test('runRequest refuses a write request for an impersonated caller too', async 
   expect(result.refused).toBe(true);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
+
+test('runRequest without explain passes no trace and returns no explain key', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(mockCallRequest.mock.calls[0][1].trace).toBeUndefined();
+  expect(result).not.toHaveProperty('explain');
+});
+
+test('runRequest with explain: false returns no explain key', async () => {
+  const result = await runRequest({
+    pageId: 'home',
+    requestId: 'get_rows',
+    explain: false,
+    honoContext,
+  });
+
+  expect(mockCallRequest.mock.calls[0][1].trace).toBeUndefined();
+  expect(result).not.toHaveProperty('explain');
+});
+
+test('runRequest with explain: true returns the five explain fields and a caller with only id, organization_id and roles', async () => {
+  mockCreateLowdefyContext.mockResolvedValue({
+    logger: { info: mockLoggerInfo },
+    user: {
+      id: 'u_1',
+      organization_id: 'org_1',
+      roles: ['admin'],
+      email: 'a@b.c',
+      session: { token: 'secret' },
+    },
+  });
+  mockCallRequest.mockImplementation(async (context, { trace }) => {
+    trace.connection = {
+      id: 'app_data',
+      type: 'MongoDBCollection',
+      tenant: { field: 'organization_id', value: 'org_1' },
+    };
+    trace.properties = { query: { status: 'open' } };
+    trace.effective = {
+      query: { $and: [{ status: 'open' }, { organization_id: 'org_1' }] },
+      options: undefined,
+    };
+    trace.rewritten.push({ at: 'query', injected: { organization_id: 'org_1' } });
+    return { id: 'requests', response: [] };
+  });
+
+  const result = await runRequest({
+    pageId: 'home',
+    requestId: 'get_rows',
+    explain: true,
+    honoContext,
+  });
+
+  expect(mockCallRequest.mock.calls[0][1].trace).toEqual(
+    expect.objectContaining({ rewritten: expect.any(Array) })
+  );
+  expect(result.response).toEqual([]);
+  expect(Object.keys(result.explain).sort()).toEqual([
+    'caller',
+    'connection',
+    'effective',
+    'properties',
+    'rewritten',
+  ]);
+  expect(result.explain).toEqual({
+    caller: { id: 'u_1', organization_id: 'org_1', roles: ['admin'] },
+    connection: {
+      id: 'app_data',
+      type: 'MongoDBCollection',
+      tenant: { field: 'organization_id', value: 'org_1' },
+    },
+    properties: { query: { status: 'open' } },
+    effective: {
+      query: { $and: [{ status: 'open' }, { organization_id: 'org_1' }] },
+      options: undefined,
+    },
+    rewritten: [{ at: 'query', injected: { organization_id: 'org_1' } }],
+  });
+});
+
+test('runRequest with explain: true reports effective: null and a note when the resolver sets nothing', async () => {
+  mockCallRequest.mockImplementation(async (context, { trace }) => {
+    trace.connection = { id: 'api', type: 'AxiosHttp', tenant: null };
+    trace.properties = { url: '/x' };
+    return { id: 'requests', response: {} };
+  });
+
+  const result = await runRequest({
+    pageId: 'home',
+    requestId: 'get_rows',
+    explain: true,
+    honoContext,
+  });
+
+  expect(result.explain.effective).toBe(null);
+  expect(result.explain.note).toBe('Request type MongoDBFind does not report an effective query.');
+  expect(result.explain.caller).toEqual({ id: null, organization_id: null, roles: [] });
+});
+
+test('runRequest with explain: true keeps the trace collected before a request error', async () => {
+  mockCallRequest.mockImplementation(async (context, { trace }) => {
+    trace.connection = { id: 'app_data', type: 'MongoDBCollection', tenant: null };
+    throw new Error('boom');
+  });
+
+  const result = await runRequest({
+    pageId: 'home',
+    requestId: 'get_rows',
+    explain: true,
+    honoContext,
+  });
+
+  expect(result.error).toEqual({ name: 'Error', message: 'boom' });
+  expect(result.explain.connection).toEqual({
+    id: 'app_data',
+    type: 'MongoDBCollection',
+    tenant: null,
+  });
+  expect(result.explain.effective).toBe(null);
+});

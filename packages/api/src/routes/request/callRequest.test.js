@@ -1012,3 +1012,64 @@ test('call request normalises source on an error returned inside the response va
 
   expect(res.response.failed[0]['~e'].source).toBe('pages/home.yaml:5');
 });
+
+test('callRequest without trace adds nothing to the result or the resolver arguments', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  mockTestRequest.mockImplementation(defaultResolverImp);
+
+  const res = await callRequest(context, defaultParams);
+  expect(Object.keys(res).sort()).toEqual(['id', 'response', 'success', 'type']);
+  expect(mockTestRequest.mock.calls[0][0].trace).toBeUndefined();
+});
+
+test('callRequest with trace collects the connection, the tenant verdict and the evaluated properties, and hands trace to the resolver', async () => {
+  const organizationContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    organization: { policy: 'tenant' },
+    secrets,
+    user: { id: 'id', organization_id: 'org-1' },
+  });
+  mockReadConfigFile.mockImplementation(
+    defaultReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestTenantConnection',
+        connectionId: 'testConnection',
+        tenant: true,
+        properties: {},
+      },
+      requestConfig: {
+        id: 'request:pageId:requestId',
+        type: 'TestRequest',
+        requestId: 'requestId',
+        connectionId: 'testConnection',
+        auth: { public: true },
+        properties: { org: { _user: 'organization_id' }, q: { _payload: 'q' } },
+      },
+    })
+  );
+  mockTestRequest.mockImplementation(({ trace }) => {
+    trace.effective = { query: { q: 'x', organization_id: 'org-1' } };
+    return 'ok';
+  });
+
+  const trace = { rewritten: [] };
+  const res = await callRequest(organizationContext, {
+    ...defaultParams,
+    payload: { q: 'x' },
+    trace,
+  });
+  expect(res.response).toBe('ok');
+  expect(trace).toEqual({
+    connection: {
+      id: 'testConnection',
+      type: 'TestTenantConnection',
+      tenant: { field: 'organization_id', value: 'org-1' },
+    },
+    properties: { org: 'org-1', q: 'x' },
+    effective: { query: { q: 'x', organization_id: 'org-1' } },
+    rewritten: [],
+  });
+});

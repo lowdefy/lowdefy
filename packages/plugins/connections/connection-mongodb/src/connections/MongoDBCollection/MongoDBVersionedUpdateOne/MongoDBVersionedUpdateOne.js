@@ -31,6 +31,7 @@ async function MongoDBVersionedUpdateOne({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, disableNoMatchError } = deserializedRequest;
@@ -39,8 +40,16 @@ async function MongoDBVersionedUpdateOne({
   const insertOptions = options?.insert;
   const updateOptions = options?.update;
   if (tenant) {
-    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
-    update = applyTenantToUpdate({ update, tenant, upsert: updateOptions?.upsert === true });
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter', trace });
+    update = applyTenantToUpdate({
+      update,
+      tenant,
+      upsert: updateOptions?.upsert === true,
+      trace,
+    });
+  }
+  if (trace) {
+    trace.effective = serialize({ filter, update, options });
   }
   const { collection, logCollection } = await getCollection({ connection });
 

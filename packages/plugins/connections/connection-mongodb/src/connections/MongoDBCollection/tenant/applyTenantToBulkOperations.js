@@ -24,26 +24,39 @@ import stampTenantOnDoc from './stampTenantOnDoc.js';
 // per its kind: insert documents and replacements stamped, update and delete
 // filters merged, update documents guarded. An operation kind this map does
 // not know is rejected - fail closed, never pass through unwalled.
-function applyTenantToBulkOperations({ operations, tenant }) {
-  return operations.map((operation) => {
+//
+// `trace` is an optional dev-only collector handed to each helper with the
+// operation's path ('operations[<i>].filter', 'operations[<i>].document', ...)
+// so every rewrite names the operation it happened in.
+function applyTenantToBulkOperations({ operations, tenant, trace }) {
+  return operations.map((operation, index) => {
     const [kind, op] = Object.entries(operation)[0] ?? [];
+    const at = `operations[${index}].${kind}`;
     switch (kind) {
       case 'insertOne':
         return {
           insertOne: {
             ...op,
-            document: stampTenantOnDoc({ doc: op.document, tenant }),
+            document: stampTenantOnDoc({ doc: op.document, tenant, trace, at: `${at}.document` }),
           },
         };
       case 'replaceOne':
         return {
           replaceOne: {
             ...op,
-            filter: applyTenantToFilter({ filter: op.filter, tenant, position: 'a filter' }),
+            filter: applyTenantToFilter({
+              filter: op.filter,
+              tenant,
+              position: 'a filter',
+              trace,
+              at: `${at}.filter`,
+            }),
             replacement: stampTenantOnDoc({
               doc: op.replacement,
               tenant,
               position: 'a replacement document',
+              trace,
+              at: `${at}.replacement`,
             }),
           },
         };
@@ -52,11 +65,19 @@ function applyTenantToBulkOperations({ operations, tenant }) {
         return {
           [kind]: {
             ...op,
-            filter: applyTenantToFilter({ filter: op.filter, tenant, position: 'a filter' }),
+            filter: applyTenantToFilter({
+              filter: op.filter,
+              tenant,
+              position: 'a filter',
+              trace,
+              at: `${at}.filter`,
+            }),
             update: applyTenantToUpdate({
               update: op.update,
               tenant,
               upsert: op.upsert === true,
+              trace,
+              at: `${at}.update`,
             }),
           },
         };
@@ -65,7 +86,13 @@ function applyTenantToBulkOperations({ operations, tenant }) {
         return {
           [kind]: {
             ...op,
-            filter: applyTenantToFilter({ filter: op.filter, tenant, position: 'a filter' }),
+            filter: applyTenantToFilter({
+              filter: op.filter,
+              tenant,
+              position: 'a filter',
+              trace,
+              at: `${at}.filter`,
+            }),
           },
         };
       default:

@@ -26,7 +26,10 @@ import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
 import validatePayload from './validatePayload.js';
 
-async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
+// `trace` is an optional dev-only collector (the `explain` flag of
+// lowdefy_run_endpoint): an array the caller allocates, which handleRequest
+// fills with one entry per request step. Absent, nothing changes.
+async function callEndpoint(context, { blockId, endpointId, pageId, payload, trace }) {
   const { logger } = context;
 
   context.blockId = blockId;
@@ -64,6 +67,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     items: {},
     state: {},
     endpointDepth: 0,
+    trace,
   };
   // The endpoint's runAs scopes every walled step of this run (a step-level
   // runAs overrides it). Resolved against the fresh routine context, so it can

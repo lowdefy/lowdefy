@@ -30,12 +30,16 @@ async function MongodbDeleteMany({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { filter } = deserializedRequest;
   if (tenant) {
-    filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
+    filter = applyTenantToFilter({ filter, tenant, position: 'a filter', trace });
+  }
+  if (trace) {
+    trace.effective = serialize({ filter, options });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;

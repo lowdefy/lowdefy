@@ -20,12 +20,15 @@ import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request, tenant }) {
+async function MongodbBulkWrite({ connection, request, tenant, trace }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { operations } = deserializedRequest;
   if (tenant) {
-    operations = applyTenantToBulkOperations({ operations, tenant });
+    operations = applyTenantToBulkOperations({ operations, tenant, trace });
+  }
+  if (trace) {
+    trace.effective = serialize({ operations, options });
   }
   const { collection } = await getCollection({ connection });
   let response;

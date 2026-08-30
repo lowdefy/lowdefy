@@ -20,12 +20,15 @@ import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbFindOne({ request, connection, tenant }) {
+async function MongodbFindOne({ request, connection, tenant, trace }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { query } = deserializedRequest;
   if (tenant) {
-    query = applyTenantToFilter({ filter: query, tenant, position: 'a query' });
+    query = applyTenantToFilter({ filter: query, tenant, position: 'a query', trace, at: 'query' });
+  }
+  if (trace) {
+    trace.effective = serialize({ query, options });
   }
   const { collection } = await getCollection({ connection });
   let res;

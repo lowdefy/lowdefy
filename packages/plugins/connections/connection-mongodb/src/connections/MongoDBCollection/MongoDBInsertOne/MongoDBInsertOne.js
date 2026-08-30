@@ -30,12 +30,16 @@ async function MongodbInsertOne({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { doc } = deserializedRequest;
   if (tenant) {
-    doc = stampTenantOnDoc({ doc, tenant });
+    doc = stampTenantOnDoc({ doc, tenant, trace, at: 'doc' });
+  }
+  if (trace) {
+    trace.effective = serialize({ doc, options });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;
