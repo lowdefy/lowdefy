@@ -42,6 +42,11 @@ jest.unstable_mockModule('./build/copyPublicFolder.js', () => ({
   default: jest.fn(() => Promise.resolve()),
 }));
 
+// Mock copyJsModules so a fixture's _js modules are not copied into the fixture tree
+jest.unstable_mockModule('./build/buildJs/copyJsModules.js', () => ({
+  default: jest.fn(() => Promise.resolve()),
+}));
+
 // Import after mocking
 const { default: build } = await import('./index.js');
 const { snapshotTypesMap } = await import('./test-utils/runBuildForSnapshots.js');
@@ -55,8 +60,7 @@ function discoverFixtures() {
   return entries
     .filter(
       (entry) =>
-        entry.isDirectory() &&
-        fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
+        entry.isDirectory() && fs.existsSync(path.join(fixturesDir, entry.name, 'lowdefy.yaml'))
     )
     .map((entry) => entry.name)
     .sort();

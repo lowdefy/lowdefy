@@ -37,6 +37,7 @@ export const VALID_CHECK_SLUGS = {
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
   'js-lint': 'Unresolved and unused names in _js bodies',
+  'js-modules': '_js module reference resolution and export checks',
 };
 
 /**

@@ -19,6 +19,7 @@ import { LowdefyInternalError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
+import copyJsModules from '../buildJs/copyJsModules.js';
 import writeJs from '../buildJs/writeJs.js';
 
 async function writePageJit({ page, context, tailwindContent }) {
@@ -54,6 +55,8 @@ async function writePageJit({ page, context, tailwindContent }) {
 
   // Write updated JS map files (JIT build extracts page-level _js functions)
   await writeJs({ context });
+  await context.writeBuildArtifact('jsModules.json', JSON.stringify(context.jsModules));
+  await copyJsModules({ context });
 
   // Write per-page content file for Tailwind to scan class and property strings.
   // Content is collected by the caller before _js extraction so class

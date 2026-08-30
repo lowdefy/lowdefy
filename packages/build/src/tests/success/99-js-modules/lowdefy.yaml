@@ -1,0 +1,16 @@
+# 99: _js module references
+# A page and a request each reference an exported function in a real .js file.
+# The module path resolves relative to the config file that contains the _js
+# node (pages/home.yaml -> pages/lib/), and the hash is keyed on the
+# config-root relative path. clientJsMap.js and serverJsMap.js import the
+# module; js/serverModules.json lists the server-side module files.
+lowdefy: local
+
+connections:
+  - id: things
+    type: AxiosHttp
+    properties:
+      baseURL: https://example.com
+
+pages:
+  - _ref: pages/home.yaml
