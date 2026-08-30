@@ -429,6 +429,11 @@
           pageId: config-tests
           properties:
             title: Config Tests
+        - id: snapshots
+          type: MenuLink
+          pageId: snapshots
+          properties:
+            title: Golden Snapshots
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction
