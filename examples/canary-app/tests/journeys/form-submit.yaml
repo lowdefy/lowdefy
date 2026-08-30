@@ -1,0 +1,41 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: admin submits a valid item and sees the confirmation
+  pageId: form
+  user: admin
+  steps:
+    - fill: { blockId: name, value: Canary widget }
+    - select: { blockId: category, value: Hardware }
+    - fill: { blockId: due_date, value: '2026-09-01' }
+    - press: Enter
+    - fill: { blockId: quantity, value: 3 }
+    - click: submit
+    # The insert_item request is copied into state by the `remember` step, so the
+    # journey waits on the state it lands in rather than the request registry.
+    - wait: { state: saved.id }
+    - expect: { visible: confirmation }
+    - expect: { text: { blockId: confirmation, contains: 3 x Canary widget (hardware) } }
+    - expect: { state: { path: name, equals: Canary widget } }
+
+- name: submit with an empty form does not insert
+  pageId: form
+  user: member
+  steps:
+    - click: submit
+    - wait: { ms: 500 }
+    # Validate fails on the required fields, so the submit chain stops before the
+    # insert; the fields reset to null and the required message renders.
+    - expect: { text: { blockId: name, contains: This field is required } }
+    - expect: { state: { path: name, equals: null } }

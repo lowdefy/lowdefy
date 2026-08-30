@@ -1,0 +1,144 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: form
+type: PageHeaderMenu
+properties:
+  title: New item
+# The page's state contract: every state path the page uses must be declared,
+# `required` reads the declared type, and Validate `schema: true` checks it.
+state:
+  name: { type: string, minLength: 1 }
+  category: { enum: [hardware, software, service] }
+  due_date: { instanceof: Date }
+  quantity: { type: integer, minimum: 1 }
+  saved:
+    type: object
+    properties:
+      id: { type: string }
+      summary: { type: string }
+
+requests:
+  - id: insert_item
+    type: MongoDBInsertOne
+    connectionId: items
+    # `payload:` is evaluated on the client (so `_state` reads the form values);
+    # `properties:` is evaluated on the server, where `_payload` reads them back
+    # and `_user` is resolved from the authenticated caller.
+    payload:
+      name:
+        _state: name
+      category:
+        _state: category
+      quantity:
+        _state: quantity
+      due_date:
+        _state: due_date
+    properties:
+      doc:
+        _id:
+          _uuid: true
+        name:
+          _payload: name
+        category:
+          _payload: category
+        quantity:
+          _payload: quantity
+        due_date:
+          _payload: due_date
+        organization_id:
+          _user: organization_id
+        created_at:
+          _date: now
+
+blocks:
+  - id: name
+    type: TextInput
+    required: true
+    properties:
+      title: Name
+  - id: category
+    type: Selector
+    required: true
+    properties:
+      title: Category
+      options:
+        - value: hardware
+          label: Hardware
+        - value: software
+          label: Software
+        - value: service
+          label: Service
+  - id: due_date
+    type: DateSelector
+    required: true
+    properties:
+      title: Due date
+  - id: quantity
+    type: NumberInput
+    required: true
+    properties:
+      title: Quantity
+      min: 1
+  - id: submit
+    type: Button
+    properties:
+      title: Save item
+    events:
+      onClick:
+        - id: validate
+          type: Validate
+          params:
+            schema: true
+        - id: save
+          type: Request
+          params: insert_item
+        - id: remember
+          type: SetState
+          params:
+            saved:
+              id:
+                _request: insert_item.insertedId
+              summary:
+                _js:
+                  fn: ../lib/items.js#summarizeItem
+                  args:
+                    item:
+                      name:
+                        _state: name
+                      category:
+                        _state: category
+                      quantity:
+                        _state: quantity
+  - id: confirmation
+    type: Template
+    visible:
+      _not:
+        _eq:
+          - _state: saved.id
+          - null
+    properties:
+      context:
+        id:
+          _state: saved.id
+        summary:
+          _state: saved.summary
+      css: |
+        .saved { padding: 12px; border: 1px solid var(--ant-color-border); border-radius: 6px; }
+        .saved code { color: var(--ant-color-text-secondary); }
+      template: |
+        <div class="saved">
+          <p>Saved <strong>{{ summary }}</strong></p>
+          <p>Item id: <code>{{ id }}</code></p>
+        </div>

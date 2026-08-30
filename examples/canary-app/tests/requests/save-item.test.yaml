@@ -1,0 +1,55 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Seeding `items` points the connection at the runner's in-memory MongoDB, so the
+# endpoint writes to a database that exists only for this run.
+- name: save_item inserts a valid payload and returns its id
+  endpointId: save_item
+  user: admin
+  payload: { name: Canary widget, category: hardware, quantity: 2 }
+  seed:
+    items: []
+  expect:
+    schema:
+      type: object
+      required: [ok, id]
+      properties:
+        ok: { const: true }
+        id: { type: string, minLength: 1 }
+
+- name: get_items returns the seeded rows that match the filter
+  pageId: list
+  requestId: get_items
+  user: admin
+  payload: { filter: widget, page: { current: 1, pageSize: 5 } }
+  seed:
+    items:
+      - _id: item_1
+        name: Canary widget
+        category: hardware
+        quantity: 1
+        organization_id: org_1
+        created_at: { '~d': '2026-01-02T00:00:00.000Z' }
+      - _id: item_2
+        name: Unrelated gadget
+        category: software
+        quantity: 4
+        organization_id: org_1
+        created_at: { '~d': '2026-01-01T00:00:00.000Z' }
+  expect:
+    - rows:
+        - _id: item_1
+          name: Canary widget
+      total:
+        - count: 1

@@ -1,0 +1,11 @@
+{
+  "name": "lowdefy-canary-app",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Downstream canary app built by CI against every candidate Lowdefy build. Not published.",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "mongodb": "6.20.0",
+    "mongodb-memory-server": "10.3.0"
+  }
+}

@@ -1,0 +1,115 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: detail
+type: PageHeaderMenu
+properties:
+  title: Item
+
+requests:
+  - id: get_item
+    type: MongoDBFindOne
+    connectionId: items
+    payload:
+      id:
+        _url_query: id
+    properties:
+      query:
+        _id:
+          _payload: id
+
+events:
+  onMount:
+    - id: load_item
+      type: Request
+      params: get_item
+    - id: set_item
+      type: SetState
+      params:
+        item:
+          _request: get_item
+
+blocks:
+  - id: missing
+    type: Alert
+    visible:
+      _eq:
+        - _state: item
+        - null
+    properties:
+      type: warning
+      message: No item found for this id.
+  - id: details
+    type: Descriptions
+    visible:
+      _not:
+        _eq:
+          - _state: item
+          - null
+    properties:
+      column: 1
+      bordered: true
+      items:
+        - label: Name
+          value:
+            _state: item.name
+        - label: Category
+          value:
+            _state: item.category
+        - label: Quantity
+          value:
+            _state: item.quantity
+  - id: show_raw
+    type: Button
+    visible:
+      _not:
+        _eq:
+          - _state: item
+          - null
+    properties:
+      title: Show raw document
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: raw_modal
+            method: toggleOpen
+  - id: raw_modal
+    type: Modal
+    properties:
+      title: Raw document
+      footer: false
+    blocks:
+      - id: raw
+        type: Template
+        properties:
+          context:
+            json:
+              _json.stringify:
+                - _state: item
+                - null
+                - 2
+          template: '<pre>{{ json }}</pre>'
+  - id: back
+    type: Button
+    properties:
+      title: Back to items
+      type: link
+    events:
+      onClick:
+        - id: back_to_list
+          type: Link
+          params:
+            pageId: list
