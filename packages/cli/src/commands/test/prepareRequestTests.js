@@ -16,11 +16,18 @@
 import { type } from '@lowdefy/helpers';
 
 import loadMemoryMongo from './loadMemoryMongo.js';
+import loadRequestTestFixtures from './loadRequestTestFixtures.js';
 
-function getSeededConnectionIds({ items }) {
+// Every connection a test writes to, through its own `seed:` or through a fixture
+// it names - all of them must be redirected at the memory server, or a fixture
+// would land in the developer's real database.
+function getSeededConnectionIds({ items, fixtures }) {
   const ids = new Set();
   items.forEach(({ test }) => {
     Object.keys(test?.seed ?? {}).forEach((id) => ids.add(id));
+  });
+  fixtures.forEach(({ fixture }) => {
+    (fixture?.connections ?? []).forEach(({ connectionId }) => ids.add(connectionId));
   });
   return [...ids];
 }
@@ -28,12 +35,14 @@ function getSeededConnectionIds({ items }) {
 // Runs once before the dev server boots. When any selected request test seeds
 // data, starts an in-memory MongoDB and returns the env that points every seeded
 // connection at it (read by @lowdefy/server-dev's applyConnectionOverrides).
-// Returns { env, client, stop }; with nothing to seed the env is empty and stop
-// is a no-op.
+// Returns { env, client, fixtures, stop }; with nothing to seed the env is empty
+// and stop is a no-op. `fixtures` maps every fixture name the tests use to its
+// loaded documents (or its load error) for runRequestTest.
 async function prepareRequestTests({ context, items }) {
-  const connectionIds = getSeededConnectionIds({ items });
+  const fixtures = await loadRequestTestFixtures({ context, items });
+  const connectionIds = getSeededConnectionIds({ items, fixtures });
   if (connectionIds.length === 0) {
-    return { env: {}, client: null, stop: async () => {} };
+    return { env: {}, client: null, fixtures, stop: async () => {} };
   }
   if (type.isString(context.options.url) && context.options.url !== '') {
     throw new Error(
@@ -59,6 +68,7 @@ async function prepareRequestTests({ context, items }) {
   return {
     env: { LOWDEFY_TEST_CONNECTION_OVERRIDES: JSON.stringify(overrides) },
     client,
+    fixtures,
     stop,
   };
 }

@@ -50,6 +50,23 @@ function getTarget({ test }) {
   };
 }
 
+// The fixtures a test names were loaded once by prepareRequestTests; a fixture
+// that failed to load fails every test naming it with the loader's message.
+function resolveFixtures({ test, session }) {
+  const fixtures = [];
+  for (const name of test.fixtures ?? []) {
+    const loaded = session.fixtures?.get(name);
+    if (type.isNone(loaded)) {
+      return { error: `Fixture "${name}" was not loaded before the run.` };
+    }
+    if (!type.isNone(loaded.error)) {
+      return { error: loaded.error };
+    }
+    fixtures.push(loaded.fixture);
+  }
+  return { fixtures };
+}
+
 // Runs one discovered request test: validate, seed, call the dev server's
 // run-request or run-endpoint route, compare. Every outcome - invalid file, seed
 // failure, transport failure, refusal, request error, mismatch - is returned in
@@ -66,12 +83,17 @@ async function runRequestTest({ context, item, url, session }) {
     return fail({ message: `Invalid request test: ${validation.message}` });
   }
   const start = Date.now();
-  if (!type.isNone(test.seed)) {
+  const { fixtures, error: fixtureError } = resolveFixtures({ test, session });
+  if (!type.isNone(fixtureError)) {
+    return fail({ message: fixtureError });
+  }
+  if (!type.isNone(test.seed) || fixtures.length > 0) {
     try {
       await seedFixtures({
         client: session.client,
         devDirectory: context.directories.dev,
         seed: test.seed,
+        fixtures,
       });
     } catch (error) {
       return fail({ message: error.message, durationMs: Date.now() - start });

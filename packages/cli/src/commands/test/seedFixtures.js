@@ -43,24 +43,53 @@ function resolveCollection({ connectionId, devDirectory }) {
   return { collection: properties.collection, databaseName: properties.databaseName };
 }
 
-// Drops every collection named by `seed` and inserts its documents, so one test's
-// data never leaks into the next. `seed` is { connectionId: documents[] } from any
-// source - this file knows nothing about test files, so shared fixtures (task 42)
-// can pass documents through the same function. `~d` markers become Dates.
-async function seedFixtures({ client, devDirectory, seed }) {
-  for (const connectionId of Object.keys(seed ?? {})) {
-    const { collection, databaseName } = resolveCollection({ connectionId, devDirectory });
-    const target = client.db(databaseName).collection(collection);
-    await target.drop().catch((error) => {
-      // A collection that does not exist yet cannot be dropped; every other
-      // driver failure is real and must surface.
-      if (error.codeName !== 'NamespaceNotFound' && error.code !== 26) {
-        throw error;
-      }
+async function dropCollection({ target }) {
+  try {
+    await target.drop();
+  } catch (error) {
+    // A collection that does not exist yet cannot be dropped; every other
+    // driver failure is real and must surface.
+    if (error.codeName !== 'NamespaceNotFound' && error.code !== 26) {
+      throw error;
+    }
+  }
+}
+
+// Drops every collection named by the fixtures and by `seed`, once each, then
+// inserts the fixtures' documents in list order and the test's own `seed`
+// documents last, so a test layers its specifics on a shared base and one
+// test's data never leaks into the next. `fixtures` is [{ name, connections:
+// [{ connectionId, docs }] }] as readFixture returns it and `seed` is
+// { connectionId: documents[] } - this file knows nothing about test or fixture
+// files. `~d` markers in `seed` become Dates; fixture documents arrive revived.
+async function seedFixtures({ client, devDirectory, seed, fixtures }) {
+  const inserts = [];
+  (fixtures ?? []).forEach((fixture) => {
+    fixture.connections.forEach(({ connectionId, docs }) => {
+      inserts.push({ connectionId, documents: docs });
     });
-    const documents = serializer.deserialize(seed[connectionId]);
+  });
+  Object.keys(seed ?? {}).forEach((connectionId) => {
+    inserts.push({ connectionId, documents: serializer.deserialize(seed[connectionId]) });
+  });
+
+  // Resolve every connection before touching the database, so an unseedable
+  // connection fails the test without a half-seeded state.
+  const targets = new Map();
+  inserts.forEach(({ connectionId }) => {
+    if (targets.has(connectionId)) {
+      return;
+    }
+    const { collection, databaseName } = resolveCollection({ connectionId, devDirectory });
+    targets.set(connectionId, client.db(databaseName).collection(collection));
+  });
+
+  for (const target of targets.values()) {
+    await dropCollection({ target });
+  }
+  for (const { connectionId, documents } of inserts) {
     if (documents.length > 0) {
-      await target.insertMany(documents);
+      await targets.get(connectionId).insertMany(documents);
     }
   }
 }

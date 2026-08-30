@@ -105,6 +105,7 @@ test('runRequestTest seeds before calling the route and compares ~d dates as Dat
     client: session.client,
     devDirectory: '/app/.lowdefy/dev',
     seed,
+    fixtures: [],
   });
   expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
     mockPost.mock.invocationCallOrder[0]
@@ -232,4 +233,87 @@ test('runRequestTest fails an unparseable file with its error and the file path 
     durationMs: 0,
     message: 'Invalid YAML: bad',
   });
+});
+
+test('runRequestTest seeds the named fixtures in list order together with seed before calling the route', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const base = { name: 'base', connections: [{ connectionId: 'controls', docs: [{ _id: 'c1' }] }] };
+  const orgA = {
+    name: 'org-a',
+    connections: [{ connectionId: 'controls', docs: [{ _id: 'c2' }] }],
+  };
+  const seed = { answers: [{ _id: 'a1' }] };
+  const fixtureSession = {
+    client: session.client,
+    fixtures: new Map([
+      ['base', { fixture: base }],
+      ['org-a', { fixture: orgA }],
+    ]),
+  };
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ fixtures: ['org-a', 'base'], seed }),
+    url,
+    session: fixtureSession,
+  });
+  expect(mockSeedFixtures).toHaveBeenCalledWith({
+    client: session.client,
+    devDirectory: '/app/.lowdefy/dev',
+    seed,
+    fixtures: [orgA, base],
+  });
+  expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
+    mockPost.mock.invocationCallOrder[0]
+  );
+  expect(result.passed).toBe(true);
+});
+
+test('runRequestTest seeds a test with fixtures and no seed', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const base = { name: 'base', connections: [{ connectionId: 'controls', docs: [{ _id: 'c1' }] }] };
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ fixtures: ['base'] }),
+    url,
+    session: { client: session.client, fixtures: new Map([['base', { fixture: base }]]) },
+  });
+  expect(mockSeedFixtures).toHaveBeenCalledWith({
+    client: session.client,
+    devDirectory: '/app/.lowdefy/dev',
+    seed: undefined,
+    fixtures: [base],
+  });
+  expect(result.passed).toBe(true);
+});
+
+test('runRequestTest fails with the fixture load error without seeding or calling the route', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ fixtures: ['missing'] }),
+    url,
+    session: {
+      client: session.client,
+      fixtures: new Map([
+        ['missing', { error: 'Fixture "missing" not found. Expected fixtures/missing.yaml.' }],
+      ]),
+    },
+  });
+  expect(mockSeedFixtures).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.passed).toBe(false);
+  expect(result.message).toEqual('Fixture "missing" not found. Expected fixtures/missing.yaml.');
+});
+
+test('runRequestTest fails an invalid fixtures field without calling the route', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ fixtures: 'base' }),
+    url,
+    session,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.passed).toBe(false);
+  expect(result.message).toContain('"fixtures" should be a list of fixture names');
 });

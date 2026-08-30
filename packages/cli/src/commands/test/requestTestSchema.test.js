@@ -88,3 +88,18 @@ test('requestTestSchema rejects a non-object test', () => {
   expect(result.valid).toBe(false);
   expect(result.message).toContain('Request test should');
 });
+
+test('requestTestSchema accepts a fixtures list of names and rejects other shapes', () => {
+  expect(validateRequestTest({ test: { ...minimal, fixtures: ['base', 'org-a'] } })).toEqual({
+    valid: true,
+  });
+  expect(validateRequestTest({ test: { ...minimal, fixtures: 'base' } })).toEqual({
+    valid: false,
+    message:
+      'Request test "fixtures" should be a list of fixture names from the fixtures directory.',
+  });
+  expect(validateRequestTest({ test: { ...minimal, fixtures: [{ name: 'base' }] } })).toEqual({
+    valid: false,
+    message: 'Request test "fixtures" entries should be fixture names (strings).',
+  });
+});

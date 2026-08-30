@@ -46,6 +46,18 @@ const requestTestSchema = {
       type: 'object',
       errorMessage: { type: 'Request test "payload" should be an object.' },
     },
+    fixtures: {
+      type: 'array',
+      items: {
+        type: 'string',
+        errorMessage: {
+          type: 'Request test "fixtures" entries should be fixture names (strings).',
+        },
+      },
+      errorMessage: {
+        type: 'Request test "fixtures" should be a list of fixture names from the fixtures directory.',
+      },
+    },
     seed: {
       type: 'object',
       additionalProperties: {
