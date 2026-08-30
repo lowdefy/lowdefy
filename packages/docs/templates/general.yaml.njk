@@ -73,9 +73,13 @@ blocks:
             path: templates/footer.yaml.njk
             vars:
               hideFeedback:
-                _var: hideFeedback
+                _var:
+                  key: hideFeedback
+                  default: null
               filePath:
-                _var: filePath
+                _var:
+                  key: filePath
+                  default: null
               pageId:
                 _var: pageId
 
