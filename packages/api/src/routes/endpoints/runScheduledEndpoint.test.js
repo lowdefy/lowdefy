@@ -131,3 +131,41 @@ test('rejects a schedule payload that violates the endpoint payloadSchema before
   );
   expect(runRoutine).not.toHaveBeenCalled();
 });
+
+test('resolves the endpoint runAs onto the routine context of a scheduled run', async () => {
+  const { operatorsServer } = await import('@lowdefy/operators-js');
+  const endpoint = {
+    endpointId: 'purge',
+    type: 'Api',
+    schedules: [{ cron: '0 6 * * *' }],
+    runAs: { organizationId: { _secret: 'SYSTEM_ORG' } },
+    routine: [],
+    '~k': 'endpoint.purge',
+  };
+  const readConfigFile = jest.fn((path) => (path === 'api/purge.json' ? endpoint : null));
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile,
+    secrets: { SYSTEM_ORG: 'org-system' },
+  });
+  await runScheduledEndpoint(context, { endpointId: 'purge', cron: '0 6 * * *' });
+  const [, routineContext] = runRoutine.mock.calls[0];
+  expect(routineContext.runAs).toEqual({
+    organizationId: 'org-system',
+    configKey: 'endpoint.purge',
+    source: 'endpoint',
+  });
+});
+
+test('leaves runAs undefined on the routine context when the endpoint declares none', async () => {
+  const context = makeContext({
+    endpointId: 'purge',
+    type: 'Api',
+    schedules: [{ cron: '0 6 * * *' }],
+    routine: [],
+  });
+  await runScheduledEndpoint(context, { endpointId: 'purge', cron: '0 6 * * *' });
+  const [, routineContext] = runRoutine.mock.calls[0];
+  expect(routineContext.runAs).toBeUndefined();
+});

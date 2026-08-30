@@ -21,6 +21,7 @@ import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
 import validatePayload from './validatePayload.js';
@@ -78,6 +79,15 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
     state: {},
     endpointDepth: 0,
   };
+  // The endpoint's runAs scopes every walled step of this run (a step-level
+  // runAs overrides it). Resolved against the fresh routine context, so it can
+  // read _user, _secret or a literal, never a step result or the payload.
+  routineContext.runAs = resolveRunAs(context, routineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
   // async: true — acknowledge the cron trigger immediately and run in the
   // background; transport auth (CRON_SECRET) already passed at the route.

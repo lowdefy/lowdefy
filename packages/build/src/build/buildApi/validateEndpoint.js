@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../utils/validateId.js';
 import validateCronExpression from '../../utils/validateCronExpression.js';
+import validateRunAs from './validateRunAs.js';
 
 function validateSchedules({ endpoint, configKey }) {
   if (type.isUndefined(endpoint.schedules)) return;
@@ -109,6 +110,7 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
     );
   }
   validateSchedules({ endpoint, configKey });
+  validateRunAs({ runAs: endpoint.runAs, location: `Api endpoint "${endpoint.id}"`, configKey });
 }
 
 export default validateEndpoint;

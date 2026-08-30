@@ -27,7 +27,7 @@ function formatEntry(error) {
 // Errors and warnings first, then the tenant: none notices under their own
 // heading with their source lines, so a pasted bar reads as two lists.
 function formatErrorsForCopy(errors) {
-  const { entries, tenantNotices } = groupNotices(errors);
+  const { entries, tenantNotices, runAsNotices } = groupNotices(errors);
   const sections = [entries.map(formatEntry).join('\n\n')];
   if (tenantNotices.length > 0) {
     const lines = tenantNotices.map((notice) => {
@@ -35,6 +35,13 @@ function formatErrorsForCopy(errors) {
       return `${notice.message}${source}`;
     });
     sections.push(`Unscoped reads (tenant: none):\n${lines.join('\n')}`);
+  }
+  if (runAsNotices.length > 0) {
+    const lines = runAsNotices.map((notice) => {
+      const source = notice.source ? `\n  Source: ${notice.source}` : '';
+      return `${notice.message}${source}`;
+    });
+    sections.push(`Scoped runs (runAs):\n${lines.join('\n')}`);
   }
   return sections.filter((section) => section !== '').join('\n\n');
 }

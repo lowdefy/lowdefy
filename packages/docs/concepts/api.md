@@ -33,6 +33,7 @@ The schema for a Lowdefy API is:
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
 - `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
+- `runAs: object`: **Optional** - `{ organizationId }`: run the routine scoped to that organization under the `tenant` organizations policy. The tenant wall filters and stamps as if a member of that organization made the call, so caller-less runs (schedules, detached calls, webhooks) stay walled instead of needing `tenant: none`. `organizationId` may be a literal or an operator (`_step`, `_user`, `_secret`, ...) but never `_payload` or `_state`. Steps accept the same key. See [Running as an organization](/organizations#running-a-routine-as-an-organization-runas).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:

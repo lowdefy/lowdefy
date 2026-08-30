@@ -126,6 +126,8 @@ _ref:
             | Request | `authored` | The request authors its own tenant clause (audited at runtime). |
             | Websocket | `none` | Opt out. `authored` is not allowed — change streams are always scoped mechanically. |
 
+            **Prefer `runAs` over `tenant: none` for caller-less chains.** A scheduled job, a detached call, a webhook or an auth hook runs with no session, so a walled step fails closed for it. Switching the wall off with `tenant: none` and hand-writing the organization clause into every filter and document is unscoped access by construction. If the routine knows which organization it is processing, declare it with [`runAs`](#running-a-routine-as-an-organization-runas) and keep the wall on.
+
             **`tenant: none` is flagged in dev.** An unscoped read looks exactly like a scoped one, so `lowdefy dev` records every execution of a `tenant: none` request, step or websocket — the browser error bar shows them as `unscoped reads (N)` on an amber bar with the `file:line` of each declaration, and `lowdefy_build_status` (`GET /lowdefy-docs/build-status`) lists them under `tenantNotices`. They are notices, not errors: the request still runs, and production emits nothing. Review each one before shipping.
 
             An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause *inside the stage*. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
@@ -154,6 +156,62 @@ _ref:
                               _payload: q
                             path: title
             ```
+
+            ### Running a routine as an organization (`runAs`)
+
+            `runAs: { organizationId }` on an `Api` endpoint, or on a single request step, makes the wall run **scoped to that organization** instead of to the caller's. Filters are injected and writes are stamped exactly as they are for a signed-in member of that organization — the same code path, nothing switched off.
+
+            ```yaml
+            api:
+              - id: process_job
+                type: Api
+                schedules:
+                  - cron: '*/5 * * * *'
+                routine:
+                  # The job row knows which organization it belongs to. This one
+                  # read runs outside the wall to find it.
+                  - id: job
+                    type: MongoDBFindOne
+                    connectionId: jobs
+                    tenant: none
+                    properties:
+                      query: { status: pending }
+                  # Every step from here runs as that organization: reads are
+                  # filtered to it, and the written row is stamped with it.
+                  - id: records
+                    type: MongoDBFind
+                    connectionId: app_data
+                    runAs:
+                      organizationId:
+                        _step: job.organization_id
+                    properties:
+                      query: { archived: false }
+                  - id: result
+                    type: MongoDBInsertOne
+                    connectionId: results
+                    runAs:
+                      organizationId:
+                        _step: job.organization_id
+                    properties:
+                      doc:
+                        jobId:
+                          _step: job._id
+                        count:
+                          _get:
+                            key: length
+                            from:
+                              _step: records
+            ```
+
+            - **Endpoint position** — `runAs` on the endpoint scopes every walled step of the run. It is evaluated once against the fresh routine context, so it can read `_user`, `_secret`, an `_env`-style value or a literal, but not a step result.
+            - **Step position** — `runAs` on a request step overrides the endpoint's scope for that step, and is evaluated as the routine stands at that step, so `_step` reads the results before it.
+            - **Every transport** — the endpoint's declaration is honoured when it is called from a page, scheduled, dispatched with `detached: true`, hit as a webhook, or called through `CallApi`. A `CallApi` child runs under *its own* declaration; the parent's scope does not flow into it.
+            - **`organizationId` may not come from `_payload` or `_state`.** A browser or an API client controls the payload and the page state, so any caller could name another organization and read its rows. The build refuses both, anywhere in the value — inside a `_js` argument or an `_if` branch included. Derive the organization from a previous step (`_step`), from the caller (`_user`), or from a secret or environment value.
+            - **`runAs` and `tenant: none` on the same step is a build error** — one scopes the step to an organization, the other switches the wall off. A step under an endpoint-level `runAs` may still declare `tenant: none` on its own to opt that one step out (as `job` does above).
+            - **Only the wall's scope moves.** `runAs` does not change the caller: authorization, roles, `_user` and logging still describe the real caller, so an endpoint cannot use `runAs` to gain access it was refused.
+            - A `runAs` whose value evaluates to anything but a non-empty string is a `ConfigError` on the step, pointing at the `runAs` line — never the caller-less `AuthenticationError`.
+
+            **`runAs` is flagged in dev.** Like `tenant: none`, a scoped run is indistinguishable from a member's request, so `lowdefy dev` records every step that ran under a `runAs` scope: the error bar shows them as `scoped runs (N)` beside the unscoped reads, and `lowdefy_build_status` lists them under `tenantNotices` with name `RunAsScope`.
 
             ### Why the wall lives on the connection
 

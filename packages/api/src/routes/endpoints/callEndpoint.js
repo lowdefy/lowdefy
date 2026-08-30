@@ -21,6 +21,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
 import validatePayload from './validatePayload.js';
@@ -64,6 +65,15 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     state: {},
     endpointDepth: 0,
   };
+  // The endpoint's runAs scopes every walled step of this run (a step-level
+  // runAs overrides it). Resolved against the fresh routine context, so it can
+  // read _user, _secret or a literal, never a step result or the payload.
+  routineContext.runAs = resolveRunAs(context, routineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
   // async: true — acknowledge now, run the routine in the background.
   // Auth was already checked above; the outcome lands in logs (scheduleBackground)

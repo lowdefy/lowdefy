@@ -17,18 +17,24 @@
 // notices, which the bar renders as their own "unscoped reads" group and the
 // copy text lists under their own heading.
 const TENANT_NONE_NOTICE = 'TenantNoneNotice';
+// Steps that ran scoped to an authored organization (runAs) sit beside the
+// unscoped ones: neither is an error, and both say which rows a step touched.
+const RUN_AS_NOTICE = 'RunAsScope';
 
 function groupNotices(errors) {
   const entries = [];
   const tenantNotices = [];
+  const runAsNotices = [];
   (errors ?? []).forEach((error) => {
     if (error.type === TENANT_NONE_NOTICE) {
       tenantNotices.push(error);
+    } else if (error.type === RUN_AS_NOTICE) {
+      runAsNotices.push(error);
     } else {
       entries.push(error);
     }
   });
-  return { entries, tenantNotices };
+  return { entries, tenantNotices, runAsNotices };
 }
 
 export default groupNotices;

@@ -22,7 +22,7 @@ import readBuildArtifact from './readBuildArtifact.js';
 // Feedback loop for agents: build status (written by the build manager to
 // build/buildStatus.json) plus recent browser errors reported via
 // POST /api/client-error, plus recent server errors (request, endpoint, MCP and
-// agent tool failures) collected by createHandleError, plus every `tenant: none`
+// agent tool failures) collected by createHandleError, plus every `tenant: none` and runAs
 // execution seen this session (unscoped reads, one per config site) collected by
 // createHandleDevNotice. Lets an agent check "did my last edit work?" without
 // tailing terminal logs.

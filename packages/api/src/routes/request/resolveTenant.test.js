@@ -654,3 +654,203 @@ test('handleDevNotice is not called for tenant authored', () => {
   );
   expect(handleDevNotice).not.toHaveBeenCalled();
 });
+
+// runAs: the resolved `runAs: { organizationId }` of a step or its endpoint
+// stands in for the caller's organization. Everything else - field, authored,
+// the capability checks - resolves exactly as for a member's request.
+const stepRequestConfig = {
+  ...defaultRequestConfig,
+  requestId: undefined,
+  stepId: 'rows',
+  '~k': 'step.3',
+};
+
+test('runAs scopes a caller with no organization to the runAs organization', () => {
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: stepRequestConfig,
+      runAs: { organizationId: 'org-9', configKey: 'endpoint.1', source: 'endpoint' },
+    }
+  );
+  expect(res).toEqual({ field: 'organization_id', value: 'org-9' });
+});
+
+test('runAs takes precedence over the caller organization without touching context.user', () => {
+  const context = { ...contextWithOrg };
+  const res = resolveTenant(context, {
+    connection: tenantConnection,
+    connectionConfig: defaultConnectionConfig,
+    requestConfig: stepRequestConfig,
+    runAs: { organizationId: 'org-9', configKey: 'step.3', source: 'step' },
+  });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-9' });
+  expect(context.user).toEqual({ id: 'id', organization_id: 'org-1' });
+});
+
+test('runAs uses the connection tenant field and keeps the authored marker', () => {
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'tenant_id' } },
+      requestConfig: { ...stepRequestConfig, tenant: 'authored' },
+      runAs: { organizationId: 'org-9', configKey: 'step.3', source: 'step' },
+    }
+  );
+  expect(res).toEqual({ field: 'tenant_id', value: 'org-9', authored: true });
+});
+
+test('the caller organization is used when runAs is absent', () => {
+  const res = resolveTenant(contextWithOrg, {
+    connection: tenantConnection,
+    connectionConfig: defaultConnectionConfig,
+    requestConfig: stepRequestConfig,
+    runAs: undefined,
+  });
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
+});
+
+test('runAs that evaluated to undefined throws a ConfigError at the runAs declaration, not an AuthenticationError', () => {
+  let error;
+  try {
+    resolveTenant(
+      { ...tenantPolicy, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: stepRequestConfig,
+        runAs: { organizationId: undefined, configKey: 'endpoint.1', source: 'endpoint' },
+      }
+    );
+  } catch (e) {
+    error = e;
+  }
+  expect(error).toBeInstanceOf(ConfigError);
+  expect(error).not.toBeInstanceOf(AuthenticationError);
+  expect(error.message).toBe(
+    'Step "rows" declares "runAs" but "organizationId" evaluated to undefined. It must be a non-empty organization id string.'
+  );
+  expect(error.configKey).toBe('endpoint.1');
+});
+
+test('runAs that evaluated to an empty string or a non-string throws a ConfigError', () => {
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: stepRequestConfig,
+      runAs: { organizationId: '', configKey: 'step.3' },
+    })
+  ).toThrow(
+    'Step "rows" declares "runAs" but "organizationId" evaluated to "". It must be a non-empty organization id string.'
+  );
+  expect(() =>
+    resolveTenant(contextWithOrg, {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: stepRequestConfig,
+      runAs: { organizationId: { id: 'org-9' }, configKey: 'step.3' },
+    })
+  ).toThrow(
+    'Step "rows" declares "runAs" but "organizationId" evaluated to {"id":"org-9"}. It must be a non-empty organization id string.'
+  );
+});
+
+test('runAs is inert on a tenant shared connection, a non-scopable type and under the pinned policy', () => {
+  const runAs = { organizationId: undefined, configKey: 'step.3' };
+  expect(
+    resolveTenant(
+      { ...tenantPolicy, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
+        requestConfig: stepRequestConfig,
+        runAs,
+      }
+    )
+  ).toBe(null);
+  expect(
+    resolveTenant(
+      { ...tenantPolicy, user: null },
+      {
+        connection: nonScopableConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: stepRequestConfig,
+        runAs,
+      }
+    )
+  ).toBe(null);
+  expect(
+    resolveTenant(
+      { organization: { policy: 'pinned' }, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: stepRequestConfig,
+        runAs,
+      }
+    )
+  ).toBe(null);
+});
+
+test('tenant none on the step still opts out under an endpoint-level runAs', () => {
+  const handleDevNotice = jest.fn();
+  const res = resolveTenant(
+    { ...tenantPolicy, user: null, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: { ...stepRequestConfig, tenant: 'none' },
+      runAs: { organizationId: 'org-9', configKey: 'endpoint.1', source: 'endpoint' },
+    }
+  );
+  expect(res).toBe(null);
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(handleDevNotice.mock.calls[0][0].name).toBe('TenantNoneNotice');
+});
+
+test('runAs calls handleDevNotice with the RunAsScope notice for the step that ran', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { ...tenantPolicy, user: null, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'tenant_id' } },
+      requestConfig: stepRequestConfig,
+      runAs: { organizationId: 'org-9', configKey: 'endpoint.1', source: 'endpoint' },
+    }
+  );
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(handleDevNotice.mock.calls[0][0]).toEqual({
+    name: 'RunAsScope',
+    level: 'info',
+    message: 'Step "rows" ran scoped to organization "org-9" (runAs).',
+    configKey: 'step.3',
+    details: {
+      connectionId: 'testConnection',
+      stepId: 'rows',
+      field: 'tenant_id',
+      organizationId: 'org-9',
+      source: 'endpoint',
+    },
+  });
+});
+
+test('runAs does not call handleDevNotice when the organizationId is invalid', () => {
+  const handleDevNotice = jest.fn();
+  expect(() =>
+    resolveTenant(
+      { ...tenantPolicy, user: null, handleDevNotice },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: stepRequestConfig,
+        runAs: { organizationId: null, configKey: 'step.3' },
+      }
+    )
+  ).toThrow(ConfigError);
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
