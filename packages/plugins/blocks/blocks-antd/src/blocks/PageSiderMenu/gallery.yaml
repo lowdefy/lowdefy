@@ -210,8 +210,7 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                     icon: AiOutlineUser
                 - id: psm_grp_name_1
                   type: Paragraph
@@ -242,8 +241,7 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#52c41a'
+                    color: '#52c41a'
                     icon: AiOutlineUser
                 - id: psm_grp_name_2
                   type: Paragraph
@@ -407,7 +405,6 @@
                   type: Progress
                   properties:
                     percent: 68
-                    size: small
         footer:
           blocks:
             - id: psm_full_footer_text

@@ -465,9 +465,6 @@
             width: 220
             collapsible: true
             initialCollapsed: false
-            designTokens:
-              colorPrimary: '#722ed1'
-              colorText: '#531dab'
           blocks:
             - id: token_menu
               type: Menu
@@ -513,9 +510,6 @@
             width: 220
             collapsible: true
             initialCollapsed: false
-            designTokens:
-              colorPrimary: '#52c41a'
-              colorBgContainer: '#1a1a2e'
           blocks:
             - id: token_dark_menu
               type: Menu

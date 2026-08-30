@@ -614,7 +614,6 @@
           properties:
             title: Amount
             placeholder: Enter amount
-            prefixIcon: AiOutlineDollar
             label:
               extra: Enter the budgeted amount for this category.
         - id: applied2_budget_save_btn

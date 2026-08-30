@@ -75,7 +75,7 @@ blocks:
   - id: avatar_number_size
     type: Avatar
     properties:
-      content: 64
+      content: '64'
       size: 64
 
   # ============================================

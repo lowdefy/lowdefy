@@ -204,7 +204,6 @@ _ref:
       - id: body_visible
         type: MarkdownWithCode
         properties:
-          renderHtml: true
           content: |
             ### How it works
 

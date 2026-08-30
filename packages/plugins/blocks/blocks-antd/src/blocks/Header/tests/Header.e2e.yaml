@@ -36,8 +36,6 @@ blocks:
 
   - id: header_theme_light
     type: Header
-    properties:
-      theme: light
     slots:
       content:
         blocks:
@@ -48,8 +46,6 @@ blocks:
 
   - id: header_theme_dark
     type: Header
-    properties:
-      theme: dark
     slots:
       content:
         blocks:

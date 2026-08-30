@@ -1045,8 +1045,7 @@
                   properties:
                     icon: AiOutlineUser
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                 - id: popover_usercard_info
                   type: Box
                   layout:
@@ -1128,8 +1127,7 @@
                 flex: 0 0 auto
               properties:
                 content: SC
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: popover_usercard_trigger_name
               type: Paragraph
               layout:
@@ -1298,4 +1296,3 @@
           properties:
             label:
               disabled: true
-            prefix: $
