@@ -373,11 +373,17 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Extract JS functions from the page
     const pageRequests = [...(processed.requests ?? [])];
     delete processed.requests;
-    const cleanPage = jsMapParser({ input: processed, jsMap: buildContext.jsMap, env: 'client' });
+    const cleanPage = jsMapParser({
+      input: processed,
+      jsMap: buildContext.jsMap,
+      env: 'client',
+      context: buildContext,
+    });
     const cleanRequests = jsMapParser({
       input: pageRequests,
       jsMap: buildContext.jsMap,
       env: 'server',
+      context: buildContext,
     });
     const finalPage = { ...cleanPage, requests: cleanRequests };
 

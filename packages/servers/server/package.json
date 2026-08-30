@@ -66,6 +66,7 @@
     "@lowdefy/blocks-markdown": "5.5.1",
     "@lowdefy/blocks-tiptap": "5.5.1",
     "@lowdefy/client": "5.5.1",
+    "@lowdefy/docs": "workspace:*",
     "@lowdefy/errors": "5.5.1",
     "@lowdefy/helpers": "5.5.1",
     "@lowdefy/layout": "5.5.1",
