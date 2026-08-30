@@ -42,6 +42,16 @@ function createApiContext(context) {
 
   context.authorizeOutcome = createAuthorizeOutcome(context);
   context.readConfigFile = createReadConfigFile(context);
+
+  // context.handleDevNotice is the dev-only notice sink and is deliberately
+  // NOT assigned here. It is an optional function a dev server sets on the
+  // context after this runs (server-dev createLowdefyContext), called by
+  // routes for things that are not errors but a developer should see while
+  // building - currently every `tenant: none` execution (resolveTenant). It
+  // is never set in @lowdefy/server or @lowdefy/server-e2e, so production
+  // emits nothing; callers use `context.handleDevNotice?.(notice)`. An
+  // implementation must never throw and must not await anything on the
+  // request path - a notice must never fail or slow a request.
 }
 
 export default createApiContext;

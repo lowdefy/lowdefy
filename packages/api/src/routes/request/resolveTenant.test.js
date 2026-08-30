@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
 import resolveTenant from './resolveTenant.js';
@@ -519,4 +520,137 @@ test('tenant authored returns null under the pinned policy', () => {
     }
   );
   expect(res).toBe(null);
+});
+
+// Dev notice: the tenant: none branch reports the opt-out through the
+// optional context.handleDevNotice hook (set only by the dev server).
+const noticeRequestConfig = { ...defaultRequestConfig, tenant: 'none', '~k': 'request.7' };
+
+test('tenant none calls handleDevNotice once with the connection, field and request key', () => {
+  const handleDevNotice = jest.fn();
+  const res = resolveTenant(
+    { ...contextWithOrg, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: noticeRequestConfig,
+    }
+  );
+  expect(res).toBe(null);
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(handleDevNotice.mock.calls[0][0]).toEqual({
+    name: 'TenantNoneNotice',
+    level: 'info',
+    message:
+      'Request "requestId" ran unscoped on tenant connection "testConnection" (tenant: none). It reads and writes rows of every organization.',
+    configKey: 'request.7',
+    details: {
+      connectionId: 'testConnection',
+      requestId: 'requestId',
+      stepId: null,
+      field: 'organization_id',
+    },
+  });
+});
+
+test('tenant none notice names the custom field and prefers stepId in the location', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { ...contextWithOrg, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'tenant_id' } },
+      requestConfig: { ...noticeRequestConfig, requestId: undefined, stepId: 'stepId' },
+    }
+  );
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
+  const notice = handleDevNotice.mock.calls[0][0];
+  expect(notice.message).toMatch(/^Request "stepId" ran unscoped/);
+  expect(notice.details).toEqual({
+    connectionId: 'testConnection',
+    requestId: null,
+    stepId: 'stepId',
+    field: 'tenant_id',
+  });
+});
+
+test('tenant none notice does not need a caller organization', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { ...tenantPolicy, user: null, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: noticeRequestConfig,
+    }
+  );
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
+});
+
+test('tenant none with a drifted dotted field throws before any notice', () => {
+  const handleDevNotice = jest.fn();
+  expect(() =>
+    resolveTenant(
+      { ...contextWithOrg, handleDevNotice },
+      {
+        connection: tenantConnection,
+        connectionConfig: { ...defaultConnectionConfig, tenant: { field: 'a.b' } },
+        requestConfig: noticeRequestConfig,
+      }
+    )
+  ).toThrow(ConfigError);
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
+
+test('handleDevNotice is not called for tenant shared', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { ...contextWithOrg, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: { ...defaultConnectionConfig, tenant: 'shared' },
+      requestConfig: noticeRequestConfig,
+    }
+  );
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
+
+test('handleDevNotice is not called under the pinned policy', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { organization: { policy: 'pinned' }, user: null, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: noticeRequestConfig,
+    }
+  );
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
+
+test('handleDevNotice is not called for a scoped verdict', () => {
+  const handleDevNotice = jest.fn();
+  const res = resolveTenant(
+    { ...contextWithOrg, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(res).toEqual({ field: 'organization_id', value: 'org-1' });
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
+
+test('handleDevNotice is not called for tenant authored', () => {
+  const handleDevNotice = jest.fn();
+  resolveTenant(
+    { ...contextWithOrg, handleDevNotice },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: { ...defaultRequestConfig, tenant: 'authored' },
+    }
+  );
+  expect(handleDevNotice).not.toHaveBeenCalled();
 });
