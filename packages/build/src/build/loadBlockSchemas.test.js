@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors';
+
 import loadBlockSchemas from './loadBlockSchemas.js';
 
 function createContext(typesMap) {
@@ -96,12 +99,47 @@ test('loadBlockSchemas contributes nothing for a package whose metas cannot be i
   expect(context.blockSchemas).toEqual({});
 });
 
-test('loadBlockSchemas skips a type the package metas do not define', async () => {
+test('loadBlockSchemas collects a ConfigError for a type the package metas do not define', async () => {
   const context = createContext({
     blocks: {
       Missing: { package: '@lowdefy/blocks-basic', version: '0.0.0', originalTypeName: 'Nope' },
     },
   });
+  context.errors = [];
   await loadBlockSchemas({ components: {}, context });
   expect(context.blockSchemas).toEqual({});
+  expect(context.blockPluginMetas).toEqual({});
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0]).toBeInstanceOf(ConfigError);
+  expect(context.errors[0].message).toBe(
+    'Block type "Missing" from package "@lowdefy/blocks-basic": has no meta. Export it from "@lowdefy/blocks-basic/metas" as { Missing: meta } with at least { category }.'
+  );
+});
+
+test('loadBlockSchemas validates every core block meta without errors or warnings', async () => {
+  const { createRequire } = await import('node:module');
+  const require = createRequire(import.meta.url);
+  const buildPackage = require('../../package.json');
+  const blockPackages = Object.keys(buildPackage.dependencies).filter((name) =>
+    name.startsWith('@lowdefy/blocks-')
+  );
+  expect(blockPackages.length).toBeGreaterThan(0);
+  const blocks = {};
+  for (const packageName of blockPackages) {
+    const { default: types } = await import(`${packageName}/types`);
+    for (const typeName of types.blocks) {
+      blocks[`${packageName}:${typeName}`] = {
+        package: packageName,
+        version: '0.0.0',
+        originalTypeName: typeName,
+      };
+    }
+  }
+  const context = createContext({ blocks });
+  context.errors = [];
+  context.handleWarning = jest.fn();
+  await loadBlockSchemas({ components: {}, context });
+  expect(context.errors).toEqual([]);
+  expect(context.handleWarning).not.toHaveBeenCalled();
+  expect(Object.keys(context.blockPluginMetas).sort()).toEqual(Object.keys(blocks).sort());
 });
