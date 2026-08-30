@@ -1111,3 +1111,127 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     warnings: [],
   });
 });
+
+async function requiredFieldValidation({ blockType, value, valueType }) {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: blockType,
+        required: true,
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy: {
+      ...lowdefy,
+      _internal: {
+        ...lowdefy._internal,
+        blocks: { [blockType]: {} },
+        blockMetas: { [blockType]: { category: 'input', valueType } },
+      },
+    },
+    pageConfig,
+    operators: lowdefy._internal.operators,
+  });
+  const text1 = context._internal.RootSlots.map['text1'];
+  text1.setValue(value);
+  return text1.eval.validation.errors;
+}
+
+test('required fails an empty string', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: '' })
+  ).toEqual(['This field is required']);
+});
+
+test('required fails an empty array', async () => {
+  expect(
+    await requiredFieldValidation({
+      blockType: 'MultipleSelector',
+      valueType: 'array',
+      value: [],
+    })
+  ).toEqual(['This field is required']);
+});
+
+test('required fails null', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: null })
+  ).toEqual(['This field is required']);
+});
+
+test('required passes 0', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'NumberInput', valueType: 'number', value: 0 })
+  ).toEqual([]);
+});
+
+test('required passes false', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'Switch', valueType: 'boolean', value: false })
+  ).toEqual([]);
+});
+
+test('required passes an empty object', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'ObjectInput', valueType: 'object', value: {} })
+  ).toEqual([]);
+});
+
+test('required passes a non-empty string', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: 'a' })
+  ).toEqual([]);
+});
+
+test('required passes a non-empty array', async () => {
+  expect(
+    await requiredFieldValidation({
+      blockType: 'MultipleSelector',
+      valueType: 'array',
+      value: ['a'],
+    })
+  ).toEqual([]);
+});
+
+test("required inside a List validates each row's own value", async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ textInput: 'a' }, { textInput: '' }, { textInput: 'c' }] },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
+        blocks: [
+          {
+            id: 'list.$.textInput',
+            type: 'TextInput',
+            required: true,
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+    operators: lowdefy._internal.operators,
+  });
+  expect(context._internal.RootSlots.map['list.0.textInput'].eval.validation.errors).toEqual([]);
+  expect(context._internal.RootSlots.map['list.1.textInput'].eval.validation.errors).toEqual([
+    'This field is required',
+  ]);
+  expect(context._internal.RootSlots.map['list.2.textInput'].eval.validation.errors).toEqual([]);
+});

@@ -382,7 +382,7 @@ class Block {
 
   validateEval = () => {
     const requiredValidation = {
-      pass: { _not: { _type: 'none' } },
+      pass: { _not: { _type: 'empty' } },
       status: 'error',
       message: type.isString(this.requiredEval.output)
         ? this.requiredEval.output

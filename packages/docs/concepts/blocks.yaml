@@ -89,6 +89,12 @@ _ref:
 
                 `required` can be a `boolean` or `string` type. When `required: true` the field label will indicate this with a red asterisk for user feedback, and a value will have to be supplied to the field in order to pass validation. If `required` is set to a `string`, this string will be used as the feedback message when the validation fails.
 
+                A field fails `required` when its value is empty. The empty values are `null`, `undefined`, an empty string (`''`), and an empty array (`[]`). The values `0`, `false` and `{}` are values, and pass `required`.
+
+                > Changed in v8: prior to v8 only `null` and `undefined` failed `required`, so a cleared text field (`''`) or an unselected multi-selector (`[]`) passed validation. If a field should deliberately accept an empty string or an empty array, drop `required` and use an explicit `validate` test instead.
+
+                The test `required` applies is `pass: { _not: { _type: empty } }` - see the [`_type`](/_type) operator.
+
                 ```yaml
                 - id: name
                   type: TextInput
