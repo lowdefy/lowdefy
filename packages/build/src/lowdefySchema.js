@@ -1885,6 +1885,15 @@ export default {
         },
         '~r': {},
         '~l': {},
+        '~snapshotIgnore': {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          errorMessage: {
+            type: 'Block "~snapshotIgnore" should be an array of state path strings.',
+          },
+        },
         id: {
           type: 'string',
           errorMessage: {

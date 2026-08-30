@@ -27,6 +27,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import modulesUpdate from './commands/modules/modulesUpdate.js';
+import snapshot from './commands/snapshot/snapshot.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
@@ -241,6 +242,40 @@ program
   .addOption(options.port)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: start }));
+
+program
+  .command('snapshot')
+  .description(
+    'Capture or check golden snapshots (screenshot, DOM and state) of pages as dev users, written to snapshots/<pageId>/<user>/.'
+  )
+  .usage('(--check | --update) [options]')
+  .option('--check', 'Compare against the committed snapshots and exit 1 on any drift.')
+  .option('--update', 'Write (or overwrite) the committed snapshots.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--pages <pageIds>',
+      'Comma-separated page ids to snapshot; defaults to every page in tests/snapshots.yaml, or every page.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--pixel-tolerance <fraction>',
+      'Fraction of changed pixels above which a screenshot counts as drift. Default is 0.001.'
+    )
+  )
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--users <names>',
+      'Comma-separated auth.dev.users names to snapshot as; defaults to every declared dev user.'
+    )
+  )
+  .action(runCommand({ cliVersion, handler: snapshot }));
 
 program
   .command('test')

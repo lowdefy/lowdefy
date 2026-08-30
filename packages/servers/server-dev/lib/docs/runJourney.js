@@ -535,4 +535,5 @@ async function runJourney({
   }
 }
 
+export { runSteps };
 export default runJourney;

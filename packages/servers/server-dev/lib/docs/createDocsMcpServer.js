@@ -50,6 +50,7 @@ import { listStateCheckpoints } from './checkpointStore.js';
 import createLogger from '../server/log/createLogger.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
+import snapshotPage from './snapshotPage.js';
 import searchDocs from './searchDocs.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
@@ -532,6 +533,46 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         content: [
           { type: 'text', text: JSON.stringify(summary, null, 2) },
           ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+        ],
+      };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_snapshot',
+    {
+      description:
+        'Take one golden snapshot of a page as a named user under deterministic browser settings (fixed viewport, reduced motion, light scheme, en-US, UTC): the viewport PNG, the app root DOM and the page state, plus the state paths the page declares under `~snapshotIgnore`. This is what `lowdefy snapshot --check` diffs against the committed snapshots/ directory — use it to see exactly what a change did to one page for one role without running the whole suite. An optional journey runs first to reach a state.',
+      inputSchema: {
+        pageId: z.string().describe('The page id to snapshot.'),
+        user: userSchema,
+        urlQuery: z
+          .record(z.any())
+          .optional()
+          .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+        journey: z
+          .array(z.record(z.any()))
+          .optional()
+          .describe(
+            'Journey steps (same grammar as lowdefy_run_journey) to run before capturing, e.g. [{"click": "open-detail"}]. A failing step is an error, not a snapshot.'
+          ),
+      },
+    },
+    async ({ pageId, user, urlQuery, journey }) => {
+      if (!origin) {
+        return notFoundResult('Snapshot unavailable: server origin unknown for this transport.');
+      }
+      const result = await snapshotPage({ origin, pageId, user, urlQuery, journey });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      // The PNG travels as an image content block so an MCP client renders it;
+      // the JSON keeps the DOM, state and ignore paths.
+      const { screenshot, ...rest } = result;
+      return {
+        content: [
+          { type: 'text', text: JSON.stringify(rest, null, 2) },
+          { type: 'image', data: screenshot, mimeType: 'image/png' },
         ],
       };
     }
