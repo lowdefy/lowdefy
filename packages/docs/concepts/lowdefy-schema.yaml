@@ -373,6 +373,7 @@ _ref:
             | `schema` | JSON schema validation errors |
             | `js-lint` | `_js` body analysis - a reference to a name that is not a parameter, not declared in the body and not in the JavaScript standard library is a build error; a declaration that is never used is a warning |
             | `tenant` | Tenant wall audits on requests and steps over a walled connection - an authored tenant field is a build error; the `tenant: none` audits (no tenant field, a caller-supplied tenant value, an unstamped write) and the unscoped inventory run under `lowdefy check` |
+            | `response-schema` | Endpoint `responseSchema` checks - a `_actions.<id>.response.response.<path>` or `_step.<id>.<path>` read that the target endpoint's `responseSchema` does not declare, and an endpoint `payloadSchema` or `responseSchema` that is not a valid JSON Schema |
 
             ### Example: Dynamic State
 
