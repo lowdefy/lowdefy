@@ -14,22 +14,28 @@
   limitations under the License.
 */
 
+import compileExpression from './compileExpression/compileExpression.js';
 import evaluateOperators, { hasDynamicMarker, hasDynChild } from './evaluateOperators.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
+import isExpression from './compileExpression/isExpression.js';
 import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
+import stampPosition from './compileExpression/stampPosition.js';
 import WebParser from './webParser.js';
 
 export {
+  compileExpression,
   evaluateOperators,
   hasDynamicMarker,
   hasDynChild,
   getFromArray,
   getFromObject,
+  isExpression,
   ServerParser,
   runClass,
   runInstance,
+  stampPosition,
   WebParser,
 };
