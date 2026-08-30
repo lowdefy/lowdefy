@@ -34,6 +34,7 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     };
     if (array['~r'] !== undefined) entry['~r'] = array['~r'];
     if (array['~l'] !== undefined) entry['~l'] = array['~l'];
+    if (array['~c'] !== undefined) entry['~c'] = array['~c'];
     keyMap[arrayKeyMapId] = entry;
     Object.defineProperty(array, '~k', {
       value: arrayKeyMapId,
@@ -43,6 +44,7 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     });
     delete array['~r'];
     delete array['~l'];
+    delete array['~c'];
   }
 
   array.forEach((item, index) => {
@@ -102,6 +104,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     };
     if (object['~r'] !== undefined) entry['~r'] = object['~r'];
     if (object['~l'] !== undefined) entry['~l'] = object['~l'];
+    if (object['~c'] !== undefined) entry['~c'] = object['~c'];
+    if (object['~x'] !== undefined) entry['~x'] = object['~x'];
 
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
@@ -139,6 +143,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
     delete object['~l'];
+    delete object['~c'];
+    delete object['~x'];
     delete object['~ignoreBuildChecks'];
   }
 

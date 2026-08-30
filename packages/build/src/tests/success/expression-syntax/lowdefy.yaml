@@ -1,0 +1,19 @@
+# expression-syntax: ${ … } compiles to operators through a full build.
+# Expressions containing YAML indicators (: ? , etc.) must be quoted, as any
+# YAML scalar with those characters must be.
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: heading
+        type: Title
+        properties:
+          content: Welcome
+        visible: "${ state.answer_detail.source == 'ai' && len(state.evidence_ids) > 0 }"
+      - id: subtitle
+        type: Title
+        properties:
+          content: "${ lower(state.q) }"
+        visible: "${ has(user.roles, 'admin') ? true : state.show != null }"

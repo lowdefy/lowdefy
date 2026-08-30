@@ -60,7 +60,11 @@ async function loadAndResolveErrorLocation({ error, readConfigFile, configDirect
     if (configDirectory) {
       resolvedPath = path.resolve(configDirectory, error.filePath);
     }
-    const source = error.lineNumber ? `${resolvedPath}:${error.lineNumber}` : resolvedPath;
+    let source = resolvedPath;
+    if (error.lineNumber) {
+      source += `:${error.lineNumber}`;
+      if (error.columnNumber) source += `:${error.columnNumber}`;
+    }
     return { source };
   }
 
