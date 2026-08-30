@@ -36,6 +36,7 @@ import buildAuth from './build/buildAuth/buildAuth.js';
 import buildCollections from './build/buildCollections.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
+import buildMigrations from './build/buildMigrations/buildMigrations.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
@@ -70,6 +71,7 @@ import writeConfig from './build/writeConfig.js';
 import writeCollections from './build/writeCollections.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
+import writeMigrations from './build/buildMigrations/writeMigrations.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeMcp from './build/writeMcp.js';
 import writeWebsockets from './build/writeWebsockets.js';
@@ -171,6 +173,10 @@ async function build(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildCollections, 'buildCollections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    // buildMigrations is async (it reads the migrations/ directory), so it is
+    // awaited directly rather than through tryBuildStep; it collects its own
+    // errors into context.errors like the wrapped steps do.
+    await buildMigrations({ components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
@@ -220,6 +226,7 @@ async function build(options) {
     await writeCollections({ components, context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeMigrations({ context });
     await writeMcp({ components, context });
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });

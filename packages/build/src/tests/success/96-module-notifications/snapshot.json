@@ -1215,6 +1215,7 @@
     ],
     "~k": "2s"
   },
+  "migrations.json": [],
   "notifications/invites/invite-user.json": {
     "id": "notification:invites/invite-user",
     "type": "NotificationEmail",

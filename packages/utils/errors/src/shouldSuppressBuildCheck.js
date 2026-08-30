@@ -42,6 +42,7 @@ export const VALID_CHECK_SLUGS = {
   'js-modules': '_js module reference resolution and export checks',
   'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
   collections: 'Collections declaration: undeclared, dynamic and untenanted connections',
+  migrations: 'Migration file discovery, routine validation and tenant audits',
 };
 
 /**

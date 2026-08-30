@@ -3494,6 +3494,45 @@ export default {
             type: 'App "config.requestTimeout" should be a number.',
           },
         },
+        migrations: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Settings for `lowdefy migrate` and the serving migration preflight. Migrations are discovered from the migrations/ directory; this block only configures the ledger connection and the run-on-deploy behaviour.',
+          errorMessage: {
+            type: 'App "config.migrations" should be an object.',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            ledgerConnectionId: {
+              type: 'string',
+              description:
+                'Id of the MongoDBCollection connection holding the migrations ledger collection. Defaults to a connection with id "migrations". The ledger records one document per applied migration and is accessed outside the tenant wall.',
+              errorMessage: {
+                type: 'App "config.migrations.ledgerConnectionId" should be a string — the id of a MongoDBCollection connection.',
+              },
+            },
+            preflight: {
+              type: 'boolean',
+              description:
+                'When true (the default), the server refuses to serve while any built migration is unapplied, naming the pending migrations. Set to false to opt out (e.g. when the deploy pipeline manages ordering, or new code is deployed ahead of the migration).',
+              errorMessage: {
+                type: 'App "config.migrations.preflight" should be a boolean.',
+              },
+            },
+            lockTimeoutMs: {
+              type: 'number',
+              minimum: 1000,
+              description:
+                'Milliseconds before an advisory migration lock is considered stale and may be stolen by a new run (the previous run likely crashed). The lock is heartbeat-refreshed while a migration runs. Defaults to 900000 (15 minutes).',
+              errorMessage: {
+                type: 'App "config.migrations.lockTimeoutMs" should be a number of milliseconds.',
+              },
+            },
+          },
+        },
         homePageId: {
           type: 'string',
           description:
