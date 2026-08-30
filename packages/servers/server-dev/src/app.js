@@ -67,6 +67,7 @@ import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
+import staleFlag from './middleware/staleFlag.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -115,7 +116,16 @@ function createApp() {
   // they read build artifacts and node_modules directly — but run-request
   // and eval-operator build a full Lowdefy context (createLowdefyContext),
   // which resolves the caller from the request headers via resolveAuthentication.
+  // The MCP transport is registered before staleFlag on purpose: hono
+  // dispatches in registration order, so the stale middleware never sees a
+  // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
+  // tool result in createDocsMcpServer — merging fields into the envelope
+  // instead would put unknown members on a strictly-validated message.
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  // Flags every other docs response while the last build failed. Registered
+  // twice: hono's `/*` pattern does not match the bare path.
+  app.use('/lowdefy-docs', staleFlag());
+  app.use('/lowdefy-docs/*', staleFlag());
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
