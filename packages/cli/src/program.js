@@ -93,7 +93,7 @@ const options = {
 program
   .command('agent-setup')
   .description(
-    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skill).'
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skills).'
   )
   .usage('[options]')
   .addOption(options.configDirectory)
@@ -101,6 +101,11 @@ program
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.projectDirectory)
+  .option(
+    '--skills <names>',
+    'Comma-separated Lowdefy topic skills to install into .claude/skills/ alongside lowdefy-config, e.g. "lowdefy-list-pages,lowdefy-filters". Use "all" (default) or "none".',
+    'all'
+  )
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program

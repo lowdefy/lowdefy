@@ -323,7 +323,52 @@ When a request returns an empty or unexpected result on a multi-tenant app, re-r
 npx lowdefy agent-setup
 ```
 
-This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server, `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Use `--port` if your dev server doesn't run on 3000.
+This writes three things into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server, the Lowdefy skills under `.claude/skills/` (see below), and an `AGENTS.md` section for other coding agents. Use `--port` if your dev server doesn't run on 3000.
+
+## Skills — the framework's manual for agents
+
+Beside `lowdefy-config`, which teaches the lookup workflow, `agent-setup` installs 28 topic skills. Each is a Claude Code skill (`.claude/skills/<name>/SKILL.md`) an agent loads when the task matches its description, with a **Reference** section generated from the docs and plugin schemas of the installed Lowdefy version and a hand-written **Recipe** section: the order to build things in, the traps, which MCP tool supersedes it, and how to verify.
+
+| Skill | Use when |
+| --- | --- |
+| `lowdefy-aggregations` | grouped, counted or joined data from MongoDB behind a request |
+| `lowdefy-aggrid-tables` | a data table with AgGrid |
+| `lowdefy-api-routines` | server-side logic as an `Api` endpoint routine |
+| `lowdefy-block-plugins` | a custom React block plugin |
+| `lowdefy-change-stamps` | created/updated audit fields on records |
+| `lowdefy-charts` | a chart from request data with `EChart` |
+| `lowdefy-contact-fields` | names, email, phone and address fields on a form |
+| `lowdefy-data-schema` | designing a collection's document shape |
+| `lowdefy-detail-pages` | a page that shows one record |
+| `lowdefy-edit-pages` | a create/edit form page |
+| `lowdefy-enums` | a field with a fixed set of values |
+| `lowdefy-events` | wiring events to action chains |
+| `lowdefy-file-structure` | laying out a project's files and `_ref`s |
+| `lowdefy-filters` | filter controls over a list or table |
+| `lowdefy-form-validation` | `required`, `validate` rules and the `Validate` action |
+| `lowdefy-js-operator` | the `_js` escape hatch and when to use an operator instead |
+| `lowdefy-layout` | arranging blocks with the grid, `Box` and `Flex` |
+| `lowdefy-list-pages` | a page that lists records from a request |
+| `lowdefy-lists` | repeating blocks over an array with `List`/`ControlledList` |
+| `lowdefy-loading-skeletons` | skeletons while requests run |
+| `lowdefy-modules` | installing or authoring a module |
+| `lowdefy-notifications` | user feedback after an action |
+| `lowdefy-operators` | writing operator expressions |
+| `lowdefy-page-layouts` | the page frame: sidebar, header and menus |
+| `lowdefy-pagination` | paging a long list |
+| `lowdefy-status-enums` | a record that moves through statuses |
+| `lowdefy-status-fields` | tags, badges and switches for status values |
+| `lowdefy-styling` | `style`, `class`, theme tokens and custom CSS |
+
+Choose which to install with `--skills`:
+
+```bash
+npx lowdefy agent-setup                                          # all 28 plus lowdefy-config
+npx lowdefy agent-setup --skills lowdefy-list-pages,lowdefy-filters
+npx lowdefy agent-setup --skills none                            # only lowdefy-config
+```
+
+An unknown name is an error that lists the available skills. Files that already exist in `.claude/skills/` are never overwritten, so a project can edit a skill and keep its edits across upgrades. The skills are maintained in the Lowdefy repository under `skills/` and regenerated for every release, so the Reference section always describes the version you have installed; the live versions of the same schemas and docs are one `lowdefy_get_schema` or `lowdefy_get_doc` call away on the running dev server.
 
 ## Using it with Claude Code manually
 

@@ -187,6 +187,52 @@ test('agentSetup warns and leaves .mcp.json unchanged when it is not valid JSON'
   expect(context.logger.warn).toHaveBeenCalledWith(expect.stringContaining('Could not parse'));
 });
 
+test('agentSetup installs the framework topic skills next to lowdefy-config', async () => {
+  await agentSetup({ context });
+
+  const skillsDir = path.join(configDirectory, '.claude', 'skills');
+  const names = fs.readdirSync(skillsDir).sort();
+  expect(names).toHaveLength(29);
+  expect(names).toContain('lowdefy-config');
+  expect(names).toContain('lowdefy-list-pages');
+  expect(read(path.join('.claude', 'skills', 'lowdefy-list-pages', 'SKILL.md'))).toContain(
+    'name: lowdefy-list-pages'
+  );
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "Installed 29 skills into '.claude/skills/' (0 already present)."
+  );
+});
+
+test('agentSetup with --skills none writes only the lowdefy-config skill', async () => {
+  context.options.skills = 'none';
+
+  await agentSetup({ context });
+
+  expect(fs.readdirSync(path.join(configDirectory, '.claude', 'skills'))).toEqual([
+    'lowdefy-config',
+  ]);
+});
+
+test('agentSetup with a --skills list writes those topics plus lowdefy-config', async () => {
+  context.options.skills = 'lowdefy-list-pages,lowdefy-filters';
+
+  await agentSetup({ context });
+
+  expect(fs.readdirSync(path.join(configDirectory, '.claude', 'skills')).sort()).toEqual([
+    'lowdefy-config',
+    'lowdefy-filters',
+    'lowdefy-list-pages',
+  ]);
+});
+
+test('agentSetup rejects an unknown --skills name and lists the available skills', async () => {
+  context.options.skills = 'lowdefy-tabels';
+
+  await expect(agentSetup({ context })).rejects.toThrow(
+    /Unknown skill "lowdefy-tabels" in --skills\. Available skills: lowdefy-aggregations, .*lowdefy-styling\. Use "all" or "none"\./
+  );
+});
+
 test('agentSetup skips the skill file when it already exists', async () => {
   const skillDir = path.join(configDirectory, '.claude', 'skills', 'lowdefy-config');
   fs.mkdirSync(skillDir, { recursive: true });

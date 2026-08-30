@@ -123,12 +123,14 @@ _ref:
 
             ## agent-setup
 
-            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten.
+            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), the Lowdefy Claude Code skills into `.claude/skills/` (`lowdefy-config` plus the 28 `lowdefy-<topic>` skills, see [Skills](/ai-agent-docs)), and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged or skipped, not overwritten.
 
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--port <port>`: The port your dev server runs on, used in the generated URLs. The default is `3000`.
+            - `--project-directory <project-directory>`: The directory where agent files are written. The default is the nearest ancestor directory containing `.git`, falling back to the config directory.
+            - `--skills <names>`: A comma-separated list of topic skills to install alongside `lowdefy-config`, for example `lowdefy-list-pages,lowdefy-filters`. Use `all` (the default) for the full set or `none` for only `lowdefy-config`. An unknown name is an error listing the available skills.
 
             ## init
 

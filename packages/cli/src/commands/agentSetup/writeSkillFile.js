@@ -18,19 +18,79 @@ import fs from 'fs';
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
+import parseSkillSelection from './parseSkillSelection.js';
+import resolveSkillsDirectory from './resolveSkillsDirectory.js';
 import skillMd from './skillMd.js';
 
-const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
+const CONFIG_SKILL = 'lowdefy-config';
 
-async function writeSkillFile({ context, projectDirectory, appPath, port }) {
-  const skillPath = path.join(projectDirectory, skillRelativePath);
-  if (fs.existsSync(skillPath)) {
-    context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
-    return;
+// Every skills/<name>/SKILL.md shipped with the CLI except lowdefy-config, which is templated
+// with the port and app path by skillMd.js rather than copied.
+export function listAvailableSkills({ skillsDirectory }) {
+  return fs
+    .readdirSync(skillsDirectory)
+    .filter(
+      (name) => name !== CONFIG_SKILL && fs.existsSync(path.join(skillsDirectory, name, 'SKILL.md'))
+    )
+    .sort();
+}
+
+function skillRelativePath(name) {
+  return path.join('.claude', 'skills', name, 'SKILL.md');
+}
+
+// Writes one skill, skipping (and reporting) a file the project already has so local edits
+// are never overwritten. Returns true when a file was written.
+async function writeOneSkill({ context, projectDirectory, name, content }) {
+  const relativePath = skillRelativePath(name);
+  const filePath = path.join(projectDirectory, relativePath);
+  if (fs.existsSync(filePath)) {
+    context.logger.info(`'${relativePath}' already exists - skipping.`);
+    return false;
+  }
+  await writeFile(filePath, content);
+  return true;
+}
+
+async function writeSkillFile({
+  context,
+  projectDirectory,
+  appPath,
+  port,
+  skills,
+  skillsDirectory = resolveSkillsDirectory(),
+}) {
+  const available = listAvailableSkills({ skillsDirectory });
+  const selected = parseSkillSelection({ selection: skills, available });
+
+  let installed = 0;
+  let present = 0;
+  const count = (written) => {
+    if (written) {
+      installed += 1;
+    } else {
+      present += 1;
+    }
+  };
+
+  count(
+    await writeOneSkill({
+      context,
+      projectDirectory,
+      name: CONFIG_SKILL,
+      content: skillMd({ port, appPath }),
+    })
+  );
+  for (const name of selected) {
+    const content = fs.readFileSync(path.join(skillsDirectory, name, 'SKILL.md'), 'utf8');
+    count(await writeOneSkill({ context, projectDirectory, name, content }));
   }
 
-  await writeFile(skillPath, skillMd({ port, appPath }));
-  context.logger.info(`Created '${skillRelativePath}'.`);
+  context.logger.info(
+    `Installed ${installed} skill${
+      installed === 1 ? '' : 's'
+    } into '.claude/skills/' (${present} already present).`
+  );
 }
 
 export default writeSkillFile;
