@@ -2,10 +2,20 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
+      "errors": [
         "_staet"
       ],
-      "warningContains": [
+      "errorContains": [
+        "Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
+        "lowdefy.yaml:21"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "_staet"
+      ],
+      "errorContains": [
         "Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
         "lowdefy.yaml:21"
       ]

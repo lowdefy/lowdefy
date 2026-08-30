@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
+import collectExceptions from '../utils/collectExceptions.js';
 import findSimilarString from '../utils/findSimilarString.js';
 
-function buildTypeClass(
-  context,
-  { counter, definitions, store, typeClass, warnIfMissing = false }
-) {
+function buildTypeClass(context, { counter, definitions, store, typeClass }) {
   const counts = counter.getCounts();
   const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
@@ -35,11 +33,8 @@ function buildTypeClass(
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      if (warnIfMissing) {
-        context.handleWarning(new ConfigWarning(message, { configKey, checkSlug: 'types' }));
-        return;
-      }
-      throw new ConfigError(message, { configKey, checkSlug: 'types' });
+      collectExceptions(context, new ConfigError(message, { configKey, checkSlug: 'types' }));
+      return;
     }
     store[typeName] = {
       originalTypeName: definitions[typeName].originalTypeName ?? typeName,
@@ -168,7 +163,6 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.operators.client,
     store: components.types.operators.client,
     typeClass: 'Operator',
-    warnIfMissing: true,
   });
 
   buildTypeClass(context, {
@@ -176,7 +170,6 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.operators.server,
     store: components.types.operators.server,
     typeClass: 'Operator',
-    warnIfMissing: true,
   });
 }
 
