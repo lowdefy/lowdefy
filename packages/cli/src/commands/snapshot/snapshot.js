@@ -115,46 +115,63 @@ async function snapshot({ context }) {
   let written = 0;
   let failed = 0;
   let targets = [];
+  // A target-resolution failure (broken manifest journey, unreachable app-map)
+  // means nothing was captured — reported as its own failure, never folded
+  // into the per-snapshot counts where it would corrupt the passed total.
+  let fatal;
   try {
     targets = await resolveAllTargets({ context, manifest, url: server.url });
     if (targets.length === 0) {
-      context.logger.warn('No snapshots to take: no pages matched.');
+      const filters = [];
+      if (!type.isNone(context.options.pages)) {
+        filters.push(`--pages "${context.options.pages}"`);
+      }
+      if (!type.isNone(context.options.users)) {
+        filters.push(`--users "${context.options.users}"`);
+      }
+      if (filters.length > 0) {
+        // A typo'd filter must not pass a CI --check with 0 snapshots.
+        fatal = `No pages matched ${filters.join(' ')}.`;
+      } else {
+        context.logger.warn('No snapshots to take: no pages matched.');
+      }
     }
     for (const target of targets) {
-      let captured;
+      // The whole capture-compare-write of one target is one unit of failure:
+      // a corrupt golden or unreadable artefact fails THIS target and the run
+      // continues to the next, instead of aborting the loop and counting the
+      // unvisited targets as passed.
       try {
-        captured = await fetchSnapshot({ url: server.url, target });
-      } catch (error) {
-        failed += 1;
-        context.logger.error(`FAIL  ${target.pageId} as ${target.user}  ${error.message}`);
-        continue;
-      }
-      if (captured.ready === false) {
-        context.logger.warn(`${target.pageId} as ${target.user}: ${captured.note}`);
-      }
-      if (update) {
-        const paths = writeSnapshot({
+        const captured = await fetchSnapshot({ url: server.url, target });
+        if (captured.ready === false) {
+          context.logger.warn(`${target.pageId} as ${target.user}: ${captured.note}`);
+        }
+        if (update) {
+          const paths = writeSnapshot({
+            configDirectory: context.directories.config,
+            target,
+            snapshot: captured,
+          });
+          written += 1;
+          context.logger.info(`WROTE ${paths.label}`);
+          continue;
+        }
+        const comparison = compareSnapshot({
           configDirectory: context.directories.config,
           target,
           snapshot: captured,
+          pixelTolerance,
         });
-        written += 1;
-        context.logger.info(`WROTE ${paths.label}`);
-        continue;
-      }
-      const comparison = compareSnapshot({
-        configDirectory: context.directories.config,
-        target,
-        snapshot: captured,
-        pixelTolerance,
-      });
-      if (logComparison({ context, comparison, target })) {
-        drifted += 1;
+        if (logComparison({ context, comparison, target })) {
+          drifted += 1;
+        }
+      } catch (error) {
+        failed += 1;
+        context.logger.error(`FAIL  ${target.pageId} as ${target.user}  ${error.message}`);
       }
     }
   } catch (error) {
-    failed += 1;
-    context.logger.error(error.message);
+    fatal = error.message;
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {
@@ -162,6 +179,10 @@ async function snapshot({ context }) {
     }
   }
 
+  if (fatal) {
+    fail({ context, message: fatal });
+    return;
+  }
   if (update) {
     const summary = `${written} snapshots written${failed > 0 ? `, ${failed} failed` : ''}`;
     if (failed > 0) {

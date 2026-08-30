@@ -27,8 +27,10 @@ const REPLACEMENTS = [
   // rc-* per-mount ids and the aria attributes that point at them:
   // `rc_select_3`, `rc-tabs-0-panel-x`, `rc_unique_12`.
   { pattern: /\brc[_-]([a-z]+)[_-]\d+/g, replacement: 'rc-$1-[N]' },
-  // rc-menu keys carry a uuid per mount: `rc-menu-uuid-49081-1-item`.
-  { pattern: /\brc-menu-uuid-[a-z0-9-]+/g, replacement: 'rc-menu-uuid-[UUID]' },
+  // rc-menu ids carry a numeric uuid per mount: `rc-menu-uuid-49081-settings`.
+  // Only the number is volatile — the trailing eventKey is the menu item's own
+  // id (content a golden must keep), so the match stops at the uuid.
+  { pattern: /\brc-menu-uuid-\d+/g, replacement: 'rc-menu-uuid-[UUID]' },
   // React's useId output, e.g. `:r0:` / `«r0»`, used by some antd inputs.
   { pattern: /(?::|«)r[0-9a-z]+(?::|»)/g, replacement: '[RID]' },
   // ISO-8601 timestamps rendered from dates that move (created_at, now).
