@@ -16,7 +16,13 @@
 
 import createCounter from '../utils/createCounter.js';
 
-function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
+function testContext({
+  blockMetas = {},
+  writeBuildArtifact,
+  configDirectory,
+  readConfigFile,
+  logger = {},
+} = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -27,6 +33,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
 
   const context = {
     stage: 'test',
+    blockMetas,
     directories: {
       config: configDirectory || '',
       server: '',

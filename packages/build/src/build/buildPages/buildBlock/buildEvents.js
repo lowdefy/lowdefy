@@ -17,9 +17,15 @@
 import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
+import findSimilarString from '../../../utils/findSimilarString.js';
 import { ORG_CLIENT_ACTION_TYPES } from '../validateOrgClientActionRefs.js';
 
 const BROWSER_DEFAULT_SHORTCUTS = new Set(['mod+n', 'mod+t', 'mod+w', 'mod+r', 'mod+q', 'mod+l']);
+
+// Every block is wrapped in MountEvents by the client, so these fire anywhere.
+const UNIVERSAL_EVENTS = new Set(['onMount', 'onMountAsync']);
+// The engine triggers these on the page's root block only.
+const ROOT_ONLY_EVENTS = new Set(['onInit', 'onInitAsync']);
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 const ACTION_KEYS_NOT_ALLOWED_ON_CONTROLS = ['id', 'skip', 'messages'];
@@ -271,10 +277,44 @@ function checkActionList(list, ctx) {
   });
 }
 
+function checkEventName(key, block, pageContext, configKey) {
+  if (UNIVERSAL_EVENTS.has(key)) return;
+  if (ROOT_ONLY_EVENTS.has(key)) {
+    if (block.blockId === pageContext.rootBlockId) return;
+    throw new ConfigError(
+      `Event "${key}" only fires on the page's root block, not on block "${block.blockId}" on page "${pageContext.pageId}". Move it to the page's own events, or use onMount, which fires on every block.`,
+      { configKey, checkSlug: 'events' }
+    );
+  }
+  const blockMeta = pageContext.context?.blockMetas?.[block.type];
+  // A block type that fires event names authored in its own properties (a Tabs
+  // tab's eventName, an AgGrid cell button's eventName) cannot enumerate them.
+  if (blockMeta?.dynamicEvents === true) return;
+  const declared = blockMeta?.events;
+  // A block type that declares no events tells the build nothing - do not guess.
+  if (!type.isArray(declared)) return;
+  if (declared.includes(key)) return;
+  const suggestion = findSimilarString({ input: key, candidates: declared });
+  const didYouMean = suggestion ? ` Did you mean "${suggestion}"?` : '';
+  const eventList = declared.length > 0 ? declared.join(', ') : 'none';
+  throw new ConfigError(
+    `Event "${key}" is not an event of block type "${block.type}" at block "${block.blockId}" on page "${pageContext.pageId}".${didYouMean} Block type "${block.type}" has events: ${eventList}. Every block also accepts onMount and onMountAsync, and any event name that declares a shortcut.`,
+    { configKey, checkSlug: 'events' }
+  );
+}
+
 function buildEvents(block, pageContext) {
   if (block.events) {
     Object.keys(block.events).map((key) => {
+      if (isMetaKey(key)) return;
       const eventConfigKey = block.events[key]?.['~k'] || block['~k'];
+      // The shortcut manager binds any event that carries a shortcut, whatever
+      // its name, so a shortcut event is never checked against the block meta.
+      const hasShortcut =
+        type.isObject(block.events[key]) && !type.isNone(block.events[key].shortcut);
+      if (!hasShortcut) {
+        checkEventName(key, block, pageContext, eventConfigKey);
+      }
       if (
         (!type.isArray(block.events[key]) && !type.isObject(block.events[key])) ||
         (type.isObject(block.events[key]) && type.isNone(block.events[key].try))
