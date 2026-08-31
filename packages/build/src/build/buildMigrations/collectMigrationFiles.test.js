@@ -83,3 +83,21 @@ test('collectMigrationFiles throws a ConfigError on invalid YAML', async () => {
     collectMigrationFiles({ directories: { config: configDirectory } })
   ).rejects.toThrow('Migration "2026-08-30-01-bad" is not valid YAML');
 });
+
+test('collectMigrationFiles sorts by code units, not locale collation', async () => {
+  // localeCompare would order 'a-B' before 'a-a' in many locales; migration
+  // order must be byte-deterministic across machines.
+  writeMigration('a-a.yaml', 'routine: []\n');
+  writeMigration('a-B.yaml', 'routine: []\n');
+  writeMigration('Z.yaml', 'routine: []\n');
+  const result = await collectMigrationFiles({ directories: { config: configDirectory } });
+  expect(result.map((m) => m.id)).toEqual(['Z', 'a-B', 'a-a']);
+});
+
+test('collectMigrationFiles throws when two files share one migration id', async () => {
+  writeMigration('2026-08-30-01-a.yaml', 'routine: []\n');
+  writeMigration('2026-08-30-01-a.yml', 'routine: []\n');
+  await expect(collectMigrationFiles({ directories: { config: configDirectory } })).rejects.toThrow(
+    'Migration id "2026-08-30-01-a" is declared by two files: "2026-08-30-01-a.yaml" and "2026-08-30-01-a.yml".'
+  );
+});
