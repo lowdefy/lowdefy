@@ -2406,7 +2406,7 @@ importers:
         specifier: 5.5.1
         version: link:../../client
       '@lowdefy/docs':
-        specifier: workspace:*
+        specifier: 5.5.1
         version: link:../../docs
       '@lowdefy/errors':
         specifier: 5.5.1
