@@ -41,9 +41,17 @@ test('confirmMigrate returns true without prompting for --yes', async () => {
   expect(result).toBe(true);
 });
 
-test('confirmMigrate returns true without prompting for --json', async () => {
-  const result = await confirmMigrate({ context: testContext(), options: { json: true } });
-  expect(result).toBe(true);
+test('confirmMigrate does not treat --json as consent — it still requires --yes or a prompt', async () => {
+  const input = new PassThrough();
+  input.isTTY = false;
+  await expect(
+    confirmMigrate({
+      context: testContext(),
+      options: { json: true },
+      input,
+      output: new PassThrough(),
+    })
+  ).rejects.toThrow('needs confirmation');
 });
 
 test('confirmMigrate throws when stdin is not a TTY and neither --yes nor --dry-run is set', async () => {

@@ -301,3 +301,51 @@ test('snapshot stops the server and rethrows when the dev server fails to boot',
   await expect(snapshot({ context })).rejects.toThrow('boot failed');
   expect(logs.error).toContain('line one');
 });
+
+test('snapshot --check fails one target on a corrupt golden and still checks the rest', async () => {
+  context.options.update = true;
+  await snapshot({ context });
+  // A corrupt screenshot golden (an LFS pointer, a bad merge) throws inside
+  // the compare — it must fail THIS target only, not abort the run and count
+  // the unvisited targets as passed.
+  fs.writeFileSync(
+    path.join(configDirectory, 'snapshots', 'home', 'admin', 'screenshot.png'),
+    'not a png'
+  );
+  context.options = { port: 3248, check: true };
+  await snapshot({ context });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error.some((line) => /FAIL {2}home as admin/.test(line))).toBe(true);
+  expect(logs.error.at(-1)).toBe('3 passed, 0 changed, 1 failed of 4 snapshots');
+});
+
+test('snapshot --check exits 1 when a --pages filter matches nothing', async () => {
+  context.options.check = true;
+  context.options.pages = 'controlz';
+  await snapshot({ context });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error.at(-1)).toBe('No pages matched --pages "controlz".');
+});
+
+test('snapshot --check exits 0 with a warning when the app has no pages and no filter is set', async () => {
+  pages = [];
+  users = [];
+  context.options.check = true;
+  await snapshot({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.warn).toContain('No snapshots to take: no pages matched.');
+});
+
+test('snapshot --check reports a broken manifest journey as the failure, not a snapshot count', async () => {
+  writeManifest(`pages:
+  - pageId: home
+    users: [admin]
+    journey: tests/journeys/missing.yaml
+`);
+  context.options.check = true;
+  await snapshot({ context });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error.at(-1)).toMatch(/Journey file .*missing.yaml.* not found/);
+  expect(logs.error.some((line) => /passed,/.test(line))).toBe(false);
+  expect(mockStop).toHaveBeenCalled();
+});

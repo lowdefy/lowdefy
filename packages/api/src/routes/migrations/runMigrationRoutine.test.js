@@ -16,14 +16,22 @@
 
 import { countDocuments } from './runMigrationRoutine.js';
 
-test('countDocuments sums MongoDB write counts across step results', () => {
+test('countDocuments counts an update result once, not matched plus modified', () => {
   const steps = {
     s1: { modifiedCount: 10, matchedCount: 10 },
     s2: { insertedCount: 3 },
     s3: { deletedCount: 2 },
     s4: { upsertedCount: 1 },
   };
-  expect(countDocuments(steps)).toBe(10 + 10 + 3 + 2 + 1);
+  expect(countDocuments(steps)).toBe(10 + 3 + 2 + 1);
+});
+
+test('countDocuments falls back to matchedCount for a no-op update and counts an upsert once', () => {
+  const steps = {
+    noop: { matchedCount: 5, modifiedCount: 0, upsertedCount: 0 },
+    upsert: { matchedCount: 0, modifiedCount: 0, upsertedCount: 1 },
+  };
+  expect(countDocuments(steps)).toBe(5 + 1);
 });
 
 test('countDocuments ignores non-count step results', () => {

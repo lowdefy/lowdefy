@@ -21,6 +21,18 @@ import diffScreenshot from './diffScreenshot.js';
 import diffState from './diffState.js';
 import snapshotPaths from './snapshotPaths.js';
 
+// State diffs are capped the same way diffDom caps its lines, so a page whose
+// loaded table drifted wholesale does not flood the terminal per page x user.
+const MAX_STATE_DIFF_LINES = 20;
+const MAX_STATE_VALUE_CHARS = 200;
+
+function truncate(text) {
+  if (text === undefined || text.length <= MAX_STATE_VALUE_CHARS) {
+    return text;
+  }
+  return `${text.slice(0, MAX_STATE_VALUE_CHARS)}…`;
+}
+
 function missing(artefact) {
   return {
     artefact,
@@ -56,7 +68,9 @@ function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) 
 
   if (fs.existsSync(paths.dom)) {
     const result = diffDom({
-      expected: fs.readFileSync(paths.dom, 'utf8').replace(/\n$/, ''),
+      // A golden checked out with CRLF line endings (git core.autocrlf on
+      // Windows) must compare equal to the LF text writeSnapshot produced.
+      expected: fs.readFileSync(paths.dom, 'utf8').replace(/\r\n/g, '\n').replace(/\n$/, ''),
       actual: snapshot.dom,
     });
     results.push({ artefact: 'dom.html', changed: result.changed, lines: result.lines });
@@ -70,13 +84,19 @@ function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) 
       actual: snapshot.state ?? {},
       snapshotIgnore: snapshot.snapshotIgnore ?? [],
     });
+    const lines = result.differences
+      .slice(0, MAX_STATE_DIFF_LINES)
+      .map(
+        ({ path, expected, actual }) =>
+          `${path}: ${truncate(JSON.stringify(expected))} -> ${truncate(JSON.stringify(actual))}`
+      );
+    if (result.differences.length > MAX_STATE_DIFF_LINES) {
+      lines.push(`... ${result.differences.length - MAX_STATE_DIFF_LINES} more differing paths`);
+    }
     results.push({
       artefact: 'state.json',
       changed: result.changed,
-      lines: result.differences.map(
-        ({ path, expected, actual }) =>
-          `${path}: ${JSON.stringify(expected)} -> ${JSON.stringify(actual)}`
-      ),
+      lines,
     });
   } else {
     results.push(missing('state.json'));

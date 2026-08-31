@@ -17,22 +17,24 @@
 import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 
-function describeHttpError(error) {
+function describeHttpError(error, { route }) {
   if (type.isNone(error.response)) {
     return `Could not reach the dev server: ${error.message}`;
   }
   const body = type.isString(error.response.data)
     ? error.response.data
     : JSON.stringify(error.response.data);
-  return `GET /lowdefy-docs/snapshot responded ${error.response.status}: ${body}`;
+  return `GET ${route} responded ${error.response.status}: ${body}`;
 }
 
-async function getJson({ url }) {
+// The metadata routes answer from built artefacts, so a short timeout is
+// enough; a hung dev server should fail the run, not wedge it.
+async function getJson({ url, route }) {
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(`${url}${route}`, { timeout: 30000 });
     return response.data;
   } catch (error) {
-    throw new Error(describeHttpError(error));
+    throw new Error(describeHttpError(error, { route }));
   }
 }
 
@@ -40,12 +42,12 @@ async function getJson({ url }) {
 // from the dev server because only it has the built artefacts and lowdefy.yaml
 // with every _ref resolved.
 async function fetchAppPageIds({ url }) {
-  const appMap = await getJson({ url: `${url}/lowdefy-docs/app-map` });
+  const appMap = await getJson({ url, route: '/lowdefy-docs/app-map' });
   return (appMap.pages ?? []).map((page) => page.pageId);
 }
 
 async function fetchDevUsers({ url }) {
-  const response = await getJson({ url: `${url}/lowdefy-docs/dev-users` });
+  const response = await getJson({ url, route: '/lowdefy-docs/dev-users' });
   return response.users ?? [];
 }
 
@@ -62,11 +64,14 @@ async function fetchSnapshot({ url, target }) {
   if (!type.isNone(target.journey)) {
     params.journey = JSON.stringify(target.journey);
   }
+  const route = `/lowdefy-docs/snapshot/${target.pageId}`;
   let response;
   try {
-    response = await axios.get(`${url}/lowdefy-docs/snapshot/${target.pageId}`, { params });
+    // Generous bound: the route renders the page in a headless browser and may
+    // replay a journey, but a wedged render must not hang the CLI forever.
+    response = await axios.get(`${url}${route}`, { params, timeout: 120000 });
   } catch (error) {
-    throw new Error(describeHttpError(error));
+    throw new Error(describeHttpError(error, { route }));
   }
   const snapshot = response.data ?? {};
   if (!type.isNone(snapshot.error)) {

@@ -34,7 +34,7 @@ test('normalizeDom replaces rc generated ids and the aria attributes pointing at
   const dom =
     '<input id="rc_select_12" aria-owns="rc_select_12_list" aria-controls="rc-tabs-3-panel-a"><ul id="rc_select_12_list" data-menu-id="rc-menu-uuid-49081-1-item"></ul>';
   expect(normalizeDom({ dom })).toBe(
-    '<input id="rc-select-[N]" aria-owns="rc-select-[N]_list" aria-controls="rc-tabs-[N]-panel-a">\n<ul id="rc-select-[N]_list" data-menu-id="rc-menu-uuid-[UUID]">\n</ul>'
+    '<input id="rc-select-[N]" aria-owns="rc-select-[N]_list" aria-controls="rc-tabs-[N]-panel-a">\n<ul id="rc-select-[N]_list" data-menu-id="rc-menu-uuid-[UUID]-1-item">\n</ul>'
   );
 });
 

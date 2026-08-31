@@ -28,7 +28,7 @@ function testContext() {
 }
 
 function fakeLedger({ applied = [], lockHeld = false } = {}) {
-  const calls = { inserted: [], acquired: 0, released: 0 };
+  const calls = { inserted: [], acquired: 0, released: 0, checksumUpdates: [] };
   return {
     calls,
     readApplied: async () => applied,
@@ -43,6 +43,9 @@ function fakeLedger({ applied = [], lockHeld = false } = {}) {
     },
     insertEntry: async (entry) => {
       calls.inserted.push(entry);
+    },
+    updateChecksum: async (entry) => {
+      calls.checksumUpdates.push(entry);
     },
   };
 }
@@ -159,4 +162,31 @@ test('runMigrations proceeds past a checksum mismatch with allowChecksumMismatch
   });
   // m1 is applied (mismatch tolerated), so only m2 runs.
   expect(ran).toEqual(['m2']);
+});
+
+test('runMigrations records the current checksum when allowChecksumMismatch tolerates an edit', async () => {
+  const ledger = fakeLedger({ applied: [{ _id: 'm1', checksum: 'CHANGED' }] });
+  await runMigrations(testContext(), {
+    options: { allowChecksumMismatch: true },
+    deps: {
+      readIndex: async () => index,
+      ledger,
+      runMigration: async () => ({ status: 'continue', documents: 0 }),
+    },
+  });
+  expect(ledger.calls.checksumUpdates).toEqual([{ id: 'm1', checksum: 'a1' }]);
+});
+
+test('runMigrations --dry-run reports a tolerated mismatch without updating the ledger', async () => {
+  const ledger = fakeLedger({ applied: [{ _id: 'm1', checksum: 'CHANGED' }] });
+  const result = await runMigrations(testContext(), {
+    options: { dryRun: true, allowChecksumMismatch: true },
+    deps: {
+      readIndex: async () => index,
+      ledger,
+      runMigration: async () => ({ status: 'continue' }),
+    },
+  });
+  expect(result.mismatches.map((m) => m.id)).toEqual(['m1']);
+  expect(ledger.calls.checksumUpdates).toEqual([]);
 });

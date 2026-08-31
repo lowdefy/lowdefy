@@ -85,11 +85,28 @@ function createMongoLedger(context, { connectionId, lockTimeoutMs = 900000 } = {
   }
 
   async function insertEntry(entry) {
+    // The migration id is the document _id (design D2), not repeated as a field.
+    const { id, ...fields } = entry;
     await callLedgerRequest(context, {
       connectionId,
       stepId: 'insert_entry',
       type: 'MongoDBInsertOne',
-      properties: { doc: { _id: entry.id, ...entry } },
+      properties: { doc: { _id: id, ...fields } },
+    });
+  }
+
+  // --allow-checksum-mismatch tolerates an edit to an applied migration and
+  // records the current checksum (design D3), so the warning does not repeat
+  // on every subsequent run.
+  async function updateChecksum({ id, checksum }) {
+    await callLedgerRequest(context, {
+      connectionId,
+      stepId: 'update_checksum',
+      type: 'MongoDBUpdateOne',
+      properties: {
+        filter: { _id: id },
+        update: { $set: { checksum } },
+      },
     });
   }
 
@@ -101,41 +118,62 @@ function createMongoLedger(context, { connectionId, lockTimeoutMs = 900000 } = {
     return Number.isFinite(expiresAt) && expiresAt > Date.now();
   }
 
-  // Advisory lock: a held-and-fresh lock is a hard stop naming the holder; an
-  // absent or expired lock is taken (expired = the previous run crashed, so it
-  // is stolen with a warning). A residual read→write race is why the lock
-  // carries an expiry and is heartbeat-refreshed rather than trusted forever.
+  function heldLockError(lock) {
+    return new ConfigError(
+      `A migration lock is held by "${lock?.holder ?? 'unknown'}" since ${
+        lock?.acquiredAt ?? 'unknown'
+      }. Another migration run is in progress. Wait for it to finish, or if it crashed wait for the lock to expire (config.migrations.lockTimeoutMs).`
+    );
+  }
+
+  // Advisory lock, taken with ONE atomic conditional write (design D9): an
+  // upserting updateOne whose filter matches the lock document only when it is
+  // absent or expired. When a fresh lock exists the filter matches nothing, the
+  // upsert tries to insert a second `$lock` document, and the unique _id index
+  // rejects it — so exactly one concurrent runner wins, with no separate
+  // read-then-write race. matchedCount === 1 means an expired lock was replaced
+  // (the previous run crashed), which is reported as a steal.
   async function acquireLock({ holder }) {
+    // Informational pre-read only — never part of the acquire decision. It
+    // names the crashed holder in the steal warning, which the conditional
+    // write destroys.
     const existing = await readLock();
-    if (isHeld(existing)) {
-      throw new ConfigError(
-        `A migration lock is held by "${existing.holder}" since ${
-          existing.acquiredAt ?? 'unknown'
-        }. Another migration run is in progress. Wait for it to finish, or if it crashed wait for the lock to expire (config.migrations.lockTimeoutMs).`
-      );
-    }
-    if (!type.isNone(existing)) {
-      context.logger.warn(
-        `Stole an expired migration lock held by "${existing.holder}" since ${existing.acquiredAt} — the previous run likely crashed.`
-      );
-    }
     const now = Date.now();
-    await callLedgerRequest(context, {
-      connectionId,
-      stepId: 'acquire_lock',
-      type: 'MongoDBUpdateOne',
-      properties: {
-        filter: { _id: LOCK_ID },
-        update: {
-          $set: {
-            holder,
-            acquiredAt: new Date(now),
-            expiresAt: new Date(now + lockTimeoutMs),
+    let result;
+    try {
+      result = await callLedgerRequest(context, {
+        connectionId,
+        stepId: 'acquire_lock',
+        type: 'MongoDBUpdateOne',
+        properties: {
+          filter: {
+            _id: LOCK_ID,
+            $or: [{ expiresAt: { $lt: new Date(now) } }, { expiresAt: null }],
           },
+          update: {
+            $set: {
+              holder,
+              acquiredAt: new Date(now),
+              expiresAt: new Date(now + lockTimeoutMs),
+            },
+          },
+          options: { upsert: true },
         },
-        options: { upsert: true },
-      },
-    });
+      });
+    } catch (error) {
+      const code = error.code ?? error.cause?.code;
+      if (code === 11000 || code === 11001) {
+        throw heldLockError(await readLock());
+      }
+      throw error;
+    }
+    if (result?.matchedCount === 1) {
+      context.logger.warn(
+        `Stole an expired migration lock held by "${existing?.holder ?? 'unknown'}" since ${
+          existing?.acquiredAt ?? 'unknown'
+        } — the previous run likely crashed.`
+      );
+    }
     return { holder };
   }
 
@@ -161,7 +199,16 @@ function createMongoLedger(context, { connectionId, lockTimeoutMs = 900000 } = {
     });
   }
 
-  return { readApplied, readLock, insertEntry, acquireLock, refreshLock, releaseLock, isHeld };
+  return {
+    readApplied,
+    readLock,
+    insertEntry,
+    updateChecksum,
+    acquireLock,
+    refreshLock,
+    releaseLock,
+    isHeld,
+  };
 }
 
 export { LOCK_ID };

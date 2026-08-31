@@ -19,22 +19,23 @@ import { ConfigError } from '@lowdefy/errors';
 
 import runRoutine from '../endpoints/runRoutine.js';
 
-const COUNT_KEYS = [
-  'modifiedCount',
-  'insertedCount',
-  'upsertedCount',
-  'matchedCount',
-  'deletedCount',
-];
-
 // Sums the documents a migration touched from its step results, so the runner
-// can report "9,812 documents". A MongoDB* write result carries one of these
-// counts; a step that returns something else contributes nothing.
+// can report "9,812 documents". A MongoDB* write result carries these counts;
+// a step that returns something else contributes nothing. An update result
+// carries BOTH matchedCount and modifiedCount for the same documents, so each
+// result counts modified (falling back to matched for a values-already-set
+// no-op update, which still touched the rows) exactly once, plus the inserts,
+// upserts and deletes that are disjoint from it.
 function countDocuments(steps) {
   let total = 0;
   Object.values(steps ?? {}).forEach((result) => {
     if (!type.isObject(result)) return;
-    COUNT_KEYS.forEach((key) => {
+    if (type.isInt(result.modifiedCount) && result.modifiedCount > 0) {
+      total += result.modifiedCount;
+    } else if (type.isInt(result.matchedCount)) {
+      total += result.matchedCount;
+    }
+    ['insertedCount', 'upsertedCount', 'deletedCount'].forEach((key) => {
       if (type.isInt(result[key])) {
         total += result[key];
       }
