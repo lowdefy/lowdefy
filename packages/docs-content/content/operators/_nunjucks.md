@@ -1,0 +1,117 @@
+# _nunjucks
+
+```
+(template: string): string
+(arguments: {template: string, on: object}): string
+```
+
+The `_nunjucks` hydrates a [Nunjucks](https://mozilla.github.io/nunjucks/) template.
+
+If called with a string argument, the template variables are the values in `state`. Otherwise template variables can be specified using the `on` argument.
+
+#### Arguments
+
+###### string
+The template to hydrate. The template variables used are the values in state
+
+###### object
+  - `template: string`: The template to hydrate.
+  - `on: object`: The template variables to use when hydrating the template.
+
+#### Examples
+
+###### Populate a template from values in `state`:
+```yaml
+_nunjucks: Hello {{ name }}
+```
+Returns: `"Hello Steven"` if the value of name in state is `"Steven"`.
+
+###### Populate a markdown template with different values:
+Assuming `get_items` returns:
+```yaml
+- name: Coca Cola
+  description: The original.
+- name: Pepsi
+  description: The same but different.
+```
+
+```yaml
+_nunjucks:
+  template: |
+    ### {{ title }}
+
+    {% for item in item_list %}
+    - {{ item.name }}: {{ item.description }}
+    {% endfor %}
+  on:
+    title: Soft drinks
+    items:
+      _request: get_items
+```
+Returns:
+```markdown
+### Soft drinks
+
+- Coca Cola: The original.
+- Pepsi: The same but different.
+```
+
+###### Make use of the _nunjucks date filter:
+
+```yaml
+_nunjucks:
+  template: {{ date | date('D MMM YYYY') }}
+  on:
+    date:
+      _date: 2022-08-01
+```
+
+Returns:  `"1 Aug 2022"`
+
+The `_nunjucks` date filter formats dates using the [Day.js](https://day.js.org/docs/en/display/format) library.
+
+###### Use the _nunjucks unique filter:
+
+```yaml
+_nunjucks:
+  template: |
+    <div>
+      {% set uniqueArray = array | unique %}
+      {% for item in uniqueArray %}
+        <p>{{ item }}</p>
+      {% endfor %}
+    </div>
+  on:
+    array:
+      - South Africa
+      - New Zealand
+      - Australia
+      - South Africa
+      - Pakistan
+      - India
+      - India
+```
+Returns:
+```html
+<div>
+  <p>South Africa</p>
+  <p>New Zealand</p>
+  <p>Australia</p>
+  <p>Pakistan</p>
+  <p>India</p>
+</div>
+```
+
+###### Make use of the _nunjucks urlQuery filter:
+
+```yaml
+_nunjucks:
+  template: {{ url | urlQuery(params) | safe }}
+  on:
+    url: www.lowdefy.com
+    params:
+      id: 1234
+      type: example
+```
+
+Returns: `"www.lowdefy.com?id=1234&type=example"`

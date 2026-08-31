@@ -1,15 +1,15 @@
 # @lowdefy/server
 
-Production Next.js server for deploying Lowdefy applications.
+Production Hono server for deploying Lowdefy applications.
 
 ## Overview
 
-The production server is a lightweight, optimized Next.js application that:
+The production server is a lightweight [Hono](https://hono.dev) application serving a [Vite](https://vite.dev)-built React client. It:
 
 - Loads pre-built configuration from `./build/`
-- Serves pages with server-side rendering
-- Handles API requests and authentication
-- Runs with full Next.js optimizations
+- Renders an HTML shell per page with the page config embedded as JSON (no SSR — React renders client-side)
+- Handles API requests, agent streaming, and authentication (Auth.js via `@hono/auth-js`)
+- Serves the content-hashed Vite client assets from `dist/client/`
 
 ## Installation
 
@@ -23,19 +23,20 @@ lowdefy build
 ```json
 {
   "build": "cp package.json package.original.json",
+  "build:client": "vite build",
   "build:lowdefy": "node lowdefy/build.mjs",
-  "build:next": "next build",
-  "dev": "next dev",
-  "start": "next start"
+  "start": "node src/index.js"
 }
 ```
+
+`lowdefy build` runs `build:lowdefy` (config → `build/` artifacts) and then `build:client` (Vite bundles `client/main.jsx` → `dist/client/` with a `.vite/manifest.json`). `lowdefy start` runs the `start` script.
 
 ## Dependencies
 
 ### Core Lowdefy
 
 - `@lowdefy/api` - Backend API logic
-- `@lowdefy/client` - Frontend framework
+- `@lowdefy/client` - Frontend framework (including `@lowdefy/client/adapters/*` — router, Link, Head)
 - `@lowdefy/helpers` - Utility functions
 - `@lowdefy/layout` - Grid layout system
 - `@lowdefy/node-utils` - Node utilities
@@ -50,303 +51,174 @@ lowdefy build
 
 ### Framework
 
-- `next` (13.5.4)
-- `next-auth` (4.24.5)
+- `hono` + `@hono/node-server` - HTTP server (Web Standards Request/Response)
+- `@auth/core` + `@hono/auth-js` - Auth.js engine and Hono integration
+- `vite` + `@vitejs/plugin-react` - Client bundling
+- `@sentry/node` + `@sentry/browser` + `@sentry/vite-plugin` - Error tracking
 - `react` (18.2.0)
-- `pino` (8.16.2)
+- `pino` (via `@lowdefy/logger`)
 
 ## Directory Structure
 
 ```
 server/
+├── src/                       # Hono server (unbundled Node ESM)
+│   ├── index.js               # Entry: env aliasing, Sentry init, serve(app)
+│   ├── app.js                 # createApp(): routes, middleware, static, onError
+│   ├── middleware/
+│   │   ├── apiContext.js      # Builds the request context (replaces apiWrapper)
+│   │   ├── errorHandler.js    # app.onError — serializes errors for API routes
+│   │   └── sentry.js          # http.server span per request
+│   ├── routes/
+│   │   ├── agent.js           # POST /api/agent/* — streams the Web Response
+│   │   ├── apiPage.js         # GET /api/page/* — page config JSON for SPA nav
+│   │   ├── auth.js            # /api/auth/* — authHandler + HEAD pre-check
+│   │   ├── clientError.js     # POST /api/client-error
+│   │   ├── endpoints.js       # /api/endpoints/* (catch-all)
+│   │   ├── request.js         # /api/request/* (catch-all)
+│   │   └── usage.js           # POST /api/usage
+│   ├── html/
+│   │   ├── template.js        # HTML shell (pre-hydration scripts, config embed)
+│   │   ├── renderPage.js      # Home redirect, 404 flow, template rendering
+│   │   └── getAssets.js       # Vite manifest read once at startup
+│   └── lib/
+│       ├── safeScriptJson.js  # Script-context JSON escaping
+│       └── getPathSegments.js # Catch-all path parsing (nested ids)
+├── client/                    # Vite client entry (bundled to dist/client/)
+│   ├── main.jsx               # CSS imports, __LOWDEFY_CONFIG__ parse, createRoot
+│   ├── App.jsx                # Providers: StyleProvider, XProvider, Auth, Sentry
+│   └── Page.jsx               # Wires Client with router/Link/Head adapters, SPA nav
 ├── lib/
-│   ├── build/            # Build artifact loaders (deserialize JSON)
-│   │   ├── app.js
-│   │   ├── auth.js
-│   │   ├── config.js
-│   │   └── logger.js
-│   ├── server/           # Server utilities
-│   │   ├── apiWrapper.js
-│   │   ├── serverSidePropsWrapper.js
-│   │   ├── fileCache.js
+│   ├── build/                 # Build artifact loaders (fs read + deserialize)
+│   │   ├── app.js / appMeta.js / auth.js / config.js / i18n.js / logger.js / theme.js
+│   ├── server/
+│   │   ├── fileCache.js       # LRU cache injected into the api context
 │   │   ├── auth/
-│   │   │   ├── getAuthOptions.js
-│   │   │   └── getServerSession.js
-│   │   └── log/
-│   │       ├── createLogger.js
-│   │       ├── logError.js
-│   │       └── logRequest.js
-│   └── client/           # Client utilities
-│       ├── Page.js
+│   │   │   ├── getAuthConfig.js  # Wires build auth plugins into api getAuthConfig
+│   │   │   └── session.js        # getAuthUser(c) → session
+│   │   ├── log/               # createLogger, createHandleError, logRequest
+│   │   └── sentry/            # initSentry, captureSentryError, setSentryUser
+│   └── client/
 │       ├── createLogUsage.js
-│       └── auth/
-│           ├── Auth.js
-│           ├── AuthConfigured.js
-│           └── AuthNotConfigured.js
+│       ├── sentry/            # @sentry/browser init + helpers
+│       └── auth/              # Auth.jsx, AuthConfigured.jsx (@hono/auth-js/react)
 ├── lowdefy/
-│   └── build.mjs         # Build orchestration
-├── pages/
-│   ├── _app.js
-│   ├── _document.js
-│   ├── index.js
-│   ├── 404.js
-│   ├── [pageId].js
-│   └── api/
-│       ├── agent/[...path].js        # Agent chat streaming route
-│       ├── auth/[...nextauth].js
-│       ├── endpoints/[endpointId].js
-│       ├── request/[pageId]/[requestId].js
-│       └── usage.js
+│   └── build.mjs              # Build orchestration
 ├── public_default/
-├── next.config.js
-└── package.json
+├── vite.config.js
+├── postcss.config.cjs         # @tailwindcss/postcss (read by Vite)
+└── package.json               # "type": "module"
 ```
 
-## API Wrapper
+## Request Context
 
-**File:** `lib/server/apiWrapper.js`
+**File:** `src/middleware/apiContext.js`
 
-Wraps API handlers with context and error handling:
+Mounted on `/api/*` and (guarded against double-build) on the page routes. Builds the context consumed by `@lowdefy/api` functions and stores it on the Hono context:
 
 ```javascript
-function apiWrapper(handler) {
-  return async function wrappedHandler(req, res) {
-    const context = {
-      rid: crypto.randomUUID(),
-      buildDirectory: path.join(cwd, 'build'),
-      config,
-      connections,
-      fileCache,
-      headers: req.headers,
-      jsMap,
-      logger,
-      operators,
-      req,
-      res,
-      secrets: getSecretsFromEnv(process.env),
-    };
-
-    // Add auth
-    context.authOptions = getAuthOptions(context);
-    context.session = await getServerSession(context);
-    createApiContext(context);
-
-    return handler({ context, req, res });
-  };
-}
+const context = {
+  rid: uuid(),
+  agents, appMeta, buildDirectory, config, connections, fileCache,
+  headers: c.req.header(),
+  i18n, jsMap, logger, operators, secrets,
+  req: { url: c.req.path, method: c.req.method, hostname: c.req.header('host') },
+};
+context.logger = createLogger({ rid: context.rid });
+context.handleError = createHandleError({ context });
+context.session = await getSession(c); // skipped for /api/auth/* paths
+createApiContext(context);             // adds user + authorize
+c.set('lowdefyContext', context);
 ```
 
-## Server-Side Props Wrapper
+## Error Handling
 
-**File:** `lib/server/serverSidePropsWrapper.js`
+**File:** `src/middleware/errorHandler.js` (registered via `app.onError`)
 
-Wraps `getServerSideProps` with context:
+**Hono routes handler errors to the app-level error handler at each compose dispatch level — upstream middleware `try/catch` around `next()` never sees them.** The error contract therefore lives in `app.onError`:
 
-```javascript
-function serverSidePropsWrapper(handler) {
-  return async function wrappedHandler(nextContext) {
-    const context = {
-      rid: crypto.randomUUID(),
-      buildDirectory: path.join(cwd, 'build'),
-      config,
-      fileCache,
-      headers: nextContext?.req?.headers,
-      logger,
-      nextContext,
-      req: nextContext?.req,
-      res: nextContext?.res,
-    };
-
-    context.authOptions = getAuthOptions(context);
-    context.session = await getServerSession(context);
-    createApiContext(context);
-
-    return handler({ context, nextContext });
-  };
-}
-```
-
-## CSS Layer Order
-
-**File:** `pages/_document.js`
-
-The production server declares the CSS cascade layer order in an inline `<style>` tag in `_document.js`:
-
-```jsx
-<style
-  dangerouslySetInnerHTML={{
-    __html: '@layer theme, base, antd, components, utilities;',
-  }}
-/>
-```
-
-This is necessary because Next.js strips the `@layer` order declaration from `globals.css` during CSS bundling. Without this, antd's CSS-in-JS styles and Tailwind utilities compete unpredictably. See [Theme and Styling Architecture](../architecture/theme-and-styling.md) for the full CSS layer system.
+- API paths: `serializer.serialize(error)` with `~e.received`, `~e.stack` and `~e.configKey` stripped, returned as JSON 500 — byte-compatible with the old `apiWrapper` behavior.
+- Page paths: plain `Internal Server Error` 500.
+- `context.handleError(error)` (structured pino log + Sentry capture) runs for both.
 
 ## Page Rendering
 
-**File:** `pages/[pageId].js`
+**Files:** `src/html/renderPage.js`, `src/html/template.js`, `src/routes/page.js` (routes `GET /`, `GET /404`, `GET /:rest{.+}`)
 
-```javascript
-export const getServerSideProps = serverSidePropsWrapper(async ({ context, nextContext }) => {
-  const [pageConfig, rootConfig] = await Promise.all([
-    getPageConfig(context, { pageId }),
-    getRootConfig(context),
-  ]);
+`renderPage`:
 
-  if (!pageConfig) {
-    return { redirect: { destination: '/404' } };
-  }
+1. Reads root config; `pageId === ''` → if no home page configured, 302 to `/${home.pageId}`.
+2. `getPageConfig` — missing page → 302 to `/404`; `GET /404` renders the 404 page config **with HTTP 404 status**.
+3. Renders the HTML template and returns `c.html(html, status)`.
 
-  logPageView(context, { pageId });
+The template embeds everything the client needs in one response:
 
-  return {
-    props: {
-      pageConfig,
-      rootConfig,
-      session: context.session,
-    },
-  };
-});
-```
+- Pre-hydration **layer-order MutationObserver** script (locks `@layer theme, base, antd, components, utilities;` as the first `<head>` child against antd's prependQueue) and the **dark-mode flash prevention** script — both interpolated via `safeScriptJson`.
+- `appendHead` / `appendBody` from app config injected as raw HTML.
+- `<script id="__LOWDEFY_CONFIG__" type="application/json">` containing `{ pageConfig, rootConfig, session, basePath, sentryDsn }` (escaped by `safeScriptJson`).
+- `<link>`/`<script type="module">` asset URLs resolved from `dist/client/.vite/manifest.json`, **read once at startup** (`src/html/getAssets.js`) — deploys must build before restarting.
+- A server-side `<title>` from `pageConfig.properties.title`.
 
-## Next.js Configuration
+## SPA Navigation
 
-**File:** `next.config.js`
+First load renders from the embedded config. Navigation is client-side: `client/Page.jsx` subscribes to the custom router (`@lowdefy/client/adapters/createRouter.js` — History API, scroll restoration, `forceReload` escape hatch) and fetches `GET /api/page/:pageId` (`src/routes/apiPage.js`) to swap `pageConfig`. Missing pages replace to `/404`.
 
-```javascript
-const nextConfig = {
-  basePath: config.basePath || '',
-  output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE ? 'standalone' : undefined,
-  poweredByHeader: false,
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Browser fallbacks for Node modules
-      config.resolve.fallback = {
-        fs: false,
-        net: false,
-        tls: false,
-        crypto: false,
-        path: false,
-        os: false,
-      };
-    }
-    return config;
-  },
-};
-```
+The framework adapters passed to `@lowdefy/client` (`Components.Head`, `Components.Link`, `router`) come from `@lowdefy/client/adapters/*` — there is no framework router dependency.
 
-## Build Process
+## Agent Streaming
 
-**File:** `lowdefy/build.mjs`
+**File:** `src/routes/agent.js`
 
-```javascript
-import build from '@lowdefy/build';
-
-const directories = {
-  build: path.join(serverDirectory, 'build'),
-  config: configDirectory,
-  server: serverDirectory,
-};
-
-await build({
-  customTypesMap,
-  directories,
-  logger,
-  refResolver,
-});
-```
+`POST /api/agent/*` parses `pageId`/`agentId` from the catch-all, validates with translated messages, and returns the Web `Response` body from `callAgent()` directly as `text/event-stream`. A `hono/body-limit` middleware enforces the 10mb request limit, and the route is excluded from compression so streaming is never buffered.
 
 ## Authentication
 
-**File:** `lib/server/auth/getAuthOptions.js`
+**Files:** `src/routes/auth.js`, `lib/server/auth/getAuthConfig.js`, `lib/server/auth/session.js`
 
-Loads auth configuration:
+- When `authJson.configured`, `initAuthConfig` is mounted app-wide; `getAuthConfig` (in `@lowdefy/api`) assembles providers/callbacks/events/adapter from the build plugins and adds the Auth.js v5 needs: `secret: AUTH_SECRET ?? NEXTAUTH_SECRET`, `trustHost: true`, `basePath: '/api/auth'`.
+- `/api/auth/*` delegates to `authHandler()` from `@hono/auth-js`. The corporate-email **HEAD pre-check** branches inside this middleware (Hono routes HEAD requests through GET handlers, so a separate HEAD route would never match).
+- Server-side sessions come from `getAuthUser(c)`; the client uses `SessionProvider`/`useSession` from `@hono/auth-js/react` (`lib/client/auth/AuthConfigured.jsx`), with `authConfigManager.setConfig({ basePath })` when a Lowdefy basePath is set.
+- `src/index.js` aliases `NEXTAUTH_URL` → `AUTH_URL` at startup for v4 compatibility.
 
-```javascript
-function getAuthOptions({ buildDirectory, logger }) {
-  const authJson = readJsonSync(path.join(buildDirectory, 'auth.json'));
+## Unbundled ESM Constraint
 
-  if (!authJson.configured) {
-    return { configured: false };
-  }
+The Hono server runs as plain Node ESM — server-side imports from `build/plugins/*.js` use standard Node resolution. Two consequences:
 
-  return getNextAuthConfig({
-    authJson,
-    logger,
-    plugins: loadAuthPlugins(buildDirectory),
-    secrets: getSecretsFromEnv(process.env),
-  });
-}
-```
+- `lib/build/*.js` artifact loaders read JSON with `fs.readFileSync` + `serializer.deserialize` (no JSON import attributes); client code imports the `build/*.json` files directly through Vite instead.
+- Plugin package subpath exports must resolve to **files**, not directories. A `"./*": "./dist/*"` wildcard mapping `pkg/connections` to a `dist/connections/` directory throws `ERR_UNSUPPORTED_DIR_IMPORT` (bundlers silently completed it to `.js`). Packages need explicit entries like `"./connections": "./dist/connections.js"`.
 
-## File Caching
+## Vite Configuration
 
-**File:** `lib/server/fileCache.js`
+**File:** `vite.config.js`
 
-Caches file reads for performance:
-
-```javascript
-const fileCache = new Map();
-
-function readConfigFile(filePath) {
-  if (fileCache.has(filePath)) {
-    return fileCache.get(filePath);
-  }
-
-  const content = fs.readFileSync(filePath, 'utf8');
-  const parsed = JSON.parse(content);
-  fileCache.set(filePath, parsed);
-
-  return parsed;
-}
-```
-
-## Build Artifact Loading
-
-**Files:** `lib/build/app.js`, `lib/build/auth.js`, `lib/build/config.js`, `lib/build/logger.js`
-
-Build artifacts are loaded via JS modules that deserialize the raw JSON using `serializer.deserialize()`. This restores `~arr` wrapper markers back to arrays with non-enumerable `~k`, `~r`, `~l` properties, enabling runtime error tracing to resolve config locations.
-
-```javascript
-import { serializer } from '@lowdefy/helpers';
-import raw from '../../build/app.json';
-export default serializer.deserialize(raw);
-```
-
-## Logging
-
-**File:** `lib/server/log/createLogger.js`
-
-Uses Pino for structured logging:
-
-```javascript
-const logger = pino({
-  level: process.env.LOWDEFY_LOG_LEVEL || 'info',
-  formatters: {
-    level: (label) => ({ level: label }),
-  },
-});
-```
+- `base` from `build/config.json` `basePath`; `build.outDir: 'dist/client'`; `build.manifest: true`; input `client/main.jsx`.
+- `define: { 'process.env.NODE_ENV': ... }` — Vite does not replace it inside dependencies.
+- `resolve.dedupe: ['react', 'react-dom']` for linked plugin packages.
+- `sentryVitePlugin` (source map upload) gated on `SENTRY_AUTH_TOKEN`.
+- PostCSS (`@tailwindcss/postcss`) is read automatically from `postcss.config.cjs` — `client/main.jsx` imports `build/layer-order.css` **first**, then `build/globals.css`.
 
 ## Key Files
 
-| File                                        | Purpose             |
-| ------------------------------------------- | ------------------- |
-| `lib/server/apiWrapper.js`                  | API context setup   |
-| `lib/server/serverSidePropsWrapper.js`      | SSP context setup   |
-| `lib/server/auth/getAuthOptions.js`         | Auth configuration  |
-| `lib/client/Page.js`                        | Page component      |
-| `lib/client/auth/Auth.js`                   | Auth wrapper        |
-| `pages/[pageId].js`                         | Dynamic page route  |
-| `pages/api/request/[pageId]/[requestId].js` | Request handler     |
-| `lowdefy/build.mjs`                         | Build orchestration |
-| `next.config.js`                            | Next.js config      |
+| File                              | Purpose                                       |
+| --------------------------------- | --------------------------------------------- |
+| `src/app.js`                      | Hono app assembly (routes, middleware, static) |
+| `src/middleware/apiContext.js`    | Request context setup                          |
+| `src/middleware/errorHandler.js`  | `app.onError` — serialized error contract      |
+| `src/html/renderPage.js`          | Page render, home redirect, 404 flow           |
+| `src/html/template.js`            | HTML shell + pre-hydration scripts             |
+| `src/routes/agent.js`             | Agent streaming route                          |
+| `client/main.jsx`                 | Client entry (CSS order, config parse)         |
+| `lib/server/auth/getAuthConfig.js`| Auth configuration                             |
+| `lowdefy/build.mjs`               | Build orchestration                            |
+| `vite.config.js`                  | Client build config                            |
 
 ## Environment Variables
 
-| Variable                          | Purpose                       |
-| --------------------------------- | ----------------------------- |
-| `LOWDEFY_LOG_LEVEL`               | Logging level (default: info) |
-| `LOWDEFY_BUILD_OUTPUT_STANDALONE` | Enable standalone output      |
-| `NEXTAUTH_SECRET`                 | Session encryption key        |
-| `NEXTAUTH_URL`                    | App URL for OAuth             |
+| Variable             | Purpose                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| `PORT`               | Server port (default: 3000)                                   |
+| `LOWDEFY_LOG_LEVEL`  | Logging level (default: info)                                 |
+| `AUTH_SECRET`        | Session encryption key (`NEXTAUTH_SECRET` still honored)      |
+| `AUTH_URL`           | App URL for OAuth (`NEXTAUTH_URL` still honored; usually auto-detected via `trustHost`) |
+| `SENTRY_DSN`         | Sentry DSN — used server-side and passed to the client at runtime via the embedded config |
+| `SENTRY_AUTH_TOKEN`  | Enables source map upload during `vite build`                 |

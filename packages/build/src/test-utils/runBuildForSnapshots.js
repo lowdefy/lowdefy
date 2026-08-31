@@ -48,6 +48,7 @@ const snapshotTypesMap = {
     Box: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-basic' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
     Icon: { package: '@lowdefy/blocks-basic' },
     Img: { package: '@lowdefy/blocks-basic' },
@@ -114,6 +115,7 @@ const snapshotTypesMap = {
     TreeSelector: { package: '@lowdefy/blocks-antd' },
   },
   connections: {
+    Anthropic: { package: '@lowdefy/connection-anthropic' },
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
     Knex: { package: '@lowdefy/connection-knex' },
@@ -126,6 +128,8 @@ const snapshotTypesMap = {
   },
   requests: {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    GenerateObject: { package: '@lowdefy/connection-anthropic' },
+    GenerateText: { package: '@lowdefy/connection-anthropic' },
     MongoDBFind: { package: '@lowdefy/connection-mongodb' },
     MongoDBFindOne: { package: '@lowdefy/connection-mongodb' },
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
@@ -145,6 +149,12 @@ const snapshotTypesMap = {
     ElasticsearchSearch: { package: '@lowdefy/connection-elasticsearch' },
     AWSS3GetObject: { package: '@lowdefy/plugin-aws' },
     AWSS3PutObject: { package: '@lowdefy/plugin-aws' },
+  },
+  agents: {
+    ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
+  },
+  notifications: {
+    NotificationEmail: { package: '@lowdefy/email-templates' },
   },
   auth: {
     adapters: {
@@ -166,10 +176,14 @@ const snapshotTypesMap = {
     },
     providers: {
       Auth0Provider: { package: '@lowdefy/plugin-auth0' },
-      GoogleProvider: { package: 'next-auth' },
-      GitHubProvider: { package: 'next-auth' },
-      CredentialsProvider: { package: 'next-auth' },
-      EmailProvider: { package: 'next-auth' },
+      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
+      GitHubProvider: { package: '@lowdefy/plugin-next-auth' },
+      CredentialsProvider: { package: '@lowdefy/plugin-next-auth' },
+      EmailProvider: { package: '@lowdefy/plugin-next-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-next-auth' },
+      jwt: { package: '@lowdefy/plugin-next-auth' },
     },
   },
   operators: {

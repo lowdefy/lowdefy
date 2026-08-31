@@ -1,0 +1,1090 @@
+# Masonry
+
+Masonry-style grid layout container.
+
+<span style="color:#52c41a">+12.5%</span> vs last month
+
+Target is 5%. Campaigns are underperforming in APAC.
+
+```yaml
+- id: mas_3col
+  type: Masonry
+  properties:
+    columns: 3
+    gutter: 12
+  blocks:
+    - id: mas_3col_c1
+      type: Card
+      properties:
+        size: small
+        title: Revenue
+      blocks:
+        - id: mas_3col_c1_stat
+          type: Statistic
+          properties:
+            value: 128450
+            prefix: $
+    - id: mas_3col_c2
+      type: Card
+      properties:
+        size: small
+        title: Active Users
+      blocks:
+        - id: mas_3col_c2_stat
+          type: Statistic
+          properties:
+            value: 3842
+        - id: mas_3col_c2_p
+          type: Paragraph
+          properties:
+            content: <span style="color:#52c41a">+12.5%</span> vs last month
+    - id: mas_3col_c3
+      type: Card
+      properties:
+        size: small
+        title: Uptime
+      blocks:
+        - id: mas_3col_c3_stat
+          type: Statistic
+          properties:
+            value: 99.97
+            suffix: "%"
+    - id: mas_3col_c4
+      type: Card
+      properties:
+        size: small
+        title: Top Region
+      blocks:
+        - id: mas_3col_c4_tags
+          type: Box
+          layout:
+            gap: 8
+            wrap: wrap
+          blocks:
+            - id: mas_3col_c4_t1
+              type: Tag
+              properties:
+                title: North America
+                color: blue
+            - id: mas_3col_c4_t2
+              type: Tag
+              properties:
+                title: Europe
+                color: green
+            - id: mas_3col_c4_t3
+              type: Tag
+              properties:
+                title: Asia Pacific
+                color: orange
+    - id: mas_3col_c5
+      type: Card
+      properties:
+        size: small
+        title: Conversion Rate
+      blocks:
+        - id: mas_3col_c5_stat
+          type: Statistic
+          properties:
+            value: 4.2
+            suffix: "%"
+        - id: mas_3col_c5_p1
+          type: Paragraph
+          properties:
+            content: Target is 5%. Campaigns are underperforming in APAC.
+        - id: mas_3col_c5_p2
+          type: Progress
+          properties:
+            percent: 84
+```
+
+> Deployment completed
+
+> Disk usage at 85%
+
+```yaml
+- id: mas_2col
+  type: Masonry
+  properties:
+    columns: 2
+    gutter: 12
+  blocks:
+    - id: mas_2col_c1
+      type: Card
+      properties:
+        size: small
+        title: Notifications
+      blocks:
+        - id: mas_2col_c1_alert
+          type: Alert
+          properties:
+            type: success
+            showIcon: true
+            message: Deployment completed
+        - id: mas_2col_c1_alert2
+          type: Alert
+          properties:
+            type: warning
+            showIcon: true
+            message: Disk usage at 85%
+    - id: mas_2col_c2
+      type: Card
+      properties:
+        size: small
+        title: Quick Stats
+      blocks:
+        - id: mas_2col_c2_stat
+          type: Statistic
+          properties:
+            value: 1024
+            suffix: requests/s
+```
+
+Resize browser to see columns change at each breakpoint.
+
+Stacks to a single column on small screens.
+
+```yaml
+- id: mas_resp
+  type: Masonry
+  properties:
+    columns:
+      xs: 1
+      sm: 2
+      md: 3
+    gutter: 12
+  blocks:
+    - id: mas_resp_c1
+      type: Card
+      properties:
+        size: small
+        title: xs:1 sm:2 md:3
+      blocks:
+        - id: mas_resp_c1_p
+          type: Paragraph
+          properties:
+            content: Resize browser to see columns change at each breakpoint.
+    - id: mas_resp_c2
+      type: Card
+      properties:
+        size: small
+        title: Responsive
+      blocks:
+        - id: mas_resp_c2_stat
+          type: Statistic
+          properties:
+            value: 3
+            suffix: breakpoints
+    - id: mas_resp_c3
+      type: Card
+      properties:
+        size: small
+        title: Mobile
+      blocks:
+        - id: mas_resp_c3_p
+          type: Paragraph
+          properties:
+            content: Stacks to a single column on small screens.
+```
+
+32px gap between items in both directions.
+
+```yaml
+- id: mas_gutter
+  type: Masonry
+  properties:
+    columns: 2
+    gutter: 32
+  blocks:
+    - id: mas_gutter_c1
+      type: Card
+      properties:
+        size: small
+        title: Spacious
+      blocks:
+        - id: mas_gutter_c1_p
+          type: Paragraph
+          properties:
+            content: 32px gap between items in both directions.
+    - id: mas_gutter_c2
+      type: Card
+      properties:
+        size: small
+        title: Airy Layout
+      blocks:
+        - id: mas_gutter_c2_stat
+          type: Statistic
+          properties:
+            value: 32
+            suffix: px
+```
+
+32px horizontal, 8px vertical. Compact rows, wide columns.
+
+Notice the asymmetric spacing.
+
+```yaml
+- id: mas_hv
+  type: Masonry
+  properties:
+    columns: 2
+    gutter:
+      - 32
+      - 8
+  blocks:
+    - id: mas_hv_c1
+      type: Card
+      properties:
+        size: small
+        title: Wide Horizontal
+      blocks:
+        - id: mas_hv_c1_p
+          type: Paragraph
+          properties:
+            content: 32px horizontal, 8px vertical. Compact rows, wide columns.
+    - id: mas_hv_c2
+      type: Card
+      properties:
+        size: small
+        title: Tight Vertical
+      blocks:
+        - id: mas_hv_c2_stat
+          type: Statistic
+          properties:
+            value: 8
+            suffix: px vertical
+    - id: mas_hv_c3
+      type: Card
+      properties:
+        size: small
+        title: Third
+      blocks:
+        - id: mas_hv_c3_p
+          type: Paragraph
+          properties:
+            content: Notice the asymmetric spacing.
+```
+
+Items fill left-to-right in source order instead of shortest column.
+
+Second item.
+
+Third item.
+
+Taller card — order still preserved.
+
+```yaml
+- id: mas_seq
+  type: Masonry
+  properties:
+    columns: 3
+    gutter: 12
+    sequential: true
+  blocks:
+    - id: mas_seq_c1
+      type: Card
+      properties:
+        size: small
+        title: "1"
+      blocks:
+        - id: mas_seq_c1_p
+          type: Paragraph
+          properties:
+            content: Items fill left-to-right in source order instead of shortest column.
+    - id: mas_seq_c2
+      type: Card
+      properties:
+        size: small
+        title: "2"
+      blocks:
+        - id: mas_seq_c2_p
+          type: Paragraph
+          properties:
+            content: Second item.
+    - id: mas_seq_c3
+      type: Card
+      properties:
+        size: small
+        title: "3"
+      blocks:
+        - id: mas_seq_c3_p
+          type: Paragraph
+          properties:
+            content: Third item.
+        - id: mas_seq_c3_p2
+          type: Paragraph
+          properties:
+            content: Taller card — order still preserved.
+```
+
+Theme tokens cascade to all child blocks within this Masonry.
+
+```yaml
+- id: mas_blue
+  type: Masonry
+  properties:
+    columns: 2
+    gutter: 12
+    theme:
+      colorBorderSecondary: "#adc6ff"
+      borderRadiusLG: 16
+  blocks:
+    - id: mas_blue_c1
+      type: Card
+      properties:
+        size: small
+        title: Themed Card
+      blocks:
+        - id: mas_blue_c1_p
+          type: Paragraph
+          properties:
+            content: Theme tokens cascade to all child blocks within this Masonry.
+    - id: mas_blue_c2
+      type: Card
+      properties:
+        size: small
+        title: Rounded Corners
+      blocks:
+        - id: mas_blue_c2_stat
+          type: Statistic
+          properties:
+            value: 16
+            suffix: px radius
+```
+
+Warm-toned cards using gold design tokens.
+
+Text, borders, and backgrounds all harmonized.
+
+```yaml
+- id: mas_warm
+  type: Masonry
+  properties:
+    columns: 2
+    gutter: 12
+    theme:
+      colorBorderSecondary: "#ffd591"
+      colorTextHeading: "#d46b08"
+      colorText: "#874d00"
+  blocks:
+    - id: mas_warm_c1
+      type: Card
+      properties:
+        size: small
+        title: Orange Palette
+      blocks:
+        - id: mas_warm_c1_p
+          type: Paragraph
+          properties:
+            content: Warm-toned cards using gold design tokens.
+    - id: mas_warm_c2
+      type: Card
+      properties:
+        size: small
+        title: Consistent
+      blocks:
+        - id: mas_warm_c2_p
+          type: Paragraph
+          properties:
+            content: Text, borders, and backgrounds all harmonized.
+```
+
+Tailwind classes on the element CSS key style the Masonry wrapper.
+
+White cards against gray create visual separation.
+
+```yaml
+- id: mas_tw
+  type: Masonry
+  class:
+    element: bg-bg-layout p-6 rounded-xl
+  properties:
+    columns: 2
+    gutter: 12
+  blocks:
+    - id: mas_tw_c1
+      type: Card
+      properties:
+        size: small
+        title: Gray Background
+      blocks:
+        - id: mas_tw_c1_p
+          type: Paragraph
+          properties:
+            content: Tailwind classes on the element CSS key style the Masonry wrapper.
+    - id: mas_tw_c2
+      type: Card
+      properties:
+        size: small
+        title: Contrast
+      blocks:
+        - id: mas_tw_c2_p
+          type: Paragraph
+          properties:
+            content: White cards against gray create visual separation.
+```
+
+Resize browser to see slow item repositioning.
+
+ease-in-out instead of the default cubic-bezier.
+
+```yaml
+- id: mas_motion
+  type: Masonry
+  properties:
+    columns: 2
+    gutter: 12
+    theme:
+      motionDurationSlow: 2s
+      motionDurationFast: 1s
+      motionEaseOut: ease-in-out
+  blocks:
+    - id: mas_motion_c1
+      type: Card
+      properties:
+        size: small
+        title: 2s Transitions
+      blocks:
+        - id: mas_motion_c1_p
+          type: Paragraph
+          properties:
+            content: Resize browser to see slow item repositioning.
+    - id: mas_motion_c2
+      type: Card
+      properties:
+        size: small
+        title: Custom Easing
+      blocks:
+        - id: mas_motion_c2_p
+          type: Paragraph
+          properties:
+            content: ease-in-out instead of the default cubic-bezier.
+```
+
+Mountain Sunrise
+
+A stunning view of the morning light breaking over the peaks.
+
+City at Night
+
+Urban skyline illuminated by thousands of city lights reflecting off the river below.
+
+Autumn Forest
+
+Ocean Waves
+
+Crashing waves along the rocky coastline during golden hour.
+
+Desert Dunes
+
+Rolling sand dunes stretching to the horizon under a clear blue sky. The patterns in the sand are shaped by the wind.
+
+```yaml
+- id: mas_gallery
+  type: Masonry
+  properties:
+    columns: 3
+    gutter: 12
+  blocks:
+    - id: mas_gallery_c1
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_gallery_img1
+              type: Html
+              properties:
+                html: <img alt="landscape" src="https://picsum.photos/seed/gallery1/400/300"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_gallery_c1_title
+          type: Title
+          properties:
+            content: Mountain Sunrise
+            level: 5
+        - id: mas_gallery_c1_p
+          type: Paragraph
+          properties:
+            content: A stunning view of the morning light breaking over the peaks.
+        - id: mas_gallery_c1_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: mas_gallery_c1_t1
+              type: Tag
+              properties:
+                title: Nature
+                color: green
+            - id: mas_gallery_c1_t2
+              type: Tag
+              properties:
+                title: Featured
+                color: gold
+    - id: mas_gallery_c2
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_gallery_img2
+              type: Html
+              properties:
+                html: <img alt="cityscape" src="https://picsum.photos/seed/gallery2/400/500"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_gallery_c2_title
+          type: Title
+          properties:
+            content: City at Night
+            level: 5
+        - id: mas_gallery_c2_p
+          type: Paragraph
+          properties:
+            content: Urban skyline illuminated by thousands of city lights reflecting off
+              the river below.
+    - id: mas_gallery_c3
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_gallery_img3
+              type: Html
+              properties:
+                html: <img alt="forest" src="https://picsum.photos/seed/gallery3/400/250"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_gallery_c3_title
+          type: Title
+          properties:
+            content: Autumn Forest
+            level: 5
+    - id: mas_gallery_c4
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_gallery_img4
+              type: Html
+              properties:
+                html: <img alt="ocean" src="https://picsum.photos/seed/gallery4/400/350"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_gallery_c4_title
+          type: Title
+          properties:
+            content: Ocean Waves
+            level: 5
+        - id: mas_gallery_c4_p
+          type: Paragraph
+          properties:
+            content: Crashing waves along the rocky coastline during golden hour.
+        - id: mas_gallery_c4_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: mas_gallery_c4_t1
+              type: Tag
+              properties:
+                title: Seascape
+                color: blue
+    - id: mas_gallery_c5
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_gallery_img5
+              type: Html
+              properties:
+                html: <img alt="desert" src="https://picsum.photos/seed/gallery5/400/450"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_gallery_c5_title
+          type: Title
+          properties:
+            content: Desert Dunes
+            level: 5
+        - id: mas_gallery_c5_p
+          type: Paragraph
+          properties:
+            content: Rolling sand dunes stretching to the horizon under a clear blue sky.
+              The patterns in the sand are shaped by the wind.
+```
+
+Sarah Chen
+
+Lead Designer
+
+Marcus Johnson
+
+Senior Backend Engineer
+
+Priya Patel
+
+Product Manager
+
+```yaml
+- id: mas_team
+  type: Masonry
+  properties:
+    columns:
+      xs: 1
+      sm: 2
+      lg: 3
+    gutter: 16
+  blocks:
+    - id: mas_team_c1
+      type: Card
+      properties:
+        size: small
+        hoverable: true
+      blocks:
+        - id: mas_team_c1_row
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          blocks:
+            - id: mas_team_c1_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 48
+                color: "#fff"
+                backgroundColor: "#1677ff"
+            - id: mas_team_c1_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 2
+              blocks:
+                - id: mas_team_c1_name
+                  type: Title
+                  properties:
+                    content: Sarah Chen
+                    level: 5
+                - id: mas_team_c1_role
+                  type: Paragraph
+                  properties:
+                    content: Lead Designer
+        - id: mas_team_c1_divider
+          type: Divider
+        - id: mas_team_c1_desc
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: sarah.chen@example.com
+              - label: Location
+                value: San Francisco, CA
+              - label: Team
+                value: Design Systems
+        - id: mas_team_c1_btn
+          type: Button
+          properties:
+            title: View Profile
+            color: primary
+            variant: outlined
+            block: true
+            size: small
+          events:
+            onClick:
+              - id: mas_team_c1_msg
+                type: DisplayMessage
+                params:
+                  content: Viewing Sarah Chen's profile
+                  status: info
+    - id: mas_team_c2
+      type: Card
+      properties:
+        size: small
+        hoverable: true
+      blocks:
+        - id: mas_team_c2_row
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          blocks:
+            - id: mas_team_c2_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 48
+                color: "#fff"
+                backgroundColor: "#52c41a"
+            - id: mas_team_c2_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 2
+              blocks:
+                - id: mas_team_c2_name
+                  type: Title
+                  properties:
+                    content: Marcus Johnson
+                    level: 5
+                - id: mas_team_c2_role
+                  type: Paragraph
+                  properties:
+                    content: Senior Backend Engineer
+        - id: mas_team_c2_divider
+          type: Divider
+        - id: mas_team_c2_desc
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: marcus.j@example.com
+              - label: Location
+                value: Austin, TX
+        - id: mas_team_c2_btn
+          type: Button
+          properties:
+            title: View Profile
+            color: primary
+            variant: outlined
+            block: true
+            size: small
+          events:
+            onClick:
+              - id: mas_team_c2_msg
+                type: DisplayMessage
+                params:
+                  content: Viewing Marcus Johnson's profile
+                  status: info
+    - id: mas_team_c3
+      type: Card
+      properties:
+        size: small
+        hoverable: true
+      blocks:
+        - id: mas_team_c3_row
+          type: Box
+          layout:
+            gap: 12
+            align: center
+          blocks:
+            - id: mas_team_c3_avatar
+              type: Avatar
+              layout:
+                flex: 0 0 auto
+              properties:
+                icon: AiOutlineUser
+                size: 48
+                color: "#fff"
+                backgroundColor: "#722ed1"
+            - id: mas_team_c3_info
+              type: Box
+              layout:
+                flex: 1 1 0
+                direction: column
+                gap: 2
+              blocks:
+                - id: mas_team_c3_name
+                  type: Title
+                  properties:
+                    content: Priya Patel
+                    level: 5
+                - id: mas_team_c3_role
+                  type: Paragraph
+                  properties:
+                    content: Product Manager
+        - id: mas_team_c3_divider
+          type: Divider
+        - id: mas_team_c3_desc
+          type: Descriptions
+          properties:
+            size: small
+            column: 1
+            items:
+              - label: Email
+                value: priya.p@example.com
+              - label: Location
+                value: London, UK
+              - label: Team
+                value: Product
+              - label: Projects
+                value: 12 active
+        - id: mas_team_c3_btn
+          type: Button
+          properties:
+            title: View Profile
+            color: primary
+            variant: outlined
+            block: true
+            size: small
+          events:
+            onClick:
+              - id: mas_team_c3_msg
+                type: DisplayMessage
+                params:
+                  content: Viewing Priya Patel's profile
+                  status: info
+```
+
+Wireless Headphones
+
+Leather Notebook
+
+Ceramic Mug Set
+
+Handcrafted set of 4 ceramic mugs in earth-tone glazes. Dishwasher and microwave safe.
+
+Desk Lamp
+
+```yaml
+- id: mas_products
+  type: Masonry
+  class:
+    element: bg-bg-layout p-6 rounded-xl
+  properties:
+    columns:
+      xs: 1
+      sm: 2
+      md: 3
+      lg: 4
+    gutter: 16
+  blocks:
+    - id: mas_prod_c1
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_prod_img1
+              type: Html
+              properties:
+                html: <img alt="product" src="https://picsum.photos/seed/prod1/400/400"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_prod_c1_name
+          type: Title
+          properties:
+            content: Wireless Headphones
+            level: 5
+        - id: mas_prod_c1_price
+          type: Statistic
+          properties:
+            value: 79.99
+            prefix: $
+        - id: mas_prod_c1_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: mas_prod_c1_t1
+              type: Tag
+              properties:
+                title: Electronics
+                color: blue
+            - id: mas_prod_c1_t2
+              type: Tag
+              properties:
+                title: Best Seller
+                color: red
+        - id: mas_prod_c1_btn
+          type: Button
+          properties:
+            title: Add to Cart
+            color: primary
+            variant: solid
+            block: true
+            size: small
+            icon: AiOutlineShoppingCart
+          events:
+            onClick:
+              - id: mas_prod_c1_add
+                type: DisplayMessage
+                params:
+                  content: Wireless Headphones added to cart
+                  status: success
+    - id: mas_prod_c2
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_prod_img2
+              type: Html
+              properties:
+                html: <img alt="product" src="https://picsum.photos/seed/prod2/400/300"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_prod_c2_name
+          type: Title
+          properties:
+            content: Leather Notebook
+            level: 5
+        - id: mas_prod_c2_price
+          type: Statistic
+          properties:
+            value: 24.5
+            prefix: $
+        - id: mas_prod_c2_btn
+          type: Button
+          properties:
+            title: Add to Cart
+            color: primary
+            variant: solid
+            block: true
+            size: small
+            icon: AiOutlineShoppingCart
+          events:
+            onClick:
+              - id: mas_prod_c2_add
+                type: DisplayMessage
+                params:
+                  content: Leather Notebook added to cart
+                  status: success
+    - id: mas_prod_c3
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_prod_img3
+              type: Html
+              properties:
+                html: <img alt="product" src="https://picsum.photos/seed/prod3/400/500"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_prod_c3_name
+          type: Title
+          properties:
+            content: Ceramic Mug Set
+            level: 5
+        - id: mas_prod_c3_desc
+          type: Paragraph
+          properties:
+            content: Handcrafted set of 4 ceramic mugs in earth-tone glazes. Dishwasher and
+              microwave safe.
+        - id: mas_prod_c3_price
+          type: Statistic
+          properties:
+            value: 45
+            prefix: $
+        - id: mas_prod_c3_tags
+          type: Box
+          layout:
+            gap: 8
+          blocks:
+            - id: mas_prod_c3_t1
+              type: Tag
+              properties:
+                title: Home
+                color: orange
+            - id: mas_prod_c3_t2
+              type: Tag
+              properties:
+                title: New
+                color: green
+        - id: mas_prod_c3_btn
+          type: Button
+          properties:
+            title: Add to Cart
+            color: primary
+            variant: solid
+            block: true
+            size: small
+            icon: AiOutlineShoppingCart
+          events:
+            onClick:
+              - id: mas_prod_c3_add
+                type: DisplayMessage
+                params:
+                  content: Ceramic Mug Set added to cart
+                  status: success
+    - id: mas_prod_c4
+      type: Card
+      properties:
+        hoverable: true
+        size: small
+      slots:
+        cover:
+          blocks:
+            - id: mas_prod_img4
+              type: Html
+              properties:
+                html: <img alt="product" src="https://picsum.photos/seed/prod4/400/350"
+                  style="width:100%; display:block;" />
+      blocks:
+        - id: mas_prod_c4_name
+          type: Title
+          properties:
+            content: Desk Lamp
+            level: 5
+        - id: mas_prod_c4_price
+          type: Statistic
+          properties:
+            value: 59.99
+            prefix: $
+        - id: mas_prod_c4_btn
+          type: Button
+          properties:
+            title: Add to Cart
+            color: primary
+            variant: solid
+            block: true
+            size: small
+            icon: AiOutlineShoppingCart
+          events:
+            onClick:
+              - id: mas_prod_c4_add
+                type: DisplayMessage
+                params:
+                  content: Desk Lamp added to cart
+                  status: success
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` | integer \| object | - | Number of columns, or responsive breakpoint object. |
+| `fresh` | boolean | `false` | Force refresh the masonry layout. |
+| `gutter` | number \| array | - | Gap between items. Number or [horizontal, vertical] array. |
+| `sequential` | boolean | `false` | Whether to render items sequentially. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design masonry tokens](https://ant.design/components/masonry#design-token). |
+| `theme.motionDurationSlow` | string | `"0.3s"` | Duration for item position transitions and appear animations. |
+| `theme.motionDurationFast` | string | `"0.1s"` | Duration for item leave animations. |
+| `theme.motionEaseOut` | string | `"cubic-bezier(0.215, 0.61, 0.355, 1)"` | Easing function for item transitions. |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Masonry element. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks arranged in a masonry grid. |

@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-
 async function getRequestState(page, requestId) {
   return page.evaluate((reqId) => {
     const lowdefy = window.lowdefy;
@@ -30,44 +28,4 @@ async function getRequestResponse(page, { requestId }) {
   return state?.response;
 }
 
-async function expectRequest(page, { requestId, loading, response, payload, timeout = 30000 }) {
-  if (loading !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getRequestState(page, requestId);
-          return state?.loading;
-        },
-        { timeout }
-      )
-      .toBe(loading);
-  }
-
-  if (response !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getRequestState(page, requestId);
-          return state?.response;
-        },
-        { timeout }
-      )
-      .toEqual(expect.objectContaining(response));
-  }
-
-  // Payload is stored in the request state by the Lowdefy engine.
-  // It's the evaluated payload from the request config (client-side).
-  if (payload !== undefined) {
-    await expect
-      .poll(
-        async () => {
-          const state = await getRequestState(page, requestId);
-          return state?.payload;
-        },
-        { timeout }
-      )
-      .toEqual(expect.objectContaining(payload));
-  }
-}
-
-export { getRequestState, getRequestResponse, expectRequest };
+export { getRequestState, getRequestResponse };

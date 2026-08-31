@@ -72,6 +72,7 @@ export default {
       '_uri',
       '_url_query',
       '_user',
+      '_websocket',
     ],
     server: [
       '_and',

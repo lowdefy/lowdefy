@@ -513,6 +513,17 @@ Two surfaces wrap it:
 
 **Endpoint types:** `Api` endpoints are callable from both HTTP and other endpoints. `InternalApi` endpoints are server-only — `callEndpoint` blocks HTTP access, but both `invokeEndpoint` wrappers can reach them.
 
+### Background Execution
+
+**Files:** `packages/api/src/routes/endpoints/scheduleBackground.js`, `runDetachedEndpoint.js`, and `routes/detached.js` in both servers.
+
+Two additive controls decouple routine execution from the response:
+
+- **`async: true` on an endpoint** — `callEndpoint` (and `runScheduledEndpoint` for cron fires) responds `{ accepted: true }` immediately after authorization and hands the routine promise to `scheduleBackground`. The work runs in the *same* invocation: on serverless it stays bounded by the function's `maxDuration`; the outcome exists only in logs (`background_endpoint_done` / `_failed` events) and whatever the routine writes.
+- **`detached: true` on a `CallApi` step** — `handleEndpointCall` short-circuits before `invokeEndpoint`: it fire-and-forgets a `POST` to the deployment's own `/api/detached/<endpointId>` route (via `context.origin`, captured in each server's `apiContext` middleware) and continues with `{ detached: true, endpointId }` as the step result. The route authenticates with `CRON_SECRET` (fail closed) and runs the target through `runDetachedEndpoint` as a system context — session forced to `undefined`, `InternalApi` callable, `endpointDepth` reset to 0, so the 10-level depth cap does not chain across detached hops. At-most-once, no retry.
+
+**`scheduleBackground`** wraps the promise so failures log instead of surfacing as unhandled rejections, and passes it to `context.waitUntil` when present. `waitUntil` is a platform adapter hook: the production server's `apiContext` middleware injects one backed by Vercel's request context (`Symbol.for('@vercel/request-context')`, Fluid compute) so the invocation survives until background work settles; `packages/api` itself stays provider-agnostic. On long-lived hosts (dev server, Docker, node) there is no `waitUntil` and the promise simply runs on the live process.
+
 ## End-to-End Example
 
 **Scenario:** User searches for data
@@ -580,3 +591,7 @@ Two surfaces wrap it:
 6. **Error Handling**: Try/catch with catch actions
 7. **Serialization**: Complex objects serialized for transport
 8. **Routine-frame isolation**: `steps`, `payload`, and `state` live on `routineContext`, not the request `context`. Each routine invocation (page request, top-level endpoint, `CallApi` step, resolver `callApi`) gets its own frame. Two frames in the same request never share these values — `:set_state` in one frame is invisible to a sibling.
+
+## Webhook endpoints (`webhook: true`)
+
+The `/api/endpoints` route checks the target's config first (cached file read): endpoints declaring `webhook: true` bypass the CallAPI envelope entirely — `runWebhookEndpoint` receives the raw `{ body, query, headers }` (bodies JSON-parsed regardless of content-type; raw string passthrough otherwise), runs the routine as a system context, and the routine's return value is the literal response body, because webhook handshakes (e.g. Event Grid's `validationResponse`) require exact shapes. Caller authentication is the routine's own first step. Non-webhook endpoints follow the standard `callEndpoint` path unchanged.

@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 import logCollectedErrors from './logCollectedErrors.js';
-import { BuildError, ConfigError, OperatorError } from '@lowdefy/errors';
+import { BuildError, ConfigError, ConfigWarning, OperatorError } from '@lowdefy/errors';
 
 test('logCollectedErrors does nothing when no errors', () => {
   const context = { errors: [], handleError: jest.fn() };
@@ -73,61 +73,177 @@ test('logCollectedErrors throws BuildError', () => {
   }
 });
 
-test('logCollectedErrors reports one of two errors sharing a source line and a message', () => {
-  const keyMap = { pageKey: { key: 'root.pages[0:__proto__]' } };
+test('logCollectedErrors attaches serialized errors array to the thrown BuildError', () => {
+  const configErr = new ConfigError('Bad config', { configKey: 'abc123' });
+  const context = {
+    errors: [configErr],
+    handleError: jest.fn((err) => {
+      err.source = '/app/pages/home.yaml:5';
+      err.config = 'root.pages[0:home]';
+    }),
+  };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.errors).toEqual([
+      {
+        message: 'Bad config',
+        name: 'ConfigError',
+        source: '/app/pages/home.yaml:5',
+        config: 'root.pages[0:home]',
+        configKey: 'abc123',
+        checkSlug: null,
+      },
+    ]);
+  }
+});
+
+test('logCollectedErrors attaches serialized warnings array to the thrown BuildError', () => {
+  const configErr = new ConfigError('Bad config');
+  const warning = new ConfigWarning('Deprecated feature used');
+  warning.source = '/app/pages/home.yaml:12';
+  const context = { errors: [configErr], warnings: [warning], handleError: jest.fn() };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.warnings).toEqual([
+      {
+        message: 'Deprecated feature used',
+        name: 'ConfigWarning',
+        source: '/app/pages/home.yaml:12',
+        config: null,
+        configKey: null,
+        checkSlug: null,
+      },
+    ]);
+  }
+});
+
+// buildEntityAuth reaches page, endpoint and websocket ids before validateId does, and both gates
+// give the same message for the same config line.
+test('logCollectedErrors logs one error when two build steps report the same message on one line', () => {
+  const message = 'Page id "__proto__" is a reserved name and cannot be used as an id.';
   const context = {
     errors: [
-      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'pageKey' }),
-      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'pageKey' }),
+      new ConfigError(message, { configKey: 'abc123' }),
+      new ConfigError(message, { configKey: 'abc123' }),
     ],
+    keyMap: { abc123: { key: 'pages.0', '~r': 'ref1', '~l': 15 } },
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
     handleError: jest.fn(),
-    keyMap,
   };
+
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 1 error(s). See above for details.'
   );
   expect(context.handleError).toHaveBeenCalledTimes(1);
 });
 
-test('logCollectedErrors reports both errors sharing a source line with different messages', () => {
-  const keyMap = { pageKey: { key: 'root.pages[0:home]' } };
+test('logCollectedErrors logs both errors when the same source line has different messages', () => {
   const context = {
     errors: [
-      new ConfigError('First problem.', { configKey: 'pageKey' }),
-      new ConfigError('Second problem.', { configKey: 'pageKey' }),
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new ConfigError('Duplicate pageId "__proto__".', { configKey: 'abc123' }),
     ],
+    keyMap: { abc123: { key: 'pages.0', '~r': 'ref1', '~l': 15 } },
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
     handleError: jest.fn(),
-    keyMap,
   };
+
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 2 error(s). See above for details.'
   );
   expect(context.handleError).toHaveBeenCalledTimes(2);
 });
 
-test('logCollectedErrors reports both unlocated errors sharing a message', () => {
+test('logCollectedErrors logs both errors when the same message comes from different source lines', () => {
+  const context = {
+    errors: [
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'def456' }),
+    ],
+    keyMap: {
+      abc123: { key: 'pages.0', '~r': 'ref1', '~l': 15 },
+      def456: { key: 'pages.1', '~r': 'ref1', '~l': 22 },
+    },
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
+    handleError: jest.fn(),
+  };
+
+  expect(() => logCollectedErrors(context)).toThrow(
+    'Build failed with 2 error(s). See above for details.'
+  );
+  expect(context.handleError).toHaveBeenCalledTimes(2);
+});
+
+test('logCollectedErrors logs both unlocated errors when they share a message', () => {
   const context = {
     errors: [new Error('Something broke'), new Error('Something broke')],
     handleError: jest.fn(),
   };
+
   expect(() => logCollectedErrors(context)).toThrow(
     'Build failed with 2 error(s). See above for details.'
   );
   expect(context.handleError).toHaveBeenCalledTimes(2);
 });
 
-test('logCollectedErrors still logs when resolveErrorLocation throws', () => {
-  const configErr = new ConfigError('Bad config', { configKey: 'brokenKey' });
+test('logCollectedErrors logs every error when resolveErrorLocation throws', () => {
   const context = {
-    errors: [configErr],
+    errors: [
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new ConfigError('Page id "__proto__" is a reserved name.', { configKey: 'abc123' }),
+      new Error('Something broke'),
+    ],
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
     handleError: jest.fn(),
-    // A keyMap whose entry lookup throws - resolution reads author-supplied data.
-    get keyMap() {
-      throw new Error('keyMap read failed');
-    },
   };
+  Object.defineProperty(context, 'keyMap', {
+    get() {
+      throw new Error('keyMap exploded');
+    },
+  });
+
   expect(() => logCollectedErrors(context)).toThrow(
-    'Build failed with 1 error(s). See above for details.'
+    'Build failed with 3 error(s). See above for details.'
   );
-  expect(context.handleError).toHaveBeenCalledWith(configErr);
+  expect(context.handleError).toHaveBeenCalledTimes(3);
+});
+
+test('logCollectedErrors serializes only the errors it logged', () => {
+  const configErr = new ConfigError('Bad config', { configKey: 'abc123' });
+  const duplicateErr = new ConfigError('Bad config', { configKey: 'abc123' });
+  const context = {
+    errors: [configErr, duplicateErr],
+    keyMap: { abc123: { key: 'pages.0', '~r': 'ref1', '~l': 15 } },
+    refMap: { ref1: { path: 'lowdefy.yaml' } },
+    directories: { config: '/app' },
+    handleError: jest.fn(),
+  };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.errors).toHaveLength(1);
+  }
+});
+
+test('logCollectedErrors attaches an empty warnings array when context has no warnings', () => {
+  const context = { errors: [new ConfigError('Bad config')], handleError: jest.fn() };
+
+  try {
+    logCollectedErrors(context);
+    throw new Error('logCollectedErrors should have thrown');
+  } catch (err) {
+    expect(err.warnings).toEqual([]);
+  }
 });

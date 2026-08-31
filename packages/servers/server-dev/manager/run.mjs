@@ -16,9 +16,11 @@
 */
 
 import { wait } from '@lowdefy/helpers';
+import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import startServer from './processes/startServer.mjs';
+import formatNoticeBox from './utils/formatNoticeBox.mjs';
 
 /*
 The run script does the following:
@@ -78,6 +80,16 @@ The run script does the following:
 
 const context = await getContext();
 
+// Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
+// signal forwarding) — terminal Ctrl+C signals the whole process group, but a
+// targeted SIGTERM would otherwise orphan the child.
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.on(signal, () => {
+    context.shutdownServer();
+    process.exit(0);
+  });
+}
+
 try {
   await context.initialBuild();
 
@@ -85,8 +97,37 @@ try {
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
+  // The manager is the component that binds the port, so it re-checks here to
+  // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
+  // process that grabbed the port during the initial build.
+  const availablePort = await findAvailablePort({ port: context.options.port });
+  if (availablePort !== context.options.port) {
+    context.logger.warn(
+      `Port ${context.options.port} is in use, using port ${availablePort} instead.`
+    );
+    context.options.port = availablePort;
+  }
+
   startServer(context);
   await wait(800);
+  const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
+  context.logger.info(
+    { color: 'blue' },
+    formatNoticeBox({
+      title: 'Lowdefy coding agent tools',
+      lines: [
+        `Docs & MCP  ${docsUrl}`,
+        '            run `lowdefy agent-setup` to connect your agent',
+        '',
+        'Annotate    Press Cmd/Ctrl+/ in the browser to point, draw,',
+        '            and comment on the running app, then paste the',
+        '            copied feedback into your coding agent session.',
+        '',
+        'Open code   Cmd/Ctrl+click any element in the browser to open',
+        '            its yaml in VS Code at the defining line.',
+      ],
+    })
+  );
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
     opener(`http://localhost:${context.options.port}`);

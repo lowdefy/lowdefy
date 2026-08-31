@@ -88,15 +88,15 @@ _ref:
 
             The schema for passing actions to Lowdefy events is:
             ```
-              (eventName: action[])
+              (eventName: (action | control)[])
               (eventName: {
                 shortcut?: string | string[],
                 debounce?: {
                   ms?: number,
                   immediate?: boolean,
                 },
-                try: action[],
-                catch?: action[],
+                try: (action | control)[],
+                catch?: (action | control)[],
               })
             ```
 
@@ -125,6 +125,69 @@ _ref:
                       params:
                         # ...
             ```
+
+            ## Control flow in action lists
+
+            An item in an action list is either an action (`id` and `type`) or a control. Action lists support the routine controls [`:if`](/:if), [`:switch`](/:switch) and [`:return`](/:return):
+
+            - [`:if`](/:if): Evaluates a condition and executes the `:then` action list if the result is truthy, else the optional `:else` action list.
+            - [`:switch`](/:switch): Evaluates `:case` conditions in order and executes the `:then` action list of the first truthy case — later cases are never evaluated. If no case matches, the optional `:default` action list is executed.
+            - [`:return`](/:return): Ends the whole event successfully. No further actions execute — not even in enclosing lists — and the event's `catch` actions do not run. A `:return` inside a `catch` list ends the remaining catch actions the same way, but the event keeps its error result.
+
+            Branch lists are action lists themselves, so controls can nest, and controls can be used in both `try` and `catch` action lists.
+
+            ###### Control flow example:
+            ```yaml
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+                - :if:
+                    _not:
+                      _state: skip_reopen
+                  :then:
+                    - id: reopen_ticket
+                      type: Request
+                      params: reopen_ticket
+                    - id: redirect
+                      type: Link
+                      params:
+                        pageId: ticket-view
+                  :else:
+                    - id: show_blocked
+                      type: DisplayMessage
+                      params:
+                        content: Ticket cannot be reopened.
+                        status: warning
+            ```
+
+            Actions inside branches are ordinary actions — `skip`, `messages`, `async` and error behavior are unchanged. Actions the event does not execute for a control-flow reason — actions in an untaken branch, in an unmatched case, or after a `:return` — are recorded as skipped, so [`_actions`](/_actions) lookups like `_actions: my_action.skipped` keep working.
+
+            ### When to use which
+
+            - `skip` gates a single action.
+            - `:if` gates a group of consecutive actions with one condition.
+            - `:switch` replaces a chain of nested `:if`s over mutually exclusive alternatives.
+            - `:return` ends the event early — replacing the workaround of throwing an error in a `try` list.
+
+            Deep control nesting in an event is a sign the logic belongs in an [API routine](/lowdefy-api).
+
+            ### Routine controls in events
+
+            The control grammar is shared with [API routines](/lowdefy-api): where a control exists on both sides, the syntax and semantics match.
+
+            | Routine control | In events | Client answer |
+            | --- | --- | --- |
+            | `:if` | Yes | Same syntax and semantics as in routines. |
+            | `:switch` | Yes | First truthy `:case` wins; later cases are never evaluated; `:default` optional. |
+            | `:return` | Yes | Ends the event successfully — replaces the early-`Throw` workaround. |
+            | `:for`, `:parallel_for` | No | Loops belong in routines; move the iteration into an API endpoint. |
+            | `:parallel` | No | Parallelism belongs in routines; for fire-and-forget on the client, actions already take `async: true`. |
+            | `:try` / `:catch` / `:finally` | No | Events already scope errors with `try` / `catch` action lists. |
+            | `:set_state` | Already an action | [`SetState`](/SetState). Step-like controls exist server-side only because routines have no actions. |
+            | `:throw` | Already an action | [`Throw`](/Throw). |
+            | `:reject` | No client meaning | It maps a routine to a 4xx response; on the client, `Throw` covers aborts. |
+            | `:log` | No | Server logging concern; no client counterpart planned. |
 
             ## Debouncing events
 
@@ -224,6 +287,7 @@ _ref:
             - Operators used in action `params` are evaluated right before the action is executed.
             - The [`_actions`](/_actions) operator is available for sequential actions to use the values returned from preceding actions in the chain.
             - Actions have a `skip` field that can be used to skip action execution.
+            - Action lists also support the [`:if`](/:if), [`:switch`](/:switch) and [`:return`](/:return) controls — `skip` gates one action, `:if` gates a group, `:switch` picks between alternatives, and `:return` ends the event early.
             - Events support `shortcut` to bind keyboard shortcuts to the event. The shortcut fires the event when the key combination is pressed.
             - The `onInit` event is triggered the first time a page is mounted and keeps the page in loading until all actions have finished.
             - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.

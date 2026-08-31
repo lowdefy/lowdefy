@@ -18,20 +18,40 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function createWorkspace({ targetDir }) {
-  // pnpm 11 fails installs when build scripts are ignored — same fix as the root
-  // workspace, plus sharp, which enters the server copy via next.
+  // Carry the repo's build-script allowlist into the isolated workspace —
+  // pnpm refuses to run dependency build scripts (@swc/core, @sentry/cli,
+  // better-sqlite3, esbuild) unless they are approved in the workspace file.
+  // pnpm 10 reads onlyBuiltDependencies; pnpm 11 reads allowBuilds and fails
+  // the install without it.
+  // pnpm 11 also stopped reading pnpm.overrides from package.json, so the
+  // link: overrides written by rewriteDeps/addPlugins (this runs after both)
+  // are mirrored into pnpm-workspace.yaml — without them a fresh install
+  // resolves @lowdefy/* plugins from the npm registry instead of the monorepo.
+  const pkg = JSON.parse(fs.readFileSync(path.join(targetDir, 'package.json'), 'utf8'));
+  // YAML single-quoted scalars escape embedded quotes by doubling them.
+  const quote = (value) => `'${String(value).replace(/'/g, "''")}'`;
+  const overrides = Object.entries(pkg.pnpm?.overrides ?? {}).map(
+    ([name, target]) => `  ${quote(name)}: ${quote(target)}`
+  );
   fs.writeFileSync(
     path.join(targetDir, 'pnpm-workspace.yaml'),
-    `packages: []
-onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - sharp
-allowBuilds:
-  '@swc/core': true
-  esbuild: true
-  sharp: true
-`
+    [
+      'packages: []',
+      'onlyBuiltDependencies:',
+      "  - '@sentry/cli'",
+      "  - '@swc/core'",
+      '  - better-sqlite3',
+      '  - esbuild',
+      '  - sharp',
+      'allowBuilds:',
+      "  '@sentry/cli': true",
+      "  '@swc/core': true",
+      '  better-sqlite3: true',
+      '  esbuild: true',
+      '  sharp: true',
+      ...(overrides.length > 0 ? ['overrides:', ...overrides] : []),
+      '',
+    ].join('\n')
   );
   if (!fs.existsSync(path.join(targetDir, '.npmrc'))) {
     fs.writeFileSync(path.join(targetDir, '.npmrc'), 'strict-peer-dependencies=false\n');

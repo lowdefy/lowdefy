@@ -55,6 +55,20 @@ function collectSkeletonSourceFiles({ components, context }) {
     walkRefIds(moduleEntry.consumerVars, refIds);
   }
 
+  // The walker only ~r-tags resolved _ref content, never the root file's own
+  // objects — so a scalar ref parented directly on the root (e.g.
+  // app.html.appendHead: {_ref: head.html}) has no collected ancestor and
+  // would be missed by the descendant scan. Add the root ref id explicitly.
+  if (context.rootRefDef?.id != null) {
+    refIds.add(context.rootRefDef.id);
+  }
+
+  // Page refs are stop boundaries for the descendant scan: with the root id
+  // collected, a scalar ref'd inside a page file would otherwise reach the
+  // root through its page ref and wrongly become a skeleton source.
+  const pageRefIds = new Set();
+  walkRefIds(components.pages ?? [], pageRefIds);
+
   const sourceFiles = new Set();
 
   // Walk parent chains for each collected ref ID
@@ -75,6 +89,7 @@ function collectSkeletonSourceFiles({ components, context }) {
   // their paths if any ancestor in their parent chain is a collected ref ID.
   for (const [id, entry] of Object.entries(context.refMap)) {
     if (refIds.has(id)) continue;
+    if (pageRefIds.has(id)) continue;
     let current = entry.parent;
     while (current != null) {
       if (refIds.has(current)) {
@@ -83,6 +98,7 @@ function collectSkeletonSourceFiles({ components, context }) {
         }
         break;
       }
+      if (pageRefIds.has(current)) break;
       const parentEntry = context.refMap[current];
       if (!parentEntry) break;
       current = parentEntry.parent;

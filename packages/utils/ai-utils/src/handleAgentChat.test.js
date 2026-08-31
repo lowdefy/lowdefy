@@ -61,6 +61,7 @@ const mockCreateUIMessageStream = jest.fn().mockImplementation(({ execute }) => 
 });
 const mockCreateUIMessageStreamResponse = jest.fn().mockReturnValue({ type: 'web-response' });
 const mockGenerateText = jest.fn().mockResolvedValue({ text: 'Generated Title' });
+const mockGenerateId = jest.fn(() => 'generated-id');
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
@@ -93,6 +94,7 @@ jest.unstable_mockModule('ai', () => ({
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
   createUIMessageStreamResponse: mockCreateUIMessageStreamResponse,
+  generateId: mockGenerateId,
   generateText: mockGenerateText,
   pruneMessages: mockPruneMessages,
   tool: mockTool,
@@ -121,7 +123,29 @@ jest.unstable_mockModule('@ai-sdk/mcp/mcp-stdio', () => ({
   Experimental_StdioMCPTransport: MockStdioMCPTransport,
 }));
 
+const mockHandleAgentGenerate = jest.fn();
+jest.unstable_mockModule('./handleAgentGenerate.js', () => ({
+  default: mockHandleAgentGenerate,
+}));
+
 const MOCK_SCHEMA = { type: 'object', properties: {} };
+
+test('dispatches to handleAgentGenerate when context.mode is generate', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const mockResult = { result: { text: 'done', finishReason: 'stop' } };
+  mockHandleAgentGenerate.mockResolvedValue(mockResult);
+
+  const args = {
+    connection: { provider: jest.fn() },
+    properties: { agent: { properties: { model: 'test-model' } }, prompt: 'Go.' },
+    context: { mode: 'generate' },
+  };
+  const result = await handleAgentChat(args);
+
+  expect(mockHandleAgentGenerate).toHaveBeenCalledWith(args);
+  expect(result).toBe(mockResult);
+  expect(mockCreateUIMessageStream).not.toHaveBeenCalled();
+});
 
 test('creates ToolLoopAgent with correct parameters', async () => {
   mockTool.mockImplementation((def) => def);
@@ -2068,9 +2092,52 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
   });
   expect(mockToUIMessageStream).toHaveBeenCalledWith({
     originalMessages: mockValidated,
+    generateMessageId: mockGenerateId,
     onFinish: expect.any(Function),
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
+});
+
+// The AI SDK ids the assistant message it builds only when the caller passes a
+// generator; without one it reaches onFinish with id: '', so every assistant
+// message an onFinish hook persists shares the empty id and a reloaded
+// transcript collapses onto its last reply in any UI that keys bubbles by
+// message id. Asserted on both stream constructions because only one of them
+// runs per turn, and the prune branch is the one that is easy to forget.
+test('the assistant message is given an id on both stream paths', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockCreateAgentUIStream.mockClear();
+  mockToUIMessageStream.mockClear();
+  mockValidateUIMessages.mockResolvedValue([]);
+  mockConvertToModelMessages.mockResolvedValue([]);
+  mockPruneMessages.mockReturnValue([]);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  async function run(properties) {
+    await handleAgentChat({
+      connection: { provider: jest.fn().mockReturnValue({}) },
+      properties,
+      context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    });
+    await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+  }
+
+  const messages = [{ role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
+
+  await run({ agent: { tools: [], properties: { model: 'gpt-4o' } }, messages });
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({ generateMessageId: mockGenerateId })
+  );
+
+  await run({
+    agent: { tools: [], properties: { model: 'gpt-4o', prune: { reasoning: 'all' } } },
+    messages,
+  });
+  expect(mockToUIMessageStream).toHaveBeenCalledWith(
+    expect.objectContaining({ generateMessageId: mockGenerateId })
+  );
 });
 
 test('without prune config, createAgentUIStream is used and prune functions are not called', async () => {

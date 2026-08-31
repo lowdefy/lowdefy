@@ -50,7 +50,7 @@ lowdefy dev [options]
 
 1. Downloads dev server package
 2. Runs `@lowdefy/build` on config
-3. Starts Next.js dev server
+3. Starts the dev server manager (Vite + Hono child process)
 4. Watches for config changes
 5. Rebuilds on change
 
@@ -67,7 +67,7 @@ lowdefy build [options]
 |--------|-------------|---------|
 | `--config-directory` | Config directory path | Current directory |
 | `--server-directory` | Server output directory | `.lowdefy/server` |
-| `--no-next-build` | Skip Next.js build | Builds Next.js |
+| `--no-client-build` | Skip the Vite client build | Builds the client (`--no-next-build` is a deprecated alias) |
 | `--ref-resolver` | Custom ref resolver path | - |
 | `--log-level` | Log level | info |
 
@@ -75,7 +75,7 @@ lowdefy build [options]
 
 1. Downloads production server package
 2. Runs `@lowdefy/build` on config
-3. Runs `next build` on the server
+3. Runs the Vite client build (`pnpm run build:client`) on the server
 4. Outputs ready-to-deploy app
 
 ### `lowdefy start`
@@ -242,7 +242,7 @@ All options can be set via environment variables:
                          │
                          ▼
          ┌──────────────────────────────────┐
-         │         Next.js Server           │
+         │       Hono + Vite Server          │
          │   (dev server or production)     │
          └──────────────────────────────────┘
 ```
@@ -308,14 +308,14 @@ This ensures compatibility with:
 
 - ES modules
 - Modern JavaScript features
-- Next.js requirements
+- Hono + Vite server requirements
 
 ## Integration Points
 
 - **@lowdefy/build**: Called for config compilation
 - **@lowdefy/server**: Downloaded for production builds
 - **@lowdefy/server-dev**: Downloaded for development
-- **Next.js**: Underlying framework for both servers
+- **Hono + Vite**: Underlying server and client bundler for both servers
 
 ## Typical Workflow
 
@@ -347,5 +347,5 @@ The dev server watches:
 On change:
 
 1. Rebuild config via `@lowdefy/build`
-2. Hot reload the Next.js dev server
+2. Hot reload through Vite (client plugin code) or restart the server child process (server artifacts)
 3. Browser refreshes automatically

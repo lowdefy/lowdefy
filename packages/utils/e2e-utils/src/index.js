@@ -14,34 +14,47 @@
   limitations under the License.
 */
 
-// Core helpers
+// Core helpers (runner-agnostic - also available from the "./runtime" subpath)
 import { escapeId } from './core/escapeId.js';
+import { getShortcutModifier } from './core/keyboard.js';
 import { getBlock } from './core/locators.js';
-import { goto, waitForReady, expectNavigation, waitForPage } from './core/navigation.js';
-import { getRequestState, getRequestResponse, expectRequest } from './core/requests.js';
-import { getState, getBlockState, setState, expectState } from './core/state.js';
+import { goto, waitForReady, waitForPage } from './core/navigation.js';
+import { getRequestState, getRequestResponse } from './core/requests.js';
+import { getState, getBlockState, setState } from './core/state.js';
+import { getValidation } from './core/validation.js';
+import { setUrlQuery } from './core/url.js';
+
+export { escapeId };
+export { getShortcutModifier };
+export { getBlock };
+export { goto, waitForReady, waitForPage };
+export { getRequestState, getRequestResponse };
+export { getState, getBlockState, setState };
+export { getValidation };
+export { setUrlQuery };
+
+// Assertions (coupled to @playwright/test)
+import { expectNavigation } from './assertions/navigation.js';
+import { expectRequest } from './assertions/requests.js';
+import { expectState } from './assertions/state.js';
 import {
-  getValidation,
   expectValidationStatus,
   expectValidationError,
   expectValidationWarning,
   expectValidationSuccess,
-} from './core/validation.js';
-import { expectUrl, expectUrlQuery, setUrlQuery } from './core/url.js';
+} from './assertions/validation.js';
+import { expectUrl, expectUrlQuery } from './assertions/url.js';
 
-export { escapeId };
-export { getBlock };
-export { goto, waitForReady, expectNavigation, waitForPage };
-export { getRequestState, getRequestResponse, expectRequest };
-export { getState, getBlockState, setState, expectState };
+export { expectNavigation };
+export { expectRequest };
+export { expectState };
 export {
-  getValidation,
   expectValidationStatus,
   expectValidationError,
   expectValidationWarning,
   expectValidationSuccess,
 };
-export { expectUrl, expectUrlQuery, setUrlQuery };
+export { expectUrl, expectUrlQuery };
 
 // Test prep utilities
 import { generateManifest, loadManifest } from './testPrep/generateManifest.js';

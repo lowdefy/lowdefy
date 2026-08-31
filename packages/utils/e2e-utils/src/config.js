@@ -120,7 +120,6 @@ function createMultiAppConfig({
       reuseExistingServer: true,
       timeout,
       cwd: app.appDir,
-      env: { NEXT_PUBLIC_LOWDEFY_E2E: 'true' },
     };
   });
 

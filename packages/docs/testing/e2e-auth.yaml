@@ -26,7 +26,7 @@ _ref:
           content: |
             When your app uses authentication, e2e tests need a way to set user sessions without going through a real login flow. The `@lowdefy/e2e-utils` package provides cookie-based user injection that works with Lowdefy's auth system.
 
-            When you run e2e tests, a special e2e server is used instead of the production server. This server reads the test user from a browser cookie instead of using NextAuth, so your tests can set any user object and have it work with Lowdefy's page protection and role-based access control.
+            When you run e2e tests, a special e2e server is used instead of the production server. This server reads the test user from a browser cookie instead of using the Auth.js engine, so your tests can set any user object and have it work with Lowdefy's page protection and role-based access control.
 
             ## Setting a default user
 

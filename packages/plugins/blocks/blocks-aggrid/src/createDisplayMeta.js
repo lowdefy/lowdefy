@@ -76,6 +76,16 @@ function createDisplayMeta(blockName, { size = false } = {}) {
           buttonIndex: 'Zero-based index in the buttons array.',
         },
       },
+      onCellMenuItem: {
+        description:
+          'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`).',
+        event: {
+          row: 'The row data.',
+          value: 'The cell value.',
+          item: 'The clicked item: { eventName, title }.',
+          itemIndex: 'Zero-based index in the authored items array (unshifted by hidden items).',
+        },
+      },
     },
     properties: {
       type: 'object',
@@ -227,6 +237,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                       'progress',
                       'number',
                       'buttons',
+                      'menu',
                       'selector',
                       'multipleSelector',
                       'switch',
@@ -481,6 +492,71 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                         },
                       },
                     },
+                  },
+                  items: {
+                    type: 'array',
+                    description:
+                      'Menu cell: items in the row action menu, rendered in a dropdown behind a single trigger button. Each item triggers its own block-level event (declared in `events:`). `*Field` variants (`titleField`, `iconField`, `disabledField`, `hiddenField`) are row-data paths. A hidden item is dropped, not disabled — a row on which every item is hidden renders no trigger at all.',
+                    items: {
+                      type: 'object',
+                      required: ['eventName'],
+                      properties: {
+                        eventName: {
+                          type: 'string',
+                          description:
+                            'Block-level event name to trigger on click. Event payload is `{ row, value, item: { eventName, title }, itemIndex }`.',
+                        },
+                        title: {
+                          type: 'string',
+                          description: 'Item label - supports html.',
+                        },
+                        titleField: {
+                          type: 'string',
+                          description: 'Row-data path for the label.',
+                        },
+                        icon: {
+                          type: ['string', 'object'],
+                          description: 'Name of a React-Icon or Icon block config.',
+                          docs: { displayType: 'icon' },
+                        },
+                        iconField: {
+                          type: 'string',
+                          description: 'Row-data path for the icon name or config.',
+                        },
+                        danger: {
+                          type: 'boolean',
+                          default: false,
+                          description: 'Render the item in the danger colour.',
+                        },
+                        disabled: { type: 'boolean', default: false },
+                        disabledField: {
+                          type: 'string',
+                          description: 'Row-data path → boolean.',
+                        },
+                        hidden: {
+                          type: 'boolean',
+                          default: false,
+                          description: 'Hide the item entirely.',
+                        },
+                        hiddenField: {
+                          type: 'string',
+                          description: 'Row-data path → boolean.',
+                        },
+                      },
+                    },
+                  },
+                  icon: {
+                    type: ['string', 'object'],
+                    default: 'AiOutlineMore',
+                    description:
+                      'Menu cell: the trigger icon. Name of a React-Icon or Icon block config. The trigger is icon-only.',
+                    docs: { displayType: 'icon' },
+                  },
+                  placement: {
+                    type: 'string',
+                    enum: ['bottomLeft', 'bottom', 'bottomRight', 'topLeft', 'top', 'topRight'],
+                    default: 'bottomRight',
+                    description: 'Menu cell: where the dropdown opens relative to its trigger.',
                   },
                   options: {
                     type: 'array',

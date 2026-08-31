@@ -112,6 +112,31 @@ _ref:
                 - `label: string`: Button label (sent as message when clicked).
                 - `description: string`: Button description.
                 - `icon`: Button icon.
+              - `tracks: object[]`: An alternative to `prompts` for a teaching empty state — two or more labelled columns of starters, e.g. one track to ask a question and another to build a report. A `tracks` welcome renders **in-flow** as the leading item of the transcript (rather than centred and swapped out on the first send), so it scrolls up with the conversation and stays reachable by scrolling back. A track starter **fills the composer** instead of sending, so a suggested prompt becomes an editable first draft rather than a message the user never meant to send. Each track:
+                - `label: string`: Track heading.
+                - `prompts: (string | object)[]`: Starters — a plain string, or `{ label }`. The text fills the composer on click.
+
+            When `tracks` is set, `prompts` is ignored.
+
+            ###### Two-track welcome (ask a question / build a report):
+            ```yaml
+            - id: chat
+              type: AgentChat
+              properties:
+                agentId: assistant
+                welcome:
+                  title: Ask about your data
+                  description: I can see your orders, customers, and activity.
+                  tracks:
+                    - label: Get a quick answer
+                      prompts:
+                        - Which region has the highest total sales?
+                        - How many activities were logged last month?
+                    - label: Build a report
+                      prompts:
+                        - Build a report showing trends over time.
+                        - Build a report comparing categories side by side.
+            ```
 
             ### Suggestions
 
@@ -222,16 +247,19 @@ _ref:
               - `enabled: boolean`: Enable file attachments.
               - `accept: string`: Accepted MIME types (e.g. `'image/*,.pdf'`).
               - `maxSize: number`: Maximum file size in bytes.
-              - `s3PostPolicyRequestId: string`: Request ID for S3 upload policy. When set, files are uploaded to S3 and their URLs are sent to the model instead of base64 data.
+              - `uploadPolicyRequestId: string`: Id of an upload-policy request (e.g. `AwsS3PresignedPostPolicy`, `GcsSignedPostPolicy`, `AzureBlobUploadSas`). When set, files are uploaded to storage and their URLs are sent to the model instead of base64 data.
+              - `downloadPolicyRequestId: string`: Id of a download request used to resolve the URL of an uploaded attachment. The URL is fetched by the model provider, so it must remain reachable — set `public: true` on the request for public buckets, or use a long expiry. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated).
+              - `s3PostPolicyRequestId: string`: __Deprecated__ — use `uploadPolicyRequestId` instead.
 
-            ###### Attachments with S3 upload:
+            ###### Attachments uploaded to storage:
             ```yaml
             sender:
               attachments:
                 enabled: true
                 accept: image/*,.pdf,.docx
                 maxSize: 10485760
-                s3PostPolicyRequestId: get_upload_policy
+                uploadPolicyRequestId: get_upload_policy
+                downloadPolicyRequestId: get_download_url
             ```
 
             #### Sender Switches
@@ -391,6 +419,7 @@ _ref:
             | Method | Arguments | Description |
             | --- | --- | --- |
             | `sendMessage` | `{ text, files?, metadata? }` | Send a message programmatically. |
+            | `setInput` | `{ text }` | Set the composer's text without sending — seed or clear the input box. Omit `text` to clear. |
             | `regenerate` | `{ messageId? }` | Regenerate the last (or a specific) assistant message. |
             | `setMessages` | `{ messages }` | Replace all messages with a new array. |
             | `clearMessages` | | Clear all messages. |
@@ -414,6 +443,23 @@ _ref:
                       method: sendMessage
                       args:
                         - text: Please summarize the current page content.
+            ```
+
+            ###### Prefill the composer without sending:
+            ```yaml
+            - id: draft_reply
+              type: Button
+              properties:
+                title: Draft a reply
+              events:
+                onClick:
+                  - id: prefill
+                    type: CallMethod
+                    params:
+                      blockId: chat
+                      method: setInput
+                      args:
+                        - text: Please draft a polite reply to the last message.
             ```
 
             ###### New conversation button:

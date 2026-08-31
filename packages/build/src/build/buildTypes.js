@@ -73,10 +73,13 @@ function buildTypes({ components, context }) {
       callbacks: {},
       events: {},
       providers: {},
+      strategies: {},
     },
     blocks: {},
     connections: {},
+    notifications: {},
     requests: {},
+    websockets: {},
     api: {},
     operators: {
       client: {},
@@ -127,6 +130,13 @@ function buildTypes({ components, context }) {
   });
 
   buildTypeClass(context, {
+    counter: typeCounters.auth.strategies,
+    definitions: context.typesMap.auth.strategies,
+    store: components.types.auth.strategies,
+    typeClass: 'Auth strategy',
+  });
+
+  buildTypeClass(context, {
     counter: typeCounters.blocks,
     definitions: context.typesMap.blocks,
     store: components.types.blocks,
@@ -141,10 +151,24 @@ function buildTypes({ components, context }) {
   });
 
   buildTypeClass(context, {
+    counter: typeCounters.notifications,
+    definitions: context.typesMap.notifications,
+    store: components.types.notifications,
+    typeClass: 'Notification',
+  });
+
+  buildTypeClass(context, {
     counter: typeCounters.requests,
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.websockets,
+    definitions: context.typesMap.websockets,
+    store: components.types.websockets,
+    typeClass: 'Websocket',
   });
 
   buildTypeClass(context, {

@@ -14,15 +14,23 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-function authorizeApiEndpoint({ authorize, logger }, { endpointConfig }) {
+function authorizeApiEndpoint({ authorize, logger, user }, { endpointConfig }) {
   if (!authorize(endpointConfig)) {
     logger.debug({
       event: 'debug_api_authorize',
       authorized: false,
       auth_config: endpointConfig.auth,
     });
+    // Unauthenticated on a protected endpoint - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(
+        `Authentication required for API endpoint "${endpointConfig.endpointId}".`
+      );
+    }
     throw new ConfigError(`API Endpoint "${endpointConfig.endpointId}" does not exist.`);
   }
   logger.debug({

@@ -54,10 +54,12 @@ async function handleValidateSchema(context, routineContext, { step }) {
     const error = new Error(buildErrorMessage(result.errors, step.stepId), {
       cause: result.errors,
     });
+    // Log under `err` — see controlThrow: only the `err` key runs the pino error
+    // serializer, so `error` would drop the message from the log line.
     logger.error({
       event: 'error_validate_schema',
       stepId: step.stepId,
-      error,
+      err: error,
     });
     return { status: 'error', error };
   }

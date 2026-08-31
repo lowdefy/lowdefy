@@ -31,7 +31,7 @@ import suggestion from './suggestion.js';
 import useGroupMembersPopover from './useGroupMembersPopover.js';
 import useTiptapMentionState from './useTiptapMentionState.js';
 
-import './style.module.css';
+import './style.css';
 
 // A mention node's `id` attribute holds whatever option the user picked — a
 // plain string, or the option object ({ label, value, tag }) — so the label
@@ -109,9 +109,16 @@ const TiptapMentionInput = ({
   validation,
   value,
 }) => {
-  const { emit, insertImage } = useTiptapMentionState({ value, methods });
+  const uploadPolicyRequestId =
+    properties.uploadPolicyRequestId ?? properties.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = properties.downloadPolicyRequestId;
+  const { emit, insertImage } = useTiptapMentionState({
+    value,
+    methods,
+    hasDownloadRequest: !type.isNone(downloadPolicyRequestId),
+  });
   const disabled = properties.disabled === true || loading;
-  const uploadEnabled = !type.isNone(properties.s3PostPolicyRequestId);
+  const uploadEnabled = !type.isNone(uploadPolicyRequestId);
   const char = properties.mentions?.char ?? '@';
   const allowSpaces = properties.mentions?.allowSpaces !== false;
   const limit = properties.mentions?.limit ?? 5;
@@ -188,16 +195,33 @@ const TiptapMentionInput = ({
 
   useEffect(() => {
     if (uploadEnabled) {
+      if (!type.isNone(properties.s3PostPolicyRequestId)) {
+        console.warn(
+          'TiptapMentionInput property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+        );
+      }
       methods.registerEvent({
-        name: '__getS3PostPolicy',
+        name: '__getUploadPolicy',
         actions: [
           {
-            id: '__getS3PostPolicy',
+            id: '__getUploadPolicy',
             type: 'Request',
-            params: [properties.s3PostPolicyRequestId],
+            params: [uploadPolicyRequestId],
           },
         ],
       });
+      if (!type.isNone(downloadPolicyRequestId)) {
+        methods.registerEvent({
+          name: '__getDownloadPolicy',
+          actions: [
+            {
+              id: '__getDownloadPolicy',
+              type: 'Request',
+              params: [downloadPolicyRequestId],
+            },
+          ],
+        });
+      }
     }
     if (!type.isNone(properties.mentionsRequestId)) {
       methods.registerEvent({

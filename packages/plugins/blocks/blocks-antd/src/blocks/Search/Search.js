@@ -24,7 +24,7 @@ import SearchModal from './SearchModal.js';
 import useSearchIndex from './useSearchIndex.js';
 import useRecentSearches from './useRecentSearches.js';
 
-import './style.module.css';
+import './style.css';
 
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
 

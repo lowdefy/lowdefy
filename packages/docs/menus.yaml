@@ -113,6 +113,21 @@
           pageId: lowdefy-api
           properties:
             title: APIs
+        - id: notifications
+          type: MenuLink
+          pageId: notifications
+          properties:
+            title: Notifications
+        - id: dynamic-page-content
+          type: MenuLink
+          pageId: dynamic-page-content
+          properties:
+            title: Dynamic Page Content
+        - id: ai-agent-docs
+          type: MenuLink
+          pageId: ai-agent-docs
+          properties:
+            title: Docs for AI Agents
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -231,6 +246,28 @@
           properties:
             title: AgentConversations
 
+    - id: websockets_group
+      type: MenuGroup
+      properties:
+        title: WebSockets
+        icon: AiOutlineWifi
+      links:
+        - id: websockets-introduction
+          type: MenuLink
+          pageId: websockets-introduction
+          properties:
+            title: Introduction
+        - id: websocket-subscriptions
+          type: MenuLink
+          pageId: websocket-subscriptions
+          properties:
+            title: Page Subscriptions
+        - id: websocket-publish
+          type: MenuLink
+          pageId: websocket-publish
+          properties:
+            title: Publish and Actions
+
     - id: deployment
       type: MenuGroup
       properties:
@@ -331,11 +368,11 @@
           properties:
             title: Provider Reference
           links:
-            - id: next-auth-providers
+            - id: auth-js-providers
               type: MenuLink
-              pageId: next-auth-providers
+              pageId: auth-js-providers
               properties:
-                title: Next Auth Providers
+                title: Auth.js Providers
             - id: OpenIDConnectProvider
               type: MenuLink
               pageId: OpenIDConnectProvider
@@ -476,6 +513,12 @@
         - id: Switch
           type: MenuLink
           pageId: Switch
+        - id: TagMultipleSelector
+          type: MenuLink
+          pageId: TagMultipleSelector
+        - id: TagSelector
+          type: MenuLink
+          pageId: TagSelector
         - id: TextArea
           type: MenuLink
           pageId: TextArea
@@ -500,6 +543,15 @@
         - id: TreeSelector
           type: MenuLink
           pageId: TreeSelector
+        - id: Upload
+          type: MenuLink
+          pageId: Upload
+        - id: UploadDragger
+          type: MenuLink
+          pageId: UploadDragger
+        - id: UploadPhoto
+          type: MenuLink
+          pageId: UploadPhoto
         - id: WeekSelector
           type: MenuLink
           pageId: WeekSelector
@@ -548,6 +600,9 @@
         - id: Divider
           type: MenuLink
           pageId: Divider
+        - id: Download
+          type: MenuLink
+          pageId: Download
         - id: DropdownButton
           type: MenuLink
           pageId: DropdownButton
@@ -787,6 +842,16 @@
           pageId: AxiosHttp
           properties:
             title: Axios HTTP
+        - id: AzureBlobStorage
+          type: MenuLink
+          pageId: AzureBlobStorage
+          properties:
+            title: Azure Blob Storage
+        - id: GoogleCloudStorage
+          type: MenuLink
+          pageId: GoogleCloudStorage
+          properties:
+            title: Google Cloud Storage
         - id: Elasticsearch
           type: MenuLink
           pageId: Elasticsearch
@@ -840,6 +905,11 @@
           pageId: SendGridMail
           properties:
             title: SendGrid Email
+        - id: SMTP
+          type: MenuLink
+          pageId: SMTP
+          properties:
+            title: SMTP Email
         - id: SQLite
           type: MenuLink
           pageId: SQLite
@@ -933,6 +1003,9 @@
         - id: _and
           type: MenuLink
           pageId: _and
+        - id: _app
+          type: MenuLink
+          pageId: _app
         - id: _api
           type: MenuLink
           pageId: _api
@@ -1187,6 +1260,11 @@
           pageId: upgrade-guide
           properties:
             title: Upgrade Guide
+        - id: v5-to-v6
+          type: MenuLink
+          pageId: v5-to-v6
+          properties:
+            title: V5 to V6
         - id: v4-to-v5
           type: MenuLink
           pageId: v4-to-v5

@@ -1,0 +1,1453 @@
+# Box
+
+Basic block-level container for layout.
+
+```yaml
+- id: box_basic
+  type: Box
+  blocks:
+    - id: box_basic_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">A basic Box renders a div and contains child
+          blocks.</p>'
+```
+
+A Box can render a simple string using the content property.
+
+<b>Bold</b> and <i>italic</i> text via the content property.
+
+This content property overrides the content area below.
+
+```yaml
+- id: box_content_string
+  type: Box
+  properties:
+    content: A Box can render a simple string using the content property.
+- id: box_content_html
+  type: Box
+  properties:
+    content: <b>Bold</b> and <i>italic</i> text via the content property.
+- id: box_content_override
+  type: Box
+  properties:
+    content: This content property overrides the content area below.
+  blocks:
+    - id: box_content_override_child
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">This child block is hidden because the content
+          property takes priority.</p>'
+```
+
+```yaml
+- id: box_onclick
+  type: Box
+  style:
+    .element:
+      background: rgba(22, 119, 255, 0.08)
+      border: 1px solid rgba(22, 119, 255, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_message
+        type: DisplayMessage
+        params:
+          content: Box clicked!
+          status: info
+  blocks:
+    - id: box_onclick_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #1677ff;">Click this box to trigger a
+          DisplayMessage action.</p>'
+- id: box_onclick_setstate
+  type: Box
+  style:
+    .element:
+      background: rgba(82, 196, 26, 0.08)
+      border: 1px solid rgba(82, 196, 26, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_set
+        type: SetState
+        params:
+          box_click_count:
+            _sum:
+              - _state: box_click_count
+              - 1
+  blocks:
+    - id: box_onclick_counter_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #52c41a;">Click this box to increment a
+          counter with SetState.</p>'
+- id: box_onclick_link
+  type: Box
+  style:
+    .element:
+      background: rgba(250, 140, 22, 0.08)
+      border: 1px solid rgba(250, 140, 22, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_link_action
+        type: Link
+        params:
+          url: /
+  blocks:
+    - id: box_onclick_link_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #fa8c16;">Click this box to navigate using
+          the Link action.</p>'
+```
+
+```yaml
+- id: box_onpaste
+  type: Box
+  style:
+    .element:
+      background: rgba(47, 84, 235, 0.08)
+      border: 1px dashed rgba(47, 84, 235, 0.3)
+      padding: 16
+      borderRadius: 8
+  events:
+    onPaste:
+      - id: box_onpaste_message
+        type: DisplayMessage
+        params:
+          content: Content pasted into the box!
+          status: success
+  blocks:
+    - id: box_onpaste_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #2f54eb;">Focus this box and paste something
+          to trigger the onPaste event.</p>'
+```
+
+```yaml
+- id: box_gap_8
+  type: Box
+  layout:
+    gap: 8
+  blocks:
+    - id: box_gap_8_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 8
+        color: primary
+        variant: solid
+    - id: box_gap_8_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 8
+        color: primary
+        variant: solid
+    - id: box_gap_8_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 8
+        color: primary
+        variant: solid
+- id: box_gap_16
+  type: Box
+  layout:
+    gap: 16
+  blocks:
+    - id: box_gap_16_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 16
+        color: primary
+        variant: outlined
+    - id: box_gap_16_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 16
+        color: primary
+        variant: outlined
+    - id: box_gap_16_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 16
+        color: primary
+        variant: outlined
+- id: box_gap_32
+  type: Box
+  layout:
+    gap: 32
+  blocks:
+    - id: box_gap_32_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 32
+        color: green
+        variant: solid
+    - id: box_gap_32_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 32
+        color: green
+        variant: solid
+    - id: box_gap_32_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Gap 32
+        color: green
+        variant: solid
+```
+
+**justify: flex-start**
+
+**justify: center**
+
+**justify: flex-end**
+
+**justify: space-between**
+
+**justify: space-around**
+
+```yaml
+- id: box_justify_start_label
+  type: Markdown
+  properties:
+    content: "**justify: flex-start**"
+- id: box_justify_start
+  type: Box
+  layout:
+    gap: 8
+    justify: flex-start
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_js_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: A
+        color: primary
+        variant: solid
+    - id: box_js_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: B
+        color: primary
+        variant: solid
+    - id: box_js_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: C
+        color: primary
+        variant: solid
+- id: box_justify_center_label
+  type: Markdown
+  properties:
+    content: "**justify: center**"
+- id: box_justify_center
+  type: Box
+  layout:
+    gap: 8
+    justify: center
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_jc_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: A
+        color: green
+        variant: solid
+    - id: box_jc_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: B
+        color: green
+        variant: solid
+    - id: box_jc_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: C
+        color: green
+        variant: solid
+- id: box_justify_end_label
+  type: Markdown
+  properties:
+    content: "**justify: flex-end**"
+- id: box_justify_end
+  type: Box
+  layout:
+    gap: 8
+    justify: flex-end
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_je_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: A
+        color: danger
+        variant: solid
+    - id: box_je_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: B
+        color: danger
+        variant: solid
+    - id: box_je_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: C
+        color: danger
+        variant: solid
+- id: box_justify_between_label
+  type: Markdown
+  properties:
+    content: "**justify: space-between**"
+- id: box_justify_between
+  type: Box
+  layout:
+    gap: 8
+    justify: space-between
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_jb_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: A
+        color: purple
+        variant: solid
+    - id: box_jb_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: B
+        color: purple
+        variant: solid
+    - id: box_jb_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: C
+        color: purple
+        variant: solid
+- id: box_justify_around_label
+  type: Markdown
+  properties:
+    content: "**justify: space-around**"
+- id: box_justify_around
+  type: Box
+  layout:
+    gap: 8
+    justify: space-around
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_ja_a
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: A
+        color: cyan
+        variant: solid
+    - id: box_ja_b
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: B
+        color: cyan
+        variant: solid
+    - id: box_ja_c
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: C
+        color: cyan
+        variant: solid
+```
+
+**align: flex-start**
+
+Tall
+
+Short
+
+**align: center**
+
+Tall
+
+Short
+
+**align: flex-end**
+
+Tall
+
+Short
+
+```yaml
+- id: box_align_start_label
+  type: Markdown
+  properties:
+    content: "**align: flex-start**"
+- id: box_align_start
+  type: Box
+  layout:
+    gap: 8
+    align: flex-start
+  class: p-3 rounded-lg border border-gray-500/20
+  style:
+    .element:
+      minHeight: 100
+  blocks:
+    - id: box_as_tall
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-500 text-white px-4 py-2 rounded-md flex items-center
+      style:
+        .element:
+          height: 80
+      properties:
+        content: Tall
+    - id: box_as_short
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Short
+- id: box_align_center_label
+  type: Markdown
+  properties:
+    content: "**align: center**"
+- id: box_align_center
+  type: Box
+  layout:
+    gap: 8
+    align: center
+  class: p-3 rounded-lg border border-gray-500/20
+  style:
+    .element:
+      minHeight: 100
+  blocks:
+    - id: box_ac_tall
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-green-500 text-white px-4 py-2 rounded-md flex items-center
+      style:
+        .element:
+          height: 80
+      properties:
+        content: Tall
+    - id: box_ac_short
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-green-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Short
+- id: box_align_end_label
+  type: Markdown
+  properties:
+    content: "**align: flex-end**"
+- id: box_align_end
+  type: Box
+  layout:
+    gap: 8
+    align: flex-end
+  class: p-3 rounded-lg border border-gray-500/20
+  style:
+    .element:
+      minHeight: 100
+  blocks:
+    - id: box_ae_tall
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-red-500 text-white px-4 py-2 rounded-md flex items-center
+      style:
+        .element:
+          height: 80
+      properties:
+        content: Tall
+    - id: box_ae_short
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-red-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Short
+```
+
+**Row direction (default):**
+
+Item 1
+
+Item 2
+
+Item 3
+
+**Column direction (via style):**
+
+Item 1
+
+Item 2
+
+Item 3
+
+```yaml
+- id: box_dir_row_label
+  type: Markdown
+  properties:
+    content: "**Row direction (default):**"
+- id: box_dir_row
+  type: Box
+  layout:
+    gap: 8
+  class: p-3 rounded-lg border border-blue-500/20 bg-blue-500/5
+  blocks:
+    - id: box_dr_a
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 1
+    - id: box_dr_b
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 2
+    - id: box_dr_c
+      type: Box
+      layout:
+        flex: 0 0 auto
+      class: bg-blue-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 3
+- id: box_dir_column_label
+  type: Markdown
+  properties:
+    content: "**Column direction (via style):**"
+- id: box_dir_column
+  type: Box
+  layout:
+    gap: 8
+  class: p-3 rounded-lg border border-green-500/20 bg-green-500/5
+  style:
+    .element:
+      display: flex
+      flexDirection: column
+  blocks:
+    - id: box_dc_a
+      type: Box
+      class: bg-green-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 1
+    - id: box_dc_b
+      type: Box
+      class: bg-green-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 2
+    - id: box_dc_c
+      type: Box
+      class: bg-green-500 text-white px-4 py-2 rounded-md
+      properties:
+        content: Item 3
+```
+
+**Boxes wrap to the next line when they overflow:**
+
+Item 1
+
+Item 2
+
+Item 3
+
+Item 4
+
+Item 5
+
+Item 6
+
+```yaml
+- id: box_wrap_label
+  type: Markdown
+  properties:
+    content: "**Boxes wrap to the next line when they overflow:**"
+- id: box_wrap
+  type: Box
+  layout:
+    gap: 8
+    wrap: wrap
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_w_a
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 1
+    - id: box_w_b
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 2
+    - id: box_w_c
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 3
+    - id: box_w_d
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 4
+    - id: box_w_e
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 5
+    - id: box_w_f
+      type: Box
+      layout:
+        flex: 0 0 150px
+      class: bg-purple-600 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Item 6
+```
+
+**Children with flex: 1 grow to fill available space:**
+
+Fixed 100px
+
+Grows to fill
+
+Fixed 100px
+
+```yaml
+- id: box_flex_label
+  type: Markdown
+  properties:
+    content: "**Children with flex: 1 grow to fill available space:**"
+- id: box_flex_grow
+  type: Box
+  layout:
+    gap: 8
+  class: p-3 rounded-lg border border-gray-500/20
+  blocks:
+    - id: box_fg_fixed
+      type: Box
+      layout:
+        flex: 0 0 100px
+      class: bg-orange-500 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Fixed 100px
+    - id: box_fg_grow
+      type: Box
+      layout:
+        flex: 1
+      class: bg-blue-500 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Grows to fill
+    - id: box_fg_fixed2
+      type: Box
+      layout:
+        flex: 0 0 100px
+      class: bg-orange-500 text-white px-4 py-2 rounded-md text-center
+      properties:
+        content: Fixed 100px
+```
+
+```yaml
+- id: box_nested_outer
+  type: Box
+  layout:
+    gap: 12
+  class: p-4 rounded-lg border border-blue-500/20 bg-blue-500/5
+  blocks:
+    - id: box_nested_left
+      type: Box
+      layout:
+        flex: 1
+      class: p-4 rounded-md border border-gray-500/20
+      blocks:
+        - id: box_nested_left_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 0 0 8px 0;">Left Panel</h4>'
+        - id: box_nested_left_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">This box is nested inside the outer
+              box with flex: 1.</p>'
+    - id: box_nested_right
+      type: Box
+      layout:
+        flex: 1
+      class: p-4 rounded-md border border-gray-500/20
+      blocks:
+        - id: box_nested_right_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 0 0 8px 0;">Right Panel</h4>'
+        - id: box_nested_right_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">Both panels share equal space via
+              flex: 1.</p>'
+```
+
+```yaml
+- id: box_tw_shadow
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: p-5 rounded-xl shadow-lg border border-gray-500/20
+  blocks:
+    - id: box_tw_shadow_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">Elevated box using Tailwind shadow and rounded
+          classes on the element cssKey.</p>'
+- id: box_tw_border
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: border-2 border-dashed border-blue-500 p-4 rounded-lg
+  blocks:
+    - id: box_tw_border_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #1677ff;">Dashed blue border via Tailwind
+          utilities.</p>'
+- id: box_tw_accent
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: border-l-4 border-l-orange-500 pl-4 py-2
+  blocks:
+    - id: box_tw_accent_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #fa8c16; font-weight: 500;">Left accent
+          border using Tailwind border utilities.</p>'
+- id: box_tw_centered
+  type: Box
+  class: max-w-sm mx-auto text-center p-4 bg-blue-500/10 rounded-lg
+  blocks:
+    - id: box_tw_centered_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #1677ff; font-weight: bold;">Centered and
+          constrained width with Tailwind.</p>'
+```
+
+```yaml
+- id: box_csskey_gradient
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class:
+    element: bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-5 rounded-xl
+  blocks:
+    - id: box_csskey_gradient_text
+      type: Html
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0; color: #fff;">Gradient Box</h4><p
+          style="margin: 0; color: rgba(255,255,255,0.85);">Using the element
+          cssKey with a Tailwind gradient background.</p>'
+- id: box_csskey_hover
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class:
+    element: p-5 rounded-lg border border-gray-500/20 hover:shadow-lg
+      hover:border-blue-400 transition-all duration-200
+  blocks:
+    - id: box_csskey_hover_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">Hover over this box to see a shadow and border
+          color transition using Tailwind hover utilities.</p>'
+```
+
+```yaml
+- id: box_style_shadow
+  type: Box
+  layout:
+    flex: 0 0 auto
+  style:
+    .element:
+      padding: 20
+      borderRadius: 12
+      boxShadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+      background: rgba(255, 255, 255, 0.06)
+  blocks:
+    - id: box_style_shadow_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0;">Elevated box with box-shadow via inline style on
+          the element cssKey.</p>'
+- id: box_style_dark
+  type: Box
+  layout:
+    flex: 0 0 auto
+  style:
+    .element:
+      background: "#1a1a2e"
+      color: "#e0e0e0"
+      padding: 20
+      borderRadius: 8
+  blocks:
+    - id: box_style_dark_title
+      type: Html
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0; color: #ffffff;">Dark Box</h4>'
+    - id: box_style_dark_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #a0a0a0;">Light text on dark background using
+          inline style.</p>'
+- id: box_style_gradient
+  type: Box
+  layout:
+    flex: 0 0 auto
+  style:
+    .element:
+      background: linear-gradient(135deg,
+      color: "#ffffff"
+      padding: 20
+      borderRadius: 8
+  blocks:
+    - id: box_style_gradient_text
+      type: Html
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0; color: #fff;">Gradient Box</h4><p
+          style="margin: 0; color: rgba(255,255,255,0.85);">A gradient
+          background using the inline style approach.</p>'
+```
+
+```yaml
+- id: box_bg_blue
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg
+  blocks:
+    - id: box_bg_blue_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #1677ff;">Blue info box</p>'
+- id: box_bg_green
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: bg-green-500/10 border border-green-500/30 p-4 rounded-lg
+  blocks:
+    - id: box_bg_green_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #52c41a;">Green success box</p>'
+- id: box_bg_red
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: bg-red-500/10 border border-red-500/30 p-4 rounded-lg
+  blocks:
+    - id: box_bg_red_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #ff4d4f;">Red error box</p>'
+- id: box_bg_yellow
+  type: Box
+  layout:
+    flex: 0 0 auto
+  class: bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg
+  blocks:
+    - id: box_bg_yellow_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #faad14;">Yellow warning box</p>'
+```
+
+```yaml
+- id: box_features_row
+  type: Box
+  layout:
+    gap: 16
+    wrap: wrap
+  blocks:
+    - id: box_feature_a
+      type: Box
+      layout:
+        flex: 1 1 200px
+      class: p-5 rounded-xl border border-gray-500/20
+      blocks:
+        - id: box_feature_a_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineRocket
+            size: 32
+            color: "#1677ff"
+        - id: box_feature_a_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 4px 0;">Fast</h4>'
+        - id: box_feature_a_desc
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">Optimized for performance with lazy
+              loading and code splitting.</p>'
+    - id: box_feature_b
+      type: Box
+      layout:
+        flex: 1 1 200px
+      class: p-5 rounded-xl border border-gray-500/20
+      blocks:
+        - id: box_feature_b_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineSafety
+            size: 32
+            color: "#52c41a"
+        - id: box_feature_b_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 4px 0;">Secure</h4>'
+        - id: box_feature_b_desc
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">Built-in security features with
+              role-based access control.</p>'
+    - id: box_feature_c
+      type: Box
+      layout:
+        flex: 1 1 200px
+      class: p-5 rounded-xl border border-gray-500/20
+      blocks:
+        - id: box_feature_c_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineApi
+            size: 32
+            color: "#722ed1"
+        - id: box_feature_c_title
+          type: Html
+          properties:
+            html: '<h4 style="margin: 4px 0;">Extensible</h4>'
+        - id: box_feature_c_desc
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">Plug in your own components and
+              connect to any API.</p>'
+```
+
+```yaml
+- id: box_page_layout
+  type: Box
+  style:
+    .element:
+      display: flex
+      flexDirection: column
+      minHeight: 300
+      borderRadius: 8
+      overflow: hidden
+      border: 1px solid rgba(128, 128, 128, 0.3)
+  blocks:
+    - id: box_page_header
+      type: Box
+      layout:
+        justify: space-between
+        align: center
+      class: bg-slate-900 px-5 py-3
+      blocks:
+        - id: box_page_logo
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: '<span style="color: #ffffff; font-weight: bold; font-size: 16px;">My
+              App</span>'
+        - id: box_page_nav
+          type: Box
+          layout:
+            flex: 0 0 auto
+            gap: 16
+          blocks:
+            - id: box_page_nav_home
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Home
+                color: default
+                variant: link
+              events:
+                onClick:
+                  - id: box_page_nav_home_link
+                    type: Link
+                    params:
+                      url: /
+            - id: box_page_nav_about
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: About
+                color: default
+                variant: link
+              events:
+                onClick:
+                  - id: box_page_nav_about_link
+                    type: Link
+                    params:
+                      url: /about
+            - id: box_page_nav_contact
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Contact
+                color: default
+                variant: link
+              events:
+                onClick:
+                  - id: box_page_nav_contact_link
+                    type: Link
+                    params:
+                      url: /contact
+    - id: box_page_body
+      type: Box
+      layout:
+        flex: 1
+      class: p-6
+      blocks:
+        - id: box_page_body_text
+          type: Html
+          properties:
+            html: '<p style="margin: 0; opacity: 0.65;">Main content area grows to fill
+              available space using flex: 1. Place page content blocks
+              here.</p>'
+    - id: box_page_footer
+      type: Box
+      layout:
+        justify: center
+      class: px-5 py-3 border-t border-gray-500/20
+      blocks:
+        - id: box_page_footer_text
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: '<span style="opacity: 0.5; font-size: 13px;">2026 My App. All rights
+              reserved.</span>'
+```
+
+```yaml
+- id: box_inbox_wrapper
+  type: Box
+  class: rounded-lg border border-gray-500/20 overflow-hidden
+  style:
+    .element:
+      display: flex
+      flexDirection: column
+      maxWidth: 480
+  blocks:
+    - id: box_inbox_header
+      type: Box
+      layout:
+        justify: space-between
+        align: center
+      class: px-4 py-3 border-b border-gray-500/20
+      blocks:
+        - id: box_inbox_title
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: '<span style="font-weight: 600; font-size: 15px;">Notifications</span>'
+        - id: box_inbox_mark_read
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Mark all read
+            color: primary
+            variant: link
+            size: small
+          events:
+            onClick:
+              - id: box_inbox_mark_read_action
+                type: DisplayMessage
+                params:
+                  content: All notifications marked as read.
+                  status: success
+    - id: box_inbox_item_1
+      type: Box
+      layout:
+        gap: 12
+        align: flex-start
+      class: px-4 py-3 border-b border-gray-500/10 bg-blue-500/10 cursor-pointer
+        hover:bg-blue-500/15
+      events:
+        onClick:
+          - id: box_inbox_item_1_click
+            type: DisplayMessage
+            params:
+              content: "Opened: Deployment completed"
+              status: info
+      blocks:
+        - id: box_inbox_item_1_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineCheckCircle
+            size: 20
+            color: "#52c41a"
+        - id: box_inbox_item_1_body
+          type: Box
+          layout:
+            flex: 1
+            direction: column
+            gap: 2
+          blocks:
+            - id: box_inbox_item_1_text
+              type: Html
+              properties:
+                html: '<span style="font-weight: 500;">Deployment completed</span>'
+            - id: box_inbox_item_1_time
+              type: Html
+              properties:
+                html: '<span style="font-size: 12px; opacity: 0.5;">Production v2.4.1 deployed
+                  successfully - 5 minutes ago</span>'
+    - id: box_inbox_item_2
+      type: Box
+      layout:
+        gap: 12
+        align: flex-start
+      class: px-4 py-3 border-b border-gray-500/10 bg-blue-500/10 cursor-pointer
+        hover:bg-blue-500/15
+      events:
+        onClick:
+          - id: box_inbox_item_2_click
+            type: DisplayMessage
+            params:
+              content: "Opened: New team member"
+              status: info
+      blocks:
+        - id: box_inbox_item_2_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineUserAdd
+            size: 20
+            color: "#1677ff"
+        - id: box_inbox_item_2_body
+          type: Box
+          layout:
+            flex: 1
+            direction: column
+            gap: 2
+          blocks:
+            - id: box_inbox_item_2_text
+              type: Html
+              properties:
+                html: '<span style="font-weight: 500;">New team member added</span>'
+            - id: box_inbox_item_2_time
+              type: Html
+              properties:
+                html: '<span style="font-size: 12px; opacity: 0.5;">Sarah joined the Design team
+                  - 2 hours ago</span>'
+    - id: box_inbox_item_3
+      type: Box
+      layout:
+        gap: 12
+        align: flex-start
+      class: px-4 py-3 cursor-pointer hover:bg-gray-500/10
+      events:
+        onClick:
+          - id: box_inbox_item_3_click
+            type: DisplayMessage
+            params:
+              content: "Opened: Storage warning"
+              status: info
+      blocks:
+        - id: box_inbox_item_3_icon
+          type: Icon
+          layout:
+            flex: 0 0 auto
+          properties:
+            name: AiOutlineWarning
+            size: 20
+            color: "#faad14"
+        - id: box_inbox_item_3_body
+          type: Box
+          layout:
+            flex: 1
+            direction: column
+            gap: 2
+          blocks:
+            - id: box_inbox_item_3_text
+              type: Html
+              properties:
+                html: '<span style="opacity: 0.65;">Storage limit approaching</span>'
+            - id: box_inbox_item_3_time
+              type: Html
+              properties:
+                html: '<span style="font-size: 12px; opacity: 0.5;">You have used 85% of your
+                  storage quota - 1 day ago</span>'
+```
+
+```yaml
+- id: box_sidebar_layout
+  type: Box
+  layout:
+    gap: 0
+  class: rounded-lg border border-gray-500/20 overflow-hidden
+  style:
+    .element:
+      minHeight: 320
+  blocks:
+    - id: box_sidebar_nav
+      type: Box
+      layout:
+        flex: 0 0 200px
+      class: border-r border-gray-500/20
+      style:
+        .element:
+          display: flex
+          flexDirection: column
+      blocks:
+        - id: box_sidebar_brand
+          type: Html
+          properties:
+            html: '<div style="padding: 16px; font-weight: 700; font-size: 15px;
+              border-bottom: 1px solid rgba(128,128,128,0.2);">Workspace</div>'
+        - id: box_sidebar_item_dashboard
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          class: px-4 py-2 bg-blue-500/10 cursor-pointer
+          events:
+            onClick:
+              - id: box_sidebar_dashboard_action
+                type: SetState
+                params:
+                  sidebar_active: dashboard
+          blocks:
+            - id: box_sidebar_icon_dashboard
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineDashboard
+                size: 16
+                color: "#1677ff"
+            - id: box_sidebar_text_dashboard
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="color: #1677ff; font-weight: 500; font-size:
+                  14px;">Dashboard</span>'
+        - id: box_sidebar_item_projects
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          class: px-4 py-2 cursor-pointer hover:bg-gray-500/10
+          events:
+            onClick:
+              - id: box_sidebar_projects_action
+                type: SetState
+                params:
+                  sidebar_active: projects
+          blocks:
+            - id: box_sidebar_icon_projects
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineProject
+                size: 16
+                color: rgba(128, 128, 128, 0.7)
+            - id: box_sidebar_text_projects
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="opacity: 0.65; font-size: 14px;">Projects</span>'
+        - id: box_sidebar_item_settings
+          type: Box
+          layout:
+            gap: 8
+            align: center
+          class: px-4 py-2 cursor-pointer hover:bg-gray-500/10
+          events:
+            onClick:
+              - id: box_sidebar_settings_action
+                type: SetState
+                params:
+                  sidebar_active: settings
+          blocks:
+            - id: box_sidebar_icon_settings
+              type: Icon
+              layout:
+                flex: 0 0 auto
+              properties:
+                name: AiOutlineSetting
+                size: 16
+                color: rgba(128, 128, 128, 0.7)
+            - id: box_sidebar_text_settings
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="opacity: 0.65; font-size: 14px;">Settings</span>'
+    - id: box_sidebar_content
+      type: Box
+      layout:
+        flex: 1
+      class: p-6
+      blocks:
+        - id: box_sidebar_content_title
+          type: Html
+          properties:
+            html: '<h3 style="margin: 0 0 12px 0;">Dashboard</h3>'
+        - id: box_sidebar_stats_row
+          type: Box
+          layout:
+            gap: 12
+          blocks:
+            - id: box_sidebar_stat_users
+              type: Box
+              layout:
+                flex: 1
+              class: p-4 rounded-lg border border-blue-500/20 bg-blue-500/5
+              blocks:
+                - id: box_sidebar_stat_users_label
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 12px; opacity: 0.5;">Active Users</span>'
+                - id: box_sidebar_stat_users_value
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 24px; font-weight: 700; color:
+                      #1677ff;">1,248</span>'
+            - id: box_sidebar_stat_revenue
+              type: Box
+              layout:
+                flex: 1
+              class: p-4 rounded-lg border border-green-500/20 bg-green-500/5
+              blocks:
+                - id: box_sidebar_stat_revenue_label
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 12px; opacity: 0.5;">Revenue</span>'
+                - id: box_sidebar_stat_revenue_value
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 24px; font-weight: 700; color:
+                      #52c41a;">$48,650</span>'
+            - id: box_sidebar_stat_tasks
+              type: Box
+              layout:
+                flex: 1
+              class: p-4 rounded-lg border border-orange-500/20 bg-orange-500/5
+              blocks:
+                - id: box_sidebar_stat_tasks_label
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 12px; opacity: 0.5;">Open Tasks</span>'
+                - id: box_sidebar_stat_tasks_value
+                  type: Html
+                  properties:
+                    html: '<span style="font-size: 24px; font-weight: 700; color:
+                      #fa8c16;">37</span>'
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | string | - | Box content string. Overrides the "content" content area. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onClick` | \- | Trigger actions when the Box is clicked. |
+| `onPaste` | \- | Trigger actions when the element is focused and a paste event is triggered. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Box element. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks in the Box. |

@@ -14,20 +14,29 @@
   limitations under the License.
 */
 
+import { findAvailablePort } from '@lowdefy/node-utils';
+
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
-import checkPortAvailable from '../../utils/checkPortAvailable.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import installServer from '../../utils/installServer.js';
-import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runDevServer from './runDevServer.js';
 import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
   const directory = context.directories.dev;
   context.logger.info('Starting development server.');
-  await checkPortAvailable({ port: context.options.port });
+  const port = await findAvailablePort({ port: context.options.port });
+  if (port !== context.options.port) {
+    context.logger.warn(`Port ${context.options.port} is in use, using port ${port} instead.`);
+    context.options.port = port;
+  }
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
-  await resetServerPackageJson({ context, directory });
+  // Dev keeps the plugin dependency set accumulated by previous sessions —
+  // resetting package.json to package.original.json here would uninstall
+  // JIT-added plugin packages, churn the lockfile (invalidating Vite's
+  // optimizer cache), and force reinstalls on first navigation. The full
+  // `lowdefy build` recomputes the complete set, and getServer replaces
+  // package.json when the lowdefy version changes.
   await addCustomPluginsAsDeps({ context, directory });
   await ensurePnpmWorkspaceYaml({ context, directory });
   await installServer({ context, directory });

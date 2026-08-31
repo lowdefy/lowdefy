@@ -56,10 +56,15 @@ _ref:
 
             - `apiKey: string`: __Required__ - SendGrid API key.
             - `from: email`: __Required__ - Email address to send email from.
+            - `replyTo: email`: Default email address replies should be sent to.
             - `mailSettings: object`: SendGrid mail settings. See [SendGrid API-Reference](https://sendgrid.com/docs/api-reference/)
               - `sandboxMode: object`: SendGrid mail sandbox mode settings.
                 - `enable: boolean`: Sandbox mode enabled when `true`.
             - `templateId: string`: SendGrid email template ID to render email when sending.
+            - `filter: object`: Environment-aware delivery filter, applied to every send. Filter values are usually supplied by [`_secret`](operators/secret.md); a field that resolves to `null` is ignored, so one config serves every environment (a dev catch-all, a sandbox allowlist, nothing in production).
+              - `replaceAddress: string`: Redirect all mail to this single address. When set, it takes precedence — every message goes to this address only, with `cc` and `bcc` dropped.
+              - `allowlist: string[]`: A list of domains. Only recipients whose domain is in the list are sent to.
+              - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
 
             ### SendGridMailSend
 

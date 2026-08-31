@@ -99,6 +99,106 @@ test('buildModules adds module API endpoints with scoped IDs', () => {
   expect(result.api).toEqual([{ id: 'team-users/invite-user', type: 'MongoDBInsertOne' }]);
 });
 
+test('buildModules adds module notifications with scoped IDs', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'invites',
+    manifest: {
+      notifications: [
+        { id: 'invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'invites' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.notifications).toEqual([
+    { id: 'invites/invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+  ]);
+});
+
+test('buildModules appends module notifications to existing app notifications', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'invites',
+    manifest: {
+      notifications: [
+        { id: 'invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'invites' }],
+    notifications: [
+      { id: 'quote-approved', type: 'NotificationEmail', properties: { subject: 'Approved' } },
+    ],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.notifications).toEqual([
+    { id: 'quote-approved', type: 'NotificationEmail', properties: { subject: 'Approved' } },
+    { id: 'invites/invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+  ]);
+});
+
+test('buildModules processes same module package with different entry IDs — two scoped notifications', () => {
+  const entryA = makeModuleEntry({
+    id: 'invites-a',
+    manifest: {
+      notifications: [
+        { id: 'invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+      ],
+    },
+  });
+  const entryB = makeModuleEntry({
+    id: 'invites-b',
+    manifest: {
+      notifications: [
+        { id: 'invite-user', type: 'NotificationEmail', properties: { subject: 'Invite' } },
+      ],
+    },
+  });
+  const context = makeContext([entryA, entryB]);
+  const components = {
+    modules: [{ id: 'invites-a' }, { id: 'invites-b' }],
+  };
+
+  const result = buildModules({ components, context });
+
+  expect(result.notifications.map((n) => n.id)).toEqual([
+    'invites-a/invite-user',
+    'invites-b/invite-user',
+  ]);
+});
+
+test('buildModules throws ConfigError when _secret references undeclared secret in notification', () => {
+  const moduleEntry = makeModuleEntry({
+    id: 'invites',
+    manifest: {
+      secrets: [{ name: 'DECLARED_SECRET' }],
+      notifications: [
+        {
+          id: 'invite-user',
+          type: 'NotificationEmail',
+          properties: { subject: 'Invite', apiKey: { _secret: 'UNDECLARED_SECRET' } },
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'invites' }],
+  };
+
+  expect(() => buildModules({ components, context })).toThrow(
+    /references secret "UNDECLARED_SECRET"/
+  );
+});
+
 test('buildModules skips remapped connections', () => {
   const moduleEntry = makeModuleEntry({
     id: 'team-users',
@@ -478,6 +578,36 @@ test('buildModules throws ConfigError when _secret references undeclared secret 
   expect(() => buildModules({ components, context })).toThrow(
     'Module "team-users" references secret "DATABASE_URL" but does not declare it in module.lowdefy.yaml secrets.'
   );
+});
+
+test('buildModules does not treat multi-key objects containing _secret as secret references', () => {
+  // Pins the single-non-tilde-key operator shape (matches getRuntimeOperatorKey):
+  // { _secret: 'X', extra: 1 } is not operator shape, so it escapes validation.
+  const moduleEntry = makeModuleEntry({
+    id: 'team-users',
+    manifest: {
+      secrets: [],
+      pages: [
+        {
+          id: 'users-list',
+          type: 'PageHeaderMenu',
+          blocks: [
+            {
+              id: 'info',
+              type: 'Paragraph',
+              properties: { content: { _secret: 'UNDECLARED', extra: 1 } },
+            },
+          ],
+        },
+      ],
+    },
+  });
+  const context = makeContext([moduleEntry]);
+  const components = {
+    modules: [{ id: 'team-users' }],
+  };
+
+  expect(() => buildModules({ components, context })).not.toThrow();
 });
 
 test('buildModules throws ConfigError when _secret references undeclared secret in connection', () => {
