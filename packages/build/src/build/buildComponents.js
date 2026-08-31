@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import addKeys from './addKeys.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
 
@@ -32,6 +33,15 @@ function buildComponents({ components, context }) {
     throw new ConfigError('App "components" should be an array.', {
       received: componentList,
     });
+  }
+
+  // buildComponents runs before the build's first addKeys pass (the defs are
+  // extracted so _prop/_slot markers never reach precompute), so key the
+  // extracted list here — the same pre-keying buildMigrations does — so that
+  // validation errors below and expansion-time errors inside component bodies
+  // resolve to the component file instead of having no location.
+  if (componentList.length > 0) {
+    addKeys({ components: { components: componentList }, context });
   }
 
   const checkDuplicateComponentId = createCheckDuplicateId({

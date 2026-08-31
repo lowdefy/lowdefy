@@ -182,6 +182,7 @@
     "@lowdefy/blocks-loaders"
   ],
   "collections.json": {},
+  "componentDefs.json": {},
   "config.json": {
     "homePageId": "dashboard",
     "basePath": "/crm",

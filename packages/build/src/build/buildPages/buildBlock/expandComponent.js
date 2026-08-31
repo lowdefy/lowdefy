@@ -75,8 +75,23 @@ function transformBlock(block, ctx) {
   // Carry the component ancestry so a nested component instance in the body can
   // detect a cycle when buildSubBlocks recurses into it.
   setNonEnumerableProperty(block, '__componentAncestry', ctx.bodyAncestry);
-  for (const field of ['properties', 'class', 'style', 'visible', 'loading', 'required',
-    'layout', 'validate', 'events', 'skeleton']) {
+  // 'props' is in the list so a body block that is itself a component instance
+  // can forward this component's props (props: { tone: { _prop: tone } }) —
+  // the inner instance then receives the use-site expression, not a dangling
+  // _prop node that would resolve to nothing at runtime.
+  for (const field of [
+    'properties',
+    'class',
+    'style',
+    'visible',
+    'loading',
+    'required',
+    'layout',
+    'validate',
+    'events',
+    'skeleton',
+    'props',
+  ]) {
     if (!type.isNone(block[field])) {
       block[field] = inlineProps(block[field], ctx.propExprs);
     }
