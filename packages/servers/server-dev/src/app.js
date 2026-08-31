@@ -65,6 +65,7 @@ import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
 import usageHandler from './routes/usage.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -98,6 +99,8 @@ function createApp() {
       initAuthConfig(() => getAuthConfig({ logger }))
     );
   }
+
+  app.all('/.well-known/*', wellKnownFallbackHandler);
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus

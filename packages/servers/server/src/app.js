@@ -39,6 +39,7 @@ import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -97,6 +98,8 @@ function createApp({ serveStaticAssets = true } = {}) {
       initAuthConfig(() => getAuthConfig({ logger }))
     );
   }
+
+  app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
