@@ -2661,10 +2661,20 @@
               ],
               "description": "Shape of the button."
             },
+            "iconPosition": {
+              "type": "string",
+              "enum": [
+                "start",
+                "end"
+              ],
+              "default": "start",
+              "description": "Position of the icon relative to the button title."
+            },
             "size": {
               "type": "string",
               "enum": [
                 "small",
+                "middle",
                 "default",
                 "large"
               ],
