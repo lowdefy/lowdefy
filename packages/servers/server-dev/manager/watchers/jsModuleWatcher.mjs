@@ -55,7 +55,8 @@ function hashAll(paths) {
 // serverArtifactWatcher deliberately does not track these: user source files
 // are a different signal with a different rule.
 function jsModuleWatcher(context) {
-  const artifactPath = path.join(context.directories.build, 'js', 'serverModules.json');
+  const jsDir = path.join(context.directories.build, 'js');
+  const artifactPath = path.join(jsDir, 'serverModules.json');
   let hashes = hashAll(readServerModules(artifactPath));
   let watcher;
 
@@ -77,11 +78,22 @@ function jsModuleWatcher(context) {
     context.restartServer();
   };
 
+  // chokidar on inotify never emits for a file path that does not exist yet,
+  // and build/js/ is only created by the first build - so watch the build
+  // directory and admit only the artifact and the listed module files (the
+  // same pattern restartRequestWatcher uses for its sentinel).
   return setupWatcher({
     callback,
     context,
     watchDotfiles: true,
-    watchPaths: [artifactPath, ...Object.keys(hashes)],
+    watchPaths: [context.directories.build, ...Object.keys(hashes)],
+    ignorePaths: [
+      (filePath) =>
+        filePath !== context.directories.build &&
+        filePath !== jsDir &&
+        filePath !== artifactPath &&
+        hashes[filePath] === undefined,
+    ],
   }).then((created) => {
     watcher = created;
     return created;

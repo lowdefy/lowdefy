@@ -19,6 +19,9 @@ import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
+// CI machines can take several seconds to deliver fs events under load.
+jest.setTimeout(30000);
+
 const { default: jsModuleWatcher } = await import('./jsModuleWatcher.mjs');
 
 function waitFor(predicate, timeout = 15000) {
