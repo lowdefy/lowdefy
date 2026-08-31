@@ -165,3 +165,22 @@ describe('event payload schemas', () => {
     });
   });
 });
+
+test('resolveSchemaPath resolves .length on an array-typed field as an integer read', () => {
+  const schema = {
+    type: 'object',
+    properties: { items: { type: 'array', items: { type: 'string' } } },
+  };
+  expect(resolveSchemaPath({ schema, path: 'items.length' }).resolved).toBe(true);
+  // .length ends the path in an integer; deeper segments are ruled out.
+  expect(resolveSchemaPath({ schema, path: 'items.length.x' }).resolved).toBe(false);
+});
+
+test('resolveSchemaPath rules out .length on a string-typed field', () => {
+  // get() does not traverse into strings, so name.length is null at runtime;
+  // string length is _string.length's job (expression design §4.5).
+  const schema = { type: 'object', properties: { name: { type: 'string' } } };
+  const result = resolveSchemaPath({ schema, path: 'name.length' });
+  expect(result.resolved).toBe(false);
+  expect(result.segment).toBe('length');
+});
