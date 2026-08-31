@@ -36,6 +36,7 @@ import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
@@ -106,6 +107,7 @@ function createApp({ serveStaticAssets = true } = {}) {
     app,
     auth: authJson.configured === true ? getAuth({ logger }) : null,
   });
+  app.all('/.well-known/*', wellKnownFallbackHandler);
 
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware({ logger }));
