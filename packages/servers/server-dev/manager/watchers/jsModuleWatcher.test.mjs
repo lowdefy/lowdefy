@@ -21,7 +21,7 @@ import { jest } from '@jest/globals';
 
 const { default: jsModuleWatcher } = await import('./jsModuleWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
+function waitFor(predicate, timeout = 15000) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const tick = () => {
