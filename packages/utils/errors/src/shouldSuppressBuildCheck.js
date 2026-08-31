@@ -45,6 +45,7 @@ export const VALID_CHECK_SLUGS = {
   'event-payload': '_event paths checked against the block event payload schema',
   migrations: 'Migration file discovery, routine validation and tenant audits',
   expression: 'Errors compiling ${ … } expression syntax to operators',
+  archetype: 'Page archetype expansion: collection, field and prop resolution',
 };
 
 /**

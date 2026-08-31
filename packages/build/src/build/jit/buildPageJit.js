@@ -121,6 +121,25 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
   }
 
+  // Restore the skeleton-built component definitions so expandComponent can
+  // expand component-instance blocks in the JIT page build identically to a
+  // full build (createContext initializes an empty map, so check size, not
+  // presence; re-reading an empty artifact is a cheap no-op).
+  if (
+    Object.keys(buildContext.componentDefs ?? {}).length === 0 &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const componentDefsPath = path.join(buildContext.directories.build, 'componentDefs.json');
+    try {
+      const content = await fs.promises.readFile(componentDefsPath, 'utf8');
+      // writeComponentDefs writes plain JSON (JSON.stringify), so parse plainly.
+      buildContext.componentDefs = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+      buildContext.componentDefs = {};
+    }
+  }
+
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
     : pageRegistry[pageId];

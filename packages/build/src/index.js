@@ -70,6 +70,7 @@ import writeAppMeta from './build/writeAppMeta.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
 import writeCollections from './build/writeCollections.js';
+import writeComponentDefs from './build/writeComponentDefs.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeMigrations from './build/buildMigrations/writeMigrations.js';
@@ -231,6 +232,7 @@ async function build(options) {
     await writeAuth({ components, context });
     await writeConnections({ components, context });
     await writeCollections({ components, context });
+    await writeComponentDefs({ context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
     await writeMigrations({ context });

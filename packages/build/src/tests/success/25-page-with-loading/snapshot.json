@@ -58,6 +58,7 @@
     "@lowdefy/blocks-antd"
   ],
   "collections.json": {},
+  "componentDefs.json": {},
   "config.json": {
     "~k": "v"
   },

@@ -102,6 +102,7 @@
     "@lowdefy/blocks-loaders"
   ],
   "collections.json": {},
+  "componentDefs.json": {},
   "config.json": {
     "~k": "1p"
   },

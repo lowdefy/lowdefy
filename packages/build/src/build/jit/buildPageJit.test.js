@@ -1221,3 +1221,112 @@ test('buildPageJit resolves _build.authConfig in a module page from the restored
 
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });
+
+test('buildPageJit expands a component instance using context componentDefs', async () => {
+  const context = createTestContext();
+  context.componentDefs = {
+    AnswerPill: {
+      id: 'AnswerPill',
+      props: { result: { type: 'string', required: true } },
+      slots: [],
+      blocks: [{ id: 'label', type: 'Title', properties: { content: { _prop: 'result' } } }],
+    },
+  };
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+blocks:
+  - id: pill
+    type: AnswerPill
+    props:
+      result:
+        _state: answer
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  expect(context.errors).toEqual([]);
+  const pill = result.slots.content.blocks[0];
+  expect(pill.type).toBe('Box');
+  expect(pill.slots.content.blocks[0].blockId).toBe('pill.label');
+  expect(pill.slots.content.blocks[0].properties.content).toEqual({ _state: 'answer' });
+});
+
+test('buildPageJit restores componentDefs from the componentDefs.json artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-components-'));
+  fs.writeFileSync(
+    path.join(buildDirectory, 'componentDefs.json'),
+    JSON.stringify({
+      AnswerPill: {
+        id: 'AnswerPill',
+        props: { result: { type: 'string', required: true } },
+        slots: [],
+        blocks: [{ id: 'label', type: 'Title', properties: { content: { _prop: 'result' } } }],
+      },
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+blocks:
+  - id: pill
+    type: AnswerPill
+    props:
+      result:
+        _state: answer
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  expect(context.errors).toEqual([]);
+  // The defs were restored from the artifact into the JIT context and the
+  // instance expanded — the dev server builds JIT pages in a separate process
+  // whose context starts with an empty componentDefs map.
+  expect(context.componentDefs.AnswerPill).toBeDefined();
+  const pill = result.slots.content.blocks[0];
+  expect(pill.type).toBe('Box');
+  expect(pill.slots.content.blocks[0].blockId).toBe('pill.label');
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});

@@ -17,7 +17,9 @@
 import buildComponents from './buildComponents.js';
 
 function testContext({ blockMetas = {} } = {}) {
-  return { componentDefs: {}, blockMetas };
+  // keyMap: buildComponents pre-keys the extracted defs (addKeys) so its
+  // errors and expansion-time body errors carry config locations.
+  return { componentDefs: {}, blockMetas, keyMap: {}, errors: [] };
 }
 
 test('registers a component definition by id', () => {
@@ -80,4 +82,13 @@ test('throws when a component id is missing', () => {
   expect(() =>
     buildComponents({ components: { components: [{ blocks: [] }] }, context })
   ).toThrow('Component id missing');
+});
+
+test('pre-keys extracted definitions so errors carry a config location', () => {
+  const context = testContext();
+  const component = { id: 'Pill', blocks: [{ id: 'label', type: 'Title' }] };
+  buildComponents({ components: { components: [component] }, context });
+  expect(context.componentDefs.Pill.configKey).toBeDefined();
+  expect(context.keyMap[context.componentDefs.Pill.configKey]).toBeDefined();
+  expect(context.componentDefs.Pill.blocks[0]['~k']).toBeDefined();
 });

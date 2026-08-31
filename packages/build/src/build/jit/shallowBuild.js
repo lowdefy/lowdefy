@@ -31,6 +31,7 @@ import buildApp from '../buildApp.js';
 import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildCollections from '../buildCollections.js';
+import buildComponents from '../buildComponents.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
@@ -61,6 +62,7 @@ import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
 import writeCollections from '../writeCollections.js';
+import writeComponentDefs from '../writeComponentDefs.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
@@ -136,6 +138,13 @@ async function shallowBuild(options) {
     buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+
+    // Extract runtime component definitions into context.componentDefs before
+    // the precompute/validation passes, mirroring the full build (index.js
+    // Phase 3.1). Runs after collectSkeletonSourceFiles so component files
+    // count as skeleton sources — a component edit rebuilds the skeleton and
+    // refreshes componentDefs.json for the JIT page builds.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
 
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline
@@ -221,6 +230,7 @@ async function shallowBuild(options) {
     await writeAuth({ components, context });
     await writeConnections({ components, context });
     await writeCollections({ components, context });
+    await writeComponentDefs({ context });
     await writeApi({ components, context });
     await writeMcp({ components, context });
     await writeAgents({ components, context });

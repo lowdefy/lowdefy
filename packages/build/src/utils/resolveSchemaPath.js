@@ -74,10 +74,10 @@ function stepInto({ schema, segment }) {
     }
     return { resolved: true, schema: type.isObject(schema.items) ? schema.items : undefined };
   }
-  // `.length` is likewise a valid read on a string.
-  if (schema.type === 'string' && segment === 'length') {
-    return { resolved: true, schema: { type: 'integer' } };
-  }
+  // No string `.length`: the path reader (get) does not traverse into strings,
+  // so `field.length` on a string-typed field returns null at runtime — the
+  // check must flag it (expression grammar §4.5; string length is
+  // _string.length's job).
   const primitive = ['string', 'number', 'integer', 'boolean', 'null'];
   if (primitive.includes(schema.type)) {
     return { resolved: false };

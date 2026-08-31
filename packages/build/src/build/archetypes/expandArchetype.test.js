@@ -86,3 +86,28 @@ test('expandArchetype requires the collection prop', () => {
   const block = { id: 'controls', type: 'ListPage', '~k': 'k1', properties: {} };
   expect(() => expandArchetype(block, pageContext())).toThrow(/requires prop "collection"/);
 });
+
+test('expandArchetype rejects an operator-valued prop loudly', () => {
+  // The generator runs at build; an operator prop cannot be honoured and must
+  // not silently fall back to the prop default.
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls', title: { _state: 'page_title' } },
+  };
+  expect(() => expandArchetype(block, pageContext())).toThrow(
+    'Archetype "ListPage" prop "title" on page "controls" is an operator (_state). Archetype props are resolved at build time and must be literal values.'
+  );
+});
+
+test('expandArchetype accepts an integer pageSize literal', () => {
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls', pageSize: 25 },
+  };
+  expandArchetype(block, pageContext());
+  expect(block.requests[0].properties.options.limit).toBe(25);
+});

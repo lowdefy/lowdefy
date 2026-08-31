@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import archetypes from './registry.js';
@@ -47,6 +47,24 @@ function expandArchetype(block, pageContext) {
   }
 
   const properties = type.isObject(block.properties) ? block.properties : {};
+
+  // An archetype expands at build — an operator can never be evaluated before
+  // generation, so an operator-valued prop cannot be honoured. Failing loud
+  // beats the silent wrongness of quietly falling back to the prop's default
+  // (Decision 2). Operators nested inside object/array props (e.g. an
+  // emptyState title) are fine: they flow into generated block properties and
+  // evaluate at runtime.
+  for (const [name, value] of Object.entries(properties)) {
+    const operatorType = getOperatorType(value);
+    if (operatorType !== null) {
+      throw new ConfigError(
+        `Archetype "${archetypeName}" prop "${name}" on page "${pageContext.pageId}" is an ` +
+          `operator (${operatorType}). Archetype props are resolved at build time and must be ` +
+          `literal values.`,
+        { configKey, checkSlug: 'archetype' }
+      );
+    }
+  }
 
   // Reuse the task-50 component prop validator: required/unknown/typed checks
   // with "did you mean", in the module-var shape the archetype props declare.

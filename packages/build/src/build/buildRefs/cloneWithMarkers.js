@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 
 // THE deep clone for config subtrees inside buildRefs — preserves the
-// non-enumerable provenance markers (~r ~l ~k ~arr), and with assignRefId set
+// non-enumerable provenance markers (~r ~l ~c ~x ~k ~arr), and with assignRefId set
 // stamps ~r on nodes that have none (pass nothing to preserve the template's
 // existing markers only). Non-plain values (Date) pass by reference; nothing
 // in the build mutates them.
@@ -43,7 +43,7 @@ function cloneWithMarkers(value, { assignRefId = null } = {}) {
   } else if (assignRefId) {
     setNonEnumerableProperty(clone, '~r', assignRefId);
   }
-  for (const marker of ['~l', '~k', '~arr']) {
+  for (const marker of ['~l', '~c', '~x', '~k', '~arr']) {
     if (value[marker] !== undefined) {
       setNonEnumerableProperty(clone, marker, value[marker]);
     }

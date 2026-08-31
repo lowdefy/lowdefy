@@ -23,6 +23,7 @@ import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
 import stampPosition from './compileExpression/stampPosition.js';
+import unescapeExpression from './compileExpression/unescapeExpression.js';
 import WebParser from './webParser.js';
 
 export {
@@ -37,5 +38,6 @@ export {
   runClass,
   runInstance,
   stampPosition,
+  unescapeExpression,
   WebParser,
 };

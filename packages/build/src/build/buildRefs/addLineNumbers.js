@@ -17,7 +17,12 @@
 /* eslint-disable no-param-reassign */
 
 import { isMap, isSeq, isPair, isScalar } from 'yaml';
-import { compileExpression, isExpression, stampPosition } from '@lowdefy/operators';
+import {
+  compileExpression,
+  isExpression,
+  stampPosition,
+  unescapeExpression,
+} from '@lowdefy/operators';
 
 import getColumnNumber from './getColumnNumber.js';
 import getLineNumber from './getLineNumber.js';
@@ -36,8 +41,15 @@ const RAW_OPERATOR_KEYS = new Set(['_js', '_nunjucks']);
 // build check sees ordinary operators (§6).
 function resolveScalar({ scalar, content, filePath, insideRawOperator }) {
   const value = scalar.value;
-  if (insideRawOperator || !isExpression(value)) {
+  if (insideRawOperator) {
     return value;
+  }
+  // The literal escape (§7): "$${ … }" is not an expression — it yields the
+  // literal "${ … }" string. Inside a raw-operator subtree the scalar is
+  // untouched entirely (the other language owns its $ syntax), so the escape
+  // only applies at positions that would otherwise trigger compilation.
+  if (!isExpression(value)) {
+    return unescapeExpression(value);
   }
   const offset = scalar.range ? scalar.range[0] : null;
   const line = getLineNumber(content, offset);

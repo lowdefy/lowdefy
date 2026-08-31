@@ -50,16 +50,29 @@ async function collectMigrationFiles({ directories }) {
     }
     throw error;
   }
+  // Plain code-unit sort (not localeCompare): migration order must be
+  // byte-deterministic across machines and locales — the same reason lockfiles
+  // sort plainly.
   const fileNames = entries
     .filter((entry) => entry.isFile() && MIGRATION_FILE.test(entry.name))
     .map((entry) => entry.name)
-    .sort((a, b) => a.localeCompare(b));
+    .sort();
 
   const migrations = [];
+  const fileNameById = {};
   for (const fileName of fileNames) {
     const filePath = path.join(migrationsDir, fileName);
     const text = await fs.readFile(filePath, 'utf8');
     const id = migrationIdFromFileName(fileName);
+    // "a.yaml" and "a.yml" would share the ledger key "a"; two files answering
+    // to one id makes the applied/pending decision ambiguous, so reject it.
+    if (fileNameById[id] !== undefined) {
+      throw new ConfigError(
+        `Migration id "${id}" is declared by two files: "${fileNameById[id]}" and "${fileName}". Migration ids are filename stems and must be unique.`,
+        { checkSlug: 'migrations' }
+      );
+    }
+    fileNameById[id] = fileName;
     let parsed;
     try {
       parsed = YAML.parse(text);
