@@ -63,3 +63,18 @@ test('non-plain values pass by reference', () => {
   const clone = cloneWithMarkers({ stamp: date });
   expect(clone.stamp).toBe(date);
 });
+
+test('preserves ~c and ~x from compiled ${ … } expression nodes', () => {
+  // stampPosition marks compiled expression trees with ~c (column) and ~x (the
+  // source expression); var substitution and module bodies clone through here,
+  // so losing them would silently drop expression error locations (design §6.5).
+  const node = { _eq: [{ _state: 'x' }, 'a'] };
+  Object.defineProperty(node, '~l', { value: 4, enumerable: false });
+  Object.defineProperty(node, '~c', { value: 12, enumerable: false });
+  Object.defineProperty(node, '~x', { value: "${ state.x == 'a' }", enumerable: false });
+  const clone = cloneWithMarkers(node);
+  expect(clone['~l']).toBe(4);
+  expect(clone['~c']).toBe(12);
+  expect(clone['~x']).toBe("${ state.x == 'a' }");
+  expect(Object.keys(clone)).toEqual(['_eq']);
+});
