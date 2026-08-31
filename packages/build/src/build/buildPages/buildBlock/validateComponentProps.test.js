@@ -77,3 +77,25 @@ test('accepts an operator-valued prop for a typed prop (pruned)', () => {
     })
   ).not.toThrow();
 });
+
+test('accepts an integer literal for an "integer" typed prop', () => {
+  // Archetype props (e.g. ListPage pageSize) declare 'integer'; type.typeOf
+  // has no integer kind, so the validator narrows with type.isInt.
+  expect(() =>
+    validateComponentProps({
+      def: { ...base, props: { pageSize: { type: 'integer' } } },
+      useProps: { pageSize: 25 },
+      instanceId: 'p',
+    })
+  ).not.toThrow();
+});
+
+test('rejects a non-integer number for an "integer" typed prop', () => {
+  expect(() =>
+    validateComponentProps({
+      def: { ...base, props: { pageSize: { type: 'integer' } } },
+      useProps: { pageSize: 2.5 },
+      instanceId: 'p',
+    })
+  ).toThrow('should be type "integer" but received "number"');
+});

@@ -64,12 +64,16 @@ function validateComponentProps({ def, useProps, instanceId, configKey }) {
 
     // Type-check a supplied literal against the declared type. Operator-valued
     // props are pruned (accepted) — their output type is unknown at build.
+    // 'integer' narrows 'number' (type.typeOf has no integer kind), used by
+    // archetype props such as ListPage pageSize.
+    const matchesType =
+      propDef.type === 'integer' ? type.isInt(value) : type.typeOf(value) === propDef.type;
     if (
       supplied &&
       type.isString(propDef.type) &&
       getOperatorType(value) === null &&
       !type.isNone(value) &&
-      type.typeOf(value) !== propDef.type
+      !matchesType
     ) {
       throw new ConfigError(
         `Component "${def.id}" used at "${instanceId}" prop "${name}" should be type "${propDef.type}" but received "${type.typeOf(value)}".`,
