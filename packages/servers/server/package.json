@@ -38,7 +38,7 @@
     "postcss.config.cjs"
   ],
   "scripts": {
-    "build": "cp package.json package.original.json || copy package.json package.original.json",
+    "build": "node lowdefy/writePackageOriginal.mjs",
     "build:client": "vite build",
     "build:lowdefy": "node lowdefy/build.mjs",
     "check:lowdefy": "node lowdefy/check.mjs",
