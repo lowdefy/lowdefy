@@ -126,6 +126,88 @@ const goldenFixtures = [
       ],
     },
   },
+
+  // precedence torture
+  // ! binds tighter than comparison, comparison tighter than &&, && tighter than ||
+  {
+    expression: '${ !state.a && state.b || state.c && !state.d }',
+    ir: {
+      _or: [
+        { _and: [{ _not: { _state: 'a' } }, { _state: 'b' }] },
+        { _and: [{ _state: 'c' }, { _not: { _state: 'd' } }] },
+      ],
+    },
+  },
+  {
+    expression: '${ state.a == 1 && state.b != 2 || state.c > 3 }',
+    ir: {
+      _or: [
+        { _and: [{ _eq: [{ _state: 'a' }, 1] }, { _ne: [{ _state: 'b' }, 2] }] },
+        { _gt: [{ _state: 'c' }, 3] },
+      ],
+    },
+  },
+  // equality may take a relational operand (grammar: Equality ::= Relational (op Relational)?)
+  {
+    expression: '${ state.a == state.b < state.c }',
+    ir: { _eq: [{ _state: 'a' }, { _lt: [{ _state: 'b' }, { _state: 'c' }] }] },
+  },
+  // ternary is right-associative through its else branch
+  {
+    expression: "${ state.a == 1 ? 'x' : state.b == 2 ? 'y' : 'z' }",
+    ir: {
+      _if: {
+        test: { _eq: [{ _state: 'a' }, 1] },
+        then: 'x',
+        else: { _if: { test: { _eq: [{ _state: 'b' }, 2] }, then: 'y', else: 'z' } },
+      },
+    },
+  },
+  // ! of a parenthesised group, and a parenthesised ?? as a logical operand
+  {
+    expression: '${ !(state.a && state.b) }',
+    ir: { _not: { _and: [{ _state: 'a' }, { _state: 'b' }] } },
+  },
+  {
+    expression: '${ state.a && (state.b ?? false) }',
+    ir: { _and: [{ _state: 'a' }, { _if_none: [{ _state: 'b' }, false] }] },
+  },
+  // ?? binds looser than comparison: a compare result may be ??-defaulted
+  {
+    expression: '${ state.a > 1 ?? false }',
+    ir: { _if_none: [{ _gt: [{ _state: 'a' }, 1] }, false] },
+  },
+  // .length composes with comparison and function calls
+  {
+    expression: '${ state.rows.length > 0 && !has(state.hidden, state.rows[0].id) }',
+    ir: {
+      _and: [
+        { _gt: [{ '_array.length': { _state: 'rows' } }, 0] },
+        { _not: { '_array.includes': [{ _state: 'hidden' }, { _state: 'rows.0.id' }] } },
+      ],
+    },
+  },
+  // has() is boolean-typed, so it is a valid ternary test
+  {
+    expression: "${ has(user.roles, 'admin') ? 'all' : 'own' }",
+    ir: {
+      _if: {
+        test: { '_array.includes': [{ _user: 'roles' }, 'admin'] },
+        then: 'all',
+        else: 'own',
+      },
+    },
+  },
+  // member read off a non-root expression falls back to _get
+  {
+    expression: "${ (state.a ?? state.b).city == 'PTA' }",
+    ir: {
+      _eq: [
+        { _get: { from: { _if_none: [{ _state: 'a' }, { _state: 'b' }] }, key: 'city' } },
+        'PTA',
+      ],
+    },
+  },
 ];
 
 describe('compileExpression golden corpus', () => {
@@ -150,6 +232,18 @@ const errorFixtures = [
   { expression: '${ state.name ? "a" : "b" }', match: /ternary condition must be a boolean/ },
   { expression: '${ state.a == state.b == state.c }', match: /non-associative/ },
   { expression: '${ len(state.a, state.b) }', match: /len\(\) takes 1 argument/ },
+  // mixing ?? with && on either side without parentheses
+  { expression: '${ state.a && state.b ?? state.c }', match: /cannot be combined with/ },
+  // a nullish chain is not boolean-typed, so it cannot be a ternary test
+  {
+    expression: "${ state.a ?? state.b ? 'x' : 'y' }",
+    match: /ternary condition must be a boolean/,
+  },
+  // chained relational comparisons
+  { expression: '${ state.a < state.b < state.c }', match: /non-associative/ },
+  // arithmetic is not in the language
+  { expression: '${ state.a - 1 > 0 }', match: /unexpected character "-"/ },
+  { expression: '${ state.a + 1 > 0 }', match: /unexpected character "\+"/ },
 ];
 
 describe('compileExpression parse errors', () => {
