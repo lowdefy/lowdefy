@@ -13,29 +13,48 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import fs from 'node:fs';
 import path from 'node:path';
 
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
-// lowdefy init ignores .lowdefy/** — the CLI's working directory — but the
-// per-stage migration ledgers under .lowdefy/migrations/ must be committed,
-// and the local stage's ledger (each developer's own database) must not.
+// lowdefy init ignores the CLI's working directory, but the per-stage migration
+// ledgers under .lowdefy/migrations/ must be committed, and the local stage's
+// ledger (each developer's own database) must not. The ignore must be
+// `.lowdefy/*` (direct children only): git cannot re-include a file whose parent
+// is matched by `.lowdefy/**`, so under that pattern `!.lowdefy/migrations/`
+// un-ignores the directory entry and the ledger files inside it stay ignored.
+const BROKEN_IGNORE_LINE = '.lowdefy/**';
+const IGNORE_LINE = '.lowdefy/*';
 const GITIGNORE_LINES = ['!.lowdefy/migrations/', '.lowdefy/migrations/local.json'];
 
 async function ensureGitignore({ context, configDirectory }) {
   const gitignorePath = path.join(configDirectory, '.gitignore');
   const existing = fs.existsSync(gitignorePath) ? await readFile(gitignorePath) : '';
   const lines = existing.split(/\r?\n/);
-  const missing = GITIGNORE_LINES.filter((line) => !lines.includes(line));
-  if (missing.length === 0) {
+  const repaired = lines.map((line) => (line === BROKEN_IGNORE_LINE ? IGNORE_LINE : line));
+  const wasRepaired = repaired.some((line, index) => line !== lines[index]);
+  const missing = GITIGNORE_LINES.filter((line) => !repaired.includes(line));
+  if (missing.length === 0 && !wasRepaired) {
     return false;
   }
-  const separator = existing === '' || existing.endsWith('\n') ? '' : '\n';
-  await writeFile(gitignorePath, `${existing}${separator}${missing.join('\n')}\n`);
-  context.logger.info(`Added ${missing.map((line) => `'${line}'`).join(' and ')} to '.gitignore'.`);
+  const base = repaired.join('\n');
+  const separator = base === '' || base.endsWith('\n') ? '' : '\n';
+  const content = missing.length === 0 ? base : `${base}${separator}${missing.join('\n')}\n`;
+  await writeFile(gitignorePath, content);
+  if (wasRepaired) {
+    context.logger.info(
+      `Replaced '${BROKEN_IGNORE_LINE}' with '${IGNORE_LINE}' in '.gitignore' so the migration ledgers can be committed.`
+    );
+  }
+  if (missing.length > 0) {
+    context.logger.info(
+      `Added ${missing.map((line) => `'${line}'`).join(' and ')} to '.gitignore'.`
+    );
+  }
   return true;
 }
 
-export { GITIGNORE_LINES };
+export { GITIGNORE_LINES, IGNORE_LINE };
 export default ensureGitignore;

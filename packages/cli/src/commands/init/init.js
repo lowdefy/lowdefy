@@ -31,7 +31,7 @@ async function init({ context }) {
   context.logger.info("Created 'lowdefy.yaml'.");
   await writeFile(
     path.resolve('./.gitignore'),
-    `.lowdefy/**
+    `.lowdefy/*
 !.lowdefy/migrations/
 .lowdefy/migrations/local.json
 .env`

@@ -38,16 +38,25 @@ test('ensureGitignore creates .gitignore with the ledger lines when there is non
 });
 
 test('ensureGitignore appends only the missing lines to an existing file without a trailing newline', async () => {
-  fs.writeFileSync(path.join(configDirectory, '.gitignore'), '.lowdefy/**\n.env');
+  fs.writeFileSync(path.join(configDirectory, '.gitignore'), '.lowdefy/*\n.env');
   await ensureGitignore({ context, configDirectory });
   expect(fs.readFileSync(path.join(configDirectory, '.gitignore'), 'utf8')).toBe(
-    '.lowdefy/**\n.env\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n'
+    '.lowdefy/*\n.env\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n'
   );
 });
 
 test('ensureGitignore leaves a file that already has both lines untouched', async () => {
-  const content = '.lowdefy/**\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n.env\n';
+  const content = '.lowdefy/*\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n.env\n';
   fs.writeFileSync(path.join(configDirectory, '.gitignore'), content);
   expect(await ensureGitignore({ context, configDirectory })).toBe(false);
   expect(fs.readFileSync(path.join(configDirectory, '.gitignore'), 'utf8')).toBe(content);
+});
+
+test('ensureGitignore replaces the .lowdefy/** pattern that git cannot re-include below', async () => {
+  const content = '.lowdefy/**\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n.env\n';
+  fs.writeFileSync(path.join(configDirectory, '.gitignore'), content);
+  expect(await ensureGitignore({ context, configDirectory })).toBe(true);
+  expect(fs.readFileSync(path.join(configDirectory, '.gitignore'), 'utf8')).toBe(
+    '.lowdefy/*\n!.lowdefy/migrations/\n.lowdefy/migrations/local.json\n.env\n'
+  );
 });
