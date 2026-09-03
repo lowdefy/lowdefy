@@ -95,6 +95,7 @@ class WebParser {
           state: this.context.state,
           theme,
           user,
+          websockets: this.context.websockets,
         });
         return res;
       } catch (e) {

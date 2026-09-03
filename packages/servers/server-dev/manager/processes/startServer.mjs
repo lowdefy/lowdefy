@@ -16,6 +16,8 @@
 
 import { spawn } from 'child_process';
 
+import warnAuthUrlPortMismatch from './warnAuthUrlPortMismatch.mjs';
+
 function createStdErrLineHandler({ context }) {
   const port = context.options.port;
   return function stdErrLineHandler(line) {
@@ -31,8 +33,9 @@ function createStdErrLineHandler({ context }) {
 
 function startServer(context) {
   context.shutdownServer();
+  warnAuthUrlPortMismatch({ context });
 
-  const nextServer = spawn('node', [context.bin.next, 'start'], {
+  const devServer = spawn('node', [context.bin.vite, '--port', String(context.options.port), '--strictPort'], {
     stdio: ['ignore', 'inherit', 'pipe'],
     env: {
       ...process.env,
@@ -42,7 +45,7 @@ function startServer(context) {
   });
 
   const stdErrLineHandler = createStdErrLineHandler({ context });
-  nextServer.stderr.on('data', (data) => {
+  devServer.stderr.on('data', (data) => {
     data
       .toString('utf8')
       .split('\n')
@@ -51,14 +54,14 @@ function startServer(context) {
       });
   });
 
-  context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
-  nextServer.on('exit', (code, signal) => {
-    context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
+  context.logger.debug(`Started dev server with pid ${devServer.pid}.`);
+  devServer.on('exit', (code, signal) => {
+    context.logger.debug(`devServer exit ${devServer.pid}, signal: ${signal}, code: ${code}`);
   });
-  nextServer.on('error', (error) => {
+  devServer.on('error', (error) => {
     context.logger.error(error);
   });
-  context.nextServer = nextServer;
+  context.devServer = devServer;
 }
 
 export default startServer;

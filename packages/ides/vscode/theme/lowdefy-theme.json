@@ -1,0 +1,20 @@
+{
+  "iconDefinitions": {
+    "lowdefyIcon": {
+      "iconPath": "../media/lowdefy-icon.svg"
+    }
+  },
+  "fileExtensions": {
+    "yaml": "lowdefyIcon",
+    "yml": "lowdefyIcon"
+  }
+}
+{
+"iconThemes": [
+  {
+    "id": "lowdefy-icons",
+    "label": "Lowdefy Icons",
+    "path": "./theme/lowdefy-theme.json"
+  }
+]
+}

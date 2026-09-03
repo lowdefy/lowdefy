@@ -276,6 +276,46 @@ test('descendant scan picks up scalar _ref leaves under module consumerVars', ()
   expect(result.has('modules/layout/page-type.yaml')).toBe(true);
 });
 
+test('collects scalar refs parented directly on the root ref', () => {
+  // app.html.appendHead: {_ref: head.html} resolves to a string. The root
+  // file's own objects carry no ~r markers, so the scalar's only ancestor is
+  // the root ref id — which must be collected via context.rootRefDef.
+  const components = {
+    app: { html: { appendHead: '<link rel="stylesheet">' } },
+  };
+  const context = {
+    refMap: {
+      'ref-root': { parent: null, path: 'lowdefy.yaml' },
+      'ref-head': { parent: 'ref-root', path: 'head.html' },
+    },
+    rootRefDef: { id: 'ref-root' },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result.has('head.html')).toBe(true);
+  expect(result.has('lowdefy.yaml')).toBe(true);
+});
+
+test('root ref id does not pull in scalar refs from inside page files', () => {
+  // A scalar ref'd inside a page reaches the root through its page ref.
+  // Page refs are stop boundaries — page content edits must stay JIT-only.
+  const page = setRefMarker({ id: 'page1' }, 'ref-page');
+  const components = {
+    pages: [page],
+  };
+  const context = {
+    refMap: {
+      'ref-root': { parent: null, path: 'lowdefy.yaml' },
+      'ref-page': { parent: 'ref-root', path: 'pages/my-page.yaml' },
+      'ref-page-scalar': { parent: 'ref-page', path: 'pages/title.md' },
+    },
+    rootRefDef: { id: 'ref-root' },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result.has('pages/title.md')).toBe(false);
+  expect(result.has('pages/my-page.yaml')).toBe(false);
+  expect(result.has('lowdefy.yaml')).toBe(true);
+});
+
 test('returns empty set when context has no modules key', () => {
   // Existing call sites and tests don't supply context.modules; the ?? {}
   // fallback must keep the function a no-op for the new branch.

@@ -38,6 +38,7 @@ const testTypesMap = {
     Box: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-basic' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
+    Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
     Icon: { package: '@lowdefy/blocks-basic' },
     Img: { package: '@lowdefy/blocks-basic' },
@@ -74,7 +75,11 @@ const testTypesMap = {
     callbacks: {},
     events: {},
     providers: {
-      GoogleProvider: { package: 'next-auth' },
+      GoogleProvider: { package: '@lowdefy/plugin-next-auth' },
+    },
+    strategies: {
+      apiKey: { package: '@lowdefy/plugin-next-auth' },
+      jwt: { package: '@lowdefy/plugin-next-auth' },
     },
   },
   operators: {

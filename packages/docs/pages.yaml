@@ -32,6 +32,9 @@
 - _ref: concepts/theming.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
+- _ref: concepts/notifications.yaml
+- _ref: concepts/dynamic-page-content.yaml
+- _ref: concepts/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
 - _ref: agents/agent-properties.yaml
@@ -41,6 +44,9 @@
 - _ref: agents/server-hooks.yaml
 - _ref: agents/AgentChat.yaml
 - _ref: agents/AgentConversations.yaml
+- _ref: websockets/introduction.yaml
+- _ref: websockets/subscriptions.yaml
+- _ref: websockets/publish.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
@@ -60,7 +66,8 @@
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml
 
-- _ref: users/reference/next-auth-providers.yaml
+- _ref: users/reference/auth-js-providers.yaml
+- _ref: users/reference/next-auth-providers-redirect.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/MultiAppMongoDBAdapter.yaml
@@ -93,10 +100,15 @@
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/SegmentedSelector.yaml
 - _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/Upload.yaml
+- _ref: blocks/input/UploadDragger.yaml
+- _ref: blocks/input/UploadPhoto.yaml
 - _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
+- _ref: blocks/input/TagMultipleSelector.yaml
+- _ref: blocks/input/TagSelector.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TiptapInput.yaml
@@ -135,6 +147,7 @@
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
+- _ref: blocks/display/Download.yaml
 - _ref: blocks/display/Search.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
@@ -197,6 +210,8 @@
 
 - _ref: connections/AmazonRedshift.yaml
 - _ref: connections/AWSS3.yaml
+- _ref: connections/AzureBlobStorage.yaml
+- _ref: connections/GoogleCloudStorage.yaml
 - _ref: connections/AxiosHttp.yaml
 - _ref: connections/Elasticsearch.yaml
 - _ref: connections/GoogleSheet.yaml
@@ -208,6 +223,7 @@
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/Redis.yaml
 - _ref: connections/SendGridMail.yaml
+- _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
@@ -322,6 +338,7 @@
 
 - _ref: migration/upgrade-guide.yaml
 - _ref: migration/v3-to-v4.yaml
+- _ref: migration/v5-to-v6.yaml
 - _ref: migration/v4-to-v5.yaml
 
 - _ref: 404.yaml

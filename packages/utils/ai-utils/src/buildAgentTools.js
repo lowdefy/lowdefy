@@ -47,7 +47,9 @@ function assertNotPlatformToolName(name, kind, i18n) {
   }
 }
 
-async function buildAgentTools({ agent, context, depth = 0 }) {
+// autoApprove skips needsApproval on confirm tools — used by headless
+// run-to-completion agents, where no client exists to resolve an approval.
+async function buildAgentTools({ agent, context, depth = 0, autoApprove = false }) {
   const MAX_DEPTH = 5;
   if (depth > MAX_DEPTH) {
     throw new Error(
@@ -62,28 +64,31 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
   const tools = {};
   const mcpClients = [];
 
-  // Build endpoint tools
+  // Build endpoint tools. The model-facing tool name is toolConfig.name
+  // (assigned by buildAgents — endpoint id with '/' → '__' unless overridden);
+  // execution still targets the endpointId.
   for (const toolConfig of agent.tools ?? []) {
     const { endpointId, confirm } = toolConfig;
-    assertNotPlatformToolName(endpointId, 'Endpoint tool', context.i18n);
+    const toolName = toolConfig.name ?? endpointId;
+    assertNotPlatformToolName(toolName, 'Endpoint tool', context.i18n);
     // A second, disjoint list: RESERVED_PLATFORM_TOOL_NAMES are the tools Lowdefy itself registers,
     // isReserved are the prototype-pollution keys setKey refuses. A name can pass one gate and fail
     // the other, so both checks are needed. The build rejects reserved key names, so this only fires
     // for a stale or hand-edited build artifact. Skip the tool rather than fail the whole agent, as
     // the MCP name cases below do.
-    if (isReserved(endpointId)) {
-      console.warn(`Endpoint tool "${endpointId}" uses a reserved key name — skipped.`);
+    if (isReserved(toolName)) {
+      console.warn(`Endpoint tool "${toolName}" uses a reserved key name — skipped.`);
       continue;
     }
     const endpointConfig = await context.getEndpointConfig({ endpointId });
 
     setKey(
       tools,
-      endpointId,
+      toolName,
       tool({
         description: endpointConfig.description,
         inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-        ...(confirm ? { needsApproval: true } : {}),
+        ...(confirm && !autoApprove ? { needsApproval: true } : {}),
         execute: async (input, { abortSignal } = {}) => {
           const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
           if (!result.success) {
@@ -158,7 +163,8 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
           );
           continue;
         }
-        setKey(tools, name, source.confirm ? { ...mcpTool, needsApproval: true } : mcpTool);
+        const needsApproval = source.confirm && !autoApprove;
+        setKey(tools, name, needsApproval ? { ...mcpTool, needsApproval: true } : mcpTool);
       }
     } catch (err) {
       const label = source.transport === 'stdio' ? source.command : source.url;
@@ -166,13 +172,15 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
     }
   }
 
-  // Build sub-agent tools
+  // Build sub-agent tools — keyed by name for the same provider-rule reason
+  // as endpoint tools (scoped agent ids contain '/').
   for (const subAgentRef of agent.agents ?? []) {
-    assertNotPlatformToolName(subAgentRef.agentId, 'Sub-agent', context.i18n);
+    const subAgentToolName = subAgentRef.name ?? subAgentRef.agentId;
+    assertNotPlatformToolName(subAgentToolName, 'Sub-agent', context.i18n);
     // Same policy as the endpoint tool name above: unreachable from valid config, so skip rather
     // than fail the whole agent.
-    if (isReserved(subAgentRef.agentId)) {
-      console.warn(`Sub-agent tool "${subAgentRef.agentId}" uses a reserved key name — skipped.`);
+    if (isReserved(subAgentToolName)) {
+      console.warn(`Sub-agent tool "${subAgentToolName}" uses a reserved key name — skipped.`);
       continue;
     }
     const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
@@ -184,6 +192,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
       agent: subAgentConfig,
       context,
       depth: depth + 1,
+      autoApprove,
     });
 
     const subModel = subConnection.provider(subAgentConfig.properties.model);
@@ -212,7 +221,7 @@ async function buildAgentTools({ agent, context, depth = 0 }) {
 
     setKey(
       tools,
-      subAgentRef.agentId,
+      subAgentToolName,
       tool({
         description,
         inputSchema,

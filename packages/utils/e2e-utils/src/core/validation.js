@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-
 async function getValidation(page, blockId) {
   return page.evaluate((id) => {
     const lowdefy = window.lowdefy;
@@ -26,58 +24,4 @@ async function getValidation(page, blockId) {
   }, blockId);
 }
 
-async function expectValidationStatus(page, { blockId, status, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const validation = await getValidation(page, blockId);
-        return validation?.status;
-      },
-      { timeout }
-    )
-    .toBe(status);
-}
-
-async function expectValidationError(page, { blockId, message, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const validation = await getValidation(page, blockId);
-        if (validation?.status !== 'error') return { status: validation?.status };
-        if (message && !validation?.errors?.includes(message)) {
-          return { errors: validation?.errors };
-        }
-        return true;
-      },
-      { timeout }
-    )
-    .toBe(true);
-}
-
-async function expectValidationWarning(page, { blockId, message, timeout = 5000 }) {
-  await expect
-    .poll(
-      async () => {
-        const validation = await getValidation(page, blockId);
-        if (validation?.status !== 'warning') return { status: validation?.status };
-        if (message && !validation?.warnings?.includes(message)) {
-          return { warnings: validation?.warnings };
-        }
-        return true;
-      },
-      { timeout }
-    )
-    .toBe(true);
-}
-
-async function expectValidationSuccess(page, { blockId, timeout = 5000 }) {
-  await expectValidationStatus(page, { blockId, status: 'success', timeout });
-}
-
-export {
-  getValidation,
-  expectValidationStatus,
-  expectValidationError,
-  expectValidationWarning,
-  expectValidationSuccess,
-};
+export { getValidation };

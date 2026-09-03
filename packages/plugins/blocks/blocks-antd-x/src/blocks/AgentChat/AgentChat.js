@@ -25,6 +25,9 @@ import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
 import { isReserved, setKey, type } from '@lowdefy/helpers';
+import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
+import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
+import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
 
 import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 
@@ -54,12 +57,18 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
+  // Controlled composer value, so a starter prompt (or the setInput method) can
+  // fill the box, and a send can leave typed text in place when it is rejected.
+  const [inputValue, setInputValue] = useState('');
   // Mirror the operator-evaluated sharedState object into a ref so transport.body()
   // sees the freshest value at send time without re-constructing the transport.
   const sharedStateRef = useRef(null);
   sharedStateRef.current =
     type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
   const attachmentsConfig = sender?.attachments;
+  const uploadPolicyRequestId =
+    attachmentsConfig?.uploadPolicyRequestId ?? attachmentsConfig?.s3PostPolicyRequestId;
+  const downloadPolicyRequestId = attachmentsConfig?.downloadPolicyRequestId;
   const switchConfigs = sender?.switches ?? [];
   const [headerOpen, setHeaderOpen] = useState(sender?.header?.open ?? true);
   const [switchState, setSwitchState] = useState(() => {
@@ -250,10 +259,13 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       if (args?.text) {
         sendMessage({
           text: args.text,
-          ...(args.files ? { experimental_attachments: args.files } : {}),
+          ...(args.files ? { files: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
         });
       }
+    });
+    methods.registerMethod('setInput', (args) => {
+      setInputValue(typeof args?.text === 'string' ? args.text : '');
     });
     methods.registerMethod('clearMessages', () => {
       setMessages([]);
@@ -276,17 +288,34 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       name: '__updatePageState',
       actions: [{ id: 'setState', type: 'SetState', params: { _event: true } }],
     });
-    if (attachmentsConfig?.s3PostPolicyRequestId) {
+    if (uploadPolicyRequestId) {
+      if (attachmentsConfig?.s3PostPolicyRequestId) {
+        console.warn(
+          'AgentChat attachments property "s3PostPolicyRequestId" is deprecated. Use "uploadPolicyRequestId" instead.'
+        );
+      }
       methods.registerEvent({
-        name: '__getS3PostPolicy',
+        name: '__getUploadPolicy',
         actions: [
           {
-            id: '__getS3PostPolicy',
+            id: '__getUploadPolicy',
             type: 'Request',
-            params: [attachmentsConfig.s3PostPolicyRequestId],
+            params: [uploadPolicyRequestId],
           },
         ],
       });
+      if (downloadPolicyRequestId) {
+        methods.registerEvent({
+          name: '__getDownloadPolicy',
+          actions: [
+            {
+              id: '__getDownloadPolicy',
+              type: 'Request',
+              params: [downloadPolicyRequestId],
+            },
+          ],
+        });
+      }
     }
   }, []);
 
@@ -312,41 +341,30 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     });
   }
 
-  async function uploadFileToS3(file) {
-    const { name, size, type: fileType } = file;
-    const s3PostPolicyResponse = await methods.triggerEvent({
-      name: '__getS3PostPolicy',
-      event: { file: { name, size, type: fileType } },
-    });
+  async function uploadFileToStorage(file) {
+    const { name, type: fileType } = file;
+    const descriptor = await getUploadPolicy({ methods, file });
 
-    if (s3PostPolicyResponse.success !== true) {
-      throw new Error('S3 post policy request failed.');
-    }
+    await uploadFile({ descriptor, file });
 
-    const { url, fields = {} } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
-    const { key } = fields;
-
-    const formData = new FormData();
-    Object.keys(fields).forEach((field) => {
-      formData.append(field, fields[field]);
-    });
-    formData.append('file', file);
-
-    await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve();
-        } else {
-          reject(new Error(`S3 upload failed with status ${xhr.status}`));
-        }
+    // The model provider fetches this URL, so resolve it through the download
+    // request when configured (stable public URL or signed URL). Otherwise
+    // fall back to the legacy unsigned object URL from the descriptor.
+    let objectUrl;
+    if (downloadPolicyRequestId) {
+      const response = await methods.triggerEvent({
+        name: '__getDownloadPolicy',
+        event: {
+          file: { bucket: descriptor.bucket, key: descriptor.key, name, type: fileType },
+        },
       });
-      xhr.addEventListener('error', () => reject(new Error('S3 upload network error')));
-      xhr.open('POST', url);
-      xhr.send(formData);
-    });
-
-    const objectUrl = url.endsWith('/') ? `${url}${key}` : `${url}/${key}`;
+      if (response.success !== true) {
+        throw new Error('Download policy request failed.');
+      }
+      objectUrl = response.responses.__getDownloadPolicy.response[0];
+    } else {
+      objectUrl = getLegacyObjectUrl({ descriptor });
+    }
     return { url: objectUrl, mediaType: fileType, filename: name };
   }
 
@@ -405,10 +423,10 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];
 
-      if (attachmentsConfig?.s3PostPolicyRequestId) {
+      if (uploadPolicyRequestId) {
         try {
           const uploadResults = await Promise.all(
-            attachedFiles.map((file) => uploadFileToS3(file))
+            attachedFiles.map((file) => uploadFileToStorage(file))
           );
           for (const result of uploadResults) {
             parts.push({
@@ -421,7 +439,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
         } catch (error) {
           methods.triggerEvent({
             name: 'onError',
-            event: { message: error.message ?? 'File upload to S3 failed.' },
+            event: { message: error.message ?? 'File upload failed.' },
           });
           return;
         }
@@ -437,7 +455,12 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     } else {
       sendMessage({ text });
     }
-    senderRef.current?.clear();
+    // Empty the composer here, after the sends and downstream of both the
+    // onBeforeSend cancellation return and the upload await, so a send that was
+    // rejected or failed to upload leaves the user's text in the box. Resetting
+    // from the Sender's onSubmit handler instead would silently lose typed input
+    // on every rejected send.
+    setInputValue('');
   }
 
   function handleStop() {
@@ -450,6 +473,13 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
 
   function handlePromptClick(prompt) {
     sendMessage({ text: prompt.label });
+  }
+
+  // A two-track welcome starter fills the composer instead of sending, so a
+  // generic shipped default is an editable first draft rather than a message the
+  // user never meant to send. Reuses the controlled Sender value.
+  function handleWelcomePromptFill(text) {
+    setInputValue(typeof text === 'string' ? text : '');
   }
 
   function handleSuggestionClick(suggestion) {
@@ -573,7 +603,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       }}
     >
       <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty ? (
+        {isEmpty && !welcome?.tracks ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
           <MessageList
@@ -581,6 +611,8 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
             messages={messages}
             isStreaming={isBusy}
             config={messageDisplay}
+            welcome={welcome}
+            onWelcomePromptFill={handleWelcomePromptFill}
             addToolApprovalResponse={addToolApprovalResponse}
             onFeedback={handleFeedback}
             onLinkClick={handleLinkClick}
@@ -678,6 +710,8 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
         )}
         <Sender
           ref={senderRef}
+          value={inputValue}
+          onChange={setInputValue}
           placeholder={sender?.placeholder ?? methods.translate('agent.sender.placeholder')}
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
@@ -747,7 +781,6 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
 AgentChat.meta = {
   category: 'display',
   icons: [],
-  styles: [],
 };
 
 export default AgentChat;

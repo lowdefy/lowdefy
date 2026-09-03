@@ -22,18 +22,16 @@ import { hideBin } from 'yargs/helpers';
 import pino from 'pino';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
-import compileCss from './processes/compileCss.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
-import nextBuild from './processes/nextBuild.mjs';
 import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 import restartServer from './processes/restartServer.mjs';
 import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
-import getNextBin from './utils/getNextBin.mjs';
+import getViteBin from './utils/getViteBin.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -42,7 +40,7 @@ async function getContext() {
 
   const context = {
     bin: {
-      next: getNextBin(),
+      vite: getViteBin(),
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
@@ -56,7 +54,7 @@ async function getContext() {
       destination: pino.destination({ dest: 1, sync: true }),
     }),
     options: {
-      port: argv.port ?? env.PORT ?? 3000,
+      port: Number(argv.port ?? env.PORT ?? 3000),
       refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
       watch:
         argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
@@ -87,8 +85,6 @@ async function getContext() {
     }
   };
 
-  context.compileCss = compileCss(context);
-  context.nextBuild = nextBuild(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
   context.restartServer = restartServer(context);

@@ -109,6 +109,12 @@ function buildAuthPlugins({ components, context }) {
     typeClass: 'provider',
     context,
   });
+  buildAuthPlugin({
+    counter: counters.strategies,
+    pluginConfig: authConfig.strategies,
+    typeClass: 'strategy',
+    context,
+  });
 }
 
 export default buildAuthPlugins;

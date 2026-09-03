@@ -1,0 +1,79 @@
+# :throw
+
+```
+({:throw: string, :cause: any}): void
+```
+
+The `:throw` control creates a system error that immediately stops routine execution and returns with an "error" status.
+Unlike [`:reject`](/:reject), which handles expected user errors, `:throw` is designed for unexpected system failures, programming errors, or critical issues that require attention.
+The key difference is that `:throw` can be caught and handled by [`:try`](/:try)/`:catch` blocks, while [`:reject`](/:reject) cannot.
+This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
+
+#### Keys
+
+- `:throw: string`: __Required__ - The error message that will be returned in the response object of the API call result.
+- `:cause: any`: Additional metadata that will be returned with the error message.
+
+#### Examples
+
+###### Throw on invalid status
+```yaml
+- :switch:
+    - :case:
+        _eq:
+          - _payload: status
+          - accept
+      :then:
+        - :return:
+            message: Accepted
+    - :case:
+        _eq:
+          - _payload: status
+          - deny
+      :then:
+        - :return:
+            message: Denied
+    - :case:
+        _eq:
+          - _payload: status
+          - more_info_required
+      :then:
+        - :return:
+            message: More info required
+  :default:
+    - :throw: 'Invalid status type'
+      :cause:
+        status:
+          _payload: status
+```
+
+###### Throw on invalid configuration
+```yaml
+- id: get_system_config
+  type: MongoDBFindOne
+  connectionId: config
+  properties:
+    query:
+      name: 'max_file_size'
+
+- :if:
+    _not:
+      _step: get_system_config
+  :then:
+    :throw: 'System configuration missing: max_file_size not found'
+
+- :if:
+    _gt:
+      - _payload: file_size
+      - _step: get_system_config.value
+  :then:
+    :throw: 'File size exceeds system limit'
+    :cause:
+      maxAllowed:
+        _step: get_system_config.value
+      received:
+        _payload: file_size
+
+- :return:
+    message: 'File upload validated'
+```

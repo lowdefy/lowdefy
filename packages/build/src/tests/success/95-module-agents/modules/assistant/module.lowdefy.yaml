@@ -1,0 +1,21 @@
+name: Assistant
+description: Module that ships its own agent
+
+secrets:
+  - name: ANTHROPIC_API_KEY
+    description: Anthropic API key
+
+connections:
+  - _ref: connections/ai.yaml
+
+api:
+  - _ref: api/lookup-signups.yaml
+  - _ref: api/count-users.yaml
+  - _ref: api/save-log.yaml
+  - _ref: api/run-assistant.yaml
+
+agents:
+  - _ref: agents/assistant.yaml
+
+pages:
+  - _ref: pages/chat.yaml

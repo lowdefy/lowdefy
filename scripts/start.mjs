@@ -46,8 +46,8 @@ const logLevel = args['log-level'];
 
 // -- Check build exists --
 
-if (!fs.existsSync(path.join(prodDir, '.next'))) {
-  console.error('Error: No production build found at _server/prod/.next');
+if (!fs.existsSync(path.join(prodDir, 'dist/client'))) {
+  console.error('Error: No production build found at _server/prod/dist/client');
   console.error('Run `pnpm app:build` first.');
   process.exit(1);
 }

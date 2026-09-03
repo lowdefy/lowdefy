@@ -30,7 +30,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./config": "./dist/config.js",
-    "./fixtures": "./dist/fixtures/index.js"
+    "./fixtures": "./dist/fixtures/index.js",
+    "./runtime": "./dist/runtime.js"
   },
   "files": [
     "dist/*"
@@ -48,11 +49,11 @@
     "prompts": "2.4.2"
   },
   "peerDependencies": {
-    "@playwright/test": "1.50.1"
+    "@playwright/test": "1.59.1"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "copyfiles": "2.4.1",
     "jest": "28.1.3"
   },

@@ -1,0 +1,380 @@
+# Footer
+
+Page footer layout section.
+
+Page content above the footer.
+
+My Application - Copyright 2026
+
+```yaml
+- id: footer_basic_layout
+  type: Layout
+  blocks:
+    - id: footer_basic_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+        minHeight: 120px
+      blocks:
+        - id: footer_basic_content_text
+          type: Paragraph
+          properties:
+            content: Page content above the footer.
+    - id: footer_basic_el
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: footer_basic_text
+          type: Paragraph
+          properties:
+            content: My Application - Copyright 2026
+```
+
+Page content.
+
+Made with Lowdefy
+
+```yaml
+- id: footer_links_layout
+  type: Layout
+  blocks:
+    - id: footer_links_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+        minHeight: 80px
+      blocks:
+        - id: footer_links_content_text
+          type: Paragraph
+          properties:
+            content: Page content.
+    - id: footer_links_el
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: footer_links_row
+          type: Box
+          layout:
+            gap: 16
+            justify: center
+          blocks:
+            - id: footer_links_privacy
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Privacy Policy
+                color: default
+                variant: link
+            - id: footer_links_terms
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Terms of Service
+                color: default
+                variant: link
+            - id: footer_links_contact
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Contact Us
+                color: default
+                variant: link
+        - id: footer_links_copyright
+          type: Paragraph
+          properties:
+            content: Made with Lowdefy
+            style:
+              marginTop: 8px
+              color: "#999"
+```
+
+Main website content goes here.
+
+Acme Corp
+
+Building better tools for modern teams since 2020.
+
+Product
+
+Company
+
+© 2026 Acme Corp. All rights reserved.
+
+```yaml
+- id: footer_corp_layout
+  type: Layout
+  blocks:
+    - id: footer_corp_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+        minHeight: 100px
+      blocks:
+        - id: footer_corp_content_text
+          type: Paragraph
+          properties:
+            content: Main website content goes here.
+    - id: footer_corp_el
+      type: Footer
+      class:
+        element: bg-bg-layout
+      style:
+        padding: 40px 50px 24px
+      blocks:
+        - id: footer_corp_columns
+          type: Box
+          layout:
+            gap: 32
+            justify: space-between
+          blocks:
+            - id: footer_corp_col1
+              type: Box
+              layout:
+                flex: 1 1 200px
+                direction: column
+                gap: 8
+              blocks:
+                - id: footer_corp_col1_title
+                  type: Title
+                  properties:
+                    content: Acme Corp
+                    level: 5
+                - id: footer_corp_col1_desc
+                  type: Paragraph
+                  properties:
+                    content: Building better tools for modern teams since 2020.
+                    style:
+                      color: "#666"
+            - id: footer_corp_col2
+              type: Box
+              layout:
+                flex: 0 0 auto
+                direction: column
+                gap: 4
+              blocks:
+                - id: footer_corp_col2_title
+                  type: Title
+                  properties:
+                    content: Product
+                    level: 5
+                - id: footer_corp_col2_link1
+                  type: Button
+                  properties:
+                    title: Features
+                    color: default
+                    variant: link
+                    size: small
+                - id: footer_corp_col2_link2
+                  type: Button
+                  properties:
+                    title: Pricing
+                    color: default
+                    variant: link
+                    size: small
+                - id: footer_corp_col2_link3
+                  type: Button
+                  properties:
+                    title: Documentation
+                    color: default
+                    variant: link
+                    size: small
+            - id: footer_corp_col3
+              type: Box
+              layout:
+                flex: 0 0 auto
+                direction: column
+                gap: 4
+              blocks:
+                - id: footer_corp_col3_title
+                  type: Title
+                  properties:
+                    content: Company
+                    level: 5
+                - id: footer_corp_col3_link1
+                  type: Button
+                  properties:
+                    title: About
+                    color: default
+                    variant: link
+                    size: small
+                - id: footer_corp_col3_link2
+                  type: Button
+                  properties:
+                    title: Careers
+                    color: default
+                    variant: link
+                    size: small
+                - id: footer_corp_col3_link3
+                  type: Button
+                  properties:
+                    title: Contact
+                    color: default
+                    variant: link
+                    size: small
+        - id: footer_corp_divider
+          type: Divider
+        - id: footer_corp_bottom
+          type: Box
+          layout:
+            justify: space-between
+            align: center
+          blocks:
+            - id: footer_corp_copyright
+              type: Paragraph
+              layout:
+                flex: 0 0 auto
+              properties:
+                content: © 2026 Acme Corp. All rights reserved.
+                style:
+                  color: "#999"
+                  margin: 0
+            - id: footer_corp_social
+              type: Box
+              layout:
+                flex: 0 0 auto
+                gap: 12
+              blocks:
+                - id: footer_corp_social_github
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineGithub
+                    color: default
+                    variant: text
+                    size: small
+                    hideTitle: true
+                - id: footer_corp_social_twitter
+                  type: Button
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineTwitter
+                    color: default
+                    variant: text
+                    size: small
+                    hideTitle: true
+```
+
+Dashboard
+
+Admin Portal v2.4.1 - Powered by Lowdefy
+
+```yaml
+- id: footer_admin_layout
+  type: Layout
+  properties:
+    hasSider: true
+  blocks:
+    - id: footer_admin_sider
+      type: Sider
+      layout:
+        flex: 0 0 auto
+      properties:
+        width: 200
+        theme: dark
+      style:
+        minHeight: 200px
+      blocks:
+        - id: footer_admin_sider_menu
+          type: Menu
+          properties:
+            theme: dark
+            mode: inline
+            links:
+              - id: footer_admin_menu_dashboard
+                type: MenuLink
+                properties:
+                  title: Dashboard
+                  icon: AiOutlineDashboard
+              - id: footer_admin_menu_users
+                type: MenuLink
+                properties:
+                  title: Users
+                  icon: AiOutlineUser
+              - id: footer_admin_menu_settings
+                type: MenuLink
+                properties:
+                  title: Settings
+                  icon: AiOutlineSetting
+    - id: footer_admin_inner_layout
+      type: Layout
+      layout:
+        flex: 1 1 auto
+      blocks:
+        - id: footer_admin_content
+          type: Content
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-container)
+            minHeight: 120px
+          blocks:
+            - id: footer_admin_content_title
+              type: Title
+              properties:
+                content: Dashboard
+                level: 3
+            - id: footer_admin_stats_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: footer_admin_stat1
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Total Users
+                    value: 1284
+                - id: footer_admin_stat2
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Active Sessions
+                    value: 312
+                - id: footer_admin_stat3
+                  type: Statistic
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    title: Pending Tasks
+                    value: 47
+        - id: footer_admin_el
+          type: Footer
+          style:
+            textAlign: center
+            padding: 12px 50px
+          blocks:
+            - id: footer_admin_text
+              type: Paragraph
+              properties:
+                content: Admin Portal v2.4.1 - Powered by Lowdefy
+                style:
+                  color: "#999"
+                  margin: 0
+                  fontSize: 12px
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Footer element. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Child blocks in the footer. |

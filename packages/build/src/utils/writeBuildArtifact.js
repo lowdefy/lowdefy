@@ -15,11 +15,14 @@
 */
 
 import path from 'path';
-import { writeFile } from '@lowdefy/node-utils';
+import { writeFileIfChanged } from '@lowdefy/node-utils';
 
 function createWriteBuildArtifact({ directories }) {
+  // Skipping byte-identical writes keeps artifact mtimes stable so Vite does
+  // not invalidate modules (clientJsMap → Routing HMR, serverJsMap → SSR
+  // reload) on JIT page builds that changed nothing.
   async function writeBuildArtifact(filePath, content) {
-    await writeFile(path.join(directories.build, filePath), content);
+    await writeFileIfChanged(path.join(directories.build, filePath), content);
   }
   return writeBuildArtifact;
 }

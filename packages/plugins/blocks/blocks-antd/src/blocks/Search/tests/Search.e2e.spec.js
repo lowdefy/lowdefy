@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 test.describe('Search Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -78,13 +78,13 @@ test.describe('Search Block', () => {
     expect(await kbd.count()).toBeGreaterThanOrEqual(1);
   });
 
-  // TODO: could not get this to pass.
-  // test('opens search modal when shortcut is pressed', async ({ page }) => {
-  //   const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
-  //   const block = getBlock(page, 'search_shortcut_custom');
-  //   await expect(block).toBeVisible();
-  //   await page.keyboard.press(`${mod}+.`);
-  //   const modal = block.locator('.ant-modal').first();
-  //   await expect(modal).toBeVisible();
-  // });
+  test('opens search modal when shortcut is pressed', async ({ page }) => {
+    const mod = await getShortcutModifier(page);
+    const block = getBlock(page, 'search_shortcut_custom');
+    await expect(block).toBeVisible();
+    await page.keyboard.press(`${mod}+.`);
+    // The modal renders in a portal at the document root, not inside the block.
+    const modal = page.locator('.ant-modal').first();
+    await expect(modal).toBeVisible();
+  });
 });

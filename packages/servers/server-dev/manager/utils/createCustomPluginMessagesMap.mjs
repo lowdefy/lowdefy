@@ -23,6 +23,10 @@ import YAML from 'yaml';
 
 const require = createRequire(import.meta.url);
 
+// The map is rebuilt on every config rebuild — warn once per plugin per
+// process instead of repeating the same skip message on each rebuild.
+const warnedMissingMessages = new Set();
+
 async function getPluginDefinitions({ directories }) {
   let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
@@ -45,7 +49,10 @@ async function createCustomPluginMessagesMap({ directories, logger }) {
       messagesModule = require(`${plugin.name}/messages`);
     } catch (e) {
       // Plugin does not ship a `./messages` export — silently skip.
-      logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
+      if (!warnedMissingMessages.has(plugin.name)) {
+        warnedMissingMessages.add(plugin.name);
+        logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
+      }
       continue;
     }
     const messages = messagesModule.default ?? messagesModule;

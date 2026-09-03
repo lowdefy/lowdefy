@@ -28,34 +28,40 @@
   "files": [
     "lib/*",
     "lowdefy/*",
-    "pages/*",
     "public_default/*",
-    "next.config.js",
-    "postcss.config.js",
     "package.original.json",
     ".eslintrc.yaml",
-    ".npmrc"
+    ".npmrc",
+    "src/*",
+    "client/*",
+    "vite.config.js",
+    "postcss.config.cjs"
   ],
   "scripts": {
     "build": "cp package.json package.original.json || copy package.json package.original.json",
+    "build:client": "vite build",
     "build:lowdefy": "node lowdefy/build.mjs",
-    "build:next": "next build",
-    "dev": "next dev",
-    "start": "next start",
-    "lint": "next lint",
-    "next": "next",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
     "@ant-design/x": "2.7.0",
+    "@auth/core": "0.41.2",
+    "@hono/auth-js": "1.1.1",
+    "@hono/mcp": "0.3.0",
+    "@hono/node-server": "2.0.4",
     "@lowdefy/actions-core": "5.6.0",
     "@lowdefy/api": "5.6.0",
     "@lowdefy/block-utils": "5.6.0",
+    "@lowdefy/blocks-aggrid": "5.6.0",
     "@lowdefy/blocks-antd": "5.6.0",
     "@lowdefy/blocks-antd-x": "5.6.0",
     "@lowdefy/blocks-basic": "5.6.0",
+    "@lowdefy/blocks-echarts": "5.6.0",
+    "@lowdefy/blocks-files": "5.6.0",
     "@lowdefy/blocks-loaders": "5.6.0",
+    "@lowdefy/blocks-markdown": "5.6.0",
     "@lowdefy/blocks-tiptap": "5.6.0",
     "@lowdefy/client": "5.6.0",
     "@lowdefy/errors": "5.6.0",
@@ -65,32 +71,39 @@
     "@lowdefy/node-utils": "5.6.0",
     "@lowdefy/operators-js": "5.6.0",
     "@lowdefy/plugin-next-auth": "5.6.0",
+    "@lowdefy/websockets-core": "5.6.0",
+    "@sentry/browser": "10.57.0",
     "@sentry/nextjs": "8.53.0",
-    "@tailwindcss/postcss": "4.2.1",
+    "@sentry/node": "10.57.0",
+    "@sentry/vite-plugin": "5.3.0",
+    "@tailwindcss/postcss": "4.3.1",
+    "@vitejs/plugin-react": "6.0.2",
     "antd": "6.3.1",
-    "dayjs": "1.11.19",
-    "next": "16.1.6",
-    "next-auth": "4.24.10",
-    "pino": "8.16.2",
+    "dayjs": "1.11.20",
+    "hono": "4.12.25",
+    "pino": "10.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "5.6.0",
-    "tailwindcss": "4.2.1",
-    "uuid": "13.0.0"
+    "tailwindcss": "4.3.1",
+    "uuid": "14.0.0",
+    "vite": "8.0.16",
+    "ws": "8.18.0"
   },
   "devDependencies": {
     "@lowdefy/build": "5.6.0",
     "@next/eslint-plugin-next": "16.1.6",
-    "@tailwindcss/postcss": "4.2.1",
-    "tailwindcss": "4.2.1",
+    "@tailwindcss/postcss": "4.3.1",
+    "tailwindcss": "4.3.1",
     "webpack": "5.94.0",
-    "yaml": "2.3.4",
-    "yargs": "17.7.2"
+    "yaml": "2.9.0",
+    "yargs": "18.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

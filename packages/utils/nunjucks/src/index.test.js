@@ -14,7 +14,12 @@
   limitations under the License.
 */
 
-import { nunjucksString, nunjucksFunction, validNunjucksString } from './index.js';
+import {
+  createEnvironment,
+  nunjucksString,
+  nunjucksFunction,
+  validNunjucksString,
+} from './index.js';
 
 test('nunjucksString - string parsing', () => {
   expect(nunjucksString('$ {{value}}', '100')).toEqual('$ 100');
@@ -135,4 +140,27 @@ test('nunjucksFunction - eviction is bounded to maxSize 500', () => {
   expect(nunjucksFunction('t250')).toBe(midWindow);
   // The most recently compiled template is still a cache hit.
   expect(nunjucksFunction('t500')).toBe(mostRecent);
+});
+
+test('createEnvironment autoescapes by default', () => {
+  const env = createEnvironment();
+  expect(env.renderString('{{ value }}', { value: '<b>&</b>' })).toEqual(
+    '&lt;b&gt;&amp;&lt;/b&gt;'
+  );
+});
+
+test('createEnvironment with autoescape false renders values verbatim', () => {
+  const env = createEnvironment({ autoescape: false });
+  expect(env.renderString('{{ value }}', { value: '<b>&</b>' })).toEqual('<b>&</b>');
+});
+
+test('createEnvironment registers date, unique and urlQuery filters', () => {
+  const env = createEnvironment({ autoescape: false });
+  expect(env.renderString('{{ items | unique | join(",") }}', { items: ['a', 'a', 'b'] })).toEqual(
+    'a,b'
+  );
+  expect(env.renderString('{{ url | urlQuery({ a: "1" }) }}', { url: '/page' })).toEqual(
+    '/page?a=1'
+  );
+  expect(env.getFilter('date')).toBeDefined();
 });

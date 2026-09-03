@@ -24,19 +24,23 @@ import operators from '@lowdefy/operators-js/operators/build';
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
+import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
+import collectPageContent from '../collectPageContent.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
-import evaluateStaticOperators from '../buildRefs/evaluateStaticOperators.js';
+import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
-import { resolve, WalkContext, cloneForResolve, tagRefDeep } from '../buildRefs/walker.js';
+import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
+import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -88,7 +92,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   buildContext.warnings = buildWarnings;
 
   try {
-
     // Pages without a source file (e.g., default 404) can only be served from
     // their pre-built artifact — they have no YAML to re-resolve from.
     // All user pages (with refId) always JIT-resolve from source YAML so that
@@ -143,10 +146,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         refChain: new Set(),
         operators,
         env: process.env,
+        lowdefyApp: buildContext.appMeta,
         dynamicIdentifiers,
         shouldStop: null,
       });
-      resolvedVars = await resolve(cloneForResolve(unresolvedVars), varCtx);
+      resolvedVars = await resolve(cloneWithMarkers(unresolvedVars), varCtx);
     }
 
     let refDef;
@@ -198,11 +202,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       refChain: new Set(),
       operators,
       env: process.env,
+      lowdefyApp: buildContext.appMeta,
       dynamicIdentifiers,
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
-    processed = evaluateStaticOperators({
+    processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
       refDef,
@@ -211,9 +216,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // When resolving from a collection file (with vars), the result is an array of pages.
     // Find the specific page by ID. For module pages, source IDs are unscoped.
     if (type.isArray(processed)) {
-      const unscopedId = moduleEntry
-        ? pageId.slice(`${moduleEntry.id}/`.length)
-        : pageId;
+      const unscopedId = moduleEntry ? pageId.slice(`${moduleEntry.id}/`.length) : pageId;
       processed = processed.find((p) => type.isObject(p) && p.id === unscopedId);
       if (!processed) {
         throw new ConfigError(`Page "${pageId}" not found in resolved page source file.`);
@@ -245,6 +248,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
     if (!buildContext.callApiActionRefs) {
       buildContext.callApiActionRefs = [];
+    }
+    if (!buildContext.websocketActionRefs) {
+      buildContext.websocketActionRefs = [];
+    }
+    if (!buildContext.dynamicBlockRefs) {
+      buildContext.dynamicBlockRefs = [];
+    }
+    // buildSubscriptions validates against websocketIds — the dev server
+    // restores the set from the websocketIds.json skeleton artifact. Rebuild
+    // it from skeleton-built websockets when the context doesn't carry it
+    // (createContext initializes an empty set, so check size, not presence).
+    if (!buildContext.websocketIds?.size) {
+      buildContext.websocketIds = new Set(
+        (buildContext.components?.websockets ?? []).map((websocket) => websocket.websocketId)
+      );
     }
 
     // Build the page (validation, block processing)
@@ -291,9 +309,24 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       endpointConfigs,
       context: buildContext,
     });
+    validateDynamicBlockRefs({
+      dynamicBlockRefs: buildContext.dynamicBlockRefs,
+      endpointConfigs,
+      context: buildContext,
+    });
+    validateWebsocketRefs({
+      websocketActionRefs: buildContext.websocketActionRefs,
+      websocketIds: buildContext.websocketIds,
+      context: buildContext,
+    });
     validateStateReferences({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
+
+    // Collect Tailwind class candidates before _js extraction — jsMapParser
+    // replaces _js source with hashes, so classes used only inside _js source
+    // would otherwise never reach the Tailwind scanner.
+    const tailwindContent = collectPageContent([processed]);
 
     // Extract JS functions from the page
     const pageRequests = [...(processed.requests ?? [])];
@@ -316,7 +349,16 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
 
     // Write page artifacts
-    await writePageJit({ page: finalPage, context: buildContext });
+    const { tailwindChanged } = await writePageJit({
+      page: finalPage,
+      context: buildContext,
+      tailwindContent,
+    });
+
+    // Attached after the disk write (like _warnings) so it never persists in
+    // artifacts — the JIT server uses it to decide whether to trigger a CSS
+    // recompile for newly discovered tailwind class candidates.
+    finalPage._tailwindChanged = tailwindChanged;
 
     // Attach warnings after disk write so they don't persist in artifacts
     if (buildWarnings.length > 0) {

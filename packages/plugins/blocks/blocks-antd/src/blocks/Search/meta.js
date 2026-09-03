@@ -33,6 +33,7 @@ export default {
     itemDescription: 'The description/snippet in a result item.',
     highlight: 'Highlighted match text (<mark> elements).',
     empty: 'The empty state message.',
+    loading: 'The loading spinner container.',
   },
   methods: {
     toggleOpen: 'Toggle the search modal open or closed.',

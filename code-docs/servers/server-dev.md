@@ -8,6 +8,7 @@ The development server provides:
 
 - Automatic rebuilding on config changes
 - Hot reload without full page refresh
+- Vite HMR for client plugin code and CSS
 - Extended plugin set for development
 - Environment file watching
 - Process management
@@ -15,34 +16,31 @@ The development server provides:
 
 ## Key Differences from Production
 
-| Feature       | Development | Production |
-| ------------- | ----------- | ---------- |
-| Minification  | Disabled    | Enabled    |
-| Compression   | Disabled    | Enabled    |
-| Source maps   | Available   | Disabled   |
-| File watching | 3 watchers  | None       |
-| Hot reload    | SSE-based   | None       |
-| Plugins       | Extended    | Core only  |
+| Feature       | Development                    | Production                      |
+| ------------- | ------------------------------ | ------------------------------- |
+| Client assets | Vite dev server modules + HMR  | Pre-built `dist/client/` bundle |
+| Compression   | Disabled                       | Enabled                         |
+| Page builds   | JIT per request                | All pages at build time         |
+| File watching | 4 watchers                     | None                            |
+| Hot reload    | SSE-based + Vite HMR           | None                            |
+| Plugins       | Extended                       | Core only                       |
 
 ## Additional Dependencies
 
 Beyond production server:
 
 - `@lowdefy/build` - Build system
+- `@lowdefy/engine` - State engine
+- `@hono/vite-dev-server` (0.26.0) - Mounts the Hono app inside Vite
 - `chokidar` (3.5.3) - File watcher
 - `dotenv` (16.3.1) - Env loading
 - `opener` (1.5.2) - Browser opener
 - `swr` (2.2.4) - Data fetching
-- `postcss`, `tailwindcss`, `@tailwindcss/postcss` - JIT CSS compilation (used by `compileCss.mjs` and `lib/server/compileCss.js`)
+- `yaml`, `yargs` - Config parsing, CLI args
 
-Additional block packages:
+The block packages match production (`@lowdefy/blocks-antd`, `-antd-x`, `-aggrid`, `-basic`, `-echarts`, `-loaders`, `-markdown`, `-tiptap`).
 
-- `@lowdefy/blocks-aggrid`
-- `@lowdefy/blocks-echarts`
-- `@lowdefy/blocks-markdown`
-- `@lowdefy/blocks-qr`
-
-Additional operators:
+Additional operators and connections:
 
 - `@lowdefy/operators-change-case`
 - `@lowdefy/operators-diff`
@@ -51,6 +49,7 @@ Additional operators:
 - `@lowdefy/operators-nunjucks`
 - `@lowdefy/operators-uuid`
 - `@lowdefy/operators-yaml`
+- `@lowdefy/connection-axios-http`
 
 ### CRITICAL: Singleton Packages in Local Dev
 
@@ -66,6 +65,8 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 **Symptoms of duplicate instances:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
 
+`resolve.dedupe: ['react', 'react-dom']` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance.
+
 ## Scripts
 
 ```json
@@ -79,55 +80,86 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 ```
 server-dev/
+├── src/                      # Hono app (run inside Vite via @hono/vite-dev-server)
+│   ├── app.js                # Route mounting, middleware, static, onError
+│   ├── html/
+│   │   └── renderDevPage.js  # Config-free HTML shell
+│   ├── middleware/
+│   │   ├── apiContext.js     # Per-request context (replaces apiWrapper)
+│   │   └── errorHandler.js   # app.onError — serialized error contract
+│   ├── routes/               # reload, ping, jitPage, jsEnv, iconsDynamic,
+│   │                         # root, request, endpoints, auth, agent,
+│   │                         # clientError, usage, devTools
+│   └── lib/                  # getPathSegments, safeScriptJson, serveBuildJs
+├── client/                   # Vite client entry (served as modules with HMR)
+│   ├── main.jsx              # CSS imports, router, HMR-stable React root
+│   ├── App.jsx               # Providers (StyleProvider, XProvider, Auth, ErrorBar)
+│   ├── Routing.jsx           # Page resolution from the custom router
+│   ├── Page.jsx              # Page renderer (merges jsMap, dynamic icons)
+│   └── Reload.jsx            # SSE hot reload listener
 ├── lib/
-│   ├── build/                # Build artifact loaders (deserialize JSON)
-│   ├── server/               # Server utilities
+│   ├── build/                # Build artifact loaders (fs read + deserialize)
+│   ├── server/
 │   │   ├── jitPageBuilder.js # JIT page build on request
-│   │   ├── pageCache.mjs     # PageCache class (shared by manager and server)
-│   │   └── log/
-│   │       └── createLogger.js
-│   └── client/               # Client utilities (extended)
-│       ├── App.js            # Dev app wrapper
-│       ├── Page.js           # Page renderer (merges jsMap)
-│       ├── Reload.js         # Hot reload component
-│       ├── RestartingPage.js
-│       └── Utils/
+│   │   ├── pageCache.mjs     # PageCache class (compiled tracking, locks)
+│   │   ├── auth/             # getAuthConfig, session, getMockSession
+│   │   └── log/              # createLogger, createHandleError, logRequest
+│   └── client/               # Dev pages + utilities
+│       ├── BuildErrorPage.jsx / BuildingPage.jsx / InstallingPluginsPage.jsx
+│       ├── RestartingPage.jsx / ErrorBar.jsx / setPageId.js
+│       ├── auth/             # Auth.jsx, AuthConfigured.jsx (@hono/auth-js/react)
+│       └── utils/
 │           ├── usePageConfig.js       # SWR hook with versioned keys
 │           ├── useRootConfig.js
 │           ├── useMutateCache.js      # reloadVersion counter
 │           └── waitForRestartedServer.js
 ├── manager/
-│   ├── run.mjs               # Entry point
-│   ├── getContext.mjs         # Context factory (stores JIT build state)
+│   ├── run.mjs               # Entry point (signal handling, orchestration)
+│   ├── getContext.mjs        # Context factory (stores JIT build state)
 │   ├── processes/
 │   │   ├── initialBuild.mjs
 │   │   ├── lowdefyBuild.mjs  # Calls shallowBuild, captures result
 │   │   ├── installPlugins.mjs
-│   │   ├── nextBuild.mjs
-│   │   ├── startServer.mjs
+│   │   ├── checkMockUserWarning.mjs
+│   │   ├── startServer.mjs   # Spawns the Vite child process
 │   │   ├── restartServer.mjs
 │   │   ├── shutdownServer.mjs
 │   │   ├── readDotEnv.mjs
 │   │   └── reloadClients.mjs
 │   ├── utils/
-│   │   └── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
+│   │   ├── getViteBin.mjs    # Resolves the vite bin path
+│   │   ├── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
+│   │   └── updatePageTailwindCss.mjs    # Refresh Tailwind candidates on page edits
 │   └── watchers/
 │       ├── lowdefyBuildWatcher.mjs   # Skeleton vs page change classification
 │       ├── moduleBuildWatcher.mjs    # Local module file change classification
 │       ├── envWatcher.mjs
-│       └── nextBuildWatcher.mjs
-├── pages/
-│   └── api/
-│       ├── agent/[...path].js # Agent chat streaming route
-│       ├── reload.js         # SSE endpoint
-│       ├── ping.js           # Health check
-│       ├── page/[pageId].js  # Page API (triggers JIT build)
-│       ├── js/[env].js       # Serves clientJsMap.js or serverJsMap.js
-│       ├── root.js
-│       └── dev-tools.js
-├── next.config.js
+│       └── serverArtifactWatcher.mjs # Server-read artifacts → restart
+├── vite.config.js
+├── postcss.config.cjs        # @tailwindcss/postcss (read by Vite)
 └── package.json
 ```
+
+## Process Topology (Vite + Hono)
+
+The manager spawns **one child process running Vite** (`node <vite-bin> --port N --strictPort`). Inside that process:
+
+- **Vite owns HTTP.** It serves `/client/*`, `/lib/*`, `/build/*`, `/@*` (Vite internals), and `/node_modules/*` as ES modules with HMR — see the `exclude` list in `vite.config.js`.
+- **Everything else routes to the Hono app** (`src/app.js`), mounted via the `@hono/vite-dev-server` plugin with `entry: './src/app.js'`.
+
+```
+Manager Process                     Vite Child Process
+┌─────────────────────┐            ┌──────────────────────────────┐
+│ initial build       │            │ Vite dev server (HTTP)        │
+│ watchers            │  spawn     │ ├── /client/* → modules + HMR │
+│ restart/shutdown    │ ─────────→ │ └── everything else →         │
+│ SIGINT/SIGTERM      │            │     Hono app (src/app.js)     │
+└─────────────────────┘            └──────────────────────────────┘
+```
+
+**The child-process model is load-bearing.** The Hono app imports server-read build artifacts (`build/plugins/connections.js`, `build/plugins/operators/server.js`, `build/config.json`, ...) through Node's ESM loader, and Node's module cache cannot be invalidated. Restarting the child is the only way to pick up changes to those artifacts — that is exactly what `serverArtifactWatcher` does. Client-side artifacts never need a restart: Vite serves them as modules and hot-replaces them.
+
+Because `@hono/vite-dev-server` SSR-loads the server module graph through Vite, intentionally-dynamic imports in `@lowdefy/build` (e.g. `buildRefs/getUserJavascriptFunction.js`, `writePluginImports/write*SchemaMap.js`) carry `/* @vite-ignore */` so Vite does not try to statically resolve them.
 
 ## Manager System
 
@@ -136,22 +168,22 @@ server-dev/
 **File:** `manager/run.mjs`
 
 ```javascript
-async function run() {
-  const context = await getContext();
+const context = await getContext();
 
-  // Initial build
-  await context.initialBuild();
+// Shut the Vite child down on direct signals — a targeted SIGTERM would
+// otherwise orphan the child.
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  process.on(signal, () => {
+    context.shutdownServer();
+    process.exit(0);
+  });
+}
 
-  // Start watchers (non-blocking)
-  context.startWatchers();
-
-  // Start server
-  await context.startServer();
-
-  // Open browser
-  if (process.env.LOWDEFY_OPEN_BROWSER !== 'false') {
-    opener(`http://localhost:${context.options.port}`);
-  }
+await context.initialBuild();
+context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
+startServer(context);
+if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+  opener(`http://localhost:${context.options.port}`);
 }
 ```
 
@@ -161,23 +193,22 @@ async function run() {
 
 ```javascript
 const context = {
-  bin: { next: nextBin },
+  bin: { vite: getViteBin() }, // Resolved from vite/package.json bin field
   directories: { build, config, server },
-  logger,
+  logger, // createNodeLogger from @lowdefy/logger/node
   options: { port, refResolver, watch: [], watchIgnore: [] },
   version,
-  packageManagerCmd,
+  packageManagerCmd, // pnpm / pnpm.cmd
 
   // JIT build state
-  pageCache: new PageCache(), // Manager's PageCache instance
   pageRegistry: null, // Set after each skeleton build
   buildContext: null, // Build context from shallowBuild
 
   // Bound functions
+  checkMockUserWarning,
   initialBuild,
   installPlugins,
   lowdefyBuild, // Wrapped to capture build result
-  nextBuild,
   readDotEnv,
   reloadClients,
   restartServer,
@@ -195,18 +226,17 @@ The dev server uses a two-phase build strategy to minimize rebuild times:
 
 ### Two-Process Architecture
 
-The manager process and the Next.js server run as **separate processes** with no shared memory:
+The manager process and the Vite child (Hono app) run as **separate processes** with no shared memory:
 
 ```
-Manager Process                    Next.js Server Process
-┌────────────────────┐            ┌────────────────────┐
-│ PageCache instance │            │ PageCache instance  │
-│ pageRegistry       │            │ (jitPageBuilder.js) │
-│ buildContext       │            │                     │
-│                    │            │ cachedRegistry      │
-│ Watcher → build    │            │ cachedBuildContext   │
-│                    │            │ API → buildPageJit  │
-└────────────────────┘            └────────────────────┘
+Manager Process                    Vite Child Process
+┌────────────────────┐            ┌─────────────────────────┐
+│ pageRegistry       │            │ jitPageBuilder.js        │
+│ buildContext       │            │   pageCache (PageCache)  │
+│                    │            │   cachedRegistry         │
+│ Watcher → build    │            │   cachedBuildContext     │
+│                    │            │   route → buildPageJit   │
+└────────────────────┘            └─────────────────────────┘
          │                                  ↑
          │  invalidatePages (signal file)   │
          └──── (file on disk) ─────────────→┘
@@ -224,19 +254,14 @@ Cross-process communication uses files in the build directory:
 **File:** `manager/processes/lowdefyBuild.mjs`
 
 ```javascript
-function lowdefyBuild({ directories, logger, options, pageCache }) {
+function lowdefyBuild({ directories, logger, options }) {
   return async () => {
-    logger.info('Building config...', { spin: true });
+    logger.info({ spin: 'start' }, 'Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    await pageCache.acquireSkeletonLock();
-    try {
-      const result = await shallowBuild({ customTypesMap, directories, logger, ... });
-      logger.info('Built config.');
-      return result; // { components, pageRegistry, context }
-    } finally {
-      pageCache.invalidateAll();
-      pageCache.releaseSkeletonLock();
-    }
+    const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
+    const result = await shallowBuild({ customMessagesMap, customTypesMap, directories, ... });
+    logger.info({ spin: 'succeed' }, `Built config in ...`);
+    return result; // { components, pageRegistry, context }
   };
 }
 ```
@@ -258,9 +283,9 @@ context.lowdefyBuild = async () => {
 
 **File:** `lib/server/jitPageBuilder.js`
 
-When a page API request arrives (`/api/page/[pageId]`):
+When a page API request arrives (`GET /api/page/*`):
 
-1. `checkPageInvalidations()` reads `invalidatePages.json` (with mtime caching)
+1. `checkPageInvalidations()` reads the `invalidatePages` signal file (with mtime caching)
 2. `loadPageRegistry()` reads `pageRegistry.json` (with mtime caching)
 3. `pageCache.isCompiled(pageId)` checks if page was already built
 4. If not compiled, acquires build lock and calls `buildPageJit()`
@@ -279,14 +304,20 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
-    await buildPageJit({ pageId, pageRegistry: registry, context });
+    const result = await buildPageJit({ pageId, pageRegistry: registry, context });
+    if (result?.installing) return result; // { installing: true, packages }
     pageCache.markCompiled(pageId);
-    return true;
+    // Touch tailwind-candidates.css so Vite's CSS pipeline re-runs Tailwind
+    // for classes the JIT build discovered — globals.css imports it.
+    fs.writeFileSync(path.join(buildDirectory, 'tailwind-candidates.css'), ...);
+    return { built: true, warnings: result?._warnings };
   } finally {
     pageCache.releaseBuildLock(pageId);
   }
 }
 ```
+
+`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and advances the `makeId` counter past skeleton IDs. Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart.
 
 ### PageCache
 
@@ -294,30 +325,15 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 
 Tracks which pages have been JIT-compiled and provides concurrency control:
 
-| Method                             | Purpose                                      |
-| ---------------------------------- | -------------------------------------------- |
-| `isCompiled(pageId)`               | Check if page has been built                 |
-| `markCompiled(pageId)`             | Mark page as built                           |
-| `acquireBuildLock(pageId)`         | Prevent concurrent builds of same page       |
-| `releaseBuildLock(pageId)`         | Release build lock                           |
-| `acquireSkeletonLock()`            | Block page builds during skeleton rebuild    |
-| `releaseSkeletonLock()`            | Allow page builds after skeleton rebuild     |
-| `invalidateAll()`                  | Clear all compiled pages (skeleton rebuild)  |
-| `invalidatePages(pageIds)`         | Clear specific pages (targeted invalidation) |
-| `invalidateByFiles(files, depMap)` | Clear pages affected by changed files        |
+| Method                     | Purpose                                     |
+| -------------------------- | ------------------------------------------- |
+| `isCompiled(pageId)`       | Check if page has been built                |
+| `markCompiled(pageId)`     | Mark page as built                          |
+| `acquireBuildLock(pageId)` | Prevent concurrent builds of same page      |
+| `releaseBuildLock(pageId)` | Release build lock                          |
+| `invalidateAll()`          | Clear all compiled pages (skeleton rebuild) |
 
-Two separate instances exist: one in the manager process (for watcher invalidation) and one in the Next.js server (for JIT build tracking).
-
-### File Dependency Map
-
-**File:** `packages/build/src/build/createFileDependencyMap.js`
-
-Maps config file paths → Set of page IDs that depend on them. Used for targeted invalidation.
-
-Sources of dependencies:
-
-1. **Page source file**: via `pageEntry.refId` → `refMap[refId].path`
-2. **Child `_ref` paths**: Collected from `_shallow` markers in raw page content
+A single instance lives in the server process (`jitPageBuilder.js`). The manager process holds no PageCache — it invalidates the server's cache through the `invalidatePages` signal file and `pageRegistry.json` mtime changes.
 
 ### Skeleton vs Page Change Classification
 
@@ -337,50 +353,55 @@ Both `lowdefyBuildWatcher` and `moduleBuildWatcher` use the same `loadSkeletonSo
 
 ### Cross-Process Cache Invalidation
 
-The manager and server run in separate processes with separate `PageCache` instances. When a file change only affects pages (not skeleton):
+The manager and server run in separate processes with a single `PageCache` instance in the server. When a file change only affects pages (not skeleton):
 
 1. Manager writes `invalidatePages` signal file (timestamp)
-2. Manager calls `reloadClients()` (SSE event)
-3. On next page request, server's `checkPageInvalidations()` detects the signal file (mtime-based)
-4. Server's `pageCache.invalidateAll()` clears all compiled pages
-5. Server's `cachedBuildContext` is set to `null` to refresh maps
+2. Manager runs `updatePageTailwindCss` to refresh Tailwind candidates for the changed page YAML
+3. Manager calls `reloadClients()` (SSE event)
+4. On next page request, server's `checkPageInvalidations()` detects the signal file (mtime-based)
+5. Server's `pageCache.invalidateAll()` clears all compiled pages
+6. Server's `cachedBuildContext` is set to `null` to refresh maps
 
-For skeleton changes, `lowdefyBuild()` triggers a full rebuild which calls `pageCache.invalidateAll()` on the manager side, and the server detects the new artifacts on next request.
+For skeleton changes, `lowdefyBuild()` triggers a full rebuild; the server detects the new `pageRegistry.json` mtime on next request and invalidates everything.
 
 ## Server Process and Logging
 
 ### stdio: inherit
 
-The manager spawns the Next.js server with `stdio: ['ignore', 'inherit', 'pipe']`:
+The manager spawns the Vite child with `stdio: ['ignore', 'inherit', 'pipe']`:
 
 - **stdout** is inherited — server pino JSON flows directly to the manager's stdout (which the CLI reads)
-- **stderr** is piped — the manager formats stderr lines through its own logger
+- **stderr** is piped — the manager formats stderr lines through its own logger, with a friendly message for `EADDRINUSE`
 - **stdin** is ignored
 
 This eliminates the need for a dev stdout line handler to parse and re-emit server logs. The server's pino logger emits JSON with optional `color`/`spin`/`succeed` fields, so the CLI can render each line correctly (error → red, blue → source link, spin → spinner, etc.).
 
 ```javascript
 // startServer.mjs
-const nextServer = spawn('node', [context.bin.next, 'start'], {
-  stdio: ['ignore', 'inherit', 'pipe'],
-  env: {
-    ...process.env,
-    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-    PORT: context.options.port,
-  },
-});
+const devServer = spawn(
+  'node',
+  [context.bin.vite, '--port', String(context.options.port), '--strictPort'],
+  {
+    stdio: ['ignore', 'inherit', 'pipe'],
+    env: {
+      ...process.env,
+      LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+      PORT: context.options.port,
+    },
+  }
+);
 ```
 
 ### Logger Setup
 
-The server-dev uses two loggers:
+Both processes use `createNodeLogger` from `@lowdefy/logger/node`:
 
-| Logger         | Package                                        | Purpose                             |
-| -------------- | ---------------------------------------------- | ----------------------------------- |
-| Manager logger | `createDevLogger` from `@lowdefy/logger/dev`   | Build orchestration, watcher output |
-| Server logger  | `createNodeLogger` from `@lowdefy/logger/node` | HTTP request logs, runtime errors   |
+| Logger         | Name                | Purpose                             |
+| -------------- | ------------------- | ----------------------------------- |
+| Manager logger | `lowdefy build`     | Build orchestration, watcher output |
+| Server logger  | `lowdefy_server_dev` | HTTP request logs, runtime errors   |
 
-Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createCliLogger` (ora spinners, colored output).
+Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The CLI reads this JSON and renders it via `createStdOutLineHandler` → `createCliLogger` (ora spinners, colored output). The JIT builder logs through a `jit-build` child logger.
 
 See [@lowdefy/logger](../utils/logger.md) for details.
 
@@ -391,30 +412,33 @@ See [@lowdefy/logger](../utils/logger.md) for details.
 **File:** `manager/processes/initialBuild.mjs`
 
 ```javascript
-async function initialBuild(context) {
-  await context.readDotEnv();
-  await context.lowdefyBuild();
-  await context.installPlugins();
-  await context.nextBuild();
+function initialBuild(context) {
+  return async () => {
+    context.readDotEnv();
+    await context.lowdefyBuild();
+    await context.checkMockUserWarning();
+    await context.installPlugins();
+  };
 }
 ```
 
-````
+There is no client build step — Vite compiles client modules on demand when the browser requests them.
 
 ### Install Plugins
 
 **File:** `manager/processes/installPlugins.mjs`
 
 ```javascript
-async function installPlugins(context) {
-  await spawnProcess({
-    command: context.packageManagerCmd,
-    args: ['install', '--no-frozen-lockfile'],
-    cwd: context.directories.server,
-    logger: context.logger
-  });
+function installPlugins({ logger, packageManagerCmd }) {
+  return async () => {
+    await spawnProcess({
+      command: packageManagerCmd,
+      args: ['install', '--no-frozen-lockfile'],
+      stdOutLineHandler: (line) => logger.debug(line),
+    });
+  };
 }
-````
+```
 
 ## File Watchers
 
@@ -426,10 +450,10 @@ async function installPlugins(context) {
 function startWatchers(context) {
   return async () => {
     await Promise.all([
-      envWatcher(context), // .env changes → hard restart
+      envWatcher(context), // .env changes → rebuild + hard restart
       lowdefyBuildWatcher(context), // Config changes → soft reload
       moduleBuildWatcher(context), // Local module changes → soft reload
-      nextBuildWatcher(context), // Plugin changes → rebuild + restart
+      serverArtifactWatcher(context), // Server-read artifacts → restart
     ]);
   };
 }
@@ -439,7 +463,7 @@ function startWatchers(context) {
 
 **File:** `manager/watchers/lowdefyBuildWatcher.mjs`
 
-Watches config directory for changes. Decides between targeted invalidation (fast) and full skeleton rebuild based on file dependency map:
+Watches the config directory (plus `--watch` paths). Decides between page invalidation (fast) and full skeleton rebuild:
 
 ```javascript
 const callback = async (filePaths) => {
@@ -451,7 +475,6 @@ const callback = async (filePaths) => {
   }
 
   const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
-
   const isSkeletonChange =
     lowdefyYamlModified || changedFiles.some((f) => skeletonSourceFiles.has(f));
 
@@ -460,8 +483,9 @@ const callback = async (filePaths) => {
   } else {
     // Page-only change: write signal file so server invalidates its page cache
     fs.writeFileSync(invalidatePath, String(Date.now()));
+    await updatePageTailwindCss({ changedFiles, context });
   }
-  context.reloadClients();
+  await context.reloadClients();
 };
 ```
 
@@ -484,11 +508,10 @@ const callback = async (filePaths) => {
 
   if (moduleYamlChanged || hasSkeletonChanges) {
     await context.lowdefyBuild();
-    await context.compileCss();
   } else {
     fs.writeFileSync(invalidatePath, String(Date.now()));
   }
-  context.reloadClients();
+  await context.reloadClients();
 };
 ```
 
@@ -500,197 +523,275 @@ The watcher only starts when local modules exist. If `buildContext.modules` is e
 
 **File:** `manager/watchers/envWatcher.mjs`
 
-Watches `.env` file:
+Watches the `.env` file in the config directory:
 
 ```javascript
-const watcher = chokidar.watch('.env', { ignoreInitial: true });
-
-watcher.on('all', async () => {
-  await context.readDotEnv();
-  await context.restartServer();
-});
+const callback = async () => {
+  context.readDotEnv();
+  await context.lowdefyBuild();
+  context.restartServer();
+};
 ```
 
-### Next Build Watcher
+### Server Artifact Watcher
 
-**File:** `manager/watchers/nextBuildWatcher.mjs`
+**File:** `manager/watchers/serverArtifactWatcher.mjs`
 
-Watches build artifacts:
+Replaces the old next build watcher. Only files the **server reads at startup** are tracked — a change requires a child restart for a fresh ESM module cache. Client-side artifacts (`blocks.js`, `operators/client.js`, `globals.css`, ...) are served by Vite itself and hot-replaced without a restart.
 
-```javascript
-const watcher = chokidar.watch(['build/plugins/**', 'build/config.json', 'server/package.json'], {
-  ignoreInitial: true,
-});
+Tracked files:
 
-watcher.on('all', async (event, filePath) => {
-  if (filePath.includes('package.json')) {
-    await context.installPlugins();
-  }
-  await context.nextBuild();
-  await context.restartServer();
-});
 ```
+build/app.json
+build/auth.json
+build/config.json
+build/plugins/auth/adapters.js
+build/plugins/auth/callbacks.js
+build/plugins/auth/events.js
+build/plugins/auth/providers.js
+build/plugins/connections.js
+build/plugins/operators/server.js
+package.json            (server directory)
+```
+
+Each tracked file is content-hashed (sha1, with `~k` keys stripped from JSON before hashing) so rebuilds that produce identical output do not restart the server:
+
+- **No hash changed** → log "Reloaded app.", no restart
+- **Any hash changed** → shut down and restart the child
+- **`package.json` changed** → run `installPlugins`, re-run `lowdefyBuild` (so newly installed packages are included in the plugin imports), re-hash all tracked files (to avoid detecting the build's own output as a new change), then restart
 
 ## Hot Reload System
 
 ### Server-Side (SSE)
 
-**File:** `pages/api/reload.js`
+**File:** `src/routes/reload.js`
 
 ```javascript
-export default function handler(req, res) {
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    Connection: 'keep-alive',
-  });
+async function reloadHandler(c) {
+  return streamSSE(c, async (stream) => {
+    const watcher = chokidar.watch(['./build/reload'], { ignoreInitial: true });
 
-  const watcher = chokidar.watch('./build/reload');
+    stream.onAbort(() => watcher.close());
 
-  watcher.on('change', () => {
-    res.write('data: reload\n\n');
-  });
+    watcher.on('add', () => stream.writeSSE({ event: 'reload', data: '{}' }));
+    watcher.on('change', () => stream.writeSSE({ event: 'reload', data: '{}' }));
+    // No reload on unlink — cleanBuildDirectory deletes build/reload during
+    // skeleton rebuilds, which would send a premature event before the new
+    // artifacts are written.
 
-  req.on('close', () => {
-    watcher.close();
+    while (open) {
+      await stream.sleep(15000);
+      await stream.writeSSE({ event: 'ping', data: '' });
+    }
   });
 }
 ```
+
+The 15s pings keep the connection alive; the route is registered before the api context middleware (it needs no request context) and dev has no compression middleware, so the stream is never buffered.
 
 ### Client-Side
 
-**File:** `lib/client/Reload.js`
+**File:** `client/Reload.jsx`
 
 ```javascript
-function Reload({ children, lowdefy, resetContext }) {
+const Reload = ({ children, basePath, lowdefy }) => {
+  const [reset, setReset] = useState(false);
   const [restarting, setRestarting] = useState(false);
+  const mutateCache = useMutateCache(basePath);
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/reload');
+    const sse = new EventSource(`${basePath}/api/reload`);
 
-    eventSource.onmessage = (event) => {
-      if (event.data === 'reload') {
-        // Soft reload
-        mutateCache();
-        resetContext();
-      }
-    };
+    sse.addEventListener('reload', () => {
+      setTimeout(async () => {
+        await mutateCache();
+        setReset(true);
+      }, 600);
+    });
 
-    eventSource.onerror = () => {
-      // Server restarting
+    sse.onerror = () => {
+      // Server restarting — stream closed
       setRestarting(true);
-      waitForRestartedServer().then(() => {
-        window.location.reload();
-      });
+      sse.close();
+      waitForRestartedServer(basePath); // Polls /api/ping, then reloads window
     };
-
-    return () => eventSource.close();
+    return () => sse.close();
   }, []);
-
-  if (restarting) {
-    return <RestartingPage />;
-  }
-
-  return children;
-}
+  return <>{children({ reset, setReset, restarting })}</>;
+};
 ```
+
+Tailwind CSS updates arrive through Vite HMR (`globals.css` is in the dev module graph) — the old `tailwind-jit.css` link cache-bust is gone.
 
 ### Reload Trigger
 
 **File:** `manager/processes/reloadClients.mjs`
 
 ```javascript
-async function reloadClients(context) {
-  const reloadFile = path.join(context.directories.build, 'reload');
-  fs.writeFileSync(reloadFile, Date.now().toString());
+function reloadClients({ directories }) {
+  return async () => {
+    await writeFile(path.join(directories.build, 'reload'), `${Date.now()}`);
+  };
 }
 ```
 
-## Dev-Specific API Routes
+## Hono App and Dev Routes
+
+**File:** `src/app.js`
+
+The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compression in dev (parity with the old `compress: false`, and SSE must stay unbuffered). Mounting order matters:
+
+1. **Context-free routes first**: `/api/reload`, `/api/ping`, `/api/js/:env`, `/api/icons/dynamic`, `/api/dev-tools` — these had no `apiWrapper` before and need no request context.
+2. **`initAuthConfig`** (app-wide) — only when `authJson.configured === true`.
+3. **`apiContext()`** on `/api/*`, then `/api/auth/*` (Auth.js handler), `/api/root`, `/api/page/*`, `/api/request/*`, `/api/endpoints/*`, `/api/client-error`, `/api/usage`, `/api/agent/*` (with a 10mb `bodyLimit`).
+4. **`serveStatic({ root: './public' })`** for user public assets (icons, images).
+5. **Page catch-all**: `GET /` and `GET /:rest{.+}` — every page path renders the same shell via `renderDevPage`; the client fetches config and handles home/404 routing.
+6. **`app.onError`** — Hono routes every handler error to the app-level error handler (upstream middleware try/catch never sees them). API paths get serialized error JSON (with `received`/`stack`/`configKey` stripped); page paths get a plain 500. Same contract as production — see [server.md](./server.md#error-handling).
 
 ### Page Config (JIT Build Trigger)
 
-**File:** `pages/api/page/[pageId].js`
+**File:** `src/routes/jitPage.js`
 
-The page API endpoint triggers JIT page building before returning page config:
+The page route triggers JIT page building before returning page config. The response shapes are a **frozen contract** with the dev client:
+
+| Response                                          | Meaning                                  |
+| ------------------------------------------------- | ---------------------------------------- |
+| `200 { installing: true, packages }`              | Plugin install in progress, client polls |
+| `500 { buildError: true, errors, message, source }` | Build failed (errors include type/stack) |
+| `404 'Page not found.'`                           | Page not in registry                     |
+| `200 pageConfig` (+ `_warnings`)                  | Built page config, with build warnings   |
 
 ```javascript
-export default apiWrapper(async ({ context, req, res }) => {
-  const { pageId } = req.query;
+async function jitPageHandler(c) {
+  const context = c.get('lowdefyContext');
+  const pageId = getPathSegments(c, '/api/page/').join('/');
 
-  // Trigger JIT build if page not yet compiled
-  const built = await buildPageIfNeeded({
-    pageId,
-    buildDirectory: context.directories.build,
-    configDirectory: context.directories.config,
-  });
-
-  if (!built) {
-    return res.status(404).json({ message: 'Page not found' });
+  let buildResult;
+  try {
+    buildResult = await buildPageIfNeeded({ pageId, ... });
+  } catch (error) {
+    // error.buildErrors collected → 500 { buildError: true, errors, message, source }
   }
 
-  // Read and return built page config
+  if (buildResult?.installing) return c.json({ installing: true, packages });
+
   const pageConfig = await getPageConfig(context, { pageId });
-  return res.json(pageConfig);
-});
+  if (pageConfig === null) return c.text('Page not found.', 404);
+  if (buildResult?.warnings?.length > 0) pageConfig._warnings = buildResult.warnings;
+  return c.json(pageConfig);
+}
 ```
 
 ### JS Map
 
-**File:** `pages/api/js/[env].js`
+**File:** `src/routes/jsEnv.js`
 
-Serves the client or server JS map as a JavaScript module. The client fetches this after a JIT build to get newly extracted `_js` function entries.
+`GET /api/js/:env` (`client` or `server`) serves `clientJsMap.js` or `serverJsMap.js` from `build/plugins/operators/` as JavaScript. The client fetches this after a JIT build to get newly extracted `_js` function entries.
+
+### Dynamic Icons
+
+**File:** `src/routes/iconsDynamic.js`
+
+`GET /api/icons/dynamic` serves `build/plugins/iconsDynamic.js` — icon SVG data discovered by JIT page builds that is not in the static icon imports.
 
 ### Health Check
 
-**File:** `pages/api/ping.js`
+**File:** `src/routes/ping.js`
 
 ```javascript
-export default function handler(req, res) {
-  res.status(200).json({ status: 'ok' });
+function pingHandler(c) {
+  return c.json({ timestamp: new Date().toISOString() });
 }
 ```
+
+### API Context Middleware
+
+**File:** `src/middleware/apiContext.js`
+
+Builds the request context (`rid`, `config`, `connections`, `operators`, `secrets`, `session`, ...) and stores it on the Hono context — same shape as production, plus `configDirectory` (from `LOWDEFY_DIRECTORY_CONFIG`) for JIT builds. The server `jsMap` is loaded dynamically: the build rewrites `serverJsMap.js` when a JIT page discovers new `_js` operators, so the middleware mtime-checks the file and re-evaluates it via `new Function` (Node's ESM cache cannot re-import a changed file).
+
+## HTML Shell
+
+**File:** `src/html/renderDevPage.js`
+
+Unlike production, the dev shell is **config-free** — the client fetches root config and page config over the API (SWR). The shell embeds only `{ basePath }` in `__LOWDEFY_CONFIG__`.
+
+- Theme and app JSON (`build/theme.json`, `build/app.json`) are read from disk **per request**, so a `lowdefyBuild` updates the pre-hydration values (layer-order script, dark-mode flash prevention, `appendHead`/`appendBody`) without a server restart.
+- The **react-refresh preamble** is inlined in the shell — required by `@vitejs/plugin-react` when serving custom HTML.
+- `@hono/vite-dev-server` injects `/@vite/client` into the response automatically.
+- The body loads `/client/main.jsx` as a module — Vite serves and transforms it on demand.
 
 ## Client Components
 
-### App Wrapper
+### Entry
 
-**File:** `lib/client/App.js`
+**File:** `client/main.jsx`
 
 ```javascript
-function App({ children }) {
-  const { data: rootConfig } = useRootConfig();
+import '../build/layer-order.css'; // MUST be the first CSS import
 
-  return (
-    <Reload lowdefy={lowdefy} resetContext={resetContext}>
-      <Auth auth={auth}>{children}</Auth>
-    </Reload>
-  );
+import createRouter from '@lowdefy/client/adapters/createRouter.js';
+import App from './App.jsx';
+
+import '../build/globals.css'; // Tailwind — compiled by Vite's PostCSS pipeline
+
+const config = JSON.parse(document.getElementById('__LOWDEFY_CONFIG__').textContent);
+const router = createRouter({ basePath: config.basePath ?? '', window });
+
+// Keep one React root across Vite HMR updates.
+const root = import.meta.hot?.data.root ?? createRoot(container);
+if (import.meta.hot) {
+  import.meta.hot.data.root = root;
 }
+root.render(<App config={config} router={router} />);
 ```
+
+### App Wrapper
+
+**File:** `client/App.jsx`
+
+Sets up the provider tree (`StyleProvider`, `XProvider`/antd theme, `AntdApp`, `ErrorBoundary`, `Auth`) and the `ErrorBar`. Subscribes to the root config SWR cache **without suspense** (deduplicates with Routing's fetch) for theme/dark-mode/i18n, and registers a runtime error callback that feeds the ErrorBar.
+
+### Routing
+
+**File:** `client/Routing.jsx`
+
+Replaces the old `lib/client/App.js` — page resolution is driven by the custom router from `@lowdefy/client/adapters` instead of `next/router`, everything else preserved. It subscribes to router location changes, resolves `pageId` via `setPageId(location, rootConfig)` (location shape: `{ pageId, pathname, search }`; `pageId` is null at the root path, which resolves/redirects to the home page), and renders `<Reload>` → `<Suspense>` → `<Page>` keyed on `${pageId}_${reloadVersion}`.
+
+### Page
+
+**File:** `client/Page.jsx`
+
+Fetches page config via `usePageConfig` and renders `@lowdefy/client`'s `Client`. Handles the JIT response contract: `buildError` → `BuildErrorPage`, `installing` → `InstallingPluginsPage`, `restarting` → `RestartingPage`, `null` → replace to `/404`. Merges `_jsEntries` into the static `jsMap` and mutates the static icons object with `_dynamicIcons` (via `GenIcon`) so JIT-discovered icons render immediately.
 
 ### ErrorBar
 
-**File:** `lib/client/ErrorBar.js`
+**File:** `lib/client/ErrorBar.jsx`
 
-Fixed bottom bar that displays build errors and warnings in the browser. Build warnings propagate from the build pipeline through the SSE reload channel to the client, giving developers immediate feedback without checking the terminal. Includes a copy-to-clipboard button for sharing error details with stack traces.
+Fixed bottom bar that displays build errors and warnings in the browser. Build warnings propagate from the build pipeline through the page config (`_warnings`) and SSE reload channel to the client, giving developers immediate feedback without checking the terminal. Includes a copy-to-clipboard button for sharing error details with stack traces.
 
 ### SWR Hooks
 
-**File:** `lib/client/Utils/usePageConfig.js`
+**File:** `lib/client/utils/usePageConfig.js`
 
 Uses SWR with a versioned key to support cache busting on hot reload:
 
 ```javascript
-import { getReloadVersion } from './useMutateCache.js';
-
 async function fetchPageConfig(url) {
   const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
+  if (res.status === 404) return null;
   const data = await res.json();
+  if (data?.buildError || data?.installing) return data;
+
   // After page config fetch (which triggers JIT build), fetch JS entries
+  // and dynamic icons (parallel with each other, sequential after the build)
   const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const jsEntries = await fetchJsEntries(basePath);
+  const [jsEntries, dynamicIcons] = await Promise.all([
+    fetchJsEntries(basePath),
+    fetchDynamicIcons(basePath),
+  ]);
   data._jsEntries = jsEntries;
+  data._dynamicIcons = dynamicIcons;
   return data;
 }
 
@@ -704,7 +805,9 @@ function usePageConfig(pageId, basePath) {
 }
 ```
 
-**File:** `lib/client/Utils/useMutateCache.js`
+The `/api/js/client` and `/api/icons/dynamic` responses are JS module text, evaluated client-side via `new Function`.
+
+**File:** `lib/client/utils/useMutateCache.js`
 
 Manages cache busting via a `reloadVersion` counter:
 
@@ -734,61 +837,94 @@ function useMutateCache(basePath) {
 
 - Page config fetch triggers JIT build which may extract new `_js` functions
 - If jsMap is fetched in parallel, it returns stale data missing the new JS entries
-- The `_jsEntries` are merged with the static `jsMap` in `Page.js`
+- The `_jsEntries` are merged with the static `jsMap` in `Page.jsx`
 
-## Next.js Configuration
+## Tailwind CSS Pipeline
 
-**File:** `next.config.js`
+Tailwind compiles through **Vite's PostCSS pipeline** (`postcss.config.cjs` → `@tailwindcss/postcss`). The old side-channel (`compileCss.mjs`, `lib/server/compileCss.js`, `public/tailwind-jit.css`) is gone.
+
+- The build writes `build/globals.css`, which imports `tailwindcss`, the layout grid CSS, and `./tailwind-candidates.css`, and declares `@source "../lowdefy-build/tailwind/*.html"` for JIT class candidates.
+- `client/main.jsx` imports `build/layer-order.css` **first** (locks the cascade layer order), then `build/globals.css`. Both are in the dev module graph, so CSS changes hot-replace via Vite.
+- New Tailwind classes are picked up by **touching `build/tailwind-candidates.css`**, which forces PostCSS to re-run and Tailwind to re-scan its `@source` files:
+  - **JIT page builds** touch it after writing page artifacts (`lib/server/jitPageBuilder.js`).
+  - **Page YAML edits** go through `manager/utils/updatePageTailwindCss.mjs`, which extracts all strings from the changed YAML into `lowdefy-build/tailwind/<pageId>.html` and then touches the candidates file.
+
+## Vite Configuration
+
+**File:** `vite.config.js`
 
 ```javascript
-const nextConfig = {
-  // Disable optimizations for faster dev builds
-  swcMinify: false,
-  compress: false,
-  outputFileTracing: false,
-  generateEtags: false,
-  optimizeFonts: false,
-
-  webpack: (config) => {
-    // Same browser fallbacks as production
-    return config;
+export default defineConfig(({ mode }) => ({
+  base: `${basePath}/`, // From build/config.json (best-effort — may not exist yet)
+  plugins: [
+    react(),
+    devServer({
+      entry: './src/app.js',
+      // Vite serves these itself; everything else routes to the Hono app.
+      exclude: [
+        /^\/client\/.+/,
+        /^\/lib\/.+/,
+        /^\/build\/.+/,
+        /^\/@.+$/,
+        /^\/node_modules\/.*/,
+        /\?t=\d+$/,
+        /^\/favicon\.ico$/,
+      ],
+    }),
+  ],
+  define: {
+    // Vite does not replace process.env.NODE_ENV inside dependencies —
+    // plugin and client code branch on it.
+    'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
   },
-};
+  resolve: {
+    // Linked plugin packages (pnpm link: / workspace) must share one React.
+    dedupe: ['react', 'react-dom'],
+  },
+}));
 ```
 
 ## Key Files
 
-| File                                        | Purpose                                           |
-| ------------------------------------------- | ------------------------------------------------- |
-| `manager/run.mjs`                           | Entry point                                       |
-| `manager/getContext.mjs`                    | Context factory with JIT build state              |
-| `manager/processes/lowdefyBuild.mjs`        | Calls `shallowBuild`, captures result             |
-| `manager/utils/loadSkeletonSourceFiles.mjs` | Load skeleton source file set from build artifact |
-| `manager/watchers/lowdefyBuildWatcher.mjs`  | Skeleton vs page change classification            |
-| `manager/watchers/moduleBuildWatcher.mjs`   | Local module file change classification           |
-| `lib/server/jitPageBuilder.js`              | JIT page build on API request                     |
-| `lib/server/pageCache.mjs`                  | PageCache class (compiled tracking, locks)        |
-| `pages/api/page/[pageId].js`                | Page API (triggers JIT build)                     |
-| `pages/api/js/[env].js`                     | Serves JS map as module                           |
-| `pages/api/reload.js`                       | SSE endpoint                                      |
-| `lib/client/Reload.js`                      | Hot reload component                              |
-| `lib/client/App.js`                         | Dev app wrapper                                   |
-| `lib/client/Page.js`                        | Page renderer (merges jsMap)                      |
-| `lib/client/Utils/usePageConfig.js`         | SWR hook with versioned cache keys                |
-| `lib/client/Utils/useMutateCache.js`        | `reloadVersion` counter for cache busting         |
+| File                                        | Purpose                                            |
+| ------------------------------------------- | -------------------------------------------------- |
+| `manager/run.mjs`                           | Entry point (signal handling, orchestration)       |
+| `manager/getContext.mjs`                    | Context factory with JIT build state               |
+| `manager/processes/startServer.mjs`         | Spawns the Vite child process                      |
+| `manager/processes/lowdefyBuild.mjs`        | Calls `shallowBuild`, captures result              |
+| `manager/utils/loadSkeletonSourceFiles.mjs` | Load skeleton source file set from build artifact  |
+| `manager/utils/updatePageTailwindCss.mjs`   | Refresh Tailwind candidates on page edits          |
+| `manager/watchers/lowdefyBuildWatcher.mjs`  | Skeleton vs page change classification             |
+| `manager/watchers/moduleBuildWatcher.mjs`   | Local module file change classification            |
+| `manager/watchers/serverArtifactWatcher.mjs`| Server-read artifact changes → restart             |
+| `lib/server/jitPageBuilder.js`              | JIT page build on API request                      |
+| `lib/server/pageCache.mjs`                  | PageCache class (compiled tracking, locks)         |
+| `src/app.js`                                | Hono app assembly (routes, middleware, static)     |
+| `src/routes/jitPage.js`                     | Page route (triggers JIT build, frozen contract)   |
+| `src/routes/jsEnv.js`                       | Serves JS map as module                            |
+| `src/routes/reload.js`                      | SSE endpoint                                       |
+| `src/middleware/apiContext.js`              | Request context + dynamic serverJsMap loading      |
+| `src/html/renderDevPage.js`                 | Config-free HTML shell                             |
+| `client/main.jsx`                           | Client entry (CSS order, HMR-stable root)          |
+| `client/Routing.jsx`                        | Page resolution from the custom router             |
+| `client/Page.jsx`                           | Page renderer (merges jsMap, dynamic icons)        |
+| `client/Reload.jsx`                         | SSE hot reload listener                            |
+| `lib/client/utils/usePageConfig.js`         | SWR hook with versioned cache keys                 |
+| `lib/client/utils/useMutateCache.js`        | `reloadVersion` counter for cache busting          |
+| `vite.config.js`                            | Vite dev server + Hono mounting                    |
 
 ## Reload Types
 
-| Trigger                      | Watcher             | Action                            | Result                                           |
-| ---------------------------- | ------------------- | --------------------------------- | ------------------------------------------------ |
-| Page-level config change     | lowdefyBuildWatcher | Signal file + SSE                 | Soft reload (all pages invalidated, rebuilt JIT) |
-| Skeleton-level config change | lowdefyBuildWatcher | Full skeleton rebuild + SSE       | Soft reload (all pages invalidated)              |
-| Module skeleton file change  | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                                      |
-| Module page content change   | moduleBuildWatcher  | Signal file + SSE                 | Soft reload (all pages invalidated, rebuilt JIT) |
-| `module.lowdefy.yaml` change | moduleBuildWatcher  | Full skeleton rebuild + CSS + SSE | Soft reload                                      |
-| .env change                  | envWatcher          | Read env                          | Hard restart                                     |
-| Plugin change                | nextBuildWatcher    | Next build                        | Hard restart                                     |
-| package.json                 | nextBuildWatcher    | Install + build                   | Hard restart                                     |
+| Trigger                                          | Handled by            | Action                                       | Result                                           |
+| ------------------------------------------------ | --------------------- | -------------------------------------------- | ------------------------------------------------ |
+| Page-level config change                         | lowdefyBuildWatcher   | Signal file + Tailwind candidates + SSE      | Soft reload (all pages invalidated, rebuilt JIT) |
+| Skeleton-level config change                     | lowdefyBuildWatcher   | Full skeleton rebuild + SSE                  | Soft reload (all pages invalidated)              |
+| Module skeleton / `module.lowdefy.yaml` change   | moduleBuildWatcher    | Full skeleton rebuild + SSE                  | Soft reload                                      |
+| Module page content change                       | moduleBuildWatcher    | Signal file + SSE                            | Soft reload (all pages invalidated, rebuilt JIT) |
+| Client plugin code / CSS change                  | Vite                  | HMR module replacement                       | In-place update (~hundreds of ms, no restart)    |
+| Server artifact change (auth, connections, server operators, config) | serverArtifactWatcher | Restart child                | Hard restart                                     |
+| `package.json` change                            | serverArtifactWatcher | Install + lowdefy build + restart            | Hard restart                                     |
+| `.env` change                                    | envWatcher            | Read env + lowdefy build + restart           | Hard restart                                     |
 
 ## Mock User for Testing
 
@@ -814,14 +950,13 @@ auth:
 
 ### Key Files
 
-| File                                      | Purpose                 |
-| ----------------------------------------- | ----------------------- |
-| `lib/server/auth/getMockSession.js`       | Core mock session logic |
-| `lib/server/auth/checkMockUserWarning.js` | Startup warning         |
-| `lib/server/auth/getServerSession.js`     | Server-side integration |
-| `pages/api/auth/[...nextauth].js`         | Client-side integration |
+| File                                       | Purpose                                          |
+| ------------------------------------------ | ------------------------------------------------ |
+| `lib/server/auth/getMockSession.js`        | Core mock session logic                          |
+| `manager/processes/checkMockUserWarning.mjs` | Startup warning                                |
+| `lib/server/auth/session.js`               | Server-side integration (mock checked first, then `getAuthUser(c)` from `@hono/auth-js`) |
 
-See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
+Auth itself is Auth.js v5 (`@auth/core` via `@hono/auth-js`), wired the same way as production: `initAuthConfig` mounted app-wide when configured, `/api/auth/*` delegating to `authHandler()`, and `SessionProvider`/`useSession` from `@hono/auth-js/react` on the client. See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
 
 ## Plugin Strategy
 
@@ -831,7 +966,7 @@ The dev server uses a different plugin strategy than production to optimize for 
 
 The dev server's `package.json` includes a broad set of default plugin packages (blocks, operators, actions, connections) as dependencies. This means:
 
-- No code build (Next.js rebuild) is needed when a user first uses a new block or action type
+- No bundling step is needed when a user first uses a new block or action type — Vite serves the module on demand
 - Bundle size is not a concern in development — all installed types are available immediately
 - The skeleton build reads the server's `package.json` to determine installed packages and includes all types from those packages in the generated import files
 
@@ -845,9 +980,9 @@ To compensate, `shallowBuild` adds all types from installed packages to `compone
 
 If a user configures a plugin package that isn't installed in the dev server:
 
-1. The build detects the new package via `customTypesMap`
-2. `installPlugins` runs `pnpm install` to add the package
-3. A Next.js rebuild is triggered to bundle the new imports
+1. The JIT build detects the missing package (`detectMissingPluginPackages`) and writes it into the server `package.json` (`updateServerPackageJsonJit`)
+2. The page route responds `{ installing: true, packages }` — the client shows `InstallingPluginsPage`
+3. `serverArtifactWatcher` sees the `package.json` change: `installPlugins` runs `pnpm install`, `lowdefyBuild` regenerates the plugin imports
 4. The server restarts with the new plugin available
 
 ### Production Comparison
@@ -855,25 +990,29 @@ If a user configures a plugin package that isn't installed in the dev server:
 | Aspect              | Development                                               | Production                                |
 | ------------------- | --------------------------------------------------------- | ----------------------------------------- |
 | Type counting       | Only non-page types counted; all installed types included | All pages built; exact type usage counted |
-| Bundle size         | All installed types bundled (larger)                      | Only used types bundled (tree-shaken)     |
+| Bundle size         | All installed types served on demand                      | Only used types bundled (tree-shaken)     |
 | Plugin availability | Immediate for pre-installed packages                      | Only what's declared and used             |
-| New plugin          | Install + rebuild triggered automatically                 | Must be declared in `lowdefy.yaml`        |
+| New plugin          | Install + rebuild + restart triggered automatically       | Must be declared in `lowdefy.yaml`        |
 
 ### Key Files
 
-| File                                                                | Purpose                                                                                     |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `packages/build/src/build/shallowBuild.js`                          | `getInstalledPackages()` reads server `package.json`; `addInstalledTypes()` pre-seeds types |
-| `packages/build/src/build/buildImports/buildImportsDev.js`          | Generates imports from `components.types`                                                   |
-| `packages/servers/server-dev/manager/processes/installPlugins.mjs`  | Installs new plugin packages                                                                |
-| `packages/servers/server-dev/manager/watchers/nextBuildWatcher.mjs` | Triggers rebuild on plugin changes                                                          |
+| File                                                                      | Purpose                                                                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `packages/build/src/build/jit/shallowBuild.js`                            | Reads server `package.json`; `addInstalledTypes` pre-seeds types                            |
+| `packages/build/src/build/jit/updateServerPackageJsonJit.js`              | Adds missing plugin packages to server `package.json`                                       |
+| `packages/build/src/build/buildImports/buildImportsDev.js`                | Generates imports from `components.types`                                                   |
+| `packages/servers/server-dev/manager/processes/installPlugins.mjs`        | Installs new plugin packages                                                                |
+| `packages/servers/server-dev/manager/watchers/serverArtifactWatcher.mjs`  | Triggers install + rebuild + restart on `package.json` changes                              |
 
 ## Environment Variables
 
-| Variable                     | Purpose                           |
-| ---------------------------- | --------------------------------- |
-| `LOWDEFY_OPEN_BROWSER`       | Auto-open browser (default: true) |
-| `LOWDEFY_DIRECTORY_CONFIG`   | Config directory path             |
-| `PORT`                       | Server port (default: 3000)       |
-| `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver               |
-| `LOWDEFY_DEV_USER`           | Mock user JSON for testing        |
+| Variable                          | Purpose                                        |
+| --------------------------------- | ---------------------------------------------- |
+| `LOWDEFY_SERVER_DEV_OPEN_BROWSER` | Open browser on start when set to `'true'`     |
+| `LOWDEFY_DIRECTORY_CONFIG`        | Config directory path                          |
+| `PORT` (or `--port`)              | Server port (default: 3000)                    |
+| `LOWDEFY_LOG_LEVEL`               | Log level (default: info)                      |
+| `LOWDEFY_BUILD_REF_RESOLVER`      | Custom ref resolver                            |
+| `LOWDEFY_DEV_USER`                | Mock user JSON for testing                     |
+| `LOWDEFY_SERVER_DEV_WATCH`        | Extra watch paths (JSON array)                 |
+| `LOWDEFY_SERVER_DEV_WATCH_IGNORE` | Watch ignore paths (JSON array)                |

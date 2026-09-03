@@ -20,6 +20,7 @@ import Actions from './Actions.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import WebSockets from './WebSockets.js';
 
 const blockData = (config) => {
   const {
@@ -35,6 +36,7 @@ const blockData = (config) => {
     requests,
     required,
     style,
+    subscriptions,
     type,
     validate,
     visible,
@@ -52,6 +54,7 @@ const blockData = (config) => {
     requests,
     required,
     style,
+    subscriptions,
     type,
     validate,
     visible,
@@ -78,12 +81,25 @@ function getContext({
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  if (lowdefy.contexts[id] && !resetContext.reset) {
+  // Dynamic pages are server-resolved per request — a context memoized across
+  // navigations would render the previous request's content. Rebuild when a
+  // new config object arrives (a fresh fetch), but stay memoized across
+  // re-renders of the same config: getContext runs in the render body, so
+  // rebuilding per render would loop.
+  const sameDynamicConfig =
+    config.dynamic !== true || lowdefy.contexts[id]?._internal.pageConfig === config;
+  if (lowdefy.contexts[id] && !resetContext.reset && sameDynamicConfig) {
     // memoize context if already created, eg between page transitions, unless the reset flag is raised
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
-  resetContext.setReset(false); // lower context reset flag.
+  // Lower the context reset flag — only when raised: setReset is a React
+  // state setter on the Reload component, and getContext runs in the render
+  // body, so skip the redundant cross-component setState on rebuilds where
+  // the flag is already down.
+  if (resetContext.reset) {
+    resetContext.setReset(false);
+  }
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
   }
@@ -96,8 +112,16 @@ function getContext({
     state: {},
     _internal: {
       lowdefy,
+      // Config object reference for dynamic page memoization — identity marks
+      // which fetch this context was built from.
+      pageConfig: config,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
+      // React updaters register here per block id when the context's Block
+      // components mount — scoped per context so rebuilding over a live
+      // context (dynamic page navigation, reset) never notifies the previous
+      // context's still-mounted components.
+      updaters: {},
     },
   };
   const _internal = ctx._internal;
@@ -105,6 +129,7 @@ function getContext({
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
+  _internal.WebSockets = new WebSockets(ctx);
   _internal.RootSlots = new Slots({
     slots: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,

@@ -20,13 +20,13 @@ Generate documentation for cross-cutting architectural concerns in the Lowdefy m
 
 ### build-pipeline
 
-How Lowdefy transforms YAML config into a running Next.js app
+How Lowdefy transforms YAML config into a running Hono + Vite app
 
 - Config parsing and validation
 - Reference resolution (`_ref`)
 - Plugin loading
 - Build artifacts generation
-- Next.js integration
+- Hono + Vite integration
 
 ### request-lifecycle
 
@@ -60,7 +60,7 @@ How Lowdefy's plugin architecture works
 
 How authentication integrates with Lowdefy
 
-- Auth.js (NextAuth) integration
+- Auth.js integration
 - Provider configuration
 - Session management
 - Protected pages
@@ -243,12 +243,12 @@ packages: [cli, build, server]
 
 # Build Pipeline
 
-How Lowdefy transforms YAML configuration into a deployable Next.js application.
+How Lowdefy transforms YAML configuration into a deployable Hono + Vite application.
 
 ## Overview
 
 The build pipeline takes a directory of YAML files and produces a complete
-Next.js app. This happens at build time (not runtime), which is key to
+running app. This happens at build time (not runtime), which is key to
 Lowdefy's performance - all config parsing and validation happens once.
 
 ## The Flow
@@ -298,7 +298,7 @@ Identifies all plugins used in config and generates import statements.
 
 Generates:
 
-- `pages/` - Next.js page routes
+- `src/routes/` - Hono routes
 - `public/` - Static assets
 - `lowdefy.config.json` - Runtime config
 

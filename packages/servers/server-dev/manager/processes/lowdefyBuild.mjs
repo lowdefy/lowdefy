@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { shallowBuild } from '@lowdefy/build/dev';
+import { serializeBuildException, shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginMessagesMap from '../utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+import writeBuildStatus from '../utils/writeBuildStatus.mjs';
 
 function formatDuration(ms) {
   if (ms < 1000) return `${ms}ms`;
@@ -30,13 +31,34 @@ function lowdefyBuild({ directories, logger, options }) {
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
 
-    const result = await shallowBuild({
-      customMessagesMap,
-      customTypesMap,
+    let result;
+    try {
+      result = await shallowBuild({
+        customMessagesMap,
+        customTypesMap,
+        directories,
+        logger,
+        refResolver: options.refResolver,
+        stage: 'dev',
+      });
+    } catch (error) {
+      // Write the artifact after the attempt fails - the build may have
+      // cleaned the build directory before failing, so this must not run
+      // before the attempt completes.
+      await writeBuildStatus({
+        directories,
+        status: 'error',
+        errors: error.errors ?? [{ message: error.message }],
+        warnings: error.warnings ?? [],
+      });
+      throw error;
+    }
+
+    await writeBuildStatus({
       directories,
-      logger,
-      refResolver: options.refResolver,
-      stage: 'dev',
+      status: 'ok',
+      errors: [],
+      warnings: (result.context.warnings ?? []).map(serializeBuildException),
     });
 
     // Return result so getContext can store registries

@@ -18,7 +18,7 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
-import processColDefs from './processColDefs.js';
+import useColDefs from './useColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
 
@@ -41,6 +41,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   const gridRef = useRef();
 
   const memoDefaultColDef = useMemo(() => defaultColDef);
+  const processedColDefs = useColDefs({ columnDefs, methods, gridRef });
 
   const getRowId = useCallback(
     (params) => {
@@ -224,7 +225,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
         onSortChanged={onSortChanged}
         onRowDragEnd={onRowDragEnd}
         defaultColDef={memoDefaultColDef}
-        columnDefs={processColDefs(columnDefs, methods)}
+        columnDefs={processedColDefs}
         ref={gridRef}
         getRowId={getRowId}
         suppressLoadingOverlay

@@ -39,7 +39,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./dev": "./dist/indexDev.js",
-    "./buildTestPage": "./dist/build/full/buildTestPage.js"
+    "./buildTestPage": "./dist/build/full/buildTestPage.js",
+    "./dynamic": "./dist/dynamic/buildDynamicBlocks.js"
   },
   "files": [
     "dist/*"
@@ -64,13 +65,13 @@
     "@lowdefy/nunjucks": "5.6.0",
     "@lowdefy/operators": "5.6.0",
     "@lowdefy/operators-js": "5.6.0",
-    "ajv": "8.12.0",
+    "ajv": "8.20.0",
     "json5": "2.2.3",
     "picomatch": "4.0.1",
-    "semver": "7.5.4",
-    "tar": "6.2.1",
-    "yaml": "2.3.4",
-    "yargs": "17.7.2"
+    "semver": "7.7.4",
+    "tar": "7.5.13",
+    "yaml": "2.9.0",
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
@@ -81,6 +82,7 @@
     "@lowdefy/blocks-antd-x": "5.6.0",
     "@lowdefy/blocks-diff": "5.6.0",
     "@lowdefy/blocks-echarts": "5.6.0",
+    "@lowdefy/blocks-files": "5.6.0",
     "@lowdefy/blocks-google-maps": "5.6.0",
     "@lowdefy/blocks-markdown": "5.6.0",
     "@lowdefy/blocks-qr": "5.6.0",
@@ -97,8 +99,10 @@
     "@lowdefy/connection-openai": "5.6.0",
     "@lowdefy/connection-redis": "5.6.0",
     "@lowdefy/connection-sendgrid": "5.6.0",
+    "@lowdefy/connection-smtp": "5.6.0",
     "@lowdefy/connection-stripe": "5.6.0",
     "@lowdefy/connection-test": "5.6.0",
+    "@lowdefy/email-templates": "5.6.0",
     "@lowdefy/logger": "5.6.0",
     "@lowdefy/operators-change-case": "5.6.0",
     "@lowdefy/operators-dayjs": "5.6.0",
@@ -110,13 +114,16 @@
     "@lowdefy/operators-yaml": "5.6.0",
     "@lowdefy/plugin-auth0": "5.6.0",
     "@lowdefy/plugin-aws": "5.6.0",
+    "@lowdefy/plugin-azure": "5.6.0",
     "@lowdefy/plugin-csv": "5.6.0",
+    "@lowdefy/plugin-gcp": "5.6.0",
     "@lowdefy/plugin-next-auth": "5.6.0",
-    "@swc/cli": "0.8.0",
-    "@swc/core": "1.15.18",
+    "@lowdefy/websockets-core": "5.6.0",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
     "jest": "28.1.3",
-    "pino": "8.16.2"
+    "pino": "10.3.1"
   },
   "publishConfig": {
     "access": "public"

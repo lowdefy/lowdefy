@@ -55,6 +55,7 @@ _ref:
 
           The following operators can be used during the build:
           - [_and](/_and)
+          - [_app](/_app)
           - [_args](/_args)
           - [_array](/_array)
           - [_base64](/_base64)
@@ -91,6 +92,20 @@ _ref:
           - [_uri](/_uri)
 
         examples: |
+          ###### Use the app slug as a map key at build time:
+          The [`_app`](/_app) operator also resolves at build time, so `_build.app: slug` can supply a key for a build-time map. Because the key must be a string when `_build.object.fromEntries` runs, the runtime `_app` form would arrive too late here.
+
+          ```yaml
+          _build.object.fromEntries:
+            - - _build.app: slug
+              - enabled: true
+          ```
+          Returns (when `slug` is `my-app`):
+          ```yaml
+          my-app:
+            enabled: true
+          ```
+
           ###### Check environment variables to determine which url to link to:
           Use the `Link` action to link to a production url if the build is a production build in Vercel (the `VERCEL_ENV` variable will be set to "production"), otherwise link to a preview url.
 
@@ -102,7 +117,7 @@ _ref:
               _build.if:
                 test:
                   _build.eq:
-                    - _build.env: NEXT_PUBLIC_VERCEL_ENV
+                    - _build.env: VERCEL_ENV
                     - production
                 then: "https://www.productionsite.com"
                 else: "https://productionsite-git-develop-org.vercel.app"

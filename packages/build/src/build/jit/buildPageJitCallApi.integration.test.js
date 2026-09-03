@@ -32,27 +32,29 @@ import os from 'os';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
-process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-test';
+process.env.AUTH_SECRET = 'test-secret-for-integration-test';
 
 // Mock the steps that touch the real server filesystem / git so shallowBuild can
 // run against a throwaway temp directory. Everything that matters for CallAPI
 // validation (buildRefs/walker, buildModules, buildApi, writeApi, buildShallowPages,
 // writeMaps, buildPageJit, validateCallApiRefs) runs for real.
+const mockComputeAppMeta = (source = {}) => ({
+  slug: source.slug ?? null,
+  name: source.name ?? null,
+  version: source.version ?? null,
+  description: source.description ?? null,
+  license: source.license ?? null,
+  lowdefyVersion: source.lowdefy ?? null,
+  gitSha: 'test-git-sha',
+});
 jest.unstable_mockModule('../buildApp.js', () => ({
-  default: ({ components }) => {
+  computeAppMeta: mockComputeAppMeta,
+  default: ({ components, context }) => {
     components.app = components.app ?? {};
     components.app.html = components.app.html ?? {};
     components.app.html.appendBody = components.app.html.appendBody ?? '';
     components.app.html.appendHead = components.app.html.appendHead ?? '';
-    components.appMeta = {
-      slug: components.slug ?? null,
-      name: components.name ?? null,
-      version: components.version ?? null,
-      description: components.description ?? null,
-      license: components.license ?? null,
-      lowdefyVersion: components.lowdefy ?? null,
-      gitSha: 'test-git-sha',
-    };
+    components.appMeta = context?.appMeta ?? mockComputeAppMeta(components);
     return components;
   },
 }));
@@ -78,6 +80,10 @@ const typesMap = {
   actions: {
     ...snapshotTypesMap.actions,
     CallAPI: { package: '@lowdefy/actions-core' },
+  },
+  notifications: {
+    ...snapshotTypesMap.notifications,
+    NotificationEmail: { package: '@lowdefy/email-templates' },
   },
 };
 
@@ -141,8 +147,16 @@ modules:
   - id: inviter
     source: 'file:modules/inviter'
 
+notifications:
+  - id: hello
+    type: NotificationEmail
+    properties:
+      subject: Hello
+      message: Hi there
+
 api:
   - _ref: api/top-endpoint.yaml
+  - _ref: api/render-endpoint.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -151,6 +165,20 @@ pages:
   );
 
   write('api/top-endpoint.yaml', returnEndpoint('top_endpoint'));
+  write(
+    'api/render-endpoint.yaml',
+    `id: render-test
+type: Api
+routine:
+  - id: render
+    type: RenderNotification
+    properties:
+      notificationId: hello
+      data:
+        contact:
+          email: test@example.com
+`
+  );
   write('pages/home.yaml', callApiPage('home', 'top_endpoint'));
   write('pages/missing.yaml', callApiPage('missing', 'does_not_exist'));
 
@@ -277,7 +305,17 @@ async function buildAndCollectWarnings(pageId) {
 test('shallowBuild writes scoped api endpoint artifacts to build/api', () => {
   const endpointIds = apiArtifacts.map((c) => c.endpointId).sort();
   // Top-level keeps its id; module endpoint is scoped with the module entry id.
-  expect(endpointIds).toEqual(['inviter/send-invite', 'top_endpoint']);
+  expect(endpointIds).toEqual(['inviter/send-invite', 'render-test', 'top_endpoint']);
+});
+
+test('shallowBuild writes the notifications config artifact to build/notifications', () => {
+  // Regression: the dev shallow build previously dropped the notifications: section,
+  // so RenderNotification threw "Notification does not exist" under lowdefy dev.
+  const notification = readArtifact(buildDir, 'notifications/hello.json');
+  expect(notification).not.toBeNull();
+  expect(notification.notificationId).toBe('hello');
+  expect(notification.type).toBe('NotificationEmail');
+  expect(notification.properties.subject).toBe('Hello');
 });
 
 test('JIT build of a page calling a top-level endpoint emits no false non-existent warning', async () => {

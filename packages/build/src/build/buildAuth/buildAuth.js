@@ -19,17 +19,19 @@
 import { type } from '@lowdefy/helpers';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildAgentAuth from './buildAgentAuth.js';
+import buildAuthStrategies from './buildAuthStrategies.js';
 import buildApiAuth from './buildApiAuth.js';
 import buildPageAuth from './buildPageAuth.js';
-import rejectReservedEntityIds from './rejectReservedEntityIds.js';
+import buildWebsocketAuth from './buildWebsocketAuth.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
   validateAuthConfig({ components, context });
-  rejectReservedEntityIds({ components });
   components.auth.configured = configured;
+  buildAuthStrategies({ components });
   buildApiAuth({ components, context });
+  buildWebsocketAuth({ components, context });
   buildAgentAuth({ components, context });
   buildPageAuth({ components, context });
   buildAuthPlugins({ components, context });

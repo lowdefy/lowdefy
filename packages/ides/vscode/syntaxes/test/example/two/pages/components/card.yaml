@@ -1,0 +1,6 @@
+id: card
+type: Card
+protperties:
+  title:
+    _ref:
+      path: ../one/pages/components/text.yaml

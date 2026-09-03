@@ -1,0 +1,13 @@
+# string.unquoted.ref.operator.lowdefy.yaml
+one:
+  _ref: more.yaml
+# string.unquoted.path.ref.operator.lowdefy.yaml
+two:
+  _ref:
+    path: some.yaml
+# string.unquoted.path.ref.operator.lowdefy.yaml
+three:
+  _ref:
+    other: blue
+    path: pages/components/card.yaml
+    sd: one

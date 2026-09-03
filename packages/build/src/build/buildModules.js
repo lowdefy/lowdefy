@@ -17,29 +17,38 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+
+function checkSecretNodes({ value, declaredSecrets, entryId }) {
+  if (type.isArray(value)) {
+    for (const item of value) {
+      checkSecretNodes({ value: item, declaredSecrets, entryId });
+    }
+    return;
+  }
+  if (!type.isObject(value)) return;
+  // Only a single-non-tilde-key object is operator shape (matches
+  // getRuntimeOperatorKey) — { _secret: 'X', extra: 1 } is deliberately not
+  // treated as a secret reference.
+  const keys = Object.keys(value).filter((k) => !k.startsWith('~'));
+  if (keys.length === 1 && !type.isUndefined(value['_secret'])) {
+    const secretName = value['_secret'];
+    if (type.isString(secretName) && !declaredSecrets.has(secretName)) {
+      throw new ConfigError(
+        `Module "${entryId}" references secret "${secretName}" ` +
+          `but does not declare it in module.lowdefy.yaml secrets. ` +
+          `Add it to the module's secrets list or remove the reference.`
+      );
+    }
+  }
+  for (const key of Object.keys(value)) {
+    checkSecretNodes({ value: value[key], declaredSecrets, entryId });
+  }
+}
 
 function validateModuleSecrets({ content, manifest, entryId }) {
   const declaredSecrets = new Set((manifest.secrets ?? []).map((s) => s.name));
-
-  serializer.copy(content, {
-    reviver: (_, value) => {
-      if (!type.isObject(value)) return value;
-      const keys = Object.keys(value).filter((k) => !k.startsWith('~'));
-      if (keys.length !== 1) return value;
-      if (!type.isUndefined(value['_secret'])) {
-        const secretName = value['_secret'];
-        if (type.isString(secretName) && !declaredSecrets.has(secretName)) {
-          throw new ConfigError(
-            `Module "${entryId}" references secret "${secretName}" ` +
-              `but does not declare it in module.lowdefy.yaml secrets. ` +
-              `Add it to the module's secrets list or remove the reference.`
-          );
-        }
-      }
-      return value;
-    },
-  });
+  checkSecretNodes({ value: content, declaredSecrets, entryId });
 }
 
 function buildModules({ components, context }) {
@@ -81,6 +90,12 @@ function buildModules({ components, context }) {
     for (const endpoint of manifest.api ?? []) {
       validateModuleSecrets({ content: endpoint, manifest, entryId: entry.id });
     }
+    for (const agent of manifest.agents ?? []) {
+      validateModuleSecrets({ content: agent, manifest, entryId: entry.id });
+    }
+    for (const notification of manifest.notifications ?? []) {
+      validateModuleSecrets({ content: notification, manifest, entryId: entry.id });
+    }
 
     // Process pages
     for (const page of manifest.pages ?? []) {
@@ -102,6 +117,20 @@ function buildModules({ components, context }) {
       endpoint.id = `${entry.id}/${endpoint.id}`;
       components.api = components.api ?? [];
       components.api.push(endpoint);
+    }
+
+    // Process agents
+    for (const agent of manifest.agents ?? []) {
+      agent.id = `${entry.id}/${agent.id}`;
+      components.agents = components.agents ?? [];
+      components.agents.push(agent);
+    }
+
+    // Process notifications
+    for (const notification of manifest.notifications ?? []) {
+      notification.id = `${entry.id}/${notification.id}`;
+      components.notifications = components.notifications ?? [];
+      components.notifications.push(notification);
     }
   }
 

@@ -21,6 +21,7 @@ import { jest } from '@jest/globals';
 import operators from '@lowdefy/operators-js/operators/build';
 import testContext from '../../test-utils/testContext.js';
 import { resolve, WalkContext } from './walker.js';
+import { getRecord } from './deferredRegistry.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
@@ -422,6 +423,39 @@ describe('_module.endpointId resolution', () => {
   });
 });
 
+describe('_module.notificationId resolution', () => {
+  test('string form resolves to scoped notification id', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve({ '_module.notificationId': 'invite-user' }, ctx);
+    expect(result).toBe('entry-id/invite-user');
+  });
+
+  test('object form resolves cross-module notification', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.notificationId': { id: 'event-digest', module: 'events' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/event-digest');
+  });
+
+  test('throws for invalid argument type', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: testModuleEntry,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 7 }, ctx)).rejects.toThrow(
+      '_module.notificationId requires a string or object { id, module }.'
+    );
+  });
+});
+
 describe('_module.id resolution', () => {
   test('non-object form returns own module id', async () => {
     const ctx = createWalkContext({
@@ -483,6 +517,16 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
     );
   });
 
+  test('_module.notificationId string form throws at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    await expect(resolve({ '_module.notificationId': 'invite-user' }, ctx)).rejects.toThrow(
+      '_module.notificationId string form is ambiguous at the app level'
+    );
+  });
+
   test('_module.id non-object form throws at app level', async () => {
     const ctx = createWalkContext({
       moduleEntry: null,
@@ -541,6 +585,18 @@ describe('_module.*Id at app level (null moduleEntry)', () => {
       ctx
     );
     expect(result).toBe('events-entry/send-event');
+  });
+
+  test('_module.notificationId object form resolves at app level', async () => {
+    const ctx = createWalkContext({
+      moduleEntry: null,
+      buildContext: createModuleBuildContext(),
+    });
+    const result = await resolve(
+      { '_module.notificationId': { id: 'invite-user', module: 'events-entry' } },
+      ctx
+    );
+    expect(result).toBe('events-entry/invite-user');
   });
 
   test('_module.id object form resolves at app level', async () => {
@@ -841,9 +897,10 @@ describe('_module.var lazy resolution', () => {
     expect(result).toEqual({ show_header: true });
   });
 
-  test('preserves _module.var when moduleRoot set but no moduleEntry (Phase 1a)', async () => {
+  test('errors on _module.var in module scope without an entry (module-static positions)', async () => {
+    const buildContext = createBuildContext();
     const ctx = new WalkContext({
-      buildContext: createBuildContext(),
+      buildContext,
       refId: 'test:module.yaml:0',
       sourceRefId: null,
       vars: {},
@@ -857,9 +914,12 @@ describe('_module.var lazy resolution', () => {
       dynamicIdentifiers,
       shouldStop: null,
     });
+    // Manifest headers and export ids walk without a module entry — they are
+    // module-static, so _module.var there is a ConfigError, not a pass-through.
     const node = { '_module.var': 'theme' };
-    const result = await resolve(node, ctx);
-    expect(result).toEqual({ '_module.var': 'theme' });
+    await expect(resolve(node, ctx)).rejects.toThrow(
+      '_module.var cannot be used in manifest headers or component/menu ids'
+    );
   });
 });
 
@@ -1534,5 +1594,95 @@ describe('module ref JS path resolution (resolver / transformer / .js content)',
     await expect(resolve(node, ctx)).rejects.toThrow(
       'Module ref path "/modules/escape.yaml" escapes the package root.'
     );
+  });
+});
+
+describe('deferModuleRefs record deferral', () => {
+  test('resolving a cross-module _ref with deferModuleRefs true returns an entryRef record placeholder', async () => {
+    const buildContext = createBuildContext();
+    // Give the refMap an entry for the ref id that will be created
+    buildContext.refMap = {};
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: 'lowdefy.yaml',
+      refChain: new Set(['lowdefy.yaml']),
+      deferModuleRefs: true,
+      entryId: 'consumer-entry',
+      entrySection: 'consumerVars',
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { slot: { _ref: { module: 'my-module', component: 'MyComponent' } } };
+
+    const resolved = await resolve(node, ctx);
+
+    // The tree holds an enumerable placeholder; the prepared refDef is the
+    // record body and the env replaces ~deferredFrom with explicit provenance.
+    const id = 'consumer-entry:consumerVars.slot';
+    expect(resolved.slot).toEqual({ '~deferred': id });
+    const record = getRecord(buildContext, id);
+    expect(record.kind).toBe('entryRef');
+    expect(record.body.module).toBe('my-module');
+    expect(record.body.component).toBe('MyComponent');
+    expect(record.env.file).toBe('lowdefy.yaml');
+    expect(record.env.entryId).toBeNull();
+    expect(record.slot).toEqual({
+      entryId: 'consumer-entry',
+      section: 'consumerVars',
+      path: 'slot',
+    });
+  });
+
+  test('resolving a file _ref with deferModuleRefs true does not produce a placeholder', async () => {
+    // A file _ref (no module key) must not be deferred — the refDef.module guard
+    // in resolveRef ensures only module refs become records.
+    // (The actual file resolution may fail due to missing test fixtures; we only
+    //  care about the deferral branch not activating.)
+    const buildContext = createBuildContext();
+    buildContext.refMap = {};
+
+    const ctx = new WalkContext({
+      buildContext,
+      refId: 'entry:lowdefy.yaml:0',
+      sourceRefId: null,
+      vars: {},
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: '/app/lowdefy.yaml',
+      refChain: new Set(['/app/lowdefy.yaml']),
+      deferModuleRefs: true,
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+
+    const node = { _ref: '/app/some-file.yaml' };
+    const result = await resolve(node, ctx);
+    // Result must NOT be a placeholder — either resolved content or null
+    // (null when getRefContent fails due to missing file in tests).
+    expect(result === null || result['~deferred'] === undefined).toBe(true);
+  });
+
+  test('cloneWithMarkers carries placeholders through unchanged', async () => {
+    const { default: cloneWithMarkers } = await import('./cloneWithMarkers.js');
+
+    const placeholder = { '~deferred': 'consumer-entry:consumerVars.slot' };
+    const cloned = cloneWithMarkers({ wrapper: placeholder });
+
+    // Plain enumerable data — the whole point of the record placeholder.
+    expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
   });
 });

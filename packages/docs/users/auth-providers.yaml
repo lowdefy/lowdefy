@@ -43,5 +43,5 @@ _ref:
           vars:
             previous_page_title: Login and Logout
             previous_page_id: login-and-logout
-            next_page_title: Next Auth Providers
-            next_page_id: next-auth-providers
+            next_page_title: Auth.js Providers
+            next_page_id: auth-js-providers

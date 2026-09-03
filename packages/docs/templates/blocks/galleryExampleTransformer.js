@@ -259,6 +259,11 @@ function buildCard({ section, slug, showState }) {
   if (section.fullWidth) {
     cardStyle.columnSpan = 'all';
   }
+  // A block renders its popup inside itself, so a popup wider than a gallery column is cut off by
+  // the card. Sections of blocks with wide popups opt out of the clipping to show them whole.
+  if (section.overflowVisible) {
+    cardStyle.overflow = 'visible';
+  }
 
   return {
     id: `gallery_card_${slug}`,

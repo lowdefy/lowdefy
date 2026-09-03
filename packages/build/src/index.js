@@ -28,17 +28,22 @@ import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildAgents from './build/buildAgents.js';
 import buildApp from './build/buildApp.js';
+import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
+import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
 import buildModules from './build/buildModules.js';
+import buildNotifications from './build/buildNotifications.js';
+import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
@@ -46,7 +51,9 @@ import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
+import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
+import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
@@ -55,6 +62,8 @@ import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeMcp from './build/writeMcp.js';
+import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
 import writeI18n from './build/writeI18n.js';
 import writeTheme from './build/writeTheme.js';
@@ -62,6 +71,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeRequests from './build/full/writeRequests.js';
@@ -74,6 +84,14 @@ async function build(options) {
   let context;
   try {
     context = createContext(options);
+
+    // Phase 0: Resolve root app metadata into context.appMeta before any
+    // operator evaluation. _app / _build.app read this, and buildModuleDefs
+    // (next) evaluates operators on root config, consumer vars, and connections.
+    await buildAppMeta({ context });
+    // Surface bad root metadata (unsupported operators, failed _build.*) now,
+    // before module operators evaluate against it — avoids cascade errors.
+    logCollectedErrors(context);
 
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
@@ -97,6 +115,19 @@ async function build(options) {
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
 
+    // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
+    // whose arguments are fully static. This single fold covers components after
+    // module manifests are merged (replacing the old per-region folds in buildRefs,
+    // buildModuleDefs, and registerModules). Must run before addKeys so that ~k
+    // markers are added to the already-folded tree.
+    // context.rootRefDef is the lowdefy.yaml refDef stashed by buildRefs (Phase 2)
+    // so we can resolve error source file paths without allocating a new makeId entry.
+    components = precomputeRuntimeOperators({
+      context,
+      input: components,
+      refDef: context.rootRefDef,
+    });
+
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -108,6 +139,9 @@ async function build(options) {
     logCollectedErrors(context);
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    // appMeta is computed in Phase 0; attach it here (where buildApp used to
+    // create it) so the following addKeys pass keys it identically.
+    components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
@@ -117,14 +151,21 @@ async function build(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    tryBuildStep(buildMcp, 'buildMcp', { components, context });
+    tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    // Cross-config step validations — need buildApi (stepIds) and the
+    // buildAgents/buildNotifications id sets
+    tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
+      components,
+      context,
+    });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
-    tryBuildStep(buildJs, 'buildJs', { components, context });
-    tryBuildStep(buildTypes, 'buildTypes', { components, context });
-    tryBuildStep(buildImports, 'buildImports', { components, context });
-    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
-    tryBuildStep(addKeys, 'addKeys', { components, context });
-    // Collect page content strings for Tailwind to scan
+    // Collect page content strings for Tailwind to scan. Must run before
+    // buildJs — jsMapParser replaces _js source with hashes, and class
+    // candidates used only inside _js source would otherwise never be scanned.
     context.tailwindContentMap = new Map();
     for (const page of components.pages ?? []) {
       const content = collectPageContent([page]);
@@ -132,6 +173,11 @@ async function build(options) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    tryBuildStep(buildJs, 'buildJs', { components, context });
+    tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    tryBuildStep(buildImports, 'buildImports', { components, context });
+    // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
+    tryBuildStep(addKeys, 'addKeys', { components, context });
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
@@ -144,6 +190,9 @@ async function build(options) {
     await writeConnections({ components, context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeMcp({ components, context });
+    await writeWebsockets({ components, context });
+    await writeNotifications({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
     await writeConfig({ components, context });

@@ -14,61 +14,22 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
-import { execSync } from 'child_process';
-
 import buildApp from './buildApp.js';
 import testContext from '../test-utils/testContext.js';
 
 const context = testContext();
-
-let gitSha;
-
-try {
-  gitSha = execSync('git rev-parse HEAD').toString().trim();
-} catch (_) {
-  gitSha = null;
-}
-
-const emptyAppMeta = {
-  slug: null,
-  name: null,
-  version: null,
-  description: null,
-  license: null,
-  lowdefyVersion: null,
-  gitSha,
-};
-
-const originalEnvShaPresent = Object.prototype.hasOwnProperty.call(
-  process.env,
-  'LOWDEFY_GIT_SHA'
-);
-const originalEnvSha = process.env.LOWDEFY_GIT_SHA;
-
-beforeEach(() => {
-  delete process.env.LOWDEFY_GIT_SHA;
-});
-
-afterAll(() => {
-  if (originalEnvShaPresent) {
-    process.env.LOWDEFY_GIT_SHA = originalEnvSha;
-  } else {
-    delete process.env.LOWDEFY_GIT_SHA;
-  }
-});
 
 test('buildApp no app defined', () => {
   const components = {};
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
       },
     },
-    appMeta: emptyAppMeta,
   });
 });
 
@@ -77,12 +38,12 @@ test('buildApp empty app object', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
       },
     },
-    appMeta: emptyAppMeta,
   });
 });
 
@@ -91,12 +52,12 @@ test('buildApp empty html', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: '',
         appendHead: '',
       },
     },
-    appMeta: emptyAppMeta,
   });
 });
 
@@ -112,12 +73,74 @@ test('buildApp appendHead and appendBody', () => {
   const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
+      email: {},
       html: {
         appendBody: 'body',
         appendHead: 'head',
       },
     },
-    appMeta: emptyAppMeta,
+  });
+});
+
+test('buildApp defaults email companyName from root name', () => {
+  const components = { name: 'My App' };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({ companyName: 'My App' });
+});
+
+test('buildApp keeps explicit email companyName when root name is also set', () => {
+  const components = { name: 'My App', app: { email: { companyName: 'Branded Name' } } };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({ companyName: 'Branded Name' });
+});
+
+test('buildApp keeps explicit empty string companyName as opt-out', () => {
+  const components = { name: 'My App', app: { email: { companyName: '' } } };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({ companyName: '' });
+});
+
+test('buildApp defaults email primaryColor from theme.antd.token.colorPrimary', () => {
+  const components = { theme: { antd: { token: { colorPrimary: '#c9a84c' } } } };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({ primaryColor: '#c9a84c' });
+});
+
+test('buildApp keeps explicit email primaryColor over theme colorPrimary', () => {
+  const components = {
+    theme: { antd: { token: { colorPrimary: '#c9a84c' } } },
+    app: { email: { primaryColor: '#000000' } },
+  };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({ primaryColor: '#000000' });
+});
+
+test('buildApp adds no email defaults when name and theme are missing', () => {
+  const components = {};
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({});
+});
+
+test('buildApp adds no email defaults for malformed theme or non-string values', () => {
+  expect(buildApp({ components: { theme: {} }, context }).app.email).toEqual({});
+  expect(buildApp({ components: { theme: { antd: 'dark' } }, context }).app.email).toEqual({});
+  expect(
+    buildApp({ components: { theme: { antd: { token: { colorPrimary: 7 } } } }, context }).app.email
+  ).toEqual({});
+  expect(buildApp({ components: { name: 7 }, context }).app.email).toEqual({});
+});
+
+test('buildApp applies both email defaults alongside user-set email fields', () => {
+  const components = {
+    name: 'My App',
+    theme: { antd: { token: { colorPrimary: '#c9a84c' } } },
+    app: { email: { logo: 'https://cdn.example.com/logo.png' } },
+  };
+  const result = buildApp({ components, context });
+  expect(result.app.email).toEqual({
+    companyName: 'My App',
+    primaryColor: '#c9a84c',
+    logo: 'https://cdn.example.com/logo.png',
   });
 });
 
@@ -128,80 +151,8 @@ test('buildApp app not an object', () => {
   expect(() => buildApp({ components, context })).toThrow('lowdefy.app is not an object.');
 });
 
-test('buildApp populates appMeta from root fields', () => {
-  const components = {
-    slug: 'my-app',
-    name: 'My App',
-    version: '1.2.3',
-    description: 'Useful.',
-    license: 'MIT',
-    lowdefy: '5.0.0',
-  };
+test('buildApp does not set appMeta', () => {
+  const components = { slug: 'my-app', name: 'My App' };
   const result = buildApp({ components, context });
-  expect(result.appMeta).toEqual({
-    slug: 'my-app',
-    name: 'My App',
-    version: '1.2.3',
-    description: 'Useful.',
-    license: 'MIT',
-    lowdefyVersion: '5.0.0',
-    gitSha,
-  });
-});
-
-test('buildApp absent root fields become null in appMeta', () => {
-  const components = {};
-  const result = buildApp({ components, context });
-  expect(result.appMeta).toEqual({
-    slug: null,
-    name: null,
-    version: null,
-    description: null,
-    license: null,
-    lowdefyVersion: null,
-    gitSha,
-  });
-});
-
-test('buildApp LOWDEFY_GIT_SHA env var wins over git rev-parse', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('child_process', () => ({
-    execSync: jest.fn(() => Buffer.from('from-git-rev-parse\n')),
-  }));
-  const { default: buildAppMocked } = await import('./buildApp.js');
-
-  process.env.LOWDEFY_GIT_SHA = 'from-env-var';
-  const result = buildAppMocked({ components: {}, context });
-  expect(result.appMeta.gitSha).toBe('from-env-var');
-
-  delete process.env.LOWDEFY_GIT_SHA;
-  const result2 = buildAppMocked({ components: {}, context });
-  expect(result2.appMeta.gitSha).toBe('from-git-rev-parse');
-});
-
-test('buildApp empty/whitespace LOWDEFY_GIT_SHA falls through to git rev-parse', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('child_process', () => ({
-    execSync: jest.fn(() => Buffer.from('from-git-rev-parse\n')),
-  }));
-  const { default: buildAppMocked } = await import('./buildApp.js');
-
-  process.env.LOWDEFY_GIT_SHA = '';
-  expect(buildAppMocked({ components: {}, context }).appMeta.gitSha).toBe('from-git-rev-parse');
-
-  process.env.LOWDEFY_GIT_SHA = '   ';
-  expect(buildAppMocked({ components: {}, context }).appMeta.gitSha).toBe('from-git-rev-parse');
-});
-
-test('buildApp returns null gitSha when both env and git rev-parse fail', async () => {
-  jest.resetModules();
-  jest.unstable_mockModule('child_process', () => ({
-    execSync: jest.fn(() => {
-      throw new Error('not a git repo');
-    }),
-  }));
-  const { default: buildAppMocked } = await import('./buildApp.js');
-
-  const result = buildAppMocked({ components: {}, context });
-  expect(result.appMeta.gitSha).toBeNull();
+  expect(result.appMeta).toBeUndefined();
 });

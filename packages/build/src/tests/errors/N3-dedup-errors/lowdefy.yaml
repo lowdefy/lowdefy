@@ -1,9 +1,9 @@
 # N3: Deduplication of Errors
 # ===========================
-# A reserved page id is reported by two build steps - the rejectReservedEntityIds
-# gate in buildAuth (buildAuth runs before buildPages) and validateId in
-# buildPages - with the same message at the same source line. logCollectedErrors
-# collapses that pair, so the developer reads it once.
+# The error counterpart of N1. A reserved page id is reported by two build
+# steps - the buildEntityAuth gate (buildAuth runs before buildPages) and
+# validateId in buildPages - with the same message at the same source line.
+# logCollectedErrors collapses that pair, so the developer reads it once.
 #
 # The second page carries a genuinely distinct error, proving the dedup only
 # collapses entries that share both source line and message.

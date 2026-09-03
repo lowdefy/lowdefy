@@ -15,95 +15,34 @@
 */
 
 import React, { useEffect } from 'react';
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
-import { Button } from '@lowdefy/blocks-antd/blocks';
+import { cn } from '@lowdefy/block-utils';
+import { Upload } from '@lowdefy/blocks-files/blocks';
 
-import { Upload } from 'antd';
-
-import useFileList from '../utils/useFileList.js';
-import getS3Upload from '../utils/getS3Upload.js';
-import withTheme from '../withTheme.js';
-
-const S3UploadButtonBlock = ({
-  blockId,
-  classNames = {},
-  components,
-  events,
-  methods,
-  properties,
-  styles = {},
-  value,
-}) => {
-  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
-    properties,
-    methods,
-    value,
-  });
-  const s3UploadRequest = getS3Upload({ methods, setFileList });
+// Deprecated alias for the generic Upload block in @lowdefy/blocks-files.
+// Maps the legacy s3PostPolicyRequestId property onto uploadPolicyRequestId
+// and keeps the legacy element class so existing app CSS targeting the S3
+// block name keeps matching.
+const S3UploadButton = (props) => {
   useEffect(() => {
-    methods.setValue({ file: null, fileList: [] });
-    methods.registerEvent({
-      name: '__getS3PostPolicy',
-      actions: [
-        {
-          id: '__getS3PostPolicy',
-          type: 'Request',
-          params: [properties.s3PostPolicyRequestId],
-        },
-      ],
-    });
+    console.warn(
+      'The S3UploadButton block is deprecated. Use the Upload block with "uploadPolicyRequestId" instead.'
+    );
   }, []);
-  useEffect(() => {
-    if (JSON.stringify(value) !== JSON.stringify(state)) {
-      setValue(value);
-    }
-  }, [value]);
+  const { s3PostPolicyRequestId, ...properties } = props.properties ?? {};
+  const classNames = props.classNames ?? {};
   return (
-    <div
-      id={blockId}
-      className={cn('lf-s3-upload-button', classNames.element)}
-      style={styles.element}
-    >
-      <Upload
-        accept={properties.accept ?? '*'}
-        beforeUpload={loadFileList}
-        classNames={{
-          trigger: classNames.trigger,
-          list: classNames.list,
-          item: classNames.item,
-        }}
-        styles={{
-          trigger: styles.trigger,
-          list: styles.list,
-          item: styles.item,
-        }}
-        customRequest={s3UploadRequest}
-        disabled={properties.disabled}
-        fileList={state.fileList}
-        maxCount={properties.maxCount}
-        multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
-        onRemove={removeFile}
-        showUploadList={properties.showUploadList}
-        onChange={() => {
-          methods.triggerEvent({ name: 'onChange' });
-        }}
-      >
-        <Button
-          blockId={`${blockId}_button`}
-          components={components}
-          events={events}
-          properties={{
-            disabled: properties.disabled,
-            icon: 'AiOutlineUpload',
-            title: 'Upload',
-            type: 'default',
-            ...properties.button,
-          }}
-          methods={methods}
-        />
-      </Upload>
-    </div>
+    <Upload
+      {...props}
+      classNames={{
+        ...classNames,
+        element: cn('lf-s3-upload-button', classNames.element),
+      }}
+      properties={{
+        uploadPolicyRequestId: s3PostPolicyRequestId,
+        ...properties,
+      }}
+    />
   );
 };
 
-export default withBlockDefaults(withTheme('Upload', S3UploadButtonBlock));
+export default S3UploadButton;

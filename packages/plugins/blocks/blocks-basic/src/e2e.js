@@ -17,6 +17,7 @@
 export { default as Anchor } from './blocks/Anchor/e2e.js';
 export { default as Box } from './blocks/Box/e2e.js';
 export { default as DangerousHtml } from './blocks/DangerousHtml/e2e.js';
+export { default as Dynamic } from './blocks/Dynamic/e2e.js';
 export { default as Html } from './blocks/Html/e2e.js';
 export { default as Icon } from './blocks/Icon/e2e.js';
 export { default as Img } from './blocks/Img/e2e.js';

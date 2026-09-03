@@ -38,6 +38,7 @@
     "docs:dev": "node scripts/dev.mjs --config-directory packages/docs",
     "docs:dev:log": "pnpm docs:dev 2>&1 | tee log.txt",
     "docs:build": "node scripts/build.mjs --config-directory packages/docs",
+    "docs:content": "LOWDEFY_EXTRACT_AGENT_DOCS=true node scripts/build.mjs --config-directory packages/docs",
     "docs:start": "node scripts/start.mjs",
     "cli": "pnpm build:turbo && pnpm -r --filter=lowdefy start",
     "web:build": "pnpm --filter=@lowdefy/website build",
@@ -46,7 +47,7 @@
     "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile",
     "release:publish": "changeset publish",
     "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
-    "release:publish-experimental": "pnpm -r publish --tag experimental --no-git-checks",
+    "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
     "release:experimental": "(npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- ."
   },
   "devDependencies": {
@@ -60,13 +61,9 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "node-gyp": "13.0.0",
     "prettier": "3.1.0",
     "turbo": "2.8.19"
   },
-  "packageManager": "pnpm@10.29.2",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3"
-    ]
-  }
+  "packageManager": "pnpm@10.29.2"
 }

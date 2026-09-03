@@ -1,6 +1,23 @@
 {
   "versions": [
     {
+      "version": "6.0.0",
+      "from": ">=5.0.0 <6.0.0",
+      "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports, provider-neutral file blocks)",
+      "codemods": [
+        {
+          "id": "migrate-plugin-packages",
+          "description": "Convert custom plugin packages for the unbundled Node ESM server: exports subpaths must resolve to files (fixes ERR_UNSUPPORTED_DIR_IMPORT), next-auth imports move to @auth/core, next/* imports and NEXT_PUBLIC_* reads are removed.",
+          "path": "v6-0-0/01-migrate-plugin-packages.md"
+        },
+        {
+          "id": "s3-blocks-to-file-blocks",
+          "description": "Optional: rename the deprecated S3UploadButton/S3UploadPhoto/S3UploadDragger/S3Download blocks to the provider-neutral Upload/UploadPhoto/UploadDragger/Download blocks, and s3PostPolicyRequestId/s3GetPolicyRequestId to uploadPolicyRequestId/downloadPolicyRequestId (also on TiptapInput, TiptapMentionInput, and AgentChat attachments). The aliases keep working; this silences deprecation warnings.",
+          "path": "v6-0-0/02-s3-blocks-to-file-blocks.md"
+        }
+      ]
+    },
+    {
       "version": "5.5.0",
       "from": ">=5.1.0 <5.5.0",
       "description": "MongoDBUpdateOne throws a no-match error by default; opt out per request with disableNoMatchError",

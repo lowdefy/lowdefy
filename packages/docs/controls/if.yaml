@@ -24,6 +24,10 @@ _ref:
       ```
     description: |
       The `:if` control executes different routines based on a boolean condition. It evaluates the condition and runs the `:then` branch if true, or the optional `:else` branch if false. Generally other operators are used to evaluate the test.
+
+      The `:if` control also works in client [event action lists](/events-and-actions) — there each branch is a list of actions, and the same syntax and semantics apply.
+
+      The condition uses JS truthiness — any truthy value takes the `:then` branch. This differs from an action's `skip` field, which only skips when it evaluates to exactly `true`.
     controlKeys: |
       - `:if: boolean`: __Required__ - The boolean result of a test or value.
       - `:then: routine`: __Required__ - The routine to execute if the test result is true.
@@ -91,4 +95,28 @@ _ref:
                 - amount: 2000
                   currency: eur
                   payment_method_types: ['card']
+      ```
+
+      ###### In a client event action list
+
+      ```yaml
+      events:
+        onClick:
+          - :if:
+              _not:
+                _state: skip_reopen
+            :then:
+              - id: reopen_ticket
+                type: Request
+                params: reopen_ticket
+              - id: redirect
+                type: Link
+                params:
+                  pageId: ticket-view
+            :else:
+              - id: show_blocked
+                type: DisplayMessage
+                params:
+                  content: Ticket cannot be reopened.
+                  status: warning
       ```

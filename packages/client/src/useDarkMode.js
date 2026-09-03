@@ -115,7 +115,7 @@ function useDarkMode({ antd, configDarkMode }) {
   );
 
   // Keep the <html> background and color-scheme in sync with the resolved mode.
-  // The _document.js pre-hydration inline script sets initial values before
+  // The server templates' pre-hydration inline script sets initial values before
   // hydration; this effect takes over once React is active and updates on every
   // dark/light toggle.
   const darkBg = darkToken?.colorBgLayout;

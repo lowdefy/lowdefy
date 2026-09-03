@@ -93,7 +93,7 @@ _ref:
 
             ## How Modules Stay Scoped and Composable
 
-            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
+            Three mechanisms keep modules working at scale. **Auto-scoping** prefixes every page, connection, API endpoint, notification, and menu item ID with the entry's `id`, so module authors write plain IDs and installing the same module twice under different entry IDs produces no collisions. **`_module.var`** lets any file in the module read the entry's vars at any depth, without the app threading values through nested `_ref`s. **Typed exports** declared in `exports:` mark which pages, components, endpoints, connections, and menus are public, so internal files stay internal and renaming one does not break consumers.
 
             ## Writing module.lowdefy.yaml
 
@@ -129,6 +129,9 @@ _ref:
 
             api:
               - _ref: api/invite-user.yaml
+
+            notifications:
+              - _ref: notifications/invite-user.yaml
 
             components:
               - id: user-avatar
@@ -257,7 +260,7 @@ _ref:
 
             ## Using ID Operators
 
-            Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), and [`_module.endpointId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
+            Module authors use [`_module.pageId`](/_module), [`_module.connectionId`](/_module), [`_module.endpointId`](/_module), and [`_module.notificationId`](/_module) to reference sibling resources. These resolve to the fully scoped ID at build time:
 
             ```yaml
             # Link to a sibling page

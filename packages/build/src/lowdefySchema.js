@@ -1,3 +1,19 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -62,6 +78,114 @@ export default {
         },
       },
     },
+    actionOrControl: {
+      anyOf: [
+        { $ref: '#/definitions/action' },
+        { $ref: '#/definitions/controlIf' },
+        { $ref: '#/definitions/controlSwitch' },
+        { $ref: '#/definitions/controlReturn' },
+      ],
+    },
+    controlIf: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':if', ':then'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':if': {},
+        ':then': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":then" should be an array of actions.',
+          },
+        },
+        ':else': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":else" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":if" should be an object.',
+        required: {
+          ':then': 'Control ":if" should have required property ":then".',
+        },
+      },
+    },
+    controlReturn: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':return'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':return': {},
+      },
+      errorMessage: {
+        type: 'Control ":return" should be an object.',
+      },
+    },
+    controlSwitch: {
+      type: 'object',
+      additionalProperties: false,
+      required: [':switch'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        ':switch': {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: [':case', ':then'],
+            properties: {
+              '~r': {},
+              '~l': {},
+              ':case': {},
+              ':then': {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+                errorMessage: {
+                  type: 'Control ":then" should be an array of actions.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Control ":switch" cases should be objects.',
+              required: {
+                ':case': 'Control ":switch" case should have required property ":case".',
+                ':then': 'Control ":switch" case should have required property ":then".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Control ":switch" should be an array of case objects.',
+          },
+        },
+        ':default': {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/actionOrControl',
+          },
+          errorMessage: {
+            type: 'Control ":default" should be an array of actions.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Control ":switch" should be an object.',
+      },
+    },
     agent: {
       type: 'object',
       additionalProperties: false,
@@ -124,6 +248,7 @@ export default {
                 required: ['endpointId'],
                 properties: {
                   endpointId: { type: 'string' },
+                  name: { type: 'string' },
                   confirm: {
                     const: true,
                   },
@@ -189,6 +314,7 @@ export default {
                 required: ['agentId'],
                 properties: {
                   agentId: { type: 'string' },
+                  name: { type: 'string' },
                   description: { type: 'string' },
                   inputSchema: { type: 'object' },
                 },
@@ -237,6 +363,44 @@ export default {
         },
         '~r': {},
         '~l': {},
+        email: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "app.email" should be an object.',
+          },
+          properties: {
+            logo: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.logo" should be a string.',
+              },
+            },
+            companyName: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.companyName" should be a string.',
+              },
+            },
+            primaryColor: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.primaryColor" should be a string.',
+              },
+            },
+            signature: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.signature" should be a string.',
+              },
+            },
+            footer: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "app.email.footer" should be a string.',
+              },
+            },
+          },
+        },
         html: {
           type: 'object',
           errorMessage: {
@@ -292,6 +456,12 @@ export default {
         advanced: {
           type: 'object',
           properties: {
+            cookiePrefix: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "advanced.cookiePrefix" should be a string.',
+              },
+            },
             cookies: {
               type: 'object',
             },
@@ -398,6 +568,83 @@ export default {
               },
               errorMessage: {
                 type: 'App "auth.api.roles" should be an object.',
+              },
+            },
+          },
+        },
+        websockets: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.websockets" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.websockets.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Websocket ids for which authentication is required. When specified, all unspecified websockets will be public.',
+                errorMessage: {
+                  type: 'App "auth.websockets.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.websockets.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Websocket ids for which authentication is not required. When specified, all unspecified websockets will be protected.',
+                errorMessage: {
+                  type: 'App "auth.websockets.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.websockets.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.websockets.roles" should be an object.',
               },
             },
           },
@@ -634,6 +881,65 @@ export default {
         session: {
           type: 'object',
         },
+        strategies: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "strategies" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth strategy "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "properties" should be an object.',
+                },
+              },
+              roles: {
+                type: 'array',
+                items: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth strategy "roles" should be an array of role names.',
+                  },
+                },
+                errorMessage: {
+                  type: 'Auth strategy "roles" should be an array of role names.',
+                },
+              },
+              attributes: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth strategy "attributes" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth strategy should be an object.',
+              required: {
+                id: 'Auth strategy should have required property "id".',
+                type: 'Auth strategy should have required property "type".',
+              },
+            },
+          },
+        },
         theme: {
           type: 'object',
         },
@@ -758,6 +1064,15 @@ export default {
             type: 'Block "requests" should be an array.',
           },
         },
+        subscriptions: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/subscription',
+          },
+          errorMessage: {
+            type: 'Page "subscriptions" should be an array.',
+          },
+        },
         required: {},
         validate: {
           type: 'array',
@@ -779,7 +1094,7 @@ export default {
                 {
                   type: 'array',
                   items: {
-                    $ref: '#/definitions/action',
+                    $ref: '#/definitions/actionOrControl',
                   },
                 },
                 {
@@ -812,13 +1127,13 @@ export default {
                     try: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     catch: {
                       type: 'array',
                       items: {
-                        $ref: '#/definitions/action',
+                        $ref: '#/definitions/actionOrControl',
                       },
                     },
                     debounce: {
@@ -1014,6 +1329,259 @@ export default {
               },
             },
           ],
+        },
+        async: {
+          type: 'boolean',
+          description:
+            'Run the endpoint routine in the background. The endpoint returns { accepted: true } immediately and the routine runs after the response (kept alive via the platform request context on Vercel fluid compute, still bounded by the function maxDuration); the outcome is observable only through logs and whatever the routine writes.',
+          errorMessage: {
+            type: 'Api endpoint "async" should be a boolean.',
+          },
+        },
+        webhook: {
+          type: 'boolean',
+          description:
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
+          errorMessage: {
+            type: 'Api endpoint "webhook" should be a boolean.',
+          },
+        },
+        schedules: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['cron'],
+            properties: {
+              cron: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].cron" should be a cron expression string.',
+                },
+              },
+              payload: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Api endpoint "schedules[].payload" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Api endpoint "schedules[]" should be an object.',
+              required: {
+                cron: 'Api endpoint schedule should have required property "cron".',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Api endpoint "schedules" should be an array.',
+          },
+        },
+      },
+    },
+    websocket: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "type" should be a string.',
+          },
+        },
+        connectionId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Websocket "connectionId" should be a string.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Websocket "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Websocket should be an object.',
+        required: {
+          id: 'Websocket should have required property "id".',
+          type: 'Websocket should have required property "type".',
+        },
+      },
+    },
+    notification: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Notification "type" should be a string.',
+          },
+        },
+        theme: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "theme" should be an object.',
+          },
+        },
+        testData: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "testData" should be an object.',
+          },
+        },
+        properties: {
+          type: 'object',
+          errorMessage: {
+            type: 'Notification "properties" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Notification should be an object.',
+        required: {
+          id: 'Notification should have required property "id".',
+          type: 'Notification should have required property "type".',
+        },
+      },
+    },
+    subscription: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['websocketId'],
+      properties: {
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
+        '~r': {},
+        '~l': {},
+        websocketId: {
+          type: 'string',
+          errorMessage: {
+            type: 'Subscription "websocketId" should be a string.',
+          },
+        },
+        payload: {
+          type: 'object',
+          errorMessage: {
+            type: 'Subscription "payload" should be an object.',
+          },
+        },
+        events: {
+          type: 'object',
+          errorMessage: {
+            type: 'Subscription "events" should be an object.',
+          },
+        },
+        client: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~r': {},
+            '~l': {},
+            maxMessages: {
+              type: 'integer',
+              minimum: 1,
+              errorMessage: {
+                type: 'Subscription "client.maxMessages" should be a positive integer.',
+              },
+            },
+            throttleRender: {
+              type: 'number',
+              errorMessage: {
+                type: 'Subscription "client.throttleRender" should be a number.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Subscription "client" should be an object.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Subscription should be an object.',
+        required: {
+          websocketId: 'Subscription should have required property "websocketId".',
         },
       },
     },
@@ -1608,6 +2176,42 @@ export default {
             type: 'App "config.basePath" should be a string.',
           },
         },
+        vercel: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Vercel deployment function settings, applied by the CLI vercelOutput assembly.',
+          errorMessage: {
+            type: 'App "config.vercel" should be an object.',
+          },
+          properties: {
+            maxDuration: {
+              type: 'number',
+              minimum: 1,
+              description:
+                'Maximum function execution time in seconds for the deployed serverless function. Defaults to 60. Plan limits apply (Vercel rejects over-limit values at deploy).',
+              errorMessage: {
+                type: 'App "config.vercel.maxDuration" should be a number.',
+              },
+            },
+            memory: {
+              type: 'number',
+              description: 'Function memory in MB. Omit to use the Vercel default.',
+              errorMessage: {
+                type: 'App "config.vercel.memory" should be a number.',
+              },
+            },
+          },
+        },
+        requestTimeout: {
+          type: 'number',
+          minimum: 0,
+          description:
+            'Maximum time in milliseconds a request may run before the server returns a timeout. Protects against hung upstream calls (database, SMTP, external APIs) running to the platform function limit — important on serverless hosts billed by duration. Defaults to 30000 (30s). Set to 0 to disable. Agent streaming routes are exempt.',
+          errorMessage: {
+            type: 'App "config.requestTimeout" should be a number.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:
@@ -1626,7 +2230,8 @@ export default {
             '~l': {},
             defaultLocale: {
               type: 'string',
-              description: 'BCP 47 locale code used when no user preference or browser match is available.',
+              description:
+                'BCP 47 locale code used when no user preference or browser match is available.',
             },
             locales: {
               type: 'array',
@@ -1649,7 +2254,8 @@ export default {
                   },
                   antd: {
                     type: 'string',
-                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                    description:
+                      'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
                   },
                   dayjs: {
                     type: 'string',
@@ -1660,7 +2266,8 @@ export default {
             },
             messages: {
               type: 'object',
-              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              description:
+                'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
               additionalProperties: {
                 type: 'object',
               },
@@ -1733,6 +2340,126 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+        additionalProperties:
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
+      },
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        // Server branding advertised in the initialize result's serverInfo
+        // (MCP Implementation: title, websiteUrl, icons). Clients that render
+        // a connector card prefer these over guessing from the host's favicon.
+        title: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "title" should be a string.',
+          },
+        },
+        websiteUrl: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "websiteUrl" should be a string.',
+          },
+        },
+        icons: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['src'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              src: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "src" should be a string.',
+                },
+              },
+              mimeType: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "mimeType" should be a string.',
+                },
+              },
+              sizes: {
+                type: 'array',
+                items: { type: 'string' },
+                errorMessage: {
+                  type: 'MCP icon "sizes" should be an array of strings like "512x512".',
+                },
+              },
+              theme: {
+                type: 'string',
+                enum: ['light', 'dark'],
+                errorMessage: {
+                  type: 'MCP icon "theme" should be a string.',
+                  enum: 'MCP icon "theme" should be "light" or "dark".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "icons" items should be objects with a "src" property.',
+              required: {
+                src: 'MCP icon should have required property "src".',
+              },
+              additionalProperties:
+                'MCP icon contains an unknown property. The known properties are "src", "mimeType", "sizes" and "theme".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "icons" should be an array.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'Api endpoint ids exposed as MCP tools.',
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array of endpoint id strings.',
+          },
+        },
+      },
+    },
+    websockets: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/websocket',
+      },
+      errorMessage: {
+        type: 'App "websockets" should be an array.',
+      },
+    },
+    notifications: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/notification',
+      },
+      errorMessage: {
+        type: 'App "notifications" should be an array.',
       },
     },
     menus: {

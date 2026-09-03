@@ -14,5 +14,8 @@
   limitations under the License.
 */
 
+export { default as createGenerateObject } from './createGenerateObject.js';
+export { default as createGenerateText } from './createGenerateText.js';
 export { default as handleAgentChat } from './handleAgentChat.js';
+export { default as handleAgentGenerate } from './handleAgentGenerate.js';
 export { default as RESERVED_PLATFORM_TOOL_NAMES } from './reservedToolNames.js';

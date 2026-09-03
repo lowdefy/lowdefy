@@ -14,10 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
+import { getOperatorType, type } from '@lowdefy/helpers';
 
 function walkAndCount(value, counter, parentConfigKey) {
   if (type.isArray(value)) {
@@ -30,22 +27,14 @@ function walkAndCount(value, counter, parentConfigKey) {
   }
 
   const configKey = value['~k'] || parentConfigKey;
-  const keys = Object.keys(value);
 
-  // Check if this object is an operator (single key starting with _, ignoring ~ prefixed keys)
-  // This allows ~ignoreBuildCheck to be on the same object as an operator
-  const nonTildeKeys = keys.filter((k) => !k.startsWith('~'));
-  if (nonTildeKeys.length === 1) {
-    const key = nonTildeKeys[0];
-    const [op] = key.split('.');
-    const operator = op.replace(/^(_+)/gm, '_');
-    if (operator.length > 1 && operator[0] === '_' && !KNOWN_NON_OPERATORS.has(operator)) {
-      counter.increment(operator, configKey);
-    }
+  const operator = getOperatorType(value);
+  if (operator) {
+    counter.increment(operator, configKey);
   }
 
   // Recurse into all values
-  keys.forEach((key) => {
+  Object.keys(value).forEach((key) => {
     walkAndCount(value[key], counter, configKey);
   });
 }

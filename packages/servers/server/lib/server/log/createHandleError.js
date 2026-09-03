@@ -127,7 +127,7 @@ function createHandleError({ context }) {
             host: headers.host,
             referer: headers.referer,
             // Non localhost headers
-            'x-forward-for': headers['x-forward-for'],
+            'x-forwarded-for': headers['x-forwarded-for'],
             // Vercel headers
             'x-vercel-id': headers['x-vercel-id'],
             'x-real-ip': headers['x-real-ip'],

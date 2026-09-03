@@ -1,0 +1,36 @@
+# Version 5 to Version 6
+
+This guide covers all breaking changes when upgrading from Lowdefy v5 to v6.
+
+Lowdefy v6 replaces the Next.js framework with a [Hono](https://hono.dev) server and a [Vite](https://vite.dev)-built React client, and moves authentication from NextAuth v4 to [Auth.js](https://authjs.dev). **Your YAML config does not change** — `lowdefy build`, `lowdefy dev` and `lowdefy start` work as before, and plugin changes in dev now hot-reload in well under a second instead of triggering a full rebuild.
+
+## Summary of breaking changes
+
+| Change | Impact | Action |
+|---|---|---|
+| Server runs on Hono + Vite (not Next.js) | All apps | No config change |
+| Custom `next.config.js` no longer applies | Apps with bundler customizations | Move to `vite.config.js` |
+| Auth engine is Auth.js (not NextAuth v4) | Apps using auth | Users sign in again once; config unchanged |
+| `NEXTAUTH_SECRET` removed, `NEXTAUTH_URL` deprecated | Apps using auth | Rename `NEXTAUTH_SECRET` to `AUTH_SECRET`; prefer `AUTH_URL` |
+| `LOWDEFY_BUILD_OUTPUT_STANDALONE` removed | Docker / standalone deploys | Deploy the `.lowdefy/server` folder |
+| `NEXT_PUBLIC_SENTRY_DSN` removed | Apps using Sentry | Set `SENTRY_DSN` only |
+| CLI `--no-next-build` renamed | Deployment scripts | Use `--no-client-build` (old flag is a deprecated alias) |
+| Page navigation is client-side (SPA) | All apps | No action; full reloads no longer happen on navigation |
+
+## Server runs on Hono + Vite
+
+The production server is a [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React client, and the dev server hot-reloads plugin changes through Vite instead of rebuilding the whole app. Things to check when upgrading:
+
+- **Custom `next.config.js` files no longer apply.** If you customized the client bundler, move the customization to a `vite.config.js` in the server directory.
+- **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a complete runnable server to `<config-directory>/.lowdefy/server` — copy that folder and run `node src/index.js` (or `pnpm start`) inside it. See the updated [Docker](/docker) and [node server](/node-server) guides.
+- **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server — it is passed to the browser client at runtime, so rotating the DSN no longer requires a rebuild.
+- **The CLI `--no-next-build` flag is now `--no-client-build`.** The old flag still works as a deprecated alias.
+- **Page navigation is client-side.** The first page load embeds config in the HTML; navigating between pages fetches page config without a full browser reload.
+
+## Auth engine is Auth.js
+
+Authentication now runs on [Auth.js](https://authjs.dev) instead of NextAuth v4. The `auth:` configuration schema — providers, adapters, callbacks, events, session options and protected pages — is **unchanged**. Things to know when upgrading:
+
+- **Users sign in again once.** The session cookie prefix changes from `next-auth.*` to `authjs.*`, so existing sessions are invalidated on upgrade.
+- **`NEXTAUTH_SECRET` is no longer read — rename it to `AUTH_SECRET`.** The build fails with a config error when auth providers are configured and `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js fallback, but `AUTH_URL` is the preferred name.
+- **Email sign-in flows expect `nodemailer@^7`.** Auth.js declares a `nodemailer@^7` peer dependency. Custom email providers (or plugins) that pin `nodemailer@6` keep working but log a peer-dependency warning during install — upgrade the `nodemailer` dependency in your app or plugin to `^7` to clear it.
