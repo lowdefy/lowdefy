@@ -224,6 +224,7 @@ A failing journey stops at its first failing step and prints the step's index, t
 
 ### Options
 
+- `--coverage`: Report journey coverage after the run and write the page-to-journeys index. See [Journey coverage](#journey-coverage).
 - `--filter <name>`: Only run journeys and request tests whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every test with "control" in its name.
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
@@ -237,6 +238,42 @@ A failing journey stops at its first failing step and prints the step's index, t
 | `1`       | At least one test failed, a test file was invalid, seeding needed a package that is not installed, or an explicit `--filter` matched nothing. |
 
 A journey file that is not valid YAML, is empty, or does not match the journey format (a missing `name`, a typo'd top-level key such as `pageID`, a step with two keys, an unknown step key, or a step malformed below its key such as `fill: title`) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
+
+## Journey coverage
+
+```
+pnpx lowdefy@5 test --coverage
+```
+
+`--coverage` answers "which parts of this app has nobody written a journey for?".
+
+```
+Journey coverage (static, declared config): 14/31 triples, 45.2%
+  controls (9 uncovered)
+    control_form onSubmit
+    delete_control onClick
+    request delete_control
+  home (5 uncovered)
+    ...
+Journey index written to /my-app/.lowdefy/test/journeyIndex.json
+```
+
+The denominator is **static**: it is every `(pageId, blockId, eventName)` triple the built
+config declares, plus one entry per page request. The build writes it to
+`.lowdefy/server/build/journeyCoverage.json` on every build. The numerator is the triples
+the committed journeys exercise — a `click` covers that block's `onClick`, `fill`, `set`
+and `select` cover its `onChange`, a `press` on a block covers `onKeyDown` (and `onEnter`
+when the key is `Enter`), and a `wait: { request: ... }` covers that request.
+
+Read the number as coverage of what the app _can_ do, not of what its users _do_: a page
+nobody visits and a page everybody visits weigh the same, and a click that navigates to
+another page is credited to the page the journey started on. When the production
+interaction recorder lands, the same command reports a trace-weighted denominator — the
+share of the triples users actually fire — and this static number becomes the offline
+fallback.
+
+`--coverage` also writes `.lowdefy/test/journeyIndex.json`, a `page -> journeys` map, so a
+pre-commit hook or CI step can run only the journeys that touch the pages a change edited.
 
 ## Continuous integration
 

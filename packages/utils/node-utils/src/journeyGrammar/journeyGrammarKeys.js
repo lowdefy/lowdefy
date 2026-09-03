@@ -19,7 +19,7 @@
 // lowdefy_run_journey MCP tool, snapshotPage) both validate against these
 // lists, so a step the CLI accepts is a step the runner can execute.
 
-const JOURNEY_KEYS = ['name', 'pageId', 'steps', 'urlQuery', 'user'];
+const JOURNEY_KEYS = ['fixtures', 'name', 'pageId', 'steps', 'urlQuery', 'user'];
 
 const JOURNEY_STEP_KEYS = [
   'click',
@@ -37,6 +37,11 @@ const WAIT_KEYS = ['ms', 'request', 'state'];
 const EXPECT_KEYS = ['state', 'visible', 'text', 'url', 'dom', 'durationMsUnder'];
 
 const EXPECT_TEXT_KEYS = ['contains', 'equals', 'notContains'];
+
+// `equals` is optional in the file: a state expectation written with a path and
+// no value is a proposal `lowdefy test --update` fills from the observed state,
+// stamping `from: recorded` on what it wrote.
+const EXPECT_STATE_KEYS = ['path', 'equals', 'from'];
 
 const EXPECT_DOM_KEYS = ['hasClass', 'notHasClass', 'matches', 'attribute'];
 
@@ -64,6 +69,7 @@ const REJECT_KEYS = ['messageContains', 'name'];
 
 export {
   EXPECT_DOM_KEYS,
+  EXPECT_STATE_KEYS,
   EXPECT_KEYS,
   EXPECT_TEXT_KEYS,
   JOURNEY_KEYS,

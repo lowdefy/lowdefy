@@ -17,8 +17,10 @@
 import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import findAvailablePort from './findAvailablePort.js';
+import findIncompleteExpectation from './journeyGrammar/findIncompleteExpectation.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getMigrationLedgerPath from './migrations/getMigrationLedgerPath.js';
+import getJourneyTouches from './journeyGrammar/getJourneyTouches.js';
 import getRejectExpectation from './journeyGrammar/getRejectExpectation.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import getStepKey from './journeyGrammar/getStepKey.js';
@@ -39,6 +41,7 @@ import writeMigrationLedger from './migrations/writeMigrationLedger.js';
 import {
   EXPECT_DOM_KEYS,
   EXPECT_KEYS,
+  EXPECT_STATE_KEYS,
   EXPECT_TEXT_KEYS,
   JOURNEY_KEYS,
   JOURNEY_STEP_KEYS,
@@ -50,6 +53,7 @@ import {
 export {
   EXPECT_DOM_KEYS,
   EXPECT_KEYS,
+  EXPECT_STATE_KEYS,
   EXPECT_TEXT_KEYS,
   JOURNEY_KEYS,
   JOURNEY_STEP_KEYS,
@@ -59,8 +63,10 @@ export {
   cleanDirectory,
   copyFileOrDirectory,
   findAvailablePort,
+  findIncompleteExpectation,
   getFileExtension,
   getFileSubExtension,
+  getJourneyTouches,
   getMigrationLedgerPath,
   getRejectExpectation,
   getSecretsFromEnv,

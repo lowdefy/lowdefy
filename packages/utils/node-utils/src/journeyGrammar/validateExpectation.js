@@ -18,7 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 import describeValue from './describeValue.js';
 import getStepKey from './getStepKey.js';
-import { EXPECT_DOM_KEYS, EXPECT_KEYS, EXPECT_TEXT_KEYS } from './journeyGrammarKeys.js';
+import {
+  EXPECT_DOM_KEYS,
+  EXPECT_KEYS,
+  EXPECT_STATE_KEYS,
+  EXPECT_TEXT_KEYS,
+} from './journeyGrammarKeys.js';
 
 function quoteList(keys) {
   return keys.map((key) => `"${key}"`).join(', ');
@@ -28,9 +33,29 @@ function presentKeys({ params, keys }) {
   return keys.filter((key) => !type.isUndefined(params[key]));
 }
 
+// `equals` may be absent: that is an expectation waiting for
+// `lowdefy test --update` to fill it from the observed state, which the runners
+// refuse to pass until it is filled. `from` records that the value in the file
+// was written by that run rather than by a human.
 function validateState({ label, value }) {
-  if (!type.isObject(value) || !type.isString(value.path) || !('equals' in value)) {
-    return `${label('state')} requires { path, equals }. Received ${describeValue(value)}.`;
+  const requires = `${label(
+    'state'
+  )} requires { path, equals }, or { path } alone for lowdefy test --update to fill.`;
+  if (!type.isObject(value) || !type.isString(value.path)) {
+    return `${requires} Received ${describeValue(value)}.`;
+  }
+  const unknown = Object.keys(value).filter((key) => !EXPECT_STATE_KEYS.includes(key));
+  if (unknown.length > 0) {
+    return `${label('state')} has unknown key "${unknown[0]}". Keys are: ${quoteList(
+      EXPECT_STATE_KEYS
+    )}.`;
+  }
+  if (!type.isUndefined(value.from) && value.from !== 'recorded') {
+    return `${label(
+      'state'
+    )} "from" records where the value came from and can only be "recorded". Received ${describeValue(
+      value.from
+    )}.`;
   }
   return undefined;
 }

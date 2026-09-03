@@ -377,3 +377,36 @@ test('test prints the mismatch path for a failing request test and exits 1', asy
   ]);
   expect(process.exitCode).toEqual(1);
 });
+
+test('test --coverage reports static journey coverage and writes the journey index', async () => {
+  const { default: test } = await import('./test.js');
+  context.options.coverage = true;
+  context.directories.build = path.join(configDirectory, 'build');
+  fs.mkdirSync(context.directories.build, { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'journeyCoverage.json'),
+    JSON.stringify({
+      pages: {
+        form: { events: [{ blockId: 'submit', event: 'onClick' }], requestIds: [] },
+        other: { events: [{ blockId: 'cancel', event: 'onClick' }], requestIds: [] },
+      },
+    })
+  );
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  await test({ context });
+  expect(logs.info).toContain('Journey coverage (static, declared config): 1/2 triples, 50%');
+  expect(logs.info).toContain('  other (1 uncovered)');
+  expect(
+    JSON.parse(
+      fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'journeyIndex.json'), 'utf8')
+    )
+  ).toEqual({ pages: { form: ['first journey'] } });
+});
+
+test('test does not report coverage without --coverage', async () => {
+  const { default: test } = await import('./test.js');
+  context.directories.build = path.join(configDirectory, 'build');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  await test({ context });
+  expect(logs.info.some((line) => line.startsWith('Journey coverage'))).toBe(false);
+});

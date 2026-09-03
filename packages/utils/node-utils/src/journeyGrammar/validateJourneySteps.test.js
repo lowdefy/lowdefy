@@ -85,8 +85,16 @@ test.each([
     'Step 0 "expect" requires exactly one of "state", "visible", "text", "url", "dom", "durationMsUnder". Received {"count":2}.',
   ],
   [
-    { expect: { state: { path: 'x' } } },
-    'Step 0 "expect.state" requires { path, equals }. Received {"path":"x"}.',
+    { expect: { state: { equals: 1 } } },
+    'Step 0 "expect.state" requires { path, equals }, or { path } alone for lowdefy test --update to fill. Received {"equals":1}.',
+  ],
+  [
+    { expect: { state: { path: 'x', equals: 1, note: 'why' } } },
+    'Step 0 "expect.state" has unknown key "note". Keys are: "path", "equals", "from".',
+  ],
+  [
+    { expect: { state: { path: 'x', equals: 1, from: 'guessed' } } },
+    'Step 0 "expect.state" "from" records where the value came from and can only be "recorded". Received "guessed".',
   ],
   [{ expect: { visible: 2 } }, 'Step 0 "expect.visible" requires a blockId string. Received 2.'],
   [
@@ -132,5 +140,17 @@ test.each([
 test('validateJourneySteps accepts durationMsUnder once a step precedes it', () => {
   expect(
     validateJourneySteps({ steps: [{ click: 'submit' }, { expect: { durationMsUnder: 500 } }] })
+  ).toEqual({});
+});
+
+test('validateJourneySteps accepts an expect.state with a path and no equals, for --update to fill', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { state: { path: 'title' } } }] })).toEqual({});
+});
+
+test('validateJourneySteps accepts from: recorded on a filled expect.state', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ expect: { state: { path: 'title', equals: 'done', from: 'recorded' } } }],
+    })
   ).toEqual({});
 });

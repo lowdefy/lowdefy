@@ -78,6 +78,7 @@ import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeMigrations from './build/buildMigrations/writeMigrations.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeJourneyCoverage from './build/writeJourneyCoverage.js';
 import writeMcp from './build/writeMcp.js';
 import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
@@ -245,6 +246,7 @@ async function build(options) {
     await writeNotifications({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
+    await writeJourneyCoverage({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });

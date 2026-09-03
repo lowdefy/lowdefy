@@ -98,7 +98,7 @@ const options = {
 program
   .command('agent-setup')
   .description(
-    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skills).'
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skills and hooks).'
   )
   .usage('[options]')
   .addOption(options.configDirectory)
@@ -114,6 +114,10 @@ program
   .option(
     '--force-skills',
     'Overwrite skills already in .claude/skills/ with the versions shipped by this CLI, discarding local edits.'
+  )
+  .option(
+    '--git-hooks',
+    'Also install a pre-commit hook that runs "lowdefy check" and the journeys covering the pages the staged files touch.'
   )
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
@@ -357,6 +361,12 @@ program
   )
   .usage('[options]')
   .addOption(options.configDirectory)
+  .addOption(
+    new Option(
+      '--coverage',
+      'Report journey coverage of the config the app declares, and write .lowdefy/test/journeyIndex.json.'
+    )
+  )
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
   .addOption(

@@ -70,6 +70,18 @@ function validateJourney({ journey }) {
       )}.`,
     };
   }
+  // The fixtures a journey needs before its page opens, by file name, in the
+  // order they are inserted - the same list a request test names.
+  if (!type.isUndefined(journey.fixtures)) {
+    if (!type.isArray(journey.fixtures) || journey.fixtures.some((name) => !type.isString(name))) {
+      return {
+        valid: false,
+        message: `Journey "fixtures" should be an array of fixture names. Received ${describeValue(
+          journey.fixtures
+        )}.`,
+      };
+    }
+  }
   if (type.isUndefined(journey.steps)) {
     return { valid: false, message: 'Journey should have required property "steps".' };
   }

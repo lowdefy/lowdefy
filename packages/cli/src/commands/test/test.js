@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import discoverJourneys from './discoverJourneys.js';
 import formatJourneyResult from './formatJourneyResult.js';
+import reportJourneyCoverage from './journeyCoverage/reportJourneyCoverage.js';
 import requestTestSuite from './requestTestSuite.js';
 import resolveTestServer from './resolveTestServer.js';
 import runJourney from './runJourney.js';
@@ -150,6 +151,15 @@ async function test({ context }) {
       await server.stop();
       await prepared.stop();
     }
+  }
+
+  // Coverage is a property of the committed journeys, not of this run, so it is
+  // computed from every discovered journey even when --filter narrowed the run.
+  if (context.options.coverage === true) {
+    reportJourneyCoverage({
+      context,
+      journeys: items.filter(({ suite }) => suite.name === 'journeys').map(({ item }) => item),
+    });
   }
 
   const passed = results.filter((result) => result.passed).length;
