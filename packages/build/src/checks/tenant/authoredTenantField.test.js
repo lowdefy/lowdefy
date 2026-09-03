@@ -106,3 +106,63 @@ test('authoredTenantField does not fire when the filter never names the field', 
   authoredTenantField.run({ components, context });
   expect(context.errors).toEqual([]);
 });
+
+test('authoredTenantField does not fire on a projection or sort that only reads the tenant field', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBFind',
+    properties: {
+      query: { status: 'active' },
+      options: { projection: { organization_id: 0 }, sort: { organization_id: 1 } },
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toEqual([]);
+});
+
+test('authoredTenantField does not fire on a $group key or an index hint naming the tenant field', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBAggregation',
+    properties: {
+      pipeline: [{ $group: { _id: '$organization_id', n: { $sum: 1 } } }],
+      options: { hint: { organization_id: 1 } },
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toEqual([]);
+});
+
+test('authoredTenantField errors on a $match stage nested in a $lookup sub-pipeline', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBAggregation',
+    properties: {
+      pipeline: [
+        { $lookup: { from: 'other', as: 'o', pipeline: [{ $match: { organization_id: 'a' } }] } },
+      ],
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toHaveLength(1);
+});
+
+test('authoredTenantField errors on an update that sets the tenant field, and on a bulk operation', () => {
+  const context = createTenantContext();
+  const components = mergeComponents(
+    pageRequest({
+      id: 'update_control',
+      type: 'MongoDBUpdateOne',
+      properties: { filter: { _id: 'a' }, update: { $set: { organization_id: 'b' } } },
+    }),
+    endpointStep({
+      id: 'bulk_controls',
+      type: 'MongoDBBulkWrite',
+      properties: {
+        operations: [{ insertOne: { document: { organization_id: 'b' } } }],
+      },
+    })
+  );
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toHaveLength(2);
+});

@@ -19,8 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../../../utils/collectExceptions.js';
 import validateId from '../../../utils/validateId.js';
-import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
-import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
+import validateTenantPipeline from '../../validateTenantPipeline.js';
 
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
@@ -83,30 +82,18 @@ function buildRequest(request, pageContext) {
     );
   }
 
-  // Best-effort (literal pipelines only): a walled pipeline the wall can not
-  // scope mechanically must declare tenant: authored, and a walled pipeline
-  // that joins a tenant: shared collection gets an injected $match it can never
-  // satisfy. Both walkers still throw, so their exceptions are routed through
-  // collectExceptions here: suppression is decided there, and the rest of the
-  // page keeps building.
-  try {
-    validateTenantPipelineEntry({
-      config: request,
-      location: `Request "${request.id}" at page "${pageId}"`,
-      tenantConnections: context.tenantConnections,
-      configKey,
-    });
-    validateTenantSharedLookup({
-      config: request,
-      location: `Request "${request.id}" at page "${pageId}"`,
-      tenantConnections: context.tenantConnections,
-      tenantCollectionMap: context.tenantCollectionMap,
-      collections: context.collections,
-      configKey,
-    });
-  } catch (error) {
-    collectExceptions(context, error);
-  }
+  // Best-effort (literal pipelines only): every refusal the tenant wall raises
+  // at request time on a walled pipeline, raised at build instead. The walker
+  // returns its findings, so a pipeline with several reports all of them and
+  // the rest of the page keeps building.
+  validateTenantPipeline({
+    config: request,
+    location: `Request "${request.id}" at page "${pageId}"`,
+    tenantConnections: context.tenantConnections,
+    tenantCollectionMap: context.tenantCollectionMap,
+    collections: context.collections,
+    configKey,
+  }).forEach((error) => collectExceptions(context, error));
 
   if (type.isUndefined(request.payload)) request.payload = {};
 

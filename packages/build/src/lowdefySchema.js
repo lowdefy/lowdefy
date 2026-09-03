@@ -2297,7 +2297,17 @@ export default {
             type: { type: 'string' },
             enum: { type: 'array', minItems: 1 },
             items: { $ref: '#/definitions/collectionField' },
+            properties: {
+              type: 'object',
+              additionalProperties: { $ref: '#/definitions/collectionField' },
+            },
             required: { type: 'boolean' },
+            description: { type: 'string' },
+            pii: {
+              type: 'boolean',
+              description:
+                'Marks the field as personal data. Consumed by the journey recorder, log redaction and fixture export; declared once, read by every consumer.',
+            },
             '~k': {},
             '~r': {},
             '~l': {},
@@ -2305,10 +2315,10 @@ export default {
         },
       ],
       description:
-        'The declared shape of one collection field: a type name ("string", "number", "integer", "boolean", "date", "object", "array"), a one-element [type] array for a list of that type, or an object with "type", "enum", "items" and "required".',
+        'The declared shape of one collection field: a type name ("string", "number", "integer", "boolean", "date", "object", "array"), a one-element [type] array for a list of that type, or an object with "type", "enum", "items", "properties", "description" and "pii". Prefer the collection-level "required" array to a per-field "required: true".',
       errorMessage: {
         oneOf:
-          'Collection field should be a type name (string, number, integer, boolean, date, object, array), a one-element [type] array, or an object with "type", "enum", "items" or "required".',
+          'Collection field should be a type name (string, number, integer, boolean, date, object, array), a one-element [type] array, or an object with "type", "enum", "items", "properties", "description" or "pii".',
       },
     },
     collection: {
@@ -2357,6 +2367,15 @@ export default {
             type: 'Collection "relations" should be an object of field name to "<collection>.<field>".',
           },
         },
+        required: {
+          type: 'array',
+          items: { type: 'string', minLength: 1 },
+          description:
+            'The names of the fields a document must carry (the JSON Schema array form). A per-field "required: true" is accepted for one release and folded into this array with a build warning.',
+          errorMessage: {
+            type: 'Collection "required" should be an array of field names.',
+          },
+        },
         indexes: {
           type: 'array',
           items: {
@@ -2389,7 +2408,7 @@ export default {
       errorMessage: {
         type: 'Collection should be an object.',
         additionalProperties:
-          'Collection has an unknown key. Valid keys: tenant, fields, relations, indexes.',
+          'Collection has an unknown key. Valid keys: tenant, fields, required, relations, indexes.',
       },
     },
     connection: {

@@ -267,7 +267,7 @@ test('a literal $search step pipeline on a walled connection without tenant auth
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" in its pipeline on tenant connection "walled", which the tenant wall does not scope mechanically.'
   );
 });
 

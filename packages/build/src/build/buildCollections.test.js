@@ -376,3 +376,31 @@ test('buildCollections writes fields every consumer can compile with ajv untouch
   ).toBe(true);
   expect(validator({ address: { city: 'Cape Town' } }).valid).toBe(false);
 });
+
+test('buildCollections collects pii field names onto the collection and keeps pii out of the schema fragment', () => {
+  const context = createContext();
+  const components = {
+    collections: {
+      users: {
+        fields: {
+          email: { type: 'string', pii: true },
+          name: { type: 'string', pii: false },
+          age: 'number',
+        },
+      },
+    },
+  };
+  buildCollections({ components, context });
+  expect(context.collections.users.pii).toEqual(['email']);
+  expect(context.collections.users.fields.email).toEqual({ type: 'string' });
+});
+
+test('buildCollections throws when pii is not a boolean', () => {
+  const context = createContext();
+  const components = {
+    collections: { users: { fields: { email: { type: 'string', pii: 'yes' } } } },
+  };
+  buildCollections({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain('pii must be a boolean');
+});

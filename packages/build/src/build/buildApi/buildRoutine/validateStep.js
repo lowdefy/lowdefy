@@ -19,8 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 import validateRunAs from '../validateRunAs.js';
-import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
-import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
+import validateTenantPipeline from '../../validateTenantPipeline.js';
 
 function validateStep(
   step,
@@ -241,17 +240,11 @@ function validateStep(
     );
   }
 
-  // Best-effort (literal pipelines only): a walled pipeline the wall can not
-  // scope mechanically must declare tenant: authored. Runtime re-checks.
-  validateTenantPipelineEntry({
-    config: step,
-    location: `Step "${step.id}" at endpoint "${endpointId}"`,
-    tenantConnections,
-    configKey,
-  });
-  // Best-effort (literal pipelines only): a walled pipeline that joins a
-  // tenant: shared collection gets an injected $match it can never satisfy.
-  validateTenantSharedLookup({
+  // Best-effort (literal pipelines only): every refusal the tenant wall raises
+  // at request time on a walled pipeline, raised at build instead. validateStep
+  // has no build context to collect through, so the first finding is thrown and
+  // buildApi collects it per endpoint.
+  const [tenantPipelineError] = validateTenantPipeline({
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnections,
@@ -259,6 +252,9 @@ function validateStep(
     collections,
     configKey,
   });
+  if (!type.isUndefined(tenantPipelineError)) {
+    throw tenantPipelineError;
+  }
 }
 
 export default validateStep;

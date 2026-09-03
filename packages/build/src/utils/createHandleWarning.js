@@ -39,7 +39,10 @@ function createHandleWarning({ context }) {
       warning.config = location.config;
     }
 
-    const dedupKey = warning.source ?? warning.message;
+    // Source and message: two different warnings resolving to the same config
+    // line are two findings, and collapsing them loses one of them - the
+    // tenant inventory lists a site per warning on the same step.
+    const dedupKey = `${warning.source ?? ''}::${warning.message}`;
     if (context.seenSourceLines?.has(dedupKey)) return;
     context.seenSourceLines?.add(dedupKey);
 

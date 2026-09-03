@@ -581,7 +581,7 @@ test('a literal $search pipeline on a walled connection without tenant authored 
     ],
   };
   expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
-    'Request "my_request" at page "page_1" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+    'Request "my_request" at page "page_1" contains "$search" in its pipeline on tenant connection "walled", which the tenant wall does not scope mechanically.'
   );
 });
 
@@ -612,7 +612,7 @@ test('a literal $graphLookup on a walled connection without tenant authored thro
     ],
   };
   expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
-    'Request "my_request" at page "page_1" contains "$graphLookup" on tenant connection "walled"'
+    'Request "my_request" at page "page_1" contains "$graphLookup" in its pipeline on tenant connection "walled"'
   );
 });
 

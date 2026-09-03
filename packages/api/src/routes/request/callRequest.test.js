@@ -157,6 +157,10 @@ const defaultResolverImp = ({ request, connection }) => ({
   connection,
 });
 
+afterEach(() => {
+  mockTestRequest.meta.checkWrite = false;
+});
+
 beforeEach(() => {
   mockReadConfigFile.mockReset();
   mockTestRequest.mockReset();
@@ -1104,13 +1108,15 @@ const collectionsReadConfigImp =
   };
 
 test('callRequest resolves collectionSchema from the evaluated connection collection', async () => {
+  // Only write types consult the contract.
+  mockTestRequest.meta.checkWrite = true;
   mockReadConfigFile.mockImplementation(
     collectionsReadConfigImp({
       connectionConfig: {
         id: 'connection:testConnection',
         type: 'TestConnection',
         connectionId: 'testConnection',
-        properties: { collection: { _payload: 'collection' } },
+        properties: { write: true, collection: { _payload: 'collection' } },
       },
     })
   );
@@ -1121,10 +1127,28 @@ test('callRequest resolves collectionSchema from the evaluated connection collec
     fields: collectionsArtifact.answers.fields,
     required: [],
   });
-  expect(mockTestRequest.mock.calls[0][0].connection).toEqual({ collection: 'answers' });
+  expect(mockTestRequest.mock.calls[0][0].connection).toEqual({ write: true, collection: 'answers' });
+});
+
+test('callRequest passes a null collectionSchema to a read type without touching the artifact', async () => {
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  mockReadConfigFile.mockImplementation(
+    collectionsReadConfigImp({
+      connectionConfig: {
+        id: 'connection:testConnection',
+        type: 'TestConnection',
+        connectionId: 'testConnection',
+        properties: { collection: 'answers' },
+      },
+    })
+  );
+  await callRequest(context, defaultParams);
+  expect(mockTestRequest.mock.calls[0][0].collectionSchema).toBe(null);
+  expect(mockReadConfigFile.mock.calls.map(([path]) => path)).not.toContain('collections.json');
 });
 
 test('callRequest passes a null collectionSchema when the collection is undeclared or declares no fields', async () => {
+  mockTestRequest.meta.checkWrite = true;
   mockTestRequest.mockImplementation(defaultResolverImp);
   for (const collection of ['controls', 'unknown']) {
     mockReadConfigFile.mockImplementation(
@@ -1133,7 +1157,7 @@ test('callRequest passes a null collectionSchema when the collection is undeclar
           id: 'connection:testConnection',
           type: 'TestConnection',
           connectionId: 'testConnection',
-          properties: { collection },
+          properties: { write: true, collection },
         },
       })
     );

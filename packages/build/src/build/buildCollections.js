@@ -21,7 +21,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import collectExceptions from '../utils/collectExceptions.js';
 
 const COLLECTION_KEYS = ['tenant', 'fields', 'relations', 'indexes', 'required'];
-const FIELD_KEYS = ['type', 'enum', 'items', 'properties', 'required', 'description'];
+const FIELD_KEYS = ['type', 'enum', 'items', 'properties', 'required', 'description', 'pii'];
 
 // A collection is a property of the database, not of a connection: one
 // collection is routinely addressed by several connections (a read-only one,
@@ -29,7 +29,7 @@ const FIELD_KEYS = ['type', 'enum', 'items', 'properties', 'required', 'descript
 // root and the build joins it to connections by properties.collection. The
 // normalised result is written to build/collections.json for the data-layer
 // consumers (data model tool, write validation, migrations) and consulted by
-// validateTenantSharedLookup as its first source of sharedness.
+// validateTenantPipeline as its first source of sharedness.
 
 function collectionError(message, { configKey, received }) {
   return new ConfigError(message, { configKey, received, checkSlug: 'collections' });
@@ -92,8 +92,20 @@ function normalizeField({ name, fieldName, field, configKey }) {
       { configKey, received: field }
     );
   }
+  if (type.isObject(field) && !type.isUndefined(field.pii) && !type.isBoolean(field.pii)) {
+    throw collectionError(
+      `Collection "${name}" field "${fieldName}" pii must be a boolean. Received ${JSON.stringify(
+        field.pii
+      )}.`,
+      { configKey: field['~k'] ?? configKey, received: field.pii }
+    );
+  }
   try {
-    return normalizeSchemaShorthand({ schema: stripMarkers(field) });
+    // pii is a Lowdefy annotation, not a JSON Schema keyword; it is collected
+    // on the collection (see normalizeFields) and kept out of the fragment.
+    const declaration = type.isObject(field) ? { ...field } : field;
+    if (type.isObject(declaration)) delete declaration.pii;
+    return normalizeSchemaShorthand({ schema: stripMarkers(declaration) });
   } catch (error) {
     throw collectionError(
       `Collection "${name}" field "${fieldName}" is not a valid declaration: ${error.message}`,
@@ -154,7 +166,7 @@ function normalizeFields({ name, declaration, configKey, context }) {
     configKey,
   });
   if (type.isUndefined(fields)) {
-    return { fields: undefined, required: declaredRequired };
+    return { fields: undefined, required: declaredRequired, pii: [] };
   }
   if (!type.isObject(fields)) {
     throw collectionError(
@@ -165,8 +177,12 @@ function normalizeFields({ name, declaration, configKey, context }) {
     );
   }
   const normalized = {};
+  const pii = [];
   Object.keys(fields).forEach((fieldName) => {
     if (fieldName.startsWith('~')) return;
+    if (type.isObject(fields[fieldName]) && fields[fieldName].pii === true) {
+      pii.push(fieldName);
+    }
     normalized[fieldName] = normalizeField({
       name,
       fieldName,
@@ -185,7 +201,7 @@ function normalizeFields({ name, declaration, configKey, context }) {
       );
     },
   });
-  return { fields: root.properties, required: root.required ?? [] };
+  return { fields: root.properties, required: root.required ?? [], pii };
 }
 
 function normalizeIndexes({ name, indexes, configKey }) {
@@ -291,10 +307,11 @@ function normalizeCollection({ name, declaration, context }) {
       { configKey, received: declaration }
     );
   }
-  const { fields, required } = normalizeFields({ name, declaration, configKey, context });
+  const { fields, required, pii } = normalizeFields({ name, declaration, configKey, context });
   const collection = {
     fields,
     required,
+    pii,
     relations: parseRelations({ name, relations: declaration.relations, configKey }),
     indexes: normalizeIndexes({ name, indexes: declaration.indexes, configKey }),
     connections: [],

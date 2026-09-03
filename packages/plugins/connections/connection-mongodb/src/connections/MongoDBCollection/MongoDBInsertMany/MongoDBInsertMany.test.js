@@ -177,7 +177,7 @@ test('insertMany mongodb error', async () => {
   };
   await MongoDBInsertMany({ request, connection });
   await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error'
+    'Duplicate key on collection "insertMany"'
   );
 });
 

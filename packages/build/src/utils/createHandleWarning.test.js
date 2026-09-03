@@ -167,6 +167,24 @@ test('handleWarning deduplicates by source when resolved', () => {
   expect(lines).toHaveLength(1);
 });
 
+test('handleWarning keeps two different warnings that resolve to the same source', () => {
+  const { context, lines } = createContext({
+    keyMap: {
+      k1: { key: 'pages.0', '~r': 'r1', '~l': 10 },
+      k2: { key: 'pages.1', '~r': 'r1', '~l': 10 },
+    },
+    refMap: {
+      r1: { path: 'pages/home.yaml' },
+    },
+  });
+  const handleWarning = createHandleWarning({ context });
+
+  handleWarning(new ConfigWarning('First finding', { configKey: 'k1' }));
+  handleWarning(new ConfigWarning('Second finding', { configKey: 'k2' }));
+
+  expect(lines).toHaveLength(2);
+});
+
 test('handleWarning deduplicates by message when source not resolved', () => {
   const { context, lines } = createContext();
   const handleWarning = createHandleWarning({ context });

@@ -91,8 +91,9 @@ const VALID_CHECK_SLUGS = {
   'migration-routine': 'Migration routine shape and step validation',
 
   // Secrets
-  secrets: 'Secret declaration and usage checks',
-  'plugin-api-version': 'A plugin package declaring a plugin API version the framework does not provide.',
+  secrets: '_secret names that are not set in the environment',
+  'plugin-api-version':
+    'A plugin package declaring a plugin API version the framework does not provide.',
 };
 
 export default VALID_CHECK_SLUGS;

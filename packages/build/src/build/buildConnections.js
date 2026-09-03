@@ -170,7 +170,7 @@ function buildConnections({ components, context }) {
   context.connectionIds = new Set();
   // Walled connection id -> { type, field } - scoping-capable type, no
   // tenant: shared - for the best-effort entry-stage check on requests and
-  // steps (validateTenantPipelineEntry) and the tenant audit rules in
+  // steps (validateTenantPipeline) and the tenant audit rules in
   // checks/tenant, which need the tenant field name each connection stamps
   // and matches. Populated only under the tenant policy - the wall does not
   // engage under pinned, so demanding an authored clause there would be a
@@ -179,7 +179,7 @@ function buildConnections({ components, context }) {
   // Collection name -> { shared: [connectionId], scoped: [connectionId] } for
   // every scoping-capable connection with a literal properties.collection.
   // A pipeline names collections, connections name collections; joining the
-  // two at build is what lets validateTenantSharedLookup refuse a scoped
+  // two at build is what lets validateTenantPipeline refuse a scoped
   // pipeline that $lookups a tenant: shared collection the injected $match
   // can never satisfy. An operator-valued collection name is unknowable here
   // and is left out rather than guessed. Same policy guard as

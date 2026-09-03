@@ -29,10 +29,11 @@ const collections = {
   frameworks: {
     configKey: 'k1',
     fields: {
-      name: { type: 'string', required: true },
-      slug: { type: 'string', required: true },
+      name: { type: 'string' },
+      slug: { type: 'string' },
       notes: { type: 'string' },
     },
+    required: ['name', 'slug'],
   },
 };
 

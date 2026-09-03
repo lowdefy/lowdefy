@@ -367,6 +367,7 @@ _ref:
             | `dynamic-endpoint-refs` | Invalid Dynamic block endpoint reference warnings |
             | `websocket-refs` | Invalid websocket action reference warnings |
             | `event-payload` | _event paths checked against the block event payload schema |
+            | `request-state-empty` | _state reads in request properties, which are always empty |
             | `block-types` | Block type names that are used but not defined |
             | `action-types` | Action type names that are used but not defined |
             | `operator-types` | Operator names that are used but not defined |
@@ -403,7 +404,8 @@ _ref:
             | `collections-field-migration` | Declared collection fields that no migration creates |
             | `migration-files` | Migration file discovery, ids, YAML parsing and ledger checks |
             | `migration-routine` | Migration routine shape and step validation |
-            | `secrets` | Secret declaration and usage checks |
+            | `secrets` | _secret names that are not set in the environment |
+            | `plugin-api-version` | A plugin package declaring a plugin API version the framework does not provide. |
             <!-- check-slugs:end -->
 
             ### Example: Dynamic State

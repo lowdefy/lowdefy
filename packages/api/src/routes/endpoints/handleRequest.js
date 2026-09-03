@@ -89,9 +89,14 @@ async function handleRequest(context, routineContext, { request }) {
   if (trace) {
     trace.properties = requestProperties;
   }
-  const collectionSchema = await resolveCollectionSchema(context, {
-    collectionName: connectionProperties.collection,
-  });
+  // Only write types consult the collection contract, so a read path never
+  // pays for the artifact lookup.
+  const collectionSchema =
+    requestResolver.meta.checkWrite === true
+      ? await resolveCollectionSchema(context, {
+          collectionName: connectionProperties.collection,
+        })
+      : null;
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,

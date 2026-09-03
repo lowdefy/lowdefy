@@ -18,22 +18,41 @@ import { jest } from '@jest/globals';
 import runChecks, { rules } from './index.js';
 import jsLint from './jsLint.js';
 import tenantRules from './tenant/index.js';
+import collectionsRules from './collections/index.js';
+import secretsRules from './secrets/index.js';
 
 test('runChecks registers the js-lint rule first so normal builds lint _js bodies', () => {
   expect(rules[0]).toBe(jsLint);
   expect(rules[0].checkOnly).toBe(false);
 });
 
-test('runChecks registers the five tenant rules after js-lint, F1 for builds and the rest check-only', () => {
-  expect(rules.slice(1, 6)).toEqual(tenantRules);
+test('runChecks registers the tenant rules after js-lint, the build-failing ones first', () => {
+  expect(rules.slice(1, 1 + tenantRules.length)).toEqual(tenantRules);
   expect(tenantRules.map((rule) => rule.slug)).toEqual([
     'tenant-authored',
     'tenant-unscoped',
+    'tenant-unscoped',
     'tenant-caller-source',
     'tenant-unstamped-write',
+    'request-state-empty',
     'tenant-inventory',
   ]);
-  expect(tenantRules.map((rule) => rule.checkOnly)).toEqual([false, true, true, true, true]);
+  expect(tenantRules.map((rule) => rule.checkOnly)).toEqual([
+    false,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+  ]);
+});
+
+test('runChecks registers the secrets rule after the collections rules, check-only', () => {
+  const secretsIndex = 1 + tenantRules.length + collectionsRules.length;
+  expect(rules.slice(secretsIndex, secretsIndex + secretsRules.length)).toEqual(secretsRules);
+  expect(secretsRules.map((rule) => rule.slug)).toEqual(['secrets']);
+  expect(secretsRules.map((rule) => rule.checkOnly)).toEqual([true]);
 });
 
 test('runChecks runs a checkOnly rule under check and skips it during a build', () => {
