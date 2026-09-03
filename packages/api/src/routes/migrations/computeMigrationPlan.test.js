@@ -31,21 +31,21 @@ test('computeMigrationPlan returns every migration as pending when the ledger is
 
 test('computeMigrationPlan excludes already-applied migrations', () => {
   const applied = [
-    { _id: 'm1', checksum: 'a1' },
-    { _id: 'm2', checksum: 'b2' },
+    { id: 'm1', checksum: 'a1' },
+    { id: 'm2', checksum: 'b2' },
   ];
   const result = computeMigrationPlan({ index, applied });
   expect(result.pending.map((m) => m.id)).toEqual(['m3']);
 });
 
 test('computeMigrationPlan keeps index order even when a later migration was applied first', () => {
-  const applied = [{ _id: 'm2', checksum: 'b2' }];
+  const applied = [{ id: 'm2', checksum: 'b2' }];
   const result = computeMigrationPlan({ index, applied });
   expect(result.pending.map((m) => m.id)).toEqual(['m1', 'm3']);
 });
 
 test('computeMigrationPlan reports a checksum mismatch without throwing', () => {
-  const applied = [{ _id: 'm1', checksum: 'DIFFERENT' }];
+  const applied = [{ id: 'm1', checksum: 'DIFFERENT' }];
   const result = computeMigrationPlan({ index, applied });
   expect(result.mismatches).toEqual([
     { id: 'm1', appliedChecksum: 'DIFFERENT', builtChecksum: 'a1' },
@@ -67,8 +67,8 @@ test('computeMigrationPlan throws a ConfigError for an unknown --to', () => {
 
 test('computeMigrationPlan reports an applied migration with no file as missingFiles', () => {
   const applied = [
-    { _id: 'm1', checksum: 'a1' },
-    { _id: 'old-deleted', checksum: 'zz' },
+    { id: 'm1', checksum: 'a1' },
+    { id: 'old-deleted', checksum: 'zz' },
   ];
   const result = computeMigrationPlan({ index, applied });
   expect(result.missingFiles).toEqual(['old-deleted']);

@@ -46,11 +46,15 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   copyFileOrDirectory: jest.fn(),
   getFileExtension: jest.fn(),
   getFileSubExtension: jest.fn(),
+  getMigrationLedgerPath: jest.fn(),
   getSecretsFromEnv: jest.fn(),
   spawnProcess: jest.fn(),
   readFile: jest.fn(async () => pluginYaml),
+  readMigrationLedger: jest.fn(),
+  resolveMigrationStage: jest.fn(),
   writeFile: jest.fn(),
   writeFileIfChanged: jest.fn(),
+  writeMigrationLedger: jest.fn(),
   installIfPackageJsonChanged: jest.fn(),
 }));
 

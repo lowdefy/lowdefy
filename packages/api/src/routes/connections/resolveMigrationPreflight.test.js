@@ -13,27 +13,34 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { ConfigError } from '@lowdefy/errors';
 
 import resolveMigrationPreflight from './resolveMigrationPreflight.js';
 
 function testContext({ config, artifacts = {} }) {
   const warnings = [];
+  const infos = [];
   return {
     warnings,
+    infos,
     config,
-    logger: { info: () => {}, warn: (msg) => warnings.push(msg) },
+    logger: { info: (msg) => infos.push(msg), warn: (msg) => warnings.push(msg) },
     readConfigFile: async (filePath) => artifacts[filePath],
   };
 }
 
-test('resolveMigrationPreflight resolves without probing when preflight is opted out', async () => {
+test('resolveMigrationPreflight resolves without reading when preflight is opted out', async () => {
   const context = testContext({ config: { migrations: { preflight: false } } });
   await expect(resolveMigrationPreflight(context)).resolves.toBeUndefined();
 });
 
-test('resolveMigrationPreflight resolves when the index is empty', async () => {
-  const context = testContext({ config: {}, artifacts: { 'migrations.json': [] } });
+test('resolveMigrationPreflight resolves when the index lists no migrations', async () => {
+  const context = testContext({
+    config: {},
+    artifacts: { 'migrations.json': { stage: 'prod', migrations: [] } },
+  });
   await expect(resolveMigrationPreflight(context)).resolves.toBeUndefined();
+  expect(context.warnings).toEqual([]);
 });
 
 test('resolveMigrationPreflight warns and resolves when there is no index artifact (stale build)', async () => {
@@ -42,18 +49,69 @@ test('resolveMigrationPreflight warns and resolves when there is no index artifa
   expect(context.warnings.join(' ')).toMatch('Migration preflight skipped');
 });
 
-test('resolveMigrationPreflight memoizes per config so it runs once', async () => {
-  let reads = 0;
+test('resolveMigrationPreflight warns and resolves on the pre-ledger array index shape', async () => {
+  const context = testContext({ config: {}, artifacts: { 'migrations.json': [{ id: 'm1' }] } });
+  await resolveMigrationPreflight(context);
+  expect(context.warnings.join(' ')).toMatch('older lowdefy version');
+});
+
+test('resolveMigrationPreflight serves when every migration is recorded as applied', async () => {
+  const context = testContext({
+    config: {},
+    artifacts: {
+      'migrations.json': {
+        stage: 'prod',
+        migrations: [
+          { id: 'm1', checksum: 'a', applied: true },
+          { id: 'm2', checksum: 'b', applied: true },
+        ],
+      },
+    },
+  });
+  await expect(resolveMigrationPreflight(context)).resolves.toBeUndefined();
+  expect(context.infos.join(' ')).toMatch('all 2 migration(s) applied to stage "prod"');
+});
+
+test('resolveMigrationPreflight refuses with a memoized ConfigError naming the pending migrations and stage', async () => {
   const config = {};
+  let reads = 0;
   const context = {
     config,
     logger: { info: () => {}, warn: () => {} },
     readConfigFile: async () => {
       reads += 1;
-      return [];
+      return {
+        stage: 'prod',
+        migrations: [
+          { id: 'm1', checksum: 'a', applied: true },
+          { id: 'm2', checksum: 'b', applied: false },
+          { id: 'm3', checksum: 'c', applied: false, ledgerChecksum: 'old' },
+        ],
+      };
     },
   };
-  await resolveMigrationPreflight(context);
-  await resolveMigrationPreflight(context);
+  await expect(resolveMigrationPreflight(context)).rejects.toThrow(
+    '2 migration(s) are not recorded as applied to stage "prod" — "m2", "m3". 1 of them ("m3") changed after being applied.'
+  );
+  await expect(resolveMigrationPreflight(context)).rejects.toThrow(ConfigError);
   expect(reads).toBe(1);
+});
+
+test('resolveMigrationPreflight retries after a failed artifact read', async () => {
+  const config = {};
+  let reads = 0;
+  const context = {
+    config,
+    logger: { info: () => {}, warn: () => {} },
+    readConfigFile: async () => {
+      reads += 1;
+      if (reads === 1) {
+        throw new Error('disk hiccup');
+      }
+      return { stage: 'prod', migrations: [] };
+    },
+  };
+  await expect(resolveMigrationPreflight(context)).rejects.toThrow('disk hiccup');
+  await expect(resolveMigrationPreflight(context)).resolves.toBeUndefined();
+  expect(reads).toBe(2);
 });

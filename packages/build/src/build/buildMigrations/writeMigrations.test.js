@@ -28,17 +28,24 @@ function testContext() {
   };
 }
 
-test('writeMigrations writes the index as [] when there are no migrations', async () => {
+test('writeMigrations writes an empty index carrying the stage when there are no migrations', async () => {
   const context = testContext();
   context.migrations = [];
+  context.migrationsStage = 'prod';
   await writeMigrations({ context });
-  expect(serializer.deserializeFromString(context.artifacts['migrations.json'])).toEqual([]);
+  expect(serializer.deserializeFromString(context.artifacts['migrations.json'])).toEqual({
+    stage: 'prod',
+    migrations: [],
+  });
 });
 
-test('writeMigrations writes [] when context.migrations is undefined', async () => {
+test('writeMigrations writes a null stage and empty list when nothing was built', async () => {
   const context = testContext();
   await writeMigrations({ context });
-  expect(serializer.deserializeFromString(context.artifacts['migrations.json'])).toEqual([]);
+  expect(serializer.deserializeFromString(context.artifacts['migrations.json'])).toEqual({
+    stage: null,
+    migrations: [],
+  });
 });
 
 test('writeMigrations writes one artifact per migration plus the ordered index', async () => {
@@ -48,22 +55,38 @@ test('writeMigrations writes one artifact per migration plus the ordered index',
       id: '2026-08-30-01-a',
       checksum: 'aaaa1111bbbb2222',
       name: 'first',
-      routine: [{ id: 'request:migration:2026-08-30-01-a:s', stepId: 's', type: 'MongoDBUpdateMany' }],
+      applied: true,
+      ledgerChecksum: 'aaaa1111bbbb2222',
+      routine: [
+        { id: 'request:migration:2026-08-30-01-a:s', stepId: 's', type: 'MongoDBUpdateMany' },
+      ],
     },
     {
       id: '2026-08-30-02-b',
       checksum: 'cccc3333dddd4444',
-      routine: [{ id: 'request:migration:2026-08-30-02-b:s', stepId: 's', type: 'MongoDBUpdateMany' }],
+      applied: false,
+      routine: [
+        { id: 'request:migration:2026-08-30-02-b:s', stepId: 's', type: 'MongoDBUpdateMany' },
+      ],
     },
   ];
   context.migrations = migrations;
+  context.migrationsStage = 'dev';
   await writeMigrations({ context });
 
   const index = serializer.deserializeFromString(context.artifacts['migrations.json']);
-  expect(index).toEqual([
-    { id: '2026-08-30-01-a', checksum: 'aaaa1111bbbb2222' },
-    { id: '2026-08-30-02-b', checksum: 'cccc3333dddd4444' },
-  ]);
+  expect(index).toEqual({
+    stage: 'dev',
+    migrations: [
+      {
+        id: '2026-08-30-01-a',
+        checksum: 'aaaa1111bbbb2222',
+        applied: true,
+        ledgerChecksum: 'aaaa1111bbbb2222',
+      },
+      { id: '2026-08-30-02-b', checksum: 'cccc3333dddd4444', applied: false },
+    ],
+  });
 
   const artifactA = serializer.deserializeFromString(
     context.artifacts['migrations/2026-08-30-01-a.json']

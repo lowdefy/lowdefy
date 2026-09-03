@@ -42,6 +42,31 @@ The `build` command runs a Lowdefy build. This builds a production Lowdefy app i
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
+## check
+
+The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules — the `_js` lint and the [tenant wall audits](/organizations#audits) (`tenant: none` reads with no tenant clause, tenant values taken from the caller, unstamped writes, and the inventory of every unscoped request and step) — and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.
+
+The check always runs with the production rules. Some build warnings are only warnings in `lowdefy dev` but fail `lowdefy build` — those are reported by `check` as errors, exactly as a production build would. Warnings never fail a check.
+
+The first run in a fresh clone prepares the server directory (`.lowdefy/server`) the same way `lowdefy build` does, so the app's own plugins are known; every later run reuses it. Running `check` while `lowdefy dev` is running is safe.
+
+The options are:
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. Use this from scripts and AI coding agents.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
+
+The human-readable output groups problems by source file, one line per problem with its line number, the error name, the message and the check slug in parentheses, and ends with a `N errors, M warnings` summary (or `No problems found.`). A check slug can be used in `~ignoreBuildChecks` to suppress that check on a config node.
+
+Exit codes:
+
+- `0`: no errors (warnings may have been reported).
+- `1`: one or more errors, or the check itself failed to run.
+
+Compared to `lowdefy build`: `build` validates and then writes the production app to the server directory and bundles the client; `check` runs the same validation and stops. `check` is the right command to answer "would `lowdefy build` refuse this?" without waiting for a build.
 
 ## dev
 
@@ -74,12 +99,14 @@ The preview tooling (`react-email`) is installed just-in-time by this command �
 
 ## agent-setup
 
-The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten.
+The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), the Lowdefy Claude Code skills into `.claude/skills/` (`lowdefy-config` plus the 28 `lowdefy-<topic>` skills, see [Skills](/ai-agent-docs)), and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged or skipped, not overwritten.
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port your dev server runs on, used in the generated URLs. The default is `3000`.
+- `--project-directory <project-directory>`: The directory where agent files are written. The default is the nearest ancestor directory containing `.git`, falling back to the config directory.
+- `--skills <names>`: A comma-separated list of topic skills to install alongside `lowdefy-config`, for example `lowdefy-list-pages,lowdefy-filters`. Use `all` (the default) for the full set or `none` for only `lowdefy-config`. An unknown name is an error listing the available skills.
 
 ## init
 
@@ -105,6 +132,22 @@ The `docker-output` command assembles a minimal production runtime at `.lowdefy/
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+## modules update
+
+The `modules update` command refetches the GitHub refs of your [modules](/modules) and rewrites `lowdefy-modules.lock.yaml`. It deletes the lock entries you name, runs a Lowdefy build so the build re-resolves each ref to the commit it currently points at, and prints one line per module showing what moved. Pass a module entry `id` to update a single module, or no name to update all of them. The client bundle is not rebuilt.
+
+```
+lowdefy modules update
+lowdefy modules update team-users
+```
+
+Commit the updated `lowdefy-modules.lock.yaml`. See [Locking GitHub module versions](/modules#locking-github-module-versions).
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
 ## init-vercel
 
 The `init-vercel` command initializes the installation scripts needed to deploy an app on [Vercel](https://vercel.com). It creates a directory called deploy, and a script called vercel.install.sh. It also creates a README file with instructions on how to configure Vercel.
@@ -112,6 +155,63 @@ The `init-vercel` command initializes the installation scripts needed to deploy 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## snapshot
+
+The `snapshot` command captures or checks golden snapshots — a screenshot, the rendered DOM and the page state — of the app's pages as each `auth.dev.users` user, written to `snapshots/<pageId>/<user>/`. It starts the development server headless on a free port, takes every snapshot named in `tests/snapshots.yaml` (or every page for every dev user when there is no manifest), stops the server, and exits with code `1` when `--check` finds drift or a snapshot has never been captured. See [Golden Snapshots](/snapshots).
+
+Exactly one of `--check` and `--update` is required.
+
+- `--check`: Compare against the committed snapshots. Prints one line per differing artefact, writes pixel diffs to `.lowdefy/snapshot-diff/<pageId>/<user>/diff.png` and exits with code `1` on any drift.
+- `--update`: Write (or overwrite) the committed snapshots.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--pages <pageIds>`: Comma-separated page ids to snapshot.
+- `--pixel-tolerance <fraction>`: The fraction of changed pixels above which a screenshot counts as drift. The default is `0.001`.
+- `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--users <names>`: Comma-separated `auth.dev.users` names to snapshot as.
+
+## init-migrations
+
+The `init-migrations` command sets a project up to run its [migrations](/migrations) per environment in GitHub Actions. For each stage it writes a dry-run workflow (`.github/workflows/migrations-dry-run-<stage>.yml`: on pull requests into the stage's branch, plan the pending migrations and post the plan as a PR comment) and a run workflow (`.github/workflows/migrations-run-<stage>.yml`: on push to the stage's branch or on demand, build, apply the pending migrations, and commit the updated ledger `.lowdefy/migrations/<stage>.json` back to the branch, even when a migration fails), plus an empty ledger per stage and the `.gitignore` lines that let the ledgers be committed while keeping `local.json` ignored. Existing files are never overwritten. The branch for `prod` is `main`; every other stage watches the branch of its own name. Each stage needs a GitHub environment of the same name holding the connection secrets.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--stages <names>`: Comma-separated stages to generate workflows for. Each becomes a GitHub environment name and a ledger file. The default is `dev,prod`. `local` is reserved and cannot be a stage.
+
+## migrate
+
+The `migrate` command applies the app's [migrations](/migrations) — the files in the `migrations/` directory — against the live database and records them in the stage's ledger file, `.lowdefy/migrations/<stage>.json`. It resolves the stage (`--stage`, then `STAGE` from the environment, then `local`), reads the ordered build index and the ledger, computes the pending set, prints the stage, the ledger path and the pending ids and confirms (unless `--yes`), names each connection the run touches and the database it resolves to, and applies each pending migration in filename order, rewriting the ledger file as each completes. It stops at the first failing migration, names the migration id, the failing step id and the error, and exits non-zero; migrations that completed are already recorded. Migrations are forward-only — there are no down migrations. See [Migrations](/migrations).
+
+The command takes no connection string of its own: every step's connection is named in config and reads its properties (including secrets) from the environment the command runs in. `STAGE` selects the ledger; the environment's secrets select the database. The build must have been made for the same stage. In CI the workflows written by `init-migrations` run `lowdefy migrate --yes` and commit the ledger before the deploy; a serving preflight refuses to serve a build whose ledger does not record every migration.
+
+- `--allow-checksum-mismatch`: Downgrade a checksum mismatch (an already-applied migration file was edited) from an error to a warning, and rewrite the ledger entry's checksum. For a whitespace- or comment-only edit you know is a no-op.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--dry-run`: Report which migrations would run, in order, and which connections and databases they touch, with no writes and no ledger changes. No step runs and no step properties are evaluated in a dry run.
+- `--json`: Print a machine-readable report and nothing else on stdout, mirroring `lowdefy check --json`.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
+- `--stage <name>`: The environment whose ledger to read and rewrite. Defaults to `STAGE` from the environment, then `local`.
+- `--to <id>`: Apply pending migrations up to and including `<id>`. Omit to apply all pending.
+- `--yes`: Skip the confirmation prompt. Required in CI.
+
+## test
+
+The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
 ## upgrade
 
@@ -151,21 +251,19 @@ The `start` command starts a Lowdefy production server. To start a Lowdefy serve
 - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 
-
 #### Examples
 
-
 Run the dev server, watching a relative directory for file changes:
+
 ```txt
 pnpx lowdefy@5 dev --watch ../other-project
 ```
 
 Run the dev server, ignoring the public directory:
+
 ```txt
 pnpx lowdefy@5 dev --watch-ignore public/**
 ```
-
-
 
 # Module Fetching
 
@@ -186,6 +284,7 @@ In development mode (`lowdefy dev`), local module sources (`file:` paths) are wa
 All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
 
 Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
+
 - `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `disableTelemetry: boolean`: Disable telemetry.
 - `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
@@ -206,6 +305,7 @@ The CLI collects usage and error information to help us fix bugs, prioritize fea
 All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file), or by using the `--disable-telemetry` command line flag.:
 
 ###### `lowdefy.yaml`
+
 ```yaml
 lowdefy: LOWDEFY_VERSION
 

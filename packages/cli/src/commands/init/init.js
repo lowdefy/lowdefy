@@ -32,6 +32,8 @@ async function init({ context }) {
   await writeFile(
     path.resolve('./.gitignore'),
     `.lowdefy/**
+!.lowdefy/migrations/
+.lowdefy/migrations/local.json
 .env`
   );
   context.logger.info("Created '.gitignore'.");

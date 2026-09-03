@@ -15,38 +15,70 @@
   limitations under the License.
 */
 
+import os from 'node:os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { ConfigError, ServiceError } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
 import { runMigrations } from '@lowdefy/api';
+import { resolveMigrationStage } from '@lowdefy/node-utils';
 
 import createSystemContext from '../lib/server/auth/createSystemContext.js';
 
 const argv = yargs(hideBin(process.argv)).argv;
+
+// Who applied a migration, recorded per ledger entry (design §4): the CI run
+// when there is one, otherwise the user and host at the terminal.
+function describeRunner() {
+  if (process.env.GITHUB_RUN_ID) {
+    return `github-actions:run-${process.env.GITHUB_RUN_ID}`;
+  }
+  let username = 'unknown';
+  try {
+    username = os.userInfo().username;
+  } catch {
+    // userInfo throws on some minimal containers; the hostname still identifies the run.
+  }
+  return `${username}@${os.hostname()}`;
+}
+
+function formatTarget(target) {
+  if (target.error) {
+    return `could not resolve: ${target.error}`;
+  }
+  if (!target.database) {
+    return String(target.type);
+  }
+  return `${target.type} database "${target.database}"`;
+}
 
 // Runs the app's pending migrations against its own database (design D7). This
 // is the server-package half of `lowdefy migrate`: the CLI spawns it here
 // because this is where the connection plugins and the database driver are
 // installed. It runs on a caller-less system context (applySystemTrust),
 // exactly like a scheduled endpoint, so migration steps that touch a walled
-// connection must declare tenant: none or runAs (enforced at build).
+// connection must declare tenant: none or runAs (enforced at build). The
+// stage (design D13) selects the ledger file the run reads and rewrites:
+// --stage, then STAGE from the environment, then local.
 async function run() {
   // No auth engine needed: migrations carry no user. The context reads the
   // built config, the connection plugin map, and secrets from the environment.
   const context = createSystemContext();
 
+  const stage = resolveMigrationStage({
+    stage: typeof argv.stage === 'string' ? argv.stage : undefined,
+    env: process.env,
+    buildStage: 'dev',
+  });
   const options = {
+    stage,
     dryRun: argv.dryRun === true,
     to: typeof argv.to === 'string' && argv.to !== '' ? argv.to : undefined,
     allowChecksumMismatch: argv.allowChecksumMismatch === true,
-    ledgerConnectionId: context.config?.migrations?.ledgerConnectionId ?? 'migrations',
-    lockTimeoutMs: context.config?.migrations?.lockTimeoutMs,
+    runner: describeRunner(),
   };
 
   context.logger.info(
-    `Migrating against ledger connection "${options.ledgerConnectionId}"${
-      options.dryRun ? ' (dry run — no writes)' : ''
-    }.`
+    `Migrating stage "${stage}"${options.dryRun ? ' (dry run — no writes)' : ''}.`
   );
 
   const report = await runMigrations(context, { options });
@@ -55,16 +87,23 @@ async function run() {
     process.stdout.write(`${JSON.stringify(report)}\n`);
   } else if (report.dryRun) {
     if (report.pending.length === 0) {
-      context.logger.info('Dry run: no pending migrations.');
+      context.logger.info(`Dry run: no pending migrations for stage "${stage}".`);
     } else {
-      context.logger.info(`Dry run: ${report.pending.length} migration(s) would run, in order:`);
-      report.pending.forEach((migration) => context.logger.info(`  • ${migration.id}`));
+      context.logger.info(
+        `Dry run: ${report.pending.length} migration(s) would run against stage "${stage}", in order:`
+      );
+      report.pending.forEach((id) => context.logger.info(`  • ${id}`));
+      report.targets.forEach((target) =>
+        context.logger.info(`  connection "${target.connectionId}" → ${formatTarget(target)}`)
+      );
     }
   } else if (report.applied.length === 0 && !report.failed) {
-    context.logger.info('No pending migrations — the database is up to date.');
+    context.logger.info(`No pending migrations for stage "${stage}" — the database is up to date.`);
   } else {
     context.logger.info(
-      `Applied ${report.applied.length} migration(s)${report.failed ? `, then "${report.failed.id}" failed` : ''}.`
+      `Applied ${report.applied.length} migration(s)${
+        report.failed ? `, then "${report.failed.id}" failed` : ''
+      }.`
     );
   }
 
@@ -74,9 +113,10 @@ async function run() {
 }
 
 run().catch((error) => {
-  // A refusal (checksum mismatch, lock held) is a clean, expected stop — print
-  // the message, not a stack. Anything else is a bug and shows its stack.
-  if (error instanceof ConfigError || error instanceof ServiceError) {
+  // A refusal (checksum mismatch, a build made for another stage, a bad
+  // --to) is a clean, expected stop — print the message, not a stack.
+  // Anything else is a bug and shows its stack.
+  if (error instanceof ConfigError) {
     console.error(error.message);
     process.exit(1);
   }

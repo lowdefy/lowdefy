@@ -18,14 +18,18 @@ import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import findAvailablePort from './findAvailablePort.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getMigrationLedgerPath from './migrations/getMigrationLedgerPath.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPortAvailable from './isPortAvailable.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import readFixture from './readFixture.js';
+import readMigrationLedger from './migrations/readMigrationLedger.js';
+import resolveMigrationStage from './migrations/resolveMigrationStage.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import writeMigrationLedger from './migrations/writeMigrationLedger.js';
 
 export {
   cleanDirectory,
@@ -33,12 +37,16 @@ export {
   findAvailablePort,
   getFileExtension,
   getFileSubExtension,
+  getMigrationLedgerPath,
   getSecretsFromEnv,
   installIfPackageJsonChanged,
   isPortAvailable,
   spawnProcess,
   readFile,
   readFixture,
+  readMigrationLedger,
+  resolveMigrationStage,
   writeFile,
   writeFileIfChanged,
+  writeMigrationLedger,
 };

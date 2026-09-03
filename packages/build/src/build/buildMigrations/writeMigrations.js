@@ -18,12 +18,15 @@ import { type, serializer } from '@lowdefy/helpers';
 
 // One artifact per migration, build/migrations/<id>.json ({ id, checksum,
 // routine }), mirroring build/api/<endpointId>.json, plus the ordered index
-// build/migrations.json ([{ id, checksum }]) the runner and the serving
-// preflight read. The index is written as [] when nothing is declared, so the
-// runtime never needs an existence check (the "build always writes the
-// artifact" principle).
+// build/migrations.json ({ stage, migrations: [{ id, checksum, applied }] })
+// the runner, the serving preflight and the dev status read. `applied` is
+// what the stage's ledger said at build time (design §3.2), so the preflight
+// needs no database. The index is written with an empty list when nothing is
+// declared, so the runtime never needs an existence check (the "build always
+// writes the artifact" principle).
 async function writeMigrations({ context }) {
   const migrations = type.isArray(context.migrations) ? context.migrations : [];
+  const stage = type.isString(context.migrationsStage) ? context.migrationsStage : null;
 
   await Promise.all(
     migrations.map((migration) =>
@@ -39,10 +42,15 @@ async function writeMigrations({ context }) {
     )
   );
 
-  const index = migrations.map((migration) => ({
-    id: migration.id,
-    checksum: migration.checksum,
-  }));
+  const index = {
+    stage,
+    migrations: migrations.map((migration) => ({
+      id: migration.id,
+      checksum: migration.checksum,
+      applied: migration.applied === true,
+      ledgerChecksum: migration.ledgerChecksum,
+    })),
+  };
   await context.writeBuildArtifact('migrations.json', serializer.serializeToString(index));
 }
 

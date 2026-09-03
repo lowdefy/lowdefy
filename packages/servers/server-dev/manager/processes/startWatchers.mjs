@@ -17,6 +17,7 @@
 import envWatcher from '../watchers/envWatcher.mjs';
 import jsModuleWatcher from '../watchers/jsModuleWatcher.mjs';
 import lowdefyBuildWatcher from '../watchers/lowdefyBuildWatcher.mjs';
+import migrationLedgerWatcher from '../watchers/migrationLedgerWatcher.mjs';
 import moduleBuildWatcher from '../watchers/moduleBuildWatcher.mjs';
 import pluginSourceWatcher from '../watchers/pluginSourceWatcher.mjs';
 import restartRequestWatcher from '../watchers/restartRequestWatcher.mjs';
@@ -28,6 +29,7 @@ function startWatchers(context) {
       envWatcher(context),
       jsModuleWatcher(context),
       lowdefyBuildWatcher(context),
+      migrationLedgerWatcher(context),
       moduleBuildWatcher(context),
       pluginSourceWatcher(context),
       restartRequestWatcher(context),

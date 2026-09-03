@@ -15,10 +15,12 @@
 */
 import fs from 'fs';
 import path from 'path';
+import { resolveMigrationStage } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import buildScriptArgs from './buildScriptArgs.js';
 import confirmMigrate from './confirmMigrate.js';
+import readMigrationPlan from './readMigrationPlan.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
@@ -55,7 +57,18 @@ async function migrate({ context }) {
     return;
   }
 
-  const confirmed = await confirmMigrate({ context, options: context.options });
+  // The stage (design D13) is resolved here, once, and passed to the script
+  // explicitly, so the confirmation print and the run can never disagree.
+  // startUp already loaded .env into process.env, so STAGE from .env counts.
+  const stage = resolveMigrationStage({
+    stage: context.options.stage,
+    env: process.env,
+    buildStage: 'dev',
+  });
+  const options = { ...context.options, stage };
+
+  const plan = await readMigrationPlan({ context, directory, stage });
+  const confirmed = await confirmMigrate({ context, options, plan });
   if (!confirmed) {
     process.exitCode = 1;
     await context.sendTelemetry();
@@ -66,7 +79,7 @@ async function migrate({ context }) {
     await runLowdefyMigrate({
       context,
       directory,
-      scriptArgs: buildScriptArgs({ options: context.options }),
+      scriptArgs: buildScriptArgs({ options }),
     });
   } catch (error) {
     // spawnProcess rejects on a non-zero exit — a failed or refused migration.

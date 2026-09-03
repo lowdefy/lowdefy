@@ -77,10 +77,9 @@ async function collectMigrationFiles({ directories }) {
     try {
       parsed = YAML.parse(text);
     } catch (error) {
-      throw new ConfigError(
-        `Migration "${id}" is not valid YAML: ${error.message}`,
-        { checkSlug: 'migrations' }
-      );
+      throw new ConfigError(`Migration "${id}" is not valid YAML: ${error.message}`, {
+        checkSlug: 'migrations',
+      });
     }
     migrations.push({
       id,
@@ -88,6 +87,7 @@ async function collectMigrationFiles({ directories }) {
       name: parsed?.name,
       routine: parsed?.routine,
       filePath,
+      text,
     });
   }
   return migrations;

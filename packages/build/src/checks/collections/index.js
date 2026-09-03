@@ -17,9 +17,16 @@
 import undeclared from './undeclared.js';
 import dynamicCollection from './dynamicCollection.js';
 import untenantedConnection from './untenantedConnection.js';
+import fieldWithoutMigration from './fieldWithoutMigration.js';
 
-// Check-only rules over the collections: declaration (task 38). All three are
-// silent when the app declares no collections: at all.
-const collectionsRules = [undeclared, dynamicCollection, untenantedConnection];
+// Check-only rules over the collections: declaration (task 38), plus the
+// collections/migrations correspondence (task 49, D11). All are silent when
+// the app declares no collections: at all.
+const collectionsRules = [
+  undeclared,
+  dynamicCollection,
+  untenantedConnection,
+  fieldWithoutMigration,
+];
 
 export default collectionsRules;
