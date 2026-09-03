@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { RequestError } from '@lowdefy/errors';
-
 import runTest from '../test/runTest.js';
 
 test('try catch with successful try', async () => {
@@ -62,11 +60,26 @@ test('try catch with successful try', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
         result: 'Success',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -117,19 +130,6 @@ test('try catch with unsuccessful try', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail', {
-          cause: new Error('Try and fail'),
-          location: 'test/try_fail',
-        }),
-        params: {
-          id: 'try_fail',
-          type: 'TestRequestError',
-        },
-      },
-      'Try and fail at test/try_fail.',
-    ],
-    [
-      {
         event: 'debug_control_catch',
       },
     ],
@@ -148,11 +148,26 @@ test('try catch with unsuccessful try', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
         result: 'Fallback thing',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -193,11 +208,26 @@ test('try only, success', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
         result: 'Success',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -236,19 +266,6 @@ test('try only, fail', async () => {
           },
         },
       },
-    ],
-    [
-      {
-        err: new RequestError('Try and fail', {
-          cause: new Error('Try and fail'),
-          location: 'test/try_fail',
-        }),
-        params: {
-          id: 'try_fail',
-          type: 'TestRequestError',
-        },
-      },
-      'Try and fail at test/try_fail.',
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -298,11 +315,26 @@ test('try with finally, try pass', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
         result: 'Success',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -324,11 +356,26 @@ test('try with finally, try pass', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
         result: 'Always do this',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -378,19 +425,6 @@ test('try with finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail', {
-          cause: new Error('Try and fail'),
-          location: 'test/try_fail',
-        }),
-        params: {
-          id: 'try_fail',
-          type: 'TestRequestError',
-        },
-      },
-      'Try and fail at test/try_fail.',
-    ],
-    [
-      {
         event: 'debug_control_finally',
       },
     ],
@@ -409,11 +443,26 @@ test('try with finally, try fail', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
         result: 'Always do this',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -472,11 +521,26 @@ test('try catch finally, try pass', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_pass',
         result: 'Success',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -498,11 +562,26 @@ test('try catch finally, try pass', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
         result: 'Always do this',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -562,19 +641,6 @@ test('try catch finally, try fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail', {
-          cause: new Error('Try and fail'),
-          location: 'test/try_fail',
-        }),
-        params: {
-          id: 'try_fail',
-          type: 'TestRequestError',
-        },
-      },
-      'Try and fail at test/try_fail.',
-    ],
-    [
-      {
         event: 'debug_control_catch',
       },
     ],
@@ -593,11 +659,26 @@ test('try catch finally, try fail', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
         result: 'Fallback thing',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -619,11 +700,26 @@ test('try catch finally, try fail', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
         result: 'Always do this',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -683,19 +779,6 @@ test('try catch finally, try and catch fail', async () => {
     ],
     [
       {
-        err: new RequestError('Try and fail', {
-          cause: new Error('Try and fail'),
-          location: 'test/try_fail',
-        }),
-        params: {
-          id: 'try_fail',
-          type: 'TestRequestError',
-        },
-      },
-      'Try and fail at test/try_fail.',
-    ],
-    [
-      {
         event: 'debug_control_catch',
       },
     ],
@@ -712,19 +795,6 @@ test('try catch finally, try and catch fail', async () => {
           },
         },
       },
-    ],
-    [
-      {
-        err: new RequestError('Fallback thing fail', {
-          cause: new Error('Fallback thing fail'),
-          location: 'test/catch_error',
-        }),
-        params: {
-          id: 'catch_error',
-          type: 'TestRequestError',
-        },
-      },
-      'Fallback thing fail at test/catch_error.',
     ],
     [
       {
@@ -746,11 +816,26 @@ test('try catch finally, try and catch fail', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:try_finally',
         result: 'Always do this',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -799,11 +884,26 @@ test('try catch with throw in try', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:catch_error',
         result: 'Fallback thing',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);

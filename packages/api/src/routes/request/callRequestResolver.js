@@ -17,6 +17,7 @@
 import { RequestError, ServiceError } from '@lowdefy/errors';
 
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import logEvent from '../../log/logEvent.js';
 
 async function callRequestResolver(
   context,
@@ -31,18 +32,13 @@ async function callRequestResolver(
     trace,
   }
 ) {
-  const { blockId, endpointId, logger, pageId, payload } = context;
+  const { blockId, endpointId, pageId, payload } = context;
   // stepId for endpoint steps (after build), requestId for page requests
   const stepOrRequestId = requestConfig.stepId ?? requestConfig.requestId;
 
+  // The invoked endpoint emits its own endpoint_completed line, so a resolver
+  // reaching back into the app through callApi needs nothing here.
   const callApi = async ({ endpointId: targetEndpointId, payload: targetPayload } = {}) => {
-    logger.debug({
-      event: 'debug_start_call_api',
-      connectionId: requestConfig.connectionId,
-      requestId: stepOrRequestId,
-      endpointId: targetEndpointId,
-    });
-
     const result = await invokeEndpoint(context, {
       endpointId: targetEndpointId,
       payload: targetPayload,
@@ -53,17 +49,29 @@ async function callRequestResolver(
       throw result.error;
     }
 
-    const response = result.status === 'return' ? result.response : null;
-
-    logger.debug({
-      event: 'debug_end_call_api',
-      connectionId: requestConfig.connectionId,
-      requestId: stepOrRequestId,
-      endpointId: targetEndpointId,
-    });
-
-    return response;
+    return result.status === 'return' ? result.response : null;
   };
+
+  const eventFields = {
+    request_id: stepOrRequestId,
+    connection_id: requestConfig.connectionId,
+    request_type: requestConfig.type,
+    endpoint_id: endpointId,
+    config_key: requestConfig['~k'],
+    org: tenant?.value,
+  };
+  const startTime = performance.now();
+  const logFailed = (error) =>
+    logEvent({
+      context,
+      event: 'request_failed',
+      fields: {
+        ...eventFields,
+        duration_ms: Math.round(performance.now() - startTime),
+        success: false,
+        error,
+      },
+    });
 
   try {
     const response = await requestResolver({
@@ -92,6 +100,15 @@ async function callRequestResolver(
       // trace.rewritten. A resolver that ignores it behaves exactly as before.
       trace,
     });
+    logEvent({
+      context,
+      event: 'request_completed',
+      fields: {
+        ...eventFields,
+        duration_ms: Math.round(performance.now() - startTime),
+        success: true,
+      },
+    });
     return response;
   } catch (error) {
     // Add configKey to any error for location tracing
@@ -102,10 +119,7 @@ async function callRequestResolver(
     // Lowdefy errors pass through unchanged — re-wrapping every boundary would
     // nest causes and truncate the deepest (most informative) frame.
     if (error.isLowdefyError) {
-      logger.debug(
-        { params: { id: stepOrRequestId, type: requestConfig.type }, err: error },
-        error.message
-      );
+      logFailed(error);
       throw error;
     }
 
@@ -116,10 +130,7 @@ async function callRequestResolver(
         service: requestConfig.connectionId,
         configKey: requestConfig['~k'],
       });
-      logger.debug(
-        { params: { id: stepOrRequestId, type: requestConfig.type }, err: serviceError },
-        serviceError.message
-      );
+      logFailed(serviceError);
       throw serviceError;
     }
 
@@ -132,10 +143,7 @@ async function callRequestResolver(
       configKey: requestConfig['~k'],
     });
 
-    logger.debug(
-      { params: { id: stepOrRequestId, type: requestConfig.type }, err: requestError },
-      requestError.message
-    );
+    logFailed(requestError);
     throw requestError;
   }
 }

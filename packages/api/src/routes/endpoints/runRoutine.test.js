@@ -47,11 +47,31 @@ test('single stage', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -88,11 +108,31 @@ test('array with single stage', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -138,11 +178,31 @@ test('array with two stages', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request_1',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request_1',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -159,11 +219,31 @@ test('array with two stages', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request_2',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
         result: 2,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request_2',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -387,7 +467,7 @@ test('a UserError is returned as an error status without going through handleErr
   };
   const context = {
     handleError,
-    logger: { debug: jest.fn() },
+    logger: { debug: jest.fn(), info: jest.fn() },
     evaluateOperators: () => {
       throw error;
     },

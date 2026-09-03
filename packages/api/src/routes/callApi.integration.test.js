@@ -354,7 +354,7 @@ test('9.7 InternalApi endpoint is reachable via callApi', async () => {
   expect(result.response).toBe('internal_ok');
 });
 
-test('9.8 debug events emitted on success path', async () => {
+test('9.8 wide events emitted on success path', async () => {
   const logger = {
     debug: jest.fn(),
     info: jest.fn(),
@@ -381,8 +381,10 @@ test('9.8 debug events emitted on success path', async () => {
     requestId: 'outerReq',
   });
   const events = logger.debug.mock.calls.map((c) => c[0]?.event);
-  expect(events).toContain('debug_start_call_api');
-  expect(events).toContain('debug_end_call_api');
+  expect(events).not.toContain('debug_start_call_api');
+  expect(events).not.toContain('debug_end_call_api');
+  expect(events).toContain('endpoint_completed');
+  expect(events).toContain('request_completed');
 });
 
 test('9.4 state isolation: caller state not visible in target, target writes do not leak', async () => {

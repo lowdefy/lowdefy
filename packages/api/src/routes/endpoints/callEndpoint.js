@@ -21,6 +21,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import logEndpointCompleted from './logEndpointCompleted.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
@@ -95,8 +96,16 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload, tra
     };
   }
 
+  const startTime = performance.now();
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
+  });
+  logEndpointCompleted(context, {
+    endpointConfig,
+    entry: 'api',
+    error,
+    startTime,
+    status,
   });
   if (status === 'return') {
     validateEndpointResponse(context, { endpointConfig, response });

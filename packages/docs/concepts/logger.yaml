@@ -163,6 +163,75 @@ _ref:
             - **Config Location:** The source file and line number in your YAML config
             - **User Context:** Configured user fields for authenticated sessions
 
+      - id: md3
+        type: Markdown
+        properties:
+          content: |
+            ## Wide Events
+
+            Every unit of server work writes one structured log line - a "wide event" - naming what ran, how long it took, whether it succeeded, and where in your config it is defined.
+
+            ### The event catalogue
+
+            | `event` | Written by |
+            |---------|------------|
+            | `request_completed` / `request_failed` | A request resolver run (a page request, or a request step in an endpoint) |
+            | `step_completed` / `step_failed` | A routine step (controls like `:if` are structure and write no line; the steps inside them do) |
+            | `endpoint_completed` / `endpoint_failed` | An endpoint routine, with `entry` naming how it was called: `api`, `call_api`, `scheduled`, `webhook` or `detached` |
+            | `agent_tool_completed` / `agent_tool_failed` | A tool call - an MCP `tools/call` (`transport: mcp`) or an agent calling one of its tools (`transport: agent`) |
+            | `process_started` | Written once when a server process starts |
+            | `migrations_checked` | Written once when the migration preflight first resolves |
+
+            ### The fields
+
+            | Field | Description |
+            |-------|-------------|
+            | `event` | The event name from the table above |
+            | `rid` | The request id, shared by every line of one request (honours an upstream `x-request-id`) |
+            | `page_id`, `block_id` | The page and block the work belongs to, where there is one |
+            | `request_id`, `endpoint_id`, `step_id` | The ids of the unit that ran |
+            | `config_key` | The config location key of the unit - see below |
+            | `duration_ms` | Wall-clock duration of the unit |
+            | `success` | Whether the unit completed |
+            | `error.name`, `error.message`, `error.hint` | On a `*_failed` line only |
+            | `user.id`, `org` | Only when `logger.events.identity` is `true` |
+
+            Every line also carries `app_name`, `app_version` and `git_sha` from the app's build.
+
+            ### Resolving `config_key` to a source location
+
+            A line carries `config_key`, not a file path. The build writes `keyMap.json`, which maps every key to the file and line it came from, so `source` is `keyMap.json[config_key]` for the build at that line's `git_sha`. Resolving it in your query tool - once per session - keeps the file read off the request path.
+
+            ### Configuration
+
+            ```yaml
+            # lowdefy.yaml
+            logger:
+              # 'errors' (default): failures at info, successes at debug
+              # 'all': successes at info too
+              events: errors
+            ```
+
+            The object form adds sampling and identity:
+
+            ```yaml
+            # lowdefy.yaml
+            logger:
+              events:
+                level: errors
+                # Keep a fraction of successful events at info. The decision is made
+                # per request id, so a kept request is complete, never half-logged.
+                sample_rate: 0.05
+                # Off by default. Adds user.id and the tenant value (org) to every
+                # event line - a material expansion of what your logs hold about a
+                # person, so opt in deliberately.
+                identity: false
+            ```
+
+            ### Process starts
+
+            `process_started` carries `app_version`, `git_sha`, the Lowdefy version and the Node version. On a long-lived server that is one line per deploy; on serverless it is one line per cold start, per replica - so group by `git_sha` in your queries, never by line count. `migrations_checked` follows on the first request, naming the stage and the migrations the build recorded as applied.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

@@ -3184,6 +3184,36 @@ export default {
       properties: {
         '~r': {},
         '~l': {},
+        events: {
+          anyOf: [
+            {
+              type: 'string',
+              enum: ['errors', 'all'],
+            },
+            {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                level: {
+                  type: 'string',
+                  enum: ['errors', 'all'],
+                },
+                sample_rate: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                },
+                identity: {
+                  type: 'boolean',
+                },
+              },
+            },
+          ],
+          errorMessage:
+            'App "logger.events" should be "errors", "all", or an object with "level" ("errors" or "all"), "sample_rate" (a number between 0 and 1) and "identity" (a boolean).',
+        },
         sentry: {
           type: 'object',
           additionalProperties: false,

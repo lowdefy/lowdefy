@@ -64,7 +64,15 @@ async function runPreflight(context) {
       }.json, and redeploy. To opt out, set config.migrations.preflight: false.`
     );
   }
+  // The migration state of this process, on the one line that knows it: the
+  // process_started marker is emitted before any request, and the preflight is
+  // resolved lazily on the first one. Grouped with that marker by git_sha.
   context.logger.info(
+    {
+      event: 'migrations_checked',
+      stage: index.stage,
+      migrations: index.migrations.map(({ id }) => id),
+    },
     `Migration preflight passed — all ${index.migrations.length} migration(s) applied to stage "${index.stage}".`
   );
 }

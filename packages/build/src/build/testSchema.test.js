@@ -849,3 +849,34 @@ test('a typo in a component prop definition key is a warning', () => {
   expect(mockLogWarn).toHaveBeenCalled();
   expect(mockLogWarn.mock.calls[0][0]).toContain('unknown key');
 });
+
+// --- logger.events (wide events, review H P1.1) ---
+
+test('logger events string form emits no warnings', () => {
+  const components = { lowdefy: '1.0.0', logger: { events: 'all' } };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('logger events object form emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    logger: { events: { level: 'errors', sample_rate: 0.05, identity: true } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('an unknown logger events level is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { events: 'everything' } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.events');
+});
+
+test('a logger events sample_rate above 1 is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { events: { sample_rate: 2 } } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.events');
+});

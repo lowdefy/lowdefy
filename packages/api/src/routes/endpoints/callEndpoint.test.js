@@ -566,3 +566,75 @@ test('callEndpoint records no notice for a conforming :return or without the dev
   });
   expect(result.success).toBe(true);
 });
+
+test('endpoint_completed is emitted once with the api entry, config_key and duration', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/ep.json') {
+      return {
+        '~k': 'endpoint_key',
+        endpointId: 'ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: { ':return': 'done' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+  const events = logger.debug.mock.calls
+    .map((call) => call[0])
+    .filter((line) => line?.event === 'endpoint_completed');
+  expect(events).toEqual([
+    {
+      event: 'endpoint_completed',
+      rid: undefined,
+      page_id: 'pageId',
+      block_id: 'blockId',
+      endpoint_id: 'ep',
+      entry: 'api',
+      config_key: 'endpoint_key',
+      duration_ms: expect.any(Number),
+      status: 'return',
+      success: true,
+    },
+  ]);
+});
+
+test('endpoint_failed is emitted at info when the routine errors', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/ep.json') {
+      return {
+        '~k': 'endpoint_key',
+        endpointId: 'ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: { ':throw': 'nope' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile });
+  await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'ep',
+    pageId: 'pageId',
+    payload: {},
+  });
+  const events = logger.info.mock.calls
+    .map((call) => call[0])
+    .filter((line) => line?.event === 'endpoint_failed');
+  expect(events).toHaveLength(1);
+  expect(events[0]).toMatchObject({
+    endpoint_id: 'ep',
+    entry: 'api',
+    config_key: 'endpoint_key',
+    success: false,
+    error: { name: 'UserError', message: 'nope' },
+  });
+});

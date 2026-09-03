@@ -24,7 +24,11 @@ function testContext({ config, artifacts = {} }) {
     warnings,
     infos,
     config,
-    logger: { info: (msg) => infos.push(msg), warn: (msg) => warnings.push(msg) },
+    logger: {
+      // pino's two-argument form: the event line and its message.
+      info: (line, msg) => infos.push(msg ?? line),
+      warn: (msg) => warnings.push(msg),
+    },
     readConfigFile: async (filePath) => artifacts[filePath],
   };
 }
@@ -70,6 +74,25 @@ test('resolveMigrationPreflight serves when every migration is recorded as appli
   });
   await expect(resolveMigrationPreflight(context)).resolves.toBeUndefined();
   expect(context.infos.join(' ')).toMatch('all 2 migration(s) applied to stage "prod"');
+});
+
+test('resolveMigrationPreflight logs a migrations_checked event naming the stage and migrations', async () => {
+  const events = [];
+  const context = {
+    config: {},
+    logger: { info: (line) => events.push(line), warn: () => {} },
+    readConfigFile: async () => ({
+      stage: 'prod',
+      migrations: [
+        { id: 'm1', checksum: 'a', applied: true },
+        { id: 'm2', checksum: 'b', applied: true },
+      ],
+    }),
+  };
+  await resolveMigrationPreflight(context);
+  expect(events).toEqual([
+    { event: 'migrations_checked', stage: 'prod', migrations: ['m1', 'm2'] },
+  ]);
 });
 
 test('resolveMigrationPreflight refuses with a memoized ConfigError naming the pending migrations and stage', async () => {

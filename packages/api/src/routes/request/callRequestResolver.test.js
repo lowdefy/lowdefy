@@ -248,7 +248,111 @@ test('callApi target routine without :return resolves to null', async () => {
   expect(ret).toEqual({ wrapped: null });
 });
 
-test('debug events emitted on success: start and end', async () => {
+test('request_completed is emitted once on success with config_key and duration', async () => {
+  const context = createTestContext();
+  const requestResolver = async () => 'ok';
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver,
+  });
+  const events = context.logger.debug.mock.calls.map((call) => call[0]);
+  expect(events).toEqual([
+    {
+      event: 'request_completed',
+      rid: undefined,
+      page_id: 'pageId',
+      block_id: 'blockId',
+      request_id: 'req1',
+      connection_id: 'conn1',
+      request_type: 'TestRequest',
+      endpoint_id: 'caller_endpoint',
+      config_key: 'request_key',
+      duration_ms: expect.any(Number),
+      success: true,
+    },
+  ]);
+});
+
+test('request_completed carries no identity fields by default', async () => {
+  const context = createTestContext();
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: async () => 'ok',
+    tenant: { field: 'org', value: 'org_1' },
+  });
+  const [line] = context.logger.debug.mock.calls[0];
+  expect(line.user).toBeUndefined();
+  expect(line.org).toBeUndefined();
+});
+
+test('request_completed carries user.id and org when identity is enabled', async () => {
+  const context = createTestContext();
+  context.logger.eventsConfig = { level: 'errors', identity: true };
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: async () => 'ok',
+    tenant: { field: 'org', value: 'org_1' },
+  });
+  const [line] = context.logger.debug.mock.calls[0];
+  expect(line.user).toEqual({ id: 'user_1' });
+  expect(line.org).toEqual('org_1');
+});
+
+test('request_completed is emitted at info when logger.events is all', async () => {
+  const context = createTestContext();
+  context.logger.eventsConfig = 'all';
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: async () => 'ok',
+  });
+  expect(context.logger.debug).not.toHaveBeenCalled();
+  expect(context.logger.info.mock.calls[0][0]).toMatchObject({
+    event: 'request_completed',
+    success: true,
+  });
+});
+
+test('request_failed is emitted at info with the error name, message and config_key', async () => {
+  const context = createTestContext();
+  const requestResolver = async () => {
+    throw new Error('resolver blew up');
+  };
+  await expect(
+    callRequestResolver(context, {
+      connectionProperties: {},
+      endpointDepth: 0,
+      requestConfig,
+      requestProperties: {},
+      requestResolver,
+    })
+  ).rejects.toThrow('resolver blew up');
+  const [line, message] = context.logger.info.mock.calls[0];
+  expect(line).toMatchObject({
+    event: 'request_failed',
+    request_id: 'req1',
+    config_key: 'request_key',
+    success: false,
+    duration_ms: expect.any(Number),
+    error: { name: 'RequestError', message: expect.stringContaining('resolver blew up') },
+  });
+  // The err serializer keeps the stack on the line.
+  expect(line.err).toBeInstanceOf(Error);
+  expect(message).toEqual(line.error.message);
+});
+
+test('callApi emits no debug start and end pair', async () => {
   const context = createTestContext({
     endpointConfigs: {
       target: {
@@ -266,52 +370,11 @@ test('debug events emitted on success: start and end', async () => {
     requestProperties: {},
     requestResolver,
   });
-  const starts = context.logger.debug.mock.calls
-    .map((c) => c[0])
-    .filter((e) => e?.event === 'debug_start_call_api');
-  const ends = context.logger.debug.mock.calls
-    .map((c) => c[0])
-    .filter((e) => e?.event === 'debug_end_call_api');
-  expect(starts).toEqual([
-    {
-      event: 'debug_start_call_api',
-      connectionId: 'conn1',
-      requestId: 'req1',
-      endpointId: 'target',
-    },
-  ]);
-  expect(ends).toEqual([
-    {
-      event: 'debug_end_call_api',
-      connectionId: 'conn1',
-      requestId: 'req1',
-      endpointId: 'target',
-    },
-  ]);
-});
-
-test('debug end event NOT emitted when callApi throws', async () => {
-  const context = createTestContext({
-    endpointConfigs: {
-      target: {
-        endpointId: 'target',
-        type: 'Api',
-        routine: { ':throw': 'boom' },
-      },
-    },
-  });
-  const requestResolver = async ({ callApi }) => callApi({ endpointId: 'target', payload: {} });
-  await callRequestResolver(context, {
-    connectionProperties: {},
-    endpointDepth: 0,
-    requestConfig,
-    requestProperties: {},
-    requestResolver,
-  }).catch(() => {});
-  const ends = context.logger.debug.mock.calls
-    .map((c) => c[0])
-    .filter((e) => e?.event === 'debug_end_call_api');
-  expect(ends).toEqual([]);
+  const events = context.logger.debug.mock.calls.map((call) => call[0]?.event);
+  expect(events).not.toContain('debug_start_call_api');
+  expect(events).not.toContain('debug_end_call_api');
+  expect(events).toContain('endpoint_completed');
+  expect(events).toContain('request_completed');
 });
 
 test('Lowdefy error from resolver passes through unchanged', async () => {

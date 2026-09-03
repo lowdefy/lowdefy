@@ -16,11 +16,13 @@
 
 import buildLogger from './buildLogger.js';
 
+const eventsDefaults = { level: 'errors', identity: false };
+
 test('buildLogger no logger defined', () => {
   const components = {};
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults },
   });
 });
 
@@ -28,7 +30,7 @@ test('buildLogger empty logger object', () => {
   const components = { logger: {} };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults },
   });
 });
 
@@ -36,8 +38,30 @@ test('buildLogger logger null', () => {
   const components = { logger: null };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults },
   });
+});
+
+test('buildLogger events string form becomes the level', () => {
+  const components = { logger: { events: 'all' } };
+  const result = buildLogger({ components });
+  expect(result.logger.events).toEqual({ level: 'all', identity: false });
+});
+
+test('buildLogger events object form keeps sample_rate and identity', () => {
+  const components = { logger: { events: { sample_rate: 0.05, identity: true } } };
+  const result = buildLogger({ components });
+  expect(result.logger.events).toEqual({
+    level: 'errors',
+    sample_rate: 0.05,
+    identity: true,
+  });
+});
+
+test('buildLogger events preserves a zero sample_rate', () => {
+  const components = { logger: { events: { sample_rate: 0 } } };
+  const result = buildLogger({ components });
+  expect(result.logger.events.sample_rate).toBe(0);
 });
 
 test('buildLogger sentry with defaults', () => {
@@ -45,6 +69,7 @@ test('buildLogger sentry with defaults', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
       sentry: {
         client: true,
         server: true,
@@ -63,6 +88,7 @@ test('buildLogger sentry with custom tracesSampleRate', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
       sentry: {
         client: true,
         server: true,
@@ -126,6 +152,7 @@ test('buildLogger sentry all custom values', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
       sentry: {
         client: false,
         server: true,
@@ -145,7 +172,7 @@ test('buildLogger returns components object', () => {
   const result = buildLogger({ components });
   expect(result.pages).toEqual([]);
   expect(result.menus).toEqual([]);
-  expect(result.logger).toEqual({});
+  expect(result.logger).toEqual({ events: eventsDefaults });
 });
 
 test('buildLogger sentry null does not apply defaults', () => {

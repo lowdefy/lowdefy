@@ -26,10 +26,32 @@ const sentryDefaults = {
   userFields: ['id', '_id'],
 };
 
+// Wide events (request_completed, step_completed, endpoint_completed,
+// agent_tool_completed and their failed twins) are always emitted; the policy
+// decides at which level. The default keeps a production log at the volume it
+// has today: failures only, and no identity fields on a per-step line.
+const eventsDefaults = {
+  level: 'errors',
+  identity: false,
+};
+
+function resolveEvents(events) {
+  if (type.isString(events)) {
+    return { ...eventsDefaults, level: events };
+  }
+  if (type.isObject(events)) {
+    return { ...eventsDefaults, ...events };
+  }
+  return { ...eventsDefaults };
+}
+
 function buildLogger({ components }) {
   if (type.isNone(components.logger)) {
     components.logger = {};
   }
+
+  // Always written, so the runtime reads a policy instead of defaulting one.
+  components.logger.events = resolveEvents(components.logger.events);
 
   // Only apply defaults if sentry is explicitly configured
   if (!type.isNone(components.logger.sentry)) {

@@ -23,6 +23,7 @@ import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import detachRequestSignal from './detachRequestSignal.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import logEndpointCompleted from './logEndpointCompleted.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import runWebhookVerify from './runWebhookVerify.js';
@@ -103,8 +104,16 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
     source: 'endpoint',
   });
 
+  const startTime = performance.now();
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
+  });
+  logEndpointCompleted(context, {
+    endpointConfig,
+    entry: 'webhook',
+    error,
+    startTime,
+    status,
   });
 
   return buildEndpointResult(context, { error, response, status });
