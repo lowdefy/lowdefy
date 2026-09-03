@@ -113,6 +113,11 @@ async function writeGlobalsCss({ components, context }) {
 ${userStylesImport}/* Content sources for Tailwind JIT — block JS content collected at build time */
 @source "../lowdefy-build/tailwind/*.html";
 
+/* Tailwind's dark: variant follows the resolved theme mode, not only the OS
+   preference: the client toggles a "dark" class on <html> from theme.mode
+   (config → user toggle → prefers-color-scheme), so antd and Tailwind agree. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Themed scrollbars — opts out of the browser default that clashes on dark surfaces,
    especially on Windows/Linux where scrollbars are always visible and native-chrome.
    Colors use antd CSS custom properties so they auto-swap with dark/light mode. */

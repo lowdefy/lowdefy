@@ -122,6 +122,8 @@ function useDarkMode({ antd, configDarkMode }) {
   const lightBg = lightToken?.colorBgLayout;
   useEffect(() => {
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    // Tailwind's dark: variant is bound to this class (see writeGlobalsCss).
+    document.documentElement.classList.toggle('dark', isDark);
     if (isDark) {
       document.documentElement.style.backgroundColor = darkBg ?? '#000';
     } else if (lightBg) {

@@ -243,3 +243,15 @@ test('an explicit borderRadius token is passed through unchanged', () => {
   );
   expect(result.current.token).toEqual({ borderRadius: 12 });
 });
+
+test('useDarkMode toggles the dark class on the document element for the Tailwind dark variant', () => {
+  document.documentElement.classList.remove('dark');
+  const { rerender } = renderHook(
+    ({ darkMode }) => useDarkMode({ antd: {}, configDarkMode: darkMode }),
+    { initialProps: { darkMode: 'dark' } }
+  );
+  expect(document.documentElement.classList.contains('dark')).toBe(true);
+  rerender({ darkMode: 'light' });
+  expect(document.documentElement.classList.contains('dark')).toBe(false);
+});
+
