@@ -155,7 +155,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
-  buildContext.jsBodies = [];
+  const buildJsBodies = [];
+  buildContext.jsBodies = buildJsBodies;
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -438,7 +439,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const finalPage = { ...cleanPage, requests: cleanRequests };
     // The page pipeline has no checks step, so the js-lint rule is run directly
     // on the bodies the two jsMapParser calls above queued.
-    jsLint.run({ components: finalPage, context: buildContext });
+    jsLint.run({ components: finalPage, context: buildContext, jsBodies: buildJsBodies });
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {

@@ -17,13 +17,18 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import resolveJsModule from './resolveJsModule.js';
 
 let configDirectory;
 
-function createContext({ refMap = {}, keyMap = {} } = {}) {
+// A _js node always sits inside a config file; the default context stands in
+// for one written directly in lowdefy.yaml.
+function createContext({
+  refMap = { root: { path: 'lowdefy.yaml' } },
+  keyMap = { k1: { '~r': 'root' } },
+} = {}) {
   return {
     directories: { config: configDirectory },
     jsModules: { client: {}, server: {} },
@@ -91,20 +96,35 @@ test('resolveJsModule finds the containing file through the keyMap chain when th
   expect(result.relativePath).toBe('pages/lib/rows.js');
 });
 
-test('resolveJsModule resolves from the config root when the node has no ref', () => {
+test('resolveJsModule throws an internal error when the containing config file cannot be found', () => {
   writeModule('lib/rows.js', 'export const buildRows = () => [];');
-  const context = createContext();
+  const context = createContext({ refMap: {}, keyMap: {} });
+
+  expect(() =>
+    resolveJsModule({
+      context,
+      configKey: 'k1',
+      env: 'server',
+      fn: './lib/rows.js#buildRows',
+      refId: undefined,
+    })
+  ).toThrow(LowdefyInternalError);
+  expect(Object.keys(context.jsModules.server)).toEqual([]);
+});
+
+test('resolveJsModule resolves an .mjs module', () => {
+  writeModule('pages/lib/rows.mjs', 'export const buildRows = () => [];');
+  const context = createContext({ refMap: { r1: { path: 'pages/home.yaml' } } });
 
   const result = resolveJsModule({
     context,
     configKey: 'k1',
     env: 'server',
-    fn: './lib/rows.js#buildRows',
-    refId: undefined,
+    fn: './lib/rows.mjs#buildRows',
+    refId: 'r1',
   });
 
-  expect(result.relativePath).toBe('lib/rows.js');
-  expect(Object.keys(context.jsModules.server)).toEqual([result.hash]);
+  expect(result.relativePath).toBe('pages/lib/rows.mjs');
 });
 
 test('resolveJsModule hashes the same file identically from two config files and differently for two files', () => {
@@ -131,8 +151,18 @@ test('resolveJsModule hashes the same file identically from two config files and
 
 test('resolveJsModule hash is stable across runs for the same config-root path and export', () => {
   writeModule('lib/x.js', 'export function run() {}');
-  const first = resolveJsModule({ context: createContext(), env: 'client', fn: './lib/x.js#run' });
-  const second = resolveJsModule({ context: createContext(), env: 'client', fn: './lib/x.js#run' });
+  const first = resolveJsModule({
+    context: createContext(),
+    configKey: 'k1',
+    env: 'client',
+    fn: './lib/x.js#run',
+  });
+  const second = resolveJsModule({
+    context: createContext(),
+    configKey: 'k1',
+    env: 'client',
+    fn: './lib/x.js#run',
+  });
   expect(first.hash).toBe(second.hash);
 });
 
@@ -140,6 +170,7 @@ test('resolveJsModule resolves #default', () => {
   writeModule('lib/x.js', 'export default function run() {}');
   const result = resolveJsModule({
     context: createContext(),
+    configKey: 'k1',
     env: 'client',
     fn: './lib/x.js#default',
   });
@@ -173,6 +204,7 @@ test('resolveJsModule collects every export shape', () => {
   for (const name of ['fnDecl', 'ClassDecl', 'a', 'b', 'd', 'e', 'f', 'h', 'ns']) {
     const result = resolveJsModule({
       context: createContext(),
+      configKey: 'k1',
       env: 'client',
       fn: `./lib/x.js#${name}`,
     });
@@ -204,7 +236,7 @@ test('resolveJsModule throws for a malformed reference', () => {
   ]) {
     expectConfigError(
       () => resolveJsModule({ context, configKey: 'k1', env: 'client', fn }),
-      `_js module reference must be "<relative path to a .js file>#<exportName>". Received "${fn}".`
+      `_js module reference must be "<relative path to a .js or .mjs file>#<exportName>". Received "${fn}".`
     );
   }
 });
@@ -221,7 +253,10 @@ test('resolveJsModule throws when the file is missing', () => {
         fn: './lib/answer-detail.js#buildRows',
         refId: 'r',
       }),
-    `_js module file not found: "./lib/answer-detail.js" (resolved to "${resolved}").`
+    `_js module file not found: "./lib/answer-detail.js" resolved to "${resolved}", relative to the config file "pages" that contains it. Module paths are relative to their own config file, unlike _ref, which is relative to the config root — that reading would be "${path.join(
+      configDirectory,
+      'lib/answer-detail.js'
+    )}".`
   );
 });
 
@@ -290,6 +325,11 @@ test('resolveJsModule throws when the export may come from export *', () => {
   );
   // An export found directly is not blocked by export *.
   expect(
-    resolveJsModule({ context: createContext(), env: 'client', fn: './lib/x.js#a' }).exportName
+    resolveJsModule({
+      context: createContext(),
+      configKey: 'k1',
+      env: 'client',
+      fn: './lib/x.js#a',
+    }).exportName
   ).toBe('a');
 });

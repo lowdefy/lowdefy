@@ -18,12 +18,12 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import * as espree from 'espree';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import findSimilarString from '../../utils/findSimilarString.js';
 
-const moduleReferenceRegex = /^\.{1,2}\/[^#]+\.js#([A-Za-z_$][\w$]*)$/;
+const moduleReferenceRegex = /^\.{1,2}\/[^#]+\.(?:js|mjs)#([A-Za-z_$][\w$]*)$/;
 
 function collectExports(ast) {
   const names = new Set();
@@ -82,18 +82,22 @@ function collectPatternNames(pattern, names) {
 // addKeys moves a node's ~r into its keyMap entry before buildJs runs, so the
 // containing file is found from the node's configKey — walking up ~k_parent
 // for nodes created by build steps that never carried a ref of their own.
+// Every _js node comes from a config file, so a miss is a broken keyMap, not a
+// reason to reinterpret the path as relative to the config root.
 function findRefId({ context, configKey, refId }) {
   if (!type.isNone(refId)) return refId;
   let key = configKey;
   let depth = 0;
   while (!type.isNone(key) && depth < 100) {
     const entry = context.keyMap[key];
-    if (type.isNone(entry)) return undefined;
+    if (type.isNone(entry)) break;
     if (!type.isNone(entry['~r'])) return entry['~r'];
     key = entry['~k_parent'];
     depth += 1;
   }
-  return undefined;
+  throw new LowdefyInternalError(
+    `_js module reference at config key "${configKey}" could not be traced to the config file that contains it.`
+  );
 }
 
 function toPosix(filePath) {
@@ -110,7 +114,7 @@ function resolveJsModule({ context, configKey, env, fn, refId }) {
   const match = fn.match(moduleReferenceRegex);
   if (!match) {
     throw new ConfigError(
-      `_js module reference must be "<relative path to a .js file>#<exportName>". Received "${fn}".`,
+      `_js module reference must be "<relative path to a .js or .mjs file>#<exportName>". Received "${fn}".`,
       { configKey, checkSlug: 'js-modules' }
     );
   }
@@ -128,8 +132,14 @@ function resolveJsModule({ context, configKey, env, fn, refId }) {
     );
   }
   if (!fs.existsSync(absolutePath)) {
+    // _ref is relative to the config root and a module is relative to the file
+    // that names it, so both readings are printed - the second is the mistake
+    // an author who knows _ref makes.
+    const fromConfigRoot = path.resolve(context.directories.config, modulePath);
     throw new ConfigError(
-      `_js module file not found: "${modulePath}" (resolved to "${absolutePath}").`,
+      `_js module file not found: "${modulePath}" resolved to "${absolutePath}", relative to the config file "${toPosix(
+        containingDirectory
+      )}" that contains it. Module paths are relative to their own config file, unlike _ref, which is relative to the config root — that reading would be "${fromConfigRoot}".`,
       { configKey, checkSlug: 'js-modules' }
     );
   }

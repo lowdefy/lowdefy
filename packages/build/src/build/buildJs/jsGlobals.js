@@ -36,6 +36,27 @@ const SHARED_JS_GLOBALS = [
   'TypeError',
   'RangeError',
   'SyntaxError',
+  'EvalError',
+  'ReferenceError',
+  'URIError',
+  'AggregateError',
+  'Function',
+  'ArrayBuffer',
+  'SharedArrayBuffer',
+  'DataView',
+  'Int8Array',
+  'Uint8Array',
+  'Uint8ClampedArray',
+  'Int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'BigInt64Array',
+  'BigUint64Array',
+  'WeakRef',
+  'FinalizationRegistry',
   'Intl',
   'Infinity',
   'NaN',
@@ -55,6 +76,11 @@ const SHARED_JS_GLOBALS = [
   'URL',
   'URLSearchParams',
   'AbortController',
+  'AbortSignal',
+  'queueMicrotask',
+  'performance',
+  'escape',
+  'unescape',
   'TextEncoder',
   'TextDecoder',
   'setTimeout',
@@ -90,7 +116,7 @@ const CLIENT_ONLY_JS_GLOBALS = [
   'getComputedStyle',
 ];
 
-const SERVER_ONLY_JS_GLOBALS = ['Buffer', 'process'];
+const SERVER_ONLY_JS_GLOBALS = ['Buffer', 'process', 'atob', 'btoa'];
 
 export const CLIENT_JS_GLOBALS = new Set([...SHARED_JS_GLOBALS, ...CLIENT_ONLY_JS_GLOBALS]);
 export const SERVER_JS_GLOBALS = new Set([...SHARED_JS_GLOBALS, ...SERVER_ONLY_JS_GLOBALS]);

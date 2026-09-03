@@ -32,6 +32,7 @@ const KNOWN_KEYS = [
   'methods',
   'properties',
   'slots',
+  'styles',
   'valueType',
 ];
 
@@ -123,6 +124,15 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
       !(type.isArray(meta.icons) && meta.icons.every((icon) => type.isString(icon)))
     ) {
       fail(`meta.icons must be an array of strings. Received ${received(meta.icons)}.`, meta.icons);
+    }
+    if (
+      !type.isUndefined(meta.styles) &&
+      !(type.isArray(meta.styles) && meta.styles.every((style) => type.isString(style)))
+    ) {
+      fail(
+        `meta.styles must be an array of strings. Received ${received(meta.styles)}.`,
+        meta.styles
+      );
     }
     if (!type.isUndefined(meta.properties) && !type.isObject(meta.properties)) {
       fail(

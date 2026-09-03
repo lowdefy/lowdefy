@@ -228,15 +228,15 @@ test('validateBlockMeta reports malformed hazards and dynamicEvents', () => {
 });
 
 test('validateBlockMeta warns rather than errors on an unknown key and keeps the meta valid', () => {
-  const { valid, context } = validate({ category: 'display', valueType: null, styles: ['a.css'] });
+  const { valid, context } = validate({ category: 'display', valueType: null, colours: ['red'] });
   expect(valid).toBe(true);
   expect(context.errors).toEqual([]);
   expect(context.handleWarning).toHaveBeenCalledTimes(1);
   const warning = context.handleWarning.mock.calls[0][0];
   expect(warning).toBeInstanceOf(ConfigWarning);
-  expect(warning.message).toContain('meta has unknown keys ["styles"]');
+  expect(warning.message).toContain('meta has unknown keys ["colours"]');
   expect(warning.message).toContain('Known keys are ["category","cssKeys"');
-  expect(warning.received).toEqual(['styles']);
+  expect(warning.received).toEqual(['colours']);
 });
 
 test('validateBlockMeta collects every bad field of one meta instead of stopping at the first', () => {
@@ -252,4 +252,16 @@ test('validateBlockMeta collects every bad field of one meta instead of stopping
 
 test('validateBlockMeta throws immediately when the context has no error collection', () => {
   expect(() => validate({ category: 'widget' }, { handleWarning: jest.fn() })).toThrow(ConfigError);
+});
+
+test('validateBlockMeta accepts styles as a known key and rejects a non-string list', () => {
+  const accepted = validate({ category: 'display', styles: ['a.css'] });
+  expect(accepted.valid).toBe(true);
+  expect(accepted.context.handleWarning).not.toHaveBeenCalled();
+
+  const rejected = validate({ category: 'display', styles: 'a.css' });
+  expect(rejected.valid).toBe(false);
+  expect(rejected.context.errors[0].message).toContain(
+    'meta.styles must be an array of strings. Received "a.css".'
+  );
 });

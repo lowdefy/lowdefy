@@ -223,7 +223,7 @@ describe('module references', () => {
       error = e;
     }
     expect(error.message).toBe(
-      '_js module reference must be "<relative path to a .js file>#<exportName>". Received "../lib/rows.js".'
+      '_js module reference must be "<relative path to a .js or .mjs file>#<exportName>". Received "../lib/rows.js".'
     );
     expect(error.configKey).toBe('k1');
     expect(error.checkSlug).toBe('js-modules');

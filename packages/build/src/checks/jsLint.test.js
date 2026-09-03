@@ -124,3 +124,28 @@ test('jsLint drains the queue so a body is reported once per pipeline run', () =
   expect(context.jsBodies).toEqual([]);
   expect(context.errors).toHaveLength(1);
 });
+
+test('jsLint caches analysed bodies on the context, not across contexts', () => {
+  const first = lint({ input: { x: withKey({ _js: 'return unlinked;' }, 'k1') } });
+  expect(first.jsLintCache.size).toBe(1);
+
+  const second = createContext();
+  expect(second.jsLintCache).toBeUndefined();
+});
+
+test('jsLint drains the list it is given rather than the one on the context', () => {
+  const context = createContext();
+  jsMapParser({
+    input: { x: withKey({ _js: 'return unlinked;' }, 'k1') },
+    jsMap: {},
+    env: 'client',
+    context,
+  });
+  const jsBodies = context.jsBodies;
+  // A concurrent JIT build reassigns context.jsBodies while this build runs.
+  context.jsBodies = [];
+  jsLint.run({ components: {}, context, jsBodies });
+
+  expect(context.errors).toHaveLength(1);
+  expect(jsBodies).toEqual([]);
+});

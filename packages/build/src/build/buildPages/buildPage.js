@@ -22,6 +22,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import buildBlock from './buildBlock/buildBlock.js';
 import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
+import createCheckDuplicateBlockId from './createCheckDuplicateBlockId.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
@@ -64,10 +65,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     callApiActionRefs: context.callApiActionRefs ?? [],
     websocketActionRefs: context.websocketActionRefs ?? [],
     dynamicBlockRefs: context.dynamicBlockRefs ?? [],
-    checkDuplicateBlockId: createCheckDuplicateId({
-      message:
-        'Duplicate blockId "{{ id }}" on page "{{ pageId }}". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.',
-    }),
+    checkDuplicateBlockId: createCheckDuplicateBlockId({ context, pageId: page.pageId }),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

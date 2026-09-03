@@ -141,13 +141,14 @@ properties:
     ],
   ]);
 
-  await expect(
-    buildPageJit({
-      pageId: 'home',
-      pageRegistry,
-      context,
-    })
-  ).rejects.toMatchObject({
+  // The check collects, so the page build reports it in buildErrors rather
+  // than throwing it out of the block build.
+  const error = await buildPageJit({ pageId: 'home', pageRegistry, context }).then(
+    () => null,
+    (err) => err
+  );
+  expect(error.message).toBe('Page "home" build failed with 1 error(s).');
+  expect(error.buildErrors[0]).toMatchObject({
     message: 'Block "home" of type "Box": unknown property "contnet". Did you mean "content"?',
     checkSlug: 'block-properties',
   });

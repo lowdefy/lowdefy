@@ -46,7 +46,9 @@ function collectUnusedNames({ scopeManager }) {
     scope.variables.forEach((variable) => {
       if (variable.name === WRAPPER_NAME) return;
       if (variable.defs.length === 0) return;
-      if (variable.defs.some((def) => def.type === 'Parameter')) return;
+      // A catch binding is idiomatic to declare and never read, as is a
+      // function parameter, so neither is reported as unused.
+      if (variable.defs.some((def) => ['Parameter', 'CatchClause'].includes(def.type))) return;
       const used = variable.references.some(
         (reference) => !isInitialisationReference(reference, variable)
       );

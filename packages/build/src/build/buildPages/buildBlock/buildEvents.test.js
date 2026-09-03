@@ -1476,12 +1476,54 @@ test('buildEvents suppresses the error under ~ignoreBuildChecks events', () => {
   expect(() => buildPages({ components, context: suppressContext })).not.toThrow();
 });
 
-test('buildEvents skips the check for a block type that declares dynamicEvents', () => {
+test('buildEvents warns rather than errors on an unknown event name of a dynamicEvents block', () => {
   const components = pageWithBlockEvents(
     { onApprove: [{ id: 'action_1', type: 'Reset' }] },
     { blockType: 'Tabs' }
   );
   expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Event "onApprove" is not a declared event of block type "Tabs" at block "block_1" on page "page_1". Block type "Tabs" fires event names authored in its properties, so this event only fires if a property names it as its eventName. Declared events: onChange.'
+  );
+});
+
+test('buildEvents errors on a near miss of a declared event name of a dynamicEvents block', () => {
+  const components = pageWithBlockEvents(
+    { onChang: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'Tabs' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onChang" is not an event of block type "Tabs" at block "block_1" on page "page_1". Did you mean "onChange"?'
+  );
+});
+
+test('buildEvents is silent on a dynamicEvents event name authored in the block properties', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Tabs',
+            properties: { tabs: [{ key: 'a', eventName: 'onApprove' }] },
+            events: { onApprove: [{ id: 'action_1', type: 'Reset' }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('buildEvents errors when events is an array instead of a map of event names', () => {
+  const components = pageWithBlockEvents([{ id: 'action_1', type: 'Reset' }]);
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Block "block_1" on page "page_1" events must be a map of event name to actions. Received [{"id":"action_1","type":"Reset"}].'
+  );
 });
 
 function textInputChange(actions, blockType = 'TextInput') {
@@ -1662,4 +1704,19 @@ test('buildEvents suppresses the _event payload error under ~ignoreBuildChecks e
     { blockType: 'TextInput' }
   );
   expect(() => buildPages({ components, context: suppressContext })).not.toThrow();
+});
+
+test('buildEvents reports every _event path that is not in the payload in one build', () => {
+  const collectingContext = testContext({ blockMetas, logger });
+  collectingContext.errors = [];
+  const components = textInputChange([
+    {
+      id: 'store',
+      type: 'SetState',
+      params: { a: { _event: 'valu' }, b: { _event: 'other' } },
+    },
+  ]);
+  buildPages({ components, context: collectingContext });
+  expect(collectingContext.errors).toHaveLength(2);
+  expect(collectingContext.errors.every((error) => error.checkSlug === 'event-payload')).toBe(true);
 });

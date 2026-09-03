@@ -16,6 +16,7 @@
 
 import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import collectExceptions from '../../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 import findSimilarString from '../../../utils/findSimilarString.js';
 import { ORG_CLIENT_ACTION_TYPES } from '../validateOrgClientActionRefs.js';
@@ -278,35 +279,82 @@ function checkActionList(list, ctx) {
   });
 }
 
+// A block type that fires event names authored in its own properties (a Tabs
+// tab's eventName, an AgGrid cell button's eventName) declares dynamicEvents.
+// Those names are found here so an authored name is not reported as unknown.
+function collectAuthoredEventNames(node, names) {
+  if (type.isArray(node)) {
+    node.forEach((item) => collectAuthoredEventNames(item, names));
+    return;
+  }
+  if (!type.isObject(node)) return;
+  Object.keys(node).forEach((key) => {
+    if (key === 'eventName' && type.isString(node[key])) {
+      names.add(node[key]);
+      return;
+    }
+    collectAuthoredEventNames(node[key], names);
+  });
+}
+
 function checkEventName(key, block, pageContext, configKey) {
   if (UNIVERSAL_EVENTS.has(key)) return;
+  const context = pageContext.context;
   if (ROOT_ONLY_EVENTS.has(key)) {
     if (block.blockId === pageContext.rootBlockId) return;
-    throw new ConfigError(
-      `Event "${key}" only fires on the page's root block, not on block "${block.blockId}" on page "${pageContext.pageId}". Move it to the page's own events, or use onMount, which fires on every block.`,
-      { configKey, checkSlug: 'events' }
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Event "${key}" only fires on the page's root block, not on block "${block.blockId}" on page "${pageContext.pageId}". Move it to the page's own events, or use onMount, which fires on every block.`,
+        { configKey, checkSlug: 'events' }
+      )
     );
+    return;
   }
-  const blockMeta = pageContext.context?.blockMetas?.[block.type];
-  // A block type that fires event names authored in its own properties (a Tabs
-  // tab's eventName, an AgGrid cell button's eventName) cannot enumerate them.
-  if (blockMeta?.dynamicEvents === true) return;
+  const blockMeta = context?.blockMetas?.[block.type];
   // Declared events are a name -> { payload? } map (see extractBlockTypes).
   // A block type that declares no events tells the build nothing - do not guess.
   if (!type.isObject(blockMeta?.events)) return;
   const declared = Object.keys(blockMeta.events);
   if (declared.includes(key)) return;
   const suggestion = findSimilarString({ input: key, candidates: declared });
-  const didYouMean = suggestion ? ` Did you mean "${suggestion}"?` : '';
   const eventList = declared.length > 0 ? declared.join(', ') : 'none';
-  throw new ConfigError(
-    `Event "${key}" is not an event of block type "${block.type}" at block "${block.blockId}" on page "${pageContext.pageId}".${didYouMean} Block type "${block.type}" has events: ${eventList}. Every block also accepts onMount and onMountAsync, and any event name that declares a shortcut.`,
-    { configKey, checkSlug: 'events' }
+
+  if (blockMeta.dynamicEvents === true && suggestion === null) {
+    const authored = new Set();
+    collectAuthoredEventNames(block.properties, authored);
+    if (authored.has(key)) return;
+    context.handleWarning(
+      new ConfigWarning(
+        `Event "${key}" is not a declared event of block type "${block.type}" at block "${block.blockId}" on page "${pageContext.pageId}". Block type "${block.type}" fires event names authored in its properties, so this event only fires if a property names it as its eventName. Declared events: ${eventList}.`,
+        { configKey, checkSlug: 'events' }
+      )
+    );
+    return;
+  }
+
+  const didYouMean = suggestion ? ` Did you mean "${suggestion}"?` : '';
+  collectExceptions(
+    context,
+    new ConfigError(
+      `Event "${key}" is not an event of block type "${block.type}" at block "${block.blockId}" on page "${pageContext.pageId}".${didYouMean} Block type "${block.type}" has events: ${eventList}. Every block also accepts onMount and onMountAsync, and any event name that declares a shortcut.`,
+      { configKey, checkSlug: 'events' }
+    )
   );
 }
 
 function buildEvents(block, pageContext) {
-  if (block.events) {
+  if (!type.isNone(block.events)) {
+    if (!type.isObject(block.events)) {
+      throw new ConfigError(
+        `Block "${block.blockId}" on page "${
+          pageContext.pageId
+        }" events must be a map of event name to actions. Received ${JSON.stringify(
+          block.events
+        )}.`,
+        { received: block.events, configKey: block['~k'] }
+      );
+    }
     Object.keys(block.events).map((key) => {
       if (isMetaKey(key)) return;
       const eventConfigKey = block.events[key]?.['~k'] || block['~k'];
@@ -370,6 +418,7 @@ function buildEvents(block, pageContext) {
       if (type.isObject(payload)) {
         checkEventPayloadRefs({
           block,
+          context: pageContext.context,
           event: block.events[key],
           eventConfigKey,
           eventName: key,
