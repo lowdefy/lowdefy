@@ -78,6 +78,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_migrations_status',
   'lowdefy_migrate',
   'lowdefy_restart',
+  'lowdefy_app_brief',
   'lowdefy_app_map',
   'lowdefy_data_model',
   'lowdefy_checkpoint',

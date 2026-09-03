@@ -30,6 +30,7 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
+import docsAppBriefHandler from './routes/docs/appBrief.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
 import docsDataModelHandler from './routes/docs/dataModel.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
@@ -155,6 +156,8 @@ function createApp() {
   app.get('/lowdefy-docs/migrations', docsMigrationsStatusHandler);
   app.post('/lowdefy-docs/migrate', docsMigrateHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/app-brief', docsAppBriefHandler);
+  app.get('/lowdefy-docs/app-brief/:pageId', docsAppBriefHandler);
   app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
