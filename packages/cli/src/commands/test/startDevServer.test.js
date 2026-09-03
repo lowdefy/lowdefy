@@ -60,6 +60,7 @@ let child;
 
 beforeEach(() => {
   context = {
+    commandLineOptions: {},
     directories: { config: '/app', dev: '/app/.lowdefy/dev' },
     options: { port: 3000, logLevel: 'info', refResolver: undefined },
     pnpmCmd: 'pnpm',
@@ -82,17 +83,20 @@ afterEach(() => {
   process.kill = realProcessKill;
 });
 
-test('startDevServer prepares .lowdefy/dev, spawns the server headless and resolves once ping answers', async () => {
+test('startDevServer prepares .lowdefy/test, spawns the server headless and resolves once ping answers', async () => {
   const { default: startDevServer } = await import('./startDevServer.js');
   mockGet.mockRejectedValueOnce(new Error('ECONNREFUSED')).mockResolvedValue({ data: {} });
 
   const server = await startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 });
 
-  expect(mockFindAvailablePort).toHaveBeenCalledWith({ port: 3000 });
+  // A run beside `lowdefy dev` must never reach for the developer's port.
+  const { port: startPort } = mockFindAvailablePort.mock.calls[0][0];
+  expect(startPort).toBeGreaterThanOrEqual(40000);
+  expect(startPort).toBeLessThan(60000);
   expect(mockGetServer).toHaveBeenCalledWith({
     context,
     packageName: '@lowdefy/server-dev',
-    directory: '/app/.lowdefy/dev',
+    directory: '/app/.lowdefy/test',
   });
   expect(mockAddCustomPluginsAsDeps).toHaveBeenCalled();
   expect(mockEnsurePnpmWorkspaceYaml).toHaveBeenCalled();
@@ -102,11 +106,14 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(spawnArgs.command).toEqual('pnpm');
   expect(spawnArgs.args).toEqual(['run', 'start']);
   expect(spawnArgs.returnProcess).toBe(true);
-  expect(spawnArgs.processOptions.cwd).toEqual('/app/.lowdefy/dev');
+  expect(spawnArgs.processOptions.cwd).toEqual('/app/.lowdefy/test');
   expect(spawnArgs.processOptions.detached).toBe(true);
   expect(spawnArgs.processOptions.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER).toBe(false);
   expect(spawnArgs.processOptions.env.PORT).toEqual(3228);
   expect(spawnArgs.processOptions.env.LOWDEFY_DIRECTORY_CONFIG).toEqual('/app');
+  // The runner's own server carries the write allowance, so an endpoint request
+  // test never needs cli.agentTools.allowWriteRequests in committed config.
+  expect(spawnArgs.processOptions.env.LOWDEFY_TEST_RUN).toEqual('1');
 
   expect(mockGet).toHaveBeenCalledWith('http://localhost:3228/api/ping', { timeout: 1000 });
   expect(server.url).toEqual('http://localhost:3228');
@@ -168,4 +175,22 @@ test('startDevServer throws when the server process exits before it is ready', a
   await expect(startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 })).rejects.toThrow(
     'Development server exited with code 1 before it was ready.'
   );
+});
+
+test('startDevServer starts port discovery at --port when one was given', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockGet.mockResolvedValue({ data: {} });
+  context.commandLineOptions = { port: '3111' };
+  const server = await startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 });
+  expect(mockFindAvailablePort).toHaveBeenCalledWith({ port: 3111 });
+  await server.stop();
+});
+
+test('startDevServer uses --dev-directory when the caller named one', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockGet.mockResolvedValue({ data: {} });
+  context.commandLineOptions = { devDirectory: '/app/.lowdefy/dev' };
+  const server = await startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 });
+  expect(mockSpawnProcess.mock.calls[0][0].processOptions.cwd).toEqual('/app/.lowdefy/dev');
+  await server.stop();
 });

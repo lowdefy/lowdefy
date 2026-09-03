@@ -30,6 +30,13 @@ import YAML from 'yaml';
 // opt-in flag. Read fresh (no caching) so toggling the flag in lowdefy.yaml
 // takes effect without a server restart.
 async function isWriteRequestsAllowed() {
+  // `lowdefy test` sets this on a server it started itself for the length of one
+  // run, so an app with an endpoint request test does not have to commit
+  // cli.agentTools.allowWriteRequests and leave the gate open for every ordinary
+  // development session.
+  if (process.env.LOWDEFY_TEST_RUN === '1') {
+    return true;
+  }
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   let raw = await readFile(path.join(configDirectory, 'lowdefy.yaml'));
   if (type.isNone(raw)) {

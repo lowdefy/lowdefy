@@ -22,8 +22,13 @@ const mockSeedFixtures = jest.fn();
 jest.unstable_mockModule('./seedFixtures.js', () => ({ default: mockSeedFixtures }));
 
 const url = 'http://localhost:3229';
-const context = { directories: { dev: '/app/.lowdefy/dev' } };
-const session = { client: { tag: 'client' } };
+const context = {
+  commandLineOptions: {},
+  directories: { config: '/app', dev: '/app/.lowdefy/dev' },
+};
+const seeded = new Map();
+const ObjectId = { tag: 'ObjectId' };
+const session = { client: { tag: 'client' }, seeded, ObjectId };
 
 function pageTest(overrides = {}) {
   return {
@@ -62,7 +67,6 @@ test('runRequestTest posts a page request to run-request and passes on a subset 
     payload: { status: 'open' },
     user: 'admin',
   });
-  expect(mockSeedFixtures).not.toHaveBeenCalled();
   expect(result).toEqual({
     name: 'lists open controls',
     filePath: '/app/tests/requests/controls.test.yaml',
@@ -103,9 +107,11 @@ test('runRequestTest seeds before calling the route and compares ~d dates as Dat
   const result = await runRequestTest({ context, item, url, session });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed,
     fixtures: [],
+    seeded,
+    ObjectId,
   });
   expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
     mockPost.mock.invocationCallOrder[0]
@@ -245,6 +251,8 @@ test('runRequestTest seeds the named fixtures in list order together with seed b
   const seed = { answers: [{ _id: 'a1' }] };
   const fixtureSession = {
     client: session.client,
+    seeded,
+    ObjectId,
     fixtures: new Map([
       ['base', { fixture: base }],
       ['org-a', { fixture: orgA }],
@@ -258,9 +266,11 @@ test('runRequestTest seeds the named fixtures in list order together with seed b
   });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed,
     fixtures: [orgA, base],
+    seeded,
+    ObjectId,
   });
   expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
     mockPost.mock.invocationCallOrder[0]
@@ -275,13 +285,20 @@ test('runRequestTest seeds a test with fixtures and no seed', async () => {
     context,
     item: pageTest({ fixtures: ['base'] }),
     url,
-    session: { client: session.client, fixtures: new Map([['base', { fixture: base }]]) },
+    session: {
+      client: session.client,
+      seeded,
+      ObjectId,
+      fixtures: new Map([['base', { fixture: base }]]),
+    },
   });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed: undefined,
     fixtures: [base],
+    seeded,
+    ObjectId,
   });
   expect(result.passed).toBe(true);
 });
@@ -316,4 +333,36 @@ test('runRequestTest fails an invalid fixtures field without calling the route',
   expect(mockPost).not.toHaveBeenCalled();
   expect(result.passed).toBe(false);
   expect(result.message).toContain('"fixtures" should be a list of fixture names');
+});
+
+test('runRequestTest clears the run before a test that seeds nothing of its own', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({ data: { success: true, response: [] } });
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ expect: [] }),
+    url,
+    session,
+  });
+  expect(mockSeedFixtures).toHaveBeenCalledWith({
+    client: session.client,
+    devDirectory: '/app/.lowdefy/test',
+    seed: undefined,
+    fixtures: [],
+    seeded,
+    ObjectId,
+  });
+  expect(result.passed).toBe(true);
+});
+
+test('runRequestTest does not seed when the run has no memory server', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({ data: { success: true, response: [] } });
+  await runRequestTest({
+    context,
+    item: pageTest({ expect: [] }),
+    url,
+    session: { client: null, fixtures: new Map() },
+  });
+  expect(mockSeedFixtures).not.toHaveBeenCalled();
 });

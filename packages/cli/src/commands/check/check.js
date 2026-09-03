@@ -26,9 +26,42 @@ import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyCheck from '../../utils/runLowdefyCheck.js';
 import formatCheckReport from './formatCheckReport.js';
 
+function readJson(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+// The check validates against the types the server directory has installed, so
+// a directory installed for an older Lowdefy version or a different plugin set
+// reports types the app does have as missing. package.json records exactly what
+// was installed - the pristine package.original.json plus the app's plugins -
+// so comparing it against what the app asks for now answers "is this directory
+// still the right one" without an extra artefact.
+function isServerPrepared({ context, directory }) {
+  const packageJson = readJson(path.join(directory, 'package.json'));
+  const original = readJson(path.join(directory, 'package.original.json'));
+  if (packageJson === null || original === null) {
+    return false;
+  }
+  if (context.lowdefyVersion !== 'local' && packageJson.version !== context.lowdefyVersion) {
+    return false;
+  }
+  const expected = { ...(original.dependencies ?? {}) };
+  Object.values(context.plugins ?? {}).forEach((plugin) => {
+    expected[plugin.name] = plugin.version;
+  });
+  const installed = packageJson.dependencies ?? {};
+  const names = new Set([...Object.keys(expected), ...Object.keys(installed)]);
+  return [...names].every((name) => expected[name] === installed[name]);
+}
+
 // The app's own plugins tell the check which types exist, so the server
-// directory the build maintains is prepared the same way build does — once, on
-// a fresh clone; every later check reuses it.
+// directory the build maintains is prepared the same way build does — on a
+// fresh clone, and again whenever the Lowdefy version or the plugin set the
+// app declares no longer matches what is installed there.
 async function prepareServer({ context, directory }) {
   await getServer({ context, packageName: '@lowdefy/server', directory });
   await resetServerPackageJson({ context, directory });
@@ -48,7 +81,7 @@ async function readCheckReport({ directory }) {
 
 async function check({ context }) {
   const directory = context.directories.server;
-  if (!fs.existsSync(path.join(directory, 'package.json'))) {
+  if (!isServerPrepared({ context, directory })) {
     await prepareServer({ context, directory });
   }
   await runLowdefyCheck({ context, directory });

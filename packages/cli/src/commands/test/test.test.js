@@ -83,7 +83,11 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory },
+    commandLineOptions: {},
+    directories: {
+      config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    },
     options: { port: 3000 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -206,7 +210,7 @@ test('test --url targets a running server and does not boot or stop one', async 
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockStop).not.toHaveBeenCalled();
   expect(mockPost.mock.calls[0][0]).toEqual('http://localhost:3000/lowdefy-docs/journey');
-  expect(logs.info[0]).toEqual('Running tests against http://localhost:3000/.');
+  expect(logs.info[0]).toEqual('Running against http://localhost:3000.');
 });
 
 test('test reports a malformed journey file as a failure and still runs the others', async () => {

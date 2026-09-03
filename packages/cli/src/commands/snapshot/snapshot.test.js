@@ -93,7 +93,11 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-snapshot-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory },
+    commandLineOptions: {},
+    directories: {
+      config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    },
     options: { port: 3248 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -149,7 +153,7 @@ test('snapshot --update without a manifest writes every page for every dev user 
   expect(goldenFiles('about', 'member')).toEqual(['dom.html', 'screenshot.png', 'state.json']);
   expect(logs.info).toContain('4 snapshots written');
   expect(mockStop).toHaveBeenCalled();
-  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context, env: {} });
 });
 
 test('snapshot --update passes the snapshot route the user, urlQuery and journey from the manifest', async () => {
@@ -348,4 +352,15 @@ test('snapshot --check reports a broken manifest journey as the failure, not a s
   expect(logs.error.at(-1)).toMatch(/Journey file .*missing.yaml.* not found/);
   expect(logs.error.some((line) => /passed,/.test(line))).toBe(false);
   expect(mockStop).toHaveBeenCalled();
+});
+
+test('snapshot --url captures from a running server without booting or stopping one', async () => {
+  context.options.update = true;
+  context.options.url = 'http://localhost:3000/';
+  await snapshot({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockStop).not.toHaveBeenCalled();
+  expect(mockGet.mock.calls[0][0]).toMatch(/^http:\/\/localhost:3000\/lowdefy-docs\//);
+  expect(logs.info[0]).toEqual('Running against http://localhost:3000.');
+  expect(process.exitCode).toBeUndefined();
 });

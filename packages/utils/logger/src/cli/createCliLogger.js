@@ -65,11 +65,15 @@ function colorize(text, color, level) {
   return colors[color ?? defaultColors[level]](text);
 }
 
+// Human output is stderr, always. stdout belongs to the machine-readable output
+// a command was asked for (`lowdefy check --json`), and a log line mixed into it
+// makes the report unparseable for the caller that asked for it.
 function createOraPrint({ logLevel }) {
   const spinner = ora({
     spinner: 'random',
     prefixText: () => colors.gray(getTime()),
     color: 'blue',
+    stream: process.stderr,
   });
 
   // Write a log line. If spinner is active, output above it without stopping it.
@@ -99,15 +103,16 @@ function createOraPrint({ logLevel }) {
 }
 
 function createBasicPrint({ logLevel = 'info' }) {
+  const write = (text) => process.stderr.write(`${text}\n`);
   return filterLevels(
     {
-      error: (text) => console.error(text),
-      warn: (text) => console.warn(text),
-      info: (text) => console.log(text),
-      debug: (text) => console.debug(text),
-      spin: (text) => console.log(text),
-      succeed: (text) => console.log(text),
-      fail: (text) => console.error(text),
+      error: write,
+      warn: write,
+      info: write,
+      debug: write,
+      spin: write,
+      succeed: write,
+      fail: write,
     },
     logLevel
   );

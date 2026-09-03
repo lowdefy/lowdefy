@@ -16,6 +16,7 @@
 import axios from 'axios';
 import { serializer, type } from '@lowdefy/helpers';
 
+import getTestServerDirectory from './getTestServerDirectory.js';
 import matchExpectation from './matchExpectation.js';
 import seedFixtures from './seedFixtures.js';
 import validateRequestTest from './validateRequestTest.js';
@@ -87,13 +88,18 @@ async function runRequestTest({ context, item, url, session }) {
   if (!type.isNone(fixtureError)) {
     return fail({ message: fixtureError });
   }
-  if (!type.isNone(test.seed) || fixtures.length > 0) {
+  // Seeding runs for every test of a seeded run, not only for tests that declare
+  // their own data: a test without `seed` must still start from a database
+  // cleared of what the previous test wrote.
+  if (!type.isNone(session.client)) {
     try {
       await seedFixtures({
         client: session.client,
-        devDirectory: context.directories.dev,
+        devDirectory: getTestServerDirectory({ context }),
         seed: test.seed,
         fixtures,
+        seeded: session.seeded,
+        ObjectId: session.ObjectId,
       });
     } catch (error) {
       return fail({ message: error.message, durationMs: Date.now() - start });

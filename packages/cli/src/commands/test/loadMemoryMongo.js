@@ -49,13 +49,19 @@ async function importOptional({ name, configDirectory }) {
 }
 
 // Loads mongodb-memory-server and the mongodb driver, or throws the install hint.
+// ObjectId comes back with the client because the seeder revives the { _oid }
+// marker with it.
 // Called only when at least one request test declares `seed`.
 async function loadMemoryMongo({ configDirectory }) {
   const [memoryServer, driver] = await Promise.all([
     importOptional({ name: 'mongodb-memory-server', configDirectory }),
     importOptional({ name: 'mongodb', configDirectory }),
   ]);
-  return { MongoMemoryServer: memoryServer.MongoMemoryServer, MongoClient: driver.MongoClient };
+  return {
+    MongoMemoryServer: memoryServer.MongoMemoryServer,
+    MongoClient: driver.MongoClient,
+    ObjectId: driver.ObjectId,
+  };
 }
 
 export { INSTALL_HINT };

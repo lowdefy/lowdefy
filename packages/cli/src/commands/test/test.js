@@ -19,8 +19,8 @@ import { type } from '@lowdefy/helpers';
 import discoverJourneys from './discoverJourneys.js';
 import formatJourneyResult from './formatJourneyResult.js';
 import requestTestSuite from './requestTestSuite.js';
+import resolveTestServer from './resolveTestServer.js';
 import runJourney from './runJourney.js';
-import startDevServer from './startDevServer.js';
 
 // Each suite discovers its own test items and runs one item against the dev server.
 // An optional `prepare({ context, items })` runs before the server boots and returns
@@ -67,21 +67,12 @@ async function prepareSuites({ context, selected }) {
   return { sessions, env, stop };
 }
 
-function trimTrailingSlash(url) {
-  return url.replace(/\/+$/, '');
-}
-
-async function resolveServer({ context, env }) {
-  if (type.isString(context.options.url) && context.options.url !== '') {
-    context.logger.info(`Running tests against ${context.options.url}.`);
-    return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
-  }
-  try {
-    return await startDevServer({ context, env });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
+// Request tests need a server the runner controls: their connection overrides
+// and the runner-scoped write allowance are handed to the server as environment,
+// which an already running development server never read. Journeys only read the
+// app, so they run against whichever server is already up.
+function needsOwnServer({ selected }) {
+  return selected.some(({ suite }) => suite === requestTestSuite);
 }
 
 async function test({ context }) {
@@ -117,7 +108,11 @@ async function test({ context }) {
 
   let server;
   try {
-    server = await resolveServer({ context, env: prepared.env });
+    server = await resolveTestServer({
+      context,
+      env: prepared.env,
+      reuseRunningServer: !needsOwnServer({ selected }),
+    });
   } catch (error) {
     await prepared.stop();
     throw error;

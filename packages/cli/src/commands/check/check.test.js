@@ -16,7 +16,7 @@
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('fs', () => ({
-  default: { existsSync: jest.fn() },
+  default: { readFileSync: jest.fn() },
 }));
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   readFile: jest.fn(),
@@ -45,14 +45,36 @@ const errorEntry = {
   prodError: false,
 };
 
-function createContext({ json } = {}) {
+function createContext({ json, plugins } = {}) {
   return {
     directories: { config: '/app', server: '/app/.lowdefy/server' },
     logger: { info: jest.fn(), warn: jest.fn(), debug: jest.fn() },
+    lowdefyVersion: '5.0.0',
     options: { json, logLevel: 'info' },
+    plugins: plugins ?? {},
     pnpmCmd: 'pnpm',
     sendTelemetry: jest.fn(),
   };
+}
+
+// The server directory records what it has installed in package.json, against
+// the pristine package.original.json the server package ships.
+function mockServerDirectory({ dependencies = {}, version = '5.0.0', missing = false } = {}) {
+  fs.readFileSync.mockImplementation((filePath) => {
+    if (missing) {
+      throw new Error(`ENOENT: no such file or directory, open '${filePath}'`);
+    }
+    if (filePath === '/app/.lowdefy/server/package.original.json') {
+      return JSON.stringify({ dependencies: { '@lowdefy/api': '5.0.0' } });
+    }
+    if (filePath === '/app/.lowdefy/server/package.json') {
+      return JSON.stringify({
+        version,
+        dependencies: { '@lowdefy/api': '5.0.0', ...dependencies },
+      });
+    }
+    throw new Error(`Unexpected read of ${filePath}.`);
+  });
 }
 
 let stdout;
@@ -65,7 +87,7 @@ beforeEach(() => {
     return true;
   });
   process.exitCode = undefined;
-  fs.existsSync.mockReturnValue(true);
+  mockServerDirectory();
 });
 
 afterEach(() => {
@@ -119,11 +141,10 @@ test('check --json prints only the report object', async () => {
 });
 
 test('check prepares the server directory when its package.json is missing', async () => {
-  fs.existsSync.mockReturnValue(false);
+  mockServerDirectory({ missing: true });
   readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
   const context = createContext();
   await check({ context });
-  expect(fs.existsSync).toHaveBeenCalledWith('/app/.lowdefy/server/package.json');
   expect(getServer).toHaveBeenCalledWith({
     context,
     packageName: '@lowdefy/server',
@@ -131,6 +152,40 @@ test('check prepares the server directory when its package.json is missing', asy
   });
   expect(installServer).toHaveBeenCalledTimes(1);
   expect(runLowdefyCheck).toHaveBeenCalledTimes(1);
+});
+
+test('check re-prepares the server directory when a plugin dependency was added', async () => {
+  mockServerDirectory();
+  readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
+  await check({
+    context: createContext({ plugins: { blocks: { name: 'my-blocks', version: '1.0.0' } } }),
+  });
+  expect(installServer).toHaveBeenCalledTimes(1);
+});
+
+test('check re-prepares the server directory when a plugin version changed', async () => {
+  mockServerDirectory({ dependencies: { 'my-blocks': '1.0.0' } });
+  readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
+  await check({
+    context: createContext({ plugins: { blocks: { name: 'my-blocks', version: '2.0.0' } } }),
+  });
+  expect(installServer).toHaveBeenCalledTimes(1);
+});
+
+test('check re-prepares the server directory when the Lowdefy version changed', async () => {
+  mockServerDirectory({ version: '4.0.0' });
+  readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
+  await check({ context: createContext() });
+  expect(installServer).toHaveBeenCalledTimes(1);
+});
+
+test('check reuses the server directory when the installed plugin set still matches', async () => {
+  mockServerDirectory({ dependencies: { 'my-blocks': '1.0.0' } });
+  readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
+  await check({
+    context: createContext({ plugins: { blocks: { name: 'my-blocks', version: '1.0.0' } } }),
+  });
+  expect(installServer).not.toHaveBeenCalled();
 });
 
 test('check throws when the child wrote no report', async () => {

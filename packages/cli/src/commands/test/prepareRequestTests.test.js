@@ -43,6 +43,10 @@ beforeEach(() => {
     connections: [{ connectionId: `${name}_connection`, docs: [{ _id: 1 }] }],
   }));
   constructedUris = [];
+  mockServerStop.mockReset();
+  mockClientConnect.mockReset();
+  mockClientClose.mockReset();
+  mockLoadMemoryMongo.mockClear();
   context = {
     directories: { config: '/app' },
     options: {},
@@ -55,6 +59,7 @@ beforeEach(() => {
   mockLoadMemoryMongo.mockResolvedValue({
     MongoMemoryServer: { create: mockCreate },
     MongoClient,
+    ObjectId: { tag: 'ObjectId' },
   });
 });
 
@@ -149,4 +154,27 @@ test('prepareRequestTests starts no memory server when the only fixture failed t
   expect(session.fixtures.get('nope')).toEqual({
     error: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
   });
+});
+
+test('prepareRequestTests stops the memory server when the client cannot connect', async () => {
+  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+  mockClientConnect.mockRejectedValueOnce(new Error('connect ECONNREFUSED'));
+  await expect(
+    prepareRequestTests({
+      context,
+      items: [{ test: { name: 'a', seed: { controls: [] } } }],
+    })
+  ).rejects.toThrow('connect ECONNREFUSED');
+  // Without this the mongod process outlives the command.
+  expect(mockServerStop).toHaveBeenCalledTimes(1);
+});
+
+test('prepareRequestTests hands the session the ObjectId the seeder revives markers with', async () => {
+  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+  const session = await prepareRequestTests({
+    context,
+    items: [{ test: { name: 'a', seed: { controls: [] } } }],
+  });
+  expect(session.ObjectId).toEqual({ tag: 'ObjectId' });
+  expect(session.seeded).toEqual(new Map());
 });

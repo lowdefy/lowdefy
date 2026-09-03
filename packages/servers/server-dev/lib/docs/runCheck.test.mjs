@@ -89,3 +89,19 @@ test('runCheck reports a broken check run as one unlocated internal error', asyn
     'lowdefy check failed to run: Command failed: node runCheckChild.js\nTypeError: boom'
   );
 });
+
+test('runCheck returns a broken report when the child printed no JSON', async () => {
+  mockChild({ stdout: '' });
+  const report = await runCheck();
+  expect(report.ok).toBe(false);
+  expect(report.warnings).toEqual([]);
+  expect(report.errors[0].name).toEqual('LowdefyInternalError');
+  expect(report.errors[0].message).toContain('lowdefy check failed to run');
+});
+
+test('runCheck returns a broken report when the last stdout line is not JSON', async () => {
+  mockChild({ stdout: 'Debugger attached.\nnot a report\n' });
+  const report = await runCheck();
+  expect(report.ok).toBe(false);
+  expect(report.errors[0].message).toContain('lowdefy check failed to run');
+});

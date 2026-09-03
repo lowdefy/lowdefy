@@ -16,13 +16,29 @@
 
 import axios from 'axios';
 import { findAvailablePort, spawnProcess } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
+import getTestServerDirectory from './getTestServerDirectory.js';
 import installServer from '../../utils/installServer.js';
 
 const CAPTURED_LINES = 40;
+
+// The runner's server is ephemeral and shares the machine with the developer's
+// own `lowdefy dev`, so it never reaches for 3000 unless --port asked for it.
+function randomHighPort() {
+  return 40000 + Math.floor(Math.random() * 20000);
+}
+
+function getStartPort({ context }) {
+  const port = context.commandLineOptions?.port;
+  if (type.isNone(port)) {
+    return randomHighPort();
+  }
+  return Number(port);
+}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -44,12 +60,12 @@ function waitForExit(child) {
   return new Promise((resolve) => child.once('exit', resolve));
 }
 
-// Boots @lowdefy/server-dev headless in .lowdefy/dev, exactly as `lowdefy dev` does but
+// Boots @lowdefy/server-dev headless in .lowdefy/test, exactly as `lowdefy dev` does but
 // without opening a browser, and resolves once GET /api/ping answers. `env` is merged
 // into the child's environment (the request suite passes its connection overrides).
 async function startDevServer({ context, env = {}, pollIntervalMs = 250, bootTimeoutMs = 120000 }) {
-  const directory = context.directories.dev;
-  const port = await findAvailablePort({ port: context.options.port ?? 3000 });
+  const directory = getTestServerDirectory({ context });
+  const port = await findAvailablePort({ port: getStartPort({ context }) });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   await addCustomPluginsAsDeps({ context, directory });
   await ensurePnpmWorkspaceYaml({ context, directory });
@@ -84,6 +100,11 @@ async function startDevServer({ context, env = {}, pollIntervalMs = 250, bootTim
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         LOWDEFY_LOG_LEVEL: context.options.logLevel,
         LOWDEFY_SERVER_DEV_OPEN_BROWSER: false,
+        // Write requests are refused by default, and the opt-in belongs to a
+        // developer's own session, not to committed config. A server this
+        // runner started is scoped to the run, so it carries the allowance in
+        // its environment and the app's lowdefy.yaml stays fail-closed.
+        LOWDEFY_TEST_RUN: '1',
         PORT: port,
         ...env,
       },

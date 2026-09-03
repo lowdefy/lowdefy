@@ -49,9 +49,9 @@ function brokenReport(message) {
 async function runCheck() {
   const serverDirectory = process.cwd();
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || serverDirectory;
-  let stdout;
+  let report;
   try {
-    ({ stdout } = await execFileAsync(process.execPath, [childPath], {
+    const { stdout } = await execFileAsync(process.execPath, [childPath], {
       cwd: serverDirectory,
       env: {
         ...process.env,
@@ -59,7 +59,11 @@ async function runCheck() {
         LOWDEFY_DIRECTORY_SERVER: serverDirectory,
       },
       maxBuffer: 64 * 1024 * 1024,
-    }));
+    });
+    // A killed child, an exceeded maxBuffer or a stray trailing line all leave
+    // stdout without a report; the parse belongs with the run so the caller
+    // still gets the report shape it was promised.
+    report = JSON.parse(stdout.trim().split('\n').pop());
   } catch (error) {
     return brokenReport(
       `lowdefy check failed to run: ${error.message}${
@@ -67,8 +71,6 @@ async function runCheck() {
       }`
     );
   }
-  const lastLine = stdout.trim().split('\n').pop();
-  const report = JSON.parse(lastLine);
   return { ok: report.errors.length === 0, ...report };
 }
 

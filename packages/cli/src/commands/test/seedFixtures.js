@@ -55,22 +55,39 @@ async function dropCollection({ target }) {
   }
 }
 
-// Drops every collection named by the fixtures and by `seed`, once each, then
-// inserts the fixtures' documents in list order and the test's own `seed`
-// documents last, so a test layers its specifics on a shared base and one
-// test's data never leaks into the next. `fixtures` is [{ name, connections:
-// [{ connectionId, docs }] }] as readFixture returns it and `seed` is
-// { connectionId: documents[] } - this file knows nothing about test or fixture
-// files. `~d` markers in `seed` become Dates; fixture documents arrive revived.
-async function seedFixtures({ client, devDirectory, seed, fixtures }) {
+// MongoDB's ObjectId has no JSON form, so the connection plugin writes it as
+// { _oid: '<hex>' } (connection-mongodb/.../serialize.js). The MCP seeder goes
+// through that plugin and revives the marker; this seeder inserts with the raw
+// driver, so it revives it here - the same fixture file must seed the same
+// documents whichever seeder ran it.
+function createReviver({ ObjectId }) {
+  return function reviver(_, value) {
+    if (type.isObject(value) && type.isString(value._oid)) {
+      return ObjectId.createFromHexString(value._oid);
+    }
+    return value;
+  };
+}
+
+// Drops every collection this run has ever seeded, then inserts the fixtures'
+// documents in list order and the test's own `seed` documents last, so a test
+// layers its specifics on a shared base and no test ever reads what an earlier
+// test left behind - including a test that seeds nothing at all. `seeded` is the
+// run-wide map of collections to clear, owned by the request-test session.
+// `fixtures` is [{ name, connections: [{ connectionId, docs }] }] as readFixture
+// returns it and `seed` is { connectionId: documents[] } - this file knows
+// nothing about test or fixture files. `~d` markers become Dates and { _oid }
+// markers become ObjectIds in both.
+async function seedFixtures({ client, devDirectory, seed, fixtures, seeded, ObjectId }) {
+  const reviver = createReviver({ ObjectId });
   const inserts = [];
   (fixtures ?? []).forEach((fixture) => {
     fixture.connections.forEach(({ connectionId, docs }) => {
-      inserts.push({ connectionId, documents: docs });
+      inserts.push({ connectionId, documents: serializer.copy(docs, { reviver }) });
     });
   });
   Object.keys(seed ?? {}).forEach((connectionId) => {
-    inserts.push({ connectionId, documents: serializer.deserialize(seed[connectionId]) });
+    inserts.push({ connectionId, documents: serializer.copy(seed[connectionId], { reviver }) });
   });
 
   // Resolve every connection before touching the database, so an unseedable
@@ -82,9 +99,10 @@ async function seedFixtures({ client, devDirectory, seed, fixtures }) {
     }
     const { collection, databaseName } = resolveCollection({ connectionId, devDirectory });
     targets.set(connectionId, client.db(databaseName).collection(collection));
+    seeded.set(connectionId, targets.get(connectionId));
   });
 
-  for (const target of targets.values()) {
+  for (const target of seeded.values()) {
     await dropCollection({ target });
   }
   for (const { connectionId, documents } of inserts) {

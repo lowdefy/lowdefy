@@ -35,28 +35,34 @@ function getSeededConnectionIds({ items, fixtures }) {
 // Runs once before the dev server boots. When any selected request test seeds
 // data, starts an in-memory MongoDB and returns the env that points every seeded
 // connection at it (read by @lowdefy/server-dev's applyConnectionOverrides).
-// Returns { env, client, fixtures, stop }; with nothing to seed the env is empty
+// Returns { env, client, fixtures, ObjectId, seeded, stop }; with nothing to seed the env is empty
 // and stop is a no-op. `fixtures` maps every fixture name the tests use to its
 // loaded documents (or its load error) for runRequestTest.
 async function prepareRequestTests({ context, items }) {
   const fixtures = await loadRequestTestFixtures({ context, items });
   const connectionIds = getSeededConnectionIds({ items, fixtures });
   if (connectionIds.length === 0) {
-    return { env: {}, client: null, fixtures, stop: async () => {} };
+    return { env: {}, client: null, fixtures, seeded: new Map(), stop: async () => {} };
   }
   if (type.isString(context.options.url) && context.options.url !== '') {
     throw new Error(
       'Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.'
     );
   }
-  const { MongoMemoryServer, MongoClient } = await loadMemoryMongo({
+  const { MongoMemoryServer, MongoClient, ObjectId } = await loadMemoryMongo({
     configDirectory: context.directories.config,
   });
   context.logger.info('Starting in-memory MongoDB for seeded request tests.');
   const memoryServer = await MongoMemoryServer.create();
   const databaseUri = memoryServer.getUri();
   const client = new MongoClient(databaseUri);
-  await client.connect();
+  try {
+    await client.connect();
+  } catch (error) {
+    // The mongod process outlives this command unless it is stopped here.
+    await memoryServer.stop();
+    throw error;
+  }
   const overrides = {};
   connectionIds.forEach((connectionId) => {
     overrides[connectionId] = { databaseUri };
@@ -69,6 +75,10 @@ async function prepareRequestTests({ context, items }) {
     env: { LOWDEFY_TEST_CONNECTION_OVERRIDES: JSON.stringify(overrides) },
     client,
     fixtures,
+    ObjectId,
+    // Every collection any test in this run has seeded, so each test starts from
+    // a database holding only its own data no matter what ran before it.
+    seeded: new Map(),
     stop,
   };
 }

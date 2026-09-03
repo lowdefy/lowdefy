@@ -317,11 +317,19 @@ program
       'Comma-separated auth.dev.users names to snapshot as; defaults to every declared dev user.'
     )
   )
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Capture from an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
   .action(runCommand({ cliVersion, handler: snapshot }));
 
 program
   .command('test')
-  .description("Run the app's config tests (tests/journeys/*.yaml).")
+  .description(
+    "Run the app's config tests: journeys (tests/journeys/*.yaml) and request tests (tests/requests/*.test.yaml)."
+  )
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)

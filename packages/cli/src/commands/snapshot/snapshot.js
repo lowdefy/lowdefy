@@ -20,11 +20,11 @@ import compareSnapshot from './compareSnapshot.js';
 import fetchSnapshot, { fetchAppPageIds, fetchDevUsers } from './fetchSnapshot.js';
 import readManifest from './readManifest.js';
 import resolveTargets from './resolveTargets.js';
-import startDevServer from '../test/startDevServer.js';
+import resolveTestServer from '../test/resolveTestServer.js';
 import writeSnapshot from './writeSnapshot.js';
 
 const USAGE =
-  'Usage: lowdefy snapshot (--check | --update) [--pages a,b] [--users admin,member] [--pixel-tolerance 0.001]. Exactly one of --check and --update is required.';
+  'Usage: lowdefy snapshot (--check | --update) [--pages a,b] [--users admin,member] [--pixel-tolerance 0.001] [--url http://localhost:3000]. Exactly one of --check and --update is required.';
 
 function parseTolerance(value) {
   if (type.isNone(value)) {
@@ -95,13 +95,10 @@ async function snapshot({ context }) {
     return;
   }
 
-  let server;
-  try {
-    server = await startDevServer({ context });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
+  // Snapshots only read pages, so a development server already running for this
+  // app is the right one to capture from; resolveTestServer boots one in
+  // .lowdefy/test only when there is none.
+  const server = await resolveTestServer({ context });
   let interrupted = false;
   async function onSigint() {
     interrupted = true;
