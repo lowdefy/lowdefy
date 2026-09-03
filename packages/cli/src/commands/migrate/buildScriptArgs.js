@@ -20,6 +20,9 @@ import { type } from '@lowdefy/helpers';
 // script. Kept pure so the mapping is unit-testable without spawning anything.
 function buildScriptArgs({ options }) {
   const args = [];
+  if (type.isString(options.stage) && options.stage !== '') {
+    args.push('--stage', options.stage);
+  }
   if (options.dryRun === true) {
     args.push('--dry-run');
   }

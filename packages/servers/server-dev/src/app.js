@@ -47,6 +47,8 @@ import docsDevUsersHandler from './routes/docs/devUsers.js';
 import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
+import docsMigrateHandler from './routes/docs/migrate.js';
+import docsMigrationsStatusHandler from './routes/docs/migrationsStatus.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
 import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
@@ -150,6 +152,8 @@ function createApp() {
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
   app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
   app.post('/lowdefy-docs/seed-fixture', docsSeedFixtureHandler);
+  app.get('/lowdefy-docs/migrations', docsMigrationsStatusHandler);
+  app.post('/lowdefy-docs/migrate', docsMigrateHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
   app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);

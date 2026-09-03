@@ -35,6 +35,7 @@ import buildComponents from '../buildComponents.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
+import buildMigrations from '../buildMigrations/buildMigrations.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import loadBlockSchemas from '../loadBlockSchemas.js';
@@ -66,6 +67,7 @@ import writeComponentDefs from '../writeComponentDefs.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
+import writeMigrations from '../buildMigrations/writeMigrations.js';
 import writeMcp from '../writeMcp.js';
 import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
@@ -188,6 +190,9 @@ async function shallowBuild(options) {
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
     tryBuildStep(buildCollections, 'buildCollections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    // Async (reads migrations/ and the stage ledger); collects its own errors
+    // into context.errors like the wrapped steps do. Match the full build.
+    await buildMigrations({ components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
@@ -232,6 +237,7 @@ async function shallowBuild(options) {
     await writeCollections({ components, context });
     await writeComponentDefs({ context });
     await writeApi({ components, context });
+    await writeMigrations({ context });
     await writeMcp({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });

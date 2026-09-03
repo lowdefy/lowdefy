@@ -28,6 +28,7 @@ import getDataModel from './getDataModel.js';
 import getBuildStatus from './getBuildStatus.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
+import getMigrationsStatus from './getMigrationsStatus.js';
 import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
 import getPluginDoc from './getPluginDoc.js';
@@ -43,6 +44,7 @@ import requestRestart from './requestRestart.js';
 import runEndpoint from './runEndpoint.js';
 import runCheck from './runCheck.js';
 import runJourney from './runJourney.js';
+import runMigrate from './runMigrate.js';
 import runRequest from './runRequest.js';
 import seedFixture from './seedFixture.js';
 import snapshotState from './snapshotState.js';
@@ -64,6 +66,8 @@ Push events: build results, server restarts, browser/server errors and fixture s
 Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
+
+Migrations: a shape change to a collection needs a migration file (migrations/<YYYY-MM-DD-NN-name>.yaml, a routine in the endpoint grammar, forward-only, idempotent). lowdefy_build_status carries \`migrations\` — the stage the dev build is for and the migration ids pending or changed against that stage's ledger (.lowdefy/migrations/<stage>.json); a pending migration means the dev database is behind the config. lowdefy_migrations_status gives the full picture (every migration, the ledger entries, the ledger path); lowdefy_migrate applies the pending ones to the dev database and rewrites the ledger (dryRun: true plans only, naming each connection and the database it resolves to; applying needs cli.agentTools.allowWriteRequests). Never edit an applied migration — write a new one.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. When a request returns an empty or unexpected result on a multi-tenant app, re-run it with explain: true BEFORE changing config — it returns the caller, the connection tenancy, the properties after operator evaluation, the effective query the driver received and every clause the tenant wall injected (rewritten); the wall's injected clauses are the usual cause.
 
@@ -256,6 +260,39 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       },
     },
     async ({ name, reset }) => textResult(await seedFixture({ name, reset, honoContext }))
+  );
+
+  server.registerTool(
+    'lowdefy_migrations_status',
+    {
+      description:
+        'Report the migration state of the dev build: the stage it was built for (STAGE, else local), every migration under migrations/ with whether the stage ledger (.lowdefy/migrations/<stage>.json) records it as applied, the ids pending or changed since applied, and the ledger entries themselves. Call after adding a migration to confirm the build discovered it, and before telling the developer a data-shape change is done — a pending migration means the dev database is behind the config.',
+      inputSchema: {},
+    },
+    async () => textResult(await getMigrationsStatus())
+  );
+
+  server.registerTool(
+    'lowdefy_migrate',
+    {
+      description:
+        "Apply the pending migrations to the dev database the way `lowdefy migrate` does, for the stage the dev build was made for, and rewrite that stage's ledger file. dryRun: true plans only — it lists the migrations that would run, in order, and for each connection they touch the connection id and the database it resolves to in this environment, with no writes. Applying writes to the developer's real dev database, so it is refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml). Stops at the first failing migration and reports it as data (the ledger entry is not written, so it re-runs once fixed). A checksum mismatch (an applied migration file was edited) is refused; pass allowChecksumMismatch: true only for a known no-op edit.",
+      inputSchema: {
+        dryRun: z.boolean().optional().describe('Plan only, write nothing (default false).'),
+        to: z
+          .string()
+          .optional()
+          .describe('Apply pending migrations up to and including this id; omit to apply all.'),
+        allowChecksumMismatch: z
+          .boolean()
+          .optional()
+          .describe(
+            'Tolerate an applied migration whose file changed and record its new checksum (default false).'
+          ),
+      },
+    },
+    async ({ dryRun, to, allowChecksumMismatch }) =>
+      textResult(await runMigrate({ dryRun, to, allowChecksumMismatch }))
   );
 
   server.registerTool(
@@ -644,7 +681,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_schema',
     {
       description:
-        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event\'s actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types.' +
+        "Get the JSON Schema for a specific type: all properties, events, and their descriptions. For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event's actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types." +
         HAZARDS_NOTE,
       inputSchema: {
         kind: z

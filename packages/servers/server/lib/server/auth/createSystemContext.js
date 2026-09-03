@@ -50,6 +50,9 @@ function createSystemContext({ auth } = {}) {
     auth,
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
+    // The migration runner locates .lowdefy/migrations/<stage>.json from here;
+    // the CLI sets it when it spawns migrate:lowdefy.
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
     connections,
     createHandleError,
     fileCache,

@@ -17,11 +17,18 @@
 import readline from 'node:readline/promises';
 
 // A migration writes to a real database (design D13). A dry run and a --yes
-// run never prompt; every other interactive run asks first, against whichever
-// database the environment points at. --json is an output format, not consent
-// — it never stands in for --yes. A non-interactive run (CI, a pipe) with
-// neither --yes nor --dry-run refuses rather than guessing.
-async function confirmMigrate({ context, options, input = process.stdin, output = process.stdout }) {
+// run never prompt; every other interactive run prints the stage, the ledger
+// it will rewrite and the migrations it will apply, then asks, so a human at
+// a terminal sees "stage: prod" before confirming. --json is an output format,
+// not consent — it never stands in for --yes. A non-interactive run (CI, a
+// pipe) with neither --yes nor --dry-run refuses rather than guessing.
+async function confirmMigrate({
+  context,
+  options,
+  plan,
+  input = process.stdin,
+  output = process.stdout,
+}) {
   if (options.dryRun === true || options.yes === true) {
     return true;
   }
@@ -30,10 +37,22 @@ async function confirmMigrate({ context, options, input = process.stdin, output 
       'lowdefy migrate needs confirmation before writing to a database, but stdin is not interactive. Re-run with --yes to confirm in a non-interactive environment (CI), or --dry-run to preview.'
     );
   }
+  if (plan) {
+    context.logger.info(`Stage: ${plan.stage}`);
+    context.logger.info(`Ledger: ${plan.ledgerPath}`);
+    if (plan.pending.length === 0) {
+      context.logger.info('Pending migrations: none recorded as unapplied in the ledger.');
+    } else {
+      context.logger.info(`Pending migrations (${plan.pending.length}):`);
+      plan.pending.forEach((id) => context.logger.info(`  • ${id}`));
+    }
+  }
   const rl = readline.createInterface({ input, output });
   try {
     const answer = await rl.question(
-      'This will run pending migrations against the database configured for this environment. Continue? [y/N] '
+      `This will run pending migrations for stage "${
+        plan?.stage ?? 'unknown'
+      }" against the database the current environment's secrets point at. Continue? [y/N] `
     );
     const confirmed = /^y(es)?$/i.test(answer.trim());
     if (!confirmed) {

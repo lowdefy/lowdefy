@@ -19,7 +19,8 @@ import { PassThrough } from 'node:stream';
 import confirmMigrate from './confirmMigrate.js';
 
 function testContext() {
-  return { logger: { info: () => {} } };
+  const infos = [];
+  return { infos, logger: { info: (msg) => infos.push(msg) } };
 }
 
 function ttyInput(line) {
@@ -70,6 +71,34 @@ test('confirmMigrate returns true when the user answers yes', async () => {
     output: new PassThrough(),
   });
   expect(result).toBe(true);
+});
+
+test('confirmMigrate prints the stage, ledger path and pending migrations before asking', async () => {
+  const context = testContext();
+  const output = new PassThrough();
+  let prompt = '';
+  output.on('data', (chunk) => {
+    prompt += String(chunk);
+  });
+  await confirmMigrate({
+    context,
+    options: {},
+    plan: {
+      stage: 'prod',
+      ledgerPath: '/app/.lowdefy/migrations/prod.json',
+      pending: ['m1', 'm2'],
+    },
+    input: ttyInput('y'),
+    output,
+  });
+  expect(context.infos).toEqual([
+    'Stage: prod',
+    'Ledger: /app/.lowdefy/migrations/prod.json',
+    'Pending migrations (2):',
+    '  • m1',
+    '  • m2',
+  ]);
+  expect(prompt).toMatch('for stage "prod"');
 });
 
 test('confirmMigrate returns false when the user answers no', async () => {

@@ -25,6 +25,8 @@ const fixturesDir = path.join(__dirname, 'tests/success');
 
 // Pin gitSha so buildAppMeta produces a deterministic appMeta in snapshots.
 process.env.LOWDEFY_GIT_SHA = 'test-git-sha-for-snapshots';
+// Fixtures with migrations build for a stage; none of them carry a ledger.
+process.env.STAGE = 'snapshot';
 
 // Mock writeBuildArtifact to capture artifacts instead of writing to disk
 const mockWriteBuildArtifact = jest.fn();

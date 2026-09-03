@@ -198,19 +198,29 @@ _ref:
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--users <names>`: Comma-separated `auth.dev.users` names to snapshot as.
 
-            ## migrate
+            ## init-migrations
 
-            The `migrate` command applies the app's [migrations](/migrations) — the files in the `migrations/` directory — against the live database. It reads the ordered build index and the `migrations` ledger collection, computes the pending set, confirms (unless `--yes`), prints the ledger connection id it will write through, acquires an advisory lock, and applies each pending migration in filename order, appending one ledger document per migration as it completes. It stops at the first failing migration, names the migration id, the failing step id and the error, and exits non-zero; migrations that completed stay applied. Migrations are forward-only — there are no down migrations. See [Migrations](/migrations).
+            The `init-migrations` command sets a project up to run its [migrations](/migrations) per environment in GitHub Actions. For each stage it writes a dry-run workflow (`.github/workflows/migrations-dry-run-<stage>.yml`: on pull requests into the stage's branch, plan the pending migrations and post the plan as a PR comment) and a run workflow (`.github/workflows/migrations-run-<stage>.yml`: on push to the stage's branch or on demand, build, apply the pending migrations, and commit the updated ledger `.lowdefy/migrations/<stage>.json` back to the branch, even when a migration fails), plus an empty ledger per stage and the `.gitignore` lines that let the ledgers be committed while keeping `local.json` ignored. Existing files are never overwritten. The branch for `prod` is `main`; every other stage watches the branch of its own name. Each stage needs a GitHub environment of the same name holding the connection secrets.
 
-            The command takes no connection string of its own: the ledger connection and every step's connection are named in config and read their properties (including secrets) from the environment the command runs in, so targeting staging versus production is a matter of which environment `migrate` runs against. The deploy pipeline runs `lowdefy migrate --yes` after `lowdefy build` and before traffic shifts; a serving preflight refuses to serve while any migration is still pending.
-
-            - `--allow-checksum-mismatch`: Downgrade a checksum mismatch (an already-applied migration file was edited) from an error to a warning, and update the stored checksum. For a whitespace- or comment-only edit you know is a no-op.
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
-            - `--dry-run`: Report which migrations would run, in order, with no writes, no lock, and no ledger changes. No step runs and no step properties are evaluated in a dry run.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--stages <names>`: Comma-separated stages to generate workflows for. Each becomes a GitHub environment name and a ledger file. The default is `dev,prod`. `local` is reserved and cannot be a stage.
+
+            ## migrate
+
+            The `migrate` command applies the app's [migrations](/migrations) — the files in the `migrations/` directory — against the live database and records them in the stage's ledger file, `.lowdefy/migrations/<stage>.json`. It resolves the stage (`--stage`, then `STAGE` from the environment, then `local`), reads the ordered build index and the ledger, computes the pending set, prints the stage, the ledger path and the pending ids and confirms (unless `--yes`), names each connection the run touches and the database it resolves to, and applies each pending migration in filename order, rewriting the ledger file as each completes. It stops at the first failing migration, names the migration id, the failing step id and the error, and exits non-zero; migrations that completed are already recorded. Migrations are forward-only — there are no down migrations. See [Migrations](/migrations).
+
+            The command takes no connection string of its own: every step's connection is named in config and reads its properties (including secrets) from the environment the command runs in. `STAGE` selects the ledger; the environment's secrets select the database. The build must have been made for the same stage. In CI the workflows written by `init-migrations` run `lowdefy migrate --yes` and commit the ledger before the deploy; a serving preflight refuses to serve a build whose ledger does not record every migration.
+
+            - `--allow-checksum-mismatch`: Downgrade a checksum mismatch (an already-applied migration file was edited) from an error to a warning, and rewrite the ledger entry's checksum. For a whitespace- or comment-only edit you know is a no-op.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--dry-run`: Report which migrations would run, in order, and which connections and databases they touch, with no writes and no ledger changes. No step runs and no step properties are evaluated in a dry run.
             - `--json`: Print a machine-readable report and nothing else on stdout, mirroring `lowdefy check --json`.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
+            - `--stage <name>`: The environment whose ledger to read and rewrite. Defaults to `STAGE` from the environment, then `local`.
             - `--to <id>`: Apply pending migrations up to and including `<id>`. Omit to apply all pending.
             - `--yes`: Skip the confirmation prompt. Required in CI.
 

@@ -24,8 +24,8 @@ import { type } from '@lowdefy/helpers';
 // runner and the serving preflight call, so pending is computed identically in
 // both.
 //
-//   index    [{ id, checksum }]  — build/migrations.json, in order
-//   applied  [{ _id, checksum }] — the ledger documents
+//   index    [{ id, checksum }] — build/migrations.json `migrations`, in order
+//   applied  [{ id, checksum }] — the stage ledger's `applied` entries
 //   options  { to, allowChecksumMismatch }
 //
 // Returns { pending, applied, mismatches, missingFiles } and never writes.
@@ -36,8 +36,8 @@ function computeMigrationPlan({ index, applied, options = {} }) {
   const orderedIndex = type.isArray(index) ? index : [];
   const appliedById = new Map();
   (type.isArray(applied) ? applied : []).forEach((entry) => {
-    if (!type.isNone(entry?._id)) {
-      appliedById.set(entry._id, entry);
+    if (!type.isNone(entry?.id)) {
+      appliedById.set(entry.id, entry);
     }
   });
 

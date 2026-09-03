@@ -25,6 +25,7 @@ import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
+import initMigrations from './commands/init-migrations/initMigrations.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import modulesUpdate from './commands/modules/modulesUpdate.js';
 import snapshot from './commands/snapshot/snapshot.js';
@@ -203,6 +204,22 @@ program
   .action(runCommand({ cliVersion, handler: initDocker }));
 
 program
+  .command('init-migrations')
+  .description(
+    'Write per-stage GitHub Actions workflows that dry-run migrations on pull requests and apply them on push, plus an empty ledger per stage.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .option(
+    '--stages <names>',
+    'Comma-separated stages to generate workflows for. Each becomes a GitHub environment name and a ledger file .lowdefy/migrations/<stage>.json.',
+    'dev,prod'
+  )
+  .action(runCommand({ cliVersion, handler: initMigrations }));
+
+program
   .command('init-vercel')
   .description('Initialize Vercel deployment installation scripts.')
   .usage('[options]')
@@ -225,10 +242,16 @@ modules
 
 program
   .command('migrate')
-  .description('Run pending database migrations (migrations/*.yaml) against the app database.')
+  .description(
+    'Run pending database migrations (migrations/*.yaml) against the app database and record them in the stage ledger.'
+  )
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
+  .option(
+    '--stage <name>',
+    'The environment whose ledger (.lowdefy/migrations/<stage>.json) to read and write. Defaults to STAGE from the environment, then "local".'
+  )
   .option('--dry-run', 'List the migrations that would run, in order, without applying anything.')
   .addOption(new Option('--to <id>', 'Apply pending migrations up to and including this id.'))
   .option('--yes', 'Skip the confirmation prompt (required in non-interactive environments).')

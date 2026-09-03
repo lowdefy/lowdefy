@@ -75,6 +75,8 @@ const EXPECTED_TOOLS = [
   'lowdefy_run_request',
   'lowdefy_run_endpoint',
   'lowdefy_seed_fixture',
+  'lowdefy_migrations_status',
+  'lowdefy_migrate',
   'lowdefy_restart',
   'lowdefy_app_map',
   'lowdefy_data_model',

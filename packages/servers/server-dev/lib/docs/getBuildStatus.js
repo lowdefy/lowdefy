@@ -18,14 +18,17 @@ import clientErrorStore from './clientErrorStore.js';
 import devNoticeStore from './devNoticeStore.js';
 import serverErrorStore from './serverErrorStore.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import { summarizeMigrations } from './getMigrationsStatus.js';
 
 // Feedback loop for agents: build status (written by the build manager to
 // build/buildStatus.json) plus recent browser errors reported via
 // POST /api/client-error, plus recent server errors (request, endpoint, MCP and
 // agent tool failures) collected by createHandleError, plus every `tenant: none` and runAs
 // execution seen this session (unscoped reads, one per config site) collected by
-// createHandleDevNotice. Lets an agent check "did my last edit work?" without
-// tailing terminal logs.
+// createHandleDevNotice, plus the migrations the build index lists as pending
+// or changed for the dev stage (design D14) — a pending migration is app
+// state the agent must be told about in its own channel. Lets an agent check
+// "did my last edit work?" without tailing terminal logs.
 function getBuildStatus() {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
@@ -38,6 +41,7 @@ function getBuildStatus() {
     clientErrors: clientErrorStore.list(),
     serverErrors: serverErrorStore.list(),
     tenantNotices: devNoticeStore.list(),
+    migrations: summarizeMigrations(),
   };
 }
 

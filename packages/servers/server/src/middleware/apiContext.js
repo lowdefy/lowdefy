@@ -148,10 +148,11 @@ function apiContext() {
     // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
     // probe failure retries next request). No-op under pinned.
     await resolveTenantPreflight(context);
-    // Refuse to serve while any built migration is unapplied (lazily-run-once;
-    // a refusal memoizes until restart, a connectivity or in-progress failure
-    // retries next request). No-op when config.migrations.preflight is false or
-    // no migrations are built.
+    // Refuse to serve while the build index lists a migration the stage ledger
+    // did not record as applied (lazily-run-once, a pure read of
+    // build/migrations.json; a refusal memoizes until restart, a failed read
+    // retries next request). No-op when config.migrations.preflight is false
+    // or no migrations are built.
     await resolveMigrationPreflight(context);
     c.set('lowdefyContext', context);
     // Echo the request id so clients and proxies can quote it when reporting

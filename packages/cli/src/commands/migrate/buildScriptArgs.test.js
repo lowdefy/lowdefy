@@ -20,6 +20,14 @@ test('buildScriptArgs returns no flags for a bare run', () => {
   expect(buildScriptArgs({ options: {} })).toEqual([]);
 });
 
+test('buildScriptArgs forwards --stage first', () => {
+  expect(buildScriptArgs({ options: { stage: 'prod', dryRun: true } })).toEqual([
+    '--stage',
+    'prod',
+    '--dry-run',
+  ]);
+});
+
 test('buildScriptArgs forwards --dry-run', () => {
   expect(buildScriptArgs({ options: { dryRun: true } })).toEqual(['--dry-run']);
 });
@@ -36,9 +44,10 @@ test('buildScriptArgs ignores an empty --to', () => {
 });
 
 test('buildScriptArgs forwards --allow-checksum-mismatch and --json', () => {
-  expect(
-    buildScriptArgs({ options: { allowChecksumMismatch: true, json: true } })
-  ).toEqual(['--allow-checksum-mismatch', '--json']);
+  expect(buildScriptArgs({ options: { allowChecksumMismatch: true, json: true } })).toEqual([
+    '--allow-checksum-mismatch',
+    '--json',
+  ]);
 });
 
 test('buildScriptArgs combines all flags in a stable order', () => {
