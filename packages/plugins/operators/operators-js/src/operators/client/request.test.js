@@ -56,25 +56,41 @@ const context = {
   eventLog: [{ eventLog: true }],
   id: 'id',
   requests: {
+    failed: [
+      {
+        response: null,
+        loading: false,
+        error: new Error('Connection refused.'),
+      },
+    ],
+    emptyArray: [
+      {
+        response: [],
+        loading: false,
+      },
+    ],
+    returnsNull: [
+      {
+        response: null,
+        loading: false,
+      },
+    ],
     arr: [
       {
         response: [{ a: 'request a1' }, { a: 'request a2' }],
         loading: false,
-        error: [],
       },
     ],
     number: [
       {
         response: 500,
         loading: false,
-        error: [],
       },
     ],
     string: [
       {
         response: 'request String',
         loading: false,
-        error: [],
       },
     ],
     holding: [
@@ -82,21 +98,18 @@ const context = {
         response: 'previous value',
         loading: true,
         holdValue: true,
-        error: [],
       },
     ],
     loadingNoHold: [
       {
         response: 'stale value',
         loading: true,
-        error: [],
       },
     ],
     reserved: [
       {
         response: { constructor: 'from the api', safe: 'ok' },
         loading: false,
-        error: [],
       },
     ],
   },
@@ -121,8 +134,9 @@ test('_request true gives null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]._message).toBe('_request accepts a string value.');
-  expect(res.errors[0].message).toBe('_request accepts a string value. at locationId.');
+  expect(res.errors[0]._message).toBe(
+    '_request accepts a string value, or an object with a "key" string and an optional "status" boolean.'
+  );
 });
 
 test('_request return full array', () => {
@@ -147,8 +161,9 @@ test('_request null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0]._message).toBe('_request accepts a string value.');
-  expect(res.errors[0].message).toBe('_request accepts a string value. at locationId.');
+  expect(res.errors[0]._message).toBe(
+    '_request accepts a string value, or an object with a "key" string and an optional "status" boolean.'
+  );
 });
 
 test('_request loading true', () => {
@@ -223,6 +238,85 @@ test('_request propagates an error that is not a ReservedKeyError', () => {
       throw new Error('read failed');
     },
   });
-  const requests = { throws: [{ response, loading: false, error: [] }] };
+  const requests = { throws: [{ response, loading: false }] };
   expect(() => _request({ arrayIndices, params: 'throws.boom', requests })).toThrow('read failed');
+});
+
+test('_request status returns loading while the request is in flight', () => {
+  const input = { _request: { key: 'loadingNoHold', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ loading: true, error: null, success: false, empty: false });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request status returns the error message when the request failed', () => {
+  const input = { _request: { key: 'failed', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({
+    loading: false,
+    error: 'Connection refused.',
+    success: false,
+    empty: false,
+  });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request status returns success for a completed request with rows', () => {
+  const input = { _request: { key: 'arr', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ loading: false, error: null, success: true, empty: false });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request status reports an empty array response as a successful empty request', () => {
+  const input = { _request: { key: 'emptyArray', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ loading: false, error: null, success: true, empty: true });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request status reports a null response as a successful empty request', () => {
+  const input = { _request: { key: 'returnsNull', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ loading: false, error: null, success: true, empty: true });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request status of a request that was never called is neither loading nor successful', () => {
+  const input = { _request: { key: 'never_called', status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual({ loading: false, error: null, success: false, empty: false });
+  expect(res.errors).toEqual([]);
+});
+
+test('_request object form without status reads the response like the string form', () => {
+  const input = { _request: { key: 'arr.0.a' } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toEqual('request a1');
+  expect(res.errors).toEqual([]);
+});
+
+test('_request object form requires a key string', () => {
+  const input = { _request: { status: true } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(null);
+  expect(res.errors[0]._message).toBe(
+    '_request object params require a "key" string naming the request.'
+  );
+});
+
+test('_request object form rejects a non-boolean status', () => {
+  const input = { _request: { key: 'arr', status: 'yes' } };
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  expect(res.output).toBe(null);
+  expect(res.errors[0]._message).toBe('_request "status" must be a boolean.');
 });

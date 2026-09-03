@@ -27,11 +27,13 @@ const collections = {
   },
 };
 
+const experimentalOn = { config: { experimental: { archetypes: true } } };
+
 function pageContext(overrides = {}) {
   return {
     pageId: 'controls',
     rootBlockId: 'controls',
-    context: { collections },
+    context: { collections, lowdefyConfig: experimentalOn },
     ...overrides,
   };
 }
@@ -55,7 +57,11 @@ test('expandArchetype rewrites a ListPage root into its layout with blocks and r
 
 test('expandArchetype leaves a non-archetype block untouched', () => {
   const block = { id: 'x', type: 'Box', properties: { a: 1 } };
-  expandArchetype(block, pageContext({ rootBlockId: 'x', pageId: 'x' }));
+  expandArchetype(block, {
+    pageId: 'x',
+    rootBlockId: 'x',
+    context: { collections, lowdefyConfig: {} },
+  });
   expect(block.type).toBe('Box');
   expect(block.properties).toEqual({ a: 1 });
 });
@@ -67,9 +73,7 @@ test('expandArchetype errors when an archetype is used on a nested block', () =>
     '~k': 'k1',
     properties: { collection: 'controls' },
   };
-  expect(() => expandArchetype(block, pageContext())).toThrow(
-    /can only be a page's root type/
-  );
+  expect(() => expandArchetype(block, pageContext())).toThrow(/can only be a page's root type/);
 });
 
 test('expandArchetype rejects an unknown archetype prop with a suggestion', () => {
@@ -110,4 +114,64 @@ test('expandArchetype accepts an integer pageSize literal', () => {
   };
   expandArchetype(block, pageContext());
   expect(block.requests[0].properties.options.limit).toBe(25);
+});
+
+test('expandArchetype refuses to build an archetype without the experimental flag', () => {
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls' },
+  };
+  expect(() =>
+    expandArchetype(block, {
+      pageId: 'controls',
+      rootBlockId: 'controls',
+      context: { collections, lowdefyConfig: {} },
+    })
+  ).toThrow(
+    /is experimental and must be enabled with "config.experimental.archetypes: true".*may change within a minor release/s
+  );
+  // The declaration is left as the author wrote it.
+  expect(block.type).toBe('ListPage');
+});
+
+test('expandArchetype refuses to discard requests the author declared on the page root', () => {
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls' },
+    requests: [{ id: 'frameworks', type: 'MongoDBFind', connectionId: 'controls' }],
+  };
+  expect(() => expandArchetype(block, pageContext())).toThrow(
+    /generates the page's "requests", so the page may not declare its own.*lowdefy expand controls/s
+  );
+});
+
+test('expandArchetype refuses to discard events the author declared on the page root', () => {
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls' },
+    events: { onInit: [{ id: 'a', type: 'SetState', params: {} }] },
+  };
+  expect(() => expandArchetype(block, pageContext())).toThrow(
+    /generates the page's "events", so the page may not declare its own/
+  );
+});
+
+test('expandArchetype passes the archetype slots to the generator and removes the key', () => {
+  const footer = { id: 'note', type: 'Paragraph', properties: { content: 'note' } };
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls', columns: ['title'] },
+    slots: { footer: { blocks: [footer] } },
+  };
+  expandArchetype(block, pageContext());
+  expect(block.slots).toBeUndefined();
+  expect(block.blocks[block.blocks.length - 1]).toBe(footer);
 });

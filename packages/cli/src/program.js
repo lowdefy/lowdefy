@@ -23,6 +23,7 @@ import check from './commands/check/check.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
+import expand from './commands/expand/expand.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initMigrations from './commands/init-migrations/initMigrations.js';
@@ -175,6 +176,20 @@ program
   .addOption(options.refResolver)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: emails }));
+
+program
+  .command('expand <pageId>')
+  .description(
+    'Write a built page out as ordinary config (pages/<pageId>.yaml) — the way out of a page archetype.'
+  )
+  .usage('<pageId> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .option('--output <path>', 'Write the expanded page here instead of pages/<pageId>.yaml.')
+  .addOption(options.serverDirectory)
+  .option('--yes', 'Overwrite an existing file without asking.')
+  .action(runCommand({ cliVersion, handler: expand }));
 
 program
   .command('docker-output')

@@ -16,20 +16,61 @@
 
 import { ReservedKeyError, applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
-function _request({ arrayIndices, params, requests }) {
-  if (!type.isString(params)) {
-    throw new Error(`_request accepts a string value.`);
+// The engine keeps one entry per call, newest first (engine/Requests.js), and
+// only creates an entry once the request has been called. So "no entry" is the
+// never-called state, and it is neither loading, failed, nor successful — the
+// distinction the value form collapses into a single null.
+//
+// `empty` is the form author's "no value" — null, undefined, '' and [] — the
+// same rule _type: empty uses. An empty response is a *successful* request:
+// "empty is not failed" is the whole reason this form exists.
+function readStatus(entry) {
+  if (type.isNone(entry)) {
+    return { loading: false, error: null, success: false, empty: false };
   }
-  const splitKey = params.split('.');
+  const loading = entry.loading === true;
+  const error = type.isNone(entry.error) ? null : entry.error.message ?? `${entry.error}`;
+  const success = !loading && type.isNone(error);
+  const response = entry.response;
+  const empty =
+    success &&
+    (type.isNone(response) || response === '' || (type.isArray(response) && response.length === 0));
+  return { loading, error, success, empty };
+}
+
+function readKey({ params }) {
+  if (type.isString(params)) {
+    return { key: params, status: false };
+  }
+  if (!type.isObject(params)) {
+    throw new Error(
+      `_request accepts a string value, or an object with a "key" string and an optional "status" boolean.`
+    );
+  }
+  if (!type.isString(params.key)) {
+    throw new Error(`_request object params require a "key" string naming the request.`);
+  }
+  if (!type.isNone(params.status) && !type.isBoolean(params.status)) {
+    throw new Error(`_request "status" must be a boolean.`);
+  }
+  return { key: params.key, status: params.status === true };
+}
+
+function _request({ arrayIndices, params, requests }) {
+  const { key, status } = readKey({ params });
+  const splitKey = key.split('.');
   const [requestId, ...keyParts] = splitKey;
   const entry = requests[requestId]?.[0];
+  if (status) {
+    return readStatus(entry);
+  }
   if (entry && (!entry.loading || entry.holdValue)) {
     if (splitKey.length === 1) {
       return serializer.copy(entry.response);
     }
-    const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
+    const path = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
     try {
-      return get(entry.response, applyArrayIndices(arrayIndices, key), {
+      return get(entry.response, applyArrayIndices(arrayIndices, path), {
         copy: true,
         default: null,
       });

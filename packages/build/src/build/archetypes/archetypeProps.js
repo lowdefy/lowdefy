@@ -49,12 +49,14 @@ const listPageProps = {
   },
   sort: {
     type: 'object',
-    description: 'Default MongoDB sort. Defaults to created_at desc, else _id desc.',
+    description:
+      "Default MongoDB sort. Defaults to the collection's first declared date field descending, else _id descending.",
   },
   pageSize: {
     type: 'integer',
     default: 50,
-    description: 'The find limit.',
+    description:
+      'A cap on the number of rows fetched. The generated page has no pagination controls yet, so rows beyond this limit are not reachable.',
   },
   title: {
     type: 'string',
