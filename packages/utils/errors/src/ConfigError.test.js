@@ -47,6 +47,17 @@ test('ConfigError stores checkSlug', () => {
   expect(error.checkSlug).toBe('block-types');
 });
 
+test('ConfigError throws a LowdefyInternalError for a checkSlug not in the catalogue', () => {
+  expect(() => new ConfigError('Test error', { checkSlug: 'not-a-slug' })).toThrow(
+    'Unknown checkSlug "not-a-slug". Add it to VALID_CHECK_SLUGS in @lowdefy/errors.'
+  );
+});
+
+test('ConfigError accepts a null or omitted checkSlug', () => {
+  expect(new ConfigError('Test error', { checkSlug: null }).checkSlug).toBe(null);
+  expect(new ConfigError('Test error').checkSlug).toBe(undefined);
+});
+
 test('ConfigError stores filePath and lineNumber', () => {
   const error = new ConfigError('Error parsing file', {
     filePath: 'pages/home.yaml',

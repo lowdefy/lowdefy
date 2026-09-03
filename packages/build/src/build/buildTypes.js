@@ -21,7 +21,7 @@ import loaderTypes from '@lowdefy/blocks-loaders/types';
 import collectExceptions from '../utils/collectExceptions.js';
 import findSimilarString from '../utils/findSimilarString.js';
 
-function buildTypeClass(context, { counter, definitions, store, typeClass }) {
+function buildTypeClass(context, { checkSlug, counter, definitions, store, typeClass }) {
   const counts = counter.getCounts();
   const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
@@ -33,7 +33,7 @@ function buildTypeClass(context, { counter, definitions, store, typeClass }) {
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      collectExceptions(context, new ConfigError(message, { configKey, checkSlug: 'types' }));
+      collectExceptions(context, new ConfigError(message, { configKey, checkSlug }));
       return;
     }
     store[typeName] = {
@@ -86,6 +86,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.actions,
     store: components.types.actions,
     typeClass: 'Action',
+    checkSlug: 'action-types',
   });
 
   buildTypeClass(context, {
@@ -93,6 +94,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.agents,
     store: components.types.agents,
     typeClass: 'Agent',
+    checkSlug: 'agent-types',
   });
 
   buildTypeClass(context, {
@@ -100,6 +102,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.adapters,
     store: components.types.auth.adapters,
     typeClass: 'Auth adapter',
+    checkSlug: 'auth-types',
   });
 
   buildTypeClass(context, {
@@ -107,6 +110,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.providers,
     store: components.types.auth.providers,
     typeClass: 'Auth provider',
+    checkSlug: 'auth-types',
   });
 
   buildTypeClass(context, {
@@ -114,6 +118,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.strategies,
     store: components.types.auth.strategies,
     typeClass: 'Auth strategy',
+    checkSlug: 'auth-types',
   });
 
   buildTypeClass(context, {
@@ -121,6 +126,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.blocks,
     store: components.types.blocks,
     typeClass: 'Block',
+    checkSlug: 'block-types',
   });
 
   buildTypeClass(context, {
@@ -128,6 +134,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.connections,
     store: components.types.connections,
     typeClass: 'Connection',
+    checkSlug: 'connection-types',
   });
 
   buildTypeClass(context, {
@@ -135,6 +142,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.notifications,
     store: components.types.notifications,
     typeClass: 'Notification',
+    checkSlug: 'notification-types',
   });
 
   buildTypeClass(context, {
@@ -142,6 +150,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+    checkSlug: 'request-types',
   });
 
   buildTypeClass(context, {
@@ -149,6 +158,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.steps,
     store: components.types.steps,
     typeClass: 'Step',
+    checkSlug: 'step-types',
   });
 
   buildTypeClass(context, {
@@ -156,6 +166,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.websockets,
     store: components.types.websockets,
     typeClass: 'Websocket',
+    checkSlug: 'websocket-types',
   });
 
   buildTypeClass(context, {
@@ -163,6 +174,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.operators.client,
     store: components.types.operators.client,
     typeClass: 'Operator',
+    checkSlug: 'operator-types',
   });
 
   buildTypeClass(context, {
@@ -170,6 +182,7 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.operators.server,
     store: components.types.operators.server,
     typeClass: 'Operator',
+    checkSlug: 'operator-types',
   });
 }
 

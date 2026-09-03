@@ -9,7 +9,8 @@ requests:
       # ~ignoreBuildChecks suppresses the undefined state warning
       userData:
         _state: {{ blockId }}
-        ~ignoreBuildChecks: true
+        ~ignoreBuildChecks:
+          - state-refs
     properties:
       url: /api/test
 blocks:

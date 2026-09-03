@@ -14,39 +14,7 @@
   limitations under the License.
 */
 
-/**
- * Valid check slugs for ~ignoreBuildChecks.
- * Keys are the slug names, values are descriptions for error messages.
- * These suppress BUILD-TIME validation only - runtime errors still occur.
- */
-export const VALID_CHECK_SLUGS = {
-  'state-refs': 'Undefined _state reference warnings',
-  'payload-refs': 'Undefined _payload reference warnings',
-  'step-refs': 'Undefined _step reference warnings',
-  'link-refs': 'Invalid Link action page reference warnings',
-  'request-refs': 'Invalid Request action reference warnings',
-  'connection-refs': 'Nonexistent connection ID references',
-  'tenant-lookup': 'Tenant pipeline lookups into shared collections',
-  'callapi-refs': 'Invalid CallAPI action endpoint reference warnings',
-  'callapi-internal-refs': 'CallAPI actions targeting InternalApi endpoints',
-  'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
-  'websocket-refs': 'Invalid websocket action reference warnings',
-  'block-properties': 'Block properties schema validation',
-  icons: 'Unresolvable icon name warnings',
-  events: 'Block event name validation',
-  types: 'All type validation (blocks, operators, actions, requests, connections)',
-  schema: 'JSON schema validation errors',
-  'js-lint': 'Unresolved and unused names in _js bodies',
-  'state-schema': 'Page state contract violations (undeclared or mistyped state paths)',
-  tenant: 'Tenant wall audits on walled requests and steps',
-  'js-modules': '_js module reference resolution and export checks',
-  'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
-  collections: 'Collections declaration: undeclared, dynamic and untenanted connections',
-  'event-payload': '_event paths checked against the block event payload schema',
-  migrations: 'Migration file discovery, routine validation and tenant audits',
-  expression: 'Errors compiling ${ … } expression syntax to operators',
-  archetype: 'Page archetype expansion: collection, field and prop resolution',
-};
+import VALID_CHECK_SLUGS from './checkSlugs.js';
 
 /**
  * Checks if a build check should be suppressed based on ~ignoreBuildChecks.
@@ -71,10 +39,6 @@ function shouldSuppressBuildCheck(error, keyMap) {
 
     const ignoredChecks = entry['~ignoreBuildChecks'];
 
-    if (ignoredChecks === true) {
-      return true;
-    }
-
     if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
       return true;
     }
@@ -85,5 +49,7 @@ function shouldSuppressBuildCheck(error, keyMap) {
 
   return false;
 }
+
+export { VALID_CHECK_SLUGS };
 
 export default shouldSuppressBuildCheck;

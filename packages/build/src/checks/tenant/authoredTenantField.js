@@ -37,14 +37,14 @@ function run({ components, context }) {
       context,
       new ConfigError(
         `${site.location} sets "${site.field}" itself on tenant connection "${site.connectionId}". The wall injects it — an authored value is refused at runtime. Remove the clause; the caller's organization is applied automatically.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-authored' }
       )
     );
   });
 }
 
 const authoredTenantField = {
-  slug: 'tenant',
+  slug: 'tenant-authored',
   checkOnly: false,
   run,
 };

@@ -2,7 +2,7 @@
 # =============================================
 # Tests that an invalid check slug in ~ignoreBuildChecks throws an error.
 #
-# Expected: ConfigError with "Invalid check slug(s)"
+# Expected: ConfigError with "Invalid check slug"
 
 lowdefy: local
 

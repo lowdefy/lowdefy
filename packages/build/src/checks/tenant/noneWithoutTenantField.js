@@ -36,14 +36,14 @@ function run({ components, context }) {
       context,
       new ConfigError(
         `${site.location} declares "tenant: none" on tenant connection "${site.connectionId}" but never mentions "${site.field}". It reads every organization's rows. Scope the endpoint with runAs: { organizationId: … }, or author an "${site.field}" clause in its properties.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-unscoped' }
       )
     );
   });
 }
 
 const noneWithoutTenantField = {
-  slug: 'tenant',
+  slug: 'tenant-unscoped',
   checkOnly: true,
   run,
 };

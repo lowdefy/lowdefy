@@ -34,7 +34,7 @@ function run({ components, context }) {
       context.handleWarning(
         new ConfigWarning(
           `Collection "${collectionName}" declares field "${fieldName}" as required, but no migration file names it. Existing documents may lack it — add a migration under migrations/ that backfills "${fieldName}", or confirm existing documents already carry it.`,
-          { configKey: collection.configKey, checkSlug: 'collections' }
+          { configKey: collection.configKey, checkSlug: 'collections-field-migration' }
         )
       );
     });
@@ -42,7 +42,7 @@ function run({ components, context }) {
 }
 
 const fieldWithoutMigration = {
-  slug: 'collections',
+  slug: 'collections-field-migration',
   checkOnly: true,
   run,
 };

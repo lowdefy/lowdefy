@@ -1,6 +1,6 @@
 lowdefy: local
 components:
-  - id: Pill
+  Pill:
     props:
       result:
         type: string

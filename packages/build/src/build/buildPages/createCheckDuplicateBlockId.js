@@ -30,7 +30,7 @@ function createCheckDuplicateBlockId({ context, pageId }) {
         context,
         new ConfigError(
           `Duplicate blockId "${id}" on page "${pageId}". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.`,
-          { configKey }
+          { configKey, checkSlug: 'duplicate-block-id' }
         )
       );
       return;

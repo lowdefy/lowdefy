@@ -27,11 +27,11 @@ test('runChecks registers the js-lint rule first so normal builds lint _js bodie
 test('runChecks registers the five tenant rules after js-lint, F1 for builds and the rest check-only', () => {
   expect(rules.slice(1, 6)).toEqual(tenantRules);
   expect(tenantRules.map((rule) => rule.slug)).toEqual([
-    'tenant',
-    'tenant',
-    'tenant',
-    'tenant',
-    'tenant',
+    'tenant-authored',
+    'tenant-unscoped',
+    'tenant-caller-source',
+    'tenant-unstamped-write',
+    'tenant-inventory',
   ]);
   expect(tenantRules.map((rule) => rule.checkOnly)).toEqual([false, true, true, true, true]);
 });

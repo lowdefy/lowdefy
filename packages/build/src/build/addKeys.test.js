@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { VALID_CHECK_SLUGS } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 import parseTestYaml from '../test-utils/parseTestYaml.js';
 import testContext from '../test-utils/testContext.js';
@@ -340,4 +341,79 @@ pages:
   // Verify ~k is added to arrays
   expect(pagesArr['~k']).toBe('3');
   expect(blocksArr['~k']).toBe('5');
+});
+
+// addKeys is the only validator of ~ignoreBuildChecks: the key is deleted here,
+// before testSchema runs, so the JSON schema never sees it.
+
+async function addKeysWith(config) {
+  makeId.reset();
+  const context = testContext();
+  context.errors = [];
+  const addKeys = (await import('./addKeys.js')).default;
+  const components = parseTestYaml(config);
+  addKeys({ components, context });
+  return { components, context };
+}
+
+test('addKeys stores a valid ~ignoreBuildChecks list on the keyMap entry and deletes the key', async () => {
+  const { components, context } = await addKeysWith(`
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks:
+      - state-refs
+      - block-types
+`);
+  const page = components.pages[0];
+  expect(page['~ignoreBuildChecks']).toBeUndefined();
+  expect([...context.keyMap[page['~k']]['~ignoreBuildChecks']]).toEqual([
+    'state-refs',
+    'block-types',
+  ]);
+  expect(context.errors).toEqual([]);
+});
+
+test('addKeys rejects ~ignoreBuildChecks: true and names the slug array', async () => {
+  const { context } = await addKeysWith(`
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks: true
+`);
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain(
+    '~ignoreBuildChecks must be an array of check slugs.'
+  );
+  expect(context.errors[0].message).toContain('Valid slugs: state-refs');
+  expect(context.errors[0].received).toBe(true);
+});
+
+test('addKeys suggests the nearest slug for a typo', async () => {
+  const { context } = await addKeysWith(`
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks:
+      - state-ref
+`);
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    `Invalid check slug "state-ref" in ~ignoreBuildChecks. Did you mean "state-refs"?` +
+      ` Valid slugs: ${Object.keys(VALID_CHECK_SLUGS).join(', ')}.`
+  );
+});
+
+test('addKeys reports every invalid slug in one list', async () => {
+  const { context } = await addKeysWith(`
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks:
+      - state-ref
+      - not-a-slug-at-all
+`);
+  expect(context.errors).toHaveLength(2);
+  expect(context.errors[1].message).toContain('Invalid check slug "not-a-slug-at-all"');
+  expect(context.errors[1].message).not.toContain('Did you mean');
 });

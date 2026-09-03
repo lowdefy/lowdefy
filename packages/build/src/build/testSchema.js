@@ -58,8 +58,30 @@ function testSchema({ components, context }) {
       return !hasChildError;
     });
 
-    // Same-path deduplication: only show first error per unique path
-    // (multiple errors at same path are usually cascade errors from schema branches)
+    // Same-path deduplication: only show one error per unique path (multiple
+    // errors at one path are usually the branches of an anyOf/oneOf, each
+    // reporting that the value is not its own type).
+    //
+    // ajv-errors replaces the branch keyword itself with the schema's
+    // errorMessage, and that message is the only one that lists the legal forms
+    // (collectionField, connection.tenant) - where "must be string" from the
+    // first branch is actively misleading. So when a message replaced an
+    // anyOf/oneOf at this path, it wins the path.
+    const branchMessagePaths = new Set(
+      filteredErrors
+        .filter(
+          (error) =>
+            error.keyword === 'errorMessage' &&
+            (error.params?.errors ?? []).some(
+              (replaced) => replaced.keyword === 'anyOf' || replaced.keyword === 'oneOf'
+            )
+        )
+        .map((error) => error.instancePath)
+    );
+    filteredErrors = filteredErrors.filter(
+      (error) => !branchMessagePaths.has(error.instancePath) || error.keyword === 'errorMessage'
+    );
+
     const seenPaths = new Set();
     filteredErrors = filteredErrors.filter((error) => {
       if (seenPaths.has(error.instancePath)) {

@@ -58,26 +58,26 @@ function validateRunAs({ runAs, location, configKey, level = 'endpoint' }) {
     throw new ConfigError(`${location} "runAs" should be an object with an "organizationId".`, {
       received: runAs,
       configKey,
-      checkSlug: 'tenant',
+      checkSlug: 'tenant-run-as',
     });
   }
   if (type.isString(runAs.organizationId) && runAs.organizationId.trim() === '') {
     throw new ConfigError(
       `${location} "runAs.organizationId" is an empty string. A routine can not run as an unnamed organization - remove the runAs, or give it the id of the organization the routine should be scoped to.`,
-      { received: runAs.organizationId, configKey, checkSlug: 'tenant' }
+      { received: runAs.organizationId, configKey, checkSlug: 'tenant-run-as' }
     );
   }
   if (level === 'endpoint' && findOperator(runAs.organizationId, ['_state'])) {
     throw new ConfigError(
       `${location} "runAs.organizationId" reads "_state" — _state is empty when an endpoint's runAs is evaluated, before any step has run. Use _user, _secret or a step-level runAs.`,
-      { received: runAs.organizationId, configKey, checkSlug: 'tenant' }
+      { received: runAs.organizationId, configKey, checkSlug: 'tenant-run-as' }
     );
   }
   const operator = findOperator(runAs.organizationId, ['_payload']);
   if (operator) {
     throw new ConfigError(
       `${location} "runAs.organizationId" reads "${operator}" — the organization a routine runs as can not come from the caller. A browser or an API client controls the payload, so any caller could name another organization and read its rows. Derive it from a previous step (_step), from the caller (_user), or from a secret or environment value.`,
-      { received: runAs.organizationId, configKey, checkSlug: 'tenant' }
+      { received: runAs.organizationId, configKey, checkSlug: 'tenant-run-as' }
     );
   }
 }

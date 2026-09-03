@@ -262,7 +262,7 @@ describe('~ignoreBuildChecks', () => {
 pages:
   - _ref:
       path: page.yaml
-      ~ignoreBuildChecks: true`,
+      ~ignoreBuildChecks: [state-refs]`,
       },
       {
         path: 'page.yaml',

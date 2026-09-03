@@ -71,14 +71,14 @@ function run({ components, context }) {
         }" from "${operator}". The caller controls the ${
           operator === '_payload' ? 'payload' : 'state'
         }, so any caller could read another organization's rows. Derive it from a previous step (_step), the caller (_user), or scope the step with runAs.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-caller-source' }
       )
     );
   });
 }
 
 const noneFromCaller = {
-  slug: 'tenant',
+  slug: 'tenant-caller-source',
   checkOnly: true,
   run,
 };

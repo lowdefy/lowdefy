@@ -4,9 +4,7 @@
       "mode": "dev",
       "errors": ["Invalid check slug"],
       "errorContains": [
-        "Invalid check slug \"invalid-slug\" in ~ignoreBuildChecks.",
-        "Valid slugs: state-refs, payload-refs",
-        "lowdefy.yaml:10"
+        "Invalid check slug \"state-ref\" in ~ignoreBuildChecks. Did you mean \"state-refs\"?"
       ],
       "expectThrow": true
     }

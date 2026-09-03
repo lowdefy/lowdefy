@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { VALID_CHECK_SLUGS } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import getHazards from './getHazards.js';
@@ -28,13 +29,43 @@ const SCHEMA_ARTIFACTS = {
   requests: 'plugins/requestSchemas.json',
 };
 
+// An agent has no other way to learn a legal ~ignoreBuildChecks slug: the key
+// is stripped before the JSON schema runs, so the build's own error message was
+// the only source. Serve the catalogue here instead.
+function getCheckSlugs({ typeName }) {
+  if (type.isNone(typeName) || typeName === '~ignoreBuildChecks' || typeName === 'all') {
+    return {
+      kind: 'checks',
+      type: '~ignoreBuildChecks',
+      description:
+        'Build checks that ~ignoreBuildChecks can suppress. Write them as an array on the config node the check reports on, or on any of its ancestors: "~ignoreBuildChecks: [state-refs]". Suppression covers build-time validation only - the runtime behaviour is unchanged.',
+      slugs: Object.entries(VALID_CHECK_SLUGS).map(([slug, slugDescription]) => ({
+        slug,
+        description: slugDescription,
+      })),
+    };
+  }
+  if (type.isNone(VALID_CHECK_SLUGS[typeName])) {
+    return null;
+  }
+  return {
+    kind: 'checks',
+    type: typeName,
+    slug: typeName,
+    description: VALID_CHECK_SLUGS[typeName],
+  };
+}
+
 function getSchema({ kind, type: typeName }) {
+  if (String(kind ?? '').toLowerCase() === 'checks') {
+    return getCheckSlugs({ typeName });
+  }
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(SCHEMA_ARTIFACTS[normalizedKind])) {
     throw new Error(
       `No schemas available for type kind. Received ${JSON.stringify(
         kind
-      )}. Use one of: blocks, operators, actions, connections, requests.`
+      )}. Use one of: blocks, operators, actions, connections, requests, checks.`
     );
   }
   const schemas = readBuildArtifact({ name: SCHEMA_ARTIFACTS[normalizedKind] }) ?? {};

@@ -17,7 +17,7 @@ import noneFromCaller from './noneFromCaller.js';
 import { createTenantContext, pageRequest, endpointStep, mergeComponents } from './testSites.js';
 
 test('noneFromCaller runs under check only', () => {
-  expect(noneFromCaller.slug).toBe('tenant');
+  expect(noneFromCaller.slug).toBe('tenant-caller-source');
   expect(noneFromCaller.checkOnly).toBe(true);
 });
 
@@ -35,7 +35,10 @@ test('noneFromCaller errors when a tenant: none step takes the field from _paylo
   expect(context.errors[0].message).toBe(
     'Step "read_controls" at endpoint "sync" declares "tenant: none" and takes "organization_id" from "_payload". The caller controls the payload, so any caller could read another organization\'s rows. Derive it from a previous step (_step), the caller (_user), or scope the step with runAs.'
   );
-  expect(context.errors[0]).toMatchObject({ configKey: 'k_read_controls', checkSlug: 'tenant' });
+  expect(context.errors[0]).toMatchObject({
+    configKey: 'k_read_controls',
+    checkSlug: 'tenant-caller-source',
+  });
 });
 
 test('noneFromCaller errors for the dotted _state shorthand nested inside the tenant value', () => {

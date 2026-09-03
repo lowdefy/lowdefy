@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["~ignoreBuildChecks must be an array of check slugs."],
+      "errorContains": ["Valid slugs: state-refs, payload-refs"],
+      "expectThrow": true
+    }
+  ]
+}

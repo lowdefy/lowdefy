@@ -112,7 +112,7 @@ test('buildTypes collects an error for an unknown client operator', () => {
   expect(context.errors[0].message).toEqual(
     'Operator type "_stat" was used but is not defined. Did you mean "_state"?'
   );
-  expect(context.errors[0].checkSlug).toEqual('types');
+  expect(context.errors[0].checkSlug).toEqual('operator-types');
   expect(context.errors[0].configKey).toEqual('configKey1');
   expect(components.types.operators.client._stat).toBeUndefined();
 });
@@ -132,7 +132,21 @@ test('buildTypes collects an error for an unknown server operator', () => {
   expect(context.errors[0].message).toEqual(
     'Operator type "_secrt" was used but is not defined. Did you mean "_secret"?'
   );
-  expect(context.errors[0].checkSlug).toEqual('types');
+  expect(context.errors[0].checkSlug).toEqual('operator-types');
+});
+
+test('buildTypes does not suppress an unknown operator under a sibling type slug', () => {
+  const context = createTypesMapContext({
+    operators: { client: createDefinitions(['_not', '_type', '_state']), server: {} },
+  });
+  context.errors = [];
+  context.keyMap = {
+    configKey1: { '~k_parent': 'blockKey' },
+    blockKey: { '~ignoreBuildChecks': ['block-types'] },
+  };
+  context.typeCounters.operators.client.increment('_stat', 'configKey1');
+  buildTypes({ components: {}, context });
+  expect(context.errors).toHaveLength(1);
 });
 
 test('buildTypes reports every unknown type in one build', () => {
@@ -148,14 +162,14 @@ test('buildTypes reports every unknown type in one build', () => {
   expect(context.errors.map((error) => error.configKey)).toEqual(['configKey1', 'configKey2']);
 });
 
-test('buildTypes suppresses an unknown operator under ~ignoreBuildChecks types', () => {
+test('buildTypes suppresses an unknown operator under ~ignoreBuildChecks operator-types', () => {
   const context = createTypesMapContext({
     operators: { client: createDefinitions(['_not', '_type', '_state']), server: {} },
   });
   context.errors = [];
   context.keyMap = {
     configKey1: { '~k_parent': 'blockKey' },
-    blockKey: { '~ignoreBuildChecks': ['types'] },
+    blockKey: { '~ignoreBuildChecks': ['operator-types'] },
   };
   context.typeCounters.operators.client.increment('_stat', 'configKey1');
   const components = {};

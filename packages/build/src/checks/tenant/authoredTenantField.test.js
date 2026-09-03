@@ -17,7 +17,7 @@ import authoredTenantField from './authoredTenantField.js';
 import { createTenantContext, pageRequest, endpointStep, mergeComponents } from './testSites.js';
 
 test('authoredTenantField is the tenant rule that also fails builds', () => {
-  expect(authoredTenantField.slug).toBe('tenant');
+  expect(authoredTenantField.slug).toBe('tenant-authored');
   expect(authoredTenantField.checkOnly).toBe(false);
 });
 
@@ -32,7 +32,10 @@ test('authoredTenantField errors when a walled request filters by the tenant fie
   expect(context.errors[0].message).toBe(
     'Request "get_controls" at page "controls" sets "organization_id" itself on tenant connection "controls_db". The wall injects it — an authored value is refused at runtime. Remove the clause; the caller\'s organization is applied automatically.'
   );
-  expect(context.errors[0]).toMatchObject({ configKey: 'k_get_controls', checkSlug: 'tenant' });
+  expect(context.errors[0]).toMatchObject({
+    configKey: 'k_get_controls',
+    checkSlug: 'tenant-authored',
+  });
 });
 
 test('authoredTenantField errors when a walled insert step writes the custom tenant field deep in a document', () => {

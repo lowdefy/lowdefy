@@ -2,7 +2,7 @@
 # ======================================
 # Tests that ~ignoreBuildChecks cascades to children.
 #
-# The page has ~ignoreBuildChecks: true which should suppress warnings
+# The page has ~ignoreBuildChecks naming state-refs, which should suppress warnings
 # for all blocks within the page.
 #
 # Expected: NO warning for the child block's undefined _state reference.
@@ -12,7 +12,8 @@ lowdefy: local
 pages:
   - id: home
     type: Box
-    ~ignoreBuildChecks: true
+    ~ignoreBuildChecks:
+      - state-refs
     blocks:
       - id: stateRef
         type: Paragraph

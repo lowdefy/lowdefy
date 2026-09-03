@@ -112,7 +112,7 @@ test('multiple schema issues emit multiple warnings', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn).toHaveBeenCalled();
-  expect(mockLogWarn.mock.calls[0][0]).toBe('Block should have required property "id".');
+  expect(mockLogWarn.mock.calls[0][0]).toBe('Page should have required property "id".');
 });
 
 test('nested schema warning', () => {
@@ -190,10 +190,7 @@ test('null item in blocks array emits warning', () => {
       {
         id: 'page_1',
         type: 'PageHeaderMenu',
-        blocks: [
-          { id: 'valid', type: 'Box' },
-          null,
-        ],
+        blocks: [{ id: 'valid', type: 'Box' }, null],
       },
     ],
   };
@@ -372,9 +369,7 @@ test('auth role entry missing id emits required warning', () => {
     },
   };
   testSchema({ components, context });
-  expect(mockLogWarn).toHaveBeenCalledWith(
-    'Auth role entries should have required property "id".'
-  );
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth role entries should have required property "id".');
 });
 
 test('auth role entry with a non-string id emits type warning', () => {
@@ -450,9 +445,11 @@ test('connection tenant true emits warning - the key was removed with the invert
     ],
   };
   testSchema({ components, context });
-  // The raw const error surfaces here for the same reason as the invalid
-  // shape below; buildConnections validateTenant carries the teaching error.
-  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+  // B-43: the oneOf errorMessage is the only message that lists the legal
+  // forms, so it wins the path over the first branch's raw const error.
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    'Connection "tenant" should be "shared" or an object with a "field"'
+  );
 });
 
 test('connection tenant with a field object emits no warnings', () => {
@@ -482,11 +479,9 @@ test('connection tenant with an invalid shape emits warning', () => {
     ],
   };
   testSchema({ components, context });
-  // The oneOf branch error at the same instance path wins testSchema's
-  // same-path dedup, so the raw const error surfaces instead of the custom
-  // oneOf errorMessage. The focused buildConnections validateTenant error
-  // carries the descriptive message.
-  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    'Connection "tenant" should be "shared" or an object with a "field"'
+  );
 });
 
 test('request tenant none emits no warnings', () => {
@@ -714,4 +709,143 @@ test('page ~snapshotIgnore that is not an array of strings emits a warning', () 
   expect(mockLogWarn).toHaveBeenCalledWith(
     'Block "~snapshotIgnore" should be an array of state path strings.'
   );
+});
+
+// --- page definition: page-only keys are not advertised on nested blocks ---
+
+test('a page may declare state, subscriptions and ~snapshotIgnore', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'home',
+        type: 'Box',
+        state: { 'a.b': { type: 'string' } },
+        subscriptions: [],
+        '~snapshotIgnore': ['a.b'],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('a nested block declaring a page-only state key is an unknown property', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'home',
+        type: 'Box',
+        blocks: [{ id: 'b1', type: 'Box', state: { 'a.b': { type: 'string' } } }],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn.mock.calls[0][0]).toContain('"state"');
+});
+
+// --- B-43: a oneOf error is kept when it is the only error at its path ---
+
+test('collectionField oneOf errorMessage survives when it is the only error at its path', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    collections: {
+      answers: { fields: { title: 12 } },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn.mock.calls[0][0]).toContain('Collection field should be a type name');
+});
+
+test('collectionField object branch rejects an empty field declaration', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    collections: {
+      answers: { fields: { title: {} } },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('Collection field should be a type name');
+});
+
+test('connection tenant oneOf errorMessage wins the path over a branch error', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [{ id: 'c1', type: 'MongoDBCollection', tenant: 12 }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    'Connection "tenant" should be "shared" or an object with a "field"'
+  );
+});
+
+test('an errorMessage that did not replace a branch keyword does not win the path', () => {
+  // A menu link missing "id" also carries an unknown-property error; the
+  // unknown property is the more useful message and must still surface.
+  const components = {
+    lowdefy: '1.0.0',
+    menus: [{ id: 'default', links: [{ type: 'MenuLink', pageId: 'overview', properties: {} }] }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "pageId"');
+});
+
+// --- auth.dev.users entries are typed (review B, task 15) ---
+
+test('auth.dev.users entry with "role" instead of "roles" is a located warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: { dev: { users: { admin: { role: 'admin' } } } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('unknown property');
+});
+
+test('auth.dev.users entry with a string roles value is a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: { dev: { users: { admin: { roles: 'admin' } } } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('roles');
+});
+
+test('a fully declared auth.dev.users entry emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      dev: {
+        users: {
+          admin: {
+            id: 'u1',
+            name: 'Admin',
+            email: 'admin@example.com',
+            roles: ['admin'],
+            organizationId: 'org1',
+            organization_id: 'org1',
+            attributes: {},
+            profile: {},
+          },
+        },
+      },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+// --- component prop definitions are typed (review G §5) ---
+
+test('a typo in a component prop definition key is a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    components: [{ id: 'Card', props: { title: { typ: 'string' } } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('unknown key');
 });

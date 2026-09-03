@@ -19,7 +19,7 @@ import { ConfigError, ConfigWarning, LowdefyInternalError } from '@lowdefy/error
 import serializeBuildException from './serializeBuildException.js';
 
 test('serializeBuildException extracts message, name and location fields', () => {
-  const error = new ConfigError('Bad config', { configKey: 'abc123', checkSlug: 'my-check' });
+  const error = new ConfigError('Bad config', { configKey: 'abc123', checkSlug: 'state-refs' });
   error.source = '/app/pages/home.yaml:5';
   error.config = 'root.pages[0:home]';
 
@@ -29,7 +29,7 @@ test('serializeBuildException extracts message, name and location fields', () =>
     source: '/app/pages/home.yaml:5',
     config: 'root.pages[0:home]',
     configKey: 'abc123',
-    checkSlug: 'my-check',
+    checkSlug: 'state-refs',
     prodError: false,
   });
 });

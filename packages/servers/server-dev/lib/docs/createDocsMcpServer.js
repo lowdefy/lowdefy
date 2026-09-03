@@ -684,13 +684,18 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_schema',
     {
       description:
-        "Get the JSON Schema for a specific type: all properties, events, and their descriptions. For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event's actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types." +
+        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. Also serves the ~ignoreBuildChecks catalogue: kind "checks", type "~ignoreBuildChecks".' +
+        " For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event's actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types." +
         HAZARDS_NOTE,
       inputSchema: {
         kind: z
-          .enum(['blocks', 'operators', 'actions', 'connections', 'requests'])
+          .enum(['blocks', 'operators', 'actions', 'connections', 'requests', 'checks'])
           .describe('The kind of the type.'),
-        type: z.string().describe('The exact type name, e.g. "Button", "_get", "MongoDBFind".'),
+        type: z
+          .string()
+          .describe(
+            'The exact type name, e.g. "Button", "_get", "MongoDBFind". With kind "checks", pass "~ignoreBuildChecks" for the full catalogue of build check slugs, or one slug for its description.'
+          ),
       },
     },
     ({ kind, type }) => {

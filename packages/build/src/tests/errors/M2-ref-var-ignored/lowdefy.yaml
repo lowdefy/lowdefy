@@ -24,4 +24,5 @@ pages:
         # The ~ignoreBuildCheck flag should suppress the warning
         stateValue:
           _state: undefinedBlockId
-          ~ignoreBuildChecks: true
+          ~ignoreBuildChecks:
+            - state-refs

@@ -68,15 +68,9 @@ test('collectExceptions collects multiple errors', () => {
     directories: { config: '/app' },
   };
 
-  collectExceptions(
-    context,
-    new ConfigError('First error', { configKey: 'abc123' })
-  );
+  collectExceptions(context, new ConfigError('First error', { configKey: 'abc123' }));
 
-  collectExceptions(
-    context,
-    new ConfigError('Second error', { configKey: 'def456' })
-  );
+  collectExceptions(context, new ConfigError('Second error', { configKey: 'def456' }));
 
   expect(context.errors).toHaveLength(2);
   expect(context.errors[0].message).toBe('First error');
@@ -146,13 +140,16 @@ test('collectExceptions skips suppressed errors', () => {
     errors: [],
     seenSourceLines: new Set(),
     keyMap: {
-      abc123: { key: 'pages.0', '~ignoreBuildChecks': true },
+      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-refs'] },
     },
     refMap: {},
     directories: { config: '/app' },
   };
 
-  const error = new ConfigError('Suppressed error', { configKey: 'abc123' });
+  const error = new ConfigError('Suppressed error', {
+    configKey: 'abc123',
+    checkSlug: 'state-refs',
+  });
 
   collectExceptions(context, error);
 

@@ -1,6 +1,6 @@
 # J2: Undefined State Reference with ~ignoreBuildChecks
 # ======================================================
-# Tests that _state reference warnings are suppressed with ~ignoreBuildChecks: true.
+# Tests that _state reference warnings are suppressed with ~ignoreBuildChecks.
 # The ~ignoreBuildChecks flag is on the same object as the operator.
 #
 # Expected: NO warning should be shown.
@@ -16,4 +16,5 @@ pages:
         properties:
           content:
             _state: undefinedKey
-            ~ignoreBuildChecks: true
+            ~ignoreBuildChecks:
+              - state-refs

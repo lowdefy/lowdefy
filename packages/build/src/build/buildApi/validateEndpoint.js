@@ -71,7 +71,7 @@ function validateSchedules({ endpoint, configKey }) {
 
 // A declared schema is compiled once here so an invalid one is a located build
 // error, not a runtime throw on the first call that reaches it.
-function validateJsonSchema({ endpoint, field, configKey }) {
+function validateJsonSchema({ checkSlug, endpoint, field, configKey }) {
   const schema = endpoint[field];
   if (type.isNone(schema)) return;
   try {
@@ -79,7 +79,7 @@ function validateJsonSchema({ endpoint, field, configKey }) {
   } catch (error) {
     throw new ConfigError(
       `Api endpoint "${endpoint.id}" ${field} is not a valid JSON schema: ${error.message}.`,
-      { received: schema, configKey, checkSlug: 'response-schema' }
+      { received: schema, configKey, checkSlug }
     );
   }
 }
@@ -126,8 +126,13 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
     );
   }
   validateSchedules({ endpoint, configKey });
-  validateJsonSchema({ endpoint, field: 'payloadSchema', configKey });
-  validateJsonSchema({ endpoint, field: 'responseSchema', configKey });
+  validateJsonSchema({ checkSlug: 'payload-schema', endpoint, field: 'payloadSchema', configKey });
+  validateJsonSchema({
+    checkSlug: 'response-schema',
+    endpoint,
+    field: 'responseSchema',
+    configKey,
+  });
   validateRunAs({ runAs: endpoint.runAs, location: `Api endpoint "${endpoint.id}"`, configKey });
 }
 

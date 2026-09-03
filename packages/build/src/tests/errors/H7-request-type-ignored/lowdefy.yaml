@@ -1,6 +1,6 @@
 # H7: Invalid Request Type with ~ignoreBuildCheck
 # ================================================
-# Tests that invalid request type errors are suppressed with ~ignoreBuildChecks: true.
+# Tests that invalid request type errors are suppressed with ~ignoreBuildChecks.
 # The ~ignoreBuildCheck flag is on the request object.
 #
 # Expected: NO error should be shown for NonExistentRequest.
@@ -18,4 +18,5 @@ pages:
       - id: ignoredRequest
         type: NonExistentRequest
         connectionId: testApi
-        ~ignoreBuildChecks: true
+        ~ignoreBuildChecks:
+          - request-types

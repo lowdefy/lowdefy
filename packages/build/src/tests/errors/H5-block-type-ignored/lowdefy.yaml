@@ -1,6 +1,6 @@
 # H5: Invalid Block Type with ~ignoreBuildCheck
 # ==============================================
-# Tests that invalid block type errors are suppressed with ~ignoreBuildChecks: true.
+# Tests that invalid block type errors are suppressed with ~ignoreBuildChecks.
 # The ~ignoreBuildCheck flag is on the block object.
 #
 # Expected: NO error should be shown for NonExistentBlock.
@@ -13,4 +13,5 @@ pages:
     blocks:
       - id: ignoredBlock
         type: NonExistentBlock
-        ~ignoreBuildChecks: true
+        ~ignoreBuildChecks:
+          - block-types

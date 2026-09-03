@@ -18,7 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import findSimilarString from '../../utils/findSimilarString.js';
 
-function validateTypeClass({ counter, definitions, typeClass }) {
+function validateTypeClass({ checkSlug, counter, definitions, typeClass }) {
   const counts = counter.getCounts();
   const definedTypes = Object.keys(definitions);
   for (const typeName of Object.keys(counts)) {
@@ -29,7 +29,7 @@ function validateTypeClass({ counter, definitions, typeClass }) {
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      throw new ConfigError(message, { configKey, checkSlug: 'types' });
+      throw new ConfigError(message, { configKey, checkSlug });
     }
   }
 }
@@ -41,24 +41,28 @@ function validatePageTypes({ context }) {
     counter: typeCounters.blocks,
     definitions: typesMap.blocks,
     typeClass: 'Block',
+    checkSlug: 'block-types',
   });
 
   validateTypeClass({
     counter: typeCounters.actions,
     definitions: typesMap.actions,
     typeClass: 'Action',
+    checkSlug: 'action-types',
   });
 
   validateTypeClass({
     counter: typeCounters.operators.client,
     definitions: typesMap.operators.client,
     typeClass: 'Operator',
+    checkSlug: 'operator-types',
   });
 
   validateTypeClass({
     counter: typeCounters.operators.server,
     definitions: typesMap.operators.server,
     typeClass: 'Operator',
+    checkSlug: 'operator-types',
   });
 }
 

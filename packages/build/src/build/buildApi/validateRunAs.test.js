@@ -97,7 +97,7 @@ test('validateRunAs throws when organizationId is an empty string', () => {
   expect(error.message).toBe(
     'Api endpoint "jobs" "runAs.organizationId" is an empty string. A routine can not run as an unnamed organization - remove the runAs, or give it the id of the organization the routine should be scoped to.'
   );
-  expect(error.checkSlug).toBe('tenant');
+  expect(error.checkSlug).toBe('tenant-run-as');
 });
 
 test('validateRunAs throws when organizationId is missing', () => {
@@ -112,7 +112,7 @@ test('validateRunAs throws when organizationId is missing', () => {
   }
   expect(error).toBeInstanceOf(ConfigError);
   expect(error.configKey).toBe(configKey);
-  expect(error.checkSlug).toBe('tenant');
+  expect(error.checkSlug).toBe('tenant-run-as');
 });
 
 test('validateRunAs throws when organizationId reads _payload at the top level', () => {
@@ -125,7 +125,7 @@ test('validateRunAs throws when organizationId reads _payload at the top level',
   expect(error).toBeInstanceOf(ConfigError);
   expect(error.message).toBe(payloadMessage('_payload'));
   expect(error.configKey).toBe(configKey);
-  expect(error.checkSlug).toBe('tenant');
+  expect(error.checkSlug).toBe('tenant-run-as');
   expect(error.received).toEqual({ _payload: 'orgId' });
 });
 

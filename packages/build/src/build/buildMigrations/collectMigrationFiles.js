@@ -69,7 +69,7 @@ async function collectMigrationFiles({ directories }) {
     if (fileNameById[id] !== undefined) {
       throw new ConfigError(
         `Migration id "${id}" is declared by two files: "${fileNameById[id]}" and "${fileName}". Migration ids are filename stems and must be unique.`,
-        { checkSlug: 'migrations' }
+        { checkSlug: 'migration-files' }
       );
     }
     fileNameById[id] = fileName;
@@ -78,7 +78,7 @@ async function collectMigrationFiles({ directories }) {
       parsed = YAML.parse(text);
     } catch (error) {
       throw new ConfigError(`Migration "${id}" is not valid YAML: ${error.message}`, {
-        checkSlug: 'migrations',
+        checkSlug: 'migration-files',
       });
     }
     migrations.push({

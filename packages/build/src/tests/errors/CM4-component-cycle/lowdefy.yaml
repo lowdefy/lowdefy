@@ -1,6 +1,6 @@
 lowdefy: local
 components:
-  - id: Rec
+  Rec:
     blocks:
       - id: inner
         type: Rec

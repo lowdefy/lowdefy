@@ -31,14 +31,14 @@ function run({ components, context }) {
     context.handleWarning(
       new ConfigWarning(
         `${site.location} runs unscoped on tenant connection "${site.connectionId}" (tenant: none). Prefer runAs: { organizationId: … }, which keeps the wall on.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-inventory' }
       )
     );
   });
 }
 
 const unscopedInventory = {
-  slug: 'tenant',
+  slug: 'tenant-inventory',
   checkOnly: true,
   run,
 };

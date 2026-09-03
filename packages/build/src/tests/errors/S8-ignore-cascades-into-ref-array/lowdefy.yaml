@@ -13,4 +13,5 @@ pages:
     blocks:
       _ref:
         path: template.yaml
-        ~ignoreBuildChecks: true
+        ~ignoreBuildChecks:
+          - state-refs

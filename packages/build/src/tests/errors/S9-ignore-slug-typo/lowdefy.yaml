@@ -1,0 +1,17 @@
+# S9: Slug typo gets a "did you mean"
+# ====================================
+# An agent has no way to learn a legal slug except by triggering this error, so
+# a near miss must name the slug it is a near miss for.
+#
+# Expected: ConfigError suggesting "state-refs".
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildChecks:
+      - state-ref
+    blocks:
+      - id: test
+        type: Paragraph

@@ -29,14 +29,14 @@ function run({ components, context }) {
     context.handleWarning(
       new ConfigWarning(
         `Connection "${binding.connectionId}" declares no tenant but addresses collection "${binding.collection}", which is declared tenant-scoped on "${collection.tenant.field}". If the connection is meant to be walled on that field declare tenant: { field: ${collection.tenant.field} }; if it is a deliberate admin path, leave it and this note stands as the record.`,
-        { configKey: binding.configKey, checkSlug: 'collections' }
+        { configKey: binding.configKey, checkSlug: 'collections-untenanted' }
       )
     );
   });
 }
 
 const untenantedConnection = {
-  slug: 'collections',
+  slug: 'collections-untenanted',
   checkOnly: true,
   run,
 };

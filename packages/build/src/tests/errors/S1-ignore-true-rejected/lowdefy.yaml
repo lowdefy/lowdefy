@@ -1,0 +1,20 @@
+# S1: ~ignoreBuildChecks: true is rejected
+# ========================================
+# The bare `true` form suppressed every check at this node and below, with no
+# audit trail — an app author reaching for it disabled checks they had never
+# heard of. Only the slug array remains.
+#
+# Expected: ConfigError naming the valid slugs.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef
+        type: Paragraph
+        ~ignoreBuildChecks: true
+        properties:
+          content:
+            _state: undefinedKey

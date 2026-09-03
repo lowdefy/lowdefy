@@ -17,7 +17,7 @@ import unscopedInventory from './unscopedInventory.js';
 import { createTenantContext, pageRequest, endpointStep, mergeComponents } from './testSites.js';
 
 test('unscopedInventory runs under check only', () => {
-  expect(unscopedInventory.slug).toBe('tenant');
+  expect(unscopedInventory.slug).toBe('tenant-inventory');
   expect(unscopedInventory.checkOnly).toBe(true);
 });
 
@@ -40,14 +40,14 @@ test('unscopedInventory warns once per tenant: none site with its own configKey'
   expect(context.warnings[0]).toMatchObject({
     name: 'ConfigWarning',
     configKey: 'k_get_controls',
-    checkSlug: 'tenant',
+    checkSlug: 'tenant-inventory',
   });
   expect(context.warnings[1].message).toBe(
     'Step "read_all_controls" at endpoint "nightly_sync" runs unscoped on tenant connection "controls_db" (tenant: none). Prefer runAs: { organizationId: … }, which keeps the wall on.'
   );
   expect(context.warnings[1]).toMatchObject({
     configKey: 'k_read_all_controls',
-    checkSlug: 'tenant',
+    checkSlug: 'tenant-inventory',
   });
 });
 

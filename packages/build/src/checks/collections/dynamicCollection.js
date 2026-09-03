@@ -26,14 +26,14 @@ function run({ components, context }) {
     context.handleWarning(
       new ConfigWarning(
         `Connection "${binding.connectionId}" names its collection with an operator, so it can not be joined to the collections: declaration. It opts out of the tenancy agreement check, the tenant $lookup check and the data model until the collection is a literal string.`,
-        { configKey: binding.configKey, checkSlug: 'collections' }
+        { configKey: binding.configKey, checkSlug: 'collections-dynamic' }
       )
     );
   });
 }
 
 const dynamicCollection = {
-  slug: 'collections',
+  slug: 'collections-dynamic',
   checkOnly: true,
   run,
 };

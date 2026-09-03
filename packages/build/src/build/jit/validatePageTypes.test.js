@@ -96,7 +96,7 @@ test('validatePageTypes throws when the retired InviteMember action type is used
   );
 });
 
-test('validatePageTypes throws with checkSlug types for an unknown client operator', () => {
+test('validatePageTypes throws with checkSlug operator-types for an unknown client operator', () => {
   const context = createContext({ clientOps: { _state: {} } });
   context.typeCounters.operators.client.increment('_stat', 'key1');
   expect(() => validatePageTypes({ context })).toThrow(
@@ -105,12 +105,12 @@ test('validatePageTypes throws with checkSlug types for an unknown client operat
   try {
     validatePageTypes({ context });
   } catch (error) {
-    expect(error.checkSlug).toBe('types');
+    expect(error.checkSlug).toBe('operator-types');
     expect(error.configKey).toBe('key1');
   }
 });
 
-test('validatePageTypes throws with checkSlug types for an unknown server operator', () => {
+test('validatePageTypes throws with checkSlug operator-types for an unknown server operator', () => {
   const context = createContext({ serverOps: { _secret: {} } });
   context.typeCounters.operators.server.increment('_secrt', 'key1');
   expect(() => validatePageTypes({ context })).toThrow(
@@ -119,17 +119,29 @@ test('validatePageTypes throws with checkSlug types for an unknown server operat
   try {
     validatePageTypes({ context });
   } catch (error) {
-    expect(error.checkSlug).toBe('types');
+    expect(error.checkSlug).toBe('operator-types');
   }
 });
 
-test('validatePageTypes throws with checkSlug types for an unknown block type', () => {
+test('validatePageTypes throws with checkSlug block-types for an unknown block type', () => {
   const context = createContext({ blocks: { Box: {} } });
   context.typeCounters.blocks.increment('Buton', 'key1');
   try {
     validatePageTypes({ context });
+    throw new Error('validatePageTypes did not throw');
   } catch (error) {
-    expect(error.checkSlug).toBe('types');
+    expect(error.checkSlug).toBe('block-types');
+  }
+});
+
+test('validatePageTypes throws with checkSlug action-types for an unknown action type', () => {
+  const context = createContext({ actions: { SetState: {} } });
+  context.typeCounters.actions.increment('SetStat', 'key1');
+  try {
+    validatePageTypes({ context });
+    throw new Error('validatePageTypes did not throw');
+  } catch (error) {
+    expect(error.checkSlug).toBe('action-types');
   }
 });
 
