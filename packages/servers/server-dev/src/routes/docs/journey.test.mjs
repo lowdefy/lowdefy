@@ -61,13 +61,17 @@ test('docsJourneyHandler runs the journey against the request origin and returns
 
   const result = await docsJourneyHandler(c);
 
-  expect(mockRunJourney).toHaveBeenCalledWith({
-    origin: 'http://localhost:3227',
-    pageId: 'form',
-    steps: [{ click: 'submit' }],
-    user: { roles: ['admin'] },
-    urlQuery: { id: '1' },
-  });
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({
+      origin: 'http://localhost:3227',
+      pageId: 'form',
+      steps: [{ click: 'submit' }],
+      user: { roles: ['admin'] },
+      urlQuery: { id: '1' },
+      fixtures: undefined,
+      honoContext: c,
+    })
+  );
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
   expect(result.data.screenshots).toEqual([{ name: 'after', data: 'cG5n', mimeType: 'image/png' }]);
