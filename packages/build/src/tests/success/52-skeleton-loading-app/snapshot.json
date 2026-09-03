@@ -1110,7 +1110,10 @@
     ],
     "~k": "2k"
   },
-  "migrations.json": [],
+  "migrations.json": {
+    "stage": "snapshot",
+    "migrations": []
+  },
   "pages/404.json": {
     "id": "page:404",
     "type": "Result",

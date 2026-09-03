@@ -3,13 +3,14 @@
 # Two migration files under migrations/ are discovered, validated through the
 # same buildRoutine code an Api endpoint uses, and written one artifact per
 # migration to build/migrations/<id>.json plus the ordered index
-# build/migrations.json. The ledger connection is named at config.migrations.
+# build/migrations.json with `applied` read from the stage ledger
+# .lowdefy/migrations/<stage>.json (the snapshot run sets STAGE=snapshot and
+# has no ledger, so every migration is pending).
 
 lowdefy: local
 
 config:
   migrations:
-    ledgerConnectionId: migrations
     preflight: true
 
 connections:
@@ -18,12 +19,6 @@ connections:
     properties:
       databaseUri: mongodb://localhost/test
       collection: frameworks
-      write: true
-  - id: migrations
-    type: MongoDBCollection
-    properties:
-      databaseUri: mongodb://localhost/test
-      collection: migrations
       write: true
 
 pages:
