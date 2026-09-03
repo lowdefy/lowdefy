@@ -1,0 +1,7 @@
+# The framework never resolves this at build, so it must stay a string.
+name: census-fixture
+lowdefy: local
+
+pages:
+  - _ref: pages/one.yaml
+  - _ref: pages/two.yaml

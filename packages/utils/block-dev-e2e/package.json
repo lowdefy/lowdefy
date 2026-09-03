@@ -31,7 +31,8 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json",
     "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "node --test src/*.test.js"
   },
   "dependencies": {
     "@lowdefy/e2e-utils": "5.5.1",

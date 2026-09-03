@@ -1,0 +1,22 @@
+id: two
+type: PageHeaderMenu
+blocks:
+  - id: label
+    type: Paragraph
+    properties:
+      content:
+        _js: |
+          const esc = (s) => String(s).replace(/&/g, '&amp;');
+          return esc(state('title'));
+  - id: other
+    type: Paragraph
+    properties:
+      content:
+        _js: |
+          const esc = (s) => String(s).replace(/&/g, '&amp;');
+          return esc(state('other')) + ' extra';
+  - id: inline
+    type: Paragraph
+    properties:
+      content:
+        _js: state('title')

@@ -167,6 +167,27 @@ jobs:
         with:
           node-version: 24
 
+      - name: Config census
+        # The design's corpus metrics (escape-hatch share, files over 80 lines,
+        # comment lines carrying a rule) were hand-run once and went stale. This
+        # runs the committed scan against the app's own config so every release
+        # leaves a dated reading behind. Informational: it never fails the job,
+        # and there is no threshold to trip.
+        continue-on-error: true
+        run: |
+          node scripts/census/census.mjs ${{ matrix.path }} | tee census-${{ matrix.app }}.txt
+          node scripts/census/census.mjs ${{ matrix.path }} --json > census-${{ matrix.app }}.json
+
+      - name: Upload the census
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: census-${{ matrix.app }}
+          path: |
+            census-${{ matrix.app }}.txt
+            census-${{ matrix.app }}.json
+          if-no-files-found: ignore
+
       - name: Install Playwright browser
         # The installed browser revision has to match the playwright-core version
         # @lowdefy/server-dev drives, so it is read from that package.json rather
