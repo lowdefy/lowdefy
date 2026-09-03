@@ -67,3 +67,27 @@ test('requestStateEmpty does not fire on a request that reads only the payload',
   requestStateEmpty.run({ components, context });
   expect(context.errors).toEqual([]);
 });
+
+test('requestStateEmpty fires on a page request whose connection is not walled', () => {
+  const context = createTenantContext();
+  const components = {
+    pages: [
+      {
+        pageId: 'notes',
+        requests: [
+          {
+            requestId: 'get_notes',
+            type: 'MongoDBFind',
+            connectionId: 'notes_unwalled',
+            properties: { query: { owner: { _state: 'user_id' } } },
+            '~k': 'k_get_notes',
+          },
+        ],
+      },
+    ],
+  };
+  requestStateEmpty.run({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].configKey).toBe('k_get_notes');
+});
+

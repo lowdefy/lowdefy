@@ -20,10 +20,11 @@ import { ConfigError } from '@lowdefy/errors';
 import validateId from '../../../utils/validateId.js';
 import validateRunAs from '../validateRunAs.js';
 import validateTenantPipeline from '../../validateTenantPipeline.js';
+import collectExceptions from '../../../utils/collectExceptions.js';
 
 function validateStep(
   step,
-  { endpointId, stepTypes, tenantConnections, tenantCollectionMap, collections }
+  { endpointId, stepTypes, tenantConnections, tenantCollectionMap, collections, context }
 ) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
@@ -241,10 +242,10 @@ function validateStep(
   }
 
   // Best-effort (literal pipelines only): every refusal the tenant wall raises
-  // at request time on a walled pipeline, raised at build instead. validateStep
-  // has no build context to collect through, so the first finding is thrown and
-  // buildApi collects it per endpoint.
-  const [tenantPipelineError] = validateTenantPipeline({
+  // at request time on a walled pipeline, raised at build instead. With a build
+  // context every finding is collected so one build reports them all; a caller
+  // without one gets the first finding thrown.
+  const tenantPipelineErrors = validateTenantPipeline({
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnections,
@@ -252,9 +253,11 @@ function validateStep(
     collections,
     configKey,
   });
-  if (!type.isUndefined(tenantPipelineError)) {
-    throw tenantPipelineError;
+  if (tenantPipelineErrors.length === 0) return;
+  if (type.isNone(context)) {
+    throw tenantPipelineErrors[0];
   }
+  tenantPipelineErrors.forEach((error) => collectExceptions(context, error));
 }
 
 export default validateStep;

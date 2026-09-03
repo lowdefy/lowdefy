@@ -16,33 +16,30 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../../utils/collectExceptions.js';
-import collectWalledSites from './collectWalledSites.js';
 import findCallerReferences from './findCallerReferences.js';
 
 // A page request is evaluated on the server with `state` hardcoded to `{}`
 // (api callRequest.js), so `_state` in its properties always evaluates to
 // undefined: a filter that silently matches everything, or a document with a
-// missing field. It is a silent-failure bug in its own right, which is why it
-// is reported here and not as a tenant leak - the caller can not steer a value
-// that does not exist.
-//
-// This rule sees the requests on a walled connection, because that is the site
-// list the tenant checks share; the same read is equally broken on any page
-// request.
+// missing field. It is a silent-failure bug on every page request, walled or
+// not, which is why it walks every built page rather than the tenant site
+// list, and why it is reported as its own finding and not as a tenant leak -
+// the caller can not steer a value that does not exist.
 function run({ components, context }) {
-  collectWalledSites({ components, context }).forEach((site) => {
-    if (site.kind !== 'page') return;
-    const state = findCallerReferences(site.properties).find(
-      (reference) => reference.operator === '_state'
-    );
-    if (!state) return;
-    collectExceptions(
-      context,
-      new ConfigError(
-        `${site.location} reads "_state" in its request properties. _state is always empty in a request — a request is evaluated on the server with an empty state, so this value is undefined. Pass the value in the request payload and read it with _payload.`,
-        { configKey: site.configKey, checkSlug: 'request-state-empty' }
-      )
-    );
+  (components.pages ?? []).forEach((page) => {
+    (page.requests ?? []).forEach((request) => {
+      const state = findCallerReferences(request.properties).find(
+        (reference) => reference.operator === '_state'
+      );
+      if (!state) return;
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Request "${request.requestId}" at page "${page.pageId}" reads "_state" in its request properties. _state is always empty in a request — a request is evaluated on the server with an empty state, so this value is undefined. Pass the value in the request payload and read it with _payload.`,
+          { configKey: request['~k'], checkSlug: 'request-state-empty' }
+        )
+      );
+    });
   });
 }
 
