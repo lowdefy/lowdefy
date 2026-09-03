@@ -54,3 +54,8 @@ test('every scalar isExpression accepts is one compileExpression can delimit', (
     _eq: [{ _state: 'a' }, '}'],
   });
 });
+
+test('isExpression treats an empty or whitespace-only string as a literal', () => {
+  expect(isExpression('')).toBe(false);
+  expect(isExpression('   ')).toBe(false);
+});

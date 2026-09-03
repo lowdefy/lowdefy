@@ -28,7 +28,8 @@ import findExpressionEnd from './findExpressionEnd.js';
 function isExpression(value) {
   if (!type.isString(value)) return false;
   const trimmed = value.trim();
-  return findExpressionEnd(trimmed) === trimmed.length - 1;
+  const end = findExpressionEnd(trimmed);
+  return end !== -1 && end === trimmed.length - 1;
 }
 
 export default isExpression;
