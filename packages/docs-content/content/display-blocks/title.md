@@ -427,8 +427,8 @@ Extra Margin Title
     content: Extra Margin Title
     level: 4
     theme:
-      titleMarginTop: 0
-      titleMarginBottom: 0
+      titleMarginTop: 0px
+      titleMarginBottom: 0px
 ```
 
 Engineering

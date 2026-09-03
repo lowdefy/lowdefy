@@ -23,6 +23,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: toggle_on
   type: PasswordInput
   properties:
@@ -45,6 +48,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: placeholder_default
   type: PasswordInput
   properties:
@@ -60,6 +66,9 @@ Password input with visibility toggle.
   properties:
     title: No Placeholder
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_empty
@@ -78,6 +87,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: borderless_default
   type: PasswordInput
   properties:
@@ -94,6 +106,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: autofocus_on
   type: PasswordInput
   properties:
@@ -107,6 +122,9 @@ Password input with visibility toggle.
     autoFocus: false
     placeholder: Normal focus behavior
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -145,6 +163,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: inline_default
   type: PasswordInput
   properties:
@@ -173,6 +194,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_extra
   type: PasswordInput
   properties:
@@ -196,6 +220,9 @@ Password input with visibility toggle.
       hasFeedback: false
     placeholder: Feedback text hidden
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_element
@@ -253,6 +280,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: combo_large_no_toggle
   type: PasswordInput
   properties:
@@ -270,6 +300,9 @@ Password input with visibility toggle.
     visibilityToggle: true
     placeholder: Small disabled with toggle
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_radius
@@ -322,6 +355,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: login_card
   type: Card
   properties:
@@ -364,6 +400,9 @@ Password input with visibility toggle.
               content: Login successful!
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied2_security_card
@@ -409,6 +448,9 @@ Password input with visibility toggle.
               content: Your password has been updated successfully.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -464,7 +506,7 @@ Password input with visibility toggle.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
-| `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onChange` | `{ value: string }` | Trigger action when text input is changed. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

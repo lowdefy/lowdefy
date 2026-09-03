@@ -221,6 +221,9 @@ Navigation steps bar, guiding users through the steps of a task.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dot_steps
   type: Steps
   properties:
@@ -315,6 +318,9 @@ Navigation steps bar, guiding users through the steps of a task.
           clickable_current:
             _event: current
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_primary
@@ -485,6 +491,9 @@ Navigation steps bar, guiding users through the steps of a task.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: order_card
   type: Card
   properties:
@@ -574,7 +583,7 @@ Navigation steps bar, guiding users through the steps of a task.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ current }` | Triggered when a step is clicked. |
+| `onChange` | `{ current: integer }` | Triggered when a step is clicked. |
 
 | Key | Target |
 | --- | --- |

@@ -212,8 +212,7 @@ Tom Wilson
                 flex: 0 0 auto
               properties:
                 size: small
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
                 icon: AiOutlineUser
             - id: psm_grp_name_1
               type: Paragraph
@@ -244,8 +243,7 @@ Tom Wilson
                 flex: 0 0 auto
               properties:
                 size: small
-                color: "#fff"
-                backgroundColor: "#52c41a"
+                color: "#52c41a"
                 icon: AiOutlineUser
             - id: psm_grp_name_2
               type: Paragraph
@@ -413,7 +411,6 @@ Sprint Progress
               type: Progress
               properties:
                 percent: 68
-                size: small
     footer:
       blocks:
         - id: psm_full_footer_text
@@ -526,6 +523,9 @@ Profile from _menu
         showIcon: true
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `logo` | object | - | Header logo settings. By default, images are served from the app public folder and auto-swap between light and dark variants based on dark mode. See [Hosting Files](/hosting-files) for details. |
@@ -613,8 +613,8 @@ Profile from _menu
 | `onMenuItemSelect` | \- | Trigger action when menu item is selected. |
 | `onMenuItemClick` | \- | Trigger action when menu item is clicked. |
 | `onOpen` | \- | Trigger action when menu is open. |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 | `onToggleDrawer` | \- | Trigger action when mobile menu drawer is toggled. |
 | `onToggleMenuGroup` | \- | Trigger action when mobile menu group is opened. |
 

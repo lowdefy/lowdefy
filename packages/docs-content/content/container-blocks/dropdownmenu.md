@@ -388,6 +388,9 @@ Right-click anywhere in this card to open the context menu.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dropdown_menu_event
   type: DropdownMenu
   layout:
@@ -466,6 +469,9 @@ Right-click anywhere in this card to open the context menu.
         color: default
         variant: outlined
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dropdown_menu_theme
@@ -547,8 +553,7 @@ Jane Doe
             flex: 0 0 auto
           properties:
             content: JD
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: dropdown_menu_user_name
           type: Paragraph
           layout:
@@ -571,6 +576,9 @@ Jane Doe
         title: Open Menu
         icon: AiOutlineMenu
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -624,9 +632,9 @@ Jane Doe
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | `{ key, keyPath, pageId, url }` | Trigger action when a menu item is clicked. |
-| `onSelect` | `{ key, selectedKeys, pageId, url }` | Trigger action when a menu item is selected. |
-| `onOpenChange` | `{ open }` | Trigger action when dropdown opens or closes. |
+| `onClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a menu item is clicked. |
+| `onSelect` | `{ key: string, selectedKeys: array, pageId: string, url: string }` | Trigger action when a menu item is selected. |
+| `onOpenChange` | `{ open: boolean }` | Trigger action when dropdown opens or closes. |
 
 | Key | Target |
 | --- | --- |

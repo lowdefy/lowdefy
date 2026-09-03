@@ -125,6 +125,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: type_btns_row
   type: Box
   layout:
@@ -270,6 +273,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: target_btns_row
   type: Box
   layout:
@@ -408,6 +414,9 @@ Guided tour with steps, masks, and keyboard navigation.
         params:
           target_mixed_tour_open: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: placement_btns_row
@@ -580,6 +589,9 @@ Guided tour with steps, masks, and keyboard navigation.
         params:
           placement_tour_level_open: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: mask_btns_row
@@ -776,6 +788,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: arrow_btns_row
   type: Box
   layout:
@@ -954,6 +969,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: cover_btns_row
   type: Box
   layout:
@@ -1063,6 +1081,9 @@ Guided tour with steps, masks, and keyboard navigation.
         params:
           cover_target_tour_open: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: closable_btns_row
@@ -1214,6 +1235,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: anim_btns_row
   type: Box
   layout:
@@ -1348,6 +1372,9 @@ Guided tour with steps, masks, and keyboard navigation.
         params:
           disabled_interaction_tour_open: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: gap_btns_row
@@ -1537,6 +1564,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: zindex_btns_row
   type: Box
   layout:
@@ -1650,6 +1680,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: events_start_btn
   type: Button
   layout:
@@ -1726,6 +1759,9 @@ Guided tour with steps, masks, and keyboard navigation.
           content: Tour completed!
           status: success
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: css_btns_row
@@ -1893,6 +1929,9 @@ Guided tour with steps, masks, and keyboard navigation.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: theme_btns_row
   type: Box
   layout:
@@ -2055,6 +2094,9 @@ Guided tour with steps, masks, and keyboard navigation.
           theme_combined_tour_open: false
 ```
 
+```yaml
+[object Object]```
+
 Welcome to the application. Click the button below to take a guided tour of the interface.
 
 ```yaml
@@ -2179,6 +2221,9 @@ Welcome to the application. Click the button below to take a guided tour of the 
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: feature_card
   type: Card
   properties:
@@ -2301,6 +2346,9 @@ Welcome to the application. Click the button below to take a guided tour of the 
           status: success
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `animated` | boolean | `true` | Whether to enable animation. |
@@ -2346,8 +2394,8 @@ Welcome to the application. Click the button below to take a guided tour of the 
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ current }` | Triggered when the current step changes. |
-| `onClose` | `{ current }` | Triggered when the tour is closed. |
+| `onChange` | `{ current: integer }` | Triggered when the current step changes. |
+| `onClose` | `{ current: integer }` | Triggered when the tour is closed. |
 | `onFinish` | \- | Triggered when the tour is finished. |
 
 | Key | Target |

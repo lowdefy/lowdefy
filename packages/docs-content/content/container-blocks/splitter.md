@@ -697,6 +697,9 @@ Resize the panels. The onResizeStart fires a message and onResizeEnd saves panel
                     else: Resize panels to see sizes here.
 ```
 
+```yaml
+[object Object]```
+
 <b>Sidebar</b>
 
 Dashboard
@@ -1250,6 +1253,9 @@ Compiled successfully!
                         content: Compiled successfully!
 ```
 
+```yaml
+[object Object]```
+
 Overview
 
 <b>Sarah</b> updated the project plan <i>2 min ago</i>
@@ -1417,6 +1423,9 @@ Overview
                   properties:
                     content: <b>Alex</b> resolved 5 support tickets <i>3 hours ago</i>
 ```
+
+```yaml
+[object Object]```
 
 Folders
 
@@ -1642,8 +1651,7 @@ Please review the attached document and share any feedback by end of week. Our n
                   properties:
                     icon: AiOutlineUser
                     size: 32
-                    color: "#fff"
-                    backgroundColor: "#1677ff"
+                    color: "#1677ff"
                 - id: email_preview_sender
                   type: Box
                   layout:
@@ -1694,6 +1702,9 @@ Please review the attached document and share any feedback by end of week. Our n
                     color: purple
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `lazy` | boolean | `false` | Lazy render panel content. |
@@ -1722,10 +1733,10 @@ Please review the attached document and share any feedback by end of week. Our n
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCollapse` | `{ collapsed, sizes }` | Trigger action when a panel is collapsed or expanded. |
-| `onResize` | `{ sizes }` | Trigger action when panel sizes change during resize. |
-| `onResizeEnd` | `{ sizes }` | Trigger action when resize ends. |
-| `onResizeStart` | `{ sizes }` | Trigger action when resize starts. |
+| `onCollapse` | `{ collapsed: boolean, sizes: array }` | Trigger action when a panel is collapsed or expanded. |
+| `onResize` | `{ sizes: array }` | Trigger action when panel sizes change during resize. |
+| `onResizeEnd` | `{ sizes: array }` | Trigger action when resize ends. |
+| `onResizeStart` | `{ sizes: array }` | Trigger action when resize starts. |
 
 | Key | Target |
 | --- | --- |

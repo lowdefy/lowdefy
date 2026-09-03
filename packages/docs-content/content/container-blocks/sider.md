@@ -402,6 +402,8 @@ The width property accepts a number (pixels) or string value. Here the sider is 
               labels or nested navigation.
 ```
 
+Sider state:
+
 The Sider fires onOpen and onClose events when it expands or collapses. Use these events with SetState or other actions to react to sider state changes. Toggle the sider to see the state update above.
 
 ```yaml
@@ -467,6 +469,9 @@ The Sider fires onOpen and onClose events when it expands or collapses. Use thes
               state changes. Toggle the sider to see the state update above.
 ```
 
+```yaml
+[object Object]```
+
 Use designTokens to override antd theme tokens on the Sider. Here colorBgContainer changes the sidebar background, colorPrimary affects the selected item highlight, and colorText changes the menu text color.
 
 Token overrides work with both light and dark themes. This dark sider uses a custom navy background and green primary color for the active menu item highlight.
@@ -484,9 +489,6 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
         width: 220
         collapsible: true
         initialCollapsed: false
-        designTokens:
-          colorPrimary: "#722ed1"
-          colorText: "#531dab"
       blocks:
         - id: token_menu
           type: Menu
@@ -534,9 +536,6 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
         width: 220
         collapsible: true
         initialCollapsed: false
-        designTokens:
-          colorPrimary: "#52c41a"
-          colorBgContainer: "#1a1a2e"
       blocks:
         - id: token_dark_menu
           type: Menu
@@ -1046,7 +1045,7 @@ Use the sidebar on the left to browse through different sections. On smaller scr
 | `initialCollapsed` | boolean | `true` | Set the initial collapsed state |
 | `reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right |
 | `width` | string \| number | - | width of the sidebar |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | string \| object | - | The Sider color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

@@ -404,7 +404,7 @@ Present this QR code at the entrance for check-in.
     - id: ticket_qr_row
       type: Box
       layout:
-        contentAlign: center
+        align: center
         gap: 8
       blocks:
         - id: ticket_qr
@@ -435,7 +435,7 @@ Present this QR code at the entrance for check-in.
     - id: wifi_qr_row
       type: Box
       layout:
-        contentAlign: center
+        align: center
         gap: 8
       blocks:
         - id: wifi_qr

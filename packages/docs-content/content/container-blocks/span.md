@@ -124,6 +124,9 @@ Click to navigate
           newTab: true
 ```
 
+```yaml
+[object Object]```
+
 Underlined span
 
 uppercase span

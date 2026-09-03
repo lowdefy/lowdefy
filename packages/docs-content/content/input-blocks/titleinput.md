@@ -61,6 +61,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: type_default
   type: TitleInput
   properties:
@@ -121,6 +124,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           type_danger: Danger Type Title
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_italic
@@ -184,6 +190,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           style_code: Code Style Title
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combined_italic_underline
@@ -256,6 +265,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_blue
   type: TitleInput
   properties:
@@ -319,6 +331,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: copyable_boolean
   type: TitleInput
   properties:
@@ -376,6 +391,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           copyable_custom_text_and_tooltips: Custom text and tooltips together
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: editable_boolean_true
@@ -438,6 +456,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           editable_editing_state: Starts in editing mode
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ellipsis_boolean
@@ -525,6 +546,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_level_1
   type: TitleInput
   properties:
@@ -573,6 +597,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           disabled_secondary: Disabled Secondary Type
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: default_value_simple
@@ -629,6 +656,9 @@ Editable title heading with levels, copyable, and text styles.
     level: 3
     editable: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: level_1_secondary
@@ -692,6 +722,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           level_5_success: Level 5 Success
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_color_text
@@ -764,6 +797,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           theme_multiple_tokens: Multiple Token Overrides
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combined_copyable_editable
@@ -855,6 +891,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_override_inline
   type: TitleInput
   properties:
@@ -901,6 +940,9 @@ Editable title heading with levels, copyable, and text styles.
         params:
           style_override_combined: Combined Inline and Tailwind Styles
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied2_doc_editor_card
@@ -968,6 +1010,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied3_blog_editor_card
   type: Card
   properties:
@@ -1026,6 +1071,9 @@ Editable title heading with levels, copyable, and text styles.
               duration: 3
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `code` | boolean | `false` | Apply code style. |
@@ -1080,9 +1128,9 @@ Editable title heading with levels, copyable, and text styles.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onExpand` | `{ ellipsis }` | Trigger action when ellipse expand is clicked. |
-| `onCopy` | `{ value }` | Trigger action when copy text is clicked. |
-| `onChange` | `{ value }` | Trigger action when title is changed. |
+| `onExpand` | `{ ellipsis: boolean }` | Trigger action when ellipse expand is clicked. |
+| `onCopy` | `{ value: string }` | Trigger action when copy text is clicked. |
+| `onChange` | `{ value: string }` | Trigger action when title is changed. |
 
 | Key | Target |
 | --- | --- |

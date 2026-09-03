@@ -70,6 +70,12 @@ Notes
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: skills
   type: List
   properties:
@@ -96,6 +102,12 @@ Notes
               args:
                 - _index: 0
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 Tasks
 
@@ -272,6 +284,12 @@ Tasks
               status: success
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 User Directory
 
 ```yaml
@@ -371,6 +389,12 @@ User Directory
           _state: users.$.company.name
         color: blue
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 Invoice #1042
 
@@ -508,6 +532,12 @@ Invoice #1042
               content: Invoice submitted!
               status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

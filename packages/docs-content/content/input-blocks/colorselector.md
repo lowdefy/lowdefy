@@ -31,6 +31,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: ColorSelector
   layout:
@@ -50,6 +53,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
   properties:
     size: large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: size_text_small
@@ -74,6 +80,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
     size: large
     showText: true
 ```
+
+```yaml
+[object Object]```
 
 **Hex format:**
 
@@ -118,6 +127,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: allow_clear_red
   type: ColorSelector
   layout:
@@ -140,6 +152,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
     allowClear: true
     showText: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: toggle_arrow_hidden
@@ -175,6 +190,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: mode_default
   type: ColorSelector
   layout:
@@ -196,6 +214,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
     mode: gradient
     showText: true
 ```
+
+```yaml
+[object Object]```
 
 **Top:**
 
@@ -259,6 +280,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
   properties:
     placement: bottomLeft
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: presets_brand
@@ -343,6 +367,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
           - "#eb2f96"
 ```
 
+```yaml
+[object Object]```
+
 **Click trigger (default):**
 
 **Hover trigger:**
@@ -373,6 +400,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_basic
   type: ColorSelector
   layout:
@@ -401,6 +431,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
     disabled: true
     size: large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_basic
@@ -440,6 +473,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_border
   type: ColorSelector
   layout:
@@ -464,9 +500,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
   type: ColorSelector
   layout:
     flex: 0 0 auto
+  class: rounded-lg shadow-sm
   properties:
     showText: true
-    class: rounded-lg shadow-sm
 - id: style_large_swatch
   type: ColorSelector
   layout:
@@ -476,6 +512,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
       transform: scale(1.5)
       transformOrigin: left center
 ```
+
+```yaml
+[object Object]```
 
 **Full-featured picker:**
 
@@ -563,6 +602,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: multi_row
   type: Box
   layout:
@@ -593,6 +635,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
       layout:
         flex: 0 0 auto
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_handler
@@ -651,6 +696,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
       colorPickerPresetColorSize: 28
       borderRadius: 12
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_theme_editor_card
@@ -743,6 +791,12 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: applied_product_card
   type: Card
   properties:
@@ -829,11 +883,31 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
               status: success
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `format` | string | - | Color format. Enum: `rgb`, `hex`, `hsb`. |
 | `showText` | boolean | - | Show color text. |
 | `size` | string | - | Size of the color picker. Enum: `small`, `middle`, `large`. |
+| `label` | object | - | Label properties. |
+| `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
+| `label.colon` | boolean | `true` | Append label with colon. |
+| `label.extra` | string | - | Extra text to display beneath the content - supports html. |
+| `label.title` | string | - | Label title - supports html. |
+| `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
+| `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
+| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.color` | string | - | Color of the tooltip icon. |
+| `label.span` | number | - | Label inline span. |
+| `label.disabled` | boolean | `false` | Hide input label. |
+| `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
+| `label.inline` | boolean | `false` | Render input and label inline. |
+| `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `disabled` | boolean | `false` | Disable the color picker. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `arrow` | boolean | `true` | Show arrow on the color picker popup. |
@@ -866,11 +940,11 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when the color is changed. |
-| `onChangeComplete` | `{ value }` | Trigger actions when the color change is complete. |
+| `onChange` | `{ value: string }` | Trigger actions when the color is changed. |
+| `onChangeComplete` | `{ value: string }` | Trigger actions when the color change is complete. |
 | `onClear` | \- | Trigger actions when the color is cleared. |
-| `onFormatChange` | `{ format }` | Trigger actions when the color format is changed. |
-| `onOpenChange` | `{ open }` | Trigger actions when the color picker popup open state changes. |
+| `onFormatChange` | `{ format: string }` | Trigger actions when the color format is changed. |
+| `onOpenChange` | `{ open: boolean }` | Trigger actions when the color picker popup open state changes. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

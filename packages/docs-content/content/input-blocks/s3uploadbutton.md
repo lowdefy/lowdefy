@@ -28,6 +28,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: accept_images
   type: S3UploadButton
   properties:
@@ -56,6 +59,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
       title: Upload JPG, PNG, or GIF
       type: default
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: limit_single
@@ -89,6 +95,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: button_primary
   type: S3UploadButton
   properties:
@@ -117,6 +126,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: S3UploadButton
   properties:
@@ -138,6 +150,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     disabled: true
     showUploadList: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: list_visible
@@ -171,6 +186,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_default
   type: S3UploadButton
   properties:
@@ -192,6 +210,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     label:
       extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_element_bg
@@ -227,6 +248,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
       title: Upload
       type: default
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: doc_mgmt_card
@@ -292,6 +316,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: profile_card
   type: Card
   properties:
@@ -339,6 +366,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
               content: Profile updated successfully!
               status: success
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

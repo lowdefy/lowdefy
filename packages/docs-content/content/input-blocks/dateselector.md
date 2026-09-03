@@ -20,6 +20,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: variant_outlined
   type: DateSelector
   properties:
@@ -42,6 +45,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: format_iso
@@ -82,6 +88,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: placeholder_default
   type: DateSelector
   properties:
@@ -105,6 +114,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: clear_enabled
   type: DateSelector
   properties:
@@ -122,6 +134,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: today_enabled
   type: DateSelector
   properties:
@@ -137,6 +152,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: icon_default
@@ -180,6 +198,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: DateSelector
   properties:
@@ -214,6 +235,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: autofocus_off
   type: DateSelector
   properties:
@@ -229,6 +253,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_dates_min
@@ -280,6 +307,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ds_presets_relative
@@ -359,6 +389,12 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: label_default
   type: DateSelector
   properties:
@@ -399,6 +435,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_inline_4
   type: DateSelector
   properties:
@@ -423,6 +462,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: html_title_bold
   type: DateSelector
   properties:
@@ -436,6 +478,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_width
@@ -465,6 +510,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_rounded
   type: DateSelector
   class: rounded-lg shadow-sm
@@ -480,6 +528,9 @@ Date picker with configurable format and disabled dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_primary_color
@@ -525,6 +576,9 @@ Date picker with configurable format and disabled dates.
       colorPrimary: "#722ed1"
       colorBorder: "#d3adf7"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combined_full
@@ -587,6 +641,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_event_reg_card
   type: Card
   properties:
@@ -635,6 +692,9 @@ Date picker with configurable format and disabled dates.
               content: Registration submitted successfully!
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied3_profile_card
@@ -687,6 +747,9 @@ Date picker with configurable format and disabled dates.
               content: Profile saved successfully!
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -757,7 +820,7 @@ Date picker with configurable format and disabled dates.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

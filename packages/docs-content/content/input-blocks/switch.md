@@ -26,6 +26,9 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: text_on_off
   type: Switch
   properties:
@@ -68,6 +71,9 @@ Toggle switch with optional text and icon labels.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: icon_custom_check
@@ -115,6 +121,9 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_green
   type: Switch
   properties:
@@ -153,6 +162,9 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_text_green
   type: Switch
   properties:
@@ -181,6 +193,9 @@ Toggle switch with optional text and icon labels.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_off
@@ -227,6 +242,9 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_default
   type: Switch
   properties:
@@ -258,6 +276,9 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_inline
   type: Switch
   properties:
@@ -282,6 +303,9 @@ Toggle switch with optional text and icon labels.
       inline: true
       span: 8
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_margin
@@ -309,6 +333,9 @@ Toggle switch with optional text and icon labels.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_track
@@ -358,6 +385,9 @@ Toggle switch with optional text and icon labels.
       colorPrimary: "#eb2f96"
       colorPrimaryHover: "#f759ab"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: comp_settings_card
@@ -426,6 +456,12 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: applied2_privacy_card
   type: Card
   properties:
@@ -491,6 +527,9 @@ Toggle switch with optional text and icon labels.
               duration: 3
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -536,7 +575,7 @@ Toggle switch with optional text and icon labels.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when switch is changed. |
+| `onChange` | `{ value: boolean }` | Trigger action when switch is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

@@ -345,6 +345,9 @@ Google Map with a heatmap visualization layer for displaying data density. Must 
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: heatmap_css_element
   type: GoogleMapsHeatmap
   class:
@@ -557,6 +560,9 @@ Real-time air quality index readings from distributed sensor stations. Warmer ar
               selectedLocation:
                 _event: latLng
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

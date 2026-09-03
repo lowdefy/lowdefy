@@ -28,6 +28,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: accept_images
   type: Upload
   properties:
@@ -47,6 +50,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
       title: Upload PDF
       type: default
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: limit_single
@@ -70,6 +76,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: emit_file_content
   type: Upload
   properties:
@@ -82,12 +91,18 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: Upload
   properties:
     uploadPolicyRequestId: upload_policy_request
     disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -103,6 +118,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     label:
       extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -130,12 +148,12 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onBeforeUpload` | `{ file }` | Triggered before a file is uploaded. If an action throws, the upload is cancelled. |
-| `onChange` | \- | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, with the block value ({ file, fileList }) as the event, where file includes the base64 content. |
-| `onProgress` | `{ file, fileList }` | Triggered when the upload state is in progress. |
-| `onSuccess` | `{ file, fileList }` | Triggered when the upload state is done uploading. |
-| `onRemove` | `{ file, fileList }` | Triggered when the upload has been removed. |
-| `onError` | `{ file, fileList }` | Triggered when the upload has failed. |
+| `onBeforeUpload` | `{ file: object }` | Triggered before a file is uploaded. If an action throws, the upload is cancelled. |
+| `onChange` | `{ file: object, fileList: array }` | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, where file includes the base64 content. |
+| `onProgress` | `{ file: object, fileList: array }` | Triggered when the upload state is in progress. |
+| `onSuccess` | `{ file: object, fileList: array }` | Triggered when the upload state is done uploading. |
+| `onRemove` | `{ file: object, fileList: array }` | Triggered when the upload has been removed. |
+| `onError` | `{ file: object, fileList: array }` | Triggered when the upload has failed. |
 | `onClick` | \- | Triggered when the upload button is clicked. |
 
 | Key | Target |

@@ -770,6 +770,9 @@ Manage your blog posts here. Use the sidebar to navigate between sections.
               - 2 pages updated
 ```
 
+```yaml
+[object Object]```
+
 ## Configuration Guide
 
 Learn how to configure your Lowdefy application with YAML configuration files.
@@ -867,6 +870,9 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 
           - Event handling
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ip_per_item_class_menu
@@ -994,6 +1000,9 @@ Learn how to configure your Lowdefy application with YAML configuration files.
           status: info
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `expandIcon` | string \| object | - | Menu expand icon. |
@@ -1006,7 +1015,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
+| `theme` | string \| object | - | The Menu color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
 | `theme.dropdownWidth` | number | `160` | Width of dropdown submenus. |
 | `theme.zIndexPopup` | number | `1050` | Z-index for popup submenus. |
 | `theme.itemBorderRadius` | number | `8` | Border radius for menu items. |
@@ -1107,9 +1116,9 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ key }` | Trigger action when menu item is selected. |
-| `onClick` | `{ key }` | Trigger action when menu item is clicked. |
-| `onToggleMenuGroup` | `{ openKeys }` | Trigger action when mobile menu group is opened. |
+| `onSelect` | `{ key: string }` | Trigger action when menu item is selected. |
+| `onClick` | `{ key: string }` | Trigger action when menu item is clicked. |
+| `onToggleMenuGroup` | `{ openKeys: array }` | Trigger action when mobile menu group is opened. |
 
 | Key | Target |
 | --- | --- |

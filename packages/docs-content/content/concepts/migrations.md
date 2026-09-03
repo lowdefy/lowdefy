@@ -59,7 +59,7 @@ A **stage** names an environment — `dev`, `sandbox`, `staging`, `prod` — and
 
 The stage resolves in this order: `--stage` on the command line, then `STAGE` from the environment (including `.env`), then **`local`**. `local` is each developer's own database: its ledger is gitignored, the dev server defaults to it, and it is never a deploy target.
 
-A production build (`lowdefy build`) that has migrations and no `STAGE` is a **build error**: a build is made _for_ an environment and must carry that environment's ledger. `lowdefy check` does not need a stage.
+A production build (`lowdefy build`) that has migrations and no `STAGE` is a **build error**: a build is made *for* an environment and must carry that environment's ledger. `lowdefy check` does not need a stage.
 
 ## The ledger
 
@@ -169,7 +169,7 @@ Migrations are designed to run in the pipeline, per stage, before the deploy. Th
 
 Turn the preflight off with `config.migrations.preflight: false` for an app that manages migration ordering entirely in its pipeline, or one deliberately deploying new code ahead of a migration. It is on by default because the failure it prevents — new code reading a collection the migration has not reshaped — is silent and data-shaped.
 
-**The ordering the pipeline must keep.** Because the ledger is baked into the build, a deploy built from a commit _before_ the ledger commit refuses to serve until the next deploy. Chain your deploy job after the migrate job with `needs: migrate` (the generated workflow carries a commented placeholder), or trigger your deploy workflow from the migrate workflow.
+**The ordering the pipeline must keep.** Because the ledger is baked into the build, a deploy built from a commit *before* the ledger commit refuses to serve until the next deploy. Chain your deploy job after the migrate job with `needs: migrate` (the generated workflow carries a commented placeholder), or trigger your deploy workflow from the migrate workflow.
 
 ## `lowdefy init-migrations`
 
@@ -199,7 +199,7 @@ During a rolling deploy the previous version's instances keep serving while the 
 - **Expand** migrations — add a field and backfill it, add a collection, widen an enum — are safe in a rolling deploy: old code ignores the new field, new code uses it, both run against the migrated shape.
 - **Contract** migrations — drop a field, remove an enum value, delete a collection — must ship in a **later** deploy, once no running instance reads the old shape.
 
-A rename is expand-then-contract across two deploys: deploy 1 adds `name` and backfills it from `title` (both present, old code reads `title`, new code reads `name`); deploy 2, once every instance runs the new code, drops `title`. The framework cannot know which fields the previously-deployed code read, so it does not enforce this discipline — but the preflight plus the forward-only ledger make the _ordering_ reliable, which is the half the framework can guarantee.
+A rename is expand-then-contract across two deploys: deploy 1 adds `name` and backfills it from `title` (both present, old code reads `title`, new code reads `name`); deploy 2, once every instance runs the new code, drops `title`. The framework cannot know which fields the previously-deployed code read, so it does not enforce this discipline — but the preflight plus the forward-only ledger make the *ordering* reliable, which is the half the framework can guarantee.
 
 ## Environments and secrets
 
@@ -209,7 +209,7 @@ The runner reads `.env` and the process environment exactly as the build and ser
 
 The dev server builds migrations too, for the stage it resolves (`STAGE`, else `local`). Its build status carries a `migrations` section — the stage and the ids pending or changed against that stage's ledger — so an agent editing the app is told, in its own feedback channel, that the dev database is behind the config. Two MCP tools on `/lowdefy-docs/mcp` complete the loop: `lowdefy_migrations_status` reports every migration with its applied flag and the ledger entries, and `lowdefy_migrate` applies the pending ones to the dev database (`dryRun: true` plans only; applying needs `cli.agentTools.allowWriteRequests`). The same are available as `GET /lowdefy-docs/migrations` and `POST /lowdefy-docs/migrate`. A change to a ledger file rebuilds.
 
-`lowdefy check` adds a check-only warning, `migrations`, for a [`collections`](/collections) field declared `required` that no migration file names — a nudge that existing documents may lack it.
+`lowdefy check` adds a check-only warning under the `collections` slug for a [`collections`](/collections) field declared `required` that no migration file names — a nudge that existing documents may lack it.
 
 ## Worked examples
 

@@ -13,6 +13,9 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: captcha_compact
   type: Captcha
   properties:
@@ -21,6 +24,9 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
     theme: light
     size: compact
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

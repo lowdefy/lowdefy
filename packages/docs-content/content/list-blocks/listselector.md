@@ -15,6 +15,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+Selected:
+
+```yaml
 - id: select_list
   type: ListSelector
   properties:
@@ -50,6 +55,12 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: readonly_list
   type: ListSelector
   properties:
@@ -63,6 +74,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: empty_list
   type: ListSelector
   properties:
@@ -71,6 +85,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
     html: |
       <span>{{ item.name }}</span>
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: people_card_list
@@ -97,6 +114,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: click_card_list
   type: ListSelector
   properties:
@@ -121,6 +141,12 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: compact_card_list
   type: ListSelector
   properties:
@@ -134,6 +160,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
     html: |
       <span>{{ item }}</span>
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: large_card_list
@@ -154,6 +183,12 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
       <p>This list renders one thousand cards. Only rows in (and near) the
       viewport are mounted in the DOM.</p>
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: search_all_card_list
@@ -186,6 +221,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: search_fields_card_list
   type: ListSelector
   properties:
@@ -210,6 +248,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
       <strong>{{ item.name }}</strong>
       <div style="color:#666;">{{ item.role }}</div>
 ```
+
+```yaml
+[object Object]```
+
+Selected plan id: —
 
 ```yaml
 - id: keyed_list
@@ -248,6 +291,12 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
           _state: true
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | `[]` | Array of items. Each item is rendered as one card by passing it to the html Nunjucks template as `item`. |
@@ -283,9 +332,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value, index, item }` | Triggered when the selection changes (only fires when `selectable` is true). |
-| `onClick` | `{ index, item }` | Triggered when a card is clicked. |
-| `onSearch` | `{ value, resultCount }` | Triggered when the debounced search query changes (only fires when the `search` property is set). |
+| `onChange` | `{ value: any, index: integer, item: any }` | Triggered when the selection changes (only fires when `selectable` is true). |
+| `onClick` | `{ index: integer, item: any }` | Triggered when a card is clicked. |
+| `onSearch` | `{ value: string, resultCount: integer }` | Triggered when the debounced search query changes (only fires when the `search` property is set). |
 
 | Key | Target |
 | --- | --- |

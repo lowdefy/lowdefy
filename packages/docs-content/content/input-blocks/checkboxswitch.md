@@ -20,6 +20,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: desc_terms
   type: CheckboxSwitch
   properties:
@@ -36,6 +39,9 @@ Single checkbox for boolean input.
     title: Agreement
     description: I accept the <b>Terms</b> and <i>Privacy Policy</i>
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -58,6 +64,9 @@ Single checkbox for boolean input.
     label:
       colon: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: inline_basic
@@ -88,6 +97,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: extra_basic
   type: CheckboxSwitch
   properties:
@@ -114,6 +126,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: feedback_on
   type: CheckboxSwitch
   properties:
@@ -131,6 +146,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_unchecked
   type: CheckboxSwitch
   properties:
@@ -146,6 +164,9 @@ Single checkbox for boolean input.
     description: Cannot be toggled
     disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: color_green
@@ -191,6 +212,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: no_label_desc
   type: CheckboxSwitch
   properties:
@@ -209,6 +233,9 @@ Single checkbox for boolean input.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_background
@@ -247,6 +274,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_blue
   type: CheckboxSwitch
   class: p-2 rounded-lg border border-border bg-bg-layout
@@ -272,6 +302,9 @@ Single checkbox for boolean input.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_checkbox
@@ -329,6 +362,9 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied_reg_card
   type: Card
   properties:
@@ -383,6 +419,12 @@ Single checkbox for boolean input.
               content: Account created successfully!
               status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_notif_card
@@ -446,6 +488,12 @@ Single checkbox for boolean input.
               status: success
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `color` | string | - | Selected checkbox color. |
@@ -483,7 +531,7 @@ Single checkbox for boolean input.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: boolean }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

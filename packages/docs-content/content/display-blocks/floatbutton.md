@@ -93,6 +93,9 @@ Floating action button with tooltip, badge, and icon.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: btn_shape_circle
   type: Button
   layout:

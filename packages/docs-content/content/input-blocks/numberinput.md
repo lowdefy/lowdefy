@@ -28,6 +28,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: NumberInput
   properties:
@@ -46,6 +49,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     size: large
     placeholder: Large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: min_max
@@ -89,6 +95,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: precision_0
   type: NumberInput
   properties:
@@ -116,6 +125,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: separator_default
   type: NumberInput
   properties:
@@ -130,6 +142,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     precision: 2
     placeholder: Uses comma
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: controls_default
@@ -156,6 +171,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: keyboard_enabled
   type: NumberInput
   properties:
@@ -169,6 +187,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     keyboard: false
     placeholder: Arrow keys do nothing
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_empty
@@ -203,6 +224,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: borderless_empty
   type: NumberInput
   properties:
@@ -223,6 +247,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: placeholder_default
   type: NumberInput
   properties:
@@ -238,7 +265,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
   type: NumberInput
   properties:
     title: Price
-    placeholder: 0
+    placeholder: "0"
     precision: 2
     min: 0
 - id: placeholder_percentage
@@ -249,6 +276,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     min: 0
     max: 100
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: formatter_currency
@@ -289,6 +319,12 @@ Numeric input with step controls, min/max limits, precision, and formatting.
           else: ""
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 *Note: autoFocus is best demonstrated on page load. Set `autoFocus: true` to focus the input when the page renders.*
 
 ```yaml
@@ -304,6 +340,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     content: "*Note: autoFocus is best demonstrated on page load. Set `autoFocus:
       true` to focus the input when the page renders.*"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -343,6 +382,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_span_4
   type: NumberInput
   properties:
@@ -370,6 +412,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: title_bold
   type: NumberInput
   properties:
@@ -388,6 +433,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: combined_price
   type: NumberInput
   properties:
@@ -396,7 +444,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     max: 99999
     step: 0.01
     precision: 2
-    placeholder: 0
+    placeholder: "0"
     label:
       extra: Enter the product price in USD.
 - id: combined_quantity
@@ -417,7 +465,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     max: 100
     step: 0.5
     precision: 1
-    placeholder: 0
+    placeholder: "0"
     size: small
     label:
       extra: Percentage discount to apply.
@@ -446,6 +494,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
         params:
           combined_borderless_disabled: 3.14159
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: step_1
@@ -484,6 +535,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     precision: 3
     placeholder: Thousandths
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_width
@@ -531,6 +585,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_element
   type: NumberInput
   class:
@@ -546,6 +603,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     title: Blue Bold Label
     placeholder: Label class override
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_colors
@@ -588,6 +648,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     theme:
       borderRadius: 16
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: use_age
@@ -647,6 +710,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
       align: right
 ```
 
+```yaml
+[object Object]```
+
 **Inline Labels:**
 
 **Stacked Labels:**
@@ -704,7 +770,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
         title: Min Price
         min: 0
         precision: 2
-        placeholder: 0
+        placeholder: "0"
     - id: form_max_price
       type: NumberInput
       layout:
@@ -713,7 +779,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
         title: Max Price
         min: 0
         precision: 2
-        placeholder: 0
+        placeholder: "0"
 - id: form_no_label_label
   type: Markdown
   properties:
@@ -752,6 +818,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
           disabled: true
 ```
 
+```yaml
+[object Object]```
+
 *Validation status is controlled by the Lowdefy validation system. These examples show the visual appearance using theme tokens.*
 
 ```yaml
@@ -775,6 +844,9 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     theme:
       warningActiveShadow: 0 0 0 3px rgba(250, 173, 20, 0.3)
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -839,7 +911,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when number input loses focus. |
-| `onChange` | `{ value }` | Trigger action when number input is changed. |
+| `onChange` | `{ value: number }` | Trigger action when number input is changed. |
 | `onFocus` | \- | Trigger action when number input gets focus. |
 | `onPressEnter` | \- | Trigger actions when input is focused and enter is pressed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

@@ -1181,6 +1181,9 @@ Browse our latest collection across all categories.
           departments.
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `toggleMenuButton` | object | - | Toggle menu button properties. |

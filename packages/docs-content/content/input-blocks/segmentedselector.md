@@ -31,6 +31,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_value_basic
   type: SegmentedSelector
   properties:
@@ -75,6 +78,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: SegmentedSelector
   properties:
@@ -105,6 +111,9 @@ Segmented control for switching between options.
       - L
       - XL
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: size_small_lv
@@ -149,6 +158,9 @@ Segmented control for switching between options.
       - label: Critical
         value: critical
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: shape_default
@@ -219,6 +231,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: icon_view_mode
   type: SegmentedSelector
   properties:
@@ -284,6 +299,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: vertical_basic
   type: SegmentedSelector
   properties:
@@ -327,6 +345,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_all
   type: SegmentedSelector
   properties:
@@ -367,6 +388,9 @@ Segmented control for switching between options.
         value: delete
         icon: AiOutlineDelete
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -436,6 +460,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_background
   type: SegmentedSelector
   properties:
@@ -478,6 +505,9 @@ Segmented control for switching between options.
       - label: Featured
         value: featured
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_dark_track
@@ -568,6 +598,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_dashboard_card
   type: Card
   properties:
@@ -622,6 +655,12 @@ Segmented control for switching between options.
               content: Dashboard data refreshed.
               duration: 2
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied3_settings_card
@@ -703,6 +742,12 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: data_segmented_selector
   type: SegmentedSelector
   properties:
@@ -718,6 +763,9 @@ Segmented control for switching between options.
     valueKey: id
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `block` | boolean | `false` | Option to fit width to its parent's width. |
@@ -732,7 +780,7 @@ Segmented control for switching between options.
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.icon` | string | - | Name of a React-Icon (See [all icons](https://react-icons.github.io/react-icons/)) to display in the segment option. |
 | `shape` | string | `"default"` | Shape of the segmented control. Enum: `default`, `round`. |
-| `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
+| `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `vertical` | boolean | `false` | Display the segmented control vertically. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
@@ -767,7 +815,7 @@ Segmented control for switching between options.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

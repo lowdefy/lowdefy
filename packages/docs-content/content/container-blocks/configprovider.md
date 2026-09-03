@@ -753,8 +753,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
               properties:
                 icon: AiOutlineShop
                 size: 48
-                color: "#fff"
-                backgroundColor: "#e11d48"
+                color: "#e11d48"
             - id: cp_brand_title
               type: Title
               layout:

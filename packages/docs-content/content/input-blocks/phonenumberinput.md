@@ -20,6 +20,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: region_us
   type: PhoneNumberInput
   properties:
@@ -45,6 +48,9 @@ Phone number input with international country code selector.
     defaultRegion: JP
     placeholder: 3-1234-5678
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: regions_north_america
@@ -93,6 +99,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: PhoneNumberInput
   properties:
@@ -112,6 +121,9 @@ Phone number input with international country code selector.
     size: large
     placeholder: Large input
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: toggle_disabled
@@ -143,6 +155,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: maxlength_10
   type: PhoneNumberInput
   properties:
@@ -162,6 +177,9 @@ Phone number input with international country code selector.
     maxLength: 7
     placeholder: Short number
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: icon_prefix_phone
@@ -192,6 +210,9 @@ Phone number input with international country code selector.
       color: "#1677ff"
     placeholder: Blue phone icon
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_colon_false
@@ -234,6 +255,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: inline_span_4
   type: PhoneNumberInput
   properties:
@@ -259,6 +283,9 @@ Phone number input with international country code selector.
       inline: true
       span: 12
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: replace_digits_only
@@ -291,6 +318,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: css_shadow
   type: PhoneNumberInput
   class: shadow-md
@@ -312,6 +342,9 @@ Phone number input with international country code selector.
     title: Custom Background
     placeholder: Light blue background via inline style
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_active_border
@@ -374,6 +407,9 @@ Phone number input with international country code selector.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combined_full_us
@@ -462,6 +498,9 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: contact_card
   type: Card
   properties:
@@ -536,6 +575,12 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: register_card
   type: Card
   properties:
@@ -565,7 +610,6 @@ Phone number input with international country code selector.
       required: true
       properties:
         title: Password
-        prefixIcon: AiOutlineLock
         placeholder: At least 8 characters
         label:
           colon: false
@@ -606,8 +650,15 @@ Phone number input with international country code selector.
                   status: success
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `showFlags` | boolean | `true` | Show country flags in the country selector and input. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `allowedRegions` | array | - | List of allowed ISO 3166-1 alpha-2 region codes. If allowedRegions is [] or null, the default list of all regions is used. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -635,7 +686,7 @@ Phone number input with international country code selector.
 | `replaceInput.pattern` | string | - | The regular expression pattern to use to sanitize input. |
 | `replaceInput.flags` | string | - | The regex flags to use. The default value is 'gm'. |
 | `replaceInput.replacement` | string | - | The string used to replace the input that matches the pattern. The default value is ''. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
 | `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |
@@ -667,7 +718,7 @@ Phone number input with international country code selector.
 | --- | --- | --- |
 | `onInputChange` | \- | Trigger action when text input is changed. |
 | `onCodeChange` | \- | Trigger action when the selector is changed. |
-| `onChange` | `{ value }` | Trigger action when the number is changed. |
+| `onChange` | `{ value: object }` | Trigger action when the number is changed. |
 | `onBlur` | \- | Trigger action event occurs when input loses focus. |
 | `onFocus` | \- | Trigger action when input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |

@@ -37,6 +37,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: string_options
   type: Selector
   properties:
@@ -134,6 +137,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: filter_string
   type: Selector
   properties:
@@ -198,6 +204,9 @@ Dropdown selector with search, clear, and custom icons.
       - label: Option C
         value: c
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: allow_clear_false
@@ -270,6 +279,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: Selector
   properties:
@@ -306,6 +318,9 @@ Dropdown selector with search, clear, and custom icons.
       - Date
       - Elderberry
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: custom_suffix_icon
@@ -367,6 +382,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: placeholder_default
   type: Selector
   properties:
@@ -409,6 +427,9 @@ Dropdown selector with search, clear, and custom icons.
       - label: Beta
         value: beta
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -463,6 +484,9 @@ Dropdown selector with search, clear, and custom icons.
       - Banana
       - Cherry
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: css_element
@@ -528,6 +552,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_element
   type: Selector
   properties:
@@ -554,6 +581,9 @@ Dropdown selector with search, clear, and custom icons.
   class:
     label: text-blue-600 font-semibold
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: many_options
@@ -648,6 +678,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: theme_custom_colors
   type: Selector
   properties:
@@ -738,6 +771,9 @@ Dropdown selector with search, clear, and custom icons.
       activeOutlineColor: rgba(114, 46, 209, 0.1)
       optionHeight: 40
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combined_search_styled
@@ -835,6 +871,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_registration_card
   type: Card
   properties:
@@ -926,6 +965,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied3_order_card
   type: Card
   properties:
@@ -1011,6 +1053,12 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: selector_color_solid
   type: Selector
   properties:
@@ -1044,6 +1092,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: data_selector
   type: Selector
   properties:
@@ -1059,6 +1110,9 @@ Dropdown selector with search, clear, and custom icons.
     html: "{{ item.name }}"
     valueKey: id
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1094,7 +1148,7 @@ Dropdown selector with search, clear, and custom icons.
 | `placeholder` | string | `"Select item"` | Placeholder text inside the block before user selects input. |
 | `loadingPlaceholder` | string | `"Loading"` | Placeholder text to show in options while the block is loading. |
 | `notFoundContent` | string | `"not Found"` | Placeholder text to show when list of options are empty. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `showSearch` | boolean | `true` | Make the selector options searchable. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at the drop-down position of the selector. |
@@ -1141,10 +1195,10 @@ Dropdown selector with search, clear, and custom icons.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when selector loses focus. |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 | `onFocus` | \- | Trigger action when selector gets focus. |
 | `onClear` | \- | Trigger action when selector is cleared. |
-| `onSearch` | `{ value }` | Trigger actions when input is changed. |
+| `onSearch` | `{ value: string }` | Trigger actions when input is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

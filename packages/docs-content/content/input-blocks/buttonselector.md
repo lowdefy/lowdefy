@@ -44,6 +44,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: string_options
   type: ButtonSelector
   properties:
@@ -92,6 +95,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: ButtonSelector
   properties:
@@ -122,6 +128,9 @@ Radio group styled as toggle buttons.
       - Medium
       - Large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: size_small_outline
@@ -156,6 +165,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: many_options
   type: ButtonSelector
   properties:
@@ -188,6 +200,9 @@ Radio group styled as toggle buttons.
       - label: No
         value: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_solid
@@ -248,6 +263,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: option_styles
   type: ButtonSelector
   properties:
@@ -300,6 +318,9 @@ Radio group styled as toggle buttons.
         style:
           opacity: 0.6
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: color_default
@@ -356,6 +377,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_hex_coral
   type: ButtonSelector
   properties:
@@ -399,6 +423,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_outline_red
   type: ButtonSelector
   properties:
@@ -430,6 +457,9 @@ Radio group styled as toggle buttons.
       - Option B
       - Option C
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dark_mode_box
@@ -465,6 +495,9 @@ Radio group styled as toggle buttons.
               - Option B
               - Option C
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_title
@@ -534,6 +567,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: html_title
   type: ButtonSelector
   properties:
@@ -555,6 +591,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_custom_width
   type: ButtonSelector
   properties:
@@ -569,8 +608,12 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_padding
   type: ButtonSelector
+  class: p-4
   properties:
     title: Tailwind Padding
     variant: solid
@@ -581,9 +624,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: p-4
 - id: class_shadow_rounded
   type: ButtonSelector
+  class: shadow-md rounded-lg p-2
   properties:
     title: Shadow and Rounded
     variant: solid
@@ -594,9 +637,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: shadow-md rounded-lg p-2
 - id: class_background
   type: ButtonSelector
+  class: bg-bg-layout p-3 rounded
   properties:
     title: Background Color
     variant: solid
@@ -607,8 +650,10 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: bg-bg-layout p-3 rounded
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_radius
@@ -695,6 +740,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied_survey_card
   type: Card
   properties:
@@ -758,6 +806,12 @@ Radio group styled as toggle buttons.
                   - _state: applied_survey_rating
               status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_settings_card
@@ -836,6 +890,12 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: per_option_color_outline
   type: ButtonSelector
   properties:
@@ -869,6 +929,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: data_button_selector
   type: ButtonSelector
   properties:
@@ -884,6 +947,9 @@ Radio group styled as toggle buttons.
     valueKey: id
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | string | `"solid"` | Visual variant of the selected option button, matching the Button block. Enum: `solid`, `outlined`. |
@@ -892,7 +958,7 @@ Radio group styled as toggle buttons.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -950,7 +1016,7 @@ Radio group styled as toggle buttons.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

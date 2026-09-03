@@ -17,6 +17,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_size_small
   type: WeekSelector
   properties:
@@ -32,6 +35,9 @@ Week picker for selecting a week of the year.
     title: Large
     size: large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_variant_outlined
@@ -50,6 +56,9 @@ Week picker for selecting a week of the year.
     title: Borderless
     variant: borderless
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_fmt_default
@@ -83,6 +92,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_ph_default
   type: WeekSelector
   properties:
@@ -106,6 +118,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_clear_enabled
   type: WeekSelector
   properties:
@@ -123,6 +138,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_today_enabled
   type: WeekSelector
   properties:
@@ -138,6 +156,9 @@ Week picker for selecting a week of the year.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_icon_default
@@ -172,6 +193,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_dis_default
   type: WeekSelector
   properties:
@@ -188,6 +212,9 @@ Week picker for selecting a week of the year.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_dd_min
@@ -233,6 +260,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_presets_relative
   type: WeekSelector
   properties:
@@ -276,6 +306,12 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: ws_lbl_default
   type: WeekSelector
   properties:
@@ -303,6 +339,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_lbl_hidden
   type: WeekSelector
   properties:
@@ -321,6 +360,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_af_on
   type: WeekSelector
   properties:
@@ -329,6 +371,9 @@ Week picker for selecting a week of the year.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_style_element_bg
@@ -350,6 +395,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_class_rounded
   type: WeekSelector
   class: rounded-lg shadow-sm
@@ -365,6 +413,9 @@ Week picker for selecting a week of the year.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ws_theme_primary_color
@@ -414,6 +465,9 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ws_combined_full
   type: WeekSelector
   properties:
@@ -454,6 +508,9 @@ Week picker for selecting a week of the year.
     label:
       extra: Only weeks in fiscal year 2026 are available.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_sprint_card
@@ -507,6 +564,9 @@ Week picker for selecting a week of the year.
               content: Sprint has been started successfully!
               status: success
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_ts_card
@@ -584,6 +644,12 @@ Week picker for selecting a week of the year.
               status: success
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `true` | Allow the user to clear their input. |
@@ -660,7 +726,7 @@ Week picker for selecting a week of the year.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when week is changed. |
+| `onChange` | `{ value: any }` | Trigger action when week is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

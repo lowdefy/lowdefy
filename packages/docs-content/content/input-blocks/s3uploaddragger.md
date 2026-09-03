@@ -22,6 +22,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: accept_images
   type: S3UploadDragger
   properties:
@@ -41,6 +44,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     title: Drag image files here (.jpg, .png, .gif)
     accept: .jpg,.png,.gif
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: limit_single
@@ -63,6 +69,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     singleFile: true
     accept: image/*
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_light_blue
@@ -91,6 +100,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: S3UploadDragger
   properties:
@@ -110,6 +122,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     title: Disabled with hidden list
     showUploadList: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: list_visible
@@ -132,6 +147,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     singleFile: true
     showUploadList: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_element_bg
@@ -160,6 +178,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     s3PostPolicyRequestId: s3_upload_policy_request
     title: Tailwind rounded with shadow
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: submission_card
@@ -223,6 +244,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: gallery_card
   type: Card
   properties:
@@ -265,6 +289,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
                   content: Photos uploaded to album!
                   status: success
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

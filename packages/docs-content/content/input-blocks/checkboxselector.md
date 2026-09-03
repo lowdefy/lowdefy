@@ -31,6 +31,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: horizontal_default
   type: CheckboxSelector
   properties:
@@ -52,6 +55,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: vertical_checkbox
   type: CheckboxSelector
   properties:
@@ -67,6 +73,9 @@ Checkbox group for selecting multiple options.
       - label: In-app notifications
         value: in_app
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: wrap_enabled
@@ -106,6 +115,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: align_start
   type: CheckboxSelector
   properties:
@@ -143,6 +155,9 @@ Checkbox group for selecting multiple options.
       - Banana
       - Cherry
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: color_green
@@ -208,6 +223,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_all
   type: CheckboxSelector
   properties:
@@ -221,6 +239,9 @@ Checkbox group for selecting multiple options.
       - label: Option C
         value: c
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_some
@@ -241,6 +262,9 @@ Checkbox group for selecting multiple options.
       - label: Pre-order
         value: pre_order
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: styled_options
@@ -285,6 +309,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: html_labels
   type: CheckboxSelector
   properties:
@@ -299,6 +326,9 @@ Checkbox group for selecting multiple options.
       - label: Option with <code>code</code>
         value: code
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: number_options
@@ -324,6 +354,9 @@ Checkbox group for selecting multiple options.
       - label: No
         value: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -380,6 +413,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_inline
   type: CheckboxSelector
   properties:
@@ -405,6 +441,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: no_label
   type: CheckboxSelector
   properties:
@@ -418,6 +457,9 @@ Checkbox group for selecting multiple options.
       - label: I agree to the Privacy Policy
         value: privacy
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_feedback_on
@@ -443,6 +485,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: vertical_mixed_disabled
   type: CheckboxSelector
   properties:
@@ -462,6 +507,9 @@ Checkbox group for selecting multiple options.
         value: ai_assistant
         disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: many_options_wrap
@@ -489,6 +537,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: custom_style
   type: CheckboxSelector
   properties:
@@ -512,6 +563,9 @@ Checkbox group for selecting multiple options.
       - Beta
       - Gamma
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_checkbox
@@ -585,6 +639,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: combo_green_vertical
   type: CheckboxSelector
   properties:
@@ -614,6 +671,9 @@ Checkbox group for selecting multiple options.
       - label: Tag D
         value: tag_d
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: example_permissions
@@ -671,6 +731,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: checkbox_per_option_color
   type: CheckboxSelector
   properties:
@@ -688,6 +751,9 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: data_checkbox_selector
   type: CheckboxSelector
   properties:
@@ -702,6 +768,9 @@ Checkbox group for selecting multiple options.
     html: "{{ item.name }}"
     valueKey: id
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: columns_two
@@ -777,6 +846,9 @@ Checkbox group for selecting multiple options.
         color: "#7e22ce"
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
@@ -788,7 +860,7 @@ Checkbox group for selecting multiple options.
 | `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -827,7 +899,7 @@ Checkbox group for selecting multiple options.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: array }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

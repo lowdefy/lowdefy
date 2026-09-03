@@ -281,8 +281,8 @@ A Header for marketing pages with button navigation and call-to-action buttons.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 
 | Key | Target |
 | --- | --- |

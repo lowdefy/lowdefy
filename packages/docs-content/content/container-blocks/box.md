@@ -111,6 +111,9 @@ This content property overrides the content area below.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: box_onpaste
   type: Box
   style:
@@ -1441,7 +1444,7 @@ Fixed 100px
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onClick` | \- | Trigger actions when the Box is clicked. |
-| `onPaste` | \- | Trigger actions when the element is focused and a paste event is triggered. |
+| `onPaste` | `{ text: string }` | Trigger actions when the element is focused and a paste event is triggered. |
 
 | Key | Target |
 | --- | --- |

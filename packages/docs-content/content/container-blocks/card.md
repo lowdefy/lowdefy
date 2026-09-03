@@ -563,8 +563,7 @@ Advanced analytics
           properties:
             icon: AiOutlineUser
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: rich_profile_info
           type: Box
           layout:

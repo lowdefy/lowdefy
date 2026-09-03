@@ -23,6 +23,8 @@ const KINDS = {
   blocks: 'blocks',
   connection: 'connections',
   connections: 'connections',
+  control: 'controls',
+  controls: 'controls',
   notification: 'notifications',
   notifications: 'notifications',
   operator: 'operators',

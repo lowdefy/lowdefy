@@ -16,6 +16,9 @@ Single-select input rendered as a row of toggleable, colored tag pills.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_value
   type: TagSelector
   properties:
@@ -31,6 +34,9 @@ Single-select input rendered as a row of toggleable, colored tag pills.
         value: archived
         disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: explicit_colors
@@ -59,6 +65,9 @@ Single-select input rendered as a row of toggleable, colored tag pills.
       - Research
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `options` | array | - | Options to select from. Primitives, or { label, value, color, disabled } - an explicit color overrides the stable palette color. |
@@ -86,7 +95,7 @@ Single-select input rendered as a row of toggleable, colored tag pills.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when the selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when the selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

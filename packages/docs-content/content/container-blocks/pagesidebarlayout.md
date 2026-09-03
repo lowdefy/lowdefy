@@ -398,8 +398,8 @@ Dashboard Overview
 | `onMobileMenuOpen` | \- | Trigger action when mobile menu is opened. |
 | `onMobileMenuClose` | \- | Trigger action when mobile menu is closed. |
 | `onToggleDrawer` | \- | Trigger action when mobile menu drawer is toggled. |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 
 | Key | Target |
 | --- | --- |

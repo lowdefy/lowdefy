@@ -1230,8 +1230,7 @@ Senior Product Designer at Acme Corp
       properties:
         icon: AiOutlineUser
         size: 72
-        color: "#fff"
-        backgroundColor: "#1677ff"
+        color: "#1677ff"
     - id: flex_profile_info
       type: Flex
       layout:

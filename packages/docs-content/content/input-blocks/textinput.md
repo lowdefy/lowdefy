@@ -27,6 +27,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: TextInput
   properties:
@@ -48,6 +51,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: variant_outlined
   type: TextInput
   properties:
@@ -66,6 +72,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
     variant: borderless
     placeholder: Borderless variant
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: type_text
@@ -105,6 +114,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: adorn_prefix_text
   type: TextInput
   properties:
@@ -139,6 +151,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: icon_custom_color
   type: TextInput
   properties:
@@ -162,6 +177,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
     suffix: .com
     placeholder: domain
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: clear_basic
@@ -196,6 +214,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: count_with_max
   type: TextInput
   properties:
@@ -216,6 +237,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
     maxLength: 20
     placeholder: Max 20 (no counter shown)
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: replace_numbers_only
@@ -246,6 +270,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
       flags: g
       replacement: ""
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_title_html
@@ -286,6 +313,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_empty
   type: TextInput
   properties:
@@ -316,6 +346,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
         params:
           disabled_with_prefix: john_doe
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: css_shadow
@@ -352,6 +385,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
       name: AiOutlineStar
       color: "#fa8c16"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_pill
@@ -398,6 +434,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
       hoverBorderColor: "#fa8c16"
       borderRadius: 8
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: reg_name
@@ -496,6 +535,9 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: search_bar
   type: TextInput
   properties:
@@ -548,6 +590,12 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
           content: Coupon applied!
           status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -621,7 +669,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
-| `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onChange` | `{ value: string }` | Trigger action when text input is changed. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

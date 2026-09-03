@@ -22,6 +22,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: limit_single
   type: S3UploadPhoto
   properties:
@@ -42,6 +45,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
     showUploadList: false
     title: Single (No List)
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: list_visible
@@ -66,6 +72,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: S3UploadPhoto
   properties:
@@ -85,6 +94,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
     showUploadList: false
     title: Disabled (No List)
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_rounded
@@ -113,6 +125,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_element_bg
   type: S3UploadPhoto
   style:
@@ -139,6 +154,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
     s3PostPolicyRequestId: s3_upload_policy_request
     title: Tailwind Shadow
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: profile_card
@@ -186,6 +204,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: product_card
   type: Card
   properties:
@@ -227,10 +248,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
       type: NumberInput
       properties:
         title: Price
-        placeholder: 0
+        placeholder: "0.00"
         min: 0
         precision: 2
-        prefix: $
     - id: product_submit
       type: Button
       properties:
@@ -249,6 +269,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
               content: Product listed successfully!
               status: success
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

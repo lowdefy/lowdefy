@@ -128,7 +128,7 @@ _ref:
 
             **Prefer `runAs` over `tenant: none` for caller-less chains.** A scheduled job, a detached call, a webhook or an auth hook runs with no session, so a walled step fails closed for it. Switching the wall off with `tenant: none` and hand-writing the organization clause into every filter and document is unscoped access by construction. If the routine knows which organization it is processing, declare it with [`runAs`](#running-a-routine-as-an-organization-runas) and keep the wall on.
 
-            **`tenant: none` is flagged in dev.** An unscoped read looks exactly like a scoped one, so `lowdefy dev` records every execution of a `tenant: none` request, step or websocket — the browser error bar shows them as `unscoped reads (N)` on an amber bar with the `file:line` of each declaration, and `lowdefy_build_status` (`GET /lowdefy-docs/build-status`) lists them under `tenantNotices`. They are notices, not errors: the request still runs, and production emits nothing. Review each one before shipping.
+            **`tenant: none` is flagged in dev.** An unscoped read looks exactly like a scoped one, so `lowdefy dev` records every execution of a `tenant: none` request, step or websocket — the browser error bar shows them as `unscoped reads (N)` on an amber bar with the `file:line` of each declaration, and `lowdefy_build_status` (`GET /lowdefy-docs/build-status`) lists them under `devNotices`. They are notices, not errors: the request still runs, and production emits nothing. Review each one before shipping.
 
             An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause *inside the stage*. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
 
@@ -213,7 +213,7 @@ _ref:
             - **Only the wall's scope moves.** `runAs` does not change the caller: authorization, roles, `_user` and logging still describe the real caller, so an endpoint cannot use `runAs` to gain access it was refused.
             - A `runAs` whose value evaluates to anything but a non-empty string is a `ConfigError` on the step, pointing at the `runAs` line — never the caller-less `AuthenticationError`.
 
-            **`runAs` is flagged in dev.** Like `tenant: none`, a scoped run is indistinguishable from a member's request, so `lowdefy dev` records every step that ran under a `runAs` scope: the error bar shows them as `scoped runs (N)` beside the unscoped reads, and `lowdefy_build_status` lists them under `tenantNotices` with name `RunAsScope`.
+            **`runAs` is flagged in dev.** Like `tenant: none`, a scoped run is indistinguishable from a member's request, so `lowdefy dev` records every step that ran under a `runAs` scope: the error bar shows them as `scoped runs (N)` beside the unscoped reads, and `lowdefy_build_status` lists them under `devNotices` with name `RunAsScope`.
 
             ### Audits
 

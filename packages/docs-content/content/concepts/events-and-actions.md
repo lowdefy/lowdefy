@@ -269,6 +269,32 @@ events:
           done: true
 ```
 
+## Event payloads
+
+A block declares the shape of the data it passes to an event in its meta, as a JSON Schema called the event `payload`. Inputs such as [`TextInput`](/TextInput) declare `{ value: string }` for `onChange`; [`AgGrid`](/AgGridAlpine) declares `{ row: object, rowIndex: integer, selected: array, … }` for `onRowClick`. Every block's Events table lists its payload shape in the "Event Data" column.
+
+When a block declares a payload for an event, the build checks every [`_event`](/_event) path in that event's actions - in `try`, `catch`, `messages` and control branches - against it. A path the payload has no room for is a build error that names the payload keys and suggests the closest one:
+
+```yaml
+- id: email
+  type: TextInput
+  events:
+    onChange:
+      - id: store
+        type: SetState
+        params:
+          email: { _event: value }   # resolves
+          raw: { _event: valu }      # build error
+```
+
+```
+_event "valu" in event "onChange" on block "email" (TextInput) is not in the event payload. Payload: value. Did you mean "value"?
+```
+
+Only literal paths are checked: `_event: true` (the whole event object), an integer key, and a key supplied by another operator are never judged. A path that goes below a payload property with no declared shape (for example a `row: object` with no `properties`) is accepted. An event whose block declares no payload is never checked - a custom block that documents its events as plain strings keeps working unchanged.
+
+The check has the slug `event-payload`; `~ignoreBuildChecks: [event-payload]` on the action, event, block or any ancestor turns it off for a block whose plugin payload is wrong or incomplete (see [Lowdefy schema](/lowdefy-schema)). The dev server's `/lowdefy-docs/schema/blocks/{type}` route and the `lowdefy_get_schema` MCP tool return each event's payload schema under `meta.events`.
+
 ## Action types
 
 The following actions can be used:

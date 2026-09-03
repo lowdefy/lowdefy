@@ -748,9 +748,7 @@ Hover over this text to see the tooltip.
   layout:
     flex: 0 0 auto
   properties:
-    title: Tooltip with custom overlay style
-    overlayStyle:
-      boxShadow: 0 4px 12px rgba(0, 0, 0, 0.3)
+    title: Tooltip on a button
   blocks:
     - id: tooltip_overlay_style_btn
       type: Button
@@ -1088,47 +1086,15 @@ $8,230
       properties:
         label:
           title: Username
-          extra:
-            - id: tooltip_form_username_help
-              type: Tooltip
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Your unique username. Must be 3-20 characters, letters and numbers only.
-                placement: right
-              blocks:
-                - id: tooltip_form_username_icon
-                  type: Icon
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    name: AiOutlineQuestionCircle
-                    size: 14
-                    color: "#8c8c8c"
+          extra: Your unique username. Must be 3-20 characters, letters and numbers only.
         placeholder: Enter your username
     - id: tooltip_form_email
       type: TextInput
       properties:
         label:
           title: Email Address
-          extra:
-            - id: tooltip_form_email_help
-              type: Tooltip
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: We will send account notifications to this address. You can change it at
-                  any time.
-                placement: right
-              blocks:
-                - id: tooltip_form_email_icon
-                  type: Icon
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    name: AiOutlineQuestionCircle
-                    size: 14
-                    color: "#8c8c8c"
+          extra: We will send account notifications to this address. You can change it at
+            any time.
         placeholder: Enter your email
 ```
 

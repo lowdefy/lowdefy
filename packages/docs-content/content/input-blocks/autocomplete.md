@@ -39,6 +39,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: size_small
   type: AutoComplete
   properties:
@@ -71,6 +74,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: allow_clear_true
   type: AutoComplete
   properties:
@@ -92,6 +98,9 @@ Text input with auto-complete suggestions from a list of options.
       - Option B
       - Option C
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: backfill_enabled
@@ -123,6 +132,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: default_open_true
   type: AutoComplete
   properties:
@@ -136,6 +148,9 @@ Text input with auto-complete suggestions from a list of options.
       - Yellow
       - Purple
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: placeholder_custom
@@ -160,6 +175,9 @@ Text input with auto-complete suggestions from a list of options.
       - Gamma
       - Delta
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: variant_outlined
@@ -195,6 +213,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_true
   type: AutoComplete
   properties:
@@ -218,6 +239,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: autofocus_true
   type: AutoComplete
   properties:
@@ -232,6 +256,9 @@ Text input with auto-complete suggestions from a list of options.
       - Jupiter
       - Saturn
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: many_options
@@ -280,6 +307,9 @@ Text input with auto-complete suggestions from a list of options.
       - VBA
       - Zig
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_title
@@ -357,6 +387,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_hidden
   type: AutoComplete
   properties:
@@ -379,6 +412,9 @@ Text input with auto-complete suggestions from a list of options.
       - Second
       - Third
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_element
@@ -420,6 +456,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_element
   type: AutoComplete
   class:
@@ -432,6 +471,9 @@ Text input with auto-complete suggestions from a list of options.
       - TypeScript
       - Python
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_border_radius
@@ -524,6 +566,9 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_small
   type: AutoComplete
   properties:
@@ -554,6 +599,9 @@ Text input with auto-complete suggestions from a list of options.
       - Alpha
       - Beta
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: filled_small
@@ -589,6 +637,9 @@ Text input with auto-complete suggestions from a list of options.
       - Two
       - Three
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_search_form
@@ -643,6 +694,12 @@ Text input with auto-complete suggestions from a list of options.
                       - _state: applied_search_input
                   else: Please enter a search term
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_profile_card
@@ -701,6 +758,9 @@ Text input with auto-complete suggestions from a list of options.
               content: Profile saved successfully
               status: success
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -767,10 +827,10 @@ Text input with auto-complete suggestions from a list of options.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when selector loses focus. |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: string }` | Trigger actions when selection is changed. |
 | `onFocus` | \- | Trigger action when an selector gets focus. |
 | `onClear` | \- | Trigger action when selector gets cleared. |
-| `onSearch` | `{ value }` | Called when searching items. |
+| `onSearch` | `{ value: string }` | Called when searching items. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

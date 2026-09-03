@@ -83,6 +83,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_selector
   type: Selector
   properties:
@@ -172,6 +175,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_radio
   type: RadioSelector
   properties:
@@ -253,6 +259,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_switch
   type: Switch
   properties:
@@ -279,6 +288,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
       title: CheckboxSwitch
     description: I agree to the terms and conditions
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ig_date
@@ -311,6 +323,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
       title: WeekSelector
     placeholder: Select week
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ig_colorselector
@@ -355,6 +370,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_rating
   type: RatingSlider
   properties:
@@ -373,43 +391,35 @@ A visual reference of every input block available in Lowdefy. Each section shows
 - id: ig_pagination
   type: Pagination
   properties:
-    label:
-      title: Pagination
     total: 100
 - id: ig_pagination_full
   type: Pagination
   properties:
-    label:
-      title: Pagination (full features)
     total: 500
     showSizeChanger: true
     showQuickJumper: true
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_title_input
   type: TitleInput
-  properties:
-    label:
-      title: TitleInput
 - id: ig_title_input_level
   type: TitleInput
   properties:
-    label:
-      title: TitleInput (level 3)
     level: 3
 - id: ig_paragraph_input
   type: ParagraphInput
-  properties:
-    label:
-      title: ParagraphInput
 - id: ig_paragraph_copyable
   type: ParagraphInput
   properties:
-    label:
-      title: ParagraphInput (copyable)
     copyable: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ig_size_sm_text
@@ -464,6 +474,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: ig_var_outlined
   type: TextInput
   properties:
@@ -485,6 +498,9 @@ A visual reference of every input block available in Lowdefy. Each section shows
     variant: borderless
     placeholder: borderless
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ig_dis_text
@@ -526,3 +542,6 @@ A visual reference of every input block available in Lowdefy. Each section shows
       title: DateSelector
     disabled: true
 ```
+
+```yaml
+[object Object]```

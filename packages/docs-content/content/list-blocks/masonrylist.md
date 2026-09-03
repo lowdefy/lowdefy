@@ -30,6 +30,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: ml_two
   type: MasonryList
   properties:
@@ -55,6 +61,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
             content:
               _state: ml_two.$.body
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ml_gutter_tight
@@ -92,6 +104,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
             content:
               _state: ml_gutter_wide.$.label
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ml_notes
@@ -138,6 +156,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: ml_team
   type: MasonryList
   properties:
@@ -162,7 +186,7 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
               properties:
                 content:
                   _state: ml_team.$.initials
-                backgroundColor:
+                color:
                   _state: ml_team.$.bg
             - id: ml_team.$.name_block
               type: Title
@@ -178,6 +202,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
             content:
               _state: ml_team.$.role
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ml_seq
@@ -206,6 +236,12 @@ Masonry-style grid layout for list data. Items flow into columns and stack verti
             content:
               _state: ml_seq.$.desc
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

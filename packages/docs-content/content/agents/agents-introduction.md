@@ -1,0 +1,107 @@
+# Agents
+
+Lowdefy agents add AI chat capabilities to your app. An agent connects to an AI model provider (like Anthropic, OpenAI, or Google), can use tools to interact with your app's APIs, and streams responses to an [`AgentChat`](/AgentChat) block in the browser.
+
+Agents are defined at the root of your Lowdefy configuration, alongside `connections` and `pages`. You define the agent in YAML, and Lowdefy handles the streaming, tool execution, and UI.
+
+## Quick Start
+
+A connection, an agent, and a chat block — that's all you need:
+
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: anthropic
+    type: Anthropic
+    properties:
+      apiKey:
+        _secret: ANTHROPIC_API_KEY
+
+agents:
+  - id: assistant
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+      instructions: |
+        You are a helpful assistant for Acme Corp. Answer questions
+        about our products and services. Be friendly and concise.
+
+pages:
+  - id: chat
+    type: PageHeaderMenu
+    properties:
+      title: Chat
+    blocks:
+      - id: chat
+        type: AgentChat
+        properties:
+          agentId: assistant
+```
+
+Set the `ANTHROPIC_API_KEY` [secret](/secrets) and you have a fully working AI chat — streaming responses, markdown rendering, code highlighting, and editable messages all work out of the box.
+
+## How Agents Work
+
+When a user sends a message in an [`AgentChat`](/AgentChat) block:
+
+1. The message is sent to the Lowdefy server via a streaming API endpoint.
+2. The server loads the agent configuration, creates a connection to the AI provider, and starts a conversation with the model.
+3. If the agent has tools, the model can call them. Tool calls execute server-side (API endpoints, MCP servers, or sub-agents) and the results are sent back to the model.
+4. The model's response streams back to the browser in real time, updating the chat UI as tokens arrive.
+
+This tool loop continues until the model produces a final text response or reaches the `maxSteps` limit.
+
+## Agent Definition
+
+Agents are defined in the top-level `agents` array in your Lowdefy configuration:
+
+- `id: string`: __Required__ - A unique identifier for the agent.
+- `type: string`: __Required__ - The agent type. See [Anthropic](/Anthropic), [OpenAI](/OpenAI-connection), and [Google](/Google) for available types.
+- `connectionId: string`: __Required__ - The `id` of the connection to use.
+- `properties: object`: Model, instructions, and behavior settings. See [Agent Properties](/agent-properties). __Operators are evaluated__.
+- `tools: array`: API endpoint tools. See [Endpoint Tools](/agent-endpoint-tools).
+- `mcp: array`: MCP server tools. See [MCP Tools](/agent-mcp-tools).
+- `agents: array`: Sub-agent tools. See [Multi-Agent](/agent-multi-agent).
+- `hooks: object`: Server-side lifecycle hooks. See [Server Hooks](/agent-server-hooks).
+
+###### Agent with tools, sub-agents, and hooks:
+```yaml
+agents:
+  - id: support_agent
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+      instructions: |
+        You are a customer support agent. Help users find products
+        and answer questions. Be friendly and concise.
+      maxSteps: 5
+    tools:
+      - search-products
+      - endpointId: create-ticket
+        confirm: true
+    mcp:
+      - mcp_knowledge_base
+    agents:
+      - agentId: billing_agent
+        description: Handles billing and payment questions.
+    hooks:
+      onFinish:
+        - save-conversation
+```
+
+## Beyond Chat
+
+Agents can also run headlessly from [API endpoint routines](/api) using the `CallAgent` step — the agent loops through its tools to completion and the result lands in the routine's `_step` results, no chat UI involved. See [Running Agents As A Routine Step](/api) for details.
+
+## What's Next
+
+- [Agent Properties](/agent-properties) — Configure model, temperature, pruning, and more.
+- [Endpoint Tools](/agent-endpoint-tools) — Give the agent access to your database and APIs.
+- [MCP Tools](/agent-mcp-tools) — Connect to external tool providers via the MCP standard.
+- [Multi-Agent](/agent-multi-agent) — Delegate tasks to specialized sub-agents.
+- [Server Hooks](/agent-server-hooks) — Save conversations, generate titles, and run server-side logic.
+- [AgentChat](/AgentChat) — Configure the chat UI block.
+- [AgentConversations](/AgentConversations) — Add a conversation history sidebar.

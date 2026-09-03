@@ -9,6 +9,8 @@
   input?: object,
   newTab?:boolean,
   pageId?: string,
+  replace?: boolean,
+  scroll?: boolean,
   url?: string,
   urlQuery? object
 }): void
@@ -30,6 +32,8 @@ The pageId of a page in the app to link to.
 - `input: object`: Object to set as the input for the linked page.
 - `newTab: boolean`: Open the link in a new tab.
 - `pageId: string`: The pageId of a page in the app to link to.
+- `replace: boolean`: Replace the current browser history entry instead of pushing a new one, so the browser back button skips this navigation. Defaults to `false`.
+- `scroll: boolean`: Scroll to the top of the page after navigating. Set to `false` to keep the current scroll position, for example when a same-page link only updates the `urlQuery`. Defaults to `true`.
 - `url: string`: Link to an external url.
 - `urlQuery: object`: Object to set as the urlQuery for the linked page.
 
@@ -103,6 +107,19 @@ The pageId of a page in the app to link to.
     input:
       id:
         _args: row.id
+```
+
+###### Reflect state into the urlQuery without moving the page:
+```yaml
+- id: sync_url
+  type: Link
+  params:
+    pageId: my_page_id
+    urlQuery:
+      selected:
+        _state: selected_id
+    replace: true
+    scroll: false
 ```
 
 ###### Go to the previous page:

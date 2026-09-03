@@ -32,6 +32,12 @@ function loadFrameworkHazards() {
     hazards = JSON.parse(fs.readFileSync(hazardsPath, 'utf8'));
   } catch {
     // docs-content not installed — type-attached hazards are still served.
+    // Memoized for the life of the dev server, so say so once: without this
+    // line an install ordering problem is indistinguishable from having no
+    // framework hazards at all.
+    console.warn(
+      '@lowdefy/docs-content is not installed, so no framework-level hazards will be served. Run the install and restart the dev server to get them back.'
+    );
     hazards = null;
   }
   return hazards;

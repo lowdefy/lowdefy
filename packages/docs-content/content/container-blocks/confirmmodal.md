@@ -680,6 +680,9 @@ Clicking Ok or Cancel will update the state and show a message.
           status: info
 ```
 
+```yaml
+[object Object]```
+
 The element CSS key applies Tailwind classes to the modal wrapper. This modal uses rounded-2xl and shadow-2xl on the element key.
 
 The body CSS key targets the modal body area. This modal uses bg-bg-layout and p-6 on the body key for a tinted content area.
@@ -841,8 +844,7 @@ James Park - Engineering Lead
           properties:
             icon: AiOutlineUser
             size: 32
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: delete_flow_name_1
           type: Paragraph
           layout:
@@ -885,8 +887,7 @@ James Park - Engineering Lead
           properties:
             icon: AiOutlineUser
             size: 32
-            color: "#fff"
-            backgroundColor: "#52c41a"
+            color: "#52c41a"
         - id: delete_flow_name_2
           type: Paragraph
           layout:
@@ -942,6 +943,9 @@ James Park - Engineering Lead
               - " has been removed from the team."
           status: success
 ```
+
+```yaml
+[object Object]```
 
 Please verify your ticket details before submitting. You will receive a confirmation email once the ticket is created.
 

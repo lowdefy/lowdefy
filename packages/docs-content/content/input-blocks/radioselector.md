@@ -48,6 +48,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: horizontal_default
   type: RadioSelector
   properties:
@@ -79,6 +82,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: vertical_radio
   type: RadioSelector
   properties:
@@ -105,6 +111,9 @@ Radio group for selecting a single option.
         value: enterprise
         disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: wrap_enabled
@@ -148,6 +157,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: align_start
   type: RadioSelector
   properties:
@@ -189,6 +201,9 @@ Radio group for selecting a single option.
       - Banana
       - Cherry
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: color_green
@@ -254,6 +269,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_all
   type: RadioSelector
   properties:
@@ -280,6 +298,9 @@ Radio group for selecting a single option.
       - label: Large
         value: large
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_single_option
@@ -310,6 +331,9 @@ Radio group for selecting a single option.
       - label: Basic
         value: basic
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: styled_options
@@ -369,6 +393,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: html_bold_labels
   type: RadioSelector
   properties:
@@ -393,6 +420,9 @@ Radio group for selecting a single option.
       - label: <b>Enterprise</b> &mdash; Custom solutions for organizations
         value: enterprise
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -460,6 +490,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: no_label_radio
   type: RadioSelector
   properties:
@@ -486,6 +519,9 @@ Radio group for selecting a single option.
       - label: No emails
         value: none
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_border
@@ -538,6 +574,9 @@ Radio group for selecting a single option.
       - label: System
         value: system
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_radio
@@ -616,6 +655,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: object_values
   type: RadioSelector
   properties:
@@ -653,6 +695,9 @@ Radio group for selecting a single option.
         style:
           textDecoration: line-through
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: example_payment
@@ -720,6 +765,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: radio_per_option_color
   type: RadioSelector
   properties:
@@ -737,6 +785,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: data_radio_selector
   type: RadioSelector
   properties:
@@ -751,6 +802,9 @@ Radio group for selecting a single option.
     html: "{{ item.name }}"
     valueKey: id
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: radio_columns_two
@@ -812,6 +866,9 @@ Radio group for selecting a single option.
         color: "#7e22ce"
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
@@ -836,7 +893,7 @@ Radio group for selecting a single option.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -868,7 +925,7 @@ Radio group for selecting a single option.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

@@ -1200,7 +1200,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
             value: 3
           - label: 4+
             value: 4
-          - label: 5
+          - label: "5"
             value: 5
     - id: drawer_filter_panel_in_stock
       type: Switch
@@ -1270,8 +1270,7 @@ Jane Cooper
           properties:
             icon: AiOutlineUser
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: drawer_profile_info
           type: Box
           layout:

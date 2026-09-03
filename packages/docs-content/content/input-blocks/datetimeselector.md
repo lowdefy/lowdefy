@@ -20,6 +20,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_variant_outlined
   type: DateTimeSelector
   properties:
@@ -42,6 +45,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_tf_hours_minutes
@@ -69,6 +75,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_step_hour_2
@@ -111,6 +120,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_fmt_iso
   type: DateTimeSelector
   properties:
@@ -149,6 +161,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_ph_default
   type: DateTimeSelector
   properties:
@@ -179,6 +194,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_clear_enabled
   type: DateTimeSelector
   properties:
@@ -194,6 +212,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_today_enabled
@@ -235,6 +256,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_utc_off
   type: DateTimeSelector
   properties:
@@ -250,6 +274,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_dis_outlined
@@ -282,6 +309,9 @@ Combined date and time picker.
     title: Disabled with Label
     disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_icon_default
@@ -325,6 +355,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_dd_min
   type: DateTimeSelector
   properties:
@@ -366,6 +399,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_presets_relative
@@ -435,6 +471,12 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: dts_lbl_default
   type: DateTimeSelector
   properties:
@@ -475,6 +517,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_lbl_span_4
   type: DateTimeSelector
   properties:
@@ -497,6 +542,9 @@ Combined date and time picker.
       inline: true
       span: 12
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_style_width
@@ -526,6 +574,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: dts_class_rounded
   type: DateTimeSelector
   class: rounded-lg shadow-sm
@@ -541,6 +592,9 @@ Combined date and time picker.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_theme_primary
@@ -586,6 +640,9 @@ Combined date and time picker.
       activeBorderColor: "#fa8c16"
       hoverBorderColor: "#ffc069"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: dts_combo_appointment
@@ -665,6 +722,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_appt_card
   type: Card
   properties:
@@ -722,6 +782,9 @@ Combined date and time picker.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied3_meeting_card
   type: Card
   properties:
@@ -766,6 +829,9 @@ Combined date and time picker.
               content: Meeting scheduled! Calendar invites will be sent to all participants.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -845,7 +911,7 @@ Combined date and time picker.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

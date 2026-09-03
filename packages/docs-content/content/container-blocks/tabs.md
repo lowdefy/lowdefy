@@ -1661,6 +1661,9 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
             content: Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `animated` | boolean | `true` | Whether to change tabs with animation. Only works while tabPlacement is top or bottom. |
@@ -1703,8 +1706,8 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ activeKey }` | Trigger action on any tab change. |
-| `onTabSelect` | `{ key }` | Documentation reference — not a fixed event name. When a tab becomes active, the `eventName` string declared on that `tabs[]` entry is triggered (in addition to onChange). Declare your named events under `events:` (e.g. `onProfileTab`, `onBillingTab`). |
+| `onChange` | `{ activeKey: string }` | Trigger action on any tab change. |
+| `onTabSelect` | `{ key: string }` | Documentation reference — not a fixed event name. When a tab becomes active, the `eventName` string declared on that `tabs[]` entry is triggered (in addition to onChange). Declare your named events under `events:` (e.g. `onProfileTab`, `onBillingTab`). |
 
 | Key | Target |
 | --- | --- |

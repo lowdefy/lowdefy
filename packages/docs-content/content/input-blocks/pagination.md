@@ -80,6 +80,9 @@ blocks:
     size: small
 ```
 
+```yaml
+[object Object]```
+
 **Simple (default size):**
 
 **Simple (small size):**
@@ -105,6 +108,9 @@ blocks:
     simple: true
     size: small
 ```
+
+```yaml
+[object Object]```
 
 **Boolean (default format):**
 
@@ -142,6 +148,9 @@ blocks:
     showTotal: true
     size: small
 ```
+
+```yaml
+[object Object]```
 
 **Default page size options:**
 
@@ -186,6 +195,9 @@ blocks:
     size: small
 ```
 
+```yaml
+[object Object]```
+
 **Quick jumper enabled:**
 
 **Quick jumper (small):**
@@ -211,6 +223,9 @@ blocks:
     showQuickJumper: true
     size: small
 ```
+
+```yaml
+[object Object]```
 
 **Default options [10, 20, 30, 40]:**
 
@@ -258,6 +273,9 @@ blocks:
       - 200
 ```
 
+```yaml
+[object Object]```
+
 **Multiple pages (visible):**
 
 **Single page (hidden - nothing renders below):**
@@ -293,6 +311,9 @@ blocks:
     total: 5
     hideOnSinglePage: false
 ```
+
+```yaml
+[object Object]```
 
 **Small total (30):**
 
@@ -336,6 +357,9 @@ blocks:
   properties:
     total: 10000
 ```
+
+```yaml
+[object Object]```
 
 **Basic disabled:**
 
@@ -388,6 +412,9 @@ blocks:
     disabled: true
     simple: true
 ```
+
+```yaml
+[object Object]```
 
 **All features enabled:**
 
@@ -456,21 +483,7 @@ blocks:
 ```
 
 ```yaml
-- id: with_label_default
-  type: Pagination
-  properties:
-    title: Page Navigation
-    total: 100
-- id: with_label_inline
-  type: Pagination
-  properties:
-    title: Results
-    total: 200
-    showTotal: true
-    label:
-      inline: true
-      span: 6
-```
+[object Object]```
 
 **Custom background and padding:**
 
@@ -521,6 +534,9 @@ blocks:
     total: 100
 ```
 
+```yaml
+[object Object]```
+
 **Tailwind background and padding:**
 
 **Tailwind border and centered:**
@@ -556,6 +572,9 @@ blocks:
   properties:
     total: 100
 ```
+
+```yaml
+[object Object]```
 
 **Custom primary color:**
 
@@ -630,6 +649,9 @@ blocks:
       fontSize: 14
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `total` | integer | `100` | Total number of items to be displayed in pagination. |
@@ -668,8 +690,8 @@ blocks:
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSizeChange` | `{ current, pageSize, skip }` | Triggered when page size is changed. |
-| `onChange` | `{ current, pageSize, skip }` | Triggered when current page is changed. |
+| `onSizeChange` | `{ current: integer, pageSize: integer, skip: integer }` | Triggered when page size is changed. |
+| `onChange` | `{ current: integer, pageSize: integer, skip: integer }` | Triggered when current page is changed. |
 
 | Key | Target |
 | --- | --- |

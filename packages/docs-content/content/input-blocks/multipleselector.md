@@ -41,6 +41,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: prim_strings
   type: MultipleSelector
   properties:
@@ -63,6 +66,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - 40
       - 50
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: size_small
@@ -95,6 +101,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - Blue
       - Yellow
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: toggle_allow_clear
@@ -136,6 +145,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: bordered_true
   type: MultipleSelector
   properties:
@@ -161,6 +173,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Angular
         value: angular
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: max_tags_3
@@ -218,6 +233,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: custom_placeholder
   type: MultipleSelector
   properties:
@@ -247,6 +265,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Item B
         value: b
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: auto_clear_true
@@ -282,6 +303,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Go
         value: go
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: custom_suffix_icon
@@ -337,6 +361,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Bronze Plan
         value: bronze
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tags_preset_colors
@@ -493,6 +520,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tags_with_icons
   type: MultipleSelector
   properties:
@@ -546,6 +576,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_multi
   type: MultipleSelector
   properties:
@@ -576,6 +609,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Pre-order
         value: preorder
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: options_filter_string
@@ -631,6 +667,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Option C
         value: c
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_with_colon
@@ -736,6 +775,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_inline
   type: MultipleSelector
   properties:
@@ -765,6 +807,9 @@ Multi-select dropdown with tags, search, and custom rendering.
       - label: Option 3
         value: 3
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: scrollable_selector
@@ -821,6 +866,9 @@ Multi-select dropdown with tags, search, and custom rendering.
         tag:
           color: geekblue
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: style_border
@@ -882,6 +930,9 @@ Multi-select dropdown with tags, search, and custom rendering.
   class:
     label: text-blue-600 font-semibold
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_custom_colors
@@ -967,6 +1018,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: combined_full
   type: MultipleSelector
   properties:
@@ -1048,6 +1102,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_team_card
   type: Card
   properties:
@@ -1116,6 +1173,9 @@ Multi-select dropdown with tags, search, and custom rendering.
               content: Team has been assigned to the project.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_filter_card
@@ -1188,6 +1248,12 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: multiple_color_solid
   type: MultipleSelector
   properties:
@@ -1221,6 +1287,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: data_multiple_selector
   type: MultipleSelector
   properties:
@@ -1238,6 +1307,9 @@ Multi-select dropdown with tags, search, and custom rendering.
     html: "{{ item.name }}"
     valueKey: id
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1280,7 +1352,7 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `loadingPlaceholder` | string | `"Loading"` | Placeholder text to show in options while the block is loading. |
 | `notFoundContent` | string | `"not Found"` | Placeholder text to show when list of options are empty. |
 | `selectedIcon` | string \| object | `"AiOutlineCheck"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize at the drop-down position of the selector. |
 | `title` | string | - | Multiple selector label title - supports html. |
@@ -1314,11 +1386,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | \- | Trigger actions when selection is changed. |
+| `onChange` | `{ value: array }` | Trigger actions when selection is changed. |
 | `onBlur` | \- | Trigger action event occurs when selector loses focus. |
 | `onFocus` | \- | Trigger action when selector gets focus. |
 | `onClear` | \- | Trigger action when selector gets cleared. |
-| `onSearch` | `{ value }` | Trigger actions when input is changed. |
+| `onSearch` | `{ value: string }` | Trigger actions when input is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

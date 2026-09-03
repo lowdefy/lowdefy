@@ -20,6 +20,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_variant_outlined
   type: DateRangeSelector
   properties:
@@ -42,6 +45,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_format_iso
@@ -80,6 +86,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_ph_default
@@ -127,6 +136,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_sep_tilde
   type: DateRangeSelector
   properties:
@@ -163,6 +175,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_icon_default
@@ -206,6 +221,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_dis_default
   type: DateRangeSelector
   properties:
@@ -238,6 +256,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_dd_min
@@ -281,6 +302,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_presets_relative
@@ -462,6 +486,12 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: drs_label_default
   type: DateRangeSelector
   properties:
@@ -520,6 +550,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_label_inline_4
   type: DateRangeSelector
   properties:
@@ -544,6 +577,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_html_bold
   type: DateRangeSelector
   properties:
@@ -563,6 +599,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_style_width
@@ -600,6 +639,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: drs_class_rounded
   type: DateRangeSelector
   class: rounded-lg shadow-sm
@@ -622,6 +664,9 @@ Date range picker for selecting start and end dates.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_theme_primary
@@ -665,6 +710,9 @@ Date range picker for selecting start and end dates.
     theme:
       colorPrimary: "#52c41a"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: drs_combo_hotel
@@ -758,6 +806,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_report_card
   type: Card
   properties:
@@ -819,6 +870,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied3_vacation_card
   type: Card
   properties:
@@ -870,6 +924,9 @@ Date range picker for selecting start and end dates.
               content: Vacation request submitted for approval.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -943,7 +1000,7 @@ Date range picker for selecting start and end dates.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: array }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

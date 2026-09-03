@@ -6,8 +6,9 @@
 (blockIds: string[]): void
 (blockIds: string[]): void
 (params: {
-  blockId?: string|string[],
+  blockIds?: string|string[],
   regex?: string|string[],
+  schema?: boolean|string,
 }): void
 ```
 
@@ -17,6 +18,8 @@ It is used in conjunction with the `required` and `validate` fields on input blo
 The first time a `Validate` action is called, validation errors and warnings are shown to the user. The [`Reset`](/Reset) action resets the validation status and the page `state`. The [`ResetValidation`](/ResetValidation) action resets only the validation status.
 
 The `Validate` action `blockIds` or `regex` params are used to limit which blocks are validated. Only the matched blocks will be validated, and validation results are shown for only those matched blocks.
+
+When the page declares a [state contract](/page-and-app-state#state-contract), the `schema` param validates the page `state` against it: `schema: true` checks the whole contract, and a dotted state path checks only the fragment declared at that path. The schema check runs in addition to the blocks selected by `blockIds` or `regex`, so `{ blockIds: [...], schema: true }` does both. A violation at a path that is a block on the page is shown on that block; the rest are reported in the error message as `state.<path>: <message>` lines.
 
 #### Parameters
 
@@ -30,8 +33,9 @@ A blockId of the block to validate.
 An array of blockIds of the blocks to validate.
 
 ###### object
-  - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
+  - `blockIds?: string|string[]`: A blockId or an array of the blockIds of the blocks to validate.
   - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds to validate.
+  - `schema?: boolean|string`: Validate the page `state` against the page's declared `state` contract. `true` validates the whole contract; a dotted state path validates the fragment declared at that path. Runs in addition to the blocks matched by `blockIds` or `regex`.
 
 #### Examples
 
@@ -55,6 +59,24 @@ An array of blockIds of the blocks to validate.
   params:
     - my_input_a
     - my_input_b
+```
+
+###### Validate the page state against the declared state contract:
+```yaml
+- id: validate_contract
+  type: Validate
+  params:
+    schema: true
+```
+
+###### Validate the required inputs and one fragment of the state contract:
+```yaml
+- id: validate_address
+  type: Validate
+  params:
+    blockIds:
+      - data.address.formatted_address
+    schema: data.address
 ```
 
 ###### Validate all inputs matching a regex pattern:

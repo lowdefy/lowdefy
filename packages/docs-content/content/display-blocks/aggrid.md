@@ -614,6 +614,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: lowdefy_styled_columns
   type: AgGridLowdefy
   properties:
@@ -806,6 +809,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: lowdefy_ellipsis_demo
   type: AgGridLowdefy
   properties:
@@ -955,6 +961,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
       - name: Charlie Lee
         role: Manager
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: lowdefy_tag_array_demo
@@ -1115,6 +1124,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: lowdefy_selector_cell_demo
   type: AgGridLowdefy
   properties:
@@ -1211,6 +1223,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: lowdefy_input_cell_demo
   type: AgGridLowdefy
   properties:
@@ -1301,6 +1316,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
                     - _event: newValue
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | string | `"middle"` | Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes. Enum: `small`, `middle`, `large`. |
@@ -1320,7 +1338,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.sortable` | boolean | `false` | Set to true to allow sorting on this column. |
 | `columnDefs.$.resizable` | boolean | `false` | Set to true to allow this column should be resized. |
 | `columnDefs.$.width` | number | - | Initial width in pixels for the cell. |
-| `columnDefs.$.cellStyle` | number | - | An object of css values returning an object of css values for a particular cell. |
+| `columnDefs.$.cellStyle` | object | - | An object of css values returning an object of css values for a particular cell. |
 | `columnDefs.$.cellRenderer` | object | - | Provide your own cell Renderer function (using the `_function` operator) for this column's cells. |
 | `columnDefs.$.valueFormatter` | object \| string | - | A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering. |
 | `columnDefs.$.tooltipField` | string | - | The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component. |
@@ -1438,15 +1456,15 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. |
-| `onFilterChanged` | `{ rows, filter }` | Trigger event when the filter changes. |
-| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. |
-| `onRowSelected` | `{ row, rowIndex, selected }` | Trigger event when a row is selected. |
-| `onSelectionChanged` | `{ selected }` | Triggered when the selected rows are changed. |
-| `onSortChanged` | `{ rows, sort }` | Trigger event when the sort changes. |
-| `onCellLink` | `{ link, row, value }` | Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate. |
-| `onCellButton` | `{ row, value, button, buttonIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`). |
-| `onCellMenuItem` | `{ row, value, item, itemIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`). |
+| `onCellClick` | `{ cell: object, colId: string, row: object, rowIndex: integer, selected: array }` | Trigger event when a cell is clicked. |
+| `onFilterChanged` | `{ rows: array, filter: object }` | Trigger event when the filter changes. |
+| `onRowClick` | `{ row: object, selected: array, rowIndex: integer }` | Trigger event when a row is clicked. |
+| `onRowSelected` | `{ row: object, rowIndex: integer, selected: array }` | Trigger event when a row is selected. |
+| `onSelectionChanged` | `{ selected: array }` | Triggered when the selected rows are changed. |
+| `onSortChanged` | `{ rows: array, sort: array }` | Trigger event when the sort changes. |
+| `onCellLink` | `{ link: object, row: object, value: any }` | Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate. |
+| `onCellButton` | `{ row: object, value: any, button: object, buttonIndex: integer }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`). |
+| `onCellMenuItem` | `{ row: object, value: any, item: object, itemIndex: integer }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`). |
 
 | Key | Target |
 | --- | --- |

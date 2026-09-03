@@ -24,6 +24,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: placeholder_default
   type: TextArea
   properties:
@@ -42,6 +45,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       extra: TextArea with no placeholder text.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: rows_1
@@ -82,6 +88,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: auto_size_true
   type: TextArea
   properties:
@@ -96,6 +105,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     autoSize: false
     placeholder: Fixed height, does not grow
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: auto_size_min2_max4
@@ -140,6 +152,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: allow_clear_true
   type: TextArea
   properties:
@@ -160,6 +175,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     rows: 4
     placeholder: Clearable with 4 rows
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: show_count_basic
@@ -198,6 +216,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: max_length_20
   type: TextArea
   properties:
@@ -220,6 +241,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: bordered_true
   type: TextArea
   properties:
@@ -240,6 +264,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     rows: 6
     placeholder: Larger borderless textarea
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: disabled_empty
@@ -275,6 +302,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     bordered: false
     placeholder: Disabled without border
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -313,6 +343,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_inline
   type: TextArea
   properties:
@@ -347,6 +380,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: label_disabled
   type: TextArea
   properties:
@@ -362,6 +398,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
       hasFeedback: false
     placeholder: Validation feedback text will not appear
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combo_count_autosize
@@ -388,6 +427,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: combo_small_2rows
   type: TextArea
   properties:
@@ -412,6 +454,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
       maxRows: 6
     placeholder: Large auto-growing textarea
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combo_disabled_count
@@ -454,6 +499,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: usecase_feedback
   type: TextArea
   properties:
@@ -468,6 +516,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       extra: Please be specific with your feedback. Maximum 1000 characters.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: usecase_code
@@ -487,6 +538,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: usecase_notes
   type: TextArea
   properties:
@@ -497,6 +551,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       colon: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: usecase_bio
@@ -512,6 +569,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       extra: A brief description shown on your profile.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: css_element
@@ -562,6 +622,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_rounded
   type: TextArea
   class: rounded-lg shadow-md
@@ -577,6 +640,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_active_border
@@ -625,6 +691,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: auto_focus_false
   type: TextArea
   properties:
@@ -632,6 +701,9 @@ Multi-line text input with auto-sizing, character count, and clear button.
     autoFocus: false
     placeholder: Does not auto focus
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -698,7 +770,7 @@ Multi-line text input with auto-sizing, character count, and clear button.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
-| `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onChange` | `{ value: string }` | Trigger action when text input is changed. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

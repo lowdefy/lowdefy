@@ -202,16 +202,16 @@ The command takes no connection string of its own: every step's connection is na
 
 ## test
 
-The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
+The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml` and the request tests in `tests/requests/*.test.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route and every request test through its request route, prints `PASS`/`FAIL` per test with the failing step, stops the server, and exits with code `1` if any test failed. Journeys are validated against the same step grammar the dev server runs, so a file with a typo — an unknown top-level key, a step with two keys, a `fill` without a `blockId` — is reported with its file path before a browser is opened. See [Config Tests](/config-tests).
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
-- `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+- `--filter <name>`: Only run journeys and request tests whose `name` contains this string (case-insensitive). Exits with code `1` if nothing matches.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
-- `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
+- `--url <url>`: Run the tests against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
 ## upgrade
 
@@ -251,19 +251,21 @@ The `start` command starts a Lowdefy production server. To start a Lowdefy serve
 - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 
+
 #### Examples
 
-Run the dev server, watching a relative directory for file changes:
 
+Run the dev server, watching a relative directory for file changes:
 ```txt
 pnpx lowdefy@5 dev --watch ../other-project
 ```
 
 Run the dev server, ignoring the public directory:
-
 ```txt
 pnpx lowdefy@5 dev --watch-ignore public/**
 ```
+
+
 
 # Module Fetching
 
@@ -284,7 +286,6 @@ In development mode (`lowdefy dev`), local module sources (`file:` paths) are wa
 All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
 
 Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
-
 - `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `disableTelemetry: boolean`: Disable telemetry.
 - `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
@@ -305,7 +306,6 @@ The CLI collects usage and error information to help us fix bugs, prioritize fea
 All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file), or by using the `--disable-telemetry` command line flag.:
 
 ###### `lowdefy.yaml`
-
 ```yaml
 lowdefy: LOWDEFY_VERSION
 

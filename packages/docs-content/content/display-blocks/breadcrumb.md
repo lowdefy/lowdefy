@@ -234,6 +234,9 @@ Navigation breadcrumb showing the current location in a hierarchy.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: css_tailwind_bg
   type: Breadcrumb
   class: bg-bg-layout p-3 rounded-lg
@@ -409,6 +412,9 @@ Add an extra layer of security to your account by enabling two-factor authentica
                   status: success
 ```
 
+```yaml
+[object Object]```
+
 **$249.99** ~~$329.99~~
 
 Premium over-ear headphones with active noise cancellation, 30-hour battery life, and hi-res audio support. Available in Midnight Black and Pearl White.
@@ -506,7 +512,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | `{ link, index }` | Triggered when breadcrumb item is clicked. |
+| `onClick` | `{ link: object, index: integer }` | Triggered when breadcrumb item is clicked. |
 
 | Key | Target |
 | --- | --- |

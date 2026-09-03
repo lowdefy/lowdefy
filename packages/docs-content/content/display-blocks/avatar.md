@@ -1109,14 +1109,14 @@ I've started on the date picker component. Quick question — should it default 
 | `gap` | number | - | Letter type unit distance between left and right sides. |
 | `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in avatar. |
 | `shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
-| `size` | string \| object | `"default"` | Size of the avatar; default, small, large or responsive. Enum: `default`, `small`, `large`. |
+| `size` | string \| number \| object | `"default"` | Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes. |
 | `src` | string | - | The address of the image for an image avatar. |
 | `group` | object | - | Render as an avatar group with multiple avatars. When set, the block renders Avatar.Group wrapping data-driven avatars. |
 | `group.maxCount` | number | - | Max avatars to show. Excess shows as "+N". |
 | `group.maxPopoverPlacement` | string | `"top"` | Placement of the overflow popover. Enum: `top`, `bottom`. |
 | `group.maxPopoverTrigger` | string | `"hover"` | Trigger mode for the overflow popover. Enum: `hover`, `click`. |
 | `group.shape` | string | - | Default shape for all avatars in the group. Enum: `circle`, `square`. |
-| `group.size` | string \| number | - | Default size for all avatars in the group. Enum: `default`, `small`, `large`. |
+| `group.size` | string \| number | - | Default size for all avatars in the group: default, small, large or a pixel number. |
 | `group.avatars` | array | - | Array of avatar configurations. |
 | `group.avatars.$.alt` | string | - | Alt text for image avatar. |
 | `group.avatars.$.color` | string | - | Background color. |

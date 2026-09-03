@@ -50,7 +50,7 @@ Download files from any storage provider — AWS S3 (and S3-compatible services)
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onChange` | \- | Triggered when the upload state is changing. |
-| `onRemove` | `{ file }` | Triggered when a file remove icon is clicked. The file is NOT removed automatically — the handler is responsible for updating `fileList` (e.g. via `SetState`). |
+| `onRemove` | `{ file: object }` | Triggered when a file remove icon is clicked. The file is NOT removed automatically — the handler is responsible for updating `fileList` (e.g. via `SetState`). |
 
 | Key | Target |
 | --- | --- |

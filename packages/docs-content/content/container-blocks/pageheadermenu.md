@@ -502,6 +502,9 @@ Profile from _menu
         showIcon: true
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `logo` | object | - | Header logo settings. By default, images are served from the app public folder and auto-swap between light and dark variants based on dark mode. See [Hosting Files](/hosting-files) for details. |
@@ -579,8 +582,8 @@ Profile from _menu
 | `onMenuItemClick` | \- | Trigger action when menu item is clicked. |
 | `onMenuItemSelect` | \- | Trigger action when menu item is selected. |
 | `onOpen` | \- | Trigger action when mobile menu is open. |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 | `onToggleDrawer` | \- | Trigger action when mobile menu drawer is toggled. |
 | `onToggleMenuGroup` | \- | Trigger action when mobile menu group is opened. |
 

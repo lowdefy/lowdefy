@@ -178,6 +178,9 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: example_search_runtime
   type: Search
   properties:
@@ -245,6 +248,9 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: example_search_custom_shortcut
   type: Search
   properties:
@@ -260,6 +266,9 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
           pageId:
             _event: pageId
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: example_search_analytics
@@ -295,6 +304,9 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
           pageId:
             _event: pageId
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -334,8 +346,8 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ query, resultCount }` | Trigger actions when a search result is selected. Result item stored fields are spread into the event object. |
-| `onSearch` | `{ value, resultCount }` | Trigger actions when the search query changes. |
+| `onSelect` | `{ query: string, resultCount: integer }` | Trigger actions when a search result is selected. Result item stored fields are spread into the event object. |
+| `onSearch` | `{ value: string, resultCount: integer }` | Trigger actions when the search query changes. |
 | `onOpen` | \- | Trigger actions when the search modal opens. |
 | `onClose` | \- | Trigger actions when the search modal closes. |
 

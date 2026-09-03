@@ -1116,8 +1116,7 @@ Product Manager
               properties:
                 icon: AiOutlineUser
                 size: 48
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
             - id: popover_usercard_info
               type: Box
               layout:
@@ -1199,8 +1198,7 @@ Product Manager
             flex: 0 0 auto
           properties:
             content: SC
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: popover_usercard_trigger_name
           type: Paragraph
           layout:
@@ -1377,7 +1375,6 @@ You will receive a warning notification when 80% of the budget is used.
       properties:
         label:
           disabled: true
-        prefix: $
 ```
 
 | Property | Type | Default | Description |

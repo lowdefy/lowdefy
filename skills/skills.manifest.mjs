@@ -58,6 +58,7 @@ export default {
       'Use when writing server-side logic as an Api endpoint routine — control flow steps, requests inside a routine, payload schemas, calling it from the page with CallAPI, and exposing it as an MCP tool.',
     title: 'Api endpoint routines',
     docSlugs: [
+      'concepts/lowdefy-api',
       'controls/if',
       'controls/for',
       'controls/try',

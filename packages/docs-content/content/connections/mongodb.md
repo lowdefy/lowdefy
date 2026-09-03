@@ -40,6 +40,7 @@ When the connection has a `changeLog` collection, all write requests log a chang
 - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
 - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
 - `collection: string`: __Required__ - The name of the MongoDB collection.
+  Declare what the collection holds - tenancy, fields, relations, indexes - under the app-level [`collections:`](/collections) key; the build joins every connection to its collection by this name.
 - `changeLog: object`: Log all changes made by write requests to a log collection.
   - `collection: string`: __Required__ - The name of the collection change log records are written to.
   - `meta: object`: Additional data to include in every change log record, for example the user making the change.
@@ -116,6 +117,9 @@ Request types:
   - MongoDBUpdateOne
   - MongoDBVersionedUpdateOne
 
+##### Validation on write
+
+When the app declares the collection a connection addresses under the root [`collections`](/collections) object with `fields`, every write request type on that connection validates what it writes against those fields before calling the driver: the insert types check each document, the update types check the values of `$set` and `$setOnInsert`, and `MongoDBBulkWrite` checks each operation by kind. Undeclared fields pass. A violation is a request error naming the field, the expected type and the received value. Nothing is validated when the collection is not declared or declares no `fields`. See [Collections - Validation on write](/collections#validation-on-write) for the rules and the reasons this runs in the connection rather than as a `$jsonSchema` collection validator.
 
 ### MongoDBAggregation
 
@@ -861,3 +865,15 @@ pages:
 ```
 
 The change event payload is available on `_event: messages` in `onMessage` and via the [`_websocket`](/websocket-subscriptions) operator — each message is the MongoDB change event, including `operationType`, `documentKey` and `fullDocument`.
+
+## Errors
+
+When MongoDB rejects an operation, the request fails with a `ServiceError` that carries:
+
+- `code` — the MongoDB error code, for example `11000` for a duplicate key.
+- `message` — a plain sentence naming the collection and the request type, like `MongoDB: Duplicate key on collection "orders".`
+- `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, to add an index covering the filter, or to grant the database user a role.
+
+The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. It is logged on the server instead, where the dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.
+
+Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code.

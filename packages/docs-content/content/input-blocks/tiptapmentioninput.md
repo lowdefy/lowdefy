@@ -169,6 +169,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_mention_prepopulated
   type: TiptapMentionInput
   events:
@@ -194,6 +200,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_mention_hashtags
   type: TiptapMentionInput
   properties:
@@ -213,6 +225,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
           value:
             _id: tag_triage
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_mention_links
@@ -236,6 +254,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_mention_autosize
   type: TiptapMentionInput
   properties:
@@ -253,6 +277,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
           value:
             _id: user_2
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_mention_validation
@@ -291,6 +321,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_mention_disabled
   type: TiptapMentionInput
   events:
@@ -305,6 +341,9 @@ A mixed `options` array — people alongside group options carrying `tag.section
     title: Read only
     disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_mention_sectioned
@@ -346,6 +385,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
           tag:
             section: Roles
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_mention_groups
@@ -398,6 +443,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_mention_minimal
   type: TiptapMentionInput
   properties:
@@ -418,6 +469,12 @@ A mixed `options` array — people alongside group options carrying `tag.section
           value:
             _id: user_2
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

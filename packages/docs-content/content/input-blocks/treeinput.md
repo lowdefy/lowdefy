@@ -2,6 +2,8 @@
 
 Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 
+Selected: —
+
 ```yaml
 - id: tree_basic
   type: TreeInput
@@ -43,6 +45,12 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tree_line
   type: TreeInput
   properties:
@@ -70,6 +78,9 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tree_options
   type: TreeInput
   properties:
@@ -89,6 +100,9 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
         label: Operations
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
@@ -98,7 +112,7 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 | `parentKey` | string | - | Tree selectors only: names each row’s parent id. Build a flat `data`/`options` array where each row has a `primaryKey` (its own id) and a `parentKey` whose value equals the parent row’s `primaryKey`. Rows whose `parentKey` is empty or points at no row become tree roots. Supports dotted paths. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -134,7 +148,7 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 
 | Key | Target |
 | --- | --- |

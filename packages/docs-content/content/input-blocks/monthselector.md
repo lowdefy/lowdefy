@@ -20,6 +20,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_variant_outlined
   type: MonthSelector
   properties:
@@ -42,6 +45,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_format_default
@@ -82,6 +88,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_placeholder_default
   type: MonthSelector
   properties:
@@ -113,6 +122,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_clear_enabled
   type: MonthSelector
   properties:
@@ -130,6 +142,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_today_enabled
   type: MonthSelector
   properties:
@@ -145,6 +160,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_icon_default
@@ -188,6 +206,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_disabled_default
   type: MonthSelector
   properties:
@@ -222,6 +243,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_autofocus_off
   type: MonthSelector
   properties:
@@ -237,6 +261,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_disabled_dates_min
@@ -288,6 +315,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: ms_presets_relative
@@ -343,6 +373,12 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: month_label_default
   type: MonthSelector
   properties:
@@ -379,6 +415,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_label_inline_4
   type: MonthSelector
   properties:
@@ -403,6 +442,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_html_title_bold
   type: MonthSelector
   properties:
@@ -422,6 +464,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_style_width
@@ -451,6 +496,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: month_class_rounded
   type: MonthSelector
   class: rounded-lg shadow-sm
@@ -466,6 +514,9 @@ Month picker for selecting year and month.
     label:
       disabled: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_theme_primary_color
@@ -511,6 +562,9 @@ Month picker for selecting year and month.
       fontSize: 18
       borderRadius: 12
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: month_combined_full
@@ -573,6 +627,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: applied2_budget_card
   type: Card
   properties:
@@ -611,7 +668,6 @@ Month picker for selecting year and month.
       properties:
         title: Amount
         placeholder: Enter amount
-        prefixIcon: AiOutlineDollar
         label:
           extra: Enter the budgeted amount for this category.
     - id: applied2_budget_save_btn
@@ -630,6 +686,9 @@ Month picker for selecting year and month.
               content: Budget entry saved successfully.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied3_billing_card
@@ -683,6 +742,9 @@ Month picker for selecting year and month.
               content: Subscription billing confirmed.
               duration: 3
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -757,7 +819,7 @@ Month picker for selecting year and month.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

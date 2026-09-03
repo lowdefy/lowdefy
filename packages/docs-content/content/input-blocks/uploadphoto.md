@@ -17,6 +17,9 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: limit_single
   type: UploadPhoto
   properties:
@@ -30,6 +33,9 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: emit_file_content
   type: UploadPhoto
   properties:
@@ -38,12 +44,18 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: UploadPhoto
   properties:
     uploadPolicyRequestId: upload_policy_request
     disabled: true
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -64,12 +76,12 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onBeforeUpload` | `{ file }` | Triggered before upload starts. If any action throws, the upload is cancelled. |
-| `onChange` | \- | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, with the block value ({ file, fileList }) as the event, where file includes the base64 content. |
-| `onProgress` | `{ file, fileList }` | Triggered when the upload state is in progress. |
-| `onSuccess` | `{ file, fileList }` | Triggered when the upload state is done uploading. |
-| `onRemove` | `{ file, fileList }` | Triggered when the upload has been removed. |
-| `onError` | `{ file, fileList }` | Triggered when the upload has failed. |
+| `onBeforeUpload` | `{ file: object }` | Triggered before upload starts. If any action throws, the upload is cancelled. |
+| `onChange` | `{ file: object, fileList: array }` | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, where file includes the base64 content. |
+| `onProgress` | `{ file: object, fileList: array }` | Triggered when the upload state is in progress. |
+| `onSuccess` | `{ file: object, fileList: array }` | Triggered when the upload state is done uploading. |
+| `onRemove` | `{ file: object, fileList: array }` | Triggered when the upload has been removed. |
+| `onError` | `{ file: object, fileList: array }` | Triggered when the upload has failed. |
 
 | Key | Target |
 | --- | --- |

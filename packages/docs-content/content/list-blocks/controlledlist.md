@@ -41,6 +41,9 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: bookmarks
   type: ControlledList
   properties:
@@ -73,6 +76,9 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
           disabled: true
         placeholder: Label
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: attendees
@@ -169,7 +175,8 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
       layout:
         flex: 0 0 auto
       properties:
-        label: Needs supervision
+        label:
+          title: Needs supervision
         size: small
     - id: attendees.$.wheelchair
       type: Switch
@@ -180,7 +187,8 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
       layout:
         flex: 0 0 auto
       properties:
-        label: Wheelchair access
+        label:
+          title: Wheelchair access
         size: small
     - id: attendees.$.dietary
       type: TextInput
@@ -220,6 +228,12 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
               content: All attendees registered!
               status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: expenses
@@ -278,7 +292,6 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         placeholder: Amount
         min: 0
         step: 0.01
-        prefix: $
 - id: expenses_footer
   type: Box
   layout:
@@ -319,6 +332,12 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
               content: Expense report submitted!
               status: success
 ```
+
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: projects
@@ -379,7 +398,8 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
           layout:
             flex: 0 0 auto
           properties:
-            label: Done
+            label:
+              title: Done
             size: small
 - id: projects_footer
   type: Box
@@ -407,6 +427,9 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
               content: Projects saved!
               status: success
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tags
@@ -455,6 +478,12 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         size: small
 ```
 
+```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | string | - | Controlled list title. |
@@ -481,8 +510,8 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onAdd` | \- | Triggered after a new item is added via the add button. The event payload is `{ index, item }`, where `item` is the newly added value (`undefined` for an empty row). |
-| `onRemove` | \- | Triggered after an item is removed via the remove icon. The event payload is `{ index, item }`, where `item` is the removed value captured before removal. |
+| `onAdd` | `{ index: integer, item: any }` | Triggered after a new item is added via the add button. |
+| `onRemove` | `{ index: integer, item: any }` | Triggered after an item is removed via the remove icon. |
 
 | Key | Target |
 | --- | --- |

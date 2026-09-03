@@ -719,7 +719,8 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `href` | string | - | The URL to redirect to when the button is clicked. Useful when used with a type link button. |
 | `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use icon in button. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |
-| `size` | string | `"default"` | Size of the button. Enum: `small`, `default`, `large`. |
+| `iconPosition` | string | `"start"` | Position of the icon relative to the button title. Enum: `start`, `end`. |
+| `size` | string | `"default"` | Size of the button. Enum: `small`, `middle`, `default`, `large`. |
 | `title` | string | - | Title text on the button - supports html. |
 | `type` | string | `"primary"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |

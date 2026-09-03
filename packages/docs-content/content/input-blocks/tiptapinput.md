@@ -11,6 +11,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_prepopulated
   type: TiptapInput
   events:
@@ -31,6 +34,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_disabled
   type: TiptapInput
   events:
@@ -46,6 +52,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_borderless
   type: TiptapInput
   properties:
@@ -53,6 +62,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
     bordered: false
     placeholder: No border, just content.
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_rows_2
@@ -64,6 +76,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_autosize_range
   type: TiptapInput
   properties:
@@ -73,6 +88,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
       minRows: 2
       maxRows: 5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_validation
@@ -103,6 +121,12 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_autosize_true
   type: TiptapInput
   properties:
@@ -110,6 +134,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
     placeholder: No height cap.
     autoSize: true
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_minimal
@@ -126,6 +153,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_starterkit
   type: TiptapInput
   properties:
@@ -136,6 +166,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
       blockquote: false
       horizontalRule: false
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: tiptap_with_table
@@ -166,6 +199,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tiptap_links
   type: TiptapInput
   events:
@@ -181,6 +217,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
     link:
       openOnClick: false
 ```
+
+```yaml
+[object Object]```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

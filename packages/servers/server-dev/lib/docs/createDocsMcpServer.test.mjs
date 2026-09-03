@@ -275,10 +275,10 @@ test('MCP get_schema, get_doc and find_config describe and return hazards', asyn
 
   const found = await client.callTool({
     name: 'lowdefy_find_config',
-    arguments: { id: 'my_button' },
+    arguments: { id: 'req-tenant' },
   });
   expect(JSON.parse(found.content[0].text).matches[0].hazards[0].id).toEqual(
-    'visible-false-prunes-state'
+    'write-request-hazard'
   );
   await client.close();
 });

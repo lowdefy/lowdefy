@@ -147,6 +147,9 @@ An Affix block makes its content stick to the viewport when scrolling.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: affix_theme_default_z
   type: Affix
   layout:

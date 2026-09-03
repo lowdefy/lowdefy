@@ -1,6 +1,6 @@
 # DangerousHtml
 
-Render raw HTML content without sanitization.
+Render raw HTML content without sanitization. Never pass caller-supplied or database HTML through it. If DangerousHtml is only being used to get a `<style>` block or a custom layout past sanitization, use the [Template](/Template) block instead: it escapes values by default, scopes CSS to the block through `properties.css`, and renders child blocks into `{% slot %}` positions.
 
 ```yaml
 - id: basic_paragraph

@@ -10,6 +10,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: range_0_5
   type: RatingSlider
   properties:
@@ -37,6 +40,9 @@ Rating slider with customizable range, icons, and N/A option.
     min: -5
     max: 5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: step_1
@@ -68,6 +74,9 @@ Rating slider with customizable range, icons, and N/A option.
     max: 5
     step: 0.5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: marks_and_dots
@@ -106,6 +115,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: tooltip_onclick
   type: RatingSlider
   properties:
@@ -122,6 +134,9 @@ Rating slider with customizable range, icons, and N/A option.
     title: Tooltip Never Visible
     tooltipVisible: never
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: na_default
@@ -152,6 +167,9 @@ Rating slider with customizable range, icons, and N/A option.
     min: 1
     max: 5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: icons_default
@@ -199,6 +217,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: color_blue
   type: RatingSlider
   properties:
@@ -237,6 +258,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: disabled_default
   type: RatingSlider
   properties:
@@ -263,6 +287,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: autofocus_enabled
   type: RatingSlider
   properties:
@@ -278,6 +305,9 @@ Rating slider with customizable range, icons, and N/A option.
     min: 0
     max: 5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: label_default
@@ -314,6 +344,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: minimal_slider
   type: RatingSlider
   properties:
@@ -342,6 +375,9 @@ Rating slider with customizable range, icons, and N/A option.
     min: 0
     max: 5
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: combo_survey_satisfaction
@@ -411,6 +447,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: style_background
   type: RatingSlider
   properties:
@@ -435,6 +474,9 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
 - id: class_rounded
   type: RatingSlider
   class: rounded-lg shadow-sm p-2 border border-border
@@ -451,6 +493,9 @@ Rating slider with customizable range, icons, and N/A option.
     max: 10
     color: "#722ed1"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: theme_large_handle
@@ -504,6 +549,9 @@ Rating slider with customizable range, icons, and N/A option.
       dotBorderColor: "#d3adf7"
       dotActiveBorderColor: "#722ed1"
 ```
+
+```yaml
+[object Object]```
 
 ```yaml
 - id: applied_product_review_card
@@ -561,6 +609,12 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+[object Object]```
+
+```yaml
+[object Object]```
+
+```yaml
 - id: applied_survey_card
   type: Card
   properties:
@@ -616,6 +670,9 @@ Rating slider with customizable range, icons, and N/A option.
               status: success
 ```
 
+```yaml
+[object Object]```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -668,7 +725,7 @@ Rating slider with customizable range, icons, and N/A option.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when rating is changed. |
+| `onChange` | `{ value: number }` | Trigger action when rating is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |
