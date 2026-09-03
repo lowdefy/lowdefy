@@ -44,7 +44,7 @@ const blockProperties = {
   props: {
     type: 'object',
     description:
-      'Values for the props of the component named by "type", keyed by prop name. Only meaningful when the block type is a component declared under "components:"; the component body reads them with _prop.',
+      'Values for the props of the component named by "type", keyed by prop name. Only meaningful when the block type is a component declared under "components:"; the build inlines them wherever the body wrote { _prop: name }.',
     errorMessage: {
       type: 'Block "props" should be an object mapping component prop names to values.',
     },
@@ -1919,7 +1919,6 @@ export default {
     component: {
       type: 'object',
       additionalProperties: false,
-      required: ['id'],
       properties: {
         '~r': {},
         '~l': {},
@@ -1962,7 +1961,7 @@ export default {
             },
           },
           description:
-            'The props the component takes, keyed by prop name. Each value declares the prop: { type, required, default, description }. A use site passes values under "props:" and the body reads them with _prop.',
+            'The props the component takes, keyed by prop name. Each value declares the prop: { type, required, default, description }. A use site passes values under "props:"; the build inlines each value wherever the body wrote { _prop: name }. There is no runtime _prop operator.',
           errorMessage: {
             type: 'Component "props" should be an object mapping prop names to prop definitions ({ type, required, default, description }).',
           },
@@ -1971,7 +1970,7 @@ export default {
           type: 'array',
           items: { type: 'string' },
           description:
-            'The named block-tree slots the component accepts. A use site fills a slot under "areas:" and the body places it with _slot.',
+            'The named block-tree slots the component accepts. A use site fills a slot under "slots:"; the build places the filler wherever the body wrote { _slot: name }.',
           errorMessage: {
             type: 'Component "slots" should be an array of slot name strings.',
           },
@@ -1982,7 +1981,7 @@ export default {
             $ref: '#/definitions/block',
           },
           description:
-            'The component body: the block tree inserted at every use site, with _prop and _slot resolved against that use.',
+            'The component body: the block tree inserted at every use site, with every { _prop } and { _slot } marker resolved at build against that use.',
           errorMessage: {
             type: 'Component "blocks" should be an array.',
           },
@@ -3084,12 +3083,24 @@ export default {
       },
     },
     components: {
-      type: 'array',
-      items: {
-        $ref: '#/definitions/component',
-      },
+      description:
+        'Reusable block trees declared once and used as block types. A map keyed by component id (the array form with an "id" per entry still builds, but warns).',
+      anyOf: [
+        {
+          type: 'object',
+          additionalProperties: {
+            $ref: '#/definitions/component',
+          },
+        },
+        {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/component',
+          },
+        },
+      ],
       errorMessage: {
-        type: 'App "components" should be an array.',
+        anyOf: 'App "components" should be a map of component definitions keyed by id.',
       },
     },
     modules: {

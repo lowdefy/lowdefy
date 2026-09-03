@@ -293,7 +293,7 @@ test('listPage emits an error Result carrying the message and a retry button', (
       },
     },
   });
-  const retry = error.areas.extra.blocks[0];
+  const retry = error.slots.extra.blocks[0];
   expect(retry.id).toBe('retry_list');
   expect(retry.events.onClick).toContainEqual({
     id: 'reload_list',

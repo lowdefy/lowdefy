@@ -483,7 +483,7 @@ function listPage({ properties, slots, pageId, collections, configKey }) {
         title: `Could not load ${title.toLowerCase()}`,
         subTitle: listStatus('error'),
       },
-      areas: {
+      slots: {
         extra: {
           blocks: [
             {
