@@ -23,14 +23,17 @@ import {
   resolvePinnedOrganization,
   resolveTenantPreflight,
 } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
+import applyConnectionOverrides from './applyConnectionOverrides.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
+import createHandleDevNotice from '../docs/createHandleDevNotice.js';
 import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
@@ -46,6 +49,7 @@ import notifications, {
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -63,10 +67,12 @@ function isMcpPath(path) {
 // middleware (src/middleware/apiContext.js) so run_request
 // (lib/docs/runRequest.js) can build an identical context outside the Hono
 // middleware chain, to call callRequest directly for agent-driven request
-// execution.
-async function createLowdefyContext({ c }) {
+// execution. A `user` option injects a per-call caller (agent tools that run
+// outside a browser, e.g. run_request), resolved the same way the headless
+// renderer's cookie user is.
+async function createLowdefyContext({ c, user }) {
   const buildDirectory = path.join(process.cwd(), 'build');
-  const jsMap = loadDynamicJsMap(buildDirectory);
+  const jsMap = await loadDynamicJsMap(buildDirectory);
 
   const rid = uuid();
   const context = {
@@ -101,7 +107,14 @@ async function createLowdefyContext({ c }) {
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
   const headlessUser = getHeadlessUser(c);
-  if (mockUser) {
+  if (!type.isNone(user)) {
+    // An explicit per-call user wins over the ambient auth.dev.mockUser: the
+    // caller named an identity for this call, so honour it. Merged over the
+    // roleless headless default by resolveHeadlessUser, exactly as the
+    // headless page tools' `user` param is.
+    context.auth = null;
+    context.user = normalizeInjectedCaller(resolveHeadlessUser({ user }));
+  } else if (mockUser) {
     // The mock user is a pre-resolved caller - it substitutes for the
     // whole resolveAuthentication step and its roles are authoritative.
     // No auth engine runs while dev.mockUser is active (see src/app.js),
@@ -142,6 +155,12 @@ async function createLowdefyContext({ c }) {
     }
   }
   createApiContext(context);
+  // `lowdefy test` redirects seeded connections (LOWDEFY_TEST_CONNECTION_OVERRIDES)
+  // by wrapping the readConfigFile createApiContext just installed. No-op otherwise.
+  applyConnectionOverrides({ context });
+  // Dev-only notice sink (tenant: none executions) - needs context.readConfigFile,
+  // which createApiContext just set, to resolve the notice's config source.
+  context.handleDevNotice = createHandleDevNotice({ context });
   if (!context.auth && authJson.organizations) {
     // Mock and headless callers run no auth engine, so createApiContext
     // retains no organization binding. Derive the policy from the built auth

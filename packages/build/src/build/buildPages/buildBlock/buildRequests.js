@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
+import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
 
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
@@ -80,7 +81,17 @@ function buildRequest(request, pageContext) {
   validateTenantPipelineEntry({
     config: request,
     location: `Request "${request.id}" at page "${pageId}"`,
-    tenantConnectionIds: context.tenantConnectionIds,
+    tenantConnections: context.tenantConnections,
+    configKey,
+  });
+  // Best-effort (literal pipelines only): a walled pipeline that joins a
+  // tenant: shared collection gets an injected $match it can never satisfy.
+  validateTenantSharedLookup({
+    config: request,
+    location: `Request "${request.id}" at page "${pageId}"`,
+    tenantConnections: context.tenantConnections,
+    tenantCollectionMap: context.tenantCollectionMap,
+    collections: context.collections,
     configKey,
   });
 

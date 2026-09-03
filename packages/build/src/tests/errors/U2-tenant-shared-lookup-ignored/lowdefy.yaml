@@ -1,0 +1,46 @@
+# U2: Tenant shared lookup suppressed with ~ignoreBuildChecks
+# ==========================================================
+# Tests that ~ignoreBuildChecks: [tenant-lookup] on the request suppresses the
+# tenant-lookup build error, and nothing else.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
+connections:
+  - id: org_scope
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+  - id: frameworks
+    type: MongoDBCollection
+    tenant: shared
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: catalogue
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: search_controls
+        ~ignoreBuildChecks:
+          - tenant-lookup
+        type: MongoDBAggregation
+        connectionId: org_scope
+        properties:
+          pipeline:
+            - $match:
+                status: active
+            - $lookup:
+                from: catalogue
+                localField: catalogue_id
+                foreignField: _id
+                as: catalogue

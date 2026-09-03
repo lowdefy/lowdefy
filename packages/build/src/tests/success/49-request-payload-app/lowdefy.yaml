@@ -153,7 +153,6 @@ pages:
             type: NumberInput
             properties:
               title: Page Size
-              defaultValue: 10
           - id: searchBtn
             type: Button
             properties:

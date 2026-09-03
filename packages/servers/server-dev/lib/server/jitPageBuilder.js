@@ -97,8 +97,17 @@ function getBuildContext(buildDirectory, configDirectory) {
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
   const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
+  const jsModules = readJsonFile(path.join(buildDirectory, 'jsModules.json')) ?? {
+    client: {},
+    server: {},
+  };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
   const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
+  const tenantCollections = readJsonFile(path.join(buildDirectory, 'tenantCollections.json')) ?? {
+    tenantConnections: {},
+    tenantCollectionMap: {},
+  };
+  const collections = readJsonFile(path.join(buildDirectory, 'collections.json')) ?? {};
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
@@ -115,17 +124,30 @@ function getBuildContext(buildDirectory, configDirectory) {
     stage: 'dev',
   });
 
-  // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
+  // Restore refMap, keyMap, jsMap, connectionIds, websocketIds and the tenant
+  // indexes from the skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
   Object.assign(cachedBuildContext.keyMap, keyMap);
   cachedBuildContext.jsMap.client = jsMap.client ?? {};
   cachedBuildContext.jsMap.server = jsMap.server ?? {};
+  cachedBuildContext.jsModules.client = jsModules.client ?? {};
+  cachedBuildContext.jsModules.server = jsModules.server ?? {};
   for (const id of connectionIds) {
     cachedBuildContext.connectionIds.add(id);
   }
   for (const id of websocketIds) {
     cachedBuildContext.websocketIds.add(id);
   }
+  // The skeleton build ran buildConnections; the JIT page build does not, so
+  // without this restore the tenant pipeline checks on page requests are
+  // silently inert in dev.
+  cachedBuildContext.tenantConnections = new Map(
+    Object.entries(tenantCollections.tenantConnections ?? {})
+  );
+  cachedBuildContext.tenantCollectionMap = tenantCollections.tenantCollectionMap ?? {};
+  // The collections: declaration is the first source of sharedness for the
+  // same check; buildCollections only runs in the skeleton build.
+  cachedBuildContext.collections = collections;
 
   // Load installed packages snapshot from skeleton build for missing-package detection
   const installedPluginPackages =
@@ -280,6 +302,25 @@ function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
   return Object.keys(found).length > 0 ? found : undefined;
 }
 
+// The client compiles _jsEntries with an AsyncFunction (usePageConfig.js), so a
+// static import cannot survive; a module reference becomes a dynamic import of
+// Vite's filesystem URL for the file the author edits, awaited in a preamble
+// before the map. Inline entries render exactly as in clientJsMap.js.
+function generateJitJsEntries({ scopedJsMap, scopedJsModules }) {
+  const moduleHashes = Object.keys(scopedJsModules).sort();
+  const preamble = moduleHashes
+    .map(
+      (hash, index) =>
+        `const m${index} = await import('/@fs${scopedJsModules[hash].absolutePath}');`
+    )
+    .join('\n');
+  const inline = generateClientJsModule(scopedJsMap);
+  const moduleEntries = moduleHashes
+    .map((hash, index) => `  '${hash}': m${index}.${scopedJsModules[hash].exportName},\n`)
+    .join('');
+  return `${preamble}${inline.replace(/  };$/, `${moduleEntries}  };`)}`;
+}
+
 // Scope this page's JIT-discovered enrichment out of the persistent build
 // context so jitPageHandler can fold it into the page-config response the client
 // already awaits — removing the two secondary fetches that stalled first paint.
@@ -302,8 +343,16 @@ export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildCon
     }
   }
 
-  const jsEntries =
-    Object.keys(scopedJsMap).length > 0 ? generateClientJsModule(scopedJsMap) : undefined;
+  const clientJsModules = buildContext.jsModules.client;
+  const scopedJsModules = {};
+  for (const hash of hashes) {
+    if (Object.prototype.hasOwnProperty.call(clientJsModules, hash)) {
+      scopedJsModules[hash] = clientJsModules[hash];
+    }
+  }
+
+  const hasEntries = Object.keys(scopedJsMap).length > 0 || Object.keys(scopedJsModules).length > 0;
+  const jsEntries = hasEntries ? generateJitJsEntries({ scopedJsMap, scopedJsModules }) : undefined;
 
   const dynamicIcons = scopeDynamicIcons({
     pageConfig,

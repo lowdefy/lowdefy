@@ -750,12 +750,14 @@ describe('_var with computed name (bottom-up)', () => {
     expect(result).toBe('resolved-value');
   });
 
-  test('_var with computed name that misses returns null', async () => {
+  test('_var with a computed name that is not supplied collects a ConfigError and returns null', async () => {
     const ctx = createWalkContext({
       vars: { which: 'fallback' },
     });
     const result = await resolve({ _var: { _var: 'which' } }, ctx);
     expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].message).toContain('_var "fallback" is not supplied.');
   });
 });
 
@@ -812,6 +814,110 @@ describe('_var reserved key handling', () => {
     const ctx = createWalkContext({ vars: { provided: null } });
     const result = await resolve({ _var: { key: 'provided', default: 'fallback' } }, ctx);
     expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
+describe('_var string form requires the var to be supplied', () => {
+  function createRefChainContext({ vars }) {
+    const buildContext = createBuildContext();
+    buildContext.refMap = {
+      'ref:0': { path: 'pages/home.yaml', parent: null, lineNumber: null },
+      'ref:1': { path: 'templates/card.yaml', parent: 'ref:0', lineNumber: 12 },
+    };
+    return new WalkContext({
+      buildContext,
+      refId: 'ref:1',
+      sourceRefId: 'ref:0',
+      vars,
+      moduleEntry: null,
+      moduleRoot: null,
+      packageRoot: null,
+      path: '',
+      currentFile: 'templates/card.yaml',
+      refChain: new Set(['pages/home.yaml', 'templates/card.yaml']),
+      operators,
+      env: process.env,
+      dynamicIdentifiers,
+      shouldStop: null,
+    });
+  }
+
+  test('string form with no supplied var collects a ConfigError naming the var, the reading file and the referring _ref', async () => {
+    const ctx = createRefChainContext({ vars: { title: 'Home' } });
+    const result = await resolve({ _var: 'titel' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].name).toBe('ConfigError');
+    expect(ctx.buildContext.errors[0].message).toBe(
+      '_var "titel" is not supplied. It is read in "templates/card.yaml", which is loaded by the ' +
+        '_ref at "pages/home.yaml:12" resolving to "templates/card.yaml". ' +
+        'Add "titel" to that _ref\'s vars, or write { _var: { key: titel, default: null } } to make it optional. ' +
+        'Supplied vars: title.'
+    );
+  });
+
+  test('the message lists every var name the _ref did supply', async () => {
+    const ctx = createRefChainContext({ vars: { a: 1, b: 2, c: 3 } });
+    await resolve({ _var: 'missing' }, ctx);
+    expect(ctx.buildContext.errors[0].message).toContain('Supplied vars: a, b, c.');
+  });
+
+  test('the message degrades when the ref chain is unknown', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: 'missing' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors[0].message).toBe(
+      '_var "missing" is not supplied. It is read in "lowdefy.yaml". ' +
+        'Add it to the vars of the _ref that loads this file, or write ' +
+        '{ _var: { key: missing, default: null } } to make it optional.'
+    );
+  });
+
+  test('string form supplied as null resolves to null with no error', async () => {
+    const ctx = createWalkContext({ vars: { title: null } });
+    const result = await resolve({ _var: 'title' }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('string form supplied as false resolves to false with no error', async () => {
+    const ctx = createWalkContext({ vars: { hide: false } });
+    const result = await resolve({ _var: 'hide' }, ctx);
+    expect(result).toBe(false);
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+});
+
+describe('_var object form is optional only when a default key is written', () => {
+  test('{ _var: { key } } with no default key collects a ConfigError naming the var', async () => {
+    const ctx = createWalkContext({ vars: { title: 'Home' } });
+    const result = await resolve({ _var: { key: 'subtitle' } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toHaveLength(1);
+    expect(ctx.buildContext.errors[0].name).toBe('ConfigError');
+    expect(ctx.buildContext.errors[0].message).toContain('_var "subtitle" is not supplied.');
+    expect(ctx.buildContext.errors[0].message).toContain('Supplied vars: title.');
+  });
+
+  test('{ _var: { key, default: null } } resolves to null with no error', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: 'subtitle', default: null } }, ctx);
+    expect(result).toBeNull();
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('{ _var: { key, default } } resolves to the default when the var is not supplied', async () => {
+    const ctx = createWalkContext({ vars: {} });
+    const result = await resolve({ _var: { key: 'subtitle', default: 'x' } }, ctx);
+    expect(result).toBe('x');
+    expect(ctx.buildContext.errors).toEqual([]);
+  });
+
+  test('{ _var: { key, default } } resolves to the supplied value when the var is supplied', async () => {
+    const ctx = createWalkContext({ vars: { subtitle: 'supplied' } });
+    const result = await resolve({ _var: { key: 'subtitle', default: 'x' } }, ctx);
+    expect(result).toBe('supplied');
     expect(ctx.buildContext.errors).toEqual([]);
   });
 });
@@ -1688,7 +1794,11 @@ describe('deferModuleRefs record deferral', () => {
 });
 
 describe('_build.authConfig deferral before the projection exists', () => {
-  function createDeferAuthConfigContext({ authConfigProjection, deferAuthConfig = true, vars } = {}) {
+  function createDeferAuthConfigContext({
+    authConfigProjection,
+    deferAuthConfig = true,
+    vars,
+  } = {}) {
     const buildContext = createBuildContext();
     if (authConfigProjection !== undefined) {
       buildContext.authConfigProjection = authConfigProjection;

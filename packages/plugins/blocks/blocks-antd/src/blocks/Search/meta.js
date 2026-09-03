@@ -43,11 +43,27 @@ export default {
     onSelect: {
       description:
         'Trigger actions when a search result is selected. Result item stored fields are spread into the event object.',
-      event: { query: 'The search term.', resultCount: 'Total results for the query.' },
+      payload: {
+        type: 'object',
+        // The selected result's stored fields (pageId, title, ...) are spread
+        // into the event, so _event paths beyond query/resultCount are valid.
+        additionalProperties: true,
+        properties: {
+          query: { type: 'string', description: 'The search term.' },
+          resultCount: { type: 'integer', description: 'Total results for the query.' },
+        },
+      },
     },
     onSearch: {
       description: 'Trigger actions when the search query changes.',
-      event: { value: 'The search term.', resultCount: 'Number of matching results.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The search term.' },
+          resultCount: { type: 'integer', description: 'Number of matching results.' },
+        },
+      },
     },
     onOpen: 'Trigger actions when the search modal opens.',
     onClose: 'Trigger actions when the search modal closes.',

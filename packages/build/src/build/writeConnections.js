@@ -53,6 +53,20 @@ async function writeConnections({ components, context }) {
       serializer.serializeToString(tenantConnections)
     )
   );
+  // The tenant indexes the build computed for validateTenantPipelineEntry and
+  // validateTenantSharedLookup, so the dev JIT page build - which never runs
+  // buildConnections - can restore them and run the same checks on page
+  // requests. Separate from tenantConnections.json on purpose: the server's
+  // tenant preflight reads that one and must never see shared connections.
+  writePromises.push(
+    context.writeBuildArtifact(
+      'tenantCollections.json',
+      serializer.serializeToString({
+        tenantConnections: Object.fromEntries(context.tenantConnections ?? new Map()),
+        tenantCollectionMap: context.tenantCollectionMap ?? {},
+      })
+    )
+  );
   return Promise.all(writePromises);
 }
 

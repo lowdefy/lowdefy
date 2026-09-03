@@ -55,6 +55,9 @@ async function run() {
     directories,
     logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
+    // "lowdefy modules update" opts the production-stage build in to rewriting
+    // the lockfile entries it invalidated; undefined keeps the stage default.
+    writeModuleLock: process.env.LOWDEFY_BUILD_WRITE_MODULE_LOCK === '1' ? true : undefined,
   });
 }
 

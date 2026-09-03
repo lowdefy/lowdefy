@@ -32,6 +32,8 @@ function createContext({
   logger,
   refResolver,
   stage = 'prod',
+  validateOnly = false,
+  writeModuleLock,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
@@ -41,7 +43,9 @@ function createContext({
     websocketIds: new Set(),
     directories,
     errors: [],
+    jsBodies: [],
     jsMap: {},
+    jsModules: { client: {}, server: {} },
     warnings: [],
     keyMap: {},
     logger,
@@ -53,6 +57,10 @@ function createContext({
     unresolvedRefVars: {},
     seenSourceLines: new Set(),
     stage,
+    validateOnly,
+    // Production builds never write into the config directory. "lowdefy modules
+    // update" opts in so it can rewrite the entries it invalidated.
+    writeModuleLock: writeModuleLock ?? stage !== 'prod',
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),
@@ -75,10 +83,22 @@ function createContext({
     },
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
-    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
 
+  // A check run must never touch the build directory. The no-op makes that
+  // structural instead of relying on every validation step to stay write-free.
+  if (validateOnly) {
+    context.writeBuildArtifact = async () => {};
+  } else {
+    context.writeBuildArtifact = createWriteBuildArtifact({ directories });
+  }
+
   context.blockMetas = context.typesMap.blockMetas ?? {};
+
+  // Registry of runtime component definitions, keyed by component type name.
+  // Populated by buildComponents from the top-level components: list and
+  // consumed by expandComponent during buildBlock.
+  context.componentDefs = {};
 
   context.handleError = createBuildHandleError({ context });
   context.handleWarning = createHandleWarning({ context });

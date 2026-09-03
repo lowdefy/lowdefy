@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import injectTenantIntoPipeline from '../tenant/injectTenantIntoPipeline.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
@@ -33,7 +34,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   }
 }
 
-async function MongodbAggregation({ request, connection, tenant }) {
+async function MongodbAggregation({ request, connection, tenant, trace }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { pipeline } = deserializedRequest;
@@ -46,11 +47,19 @@ async function MongodbAggregation({ request, connection, tenant }) {
     // tenant clause is audited against the verdict instead. Also rejects
     // $out/$merge outright on tenant connections (they write whole
     // collections outside the stamp path, even when write is allowed).
-    pipeline = injectTenantIntoPipeline({ pipeline, tenant });
+    pipeline = injectTenantIntoPipeline({ pipeline, tenant, trace });
+  }
+  if (trace) {
+    trace.effective = serialize({ pipeline, options });
   }
   const { collection } = await getCollection({ connection });
-  const cursor = await collection.aggregate(pipeline, options);
-  const res = await cursor.toArray();
+  let res;
+  try {
+    const cursor = await collection.aggregate(pipeline, options);
+    res = await cursor.toArray();
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation' });
+  }
   return serialize(res);
 }
 

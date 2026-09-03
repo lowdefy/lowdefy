@@ -26,15 +26,30 @@ export default {
     tabPane: 'The Tabs tab pane.',
     inkBar: 'The Tabs ink bar.',
   },
+  // Each tab may declare its own eventName, so the event names a Tabs block
+  // fires are authored in its properties and cannot be enumerated here.
+  dynamicEvents: true,
   events: {
     onChange: {
       description: 'Trigger action on any tab change.',
-      event: { activeKey: 'The key of the active tab.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          activeKey: { type: 'string', description: 'The key of the active tab.' },
+        },
+      },
     },
     onTabSelect: {
       description:
         'Documentation reference — not a fixed event name. When a tab becomes active, the `eventName` string declared on that `tabs[]` entry is triggered (in addition to onChange). Declare your named events under `events:` (e.g. `onProfileTab`, `onBillingTab`).',
-      event: { key: 'The key of the now-active tab.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The key of the now-active tab.' },
+        },
+      },
     },
   },
   properties: {

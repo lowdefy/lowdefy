@@ -16,7 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-function setBlockId(block, { pageId, blockIdCounter, blockIdPrefix }) {
+function setBlockId(block, { pageId, blockIdCounter, blockIdPrefix, checkDuplicateBlockId }) {
   block.blockId = block.id;
   if (block.blockId === pageId && blockIdCounter.getCount(block.blockId) > 0) {
     throw new ConfigError(
@@ -24,6 +24,9 @@ function setBlockId(block, { pageId, blockIdCounter, blockIdPrefix }) {
       { configKey: block['~k'] }
     );
   }
+  // Optional: dynamic content builds its own pageContext without the check —
+  // its ids are namespaced under the resolving Dynamic block's id.
+  checkDuplicateBlockId?.({ id: block.blockId, configKey: block['~k'], pageId });
   // blockIdPrefix namespaces runtime-built dynamic content ids under the
   // resolving Dynamic block's id so they can never collide with static ids.
   const prefix = blockIdPrefix ?? `block:${pageId}`;

@@ -64,6 +64,68 @@ test('no cssKeys produces only /block in class/style properties', () => {
   expect(Object.keys(styleObj.properties)).toEqual(['.block']);
 });
 
+test('events: string form becomes the event description', () => {
+  const schema = buildBlockSchema({
+    category: 'display',
+    events: { onClick: 'Trigger actions when clicked.' },
+  });
+  const eventObj = schema.properties.events.oneOf[1];
+  expect(eventObj.properties.onClick.description).toEqual('Trigger actions when clicked.');
+});
+
+test('events: { description, payload } form emits only the description string', () => {
+  const schema = buildBlockSchema({
+    category: 'input',
+    events: {
+      onChange: {
+        description: 'Trigger action when the input value changes.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: { value: { type: 'string', description: 'The current input value.' } },
+        },
+      },
+    },
+  });
+  const onChange = schema.properties.events.oneOf[1].properties.onChange;
+  expect(onChange.description).toEqual('Trigger action when the input value changes.');
+  expect(onChange.payload).toBeUndefined();
+  expect(onChange.oneOf).toEqual([
+    { type: 'array' },
+    {
+      type: 'object',
+      patternProperties: { '^_': {} },
+      additionalProperties: false,
+      minProperties: 1,
+      maxProperties: 1,
+    },
+  ]);
+});
+
+test('events: legacy { description, event } form emits a string description, not the meta object', () => {
+  const schema = buildBlockSchema({
+    category: 'input',
+    events: {
+      onChange: {
+        description: 'Trigger action when selection is changed.',
+        event: { value: 'The selected value.' },
+      },
+    },
+  });
+  const onChange = schema.properties.events.oneOf[1].properties.onChange;
+  expect(typeof onChange.description).toBe('string');
+  expect(onChange.description).toEqual('Trigger action when selection is changed.');
+  expect(onChange.event).toBeUndefined();
+});
+
+test('events: object form without a description emits an empty string', () => {
+  const schema = buildBlockSchema({
+    category: 'input',
+    events: { onChange: { event: { value: 'The value.' } } },
+  });
+  expect(schema.properties.events.oneOf[1].properties.onChange.description).toEqual('');
+});
+
 test('no events produces empty event properties', () => {
   const meta = { category: 'display' };
   const schema = buildBlockSchema(meta);
@@ -72,18 +134,12 @@ test('no events produces empty event properties', () => {
 });
 
 test('class: string passes', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', class: 'my-class' }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', class: 'my-class' });
   expect(valid).toBe(true);
 });
 
 test('class: array passes', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', class: ['a', 'b'] }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', class: ['a', 'b'] });
   expect(valid).toBe(true);
 });
 
@@ -144,10 +200,7 @@ test('style: unknown .key fails', () => {
 });
 
 test('style: empty object matches keyed-style', () => {
-  const { valid } = validate(
-    { category: 'display' },
-    { id: 'b1', type: 'Box', style: {} }
-  );
+  const { valid } = validate({ category: 'display' }, { id: 'b1', type: 'Box', style: {} });
   expect(valid).toBe(true);
 });
 

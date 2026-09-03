@@ -18,7 +18,10 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
+import validateEndpointResponse from './validateEndpointResponse.js';
+import validatePayload from './validatePayload.js';
 
 async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
   if (endpointDepth >= 10) {
@@ -30,18 +33,36 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
   const endpointConfig = await getEndpointConfig(context, { endpointId });
   authorizeApiEndpoint(context, { endpointConfig });
 
+  const childPayload = payload ?? {};
+  validatePayload({ endpointConfig, payload: childPayload });
+
   const childRoutineContext = {
     steps: {},
-    payload: payload ?? {},
+    payload: childPayload,
     arrayIndices: [],
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
   };
+  // The child endpoint's own runAs declaration, evaluated in the child's fresh
+  // context - not the parent's scope. Like the caller identity, the parent's
+  // runAs does not flow into a CallApi child: each endpoint declares the
+  // organization it runs as, so the same endpoint is scoped identically over
+  // every transport.
+  childRoutineContext.runAs = resolveRunAs(context, childRoutineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
-  return runRoutine(context, childRoutineContext, {
+  const result = await runRoutine(context, childRoutineContext, {
     routine: endpointConfig.routine,
   });
+  if (result.status === 'return') {
+    validateEndpointResponse(context, { endpointConfig, response: result.response });
+  }
+  return result;
 }
 
 export default invokeEndpoint;

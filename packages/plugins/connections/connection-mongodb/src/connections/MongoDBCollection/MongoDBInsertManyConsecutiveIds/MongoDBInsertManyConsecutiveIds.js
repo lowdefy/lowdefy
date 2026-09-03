@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
+import validateDocFields from '../collectionSchema/validateDocFields.js';
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -23,6 +25,7 @@ import schema from './schema.js';
 
 async function MongoDBInsertManyConsecutiveIds({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -30,12 +33,21 @@ async function MongoDBInsertManyConsecutiveIds({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, prefix, length } = deserializedRequest;
   let { docs } = deserializedRequest;
   if (tenant) {
-    docs = docs.map((doc) => stampTenantOnDoc({ doc, tenant }));
+    docs = docs.map((doc, index) => stampTenantOnDoc({ doc, tenant, trace, at: `docs[${index}]` }));
+  }
+  if (collectionSchema) {
+    docs.forEach((doc, index) =>
+      validateDocFields({ doc, collectionSchema, position: `an insert document (docs[${index}])` })
+    );
+  }
+  if (trace) {
+    trace.effective = serialize({ docs, options });
   }
   const { client, collection, logCollection } = await getCollection({ connection });
 
@@ -76,6 +88,8 @@ async function MongoDBInsertManyConsecutiveIds({
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertManyConsecutiveIds' });
   } finally {
     await session.endSession();
   }

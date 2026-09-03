@@ -16,15 +16,18 @@
 
 import React, { useCallback, useState } from 'react';
 
+import formatErrorsForCopy from './utils/formatErrorsForCopy.js';
+import getErrorBarColor from './utils/getErrorBarColor.js';
+import groupNotices from './utils/groupNotices.js';
+
 function getBarStyle(errors) {
-  const hasError = errors.some((e) => e.type !== 'ConfigWarning');
   return {
     position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
     height: 28,
-    backgroundColor: hasError ? '#cf1322' : '#d48806',
+    backgroundColor: getErrorBarColor(errors),
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
@@ -36,17 +39,6 @@ function getBarStyle(errors) {
     zIndex: 99999,
     boxShadow: '0 -1px 4px rgba(0,0,0,0.15)',
   };
-}
-
-function formatErrorsForCopy(errors) {
-  return errors
-    .map((e) => {
-      let text = `[${e.type}] ${e.message}`;
-      if (e.source) text += `\n  Source: ${e.source}`;
-      if (e.stack) text += `\n${e.stack}`;
-      return text;
-    })
-    .join('\n\n');
 }
 
 function CopyIcon() {
@@ -98,7 +90,10 @@ const ErrorBar = ({ errors }) => {
   if (!errors || errors.length === 0) return null;
 
   const latest = errors[errors.length - 1];
-  const count = errors.length;
+  // tenant: none notices are counted as their own group beside the error
+  // count, so an unscoped read never hides inside an error total.
+  const { entries, tenantNotices, runAsNotices } = groupNotices(errors);
+  const count = entries.length;
 
   return (
     <div style={getBarStyle(errors)}>
@@ -112,6 +107,19 @@ const ErrorBar = ({ errors }) => {
         }}
       >
         <span style={{ opacity: 0.8 }}>{latest.type}: </span>
+        {latest.prodError === true && (
+          <span
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              marginRight: 6,
+            }}
+          >
+            fails in prod
+          </span>
+        )}
         <span>{latest.message}</span>
         {latest.source && <span style={{ opacity: 0.7, marginLeft: 8 }}>{latest.source}</span>}
       </div>
@@ -126,6 +134,34 @@ const ErrorBar = ({ errors }) => {
             }}
           >
             {count}
+          </span>
+        )}
+        {tenantNotices.length > 0 && (
+          <span
+            title="Requests that ran with tenant: none read and write rows of every organization"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            unscoped reads ({tenantNotices.length})
+          </span>
+        )}
+        {runAsNotices.length > 0 && (
+          <span
+            title="Steps that ran scoped to an organization declared with runAs"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            scoped runs ({runAsNotices.length})
           </span>
         )}
         <button

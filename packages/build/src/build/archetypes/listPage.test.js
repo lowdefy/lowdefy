@@ -1,0 +1,227 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import listPage from './listPage.js';
+
+const collections = {
+  controls: {
+    tenant: 'shared',
+    fields: {
+      _id: { type: 'string' },
+      title: { type: 'string' },
+      description: { type: 'string' },
+      framework_id: { type: 'string' },
+      status: { type: 'string', enum: ['draft', 'active', 'retired', 'na'] },
+    },
+    relations: { framework_id: { collection: 'frameworks', field: '_id' } },
+    connections: [{ connectionId: 'controls', read: true, write: false }],
+  },
+};
+
+function run(properties) {
+  return listPage({ properties, pageId: 'controls', collections, configKey: 'k1' });
+}
+
+test('listPage emits a layout, one list request and the block tree', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title', 'framework_id', 'status'],
+    filters: ['framework_id', 'status'],
+    search: ['title', 'description'],
+    rowLink: { pageId: 'control', urlQuery: { id: '$_id' } },
+  });
+  expect(result.layoutType).toBe('Box');
+  expect(result.events.onInitAsync).toEqual([
+    { id: 'reload_list', type: 'Request', params: 'list' },
+    { id: 'set_rows', type: 'SetState', params: { rows: { _request: 'list' } } },
+  ]);
+  expect(result.requests).toHaveLength(1);
+  const request = result.requests[0];
+  expect(request.id).toBe('list');
+  expect(request.type).toBe('MongoDBFind');
+  expect(request.connectionId).toBe('controls');
+  expect(request.properties.options.limit).toBe(50);
+  // Projection includes _id, every column and the search fields.
+  expect(request.properties.options.projection).toMatchObject({
+    _id: 1,
+    title: 1,
+    framework_id: 1,
+    status: 1,
+    description: 1,
+  });
+});
+
+test('listPage derives the read connection when the collection has exactly one', () => {
+  const result = run({ collection: 'controls', columns: ['title'] });
+  expect(result.requests[0].connectionId).toBe('controls');
+});
+
+test('listPage requires connectionId when the read connection is ambiguous', () => {
+  const twoReads = {
+    controls: {
+      ...collections.controls,
+      connections: [
+        { connectionId: 'a', read: true },
+        { connectionId: 'b', read: true },
+      ],
+    },
+  };
+  expect(() =>
+    listPage({
+      properties: { collection: 'controls', columns: ['title'] },
+      pageId: 'controls',
+      collections: twoReads,
+      configKey: 'k1',
+    })
+  ).toThrow(/cannot derive a read connection/);
+});
+
+test('listPage builds an equality drop per filter and a regex $or for search', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title'],
+    filters: ['status'],
+    search: ['title', 'description'],
+  });
+  const assign = result.requests[0].properties.query['_object.assign'];
+  // { }, status drop, search drop
+  expect(assign).toHaveLength(3);
+  expect(assign[1]._if.then).toEqual({ status: { _payload: 'status' } });
+  expect(assign[2]._if.then.$or).toEqual([
+    { title: { $regex: { _payload: 'search' }, $options: 'i' } },
+    { description: { $regex: { _payload: 'search' }, $options: 'i' } },
+  ]);
+  expect(result.requests[0].payload).toEqual({
+    status: { _state: 'filters.status' },
+    search: { _state: 'filters.search' },
+  });
+});
+
+test('listPage renders an enum filter as a Selector and a text filter as a TextInput', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title'],
+    filters: ['status', 'framework_id'],
+  });
+  const filterBox = result.blocks.find((b) => b.id === 'filters');
+  const status = filterBox.blocks.find((b) => b.id === 'filters.status');
+  const framework = filterBox.blocks.find((b) => b.id === 'filters.framework_id');
+  expect(status.type).toBe('Selector');
+  expect(status.properties.options).toEqual(['draft', 'active', 'retired', 'na']);
+  expect(status.events.onChange).toBeDefined();
+  expect(framework.type).toBe('TextInput');
+  expect(framework.events.onPressEnter).toBeDefined();
+});
+
+test('listPage renders an enum column as a Tag and a text column as Html', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title', 'description', 'status'],
+  });
+  const rows = result.blocks.find((b) => b.id === 'rows');
+  const card = rows.blocks[0];
+  // First column is the card title.
+  expect(card.properties.title).toEqual({ _request: 'list.$.title' });
+  const cells = card.blocks;
+  const description = cells.find((c) => c.id === 'rows.$.description');
+  const status = cells.find((c) => c.id === 'rows.$.status');
+  expect(description.type).toBe('Html');
+  expect(description.properties.html).toEqual({ _request: 'list.$.description' });
+  expect(status.type).toBe('Tag');
+  expect(status.properties.title).toEqual({ _request: 'list.$.status' });
+});
+
+test('listPage turns a $field rowLink token into a _request row read', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title'],
+    rowLink: { pageId: 'control', urlQuery: { id: '$_id' }, input: { slug: '$title' } },
+  });
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  expect(card.events.onClick[0]).toEqual({
+    id: 'open_row',
+    type: 'Link',
+    params: {
+      pageId: 'control',
+      urlQuery: { id: { _request: 'list.$._id' } },
+      input: { slug: { _request: 'list.$.title' } },
+    },
+  });
+});
+
+test('listPage defaults columns to every declared field', () => {
+  const result = run({ collection: 'controls' });
+  expect(result.requests[0].properties.options.projection).toMatchObject({
+    _id: 1,
+    title: 1,
+    description: 1,
+    framework_id: 1,
+    status: 1,
+  });
+});
+
+test('listPage emits a Result empty state and a per-list skeleton', () => {
+  const result = run({ collection: 'controls', columns: ['title'] });
+  const empty = result.blocks.find((b) => b.id === 'empty');
+  expect(empty.type).toBe('Result');
+  expect(empty.visible._and).toHaveLength(2);
+  const rows = result.blocks.find((b) => b.id === 'rows');
+  expect(rows.skeleton.blocks[0].type).toBe('Skeleton');
+});
+
+test('listPage throws when the collection is not declared', () => {
+  expect(() =>
+    listPage({
+      properties: { collection: 'missing' },
+      pageId: 'p',
+      collections,
+      configKey: 'k1',
+    })
+  ).toThrow(/not declared in collections/);
+});
+
+test('listPage throws when a column is not a declared field', () => {
+  expect(() =>
+    listPage({
+      properties: { collection: 'controls', columns: ['titel'] },
+      pageId: 'controls',
+      collections,
+      configKey: 'k1',
+    })
+  ).toThrow(/is not a field of collection "controls".*Did you mean "title"/s);
+});
+
+test('listPage honours an explicit layout, title and pageSize', () => {
+  const result = run({
+    collection: 'controls',
+    columns: ['title'],
+    title: 'All Controls',
+    pageSize: 25,
+    layout: { type: 'PageSidebarLayout', properties: { theme: 'dark' } },
+  });
+  expect(result.layoutType).toBe('PageSidebarLayout');
+  expect(result.layoutProperties).toEqual({ theme: 'dark' });
+  expect(result.requests[0].properties.options.limit).toBe(25);
+  const title = result.blocks.find((b) => b.id === 'header').blocks[0];
+  expect(title.properties.content).toBe('All Controls');
+});
+
+test('listPage passes header actions through', () => {
+  const action = { id: 'new', type: 'Button', properties: { title: 'New' } };
+  const result = run({ collection: 'controls', columns: ['title'], actions: [action] });
+  const header = result.blocks.find((b) => b.id === 'header');
+  expect(header.blocks).toContain(action);
+});

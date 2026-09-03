@@ -26,15 +26,33 @@ export default {
   events: {
     onExpand: {
       description: 'Trigger action when ellipse expand is clicked.',
-      event: { ellipsis: 'The ellipsis state.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          ellipsis: { type: 'boolean', description: 'The ellipsis state.' },
+        },
+      },
     },
     onCopy: {
       description: 'Trigger action when copy text is clicked.',
-      event: { value: 'The copied text value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The copied text value.' },
+        },
+      },
     },
     onChange: {
       description: 'Trigger action when title is changed.',
-      event: { value: 'The new title value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'string', description: 'The new title value.' },
+        },
+      },
     },
   },
   properties: {

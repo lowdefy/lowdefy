@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { compile } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
+import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 
 import validateId from '../../utils/validateId.js';
 import validateCronExpression from '../../utils/validateCronExpression.js';
+import validateRunAs from './validateRunAs.js';
 
 function validateSchedules({ endpoint, configKey }) {
   if (type.isUndefined(endpoint.schedules)) return;
@@ -67,6 +69,21 @@ function validateSchedules({ endpoint, configKey }) {
   });
 }
 
+// A declared schema is compiled once here so an invalid one is a located build
+// error, not a runtime throw on the first call that reaches it.
+function validateJsonSchema({ endpoint, field, configKey }) {
+  const schema = endpoint[field];
+  if (type.isNone(schema)) return;
+  try {
+    compile({ schema: cleanBuildArtifact(schema) });
+  } catch (error) {
+    throw new ConfigError(
+      `Api endpoint "${endpoint.id}" ${field} is not a valid JSON schema: ${error.message}.`,
+      { received: schema, configKey, checkSlug: 'response-schema' }
+    );
+  }
+}
+
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
@@ -98,7 +115,20 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
     );
   }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });
+  // A webhook routine's payload is the transport envelope { body, query, headers },
+  // never the payloadSchema shape, so the two together can only be a mistake -
+  // and silently skipping validation is the failure mode payloadSchema removes.
+  const isWebhook = !type.isNone(endpoint.webhook) && endpoint.webhook !== false;
+  if (isWebhook && !type.isNone(endpoint.payloadSchema)) {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" declares both "webhook" and "payloadSchema". A webhook routine receives { body, query, headers }, not the payloadSchema shape. Validate the body with a ValidateSchema step instead.`,
+      { configKey }
+    );
+  }
   validateSchedules({ endpoint, configKey });
+  validateJsonSchema({ endpoint, field: 'payloadSchema', configKey });
+  validateJsonSchema({ endpoint, field: 'responseSchema', configKey });
+  validateRunAs({ runAs: endpoint.runAs, location: `Api endpoint "${endpoint.id}"`, configKey });
 }
 
 export default validateEndpoint;

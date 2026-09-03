@@ -63,9 +63,9 @@ test('object form throws when $set authors a dotted tenant field path', () => {
 });
 
 test('object form throws when $unset drops the tenant field', () => {
-  expect(() => applyTenantToUpdate({ update: { $unset: { organization_id: '' } }, tenant })).toThrow(
-    'Tenant field "organization_id" can not be set in an update'
-  );
+  expect(() =>
+    applyTenantToUpdate({ update: { $unset: { organization_id: '' } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $setOnInsert authors the tenant field', () => {
@@ -182,4 +182,26 @@ test('uses the custom tenant field name', () => {
   expect(() =>
     applyTenantToUpdate({ update: { $set: { tenantId: 't_2' } }, tenant: customTenant })
   ).toThrow('Tenant field "tenantId" can not be set in an update');
+});
+
+test('trace records nothing for a plain non-upsert update', () => {
+  const trace = { rewritten: [] };
+  applyTenantToUpdate({ update: { $set: { a: 1 } }, tenant, trace });
+  expect(trace.rewritten).toEqual([]);
+});
+
+test('trace records the $setOnInsert stamp on an upsert', () => {
+  const trace = { rewritten: [] };
+  applyTenantToUpdate({ update: { $set: { a: 1 } }, tenant, upsert: true, trace });
+  expect(trace.rewritten).toEqual([
+    { at: 'update.$setOnInsert', injected: { organization_id: 'org_a' } },
+  ]);
+});
+
+test('trace records the appended $set stage of a pipeline update by its index', () => {
+  const trace = { rewritten: [] };
+  applyTenantToUpdate({ update: [{ $set: { a: 1 } }, { $unset: 'b' }], tenant, trace });
+  expect(trace.rewritten).toEqual([
+    { at: 'update[2]', injected: { $set: { organization_id: 'org_a' } } },
+  ]);
 });

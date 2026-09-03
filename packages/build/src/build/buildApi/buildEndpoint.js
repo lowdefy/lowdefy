@@ -28,7 +28,9 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},
-    tenantConnectionIds: context.tenantConnectionIds,
+    tenantConnections: context.tenantConnections,
+    tenantCollectionMap: context.tenantCollectionMap,
+    collections: context.collections,
   });
 
   // Validate that _step references point to defined step IDs

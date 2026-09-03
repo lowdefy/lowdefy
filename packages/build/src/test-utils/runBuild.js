@@ -16,6 +16,8 @@
 
 import path from 'path';
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 import createTestLogger from './createTestLogger.js';
 
 /**
@@ -36,7 +38,7 @@ const testTypesMap = {
   blocks: {
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
-    Button: { package: '@lowdefy/blocks-basic' },
+    Button: { package: '@lowdefy/blocks-antd' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
     Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
@@ -44,7 +46,7 @@ const testTypesMap = {
     Img: { package: '@lowdefy/blocks-basic' },
     List: { package: '@lowdefy/blocks-basic' },
     Message: { package: '@lowdefy/blocks-antd' },
-    Paragraph: { package: '@lowdefy/blocks-basic' },
+    Paragraph: { package: '@lowdefy/blocks-antd' },
     ProgressBar: { package: '@lowdefy/blocks-loaders' },
     Result: { package: '@lowdefy/blocks-antd' },
     Skeleton: { package: '@lowdefy/blocks-loaders' },
@@ -53,10 +55,11 @@ const testTypesMap = {
     SkeletonInput: { package: '@lowdefy/blocks-loaders' },
     SkeletonParagraph: { package: '@lowdefy/blocks-loaders' },
     Span: { package: '@lowdefy/blocks-basic' },
+    Template: { package: '@lowdefy/blocks-basic' },
     Spinner: { package: '@lowdefy/blocks-loaders' },
     TextInput: { package: '@lowdefy/blocks-antd' },
     Throw: { package: '@lowdefy/blocks-basic' },
-    Title: { package: '@lowdefy/blocks-basic' },
+    Title: { package: '@lowdefy/blocks-antd' },
   },
   agents: {
     ClaudeAgent: { package: '@lowdefy/connection-anthropic' },
@@ -66,8 +69,14 @@ const testTypesMap = {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
     MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
   },
+  connectionMetas: {
+    Anthropic: { tenant: false },
+    AxiosHttp: { tenant: false },
+    MongoDBCollection: { tenant: true },
+  },
   requests: {
     AxiosHttp: { package: '@lowdefy/connection-axios-http' },
+    MongoDBAggregation: { package: '@lowdefy/connection-mongodb' },
     MongoDBInsertOne: { package: '@lowdefy/connection-mongodb' },
   },
   auth: {
@@ -109,10 +118,15 @@ const testTypesMap = {
   },
 };
 
+// Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
+// what a developer actually reads in the terminal. `received` is left off - the
+// logged line carries the message, not the operator payload.
 function formatLine(line) {
   const source = line.err?.source ?? null;
   const name = line.err?.name ?? null;
-  const message = name ? `[${name}] ${line.msg}` : line.msg;
+  const message = name
+    ? errorToDisplayString({ name, message: line.msg, prodError: line.err?.prodError })
+    : line.msg;
   return source ? `${source}\n${message}` : message;
 }
 

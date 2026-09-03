@@ -277,7 +277,7 @@
                   _media: darkMode
                 then: /logo-dark-theme.png
                 else: /logo-light-theme.png
-            width: 126px
+            width: 126
             alt: Lowdefy
           events:
             onClick:
@@ -405,7 +405,7 @@
                 marginBottom: 0
               properties:
                 content: Receive the latest Lowdefy updates in your inbox.
-            - id: footer_cta_box
+            - id: footer_cta_form
               type: Box
               layout:
                 gap: [12, 0]
@@ -527,7 +527,7 @@
                   _media: darkMode
                 then: /logo-dark-theme.png
                 else: /logo-light-theme.png
-            width: 126px
+            width: 126
             alt: Lowdefy
           events:
             onClick:
@@ -541,14 +541,14 @@
             html: |
               <p style="text-align: center; font-size: 0.85rem;" >The config-first apps for AI and humans.</p>
               <p style="text-align: center;"><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
-        - id: community_links
+        - id: community_links_sm
           type: Box
           layout:
             gap: 16
             wrap: nowrap
             justify: center
           blocks:
-            - id: lowdefy_twitter
+            - id: lowdefy_twitter_sm
               type: Icon
               layout:
                 size: auto
@@ -557,12 +557,12 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_twitter
+                  - id: link_twitter_sm
                     type: Link
                     params:
                       url: https://twitter.com/lowdefy
                       newTab: true
-            - id: lowdefy_community
+            - id: lowdefy_community_sm
               type: Icon
               layout:
                 size: auto
@@ -571,12 +571,12 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_community
+                  - id: link_community_sm
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy/discussions
                       newTab: true
-            - id: lowdefy_github
+            - id: lowdefy_github_sm
               type: Icon
               layout:
                 size: auto
@@ -585,12 +585,12 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_github
+                  - id: link_github_sm
                     type: Link
                     params:
                       url: https://github.com/lowdefy/lowdefy
                       newTab: true
-            - id: lowdefy_youtube
+            - id: lowdefy_youtube_sm
               type: Icon
               layout:
                 size: auto
@@ -599,7 +599,7 @@
                 size: 24
               events:
                 onClick:
-                  - id: link_youtube
+                  - id: link_youtube_sm
                     type: Link
                     params:
                       url: https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg

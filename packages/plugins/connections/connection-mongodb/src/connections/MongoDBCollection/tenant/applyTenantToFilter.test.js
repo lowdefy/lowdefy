@@ -100,3 +100,16 @@ test('refuses an authored verdict — tenant: authored is aggregation-only', () 
     })
   ).toThrow('"tenant: authored" applies only to aggregation requests');
 });
+
+test('trace records the merged tenant equality under the given property name', () => {
+  const trace = { rewritten: [] };
+  const merged = applyTenantToFilter({ filter: { status: 'open' }, tenant, trace, at: 'query' });
+  expect(merged).toEqual({ $and: [{ status: 'open' }, { organization_id: 'org_a' }] });
+  expect(trace.rewritten).toEqual([{ at: 'query', injected: { organization_id: 'org_a' } }]);
+});
+
+test('trace defaults at to filter and records an empty selector too', () => {
+  const trace = { rewritten: [] };
+  applyTenantToFilter({ filter: {}, tenant, trace });
+  expect(trace.rewritten).toEqual([{ at: 'filter', injected: { organization_id: 'org_a' } }]);
+});

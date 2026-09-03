@@ -1,0 +1,37 @@
+# S5: Undeclared response path
+# ============================
+# A page reads _actions.search.response.response.totl from an endpoint whose
+# responseSchema declares "total"; the build fails with a suggestion.
+
+lowdefy: local
+
+api:
+  - id: search
+    type: Api
+    auth:
+      public: true
+    responseSchema:
+      type: object
+      properties:
+        total: { type: integer }
+    routine:
+      ':return':
+        total: 0
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: btn
+        type: Button
+        events:
+          onClick:
+            - id: search
+              type: CallAPI
+              params:
+                endpointId: search
+            - id: store
+              type: SetState
+              params:
+                total:
+                  _actions: search.response.response.totl

@@ -88,7 +88,11 @@ const typesMap = {
 // Packages that would be installed in a real dev server using these blocks/actions.
 // Set on the hydrated context so detectMissingPluginPackages doesn't short-circuit
 // buildPageJit into "installing" mode.
-const installedPluginPackages = new Set(['@lowdefy/blocks-basic', '@lowdefy/actions-core']);
+const installedPluginPackages = new Set([
+  '@lowdefy/blocks-basic',
+  '@lowdefy/blocks-antd',
+  '@lowdefy/actions-core',
+]);
 
 function callApiPage(id, endpointId) {
   return `id: ${id}
@@ -332,6 +336,7 @@ test('JIT build still warns when a CallAPI targets a genuinely missing endpoint'
   const { warnings } = await buildAndCollectWarnings('missing');
   expect(warnings).toHaveLength(1);
   expect(warnings[0].message).toBe(
-    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist".'
+    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "does_not_exist".'
   );
 });

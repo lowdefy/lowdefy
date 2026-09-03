@@ -22,8 +22,8 @@ areas:
       - id: divider
         type: Divider
         properties:
-          orientation: center
-          content: or
+          title: or
+          titlePlacement: center
       - id: emailInput
         type: TextInput
         properties:

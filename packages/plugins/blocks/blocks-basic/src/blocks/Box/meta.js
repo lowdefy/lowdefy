@@ -26,7 +26,16 @@ export default {
   },
   events: {
     onClick: 'Trigger actions when the Box is clicked.',
-    onPaste: 'Trigger actions when the element is focused and a paste event is triggered.',
+    onPaste: {
+      description: 'Trigger actions when the element is focused and a paste event is triggered.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          text: { type: 'string', description: 'The pasted plain text.' },
+        },
+      },
+    },
   },
   properties: {
     type: 'object',

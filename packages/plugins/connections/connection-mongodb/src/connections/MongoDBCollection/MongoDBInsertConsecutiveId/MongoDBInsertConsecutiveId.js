@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
+import validateDocFields from '../collectionSchema/validateDocFields.js';
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -23,6 +25,7 @@ import schema from './schema.js';
 
 async function MongoDBInsertConsecutiveId({
   blockId,
+  collectionSchema,
   connection,
   connectionId,
   pageId,
@@ -30,12 +33,19 @@ async function MongoDBInsertConsecutiveId({
   request,
   requestId,
   tenant,
+  trace,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, prefix, length } = deserializedRequest;
   let { doc } = deserializedRequest;
   if (tenant) {
-    doc = stampTenantOnDoc({ doc, tenant });
+    doc = stampTenantOnDoc({ doc, tenant, trace, at: 'doc' });
+  }
+  if (collectionSchema) {
+    validateDocFields({ doc, collectionSchema });
+  }
+  if (trace) {
+    trace.effective = serialize({ doc, options });
   }
   const { client, collection, logCollection } = await getCollection({ connection });
 
@@ -74,6 +84,8 @@ async function MongoDBInsertConsecutiveId({
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertConsecutiveId' });
   } finally {
     await session.endSession();
   }

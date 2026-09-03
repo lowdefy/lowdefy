@@ -14,18 +14,29 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
-
-const template = `
-export default {
-  {% for hash in hashes -%}
-  '{{ hash }}': ({{ functionPrototype }}) => { {{ map[hash] | safe }} },
-  {% endfor -%}
-};`;
-
-function generateJsFile({ map, functionPrototype }) {
-  const templateFn = nunjucksFunction(template);
-  return templateFn({ hashes: Object.keys(map), map, functionPrototype });
+// Renders one js-map module: import statements for module references above an
+// object keyed by hash. Inline bodies become arrow functions with the
+// environment's prototype; module references bind to their import alias, so
+// the operator calls both the same way. Aliases follow the sorted hash order
+// so the output is stable across builds.
+function generateJsFile({ map, modules = {}, functionPrototype }) {
+  const moduleHashes = Object.keys(modules).sort();
+  const aliases = {};
+  const imports = moduleHashes.map((hash, index) => {
+    const alias = `m${index}`;
+    aliases[hash] = alias;
+    const { importPath, exportName } = modules[hash];
+    if (exportName === 'default') {
+      return `import ${alias} from '${importPath}';\n`;
+    }
+    return `import { ${exportName} as ${alias} } from '${importPath}';\n`;
+  });
+  const entries = [
+    ...Object.keys(map).map((hash) => `  '${hash}': (${functionPrototype}) => { ${map[hash]} },\n`),
+    ...moduleHashes.map((hash) => `  '${hash}': ${aliases[hash]},\n`),
+  ];
+  const importBlock = imports.length > 0 ? `${imports.join('')}\n` : '';
+  return `\n${importBlock}export default {\n${entries.join('')}  };`;
 }
 
 export default generateJsFile;

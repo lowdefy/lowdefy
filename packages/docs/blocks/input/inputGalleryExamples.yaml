@@ -374,14 +374,10 @@
     - id: ig_pagination
       type: Pagination
       properties:
-        label:
-          title: Pagination
         total: 100
     - id: ig_pagination_full
       type: Pagination
       properties:
-        label:
-          title: Pagination (full features)
         total: 500
         showSizeChanger: true
         showQuickJumper: true
@@ -390,25 +386,15 @@
   blocks:
     - id: ig_title_input
       type: TitleInput
-      properties:
-        label:
-          title: TitleInput
     - id: ig_title_input_level
       type: TitleInput
       properties:
-        label:
-          title: TitleInput (level 3)
         level: 3
     - id: ig_paragraph_input
       type: ParagraphInput
-      properties:
-        label:
-          title: ParagraphInput
     - id: ig_paragraph_copyable
       type: ParagraphInput
       properties:
-        label:
-          title: ParagraphInput (copyable)
         copyable: true
 
 - title: Sizes

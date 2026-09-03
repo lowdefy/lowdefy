@@ -19,6 +19,8 @@ import { wait } from '@lowdefy/helpers';
 import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
+import acquireManagerLock from './utils/acquireManagerLock.mjs';
+import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 
@@ -80,6 +82,19 @@ The run script does the following:
 
 const context = await getContext();
 
+// Refuse to run beside another manager for the same app - two managers race
+// each other's incremental builds and one wedges serving a stale build.
+const managerLock = acquireManagerLock({ directory: context.directories.server });
+if (managerLock.acquired === false) {
+  context.logger.error(
+    `Another lowdefy dev manager (pid ${managerLock.holder.pid}, started ${managerLock.holder.startedAt}) ` +
+      `is already running for this app. Two managers race writing the build directory. ` +
+      `Stop it first, or delete ${managerLock.lockPath} if it is stale.`
+  );
+  process.exit(1);
+}
+process.on('exit', () => managerLock.release());
+
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
 // targeted SIGTERM would otherwise orphan the child.
@@ -107,6 +122,14 @@ try {
     );
     context.options.port = availablePort;
   }
+
+  // The manager holds the public port for the whole session and proxies to the
+  // Vite child on an internal loopback port — restarting the child (js module
+  // or .env change) then never drops the listener, so long-lived clients (MCP
+  // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
+  // on ECONNREFUSED.
+  context.internalPort = await findAvailablePort({ port: context.options.port + 1 });
+  await startProxy(context);
 
   startServer(context);
   await wait(800);

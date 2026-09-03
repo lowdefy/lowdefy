@@ -20,129 +20,194 @@ import writeBlockSchemaMap from './writeBlockSchemaMap.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
+const boxSchema = { properties: { type: 'object', properties: { content: { type: 'string' } } } };
+const spanSchema = { properties: { type: 'object' } };
+const boxMeta = { category: 'container', valueType: null };
+const spanMeta = { category: 'display', valueType: 'string', initValue: '' };
+
+function createContext({ typesMap = {}, blockSchemas = {}, blockPluginMetas = {} } = {}) {
+  return { typesMap, blockSchemas, blockPluginMetas, writeBuildArtifact: mockWriteBuildArtifact };
+}
+
+function written(artifact) {
+  const call = mockWriteBuildArtifact.mock.calls.find(([name]) => name === artifact);
+  return JSON.parse(call[1]);
+}
+
 beforeEach(() => {
   mockWriteBuildArtifact.mockReset();
 });
 
-test('writeBlockSchemaMap writes empty map when no blocks', async () => {
+test('writeBlockSchemaMap writes empty maps when no blocks are used', async () => {
   const components = { imports: { blocks: [] } };
-  const context = {
-    typesMap: { schemas: { blocks: {} } },
-    writeBuildArtifact: mockWriteBuildArtifact,
+  const context = createContext({ blockSchemas: { Box: boxSchema } });
+  await writeBlockSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockMetas.json', '{}');
+});
+
+test('writeBlockSchemaMap writes only the schemas of the used block types', async () => {
+  const components = {
+    imports: {
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' }],
+    },
   };
+  const context = createContext({
+    blockSchemas: { Box: boxSchema, Span: spanSchema },
+    blockPluginMetas: { Box: boxMeta, Span: spanMeta },
+  });
+  await writeBlockSchemaMap({ components, context });
+  expect(written('plugins/blockSchemas.json')).toEqual({ Box: boxSchema });
+  expect(written('plugins/blockMetas.json')).toEqual({
+    Box: { category: 'container', hazards: [] },
+  });
+});
+
+test('writeBlockSchemaMap writes valueType and initValue from the plugin meta', async () => {
+  const components = {
+    imports: {
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Span', originalTypeName: 'Span' }],
+    },
+  };
+  const context = createContext({
+    blockSchemas: { Span: spanSchema },
+    blockPluginMetas: { Span: spanMeta },
+  });
+  await writeBlockSchemaMap({ components, context });
+  expect(written('plugins/blockMetas.json')).toEqual({
+    Span: { category: 'display', valueType: 'string', initValue: '', hazards: [] },
+  });
+});
+
+test('writeBlockSchemaMap typesMap blockMetas take priority over plugin metas', async () => {
+  const components = {
+    imports: {
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' }],
+    },
+  };
+  const context = createContext({
+    typesMap: { blockMetas: { Box: { category: 'input', valueType: 'object' } } },
+    blockSchemas: { Box: boxSchema },
+    blockPluginMetas: { Box: boxMeta },
+  });
+  await writeBlockSchemaMap({ components, context });
+  expect(written('plugins/blockMetas.json')).toEqual({
+    Box: { category: 'input', valueType: 'object', hazards: [] },
+  });
+});
+
+test('writeBlockSchemaMap skips used types with no loaded schema or meta', async () => {
+  const components = {
+    imports: {
+      blocks: [
+        { package: 'non-existent-package', typeName: 'FakeBlock', originalTypeName: 'FakeBlock' },
+      ],
+    },
+  };
+  const context = createContext();
+  await writeBlockSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockMetas.json', '{}');
+});
+
+test('writeBlockSchemaMap handles a context without loaded maps', async () => {
+  const components = {
+    imports: {
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' }],
+    },
+  };
+  const context = { typesMap: {}, writeBuildArtifact: mockWriteBuildArtifact };
   await writeBlockSchemaMap({ components, context });
   expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
 });
 
-test('writeBlockSchemaMap uses typesMap schemas for custom plugins', async () => {
-  const customSchema = {
-    properties: { type: 'object', properties: { title: { type: 'string' } } },
+test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to an empty list', async () => {
+  const hazard = {
+    id: 'html-style-stripped',
+    message: 'Html strips <style>.',
+    see: 'display-blocks/html',
   };
   const components = {
     imports: {
       blocks: [
-        { package: 'custom-plugin', typeName: 'CustomBlock', originalTypeName: 'CustomBlock' },
+        { package: '@lowdefy/blocks-basic', typeName: 'Html', originalTypeName: 'Html' },
+        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
+        { package: 'custom-plugin', typeName: 'Custom', originalTypeName: 'Custom' },
       ],
     },
   };
   const context = {
-    typesMap: { schemas: { blocks: { CustomBlock: customSchema } } },
+    blockSchemas: {},
+    blockPluginMetas: {
+      Html: { category: 'display', hazards: [hazard] },
+      Box: { category: 'container' },
+    },
+    typesMap: {
+      blockMetas: {
+        Custom: { category: 'display', hazards: [{ id: 'custom', message: 'm', see: 's' }] },
+      },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeBlockSchemaMap({ components, context });
-  expect(mockWriteBuildArtifact).toHaveBeenCalledWith(
-    'plugins/blockSchemas.json',
-    JSON.stringify({ CustomBlock: customSchema })
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/blockMetas.json'
   );
+  const blockMetas = JSON.parse(metasCall[1]);
+  expect(blockMetas.Html.hazards).toEqual([hazard]);
+  expect(blockMetas.Box.hazards).toEqual([]);
+  expect(blockMetas.Custom.hazards.map((h) => h.id)).toEqual(['custom']);
 });
 
-test('writeBlockSchemaMap typesMap schemas take priority over package schemas', async () => {
-  const customSchema = {
-    properties: { type: 'object', properties: { custom: { type: 'boolean' } } },
+test('writeBlockSchemaMap carries events with payloads into blockMetas', async () => {
+  const payload = {
+    type: 'object',
+    additionalProperties: false,
+    properties: { value: { type: 'string', description: 'The current input value.' } },
   };
   const components = {
     imports: {
       blocks: [
+        { package: '@lowdefy/blocks-antd', typeName: 'TextInput', originalTypeName: 'TextInput' },
+        { package: '@lowdefy/blocks-antd', typeName: 'Selector', originalTypeName: 'Selector' },
         { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
+        { package: 'custom-plugin', typeName: 'Custom', originalTypeName: 'Custom' },
       ],
     },
   };
-  const context = {
-    typesMap: { schemas: { blocks: { Box: customSchema } } },
-    writeBuildArtifact: mockWriteBuildArtifact,
-  };
-  await writeBlockSchemaMap({ components, context });
-  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(written.Box).toEqual(customSchema);
-});
-
-test('writeBlockSchemaMap skips unresolvable packages gracefully', async () => {
-  const components = {
-    imports: {
-      blocks: [
-        {
-          package: 'non-existent-package',
-          typeName: 'FakeBlock',
-          originalTypeName: 'FakeBlock',
+  const context = createContext({
+    blockPluginMetas: {
+      TextInput: {
+        category: 'input',
+        events: {
+          onChange: { description: 'Trigger action when the input value changes.', payload },
+          onBlur: 'Trigger action when the input loses focus.',
         },
-      ],
-    },
-  };
-  const context = {
-    typesMap: { schemas: { blocks: {} } },
-    writeBuildArtifact: mockWriteBuildArtifact,
-  };
-  await writeBlockSchemaMap({ components, context });
-  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
-});
-
-test('writeBlockSchemaMap handles missing typesMap.schemas gracefully', async () => {
-  const components = { imports: { blocks: [] } };
-  const context = {
-    typesMap: {},
-    writeBuildArtifact: mockWriteBuildArtifact,
-  };
-  await writeBlockSchemaMap({ components, context });
-  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/blockSchemas.json', '{}');
-});
-
-test('writeBlockSchemaMap collects schemas from resolvable packages', async () => {
-  const components = {
-    imports: {
-      blocks: [
-        {
-          package: '@lowdefy/blocks-basic',
-          typeName: 'Box',
-          originalTypeName: 'Box',
+      },
+      Selector: {
+        category: 'input',
+        events: {
+          onChange: {
+            description: 'Trigger action when selection is changed.',
+            event: { value: 'The selected value.' },
+          },
         },
-      ],
+      },
+      Box: { category: 'container' },
     },
-  };
-  const context = {
-    typesMap: { schemas: { blocks: {} } },
-    writeBuildArtifact: mockWriteBuildArtifact,
-  };
-  await writeBlockSchemaMap({ components, context });
-  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(written.Box).toBeDefined();
-  expect(written.Box.properties).toBeDefined();
-});
-
-test('writeBlockSchemaMap groups multiple blocks from same package', async () => {
-  const components = {
-    imports: {
-      blocks: [
-        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
-        { package: '@lowdefy/blocks-basic', typeName: 'Span', originalTypeName: 'Span' },
-      ],
+    typesMap: {
+      blockMetas: { Custom: { category: 'display', events: { onCustom: { payload } } } },
     },
-  };
-  const context = {
-    typesMap: { schemas: { blocks: {} } },
-    writeBuildArtifact: mockWriteBuildArtifact,
-  };
+  });
   await writeBlockSchemaMap({ components, context });
-  const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
-  expect(written.Box).toBeDefined();
-  expect(written.Span).toBeDefined();
+  const blockMetas = written('plugins/blockMetas.json');
+  expect(blockMetas.TextInput.events).toEqual({ onChange: { payload }, onBlur: {} });
+  expect(JSON.stringify(blockMetas.TextInput.events)).not.toContain('Trigger action');
+  expect(blockMetas.Selector.events).toEqual({
+    onChange: {
+      payload: { type: 'object', properties: { value: { description: 'The selected value.' } } },
+    },
+  });
+  expect('events' in blockMetas.Box).toBe(false);
+  expect(blockMetas.Custom.events).toEqual({ onCustom: { payload } });
 });

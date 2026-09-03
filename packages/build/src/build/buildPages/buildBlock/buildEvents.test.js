@@ -185,9 +185,7 @@ test('block events actions try not an array', () => {
       components,
       context,
     })
-  ).toThrow(
-    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".'
-  );
+  ).toThrow('Try actions must be an array at "block_1" in event "onClick.try" on page "page_1".');
 });
 
 test('block events actions not an array', () => {
@@ -1310,4 +1308,358 @@ test('event shortcut that only contains a reserved name as a modified key is acc
     ],
   };
   expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+const textInputPayload = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    value: {
+      type: 'object',
+      additionalProperties: false,
+      properties: { name: { type: 'string' }, tags: { type: 'array', items: { type: 'string' } } },
+    },
+    items: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { id: { type: 'string' } },
+      },
+    },
+    extra: { type: 'object' },
+  },
+};
+
+const blockMetas = {
+  Button: { category: 'display', events: { onClick: {} } },
+  Container: { category: 'container' },
+  TextInput: {
+    category: 'input',
+    events: { onChange: { payload: textInputPayload }, onEnterKeyPress: {} },
+  },
+  Selector: {
+    category: 'input',
+    events: {
+      onChange: {
+        payload: { type: 'object', properties: { value: { description: 'The selected value.' } } },
+      },
+    },
+  },
+  AgGrid: { category: 'display' },
+  Tabs: { category: 'container', dynamicEvents: true, events: { onChange: {} } },
+};
+
+const metaContext = testContext({ blockMetas, logger });
+
+function pageWithBlockEvents(events, { blockType = 'Button' } = {}) {
+  return {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: blockType,
+            events,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+test('buildEvents throws on an event name the block type does not declare', () => {
+  const components = pageWithBlockEvents({
+    onHover: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onHover" is not an event of block type "Button" at block "block_1" on page "page_1". Block type "Button" has events: onClick. Every block also accepts onMount and onMountAsync, and any event name that declares a shortcut.'
+  );
+});
+
+test('buildEvents suggests the closest declared event name', () => {
+  const components = pageWithBlockEvents({
+    onClik: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onClik" is not an event of block type "Button" at block "block_1" on page "page_1". Did you mean "onClick"? Block type "Button" has events: onClick.'
+  );
+});
+
+test('buildEvents throws with checkSlug events', () => {
+  const components = pageWithBlockEvents({
+    onHover: [{ id: 'action_1', type: 'Reset' }],
+  });
+  try {
+    buildPages({ components, context: metaContext });
+    throw new Error('Expected buildPages to throw.');
+  } catch (error) {
+    expect(error.checkSlug).toBe('events');
+  }
+});
+
+test('buildEvents allows onMount and onMountAsync on any block', () => {
+  const components = pageWithBlockEvents({
+    onMount: [{ id: 'action_1', type: 'Reset' }],
+    onMountAsync: [{ id: 'action_2', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents allows onInit on the page root block', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        events: {
+          onInit: [{ id: 'action_1', type: 'Reset' }],
+          onInitAsync: [{ id: 'action_2', type: 'Reset' }],
+        },
+        blocks: [],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents throws on onInit on a nested block', () => {
+  const components = pageWithBlockEvents({
+    onInit: [{ id: 'action_1', type: 'Reset' }],
+  });
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    'Event "onInit" only fires on the page\'s root block, not on block "block_1" on page "page_1". Move it to the page\'s own events, or use onMount, which fires on every block.'
+  );
+});
+
+test('buildEvents allows any event name that declares a shortcut', () => {
+  const components = pageWithBlockEvents({
+    cmd_k_search: {
+      shortcut: 'mod+k',
+      try: [{ id: 'action_1', type: 'Reset' }],
+    },
+  });
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type whose meta declares no events', () => {
+  const components = pageWithBlockEvents(
+    { onRowClick: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'AgGrid' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type that is not in blockMetas', () => {
+  const components = pageWithBlockEvents(
+    { onAnything: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'LocalPluginBlock' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents suppresses the error under ~ignoreBuildChecks events', () => {
+  const suppressContext = testContext({ blockMetas, logger });
+  suppressContext.keyMap = {
+    event_key: { key: 'pages.0.blocks.0.events.onHover', '~ignoreBuildChecks': ['events'] },
+  };
+  const components = pageWithBlockEvents({
+    onHover: {
+      '~k': 'event_key',
+      try: [{ id: 'action_1', type: 'Reset' }],
+    },
+  });
+  expect(() => buildPages({ components, context: suppressContext })).not.toThrow();
+});
+
+test('buildEvents skips the check for a block type that declares dynamicEvents', () => {
+  const components = pageWithBlockEvents(
+    { onApprove: [{ id: 'action_1', type: 'Reset' }] },
+    { blockType: 'Tabs' }
+  );
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+function textInputChange(actions, blockType = 'TextInput') {
+  return pageWithBlockEvents({ onChange: actions }, { blockType });
+}
+
+test('buildEvents resolves _event paths declared in the event payload', () => {
+  const components = textInputChange([
+    {
+      id: 'store',
+      type: 'SetState',
+      params: {
+        whole: { _event: 'value' },
+        name: { _event: 'value.name' },
+        tag: { _event: 'value.tags.0' },
+        tagBracket: { _event: 'value.tags[1]' },
+        itemId: { _event: 'items.0.id' },
+        withDefault: { _event: { key: 'value.name', default: 'x' } },
+        open: { _event: 'extra.anything.goes' },
+      },
+    },
+  ]);
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents throws on a mistyped _event leaf with the payload keys and a suggestion', () => {
+  const components = textInputChange([
+    { id: 'store', type: 'SetState', params: { raw: { _event: 'valu' } } },
+  ]);
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    '_event "valu" in event "onChange" on block "block_1" (TextInput) is not in the event payload. Payload: value, items, extra. Did you mean "value"?'
+  );
+});
+
+test('buildEvents throws on a mistyped nested _event path and suggests the full path', () => {
+  const components = textInputChange([
+    { id: 'store', type: 'SetState', params: { raw: { _event: 'value.nme' } } },
+  ]);
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    '_event "value.nme" in event "onChange" on block "block_1" (TextInput) is not in the event payload. Payload: value, items, extra. Did you mean "value.name"?'
+  );
+});
+
+test('buildEvents throws on an _event path into array items with the wrong key', () => {
+  const components = textInputChange([
+    { id: 'store', type: 'SetState', params: { raw: { _event: 'items.0.idd' } } },
+  ]);
+  expect(() => buildPages({ components, context: metaContext })).toThrow(
+    '_event "items.0.idd" in event "onChange" on block "block_1" (TextInput) is not in the event payload. Payload: value, items, extra. Did you mean "items.0.id"?'
+  );
+});
+
+test('buildEvents _event payload error carries checkSlug event-payload and the operator configKey', () => {
+  const components = textInputChange([
+    {
+      id: 'store',
+      type: 'SetState',
+      params: { raw: { '~k': 'operator_key', _event: 'valu' } },
+    },
+  ]);
+  try {
+    buildPages({ components, context: metaContext });
+    throw new Error('Expected buildPages to throw.');
+  } catch (error) {
+    expect(error.checkSlug).toBe('event-payload');
+    expect(error.configKey).toBe('operator_key');
+  }
+});
+
+test('buildEvents checks _event paths in catch actions, messages and control branches', () => {
+  const inCatch = pageWithBlockEvents(
+    {
+      onChange: {
+        try: [],
+        catch: [{ id: 'store', type: 'SetState', params: { raw: { _event: 'valu' } } }],
+      },
+    },
+    { blockType: 'TextInput' }
+  );
+  expect(() => buildPages({ components: inCatch, context: metaContext })).toThrow(
+    '_event "valu" in event "onChange"'
+  );
+  const inMessages = textInputChange([
+    {
+      id: 'store',
+      type: 'SetState',
+      params: {},
+      messages: { success: { _event: 'valu' } },
+    },
+  ]);
+  expect(() => buildPages({ components: inMessages, context: metaContext })).toThrow(
+    '_event "valu" in event "onChange"'
+  );
+  const inControl = textInputChange([
+    {
+      ':if': { _event: 'value.name' },
+      ':then': [{ id: 'store', type: 'SetState', params: { raw: { _event: 'valu' } } }],
+    },
+  ]);
+  expect(() => buildPages({ components: inControl, context: metaContext })).toThrow(
+    '_event "valu" in event "onChange"'
+  );
+});
+
+test('buildEvents skips _event true, integer and operator-supplied key forms', () => {
+  const components = textInputChange([
+    {
+      id: 'store',
+      type: 'SetState',
+      params: {
+        all: { _event: true },
+        index: { _event: 0 },
+        computed: { _event: { key: { _state: 'path' } } },
+        cleared: { _event: { key: null, default: 1 } },
+      },
+    },
+  ]);
+  expect(() => buildPages({ components, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents never checks _event paths on an event with no declared payload', () => {
+  const noPayloadEvent = pageWithBlockEvents(
+    { onEnterKeyPress: [{ id: 'store', type: 'SetState', params: { raw: { _event: 'valu' } } }] },
+    { blockType: 'TextInput' }
+  );
+  expect(() => buildPages({ components: noPayloadEvent, context: metaContext })).not.toThrow();
+  const stringFormEvent = pageWithBlockEvents({
+    onClick: [{ id: 'store', type: 'SetState', params: { raw: { _event: 'anything' } } }],
+  });
+  expect(() => buildPages({ components: stringFormEvent, context: metaContext })).not.toThrow();
+  const unknownBlock = pageWithBlockEvents(
+    { onChange: [{ id: 'store', type: 'SetState', params: { raw: { _event: 'anything' } } }] },
+    { blockType: 'LocalPluginBlock' }
+  );
+  expect(() => buildPages({ components: unknownBlock, context: metaContext })).not.toThrow();
+});
+
+test('buildEvents checks the top level of a legacy description-only payload but not below it', () => {
+  const nested = textInputChange(
+    [{ id: 'store', type: 'SetState', params: { raw: { _event: 'value.anything.below' } } }],
+    'Selector'
+  );
+  expect(() => buildPages({ components: nested, context: metaContext })).not.toThrow();
+  const mistyped = textInputChange(
+    [{ id: 'store', type: 'SetState', params: { raw: { _event: 'valu' } } }],
+    'Selector'
+  );
+  expect(() => buildPages({ components: mistyped, context: metaContext })).toThrow(
+    '_event "valu" in event "onChange" on block "block_1" (Selector) is not in the event payload. Payload: value. Did you mean "value"?'
+  );
+});
+
+test('buildEvents suppresses the _event payload error under ~ignoreBuildChecks event-payload', () => {
+  const suppressContext = testContext({ blockMetas, logger });
+  suppressContext.keyMap = {
+    event_key: {
+      key: 'pages.0.blocks.0.events.onChange',
+      '~ignoreBuildChecks': ['event-payload'],
+    },
+    operator_key: {
+      key: 'pages.0.blocks.0.events.onChange.try.0.params.raw',
+      '~k_parent': 'event_key',
+    },
+  };
+  const components = pageWithBlockEvents(
+    {
+      onChange: {
+        '~k': 'event_key',
+        try: [
+          {
+            id: 'store',
+            type: 'SetState',
+            params: { raw: { '~k': 'operator_key', _event: 'valu' } },
+          },
+        ],
+      },
+    },
+    { blockType: 'TextInput' }
+  );
+  expect(() => buildPages({ components, context: suppressContext })).not.toThrow();
 });

@@ -1463,8 +1463,7 @@
                       properties:
                         icon: AiOutlineUser
                         size: 32
-                        color: '#fff'
-                        backgroundColor: '#1677ff'
+                        color: '#1677ff'
                     - id: email_preview_sender
                       type: Box
                       layout:

@@ -26,70 +26,169 @@ function createDisplayMeta(blockName, { size = false } = {}) {
     cssKeys: {
       element: `The ${blockName} element.`,
     },
+    // Cell buttons and menu items declare their own eventName, so the event
+    // names this block fires are authored in its properties.
+    dynamicEvents: true,
     events: {
       onCellClick: {
         description: 'Trigger event when a cell is clicked.',
-        event: {
-          cell: 'The clicked cell with column and value.',
-          colId: 'The column id.',
-          row: 'The row data.',
-          rowIndex: 'The row index.',
-          selected: 'All selected rows.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            cell: { type: 'object', description: 'The clicked cell with column and value.' },
+            colId: { type: 'string', description: 'The column id.' },
+            row: { type: 'object', description: 'The row data.' },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
         },
       },
       onFilterChanged: {
         description: 'Trigger event when the filter changes.',
-        event: { rows: 'The displayed rows after filtering.', filter: 'The filter model.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            rows: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The displayed rows after filtering.',
+            },
+            filter: { type: 'object', description: 'The filter model.' },
+          },
+        },
       },
       onRowClick: {
         description: 'Trigger event when a row is clicked.',
-        event: { row: 'The row data.', selected: 'All selected rows.', rowIndex: 'The row index.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+          },
+        },
       },
       onRowSelected: {
         description: 'Trigger event when a row is selected.',
-        event: { row: 'The row data.', rowIndex: 'The row index.', selected: 'All selected rows.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            rowIndex: { type: 'integer', description: 'The row index.' },
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
+        },
       },
       onSelectionChanged: {
         description: 'Triggered when the selected rows are changed.',
-        event: { selected: 'All selected rows.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            selected: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'All selected rows.',
+            },
+          },
+        },
       },
       onSortChanged: {
         description: 'Trigger event when the sort changes.',
-        event: { rows: 'The displayed rows after sorting.', sort: 'The sort column state.' },
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            rows: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The displayed rows after sorting.',
+            },
+            sort: {
+              type: 'array',
+              items: { type: 'object' },
+              description: 'The sort column state.',
+            },
+          },
+        },
       },
       onCellLink: {
         description:
           'Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate.',
-        event: {
-          link: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
-          row: 'The row data.',
-          value: 'The cell value.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            link: {
+              type: 'object',
+              description: 'The resolved link config (pageId/href/urlQuery/back/home/newTab).',
+            },
+            row: { type: 'object', description: 'The row data.' },
+            value: { description: 'The cell value.' },
+          },
         },
       },
       onCellButton: {
         description:
           'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`).',
-        event: {
-          row: 'The row data.',
-          value: 'The cell value.',
-          button: 'The clicked button: { eventName, title }.',
-          buttonIndex: 'Zero-based index in the buttons array.',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            value: { description: 'The cell value.' },
+            button: {
+              type: 'object',
+              properties: { eventName: { type: 'string' }, title: { type: 'string' } },
+              description: 'The clicked button: { eventName, title }.',
+            },
+            buttonIndex: { type: 'integer', description: 'Zero-based index in the buttons array.' },
+          },
         },
       },
       onCellMenuItem: {
         description:
           'Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`).',
-        event: {
-          row: 'The row data.',
-          value: 'The cell value.',
-          item: 'The clicked item: { eventName, title }.',
-          itemIndex: 'Zero-based index in the authored items array (unshifted by hidden items).',
+        payload: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            row: { type: 'object', description: 'The row data.' },
+            value: { description: 'The cell value.' },
+            item: {
+              type: 'object',
+              properties: { eventName: { type: 'string' }, title: { type: 'string' } },
+              description: 'The clicked item: { eventName, title }.',
+            },
+            itemIndex: {
+              type: 'integer',
+              description:
+                'Zero-based index in the authored items array (unshifted by hidden items).',
+            },
+          },
         },
       },
     },
     properties: {
       type: 'object',
-      additionalProperties: false,
+      // Undeclared properties are passed through to AgGrid as grid options.
+      additionalProperties: true,
       properties: {
         ...(size
           ? {
@@ -187,7 +286,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                 description: 'Initial width in pixels for the cell.',
               },
               cellStyle: {
-                type: 'number',
+                type: 'object',
                 description:
                   'An object of css values returning an object of css values for a particular cell.',
               },

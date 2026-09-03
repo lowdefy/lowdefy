@@ -496,7 +496,7 @@ test('updateInsertOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBVersionedUpdateOne({ request, connection })).rejects.toThrow(
-    'Unknown modifier: $badOp'
+    'MongoDB: MongoDB rejected the MongoDBVersionedUpdateOne command on collection "updateInsertOne" as malformed.'
   );
 });
 
@@ -610,5 +610,65 @@ test('request insert options not an object', async () => {
   const request = { update: {}, filter: {}, options: { insert: 'insert' } };
   expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBVersionedUpdateOne request property option "insert" should be an object.'
+  );
+});
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('versionedUpdateOne with a collectionSchema rejects a violating $set before versioning', async () => {
+  const contractCollection = 'versionedUpdateOneContract';
+  await populateTestMongoDb({
+    collection: contractCollection,
+    documents: [{ _id: 'v1', test_id: 't1', result: 'pass' }],
+  });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBVersionedUpdateOne({
+      request: { filter: { _id: 'v1' }, update: { $set: { result: 'Fail' } } },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "result" in $set of an update for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Fail".'
+  );
+  const { collection: testCollection, client } = await getTestCollection({
+    collection: contractCollection,
+  });
+  const afterViolation = await testCollection.find({}).toArray();
+  expect(afterViolation).toHaveLength(1);
+  const res = await MongoDBVersionedUpdateOne({
+    request: { filter: { _id: 'v1' }, update: { $set: { result: 'fail' } } },
+    connection,
+    collectionSchema,
+  });
+  expect(res.modifiedCount).toEqual(1);
+  const afterOk = await testCollection.find({}).toArray();
+  await client.close();
+  expect(afterOk).toHaveLength(2);
+});
+
+test('versionedUpdateOne with a collectionSchema validates the version copy it re-inserts', async () => {
+  const contractCollection = 'versionedUpdateOneContractCopy';
+  await populateTestMongoDb({
+    collection: contractCollection,
+    documents: [{ _id: 'legacy', test_id: 99, result: 'pass' }],
+  });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBVersionedUpdateOne({
+      request: { filter: { _id: 'legacy' }, update: { $set: { result: 'fail' } } },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "test_id" in a version copy for collection "answers" does not match the declared contract: must be string. Received 99.'
   );
 });

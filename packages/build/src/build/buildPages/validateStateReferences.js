@@ -15,60 +15,32 @@
 */
 
 import { ConfigWarning } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
 
-import extractOperatorKey from '../../utils/extractOperatorKey.js';
-import traverseConfig from '../../utils/traverseConfig.js';
+import collectStateUsage from './collectStateUsage.js';
+
+function topLevelKey(path) {
+  return path.split(/[.[]/)[0];
+}
 
 function validateStateReferences({ page, context }) {
-  // Single traversal collects blockIds, _state references, and SetState keys
-  // More memory-efficient than stringify+regex for massive pages
+  const usage = collectStateUsage({ page });
   const blockIds = new Set();
   const setStateKeys = new Set();
   const stateRefs = new Map(); // topLevelKey -> configKey (first occurrence)
 
-  // Collect ~k values inside request.properties subtrees so we can skip them
-  // when collecting _state refs — those are already handled by validateServerStateReferences
-  const requestPropertyKeys = new Set();
-  (page.requests ?? []).forEach((request) => {
-    if (request.properties) {
-      traverseConfig({
-        config: request.properties,
-        visitor: (obj) => {
-          if (obj['~k']) requestPropertyKeys.add(obj['~k']);
-        },
-      });
-    }
+  // Compare only the top-level segment, including it for dot-notation ids.
+  usage.blockIds.forEach(({ id }) => {
+    blockIds.add(id);
+    blockIds.add(topLevelKey(id));
   });
-
-  traverseConfig({
-    config: page,
-    visitor: (obj) => {
-      // Collect blockId if present, including the top-level key for dot-notation ids
-      if (type.isString(obj.blockId)) {
-        blockIds.add(obj.blockId);
-        const topLevel = obj.blockId.split(/[.\[]/)[0];
-        if (topLevel !== obj.blockId) {
-          blockIds.add(topLevel);
-        }
-      }
-
-      // Collect SetState action params to track state keys being initialized
-      if (obj.type === 'SetState' && obj.params) {
-        Object.keys(obj.params).forEach((key) => {
-          const topLevelKey = key.split(/[.\[]/)[0];
-          setStateKeys.add(topLevelKey);
-        });
-      }
-
-      // Collect _state reference if present (skip request.properties — handled separately)
-      if (obj._state !== undefined && !requestPropertyKeys.has(obj['~k'])) {
-        const topLevelKey = extractOperatorKey({ operatorValue: obj._state });
-        if (topLevelKey && !stateRefs.has(topLevelKey)) {
-          stateRefs.set(topLevelKey, obj['~k']);
-        }
-      }
-    },
+  usage.setStateKeys.forEach(({ key }) => {
+    setStateKeys.add(topLevelKey(key));
+  });
+  usage.stateRefs.forEach(({ path, configKey }) => {
+    const key = topLevelKey(path);
+    if (key && !stateRefs.has(key)) {
+      stateRefs.set(key, configKey);
+    }
   });
 
   // Filter to only undefined references and warn

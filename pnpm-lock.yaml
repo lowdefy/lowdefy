@@ -115,6 +115,9 @@ importers:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
+      '@lowdefy/connection-mongodb':
+        specifier: 5.5.1
+        version: link:../plugins/connections/connection-mongodb
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -127,6 +130,12 @@ importers:
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
+      mongodb:
+        specifier: 7.2.0
+        version: 7.2.0
+      mongodb-memory-server:
+        specifier: 11.2.0
+        version: 11.2.0
 
   packages/build:
     dependencies:
@@ -166,6 +175,12 @@ importers:
       ajv:
         specifier: 8.20.0
         version: 8.20.0
+      eslint-scope:
+        specifier: 7.2.2
+        version: 7.2.2
+      espree:
+        specifier: 9.6.1
+        version: 9.6.1
       json5:
         specifier: 2.2.3
         version: 2.2.3
@@ -338,6 +353,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../utils/errors
@@ -368,6 +386,18 @@ importers:
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
+      mongodb:
+        specifier: '>=6'
+        version: 7.2.0
+      mongodb-memory-server:
+        specifier: '>=10'
+        version: 11.2.0
+      pixelmatch:
+        specifier: 7.2.0
+        version: 7.2.0
+      pngjs:
+        specifier: 7.0.0
+        version: 7.0.0
       semver:
         specifier: 7.7.4
         version: 7.7.4
@@ -390,6 +420,9 @@ importers:
       '@swc/jest':
         specifier: 0.2.39
         version: 0.2.39(@swc/core@1.15.32)
+      copyfiles:
+        specifier: 2.4.1
+        version: 2.4.1
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
@@ -507,6 +540,9 @@ importers:
 
   packages/engine:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../utils/errors
@@ -915,6 +951,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.5.1
         version: link:../../../utils/helpers
+      '@lowdefy/nunjucks':
+        specifier: 5.5.1
+        version: link:../../../utils/nunjucks
       dompurify:
         specifier: 3.4.2
         version: 3.4.2
@@ -1586,6 +1625,9 @@ importers:
 
   packages/plugins/connections/connection-mongodb:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../../../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../../../utils/errors
@@ -1608,9 +1650,6 @@ importers:
         specifier: 13.0.0
         version: 13.0.0
     devDependencies:
-      '@lowdefy/ajv':
-        specifier: 5.5.1
-        version: link:../../../utils/ajv
       '@shelf/jest-mongodb':
         specifier: 4.3.2
         version: 4.3.2(jest-environment-node@28.1.3)(mongodb@7.2.0)
@@ -2366,6 +2405,9 @@ importers:
       '@lowdefy/client':
         specifier: 5.5.1
         version: link:../../client
+      '@lowdefy/docs':
+        specifier: 5.5.1
+        version: link:../../docs
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../../utils/errors
@@ -2490,6 +2532,9 @@ importers:
       '@lowdefy/actions-core':
         specifier: 5.5.1
         version: link:../../plugins/actions/actions-core
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../../utils/ajv
       '@lowdefy/api':
         specifier: 5.5.1
         version: link:../../api
@@ -2538,6 +2583,9 @@ importers:
       '@lowdefy/docs-content':
         specifier: 5.5.1
         version: link:../../docs-content
+      '@lowdefy/e2e-utils':
+        specifier: 5.5.1
+        version: link:../../utils/e2e-utils
       '@lowdefy/engine':
         specifier: 5.5.1
         version: link:../../engine
@@ -2859,6 +2907,9 @@ importers:
 
   packages/utils/ajv:
     dependencies:
+      '@lowdefy/helpers':
+        specifier: 5.5.1
+        version: link:../helpers
       '@lowdefy/nunjucks':
         specifier: 5.5.1
         version: link:../nunjucks
@@ -3191,6 +3242,9 @@ importers:
       fs-extra:
         specifier: 11.3.4
         version: 11.3.4
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
     devDependencies:
       '@swc/cli':
         specifier: 0.8.1
@@ -7970,6 +8024,9 @@ packages:
   async-mutex@0.4.1:
     resolution: {integrity: sha512-WfoBo4E/TbCX1G95XTjbWTE3X2XLG0m1Xbv2cwOtuPdyH9CZvnaA5nCt1ucjaKEgW2A5IF71hxrRhr83Je5xjA==}
 
+  async-mutex@0.5.0:
+    resolution: {integrity: sha512-1A94B18jkJ3DYq284ohPxoXbfTA5HsQ7/Mf4DEhcyLx3Bz27Rh59iScbB6EPiP+B+joue6YCxcMXSbFC1tZKwA==}
+
   async-retry@1.3.3:
     resolution: {integrity: sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==}
 
@@ -8032,6 +8089,14 @@ packages:
   b4a@1.6.7:
     resolution: {integrity: sha512-OnAYlL5b7LEkALw87fUVafQw5rVR9RjwGd4KUwNQ6DrrNmaVaUCgLipfVlzrPQ4tWOR9P0IXGNOx50jYCCdSJg==}
 
+  b4a@1.8.1:
+    resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
+    peerDependencies:
+      react-native-b4a: '*'
+    peerDependenciesMeta:
+      react-native-b4a:
+        optional: true
+
   babel-jest@28.1.3:
     resolution: {integrity: sha512-epUaPOEWMk3cWX0M/sPvCHHCe9fMFAa/9hXEgKP8nFfNl/jlGkE9ucq9NqkZGXLDduCJYS0UvSlPUwC0S+rH6Q==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
@@ -8069,6 +8134,43 @@ packages:
 
   bare-events@2.5.4:
     resolution: {integrity: sha512-+gFfDkR8pj4/TrWCGUGWmJIkBwuxPS5F+a5yWjOHQt2hHvNZd5YLzadjmDUtFmMM4y429bnKLa8bYBMHcYdnQA==}
+
+  bare-events@2.9.2:
+    resolution: {integrity: sha512-AIPKioV7/Y/8KfZ3AAhjPJxLLbY49S64Ym5DakZlUg75qQiTgUq9hEJoEwa4eUezPUlXRy/i5NpsKvo9jgKmoA==}
+    peerDependencies:
+      bare-abort-controller: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+
+  bare-fs@4.8.1:
+    resolution: {integrity: sha512-N1nnXdHZAOSstz0XiHikGS4HGMH4CnSwhqWdGQQMqqdvp4Jybm9sE3R1WVnpWVd4SFkc8ryPDBLViNLwiEqECg==}
+    engines: {bare: '>=1.28.0'}
+    peerDependencies:
+      bare-buffer: '*'
+    peerDependenciesMeta:
+      bare-buffer:
+        optional: true
+
+  bare-path@3.1.1:
+    resolution: {integrity: sha512-JprUlveX3QjApC1cTpsUOiscADftCGVWkzitbHsRqv84hzYwYHw2mbluddsq5TvI8mH/8Ov1f4BiMAdcB0oYnQ==}
+
+  bare-stream@2.13.4:
+    resolution: {integrity: sha512-PcrQ8lVLbiJscNm1Kez+Yp4Gy4AHGcN1lzwjvf5NybWen7VvEgUfyfnXYJ2zNqWnzOfCb1Abq6lH8ti0syQszA==}
+    peerDependencies:
+      bare-abort-controller: '*'
+      bare-buffer: '*'
+      bare-events: '*'
+    peerDependenciesMeta:
+      bare-abort-controller:
+        optional: true
+      bare-buffer:
+        optional: true
+      bare-events:
+        optional: true
+
+  bare-url@2.5.2:
+    resolution: {integrity: sha512-L13PCJzKG8RGvx8V1/DdMi12ERhC3tprr7/8a94BxpmnRsFqxh5XZNdhtMxu5HPkRshYOOWRGY8lDP7ZhpG9Cg==}
 
   base64-js@1.3.1:
     resolution: {integrity: sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==}
@@ -9169,9 +9271,6 @@ packages:
     resolution: {integrity: sha512-aITqOwnLanpHLNXZJENbOgjUBeHocD+xsSJmNrjovKBW5HbSpW3d1pEls7GFQPUWXiwG9+0P4GtHfEqC/4M0Iw==}
     engines: {node: '>=12'}
 
-  emoji-regex@10.2.1:
-    resolution: {integrity: sha512-97g6QgOk8zlDRdgq1WxwgTMgEWGVAQvB5Fdpgc1MkNy56la5SKP9GsMXKDOdqwn90/41a8yPwIGk1Y6WVbeMQA==}
-
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
 
@@ -9595,6 +9694,9 @@ packages:
   event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
+
+  events-universal@1.0.1:
+    resolution: {integrity: sha512-LUd5euvbMLpwOF8m6ivPCbhQeSiYVNb8Vs0fQ8QjXo0JTkEHpz8pxdQf0gStltaPpw0Cca8b39KxvK9cfKRiAw==}
 
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -10050,7 +10152,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
@@ -11746,9 +11848,17 @@ packages:
     resolution: {integrity: sha512-ZoS07RoFqpKYQwAk59qmrx8+jJHNHU30UjlU96QktiGn1ltvDr+vCznLX5DiUBLEpMAHatHNWV1nM/74ul66kA==}
     engines: {node: '>=20.19.0'}
 
+  mongodb-memory-server-core@11.2.0:
+    resolution: {integrity: sha512-vOoDtn0JiLrHvZY81Rp/UtKXXK0rtJHZGZFVnccvJwYitPLNspO0Ty0grqFQOe7iAET8+GI4zAQcphg+R3vxQg==}
+    engines: {node: '>=20.19.0'}
+
   mongodb-memory-server-core@9.2.0:
     resolution: {integrity: sha512-9SWZEy+dGj5Fvm5RY/mtqHZKS64o4heDwReD4SsfR7+uNgtYo+JN41kPCcJeIH3aJf04j25i5Dia2s52KmsMPA==}
     engines: {node: '>=14.20.1'}
+
+  mongodb-memory-server@11.2.0:
+    resolution: {integrity: sha512-506AD8qvClVx8Raw/WhAUUWBgIXPyi856iC01aa5vAzHmn6WOXC6ulvudkTF7oTMzJxkyA0A84VpD4BpyfqJ9w==}
+    engines: {node: '>=20.19.0'}
 
   mongodb-memory-server@9.2.0:
     resolution: {integrity: sha512-w/usKdYtby5EALERxmA0+et+D0brP0InH3a26shNDgGefXA61hgl6U0P3IfwqZlEGRZdkbZig3n57AHZgDiwvg==}
@@ -12372,6 +12482,10 @@ packages:
   piscina@4.9.2:
     resolution: {integrity: sha512-Fq0FERJWFEUpB4eSY59wSNwXD4RYqR+nR/WiEVcZW8IWfVBxJJafcgTEZDQo8k3w0sUarJ8RyVbbUF4GQ2LGbQ==}
 
+  pixelmatch@7.2.0:
+    resolution: {integrity: sha512-xhcb4yHu9sM/G7foGzoLtXYcC0zHEaOXXjRKhGup0fw78Nf2Tkiapv4EQyMzrbcmQPsllAI7DbFY2UT7PlI9Pg==}
+    hasBin: true
+
   pkce-challenge@5.0.1:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
@@ -12399,6 +12513,10 @@ packages:
 
   png-js@1.0.0:
     resolution: {integrity: sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g==}
+
+  pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
 
   points-on-curve@0.2.0:
     resolution: {integrity: sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A==}
@@ -13360,6 +13478,9 @@ packages:
   streamx@2.22.0:
     resolution: {integrity: sha512-sLh1evHOzBy/iWRiR6d1zRcLao4gGZr3C1kzNz4fopCOKJb6xD9ub8Mpi9Mr1R6id5o43S+d93fI48UC5uM9aw==}
 
+  streamx@2.28.1:
+    resolution: {integrity: sha512-zEzXb0s5Cds7tqMH6rhZ05lcJydCWiQPEwiNngVqzsxCc962vLY4Uw+mW7od8kDH258k2Uz/JrOkdIAAhSh9VA==}
+
   string-convert@0.2.1:
     resolution: {integrity: sha512-u/1tdPl4yQnPBjnVrmdLo9gtuLvELKsAoRapekWggdiQNvvvum+jYF329d84NAa660KQw7pB2n36KrIKVoXa3A==}
 
@@ -13621,6 +13742,9 @@ packages:
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
+  tar-stream@3.2.1:
+    resolution: {integrity: sha512-nqsEO8zLZJvrOMdEwkA0QdCLFbetHMn95Zqu4fKwX+hkaTWJPZZOrxx/PwtxoK0MMGQmBQNRW3CPs8IFYQz4cQ==}
+
   tar@7.5.13:
     resolution: {integrity: sha512-tOG/7GyXpFevhXVh8jOPJrmtRpOTsYqUIkVdVooZYJS/z8WhfQUX8RJILmeuJNinGAMSu1veBr4asSHFt5/hng==}
     engines: {node: '>=18'}
@@ -13636,6 +13760,9 @@ packages:
   teeny-request@9.0.0:
     resolution: {integrity: sha512-resvxdc6Mgb7YEThw6G6bExlXKkv6+YbuzGg9xuXxSgxJF7Ozs+o8Y9+2R3sArdWdW8nOokoQb1yrpFB0pQK2g==}
     engines: {node: '>=14'}
+
+  teex@1.0.1:
+    resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
 
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
@@ -20219,6 +20346,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  async-mutex@0.5.0:
+    dependencies:
+      tslib: 2.8.1
+
   async-retry@1.3.3:
     dependencies:
       retry: 0.13.1
@@ -20256,13 +20387,13 @@ snapshots:
 
   axios@0.26.1:
     dependencies:
-      follow-redirects: 1.15.9(debug@4.4.3)
+      follow-redirects: 1.16.0(debug@4.4.3)
     transitivePeerDependencies:
       - debug
 
   axios@1.15.2:
     dependencies:
-      follow-redirects: 1.16.0
+      follow-redirects: 1.16.0(debug@4.4.3)
       form-data: 4.0.6
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
@@ -20280,6 +20411,8 @@ snapshots:
       typed-rest-client: 1.8.11
 
   b4a@1.6.7: {}
+
+  b4a@1.8.1: {}
 
   babel-jest@28.1.3(@babel/core@7.29.0):
     dependencies:
@@ -20341,6 +20474,35 @@ snapshots:
 
   bare-events@2.5.4:
     optional: true
+
+  bare-events@2.9.2: {}
+
+  bare-fs@4.8.1:
+    dependencies:
+      bare-events: 2.9.2
+      bare-path: 3.1.1
+      bare-stream: 2.13.4(bare-events@2.9.2)
+      bare-url: 2.5.2
+      fast-fifo: 1.3.2
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
+
+  bare-path@3.1.1: {}
+
+  bare-stream@2.13.4(bare-events@2.9.2):
+    dependencies:
+      b4a: 1.8.1
+      streamx: 2.28.1
+      teex: 1.0.1
+    optionalDependencies:
+      bare-events: 2.9.2
+    transitivePeerDependencies:
+      - react-native-b4a
+
+  bare-url@2.5.2:
+    dependencies:
+      bare-path: 3.1.1
 
   base64-js@1.3.1: {}
 
@@ -21514,8 +21676,6 @@ snapshots:
 
   emittery@0.10.2: {}
 
-  emoji-regex@10.2.1: {}
-
   emoji-regex@10.6.0: {}
 
   emoji-regex@8.0.0: {}
@@ -22197,6 +22357,12 @@ snapshots:
 
   event-target-shim@5.0.1: {}
 
+  events-universal@1.0.1:
+    dependencies:
+      bare-events: 2.9.2
+    transitivePeerDependencies:
+      - bare-abort-controller
+
   events@3.3.0: {}
 
   eventsource-parser@3.0.8: {}
@@ -22491,7 +22657,9 @@ snapshots:
     optionalDependencies:
       debug: 4.4.3
 
-  follow-redirects@1.16.0: {}
+  follow-redirects@1.16.0(debug@4.4.3):
+    optionalDependencies:
+      debug: 4.4.3
 
   for-each@0.3.3:
     dependencies:
@@ -24832,6 +25000,33 @@ snapshots:
       '@types/whatwg-url': 13.0.0
       whatwg-url: 14.2.0
 
+  mongodb-memory-server-core@11.2.0:
+    dependencies:
+      async-mutex: 0.5.0
+      camelcase: 6.3.0
+      debug: 4.4.3
+      find-cache-dir: 3.3.2
+      follow-redirects: 1.16.0(debug@4.4.3)
+      https-proxy-agent: 7.0.6
+      mongodb: 7.2.0
+      new-find-package-json: 2.0.0
+      semver: 7.7.4
+      tar-stream: 3.2.1
+      tslib: 2.8.1
+      yauzl: 3.4.0
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - bare-abort-controller
+      - bare-buffer
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - react-native-b4a
+      - snappy
+      - socks
+      - supports-color
+
   mongodb-memory-server-core@9.2.0:
     dependencies:
       async-mutex: 0.4.1
@@ -24852,6 +25047,23 @@ snapshots:
       - kerberos
       - mongodb-client-encryption
       - snappy
+      - supports-color
+
+  mongodb-memory-server@11.2.0:
+    dependencies:
+      mongodb-memory-server-core: 11.2.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - '@aws-sdk/credential-providers'
+      - '@mongodb-js/zstd'
+      - bare-abort-controller
+      - bare-buffer
+      - gcp-metadata
+      - kerberos
+      - mongodb-client-encryption
+      - react-native-b4a
+      - snappy
+      - socks
       - supports-color
 
   mongodb-memory-server@9.2.0:
@@ -25475,6 +25687,10 @@ snapshots:
     optionalDependencies:
       '@napi-rs/nice': 1.1.1
 
+  pixelmatch@7.2.0:
+    dependencies:
+      pngjs: 7.0.0
+
   pkce-challenge@5.0.1: {}
 
   pkg-dir@4.2.0:
@@ -25498,6 +25714,8 @@ snapshots:
   pluralize@8.0.0: {}
 
   png-js@1.0.0: {}
+
+  pngjs@7.0.0: {}
 
   points-on-curve@0.2.0: {}
 
@@ -26708,6 +26926,14 @@ snapshots:
     optionalDependencies:
       bare-events: 2.5.4
 
+  streamx@2.28.1:
+    dependencies:
+      events-universal: 1.0.1
+      fast-fifo: 1.3.2
+      text-decoder: 1.2.3
+    transitivePeerDependencies:
+      - bare-abort-controller
+
   string-convert@0.2.1: {}
 
   string-length@4.0.2:
@@ -26730,7 +26956,7 @@ snapshots:
   string-width@6.1.0:
     dependencies:
       eastasianwidth: 0.2.0
-      emoji-regex: 10.2.1
+      emoji-regex: 10.6.0
       strip-ansi: 7.1.0
 
   string-width@7.2.0:
@@ -27037,6 +27263,17 @@ snapshots:
       fast-fifo: 1.3.2
       streamx: 2.22.0
 
+  tar-stream@3.2.1:
+    dependencies:
+      b4a: 1.8.1
+      bare-fs: 4.8.1
+      fast-fifo: 1.3.2
+      streamx: 2.28.1
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - react-native-b4a
+
   tar@7.5.13:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
@@ -27072,6 +27309,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  teex@1.0.1:
+    dependencies:
+      streamx: 2.28.1
+    transitivePeerDependencies:
+      - bare-abort-controller
 
   term-size@2.2.1: {}
 

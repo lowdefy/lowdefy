@@ -10,7 +10,11 @@ blocks:
     type: Paragraph
     properties:
       content:
-        _module.var: page_size
+        _nunjucks:
+          template: '{{ value }}'
+          on:
+            value:
+              _module.var: page_size
   - id: missing-var
     type: Paragraph
     properties:

@@ -41,6 +41,10 @@ async function run() {
     logger: console,
     refResolver: argv.refResolver ?? process.env.LOWDEFY_BUILD_REF_RESOLVER,
     stage: argv.stage ?? process.env.LOWDEFY_BUILD_STAGE ?? 'prod',
+    writeModuleLock:
+      argv.writeModuleLock === true || process.env.LOWDEFY_BUILD_WRITE_MODULE_LOCK === '1'
+        ? true
+        : undefined,
   });
 }
 

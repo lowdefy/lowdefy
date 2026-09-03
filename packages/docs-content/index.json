@@ -2320,6 +2320,14 @@
       "typeName": ":try"
     },
     {
+      "slug": "controls/while",
+      "title": ":while",
+      "section": "Controls",
+      "path": "content/controls/while.md",
+      "kind": "block",
+      "typeName": ":while"
+    },
+    {
       "slug": "migration/upgrade-guide",
       "title": "Upgrade Guide",
       "section": "Migration",

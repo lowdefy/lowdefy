@@ -21,8 +21,10 @@ import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
+import validatePayload from './validatePayload.js';
 
 // Runs an endpoint routine on a schedule (cron). Unlike callEndpoint this does NOT check the
 // endpoint's `auth` config and does NOT block InternalApi: a cron run is authorized by the transport
@@ -64,14 +66,28 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
   // produces for the hook path.
   applySystemTrust(context);
 
+  // A scheduler is a caller too: an authored schedule.payload that breaks the
+  // endpoint's own contract is a bug worth failing loudly on.
+  const schedulePayload = schedule.payload ?? {};
+  validatePayload({ endpointConfig, payload: schedulePayload });
+
   const routineContext = {
     steps: {},
-    payload: schedule.payload ?? {},
+    payload: schedulePayload,
     arrayIndices: [],
     items: {},
     state: {},
     endpointDepth: 0,
   };
+  // The endpoint's runAs scopes every walled step of this run (a step-level
+  // runAs overrides it). Resolved against the fresh routine context, so it can
+  // read _user, _secret or a literal, never a step result or the payload.
+  routineContext.runAs = resolveRunAs(context, routineContext, {
+    runAs: endpointConfig.runAs,
+    location: endpointId,
+    configKey: endpointConfig['~k'],
+    source: 'endpoint',
+  });
 
   // async: true — acknowledge the cron trigger immediately and run in the
   // background; transport auth (CRON_SECRET) already passed at the route.

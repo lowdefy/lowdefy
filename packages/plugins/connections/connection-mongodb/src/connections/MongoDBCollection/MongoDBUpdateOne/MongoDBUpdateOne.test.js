@@ -493,7 +493,7 @@ test('updateOne mongodb error', async () => {
     write: true,
   };
   await expect(MongoDBUpdateOne({ request, connection })).rejects.toThrow(
-    'Unknown modifier: $badOp'
+    'MongoDB: MongoDB rejected the MongoDBUpdateOne command on collection "updateOne" as malformed.'
   );
 });
 
@@ -545,4 +545,70 @@ test('request options not an object', async () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBUpdateOne request property "options" should be an object.'
   );
+});
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('updateOne with a collectionSchema rejects a violating $set and leaves the document unchanged', async () => {
+  const contractCollection = 'updateOneContract';
+  await populateTestMongoDb({
+    collection: contractCollection,
+    documents: [{ _id: 'u1', test_id: 't1', result: 'pass' }],
+  });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBUpdateOne({
+      request: { filter: { _id: 'u1' }, update: { $set: { result: 'Fail' } } },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "result" in $set of an update for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Fail".'
+  );
+  const res = await MongoDBUpdateOne({
+    request: {
+      filter: { _id: 'u1' },
+      update: { $set: { result: 'fail', reviewed_by: 'u9' }, $inc: { attempts: 1 } },
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res.modifiedCount).toEqual(1);
+});
+
+test('updateOne with a collectionSchema validates $setOnInsert on an upsert', async () => {
+  const contractCollection = 'updateOneContractUpsert';
+  await populateTestMongoDb({ collection: contractCollection, documents: [{ _id: 'seed' }] });
+  const connection = { databaseUri, databaseName, collection: contractCollection, write: true };
+  await expect(
+    MongoDBUpdateOne({
+      request: {
+        filter: { _id: 'new' },
+        update: { $setOnInsert: { test_id: 5 } },
+        options: { upsert: true },
+      },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "test_id" in $setOnInsert of an update for collection "answers" does not match the declared contract: must be string. Received 5.'
+  );
+  const res = await MongoDBUpdateOne({
+    request: {
+      filter: { _id: 'new' },
+      update: { $setOnInsert: { test_id: 't5' } },
+      options: { upsert: true },
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res.upsertedCount).toEqual(1);
 });

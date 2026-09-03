@@ -23,6 +23,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
+import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -30,6 +31,7 @@ import validatePayloadReferences from '../buildPages/validatePayloadReferences.j
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateStateSchema from '../buildPages/validateStateSchema.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectPageContent from '../collectPageContent.js';
@@ -37,11 +39,13 @@ import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createContext from '../../createContext.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
+import jsLint from '../../checks/jsLint.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
+import loadBlockSchemas from '../loadBlockSchemas.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -93,6 +97,49 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
   }
 
+  // The dev server's JIT context is created in a separate process, so the block
+  // schemas loaded by shallowBuild are not on it; load them once and reuse.
+  if (type.isUndefined(buildContext.blockSchemas)) {
+    await loadBlockSchemas({ components: {}, context: buildContext });
+  }
+
+  // Restore the skeleton-built collections map so a page archetype
+  // (expandArchetype) can resolve its columns/filters against collections: in
+  // the JIT page build, the same way authConfigProjection is restored above.
+  if (
+    type.isNone(buildContext.collections) &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const collectionsPath = path.join(buildContext.directories.build, 'collections.json');
+    try {
+      const content = await fs.promises.readFile(collectionsPath, 'utf8');
+      // writeCollections writes plain JSON (JSON.stringify), so parse plainly.
+      buildContext.collections = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+      buildContext.collections = {};
+    }
+  }
+
+  // Restore the skeleton-built component definitions so expandComponent can
+  // expand component-instance blocks in the JIT page build identically to a
+  // full build (createContext initializes an empty map, so check size, not
+  // presence; re-reading an empty artifact is a cheap no-op).
+  if (
+    Object.keys(buildContext.componentDefs ?? {}).length === 0 &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const componentDefsPath = path.join(buildContext.directories.build, 'componentDefs.json');
+    try {
+      const content = await fs.promises.readFile(componentDefsPath, 'utf8');
+      // writeComponentDefs writes plain JSON (JSON.stringify), so parse plainly.
+      buildContext.componentDefs = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+      buildContext.componentDefs = {};
+    }
+  }
+
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
     : pageRegistry[pageId];
@@ -108,6 +155,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
+  buildContext.jsBodies = [];
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -362,8 +410,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       context: buildContext,
     });
     validateStateReferences({ page: processed, context: buildContext });
+    validateStateSchema({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
+    validateActionResponsePaths({ page: processed, endpointConfigs, context: buildContext });
 
     // Collect Tailwind class candidates before _js extraction — jsMapParser
     // replaces _js source with hashes, so classes used only inside _js source
@@ -373,13 +423,22 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Extract JS functions from the page
     const pageRequests = [...(processed.requests ?? [])];
     delete processed.requests;
-    const cleanPage = jsMapParser({ input: processed, jsMap: buildContext.jsMap, env: 'client' });
+    const cleanPage = jsMapParser({
+      input: processed,
+      jsMap: buildContext.jsMap,
+      env: 'client',
+      context: buildContext,
+    });
     const cleanRequests = jsMapParser({
       input: pageRequests,
       jsMap: buildContext.jsMap,
       env: 'server',
+      context: buildContext,
     });
     const finalPage = { ...cleanPage, requests: cleanRequests };
+    // The page pipeline has no checks step, so the js-lint rule is run directly
+    // on the bodies the two jsMapParser calls above queued.
+    jsLint.run({ components: finalPage, context: buildContext });
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {
@@ -409,6 +468,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         message: w.message,
         source: w.source ?? null,
         stack: w.stack ?? null,
+        prodError: w.prodError === true,
       }));
     }
 

@@ -1,0 +1,70 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: archetypes
+    pageTitle: Page archetypes
+    section: Concepts
+    filePath: concepts/archetypes.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            A **page archetype** is a framework-owned page `type` with a large, typed set of `properties` that the build expands into ordinary blocks and requests. A list page is thirty lines with one way to be right instead of four hundred with hundreds of ways to be subtly wrong.
+
+            An archetype can only be a page's root `type`, and it reads the app's [`collections`](/collections) declaration for the field types it needs — so a column, filter or search field named on an archetype resolves its label, type and enum values from the schema, and a field that is not declared is a build error rather than a silently mistyped column.
+
+            ## `ListPage`
+
+            Lists records from a collection: a request with `projection`, `sort` and `limit`, filters bound to state, a search box, a row link, an empty state and a loading skeleton — all generated.
+
+            ```yaml
+            # pages/controls.yaml
+            id: controls
+            type: ListPage
+            properties:
+              collection: controls
+              columns: [title, framework_id, status]
+              filters: [framework_id, status]
+              search: [title, description]
+              rowLink: { pageId: control, urlQuery: { id: $_id } }
+            ```
+
+            With `controls` declared under [`collections`](/collections), the build knows `status` is an enum of four values (rendered as a `Selector` filter and a `Tag` cell) and that `framework_id` is a plain field (a text filter). The `rowLink` `$_id` token becomes a read of the row's `_id` from the list response.
+
+            ### Properties
+
+            | Property | Type | Required | Notes |
+            | --- | --- | --- | --- |
+            | `collection` | string | yes | Must be declared in `collections:`. |
+            | `connectionId` | string | no | Read connection; derived from the collection when exactly one reads it. |
+            | `columns` | array | no | Field names or `{ field, label, format, link }`. Defaults to every declared field. |
+            | `filters` | array | no | Field names or `{ field, label, widget }`; the widget is derived from the field type. |
+            | `search` | array | no | Fields matched by one search box with a case-insensitive regex. |
+            | `rowLink` | object | no | `{ pageId, url, urlQuery, input, newWindow }`; `$<field>` tokens read the row. |
+            | `sort` | object | no | MongoDB sort. Defaults to `created_at` desc, else `_id` desc. |
+            | `pageSize` | integer | no | The find limit. Defaults to `50`. |
+            | `title` | string | no | Page heading. Defaults to the humanised collection name. |
+            | `emptyState` | object | no | `Result` block props shown when no rows match. |
+            | `actions` | array | no | Header action blocks, e.g. a New button. |
+            | `layout` | object | no | Root page-layout block `{ type, properties }`. Defaults to `Box`. |
+
+            The request payload carries every filter and the search box; the request reads them with `_payload` (a request's own `_state` is always empty server side). Empty filters are dropped from the query, and the search matches its fields with `$or` of `_regex`.
+
+            ## `DetailPage` and `EditPage`
+
+            The detail and edit archetypes follow the same shape and are documented as they land. `DetailPage` reads one document by a `urlQuery` id and renders a `Descriptions` view; `EditPage` renders a form and emits a save endpoint that inherits the page's auth.

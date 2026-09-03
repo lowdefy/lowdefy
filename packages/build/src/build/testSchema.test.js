@@ -689,3 +689,29 @@ test('missing lowdefy version schema warning', () => {
     'Lowdefy configuration should have required property "lowdefy".'
   );
 });
+
+test('page ~snapshotIgnore paths emit no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'controls',
+        type: 'PageHeaderMenu',
+        '~snapshotIgnore': ['search.results.$.score', 'form.created_at'],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('page ~snapshotIgnore that is not an array of strings emits a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'controls', type: 'PageHeaderMenu', '~snapshotIgnore': 'form.created_at' }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "~snapshotIgnore" should be an array of state path strings.'
+  );
+});

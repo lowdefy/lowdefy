@@ -18,10 +18,13 @@
 
 import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
+import check from './check.js';
+import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
+import serializeBuildException from './utils/serializeBuildException.js';
 import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
@@ -30,8 +33,11 @@ import buildAgents from './build/buildAgents.js';
 import buildApp from './build/buildApp.js';
 import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
+import buildCollections from './build/buildCollections.js';
+import buildComponents from './build/buildComponents.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
+import buildMigrations from './build/buildMigrations/buildMigrations.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
@@ -43,6 +49,7 @@ import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
+import loadBlockSchemas from './build/loadBlockSchemas.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
@@ -62,14 +69,18 @@ import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
+import writeCollections from './build/writeCollections.js';
+import writeComponentDefs from './build/writeComponentDefs.js';
 import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
+import writeMigrations from './build/buildMigrations/writeMigrations.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeMcp from './build/writeMcp.js';
 import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
 import writeI18n from './build/writeI18n.js';
 import writeTheme from './build/writeTheme.js';
+import copyJsModules from './build/buildJs/copyJsModules.js';
 import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
@@ -127,6 +138,12 @@ async function build(options) {
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
 
+    // Phase 3.1: Extract runtime component definitions into context.componentDefs
+    // before operator precompute/validation runs, so component bodies (which
+    // carry _prop and _slot markers) never reach the unknown-operator or
+    // precompute passes. Expansion re-inserts them per use site in buildBlock.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
+
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after
     // module manifests are merged (replacing the old per-region folds in buildRefs,
@@ -162,7 +179,12 @@ async function build(options) {
     tryBuildStep(addKeys, 'addKeys', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    tryBuildStep(buildCollections, 'buildCollections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    // buildMigrations is async (it reads the migrations/ directory), so it is
+    // awaited directly rather than through tryBuildStep; it collects its own
+    // errors into context.errors like the wrapped steps do.
+    await buildMigrations({ components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
@@ -174,6 +196,8 @@ async function build(options) {
       components,
       context,
     });
+    // Block schemas must be in context before any block is built (validateBlockProperties).
+    await loadBlockSchemas({ components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -189,11 +213,17 @@ async function build(options) {
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(runChecks, 'checks', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
+
+    // `lowdefy check` stops here: every validation has run and nothing is written.
+    if (context.validateOnly) {
+      return { errors: [], warnings: (context.warnings ?? []).map(serializeBuildException) };
+    }
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
@@ -201,8 +231,11 @@ async function build(options) {
     await writeAppMeta({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });
+    await writeCollections({ components, context });
+    await writeComponentDefs({ context });
     await writeAgents({ components, context });
     await writeApi({ components, context });
+    await writeMigrations({ context });
     await writeMcp({ components, context });
     await writeWebsockets({ components, context });
     await writeNotifications({ components, context });
@@ -222,6 +255,7 @@ async function build(options) {
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
+    await copyJsModules({ context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;
@@ -240,6 +274,6 @@ async function build(options) {
   }
 }
 
-export { createPluginTypesMap };
+export { check, createPluginTypesMap };
 
 export default build;

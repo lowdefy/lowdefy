@@ -20,28 +20,42 @@ import path from 'node:path';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 
 // Dynamic JS map loading for JIT-built pages — the build rewrites
-// serverJsMap.js when a JIT page discovers new _js operators.
+// serverJsMap.js when a JIT page discovers new _js operators. The file carries
+// import statements for _js module references, so it is loaded as a real
+// module (a fresh specifier per mtime defeats the ESM cache) rather than
+// evaluated as text.
 let cachedJsMapMtime = null;
 let cachedJsMap = staticJsMap;
+let pending = null;
 
-function loadDynamicJsMap(buildDirectory) {
+async function loadDynamicJsMap(buildDirectory) {
   const jsMapPath = path.join(buildDirectory, 'plugins', 'operators', 'serverJsMap.js');
+  let stat;
   try {
-    const stat = fs.statSync(jsMapPath);
-    if (cachedJsMapMtime && stat.mtimeMs === cachedJsMapMtime) {
-      return cachedJsMap;
-    }
-    cachedJsMapMtime = stat.mtimeMs;
-    // For server-side, we can read and eval the JS file
-    const content = fs.readFileSync(jsMapPath, 'utf8');
-    const fn = new Function('exports', content.replace('export default', 'exports.default ='));
-    const exports = {};
-    fn(exports);
-    cachedJsMap = { ...staticJsMap, ...(exports.default ?? {}) };
-    return cachedJsMap;
+    stat = fs.statSync(jsMapPath);
   } catch {
     return cachedJsMap;
   }
+  if (cachedJsMapMtime === stat.mtimeMs) {
+    return pending ?? cachedJsMap;
+  }
+  cachedJsMapMtime = stat.mtimeMs;
+  pending = import(/* @vite-ignore */ `${jsMapPath}?v=${stat.mtimeMs}`)
+    .then((mod) => {
+      cachedJsMap = { ...staticJsMap, ...(mod.default ?? {}) };
+      return cachedJsMap;
+    })
+    .catch(() => cachedJsMap)
+    .finally(() => {
+      pending = null;
+    });
+  return pending;
+}
+
+// Synchronous readers (auth hook system contexts) take the most recent map;
+// every page and API request refreshes it through loadDynamicJsMap first.
+export function peekDynamicJsMap() {
+  return cachedJsMap;
 }
 
 export default loadDynamicJsMap;

@@ -1,0 +1,12 @@
+name: Copy title to name
+routine:
+  - id: copy
+    type: MongoDBUpdateMany
+    connectionId: frameworks
+    tenant: none
+    properties:
+      filter:
+        title: { $exists: true }
+        name: { $exists: false }
+      update:
+        - $set: { name: '$title' }

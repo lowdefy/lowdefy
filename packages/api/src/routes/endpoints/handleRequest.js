@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import addStepResult from './addStepResult.js';
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
@@ -22,12 +24,23 @@ import evaluateOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import resolveRunAs from './resolveRunAs.js';
+import resolveCollectionSchema from '../request/resolveCollectionSchema.js';
 import resolveTenant from '../request/resolveTenant.js';
 import validateSchemas from '../request/validateSchemas.js';
 
+// routineContext.trace is an optional dev-only collector (the `explain` flag of
+// lowdefy_run_endpoint): an array that gains one entry per request step,
+// carrying the step id, the tenancy verdict, the evaluated properties, the
+// effective query and the wall's rewrites. Absent, nothing is allocated.
 async function handleRequest(context, routineContext, { request }) {
   const { logger } = context;
   const { items } = routineContext;
+  let trace;
+  if (routineContext.trace) {
+    trace = { stepId: request.stepId, rewritten: [] };
+    routineContext.trace.push(trace);
+  }
 
   logger.debug({
     event: 'debug_start_request',
@@ -41,7 +54,25 @@ async function handleRequest(context, routineContext, { request }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
-  const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
+  // A step-level runAs is evaluated against the routine context as it stands
+  // at this step, so `_step` reads the results before it; otherwise the
+  // endpoint-level scope (if any) applies.
+  const runAs = type.isNone(requestConfig.runAs)
+    ? routineContext.runAs
+    : resolveRunAs(context, routineContext, {
+        runAs: requestConfig.runAs,
+        location: requestConfig.stepId,
+        configKey: requestConfig['~k'],
+        source: 'step',
+      });
+  const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig, runAs });
+  if (trace) {
+    trace.connection = {
+      id: connectionConfig.connectionId,
+      type: connectionConfig.type,
+      tenant: tenant ?? null,
+    };
+  }
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -50,6 +81,12 @@ async function handleRequest(context, routineContext, { request }) {
     requestConfig,
     state: routineContext.state,
     steps: routineContext.steps,
+  });
+  if (trace) {
+    trace.properties = requestProperties;
+  }
+  const collectionSchema = await resolveCollectionSchema(context, {
+    collectionName: connectionProperties.collection,
   });
   checkConnectionRead(context, {
     connectionConfig,
@@ -71,12 +108,14 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
   });
   const result = await callRequestResolver(context, {
+    collectionSchema,
     connectionProperties,
     endpointDepth: routineContext.endpointDepth,
     requestConfig,
     requestProperties,
     requestResolver,
     tenant,
+    trace,
   });
 
   addStepResult(context, routineContext, { result, stepId: request.stepId });

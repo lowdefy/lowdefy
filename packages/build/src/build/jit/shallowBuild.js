@@ -23,17 +23,21 @@ import createContext from '../../createContext.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
 import makeId from '../../utils/makeId.js';
 import tryBuildStep from '../../utils/tryBuildStep.js';
+import runChecks from '../../checks/index.js';
 
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
 import buildApp from '../buildApp.js';
 import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
+import buildCollections from '../buildCollections.js';
+import buildComponents from '../buildComponents.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
+import loadBlockSchemas from '../loadBlockSchemas.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
@@ -57,12 +61,15 @@ import writeApp from '../writeApp.js';
 import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
+import writeCollections from '../writeCollections.js';
+import writeComponentDefs from '../writeComponentDefs.js';
 import writeConnections from '../writeConnections.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeMcp from '../writeMcp.js';
 import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
+import copyJsModules from '../buildJs/copyJsModules.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
 import writeLogger from '../writeLogger.js';
@@ -107,7 +114,6 @@ async function shallowBuild(options) {
     // that the projection exists (matches the full build in index.js).
     await resolveModuleManifests({ context });
 
-
     let components;
     try {
       // Phase 2: Ref resolution (with shallow options)
@@ -132,6 +138,13 @@ async function shallowBuild(options) {
     buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+
+    // Extract runtime component definitions into context.componentDefs before
+    // the precompute/validation passes, mirroring the full build (index.js
+    // Phase 3.1). Runs after collectSkeletonSourceFiles so component files
+    // count as skeleton sources — a component edit rebuilds the skeleton and
+    // refreshes componentDefs.json for the JIT page builds.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
 
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline
@@ -173,6 +186,7 @@ async function shallowBuild(options) {
     tryBuildStep(addKeys, 'addKeys', { components, context });
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    tryBuildStep(buildCollections, 'buildCollections', { components, context });
     tryBuildStep(buildApi, 'buildApi', { components, context });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
@@ -186,6 +200,8 @@ async function shallowBuild(options) {
       context,
     });
 
+    // Block schemas must be in context before any block is built (validateBlockProperties).
+    await loadBlockSchemas({ components, context });
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
@@ -201,6 +217,7 @@ async function shallowBuild(options) {
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    tryBuildStep(runChecks, 'checks', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
 
     logCollectedErrors(context);
@@ -212,6 +229,8 @@ async function shallowBuild(options) {
     await writeAppMeta({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });
+    await writeCollections({ components, context });
+    await writeComponentDefs({ context });
     await writeApi({ components, context });
     await writeMcp({ components, context });
     await writeAgents({ components, context });
@@ -243,6 +262,9 @@ async function shallowBuild(options) {
     await writeTypes({ components, context });
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
+    // JIT page builds (separate process) restore this so serverJsMap.js keeps
+    // importing the modules the skeleton build discovered.
+    await context.writeBuildArtifact('jsModules.json', JSON.stringify(context.jsModules));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
     await context.writeBuildArtifact(
       'customTypesMap.json',
@@ -276,13 +298,11 @@ async function shallowBuild(options) {
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against
     // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact(
-      'iconImports.json',
-      JSON.stringify(components.imports.icons)
-    );
+    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
+    await copyJsModules({ context });
 
     return { components, pageRegistry, context };
   } catch (err) {

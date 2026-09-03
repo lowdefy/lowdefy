@@ -34,6 +34,7 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     };
     if (array['~r'] !== undefined) entry['~r'] = array['~r'];
     if (array['~l'] !== undefined) entry['~l'] = array['~l'];
+    if (array['~c'] !== undefined) entry['~c'] = array['~c'];
     keyMap[arrayKeyMapId] = entry;
     Object.defineProperty(array, '~k', {
       value: arrayKeyMapId,
@@ -43,19 +44,23 @@ function recArray({ array, arrayKey, keyMap, parentKeyMapId, context }) {
     });
     delete array['~r'];
     delete array['~l'];
+    delete array['~c'];
   }
 
   array.forEach((item, index) => {
     if (type.isObject(item)) {
       let path = `${arrayKey}[${index}]`;
       // TODO: Convert all artifacts to not modify id.
+      // Keys are added to the raw config, where a page request still carries
+      // its own `id` next to `connectionId` — the request id must win, or the
+      // key path names the connection instead of the request.
       const id =
         item.blockId ??
         item.menuId ??
         item.menuItemId ??
         item.requestId ??
-        item.connectionId ??
-        item.id;
+        item.id ??
+        item.connectionId;
       if (id) {
         path = `${path.slice(0, -1)}:${id}]`;
       }
@@ -99,6 +104,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     };
     if (object['~r'] !== undefined) entry['~r'] = object['~r'];
     if (object['~l'] !== undefined) entry['~l'] = object['~l'];
+    if (object['~c'] !== undefined) entry['~c'] = object['~c'];
+    if (object['~x'] !== undefined) entry['~x'] = object['~x'];
 
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
@@ -114,7 +121,9 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
           collectExceptions(
             context,
             new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(
+                ', '
+              )}`,
               { configKey: keyMapId }
             )
           );
@@ -134,6 +143,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     setNonEnumerableProperty(object, '~k', keyMapId);
     delete object['~r'];
     delete object['~l'];
+    delete object['~c'];
+    delete object['~x'];
     delete object['~ignoreBuildChecks'];
   }
 

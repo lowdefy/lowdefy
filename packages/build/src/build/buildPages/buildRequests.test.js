@@ -547,9 +547,7 @@ test('request tenant with a field object throws naming the connection position',
         id: 'page_1',
         auth,
         type: 'Container',
-        requests: [
-          { id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } },
-        ],
+        requests: [{ id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } }],
       },
     ],
   };
@@ -561,7 +559,10 @@ test('request tenant with a field object throws naming the connection position',
 test('a literal $search pipeline on a walled connection without tenant authored throws at build', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');
-  contextWithTenant.tenantConnectionIds.add('walled');
+  contextWithTenant.tenantConnections.set('walled', {
+    type: 'MongoDBCollection',
+    field: 'organization_id',
+  });
   const components = {
     pages: [
       {
@@ -587,7 +588,10 @@ test('a literal $search pipeline on a walled connection without tenant authored 
 test('a literal $graphLookup on a walled connection without tenant authored throws at build', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');
-  contextWithTenant.tenantConnectionIds.add('walled');
+  contextWithTenant.tenantConnections.set('walled', {
+    type: 'MongoDBCollection',
+    field: 'organization_id',
+  });
   const components = {
     pages: [
       {
@@ -615,7 +619,10 @@ test('a literal $graphLookup on a walled connection without tenant authored thro
 test('a $search pipeline with tenant authored passes the build check', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');
-  contextWithTenant.tenantConnectionIds.add('walled');
+  contextWithTenant.tenantConnections.set('walled', {
+    type: 'MongoDBCollection',
+    field: 'organization_id',
+  });
   const components = {
     pages: [
       {
@@ -665,7 +672,10 @@ test('a $search pipeline on an unwalled connection passes the build check', () =
 test('an operator-composed pipeline on a walled connection passes the build check silently', () => {
   const contextWithTenant = testContext({ logger });
   contextWithTenant.connectionIds.add('walled');
-  contextWithTenant.tenantConnectionIds.add('walled');
+  contextWithTenant.tenantConnections.set('walled', {
+    type: 'MongoDBCollection',
+    field: 'organization_id',
+  });
   const components = {
     pages: [
       {

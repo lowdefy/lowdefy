@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "collection \"controls\" is declared shared"
+      ],
+      "errorContains": [
+        "Connection \"org-scope\" is tenant-scoped on \"organization_id\" but collection \"controls\" is declared shared. One of the two is wrong — a scoped read of a shared collection matches nothing.",
+        "lowdefy.yaml:22"
+      ]
+    },
+    {
+      "mode": "dev",
+      "errors": [
+        "collection \"controls\" is declared shared"
+      ]
+    }
+  ]
+}

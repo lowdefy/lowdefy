@@ -18,13 +18,22 @@ import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 import crypto from 'crypto';
 
-function hashFn({ jsMap, env, value }) {
+import resolveJsModule from './resolveJsModule.js';
+
+function hashFn({ context, jsMap, env, value, configKey }) {
   const hash = crypto.createHash('sha1').update(value).digest('base64');
   jsMap[env][hash] = value;
+  // Linting is a check rule (checks/jsLint.js) so it runs once per pipeline
+  // and can be suppressed or listed like any other check.
+  context.jsBodies.push({ env, hash, body: value, configKey });
   return hash;
 }
 
-function JsMapParser({ input, jsMap, env }) {
+function isModuleReference(fn) {
+  return fn.startsWith('./') || fn.startsWith('../');
+}
+
+function JsMapParser({ input, jsMap, env, context }) {
   if (!jsMap[env]) {
     jsMap[env] = {};
   }
@@ -38,15 +47,34 @@ function JsMapParser({ input, jsMap, env }) {
     const inner = value[key];
 
     if (type.isString(inner)) {
-      return { _js: hashFn({ jsMap, env, value: inner }) };
+      return { _js: hashFn({ context, jsMap, env, value: inner, configKey: value['~k'] }) };
     }
 
     if (type.isObject(inner) && type.isString(inner.fn)) {
-      return { _js: { fn: hashFn({ jsMap, env, value: inner.fn }), args: inner.args } };
+      // "./lib/x.js#name" names an export in a real file; source text never
+      // starts with "./" or "../", so the two forms cannot collide.
+      if (isModuleReference(inner.fn)) {
+        const { hash } = resolveJsModule({
+          context,
+          configKey: value['~k'],
+          env,
+          fn: inner.fn,
+          refId: value['~r'],
+        });
+        return { _js: { fn: hash, args: inner.args } };
+      }
+      return {
+        _js: {
+          fn: hashFn({ context, jsMap, env, value: inner.fn, configKey: value['~k'] }),
+          args: inner.args,
+        },
+      };
     }
 
     throw new ConfigError(
-      `_js operator expects a JavaScript string or { fn: string, args?: object }. Received ${JSON.stringify(inner)}.`,
+      `_js operator expects a JavaScript string or { fn: string, args?: object }. Received ${JSON.stringify(
+        inner
+      )}.`,
       { configKey: value['~k'] }
     );
   };

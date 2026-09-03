@@ -1,0 +1,5 @@
+{
+  "tests": [
+    { "mode": "prod", "errorContains": ["has no slot \"foot\"", "Declared slots: footer"] }
+  ]
+}

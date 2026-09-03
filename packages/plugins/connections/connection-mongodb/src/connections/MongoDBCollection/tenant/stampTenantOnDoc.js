@@ -21,7 +21,11 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // The server owns the tenant field on every written document: authored values
 // are rejected (loud error over silent overwrite), then the caller's org is
 // stamped.
-function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
+//
+// `trace` is an optional dev-only collector: when present the stamp is
+// recorded on trace.rewritten as { at, injected }, where `at` names the
+// authored property ('doc', 'docs[1]', 'operations[0].document').
+function stampTenantOnDoc({ doc, tenant, position = 'an insert document', trace, at = 'doc' }) {
   const { field, value } = tenant;
   if (tenant.authored === true) {
     // See applyTenantToFilter - the shared refusal of the authored sentinel
@@ -31,6 +35,9 @@ function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
     );
   }
   assertTenantFieldNotAuthored({ value: doc, field, position });
+  if (trace) {
+    trace.rewritten.push({ at, injected: { [field]: value } });
+  }
   return { ...doc, [field]: value };
 }
 

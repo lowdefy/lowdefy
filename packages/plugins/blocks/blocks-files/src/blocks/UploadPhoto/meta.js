@@ -31,27 +31,89 @@ export default {
   events: {
     onBeforeUpload: {
       description: 'Triggered before upload starts. If any action throws, the upload is cancelled.',
-      event: { file: 'The raw File object selected by the user.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The raw File object selected by the user.' },
+        },
+      },
     },
     onChange: {
       description:
-        'Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, with the block value ({ file, fileList }) as the event, where file includes the base64 content.',
+        'Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, where file includes the base64 content.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The file whose state changed.' },
+          fileList: {
+            type: 'array',
+            items: { type: 'object' },
+            description: 'The full list of files.',
+          },
+        },
+      },
     },
     onProgress: {
       description: 'Triggered when the upload state is in progress.',
-      event: { file: 'The file being uploaded.', fileList: 'The full list of files.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The file being uploaded.' },
+          fileList: {
+            type: 'array',
+            items: { type: 'object' },
+            description: 'The full list of files.',
+          },
+        },
+      },
     },
     onSuccess: {
       description: 'Triggered when the upload state is done uploading.',
-      event: { file: 'The uploaded file.', fileList: 'The full list of files.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The uploaded file.' },
+          fileList: {
+            type: 'array',
+            items: { type: 'object' },
+            description: 'The full list of files.',
+          },
+        },
+      },
     },
     onRemove: {
       description: 'Triggered when the upload has been removed.',
-      event: { file: 'The removed file.', fileList: 'The full list of files.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The removed file.' },
+          fileList: {
+            type: 'array',
+            items: { type: 'object' },
+            description: 'The full list of files.',
+          },
+        },
+      },
     },
     onError: {
       description: 'Triggered when the upload has failed.',
-      event: { file: 'The file that failed.', fileList: 'The full list of files.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The file that failed.' },
+          fileList: {
+            type: 'array',
+            items: { type: 'object' },
+            description: 'The full list of files.',
+          },
+        },
+      },
     },
   },
   properties: {

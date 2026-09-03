@@ -26,18 +26,21 @@ blocks:
       span: 12
     properties:
       block: true
-      hideActionLoading: true
       icon: AiOutlineArrowLeft
       size: large
       title:
-        _var: previous_page_title
+        _var:
+          key: previous_page_title
+          default: null
     events:
       onClick:
         - id: link_back
           type: Link
           params:
             pageId:
-              _var: previous_page_id
+              _var:
+                key: previous_page_id
+                default: null
         - id: scroll_to_top
           type: ScrollTo
           params:
@@ -48,18 +51,21 @@ blocks:
       span: 12
     properties:
       block: true
-      hideActionLoading: true
       icon: AiOutlineArrowRight
       size: large
       title:
-        _var: next_page_title
+        _var:
+          key: next_page_title
+          default: null
     events:
       onClick:
         - id: link_forward
           type: Link
           params:
             pageId:
-              _var: next_page_id
+              _var:
+                key: next_page_id
+                default: null
         - id: scroll_to_top
           type: ScrollTo
           params:

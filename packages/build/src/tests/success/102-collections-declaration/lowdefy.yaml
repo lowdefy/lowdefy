@@ -1,0 +1,56 @@
+# 102: App-level collections declaration joined to connections
+# ============================================================
+# Two collections declared under collections:, addressed by three connections
+# (a read/write one and a read-only one on answers, a catalogue one on
+# controls). The build normalises the declaration and writes
+# build/collections.json. The snapshot types map declares no tenant
+# capability, so the connections carry no tenant: of their own here; the
+# tenancy agreement is covered by the unit tests and fixture V1.
+
+lowdefy: local
+
+collections:
+  answers:
+    tenant: organization_id
+    fields:
+      test_id: string
+      result: { enum: [pass, fail, partial, na] }
+      evidence_ids: [string]
+      superseded: boolean
+      created_at: date
+    relations:
+      test_id: controls._id
+    indexes:
+      - keys: { organization_id: 1, test_id: 1 }
+        options: { unique: true }
+  controls:
+    tenant: shared
+    fields: { _id: string, title: string, framework_id: string }
+
+connections:
+  - id: answers_rw
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: answers
+      write: true
+  - id: answers_ro
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: answers
+      write: false
+  - id: controls
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Paragraph
+        properties:
+          content: Collections

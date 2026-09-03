@@ -349,23 +349,6 @@
         showSizeChanger: true
         showQuickJumper: true
 
-- title: With Label
-  blocks:
-    - id: with_label_default
-      type: Pagination
-      properties:
-        title: Page Navigation
-        total: 100
-    - id: with_label_inline
-      type: Pagination
-      properties:
-        title: Results
-        total: 200
-        showTotal: true
-        label:
-          inline: true
-          span: 6
-
 - title: With Style
   blocks:
     - id: style_background_label

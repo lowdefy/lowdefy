@@ -165,7 +165,7 @@ test('insertOne mongodb error', async () => {
   };
   await MongoDBInsertOne({ request, connection });
   await expect(MongoDBInsertOne({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error'
+    'MongoDB: Duplicate key on collection "insertOne".'
   );
 });
 
@@ -212,6 +212,41 @@ test('insertOne insert a date', async () => {
   });
 });
 
+test('insertOne throws a ServiceError with a hint when a unique index is violated', async () => {
+  const uniqueCollection = 'insertOneUniqueIndex';
+  const client = new MongoClient(databaseUri);
+  await client.connect();
+  try {
+    await client
+      .db(databaseName)
+      .collection(uniqueCollection)
+      .createIndex({ ref: 1 }, { unique: true });
+  } finally {
+    await client.close();
+  }
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection: uniqueCollection,
+    write: true,
+  };
+  await MongoDBInsertOne({ request: { doc: { ref: 'ORD-1' } }, connection });
+  await expect(
+    MongoDBInsertOne({ request: { doc: { ref: 'ORD-1' } }, connection })
+  ).rejects.toThrow('MongoDB: Duplicate key on collection "insertOneUniqueIndex".');
+  const error = await MongoDBInsertOne({
+    request: { doc: { ref: 'ORD-1' } },
+    connection,
+  }).catch((e) => e);
+  expect(error.name).toBe('ServiceError');
+  expect(error.code).toBe(11000);
+  expect(error.hint).toBe(
+    'A unique index on ref already has a document with these values. Insert with MongoDBUpdateOne and upsert: true, or remove the existing document first.'
+  );
+  expect(error.message).not.toContain('ORD-1');
+  expect(error.cause.name).toBe('MongoServerError');
+});
+
 test('request not an object', async () => {
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
@@ -238,4 +273,88 @@ test('request options not an object', async () => {
   expect(() => validate({ schema, data: request })).toThrow(
     'MongoDBInsertOne request property "options" should be an object.'
   );
+});
+
+// Write validation against build/collections.json fields (collectionSchema).
+const collectionSchema = {
+  name: 'answers',
+  fields: {
+    test_id: { type: 'string' },
+    result: { enum: ['pass', 'fail', 'partial', 'na'] },
+    created_at: { instanceof: 'Date' },
+  },
+};
+
+test('insertOne with a collectionSchema throws a contract violation before touching the database', async () => {
+  const violationCollection = 'insertOneContractViolation';
+  await clearTestMongoDb({ collection: violationCollection });
+  const connection = { databaseUri, databaseName, collection: violationCollection, write: true };
+  await expect(
+    MongoDBInsertOne({
+      request: { doc: { _id: 'v1', test_id: 't1', result: 'Pass' } },
+      connection,
+      collectionSchema,
+    })
+  ).rejects.toThrow(
+    'Field "result" in an insert document for collection "answers" does not match the declared contract: must be equal to one of the allowed values (pass, fail, partial, na). Received "Pass".'
+  );
+  const client = new MongoClient(databaseUri);
+  await client.connect();
+  const written = await client.db().collection(violationCollection).find({}).toArray();
+  await client.close();
+  expect(written).toEqual([]);
+});
+
+test('insertOne with a collectionSchema writes a conforming document with undeclared fields and a serialized date', async () => {
+  const okCollection = 'insertOneContractOk';
+  await clearTestMongoDb({ collection: okCollection });
+  const connection = { databaseUri, databaseName, collection: okCollection, write: true };
+  const res = await MongoDBInsertOne({
+    request: {
+      doc: {
+        _id: 'ok1',
+        test_id: 't1',
+        result: 'pass',
+        reviewed_by: 'u1',
+        created_at: { '~d': '2026-01-01T00:00:00.000Z' },
+      },
+    },
+    connection,
+    collectionSchema,
+  });
+  expect(res).toEqual({ acknowledged: true, insertedId: 'ok1' });
+  const client = new MongoClient(databaseUri);
+  await client.connect();
+  const written = await client.db().collection(okCollection).findOne({ _id: 'ok1' });
+  await client.close();
+  expect(written.created_at).toEqual(new Date('2026-01-01T00:00:00.000Z'));
+  expect(written.reviewed_by).toEqual('u1');
+});
+
+test('insertOne validates after the tenant stamp so a required tenant field passes', async () => {
+  const tenantCollection = 'insertOneContractTenant';
+  await clearTestMongoDb({ collection: tenantCollection });
+  const connection = { databaseUri, databaseName, collection: tenantCollection, write: true };
+  const res = await MongoDBInsertOne({
+    request: { doc: { _id: 'tn1', test_id: 't1' } },
+    connection,
+    tenant: { field: 'organization_id', value: 'org_a' },
+    collectionSchema: {
+      name: 'answers',
+      fields: { organization_id: { type: 'string', required: true } },
+    },
+  });
+  expect(res).toEqual({ acknowledged: true, insertedId: 'tn1' });
+});
+
+test('insertOne with a null collectionSchema does not validate', async () => {
+  const nullCollection = 'insertOneContractNull';
+  await clearTestMongoDb({ collection: nullCollection });
+  const connection = { databaseUri, databaseName, collection: nullCollection, write: true };
+  const res = await MongoDBInsertOne({
+    request: { doc: { _id: 'n1', result: 'Pass' } },
+    connection,
+    collectionSchema: null,
+  });
+  expect(res).toEqual({ acknowledged: true, insertedId: 'n1' });
 });

@@ -42,6 +42,9 @@ function createTestContext() {
   context.errors = [];
   context.typesMap = snapshotTypesMap;
   context.unresolvedRefVars = {};
+  // The page templates below carry arbitrary properties to exercise the JIT
+  // machinery; an empty schema map keeps block property validation out of them.
+  context.blockSchemas = {};
   return context;
 }
 
@@ -108,6 +111,47 @@ type: PageHeaderMenu
   expect(result.id).toBe('page:home');
   expect(result.auth).toEqual(expect.objectContaining({ public: true }));
   expect(result.type).toBe('PageHeaderMenu');
+});
+
+test('buildPageJit loads the block schemas when the context has none and reports a misspelt property', async () => {
+  const context = createTestContext();
+  delete context.blockSchemas;
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+properties:
+  contnet: Hello
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'home',
+      pageRegistry,
+      context,
+    })
+  ).rejects.toMatchObject({
+    message: 'Block "home" of type "Box": unknown property "contnet". Did you mean "content"?',
+    checkSlug: 'block-properties',
+  });
+  expect(context.blockSchemas.Box).toBeDefined();
 });
 
 test('buildPageJit writes tailwind candidate file with classes from _js source, not the extracted hash', async () => {
@@ -985,8 +1029,24 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
   const warning = warnings.find((w) => w.checkSlug === 'callapi-refs');
   expect(warning).toBeDefined();
   expect(warning.message).toBe(
-    'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
+    'CallAPI action on page "home" references non-existent endpoint "my_endpoint". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "my_endpoint".'
   );
+});
+
+test('buildPageJit attaches prodError to _warnings entries for prod-gated warnings', async () => {
+  const context = createTestContextWithApi([]);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  const warning = result._warnings.find((w) => w.message.includes('non-existent endpoint'));
+  expect(warning).toMatchObject({ type: 'ConfigWarning', prodError: true });
 });
 
 const authConfigPageYaml = `
@@ -1082,9 +1142,7 @@ test('buildPageJit collects the unavailable-projection error when no projection 
     })
   ).rejects.toThrow('build failed with');
   expect(
-    context.errors.some((e) =>
-      e.message.includes('_build.authConfig is not available here.')
-    )
+    context.errors.some((e) => e.message.includes('_build.authConfig is not available here.'))
   ).toBe(true);
 });
 
@@ -1160,6 +1218,115 @@ test('buildPageJit resolves _build.authConfig in a module page from the restored
   expect(result.properties.roles).toEqual(rolesCatalog);
   // The projection was restored from the artifact into the JIT context.
   expect(context.authConfigProjection.emailAndPassword.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('buildPageJit expands a component instance using context componentDefs', async () => {
+  const context = createTestContext();
+  context.componentDefs = {
+    AnswerPill: {
+      id: 'AnswerPill',
+      props: { result: { type: 'string', required: true } },
+      slots: [],
+      blocks: [{ id: 'label', type: 'Title', properties: { content: { _prop: 'result' } } }],
+    },
+  };
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+blocks:
+  - id: pill
+    type: AnswerPill
+    props:
+      result:
+        _state: answer
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  expect(context.errors).toEqual([]);
+  const pill = result.slots.content.blocks[0];
+  expect(pill.type).toBe('Box');
+  expect(pill.slots.content.blocks[0].blockId).toBe('pill.label');
+  expect(pill.slots.content.blocks[0].properties.content).toEqual({ _state: 'answer' });
+});
+
+test('buildPageJit restores componentDefs from the componentDefs.json artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-components-'));
+  fs.writeFileSync(
+    path.join(buildDirectory, 'componentDefs.json'),
+    JSON.stringify({
+      AnswerPill: {
+        id: 'AnswerPill',
+        props: { result: { type: 'string', required: true } },
+        slots: [],
+        blocks: [{ id: 'label', type: 'Title', properties: { content: { _prop: 'result' } } }],
+      },
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: Box
+blocks:
+  - id: pill
+    type: AnswerPill
+    props:
+      result:
+        _state: answer
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  expect(context.errors).toEqual([]);
+  // The defs were restored from the artifact into the JIT context and the
+  // instance expanded — the dev server builds JIT pages in a separate process
+  // whose context starts with an empty componentDefs map.
+  expect(context.componentDefs.AnswerPill).toBeDefined();
+  const pill = result.slots.content.blocks[0];
+  expect(pill.type).toBe('Box');
+  expect(pill.slots.content.blocks[0].blockId).toBe('pill.label');
 
   fs.rmSync(buildDirectory, { recursive: true, force: true });
 });

@@ -86,11 +86,11 @@ const UploadBlock = ({
         multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
         onRemove={removeFile}
         showUploadList={properties.showUploadList}
-        onChange={() => {
+        onChange={({ file, fileList }) => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.
           if (!emitFileContent) {
-            methods.triggerEvent({ name: 'onChange' });
+            methods.triggerEvent({ name: 'onChange', event: { file, fileList } });
           }
         }}
       >

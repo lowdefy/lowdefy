@@ -94,8 +94,6 @@ blocks:
       vertical: true
       min: 0
       max: 100
-      inputStyle:
-        height: 200px
 
   - id: slider_range
     type: Slider

@@ -23,7 +23,9 @@ const Box = ({ blockId, classNames, content, events, methods, properties, styles
       id={blockId}
       data-testid={blockId}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      onPaste={() => methods.triggerEvent({ name: 'onPaste' })}
+      onPaste={(e) =>
+        methods.triggerEvent({ name: 'onPaste', event: { text: e.clipboardData.getData('text') } })
+      }
       className={classNames?.element}
       style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >

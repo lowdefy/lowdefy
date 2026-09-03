@@ -110,11 +110,13 @@ pages:
               items:
                 - label: Name
                   value:
-                    _nunjucks: '{{ first }} {{ last }}'
-                    first:
-                      _state: firstName
-                    last:
-                      _state: lastName
+                    _nunjucks:
+                      template: '{{ first }} {{ last }}'
+                      on:
+                        first:
+                          _state: firstName
+                        last:
+                          _state: lastName
                 - label: Email
                   value:
                     _state: email

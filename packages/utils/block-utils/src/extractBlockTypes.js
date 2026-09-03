@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import extractEventPayloads from './extractEventPayloads.js';
+
 function extractBlockTypes(metas) {
   const entries = Object.entries(metas);
   const blocks = entries.map(([name]) => name);
@@ -26,6 +28,8 @@ function extractBlockTypes(metas) {
     if (meta.initValue !== undefined) entry.initValue = meta.initValue;
     if (meta.slots !== undefined) entry.slots = meta.slots;
     if (meta.cssKeys) entry.cssKeys = Object.keys(meta.cssKeys);
+    if (meta.events) entry.events = extractEventPayloads(meta.events);
+    if (meta.dynamicEvents) entry.dynamicEvents = true;
     blockMetas[name] = entry;
   }
   return { blocks, icons, blockMetas };

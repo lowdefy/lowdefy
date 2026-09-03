@@ -14,9 +14,30 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import getStateSchemaDrift from './getStateSchemaDrift.js';
 import inspectStateFromTab from './inspectStateFromTab.js';
 import inspectStateHeadless from './inspectStateHeadless.js';
+import readPageArtifact from './readPageArtifact.js';
 import resolveSource from './resolveSource.js';
+
+// Adds stateSchemaDrift when the page artifact declares a state contract:
+// an empty array when the live state conforms, the violations otherwise. The
+// key is absent for a page with no contract.
+function withStateSchemaDrift({ pageId, result }) {
+  const artifact = readPageArtifact({ pageId });
+  if (!type.isObject(artifact?.stateSchema)) {
+    return result;
+  }
+  return {
+    ...result,
+    stateSchemaDrift: getStateSchemaDrift({
+      stateSchema: artifact.stateSchema,
+      state: result.state,
+    }),
+  };
+}
 
 // resolveSource picks the tab or headless — including why `user` is
 // headless-only. Falls back to headless whenever the tab path isn't usable
@@ -36,12 +57,15 @@ async function inspectState({ origin, pageId, source, user }) {
   if (tryTab) {
     const result = await inspectStateFromTab({ pageId });
     if (!result?.error) {
-      return { ...result, source: 'tab' };
+      return withStateSchemaDrift({ pageId, result: { ...result, source: 'tab' } });
     }
   }
 
   const result = await inspectStateHeadless({ origin, pageId, user });
-  return { ...result, source: 'headless' };
+  if (result?.error) {
+    return { ...result, source: 'headless' };
+  }
+  return withStateSchemaDrift({ pageId, result: { ...result, source: 'headless' } });
 }
 
 export default inspectState;

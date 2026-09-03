@@ -31,7 +31,10 @@ The schema for a Lowdefy API is:
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
+- `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
+- `responseSchema: object`: **Optional** - A JSON Schema describing the value the routine's `:return` produces. Declaring it turns on build-time checks of every `_actions` and `_step` read of the response, dev-time notices when the real response misses it, and publishes it as the MCP tool's `outputSchema`. See [Response Schema](#response-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
+- `runAs: object`: **Optional** - `{ organizationId }`: run the routine scoped to that organization under the `tenant` organizations policy. The tenant wall filters and stamps as if a member of that organization made the call, so caller-less runs (schedules, detached calls, webhooks) stay walled instead of needing `tenant: none`. `organizationId` may be a literal or an operator (`_step`, `_user`, `_secret`, ...) but never `_payload` or `_state`. Steps accept the same key. See [Running as an organization](/organizations#running-a-routine-as-an-organization-runas).
 - `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
 
 ###### API definition example:
@@ -125,6 +128,111 @@ Each schedule item has:
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
+
+## Payload Schema
+
+An endpoint can declare a `payloadSchema` — a [JSON Schema](https://json-schema.org/) describing the payload it accepts. A declared schema is a contract, not documentation: **every** payload is validated against it before the routine starts, whatever the caller is — the [`CallAPI`](/CallAPI) action from a page, an MCP `tools/call`, an [agent tool call](/ai-agent-docs), a nested `CallApi` from another endpoint, or a scheduled run's `schedule.payload`. Every `_payload` read in the routine can then rely on the shape.
+
+```yaml
+api:
+  - id: create_order
+    type: Api
+    payloadSchema:
+      type: object
+      required: [sku, quantity]
+      properties:
+        sku: { type: string }
+        quantity: { type: number, minimum: 1 }
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: orders
+        properties:
+          doc:
+            sku:
+              _payload: sku
+            quantity:
+              _payload: quantity
+```
+
+A payload that does not match is refused before the routine runs, with a message naming the endpoint, the failing location and the reason, for example:
+
+```
+Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.
+```
+
+- A REST call (`POST /api/endpoints/<endpointId>`) answers `400` with `{ name: 'UserError', message }`.
+- An MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
+- An agent tool call surfaces the message to the model as a tool error.
+- A scheduled run fails with the message — an authored `schedule.payload` that breaks its own endpoint's contract is a bug, not something to skip silently.
+
+A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
+
+There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
+
+## Response Schema
+
+An endpoint can declare a `responseSchema` — a [JSON Schema](https://json-schema.org/) describing what its routine's `:return` produces. It is the output half of the endpoint's contract, the counterpart of `payloadSchema`:
+
+```yaml
+api:
+  - id: search_controls
+    type: Api
+    payloadSchema:
+      type: object
+      properties:
+        query: { type: string }
+    responseSchema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              title: { type: string }
+        total: { type: integer }
+      required: [results, total]
+    routine:
+      # ...
+      ':return':
+        results:
+          _step: find.results
+        total:
+          _step: count.total
+```
+
+Declaring it does three things:
+
+- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the api record, whose own `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields one level up — `_actions.<actionId>.response.status`, `success`, `error`, `responseTime` — are not the endpoint's and are never checked. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
+
+  ```yaml
+  events:
+    onClick:
+      - id: search
+        type: CallAPI
+        params:
+          endpointId: search_controls
+          payload:
+            query:
+              _state: q
+      - id: store
+        type: SetState
+        params:
+          results:
+            _actions: search.response.response.results # checked
+          total:
+            _actions: search.response.response.totl # build error: Did you mean "total"?
+          ok:
+            _actions: search.response.success # action record, untouched
+  ```
+
+- **Dev notices.** The dev server validates the real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — against the schema. A mismatch is reported as a `ResponseSchemaWarning` in `build_status` and the ErrorBar with the endpoint's config location and the failing path. It is a notice, not a failure: the response is still returned. Production performs no response validation — a mismatch there is the app's data changing, not a config fault the framework should turn into a 500.
+
+- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content, so an MCP client can rely on the shape.
+
+Both `payloadSchema` and `responseSchema` are compiled at build, so a schema that is not valid JSON Schema is a build error naming the endpoint.
 
 ## Async Endpoints
 
@@ -289,7 +397,7 @@ Control structures allow you to implement complex logic flows within your API ro
 - [`:log`](/log) - Output messages to the server console.
 - [`:parallel`](/parallel) - Execute multiple routines simultaneously.
 - [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
-- [`:reject`](/reject) - Return a user-facing error response.
+- [`:reject`](/reject) - Return a user-facing error response. Not caught by [`:try`](/try)/`:catch` — it flows past every enclosing `:catch`, though `:finally` still runs.
 - [`:return`](/return) - Return a successful response with data.
 - [`:set_state`](/set_state) - Set values in server-side state.
 - [`:switch`](/switch) - Handle multiple conditions with different outcomes.
@@ -727,7 +835,7 @@ blocks:
           type: SetState
           params:
             user_data:
-              _actions: call_user_api.response.user
+              _actions: call_user_api.response.response.user
 
   - id: user_display
     type: Descriptions
@@ -760,7 +868,7 @@ events:
         type: SetState
         params:
           result:
-            _actions: call_process_data_api.response
+            _actions: call_process_data_api.response.response
 
     catch:
       - id: update_state
@@ -955,3 +1063,4 @@ api:
 - The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
 - Server-side execution provides access to secrets, connections, and server operators.
 - Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
+- A [`:reject`](/:reject) is a reply, not an exception, and is never caught by [`:try`](/:try)/`:catch`; [`:throw`](/:throw) is.

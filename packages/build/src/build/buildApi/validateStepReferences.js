@@ -18,28 +18,11 @@ import { ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import traverseConfig from '../../utils/traverseConfig.js';
-
-// Collect all step IDs from a routine (including nested control structures)
-// Note: After buildRoutine, steps have stepId (original id) and id is modified
-function collectStepIds(routine, stepIds) {
-  if (type.isArray(routine)) {
-    routine.forEach((item) => collectStepIds(item, stepIds));
-    return;
-  }
-  if (type.isObject(routine)) {
-    // Check if this is a step (has stepId after build, or id before build)
-    if (routine.stepId) {
-      stepIds.add(routine.stepId);
-    }
-    // Recurse into all values (handles control structures like :then, :else, :try, :catch)
-    Object.values(routine).forEach((value) => collectStepIds(value, stepIds));
-  }
-}
+import collectRoutineSteps from './collectRoutineSteps.js';
 
 function validateStepReferences({ endpoint, context }) {
   // Collect all step IDs defined in the routine
-  const stepIds = new Set();
-  collectStepIds(endpoint.routine, stepIds);
+  const stepIds = new Set(collectRoutineSteps(endpoint.routine).map((step) => step.stepId));
 
   // Find _step references in the routine
   const stepRefs = new Map(); // topLevelKey -> configKey (first occurrence)

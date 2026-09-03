@@ -48,12 +48,12 @@ function assertNoReservedKeys(value, filePath) {
   }
 }
 
-function parseYamlWithLineNumbers(content) {
+function parseYamlWithLineNumbers(content, filePath) {
   const doc = YAML.parseDocument(content);
   if (doc.errors && doc.errors.length > 0) {
     throw new Error(doc.errors[0].message);
   }
-  return addLineNumbers(doc.contents, content);
+  return addLineNumbers(doc.contents, content, undefined, { filePath });
 }
 
 async function parseRefContent({ content, refDef }) {
@@ -75,8 +75,11 @@ async function parseRefContent({ content, refDef }) {
 
     if (ext === 'yaml' || ext === 'yml') {
       try {
-        content = parseYamlWithLineNumbers(content);
+        content = parseYamlWithLineNumbers(content, path);
       } catch (error) {
+        // An expression compile error is already a located ConfigError; do not
+        // re-wrap it as a YAML parse error.
+        if (error instanceof ConfigError) throw error;
         if (isNjk) {
           throw new ConfigError(`Nunjucks template "${path}" produced invalid YAML.`, {
             cause: error,

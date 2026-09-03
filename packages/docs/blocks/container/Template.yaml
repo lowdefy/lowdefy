@@ -1,0 +1,73 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: Template
+    pageTitle: Template
+    section: Container Blocks
+    filePath: blocks/container/Template.yaml
+    block_type: Template
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Template
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Template/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Template/gallery.yaml
+    description: >
+      Render a Nunjucks template into HTML, with CSS scoped to the block and slots that hold real
+      Lowdefy blocks. Use Template instead of building HTML strings in `_js` for a custom card,
+      table row or detail panel.
+
+
+      **Escaping.** Every `{{ value }}` is HTML-escaped, so values from state, requests or user
+      input can be interpolated without an escape helper. The `| safe` filter turns escaping off
+      for one value (`{{ markup | safe }}`) — only use it on markup the app itself produced,
+      never on caller-supplied or database strings. The rendered result is still passed through
+      DOMPurify, which removes `<script>`, inline event handlers and `<style>`.
+
+
+      **Context.** `properties.context` holds the values the template can read. An object is
+      spread into the template scope (`context: { title: ... }` is read as `{{ title }}`); a
+      primitive is available as `{{ value }}`. Any operator can build the context, and a
+      `_js` module is the natural place to shape rows for a loop. All of Nunjucks is available:
+      `{% if %}`, `{% for %}`, `{% set %}`, filters such as `default`, `join` and
+      `upper`, and Lowdefy's `date`, `unique` and `urlQuery` filters.
+
+
+      **Scoped CSS.** `properties.css` is CSS *text* applied to this block only. It is
+      rendered nested under the block wrapper selector (`#bl-<blockId> { ... }`), so a bare
+      declaration styles the block wrapper, `.row { ... }` becomes `#bl-<blockId> .row` and
+      `@media` blocks nest unchanged, with no CSS parsing or rewriting. This is where the
+      `<style>` tag that the Html block strips belongs. The block-level `style:` config key is
+      unrelated and stays an object of CSS properties per css key
+      (`style: { .element: { padding: 8 } }`).
+
+
+      **Slots.** `{% slot "footer" %}` (a quoted name, no body, no `endslot`) marks where the
+      blocks configured under `slots.footer.blocks` render, so a Button, an input or any other
+      block can sit inside the templated markup and fire events as usual. Slot names are declared
+      by the template, so any name works. A `{% slot %}` with no matching `slots:` entry
+      renders an empty `div`, and a `slots:` entry with no matching tag renders nothing —
+      neither is an error, because the template may be built by an operator.
+
+
+      **Tailwind.** Class names written inside `properties.template` are scanned by the Tailwind
+      build like any other string in block properties. Classes that only exist inside a referenced
+      `_js` module are not scanned — write them in the template or a string property.
+    note: >
+      Templates compile in the browser when the block renders, not at build, because
+      `properties.template` can be produced by operators (`_if`, `_ref`, `_js`, a
+      `Dynamic` page). Each distinct template source compiles once per session and is cached.
+      Template inheritance and `{% include %}` are not available — the source is a config string,
+      there is no template loader — and template markup cannot wire event handlers; interaction
+      belongs in slotted blocks.

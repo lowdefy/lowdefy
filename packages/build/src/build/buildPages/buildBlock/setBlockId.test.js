@@ -16,6 +16,18 @@
 
 import setBlockId from './setBlockId.js';
 import createCounter from '../../../utils/createCounter.js';
+import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
+
+function createPageContext(pageId) {
+  return {
+    pageId,
+    blockIdCounter: createCounter(),
+    checkDuplicateBlockId: createCheckDuplicateId({
+      message:
+        'Duplicate blockId "{{ id }}" on page "{{ pageId }}". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.',
+    }),
+  };
+}
 
 test('page block gets correct blockId and id', () => {
   const block = { id: 'page1' };
@@ -36,7 +48,7 @@ test('child block with different id does not throw', () => {
   expect(child.id).toBe('block:page1:child1:0');
 });
 
-test('duplicate child blockIds do not throw', () => {
+test('setBlockId does not check duplicates when no checkDuplicateBlockId is supplied', () => {
   const blockIdCounter = createCounter();
   const page = { id: 'page1' };
   setBlockId(page, { pageId: 'page1', blockIdCounter });
@@ -78,4 +90,64 @@ test('deeply nested block with same id as page throws ConfigError', () => {
   expect(() => setBlockId(nested, { pageId: 'box', blockIdCounter })).toThrow(
     'Block id "box" on page "box" collides with the page id. A block cannot have the same id as its page.'
   );
+});
+
+test('setBlockId throws when two sibling blocks share an id', () => {
+  const pageContext = createPageContext('page1');
+  setBlockId({ id: 'page1' }, pageContext);
+  setBlockId({ id: 'email' }, pageContext);
+
+  expect(() => setBlockId({ id: 'email' }, pageContext)).toThrow(
+    'Duplicate blockId "email" on page "page1". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.'
+  );
+});
+
+test('setBlockId throws when a nested slot block repeats an id used higher on the page', () => {
+  const pageContext = createPageContext('page1');
+  setBlockId({ id: 'page1' }, pageContext);
+  setBlockId({ id: 'email' }, pageContext);
+  setBlockId({ id: 'container' }, pageContext);
+
+  expect(() => setBlockId({ id: 'email' }, pageContext)).toThrow(
+    'Duplicate blockId "email" on page "page1".'
+  );
+});
+
+test('setBlockId throws when two block ids differ only in case', () => {
+  const pageContext = createPageContext('page1');
+  setBlockId({ id: 'page1' }, pageContext);
+  setBlockId({ id: 'email' }, pageContext);
+
+  expect(() => setBlockId({ id: 'Email' }, pageContext)).toThrow(
+    'Duplicate blockId "Email" on page "page1".'
+  );
+});
+
+test('setBlockId allows the same block id on two different pages', () => {
+  const pageContext1 = createPageContext('page1');
+  setBlockId({ id: 'page1' }, pageContext1);
+  const block1 = { id: 'email' };
+  setBlockId(block1, pageContext1);
+
+  const pageContext2 = createPageContext('page2');
+  setBlockId({ id: 'page2' }, pageContext2);
+  const block2 = { id: 'email' };
+  expect(() => setBlockId(block2, pageContext2)).not.toThrow();
+
+  expect(block1.id).toBe('block:page1:email:0');
+  expect(block2.id).toBe('block:page2:email:0');
+});
+
+test('setBlockId reports the duplicate at the second block config location', () => {
+  const pageContext = createPageContext('page1');
+  setBlockId({ id: 'page1' }, pageContext);
+  setBlockId({ id: 'email', '~k': 'first' }, pageContext);
+
+  expect.assertions(2);
+  try {
+    setBlockId({ id: 'email', '~k': 'second' }, pageContext);
+  } catch (error) {
+    expect(error.name).toBe('ConfigError');
+    expect(error.configKey).toBe('second');
+  }
 });

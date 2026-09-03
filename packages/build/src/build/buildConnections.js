@@ -158,15 +158,43 @@ function validateTenant(connection, context, { tenantPolicy }) {
   }
 }
 
+function literalBoolean(value, fallback) {
+  if (type.isBoolean(value)) {
+    return value;
+  }
+  return fallback;
+}
+
 function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
-  // Scoped connection ids - scoping-capable type, no tenant: shared - for
-  // the best-effort entry-stage check on requests and steps
-  // (validateTenantPipelineEntry). Populated only under the tenant policy -
-  // the wall does not engage under pinned, so demanding an authored clause
-  // there would be a false alarm for a filter that never runs.
-  context.tenantConnectionIds = new Set();
+  // Walled connection id -> { type, field } - scoping-capable type, no
+  // tenant: shared - for the best-effort entry-stage check on requests and
+  // steps (validateTenantPipelineEntry) and the tenant audit rules in
+  // checks/tenant, which need the tenant field name each connection stamps
+  // and matches. Populated only under the tenant policy - the wall does not
+  // engage under pinned, so demanding an authored clause there would be a
+  // false alarm for a filter that never runs.
+  context.tenantConnections = new Map();
+  // Collection name -> { shared: [connectionId], scoped: [connectionId] } for
+  // every scoping-capable connection with a literal properties.collection.
+  // A pipeline names collections, connections name collections; joining the
+  // two at build is what lets validateTenantSharedLookup refuse a scoped
+  // pipeline that $lookups a tenant: shared collection the injected $match
+  // can never satisfy. An operator-valued collection name is unknowable here
+  // and is left out rather than guessed. Same policy guard as
+  // tenantConnections - the wall does not engage under pinned. Small and
+  // internal by design: the collections: declaration supersedes it.
+  context.tenantCollectionMap = {};
+  // Every connection's collection binding, for buildCollections to join the
+  // app-level collections: declaration onto - { connectionId, type,
+  // collection, dynamicCollection, tenant, read, write, configKey }. Under
+  // every policy and for every type: any connection type that names a
+  // collection string participates in the declaration. A collection named
+  // by an operator can not be joined (connection properties are never
+  // evaluated at build) and is recorded as dynamicCollection for the
+  // check-only rule that reports it.
+  context.connectionCollections = [];
   const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
@@ -204,13 +232,35 @@ function buildConnections({ components, context }) {
     if (tenantCapability === true || tenantCapability === false) {
       connection.tenantCapability = tenantCapability;
     }
-    if (
-      tenantPolicy &&
-      context.typesMap?.connectionMetas?.[connection.type]?.tenant === true &&
-      connection.tenant !== 'shared'
-    ) {
-      context.tenantConnectionIds.add(connection.connectionId);
+    if (tenantPolicy && tenantCapability === true) {
+      const shared = connection.tenant === 'shared';
+      if (!shared) {
+        context.tenantConnections.set(connection.connectionId, {
+          type: connection.type,
+          field: type.isObject(connection.tenant) ? connection.tenant.field : 'organization_id',
+        });
+      }
+      const collection = connection.properties?.collection;
+      if (type.isString(collection)) {
+        context.tenantCollectionMap[collection] ??= { shared: [], scoped: [] };
+        context.tenantCollectionMap[collection][shared ? 'shared' : 'scoped'].push(
+          connection.connectionId
+        );
+      }
     }
+    const collectionName = connection.properties?.collection;
+    context.connectionCollections.push({
+      connectionId: connection.connectionId,
+      type: connection.type,
+      collection: type.isString(collectionName) ? collectionName : undefined,
+      dynamicCollection: type.isObject(collectionName),
+      tenant: connection.tenant,
+      // MongoDBCollection defaults: read on, write off. Only a literal boolean
+      // is judged; an operator-valued flag keeps the default.
+      read: literalBoolean(connection.properties?.read, true),
+      write: literalBoolean(connection.properties?.write, false),
+      configKey,
+    });
     connection.id = `connection:${connection.id}`;
 
     // Count operators in connection properties

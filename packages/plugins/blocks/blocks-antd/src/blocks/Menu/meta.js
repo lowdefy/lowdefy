@@ -28,15 +28,37 @@ export default {
   events: {
     onSelect: {
       description: 'Trigger action when menu item is selected.',
-      event: { key: 'The selected menu item key.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The selected menu item key.' },
+        },
+      },
     },
     onClick: {
       description: 'Trigger action when menu item is clicked.',
-      event: { key: 'The clicked menu item key.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          key: { type: 'string', description: 'The clicked menu item key.' },
+        },
+      },
     },
     onToggleMenuGroup: {
       description: 'Trigger action when mobile menu group is opened.',
-      event: { openKeys: 'The keys of currently open menu groups.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          openKeys: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'The keys of currently open menu groups.',
+          },
+        },
+      },
     },
   },
   properties: {
@@ -100,9 +122,9 @@ export default {
         description: 'Delay time to show submenu when mouse enters (in seconds).',
       },
       theme: {
-        type: 'object',
+        type: ['string', 'object'],
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'The Menu color theme, light or dark, or antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/menu#design-token',

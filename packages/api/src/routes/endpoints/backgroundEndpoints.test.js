@@ -700,3 +700,95 @@ test('detached rehydrates the carried principal - roles are present on context.u
   expect(result.response).toEqual({ roles: ['admin'] });
   expect(context.user).toEqual({ id: 'user_1', roles: ['admin'], organizationId: 'org_1' });
 });
+
+// runAs: the endpoint's declaration is honoured over every transport, so the
+// same endpoint is scoped identically whether called, scheduled, detached or
+// hit as a webhook.
+const runAsTenantRequest = jest.fn(({ tenant }) => tenant);
+runAsTenantRequest.schema = {};
+runAsTenantRequest.meta = { checkRead: false, checkWrite: false };
+
+const runAsConnections = {
+  ...walledVerifierConnections,
+  TestTenantConnection: {
+    schema: {},
+    meta: { tenant: true },
+    requests: { TenantRequest: runAsTenantRequest },
+  },
+};
+
+function createRunAsReadConfigFile({ endpoint }) {
+  return jest.fn((path) => {
+    if (path === `api/${endpoint.endpointId}.json`) return endpoint;
+    if (path === 'connections/app_data.json') {
+      return { id: 'connection:app_data', type: 'TestTenantConnection', connectionId: 'app_data' };
+    }
+    if (path === 'connections/verifier.json') {
+      return {
+        id: 'connection:verifier',
+        type: 'StubVerifyConnection',
+        connectionId: 'verifier',
+        properties: {},
+      };
+    }
+    return null;
+  });
+}
+
+const runAsRoutine = [
+  { id: 'request:jobs:rows', stepId: 'rows', type: 'TenantRequest', connectionId: 'app_data' },
+  { ':return': { _step: 'rows' } },
+];
+
+test('detached run honours the endpoint runAs for a system dispatcher', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: runAsConnections,
+    organization: { policy: 'tenant' },
+    secrets: { SYSTEM_ORG: 'org-system' },
+    readConfigFile: createRunAsReadConfigFile({
+      endpoint: {
+        endpointId: 'jobs',
+        type: 'Api',
+        auth: { public: true },
+        runAs: { organizationId: { _secret: 'SYSTEM_ORG' } },
+        routine: runAsRoutine,
+      },
+    }),
+  });
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'jobs',
+    payload: {},
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ field: 'organization_id', value: 'org-system' });
+});
+
+test('webhook run honours the endpoint runAs after the verifier passes', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: runAsConnections,
+    organization: { policy: 'tenant' },
+    readConfigFile: createRunAsReadConfigFile({
+      endpoint: {
+        endpointId: 'jobs',
+        type: 'Api',
+        auth: { public: true },
+        webhook: { verify: { ...stubVerify, tenant: 'none' } },
+        runAs: { organizationId: 'org-webhook' },
+        routine: runAsRoutine,
+      },
+    }),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'jobs',
+    body: {},
+    query: { token: 'good' },
+    headers: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ field: 'organization_id', value: 'org-webhook' });
+});

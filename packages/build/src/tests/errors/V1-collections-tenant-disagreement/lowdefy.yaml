@@ -1,0 +1,32 @@
+# V1: Connection tenancy disagrees with the collections declaration
+# =================================================================
+# A connection scoped on organization_id addresses a collection the app
+# declares tenant: shared. One of the two is wrong, so the build fails and
+# points at the connection (line 22).
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
+collections:
+  controls:
+    tenant: shared
+
+connections:
+  - id: org-scope
+    type: MongoDBCollection
+    tenant:
+      field: organization_id
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+
+pages:
+  - id: home
+    type: Box

@@ -18,12 +18,11 @@ import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import resolveDevUser from '../server/auth/resolveDevUser.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
+import formatExplainTrace from './formatExplainTrace.js';
 import readBuildArtifact from './readBuildArtifact.js';
-
-// Cap the serialized response so a large request result can't blow out an
-// agent's context window.
-const MAX_RESPONSE_CHARS = 100_000;
+import truncateResponse from './truncateResponse.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -38,26 +37,19 @@ function getRequestType({ pageId, requestId }) {
   return requestConfig?.type ?? null;
 }
 
-function truncateResponse(result) {
-  const json = JSON.stringify(result.response);
-  if (json.length <= MAX_RESPONSE_CHARS) {
-    return result;
-  }
-  return {
-    ...result,
-    response: json.slice(0, MAX_RESPONSE_CHARS),
-    truncated: true,
-    note: `Response truncated to ${MAX_RESPONSE_CHARS} characters (original serialized size: ${json.length} characters).`,
-  };
-}
-
 // Executes a page request the same way POST /api/request/<pageId>/<requestId>
 // does (src/routes/request.js), but gated for agent use: requests whose type
 // is not declared read-only (checkWrite: false in requestSchemas.json meta)
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
 // returned as data so an agent can reason about them.
-async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
+//
+// `explain: true` allocates a trace collector, threads it through callRequest
+// to the resolver and the tenant wall, and adds an `explain` key to the result:
+// the caller, the connection tenancy, the properties after operator
+// evaluation, the effective query the driver received and every clause the
+// wall injected. Without it nothing is allocated and the result is unchanged.
+async function runRequest({ pageId, requestId, payload = {}, user, explain = false, honoContext }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
     throw new ConfigError(
       `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
@@ -67,6 +59,16 @@ async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
     throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
     );
+  }
+
+  // A fixture name declared under auth.dev.users, or an inline caller object -
+  // resolveDevUser is the single place a `user` value becomes a caller, and an
+  // unknown name names the fix rather than falling back to a roleless caller.
+  let caller;
+  try {
+    caller = resolveDevUser({ user });
+  } catch (error) {
+    throw new ConfigError(error.message, { cause: error });
   }
 
   let requestType = getRequestType({ pageId, requestId });
@@ -119,25 +121,40 @@ async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext });
-  context.logger.info({ event: 'agent_run_request', pageId, requestId });
+  const context = await createLowdefyContext({ c: honoContext, user: caller });
+  context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
 
+  const trace = explain === true ? { rewritten: [] } : undefined;
   try {
     const result = await callRequest(context, {
       blockId: undefined,
       pageId,
       payload,
       requestId,
+      trace,
     });
+    if (trace) {
+      return {
+        refused: false,
+        ...truncateResponse(result),
+        explain: formatExplainTrace({ trace, requestType, user: context.user }),
+      };
+    }
     return { refused: false, ...truncateResponse(result) };
   } catch (error) {
-    return {
+    const failure = {
       refused: false,
       error: {
         name: error.name,
         message: error.message,
       },
     };
+    if (trace) {
+      // The trace up to the failure still names the caller, the tenancy and
+      // the wall's rewrites - usually the reason a request was refused.
+      failure.explain = formatExplainTrace({ trace, requestType, user: context.user });
+    }
+    return failure;
   }
 }
 

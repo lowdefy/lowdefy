@@ -22,6 +22,7 @@ import path from 'path';
  */
 const snapshotTypesMap = {
   actions: {
+    CallAPI: { package: '@lowdefy/actions-core' },
     CallMethod: { package: '@lowdefy/actions-core' },
     CopyToClipboard: { package: '@lowdefy/actions-core' },
     DisplayMessage: { package: '@lowdefy/actions-core' },
@@ -46,17 +47,18 @@ const snapshotTypesMap = {
     // Basic blocks
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
-    Button: { package: '@lowdefy/blocks-basic' },
+    Button: { package: '@lowdefy/blocks-antd' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
     Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
     Icon: { package: '@lowdefy/blocks-basic' },
     Img: { package: '@lowdefy/blocks-basic' },
     List: { package: '@lowdefy/blocks-basic' },
-    Paragraph: { package: '@lowdefy/blocks-basic' },
+    Paragraph: { package: '@lowdefy/blocks-antd' },
     Span: { package: '@lowdefy/blocks-basic' },
+    Template: { package: '@lowdefy/blocks-basic' },
     Throw: { package: '@lowdefy/blocks-basic' },
-    Title: { package: '@lowdefy/blocks-basic' },
+    Title: { package: '@lowdefy/blocks-antd' },
     // Loaders
     ProgressBar: { package: '@lowdefy/blocks-loaders' },
     Skeleton: { package: '@lowdefy/blocks-loaders' },
@@ -75,7 +77,6 @@ const snapshotTypesMap = {
     Carousel: { package: '@lowdefy/blocks-antd' },
     CheckboxSelector: { package: '@lowdefy/blocks-antd' },
     Collapse: { package: '@lowdefy/blocks-antd' },
-    Comment: { package: '@lowdefy/blocks-antd' },
     ConfirmModal: { package: '@lowdefy/blocks-antd' },
     Content: { package: '@lowdefy/blocks-antd' },
     DateSelector: { package: '@lowdefy/blocks-antd' },
@@ -243,6 +244,9 @@ const snapshotTypesMap = {
       _json: { package: '@lowdefy/operators-js' },
       _yaml: { package: '@lowdefy/operators-js' },
       _date: { package: '@lowdefy/operators-js' },
+      _not: { package: '@lowdefy/operators-js' },
+      _type: { package: '@lowdefy/operators-js' },
+      _regex: { package: '@lowdefy/operators-js' },
       _mql: { package: '@lowdefy/operators-mql' },
       _js: { package: '@lowdefy/operators-js' },
     },

@@ -710,3 +710,95 @@ test('updateOne changeLog record is stamped with the tenant verdict', async () =
   });
   expect(logged.organization_id).toEqual('org_a');
 });
+
+test('explain trace: aggregation reports the effective pipeline with the injected root and $lookup matches', async () => {
+  const collection = 'tenantIsolationTraceAggregation';
+  await populateTestMongoDb({
+    collection,
+    documents: [{ _id: 'a1', organization_id: 'org_a', ref: 'a2' }],
+  });
+  const tenant = { field: 'organization_id', value: 'org_a' };
+  const trace = { rewritten: [] };
+  const pipeline = [
+    { $match: { ref: 'a2' } },
+    { $lookup: { from: collection, as: 'joined', pipeline: [{ $limit: 1 }] } },
+  ];
+  const withoutTrace = await MongoDBAggregation({
+    request: { pipeline },
+    connection: makeConnection(collection, { read: true }),
+    tenant,
+  });
+  const res = await MongoDBAggregation({
+    request: { pipeline },
+    connection: makeConnection(collection, { read: true }),
+    tenant,
+    trace,
+  });
+  expect(res).toEqual(withoutTrace);
+  expect(trace.effective).toEqual({
+    pipeline: [
+      { $match: { organization_id: 'org_a' } },
+      { $match: { ref: 'a2' } },
+      {
+        $lookup: {
+          from: collection,
+          as: 'joined',
+          pipeline: [{ $match: { organization_id: 'org_a' } }, { $limit: 1 }],
+        },
+      },
+    ],
+    options: undefined,
+  });
+  expect(trace.rewritten).toEqual([
+    { at: '$lookup[1].pipeline', injected: { $match: { organization_id: 'org_a' } } },
+    { at: '$match[0]', injected: { $match: { organization_id: 'org_a' } } },
+  ]);
+});
+
+test('explain trace: find reports the merged selector and the query rewrite', async () => {
+  const collection = 'tenantIsolationTraceFind';
+  await populateTestMongoDb({ collection, documents: [{ _id: 'a1', organization_id: 'org_a' }] });
+  const trace = { rewritten: [] };
+  await MongoDBFind({
+    request: { query: { _id: 'a1' }, options: { limit: 1 } },
+    connection: makeConnection(collection, { read: true }),
+    tenant: { field: 'organization_id', value: 'org_a' },
+    trace,
+  });
+  expect(trace.effective).toEqual({
+    query: { $and: [{ _id: 'a1' }, { organization_id: 'org_a' }] },
+    options: { limit: 1 },
+  });
+  expect(trace.rewritten).toEqual([{ at: 'query', injected: { organization_id: 'org_a' } }]);
+});
+
+test('explain trace: insertOne reports the stamped document', async () => {
+  const collection = 'tenantIsolationTraceInsert';
+  await populateTestMongoDb({ collection, documents: [{ _id: 'seed', organization_id: 'org_a' }] });
+  const trace = { rewritten: [] };
+  await MongoDBInsertOne({
+    request: { doc: { _id: 'n1', name: 'x' } },
+    connection: makeConnection(collection, { write: true }),
+    tenant: { field: 'organization_id', value: 'org_a' },
+    trace,
+  });
+  expect(trace.effective).toEqual({
+    doc: { _id: 'n1', name: 'x', organization_id: 'org_a' },
+    options: undefined,
+  });
+  expect(trace.rewritten).toEqual([{ at: 'doc', injected: { organization_id: 'org_a' } }]);
+});
+
+test('explain trace: an unwalled find still reports the effective query with no rewrites', async () => {
+  const collection = 'tenantIsolationTraceUnwalled';
+  await populateTestMongoDb({ collection, documents: [{ _id: 'a1' }] });
+  const trace = { rewritten: [] };
+  await MongoDBFind({
+    request: { query: { _id: 'a1' } },
+    connection: makeConnection(collection, { read: true }),
+    tenant: null,
+    trace,
+  });
+  expect(trace.effective).toEqual({ query: { _id: 'a1' }, options: undefined });
+  expect(trace.rewritten).toEqual([]);
+});

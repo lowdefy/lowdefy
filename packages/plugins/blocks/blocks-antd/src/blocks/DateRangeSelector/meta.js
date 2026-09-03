@@ -42,7 +42,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when selection is changed.',
-      event: { value: 'The selected date range value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'array', description: 'The selected date range value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
@@ -74,7 +80,8 @@ export default {
       label,
       placeholder: {
         type: 'array',
-        description: 'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
         docs: {
           displayType: 'manual',
           block: {

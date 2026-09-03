@@ -1,5 +1,8 @@
 id: panel
 type: Box
+# A Box carrying auth projection data for the snapshot, not real Box properties.
+~ignoreBuildChecks:
+  - block-properties
 properties:
   emailLoginEnabled:
     _build.authConfig: emailAndPassword.enabled

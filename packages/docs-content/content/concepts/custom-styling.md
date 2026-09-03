@@ -3,7 +3,7 @@
 Lowdefy provides several ways to style blocks and customize the look of your app:
 
 - **`class`** — Apply CSS class names (including Tailwind CSS utility classes) to blocks.
-- **`style`** — Apply inline CSS styles to blocks. Use `--`-prefixed keys to target specific parts (CSS slots).
+- **`style`** — Apply inline CSS styles to blocks. Use `.`-prefixed keys to target specific parts (CSS slots).
 - **`properties.theme`** — Override antd design tokens per block. See [Theming](/theming) for details.
 - **`public/styles.css`** — A global CSS file for custom styles.
 
@@ -11,7 +11,7 @@ Lowdefy provides several ways to style blocks and customize the look of your app
 
 The `class` property applies CSS class names to a block. [Tailwind CSS](https://tailwindcss.com/) is always available in Lowdefy apps, so you can use any Tailwind utility classes directly.
 
-`class` can be a string, an array of strings, or an object keyed by the block's CSS keys:
+`class` can be a string, an array of strings, an object keyed by the block's CSS keys, or an operator that computes the classes at runtime:
 
 ```yaml
 # String — applied to the block wrapper
@@ -27,14 +27,59 @@ The `class` property applies CSS class names to a block. [Tailwind CSS](https://
     - shadow-lg
     - rounded-xl
 
-# Object — target specific parts of the block using CSS keys (-- prefix)
+# Object — target specific parts of the block using CSS keys (. prefix)
 - id: my_card
   type: Card
   class:
     .element: "shadow-lg"
     .header: "bg-gray-100"
     .body: "p-8"
+
+# Operator — the block's classes are computed at runtime
+- id: status_badge
+  type: Box
+  class:
+    _if:
+      test:
+        _eq:
+          - _state: status
+          - error
+      then: bg-red-100 text-red-700
+      else: bg-green-100 text-green-700
 ```
+
+An operator's result may be a string, an array of strings, or an object of `{ class: boolean }` where each class with a truthy value is applied:
+
+```yaml
+- id: status_badge
+  type: Box
+  class:
+    _if:
+      test:
+        _eq:
+          - _state: status
+          - error
+      then:
+        bg-red-100: true
+        text-red-700: true
+      else: bg-green-100
+```
+
+An operator at the root of `class` computes the classes of the block wrapper. To compute a specific part's classes, place the operator under that CSS key:
+
+```yaml
+- id: my_card
+  type: Card
+  class:
+    .header:
+      _if:
+        test:
+          _state: highlighted
+        then: bg-yellow-100
+        else: bg-gray-100
+```
+
+> **Note:** An operator's result is never expanded into a map of CSS keys — a root operator always sets the block wrapper's classes.
 
 Tailwind responsive prefixes work as expected:
 
@@ -58,7 +103,7 @@ See [Theming](/theming) for the full list of bridged tokens and how to add custo
 
 ## The `style` property
 
-The `style` property applies inline CSS styles to a block. When used with flat CSS properties (no `--` prefix), it targets the block's layout wrapper:
+The `style` property applies inline CSS styles to a block. When used with flat CSS properties (no `.` prefix), it targets the block's layout wrapper:
 
 ```yaml
 - id: my_block
@@ -103,7 +148,7 @@ Each block's documentation page lists its supported CSS keys.
 
 Each block declares named style targets in its `meta.cssKeys`. For example, the [Card](/Card) block supports: `element`, `header`, `body`, `cover`, `actions`, `extra`.
 
-Both `class` (object form) and `style` use `--`-prefixed versions of these keys to target specific parts of a block. The `--` prefix mirrors CSS custom property convention and avoids confusion with CSS property names.
+Both `class` (object form) and `style` use `.`-prefixed versions of these keys to target specific parts of a block. The `.` prefix mirrors CSS selector convention and avoids confusion with CSS property names.
 
 To find the CSS keys for a block, check the block's documentation page.
 

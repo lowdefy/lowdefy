@@ -23,15 +23,37 @@ jest.unstable_mockModule('./fetchGitHubModule.js', () => ({
   default: jest.fn(),
 }));
 
+jest.unstable_mockModule('./getGitHubHeaders.js', () => ({
+  default: jest.fn(async () => ({ Accept: 'application/vnd.github+json' })),
+}));
+
+const mainCommit = '4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30';
+
 let fetchModules;
 let fetchGitHubModule;
+const originalFetch = global.fetch;
+
+function makeConfigDir() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-config-'));
+}
+
+function readLockfile(configDirectory) {
+  const filePath = path.join(configDirectory, 'lowdefy-modules.lock.yaml');
+  if (!fs.existsSync(filePath)) return null;
+  return fs.readFileSync(filePath, 'utf8');
+}
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  global.fetch = jest.fn(async () => ({ ok: true, json: async () => ({ sha: mainCommit }) }));
   const mod = await import('./fetchModules.js');
   fetchModules = mod.default;
   const ghMod = await import('./fetchGitHubModule.js');
   fetchGitHubModule = ghMod.default;
+});
+
+afterAll(() => {
+  global.fetch = originalFetch;
 });
 
 test('fetchModules returns empty object for empty moduleEntries', async () => {
@@ -107,7 +129,7 @@ test('fetchModules resolves github source without path', async () => {
     },
   });
   expect(fetchGitHubModule).toHaveBeenCalledWith(
-    { type: 'github', owner: 'lowdefy', repo: 'notifications', path: null, ref: 'v1.0.0' },
+    { type: 'github', owner: 'lowdefy', repo: 'notifications', path: null, ref: mainCommit },
     { directories: { config: '/app' } }
   );
 
@@ -228,4 +250,259 @@ test('fetchModules resolves multiple entries', async () => {
 
   fs.rmSync(tmpDir1, { recursive: true });
   fs.rmSync(tmpDir2, { recursive: true });
+});
+
+describe('lockfile', () => {
+  const otherCommit = '9c3e5b1f7a2d4e8c0b6f3a9d5e1c7b4a2f6d0e83';
+
+  function setupModuleDir() {
+    const moduleDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-module-'));
+    fs.writeFileSync(path.join(moduleDir, 'module.lowdefy.yaml'), 'id: test');
+    fetchGitHubModule.mockResolvedValue({ packageRoot: moduleDir });
+    return moduleDir;
+  }
+
+  test('fetchModules writes a lock entry on a first fetch when the build may write it', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+
+    await fetchModules({
+      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'dev',
+        writeModuleLock: true,
+        handleWarning: jest.fn(),
+      },
+    });
+
+    expect(readLockfile(configDirectory)).toContain('source: github:acme/team-users@main');
+    expect(readLockfile(configDirectory)).toContain(`commit: ${mainCommit}`);
+    expect(readLockfile(configDirectory)).toContain('ref: main');
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://api.github.com/repos/acme/team-users/commits/main',
+      expect.any(Object)
+    );
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules fetches the locked commit and makes no GitHub request on a second build', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    const context = {
+      directories: { config: configDirectory },
+      stage: 'dev',
+      writeModuleLock: true,
+      handleWarning: jest.fn(),
+    };
+    const moduleEntries = [{ id: 'team-users', source: 'github:acme/team-users@main' }];
+
+    await fetchModules({ moduleEntries, context });
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    fetchGitHubModule.mockClear();
+    global.fetch.mockClear();
+
+    await fetchModules({ moduleEntries, context });
+
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(fetchGitHubModule).toHaveBeenCalledWith(
+      expect.objectContaining({ ref: mainCommit }),
+      context
+    );
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules re-resolves when the locked source does not match the entry source', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    fs.writeFileSync(
+      path.join(configDirectory, 'lowdefy-modules.lock.yaml'),
+      [
+        'team-users:',
+        '  source: github:other-org/team-users@main',
+        '  ref: main',
+        `  commit: ${otherCommit}`,
+        '  fetchedAt: 2026-08-14T11:02:05.774Z',
+        '',
+      ].join('\n')
+    );
+
+    await fetchModules({
+      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'dev',
+        writeModuleLock: true,
+        handleWarning: jest.fn(),
+      },
+    });
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(readLockfile(configDirectory)).toContain(`commit: ${mainCommit}`);
+    expect(readLockfile(configDirectory)).toContain('source: github:acme/team-users@main');
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules does not write the lockfile when the build may not write it', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+
+    await fetchModules({
+      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@v1.0.0' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'prod',
+        writeModuleLock: false,
+        handleWarning: jest.fn(),
+      },
+    });
+
+    expect(readLockfile(configDirectory)).toBeNull();
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules raises a prodError warning for a branch ref with no lock entry', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    const handleWarning = jest.fn();
+
+    await fetchModules({
+      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'prod',
+        writeModuleLock: false,
+        handleWarning,
+      },
+    });
+
+    expect(handleWarning).toHaveBeenCalledTimes(1);
+    const warning = handleWarning.mock.calls[0][0];
+    expect(warning.name).toBe('ConfigWarning');
+    expect(warning.prodError).toBe(true);
+    expect(warning.message).toMatchInlineSnapshot(
+      `"Module \\"team-users\\" resolves branch ref \\"main\\" with no entry in lowdefy-modules.lock.yaml. The build pinned it to commit 4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30. Run \\"lowdefy modules update\\" and commit the lockfile so production builds are reproducible."`
+    );
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules raises no warning for an immutable ref with no lock entry', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    const handleWarning = jest.fn();
+
+    await fetchModules({
+      moduleEntries: [{ id: 'billing', source: 'github:acme/billing@v2.1.0' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'prod',
+        writeModuleLock: false,
+        handleWarning,
+      },
+    });
+
+    expect(handleWarning).not.toHaveBeenCalled();
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules raises no warning for a branch ref when the lockfile is written', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    const handleWarning = jest.fn();
+
+    await fetchModules({
+      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'dev',
+        writeModuleLock: true,
+        handleWarning,
+      },
+    });
+
+    expect(handleWarning).not.toHaveBeenCalled();
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules never locks file sources', async () => {
+    const configDirectory = makeConfigDir();
+    const localDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-local-'));
+    fs.writeFileSync(path.join(localDir, 'module.lowdefy.yaml'), 'id: local');
+    const moduleDir = setupModuleDir();
+
+    await fetchModules({
+      moduleEntries: [
+        { id: 'local-mod', source: `file:${localDir}` },
+        { id: 'billing', source: 'github:acme/billing@v2.1.0' },
+      ],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'dev',
+        writeModuleLock: true,
+        handleWarning: jest.fn(),
+      },
+    });
+
+    const content = readLockfile(configDirectory);
+    expect(content).toContain('billing:');
+    expect(content).not.toContain('local-mod');
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(localDir, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules drops lock entries for modules no longer in the app config', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    fs.writeFileSync(
+      path.join(configDirectory, 'lowdefy-modules.lock.yaml'),
+      [
+        'removed:',
+        '  source: github:acme/removed@main',
+        '  ref: main',
+        `  commit: ${otherCommit}`,
+        '  fetchedAt: 2026-08-14T11:02:05.774Z',
+        'billing:',
+        '  source: github:acme/billing@v2.1.0',
+        '  ref: v2.1.0',
+        `  commit: ${otherCommit}`,
+        '  fetchedAt: 2026-08-14T11:02:05.774Z',
+        '',
+      ].join('\n')
+    );
+
+    await fetchModules({
+      moduleEntries: [{ id: 'billing', source: 'github:acme/billing@v2.1.0' }],
+      context: {
+        directories: { config: configDirectory },
+        stage: 'dev',
+        writeModuleLock: true,
+        handleWarning: jest.fn(),
+      },
+    });
+
+    const content = readLockfile(configDirectory);
+    expect(content).toContain('billing:');
+    expect(content).not.toContain('removed:');
+    expect(global.fetch).not.toHaveBeenCalled();
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
 });

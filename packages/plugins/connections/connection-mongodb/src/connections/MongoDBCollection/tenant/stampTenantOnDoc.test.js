@@ -78,3 +78,9 @@ test('refuses an authored verdict — tenant: authored is aggregation-only', () 
     })
   ).toThrow('"tenant: authored" applies only to aggregation requests');
 });
+
+test('trace records the stamped document under the given property name', () => {
+  const trace = { rewritten: [] };
+  stampTenantOnDoc({ doc: { name: 'x' }, tenant, trace, at: 'doc' });
+  expect(trace.rewritten).toEqual([{ at: 'doc', injected: { organization_id: 'org_a' } }]);
+});

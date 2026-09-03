@@ -1,6 +1,6 @@
 # Plugin System Architecture
 
-How Lowdefy's plugin architecture works.
+How Lowdefy's plugin architecture works: declaration, resolution and loading. What a plugin may *rely on* — the block component contract, the `meta` shape, the `_js` prototypes, the request/action/operator signatures, `PLUGIN_API_VERSION` and the deprecation policy — is [plugin-api.md](./plugin-api.md).
 
 ## Overview
 
@@ -547,6 +547,7 @@ export default {
 | `packages/build/src/build/writePluginImports/`     | Import generation        |
 | `packages/client/src/initLowdefyContext.js`        | Runtime initialization   |
 | `packages/client/src/block/CategorySwitch.js`      | Block resolution         |
+| `code-docs/architecture/plugin-api.md`             | Public plugin API + deprecation policy |
 
 ## Creating Custom Plugins
 

@@ -59,7 +59,13 @@ import { type } from '@lowdefy/helpers';
 //   the active org in string form). System context (hook routines, scheduled
 //   jobs) and strategy callers have none, so they fail here by design - the
 //   wall never degrades to unscoped access.
-function resolveTenant(context, { connection, connectionConfig, requestConfig }) {
+// - `runAs` ({ organizationId, configKey, source }) is the resolved
+//   `runAs: { organizationId }` of the step or its endpoint (resolveRunAs).
+//   When present its organizationId stands in for the caller's, and nothing
+//   else changes - a runAs step is walled by exactly the code path a member's
+//   request is: filters injected, writes stamped, authored clauses audited.
+//   It is the scoped alternative to tenant: none for caller-less chains.
+function resolveTenant(context, { connection, connectionConfig, requestConfig, runAs }) {
   // Capability resolves from the runtime connection export first, then from
   // the tenantCapability the build stamped onto the connection artifact
   // (buildConnections) — the same types.js declaration the build check
@@ -104,28 +110,77 @@ function resolveTenant(context, { connection, connectionConfig, requestConfig })
       { configKey: connectionConfig['~k'] }
     );
   }
-  if (requestConfig.tenant === 'none') {
-    return null;
-  }
   const field = type.isObject(connectionConfig.tenant)
     ? connectionConfig.tenant.field
     : 'organization_id';
   // Belt-and-braces repeat of the build check: the wall stamps and matches
   // the field as a single top-level document key, so a drifted artifact with
   // a missing, empty, or dotted field must refuse rather than enforce on a
-  // key the read filters can never match.
+  // key the read filters can never match. Resolved ahead of the tenant: none
+  // branch so the dev notice below can name the field the wall would have used.
   if (!type.isString(field) || field === '' || field.includes('.')) {
     throw new ConfigError(
       `Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "${connectionConfig.connectionId}" — the tenant wall stamps and matches it as a single document key.`,
       { received: field, configKey: connectionConfig['~k'] }
     );
   }
-  const value = context.user?.organization_id;
-  if (!type.isString(value) || value === '') {
-    const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
-    throw new AuthenticationError(
-      `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request outside the wall, declare tenant: none on it and author the organization value explicitly.`
-    );
+  const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
+  if (requestConfig.tenant === 'none') {
+    // This branch is the only place that knows the opt-out was taken. An
+    // unscoped read looks exactly like a scoped one, so the dev server
+    // (context.handleDevNotice, see createApiContext) records every execution
+    // with its config source. The hook is undefined in production.
+    context.handleDevNotice?.({
+      name: 'TenantNoneNotice',
+      level: 'info',
+      message: `Request "${location}" ran unscoped on tenant connection "${connectionConfig.connectionId}" (tenant: none). It reads and writes rows of every organization.`,
+      configKey: requestConfig['~k'],
+      details: {
+        connectionId: connectionConfig.connectionId,
+        requestId: requestConfig.requestId ?? null,
+        stepId: requestConfig.stepId ?? null,
+        field,
+      },
+    });
+    return null;
+  }
+  let value;
+  if (!type.isNone(runAs)) {
+    value = runAs.organizationId;
+    // A declared scope that evaluated to nothing is a config fault (the _step
+    // or _user path is wrong), not a missing caller - so it is a ConfigError
+    // pointing at the runAs line, never the caller-less AuthenticationError.
+    if (!type.isString(value) || value === '') {
+      throw new ConfigError(
+        `Step "${location}" declares "runAs" but "organizationId" evaluated to ${JSON.stringify(
+          value
+        )}. It must be a non-empty organization id string.`,
+        { received: value, configKey: runAs.configKey ?? requestConfig['~k'] }
+      );
+    }
+    // A scoped run under an authored organization is indistinguishable from a
+    // member's request, so the dev server records it beside the tenant: none
+    // executions - which steps ran as whom.
+    context.handleDevNotice?.({
+      name: 'RunAsScope',
+      level: 'info',
+      message: `Step "${location}" ran scoped to organization "${value}" (runAs).`,
+      configKey: requestConfig['~k'],
+      details: {
+        connectionId: connectionConfig.connectionId,
+        stepId: requestConfig.stepId ?? null,
+        field,
+        organizationId: value,
+        source: runAs.source ?? null,
+      },
+    });
+  } else {
+    value = context.user?.organization_id;
+    if (!type.isString(value) || value === '') {
+      throw new AuthenticationError(
+        `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request scoped to an organization the caller does not carry, declare runAs: { organizationId } on the endpoint or step; to run it outside the wall, declare tenant: none on it and author the organization value explicitly.`
+      );
+    }
   }
   if (requestConfig.tenant === 'authored') {
     return { field, value, authored: true };

@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import { nestSchemaPaths } from '@lowdefy/ajv';
 import { LowdefyInternalError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
@@ -36,6 +38,7 @@ const blockData = (config) => {
     properties,
     requests,
     required,
+    stateSchema,
     style,
     subscriptions,
     type,
@@ -54,6 +57,7 @@ const blockData = (config) => {
     properties,
     requests,
     required,
+    stateSchema,
     style,
     subscriptions,
     type,
@@ -111,6 +115,11 @@ function getContext({
     jsMap,
     requests: {},
     state: {},
+    // The page state contract, nested into one root JSON schema so blocks can
+    // look up their declared type and Validate can check the whole state.
+    stateSchema: type.isObject(config.stateSchema)
+      ? nestSchemaPaths({ paths: config.stateSchema })
+      : undefined,
     _internal: {
       lowdefy,
       // Config object reference for dynamic page memoization — identity marks

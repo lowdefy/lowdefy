@@ -236,10 +236,9 @@
           type: NumberInput
           properties:
             title: Price
-            placeholder: 0.00
+            placeholder: '0.00'
             min: 0
             precision: 2
-            prefix: $
         - id: product_submit
           type: Button
           properties:

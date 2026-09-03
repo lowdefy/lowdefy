@@ -55,98 +55,6 @@ test('array block with init, set to id', async () => {
   expect(list_text.value).toEqual('b');
 });
 
-test('two blocks with same id should have the same value', async () => {
-  const pageConfig = {
-    id: 'root',
-    type: 'Box',
-    blocks: [
-      {
-        type: 'Switch',
-        id: 'swtch1',
-      },
-      {
-        type: 'Switch',
-        id: 'swtch1',
-      },
-    ],
-  };
-  const context = await testContext({
-    lowdefy,
-    pageConfig,
-  });
-  const swtch1 = context._internal.RootSlots.subSlots['page:root'][0].slots.content.blocks[0];
-  const swtch2 = context._internal.RootSlots.subSlots['page:root'][0].slots.content.blocks[1];
-  expect(swtch1.value).toBe(false);
-  expect(swtch2.value).toBe(false);
-  expect(context.state).toEqual({ swtch1: false });
-
-  swtch1.setValue(true);
-  expect(swtch1.value).toBe(true);
-  expect(swtch2.value).toBe(true);
-  expect(context.state).toEqual({ swtch1: true });
-
-  swtch2.setValue(false);
-  expect(swtch1.value).toBe(false);
-  expect(swtch2.value).toBe(false);
-  expect(context.state).toEqual({ swtch1: false });
-});
-
-test('two blocks with same id and state and different visibility', async () => {
-  const pageConfig = {
-    id: 'root',
-    type: 'Box',
-    events: {
-      onInit: [
-        {
-          id: 'initState',
-          type: 'SetState',
-          params: { textInput: 'abc', swtch: true },
-        },
-      ],
-    },
-    blocks: [
-      {
-        type: 'TextInput',
-        id: 'textInput',
-        visible: { _state: 'swtch' },
-      },
-      {
-        type: 'TextInput',
-        id: 'textInput',
-        visible: { _not: { _state: 'swtch' } },
-      },
-      {
-        type: 'Button',
-        id: 'button',
-        events: {
-          onClick: [
-            {
-              id: 'setState',
-              type: 'SetState',
-              params: { swtch: false },
-            },
-          ],
-        },
-      },
-    ],
-  };
-  const context = await testContext({
-    lowdefy,
-    pageConfig,
-  });
-  const { textInput, button } = context._internal.RootSlots.map;
-
-  expect(textInput.visibleEval.output).toBe(false); // Visibility of the last block in the config with same id
-  expect(textInput.value).toBe('abc');
-  expect(context.state).toEqual({ textInput: 'abc', swtch: true });
-
-  await button.triggerEvent({ name: 'onClick' });
-
-  expect(textInput.visibleEval.output).toBe(true);
-  expect(textInput.value).toBe('abc');
-  expect(context.state).toEqual({ textInput: 'abc', swtch: false });
-});
-
 // TODO:
 // test('two blocks with same field visibility and state', async () => {
 //   const pageConfig = {
@@ -214,3 +122,15 @@ test('two blocks with same id and state and different visibility', async () => {
 //   expect(text2.visibleEval.output).toBe(false);
 //   expect(context.state).toEqual({ field: 'new', swtch1: true, swtch2: false });
 // });
+
+test('duplicate block ids on a page are rejected by the build', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      { type: 'Switch', id: 'swtch1' },
+      { type: 'Switch', id: 'swtch1' },
+    ],
+  };
+  await expect(testContext({ lowdefy, pageConfig })).rejects.toThrow('Duplicate blockId "swtch1"');
+});

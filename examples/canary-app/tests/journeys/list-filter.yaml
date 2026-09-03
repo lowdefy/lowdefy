@@ -1,0 +1,35 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Runs after form-submit.yaml (file-name order), so at least one "Canary widget"
+# exists in the items collection the journeys share.
+- name: admin filters the list by name
+  pageId: list
+  user: admin
+  steps:
+    # onMount loads get_items and copies the count into state.total; wait on that.
+    - wait: { state: total }
+    - expect: { visible: catalogue }
+    - fill: { blockId: filter, value: Canary widget }
+    - click: search
+    # The first row appears once the filtered request resolves into state.items.
+    - wait: { state: items.0._id }
+    - expect: { text: { blockId: items, contains: Canary widget } }
+    - expect: { text: { blockId: count, contains: item } }
+    - fill: { blockId: filter, value: zzz-no-such-item }
+    - click: search
+    - wait: { ms: 1500 }
+    - expect: { visible: empty_state }
+    - expect: { state: { path: items, equals: [] } }
+    - expect: { state: { path: total, equals: 0 } }

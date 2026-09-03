@@ -1111,3 +1111,244 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     warnings: [],
   });
 });
+
+async function requiredFieldValidation({ blockType, value, valueType }) {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: blockType,
+        required: true,
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy: {
+      ...lowdefy,
+      _internal: {
+        ...lowdefy._internal,
+        blocks: { [blockType]: {} },
+        blockMetas: { [blockType]: { category: 'input', valueType } },
+      },
+    },
+    pageConfig,
+    operators: lowdefy._internal.operators,
+  });
+  const text1 = context._internal.RootSlots.map['text1'];
+  text1.setValue(value);
+  return text1.eval.validation.errors;
+}
+
+test('required fails an empty string', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: '' })
+  ).toEqual(['This field is required']);
+});
+
+test('required fails an empty array', async () => {
+  expect(
+    await requiredFieldValidation({
+      blockType: 'MultipleSelector',
+      valueType: 'array',
+      value: [],
+    })
+  ).toEqual(['This field is required']);
+});
+
+test('required fails null', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: null })
+  ).toEqual(['This field is required']);
+});
+
+test('required passes 0', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'NumberInput', valueType: 'number', value: 0 })
+  ).toEqual([]);
+});
+
+test('required passes false', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'Switch', valueType: 'boolean', value: false })
+  ).toEqual([]);
+});
+
+test('required passes an empty object', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'ObjectInput', valueType: 'object', value: {} })
+  ).toEqual([]);
+});
+
+test('required passes a non-empty string', async () => {
+  expect(
+    await requiredFieldValidation({ blockType: 'TextInput', valueType: 'string', value: 'a' })
+  ).toEqual([]);
+});
+
+test('required passes a non-empty array', async () => {
+  expect(
+    await requiredFieldValidation({
+      blockType: 'MultipleSelector',
+      valueType: 'array',
+      value: ['a'],
+    })
+  ).toEqual([]);
+});
+
+test("required inside a List validates each row's own value", async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ textInput: 'a' }, { textInput: '' }, { textInput: 'c' }] },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
+        blocks: [
+          {
+            id: 'list.$.textInput',
+            type: 'TextInput',
+            required: true,
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+    operators: lowdefy._internal.operators,
+  });
+  expect(context._internal.RootSlots.map['list.0.textInput'].eval.validation.errors).toEqual([]);
+  expect(context._internal.RootSlots.map['list.1.textInput'].eval.validation.errors).toEqual([
+    'This field is required',
+  ]);
+  expect(context._internal.RootSlots.map['list.2.textInput'].eval.validation.errors).toEqual([]);
+});
+
+const contractPageConfig = ({ validateParams }) => ({
+  id: 'root',
+  type: 'Box',
+  state: {
+    'data.address': {
+      type: 'object',
+      properties: { formatted_address: { type: 'string', minLength: 3 } },
+      required: ['formatted_address'],
+    },
+    'data.status': { enum: ['draft', 'submitted'] },
+    count: { type: 'number' },
+  },
+  blocks: [
+    { id: 'data.address.formatted_address', type: 'TextInput' },
+    { id: 'count', type: 'NumberInput', required: true },
+    {
+      id: 'button',
+      type: 'Button',
+      events: {
+        onClick: [{ id: 'validate', type: 'Validate', params: validateParams }],
+      },
+    },
+  ],
+});
+
+test('Validate schema: true fails state that violates the contract and attaches the error to the owning block', async () => {
+  const pageConfig = contractPageConfig({ validateParams: { schema: true } });
+  const context = await testContext({ lowdefy, pageConfig });
+  const button = context._internal.RootSlots.map['button'];
+  const address = context._internal.RootSlots.map['data.address.formatted_address'];
+  address.setValue('ab');
+  context._internal.RootSlots.map['count'].setValue(1);
+  context._internal.State.set('data.status', 'nope');
+  await button.triggerEvent({ name: 'onClick' });
+  expect(address.eval.validation).toEqual({
+    errors: ['must NOT have fewer than 3 characters'],
+    status: 'error',
+    warnings: [],
+  });
+  const { error } = button.Events.events.onClick.history[0];
+  expect(error.error).toBeInstanceOf(UserError);
+  expect(error.error.message).toEqual(
+    'Your input has 2 validation errors.\nstate.data.status: must be equal to one of the allowed values'
+  );
+  // schema alone does not select blocks for their own validation tests
+  expect(context._internal.RootSlots.map['count'].eval.validation.status).toEqual(null);
+  // editing the block clears the attached schema error
+  address.setValue('abcd');
+  expect(address.eval.validation.errors).toEqual([]);
+});
+
+test('Validate schema: true passes conforming state', async () => {
+  const pageConfig = contractPageConfig({ validateParams: { schema: true } });
+  const context = await testContext({ lowdefy, pageConfig });
+  const button = context._internal.RootSlots.map['button'];
+  context._internal.RootSlots.map['data.address.formatted_address'].setValue('abcd');
+  context._internal.RootSlots.map['count'].setValue(1);
+  context._internal.State.set('data.status', 'draft');
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].error).toEqual(undefined);
+});
+
+test('Validate schema: "data.address" scopes the check to that fragment', async () => {
+  const pageConfig = contractPageConfig({ validateParams: { schema: 'data.address' } });
+  const context = await testContext({ lowdefy, pageConfig });
+  const button = context._internal.RootSlots.map['button'];
+  const address = context._internal.RootSlots.map['data.address.formatted_address'];
+  context._internal.State.set('data.status', 'nope');
+  address.setValue('abcd');
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0].error).toEqual(undefined);
+  address.setValue(null);
+  await button.triggerEvent({ name: 'onClick' });
+  expect(address.eval.validation.errors).toEqual(['must be string']);
+  expect(button.Events.events.onClick.history[0].error.error.message).toEqual(
+    'Your input has 1 validation error.'
+  );
+});
+
+test('Validate schema combined with blockIds runs both checks', async () => {
+  const pageConfig = contractPageConfig({
+    validateParams: { blockIds: ['count'], schema: 'data.address' },
+  });
+  const context = await testContext({ lowdefy, pageConfig });
+  const button = context._internal.RootSlots.map['button'];
+  const address = context._internal.RootSlots.map['data.address.formatted_address'];
+  address.setValue('ab');
+  await button.triggerEvent({ name: 'onClick' });
+  expect(context._internal.RootSlots.map['count'].eval.validation.errors).toEqual([
+    'This field is required',
+  ]);
+  expect(address.eval.validation.errors).toEqual(['must NOT have fewer than 3 characters']);
+  expect(button.Events.events.onClick.history[0].error.error.message).toEqual(
+    'Your input has 2 validation errors.'
+  );
+});
+
+test('Validate schema on a page without a contract is an action error', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: { onClick: [{ id: 'validate', type: 'Validate', params: { schema: true } }] },
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  const button = context._internal.RootSlots.map['button'];
+  await button.triggerEvent({ name: 'onClick' });
+  const { error } = button.Events.events.onClick.history[0];
+  expect(error.error).toBeInstanceOf(ActionError);
+  expect(error.error.message).toMatch(/declares no "state"/);
+});

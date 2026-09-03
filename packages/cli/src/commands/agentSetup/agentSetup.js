@@ -60,7 +60,13 @@ async function agentSetup({ context }) {
 
   await upsertMcpServer({ context, projectDirectory, port });
   await upsertClaudeSettings({ context, projectDirectory });
-  await writeSkillFile({ context, projectDirectory, appPath, port });
+  await writeSkillFile({
+    context,
+    projectDirectory,
+    appPath,
+    port,
+    skills: context.options.skills,
+  });
   await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 
   await context.sendTelemetry();

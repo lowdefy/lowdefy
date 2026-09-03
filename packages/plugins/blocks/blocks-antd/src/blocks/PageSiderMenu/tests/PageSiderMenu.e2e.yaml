@@ -15,12 +15,8 @@
 id: pagesidermenu
 type: PageSiderMenu
 properties:
-  header:
-    theme: dark
   sider:
-    theme: light
     initialCollapsed: false
-    collapsible: true
   menu:
     links:
       - id: psm_link1

@@ -1,7 +1,8 @@
 - id: name_field
   type: TextInput
   properties:
-    label: Name
+    label:
+      title: Name
 - id: role_display
   type: Paragraph
   properties:

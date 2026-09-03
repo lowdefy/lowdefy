@@ -16,7 +16,13 @@
 
 import createCounter from '../utils/createCounter.js';
 
-function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
+function testContext({
+  blockMetas = {},
+  writeBuildArtifact,
+  configDirectory,
+  readConfigFile,
+  logger = {},
+} = {}) {
   const defaultLogger = {
     info: () => {},
     log: () => {},
@@ -27,8 +33,10 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
 
   const context = {
     stage: 'test',
+    blockMetas,
     directories: {
       config: configDirectory || '',
+      build: 'build',
       server: '',
     },
     typeCounters: {
@@ -55,10 +63,13 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     readConfigFile: readConfigFile || (() => {}),
     refMap: {},
     keyMap: {},
+    jsBodies: [],
     jsMap: {},
+    jsModules: { client: {}, server: {} },
     agentIds: new Set(),
     connectionIds: new Set(),
-    tenantConnectionIds: new Set(),
+    tenantConnections: new Map(),
+    tenantCollectionMap: {},
     websocketIds: new Set(),
   };
 
@@ -71,6 +82,9 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
   context.handleWarning = (warning) => {
     if (warning.prodError && context.stage === 'prod') {
       throw new Error(warning.message);
+    }
+    if (context.warnings) {
+      context.warnings.push(warning);
     }
     context.logger.warn(warning.message);
   };

@@ -148,6 +148,51 @@ test('validateAuthConfig throws when only dev.mockUser is set, since it is not a
   );
 });
 
+test('validateAuthConfig accepts named dev user fixtures under dev.users', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      dev: {
+        users: {
+          admin: { id: 'dev-admin', roles: ['admin'], organization_id: 'org_1' },
+          member: { id: 'dev-member', roles: ['member'], organization_id: 'org_1' },
+        },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when dev.users is not an object', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      dev: { users: ['admin'] },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "dev.users" should be an object.'
+  );
+});
+
+test('validateAuthConfig throws when a dev.users entry is not an object', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      dev: { users: { admin: 'dev-admin' } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "dev.users" entries should be objects.'
+  );
+});
+
 test('validateAuthConfig throws when secret is missing', () => {
   const components = {
     auth: {

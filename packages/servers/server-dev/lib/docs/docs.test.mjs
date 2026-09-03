@@ -33,8 +33,10 @@ process.chdir(fixtureDir);
 // present in this checkout) — mock both so runRequest can be unit tested
 // without a real server build.
 const mockCallRequest = jest.fn();
+const mockCallConnectionRequest = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
+  callConnectionRequest: mockCallConnectionRequest,
 }));
 const mockCreateLowdefyContext = jest.fn(async () => ({
   logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
@@ -61,11 +63,16 @@ const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
+const { default: serverErrorStore } = await import('./serverErrorStore.js');
+const { default: devNoticeStore } = await import('./devNoticeStore.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
 const { default: runRequest } = await import('./runRequest.js');
+const { default: seedFixture } = await import('./seedFixture.js');
 const { default: getAppMap } = await import('./getAppMap.js');
+const { default: getDataModel } = await import('./getDataModel.js');
+const { default: docsDataModelHandler } = await import('../../src/routes/docs/dataModel.js');
 
 test('listTypes returns all available blocks with used flag and category', () => {
   const blocks = listTypes({ kind: 'blocks' });
@@ -111,6 +118,40 @@ test('getSchema returns block schema with meta', () => {
   const result = getSchema({ kind: 'blocks', type: 'Button' });
   expect(result.schema.properties.title).toBeDefined();
   expect(result.meta.category).toEqual('display');
+});
+
+test('getSchema returns a block event payload schema under meta.events', () => {
+  const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
+  expect(result.meta.events).toEqual({
+    onChange: {
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { value: { type: 'string', description: 'The current value.' } },
+      },
+    },
+    onBlur: {},
+  });
+  // The JSON Schema itself carries only the event description, never the payload.
+  expect(result.schema.properties.events?.payload).toBeUndefined();
+});
+
+test('getSchema returns hazards for a block: type-attached first, then framework-level', () => {
+  const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'test-block-hazard',
+    'visible-false-prunes-state',
+  ]);
+  // The plugin's own entry wins a duplicate id.
+  expect(result.hazards[1].message).toEqual('Plugin wording for visible: false.');
+});
+
+test('getSchema returns hazards for a request, including a meta.hazards entry', () => {
+  const result = getSchema({ kind: 'requests', type: 'WriteRequest' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
 });
 
 test('getSchema returns connection schema with request list', () => {
@@ -163,6 +204,24 @@ test('getCoreDoc resolves a doc by kind and type name', () => {
   expect(doc.slug).toEqual('operators/_get');
 });
 
+test('getCoreDoc returns hazards for the requested type when resolved by kind and type', () => {
+  const doc = getCoreDoc({ kind: 'operator', type: '_get' });
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['get-fixture-hazard']);
+});
+
+test('getCoreDoc does not attach hazards when resolved by slug', () => {
+  const doc = getCoreDoc({ slug: 'operators/_get' });
+  expect(doc.hazards).toBeUndefined();
+});
+
+test('getCoreDoc resolves a request doc on its connection page but keeps request hazards', () => {
+  // findDoc remaps request → connection to find the page; hazards must come
+  // from the request kind the caller asked about.
+  const doc = getCoreDoc({ kind: 'request', type: 'MongoDBFind' });
+  expect(doc.slug).toEqual('connections/mongodb');
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['state-in-request-properties']);
+});
+
 test('getCoreDoc returns null for unknown slug', () => {
   expect(getCoreDoc({ slug: 'nope/nope' })).toBeNull();
 });
@@ -200,10 +259,35 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client errors', () => {
+test('getBuildStatus returns the build artifact plus reported client and server errors and tenant notices', () => {
+  serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
+  const notice = {
+    timestamp: '2026-01-01T00:00:00.000Z',
+    name: 'TenantNoneNotice',
+    level: 'info',
+    message: 'Request "list_all" ran unscoped on tenant connection "app_data" (tenant: none).',
+    source: 'pages/a.yaml:9',
+    config: 'pages.0.requests.0',
+    details: {
+      connectionId: 'app_data',
+      requestId: 'list_all',
+      stepId: null,
+      field: 'organization_id',
+    },
+    configKey: 'request.1',
+  };
+  devNoticeStore.push(notice);
   const result = getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
+  expect(result.serverErrors).toEqual([
+    { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
+  ]);
+  expect(result.tenantNotices).toEqual([notice]);
+});
+
+test('getBuildStatus returns an empty tenantNotices list shape when no tenant none request ran', () => {
+  expect(Array.isArray(getBuildStatus().tenantNotices)).toBe(true);
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
@@ -236,6 +320,36 @@ test('findConfig resolves a known pageId to its source file', async () => {
   // feedback enrichment read matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].location.source).toContain('pages/home.yaml');
+});
+
+test('findConfig returns hazards per match for the matched node type', async () => {
+  const result = await findConfig({ id: 'my_button', pageId: 'home' });
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'visible-false-prunes-state',
+  ]);
+});
+
+test('findConfig fires tenant-wall-lookup on a request over a walled connection only', async () => {
+  const walled = await findConfig({ id: 'req-tenant', pageId: 'other' });
+  expect(walled.matches.length).toEqual(1);
+  expect(walled.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+    'tenant-wall-lookup',
+  ]);
+
+  const shared = await findConfig({ id: 'req-shared', pageId: 'other' });
+  expect(shared.matches.length).toEqual(1);
+  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
+});
+
+test('findConfig resolves a request connection across pages when no pageId is given', async () => {
+  const result = await findConfig({ id: 'req-tenant' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toContain('tenant-wall-lookup');
 });
 
 test('findConfig scans keyMap for a matching id when no pageId is given', async () => {
@@ -425,6 +539,11 @@ test('getAppMap includes built page detail and a note for unbuilt pages', () => 
     { id: 'req-read', type: 'ReadOnlyRequest' },
     { id: 'req-write', type: 'WriteRequest' },
     { id: 'req-unknown', type: 'UnknownMetaRequest' },
+    { id: 'get_answers', type: 'MongoDBFind' },
+    { id: 'answers_report', type: 'MongoDBAggregation' },
+    { id: 'req-orphan', type: 'MongoDBFind' },
+    { id: 'req-dynamic', type: 'MongoDBFind' },
+    { id: 'req-ghost', type: 'MongoDBFind' },
   ]);
 
   const unbuilt = map.pages.find((page) => page.pageId === 'unbuilt');
@@ -435,14 +554,95 @@ test('getAppMap includes built page detail and a note for unbuilt pages', () => 
 
 test('getAppMap includes connections, endpoints, agents, menus and websockets', () => {
   const map = getAppMap();
-  expect(map.connections).toEqual([{ id: 'axios', type: 'AxiosHttp' }]);
-  expect(map.endpoints).toEqual([{ id: 'resolve_greeting', type: 'InternalApi' }]);
+  expect(map.connections).toEqual([
+    { id: 'axios', type: 'AxiosHttp' },
+    { id: 'answers_rw', type: 'MongoDBCollection' },
+    { id: 'answers_ro', type: 'MongoDBCollection' },
+    { id: 'evidence', type: 'MongoDBCollection' },
+    { id: 'audit_log', type: 'MongoDBCollection' },
+    { id: 'audit_log_scoped', type: 'MongoDBCollection' },
+    { id: 'dynamic_collection', type: 'MongoDBCollection' },
+  ]);
+  expect(map.endpoints).toEqual([
+    { id: 'resolve_greeting', type: 'InternalApi' },
+    { id: 'submit_answer', type: 'Api' },
+  ]);
   expect(map.agents).toEqual([{ id: 'assistant', type: 'OpenAiAgent' }]);
-  expect(map.websockets).toEqual([]);
+  expect(map.websockets).toEqual(['answers_stream', 'chat']);
   expect(map.menus).toEqual([
     {
       menuId: 'default',
       links: [{ menuItemId: 'home', type: 'MenuLink', pageId: 'home', title: 'Home' }],
     },
   ]);
+});
+
+test('GET /lowdefy-docs/data-model serves the same object as getDataModel', () => {
+  let body;
+  docsDataModelHandler({
+    json: (data) => {
+      body = data;
+      return data;
+    },
+  });
+  expect(body).toEqual(getDataModel());
+  expect(body.collections.answers.declared).toBe(true);
+  expect(body.collections.answers.writers.map((writer) => writer.stepId)).toEqual(['insert']);
+  expect(Array.isArray(body.unresolved)).toBe(true);
+});
+
+test('seedFixture is refused with howToEnable while cli.agentTools.allowWriteRequests is absent', async () => {
+  fs.mkdirSync(path.join(fixtureDir, 'fixtures'), { recursive: true });
+  fs.writeFileSync(
+    path.join(fixtureDir, 'fixtures', 'base.yaml'),
+    "axios:\n  - { _id: c1, created_at: { '~d': '2026-01-01T00:00:00.000Z' } }\n"
+  );
+  const result = await seedFixture({ name: 'base', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toEqual('Seeding writes to the dev database.');
+  expect(result.howToEnable).toEqual(
+    'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).'
+  );
+  expect(mockCallConnectionRequest).not.toHaveBeenCalled();
+});
+
+test('seedFixture seeds through the connection layer once cli.agentTools.allowWriteRequests is set', async () => {
+  fs.writeFileSync(
+    path.join(fixtureDir, 'lowdefy.yaml'),
+    'lowdefy: 5.0.0\ncli:\n  agentTools:\n    allowWriteRequests: true\n'
+  );
+  mockCallConnectionRequest.mockResolvedValue({ response: { insertedCount: 1 } });
+  try {
+    const result = await seedFixture({ name: 'base', honoContext: {} });
+    expect(result.refused).toBe(false);
+    expect(result.seeded).toEqual([
+      { connectionId: 'axios', collection: null, deleted: 0, inserted: 1 },
+    ]);
+    expect(mockCallConnectionRequest).toHaveBeenCalledTimes(1);
+    const [, params] = mockCallConnectionRequest.mock.calls[0];
+    expect(params.type).toEqual('MongoDBInsertMany');
+    expect(params.tenant).toBeNull();
+    expect(params.properties.docs[0].created_at).toBeInstanceOf(Date);
+  } finally {
+    fs.writeFileSync(path.join(fixtureDir, 'lowdefy.yaml'), 'lowdefy: 5.0.0\n');
+  }
+});
+
+test('seedFixture returns a missing fixture as data once writes are allowed', async () => {
+  fs.writeFileSync(
+    path.join(fixtureDir, 'lowdefy.yaml'),
+    'lowdefy: 5.0.0\ncli:\n  agentTools:\n    allowWriteRequests: true\n'
+  );
+  try {
+    const result = await seedFixture({ name: 'nope', honoContext: {} });
+    expect(result).toEqual({
+      refused: false,
+      error: {
+        name: 'ConfigError',
+        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
+      },
+    });
+  } finally {
+    fs.writeFileSync(path.join(fixtureDir, 'lowdefy.yaml'), 'lowdefy: 5.0.0\n');
+  }
 });

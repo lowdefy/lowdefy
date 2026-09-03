@@ -96,24 +96,41 @@ test('validatePageTypes throws when the retired InviteMember action type is used
   );
 });
 
-test('validatePageTypes warns (not throws) for missing client operator types', () => {
+test('validatePageTypes throws with checkSlug types for an unknown client operator', () => {
   const context = createContext({ clientOps: { _state: {} } });
   context.typeCounters.operators.client.increment('_stat', 'key1');
-  validatePageTypes({ context });
-  expect(context.handleWarning).toHaveBeenCalledTimes(1);
-  expect(context.handleWarning.mock.calls[0][0].message).toContain(
-    'Operator type "_stat" was used but is not defined'
+  expect(() => validatePageTypes({ context })).toThrow(
+    'Operator type "_stat" was used but is not defined. Did you mean "_state"?'
   );
+  try {
+    validatePageTypes({ context });
+  } catch (error) {
+    expect(error.checkSlug).toBe('types');
+    expect(error.configKey).toBe('key1');
+  }
 });
 
-test('validatePageTypes warns (not throws) for missing server operator types', () => {
+test('validatePageTypes throws with checkSlug types for an unknown server operator', () => {
   const context = createContext({ serverOps: { _secret: {} } });
   context.typeCounters.operators.server.increment('_secrt', 'key1');
-  validatePageTypes({ context });
-  expect(context.handleWarning).toHaveBeenCalledTimes(1);
-  expect(context.handleWarning.mock.calls[0][0].message).toContain(
-    'Operator type "_secrt" was used but is not defined'
+  expect(() => validatePageTypes({ context })).toThrow(
+    'Operator type "_secrt" was used but is not defined. Did you mean "_secret"?'
   );
+  try {
+    validatePageTypes({ context });
+  } catch (error) {
+    expect(error.checkSlug).toBe('types');
+  }
+});
+
+test('validatePageTypes throws with checkSlug types for an unknown block type', () => {
+  const context = createContext({ blocks: { Box: {} } });
+  context.typeCounters.blocks.increment('Buton', 'key1');
+  try {
+    validatePageTypes({ context });
+  } catch (error) {
+    expect(error.checkSlug).toBe('types');
+  }
 });
 
 test('validatePageTypes passes when all types are defined across all categories', () => {

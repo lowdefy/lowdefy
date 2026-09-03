@@ -15,15 +15,12 @@
 */
 
 import generateJsFile from './generateJsFile.js';
+import { clientJsPrototype } from './jsFunctionPrototypes.js';
 
-// Single definition of the client _js function prototype. Both the full build
-// (writeJs) and the dev server's per-page fold (getPageJitEnrichment) generate
-// client jsMap module text through here, so the destructured argument list has
-// exactly one source of truth.
-const CLIENT_JS_FUNCTION_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`;
-
-function generateClientJsModule(map) {
-  return generateJsFile({ map, functionPrototype: CLIENT_JS_FUNCTION_PROTOTYPE });
+// Both the full build (writeJs) and the dev server's per-page fold
+// (getPageJitEnrichment) generate client jsMap module text through here.
+function generateClientJsModule(map, modules = {}) {
+  return generateJsFile({ map, modules, functionPrototype: clientJsPrototype() });
 }
 
 export default generateClientJsModule;

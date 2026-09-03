@@ -25,19 +25,60 @@ export default {
   events: {
     onCollapse: {
       description: 'Trigger action when a panel is collapsed or expanded.',
-      event: { collapsed: 'Whether the panel is collapsed.', sizes: 'The panel sizes array.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          collapsed: { type: 'boolean', description: 'Whether the panel is collapsed.' },
+          sizes: {
+            type: 'array',
+            items: { type: 'number' },
+            description: 'The panel sizes array.',
+          },
+        },
+      },
     },
     onResize: {
       description: 'Trigger action when panel sizes change during resize.',
-      event: { sizes: 'The panel sizes array.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          sizes: {
+            type: 'array',
+            items: { type: 'number' },
+            description: 'The panel sizes array.',
+          },
+        },
+      },
     },
     onResizeEnd: {
       description: 'Trigger action when resize ends.',
-      event: { sizes: 'The panel sizes array.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          sizes: {
+            type: 'array',
+            items: { type: 'number' },
+            description: 'The panel sizes array.',
+          },
+        },
+      },
     },
     onResizeStart: {
       description: 'Trigger action when resize starts.',
-      event: { sizes: 'The panel sizes array.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          sizes: {
+            type: 'array',
+            items: { type: 'number' },
+            description: 'The panel sizes array.',
+          },
+        },
+      },
     },
   },
   properties: {

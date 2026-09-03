@@ -272,6 +272,7 @@ test('operator returns value with ~k present', () => {
             },
             "parse": [Function],
           },
+          "props": undefined,
           "requests": Array [
             Object {
               "requests": true,

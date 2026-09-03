@@ -28,7 +28,13 @@ export default {
     onRemove: {
       description:
         'Triggered when a file remove icon is clicked. The file is NOT removed automatically — the handler is responsible for updating `fileList` (e.g. via `SetState`).',
-      event: { file: 'The file whose remove icon was clicked.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          file: { type: 'object', description: 'The file whose remove icon was clicked.' },
+        },
+      },
     },
   },
   properties: {

@@ -16,8 +16,9 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { serializer, type } from '@lowdefy/helpers';
+import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
+import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
@@ -39,15 +40,6 @@ function scopeCovers({ grantedScopes, endpointScope }) {
     return grantedScopes.includes('mcp:write');
   }
   return grantedScopes.includes('mcp:read') || grantedScopes.includes('mcp:write');
-}
-
-// Twin of cleanBuildArtifact in packages/utils/ai-utils/src/buildAgentTools.js -
-// duplicated here rather than shared, since pulling in @lowdefy/ai-utils would
-// add the ai SDK and MCP client deps to api just for this. Strips build-artifact
-// serializer markers (~k, ~r, ~l) and unwraps { '~arr': [...] } back to a plain
-// array, so payloadSchema reaches MCP clients as plain JSON Schema.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
 // A stateless per-request MCP server exposing the configured api endpoints
@@ -105,11 +97,16 @@ async function createMcpServer({ context }) {
       if (type.isNone(endpointConfig)) {
         continue;
       }
-      tools.push({
+      const tool = {
         name: toToolName(id),
         description: endpointConfig.description,
         inputSchema: cleanBuildArtifact(endpointConfig.payloadSchema),
-      });
+      };
+      // A declared outputSchema obliges tools/call to return structuredContent.
+      if (!type.isNone(endpointConfig.responseSchema)) {
+        tool.outputSchema = cleanBuildArtifact(endpointConfig.responseSchema);
+      }
+      tools.push(tool);
     }
     return { tools };
   });
@@ -149,27 +146,44 @@ async function createMcpServer({ context }) {
       if (!success) {
         const deserialized = serializer.deserialize(error);
         return {
-          content: [{ type: 'text', text: deserialized?.message ?? 'Endpoint failed.' }],
+          content: [
+            {
+              type: 'text',
+              text: type.isNone(deserialized)
+                ? 'Endpoint failed.'
+                : formatErrorForAgent(context, deserialized),
+            },
+          ],
           isError: true,
         };
       }
-      return {
-        content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
+      const deserializedResponse = serializer.deserialize(response);
+      const result = {
+        content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }],
       };
+      if (!type.isNone(endpointConfig.responseSchema)) {
+        result.structuredContent = deserializedResponse;
+      }
+      return result;
     } catch (error) {
-      // Refused calls to gated tools are expected traffic - a warn line and the
-      // refusal message, not a structured error log.
+      // Refused calls to gated tools and payloads that miss the payloadSchema
+      // (UserError) are expected traffic - a warn line and the message the
+      // model needs to retry, not a structured error log. Everything else
+      // goes through the server's error sink, which resolves the config
+      // source, logs it and collects it for the dev feedback channel.
       if (
         ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
           error.name
         )
       ) {
         context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
+      } else if (error.name === 'UserError') {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
-        context.logger.error(error);
+        await context.handleError(error);
       }
       return {
-        content: [{ type: 'text', text: error.message }],
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,
       };
     }

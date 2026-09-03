@@ -19,6 +19,7 @@ import { Area, BlockLayout } from '@lowdefy/layout';
 import { cn } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
+import createBlockMethods from './createBlockMethods.js';
 import resolveClassNames from './resolveClassNames.js';
 
 const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
@@ -59,12 +60,17 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       layout={block.eval.layout}
     >
       <Component
-        methods={Object.assign(block.methods, {
-          getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-          registerEvent: block.registerEvent,
-          registerMethod: block.registerMethod,
-          translate: lowdefy._internal.translate,
-          triggerEvent: block.triggerEvent,
+        methods={createBlockMethods({
+          blockId: block.blockId,
+          blockType: block.type,
+          configKey: block.eval?.configKey,
+          methods: Object.assign(block.methods, {
+            getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+            registerEvent: block.registerEvent,
+            registerMethod: block.registerMethod,
+            translate: lowdefy._internal.translate,
+            triggerEvent: block.triggerEvent,
+          }),
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}

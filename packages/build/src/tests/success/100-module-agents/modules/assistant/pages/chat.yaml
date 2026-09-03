@@ -1,8 +1,8 @@
 id: chat
 type: Box
 properties:
-  # Mimics AgentChat.agentId — the block property must carry the scoped id.
-  agentId:
+  # Mimics AgentChat.agentId — a block property must carry the scoped id.
+  content:
     _module.agentId: assistant
 blocks:
   - id: title

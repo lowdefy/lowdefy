@@ -21,9 +21,25 @@ export default {
   cssKeys: {
     element: 'The Html element.',
   },
+  hazards: [
+    {
+      id: 'html-style-stripped',
+      message:
+        'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.',
+      see: 'display-blocks/html',
+    },
+  ],
   events: {
-    onTextSelection:
-      'Trigger action when text is selected and pass selected text to the event object.',
+    onTextSelection: {
+      description: 'Trigger action when text is selected.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          selection: { type: 'string', description: 'The selected text.' },
+        },
+      },
+    },
   },
   properties: {
     type: 'object',

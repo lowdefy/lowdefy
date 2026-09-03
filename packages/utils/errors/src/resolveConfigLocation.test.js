@@ -27,6 +27,12 @@ const keyMap = {
     '~r': 'ref2',
     '~l': 42,
   },
+  withColumn: {
+    key: 'root.pages[0:home].blocks[0:header].properties.visible',
+    '~r': 'ref1',
+    '~l': 5,
+    '~c': 12,
+  },
   noLine: {
     key: 'root.global',
     '~r': 'ref1',
@@ -114,6 +120,20 @@ test('resolveConfigLocation without configDirectory uses relative path', () => {
   expect(result).toEqual({
     source: 'pages/home.yaml:5',
     config: 'root.pages[0:home].blocks[0:header]',
+  });
+});
+
+test('resolveConfigLocation renders file:line:column for a compiled expression node', () => {
+  const result = resolveConfigLocation({
+    configKey: 'withColumn',
+    keyMap,
+    refMap,
+    configDirectory: '/app',
+  });
+
+  expect(result).toEqual({
+    source: '/app/pages/home.yaml:5:12',
+    config: 'root.pages[0:home].blocks[0:header].properties.visible',
   });
 });
 

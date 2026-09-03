@@ -1,0 +1,48 @@
+# U1: Tenant pipeline joins a shared collection
+# =============================================
+# Tests that an aggregation on a tenant-scoped connection that $lookups a
+# collection belonging to a tenant: shared connection fails the build.
+# The wall prepends a tenant $match into every $lookup sub-pipeline, and a
+# shared collection carries no tenant field, so the join would return [].
+#
+# The error points to the request definition (line 37).
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
+connections:
+  - id: org_scope
+    type: MongoDBCollection
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: controls
+  - id: frameworks
+    type: MongoDBCollection
+    tenant: shared
+    properties:
+      databaseUri: mongodb://localhost/test
+      collection: catalogue
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: search_controls
+        type: MongoDBAggregation
+        connectionId: org_scope
+        properties:
+          pipeline:
+            - $match:
+                status: active
+            - $lookup:
+                from: catalogue
+                localField: catalogue_id
+                foreignField: _id
+                as: catalogue

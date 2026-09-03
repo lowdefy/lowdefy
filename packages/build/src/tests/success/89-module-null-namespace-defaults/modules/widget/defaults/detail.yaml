@@ -5,9 +5,17 @@
       type: Paragraph
       properties:
         content:
-          _module.var: components.show_header
+          _nunjucks:
+            template: '{{ value }}'
+            on:
+              value:
+                _module.var: components.show_header
     - id: extra
       type: Paragraph
       properties:
         content:
-          _module.var: components.extra_fields
+          _nunjucks:
+            template: '{{ value }}'
+            on:
+              value:
+                _module.var: components.extra_fields

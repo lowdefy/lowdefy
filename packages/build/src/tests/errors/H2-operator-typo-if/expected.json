@@ -2,10 +2,20 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
+      "errors": [
         "_iff"
       ],
-      "warningContains": [
+      "errorContains": [
+        "Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
+        "lowdefy.yaml:21"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": [
+        "_iff"
+      ],
+      "errorContains": [
         "Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
         "lowdefy.yaml:21"
       ]

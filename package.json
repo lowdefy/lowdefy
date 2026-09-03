@@ -40,6 +40,9 @@
     "docs:build": "node scripts/build.mjs --config-directory packages/docs",
     "docs:content": "LOWDEFY_EXTRACT_AGENT_DOCS=true node scripts/build.mjs --config-directory packages/docs",
     "docs:start": "node scripts/start.mjs",
+    "skills:generate": "node scripts/generateSkills.mjs",
+    "skills:metrics": "node scripts/skillMetrics.mjs",
+    "skills:test": "node --test scripts/lib/skills/skills.test.mjs",
     "cli": "pnpm build:turbo && pnpm -r --filter=lowdefy start",
     "web:build": "pnpm --filter=@lowdefy/website build",
     "web:dev": "pnpm --filter=@lowdefy/website dev",
@@ -48,6 +51,8 @@
     "release:publish": "changeset publish",
     "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
     "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
+    "release:version-canary": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
+    "release:publish-canary": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks",
     "release:experimental": "(npm whoami || npm login) && pnpm release:version-experimental && pnpm release:publish-experimental && git checkout -- . && git clean -f '**/CHANGELOG.md'"
   },
   "devDependencies": {

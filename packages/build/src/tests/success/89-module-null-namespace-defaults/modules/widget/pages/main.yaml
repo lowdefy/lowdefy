@@ -5,17 +5,29 @@ blocks:
     type: Paragraph
     properties:
       content:
-        _module.var: components.extra_fields
+        _nunjucks:
+          template: '{{ value }}'
+          on:
+            value:
+              _module.var: components.extra_fields
   - id: header
     type: Paragraph
     properties:
       content:
-        _module.var: components.show_header
+        _nunjucks:
+          template: '{{ value }}'
+          on:
+            value:
+              _module.var: components.show_header
   - id: custom
     type: Paragraph
     properties:
       content:
-        _module.var: components.custom_field
+        _nunjucks:
+          template: '{{ value }}'
+          on:
+            value:
+              _module.var: components.custom_field
   - id: detail_content
     type: Box
     blocks:

@@ -27,7 +27,7 @@ import createHandleError from '../log/createHandleError.js';
 import createLogger from '../log/createLogger.js';
 import fileCache from '../fileCache.js';
 import i18nConfig from '../../build/i18n.js';
-import loadDynamicJsMap from '../loadDynamicJsMap.js';
+import { peekDynamicJsMap } from '../loadDynamicJsMap.js';
 import notifications from '../../../build/plugins/notifications.js';
 import operators from '../../../build/plugins/operators/server.js';
 import steps from '../../../build/plugins/steps.js';
@@ -57,7 +57,7 @@ function createSystemContext({ auth } = {}) {
     createHandleError,
     fileCache,
     i18n: i18nConfig,
-    jsMap: loadDynamicJsMap(buildDirectory),
+    jsMap: peekDynamicJsMap(),
     logger: createLogger({ rid }),
     notifications,
     operators,

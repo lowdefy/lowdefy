@@ -34,7 +34,6 @@ blocks:
   - id: {{ pageId }}_page
     type: PageSiderMenu
     properties:
-      title: {{ pageTitle }}
       darkModeToggle: true
       menu:
         forceSubMenuRender: true
@@ -73,9 +72,13 @@ blocks:
             path: templates/footer.yaml.njk
             vars:
               hideFeedback:
-                _var: hideFeedback
+                _var:
+                  key: hideFeedback
+                  default: null
               filePath:
-                _var: filePath
+                _var:
+                  key: filePath
+                  default: null
               pageId:
                 _var: pageId
 
@@ -101,7 +104,7 @@ blocks:
                   content:
                     _var: pageTitle
               {% endif %}
-              - id: content
+              - id: page_content
                 type: Box
                 layout:
                   gap: 16

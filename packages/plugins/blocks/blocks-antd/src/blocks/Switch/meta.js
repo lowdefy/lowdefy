@@ -34,7 +34,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger action when switch is changed.',
-      event: { value: 'The switch value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { type: 'boolean', description: 'The switch value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },

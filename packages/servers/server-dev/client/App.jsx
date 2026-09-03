@@ -79,15 +79,18 @@ function App({ config, router }) {
   } = lowdefyRef.current.theme?.antd ?? {};
 
   // Runtime error callback — pushes errors to state for ErrorBar display.
-  // Accepts Error objects (with .name) or plain objects (with .type) from build warnings.
+  // Accepts Error objects (with .name) or plain objects (with .type) from build warnings
+  // and dev notices; `level: 'info'` marks an entry that is not an error.
   lowdefyRef.current._runtimeErrorCallback = useCallback((error) => {
     setRuntimeErrors((prev) => [
       ...prev,
       {
         type: error.type ?? error.name,
+        level: error.level ?? 'error',
         message: error.message,
         source: error.source,
         stack: error.stack,
+        prodError: error.prodError === true,
       },
     ]);
   }, []);

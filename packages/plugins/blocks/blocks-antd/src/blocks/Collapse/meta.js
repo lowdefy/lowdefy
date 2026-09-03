@@ -28,7 +28,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when collapse item is toggled.',
-      event: { activeKey: 'The key of the active panel.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          activeKey: { type: ['string', 'array'], description: 'The key of the active panel.' },
+        },
+      },
     },
   },
   properties: {
@@ -50,13 +56,14 @@ export default {
         description: 'Toggles rendering of the border around the collapse block.',
       },
       defaultActiveKey: {
-        type: 'string',
-        description: "Initial active panel's key, if activeKey is not set.",
+        type: ['string', 'array'],
+        items: { type: 'string' },
+        description: 'Initial active panel key, or a list of keys, if activeKey is not set.',
       },
       destroyInactivePanel: {
         type: 'boolean',
         default: false,
-        description: 'Destroy inactive panel.',
+        description: "Destroy inactive panel. Maps to antd's `destroyOnHidden`.",
       },
       expandIcon: {
         type: ['string', 'object'],

@@ -76,7 +76,6 @@ _ref:
           marginBottom: 80px
         properties:
           block: true
-          hideActionLoading: true
           icon: AiOutlineRocket
           size: large
           title: Start the tutorial

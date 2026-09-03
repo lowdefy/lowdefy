@@ -17,7 +17,7 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
-import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
+import { disabled, inputTitle, sizeSmallMiddleLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -33,7 +33,13 @@ export default {
   events: {
     onChange: {
       description: 'Trigger actions when selection is changed.',
-      event: { value: 'The selected value.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          value: { description: 'The selected value.' },
+        },
+      },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
@@ -53,7 +59,7 @@ export default {
       primaryKey,
       options: {
         default: [],
-        oneOf: [
+        anyOf: [
           {
             type: 'array',
             description:
@@ -136,7 +142,7 @@ export default {
         default: 'default',
         description: 'Shape of the segmented control.',
       },
-      size: sizeSmallDefaultLarge,
+      size: sizeSmallMiddleLarge,
       vertical: {
         type: 'boolean',
         default: false,

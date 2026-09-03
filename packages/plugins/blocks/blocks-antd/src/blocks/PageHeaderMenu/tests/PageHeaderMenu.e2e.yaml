@@ -15,8 +15,6 @@
 id: pageheadermenu
 type: PageHeaderMenu
 properties:
-  header:
-    theme: dark
   menu:
     links:
       - id: phm_link1

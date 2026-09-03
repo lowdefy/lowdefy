@@ -9,7 +9,10 @@ blocks:
     type: Button
     properties:
       title: Log Event
-      endpointId:
+  - id: endpoint-id
+    type: Paragraph
+    properties:
+      content:
         _module.endpointId:
           id: log-event
           module: events

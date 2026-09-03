@@ -93,11 +93,31 @@
           pageId: operators
           properties:
             title: Operators
+        - id: expression-syntax
+          type: MenuLink
+          pageId: expression-syntax
+          properties:
+            title: Expression Syntax
         - id: connections-and-requests
           type: MenuLink
           pageId: connections-and-requests
           properties:
             title: Connections and Requests
+        - id: collections
+          type: MenuLink
+          pageId: collections
+          properties:
+            title: Collections
+        - id: archetypes
+          type: MenuLink
+          pageId: archetypes
+          properties:
+            title: Page archetypes
+        - id: migrations
+          type: MenuLink
+          pageId: migrations
+          properties:
+            title: Migrations
         - id: page-and-app-state
           type: MenuLink
           pageId: page-and-app-state
@@ -289,6 +309,11 @@
           pageId: vercel
           properties:
             title: Vercel
+        - id: framework-versions
+          type: MenuLink
+          pageId: framework-versions
+          properties:
+            title: Framework versions
 
     - id: plugins_group
       type: MenuGroup
@@ -306,6 +331,11 @@
           pageId: plugins-dev
           properties:
             title: Developing Plugins
+        - id: plugin-api-versioning
+          type: MenuLink
+          pageId: plugin-api-versioning
+          properties:
+            title: Plugin API Versioning
         - id: plugins-actions
           type: MenuLink
           pageId: plugins-actions
@@ -419,6 +449,21 @@
         title: Testing
         icon: AiOutlineExperiment
       links:
+        - id: config-tests
+          type: MenuLink
+          pageId: config-tests
+          properties:
+            title: Config Tests
+        - id: fixtures
+          type: MenuLink
+          pageId: fixtures
+          properties:
+            title: Fixtures
+        - id: snapshots
+          type: MenuLink
+          pageId: snapshots
+          properties:
+            title: Golden Snapshots
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction
@@ -810,6 +855,9 @@
         - id: Tabs
           type: MenuLink
           pageId: Tabs
+        - id: Template
+          type: MenuLink
+          pageId: Template
         - id: Tooltip
           type: MenuLink
           pageId: Tooltip
@@ -1266,9 +1314,9 @@
         - id: :try
           type: MenuLink
           pageId: :try
-        # - id: :while # TODO: Add back when while control implemented
-        #   type: MenuLink
-        #   pageId: :while
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: migration
       type: MenuGroup
       properties:

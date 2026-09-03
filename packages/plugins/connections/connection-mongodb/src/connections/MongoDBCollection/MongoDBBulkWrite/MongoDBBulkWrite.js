@@ -15,19 +15,32 @@
 */
 
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
+import validateBulkOperationFields from '../collectionSchema/validateBulkOperationFields.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request, tenant }) {
+async function MongodbBulkWrite({ collectionSchema, connection, request, tenant, trace }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { operations } = deserializedRequest;
   if (tenant) {
-    operations = applyTenantToBulkOperations({ operations, tenant });
+    operations = applyTenantToBulkOperations({ operations, tenant, trace });
+  }
+  if (collectionSchema) {
+    validateBulkOperationFields({ operations, collectionSchema });
+  }
+  if (trace) {
+    trace.effective = serialize({ operations, options });
   }
   const { collection } = await getCollection({ connection });
-  const response = await collection.bulkWrite(operations, options);
+  let response;
+  try {
+    response = await collection.bulkWrite(operations, options);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBBulkWrite' });
+  }
   return serialize(response);
 }
 

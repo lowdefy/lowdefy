@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, UserError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -361,4 +361,208 @@ test('InternalApi endpoint error is identical to a missing endpoint error for an
   expect(missingErr.message).toBe(
     'Authentication required for API endpoint "internal_ep_missing".'
   );
+});
+
+test('callEndpoint rejects a payload that violates the payloadSchema with a UserError before the routine runs', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/create_order.json') {
+      return {
+        endpointId: 'create_order',
+        type: 'Api',
+        auth: { public: true },
+        payloadSchema: {
+          type: 'object',
+          properties: { quantity: { type: 'number' } },
+          required: ['quantity'],
+        },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(
+    'Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.'
+  );
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(UserError);
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'create_order',
+    pageId: 'pageId',
+    payload: { quantity: 2 },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('ran');
+});
+
+// runAs: the endpoint's declaration is resolved against the fresh routine
+// context and scopes every walled step of the run.
+const tenantRequest = jest.fn(({ tenant }) => tenant);
+tenantRequest.schema = {};
+tenantRequest.meta = { checkRead: false, checkWrite: false };
+
+const walledConnections = {
+  TestTenantConnection: {
+    schema: {},
+    meta: { tenant: true },
+    requests: { TenantRequest: tenantRequest },
+  },
+};
+
+function createRunAsReadConfigFile({ runAs }) {
+  return jest.fn((path) => {
+    if (path === 'connections/app_data.json') {
+      return {
+        id: 'connection:app_data',
+        type: 'TestTenantConnection',
+        connectionId: 'app_data',
+      };
+    }
+    if (path === 'api/jobs.json') {
+      return {
+        endpointId: 'jobs',
+        type: 'Api',
+        auth: { public: true },
+        runAs,
+        routine: [
+          {
+            id: 'request:jobs:rows',
+            stepId: 'rows',
+            type: 'TenantRequest',
+            connectionId: 'app_data',
+          },
+          { ':return': { _step: 'rows' } },
+        ],
+      };
+    }
+    return null;
+  });
+}
+
+test('endpoint-level runAs scopes a walled step for a caller with no organization', async () => {
+  const { operatorsServer } = await import('@lowdefy/operators-js');
+  const context = testContext({
+    connections: walledConnections,
+    logger,
+    operators: operatorsServer,
+    organization: { policy: 'tenant' },
+    readConfigFile: createRunAsReadConfigFile({
+      runAs: { organizationId: { _secret: 'SYSTEM_ORG' } },
+    }),
+    secrets: { SYSTEM_ORG: 'org-system' },
+    user: { id: 'user_1', roles: [] },
+  });
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'jobs',
+    pageId: 'pageId',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ field: 'organization_id', value: 'org-system' });
+  expect(context.user).toEqual({ id: 'user_1', roles: [] });
+});
+
+test('a walled step fails closed for a caller with no organization when the endpoint declares no runAs', async () => {
+  const { operatorsServer } = await import('@lowdefy/operators-js');
+  const context = testContext({
+    connections: walledConnections,
+    logger,
+    operators: operatorsServer,
+    organization: { policy: 'tenant' },
+    readConfigFile: createRunAsReadConfigFile({ runAs: undefined }),
+    user: { id: 'user_1', roles: [] },
+  });
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'jobs',
+    pageId: 'pageId',
+    payload: {},
+  });
+  expect(result.success).toBe(false);
+  expect(result.status).toBe('error');
+  expect(logger.error).toHaveBeenCalled();
+});
+
+test('callEndpoint reports a :return that misses the responseSchema as a dev notice and still returns it', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_ep.json') {
+      return {
+        endpointId: 'typed_ep',
+        type: 'Api',
+        auth: { public: true },
+        responseSchema: { type: 'object', properties: { total: { type: 'integer' } } },
+        routine: { ':return': { total: 'three' } },
+        '~k': 'k_typed',
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile, user: { id: 'u' } });
+  context.handleDevNotice = jest.fn();
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'typed_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toEqual({ total: 'three' });
+  expect(context.handleDevNotice).toHaveBeenCalledTimes(1);
+  expect(context.handleDevNotice.mock.calls[0][0]).toMatchObject({
+    name: 'ResponseSchemaWarning',
+    configKey: 'k_typed',
+    details: { endpointId: 'typed_ep', instancePath: '/total' },
+  });
+});
+
+test('callEndpoint records no notice for a conforming :return or without the dev hook', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_ep.json') {
+      return {
+        endpointId: 'typed_ep',
+        type: 'Api',
+        auth: { public: true },
+        responseSchema: { type: 'object', properties: { total: { type: 'integer' } } },
+        routine: { ':return': { total: 3 } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, readConfigFile: mockReadConfigFile, user: { id: 'u' } });
+  context.handleDevNotice = jest.fn();
+  await callEndpoint(context, { blockId: 'b', endpointId: 'typed_ep', pageId: 'p', payload: {} });
+  expect(context.handleDevNotice).not.toHaveBeenCalled();
+
+  const prodContext = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'u' },
+  });
+  const result = await callEndpoint(prodContext, {
+    blockId: 'b',
+    endpointId: 'typed_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  expect(result.success).toBe(true);
 });

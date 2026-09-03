@@ -23,6 +23,8 @@ pages:
       # Direct consumption of core's stamp
       - id: direct-stamp
         type: Box
+        ~ignoreBuildChecks:
+          - block-properties
         properties:
           stamp:
             _ref:

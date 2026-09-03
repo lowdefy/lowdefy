@@ -128,6 +128,14 @@ _ref:
                   # ...
                 ```
 
+                ## Tenant scoping
+
+                Under `auth.organizations.policy: tenant` a scoping-capable connection is walled by default and a connection opts out with `tenant: shared`; see [Organizations](/organizations). One rule matters when writing aggregation pipelines: the wall injects its tenant `$match` into every `$lookup` / `$unionWith` sub-pipeline, so a `tenant: shared` collection joined from a scoped pipeline matches nothing and the join returns `[]`. The build refuses that pipeline (`tenant-lookup`). Run the pipeline on the shared connection and pass the organization facts in through the request payload, or declare `tenant: authored` on the request and author the organization clause yourself.
+
+                ## Declaring collections
+
+                A connection names the collection it addresses, but nothing on the connection records what a document in that collection contains. The optional app-level [`collections:`](/collections) declaration does: tenancy, fields, relations and indexes for each collection, joined at build to every connection whose `properties.collection` names it and written to `build/collections.json` for the data-layer tooling.
+
                 ## Request Action
 
                 The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads. Read more about the `Request` action [here](/Request).

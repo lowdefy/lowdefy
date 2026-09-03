@@ -1,0 +1,353 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: migrations
+    pageTitle: Migrations
+    section: Concepts
+    filePath: concepts/migrations.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            A Lowdefy app is config plus a live database. The config is versioned, built and deployed atomically; the database is not. It holds documents written by earlier versions of the config, in the shape those versions expected. Every time a collection's shape changes — a new required field, a renamed key, a derived id, a remapped enum — the documents already in the database have to be moved to the new shape.
+
+            A migration is the framework verb for "and move the existing documents". Migrations are **declarative**, **forward-only**, and expressed in the same routine grammar an [API endpoint](/lowdefy-api) uses, so `MongoDB*` request steps, `:for`, `:try`, `_step` and `_secret` all work with nothing new to learn. `lowdefy migrate` applies them, and a serving preflight refuses to serve an app while migrations are still pending.
+
+            A migration reconciles a [`collections`](/collections) declaration with the data, but the build never derives one for you — a generated backfill is a data-destroying guess (what default? which documents? scoped to whom?). You write the migration; the framework runs it, records it, and orders it.
+
+            ## The `migrations/` directory
+
+            Migrations are files the build discovers in a `migrations/` directory at the config root. Each file is one migration, named `migrations/<id>.yaml`:
+
+            ```
+            migrations/
+              2026-07-01-01-backfill-active.yaml
+              2026-07-08-01-rename-title-to-name.yaml
+              2026-08-30-01-derive-slug.yaml
+            ```
+
+            `migrations` is a directory, not a root config key — there is nothing to declare in `lowdefy.yaml`. The build lists `migrations/*.yaml` and `migrations/*.yml`, sorts them, validates each one, and writes a build artifact per migration plus an ordered index.
+
+            ## The file shape
+
+            Each file holds a `routine` — the same array-of-steps grammar as an `Api` endpoint's `routine` — and an optional human-readable `name`:
+
+            ```yaml
+            # migrations/2026-08-30-01-derive-slug.yaml
+            name: Derive a URL slug for every framework
+            routine:
+              - id: backfill
+                type: MongoDBUpdateMany
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  filter:
+                    slug: { $exists: false }
+                  update:
+                    $set:
+                      slug: '...'
+            ```
+
+            The routine is validated by the same build pass an endpoint routine gets: unknown step types, malformed controls (`:for`, `:if`, `:try`, `:throw`, …) and bad `_step` references are the same build errors an endpoint would raise. An empty routine is a build error.
+
+            `_ref` inside a migration file is **not supported**: a migration is a self-contained, checksummable unit, and a checksum that depended on `_ref`-ed fragments would change silently when a shared fragment changed. Operators that resolve at run time — `_secret`, `_step`, `_var`, `_user` (which is `null` under the migration caller, see below) — work normally.
+
+            ## Ids and ordering
+
+            The **id is the filename stem** (`2026-08-30-01-derive-slug`), so it is intrinsic to the file. Duplicate ids are impossible — filenames are unique — and the id is a stable ledger key with no counter and no run-time timestamp. An id must match `^[0-9a-zA-Z._-]+$`.
+
+            **Ordering is lexical on the id.** The `YYYY-MM-DD-NN-name` convention sorts chronologically as plain strings, so the build and the runner apply migrations in filename order. The date-batch prefix is a convention, not a requirement — any ids that sort into the order you want will do.
+
+            ## Forward-only
+
+            There are no down migrations. A mistake is corrected by writing a **new forward migration**, not by reversing an old one. A down migration is a data-loss decision config cannot make safely: reversing "drop `title` after copying it to `name`" means recovering `title` values that no longer exist; reversing an enum remap means knowing which documents held which value before. Rolling back a deployed schema change is a human, data-aware operation — restore a backup, or write a compensating migration. Forward-only also keeps the ledger a monotonic append log, which is what makes run-on-deploy and rolling deploys tractable.
+
+            ## The ledger
+
+            The record of what has been applied is a `migrations` collection in the app's own database — one document per applied migration:
+
+            ```json
+            {
+              "_id": "2026-08-30-01-derive-slug",
+              "checksum": "9f2b1c0a7d4e6f81",
+              "appliedAt": { "$date": "2026-08-30T09:14:02.101Z" },
+              "durationMs": 412,
+              "status": "applied",
+              "lowdefyVersion": "8.0.0"
+            }
+            ```
+
+            - **The ledger lives in the same database as the data it describes**, so it can never describe a different database than the one that was migrated.
+            - **The ledger connection is named by the app** at `config.migrations.ledgerConnectionId`, defaulting to a connection whose id is `migrations`. It must be a `MongoDBCollection` connection (v1 is database-only) pointed at the ledger collection. You declare it like any other connection; the runner never invents a connection string.
+            - **The ledger is outside the tenant wall.** It is app-global bookkeeping, not per-organization data, so the connection should be declared `tenant: shared`, and the runner reads and writes it `tenant: none` so a `pinned` and a `tenant` app behave identically.
+            - **The lock lives in the same collection** as a reserved `{ _id: "$lock", ... }` document — one collection, no extra declaration.
+
+            The `checksum` is the first 16 hex characters of a SHA-256 of the **raw file text** — the file you edit is the source of truth for "did this change".
+
+            ## `lowdefy migrate`
+
+            ```
+            lowdefy migrate [--dry-run] [--to <id>] [--yes] [--allow-checksum-mismatch] [--json]
+            ```
+
+            The runner reads the ordered build index and the ledger, computes the plan (index minus already-applied, honouring `--to`), confirms unless `--yes`, prints the ledger connection it will write through, acquires a lock, then applies each pending migration in order. Each migration's routine runs on a fresh routine context; on success the runner appends a ledger entry and prints one progress line:
+
+            ```
+            applied 2026-08-30-01-derive-slug (3 steps, 412ms, 9,812 documents)
+            ```
+
+            The document count is summed from the `MongoDB*` step results (`modifiedCount` / `insertedCount` / `matchedCount`). On failure the runner **stops at the first failing migration**, names the migration id, the step id and the underlying error, exits non-zero, and leaves that migration's ledger entry **absent** — migrations that completed before it stay applied.
+
+            The flags:
+
+            - `--dry-run`: Report which migrations would run, in order — with no writes, no lock, and no ledger changes. Dry-run is a plan, not a simulation: no step runs and no step properties are evaluated.
+            - `--to <id>`: Apply pending migrations up to and including `<id>`. Omit to apply all pending.
+            - `--yes`: Skip the confirmation prompt. Required in CI.
+            - `--allow-checksum-mismatch`: Downgrade a checksum mismatch from an error to a warning, and update the stored checksum. For the rare whitespace- or comment-only edit to an already-applied file that you know is a no-op.
+            - `--json`: Print a machine-readable report and nothing else on stdout, mirroring `lowdefy check --json`.
+
+            ### Editing and renaming applied migrations
+
+            An applied migration is immutable history.
+
+            - **Editing** an applied file changes its checksum. By default this is an **error**: the ledger no longer describes what ran, and continuing would apply nothing while pretending the current file is what is in the database. Use `--allow-checksum-mismatch` only for a no-op edit.
+            - **Renaming** an applied file changes its id, so it is treated as a new migration and re-runs, while the old id stays in the ledger with no matching file. Renaming an applied migration is unsupported — correct it by renaming it back. The runner **warns** about every applied ledger id with no corresponding file, because deleting a long-since-applied file from the repo is legitimate housekeeping, not a fault.
+
+            ### Idempotency
+
+            A migration is **expected to be re-runnable**, and this is enforced by nothing — it is your obligation. A run that fails half-way (step 3 of 5) leaves the ledger entry absent, so the whole migration re-runs on the next `lowdefy migrate`, replaying steps 1–3. There is no per-step ledger and no wrapping transaction; re-running the whole idempotent migration is the recovery model. The worked examples below use the three idempotent patterns: filter on "field missing", `$setOnInsert`, and map-with-a-default-that-throws.
+
+            ## The caller and the tenant rule
+
+            Migrations run on a **system context**: `user: null`, `system: true`. There is no signed-in caller, so `_user` is `null`, and there is no organization in scope.
+
+            Under `auth.organizations.policy: tenant`, every step that touches a walled connection must resolve an organization. A system caller carries none, so **every migration step against a walled connection must declare one of two things**:
+
+            - `tenant: none` — run unscoped across every organization's documents; or
+            - `runAs: { organizationId }` — run scoped to one organization.
+
+            The **build refuses** a migration whose request reads a walled connection with neither declared — the same tenant audit endpoint steps get. A migration is the highest-trust, lowest-visibility code in an app: it rewrites production data with no user watching, so the wall must not silently degrade to unscoped access here of all places. Forcing the declaration makes every unscoped migration step a reviewable line.
+
+            The per-organization loop is the routine grammar's `:for` over an organizations query, with `runAs: { organizationId: { _step: ... } }` on the inner step — see the derived-id example below.
+
+            ## Configuration
+
+            The optional `config.migrations` object tunes the runner and the preflight:
+
+            ```yaml
+            config:
+              migrations:
+                ledgerConnectionId: migrations   # default: the connection whose id is "migrations"
+                preflight: true                  # default: refuse to serve while migrations are pending
+                lockTimeoutMs: 900000            # default: 15 minutes
+            ```
+
+            - `ledgerConnectionId: string`: The id of the `MongoDBCollection` connection that holds the ledger and the lock. Defaults to `migrations`.
+            - `preflight: boolean`: Whether the serving preflight refuses to serve while migrations are pending. Defaults to `true`.
+            - `lockTimeoutMs: number`: How long the advisory lock is held before it is considered stale and can be stolen by the next run. Refreshed by a heartbeat while a migration runs, so a legitimately long migration is never stolen. Defaults to 15 minutes.
+
+            ## Run on deploy
+
+            Migrations are designed to run as a deploy step. There are two halves.
+
+            1. **`lowdefy migrate --yes` in the deploy pipeline**, after `lowdefy build` and before traffic shifts to the new instances.
+            2. **A serving preflight.** On the first request to a cold process, the server reads the build index and the ledger; if any migration is not applied it **refuses to serve**, with an error naming the pending migrations and telling the operator to run `lowdefy migrate`. A refusal is memoized until restart (the data does not fix itself, the deploy does), while a connectivity failure retries on the next request. If a migration is running right now (the lock is held), the preflight asks the instance to retry, so it begins serving the moment the migration finishes and never serves a half-migrated database.
+
+            Turn the preflight off with `config.migrations.preflight: false` for an app that manages migration ordering entirely in its pipeline, or one deliberately deploying new code ahead of a migration. It is on by default because the failure it prevents — new code reading a collection the migration has not reshaped — is silent and data-shaped.
+
+            ### Expand and contract for rolling deploys
+
+            During a rolling deploy the previous version's instances keep serving while the new version's come up. The new instances' preflight refuses until `lowdefy migrate` completes; the old instances keep serving the old code. This is only safe when the migration is **backward-compatible with the currently-running code**:
+
+            - **Expand** migrations — add a field and backfill it, add a collection, widen an enum — are safe in a rolling deploy: old code ignores the new field, new code uses it, both run against the migrated shape.
+            - **Contract** migrations — drop a field, remove an enum value, delete a collection — must ship in a **later** deploy, once no running instance reads the old shape.
+
+            A rename is expand-then-contract across two deploys: deploy 1 adds `name` and backfills it from `title` (both present, old code reads `title`, new code reads `name`); deploy 2, once every instance runs the new code, drops `title`. The framework cannot know which fields the previously-deployed code read, so it does not enforce this discipline — but the preflight plus the forward-only ledger make the *ordering* reliable, which is the half the framework can guarantee.
+
+            ## Environments and secrets
+
+            The runner reads `.env` and the process environment exactly as the build and server do; `_secret` values resolve identically. `lowdefy migrate` takes **no connection string of its own** — the ledger connection and every step's connection are named in config and read their properties (including secrets) from the environment the command runs in. Targeting staging versus production is therefore purely which environment the command runs against: set `MONGODB_URI` (or whatever the connection reads) for the environment you are deploying to. Without `--yes` the command asks for confirmation before running anything, and the runner prints the ledger connection id it writes through — so a human at a terminal confirms against the environment the command runs in, while CI passes `--yes`.
+
+            ## Worked examples
+
+            All four are complete `migrations/<id>.yaml` files, and all are idempotent: re-running one is a no-op because its filter matches only unmigrated documents, or its write is conditional.
+
+            ### Add-field backfill
+
+            Set a default on existing documents that lack the field.
+
+            ```yaml
+            # migrations/2026-07-01-01-backfill-active.yaml
+            name: Default `active: true` on frameworks missing the field
+            routine:
+              - id: backfill
+                type: MongoDBUpdateMany
+                connectionId: frameworks
+                tenant: none # this rewrites documents of every organization
+                properties:
+                  filter:
+                    active: { $exists: false } # only documents that lack it — idempotent
+                  update:
+                    $set:
+                      active: true
+            ```
+
+            ### Rename — copy, verify, unset
+
+            Expand and contract in one migration, safe only when no old code still reads `title` (see the two-deploy rename above). Copy, verify the copy covered every document, then unset the old key.
+
+            ```yaml
+            # migrations/2026-07-08-01-rename-title-to-name.yaml
+            name: Rename `title` to `name` on frameworks
+            routine:
+              - id: copy
+                type: MongoDBUpdateMany
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  filter:
+                    title: { $exists: true }
+                    name: { $exists: false } # idempotent: skip documents already copied
+                  update:
+                    - $set: { name: '$title' } # aggregation-pipeline update reads the sibling
+              - id: verify
+                type: MongoDBFind
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  query:
+                    title: { $exists: true }
+                    name: { $exists: false }
+              - ':if':
+                  _gt:
+                    - _js: |
+                        function len({ params }) { return params.length; }
+                      # length of the still-unmigrated set from the verify step
+                    - 0
+                ':then':
+                  - id: abort
+                    type: ':throw'
+                    # a :throw aborts the migration; the ledger entry is not written,
+                    # so it re-runs after the author fixes the offending documents.
+                    message:
+                      _nunjucks:
+                        template: '{{ n }} frameworks still have `title` but no `name` — not unsetting.'
+                        on:
+                          n: { _step: verify.length }
+              - id: unset
+                type: MongoDBUpdateMany
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  filter:
+                    title: { $exists: true }
+                    name: { $exists: true }
+                  update:
+                    $unset: { title: '' }
+            ```
+
+            ### Derived id — compute a deterministic id, rewrite references
+
+            Compute a deterministic slug from existing fields, write it, then rewrite every reference to it across another collection. This is the per-organization loop shape when the target is walled: iterate the source documents and scope each inner write with `runAs`.
+
+            ```yaml
+            # migrations/2026-08-30-01-derive-slug.yaml
+            name: Derive a deterministic slug and repoint evidence rows to it
+            routine:
+              # 1. Compute and write the slug on each framework (unscoped: the slug is
+              #    derived from the framework's own fields, deterministic, no cross-org data).
+              - id: frameworks
+                type: MongoDBFind
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  query: { slug: { $exists: false } }
+              - ':for':
+                  list: { _step: frameworks }
+                  ':do':
+                    - id: setSlug
+                      type: MongoDBUpdateOne
+                      connectionId: frameworks
+                      tenant: none
+                      properties:
+                        filter: { _id: { _step: $for.item._id } }
+                        update:
+                          $set:
+                            slug:
+                              # deterministic: same inputs → same slug on every run
+                              _js: |
+                                function slug({ params }) {
+                                  return `${params.year}-${params.code}`.toLowerCase();
+                                }
+                              # (params bound from the framework row via _step)
+                    # repoint evidence, scoped to the framework's organization
+                    - id: repoint
+                      type: MongoDBUpdateMany
+                      connectionId: evidence
+                      runAs:
+                        organizationId: { _step: $for.item.organization_id }
+                      properties:
+                        filter: { framework_id: { _step: $for.item._id } }
+                        update:
+                          $set: { framework_slug: { _step: $for.item.slug } }
+            ```
+
+            ### Enum remap — map old values to new, fail loudly on an unmapped value
+
+            ```yaml
+            # migrations/2026-08-30-02-remap-status.yaml
+            name: Remap framework status enum to the v2 values
+            routine:
+              - id: rows
+                type: MongoDBFind
+                connectionId: frameworks
+                tenant: none
+                properties:
+                  query:
+                    status: { $in: ['draft', 'active', 'archived'] } # only old values
+              - ':for':
+                  list: { _step: rows }
+                  ':do':
+                    - id: remap
+                      type: MongoDBUpdateOne
+                      connectionId: frameworks
+                      tenant: none
+                      properties:
+                        filter: { _id: { _step: $for.item._id } }
+                        update:
+                          $set:
+                            status:
+                              _js: |
+                                function remap({ params }) {
+                                  const map = { draft: 'DRAFT', active: 'PUBLISHED', archived: 'RETIRED' };
+                                  const next = map[params.status];
+                                  if (next === undefined) {
+                                    // an unmapped value fails the step, aborts the migration,
+                                    // and leaves the ledger entry absent so it re-runs
+                                    throw new Error(`Unmapped status "${params.status}" on ${params._id}.`);
+                                  }
+                                  return next;
+                                }
+            ```
+
+            ## Non-goals
+
+            - **No schema-diffing or auto-generated migrations.** The build never derives a migration from a [`collections`](/collections) change — a generated backfill is a data-destroying guess.
+            - **No down migrations.** Forward-only; correct a mistake with a new migration.
+            - **No cross-collection transactions.** A migration touching several collections is not atomic; idempotency, not rollback, is the recovery model.
+            - **No migrations for non-database connections** in v1. The ledger and the worked shapes are MongoDB; the routine grammar could express an HTTP or storage migration later.

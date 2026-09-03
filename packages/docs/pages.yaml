@@ -19,10 +19,14 @@
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
+- _ref: concepts/collections.yaml
+- _ref: concepts/archetypes.yaml
+- _ref: concepts/migrations.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/keyboard-shortcuts.yaml
 - _ref: concepts/i18n.yaml
 - _ref: concepts/operators.yaml
+- _ref: concepts/expression-syntax.yaml
 - _ref: concepts/secrets.yaml
 - _ref: concepts/logger.yaml
 - _ref: concepts/lists.yaml
@@ -51,9 +55,11 @@
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
 - _ref: deployment/vercel.yaml
+- _ref: deployment/framework-versions.yaml
 
 - _ref: plugins/plugins-introduction.yaml
 - _ref: plugins/plugins-dev.yaml
+- _ref: plugins/plugin-api-versioning.yaml
 - _ref: plugins/plugins-actions.yaml
 - _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
@@ -77,6 +83,9 @@
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
+- _ref: testing/config-tests.yaml
+- _ref: testing/fixtures.yaml
+- _ref: testing/snapshots.yaml
 - _ref: testing/e2e-introduction.yaml
 - _ref: testing/e2e-getting-started.yaml
 - _ref: testing/e2e-writing-tests.yaml
@@ -199,6 +208,7 @@
 - _ref: blocks/container/Splitter.yaml
 - _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml
+- _ref: blocks/container/Template.yaml
 - _ref: blocks/container/Tooltip.yaml
 - _ref: blocks/container/Watermark.yaml
 
@@ -339,7 +349,7 @@
 - _ref: controls/switch.yaml
 - _ref: controls/throw.yaml
 - _ref: controls/try.yaml
-# - _ref: controls/while.yaml # TODO: Add back when while control implemented
+- _ref: controls/while.yaml
 
 - _ref: migration/upgrade-guide.yaml
 - _ref: migration/auth-upgrade.yaml

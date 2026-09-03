@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
@@ -27,6 +28,7 @@ import validatePayloadReferences from '../buildPages/validatePayloadReferences.j
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
 import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
+import validateStateSchema from '../buildPages/validateStateSchema.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
 function buildPages({ components, context }) {
@@ -113,8 +115,10 @@ function buildPages({ components, context }) {
   pages.forEach((page, index) => {
     if (failedPageIndices.has(index)) return;
     validateStateReferences({ page, context });
+    validateStateSchema({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
+    validateActionResponsePaths({ page, endpointConfigs, context });
   });
 
   return components;

@@ -275,7 +275,7 @@ _ref:
           ```
         description: |
           The `_date.setUTCDate` method changes the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCDate) of a date, based on UTC time.
-      - name: setFullYear
+      - name: setUTCFullYear
         types: |
           ```
           (arguments: {on: date, year: number}): number

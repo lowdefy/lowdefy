@@ -7,12 +7,14 @@ blocks:
       content:
         _module.var: title
   - _ref:
-      path: shared/stat-card.yaml
+      path: shared/stat-card.yaml.njk
       vars:
+        stat_id: total_users
         stat_label: Total Users
         stat_value: '1,234'
   - _ref:
-      path: shared/stat-card.yaml
+      path: shared/stat-card.yaml.njk
       vars:
+        stat_id: active_today
         stat_label: Active Today
         stat_value: '56'

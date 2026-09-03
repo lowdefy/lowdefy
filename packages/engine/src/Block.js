@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import { getSchemaAtPath } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 import Events from './Events.js';
+import getRequiredValidation from './getRequiredValidation.js';
 import Slots from './Slots.js';
 
 class Block {
@@ -70,6 +72,7 @@ class Block {
     this.styleEval = {};
     this.validationEval = {};
     this.visibleEval = {};
+    this.schemaErrors = [];
 
     this.meta = this.context._internal.lowdefy._internal.blockMetas[this.type];
     if (!this.meta) {
@@ -117,6 +120,7 @@ class Block {
 
   _initInput = () => {
     this.setValue = (value) => {
+      this.schemaErrors = [];
       this.value = type.enforceType(this.meta.valueType, value);
       this.context._internal.State.set(this.blockId, this.value);
       this.update = true;
@@ -380,14 +384,21 @@ class Block {
     });
   };
 
+  // The JSON schema type the page state contract declares for this block's
+  // state path, or undefined when the page has no contract or leaves it open.
+  getDeclaredStateType = () => {
+    if (type.isNone(this.context.stateSchema)) return undefined;
+    const fragment = getSchemaAtPath({ schema: this.context.stateSchema, path: this.blockId });
+    return fragment === null ? undefined : fragment.type;
+  };
+
   validateEval = () => {
-    const requiredValidation = {
-      pass: { _not: { _type: 'none' } },
-      status: 'error',
+    const requiredValidation = getRequiredValidation({
+      declaredType: this.getDeclaredStateType(),
       message: type.isString(this.requiredEval.output)
         ? this.requiredEval.output
         : this.context._internal.lowdefy._internal.translate('engine.validation.fieldRequired'),
-    };
+    });
     const validation =
       this.requiredEval.output === false ? this.validate : [...this.validate, requiredValidation];
 
@@ -424,7 +435,13 @@ class Block {
         }
       }
     });
-    if (validation.length > 0) {
+    // Errors the Validate action found by checking state against the page
+    // contract. They stay until the block's value changes or validation resets.
+    this.schemaErrors.forEach((message) => {
+      this.validationEval.output.errors.push(message);
+      validationError = true;
+    });
+    if (validation.length > 0 || this.schemaErrors.length > 0) {
       this.validationEval.output.status = 'success';
     }
     if (validationWarning) {
@@ -523,6 +540,7 @@ class Block {
     if (!match(this.blockId)) return;
 
     this.showValidation = false;
+    this.schemaErrors = [];
     this.update = true;
   };
 

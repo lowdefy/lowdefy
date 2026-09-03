@@ -50,6 +50,13 @@ function buildTestPage({ pageConfig, connectionIds = [] }) {
   buildAuth({ components, context });
   buildPages({ components, context });
 
+  // Build errors are collected, not thrown, so a test that hands the engine an
+  // invalid page would otherwise get a half-built page and fail somewhere
+  // unrelated. Throw the first collected error so the test fails at the cause.
+  if ((context.errors ?? []).length > 0) {
+    throw context.errors[0];
+  }
+
   return components.pages[0];
 }
 

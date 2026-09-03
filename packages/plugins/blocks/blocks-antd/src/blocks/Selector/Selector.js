@@ -96,15 +96,17 @@ const Selector = ({
                 placeholder={get(properties, 'placeholder', { default: 'Select item' })}
                 status={validation.status}
                 suffixIcon={
-                  properties.suffixIcon && (
-                    <Icon
-                      blockId={`${blockId}_suffixIcon`}
-                      classNames={{ element: classNames.suffixIcon }}
-                      events={events}
-                      properties={properties.suffixIcon}
-                      styles={{ element: styles.suffixIcon }}
-                    />
-                  )
+                  properties.showArrow === false
+                    ? null
+                    : properties.suffixIcon && (
+                        <Icon
+                          blockId={`${blockId}_suffixIcon`}
+                          classNames={{ element: classNames.suffixIcon }}
+                          events={events}
+                          properties={properties.suffixIcon}
+                          styles={{ element: styles.suffixIcon }}
+                        />
+                      )
                 }
                 clearIcon={
                   properties.clearIcon && (
@@ -117,7 +119,6 @@ const Selector = ({
                     />
                   )
                 }
-                showArrow={properties.showArrow}
                 allowClear={properties.allowClear !== false}
                 showSearch={get(properties, 'showSearch', { default: true })}
                 size={properties.size}

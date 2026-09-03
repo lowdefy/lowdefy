@@ -22,10 +22,28 @@ export default {
     content: 'Blocks rendered for each list item.',
   },
   events: {
-    onAdd:
-      'Triggered after a new item is added via the add button. The event payload is `{ index, item }`, where `item` is the newly added value (`undefined` for an empty row).',
-    onRemove:
-      'Triggered after an item is removed via the remove icon. The event payload is `{ index, item }`, where `item` is the removed value captured before removal.',
+    onAdd: {
+      description: 'Triggered after a new item is added via the add button.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          index: { type: 'integer', description: 'Zero-based index of the added item.' },
+          item: { description: 'The newly added value (undefined for an empty row).' },
+        },
+      },
+    },
+    onRemove: {
+      description: 'Triggered after an item is removed via the remove icon.',
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          index: { type: 'integer', description: 'Zero-based index of the removed item.' },
+          item: { description: 'The removed value, captured before removal.' },
+        },
+      },
+    },
   },
   cssKeys: {
     element: 'The ControlledList element.',

@@ -31,26 +31,34 @@ import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
+import docsDataModelHandler from './routes/docs/dataModel.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
 import docsCheckpointsCreateHandler from './routes/docs/checkpointsCreate.js';
 import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
 import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
 import docsContentHandler from './routes/docs/content.js';
 import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
+import docsEventsHandler from './routes/docs/events.js';
 import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
 import docsInspectStateHandler from './routes/docs/inspectState.js';
+import docsDevUsersHandler from './routes/docs/devUsers.js';
+import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsRestartHandler from './routes/docs/restart.js';
+import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
 import docsRunRequestHandler from './routes/docs/runRequest.js';
+import docsSeedFixtureHandler from './routes/docs/seedFixture.js';
 import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
 import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
 import docsPluginDocHandler from './routes/docs/pluginDoc.js';
 import docsPluginsHandler from './routes/docs/plugins.js';
 import docsSchemaHandler from './routes/docs/schema.js';
 import docsScreenshotHandler from './routes/docs/screenshot.js';
+import docsSnapshotHandler from './routes/docs/snapshot.js';
 import docsSearchHandler from './routes/docs/search.js';
 import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
@@ -61,11 +69,13 @@ import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
+import staleFlag from './middleware/staleFlag.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -104,31 +114,51 @@ function createApp() {
     app,
     auth: authJson.configured === true && !mockUser ? getAuth({ logger }) : null,
   });
+  app.all('/.well-known/*', wellKnownFallbackHandler);
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
-  // they read build artifacts and node_modules directly — but run-request
-  // and eval-operator build a full Lowdefy context (createLowdefyContext),
+  // they read build artifacts and node_modules directly — but run-request,
+  // run-endpoint, seed-fixture and eval-operator build a full Lowdefy context (createLowdefyContext),
   // which resolves the caller from the request headers via resolveAuthentication.
+  // The MCP transport is registered before staleFlag on purpose: hono
+  // dispatches in registration order, so the stale middleware never sees a
+  // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
+  // tool result in createDocsMcpServer — merging fields into the envelope
+  // instead would put unknown members on a strictly-validated message.
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  // Flags every other docs response while the last build failed. Registered
+  // twice: hono's `/*` pattern does not match the bare path.
+  app.use('/lowdefy-docs', staleFlag());
+  app.use('/lowdefy-docs/*', staleFlag());
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  // Push channel for non-MCP clients. Must sit above the `/lowdefy-docs/:kind`
+  // catch-all, which would otherwise treat "events" as a type kind.
+  app.get('/lowdefy-docs/events', docsEventsHandler);
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.get('/lowdefy-docs/snapshot/:pageId', docsSnapshotHandler);
+  app.get('/lowdefy-docs/dev-users', docsDevUsersHandler);
+  app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
+  app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
+  app.post('/lowdefy-docs/seed-fixture', docsSeedFixtureHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
   app.post('/lowdefy-docs/checkpoints/revert', docsCheckpointsRevertHandler);
   app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
   app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
   app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
+  app.post('/lowdefy-docs/restart', docsRestartHandler);
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs
   // and serves checkpoint parts for the ?_checkpoint bootstrap.

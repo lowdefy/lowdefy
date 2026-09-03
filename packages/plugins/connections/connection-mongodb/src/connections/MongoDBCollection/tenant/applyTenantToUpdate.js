@@ -41,6 +41,12 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 //   a $replaceRoot/$replaceWith that omits the field (the row would fall
 //   outside every walled read), and pipeline upserts, where $setOnInsert does
 //   not exist.
+//
+// `trace` is an optional dev-only collector: when present each stamp is
+// recorded on trace.rewritten as { at, injected } - the appended stage for a
+// pipeline update ('update[<n>]'), the $setOnInsert field for an upsert
+// ('update.$setOnInsert'). A plain non-upsert update is only guarded, never
+// rewritten, so it records nothing.
 function assertUnsetDoesNotDropTenantField({ stage, field }) {
   const unset = stage.$unset;
   if (unset === undefined) return;
@@ -68,7 +74,7 @@ function assertRenameDoesNotTargetTenantField({ update, field }) {
   });
 }
 
-function applyTenantToUpdate({ update, tenant, upsert = false }) {
+function applyTenantToUpdate({ update, tenant, upsert = false, trace, at = 'update' }) {
   const { field, value } = tenant;
 
   if (Array.isArray(update)) {
@@ -76,12 +82,21 @@ function applyTenantToUpdate({ update, tenant, upsert = false }) {
       assertTenantFieldNotAuthored({ value: stage, field, position: 'an update' });
       assertUnsetDoesNotDropTenantField({ stage, field });
     });
+    if (trace) {
+      trace.rewritten.push({
+        at: `${at}[${update.length}]`,
+        injected: { $set: { [field]: value } },
+      });
+    }
     return [...update, { $set: { [field]: value } }];
   }
 
   assertTenantFieldNotAuthored({ value: update, field, position: 'an update' });
   assertRenameDoesNotTargetTenantField({ update, field });
   if (upsert) {
+    if (trace) {
+      trace.rewritten.push({ at: `${at}.$setOnInsert`, injected: { [field]: value } });
+    }
     return {
       ...update,
       $setOnInsert: { ...(update?.$setOnInsert ?? {}), [field]: value },

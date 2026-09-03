@@ -240,7 +240,7 @@
       type: NumberInput
       properties:
         title: Price
-        placeholder: 0
+        placeholder: '0'
         precision: 2
         min: 0
     - id: placeholder_percentage
@@ -389,7 +389,7 @@
         max: 99999
         step: 0.01
         precision: 2
-        placeholder: 0
+        placeholder: '0'
         label:
           extra: Enter the product price in USD.
     - id: combined_quantity
@@ -410,7 +410,7 @@
         max: 100
         step: 0.5
         precision: 1
-        placeholder: 0
+        placeholder: '0'
         size: small
         label:
           extra: Percentage discount to apply.
@@ -685,7 +685,7 @@
             title: Min Price
             min: 0
             precision: 2
-            placeholder: 0
+            placeholder: '0'
         - id: form_max_price
           type: NumberInput
           layout:
@@ -694,7 +694,7 @@
             title: Max Price
             min: 0
             precision: 2
-            placeholder: 0
+            placeholder: '0'
     - id: form_no_label_label
       type: Markdown
       properties:

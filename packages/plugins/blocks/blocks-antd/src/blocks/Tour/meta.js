@@ -25,11 +25,23 @@ export default {
   events: {
     onChange: {
       description: 'Triggered when the current step changes.',
-      event: { current: 'The index of the current step.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          current: { type: 'integer', description: 'The index of the current step.' },
+        },
+      },
     },
     onClose: {
       description: 'Triggered when the tour is closed.',
-      event: { current: 'The index of the step when closed.' },
+      payload: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          current: { type: 'integer', description: 'The index of the step when closed.' },
+        },
+      },
     },
     onFinish: 'Triggered when the tour is finished.',
   },
