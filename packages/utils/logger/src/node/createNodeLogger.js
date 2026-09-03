@@ -16,7 +16,9 @@
 
 import pino from 'pino';
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
+
+import createOtlpSink from './createOtlpSink.js';
 
 function createNodeLogger({
   name = 'lowdefy',
@@ -25,20 +27,36 @@ function createNodeLogger({
   mixin,
   serializers,
   destination,
+  otlp,
 } = {}) {
-  return pino(
-    {
-      name,
-      level,
-      base,
-      mixin,
-      serializers: {
-        err: (error) => serializer.serialize(error)?.['~e'] ?? error,
-        ...serializers,
-      },
+  const options = {
+    name,
+    level,
+    base,
+    mixin,
+    serializers: {
+      err: (error) => serializer.serialize(error)?.['~e'] ?? error,
+      ...serializers,
     },
-    destination
+  };
+  if (type.isNone(otlp)) {
+    return pino(options, destination);
+  }
+
+  // The OTLP export is a second leg beside stdout, never a replacement: the
+  // platform's own log stream stays the source of truth if the export fails.
+  const sink = createOtlpSink(otlp);
+  const logger = pino(
+    options,
+    pino.multistream([
+      { level, stream: destination ?? pino.destination(1) },
+      { level, stream: sink },
+    ])
   );
+  // Inherited by every child (pino children are created from the parent), so a
+  // per-request child logger can be flushed by the request that made it.
+  logger.flushOtlp = () => sink.flush();
+  return logger;
 }
 
 export default createNodeLogger;

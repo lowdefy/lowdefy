@@ -35,6 +35,11 @@ const eventsDefaults = {
   identity: false,
 };
 
+const otlpBatchDefaults = {
+  size: 50,
+  flush_ms: 2000,
+};
+
 function resolveEvents(events) {
   if (type.isString(events)) {
     return { ...eventsDefaults, level: events };
@@ -52,6 +57,19 @@ function buildLogger({ components }) {
 
   // Always written, so the runtime reads a policy instead of defaulting one.
   components.logger.events = resolveEvents(components.logger.events);
+
+  // The OTLP exporter is off unless an endpoint is configured. Header values
+  // are left exactly as authored - a "_secret" operator node stays an operator
+  // node, so a token is never written into the build artifact; the server
+  // resolves it against its own secrets when it creates the logger.
+  if (!type.isNone(components.logger.otlp)) {
+    components.logger.otlp = {
+      headers: {},
+      resource: {},
+      ...components.logger.otlp,
+      batch: { ...otlpBatchDefaults, ...components.logger.otlp.batch },
+    };
+  }
 
   // Only apply defaults if sentry is explicitly configured
   if (!type.isNone(components.logger.sentry)) {

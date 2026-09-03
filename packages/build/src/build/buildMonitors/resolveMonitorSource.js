@@ -14,6 +14,18 @@
   limitations under the License.
 */
 
-import { createNodeLogger, createOtlpSink } from './node/index.js';
+import { resolveConfigLocation } from '@lowdefy/errors';
 
-export { createNodeLogger, createOtlpSink };
+// `file:line`, relative to the config directory, so an alert in any sink points
+// at the config that declared the unit. Relative on purpose: the artifact is
+// read on a machine that is not the one that built it.
+function resolveMonitorSource({ configKey, context }) {
+  const location = resolveConfigLocation({
+    configKey,
+    keyMap: context.keyMap,
+    refMap: context.refMap,
+  });
+  return location?.source ?? null;
+}
+
+export default resolveMonitorSource;

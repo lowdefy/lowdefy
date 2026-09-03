@@ -231,3 +231,34 @@ test('buildLogger preserves false boolean values', () => {
   expect(result.logger.sentry.server).toBe(false);
   expect(result.logger.sentry.feedback).toBe(false);
 });
+
+test('buildLogger writes no otlp config when the app configured none', () => {
+  const result = buildLogger({ components: {} });
+  expect(result.logger.otlp).toBeUndefined();
+});
+
+test('buildLogger defaults otlp headers, resource and batch', () => {
+  const components = { logger: { otlp: { endpoint: 'https://api.axiom.co/v1/logs' } } };
+  const result = buildLogger({ components });
+  expect(result.logger.otlp).toEqual({
+    endpoint: 'https://api.axiom.co/v1/logs',
+    headers: {},
+    resource: {},
+    batch: { size: 50, flush_ms: 2000 },
+  });
+});
+
+test('buildLogger keeps a header _secret operator node unresolved', () => {
+  const components = {
+    logger: {
+      otlp: {
+        endpoint: 'https://api.axiom.co/v1/logs',
+        headers: { Authorization: { _secret: 'AXIOM_TOKEN' } },
+        batch: { size: 10 },
+      },
+    },
+  };
+  const result = buildLogger({ components });
+  expect(result.logger.otlp.headers.Authorization).toEqual({ _secret: 'AXIOM_TOKEN' });
+  expect(result.logger.otlp.batch).toEqual({ size: 10, flush_ms: 2000 });
+});

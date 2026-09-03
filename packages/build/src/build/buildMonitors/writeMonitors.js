@@ -14,6 +14,14 @@
   limitations under the License.
 */
 
-import { createNodeLogger, createOtlpSink } from './node/index.js';
+import buildMonitors from './buildMonitors.js';
 
-export { createNodeLogger, createOtlpSink };
+// build/monitors.json is always written, as [] when the app declares nothing,
+// so a consumer never needs an existence check. The array shape is a contract:
+// keep entry ids stable, because a sink keys its monitors on them.
+async function writeMonitors({ components, context }) {
+  const monitors = buildMonitors({ components, context });
+  await context.writeBuildArtifact('monitors.json', JSON.stringify(monitors, null, 2));
+}
+
+export default writeMonitors;

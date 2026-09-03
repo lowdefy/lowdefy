@@ -881,6 +881,51 @@ test('a logger events sample_rate above 1 is a warning', () => {
   expect(mockLogWarn.mock.calls[0][0]).toContain('logger.events');
 });
 
+// --- logger.otlp (OTLP export, review H P1.2 / R16) ---
+
+test('logger otlp with an endpoint, secret headers, resource and batch emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    logger: {
+      otlp: {
+        endpoint: 'https://api.axiom.co/v1/logs',
+        headers: {
+          Authorization: { _secret: 'AXIOM_TOKEN' },
+          'X-Axiom-Dataset': 'lowdefy',
+        },
+        resource: { 'deployment.environment': 'production' },
+        batch: { size: 100, flush_ms: 500 },
+      },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('logger otlp without an endpoint is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { otlp: { headers: {} } } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.otlp');
+});
+
+test('a logger otlp endpoint that is not a url is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { otlp: { endpoint: 'not a url' } } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.otlp.endpoint');
+});
+
+test('an unknown logger otlp property is a warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    logger: { otlp: { endpoint: 'https://api.axiom.co/v1/logs', batch: { sise: 10 } } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('"sise"');
+});
+
 test('theme mode, density and radius emit no warnings', () => {
   const components = {
     lowdefy: '1.0.0',

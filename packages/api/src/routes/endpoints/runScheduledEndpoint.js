@@ -96,7 +96,7 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
   // async: true — acknowledge the cron trigger immediately and run in the
   // background; transport auth (CRON_SECRET) already passed at the route.
   if (endpointConfig.async === true) {
-    scheduleBackground(context, { event: 'background_scheduled_endpoint', endpointId }, () =>
+    scheduleBackground(context, { endpointConfig, event: 'background_scheduled_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );
     return {

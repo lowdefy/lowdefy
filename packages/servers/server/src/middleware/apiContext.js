@@ -173,6 +173,14 @@ function apiContext() {
       status: c.res.status,
       durationMs: Math.round(performance.now() - startTime),
     });
+    // A serverless invocation can be frozen the moment the response is
+    // flushed, so the OTLP batch has to leave with the request: waitUntil
+    // keeps the invocation alive until the export settles. On a long-lived
+    // host the lookup resolves to nothing and the export just runs (the
+    // sink's own timer would have flushed it anyway).
+    if (context.logger.flushOtlp) {
+      context.waitUntil(context.logger.flushOtlp());
+    }
   };
 }
 

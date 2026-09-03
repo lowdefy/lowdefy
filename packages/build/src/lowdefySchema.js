@@ -3262,6 +3262,44 @@ export default {
           errorMessage:
             'App "logger.events" should be "errors", "all", or an object with "level" ("errors" or "all"), "sample_rate" (a number between 0 and 1) and "identity" (a boolean).',
         },
+        monitors: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'App-wide defaults for the monitor definitions the build writes to build/monitors.json. There is no per-monitor surface.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            defaults: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                error_rate: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  description: 'Error-rate threshold (0 to 1) for endpoint, request and connection rules. Default 0.05.',
+                },
+                p95_ms: {
+                  type: 'number',
+                  exclusiveMinimum: 0,
+                  description: 'p95 duration threshold in milliseconds for page request rules. Default 2000.',
+                },
+              },
+              errorMessage: {
+                type: 'App "logger.monitors.defaults" should be an object.',
+                additionalProperties:
+                  'App "logger.monitors.defaults" has an unknown key. Valid keys: error_rate, p95_ms.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "logger.monitors" should be an object.',
+            additionalProperties: 'App "logger.monitors" has an unknown key. Valid keys: defaults.',
+          },
+        },
         otlp: {
           type: 'object',
           additionalProperties: false,
@@ -3307,8 +3345,7 @@ export default {
               },
               errorMessage: {
                 type: 'App "logger.otlp.resource" should be an object.',
-                additionalProperties:
-                  'App "logger.otlp.resource" values should be strings.',
+                additionalProperties: 'App "logger.otlp.resource" values should be strings.',
               },
             },
             batch: {
@@ -3337,7 +3374,8 @@ export default {
                     'Milliseconds a buffered log line waits before it is exported. Default 2000.',
                   errorMessage: {
                     type: 'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
-                    minimum: 'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
+                    minimum:
+                      'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
                   },
                 },
               },

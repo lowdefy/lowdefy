@@ -91,6 +91,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeMonitors from './build/buildMonitors/writeMonitors.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
@@ -255,6 +256,7 @@ async function build(options) {
     await writeI18n({ components, context });
     await codegenI18nLocales({ components, context });
     await writeLogger({ components, context });
+    await writeMonitors({ components, context });
     await writeMaps({ components, context });
     await writeMenus({ components, context });
     await writeTypes({ components, context });
