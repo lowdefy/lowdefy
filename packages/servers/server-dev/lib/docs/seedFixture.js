@@ -64,6 +64,10 @@ async function seedConnection({ context, connectionId, docs, reset }) {
       requestId: `seed_fixture:${connectionId}`,
       type: 'MongoDBInsertMany',
       properties: { docs },
+      // A fixture document is data. Without this the operator pass would run
+      // over the documents themselves, so a document with a `_secret` or `_js`
+      // key would be executed instead of stored.
+      rawProperties: true,
       tenant: null,
     });
     inserted = response?.insertedCount ?? docs.length;
@@ -120,6 +124,9 @@ async function seedFixture({ name, reset = false, honoContext }) {
       seeded.push(await seedConnection({ context, connectionId, docs, reset }));
     }
   } catch (error) {
+    // A partial failure still changed the database, so a watching agent is
+    // told about it on the same event as a clean run.
+    publish({ type: 'fixture_seeded', name, reset, seeded });
     return {
       refused: false,
       error: { name: error.name, message: error.message },

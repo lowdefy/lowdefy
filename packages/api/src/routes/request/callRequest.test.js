@@ -1070,7 +1070,9 @@ test('callRequest with trace collects the connection, the tenant verdict and the
       type: 'TestTenantConnection',
       tenant: { field: 'organization_id', value: 'org-1' },
     },
+    requestType: 'TestRequest',
     properties: { org: 'org-1', q: 'x' },
+    dispatched: true,
     effective: { query: { q: 'x', organization_id: 'org-1' } },
     rewritten: [],
   });

@@ -56,9 +56,10 @@ function validateStep(
   // step that never reaches the wall, and a declaration that silently did
   // nothing is exactly the unscoped-by-accident state the wall exists to
   // prevent. The shape and source checks run for request steps below.
-  const isRequestStep =
-    !['CallApi', 'CallAgent', 'RenderNotification', 'ValidateSchema'].includes(step.type) &&
-    !stepTypes?.[step.type];
+  // A request step is one that names a connection. Excluding a hardcoded list
+  // of the step types that are not requests would silently accept a runAs that
+  // does nothing on every step type added after this line was written.
+  const isRequestStep = !type.isUndefined(step.connectionId);
   if (!type.isUndefined(step.runAs) && !isRequestStep) {
     throw new ConfigError(
       `Step "${step.id}" at endpoint "${endpointId}" declares "runAs", which only applies to request steps — the tenant wall scopes connections, and a ${step.type} step reaches no connection. Declare runAs on the endpoint or on the request steps instead.`,
@@ -231,6 +232,7 @@ function validateStep(
     runAs: step.runAs,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     configKey,
+    level: 'step',
   });
   if (!type.isUndefined(step.runAs) && step.tenant === 'none') {
     throw new ConfigError(

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import detachRequestSignal from './detachRequestSignal.js';
+
 // Run work after the response is sent. Platforms that reap the invocation once
 // the response is flushed (Vercel fluid compute) inject context.waitUntil in
 // their server's apiContext middleware to keep the invocation alive until the
@@ -26,6 +28,9 @@
 // drains); a background failure must never surface as an unhandled rejection.
 function scheduleBackground(context, { event, endpointId }, fn) {
   const { logger } = context;
+  // The response has been sent (or is about to be): the request's abort signal
+  // no longer describes this work.
+  detachRequestSignal(context);
   const promise = (async () => {
     try {
       const result = await fn();

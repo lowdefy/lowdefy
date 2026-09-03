@@ -101,7 +101,12 @@ async function MongodbUpdateOne({
         })
       );
     } catch (error) {
-      throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateOne' });
+      // The change-log write failed, not the data write, so the message and
+      // hint must name the log collection - the one that refused the insert.
+      throw mapMongoError(error, {
+        connection: { ...connection, collection: connection.changeLog.collection },
+        requestType: 'MongoDBUpdateOne',
+      });
     }
   } else {
     try {

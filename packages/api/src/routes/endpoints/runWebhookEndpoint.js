@@ -21,6 +21,7 @@ import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import detachRequestSignal from './detachRequestSignal.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
@@ -44,6 +45,7 @@ import runWebhookVerify from './runWebhookVerify.js';
 async function runWebhookEndpoint(context, { endpointId, body, query, headers }) {
   const { logger } = context;
 
+  detachRequestSignal(context);
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);
 

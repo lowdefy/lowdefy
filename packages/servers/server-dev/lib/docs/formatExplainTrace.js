@@ -15,12 +15,53 @@
 */
 import { type } from '@lowdefy/helpers';
 
+// A secret shorter than this is not redacted inside a larger string: a short
+// value ("dev", "1234") occurs by chance in ids, collection names and queries,
+// and redacting those would hide the very thing the explain exists to show. An
+// exact match is redacted at any length.
+const MIN_INTERPOLATED_SECRET_LENGTH = 9;
+
+// The evaluated request properties are what `explain` exists to show, but they
+// are evaluated - a `_secret` reference in a header or a databaseUri has been
+// replaced by its value by the time the trace records them. The normal
+// response path never returns them; the explain must not become the one place
+// a secret reaches an agent transcript, a model provider and a log.
+function redactSecrets(value, secretValues) {
+  if (type.isString(value)) {
+    let redacted = value;
+    for (const secret of secretValues) {
+      if (redacted === secret) return '[redacted secret]';
+      if (secret.length >= MIN_INTERPOLATED_SECRET_LENGTH && redacted.includes(secret)) {
+        redacted = redacted.split(secret).join('[redacted secret]');
+      }
+    }
+    return redacted;
+  }
+  if (type.isArray(value)) {
+    return value.map((item) => redactSecrets(item, secretValues));
+  }
+  if (type.isObject(value)) {
+    const result = {};
+    for (const key of Object.keys(value)) {
+      result[key] = redactSecrets(value[key], secretValues);
+    }
+    return result;
+  }
+  return value;
+}
+
+function secretStrings(secrets) {
+  if (!type.isObject(secrets)) return [];
+  return Object.values(secrets).filter((value) => type.isString(value) && value !== '');
+}
+
 // Shapes the trace an `explain: true` run collected into the object returned to
 // the agent. `caller` carries exactly id, organization_id and roles - an explain
-// must not become a way to dump a session. A resolver that never set
-// trace.effective (a type outside the MongoDB set, or a run that failed before
-// the driver call) reports effective: null with a note saying so.
-function formatExplainTrace({ trace, requestType, user }) {
+// must not become a way to dump a session. The request type is read off the
+// trace, which the request layer records; `requestType` is the caller's
+// fallback for a trace that was never given one.
+function formatExplainTrace({ trace, requestType, secrets, user }) {
+  const secretValues = secretStrings(secrets);
   const explain = {
     caller: {
       id: user?.id ?? null,
@@ -28,12 +69,20 @@ function formatExplainTrace({ trace, requestType, user }) {
       roles: user?.roles ?? [],
     },
     connection: trace.connection ?? null,
-    properties: trace.properties ?? null,
-    effective: type.isUndefined(trace.effective) ? null : trace.effective,
+    properties: redactSecrets(trace.properties ?? null, secretValues),
+    effective: type.isUndefined(trace.effective)
+      ? null
+      : redactSecrets(trace.effective, secretValues),
     rewritten: trace.rewritten,
   };
   if (type.isUndefined(trace.effective)) {
-    explain.note = `Request type ${requestType} does not report an effective query.`;
+    // trace.dispatched is set where the resolver is called, so a run that
+    // failed earlier - an operator error, a wall refusal, a schema violation -
+    // is not reported as a request type that keeps no effective query.
+    explain.note =
+      trace.dispatched === true
+        ? `Request type ${trace.requestType ?? requestType} does not report an effective query.`
+        : 'The request did not reach the driver — it failed before the resolver ran, so there is no effective query.';
   }
   if (!type.isUndefined(trace.stepId)) {
     return { stepId: trace.stepId, ...explain };

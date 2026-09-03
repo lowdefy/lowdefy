@@ -20,6 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import detachRequestSignal from './detachRequestSignal.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
@@ -33,6 +34,8 @@ import validatePayload from './validatePayload.js';
 // cron-only endpoint that is never client-callable.
 async function runScheduledEndpoint(context, { endpointId, cron }) {
   const { logger } = context;
+
+  detachRequestSignal(context);
 
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);

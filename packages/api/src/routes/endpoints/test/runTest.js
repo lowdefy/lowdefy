@@ -94,8 +94,9 @@ function createTextContext() {
 
   return context;
 }
-async function runTest({ routine, payload = {}, trace }) {
+async function runTest({ routine, payload = {}, signal, trace }) {
   const context = createTextContext();
+  context.signal = signal;
   const routineContext = {
     steps: {},
     payload,

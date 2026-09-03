@@ -450,13 +450,17 @@ test('routineContext.trace gains one entry per request step, carrying its stepId
       stepId: 'first',
       rewritten: [],
       connection: { id: 'test', type: 'TestConnection', tenant: null },
+      requestType: 'TestRequest',
       properties: { response: 1 },
+      dispatched: true,
     },
     {
       stepId: 'second',
       rewritten: [],
       connection: { id: 'test', type: 'TestConnection', tenant: null },
+      requestType: 'TestRequest',
       properties: { response: 2 },
+      dispatched: true,
     },
   ]);
 });
@@ -471,4 +475,31 @@ test('a routine without trace leaves routineContext.trace undefined', async () =
   };
   const { routineContext } = await runTest({ routine });
   expect(routineContext.trace).toBeUndefined();
+});
+
+test('runRoutine stops between steps when the request is aborted', async () => {
+  // Aborted after the first step: the routine gets no further.
+  let checks = 0;
+  const signal = {
+    get aborted() {
+      checks += 1;
+      return checks > 2;
+    },
+  };
+  const routine = [{ ':set_state': { first: true } }, { ':set_state': { second: true } }];
+  const { res, routineContext } = await runTest({ routine, signal });
+  expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ServiceError');
+  expect(res.error.message).toContain('The request was aborted before the next step ran.');
+  expect(routineContext.state).toEqual({ first: true });
+});
+
+test('runRoutine runs every step when the request is not aborted', async () => {
+  const routine = [{ ':set_state': { first: true } }, { ':set_state': { second: true } }];
+  const { res, routineContext } = await runTest({
+    routine,
+    signal: new AbortController().signal,
+  });
+  expect(res.status).toEqual('continue');
+  expect(routineContext.state).toEqual({ first: true, second: true });
 });

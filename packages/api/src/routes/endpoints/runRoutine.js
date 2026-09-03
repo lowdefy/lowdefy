@@ -17,6 +17,7 @@
 import { LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import checkAborted from './checkAborted.js';
 import handleAgentCall from './handleAgentCall.js';
 import handleAuthStep from './handleAuthStep.js';
 import handleControl from './control/handleControl.js';
@@ -27,6 +28,7 @@ import handleValidateSchema from './handleValidateSchema.js';
 
 async function runRoutine(context, routineContext, { routine }) {
   try {
+    checkAborted(context, { location: 'the next step' });
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
         return await handleRequest(context, routineContext, {

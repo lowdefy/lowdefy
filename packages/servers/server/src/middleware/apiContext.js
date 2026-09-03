@@ -107,6 +107,11 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      // The incoming request's AbortSignal: the endpoint runner checks it
+      // between steps and loop iterations, so a caller that disconnects or a
+      // platform that times the invocation out stops the routine instead of
+      // leaving it to run to completion for nobody.
+      signal: c.req.raw.signal,
       steps,
       // On Vercel (fluid compute) the platform request context keeps the
       // invocation alive until waitUntil promises settle; on long-lived hosts
