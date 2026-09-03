@@ -21,6 +21,7 @@ import JSON5 from 'json5';
 import YAML from 'yaml';
 
 import addLineNumbers from './addLineNumbers.js';
+import checkNjkRuntimeOperators from './checkNjkRuntimeOperators.js';
 import parseNunjucks from './parseNunjucks.js';
 import { DEFERRED_KEY } from './deferredRegistry.js';
 
@@ -71,6 +72,9 @@ async function parseRefContent({ content, refDef }) {
         });
       }
       ext = getFileSubExtension(path);
+      if (ext !== 'yaml' && ext !== 'yml' && ext !== 'json') {
+        checkNjkRuntimeOperators({ content, path });
+      }
     }
 
     if (ext === 'yaml' || ext === 'yml') {

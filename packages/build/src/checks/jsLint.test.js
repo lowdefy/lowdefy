@@ -149,3 +149,25 @@ test('jsLint drains the list it is given rather than the one on the context', ()
   expect(context.errors).toHaveLength(1);
   expect(jsBodies).toEqual([]);
 });
+
+test('jsLint names the server as the provider of "payload" used in a client body', () => {
+  const context = lint({ input: { x: withKey({ _js: 'return payload.id;' }, 'k1') } });
+
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    '_js body references "payload", which is not defined, at line 1. "payload" is a server _js parameter, and this body runs on the client. Available: actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user, and the JavaScript standard library.'
+  );
+  expect(context.errors[0].checkSlug).toBe('js-lint');
+});
+
+test('jsLint names the client as the provider of "urlQuery" used in a server body', () => {
+  const context = lint({
+    input: { x: withKey({ _js: { fn: 'return urlQuery.id;' } }, 'k1') },
+    env: 'server',
+  });
+
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    '_js body references "urlQuery", which is not defined, at line 1. "urlQuery" is a client _js parameter, and this body runs on the server. Available: args, item, lowdefyApp, payload, secret, state, step, user, and the JavaScript standard library.'
+  );
+});

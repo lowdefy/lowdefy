@@ -18,7 +18,11 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import collectExceptions from '../utils/collectExceptions.js';
-import { CLIENT_JS_PARAMS, SERVER_JS_PARAMS } from '../build/buildJs/jsFunctionPrototypes.js';
+import {
+  CLIENT_JS_PARAMS,
+  SERVER_JS_PARAMS,
+  parameterEnvironment,
+} from '../build/buildJs/jsFunctionPrototypes.js';
 import { CLIENT_JS_GLOBALS, SERVER_JS_GLOBALS } from '../build/buildJs/jsGlobals.js';
 import lintJsBody from '../build/buildJs/lintJsBodies.js';
 
@@ -46,6 +50,10 @@ function describeAvailableNames({ env, name }) {
   const available = `Available: ${ENV_LINT_OPTIONS[env].params.join(
     ', '
   )}, and the JavaScript standard library.`;
+  const provider = parameterEnvironment(name);
+  if (!type.isNone(provider)) {
+    return `"${name}" is a ${provider} _js parameter, and this body runs on the ${env}. ${available}`;
+  }
   if (env === 'server' && CLIENT_JS_GLOBALS.has(name)) {
     return `${available} This body runs on the server — browser globals such as "document" and "window" are not available.`;
   }

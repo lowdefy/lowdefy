@@ -1,46 +1,18 @@
 [
   {
-    "id": "state-in-request-properties",
-    "kind": "bug",
-    "retiredBy": "V-10 (request-state-empty check)",
-    "appliesTo": {
-      "kinds": [
-        "requests"
-      ]
-    },
-    "message": "_state in request properties is always undefined \u2014 a request is evaluated on the server with an empty state. Pass the value in the payload and read it with _payload.",
-    "see": "concepts/connections-and-requests"
-  },
-  {
-    "id": "link-same-page-no-onmount",
-    "kind": "bug",
-    "retiredBy": "V-68",
-    "appliesTo": {
-      "types": [
-        "Link"
-      ]
-    },
-    "message": "A Link to the page already open does not remount it, so onMount does not fire again. Trigger the reload chain from the same action list.",
-    "see": "actions/link"
-  },
-  {
     "id": "ref-njk-renders-at-build",
     "kind": "semantics",
     "appliesTo": {
-      "types": [
-        "_ref"
-      ]
+      "types": ["_ref"]
     },
-    "message": "A _ref to a .njk file renders at build, so _state, _request and _user are undefined inside it. Use _nunjucks over a .txt file for a template that needs runtime values.",
+    "message": "A _ref to a .njk file renders at build. A .yaml.njk, .yml.njk or .json.njk file is parsed into config afterwards, so operators written in it are ordinary runtime operators; any other .njk file renders to text, where an operator would never run - the build rejects that with the ref-njk-runtime-operator check. Use the _nunjucks operator over a .txt file for a template that needs runtime values.",
     "see": "operators/_ref"
   },
   {
     "id": "ref-js-imported-as-module",
     "kind": "semantics",
     "appliesTo": {
-      "types": [
-        "_ref"
-      ]
+      "types": ["_ref"]
     },
     "message": "A _ref to a .js file imports it as a module rather than reading it as text. Name the file .js.txt to read its source.",
     "see": "operators/_ref"
@@ -49,9 +21,7 @@
     "id": "tenant-wall-lookup",
     "kind": "semantics",
     "appliesTo": {
-      "kinds": [
-        "requests"
-      ],
+      "kinds": ["requests"],
       "when": "connectionTenantNotNone"
     },
     "message": "This request runs over a tenant-walled connection. The wall injects { $match: { <tenant field> } } into the top-level pipeline and into every $lookup / $unionWith sub-pipeline, so a lookup only ever sees documents that carry the tenant field. The build now rejects a lookup into a collection declared shared, so run that lookup over the shared connection and pass tenant facts in the payload instead.",
@@ -61,9 +31,7 @@
     "id": "reject-not-caught",
     "kind": "semantics",
     "appliesTo": {
-      "types": [
-        ":reject"
-      ]
+      "types": [":reject"]
     },
     "message": ":reject is the routine's reply, not an exception. A :catch never runs for it, :finally does, and :throw is the caught path.",
     "see": "controls/reject"

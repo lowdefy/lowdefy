@@ -699,3 +699,71 @@ test('createLink, replace and scroll are passed through to sameOriginLink', () =
     scroll: false,
   });
 });
+
+function createLowdefyOnPage({ pageId = 'page_1', pathname = '/page_1', basePath } = {}) {
+  const triggerEvent = jest.fn();
+  const lowdefy = {
+    basePath,
+    contexts: {
+      [`page:${pageId}`]: {
+        _internal: {
+          RootSlots: { map: { [pageId]: { id: `block:${pageId}`, triggerEvent } } },
+        },
+      },
+    },
+    inputs: {},
+    pageId,
+    _internal: {
+      globals: { window: { location: { origin: 'https://app.lowdefy.test', pathname } } },
+      progress: { dispatch: jest.fn() },
+    },
+  };
+  return { lowdefy, triggerEvent };
+}
+
+function linkOn(lowdefy) {
+  return createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+}
+
+test('createLink, reload true on the page already open re-runs its mount events', async () => {
+  const { lowdefy, triggerEvent } = createLowdefyOnPage();
+  linkOn(lowdefy)({ pageId: 'page_1', reload: true });
+  await mockSameOriginLink.mock.calls[0][0].setInput();
+
+  expect(triggerEvent.mock.calls.map(([{ name }]) => name)).toEqual(['onMount', 'onMountAsync']);
+  expect(lowdefy.inputs).toEqual({ 'page:page_1': {} });
+});
+
+test('createLink, reload true matches the current page under a basePath', async () => {
+  const { lowdefy, triggerEvent } = createLowdefyOnPage({
+    basePath: '/app',
+    pathname: '/app/page_1',
+  });
+  linkOn(lowdefy)({ pageId: 'page_1', reload: true });
+  await mockSameOriginLink.mock.calls[0][0].setInput();
+
+  expect(triggerEvent).toHaveBeenCalled();
+});
+
+test('createLink, reload true on a link to another page does not re-run mount events', async () => {
+  const { lowdefy, triggerEvent } = createLowdefyOnPage();
+  linkOn(lowdefy)({ pageId: 'page_2', reload: true });
+  await mockSameOriginLink.mock.calls[0][0].setInput();
+
+  expect(triggerEvent).not.toHaveBeenCalled();
+});
+
+test('createLink, a link to the page already open without reload does not re-run mount events', async () => {
+  const { lowdefy, triggerEvent } = createLowdefyOnPage();
+  linkOn(lowdefy)({ pageId: 'page_1' });
+  await mockSameOriginLink.mock.calls[0][0].setInput();
+
+  expect(triggerEvent).not.toHaveBeenCalled();
+});

@@ -34,6 +34,11 @@ export default {
             type: 'boolean',
             description: 'Replace the current history entry instead of pushing a new one.',
           },
+          reload: {
+            type: 'boolean',
+            description:
+              'Re-run the page onMount and onMountAsync events when linking to the page already open.',
+          },
           scroll: {
             type: 'boolean',
             description: 'Scroll to the top of the page after navigating. Defaults to true.',

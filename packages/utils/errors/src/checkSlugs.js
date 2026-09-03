@@ -39,6 +39,8 @@ const VALID_CHECK_SLUGS = {
   'websocket-refs': 'Invalid websocket action reference warnings',
   'event-payload': '_event paths checked against the block event payload schema',
   'request-state-empty': '_state reads in request properties, which are always empty',
+  'ref-njk-runtime-operator':
+    'Runtime operators written in a .njk template that renders to text at build',
 
   // Plugin type names that are used but not installed
   'block-types': 'Block type names that are used but not defined',
