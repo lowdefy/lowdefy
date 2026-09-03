@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
-import { registerTheme } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 
 class EChart extends React.Component {
@@ -65,15 +64,38 @@ class EChart extends React.Component {
       if (props.events[eventName]) acc[eventName] = this.allEvents[eventName];
       return acc;
     }, {});
-    if (props.properties.theme) {
-      registerTheme(`custom_theme_${props.blockId}`, props.properties.theme);
-    }
+    // The theme handed to echarts-for-react is fixed for the life of the block.
+    // It deep-compares that prop and disposes + re-inits the chart whenever it
+    // changes; swapping the theme on the live instance instead (see syncTheme)
+    // repaints without the teardown, so the chart re-inks with no visible flash.
+    this.initialTheme = props.properties.theme;
+    this.appliedTheme = JSON.stringify(props.properties.theme);
+    this.chart = undefined;
+    this.onChartReady = (chart) => {
+      this.chart = chart;
+      // The instance is created asynchronously, so the theme may already have
+      // changed by the time it exists.
+      this.syncTheme();
+    };
   }
   triggerEvent(name, event) {
     this.props.methods.triggerEvent({
       name,
       event,
     });
+  }
+  componentDidUpdate() {
+    this.syncTheme();
+  }
+  // Apply a theme that changed after mount — an app switching to dark mode, say.
+  // A theme is plain JSON, so serialising it is a sound and cheap equality check.
+  syncTheme() {
+    const { theme } = this.props.properties;
+    if (!this.chart || !theme) return;
+    const applied = JSON.stringify(theme);
+    if (applied === this.appliedTheme) return;
+    this.appliedTheme = applied;
+    this.chart.setTheme(theme);
   }
   render() {
     return (
@@ -103,7 +125,8 @@ class EChart extends React.Component {
           }}
           opts={this.props.properties.init}
           style={{ width: '100%', height: '100%' }}
-          theme={this.props.properties.theme && `custom_theme_${this.props.blockId}`}
+          theme={this.initialTheme}
+          onChartReady={this.onChartReady}
         />
       </div>
     );
