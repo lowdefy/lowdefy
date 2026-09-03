@@ -32,3 +32,27 @@ jobs:
         if: matrix.os == 'windows-latest'
       - run: pnpm test
       - uses: codecov/codecov-action@v3
+
+  canary-app:
+    name: Build the canary app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # examples/canary-app is the downstream app the nightly canary runs against a
+      # published candidate. Without this step a change that breaks its config is
+      # only found the next night, against a candidate that is already on npm.
+      # --skip-build reuses the monorepo build from the previous step.
+      - name: Build examples/canary-app
+        run: node scripts/build.mjs --config-directory examples/canary-app --skip-build --log-level warn
+        env:
+          LOWDEFY_DISABLE_TELEMETRY: '1'
+          # Build never connects; the app's connections only need the references to resolve.
+          LOWDEFY_SECRET_MONGODB_URI: mongodb://localhost:27017/canary
+          LOWDEFY_SECRET_BETTER_AUTH_SECRET: canary-placeholder-secret-canary-placeholder

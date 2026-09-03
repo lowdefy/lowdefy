@@ -28,7 +28,7 @@ const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, 
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
     defaultOpen={properties.defaultOpen}
-    destroyTooltipOnHide={properties.destroyTooltipOnHide}
+    destroyOnHidden={properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}

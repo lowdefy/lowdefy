@@ -23,10 +23,17 @@ import { navigateToTestPage } from '@lowdefy/block-dev-e2e';
 // antd prefixes every warning it raises with `[antd: <Component>]`, and batches deprecations
 // into a single `[antd] There exists deprecated usage in your code:`.
 //
-// The e2e app is a production build, where antd compiles its warnings out, so this gate is a
-// backstop rather than the primary check — a deprecated prop reaches the console when a developer
-// runs `lowdefy dev`. It still fails on any `[antd` message that does survive a production build,
+// This spec cannot catch a deprecated prop today: antd raises those warnings only in a
+// development build, and @lowdefy/block-dev-e2e's createPlaywrightConfig runs the app through
+// `lowdefy build` + `lowdefy start` — a production build, where antd compiles the warnings out.
+// The deterministic gate is no-deprecated-antd-props.e2e.spec.js, which reads the block sources
+// against antd's own `@deprecated` annotations. What this spec still earns: it fails on any
+// `[antd` console message that does survive a production build (invalid props, render warnings),
 // and it fails loudly rather than silently if a page stops rendering.
+//
+// To make it bite on deprecations, createPlaywrightConfig would need a dev-server mode — a
+// webServer command running `lowdefy dev --port <port>` instead of build + start. It has no such
+// option today (packages/utils/block-dev-e2e/src/createPlaywrightConfig.js).
 const ANTD_MESSAGE = /\[antd[:\]]/;
 
 const appDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
