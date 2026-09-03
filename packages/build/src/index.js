@@ -19,6 +19,8 @@
 import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import check from './check.js';
+import checkAgainst from './check/checkAgainst.js';
+import collectAppIds from './check/collectAppIds.js';
 import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
@@ -282,6 +284,14 @@ async function build(options) {
 
 // The CLI's "modules update" command reads and rewrites the same lockfile the
 // build owns, and must do it by exactly the same rules.
-export { check, createPluginTypesMap, moduleLockfileName, readModuleLockfile, writeModuleLockfile };
+export {
+  check,
+  checkAgainst,
+  collectAppIds,
+  createPluginTypesMap,
+  moduleLockfileName,
+  readModuleLockfile,
+  writeModuleLockfile,
+};
 
 export default build;

@@ -144,6 +144,10 @@ program
   .command('check')
   .description('Validate a Lowdefy app against production rules without building it.')
   .usage('[options]')
+  .option(
+    '--against <ref>',
+    'Also report ids and migrations that collide with the given git ref, relative to the merge base.'
+  )
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .option('--json', 'Print the { errors, warnings } report as JSON and nothing else.')

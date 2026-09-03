@@ -27,12 +27,14 @@ jest.unstable_mockModule('../../utils/addCustomPluginsAsDeps.js', () => ({ defau
 jest.unstable_mockModule('../../utils/ensurePnpmWorkspaceYaml.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../../utils/installServer.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../../utils/runLowdefyCheck.js', () => ({ default: jest.fn() }));
+jest.unstable_mockModule('./createAgainstWorktrees.js', () => ({ default: jest.fn() }));
 
 const { default: fs } = await import('fs');
 const { readFile } = await import('@lowdefy/node-utils');
 const { default: getServer } = await import('../../utils/getServer.js');
 const { default: installServer } = await import('../../utils/installServer.js');
 const { default: runLowdefyCheck } = await import('../../utils/runLowdefyCheck.js');
+const { default: createAgainstWorktrees } = await import('./createAgainstWorktrees.js');
 const { default: check } = await import('./check.js');
 
 const errorEntry = {
@@ -45,12 +47,12 @@ const errorEntry = {
   prodError: false,
 };
 
-function createContext({ json, plugins } = {}) {
+function createContext({ against, json, plugins } = {}) {
   return {
     directories: { config: '/app', server: '/app/.lowdefy/server' },
     logger: { info: jest.fn(), warn: jest.fn(), debug: jest.fn() },
     lowdefyVersion: '5.0.0',
-    options: { json, logLevel: 'info' },
+    options: { against, json, logLevel: 'info' },
     plugins: plugins ?? {},
     pnpmCmd: 'pnpm',
     sendTelemetry: jest.fn(),
@@ -87,6 +89,10 @@ beforeEach(() => {
     return true;
   });
   process.exitCode = undefined;
+  // clearMocks clears calls but keeps implementations, and these two are given
+  // per-test implementations that must not leak into the next test.
+  runLowdefyCheck.mockReset();
+  createAgainstWorktrees.mockReset();
   mockServerDirectory();
 });
 
@@ -193,4 +199,78 @@ test('check throws when the child wrote no report', async () => {
   await expect(check({ context: createContext() })).rejects.toThrow(
     'Lowdefy check did not write a report to /app/.lowdefy/server/build/checkReport.json.'
   );
+});
+
+const collisionEntry = {
+  message:
+    'Page id "orders" is added on this branch and on "develop". Merging them would declare it twice.',
+  name: 'ConfigError',
+  source: '/app/pages/orders.yaml',
+  config: null,
+  configKey: null,
+  checkSlug: 'branch-merge',
+  prodError: false,
+};
+
+function mockWorktrees() {
+  const remove = jest.fn();
+  createAgainstWorktrees.mockResolvedValue({
+    againstDirectory: '/tmp/wt/against/app',
+    baseDirectory: '/tmp/wt/base/app',
+    remove,
+  });
+  return remove;
+}
+
+test('check --against names the worktrees for the child, prints the merge section and removes them', async () => {
+  const remove = mockWorktrees();
+  readFile.mockResolvedValue(
+    JSON.stringify({
+      errors: [],
+      warnings: [],
+      against: { ref: 'develop', errors: [collisionEntry], warnings: [] },
+    })
+  );
+  runLowdefyCheck.mockImplementation(async () => {
+    expect(process.env.LOWDEFY_CHECK_AGAINST_REF).toBe('develop');
+    expect(process.env.LOWDEFY_CHECK_AGAINST_CONFIG).toBe('/tmp/wt/against/app');
+    expect(process.env.LOWDEFY_CHECK_BASE_CONFIG).toBe('/tmp/wt/base/app');
+  });
+
+  await check({ context: createContext({ against: 'develop' }) });
+
+  expect(createAgainstWorktrees).toHaveBeenCalledWith({ configDirectory: '/app', ref: 'develop' });
+  expect(stdout).toBe(
+    [
+      'Merge against develop',
+      '',
+      'pages/orders.yaml',
+      '        ConfigError: Page id "orders" is added on this branch and on "develop". Merging them would declare it twice. (branch-merge)',
+      '',
+      '1 error, 0 warnings',
+      '',
+    ].join('\n')
+  );
+  expect(process.exitCode).toBe(1);
+  expect(remove).toHaveBeenCalledTimes(1);
+  expect(process.env.LOWDEFY_CHECK_AGAINST_REF).toBeUndefined();
+});
+
+test('check --against removes the worktrees when the check fails', async () => {
+  const remove = mockWorktrees();
+  runLowdefyCheck.mockRejectedValue(new Error('Lowdefy check failed to run.'));
+
+  await expect(check({ context: createContext({ against: 'develop' }) })).rejects.toThrow(
+    'Lowdefy check failed to run.'
+  );
+
+  expect(remove).toHaveBeenCalledTimes(1);
+  expect(process.env.LOWDEFY_CHECK_AGAINST_CONFIG).toBeUndefined();
+});
+
+test('check without --against creates no worktree', async () => {
+  readFile.mockResolvedValue(JSON.stringify({ errors: [], warnings: [] }));
+  await check({ context: createContext() });
+  expect(createAgainstWorktrees).not.toHaveBeenCalled();
+  expect(process.env.LOWDEFY_CHECK_AGAINST_REF).toBeUndefined();
 });

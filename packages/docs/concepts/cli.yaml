@@ -78,19 +78,29 @@ _ref:
 
             The options are:
 
+            - `--against <ref>`: Also report what merging this branch into the given git ref would collide on. See below.
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
-            - `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. Use this from scripts and AI coding agents.
+            - `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. With `--against`, the object also has an `against` key, `{ "ref": ..., "errors": [...], "warnings": [...] }`, in the same entry shape.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
 
             The human-readable output groups problems by source file, one line per problem with its line number, the error name, the message and the check slug in parentheses, and ends with a `N errors, M warnings` summary (or `No problems found.`). A check slug can be used in `~ignoreBuildChecks` to suppress that check on a config node.
 
+            ### Checking against another branch
+
+            Two branches that each add a page id, a request id, a connection or a migration collide silently until they are merged. `lowdefy check --against <ref>` reports those collisions before the merge. It resolves the ref with git, checks the ref and the merge base of `HEAD` and the ref out into temporary worktrees, and compares the ids each side declares:
+
+            - An id declared on both sides but **introduced on each side since the merge base** is a collision, reported per kind (page, request, endpoint, connection, component, collection, migration). An id that already exists at the merge base is the same id, not a collision.
+            - A migration this branch adds that sorts **before** a migration the target branch adds is an error: migration ids sort lexically and lexical order is execution order, so after the merge that migration would be inserted before one that has already run. Rename it with a later id.
+
+            These are reported under the `branch-merge` check slug, in a `Merge against <ref>` section of the human output and under the `against` key of `--json`, and they set the exit code to `1` like any other error. The worktrees are removed when the check finishes, including when it fails.
+
             Exit codes:
 
             - `0`: no errors (warnings may have been reported).
-            - `1`: one or more errors, or the check itself failed to run.
+            - `1`: one or more errors, one or more merge collisions, or the check itself failed to run.
 
             Compared to `lowdefy build`: `build` validates and then writes the production app to the server directory and bundles the client; `check` runs the same validation and stops. `check` is the right command to answer "would `lowdefy build` refuse this?" without waiting for a build.
 

@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { readFile } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
@@ -24,6 +25,7 @@ import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyCheck from '../../utils/runLowdefyCheck.js';
+import createAgainstWorktrees from './createAgainstWorktrees.js';
 import formatCheckReport from './formatCheckReport.js';
 
 function readJson(filePath) {
@@ -79,11 +81,7 @@ async function readCheckReport({ directory }) {
   return JSON.parse(content);
 }
 
-async function check({ context }) {
-  const directory = context.directories.server;
-  if (!isServerPrepared({ context, directory })) {
-    await prepareServer({ context, directory });
-  }
+async function runCheck({ context, directory }) {
   await runLowdefyCheck({ context, directory });
   const report = await readCheckReport({ directory });
 
@@ -97,11 +95,43 @@ async function check({ context }) {
 
   // Warnings never fail a check. The exit code is set rather than exiting so
   // pending telemetry and log flushes still complete.
-  if (report.errors.length > 0) {
+  if (report.errors.length > 0 || (report.against?.errors ?? []).length > 0) {
     process.exitCode = 1;
   }
   await context.sendTelemetry({ sendTypes: false });
   return report;
+}
+
+// The worktrees are read by the build in the check child process, which
+// already receives the config directory through the environment
+// runLowdefyCheck forwards; the two extra directories travel the same way.
+async function checkAgainstRef({ context, directory, ref }) {
+  const worktrees = await createAgainstWorktrees({
+    configDirectory: context.directories.config,
+    ref,
+  });
+  process.env.LOWDEFY_CHECK_AGAINST_REF = ref;
+  process.env.LOWDEFY_CHECK_AGAINST_CONFIG = worktrees.againstDirectory;
+  process.env.LOWDEFY_CHECK_BASE_CONFIG = worktrees.baseDirectory;
+  try {
+    return await runCheck({ context, directory });
+  } finally {
+    delete process.env.LOWDEFY_CHECK_AGAINST_REF;
+    delete process.env.LOWDEFY_CHECK_AGAINST_CONFIG;
+    delete process.env.LOWDEFY_CHECK_BASE_CONFIG;
+    await worktrees.remove();
+  }
+}
+
+async function check({ context }) {
+  const directory = context.directories.server;
+  if (!isServerPrepared({ context, directory })) {
+    await prepareServer({ context, directory });
+  }
+  if (type.isNone(context.options.against)) {
+    return runCheck({ context, directory });
+  }
+  return checkAgainstRef({ context, directory, ref: context.options.against });
 }
 
 export default check;

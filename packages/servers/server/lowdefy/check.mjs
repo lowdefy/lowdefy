@@ -20,7 +20,7 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { check } from '@lowdefy/build';
+import { check, checkAgainst } from '@lowdefy/build';
 import { createNodeLogger } from '@lowdefy/logger/node';
 import createCustomPluginMessagesMap from './createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
@@ -52,13 +52,27 @@ async function run() {
     base: { pid: undefined, hostname: undefined },
   });
 
-  const report = await check({
+  const buildOptions = {
     customMessagesMap,
     customTypesMap,
     directories,
     logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
-  });
+  };
+
+  const report = await check(buildOptions);
+
+  // The CLI checks out the target ref and the merge base into worktrees and
+  // names them here, so the ids of the three sides are collected in the one
+  // process that has the build.
+  if (process.env.LOWDEFY_CHECK_AGAINST_REF) {
+    report.against = await checkAgainst({
+      againstDirectory: process.env.LOWDEFY_CHECK_AGAINST_CONFIG,
+      baseDirectory: process.env.LOWDEFY_CHECK_BASE_CONFIG,
+      buildOptions,
+      ref: process.env.LOWDEFY_CHECK_AGAINST_REF,
+    });
+  }
 
   await fs.mkdir(directories.build, { recursive: true });
   await fs.writeFile(path.join(directories.build, 'checkReport.json'), JSON.stringify(report));

@@ -90,6 +90,10 @@ const VALID_CHECK_SLUGS = {
   'migration-files': 'Migration file discovery, ids, YAML parsing and ledger checks',
   'migration-routine': 'Migration routine shape and step validation',
 
+  // Branch merges
+  'branch-merge':
+    'Ids added on both branches, and migration order, reported by "lowdefy check --against".',
+
   // Secrets
   secrets: '_secret names that are not set in the environment',
   'plugin-api-version':

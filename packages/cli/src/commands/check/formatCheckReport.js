@@ -71,8 +71,8 @@ function pluralize(count, noun) {
   return `${count} ${noun}${count === 1 ? '' : 's'}`;
 }
 
-function formatCheckReport({ errors, warnings, configDirectory }) {
-  const groups = groupBySource({ entries: [...errors, ...warnings], configDirectory });
+function formatGroups({ entries, configDirectory }) {
+  const groups = groupBySource({ entries, configDirectory });
   const lines = [];
   [...groups.keys()].sort(compareFiles).forEach((file) => {
     lines.push(file);
@@ -82,10 +82,32 @@ function formatCheckReport({ errors, warnings, configDirectory }) {
       .forEach((item) => lines.push(formatEntry(item)));
     lines.push('');
   });
-  if (errors.length === 0 && warnings.length === 0) {
+  return lines;
+}
+
+// The merge report answers a different question from the config report - what
+// this branch collides with, not what is wrong with it - so it reads as its own
+// section rather than mixed into the files.
+function formatAgainst({ against, configDirectory }) {
+  if (type.isNone(against)) {
+    return [];
+  }
+  const entries = [...against.errors, ...against.warnings];
+  if (entries.length === 0) {
+    return [];
+  }
+  return [`Merge against ${against.ref}`, '', ...formatGroups({ entries, configDirectory })];
+}
+
+function formatCheckReport({ against, errors, warnings, configDirectory }) {
+  const lines = formatGroups({ entries: [...errors, ...warnings], configDirectory });
+  lines.push(...formatAgainst({ against, configDirectory }));
+  const errorCount = errors.length + (against?.errors ?? []).length;
+  const warningCount = warnings.length + (against?.warnings ?? []).length;
+  if (errorCount === 0 && warningCount === 0) {
     lines.push('No problems found.');
   } else {
-    lines.push(`${pluralize(errors.length, 'error')}, ${pluralize(warnings.length, 'warning')}`);
+    lines.push(`${pluralize(errorCount, 'error')}, ${pluralize(warningCount, 'warning')}`);
   }
   return lines.join('\n');
 }
