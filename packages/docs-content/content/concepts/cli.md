@@ -251,21 +251,19 @@ The `start` command starts a Lowdefy production server. To start a Lowdefy serve
 - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 
-
 #### Examples
 
-
 Run the dev server, watching a relative directory for file changes:
+
 ```txt
 pnpx lowdefy@5 dev --watch ../other-project
 ```
 
 Run the dev server, ignoring the public directory:
+
 ```txt
 pnpx lowdefy@5 dev --watch-ignore public/**
 ```
-
-
 
 # Module Fetching
 
@@ -286,6 +284,7 @@ In development mode (`lowdefy dev`), local module sources (`file:` paths) are wa
 All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
 
 Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
+
 - `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `disableTelemetry: boolean`: Disable telemetry.
 - `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
@@ -306,6 +305,7 @@ The CLI collects usage and error information to help us fix bugs, prioritize fea
 All telemetry can be disabled by setting the `disableTelemetry` flag in `cli` config object in your `lowdefy.yaml` file (this cannot be a reference to another file), or by using the `--disable-telemetry` command line flag.:
 
 ###### `lowdefy.yaml`
+
 ```yaml
 lowdefy: LOWDEFY_VERSION
 
