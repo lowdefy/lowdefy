@@ -681,3 +681,21 @@ test('createLink, more than one grammar key throws the resolver ambiguity error'
     `"Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined."`
   );
 });
+
+test('createLink, replace and scroll are passed through to sameOriginLink', () => {
+  const lowdefy = { inputs: {} };
+  const link = createLink({
+    backLink: mockBackLink,
+    disabledLink: mockDisabledLink,
+    lowdefy,
+    newOriginLink: mockNewOriginLink,
+    noLink: mockNoLink,
+    sameOriginLink: mockSameOriginLink,
+  });
+  link({ pageId: 'page_1', replace: true, scroll: false });
+  expect(mockSameOriginLink.mock.calls[0][0]).toMatchObject({
+    pathname: '/page_1',
+    replace: true,
+    scroll: false,
+  });
+});

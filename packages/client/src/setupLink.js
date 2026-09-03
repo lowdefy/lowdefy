@@ -52,17 +52,18 @@ function setupLink(lowdefy) {
     }
     return window.location.assign(target);
   };
-  const sameOriginLink = ({ newTab, pathname, query, setInput }) => {
+  // `replace` swaps the current history entry instead of pushing one and
+  // `scroll` (default true) controls the router's scroll-to-top - together they
+  // let a same-page Link reflect state into the url without moving the page.
+  const sameOriginLink = ({ newTab, pathname, query, replace, scroll, setInput }) => {
     if (newTab) {
       return openNewTab(
         `${window.location.origin}${createUrl({ basePath: lowdefy.basePath, pathname, query })}`
       );
     }
     setInput();
-    return router.push({
-      pathname,
-      query,
-    });
+    const navigate = replace ? router.replace : router.push;
+    return navigate({ pathname, query, scroll });
   };
   const noLink = () => {
     throw new ConfigError('Invalid Link: no target resolved.');

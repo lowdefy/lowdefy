@@ -21,7 +21,7 @@ import setupLink from './setupLink.js';
 // Minimal fake window: jsdom does not implement navigation, and the assertions
 // here are about which target string the link is handed.
 function createFakeLowdefy({ popupBlocked = false } = {}) {
-  const calls = { assign: [], open: [], push: [], focus: 0 };
+  const calls = { assign: [], open: [], push: [], replace: [], focus: 0 };
   const handle = {
     focus: () => {
       calls.focus += 1;
@@ -46,6 +46,7 @@ function createFakeLowdefy({ popupBlocked = false } = {}) {
       router: {
         back: jest.fn(),
         push: (args) => calls.push.push(args),
+        replace: (args) => calls.replace.push(args),
       },
       displayMessage: jest.fn(),
       translate: (key) => key,
@@ -136,4 +137,32 @@ test('a link that resolves to no target throws a ConfigError', () => {
   lowdefy.home = { pageId: undefined, configured: false };
 
   expect(() => setupLink(lowdefy)({})).toThrow('Invalid Link: no target resolved.');
+});
+
+test('scroll is forwarded to the router', () => {
+  const lowdefy = createFakeLowdefy();
+
+  setupLink(lowdefy)({ pageId: 'reports', scroll: false });
+
+  expect(lowdefy.calls.push).toEqual([{ pathname: '/reports', query: '', scroll: false }]);
+  expect(lowdefy.calls.replace).toEqual([]);
+});
+
+test('replace uses router.replace instead of router.push', () => {
+  const lowdefy = createFakeLowdefy();
+
+  setupLink(lowdefy)({ pageId: 'reports', urlQuery: { a: 1 }, replace: true, scroll: false });
+
+  expect(lowdefy.calls.push).toEqual([]);
+  expect(lowdefy.calls.replace).toEqual([{ pathname: '/reports', query: 'a=1', scroll: false }]);
+});
+
+test('newTab wins over replace and scroll', () => {
+  const lowdefy = createFakeLowdefy();
+
+  setupLink(lowdefy)({ pageId: 'reports', newTab: true, replace: true, scroll: false });
+
+  expect(lowdefy.calls.open).toEqual([['http://localhost/reports', '_blank']]);
+  expect(lowdefy.calls.push).toEqual([]);
+  expect(lowdefy.calls.replace).toEqual([]);
 });
