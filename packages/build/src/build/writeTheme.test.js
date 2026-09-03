@@ -80,3 +80,90 @@ test('writeTheme preserves per-mode lightToken and darkToken', async () => {
     ],
   ]);
 });
+
+test('writeTheme maps theme.mode to darkMode', async () => {
+  const components = {
+    theme: { mode: 'dark' },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"dark"}']]);
+});
+
+test('writeTheme mode wins over the deprecated darkMode alias', async () => {
+  const components = {
+    theme: { mode: 'light', darkMode: 'dark' },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"light"}']]);
+});
+
+test('writeTheme maps density compact to the antd compact algorithm', async () => {
+  const components = {
+    theme: { density: 'compact' },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['theme.json', '{"darkMode":"system","antd":{"algorithm":"compact"}}'],
+  ]);
+});
+
+test('writeTheme density default does not add an algorithm', async () => {
+  const components = {
+    theme: { density: 'default' },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['theme.json', '{"darkMode":"system"}']]);
+});
+
+test('writeTheme appends compact to a configured algorithm array', async () => {
+  const components = {
+    theme: { density: 'compact', antd: { algorithm: ['dark'] } },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['theme.json', '{"antd":{"algorithm":["dark","compact"]},"darkMode":"system"}'],
+  ]);
+});
+
+test('writeTheme does not duplicate compact when already configured', async () => {
+  const components = {
+    theme: { density: 'compact', antd: { algorithm: 'compact' } },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['theme.json', '{"antd":{"algorithm":"compact"},"darkMode":"system"}'],
+  ]);
+});
+
+test('writeTheme maps radius to the borderRadius token', async () => {
+  const components = {
+    theme: { radius: 12 },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['theme.json', '{"darkMode":"system","antd":{"token":{"borderRadius":12}}}'],
+  ]);
+});
+
+test('writeTheme lets an explicit borderRadius token win over radius', async () => {
+  const components = {
+    theme: { radius: 12, antd: { token: { borderRadius: 2, colorPrimary: '#6366f1' } } },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'theme.json',
+      '{"antd":{"token":{"borderRadius":2,"colorPrimary":"#6366f1"}},"darkMode":"system"}',
+    ],
+  ]);
+});
+
+test('writeTheme composes mode, density and radius', async () => {
+  const components = {
+    theme: { mode: 'dark', density: 'compact', radius: 0 },
+  };
+  await writeTheme({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    ['theme.json', '{"darkMode":"dark","antd":{"algorithm":"compact","token":{"borderRadius":0}}}'],
+  ]);
+});

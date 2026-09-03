@@ -2999,17 +2999,65 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        antd: { type: 'object' },
-        tailwind: { type: 'object' },
+        antd: {
+          type: 'object',
+          description:
+            'Ant Design theme configuration (token, components, algorithm, lightToken, darkToken, lightComponents, darkComponents). Merged after "mode", "density" and "radius", so an explicit token always wins.',
+          errorMessage: {
+            type: 'App "theme.antd" should be an object.',
+          },
+        },
+        tailwind: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "theme.tailwind" should be an object.',
+          },
+        },
+        mode: {
+          type: 'string',
+          enum: ['system', 'light', 'dark'],
+          description:
+            'Color mode. "system" follows the OS prefers-color-scheme and updates live (default), "light" forces light mode, "dark" applies the antd dark algorithm.',
+          errorMessage: {
+            type: 'App "theme.mode" should be a string.',
+            enum: 'App "theme.mode" should be one of "system", "light" or "dark".',
+          },
+        },
+        density: {
+          type: 'string',
+          enum: ['default', 'compact'],
+          description:
+            'UI density. "compact" applies the antd compact algorithm, which reduces control heights, paddings and font sizes. Composes with dark mode.',
+          errorMessage: {
+            type: 'App "theme.density" should be a string.',
+            enum: 'App "theme.density" should be one of "default" or "compact".',
+          },
+        },
+        radius: {
+          type: 'number',
+          minimum: 0,
+          description:
+            'Base corner radius in pixels, applied as the antd "borderRadius" token. All derived radius tokens follow from it.',
+          errorMessage: {
+            type: 'App "theme.radius" should be a number.',
+            minimum: 'App "theme.radius" should be greater than or equal to 0.',
+          },
+        },
         darkMode: {
           type: 'string',
           enum: ['system', 'light', 'dark'],
           description:
-            'Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
+            'Deprecated alias for "theme.mode". Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
+          errorMessage: {
+            type: 'App "theme.darkMode" should be a string.',
+            enum: 'App "theme.darkMode" should be one of "system", "light" or "dark".',
+          },
         },
       },
       errorMessage: {
         type: 'App "theme" should be an object.',
+        additionalProperties:
+          'App "theme" contains an unknown property. The known properties are "mode", "density", "radius", "antd", "tailwind" and "darkMode".',
       },
     },
     plugins: {
@@ -3213,6 +3261,88 @@ export default {
           ],
           errorMessage:
             'App "logger.events" should be "errors", "all", or an object with "level" ("errors" or "all"), "sample_rate" (a number between 0 and 1) and "identity" (a boolean).',
+        },
+        otlp: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['endpoint'],
+          errorMessage: {
+            type: 'App "logger.otlp" should be an object.',
+            required: {
+              endpoint: 'App "logger.otlp" should have required property "endpoint".',
+            },
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            endpoint: {
+              type: 'string',
+              format: 'uri',
+              description:
+                'The OTLP/HTTP logs endpoint log lines are POSTed to as OTLP JSON, for example "https://api.axiom.co/v1/traces".',
+              errorMessage: {
+                type: 'App "logger.otlp.endpoint" should be a string.',
+                format: 'App "logger.otlp.endpoint" should be a valid URL.',
+              },
+            },
+            headers: {
+              type: 'object',
+              description:
+                'Headers sent with every export request, typically an authorization header. A value may be a "_secret" operator, which is resolved on the server when the logger is created.',
+              additionalProperties: {
+                anyOf: [{ type: 'string' }, { type: 'object' }],
+              },
+              errorMessage: {
+                type: 'App "logger.otlp.headers" should be an object.',
+                additionalProperties:
+                  'App "logger.otlp.headers" values should be strings or a "_secret" operator.',
+              },
+            },
+            resource: {
+              type: 'object',
+              description:
+                'Additional OpenTelemetry resource attributes sent with every batch, beside the app name, version and git sha.',
+              additionalProperties: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "logger.otlp.resource" should be an object.',
+                additionalProperties:
+                  'App "logger.otlp.resource" values should be strings.',
+              },
+            },
+            batch: {
+              type: 'object',
+              additionalProperties: false,
+              description: 'Batching settings for the OTLP exporter.',
+              errorMessage: {
+                type: 'App "logger.otlp.batch" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                size: {
+                  type: 'integer',
+                  minimum: 1,
+                  description: 'Number of buffered log lines that triggers an export. Default 50.',
+                  errorMessage: {
+                    type: 'App "logger.otlp.batch.size" should be an integer greater than 0.',
+                    minimum: 'App "logger.otlp.batch.size" should be an integer greater than 0.',
+                  },
+                },
+                flush_ms: {
+                  type: 'integer',
+                  minimum: 1,
+                  description:
+                    'Milliseconds a buffered log line waits before it is exported. Default 2000.',
+                  errorMessage: {
+                    type: 'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
+                    minimum: 'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
+                  },
+                },
+              },
+            },
+          },
         },
         sentry: {
           type: 'object',

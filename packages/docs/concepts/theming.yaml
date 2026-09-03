@@ -68,6 +68,28 @@ _ref:
 
                 From these seed tokens, antd derives hundreds of map tokens (e.g. `colorPrimaryHover`, `colorBgContainer`, `fontSizeLG`) automatically.
 
+                ## Three levers an agent can set
+
+                Most visual changes need only three keys in `lowdefy.yaml`. They are validated at build time, resolved into the antd theme by the build, and need no CSS:
+
+                | Key | Values | Effect |
+                |---|---|---|
+                | `theme.mode` | `system` (default), `light`, `dark` | `system` follows the OS `prefers-color-scheme` and updates live, `dark` applies antd's dark algorithm, `light` locks light mode. |
+                | `theme.density` | `default`, `compact` | `compact` applies antd's compact algorithm - smaller control heights, paddings and font sizes. Composes with dark mode. |
+                | `theme.radius` | number >= 0 (px) | Sets the `borderRadius` seed token. Every derived radius token follows from it. |
+
+                ```yaml
+                theme:
+                  mode: dark
+                  density: compact
+                  radius: 12
+                  antd:
+                    token:
+                      colorPrimary: '#6366f1'
+                ```
+
+                `theme.antd` is merged after the three levers, so an explicit token always wins - a `borderRadius` in `theme.antd.token` overrides `theme.radius`. `theme.mode` replaces the older `theme.darkMode`, which still works; when both are set, `mode` wins.
+
                 ## Algorithms
 
                 Algorithms transform seed tokens into map tokens. Antd provides three built-in algorithms:
@@ -231,11 +253,11 @@ _ref:
 
                 ## Dark mode
 
-                Lowdefy supports three dark mode behaviors, configured via `theme.darkMode`:
+                Lowdefy supports three dark mode behaviors, configured via `theme.mode` (the older `theme.darkMode` is still accepted):
 
                 ```yaml
                 theme:
-                  darkMode: system  # 'system' (default), 'light', or 'dark'
+                  mode: system  # 'system' (default), 'light', or 'dark'
                 ```
 
                 | Value | Behavior |
@@ -462,7 +484,7 @@ _ref:
                 ## TLDR
                   - Configure app theme via `theme.antd` in `lowdefy.yaml`.
                   - Seed tokens (`colorPrimary`, `fontSize`, etc.) drive all derived tokens automatically.
-                  - Use `algorithm: compact` for compact mode. Use `theme.darkMode` for dark mode control.
+                  - Use `theme.mode`, `theme.density` and `theme.radius` as the three declarative levers for dark mode, compact density and corner radius.
                   - Dark mode defaults to `system` (follows OS preference). Set to `light` or `dark` to lock.
                   - Override tokens per component type via `theme.antd.components`.
                   - Override tokens per block via `properties.theme`.

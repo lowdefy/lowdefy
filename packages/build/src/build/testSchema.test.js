@@ -880,3 +880,70 @@ test('a logger events sample_rate above 1 is a warning', () => {
   expect(mockLogWarn).toHaveBeenCalled();
   expect(mockLogWarn.mock.calls[0][0]).toContain('logger.events');
 });
+
+test('theme mode, density and radius emit no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: {
+      mode: 'dark',
+      density: 'compact',
+      radius: 12,
+      antd: { token: { colorPrimary: '#6366f1' } },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('theme mode with an unknown value emits an enum warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: { mode: 'darkish' },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "theme.mode" should be one of "system", "light" or "dark".'
+  );
+});
+
+test('theme density with an unknown value emits an enum warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: { density: 'cosy' },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "theme.density" should be one of "default" or "compact".'
+  );
+});
+
+test('theme radius as a string emits a type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: { radius: '12' },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('App "theme.radius" should be a number.');
+});
+
+test('theme radius below zero emits a minimum warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: { radius: -1 },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "theme.radius" should be greater than or equal to 0.'
+  );
+});
+
+test('theme with an unknown property emits an additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    theme: { modes: 'dark' },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "theme" contains an unknown property. The known properties are "mode", "density", "radius", "antd", "tailwind" and "darkMode".'
+  );
+});
