@@ -45,14 +45,34 @@ test('stamps line and column on every compiled node and expression on the root',
   expect(nested['~x']).toBeUndefined();
 });
 
-test('does not compile inside a _js body', () => {
-  const result = parse('handler:\n  _js:\n    code: "${ state.x }"\n');
-  expect(result.handler._js.code).toBe('${ state.x }');
+test('does not compile a _js body in either the scalar or the fn form', () => {
+  const scalar = parse('handler:\n  _js: "return `${ state.x }`"\n');
+  expect(scalar.handler._js).toBe('return `${ state.x }`');
+  const object = parse('handler:\n  _js:\n    fn: "return `${ state.x }`"\n');
+  expect(object.handler._js.fn).toBe('return `${ state.x }`');
 });
 
-test('does not compile inside a _nunjucks template', () => {
-  const result = parse('label:\n  _nunjucks:\n    template: "${ not compiled }"\n');
-  expect(result.label._nunjucks.template).toBe('${ not compiled }');
+test('compiles a ${ … } in _js args — only the body is raw source', () => {
+  const result = parse(
+    'handler:\n  _js:\n    fn: ./lib/f.js#run\n    args:\n      - "${ state.a }"\n'
+  );
+  expect(result.handler._js.fn).toBe('./lib/f.js#run');
+  expect(result.handler._js.args[0]).toEqual({ _state: 'a' });
+});
+
+test('compiles a ${ … } in _nunjucks on — only the template is raw source', () => {
+  const result = parse(
+    'label:\n  _nunjucks:\n    template: "{{ name }}"\n    on:\n      name: "${ state.name }"\n'
+  );
+  expect(result.label._nunjucks.template).toBe('{{ name }}');
+  expect(result.label._nunjucks.on.name).toEqual({ _state: 'name' });
+});
+
+test('does not compile a _nunjucks template in either the scalar or the template form', () => {
+  const scalar = parse('label:\n  _nunjucks: "${ not compiled }"\n');
+  expect(scalar.label._nunjucks).toBe('${ not compiled }');
+  const object = parse('label:\n  _nunjucks:\n    template: "${ not compiled }"\n');
+  expect(object.label._nunjucks.template).toBe('${ not compiled }');
 });
 
 test('$${ … } is the literal escape: it yields the literal ${ … } string', () => {
@@ -67,11 +87,11 @@ test('$$ that is not a leading escape is untouched', () => {
   expect(result.label).toBe('cost is $$5 and $$ more');
 });
 
-test('$${ … } inside a _js subtree stays fully literal, escape included', () => {
-  // Raw-operator subtrees are owned by the other language; the escape only
-  // applies where compilation would otherwise trigger.
-  const result = parse('handler:\n  _js:\n    code: "$${ state.x }"\n');
-  expect(result.handler._js.code).toBe('$${ state.x }');
+test('$${ … } in a _js body stays fully literal, escape included', () => {
+  // A raw-source body is owned by the other language; the escape only applies
+  // where compilation would otherwise trigger.
+  const result = parse('handler:\n  _js:\n    fn: "$${ state.x }"\n');
+  expect(result.handler._js.fn).toBe('$${ state.x }');
 });
 
 test('a plain string is untouched', () => {
@@ -79,12 +99,19 @@ test('a plain string is untouched', () => {
   expect(result.title).toBe('Hello world');
 });
 
+test('a v7 literal that merely contains ${ … } is left alone', () => {
+  const result = parse('path: "${HOME}/data"\nlabel: "${a} ${b}"\nopen: "${ state.a"\n');
+  expect(result.path).toBe('${HOME}/data');
+  expect(result.label).toBe('${a} ${b}');
+  expect(result.open).toBe('${ state.a');
+});
+
 test('compiles expressions inside sequences', () => {
   const result = parse(`items:\n  - \${ state.a > 0 }\n`);
   expect(result.items[0]).toEqual({ _gt: [{ _state: 'a' }, 0] });
 });
 
-test('a malformed expression throws a located ConfigError with checkSlug expression', () => {
+test('a malformed expression throws a located ConfigError', () => {
   let thrown;
   try {
     parse('visible: "${ stat.x }"\n');
@@ -92,7 +119,6 @@ test('a malformed expression throws a located ConfigError with checkSlug express
     thrown = error;
   }
   expect(thrown).toBeInstanceOf(ConfigError);
-  expect(thrown.checkSlug).toBe('expression');
   expect(thrown.filePath).toBe('pages/home.yaml');
   expect(thrown.lineNumber).toBe(1);
   expect(thrown.columnNumber).toBe(10);

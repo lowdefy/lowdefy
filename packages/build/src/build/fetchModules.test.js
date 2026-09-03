@@ -370,28 +370,56 @@ describe('lockfile', () => {
     fs.rmSync(moduleDir, { recursive: true });
   });
 
-  test('fetchModules raises a prodError warning for a branch ref with no lock entry', async () => {
+  test('fetchModules fails a production build for a branch ref with no lock entry, before calling GitHub', async () => {
     const configDirectory = makeConfigDir();
     const moduleDir = setupModuleDir();
-    const handleWarning = jest.fn();
 
-    await fetchModules({
-      moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
-      context: {
-        directories: { config: configDirectory },
-        stage: 'prod',
-        writeModuleLock: false,
-        handleWarning,
-      },
-    });
-
-    expect(handleWarning).toHaveBeenCalledTimes(1);
-    const warning = handleWarning.mock.calls[0][0];
-    expect(warning.name).toBe('ConfigWarning');
-    expect(warning.prodError).toBe(true);
-    expect(warning.message).toMatchInlineSnapshot(
-      `"Module \\"team-users\\" resolves branch ref \\"main\\" with no entry in lowdefy-modules.lock.yaml. The build pinned it to commit 4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30. Run \\"lowdefy modules update\\" and commit the lockfile so production builds are reproducible."`
+    await expect(
+      fetchModules({
+        moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+        context: {
+          directories: { config: configDirectory },
+          stage: 'prod',
+          writeModuleLock: false,
+          handleWarning: jest.fn(),
+        },
+      })
+    ).rejects.toThrow(
+      'Module "team-users" resolves branch ref "main" with no entry in lowdefy-modules.lock.yaml.'
     );
+
+    // Nothing was resolved or fetched against a module the build cannot pin.
+    expect(global.fetch).not.toHaveBeenCalled();
+
+    fs.rmSync(configDirectory, { recursive: true });
+    fs.rmSync(moduleDir, { recursive: true });
+  });
+
+  test('fetchModules rejects a lock entry whose commit is not a 40 character sha', async () => {
+    const configDirectory = makeConfigDir();
+    const moduleDir = setupModuleDir();
+    fs.writeFileSync(
+      path.join(configDirectory, 'lowdefy-modules.lock.yaml'),
+      [
+        'team-users:',
+        '  source: github:acme/team-users@main',
+        '  ref: main',
+        '  commit: main',
+        '',
+      ].join('\n')
+    );
+
+    await expect(
+      fetchModules({
+        moduleEntries: [{ id: 'team-users', source: 'github:acme/team-users@main' }],
+        context: {
+          directories: { config: configDirectory },
+          stage: 'dev',
+          writeModuleLock: true,
+          handleWarning: jest.fn(),
+        },
+      })
+    ).rejects.toThrow(/whose commit is not a 40 character sha. Received "main"/);
 
     fs.rmSync(configDirectory, { recursive: true });
     fs.rmSync(moduleDir, { recursive: true });

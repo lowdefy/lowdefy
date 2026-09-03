@@ -33,7 +33,7 @@ export default {
     {
       id: 'template-css-is-text',
       message:
-        'properties.css is CSS text scoped to this block (nested under #bl-<blockId>). The style key stays an object of CSS properties per cssKey; a <style> tag inside the template is stripped.',
+        'properties.css is CSS text scoped to this block (nested under [id="bl-<blockId>"]). Braces must balance - a stray "}" would escape the scope and is rejected. The style key stays an object of CSS properties per cssKey; a <style> tag inside the template is stripped.',
       see: 'container-blocks/template',
     },
   ],

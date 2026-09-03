@@ -18,47 +18,27 @@ import { ConfigError } from '@lowdefy/errors';
 
 import ExpressionError from './ExpressionError.js';
 import emit from './emit.js';
+import findExpressionEnd from './findExpressionEnd.js';
 import parse from './parse.js';
 import tokenize from './tokenize.js';
 
 // Validates that a trimmed scalar is a single, well-formed ${ … } and returns
-// the inner body. Throws ExpressionError for an unterminated expression or for
-// interpolation (a "}" that closes before the end — "${a} ${b}" is not a single
-// expression). Quoted strings are opaque so a "}" inside a literal does not
-// close early.
+// the inner body. isExpression uses the same findExpressionEnd rule, so a
+// scalar the build recognised always passes here; the throws cover direct
+// callers of compileExpression with a scalar that was never an expression.
 function stripDelimiters(trimmed) {
-  if (!trimmed.startsWith('${')) {
-    throw new ExpressionError('expression must be wrapped in ${ … }');
+  const end = findExpressionEnd(trimmed);
+  if (end === -1) {
+    throw new ExpressionError('expression must be a single, closed ${ … }');
   }
-  let depth = 0;
-  let quote = null;
-  for (let i = 1; i < trimmed.length; i += 1) {
-    const ch = trimmed[i];
-    if (quote) {
-      if (ch === '\\') i += 1;
-      else if (ch === quote) quote = null;
-      continue;
-    }
-    if (ch === "'" || ch === '"') {
-      quote = ch;
-      continue;
-    }
-    if (ch === '{') depth += 1;
-    if (ch === '}') {
-      depth -= 1;
-      if (depth === 0) {
-        if (i !== trimmed.length - 1) {
-          throw new ExpressionError(
-            'a scalar may hold a single ${ … } expression; interpolation such as ' +
-              '"${a} ${b}" or "text ${x}" is not supported — use _nunjucks or _string.format',
-            { column: i + 1 }
-          );
-        }
-        return trimmed.slice(2, -1);
-      }
-    }
+  if (end !== trimmed.length - 1) {
+    throw new ExpressionError(
+      'a scalar may hold a single ${ … } expression; interpolation such as ' +
+        '"${a} ${b}" or "text ${x}" is not supported — use _nunjucks or _string.format',
+      { column: end + 1 }
+    );
   }
-  throw new ExpressionError('unterminated expression, expected a closing "}"');
+  return trimmed.slice(2, -1);
 }
 
 // Compiles a single ${ … } expression scalar to an operator tree. `expression`
@@ -82,11 +62,15 @@ function compileExpression({ expression, filePath, lineNumber, columnNumber } = 
     message += ` in ${expression.trim()}.`;
     // The file:line:column is carried structurally so the build logger renders
     // it as the error's location (it is not duplicated into the message).
+    // No checkSlug: compilation runs inside buildRefs, before addKeys has built
+    // a keyMap, and shouldSuppressBuildCheck needs a configKey in that keyMap
+    // to suppress. A slug here would advertise a ~ignoreBuildChecks entry that
+    // can never take effect, and a malformed expression is not suppressible by
+    // design — it has no meaning to carry forward.
     throw new ConfigError(message, {
       filePath: filePath ?? null,
       lineNumber: lineNumber ?? null,
       columnNumber: columnNumber ?? null,
-      checkSlug: 'expression',
       received: expression,
     });
   }

@@ -29,13 +29,11 @@ const entryA = {
   source: 'github:acme/modules/a@main',
   ref: 'main',
   commit: '4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30',
-  fetchedAt: '2026-08-30T09:14:22.183Z',
 };
 const entryB = {
   source: 'github:acme/modules/b@v2.1.0',
   ref: 'v2.1.0',
   commit: '9c3e5b1f7a2d4e8c0b6f3a9d5e1c7b4a2f6d0e83',
-  fetchedAt: '2026-08-14T11:02:05.774Z',
 };
 
 test('writeModuleLockfile writes the generated comment and entries in stable key order', async () => {
@@ -50,12 +48,10 @@ alpha:
   source: github:acme/modules/a@main
   ref: main
   commit: 4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30
-  fetchedAt: 2026-08-30T09:14:22.183Z
 zebra:
   source: github:acme/modules/b@v2.1.0
   ref: v2.1.0
   commit: 9c3e5b1f7a2d4e8c0b6f3a9d5e1c7b4a2f6d0e83
-  fetchedAt: 2026-08-14T11:02:05.774Z
 "
 `);
   fs.rmSync(configDirectory, { recursive: true });
@@ -90,10 +86,12 @@ test('writeModuleLockfile does not rewrite an unchanged lockfile', async () => {
 });
 
 test('writeModuleLockfile ignores fields that are not part of a lock entry', async () => {
+  // fetchedAt was dropped from the entry shape: it pinned nothing and made the
+  // shared lockfile churn on every re-resolve.
   const configDirectory = makeConfigDir();
   await writeModuleLockfile({
     configDirectory,
-    lockfile: { alpha: { ...entryA, extra: 'ignored' } },
+    lockfile: { alpha: { ...entryA, extra: 'ignored', fetchedAt: '2026-08-30T09:14:22.183Z' } },
   });
   await expect(readModuleLockfile({ configDirectory })).resolves.toEqual({ alpha: entryA });
   fs.rmSync(configDirectory, { recursive: true });

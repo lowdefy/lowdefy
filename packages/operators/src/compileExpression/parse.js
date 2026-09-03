@@ -50,10 +50,13 @@ function isBooleanNode(node) {
 
 // Recursive-descent parser over the token list. Precedence, lowest to highest:
 // ternary < (?? | ||) < && < equality < relational < unary < postfix < primary.
-// ?? may not mix with && / || without parentheses (§4.3), enforced via the
-// `paren` flag set on grouped nodes.
+// ?? may not mix with && / || without parentheses (§4.3), enforced by
+// recording grouped nodes in the parser's own set — grouping is a fact about
+// the parse, not a property of the operand, and must not leak into the nodes
+// emit switches on.
 function parse(tokens) {
   let pos = 0;
+  const grouped = new WeakSet();
 
   const peek = () => tokens[pos];
   const next = () => tokens[pos++];
@@ -78,6 +81,26 @@ function parse(tokens) {
     if (token.type === 'string') return `string ${JSON.stringify(token.value)}`;
     if (token.type === 'number') return `number ${token.value}`;
     return `"${token.value}"`;
+  }
+
+  // Index ::= Number | String (§4.2). A negative literal is rejected rather
+  // than folded into the path: "state.a[-1]" would emit { _state: 'a.-1' },
+  // a path that resolves to undefined at runtime with no error. There is no
+  // last-element read in the grammar.
+  function assertIndexToken(index) {
+    if (index.type !== 'number' && index.type !== 'string') {
+      throw new ExpressionError(
+        `index must be a literal number or string but found ${describe(index)}`,
+        { column: index.column }
+      );
+    }
+    if (index.type === 'number' && index.value < 0) {
+      throw new ExpressionError(
+        `index must not be negative but found number ${index.value}; ` +
+          'there is no negative indexing — read the element by its position',
+        { column: index.column }
+      );
+    }
   }
 
   function parseExpression() {
@@ -124,7 +147,7 @@ function parse(tokens) {
   }
 
   function assertNotBareLogical(node) {
-    if (node.kind === 'logical' && !node.paren) {
+    if (node.kind === 'logical' && !grouped.has(node)) {
       throw new ExpressionError(
         '"??" cannot be combined with "&&" or "||" without parentheses; ' +
           'write (a ?? b) && c or a ?? (b && c)',
@@ -231,12 +254,7 @@ function parse(tokens) {
       if (isPunct('[')) {
         next();
         const index = next();
-        if (index.type !== 'number' && index.type !== 'string') {
-          throw new ExpressionError(
-            `index must be a literal number or string but found ${describe(index)}`,
-            { column: index.column }
-          );
-        }
+        assertIndexToken(index);
         expectPunct(']');
         node = { kind: 'member', object: node, key: String(index.value) };
         continue;
@@ -271,12 +289,7 @@ function parse(tokens) {
       if (isPunct('[')) {
         next();
         const index = next();
-        if (index.type !== 'number' && index.type !== 'string') {
-          throw new ExpressionError(
-            `index must be a literal number or string but found ${describe(index)}`,
-            { column: index.column }
-          );
-        }
+        assertIndexToken(index);
         expectPunct(']');
         parts.push(String(index.value));
         continue;
@@ -336,7 +349,7 @@ function parse(tokens) {
       next();
       const inner = parseExpression();
       expectPunct(')');
-      inner.paren = true;
+      grouped.add(inner);
       return inner;
     }
 

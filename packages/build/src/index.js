@@ -50,6 +50,9 @@ import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import loadBlockSchemas from './build/loadBlockSchemas.js';
+import moduleLockfileName from './build/moduleLockfileName.js';
+import readModuleLockfile from './build/readModuleLockfile.js';
+import writeModuleLockfile from './build/writeModuleLockfile.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
@@ -274,6 +277,8 @@ async function build(options) {
   }
 }
 
-export { check, createPluginTypesMap };
+// The CLI's "modules update" command reads and rewrites the same lockfile the
+// build owns, and must do it by exactly the same rules.
+export { check, createPluginTypesMap, moduleLockfileName, readModuleLockfile, writeModuleLockfile };
 
 export default build;

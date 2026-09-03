@@ -40,7 +40,13 @@ class SlotExtension {
   }
 
   run(_context, name) {
-    const escaped = String(name).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    // "<" must be escaped along with "&" and quote: the marker is emitted as a
+    // SafeString and then passed through DOMPurify, which would reinterpret an
+    // unescaped "<" in the name as the start of a tag.
+    const escaped = String(name)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/"/g, '&quot;');
     return new nunjucks.runtime.SafeString(`<div data-ldf-slot="${escaped}"></div>`);
   }
 }

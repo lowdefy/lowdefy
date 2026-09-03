@@ -30,8 +30,8 @@ async function writeModuleLockfile({ configDirectory, lockfile }) {
   const sortedIds = Object.keys(lockfile).sort();
   const ordered = {};
   for (const id of sortedIds) {
-    const { source, ref, commit, fetchedAt } = lockfile[id];
-    ordered[id] = { source, ref, commit, fetchedAt };
+    const { source, ref, commit } = lockfile[id];
+    ordered[id] = { source, ref, commit };
   }
 
   const content =

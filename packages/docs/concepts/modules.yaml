@@ -276,15 +276,13 @@ _ref:
               source: github:acme/lowdefy-modules/billing@v2.1.0
               ref: v2.1.0
               commit: 9c3e5b1f7a2d4e8c0b6f3a9d5e1c7b4a2f6d0e83
-              fetchedAt: 2026-08-14T11:02:05.774Z
             team-users:
               source: github:acme/lowdefy-modules/team-users@main
               ref: main
               commit: 4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30
-              fetchedAt: 2026-08-30T09:14:22.183Z
             ```
 
-            Each entry records the `source` it was resolved from, so changing the owner, repo, path or ref of a module entry invalidates its lock and the build resolves the new source afresh. `file:` sources are never locked, and entries for modules you remove from `lowdefy.yaml` drop out of the file.
+            Each entry records the `source` it was resolved from and the 40 character commit sha it pins (a `commit` that is not a sha is rejected), so changing the owner, repo, path or ref of a module entry invalidates its lock and the build resolves the new source afresh. `file:` sources are never locked, and entries for modules you remove from `lowdefy.yaml` drop out of the file.
 
             When an entry exists, the build fetches that exact commit — no GitHub request is made and the module cache in `.lowdefy/modules/` is never refetched. `.lowdefy/` stays gitignored; the lockfile is the committed artefact and the cache is derived from it.
 
@@ -292,7 +290,7 @@ _ref:
 
             ```
             Module "team-users" resolves branch ref "main" with no entry in lowdefy-modules.lock.yaml.
-            The build pinned it to commit 4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30.
+            A production build cannot pin it.
             Run "lowdefy modules update" and commit the lockfile so production builds are reproducible.
             ```
 

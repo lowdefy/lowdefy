@@ -24,6 +24,11 @@ import { type } from '@lowdefy/helpers';
 // strings with no leading escape, pass through unchanged.
 function unescapeExpression(value) {
   if (!type.isString(value)) return value;
+  // This runs on every scalar of every YAML file in every build, so the
+  // common case exits on a single char code: only "$" (36) or leading
+  // whitespace can precede the escape, and trimStart() allocates a copy.
+  const first = value.charCodeAt(0);
+  if (first !== 36 && first !== 32 && first !== 9 && first !== 10 && first !== 13) return value;
   if (!value.trimStart().startsWith('$${')) return value;
   const index = value.indexOf('$${');
   return value.slice(0, index) + value.slice(index + 1);

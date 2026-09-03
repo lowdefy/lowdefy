@@ -14,20 +14,42 @@
   limitations under the License.
 */
 
-import path from 'path';
+import path from 'node:path';
 
 import YAML from 'yaml';
 import { readFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
 
 import moduleLockfileName from './moduleLockfileName.js';
 
+// A byte-for-byte mirror of packages/build/src/build/readModuleLockfile.js,
+// which owns the lockfile format. The CLI cannot import it yet (@lowdefy/build
+// is not a CLI dependency), and the two must not diverge: a copy that returned
+// {} on a malformed file made "lowdefy modules update" rewrite the file empty
+// and report success, wiping every pin.
 async function readModuleLockfile({ configDirectory }) {
-  const content = await readFile(path.join(configDirectory, moduleLockfileName));
+  const filePath = path.join(configDirectory, moduleLockfileName);
+  const content = await readFile(filePath);
   if (type.isNone(content) || content.trim() === '') return {};
 
-  const parsed = YAML.parse(content);
-  if (!type.isObject(parsed)) return {};
+  let parsed;
+  try {
+    parsed = YAML.parse(content);
+  } catch (error) {
+    throw new ConfigError(`Could not parse ${moduleLockfileName}: ${error.message}`, {
+      cause: error,
+    });
+  }
+
+  if (type.isNone(parsed)) return {};
+  if (!type.isObject(parsed)) {
+    throw new ConfigError(
+      `${moduleLockfileName} should be a map of module entry ids to lock entries. Received ${JSON.stringify(
+        parsed
+      )}.`
+    );
+  }
   return parsed;
 }
 
