@@ -27,6 +27,9 @@ function shutdownServer(context) {
           `Killed dev server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
         );
       }
+      // Kept so restartServer can await the exit before spawning the next
+      // child on the same --strictPort port, whoever called the shutdown.
+      context.exitingServer = context.devServer;
       context.devServer = null;
     }
   };

@@ -63,7 +63,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts, browser/server errors and fixture seeds arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error, fixture_seeded; a build event carries status, errors, warnings and stale; a fixture_seeded event names the fixture and the collections it wrote so you know the data changed under you). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none or runAs execution seen this session (under devNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
@@ -299,7 +299,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_restart',
     {
       description:
-        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing.",
+        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing. The restart discards the serverErrors and devNotices collected this session, so read anything you still need from build_status first.",
       inputSchema: {
         reason: z
           .string()
@@ -310,7 +310,10 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     ({ reason }) =>
       textResult({
         ...requestRestart({ reason }),
-        note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+        note:
+          'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status ' +
+          'before your next call. The restart discards the serverErrors and devNotices ' +
+          'collected this session — they live in the server process only.',
       })
   );
 
@@ -436,7 +439,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_build_status',
     {
       description:
-        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, recent server errors — request, endpoint, MCP and agent tool failures with their config source — plus every `tenant: none` execution seen this session (unscoped reads) with its config source, under tenantNotices. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
+        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, recent server errors — request, endpoint, MCP and agent tool failures with their config source — plus every `tenant: none` or `runAs` execution seen this session with its config source, under devNotices. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
       inputSchema: {},
     },
     () => textResult(getBuildStatus())

@@ -24,6 +24,7 @@ const mockReadBuildArtifact = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockCreateLowdefyContext = jest.fn();
 const mockLoggerInfo = jest.fn();
+const mockHandleError = jest.fn();
 const mockGetDevUsers = jest.fn();
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
@@ -56,7 +57,10 @@ beforeEach(() => {
     return { type: 'MongoDBFind' };
   });
   mockIsWriteRequestsAllowed.mockResolvedValue(false);
-  mockCreateLowdefyContext.mockResolvedValue({ logger: { info: mockLoggerInfo } });
+  mockCreateLowdefyContext.mockResolvedValue({
+    logger: { info: mockLoggerInfo },
+    handleError: mockHandleError,
+  });
   mockCallRequest.mockResolvedValue({ id: 'requests', response: [{ _id: 1 }] });
   mockGetDevUsers.mockReturnValue({ admin: { id: 'dev-admin', roles: ['admin'] } });
 });
@@ -76,16 +80,20 @@ test('runRequest passes a user object to createLowdefyContext', async () => {
   expect(result.response).toEqual([{ _id: 1 }]);
 });
 
-test('runRequest logs the user it ran the request as', async () => {
-  const user = { roles: ['admin'] };
+test('runRequest logs the resolved caller it ran the request as, not the raw argument', async () => {
+  mockCreateLowdefyContext.mockResolvedValue({
+    logger: { info: mockLoggerInfo },
+    handleError: mockHandleError,
+    user: { id: 'dev-admin', roles: ['admin'], email: 'a@b.c' },
+  });
 
-  await runRequest({ pageId: 'home', requestId: 'get_rows', user, honoContext });
+  await runRequest({ pageId: 'home', requestId: 'get_rows', user: 'admin', honoContext });
 
   expect(mockLoggerInfo).toHaveBeenCalledWith({
     event: 'agent_run_request',
     pageId: 'home',
     requestId: 'get_rows',
-    user,
+    user: { id: 'dev-admin', roles: ['admin'] },
   });
 });
 
@@ -123,7 +131,7 @@ test('runRequest builds a context with an undefined user when user is omitted', 
     event: 'agent_run_request',
     pageId: 'home',
     requestId: 'get_rows',
-    user: undefined,
+    user: { id: null, roles: [] },
   });
   expect(result).toEqual({ refused: false, id: 'requests', response: [{ _id: 1 }] });
 });
@@ -241,7 +249,9 @@ test('runRequest with explain: true reports effective: null and a note when the 
   });
 
   expect(result.explain.effective).toBe(null);
-  expect(result.explain.note).toBe('Request type MongoDBFind does not report an effective query.');
+  expect(result.explain.note).toBe(
+    'The request did not reach the driver — it failed before the resolver ran, so there is no effective query.'
+  );
   expect(result.explain.caller).toEqual({ id: null, organization_id: null, roles: [] });
 });
 
@@ -258,11 +268,50 @@ test('runRequest with explain: true keeps the trace collected before a request e
     honoContext,
   });
 
-  expect(result.error).toEqual({ name: 'Error', message: 'boom' });
+  expect(result.error).toEqual({
+    name: 'Error',
+    message: 'boom',
+    source: null,
+    configKey: null,
+  });
   expect(result.explain.connection).toEqual({
     id: 'app_data',
     type: 'MongoDBCollection',
     tenant: null,
   });
   expect(result.explain.effective).toBe(null);
+});
+
+test('runRequest hands a fault to context.handleError and reports its resolved source', async () => {
+  const fault = new Error('Connection "app_data" does not exist.');
+  fault.name = 'RequestError';
+  fault.configKey = 'request.7';
+  // handleError is the server's error sink: it resolves the config source onto
+  // the error and records it in serverErrorStore, which is what puts the
+  // failure under serverErrors in build_status.
+  mockHandleError.mockImplementation(async (error) => {
+    error.source = 'pages/home.yaml:12';
+  });
+  mockCallRequest.mockRejectedValue(fault);
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(mockHandleError).toHaveBeenCalledWith(fault);
+  expect(result).toEqual({
+    refused: false,
+    error: {
+      name: 'RequestError',
+      message: 'Connection "app_data" does not exist.',
+      source: 'pages/home.yaml:12',
+      configKey: 'request.7',
+    },
+  });
+});
+
+test('runRequest returns a successful run whose response is undefined', async () => {
+  mockCallRequest.mockResolvedValue({ id: 'requests', response: undefined });
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result).toEqual({ refused: false, id: 'requests', response: undefined });
 });

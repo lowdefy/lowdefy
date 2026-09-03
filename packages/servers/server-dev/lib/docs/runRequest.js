@@ -18,11 +18,10 @@ import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-import resolveDevUser from '../server/auth/resolveDevUser.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import formatExplainTrace from './formatExplainTrace.js';
 import readBuildArtifact from './readBuildArtifact.js';
-import truncateResponse from './truncateResponse.js';
+import runWithDevContext from './runWithDevContext.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -59,16 +58,6 @@ async function runRequest({ pageId, requestId, payload = {}, user, explain = fal
     throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
     );
-  }
-
-  // A fixture name declared under auth.dev.users, or an inline caller object -
-  // resolveDevUser is the single place a `user` value becomes a caller, and an
-  // unknown name names the fix rather than falling back to a roleless caller.
-  let caller;
-  try {
-    caller = resolveDevUser({ user });
-  } catch (error) {
-    throw new ConfigError(error.message, { cause: error });
   }
 
   let requestType = getRequestType({ pageId, requestId });
@@ -116,46 +105,32 @@ async function runRequest({ pageId, requestId, payload = {}, user, explain = fal
     }
   }
 
-  // Deferred import: createLowdefyContext statically imports build/plugins/*
-  // artifacts, which only exist in a running server directory — importing it
-  // at module load would break every consumer of this module (e.g. the MCP
-  // server) in environments without a full build.
-  const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user: caller });
-  context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
-
-  const trace = explain === true ? { rewritten: [] } : undefined;
-  try {
-    const result = await callRequest(context, {
-      blockId: undefined,
-      pageId,
-      payload,
-      requestId,
-      trace,
-    });
-    if (trace) {
-      return {
-        refused: false,
-        ...truncateResponse(result),
-        explain: formatExplainTrace({ trace, requestType, user: context.user }),
-      };
-    }
-    return { refused: false, ...truncateResponse(result) };
-  } catch (error) {
-    const failure = {
-      refused: false,
-      error: {
-        name: error.name,
-        message: error.message,
-      },
-    };
-    if (trace) {
-      // The trace up to the failure still names the caller, the tenancy and
-      // the wall's rewrites - usually the reason a request was refused.
-      failure.explain = formatExplainTrace({ trace, requestType, user: context.user });
-    }
-    return failure;
-  }
+  return runWithDevContext({
+    createTrace: () => ({ rewritten: [] }),
+    explain,
+    formatExplain: ({ context, trace }) =>
+      formatExplainTrace({ trace, requestType, secrets: context.secrets, user: context.user }),
+    honoContext,
+    // The resolved caller, not the raw argument: a fixture name, an inline
+    // object and the roleless default all read the same in the terminal, and
+    // this is the identity the request actually ran as.
+    log: ({ context }) =>
+      context.logger.info({
+        event: 'agent_run_request',
+        pageId,
+        requestId,
+        user: { id: context.user?.id ?? null, roles: context.user?.roles ?? [] },
+      }),
+    run: ({ context, trace }) =>
+      callRequest(context, {
+        blockId: undefined,
+        pageId,
+        payload,
+        requestId,
+        trace,
+      }),
+    user,
+  });
 }
 
 export default runRequest;

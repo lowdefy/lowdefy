@@ -22,7 +22,7 @@ function envWatcher(context) {
     context.logger.warn('.env file changed.');
     context.readDotEnv();
     await context.lowdefyBuild();
-    context.restartServer();
+    await context.restartServer();
   };
   return setupWatcher({
     callback,

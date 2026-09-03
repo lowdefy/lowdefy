@@ -52,7 +52,9 @@ function listTypes({ kind }) {
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(normalizedKind)) {
     throw new Error(
-      `Unknown type kind. Received ${JSON.stringify(kind)}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
+      `Unknown type kind. Received ${JSON.stringify(
+        kind
+      )}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
     );
   }
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};

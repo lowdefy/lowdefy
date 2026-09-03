@@ -101,6 +101,10 @@ async function createLowdefyContext({ c, user }) {
       hostname: c.req.header('host'),
     },
     secrets,
+    // The incoming request's AbortSignal: the endpoint runner checks it between
+    // steps and loop iterations, so a caller that disconnects stops the routine
+    // instead of leaving it to run to completion for nobody.
+    signal: c.req.raw.signal,
     steps,
     websockets,
   };

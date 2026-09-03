@@ -122,6 +122,9 @@ try {
     );
     context.options.port = availablePort;
   }
+  // `lowdefy test` reads the lock to reuse a dev server that is already
+  // serving this app, and can only reach it once the port is settled.
+  managerLock.update({ port: context.options.port });
 
   // The manager holds the public port for the whole session and proxies to the
   // Vite child on an internal loopback port — restarting the child (js module

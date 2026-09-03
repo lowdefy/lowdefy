@@ -16,27 +16,27 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-import parseUserParam from './parseUserParam.js';
 import runRequest from '../../../lib/docs/runRequest.js';
 
 // Refusals and request errors are returned as 200 data (see runRequest.js) —
 // only malformed input (missing pageId/requestId, thrown as a ConfigError) is a
 // 400. Anything else is a fault and propagates to the error handler.
+//
+// The raw `user` goes straight to the runner: resolveDevUser is the one place
+// a name or an object becomes a caller, and its refusal (an unknown fixture
+// name, a value that is neither) arrives here as the ConfigError below - so
+// REST and MCP answer a bad caller identically.
 async function docsRunRequestHandler(c) {
   // Parse the body from a clone: runRequest builds a Lowdefy context whose
   // resolveAuthentication reads c.req.raw (headers) to resolve the caller,
   // so leave the original request body intact and read our own copy here.
   const { pageId, requestId, payload, user, explain } = await c.req.raw.clone().json();
-  const { user: parsedUser, error: userError } = parseUserParam({ value: user });
-  if (userError) {
-    return c.json({ error: userError }, 400);
-  }
   try {
     const result = await runRequest({
       pageId,
       requestId,
       payload,
-      user: parsedUser,
+      user,
       explain,
       honoContext: c,
     });

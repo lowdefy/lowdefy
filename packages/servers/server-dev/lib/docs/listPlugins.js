@@ -19,7 +19,11 @@ import readBuildArtifact from './readBuildArtifact.js';
 function addTypes({ plugins, store, kind }) {
   for (const [typeName, definition] of Object.entries(store ?? {})) {
     if (!plugins[definition.package]) {
-      plugins[definition.package] = { package: definition.package, version: definition.version, types: {} };
+      plugins[definition.package] = {
+        package: definition.package,
+        version: definition.version,
+        types: {},
+      };
     }
     const plugin = plugins[definition.package];
     if (!plugin.types[kind]) {

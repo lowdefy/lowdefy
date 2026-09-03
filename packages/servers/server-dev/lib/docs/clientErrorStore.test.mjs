@@ -27,16 +27,34 @@ test('clientErrorStore push adds an entry, lists it, and publishes it as a clien
   const entry = { timestamp: '2026-01-01T00:00:00.000Z', name: 'OperatorError', message: 'bad' };
   clientErrorStore.push(entry);
   expect(clientErrorStore.list()).toEqual([entry]);
-  expect(mockPublish).toHaveBeenCalledWith({ type: 'client_error', ...entry });
+  expect(mockPublish).toHaveBeenCalledWith({ ...entry, type: 'client_error' });
+});
+
+test('clientErrorStore collapses a repeated browser error onto one counted entry', () => {
+  mockPublish.mockClear();
+  clientErrorStore.push({
+    timestamp: '2026-01-01T00:00:01.000Z',
+    name: 'OperatorError',
+    message: 'bad',
+  });
+
+  expect(clientErrorStore.list()).toEqual([
+    {
+      timestamp: '2026-01-01T00:00:00.000Z',
+      name: 'OperatorError',
+      message: 'bad',
+      count: 2,
+      lastSeen: '2026-01-01T00:00:01.000Z',
+    },
+  ]);
+  expect(mockPublish).not.toHaveBeenCalled();
 });
 
 test('clientErrorStore caps at 50 entries and drops the oldest', () => {
   for (let i = 0; i < 60; i++) {
-    clientErrorStore.push({ index: i });
+    clientErrorStore.push({ name: 'BlockError', message: `render ${i}` });
   }
   const entries = clientErrorStore.list();
   expect(entries.length).toEqual(50);
-  expect(entries[0].index).toEqual(10);
-  expect(entries[49].index).toEqual(59);
-  expect(mockPublish).toHaveBeenCalledTimes(60);
+  expect(entries[49].message).toEqual('render 59');
 });

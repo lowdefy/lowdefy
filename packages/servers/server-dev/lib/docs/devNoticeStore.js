@@ -13,39 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import createRingBuffer from './createRingBuffer.js';
+import { publish } from './devEventBus.js';
+
 // Module-level ring buffer of dev notices — things that are not errors but a
-// developer should see while building, currently every `tenant: none`
-// execution reported by resolveTenant through context.handleDevNotice. Feeds
-// the getBuildStatus feedback endpoint (tenantNotices) beside the client and
-// server error stores. Deliberately in-memory only: entries are lost on
-// server restart, which is fine since this is a live-session debugging aid.
+// developer should see while building: every `tenant: none` execution and
+// every `runAs` scope reported through context.handleDevNotice. Feeds the
+// getBuildStatus feedback endpoint (devNotices) beside the client and server
+// error stores, and the dev tabs through the dev_notice event on
+// devEventBus. Deliberately in-memory only: entries are lost on server
+// restart, which is fine since this is a live-session debugging aid.
 //
-// One notice per config site per process: a `tenant: none` request inside a
-// :for loop, or a page the developer keeps reloading, would otherwise flood
-// the bar with identical entries. The dedupe is keyed on configKey, so a
-// notice with no key is always stored. A restart clears both the buffer and
-// the seen set.
+// One notice per config site: a `tenant: none` request inside a :for loop, or
+// a page the developer keeps reloading, would otherwise flood the bar with
+// identical entries, so repeats only raise the entry's count. The dedupe is
+// keyed on configKey, so a notice with no key is always stored.
 const MAX_ENTRIES = 50;
 
-const entries = [];
-const seenConfigKeys = new Set();
-
-function push(entry) {
-  const configKey = entry.configKey;
-  if (configKey !== undefined && configKey !== null) {
-    if (seenConfigKeys.has(configKey)) {
-      return;
-    }
-    seenConfigKeys.add(configKey);
-  }
-  entries.push(entry);
-  if (entries.length > MAX_ENTRIES) {
-    entries.shift();
-  }
-}
-
-function list() {
-  return [...entries];
-}
-
-export default { push, list };
+export default createRingBuffer({
+  max: MAX_ENTRIES,
+  dedupeKey: (entry) => entry.configKey,
+  onStore: (entry) => publish({ ...entry, type: 'dev_notice' }),
+});

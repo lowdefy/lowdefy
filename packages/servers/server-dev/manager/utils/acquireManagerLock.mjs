@@ -33,6 +33,10 @@ function isPidAlive(pid) {
 // error anywhere. A pid lock in the server directory makes the second manager
 // refuse loudly instead. A lock whose pid is no longer alive is stale (the
 // manager crashed or was SIGKILLed) and is taken over.
+//
+// The lock doubles as the manager's advertisement of itself: `lowdefy test`
+// reads it to find a dev server already serving this app, so the public port
+// is written into it (through `update`) as soon as the manager settles on one.
 function acquireManagerLock({ directory }) {
   const lockPath = path.join(directory, '.manager.lock');
   try {
@@ -43,10 +47,19 @@ function acquireManagerLock({ directory }) {
   } catch {
     // No lock, or an unreadable one - either way it is not held.
   }
-  fs.writeFileSync(
-    lockPath,
-    `${JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }, null, 2)}\n`
-  );
+  const lock = { pid: process.pid, startedAt: new Date().toISOString() };
+  function write() {
+    fs.writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
+  }
+  write();
+  // The port is only known after the initial build (it may have moved when the
+  // requested one was taken), so it is added to the lock rather than written
+  // with it.
+  function update(fields) {
+    Object.assign(lock, fields);
+    write();
+    return { ...lock };
+  }
   function release() {
     try {
       const holder = JSON.parse(fs.readFileSync(lockPath, 'utf8'));
@@ -57,7 +70,7 @@ function acquireManagerLock({ directory }) {
       // Already gone, or taken over after a crash - nothing to release.
     }
   }
-  return { acquired: true, release, lockPath };
+  return { acquired: true, release, lockPath, update };
 }
 
 export default acquireManagerLock;

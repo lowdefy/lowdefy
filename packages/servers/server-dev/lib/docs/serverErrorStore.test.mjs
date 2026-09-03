@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { jest } from '@jest/globals';
 
 const mockPublish = jest.fn();
@@ -22,24 +23,48 @@ jest.unstable_mockModule('./devEventBus.js', () => ({
 
 const { default: serverErrorStore } = await import('./serverErrorStore.js');
 
+function entry(index) {
+  return {
+    timestamp: '2026-01-01T00:00:00.000Z',
+    name: 'RequestError',
+    message: `failed ${index}`,
+    source: `pages/home.yaml:${index}`,
+  };
+}
+
 test('serverErrorStore push adds an entry, list returns it, and it is published as a server_error event', () => {
-  serverErrorStore.push({ message: 'first' });
-  expect(serverErrorStore.list()).toEqual([{ message: 'first' }]);
-  expect(mockPublish).toHaveBeenCalledWith({ type: 'server_error', message: 'first' });
+  serverErrorStore.push(entry(0));
+  expect(serverErrorStore.list()).toEqual([entry(0)]);
+  expect(mockPublish).toHaveBeenCalledWith({ ...entry(0), type: 'server_error' });
 });
 
 test('serverErrorStore list returns a copy that does not alias the store', () => {
   const entries = serverErrorStore.list();
   entries.push({ message: 'not stored' });
-  expect(serverErrorStore.list()).toEqual([{ message: 'first' }]);
+  expect(serverErrorStore.list()).toEqual([entry(0)]);
+});
+
+test('serverErrorStore collapses the same name, message and source onto one counted entry', () => {
+  mockPublish.mockClear();
+  serverErrorStore.push({ ...entry(0), timestamp: '2026-01-01T00:00:01.000Z' });
+  serverErrorStore.push({ ...entry(0), timestamp: '2026-01-01T00:00:02.000Z' });
+
+  expect(serverErrorStore.list()).toEqual([
+    { ...entry(0), count: 3, lastSeen: '2026-01-01T00:00:02.000Z' },
+  ]);
+  expect(mockPublish).not.toHaveBeenCalled();
+});
+
+test('serverErrorStore keeps errors that differ only in source apart', () => {
+  serverErrorStore.push({ ...entry(0), source: 'pages/other.yaml:9' });
+  expect(serverErrorStore.list().length).toEqual(2);
 });
 
 test('serverErrorStore caps at 50 entries and drops the oldest', () => {
   for (let i = 0; i < 60; i++) {
-    serverErrorStore.push({ index: i });
+    serverErrorStore.push(entry(i));
   }
   const entries = serverErrorStore.list();
   expect(entries.length).toEqual(50);
-  expect(entries[0].index).toEqual(10);
-  expect(entries[49].index).toEqual(59);
+  expect(entries[49].message).toEqual('failed 59');
 });

@@ -18,12 +18,17 @@ import { type } from '@lowdefy/helpers';
 
 import resolveDevUser from '../../../lib/server/auth/resolveDevUser.js';
 
-// The docs routes take the headless caller as a JSON string on the GET routes
-// (query params are always strings) and as an object in the POST bodies, so both
-// arrive here and every route answers a bad `user` with the same message. A
-// string that does not start with `{` is a fixture name declared under
-// auth.dev.users, resolved here so the routes only ever see a caller object.
-// Returns { user } or { error }.
+// The headless page routes (screenshot, snapshot, inspect-state, load-state,
+// eval-operator, journey) take the caller as a JSON string on the GET routes
+// (query params are always strings) and as an object in the POST bodies, so
+// both arrive here and every one of them answers a bad `user` with the same
+// message. A string that does not start with `{` is a fixture name declared
+// under auth.dev.users, resolved through resolveDevUser - the single resolver -
+// so those routes only ever see a caller object. Returns { user } or { error }.
+//
+// The two execution routes (run-request, run-endpoint) do not use this: they
+// hand the raw value to their runner, which resolves it once for both the REST
+// and the MCP surface.
 function parseUserParam({ value }) {
   if (type.isNone(value)) {
     return {};

@@ -27,15 +27,29 @@ import readBuildArtifact from './readBuildArtifact.js';
 // unbuffered: a subscriber that missed an event polls build_status, which is
 // derived from the same build/buildStatus.json this bus watches, so the two
 // always agree. Event shape is { type, timestamp, ...entry } with type one of
-// build | client_error | server_error | restart | fixture_seeded.
+// build | client_error | server_error | dev_notice | restart | fixture_seeded.
 const EVENT_TYPES = [
   'build',
   'client_error',
   'server_error',
+  'dev_notice',
   'restart',
   'fixture_seeded',
   'migrations',
 ];
+
+// A build that fails on a whole config directory produces hundreds of entries,
+// and publish never awaits a send - a stalled SSE client would queue every one
+// of them. The full lists stay one build_status poll away, which is the stated
+// contract for this bus.
+const MAX_EVENT_ENTRIES = 20;
+
+function capEntries(entries) {
+  if (entries.length <= MAX_EVENT_ENTRIES) {
+    return entries;
+  }
+  return entries.slice(0, MAX_EVENT_ENTRIES);
+}
 
 // The Hono process boots once per (re)start, so module load time is the
 // restart time — subscribers receive it as a restart event on connect.
@@ -47,11 +61,14 @@ let watcher = null;
 
 function publish(event) {
   if (!EVENT_TYPES.includes(event?.type)) {
-    throw new Error(
-      `devEventBus event type must be one of ${EVENT_TYPES.join(', ')}. Received ${JSON.stringify(
-        event?.type
-      )}.`
+    // A bus must not be able to break its producer: publish is called from
+    // inside the error stores, which are called from the server's error sink.
+    console.error(
+      `devEventBus dropped an event: type must be one of ${EVENT_TYPES.join(
+        ', '
+      )}. Received ${JSON.stringify(event?.type)}.`
     );
+    return;
   }
   const fullEvent = { timestamp: new Date().toISOString(), ...event };
   // Iterate over a copy: a failing send unsubscribes itself mid-loop.
@@ -76,13 +93,18 @@ function readBuildEvent() {
   try {
     const build = readBuildArtifact({ name: 'buildStatus.json' });
     if (type.isNone(build)) return null;
+    const errors = build.errors ?? [];
+    const warnings = build.warnings ?? [];
     return {
       type: 'build',
       status: build.status,
-      errorCount: (build.errors ?? []).length,
-      warningCount: (build.warnings ?? []).length,
-      errors: build.errors ?? [],
-      warnings: build.warnings ?? [],
+      errorCount: errors.length,
+      warningCount: warnings.length,
+      errors: capEntries(errors),
+      warnings: capEntries(warnings),
+      // The counts above are the whole build; the lists are the first
+      // MAX_EVENT_ENTRIES of each. Read build_status for the rest.
+      truncated: errors.length > MAX_EVENT_ENTRIES || warnings.length > MAX_EVENT_ENTRIES,
       stale: false,
       staleSince: null,
       ...getStaleStatus(),

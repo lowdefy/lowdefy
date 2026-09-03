@@ -14,26 +14,31 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import createRingBuffer from './createRingBuffer.js';
 import { publish } from './devEventBus.js';
 
 // Module-level ring buffer of recent client-reported errors — feeds the
 // getBuildStatus feedback endpoint so agents can see browser errors without
 // tailing server logs. Deliberately in-memory only: entries are lost on
 // server restart, which is fine since this is a live-session debugging aid.
+//
+// Deduped on the same key as the server errors: a render error repeats on
+// every re-render, and fifty copies of it would hide every other error.
 const MAX_ENTRIES = 50;
 
-const entries = [];
-
-function push(entry) {
-  entries.push(entry);
-  if (entries.length > MAX_ENTRIES) {
-    entries.shift();
+function dedupeKey(entry) {
+  if (type.isNone(entry.name) && type.isNone(entry.message)) {
+    return null;
   }
-  publish({ type: 'client_error', ...entry });
+  return JSON.stringify([entry.name ?? null, entry.message ?? null, entry.source ?? null]);
 }
 
-function list() {
-  return [...entries];
-}
-
-export default { push, list };
+export default createRingBuffer({
+  max: MAX_ENTRIES,
+  dedupeKey,
+  // Spread first: an entry key named `type` must not be able to overwrite the
+  // event type and make the bus drop the event.
+  onStore: (entry) => publish({ ...entry, type: 'client_error' }),
+});

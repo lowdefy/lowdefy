@@ -99,7 +99,7 @@ async function serverArtifactWatcher(context) {
         })
       );
     }
-    context.restartServer();
+    await context.restartServer();
   };
 
   return setupWatcher({

@@ -28,7 +28,10 @@ async function docsRestartHandler(c) {
   const result = requestRestart({ reason });
   return c.json({
     ...result,
-    note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+    note:
+      'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before ' +
+      'your next call. The restart discards the serverErrors and devNotices collected this ' +
+      'session — they live in the server process only.',
   });
 }
 

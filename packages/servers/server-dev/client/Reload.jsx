@@ -50,7 +50,7 @@ const Reload = ({ children, basePath, lowdefy }) => {
       }, 600);
     });
 
-    // Dev notices (lib/docs/devNoticeChannel.js) - not errors, but things the
+    // Dev notices (the `dev_notice` event on lib/docs/devEventBus.js) - not errors, but things the
     // developer should see while building, e.g. a tenant: none request that
     // ran unscoped. Shown by the ErrorBar at info level.
     sse.addEventListener('dev-notice', (event) => {

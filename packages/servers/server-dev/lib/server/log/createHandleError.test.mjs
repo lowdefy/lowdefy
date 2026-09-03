@@ -147,6 +147,7 @@ test('handleError pushes an error with a configKey into the server error store w
     name: 'ConfigError',
     message: 'Bad config.',
     source: 'pages/home.yaml:5',
+    stackFrame: null,
     config: 'root.pages[0:home]',
     hint: null,
     endpointId: 'get-customer',

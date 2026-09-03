@@ -19,6 +19,7 @@ import React, { useCallback, useState } from 'react';
 import formatErrorsForCopy from './utils/formatErrorsForCopy.js';
 import getErrorBarColor from './utils/getErrorBarColor.js';
 import groupNotices from './utils/groupNotices.js';
+import selectBarEntry from './utils/selectBarEntry.js';
 
 function getBarStyle(errors) {
   return {
@@ -89,7 +90,9 @@ const ErrorBar = ({ errors }) => {
 
   if (!errors || errors.length === 0) return null;
 
-  const latest = errors[errors.length - 1];
+  // The entry the bar colour was chosen from, not simply the newest one: the
+  // "fails in prod" badge below belongs to the entry being shown.
+  const latest = selectBarEntry(errors);
   // tenant: none notices are counted as their own group beside the error
   // count, so an unscoped read never hides inside an error total.
   const { entries, tenantNotices, runAsNotices } = groupNotices(errors);

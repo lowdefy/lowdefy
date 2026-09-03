@@ -68,14 +68,23 @@ function jsModuleWatcher(context) {
     const next = hashAll(current);
     const contentChanged = current.some((filePath) => next[filePath] !== hashes[filePath]);
     hashes = next;
-    if (added.length > 0 && watcher) {
-      watcher.add(added);
+    if (watcher) {
+      if (added.length > 0) {
+        watcher.add(added);
+      }
+      // A module dropped from the artifact is also dropped from `hashes`, so
+      // the ignore predicate would reject its events from here on - leaving a
+      // watch on a file nothing reads. Long dev sessions add and remove
+      // modules repeatedly.
+      if (removed.length > 0) {
+        watcher.unwatch(removed);
+      }
     }
     if (added.length === 0 && removed.length === 0 && !contentChanged) {
       return;
     }
     context.logger.info({ spin: 'start' }, 'Server-side _js module changed - restarting server.');
-    context.restartServer();
+    await context.restartServer();
   };
 
   // chokidar on inotify never emits for a file path that does not exist yet,
