@@ -111,6 +111,10 @@ program
     'Comma-separated Lowdefy topic skills to install into .claude/skills/ alongside lowdefy-config, e.g. "lowdefy-list-pages,lowdefy-filters". Use "all" (default) or "none".',
     'all'
   )
+  .option(
+    '--force-skills',
+    'Overwrite skills already in .claude/skills/ with the versions shipped by this CLI, discarding local edits.'
+  )
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
 program
@@ -207,6 +211,8 @@ program
   .usage('[options]')
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
+  .addOption(options.port)
+  .option('--no-agent-setup', 'Do not run "lowdefy agent-setup" on the new project.')
   .action(runCommand({ cliVersion, handler: init }));
 
 program

@@ -1,0 +1,73 @@
+lowdefy: local
+name: init-app
+
+# ListPage is experimental: the block tree it expands to may change within a
+# minor release.
+config:
+  experimental:
+    archetypes: true
+
+# What a document in each collection holds. The ListPage archetype reads this
+# for its column types and filter widgets, and every MongoDB write is checked
+# against it.
+collections:
+  items:
+    fields:
+      title: string
+      status: { enum: [open, done] }
+      created_at: date
+
+connections:
+  - id: items
+    type: MongoDBCollection
+    properties:
+      collection: items
+      databaseUri:
+        _secret: MONGODB_URI
+      read: true
+      write: true
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: MONGODB_URI
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  # Named callers for the dev server, journeys and request tests. Dev only -
+  # they are never a way into a production app.
+  dev:
+    users:
+      admin:
+        id: dev-admin
+        name: Dev Admin
+        email: admin@example.com
+        roles:
+          - admin
+
+menus:
+  - id: default
+    links:
+      - id: items
+        type: MenuLink
+        pageId: items
+        properties:
+          title: Items
+          icon: AiOutlineUnorderedList
+      - id: welcome
+        type: MenuLink
+        pageId: welcome
+        properties:
+          title: Welcome
+          icon: AiOutlineHeart
+
+api:
+  - _ref: api/add-item.yaml
+
+pages:
+  - _ref: pages/items.yaml
+  - _ref: pages/welcome.yaml

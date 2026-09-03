@@ -1,0 +1,27 @@
+id: add_item
+type: Api
+# The payload is checked against this schema before the routine runs, so the
+# endpoint never inserts a document the collection contract would reject.
+payloadSchema:
+  type: object
+  required: [title, status]
+  additionalProperties: false
+  properties:
+    title: { type: string, minLength: 1 }
+    status: { enum: [open, done] }
+routine:
+  - id: insert_item
+    type: MongoDBInsertOne
+    connectionId: items
+    properties:
+      doc:
+        title:
+          _payload: title
+        status:
+          _payload: status
+        created_at:
+          _date: now
+  - :return:
+      ok: true
+      id:
+        _step: insert_item.insertedId

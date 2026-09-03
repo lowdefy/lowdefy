@@ -134,10 +134,32 @@ _ref:
 
             ## init
 
-            The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.
+            The `init` command initializes a Lowdefy application in the working directory. It writes a small but complete app rather than a single welcome page, so `lowdefy dev` and `lowdefy test` both have something real to run:
 
+            | File | What it is |
+            | --- | --- |
+            | `lowdefy.yaml` | The app: a [`collections`](/collections) contract for `items`, a `MongoDBCollection` connection reading `MONGODB_URI` with [`_secret`](/_secret), `auth.dev.users` with one `admin` caller, menus and the page and api refs. |
+            | `pages/items.yaml` | A [`ListPage`](/archetypes) archetype over the `items` collection, with a filter, a search box and a header slot. |
+            | `pages/welcome.yaml` | A plain page. |
+            | `api/add-item.yaml` | An [`Api`](/lowdefy-api) endpoint with a `payloadSchema` that inserts an item. |
+            | `fixtures/items.yaml` | Three documents a request test can seed. |
+            | `tests/journeys/items-list.yaml` | A browser [journey](/testing) over the list page. |
+            | `tests/requests/add-item.test.yaml` | Request tests for the endpoint and the generated list request, seeded from the fixture. |
+            | `README.md` | How to get a database, and what to change next. |
+            | `.env` | `MONGODB_URI` pointed at `mongodb://localhost:27017/<app name>` and a generated `BETTER_AUTH_SECRET`. Gitignored. |
+            | `.env.example` | The same keys, empty, to commit. |
+            | `.gitignore` | Ignores `.lowdefy/*` and `.env`, keeping the [migration ledgers](/migrations). |
+
+            The app name is the working directory's name. A file that already exists is kept, never overwritten; an existing `lowdefy.yaml` stops the command.
+
+            `lowdefy dev` needs a MongoDB at the `MONGODB_URI` in `.env` — run one locally (`docker run -d -p 27017:27017 mongo:7`) or point it at a cluster. The request tests do not: a test that names a `fixtures:` file runs against an in-memory MongoDB, which needs `mongodb` and `mongodb-memory-server` installed as dev dependencies.
+
+            `init` finishes by running [`agent-setup`](#agent-setup) on the new project, so `.mcp.json`, `AGENTS.md` and the Claude Code skills are in place before the first `lowdefy dev`.
+
+            - `--no-agent-setup`: Do not run `agent-setup` on the new project.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: The port the dev server runs on, used in the URLs `agent-setup` generates. The default is `3000`.
 
             ## init-docker
 

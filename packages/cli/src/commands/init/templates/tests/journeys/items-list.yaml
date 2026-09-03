@@ -1,0 +1,12 @@
+# A journey drives a real browser against `lowdefy dev`. It reads the database
+# the dev server is pointed at (MONGODB_URI), so it asserts the page renders and
+# the generated list request resolves rather than asserting on rows - seeding a
+# journey is the job of a request test's `fixtures:` until journeys take one too.
+- name: the items page renders its generated list
+  pageId: items
+  user: admin
+  steps:
+    - wait: { request: list }
+    - expect: { text: { blockId: list_title, contains: Items } }
+    - expect: { visible: filters.status }
+    - expect: { visible: filters.search }

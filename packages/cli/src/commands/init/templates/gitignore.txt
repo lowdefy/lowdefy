@@ -1,0 +1,4 @@
+.lowdefy/*
+!.lowdefy/migrations/
+.lowdefy/migrations/local.json
+.env

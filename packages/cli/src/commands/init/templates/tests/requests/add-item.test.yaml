@@ -1,0 +1,28 @@
+# Request tests run against the endpoints and page requests themselves, with no
+# browser. The fixture points the `items` connection at an in-memory MongoDB for
+# the duration of the test, so these pass without a database of your own.
+- name: add_item inserts an item and returns its id
+  endpointId: add_item
+  user: admin
+  fixtures: [items]
+  payload: { title: Write some config, status: open }
+  expect:
+    schema:
+      type: object
+      required: [ok, id]
+      properties:
+        ok: { const: true }
+        id: { type: string, minLength: 1 }
+
+- name: the items list request returns the fixture rows, newest first
+  pageId: items
+  requestId: list
+  user: admin
+  fixtures: [items]
+  expect:
+    - title: Read the docs
+      status: open
+    - title: Run lowdefy test
+      status: open
+    - title: Ship something
+      status: done
