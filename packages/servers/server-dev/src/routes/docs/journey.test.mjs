@@ -107,7 +107,7 @@ test('docsJourneyHandler returns 400 when steps is not an array', async () => {
   const result = await docsJourneyHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/requires "steps" to be an array/);
+  expect(result.data.error).toMatch(/"steps" should be an array of steps/);
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
@@ -118,7 +118,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 0 has unknown key "hover". Steps are: click, fill, set, select, press, wait, screenshot, expect.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
