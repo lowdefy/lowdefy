@@ -15,16 +15,16 @@
 */
 import { type } from '@lowdefy/helpers';
 
+import loadFixtures from './loadFixtures.js';
 import loadMemoryMongo from './loadMemoryMongo.js';
-import loadRequestTestFixtures from './loadRequestTestFixtures.js';
 
 // Every connection a test writes to, through its own `seed:` or through a fixture
 // it names - all of them must be redirected at the memory server, or a fixture
 // would land in the developer's real database.
-function getSeededConnectionIds({ items, fixtures }) {
+function getSeededConnectionIds({ seeds, fixtures }) {
   const ids = new Set();
-  items.forEach(({ test }) => {
-    Object.keys(test?.seed ?? {}).forEach((id) => ids.add(id));
+  seeds.forEach(({ seed }) => {
+    Object.keys(seed ?? {}).forEach((id) => ids.add(id));
   });
   fixtures.forEach(({ fixture }) => {
     (fixture?.connections ?? []).forEach(({ connectionId }) => ids.add(connectionId));
@@ -32,27 +32,29 @@ function getSeededConnectionIds({ items, fixtures }) {
   return [...ids];
 }
 
-// Runs once before the dev server boots. When any selected request test seeds
-// data, starts an in-memory MongoDB and returns the env that points every seeded
-// connection at it (read by @lowdefy/server-dev's applyConnectionOverrides).
-// Returns { env, client, fixtures, ObjectId, seeded, stop }; with nothing to seed the env is empty
-// and stop is a no-op. `fixtures` maps every fixture name the tests use to its
-// loaded documents (or its load error) for runRequestTest.
-async function prepareRequestTests({ context, items }) {
-  const fixtures = await loadRequestTestFixtures({ context, items });
-  const connectionIds = getSeededConnectionIds({ items, fixtures });
+// Runs once before the dev server boots, for the whole run: journeys and request
+// tests share one database, so they share one seeding session. `seeds` is what
+// each selected test declares - { seed, fixtures } - in run order. When anything
+// is seeded, starts an in-memory MongoDB and returns the env that points every
+// seeded connection at it (read by @lowdefy/server-dev's applyConnectionOverrides).
+// Returns { env, client, fixtures, ObjectId, seeded, stop }; with nothing to seed
+// the env is empty and stop is a no-op. `fixtures` maps every fixture name the
+// tests use to its loaded documents (or its load error) for the runners.
+async function prepareSeeding({ context, seeds }) {
+  const fixtures = await loadFixtures({ context, seeds });
+  const connectionIds = getSeededConnectionIds({ seeds, fixtures });
   if (connectionIds.length === 0) {
     return { env: {}, client: null, fixtures, seeded: new Map(), stop: async () => {} };
   }
   if (type.isString(context.options.url) && context.options.url !== '') {
     throw new Error(
-      'Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.'
+      'Seeded tests need a server this command started; --url targets a server whose connections it cannot redirect.'
     );
   }
   const { MongoMemoryServer, MongoClient, ObjectId } = await loadMemoryMongo({
     configDirectory: context.directories.config,
   });
-  context.logger.info('Starting in-memory MongoDB for seeded request tests.');
+  context.logger.info('Starting in-memory MongoDB for seeded tests.');
   const memoryServer = await MongoMemoryServer.create();
   const databaseUri = memoryServer.getUri();
   const client = new MongoClient(databaseUri);
@@ -83,4 +85,4 @@ async function prepareRequestTests({ context, items }) {
   };
 }
 
-export default prepareRequestTests;
+export default prepareSeeding;

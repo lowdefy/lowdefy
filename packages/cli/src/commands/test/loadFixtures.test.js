@@ -28,15 +28,15 @@ beforeEach(() => {
   }));
 });
 
-test('loadRequestTestFixtures reads each named fixture once from the config directory', async () => {
-  const { default: loadRequestTestFixtures } = await import('./loadRequestTestFixtures.js');
-  const fixtures = await loadRequestTestFixtures({
+test('loadFixtures reads each named fixture once from the config directory', async () => {
+  const { default: loadFixtures } = await import('./loadFixtures.js');
+  const fixtures = await loadFixtures({
     context,
-    items: [
-      { test: { name: 'a', fixtures: ['base', 'org-a'] } },
-      { test: { name: 'b', fixtures: ['base'] } },
-      { test: { name: 'c' } },
-      { error: 'Invalid YAML' },
+    seeds: [
+      { fixtures: ['base', 'org-a'] },
+      { fixtures: ['base'] },
+      { seed: { controls: [] } },
+      {},
     ],
   });
   expect(mockReadFixture).toHaveBeenCalledTimes(2);
@@ -46,14 +46,14 @@ test('loadRequestTestFixtures reads each named fixture once from the config dire
   expect(fixtures.get('base').fixture.connections[0].connectionId).toEqual('base_connection');
 });
 
-test('loadRequestTestFixtures records a load failure instead of throwing', async () => {
-  const { default: loadRequestTestFixtures } = await import('./loadRequestTestFixtures.js');
+test('loadFixtures records a load failure instead of throwing', async () => {
+  const { default: loadFixtures } = await import('./loadFixtures.js');
   mockReadFixture.mockRejectedValueOnce(
     new Error('Fixture "missing" not found. Expected fixtures/missing.yaml.')
   );
-  const fixtures = await loadRequestTestFixtures({
+  const fixtures = await loadFixtures({
     context,
-    items: [{ test: { name: 'a', fixtures: ['missing', 'base'] } }],
+    seeds: [{ fixtures: ['missing', 'base'] }],
   });
   expect(fixtures.get('missing')).toEqual({
     error: 'Fixture "missing" not found. Expected fixtures/missing.yaml.',
@@ -61,14 +61,11 @@ test('loadRequestTestFixtures records a load failure instead of throwing', async
   expect(fixtures.get('base').fixture.name).toEqual('base');
 });
 
-test('loadRequestTestFixtures skips non-string names and leaves them to validation', async () => {
-  const { default: loadRequestTestFixtures } = await import('./loadRequestTestFixtures.js');
-  const fixtures = await loadRequestTestFixtures({
+test('loadFixtures skips non-string names and leaves them to validation', async () => {
+  const { default: loadFixtures } = await import('./loadFixtures.js');
+  const fixtures = await loadFixtures({
     context,
-    items: [
-      { test: { name: 'a', fixtures: [{ name: 'base' }, 3] } },
-      { test: { fixtures: 'base' } },
-    ],
+    seeds: [{ fixtures: [{ name: 'base' }, 3] }, { fixtures: 'base' }],
   });
   expect(mockReadFixture).not.toHaveBeenCalled();
   expect(fixtures.size).toEqual(0);

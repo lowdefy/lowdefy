@@ -63,11 +63,11 @@ beforeEach(() => {
   });
 });
 
-test('prepareRequestTests returns an empty env and no client when nothing is seeded', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
-  const session = await prepareRequestTests({
+test('prepareSeeding returns an empty env and no client when nothing is seeded', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
+  const session = await prepareSeeding({
     context,
-    items: [{ test: { name: 'a' } }, { filePath: 'f', error: 'bad' }],
+    seeds: [{}, {}],
   });
   expect(session.env).toEqual({});
   expect(session.client).toBeNull();
@@ -75,14 +75,11 @@ test('prepareRequestTests returns an empty env and no client when nothing is see
   await session.stop();
 });
 
-test('prepareRequestTests starts a memory server and builds overrides for every seeded connection', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
-  const session = await prepareRequestTests({
+test('prepareSeeding starts a memory server and builds overrides for every seeded connection', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
+  const session = await prepareSeeding({
     context,
-    items: [
-      { test: { name: 'a', seed: { controls: [], users: [] } } },
-      { test: { name: 'b', seed: { controls: [] } } },
-    ],
+    seeds: [{ seed: { controls: [], users: [] } }, { seed: { controls: [] } }],
   });
   expect(mockLoadMemoryMongo).toHaveBeenCalledWith({ configDirectory: '/app' });
   expect(constructedUris).toEqual(['mongodb://127.0.0.1:27999/']);
@@ -97,37 +94,32 @@ test('prepareRequestTests starts a memory server and builds overrides for every 
   expect(mockServerStop).toHaveBeenCalledTimes(1);
 });
 
-test('prepareRequestTests refuses seeded tests against --url', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+test('prepareSeeding refuses seeded tests against --url', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
   context.options.url = 'http://localhost:3000';
-  await expect(
-    prepareRequestTests({ context, items: [{ test: { name: 'a', seed: { controls: [] } } }] })
-  ).rejects.toThrow(
-    'Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.'
+  await expect(prepareSeeding({ context, seeds: [{ seed: { controls: [] } }] })).rejects.toThrow(
+    'Seeded tests need a server this command started; --url targets a server whose connections it cannot redirect.'
   );
   expect(mockLoadMemoryMongo).not.toHaveBeenCalled();
 });
 
-test('prepareRequestTests surfaces the install hint when the memory server is not installed', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+test('prepareSeeding surfaces the install hint when the memory server is not installed', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
   mockLoadMemoryMongo.mockRejectedValue(
     new Error(
       'Request tests with "seed" need an in-memory MongoDB. Install it: pnpm add -D mongodb-memory-server mongodb'
     )
   );
-  await expect(
-    prepareRequestTests({ context, items: [{ test: { name: 'a', seed: { controls: [] } } }] })
-  ).rejects.toThrow('Install it: pnpm add -D mongodb-memory-server mongodb');
+  await expect(prepareSeeding({ context, seeds: [{ seed: { controls: [] } }] })).rejects.toThrow(
+    'Install it: pnpm add -D mongodb-memory-server mongodb'
+  );
 });
 
-test('prepareRequestTests loads fixtures and redirects the connections they seed too', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
-  const session = await prepareRequestTests({
+test('prepareSeeding loads fixtures and redirects the connections they seed too', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
+  const session = await prepareSeeding({
     context,
-    items: [
-      { test: { name: 'a', fixtures: ['base'], seed: { answers: [] } } },
-      { test: { name: 'b', fixtures: ['base', 'org-a'] } },
-    ],
+    seeds: [{ fixtures: ['base'], seed: { answers: [] } }, { fixtures: ['base', 'org-a'] }],
   });
   expect(mockReadFixture).toHaveBeenCalledTimes(2);
   expect(JSON.parse(session.env.LOWDEFY_TEST_CONNECTION_OVERRIDES)).toEqual({
@@ -140,14 +132,14 @@ test('prepareRequestTests loads fixtures and redirects the connections they seed
   await session.stop();
 });
 
-test('prepareRequestTests starts no memory server when the only fixture failed to load', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+test('prepareSeeding starts no memory server when the only fixture failed to load', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
   mockReadFixture.mockRejectedValue(
     new Error('Fixture "nope" not found. Expected fixtures/nope.yaml.')
   );
-  const session = await prepareRequestTests({
+  const session = await prepareSeeding({
     context,
-    items: [{ test: { name: 'a', fixtures: ['nope'] } }],
+    seeds: [{ fixtures: ['nope'] }],
   });
   expect(mockLoadMemoryMongo).not.toHaveBeenCalled();
   expect(session.client).toBeNull();
@@ -156,25 +148,19 @@ test('prepareRequestTests starts no memory server when the only fixture failed t
   });
 });
 
-test('prepareRequestTests stops the memory server when the client cannot connect', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
+test('prepareSeeding stops the memory server when the client cannot connect', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
   mockClientConnect.mockRejectedValueOnce(new Error('connect ECONNREFUSED'));
-  await expect(
-    prepareRequestTests({
-      context,
-      items: [{ test: { name: 'a', seed: { controls: [] } } }],
-    })
-  ).rejects.toThrow('connect ECONNREFUSED');
+  await expect(prepareSeeding({ context, seeds: [{ seed: { controls: [] } }] })).rejects.toThrow(
+    'connect ECONNREFUSED'
+  );
   // Without this the mongod process outlives the command.
   expect(mockServerStop).toHaveBeenCalledTimes(1);
 });
 
-test('prepareRequestTests hands the session the ObjectId the seeder revives markers with', async () => {
-  const { default: prepareRequestTests } = await import('./prepareRequestTests.js');
-  const session = await prepareRequestTests({
-    context,
-    items: [{ test: { name: 'a', seed: { controls: [] } } }],
-  });
+test('prepareSeeding hands the session the ObjectId the seeder revives markers with', async () => {
+  const { default: prepareSeeding } = await import('./prepareSeeding.js');
+  const session = await prepareSeeding({ context, seeds: [{ seed: { controls: [] } }] });
   expect(session.ObjectId).toEqual({ tag: 'ObjectId' });
   expect(session.seeded).toEqual(new Map());
 });

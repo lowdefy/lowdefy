@@ -380,6 +380,12 @@ program
   .addOption(options.refResolver)
   .addOption(
     new Option(
+      '--update',
+      'Fill every journey expectation written with a state path and no value from the state the run observes, and write it back to the journey file.'
+    )
+  )
+  .addOption(
+    new Option(
       '--url <url>',
       'Run tests against an already running dev server instead of starting one, e.g. http://localhost:3000.'
     )

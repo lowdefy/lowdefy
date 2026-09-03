@@ -22,6 +22,7 @@ import createConfigCheckpoint from './createConfigCheckpoint.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
+import getAppBrief from './getAppBrief.js';
 import getAppMap from './getAppMap.js';
 import getDataModel from './getDataModel.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -62,7 +63,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts, browser/server errors and fixture seeds arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error, fixture_seeded; a build event carries status, errors, warnings and stale; a fixture_seeded event names the fixture and the collections it wrote so you know the data changed under you). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none or runAs execution seen this session (under devNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none or runAs execution seen this session (under devNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_brief first to understand an existing app — per page it names what it reads and writes end to end, the journeys and request tests covering it, the declared events nothing tests, and what changed since a git ref; lowdefy_app_map is the structural index behind it, and lowdefy_data_model comes before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
@@ -327,6 +328,36 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
   );
 
   server.registerTool(
+    'lowdefy_app_brief',
+    {
+      description:
+        'What you need before editing, joined from artefacts that already exist — no prose, no guessing. With a pageId: the collections that page reads and writes (its own requests, plus every Api endpoint its CallAPI actions call and what those endpoints read and write), how it is tested (the journeys covering it, the request tests naming it or its endpoints, and every declared (blockId, event) triple no journey exercises), and, with `since`, which of the files changed since that git ref the page is made of and the blocks, requests and endpoints they define. Without a pageId: one line per page — reads, writes, endpoints, journeys, event coverage — sorted changed-first and capped, with what was truncated named. Read this first when picking up work on an existing app; it replaces reading the config files to find out what a page touches.',
+      inputSchema: {
+        pageId: z
+          .string()
+          .optional()
+          .describe('Brief for this page only. Omit for the whole-app brief.'),
+        since: z
+          .string()
+          .optional()
+          .describe(
+            'A git ref (sha, tag or branch). Adds what changed between that ref and the working tree, mapped onto the pages, blocks, requests and endpoints the changed files define.'
+          ),
+      },
+    },
+    ({ pageId, since }) => {
+      const brief = getAppBrief({ pageId, since });
+      if (brief.error) {
+        return notFoundResult(brief.error);
+      }
+      const { markdown, ...data } = brief;
+      // Markdown first for reading, the same brief as JSON after it for
+      // anything the agent wants to address by id.
+      return { content: [{ type: 'text', text: markdown }, textResult(data).content[0]] };
+    }
+  );
+
+  server.registerTool(
     'lowdefy_data_model',
     {
       description:
@@ -537,6 +568,12 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           .describe(
             'Ordered steps, one key each: {"click": blockId} | {"fill": {"blockId", "value"}} (types into the input/textarea inside the block, falling back to setting the block value when it has neither) | {"set": {"blockId", "value"}} (writes the value straight through the engine, for an input block with no typeable surface — errors on a block that is not an input) | {"select": {"blockId", "value"}} (option by exact text) | {"press": "Enter" | "Mod+k" | {"key", "blockId"?}} (Mod is Meta/Control per platform; blockId presses on that block instead of the page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": blockId} | {"text": {"blockId", "contains"|"equals"|"notContains"}} | {"url": {"contains"}} | {"dom": {"blockId", "hasClass"|"notHasClass"|"matches"|"attribute"+"equals"}} | {"durationMsUnder": n}}. Exactly one key per step and one form per expect. Each step gets 5s; after an interaction the runner waits for a navigation and then for the page\'s pending events and requests to settle. Pages render under fixed locale, timezone and colour scheme, so formatted dates assert the same here as in CI.'
           ),
+        fixtures: z
+          .array(z.string())
+          .optional()
+          .describe(
+            "Fixture names (fixtures/<name>.yaml) to seed before the page opens, in order, so the journey runs against known rows. Each fixture's collections are emptied first, and this writes to the dev database, so it needs cli.agentTools.allowWriteRequests: true exactly as lowdefy_seed_fixture does. The same key is valid in a committed tests/journeys/*.yaml journey."
+          ),
         user: userSchema,
         urlQuery: z
           .record(z.any())
@@ -544,11 +581,19 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
       },
     },
-    async ({ pageId, steps, user, urlQuery }) => {
+    async ({ fixtures, pageId, steps, user, urlQuery }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
-      const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+      const result = await runJourney({
+        fixtures,
+        honoContext,
+        origin,
+        pageId,
+        steps,
+        user,
+        urlQuery,
+      });
       if (result.error) {
         return notFoundResult(result.error);
       }

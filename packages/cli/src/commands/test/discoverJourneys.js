@@ -32,8 +32,11 @@ function readJourneyFile({ filePath }) {
   } catch (error) {
     return [{ filePath, journey: undefined, error: `Invalid YAML: ${error.message}` }];
   }
+  // `journeyIndex` is where the journey sits in a file holding a list of them,
+  // and undefined in a file holding one - the address `lowdefy test --update`
+  // writes a filled expectation back to.
   if (type.isArray(parsed)) {
-    return parsed.map((journey) => ({ filePath, journey }));
+    return parsed.map((journey, journeyIndex) => ({ filePath, journey, journeyIndex }));
   }
   // A file whose YAML parses to null is empty or fully commented out; saying so
   // is clearer than "Journey should be an object. Received null."

@@ -49,6 +49,7 @@ Files run in file-name order, and journeys run one at a time — each journey op
 | `pageId`   | Yes      | The page to open.                                                                                                                                                               |
 | `user`     | No       | The user to act as: the name of a dev user fixture defined in `auth.dev.users`, or an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run signed out. |
 | `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                         |
+| `fixtures` | No       | Names of shared fixtures (`fixtures/<name>.yaml`) to seed before the page opens, in order. See [Fixtures](/fixtures).                                                           |
 | `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                     |
 
 ## Steps
@@ -68,6 +69,7 @@ Blocks are addressed by their `blockId`. Every step has a 5 second timeout by de
 | `wait: { state: path }`                           | Wait until the state value at `path` is defined.                                                                                                                 |
 | `screenshot: name`                                | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                        |
 | `expect: { state: { path, equals } }`             | The page state at `path` deep-equals `equals`.                                                                                                                   |
+| `expect: { state: { path } }`                     | An expectation with no value yet: `lowdefy test --update` fills `equals` from the state it observes. Without `--update` the journey fails.                       |
 | `expect: { visible: blockId } `                   | The block is visible.                                                                                                                                            |
 | `expect: { text: { blockId, contains } }`         | The block's rendered text contains the string.                                                                                                                   |
 | `expect: { text: { blockId, equals } }`           | The block's rendered text, trimmed, is exactly the string.                                                                                                       |
@@ -93,6 +95,60 @@ The step grammar is one implementation shared by `lowdefy test` and the dev serv
 [journey tool](/ai-agent-docs), so a journey an agent verifies interactively can be committed as-is,
 and a file with a typo — an unknown top-level key, a step with two keys, a `fill:` with no `blockId`
 — is reported with its file path and step index before a browser is opened.
+
+## Data for a journey
+
+A journey that reads a list needs rows before it opens the page. `fixtures:` names the
+[fixtures](/fixtures) to seed first, exactly as a request test does:
+
+```yaml
+- name: member closes a control
+  pageId: controls
+  fixtures: [base, org-a]
+  user: admin
+  steps:
+    - click: close_c1
+    - expect: { text: { blockId: status_c1, equals: closed } }
+```
+
+Every connection those fixtures name is pointed at an **in-memory MongoDB** the runner starts for
+the run, so a journey never touches the database your `.env` names. Before every journey and every
+request test of that run, all seeded collections are dropped and the fixtures re-inserted, so one
+test's writes never reach the next. This needs a server the command started: a journey with
+`fixtures` cannot run against `--url`, and it is never run against a development server you already
+have up, because the runner cannot redirect that server's connections.
+
+The `lowdefy_run_journey` MCP tool takes the same `fixtures` list. There it seeds your **dev**
+database through the connection layer, so it sits behind `cli.agentTools.allowWriteRequests: true`
+like every other write an agent makes.
+
+## Recording expectations with `--update`
+
+An `expect: { state: { path } }` written with no `equals` is an expectation waiting for a value:
+
+```yaml
+steps:
+  - click: submit
+  - expect: { state: { path: controls.0.title } }
+```
+
+`lowdefy test --update` runs the journey up to that step, reads the state the app is actually in,
+writes the value into the file and marks it:
+
+```yaml
+- expect: { state: { path: controls.0.title, equals: Access reviews, from: recorded } }
+```
+
+Only the two keys are written; the rest of the file — its comments, its key order, its other
+journeys — is left exactly as you wrote it. `from: recorded` says the value came from a run rather
+than from a person: it asserts **what the app does today**, which catches unintended change but can
+also freeze a bug in as the expectation. Read a recorded value once, in the diff, before you commit
+it.
+
+Without `--update` an unfilled expectation is never reported as passed: the journey **fails** with
+`Incomplete expectation at step 1: "expect.state" for path "controls.0.title" has no "equals". Run
+lowdefy test --update to fill it from the observed state.` and `lowdefy test` exits `1`. The dev
+server's journey tool refuses one with the same message.
 
 ## Request tests
 
@@ -164,7 +220,7 @@ Dates are written with the `~d` marker, exactly as Lowdefy serializes them: `cre
 
 Documents that several tests share belong in a [fixture](/fixtures): `fixtures/base.yaml` is keyed by `connectionId` exactly like `seed`, and a test loads it with `fixtures: [base]`. Before each test the runner drops every collection named by its fixtures and its `seed` once, inserts the fixtures in list order, then inserts `seed`, so a test layers its specifics on a shared base.
 
-Seeded tests need a server the command started; `--url` fails with `Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.`
+Seeded tests need a server the command started; `--url` fails with `Seeded tests need a server this command started; --url targets a server whose connections it cannot redirect.`
 
 ### Expectations
 

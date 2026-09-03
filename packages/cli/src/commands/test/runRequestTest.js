@@ -19,6 +19,7 @@ import { getRejectExpectation, validateRequestTest } from '@lowdefy/node-utils';
 
 import getTestServerDirectory from './getTestServerDirectory.js';
 import matchExpectation from './matchExpectation.js';
+import resolveFixtures from './resolveFixtures.js';
 import seedFixtures from './seedFixtures.js';
 
 function describeHttpError({ route, error }) {
@@ -49,23 +50,6 @@ function getTarget({ test }) {
     },
     label: `request ${test.pageId}.${test.requestId}`,
   };
-}
-
-// The fixtures a test names were loaded once by prepareRequestTests; a fixture
-// that failed to load fails every test naming it with the loader's message.
-function resolveFixtures({ test, session }) {
-  const fixtures = [];
-  for (const name of test.fixtures ?? []) {
-    const loaded = session.fixtures?.get(name);
-    if (type.isNone(loaded)) {
-      return { error: `Fixture "${name}" was not loaded before the run.` };
-    }
-    if (!type.isNone(loaded.error)) {
-      return { error: loaded.error };
-    }
-    fixtures.push(loaded.fixture);
-  }
-  return { fixtures };
 }
 
 // The two shapes a refusal reaches the runner in: the write gate and the tenant
@@ -139,7 +123,7 @@ async function runRequestTest({ context, item, url, session }) {
     return fail({ message: `Invalid request test: ${validation.message}` });
   }
   const start = Date.now();
-  const { fixtures, error: fixtureError } = resolveFixtures({ test, session });
+  const { fixtures, error: fixtureError } = resolveFixtures({ names: test.fixtures, session });
   if (!type.isNone(fixtureError)) {
     return fail({ message: fixtureError });
   }

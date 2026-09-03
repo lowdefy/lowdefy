@@ -34,6 +34,9 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
   },
 }));
 
+const mockSeedFixture = jest.fn();
+jest.unstable_mockModule('./seedFixture.js', () => ({ default: mockSeedFixture }));
+
 const { default: runJourney } = await import('./runJourney.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
@@ -152,6 +155,7 @@ function openWith(page, { ready = true } = {}) {
 beforeEach(() => {
   jest.clearAllMocks();
   mockGetBrowser.mockResolvedValue({});
+  mockSeedFixture.mockResolvedValue({ refused: false, seeded: [] });
 });
 
 const origin = 'http://localhost:3227';
@@ -926,4 +930,59 @@ test('runJourney waits for the page id to change before settling after a navigat
   expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
   expect(page.waitForFunction.mock.calls[1][1]).toEqual('detail');
   expect(result.state).toEqual({ id: '1' });
+});
+
+test('runJourney seeds every named fixture, with reset, before the page is opened', async () => {
+  const page = createPage();
+  openWith(page);
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    fixtures: ['base', 'org-a'],
+    honoContext: { tag: 'hono' },
+    steps: [],
+  });
+  expect(mockSeedFixture.mock.calls.map(([args]) => args)).toEqual([
+    { name: 'base', reset: true, honoContext: { tag: 'hono' } },
+    { name: 'org-a', reset: true, honoContext: { tag: 'hono' } },
+  ]);
+  expect(mockSeedFixture.mock.invocationCallOrder[0]).toBeLessThan(
+    mockOpenPage.mock.invocationCallOrder[0]
+  );
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney returns the seeding refusal and never opens a page', async () => {
+  mockSeedFixture.mockResolvedValue({
+    refused: true,
+    reason: 'Seeding writes to the dev database.',
+    howToEnable: 'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).',
+  });
+  const result = await runJourney({ origin, pageId: 'form', fixtures: ['base'], steps: [] });
+  expect(result.error).toEqual(
+    'Could not seed fixture "base": Seeding writes to the dev database. Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).'
+  );
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney rejects fixtures that are not a list of names', async () => {
+  const result = await runJourney({ origin, pageId: 'form', fixtures: 'base', steps: [] });
+  expect(result.error).toEqual(
+    'runJourney requires "fixtures" to be an array of fixture names. Received "base".'
+  );
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
+// Only `lowdefy test --update` may fill an expectation, so the dev server
+// refuses one that asserts nothing rather than reporting a step that passed.
+test('runJourney refuses an expect.state with no equals before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'submit' }, { expect: { state: { path: 'title' } } }],
+  });
+  expect(result.error).toEqual(
+    'Incomplete expectation at step 1: "expect.state" for path "title" has no "equals". Run lowdefy test --update to fill it from the observed state.'
+  );
+  expect(mockGetBrowser).not.toHaveBeenCalled();
 });

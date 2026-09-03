@@ -22,10 +22,11 @@ import {
   getState,
 } from '@lowdefy/e2e-utils/runtime';
 
-import { EXPECT_TEXT_KEYS } from '@lowdefy/node-utils';
+import { EXPECT_TEXT_KEYS, findIncompleteExpectation } from '@lowdefy/node-utils';
 
 import { getBrowser, openPage, buildPageUrl, deterministicContextOptions } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
+import seedFixture from './seedFixture.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
 
@@ -663,12 +664,32 @@ async function readFinalState({ page }) {
   }
 }
 
+// The rows a journey needs before its page opens, seeded through the same
+// connection layer and the same write gate as lowdefy_seed_fixture. `reset` so
+// the journey starts from the fixture's rows rather than from whatever the last
+// run left; a refusal or a failed insert stops the journey before a browser
+// shows a page built on the wrong data.
+async function seedJourneyFixtures({ fixtures, honoContext }) {
+  for (const name of fixtures) {
+    const result = await seedFixture({ name, reset: true, honoContext });
+    if (result.refused === true) {
+      return `Could not seed fixture "${name}": ${result.reason} ${result.howToEnable}`;
+    }
+    if (!type.isNone(result.error)) {
+      return `Could not seed fixture "${name}": ${result.error.message}`;
+    }
+  }
+  return undefined;
+}
+
 // runJourney drives a page of the running dev server through a declarative
 // list of steps — click, fill, set, select, press, wait, screenshot, expect — so
 // an agent can verify behaviour (a form submits, a modal opens, state
 // changes) and not only layout. `timeout` bounds the page open; `stepTimeout`
 // bounds each step, matching Playwright's per-action timeout.
 async function runJourney({
+  fixtures = [],
+  honoContext,
   origin,
   pageId,
   steps,
@@ -696,9 +717,23 @@ async function runJourney({
       )}.`,
     };
   }
+  if (!type.isArray(fixtures) || fixtures.some((name) => !type.isString(name))) {
+    return {
+      error: `runJourney requires "fixtures" to be an array of fixture names. Received ${JSON.stringify(
+        fixtures
+      )}.`,
+    };
+  }
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  // An expectation with a path and no value asserts nothing, so it is refused
+  // rather than reported as a step that passed; only `lowdefy test --update`
+  // fills it.
+  const incomplete = findIncompleteExpectation({ steps });
+  if (!type.isUndefined(incomplete)) {
+    return { error: incomplete.message };
   }
 
   let browser;
@@ -708,6 +743,11 @@ async function runJourney({
     return {
       error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
     };
+  }
+
+  const seedError = await seedJourneyFixtures({ fixtures, honoContext });
+  if (!type.isUndefined(seedError)) {
+    return { error: seedError };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });

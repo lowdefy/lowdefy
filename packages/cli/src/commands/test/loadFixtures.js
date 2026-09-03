@@ -16,18 +16,18 @@
 import { type } from '@lowdefy/helpers';
 import { readFixture } from '@lowdefy/node-utils';
 
-// Reads every fixture the selected request tests name, once per name, before the
-// dev server boots: prepareRequestTests needs the connectionIds they seed to
-// redirect those connections at the memory server, and runRequestTest needs the
-// documents. A fixture that fails to load is recorded as { error } rather than
-// thrown, so the tests naming it fail with the message while the rest still run.
-async function loadRequestTestFixtures({ context, items }) {
+// Reads every fixture the selected tests name, once per name, before the dev
+// server boots: prepareSeeding needs the connectionIds they seed to redirect
+// those connections at the memory server, and the runners need the documents. A
+// fixture that fails to load is recorded as { error } rather than thrown, so the
+// tests naming it fail with the message while the rest still run.
+async function loadFixtures({ context, seeds }) {
   const fixtures = new Map();
-  for (const { test } of items) {
-    if (!type.isArray(test?.fixtures)) {
+  for (const { fixtures: names } of seeds) {
+    if (!type.isArray(names)) {
       continue;
     }
-    for (const name of test.fixtures) {
+    for (const name of names) {
       if (!type.isString(name) || fixtures.has(name)) {
         continue;
       }
@@ -42,4 +42,4 @@ async function loadRequestTestFixtures({ context, items }) {
   return fixtures;
 }
 
-export default loadRequestTestFixtures;
+export default loadFixtures;

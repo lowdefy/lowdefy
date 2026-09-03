@@ -63,6 +63,31 @@ Before each test the runner:
 
 A test therefore layers its specifics on a shared base, and two tests that both name `base` never see each other's data. A test may have `fixtures:` with no `seed:`, or `seed:` with no `fixtures:`. Every connection a fixture names is pointed at the runner's in-memory MongoDB for the run, exactly like `seed:` connections — fixtures never reach the database your `.env` names. Seeding needs the same optional packages as `seed:`; see [Seeding data](/config-tests#seeding-data).
 
+## Fixtures in journeys
+
+A [journey](/config-tests) names the fixtures its page needs in the same `fixtures:` key, seeded
+before the page is opened:
+
+```yaml
+# tests/journeys/controls.yaml
+- name: member closes a control
+  pageId: controls
+  fixtures: [base, org-a]
+  user: admin
+  steps:
+    - click: close_c1
+    - expect: { text: { blockId: status_c1, equals: closed } }
+```
+
+Journeys and request tests share one seeding session per run: the collections are dropped and
+re-inserted before each test of either kind, in run order, so a journey never sees what the test
+before it wrote. Like a seeded request test, a journey with `fixtures` needs a server `lowdefy test`
+started — it cannot run against `--url` or against a development server you already have up.
+
+The `lowdefy_run_journey` MCP tool takes `fixtures` too, and seeds the **dev** database through the
+connection layer with `reset`, exactly as `lowdefy_seed_fixture` does — so it needs the same
+`cli.agentTools.allowWriteRequests: true` opt-in, and the fixture's collections are emptied first.
+
 ## Seeding the dev database
 
 While an agent builds a list page it cannot see the page work when the collection is empty. The dev server's [docs and MCP endpoint](/ai-agent-docs) exposes `lowdefy_seed_fixture` (and `POST /lowdefy-docs/seed-fixture`) to load a fixture into the **dev database** — the one your connections point at when `lowdefy dev` is running:

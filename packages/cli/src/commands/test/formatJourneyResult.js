@@ -28,13 +28,21 @@ function toCompactYaml(value) {
   return document.toString({ lineWidth: 0 }).trim();
 }
 
+// What `--update` wrote is reported on its own line: a recorded value is a
+// proposal until someone reads it, so the run says how many landed in the file.
+function recordedLine(result) {
+  const expectations = result.filled === 1 ? 'expectation' : 'expectations';
+  return `      recorded ${result.filled} ${expectations} into ${result.filePath}`;
+}
+
 // Returns the lines to print for one journey result: a single PASS line, or a FAIL
 // line followed by an indented explanation of what went wrong.
 function formatJourneyResult({ result }) {
+  const filled = result.filled > 0 ? [recordedLine(result)] : [];
   if (result.passed) {
-    return [`PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`];
+    return [`PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`, ...filled];
   }
-  const lines = [`FAIL  ${result.name}`, `      file: ${result.filePath}`];
+  const lines = [`FAIL  ${result.name}`, `      file: ${result.filePath}`, ...filled];
   const failure = result.failure;
   if (type.isObject(failure)) {
     lines.push(`      step ${failure.index}: ${toCompactYaml(failure.step)}`);

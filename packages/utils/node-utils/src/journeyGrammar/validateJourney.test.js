@@ -70,7 +70,7 @@ test('validateJourney rejects a typo in a top level key instead of ignoring it',
   expect(validateJourney({ journey: { ...minimalJourney, pageID: 'controls' } })).toEqual({
     valid: false,
     message:
-      'Journey has unknown key "pageID". Journey keys are: name, pageId, steps, urlQuery, user.',
+      'Journey has unknown key "pageID". Journey keys are: fixtures, name, pageId, steps, urlQuery, user.',
   });
 });
 
@@ -109,5 +109,30 @@ test('validateJourney reports a step malformed below the key level with its inde
   expect(validateJourney({ journey: { ...minimalJourney, steps: [{ fill: 'title' }] } })).toEqual({
     valid: false,
     message: 'Step 0 "fill" requires { blockId, value }. Received "title".',
+  });
+});
+
+test('validateJourney accepts a fixtures list of names', () => {
+  expect(
+    validateJourney({
+      journey: { name: 'j', pageId: 'p', fixtures: ['base', 'org-a'], steps: [{ click: 'a' }] },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney rejects fixtures that are not a list of names', () => {
+  expect(
+    validateJourney({
+      journey: { name: 'j', pageId: 'p', fixtures: 'base', steps: [{ click: 'a' }] },
+    })
+  ).toEqual({
+    valid: false,
+    message: 'Journey "fixtures" should be an array of fixture names. Received "base".',
+  });
+  expect(
+    validateJourney({ journey: { name: 'j', pageId: 'p', fixtures: [1], steps: [{ click: 'a' }] } })
+  ).toEqual({
+    valid: false,
+    message: 'Journey "fixtures" should be an array of fixture names. Received [1].',
   });
 });
