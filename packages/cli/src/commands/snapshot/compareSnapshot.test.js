@@ -66,7 +66,7 @@ test('writeSnapshot writes the three artefacts formatted for diffs', () => {
     '<div id="root">\n<p class="css-[HASH]">Hello</p>\n</div>\n'
   );
   expect(fs.readFileSync(paths.state, 'utf8')).toBe(
-    '{\n  "created_at": "2026-01-01T00:00:00.000Z",\n  "title": "Hello"\n}\n'
+    '{\n  "created_at": "[TS]",\n  "title": "Hello"\n}\n'
   );
   expect(paths.label).toBe(path.join('snapshots', 'home', 'admin'));
 });
@@ -84,6 +84,73 @@ test('writeSnapshot writes byte-identical dom and state for the same capture in 
   expect(fs.readFileSync(first.state).equals(stateA)).toBe(true);
 });
 
+test('writeSnapshot writes byte-identical files for two runs of a capture with moving values', () => {
+  const first = writeSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({
+      dom: '<div id="root"><p id="rc_select_1">2026-01-01T00:00:00.000Z</p></div>',
+      state: {
+        created_at: '2026-01-01T00:00:00.000Z',
+        id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        rows: [{ id: 1, score: 0.1 }],
+      },
+    }),
+    ignore: ['rows.$.score'],
+  });
+  const dom = fs.readFileSync(first.dom);
+  const state = fs.readFileSync(first.state);
+  writeSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({
+      dom: '<div id="root"><p id="rc_select_7">2027-08-09T10:11:12.999Z</p></div>',
+      state: {
+        created_at: '2027-08-09T10:11:12.999Z',
+        id: '00000000-1111-2222-3333-444444444444',
+        rows: [{ id: 1, score: 0.9 }],
+      },
+    }),
+    ignore: ['rows.$.score'],
+  });
+  expect(fs.readFileSync(first.dom).equals(dom)).toBe(true);
+  expect(fs.readFileSync(first.state).equals(state)).toBe(true);
+});
+
+test('compareSnapshot round-trips an array wildcard ignore path without drift', () => {
+  const ignore = ['rows.$.score'];
+  const captured = snapshot({ state: { rows: [{ id: 1, score: 0.1 }] }, snapshotIgnore: ignore });
+  const paths = writeSnapshot({ configDirectory, target, snapshot: captured, ignore });
+  expect(JSON.parse(fs.readFileSync(paths.state, 'utf8'))).toEqual({ rows: [{ id: 1 }] });
+  const { results } = compareSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({ state: { rows: [{ id: 1, score: 0.9 }] }, snapshotIgnore: ignore }),
+    pixelTolerance: 0.001,
+    ignore,
+  });
+  expect(results.map((result) => result.changed)).toEqual([false, false, false]);
+});
+
+test('compareSnapshot round-trips an ignored whole array element without drift', () => {
+  const ignore = ['rows.$'];
+  const paths = writeSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({ state: { rows: [{ id: 1 }, { id: 2 }] } }),
+    ignore,
+  });
+  expect(JSON.parse(fs.readFileSync(paths.state, 'utf8'))).toEqual({ rows: [null, null] });
+  const { results } = compareSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({ state: { rows: [{ id: 9 }, { id: 8 }] } }),
+    pixelTolerance: 0.001,
+    ignore,
+  });
+  expect(results.map((result) => result.changed)).toEqual([false, false, false]);
+});
+
 test('compareSnapshot reports every artefact missing when there is no golden', () => {
   const { results } = compareSnapshot({
     configDirectory,
@@ -93,6 +160,7 @@ test('compareSnapshot reports every artefact missing when there is no golden', (
   });
   expect(results.map((r) => r.artefact)).toEqual(['screenshot.png', 'dom.html', 'state.json']);
   expect(results.every((r) => r.changed)).toBe(true);
+  expect(results.map((r) => r.advisory)).toEqual([true, false, false]);
   expect(results[0].lines[0]).toMatch(/no committed screenshot.png/);
 });
 
@@ -123,6 +191,8 @@ test('compareSnapshot reports drift per artefact and writes the pixel diff', () 
     pixelTolerance: 0.001,
   });
   expect(results.map((r) => r.changed)).toEqual([true, true, true]);
+  // Pixel drift is advisory unless the caller pins its renderer.
+  expect(results.map((r) => r.advisory)).toEqual([true, false, false]);
   const diffPath = path.join(
     configDirectory,
     '.lowdefy',
@@ -138,4 +208,36 @@ test('compareSnapshot reports drift per artefact and writes the pixel diff', () 
     '+2 <p class="css-[HASH]">Goodbye</p>',
   ]);
   expect(results[2].lines).toEqual(['title: "Hello" -> "Goodbye"']);
+});
+
+test('compareSnapshot marks pixel drift not advisory when failOnPixel is set', () => {
+  writeSnapshot({ configDirectory, target, snapshot: snapshot() });
+  const { results } = compareSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({ screenshot: makePng({ dark: true }) }),
+    pixelTolerance: 0.001,
+    failOnPixel: true,
+  });
+  expect(results[0].changed).toBe(true);
+  expect(results.map((r) => r.advisory)).toEqual([false, false, false]);
+});
+
+test('compareSnapshot normalises a timestamp and a uuid in state before comparing', () => {
+  writeSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({
+      state: { created_at: '2026-01-01T00:00:00.000Z', id: '3fa85f64-5717-4562-b3fc-2c963f66afa6' },
+    }),
+  });
+  const { results } = compareSnapshot({
+    configDirectory,
+    target,
+    snapshot: snapshot({
+      state: { created_at: '2027-08-09T10:11:12.999Z', id: '00000000-1111-2222-3333-444444444444' },
+    }),
+    pixelTolerance: 0.001,
+  });
+  expect(results[2].changed).toBe(false);
 });

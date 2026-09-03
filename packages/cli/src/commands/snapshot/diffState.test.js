@@ -124,3 +124,14 @@ test('diffState does not mutate its inputs', () => {
 test('diffState treats a missing state as empty', () => {
   expect(diffState({ expected: undefined, actual: {} }).changed).toBe(false);
 });
+
+test('diffState does not drift when a golden wrote an ignored array element as null', () => {
+  // The golden is written through the same ignore, so its holes are JSON null;
+  // the freshly captured side must be normalised the same way.
+  const result = diffState({
+    expected: JSON.parse(JSON.stringify({ rows: [undefined, undefined] })),
+    actual: { rows: [{ id: 1 }, { id: 2 }] },
+    snapshotIgnore: ['rows.$'],
+  });
+  expect(result.changed).toBe(false);
+});

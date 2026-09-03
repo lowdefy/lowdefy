@@ -14,6 +14,12 @@
   limitations under the License.
 */
 
+// ISO-8601 timestamps rendered from dates that move (created_at, now).
+const TIMESTAMP_PATTERN = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})/g;
+
+// UUIDs (generated ids, request ids echoed into the DOM or held in state).
+const UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi;
+
 // Ordered replacements, applied before the DOM is compared. Each one removes a
 // value that legitimately differs between two renders of unchanged config, so
 // a golden DOM only changes when the page's own markup changes.
@@ -24,25 +30,20 @@ const REPLACEMENTS = [
   { pattern: /\bcss-(?:dev-only-do-not-override-)?[a-z0-9]{5,}\b/g, replacement: 'css-[HASH]' },
   // antd's CSS-variables hash id, e.g. `css-var-r0`.
   { pattern: /\bcss-var-r\d+\b/g, replacement: 'css-var-[HASH]' },
-  // rc-* per-mount ids and the aria attributes that point at them:
-  // `rc_select_3`, `rc-tabs-0-panel-x`, `rc_unique_12`.
-  { pattern: /\brc[_-]([a-z]+)[_-]\d+/g, replacement: 'rc-$1-[N]' },
   // rc-menu ids carry a numeric uuid per mount: `rc-menu-uuid-49081-settings`.
   // Only the number is volatile — the trailing eventKey is the menu item's own
-  // id (content a golden must keep), so the match stops at the uuid.
+  // id (content a golden must keep), so the match stops at the uuid. It runs
+  // before the general rc rule below, which would otherwise eat `rc-menu-uuid`.
   { pattern: /\brc-menu-uuid-\d+/g, replacement: 'rc-menu-uuid-[UUID]' },
+  // rc-* per-mount ids and the aria attributes that point at them. The name
+  // between the `rc` prefix and the mount counter may itself be several
+  // segments (`rc-picker-panel-3`) or camelCase (`rc_virtualList_2`), so it is
+  // matched as a whole rather than as a single lower-case word.
+  { pattern: /\brc[_-]([a-zA-Z]+(?:[_-][a-zA-Z]+)*)[_-]\d+/g, replacement: 'rc-$1-[N]' },
   // React's useId output, e.g. `:r0:` / `«r0»`, used by some antd inputs.
   { pattern: /(?::|«)r[0-9a-z]+(?::|»)/g, replacement: '[RID]' },
-  // ISO-8601 timestamps rendered from dates that move (created_at, now).
-  {
-    pattern: /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})/g,
-    replacement: '[TS]',
-  },
-  // UUIDs (generated ids, request ids echoed into the DOM).
-  {
-    pattern: /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,
-    replacement: '[UUID]',
-  },
+  { pattern: TIMESTAMP_PATTERN, replacement: '[TS]' },
+  { pattern: UUID_PATTERN, replacement: '[UUID]' },
 ];
 
 // normalizeDom turns a page's outerHTML into the text that is committed as
@@ -66,4 +67,5 @@ function normalizeDom({ dom }) {
     .join('\n');
 }
 
+export { TIMESTAMP_PATTERN, UUID_PATTERN };
 export default normalizeDom;

@@ -75,6 +75,7 @@ function resolveTargets({
         // and renders as the roleless headless caller.
         requestUser: user === DEFAULT_USER ? undefined : user,
         urlQuery: entry.urlQuery,
+        ignore: entry.ignore,
         journey,
       });
     });

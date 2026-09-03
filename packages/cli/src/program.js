@@ -324,6 +324,10 @@ program
       'Fraction of changed pixels above which a screenshot counts as drift. Default is 0.001.'
     )
   )
+  .option(
+    '--fail-on-pixel',
+    'Fail --check on screenshot drift too. Only for a pinned rendering container; pixel drift is advisory by default.'
+  )
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(

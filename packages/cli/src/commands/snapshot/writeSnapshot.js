@@ -16,7 +16,9 @@
 
 import fs from 'fs';
 
+import applyIgnore from './applyIgnore.js';
 import normalizeDom from './normalizeDom.js';
+import normalizeState from './normalizeState.js';
 import snapshotPaths from './snapshotPaths.js';
 
 // Sorted keys so two captures of the same state serialise identically whatever
@@ -38,13 +40,16 @@ function sortKeys(value) {
 
 // writeSnapshot commits one snapshot as three files formatted for a readable
 // diff: the PNG as-is, the DOM normalised one element per line, the state as
-// pretty-printed JSON with sorted keys.
-function writeSnapshot({ configDirectory, target, snapshot }) {
+// pretty-printed JSON with sorted keys. The state is written through the same
+// ignore and normalisation the comparison applies, so a golden only changes
+// when the page's own output does and two --update runs are byte-identical.
+function writeSnapshot({ configDirectory, target, snapshot, ignore = [] }) {
   const paths = snapshotPaths({ configDirectory, target });
+  const state = normalizeState({ state: applyIgnore({ state: snapshot.state, ignore }) });
   fs.mkdirSync(paths.goldenDirectory, { recursive: true });
   fs.writeFileSync(paths.screenshot, Buffer.from(snapshot.screenshot, 'base64'));
   fs.writeFileSync(paths.dom, `${normalizeDom({ dom: snapshot.dom })}\n`);
-  fs.writeFileSync(paths.state, `${JSON.stringify(sortKeys(snapshot.state ?? {}), null, 2)}\n`);
+  fs.writeFileSync(paths.state, `${JSON.stringify(sortKeys(state), null, 2)}\n`);
   return paths;
 }
 

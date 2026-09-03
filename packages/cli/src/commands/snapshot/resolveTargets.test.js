@@ -148,3 +148,18 @@ test('resolveTargets throws when the journey file has no steps', () => {
     })
   ).toThrow(/should contain a journey with a "steps" array/);
 });
+
+test('resolveTargets carries the manifest ignore list onto every target for that page', () => {
+  const targets = resolveTargets({
+    manifest: { pages: [{ pageId: 'home', ignore: ['form.created_at'] }, { pageId: 'about' }] },
+    appPageIds: [],
+    devUsers: ['admin', 'member'],
+    configDirectory,
+  });
+  expect(targets.map((target) => target.ignore)).toEqual([
+    ['form.created_at'],
+    ['form.created_at'],
+    undefined,
+    undefined,
+  ]);
+});
