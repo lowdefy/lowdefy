@@ -23,31 +23,35 @@ import validateFieldValue from './validateFieldValue.js';
 // the collection's declared fields. Only declared keys are checked -
 // undeclared keys pass, because a declaration describes the fields it knows
 // about and rejecting the rest would break every write that adds a field
-// before the declaration catches up. A field declared `required: true` must
-// be present and non-null in the document.
+// before the declaration catches up. A field named in the collection's
+// `required` array must be present and non-null in the document.
 //
 // Runs after the tenant stamp so a contract that declares the tenant field
 // required sees the value the framework wrote.
 function validateDocFields({ doc, collectionSchema, position = 'an insert document' }) {
-  const { fields, name } = collectionSchema;
+  const { fields, name, required } = collectionSchema;
   if (!type.isObject(doc)) {
     return;
   }
-  Object.keys(fields).forEach((fieldName) => {
-    const fieldSchema = fields[fieldName];
+  (required ?? []).forEach((fieldName) => {
     const value = doc[fieldName];
-    const present = fieldName in doc && value !== null && !type.isUndefined(value);
-    if (!present) {
-      if (fieldSchema.required === true) {
-        throw new ConfigError(
-          `Field "${fieldName}" in ${position} for collection "${name}" is required by the declared contract but is ${
-            fieldName in doc ? 'null' : 'missing'
-          }.`
-        );
-      }
-      return;
-    }
-    validateFieldValue({ collectionName: name, fieldName, fieldSchema, position, value });
+    if (fieldName in doc && value !== null && !type.isUndefined(value)) return;
+    throw new ConfigError(
+      `Field "${fieldName}" in ${position} for collection "${name}" is required by the declared contract but is ${
+        fieldName in doc ? 'null' : 'missing'
+      }.`
+    );
+  });
+  Object.keys(fields).forEach((fieldName) => {
+    const value = doc[fieldName];
+    if (!(fieldName in doc) || value === null || type.isUndefined(value)) return;
+    validateFieldValue({
+      collectionName: name,
+      fieldName,
+      fieldSchema: fields[fieldName],
+      position,
+      value,
+    });
   });
 }
 

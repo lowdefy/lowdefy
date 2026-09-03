@@ -18,7 +18,6 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { type } from '@lowdefy/helpers';
 
-import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
@@ -79,7 +78,7 @@ Safety: lowdefy_checkpoint snapshots the config files before risky multi-file ch
 
 Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
-State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
+State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically until the next build). When asked to write e2e tests, put the data in with fixtures and request tests rather than exporting a checkpoint.`;
 
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
@@ -363,15 +362,21 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_load_state',
     {
       description:
-        "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state.",
+        "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' returns a ?_checkpoint URL the developer can open to manually test the app in that exact state. While replayRequests is true (the default) the app's page requests are answered from the checkpoint's recorded responses instead of the database, for every browser tab, until the next build or revert_checkpoint — pass replayRequests: false to restore the state and still call the real connections.",
       inputSchema: {
         name: z.string().describe('The checkpoint name.'),
         mode: z.enum(['headless', 'registry-only']).optional(),
+        replayRequests: z
+          .boolean()
+          .optional()
+          .describe(
+            "Answer the app's page requests from the checkpoint instead of the database. Default true."
+          ),
         user: userSchema,
       },
     },
-    async ({ name, mode, user }) => {
-      const result = await loadState({ origin, name, mode, user });
+    async ({ name, mode, replayRequests, user }) => {
+      const result = await loadState({ origin, name, mode, replayRequests, user });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -386,24 +391,6 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {},
     },
     () => textResult(listStateCheckpoints())
-  );
-
-  server.registerTool(
-    'lowdefy_checkpoint_to_mocks',
-    {
-      description:
-        'Convert a state checkpoint into @lowdefy/e2e-utils mocks.yaml fixtures (requests/api entries plus rendered yaml). Use when writing e2e tests from a captured scenario.',
-      inputSchema: {
-        name: z.string().describe('The checkpoint name.'),
-      },
-    },
-    ({ name }) => {
-      const result = checkpointToMocks({ name });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
-    }
   );
 
   server.registerTool(

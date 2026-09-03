@@ -5,6 +5,7 @@
   "description": "Lowdefy TipTap rich-text editor blocks.",
   "homepage": "https://lowdefy.com",
   "lowdefy": {
+    "pluginApiVersion": 1,
     "serverExternalPackages": [
       "turndown"
     ]

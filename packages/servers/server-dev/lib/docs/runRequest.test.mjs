@@ -44,9 +44,14 @@ jest.unstable_mockModule('../server/auth/getDevUsers.js', () => ({
 }));
 
 const { ConfigError } = await import('@lowdefy/errors');
+const { clearMocks, loadMocks } = await import('./devMockRegistry.js');
 const { default: runRequest } = await import('./runRequest.js');
 
 const honoContext = { req: { path: '/lowdefy-docs/run-request' } };
+
+afterEach(() => {
+  clearMocks();
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -314,4 +319,28 @@ test('runRequest returns a successful run whose response is undefined', async ()
   const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
 
   expect(result).toEqual({ refused: false, id: 'requests', response: undefined });
+});
+
+// run_request always calls the real connection, so when a loaded checkpoint is
+// replaying the same request the page and this result disagree — the agent has
+// to be told, or it will read this result as what the page is showing.
+test('runRequest reports mockedElsewhere when a loaded checkpoint replays the same request', async () => {
+  loadMocks({
+    pageId: 'home',
+    checkpoint: 'broken-refund',
+    mocks: { get_rows: { response: { rows: [] } } },
+  });
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.mockedElsewhere).toEqual({ checkpoint: 'broken-refund' });
+  // The tool still ran the real request - it does not replay.
+  expect(mockCallRequest).toHaveBeenCalled();
+  expect(result.response).toEqual([{ _id: 1 }]);
+});
+
+test('runRequest omits mockedElsewhere when no checkpoint is replaying the request', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.mockedElsewhere).toBeUndefined();
 });

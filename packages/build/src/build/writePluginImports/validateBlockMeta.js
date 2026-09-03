@@ -17,6 +17,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import collectExceptions from '../../utils/collectExceptions.js';
+import validateHazardsShape from './validateHazardsShape.js';
 
 const CATEGORIES = ['display', 'input', 'input-container', 'container', 'list'];
 const VALUE_TYPES = ['any', 'array', 'boolean', 'date', 'number', 'object', 'primitive', 'string'];
@@ -62,10 +63,6 @@ function isMethodDefinition(value) {
   if (!type.isObject(value)) return false;
   if (!type.isString(value.description)) return false;
   return type.isUndefined(value.params) || isObjectOfStrings(value.params);
-}
-
-function isHazard(value) {
-  return type.isObject(value) && type.isString(value.id) && type.isString(value.message);
 }
 
 // Checks the meta a block plugin exports for one block type. Every violation
@@ -211,16 +208,9 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
         meta.dynamicEvents
       );
     }
-    if (
-      !type.isUndefined(meta.hazards) &&
-      !(type.isArray(meta.hazards) && meta.hazards.every(isHazard))
-    ) {
-      fail(
-        `meta.hazards must be an array of { id: string, message: string, see?: string | null }. Received ${received(
-          meta.hazards
-        )}.`,
-        meta.hazards
-      );
+    const hazardsProblem = validateHazardsShape(meta.hazards);
+    if (hazardsProblem !== null) {
+      fail(`meta.${hazardsProblem}`, meta.hazards);
     }
 
     const unknownKeys = Object.keys(meta).filter((key) => !KNOWN_KEYS.includes(key));

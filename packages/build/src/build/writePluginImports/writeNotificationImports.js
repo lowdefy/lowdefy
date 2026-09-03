@@ -32,9 +32,12 @@ async function writeNotificationImports({ components, context }) {
       : `export const renderEmail = undefined;
 export const interpolateProperties = undefined;`;
 
-  await context.writeBuildArtifact('plugins/notifications.js', `${registry}
+  await context.writeBuildArtifact(
+    'plugins/notifications.js',
+    `${registry}
 ${helperExports}
-`);
+`
+  );
 }
 
 export default writeNotificationImports;

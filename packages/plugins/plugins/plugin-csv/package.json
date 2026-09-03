@@ -28,6 +28,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "lowdefy": {
+    "pluginApiVersion": 1
+  },
   "exports": {
     "./actions": "./dist/actions.js",
     "./types": "./dist/types.js"

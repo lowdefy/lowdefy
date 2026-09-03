@@ -52,9 +52,7 @@ async function importPluginModule({ context, specifier }) {
   if (serverDir) {
     try {
       const require = createRequire(path.join(serverDir, 'package.json'));
-      return await import(
-        /* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier)
-      );
+      return await import(/* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier));
     } catch (error) {
       // Not resolvable from the server — try the build package's own tree.
       if (!isResolutionError(error)) throw error;

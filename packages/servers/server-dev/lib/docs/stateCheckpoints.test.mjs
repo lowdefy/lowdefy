@@ -54,8 +54,10 @@ const {
   readCheckpoint,
   writeCheckpoint,
 } = await import('./checkpointStore.js');
-const { clearMocks, getMock, listMocks, loadMocks } = await import('./devMockRegistry.js');
-const { default: checkpointToMocks } = await import('./checkpointToMocks.js');
+const { publish } = await import('./devEventBus.js');
+const { clearMocks, claimMockLog, getMock, listMocks, loadMocks } = await import(
+  './devMockRegistry.js'
+);
 const { default: snapshotState } = await import('./snapshotState.js');
 const { default: loadState } = await import('./loadState.js');
 
@@ -202,10 +204,15 @@ describe('checkpointStore', () => {
 
 describe('devMockRegistry', () => {
   test('loadMocks + getMock replay a recorded response by pageId/requestId', () => {
-    loadMocks({ pageId: 'home', mocks: { req1: { response: { ok: true }, error: null } } });
+    loadMocks({
+      pageId: 'home',
+      checkpoint: 'cp-registry',
+      mocks: { req1: { response: { ok: true }, error: null } },
+    });
     expect(getMock({ pageId: 'home', requestId: 'req1' })).toEqual({
       pageId: 'home',
       requestId: 'req1',
+      checkpoint: 'cp-registry',
       response: { ok: true },
       error: null,
     });
@@ -222,8 +229,8 @@ describe('devMockRegistry', () => {
     });
     const mocks = listMocks().sort((m1, m2) => m1.requestId.localeCompare(m2.requestId));
     expect(mocks).toEqual([
-      { pageId: 'home', requestId: 'req1', hasResponse: true, hasError: false },
-      { pageId: 'home', requestId: 'req2', hasResponse: false, hasError: true },
+      { pageId: 'home', requestId: 'req1', checkpoint: null, hasResponse: true, hasError: false },
+      { pageId: 'home', requestId: 'req2', checkpoint: null, hasResponse: false, hasError: true },
     ]);
   });
 
@@ -233,39 +240,33 @@ describe('devMockRegistry', () => {
     expect(listMocks()).toEqual([]);
     expect(getMock({ pageId: 'home', requestId: 'req1' })).toBeUndefined();
   });
-});
 
-describe('checkpointToMocks', () => {
-  test('converts a checkpoint into the loadStaticMocks input shape', () => {
-    writeCheckpoint({
-      name: 'cp-to-mocks',
-      snapshot: buildSnapshot({
-        requests: {
-          req1: [{ response: { ok: true } }],
-          req2: [{ error: new Error('request failed') }],
-        },
-        apiResponses: {
-          ep1: [{ response: { v: 1 } }],
-        },
-      }),
-    });
+  // A rebuild changes the config the responses were recorded against, so
+  // replaying them past it would answer for requests that may no longer exist.
+  test('a build event on the dev event bus clears the recorded mocks', () => {
+    loadMocks({ pageId: 'home', checkpoint: 'cp-build', mocks: { req1: { response: { ok: 1 } } } });
+    expect(listMocks()).toHaveLength(1);
 
-    const result = checkpointToMocks({ name: 'cp-to-mocks' });
+    publish({ type: 'build', status: 'success', errorCount: 0, warningCount: 0 });
 
-    expect(result.requests.sort((a, b) => a.requestId.localeCompare(b.requestId))).toEqual([
-      { requestId: 'req1', pageId: 'home', response: { ok: true } },
-      { requestId: 'req2', pageId: 'home', error: 'request failed' },
-    ]);
-    expect(result.api).toEqual([{ endpointId: 'ep1', response: { v: 1 } }]);
-    expect(result.yaml).toEqual(expect.any(String));
-    expect(result.yaml).toContain('requestId: req1');
-    expect(result.yaml).toContain('endpointId: ep1');
+    expect(listMocks()).toEqual([]);
+    expect(getMock({ pageId: 'home', requestId: 'req1' })).toBeUndefined();
   });
 
-  test('returns an error when the checkpoint does not exist', () => {
-    expect(checkpointToMocks({ name: 'does-not-exist' })).toEqual({
-      error: 'Checkpoint "does-not-exist" not found.',
-    });
+  test('a non-build event on the dev event bus leaves the recorded mocks in place', () => {
+    loadMocks({ pageId: 'home', checkpoint: 'cp-keep', mocks: { req1: { response: { ok: 1 } } } });
+
+    publish({ type: 'client_error', message: 'boom' });
+
+    expect(listMocks()).toHaveLength(1);
+  });
+
+  test('claimMockLog is true only the first time a request is answered from a mock', () => {
+    loadMocks({ pageId: 'home', checkpoint: 'cp-log', mocks: { req1: { response: { ok: 1 } } } });
+
+    expect(claimMockLog({ pageId: 'home', requestId: 'req1' })).toBe(true);
+    expect(claimMockLog({ pageId: 'home', requestId: 'req1' })).toBe(false);
+    expect(claimMockLog({ pageId: 'home', requestId: 'req2' })).toBe(true);
   });
 });
 
@@ -331,12 +332,51 @@ describe('loadState', () => {
     expect(result.error).toBeUndefined();
     expect(result.url).toBe('http://localhost:3111/home?a=1&_checkpoint=cp-load-registry');
     expect(result.instructions).toMatch(/Open this URL/);
+    expect(result.replayRequests).toBe(true);
     expect(getMock({ pageId: 'home', requestId: 'req1' })).toEqual({
       pageId: 'home',
       requestId: 'req1',
+      checkpoint: 'cp-load-registry',
       response: { ok: true },
       error: null,
     });
+  });
+
+  test('replayRequests false leaves the registry empty so requests hit the real connections', async () => {
+    writeCheckpoint({ name: 'cp-load-no-replay', snapshot: buildSnapshot() });
+    loadMocks({
+      pageId: 'home',
+      checkpoint: 'stale',
+      mocks: { req1: { response: { old: true } } },
+    });
+
+    const result = await loadState({
+      origin: 'http://localhost:3111',
+      name: 'cp-load-no-replay',
+      mode: 'registry-only',
+      replayRequests: false,
+    });
+
+    expect(result.error).toBeUndefined();
+    expect(result.replayRequests).toBe(false);
+    expect(result.instructions).toMatch(/real connections/);
+    // A previous load's mocks must not survive an explicit opt-out.
+    expect(listMocks()).toEqual([]);
+  });
+
+  test('rejects a non-boolean replayRequests as invalid input', async () => {
+    writeCheckpoint({ name: 'cp-load-bad-replay', snapshot: buildSnapshot() });
+
+    const result = await loadState({
+      origin: 'http://localhost:3111',
+      name: 'cp-load-bad-replay',
+      mode: 'registry-only',
+      replayRequests: 'no',
+    });
+
+    expect(result.invalidInput).toBe(true);
+    expect(result.error).toMatch(/"replayRequests" must be a boolean/);
+    expect(listMocks()).toEqual([]);
   });
 
   test('returns an error when the checkpoint does not exist', async () => {

@@ -26,8 +26,8 @@ let projectDirectory;
 let skillsDirectory;
 let context;
 
-function skill(name) {
-  return `---\nname: ${name}\ndescription: Use when ${name}.\n---\n\n# ${name}\n`;
+function skill(name, version = '5.5.1') {
+  return `---\nname: ${name}\ndescription: Use when ${name}.\nkind: reference\nlowdefyVersion: ${version}\n---\n\n# ${name}\n`;
 }
 
 beforeEach(() => {
@@ -39,7 +39,7 @@ beforeEach(() => {
   }
   fs.writeFileSync(path.join(skillsDirectory, 'README.md'), 'not a skill');
   fs.mkdirSync(path.join(skillsDirectory, 'empty-directory'));
-  context = { logger: { info: jest.fn(), warn: jest.fn() } };
+  context = { cliVersion: '5.5.1', logger: { info: jest.fn(), warn: jest.fn() } };
 });
 
 afterEach(() => {
@@ -145,10 +145,10 @@ test('writeSkillFile skips files that already exist and counts them in the summa
   expect(read('lowdefy-config')).toEqual('custom config skill');
   expect(read('lowdefy-lists')).toEqual(skill('lowdefy-lists'));
   expect(context.logger.info).toHaveBeenCalledWith(
-    "'.claude/skills/lowdefy-filters/SKILL.md' already exists - skipping."
+    "'.claude/skills/lowdefy-filters/SKILL.md' already exists at version unknown - skipping."
   );
   expect(context.logger.info).toHaveBeenCalledWith(
-    "'.claude/skills/lowdefy-config/SKILL.md' already exists - skipping."
+    "'.claude/skills/lowdefy-config/SKILL.md' already exists at version unknown - skipping."
   );
   expect(context.logger.info).toHaveBeenCalledWith(
     "Installed 2 skills into '.claude/skills/' (2 already present)."
@@ -172,7 +172,58 @@ test('writeSkillFile installs the real framework skill set from the repository',
   expect(names).toHaveLength(29);
   for (const name of names) {
     expect(read(name)).toMatch(new RegExp(`^---\\nname: ${name}\\ndescription: Use when `));
+    expect(read(name)).toMatch(/\nkind: (recipe|reference)\nlowdefyVersion: \d+\.\d+\.\d+\n---\n/);
   }
+});
+
+test('writeSkillFile reports installed skills that are behind the running version', async () => {
+  const existing = path.join(projectDirectory, '.claude', 'skills', 'lowdefy-filters');
+  fs.mkdirSync(existing, { recursive: true });
+  fs.writeFileSync(path.join(existing, 'SKILL.md'), skill('lowdefy-filters', '5.0.0'));
+
+  await writeSkillFile({ context, projectDirectory, appPath: '', port: 3000, skillsDirectory });
+
+  expect(read('lowdefy-filters')).toEqual(skill('lowdefy-filters', '5.0.0'));
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "'.claude/skills/lowdefy-filters/SKILL.md' already exists at version 5.0.0 - skipping."
+  );
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    "1 installed skill is not at version 5.5.1: lowdefy-filters. Run 'lowdefy agent-setup --force-skills' to overwrite them."
+  );
+});
+
+test('writeSkillFile with forceSkills overwrites an installed skill that is behind', async () => {
+  const existing = path.join(projectDirectory, '.claude', 'skills', 'lowdefy-filters');
+  fs.mkdirSync(existing, { recursive: true });
+  fs.writeFileSync(path.join(existing, 'SKILL.md'), skill('lowdefy-filters', '5.0.0'));
+
+  await writeSkillFile({
+    context,
+    projectDirectory,
+    appPath: '',
+    port: 3000,
+    forceSkills: true,
+    skillsDirectory,
+  });
+
+  expect(read('lowdefy-filters')).toEqual(skill('lowdefy-filters'));
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "'.claude/skills/lowdefy-filters/SKILL.md' overwritten (was version 5.0.0)."
+  );
+  expect(context.logger.warn).not.toHaveBeenCalled();
+});
+
+test('writeSkillFile stamps the running version into the templated lowdefy-config skill', async () => {
+  await writeSkillFile({
+    context,
+    projectDirectory,
+    appPath: '',
+    port: 3000,
+    skills: 'none',
+    skillsDirectory,
+  });
+
+  expect(read('lowdefy-config')).toContain('\nkind: reference\nlowdefyVersion: 5.5.1\n');
 });
 
 describe('parseSkillSelection', () => {

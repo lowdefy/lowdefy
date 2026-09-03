@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
+import collectExceptions from '../../utils/collectExceptions.js';
 import importPluginModule from './importPluginModule.js';
+import validateHazardsShape from './validateHazardsShape.js';
 
 // Connection and request schemas live as statics on the connection classes
 // (Connection.schema, Connection.requests[Request].schema), not behind a
@@ -98,6 +102,16 @@ async function writeConnectionSchemaMap({ context }) {
       if (typesMapRequestSchemas[request.typeName]) {
         requestSchemas[request.typeName] = typesMapRequestSchemas[request.typeName];
       } else if (requestFn?.schema) {
+        const hazardsProblem = validateHazardsShape(requestFn.meta?.hazards);
+        if (hazardsProblem !== null) {
+          collectExceptions(
+            context,
+            new ConfigError(
+              `Request "${request.typeName}" from package "${packageName}": meta.${hazardsProblem}`,
+              { received: requestFn.meta.hazards }
+            )
+          );
+        }
         requestSchemas[request.typeName] = {
           schema: requestFn.schema,
           meta: requestFn.meta ?? {},

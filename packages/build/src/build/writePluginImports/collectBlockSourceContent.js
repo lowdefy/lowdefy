@@ -46,13 +46,9 @@ function collectBlockSourceContent({ components, serverDirectory }) {
   // own declared deps are visible. Block packages are deps of the server, not of
   // @lowdefy/build, so require.resolve from import.meta.url silently fails.
   // Rooting at the server's package.json ensures block packages are always reachable.
-  const requireFromServer = createRequire(
-    path.join(serverDirectory, 'package.json')
-  );
+  const requireFromServer = createRequire(path.join(serverDirectory, 'package.json'));
 
-  const packages = [
-    ...new Set((components.imports?.blocks ?? []).map((b) => b.package)),
-  ];
+  const packages = [...new Set((components.imports?.blocks ?? []).map((b) => b.package))];
 
   const allContent = [];
 

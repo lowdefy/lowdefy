@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
+import collectExceptions from '../../utils/collectExceptions.js';
 import importPluginModule from './importPluginModule.js';
+import validateHazardsShape from './validateHazardsShape.js';
 
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
@@ -57,6 +61,16 @@ async function writeOperatorSchemaMap({ components, context }) {
       }
       const meta = packageMetas?.[op.originalTypeName];
       if (meta) {
+        const hazardsProblem = validateHazardsShape(meta.hazards);
+        if (hazardsProblem !== null) {
+          collectExceptions(
+            context,
+            new ConfigError(
+              `Operator "${op.typeName}" from package "${packageName}": meta.${hazardsProblem}`,
+              { received: meta.hazards }
+            )
+          );
+        }
         metas[op.typeName] = { hazards: meta.hazards ?? [] };
       }
     }

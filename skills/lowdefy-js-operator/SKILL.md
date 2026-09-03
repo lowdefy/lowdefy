@@ -1,6 +1,8 @@
 ---
 name: lowdefy-js-operator
 description: Use when an operator expression gets too deep and a `_js` body is the clearer choice — the client and server prototypes, string vs. `{ fn, args }` form, build-time linting, and when to use an operator instead.
+kind: reference
+lowdefyVersion: 5.5.1
 ---
 
 # The _js operator
@@ -8,38 +10,15 @@ description: Use when an operator expression gets too deep and a `_js` body is t
 <!-- generated:reference:start -->
 ## Reference
 
-Generated from `@lowdefy/docs-content` and the plugin schemas at release time — do not edit by hand. The running dev server has the live versions: `lowdefy_get_doc` for a doc page, `lowdefy_get_schema` for a type, `lowdefy_get_examples` for block yaml.
+What this skill covers, and the call that returns the live version from the running dev server. Read these before writing config - never write a type name or property from memory.
 
 ### Docs
 
-#### _js
-
-`/lowdefy-docs/content/operators/_js`
-
-The `_js` operator enables the use of custom JavaScript logic within Lowdefy configuration where operators are evaluated. The purpose of this operator is to facilitate quick implementation of fast, synchronous functions. Like other operators, these functions are evaluated during page render, thus slow functions can impact app performance. For more advanced logic, or when the use of external dependencies is necessary, instead develop a [custom plugin](/plugins-introduction).
-
-#### Operator Plugins
-
-`/lowdefy-docs/content/plugins/plugins-operators`
-
-Operators are synchronous functions that are used in Lowdefy to express logic. If you need to use asynchronous code, or promises, write an [action](/plugins-actions) instead.  Operator names should start with a single underscore, as this is used by the Lowdefy engine to identify and evaluate operators. By convention, operator functions are written in _snake_case_.
+`lowdefy_get_doc` by slug (or `GET /lowdefy-docs/content/{slug}`): `operators/_js`, `plugins/plugins-operators`.
 
 ### Operators
 
-Live schema: `lowdefy_get_schema` with kind `operators`.
-
-#### _js
-
-Provided by `@lowdefy/operators-js`.
-
-**Form 1** — string: Hash identifier of the pre-built JavaScript function to execute.
-
-**Form 2** — object
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `fn` | string | yes |  | Hash identifier of the pre-built JavaScript function to execute. |
-| `args` | any |  |  | Pre-resolved values injected into the JavaScript function as `args`. |
+`lowdefy_get_schema` with kind `operators`: `_js` (`@lowdefy/operators-js`).
 <!-- generated:reference:end -->
 
 ## Recipe

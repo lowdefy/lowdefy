@@ -8,6 +8,27 @@ The interface a plugin is written against — the props a block receives, the me
 import { PLUGIN_API_VERSION } from '@lowdefy/block-utils';
 ```
 
+### Declaring it in your plugin package
+
+Every block, operator, action and connection package declares the version it was built against in its `package.json`:
+
+```json
+{
+  "name": "@acme/blocks",
+  "lowdefy": {
+    "pluginApiVersion": 1
+  }
+}
+```
+
+The build reads it for every plugin package the app uses and compares it with the version the installed Lowdefy implements. A mismatch is a build error:
+
+```
+Plugin package "@acme/blocks" was built for plugin API v2, but this Lowdefy version implements v1. Upgrade the plugin, or pin a Lowdefy version that implements v2. See https://docs.lowdefy.com/plugin-api-versioning.
+```
+
+A package that declares nothing is a build **warning**, not an error, so plugins written before the field keep working. Add the field — it will become an error in a future major.
+
 ## The block meta the build validates
 
 Every block ships a `meta.js` — plain data, no React or CSS imports — re-exported from the package's `./metas` module as `{ [typeName]: meta }`. The build imports every installed block package's metas once and validates each block's meta before anything reads it. Every violation is a build error naming the block type, the package, the field, the expected shape and the value it received; all violations of one meta are reported together.
@@ -24,9 +45,36 @@ Every block ships a `meta.js` — plain data, no React or CSS imports — re-exp
 | `methods`       | no       | `{ methodName: description }` — the methods the block registers for `CallMethod`                                                                                   |
 | `events`        | no       | `{ eventName: description }` or `{ eventName: { description, payload } }` where `payload` is a JSON Schema for the event object the block passes to `triggerEvent` |
 | `dynamicEvents` | no       | `true` when the block triggers event names not listed in `events`                                                                                                  |
-| `hazards`       | no       | `[{ id, message, see }]` — behaviours the schema cannot express, returned to AI agents by the dev server's docs endpoint                                           |
+| `hazards`       | no       | `[{ id, message, kind, retiredBy, see }]` — behaviours the schema cannot express, returned to AI agents by the dev server's docs endpoint                          |
 
 Any other top-level key is a build warning listing the known keys; unknown keys are allowed and ignored.
+
+### Hazards
+
+A hazard is a behaviour an agent cannot infer from the schema. Each entry is validated at build, for blocks, operators and requests alike:
+
+| Field       | Required               | Shape                                                                                                                    |
+| ----------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `id`        | yes                    | a unique, stable, kebab-case id                                                                                          |
+| `message`   | yes                    | what surprises the reader, and what to do instead                                                                        |
+| `kind`      | yes                    | `bug` — a framework defect the reader has to work around; `semantics` — deliberate behaviour they cannot infer           |
+| `retiredBy` | yes when `kind: 'bug'` | the id of the task that removes the defect, so the bug-hazard count can be counted down rather than accumulating forever |
+| `see`       | yes                    | the docs slug that explains it in full                                                                                   |
+
+A `bug` hazard is a debt with an owner. A `semantics` hazard is permanent and needs no `retiredBy`.
+
+```js
+hazards: [
+  {
+    id: 'dompurify-options-first-render',
+    kind: 'bug',
+    retiredBy: 'V-68',
+    message:
+      'DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect.',
+    see: 'display-blocks/dangeroushtml',
+  },
+];
+```
 
 ```js
 // blocks/MyAutocomplete/meta.js
@@ -67,9 +115,19 @@ Block type "MyAutocomplete" from package "@acme/blocks": has no meta. Export it 
 
 If your plugin predates `meta.js`, the `v5-0-0/21-migrate-custom-block-plugins` codemod prompt in `@lowdefy/codemods` walks through creating the meta files and the `metas.js` barrel.
 
-## Removed block methods
+## Block methods that do not exist
 
-A block that calls a method the plugin API has removed fails at render with an error that names the block, its type, the removal and the replacement, resolved to the block's config location like any other block error:
+In development, the `methods` prop is a proxy. Reading any key off it that the block does not have — a typo, or a method the plugin API removed — throws a `BlockError` naming the block and listing the methods that _are_ available, resolved to the block's config location like any other block error:
+
+```
+BlockError: Block "my-autocomplete" (type MyAutocomplete) called the block method "tirggerEvent", which it does not have. Available methods: getLocale, registerEvent, registerMethod, translate, triggerEvent. A block's own methods come from methods.registerMethod. (plugin API v1)
+```
+
+Production takes the bare `TypeError` instead: the proxy costs an indirection on every property access, and the developer who needs the message is always in dev.
+
+### Removed block methods
+
+A method the plugin API has removed names the removal and its replacement instead:
 
 ```
 BlockError: Block "my-autocomplete" (type MyAutocomplete) called the removed block method "makeCssClass". Blocks receive resolved class names on the `classNames` prop and style objects on the `styles` prop, keyed by the block's `meta.cssKeys`. Replace `methods.makeCssClass(x)` with `classNames.<cssKey>` or an inline `style` object. See the codemod at @lowdefy/codemods v8-0-0/02-removed-block-methods.md. (plugin API v1)

@@ -1,6 +1,8 @@
 ---
 name: lowdefy-config
 description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
+kind: reference
+lowdefyVersion: 5.5.1
 ---
 
 # Writing Lowdefy config

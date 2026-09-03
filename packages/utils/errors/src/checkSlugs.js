@@ -38,6 +38,7 @@ const VALID_CHECK_SLUGS = {
   'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
   'websocket-refs': 'Invalid websocket action reference warnings',
   'event-payload': '_event paths checked against the block event payload schema',
+  'request-state-empty': '_state reads in request properties, which are always empty',
 
   // Plugin type names that are used but not installed
   'block-types': 'Block type names that are used but not defined',
@@ -91,6 +92,7 @@ const VALID_CHECK_SLUGS = {
 
   // Secrets
   secrets: 'Secret declaration and usage checks',
+  'plugin-api-version': 'A plugin package declaring a plugin API version the framework does not provide.',
 };
 
 export default VALID_CHECK_SLUGS;

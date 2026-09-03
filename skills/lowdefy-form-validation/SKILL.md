@@ -1,6 +1,8 @@
 ---
 name: lowdefy-form-validation
 description: Use when a form must refuse bad input — required fields, validate rules, the Validate action, per-step validation, and what counts as empty.
+kind: reference
+lowdefyVersion: 5.5.1
 ---
 
 # Form validation
@@ -8,224 +10,23 @@ description: Use when a form must refuse bad input — required fields, validate
 <!-- generated:reference:start -->
 ## Reference
 
-Generated from `@lowdefy/docs-content` and the plugin schemas at release time — do not edit by hand. The running dev server has the live versions: `lowdefy_get_doc` for a doc page, `lowdefy_get_schema` for a type, `lowdefy_get_examples` for block yaml.
+What this skill covers, and the call that returns the live version from the running dev server. Read these before writing config - never write a type name or property from memory.
 
 ### Docs
 
-#### Validate
-
-`/lowdefy-docs/content/actions/validate`
-
-The `Validate` action is used to validate a users input, usually before information is inserted into a database using a request. It is used in conjunction with the `required` and `validate` fields on input blocks. If the validation fails, the `Validate` action will fail, and this will stop the execution of actions that are defined after it.
-
-#### ResetValidation
-
-`/lowdefy-docs/content/actions/resetvalidation`
-
-The `ResetValidation` action is used to reset validation flags on input fields.
-
-#### Reset
-
-`/lowdefy-docs/content/actions/reset`
-
-The `Reset` actions resets a page to the state it was in just after the `onInit` event was executed. This clears the user's inputs.
-
-#### _type
-
-`/lowdefy-docs/content/operators/_type`
-
-The `_type` operator performs a type test on an object, and returns true if the object is of the specified type.
-
-#### _regex
-
-`/lowdefy-docs/content/operators/_regex`
-
-The `_regex` operator performs a regex test on a string, and returns `true` if there is a match.
-
-#### _not
-
-`/lowdefy-docs/content/operators/_not`
-
-The `_not` operator returns the logical negation of the input. If the value is not a boolean, it will be converted to a boolean using javascript [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) and [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) rules.
+`lowdefy_get_doc` by slug (or `GET /lowdefy-docs/content/{slug}`): `actions/validate`, `actions/resetvalidation`, `actions/reset`, `operators/_type`, `operators/_regex`, `operators/_not`.
 
 ### Blocks
 
-Live schema: `lowdefy_get_schema` with kind `blocks`.
-
-#### TextInput
-
-Provided by `@lowdefy/blocks-antd`. Category: `input`, value type: `string`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `allowClear` | boolean |  | `false` | Allow the user to clear their input. |
-| `type` | `"text"`, `"number"`, `"password"`, `"tel"`, `"email"`, `"url"` |  | `"text"` | The type of input, (see MDN). |
-| `autoFocus` | boolean |  | `false` | Autofocus to the block on page load. |
-| `bordered` | boolean |  | `true` | Whether or not the text input has a border style. |
-| `disabled` | boolean |  | `false` | Disable the block if true. |
-| `maxLength` | integer |  |  | The max number of input characters. |
-| `placeholder` | string |  |  | Placeholder text inside the block before user types input. |
-| `prefix` | string |  |  | Prefix text for the block, priority over $prefix_con. |
-| `prefixIcon` | string \\| object |  |  | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to prefix the text input. |
-| `label` | object |  |  | Label properties. |
-| `replaceInput` | object |  |  | Regex used to sanitize input. |
-| `size` | `"small"`, `"middle"`, `"large"` |  | `"middle"` | Size of the block. |
-| `showCount` | boolean |  | `false` | Show text character count |
-| `suffix` | string |  |  | Suffix text for the block, priority over suffixIcon. |
-| `suffixIcon` | string \\| object |  |  | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |
-| `title` | string |  |  | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | `"outlined"`, `"filled"`, `"borderless"` |  |  | Input visual variant. When set, takes precedence over bordered. |
-| `theme` | object |  |  | Antd design token overrides for this block. See antd design tokens. |
-
-##### Events
-
-- `onBlur`: Trigger action event occurs when text input loses focus.
-- `onChange`: Trigger action when text input is changed. Event payload: `value`.
-- `onFocus`: Trigger action when text input gets focus.
-- `onPressEnter`: Trigger action when enter is pressed while text input is focused.
-- `onTooltipClick`: Trigger actions when the tooltip icon is clicked.
-
-##### Example
-
-```yaml
-- id: basic_default
-  type: TextInput
-  properties:
-    title: Default TextInput
-    placeholder: Enter text here
-```
-
-#### Selector
-
-Provided by `@lowdefy/blocks-antd`. Category: `input`, value type: `any`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `allowClear` | boolean |  | `true` | Allow the user to clear the selected value, sets the value to null. |
-| `autoFocus` | boolean |  | `false` | Autofocus to the block on page load. |
-| `bordered` | boolean |  | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
-| `clearIcon` | string \\| object |  | `"AiOutlineCloseCircle"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
-| `label` | object |  |  | Label properties. |
-| `disabled` | boolean |  | `false` | Disable the block if true. |
-| `data` | array |  |  | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
-| `html` | string |  |  | Nunjucks template that renders each option label when using `data`. The context exposes `item` (the current row) and `index` (the zero-based row index). Ignored when `options` is used. |
-| `valueKey` | string |  |  | Field used as the selected value. With `options` it names the value field (defaults to "value"). With `data` it names the field stored when an option is selected; omit it to store the whole row. Supports dotted paths (e.g. "user.id"). |
-| `primaryKey` | string |  |  | Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. "id") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths. |
-| `options` | array \\| array \\| array \\| array |  | `[]` |  |
-| `placeholder` | string |  | `"Select item"` | Placeholder text inside the block before user selects input. |
-| `loadingPlaceholder` | string |  | `"Loading"` | Placeholder text to show in options while the block is loading. |
-| `notFoundContent` | string |  | `"not Found"` | Placeholder text to show when list of options are empty. |
-| `showArrow` | boolean |  | `true` | Show the suffix icon at the drop-down position of the selector. |
-| `showSearch` | boolean |  | `true` | Make the selector options searchable. |
-| `size` | `"small"`, `"default"`, `"large"` |  | `"default"` | Size of the block. |
-| `suffixIcon` | string \\| object |  | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at the drop-down position of the selector. |
-| `title` | string |  |  | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | `"solid"`, `"outlined"`, `"filled"`, `"borderless"` |  |  | Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless` are the antd input styles. |
-| `theme` | object |  |  | Antd design token overrides for this block. See antd design tokens. |
-
-##### Events
-
-- `onBlur`: Trigger action event occurs when selector loses focus.
-- `onChange`: Trigger action when selection is changed. Event payload: `value`.
-- `onFocus`: Trigger action when selector gets focus.
-- `onClear`: Trigger action when selector is cleared.
-- `onSearch`: Trigger actions when input is changed. Event payload: `value`.
-- `onTooltipClick`: Trigger actions when the tooltip icon is clicked.
-
-##### Example
-
-```yaml
-- id: basic_selector
-  type: Selector
-  properties:
-    title: Favorite Fruit
-    options:
-      - label: Apple
-        value: apple
-      - label: Banana
-        value: banana
-      - label: Cherry
-        value: cherry
-      - label: Dragonfruit
-        value: dragonfruit
-      - label: Elderberry
-        value: elderberry
-```
+`lowdefy_get_schema` with kind `blocks`, then `lowdefy_get_examples` for usage yaml: `TextInput` (`@lowdefy/blocks-antd`), `Selector` (`@lowdefy/blocks-antd`).
 
 ### Operators
 
-Live schema: `lowdefy_get_schema` with kind `operators`.
-
-#### _type
-
-Provided by `@lowdefy/operators-js`.
-
-**Form 1** — `"string"`, `"array"`, `"date"`, `"object"`, `"boolean"`, `"number"`, `"integer"`, `"null"`, `"undefined"`, `"none"`, `"empty"`, `"primitive"`: Type name to test against state value at current location. The "empty" test is true for null, undefined, '' and [], and false for 0, false and {}.
-
-**Form 2** — object
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `type` | `"string"`, `"array"`, `"date"`, `"object"`, `"boolean"`, `"number"`, `"integer"`, `"null"`, `"undefined"`, `"none"`, `"empty"`, `"primitive"` | yes |  | Type name to test. |
-| `on` | any |  |  | Value to test the type of. |
-| `key` | string |  |  | State key to test the type of. |
-
-#### _regex
-
-Provided by `@lowdefy/operators-js`.
-
-**Form 1** — string: Regex pattern string to test against the current location value.
-
-**Form 2** — object
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `pattern` | string | yes |  | Regex pattern string. |
-| `on` | string |  |  | String to test the pattern against. |
-| `key` | string |  |  | State key path to get the string to test against. |
-| `flags` | string |  |  | Regex flags (default "gm"). |
-
-#### _not
-
-Provided by `@lowdefy/operators-js`.
-
-Accepts boolean: Boolean value to negate.
-
-#### _and
-
-Provided by `@lowdefy/operators-js`.
-
-Accepts array: Array of values. Returns true if all values are truthy.
+`lowdefy_get_schema` with kind `operators`: `_type` (`@lowdefy/operators-js`), `_regex` (`@lowdefy/operators-js`), `_not` (`@lowdefy/operators-js`), `_and` (`@lowdefy/operators-js`).
 
 ### Actions
 
-Live schema: `lowdefy_get_schema` with kind `actions`.
-
-#### Validate
-
-Provided by `@lowdefy/actions-core`.
-
-**Form 1** — string: Shorthand for a single blockId to validate.
-
-**Form 2** — array: An array of blockIds to validate.
-
-#### ResetValidation
-
-Provided by `@lowdefy/actions-core`.
-
-**Form 1** — string: Shorthand for a single blockId.
-
-**Form 2** — array: An array of blockIds to reset validation for.
-
-#### Reset
-
-Provided by `@lowdefy/actions-core`.
-
-_No schema._
+`lowdefy_get_schema` with kind `actions`: `Validate` (`@lowdefy/actions-core`), `ResetValidation` (`@lowdefy/actions-core`), `Reset` (`@lowdefy/actions-core`).
 <!-- generated:reference:end -->
 
 ## Recipe

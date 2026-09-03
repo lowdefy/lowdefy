@@ -5,6 +5,7 @@
   "description": "Lowdefy Microsoft Azure connections.",
   "homepage": "https://lowdefy.com",
   "lowdefy": {
+    "pluginApiVersion": 1,
     "serverExternalPackages": [
       "@azure/storage-blob"
     ]

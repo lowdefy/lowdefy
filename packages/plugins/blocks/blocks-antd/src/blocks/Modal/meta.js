@@ -34,6 +34,7 @@ export default {
   hazards: [
     {
       id: 'modal-keeps-state',
+      kind: 'semantics',
       message:
         'Closing a Modal does not clear the state of the blocks inside it, while visible: false on the Modal does prune that state. Reset the values in onClose if a reopened Modal should start empty.',
       see: 'container-blocks/modal',

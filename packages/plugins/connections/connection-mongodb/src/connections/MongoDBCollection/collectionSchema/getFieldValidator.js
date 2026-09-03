@@ -15,41 +15,18 @@
 */
 
 import { compile } from '@lowdefy/ajv';
-import { type } from '@lowdefy/helpers';
 
 // One compiled validator per declared field, keyed by the field's schema
 // object. context.readConfigFile caches build/collections.json, so the same
 // schema objects arrive on every request of a server process and each field
-// compiles once; a rebuild in dev hands out new objects and recompiles.
+// compiles once; a rebuild in dev hands out new objects and recompiles. The
+// build writes valid JSON Schema, so nothing is preprocessed here.
 const validators = new WeakMap();
-
-// The build's `required` is a presence flag on the field, not JSON Schema's
-// array-valued keyword - ajv would refuse to compile it. Presence is checked
-// by validateDocFields; the value validator sees the schema without it.
-function stripRequired(schema) {
-  const copy = {};
-  Object.keys(schema).forEach((key) => {
-    if (key === 'required') return;
-    if (key === 'items' && type.isObject(schema.items)) {
-      copy.items = stripRequired(schema.items);
-      return;
-    }
-    if (key === 'properties' && type.isObject(schema.properties)) {
-      copy.properties = {};
-      Object.keys(schema.properties).forEach((name) => {
-        copy.properties[name] = stripRequired(schema.properties[name]);
-      });
-      return;
-    }
-    copy[key] = schema[key];
-  });
-  return copy;
-}
 
 function getFieldValidator({ fieldSchema }) {
   let validator = validators.get(fieldSchema);
   if (!validator) {
-    validator = compile({ schema: stripRequired(fieldSchema) });
+    validator = compile({ schema: fieldSchema });
     validators.set(fieldSchema, validator);
   }
   return validator;

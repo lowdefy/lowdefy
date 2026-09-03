@@ -26,6 +26,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "lowdefy": {
+    "pluginApiVersion": 1
+  },
   "exports": {
     "./auth/providers": "./dist/auth/providers.js",
     "./auth/strategies": "./dist/auth/strategies.js",

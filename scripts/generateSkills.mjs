@@ -41,6 +41,11 @@ const SKILLS_DIRECTORY = path.join(REPO_ROOT, 'skills');
 
 const { default: manifest } = await import(path.join(SKILLS_DIRECTORY, 'skills.manifest.mjs'));
 
+// The `lowdefy` package is the CLI, and its version is the framework version an app installs.
+const { version } = JSON.parse(
+  fs.readFileSync(path.join(REPO_ROOT, 'packages', 'cli', 'package.json'), 'utf8')
+);
+
 const resolveDoc = createDocsResolver({
   docsContentDirectory: path.join(REPO_ROOT, 'packages', 'docs-content'),
 });
@@ -55,6 +60,7 @@ function skillPath(name) {
 try {
   const results = await generateSkills({
     manifest,
+    version,
     resolveDoc,
     resolveType,
     readSkill: (name) =>

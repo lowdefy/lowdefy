@@ -16,9 +16,9 @@
 */
 
 /*
-  Print the size of every skill in skills/: total lines, generated lines (between the markers)
-  and hand-written recipe lines (from "## Recipe" to the end). The recipe count is the design's
-  shrink metric - as the framework encodes a recipe, its lines here should fall.
+  Print the kind of every skill in skills/ and count the recipe skills. A recipe skill carries a
+  workaround for something the framework should do natively; the count is the shrink metric, and
+  it falls when a feature retires a recipe by name in its changeset.
 
   Usage:
     pnpm skills:metrics

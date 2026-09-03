@@ -17,40 +17,37 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { countSkillLines } from './skillFile.mjs';
+import { parseFrontmatter } from './skillFile.mjs';
 
-// One row per skills/<name>/SKILL.md, sorted by name, plus a total row.
+// The metric is how many skills are recipes - a recipe is a workaround an agent has to carry for
+// something the framework should do natively, so the number falling is the framework growing up.
+// Bytes are not the metric: a reference skill grows with the framework, and prose length is
+// trivially gamed.
 function collectSkillMetrics({ skillsDirectory }) {
   const rows = [];
   for (const name of fs.readdirSync(skillsDirectory).sort()) {
     const skillPath = path.join(skillsDirectory, name, 'SKILL.md');
     if (!fs.existsSync(skillPath)) continue;
-    rows.push({ name, ...countSkillLines(fs.readFileSync(skillPath, 'utf8')) });
+    const frontmatter = parseFrontmatter(fs.readFileSync(skillPath, 'utf8')) ?? {};
+    rows.push({
+      name,
+      kind: frontmatter.kind ?? 'unknown',
+      lowdefyVersion: frontmatter.lowdefyVersion ?? 'unknown',
+    });
   }
-  const total = rows.reduce(
-    (sum, row) => ({
-      total: sum.total + row.total,
-      generated: sum.generated + row.generated,
-      recipe: sum.recipe + row.recipe,
-    }),
-    { total: 0, generated: 0, recipe: 0 }
-  );
-  return { rows, total };
+  const recipes = rows.filter((row) => row.kind === 'recipe').map((row) => row.name);
+  return { rows, recipes };
 }
 
-export function formatSkillMetrics({ rows, total }) {
-  const totalLabel = `total (${rows.length} skills)`;
-  const width = Math.max(totalLabel.length, ...rows.map((row) => row.name.length));
-  const line = (label, row) =>
-    `${label.padEnd(width)}  ${String(row.total).padStart(6)}  ${String(row.generated).padStart(
-      9
-    )}  ${String(row.recipe).padStart(6)}`;
+export function formatSkillMetrics({ rows, recipes }) {
+  const width = Math.max(0, ...rows.map((row) => row.name.length));
   return [
-    `${'skill'.padEnd(width)}  ${'lines'.padStart(6)}  ${'generated'.padStart(
-      9
-    )}  ${'recipe'.padStart(6)}`,
-    ...rows.map((row) => line(row.name, row)),
-    line(totalLabel, total),
+    ...rows.map((row) => `${row.name.padEnd(width)}  ${row.kind}`),
+    '',
+    `recipe skills: ${recipes.length} of ${rows.length}`,
+    ...recipes.map((name) => `  ${name}`),
+    '',
+    'Retire a recipe by name in the changeset of the feature that makes it unnecessary.',
   ].join('\n');
 }
 

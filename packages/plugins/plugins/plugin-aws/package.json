@@ -5,6 +5,7 @@
   "description": "",
   "homepage": "https://lowdefy.com",
   "lowdefy": {
+    "pluginApiVersion": 1,
     "serverExternalPackages": [
       "@aws-sdk/client-s3"
     ]

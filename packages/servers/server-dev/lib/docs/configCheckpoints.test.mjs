@@ -22,6 +22,7 @@ import { MAX_CHECKPOINTS } from './checkpointPaths.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
 import listConfigCheckpoints from './listConfigCheckpoints.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
+import { listMocks, loadMocks } from './devMockRegistry.js';
 
 let configDirectory;
 let previousConfigDirectory;
@@ -153,4 +154,16 @@ test('createConfigCheckpoint evicts the oldest checkpoint once more than the cap
   expect(
     checkpoints.some((checkpoint) => checkpoint.label === `checkpoint-${MAX_CHECKPOINTS}`)
   ).toBe(true);
+});
+
+// Recorded responses were captured against the config as it was before the
+// revert, so a revert must not leave the app replaying them.
+test('revertConfigCheckpoint clears the replayed request mocks', () => {
+  const { id } = createConfigCheckpoint({ label: 'before-mocks' });
+  loadMocks({ pageId: 'home', checkpoint: 'cp-revert', mocks: { req1: { response: { ok: 1 } } } });
+  expect(listMocks()).toHaveLength(1);
+
+  revertConfigCheckpoint({ id });
+
+  expect(listMocks()).toEqual([]);
 });

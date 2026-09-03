@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function skillMd({ port, appPath }) {
+function skillMd({ port, appPath, version }) {
   const appPathLine =
     appPath === ''
       ? ''
@@ -22,6 +22,8 @@ function skillMd({ port, appPath }) {
   return `---
 name: lowdefy-config
 description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
+kind: reference
+lowdefyVersion: ${version}
 ---
 
 # Writing Lowdefy config

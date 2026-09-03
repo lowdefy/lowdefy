@@ -19,7 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
-import { getMock } from '../../lib/docs/devMockRegistry.js';
+import { claimMockLog, getMock } from '../../lib/docs/devMockRegistry.js';
 
 async function requestHandler(c) {
   if (c.req.method !== 'POST') {
@@ -47,7 +47,21 @@ async function requestHandler(c) {
   // Requests.js can't tell the difference from a real request.
   const mock = getMock({ pageId, requestId });
   if (mock) {
-    context.logger.info({ event: 'dev_mock_request', pageId, requestId, blockId, actionId });
+    // Once per (pageId, requestId): a replayed page re-fires its requests on
+    // every render, and the fact worth surfacing is that this page is not
+    // reaching the database at all — not each individual replay.
+    if (claimMockLog({ pageId, requestId })) {
+      context.logger.info({
+        event: 'dev_mock_request',
+        pageId,
+        requestId,
+        blockId,
+        actionId,
+        msg: `Request "${requestId}" on page "${pageId}" answered from checkpoint "${
+          mock.checkpoint ?? 'unknown'
+        }" — no connection was called. Load the checkpoint with replayRequests: false to hit the real connections.`,
+      });
+    }
     if (mock.error) {
       const error = mock.error instanceof Error ? mock.error : new Error(mock.error);
       return c.json(redactErrorResponse(context, error), 500);

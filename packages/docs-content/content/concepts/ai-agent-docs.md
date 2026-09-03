@@ -38,9 +38,8 @@ It provides these tools:
 | `lowdefy_run_request`            | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in)                                                                     |
 | `lowdefy_run_endpoint`           | Execute an Api endpoint routine with a test payload, as a given `user`, to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data) |
 | `lowdefy_snapshot_state`         | Capture live page state + request responses into a committable checkpoint folder                                                                                               |
-| `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing                                                                                             |
+| `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing. Requests replay from the checkpoint until the next build unless `replayRequests: false`                                                                                             |
 | `lowdefy_list_state_checkpoints` | List saved state checkpoints                                                                                                                                                   |
-| `lowdefy_checkpoint_to_mocks`    | Convert a state checkpoint into e2e `mocks.yaml` fixtures                                                                                                                      |
 | `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status`               |
 | `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                 |
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                         |
@@ -172,7 +171,7 @@ Loading it back (`lowdefy_load_state`) serves the recorded request data from the
 
 - **Agent verification**: the agent restores a scenario headless and confirms its fix works against the exact data that caused the bug.
 - **Manual testing**: `mode: registry-only` returns a URL like `http://localhost:3000/orders?_checkpoint=broken-refund-flow` — open it and the app is in that state, no clicking required.
-- **e2e fixtures**: `lowdefy_checkpoint_to_mocks` converts a checkpoint into `mocks.yaml` entries for [e2e tests](/e2e-introduction), so "write an e2e test for this flow" starts from captured reality.
+- **Replay is a mode, not a copy**: while a checkpoint is loaded with `replayRequests` on (the default), every browser tab's page requests are answered from the recorded responses instead of the database, until the next build or `lowdefy_revert_checkpoint`. Pass `replayRequests: false` to restore the state and still hit the real connections. To put data into an [e2e test](/e2e-introduction), write fixtures and request tests rather than exporting a checkpoint.
 
 ## Running requests safely
 

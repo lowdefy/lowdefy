@@ -66,6 +66,7 @@ async function agentSetup({ context }) {
     appPath,
     port,
     skills: context.options.skills,
+    forceSkills: context.options.forceSkills,
   });
   await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 

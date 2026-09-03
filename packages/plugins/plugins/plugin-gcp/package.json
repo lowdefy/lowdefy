@@ -5,6 +5,7 @@
   "description": "Lowdefy Google Cloud Platform connections.",
   "homepage": "https://lowdefy.com",
   "lowdefy": {
+    "pluginApiVersion": 1,
     "serverExternalPackages": [
       "@google-cloud/storage"
     ]

@@ -244,7 +244,7 @@ test('agentSetup skips the skill file when it already exists', async () => {
     'custom content'
   );
   expect(context.logger.info).toHaveBeenCalledWith(
-    expect.stringContaining('already exists - skipping.')
+    expect.stringContaining('already exists at version unknown - skipping.')
   );
 });
 

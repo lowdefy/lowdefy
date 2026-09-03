@@ -49,7 +49,21 @@ const validMeta = {
       payload: { type: 'object', properties: { value: { type: 'string' } } },
     },
   },
-  hazards: [{ id: 'trims-value', message: 'The value is trimmed.', see: null }],
+  hazards: [
+    {
+      id: 'trims-value',
+      kind: 'bug',
+      retiredBy: 'V-68',
+      message: 'The value is trimmed.',
+      see: 'input-blocks/textinput',
+    },
+    {
+      id: 'empty-is-null',
+      kind: 'semantics',
+      message: 'An empty input is null, not "".',
+      see: 'concepts/state',
+    },
+  ],
   dynamicEvents: false,
 };
 
@@ -223,8 +237,33 @@ test('validateBlockMeta reports malformed hazards and dynamicEvents', () => {
   expect(context.errors[0].message).toContain(
     'meta.dynamicEvents must be a boolean. Received "yes".'
   );
-  expect(context.errors[1].message).toContain('meta.hazards must be an array of');
+  expect(context.errors[1].message).toContain('meta.every hazard must be');
   expect(context.errors[1].message).toContain('Received [{"id":"x"}].');
+});
+
+test('validateBlockMeta requires a hazard kind, a see slug, and retiredBy for a bug', () => {
+  const cases = [
+    { id: 'a', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'gotcha', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'bug', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'bug', retiredBy: '', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'semantics', message: 'm.' },
+    { id: 'a', kind: 'semantics', message: 'm.', see: null },
+  ];
+  for (const hazard of cases) {
+    const { valid, context } = validate({ category: 'display', hazards: [hazard] });
+    expect([hazard, valid]).toEqual([hazard, false]);
+    expect(context.errors[0].message).toContain('every hazard must be');
+  }
+});
+
+test('validateBlockMeta accepts a semantics hazard without retiredBy', () => {
+  const { valid, context } = validate({
+    category: 'display',
+    hazards: [{ id: 'a', kind: 'semantics', message: 'm.', see: 'concepts/state' }],
+  });
+  expect(valid).toBe(true);
+  expect(context.errors).toEqual([]);
 });
 
 test('validateBlockMeta warns rather than errors on an unknown key and keeps the meta valid', () => {

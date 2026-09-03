@@ -44,6 +44,8 @@ function validateBulkOperationFields({ operations, collectionSchema }) {
         validateUpdateFields({
           update: op.update,
           collectionSchema,
+          filter: op.filter,
+          options: op,
           position: `an update (operations[${index}])`,
         });
         return;

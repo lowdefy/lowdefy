@@ -55,12 +55,105 @@ test('validateUpdateFields validates $setOnInsert and ignores $inc', () => {
   );
   expect(() =>
     validateUpdateFields({
-      update: {
-        $inc: { count: 'not-a-number' },
-        $push: { evidence_ids: 4 },
-        $unset: { result: '' },
-      },
+      update: { $inc: { count: 'not-a-number' }, $unset: { result: '' } },
       collectionSchema,
+    })
+  ).not.toThrow();
+});
+
+// Appending to an array is the most common way an array field drifts, so the
+// operand is checked against the field's items schema.
+test('validateUpdateFields validates a $push operand against the field items schema', () => {
+  expect(() =>
+    validateUpdateFields({ update: { $push: { evidence_ids: 'e9' } }, collectionSchema })
+  ).not.toThrow();
+  expect(() =>
+    validateUpdateFields({ update: { $push: { evidence_ids: 4 } }, collectionSchema })
+  ).toThrow(
+    'Field "evidence_ids" in $push of an update for collection "answers" does not match the declared contract: must be string. Received 4.'
+  );
+});
+
+test('validateUpdateFields validates every element of a $push $each and of $addToSet', () => {
+  expect(() =>
+    validateUpdateFields({
+      update: { $push: { evidence_ids: { $each: ['e1', 'e2'], $slice: -3 } } },
+      collectionSchema,
+    })
+  ).not.toThrow();
+  expect(() =>
+    validateUpdateFields({
+      update: { $push: { evidence_ids: { $each: ['e1', 7] } } },
+      collectionSchema,
+    })
+  ).toThrow('Field "evidence_ids" in $push of an update for collection "answers"');
+  expect(() =>
+    validateUpdateFields({ update: { $addToSet: { evidence_ids: 7 } }, collectionSchema })
+  ).toThrow('Field "evidence_ids" in $addToSet of an update for collection "answers"');
+});
+
+test('validateUpdateFields leaves a $push on an undeclared or non-array field alone', () => {
+  expect(() =>
+    validateUpdateFields({ update: { $push: { notes: 7, test_id: 7 } }, collectionSchema })
+  ).not.toThrow();
+});
+
+test('validateUpdateFields refuses to $unset a required field', () => {
+  const withRequired = { ...collectionSchema, required: ['test_id'] };
+  expect(() =>
+    validateUpdateFields({ update: { $unset: { test_id: '' } }, collectionSchema: withRequired })
+  ).toThrow(
+    'Field "test_id" in $unset of an update for collection "answers" is required by the declared contract and cannot be removed.'
+  );
+  expect(() =>
+    validateUpdateFields({ update: { $unset: { result: '' } }, collectionSchema: withRequired })
+  ).not.toThrow();
+});
+
+test('validateUpdateFields refuses to $unset a nested required field', () => {
+  const nested = {
+    name: 'answers',
+    fields: {
+      address: {
+        type: 'object',
+        properties: { city: { type: 'string' } },
+        required: ['city'],
+      },
+    },
+    required: [],
+  };
+  expect(() =>
+    validateUpdateFields({ update: { $unset: { 'address.city': '' } }, collectionSchema: nested })
+  ).toThrow('Field "address.city" in $unset of an update');
+});
+
+// An upserting update is the one update shape that can create a document, so
+// it has to satisfy the document-level required contract.
+test('validateUpdateFields checks required presence on an upsert over filter, $set and $setOnInsert', () => {
+  const withRequired = { ...collectionSchema, required: ['test_id', 'result'] };
+  expect(() =>
+    validateUpdateFields({
+      update: { $set: { result: 'pass' } },
+      filter: { test_id: 't1' },
+      options: { upsert: true },
+      collectionSchema: withRequired,
+    })
+  ).not.toThrow();
+  expect(() =>
+    validateUpdateFields({
+      update: { $setOnInsert: { test_id: 't1' } },
+      filter: {},
+      options: { upsert: true },
+      collectionSchema: withRequired,
+    })
+  ).toThrow(
+    'Field "result" is required by the declared contract for collection "answers", but the upserting an update does not set it in the filter, $set or $setOnInsert.'
+  );
+  expect(() =>
+    validateUpdateFields({
+      update: { $setOnInsert: { test_id: 't1' } },
+      filter: {},
+      collectionSchema: withRequired,
     })
   ).not.toThrow();
 });

@@ -28,7 +28,7 @@ const collectionSchema = {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
     evidence_ids: { type: 'array', items: { type: 'string' } },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
     meta: { type: 'object' },
   },
 };
@@ -89,12 +89,17 @@ test('validateDocFields passes undeclared keys', () => {
   ).not.toThrow();
 });
 
-test('validateDocFields checks a date field with instanceof Date', () => {
+// R6: `date` is { type: string, format: date-time } on every surface, and the
+// live Date the driver holds is validated as the ISO string it represents.
+test('validateDocFields accepts a Date for a date-time field and rejects a non-date string', () => {
   expect(() =>
     validateDocFields({ doc: { created_at: new Date('2026-01-01') }, collectionSchema })
   ).not.toThrow();
-  expect(() => validateDocFields({ doc: { created_at: '2026-01-01' }, collectionSchema })).toThrow(
-    'Field "created_at" in an insert document for collection "answers" does not match the declared contract: must be a Date. Received "2026-01-01".'
+  expect(() =>
+    validateDocFields({ doc: { created_at: '2026-01-01T00:00:00.000Z' }, collectionSchema })
+  ).not.toThrow();
+  expect(() => validateDocFields({ doc: { created_at: 'yesterday' }, collectionSchema })).toThrow(
+    'Field "created_at" in an insert document for collection "answers" does not match the declared contract: must match format "date-time". Received "yesterday".'
   );
 });
 
@@ -113,7 +118,8 @@ test('validateDocFields passes null for a declared field that is not required', 
 test('validateDocFields requires a field declared required to be present and non-null', () => {
   const required = {
     name: 'answers',
-    fields: { organization_id: { type: 'string', required: true } },
+    fields: { organization_id: { type: 'string' } },
+    required: ['organization_id'],
   };
   expect(() =>
     validateDocFields({ doc: { organization_id: 'org_a' }, collectionSchema: required })

@@ -42,8 +42,16 @@ beforeEach(() => {
 test('writeAvailableTypes writes installed typesMap types', async () => {
   const context = {
     typesMap: makeTypesMap({
-      blocks: { Button: { package: '@lowdefy/blocks-antd', originalTypeName: 'Button', version: '5.0.0' } },
-      requests: { MongoDBFind: { package: '@lowdefy/connection-mongodb', originalTypeName: 'MongoDBFind', version: '5.0.0' } },
+      blocks: {
+        Button: { package: '@lowdefy/blocks-antd', originalTypeName: 'Button', version: '5.0.0' },
+      },
+      requests: {
+        MongoDBFind: {
+          package: '@lowdefy/connection-mongodb',
+          originalTypeName: 'MongoDBFind',
+          version: '5.0.0',
+        },
+      },
     }),
     installedPackages: new Set(['@lowdefy/blocks-antd', '@lowdefy/connection-mongodb']),
     writeBuildArtifact: mockWriteBuildArtifact,
@@ -85,10 +93,16 @@ test('writeAvailableTypes includes operator client and server stores separately'
   const context = {
     typesMap: makeTypesMap({
       operators: {
-        client: { _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' } },
+        client: {
+          _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' },
+        },
         server: {
           _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' },
-          _secret: { package: '@lowdefy/operators-js', originalTypeName: '_secret', version: '5.0.0' },
+          _secret: {
+            package: '@lowdefy/operators-js',
+            originalTypeName: '_secret',
+            version: '5.0.0',
+          },
         },
       },
     }),
@@ -105,7 +119,13 @@ test('writeAvailableTypes writes auth type stores', async () => {
   const context = {
     typesMap: makeTypesMap({
       auth: {
-        adapters: { MongoDBAdapter: { package: '@lowdefy/connection-mongodb', originalTypeName: 'MongoDBAdapter', version: '5.0.0' } },
+        adapters: {
+          MongoDBAdapter: {
+            package: '@lowdefy/connection-mongodb',
+            originalTypeName: 'MongoDBAdapter',
+            version: '5.0.0',
+          },
+        },
         callbacks: {},
         events: {},
         providers: {},

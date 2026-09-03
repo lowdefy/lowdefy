@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
+import { getMock } from './devMockRegistry.js';
 import formatExplainTrace from './formatExplainTrace.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import runWithDevContext from './runWithDevContext.js';
@@ -105,7 +106,13 @@ async function runRequest({ pageId, requestId, payload = {}, user, explain = fal
     }
   }
 
-  return runWithDevContext({
+  // run_request always calls the real connection. If a loaded checkpoint is
+  // replaying this same request, the page and this tool are looking at two
+  // different answers — say so, rather than letting an agent conclude the page
+  // shows what this result shows.
+  const mock = getMock({ pageId, requestId });
+
+  const result = await runWithDevContext({
     createTrace: () => ({ rewritten: [] }),
     explain,
     formatExplain: ({ context, trace }) =>
@@ -131,6 +138,11 @@ async function runRequest({ pageId, requestId, payload = {}, user, explain = fal
       }),
     user,
   });
+
+  if (type.isNone(mock)) {
+    return result;
+  }
+  return { ...result, mockedElsewhere: { checkpoint: mock.checkpoint } };
 }
 
 export default runRequest;
