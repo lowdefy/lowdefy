@@ -366,3 +366,101 @@ test('runRequestTest does not seed when the run has no memory server', async () 
   });
   expect(mockSeedFixtures).not.toHaveBeenCalled();
 });
+
+test('runRequestTest passes an expect.reject when the message contains the string', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: {
+      refused: false,
+      error: { name: 'RequestError', message: 'You are not authorized to close this ticket.' },
+    },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized to close' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result).toEqual({
+    name: 'lists open controls',
+    filePath: item.filePath,
+    passed: true,
+    durationMs: expect.any(Number),
+  });
+});
+
+test('runRequestTest passes an expect.reject matching the error name', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'AuthorizationError', message: 'Refused.' } },
+  });
+  const item = pageTest({ expect: { reject: { name: 'AuthorizationError' } } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest passes an expect.reject against a refusal by the write gate', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: true, reason: 'Api endpoint routines are not classified read-only.' },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not classified read-only' } } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest fails an expect.reject when the request succeeded', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.passed).toBe(false);
+  expect(result.message).toEqual(
+    'Expected request controls.get_controls to reject, it returned [{"title":"Access reviews","status":"open"}].'
+  );
+});
+
+test('runRequestTest fails an expect.reject whose message does not match, naming both', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'RequestError', message: 'Collection not found.' } },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.passed).toBe(false);
+  expect(result.mismatch).toEqual({
+    path: 'reject.messageContains',
+    expected: 'not authorized',
+    actual: 'Collection not found.',
+  });
+});
+
+test('runRequestTest fails an expect.reject whose error name does not match', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'RequestError', message: 'Refused.' } },
+  });
+  const item = pageTest({ expect: { reject: { name: 'AuthorizationError' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.mismatch).toEqual({
+    path: 'reject.name',
+    expected: 'AuthorizationError',
+    actual: 'RequestError',
+  });
+});
+
+test('runRequestTest passes an expect.contains that ignores extra rows', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: {
+      refused: false,
+      success: true,
+      response: [{ title: 'Access reviews' }, { title: 'Vendor reviews' }],
+    },
+  });
+  const item = pageTest({ expect: { contains: [{ title: 'Vendor reviews' }] } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest rejects a test file with an unknown key before calling the route', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const item = pageTest({ request: 'get_controls' });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.message).toEqual(
+    'Invalid request test: Request test has unknown key "request". Request test keys are: endpointId, expect, fixtures, name, pageId, payload, requestId, seed, user.'
+  );
+});

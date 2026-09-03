@@ -14,8 +14,20 @@
   limitations under the License.
 */
 
-// The journey grammar lives in @lowdefy/node-utils so `lowdefy test` and this
-// server validate exactly the same steps. This module is the dev server's door
-// onto it; nothing here may add or relax a rule.
-export { getStepKey, JOURNEY_STEP_KEYS as STEP_KEYS } from '@lowdefy/node-utils';
-export { validateJourneySteps as default } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
+
+// Every step, wait and expect in the grammar is an object with exactly one
+// key naming the verb; returns that key, or undefined when the object does not
+// have exactly one.
+function getStepKey(step) {
+  if (!type.isObject(step)) {
+    return undefined;
+  }
+  const keys = Object.keys(step);
+  if (keys.length !== 1) {
+    return undefined;
+  }
+  return keys[0];
+}
+
+export default getStepKey;

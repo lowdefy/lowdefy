@@ -101,3 +101,10 @@ test('discoverJourneys reports a file with invalid YAML as an entry with an erro
   expect(journeys[0].error).toMatch(/^Invalid YAML: /);
   expect(journeys[1].journey.name).toEqual('ok');
 });
+
+test('discoverJourneys reports an empty journey file as empty', () => {
+  const filePath = writeJourneyFile('empty.yaml', '# nothing here\n');
+  expect(discoverJourneys({ context })).toEqual([
+    { filePath, journey: undefined, error: 'Journey file is empty.' },
+  ]);
+});

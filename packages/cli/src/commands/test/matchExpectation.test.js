@@ -151,3 +151,17 @@ test('matchExpectation treats a non-array contains value as a literal subset', (
     matchExpectation({ expected: { contains: 'text' }, actual: { contains: 'text' } })
   ).toEqual({ matched: true });
 });
+
+test('matchExpectation validates against a ~schema marker, the escape hatch for a schema key', () => {
+  expect(
+    matchExpectation({
+      expected: { '~schema': { type: 'array' } },
+      actual: [{ schema: 'public' }],
+    })
+  ).toEqual({ matched: true });
+  const result = matchExpectation({
+    expected: { '~schema': { type: 'object' } },
+    actual: [{ schema: 'public' }],
+  });
+  expect(result.matched).toBe(false);
+});

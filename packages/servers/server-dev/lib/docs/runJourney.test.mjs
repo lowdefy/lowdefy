@@ -26,6 +26,12 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
   getBrowser: mockGetBrowser,
   openPage: mockOpenPage,
   buildPageUrl: ({ origin, pageId }) => `${origin}/${pageId}`,
+  deterministicContextOptions: {
+    reducedMotion: 'reduce',
+    colorScheme: 'light',
+    locale: 'en-US',
+    timezoneId: 'UTC',
+  },
 }));
 
 const { default: runJourney } = await import('./runJourney.js');
@@ -37,7 +43,19 @@ Object.defineProperty(globalThis, 'navigator', {
   configurable: true,
 });
 
-function createLowdefyWindow({ pageId = 'form', state = {}, requests = {} } = {}) {
+// `blocks` stands in for the engine's RootSlots.map: an input block carries
+// setValue exactly as Block._initInput builds it, a display block does not.
+function createInputBlock({ blockId, state, type: blockType = 'TextInput' }) {
+  return {
+    blockId,
+    type: blockType,
+    setValue: (value) => {
+      state[blockId] = value;
+    },
+  };
+}
+
+function createLowdefyWindow({ pageId = 'form', state = {}, requests = {}, blocks = {} } = {}) {
   return {
     lowdefy: {
       pageId,
@@ -46,7 +64,7 @@ function createLowdefyWindow({ pageId = 'form', state = {}, requests = {} } = {}
           state,
           requests,
           websockets: {},
-          _internal: { onInitDone: true, onInitAsyncDone: true, RootSlots: { map: {} } },
+          _internal: { onInitDone: true, onInitAsyncDone: true, RootSlots: { map: blocks } },
         },
       },
     },
@@ -69,9 +87,16 @@ function createLocator({ selector, page }) {
     }),
     locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
     first: jest.fn(() => locator),
+    last: jest.fn(() => locator),
     filter: jest.fn(() => locator),
-    count: jest.fn(async () => 0),
+    // A block is assumed to hold a typeable surface unless the test says
+    // otherwise, which is what `fill` checks before falling back to `set`.
+    count: jest.fn(
+      async () => page.locatorCounts[selector] ?? (selector.endsWith(' input, textarea') ? 1 : 0)
+    ),
     selectOption: jest.fn(),
+    getAttribute: jest.fn(async (name) => page.attributes[`${selector}@${name}`] ?? null),
+    press: jest.fn(async (key) => page.presses.push({ selector, key })),
     waitFor: jest.fn(async () => {
       if (page.hiddenBlocks.some((id) => selector === `#bl-${id}`)) {
         throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
@@ -91,6 +116,8 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     missingBlocks: [],
     hiddenBlocks: [],
     texts: {},
+    attributes: {},
+    locatorCounts: {},
     screenshotCount: 0,
     evaluate: jest.fn(async (fn, arg) => fn(arg)),
     waitForFunction: jest.fn(async (fn, arg) => {
@@ -100,11 +127,12 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     }),
     waitForTimeout: jest.fn(async () => {}),
     waitForURL: jest.fn(async (predicate) => {
-      if (!predicate(new URL(url))) {
+      if (!predicate(new URL(page.currentUrl))) {
         throw new Error('page.waitForURL: Timeout exceeded.');
       }
     }),
-    url: jest.fn(() => url),
+    currentUrl: url,
+    url: jest.fn(() => page.currentUrl),
     keyboard: { press: jest.fn(async (key) => page.presses.push(key)) },
     screenshot: jest.fn(async () => {
       page.screenshotCount += 1;
@@ -141,7 +169,7 @@ test('runJourney returns an error when pageId is not a string', async () => {
 
 test('runJourney returns an error when steps is not an array', async () => {
   const result = await runJourney({ origin, pageId: 'form', steps: { click: 'a' } });
-  expect(result.error).toMatch(/requires "steps" to be an array/);
+  expect(result.error).toMatch(/"steps" should be an array of steps/);
   expect(mockGetBrowser).not.toHaveBeenCalled();
 });
 
@@ -152,7 +180,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 1 has unknown key "tap". Steps are: click, fill, set, select, press, wait, screenshot, expect.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -185,6 +213,12 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     width: 800,
     height: 600,
     timeout: 15000,
+    contextOptions: {
+      reducedMotion: 'reduce',
+      colorScheme: 'light',
+      locale: 'en-US',
+      timezoneId: 'UTC',
+    },
   });
 });
 
@@ -352,15 +386,19 @@ test('runJourney collects screenshots in step order with default and given names
   const result = await runJourney({
     origin,
     pageId: 'form',
-    steps: [{ screenshot: 'start' }, { click: 'open' }, { screenshot: true }, { screenshot: null }],
+    steps: [{ screenshot: 'start' }, { click: 'open' }, { screenshot: null }],
   });
 
   expect(result.passed).toBe(true);
   expect(result.screenshots).toEqual([
     { name: 'start', data: Buffer.from('png-1').toString('base64'), mimeType: 'image/png' },
     { name: 'step-2', data: Buffer.from('png-2').toString('base64'), mimeType: 'image/png' },
-    { name: 'step-3', data: Buffer.from('png-3').toString('base64'), mimeType: 'image/png' },
   ]);
+});
+
+test('runJourney refuses the undocumented screenshot: true alias', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ screenshot: true }] });
+  expect(result.error).toEqual('Step 0 "screenshot" takes an optional name string. Received true.');
 });
 
 test('runJourney keeps screenshots taken before a failing step', async () => {
@@ -391,6 +429,21 @@ test('runJourney resolves Mod in a press chord through getShortcutModifier', asy
 
   expect(result.passed).toBe(true);
   expect(page.presses).toEqual(['Meta+k', 'Enter']);
+});
+
+test('runJourney presses on the block control when press names a blockId', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ press: { blockId: 'title', key: 'Mod+Enter' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.presses).toEqual([{ selector: '#bl-title', key: 'Meta+Enter' }]);
+  expect(page.keyboard.press).not.toHaveBeenCalled();
 });
 
 test('runJourney selects a native option by label when the block contains a select', async () => {
@@ -491,6 +544,46 @@ test('runJourney fails expect.text with the actual text when it does not contain
   expect(result.failure.actual).toEqual('Hello world');
 });
 
+test('runJourney checks expect.text equals against the trimmed text', async () => {
+  const page = createPage();
+  page.texts['#bl-title'] = '  Hello world\n';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { text: { blockId: 'title', equals: 'Hello world' } } },
+      { expect: { text: { blockId: 'title', equals: 'Hello' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+  expect(result.failure.expected).toEqual('block "title" text to equal "Hello"');
+  expect(result.failure.message).toEqual(
+    'Expected block "title" text to equal "Hello" but found "  Hello world\\n".'
+  );
+});
+
+test('runJourney checks expect.text notContains, which is what proves a row was removed', async () => {
+  const page = createPage();
+  page.texts['#bl-rows'] = 'Access reviews';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { text: { blockId: 'rows', notContains: 'Vendor reviews' } } },
+      { expect: { text: { blockId: 'rows', notContains: 'Access' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+  expect(result.failure.expected).toEqual('block "rows" text not to contain "Access"');
+  expect(result.failure.actual).toEqual('Access reviews');
+});
+
 test('runJourney checks expect.url against the page url', async () => {
   const page = createPage({ url: 'http://localhost:3227/detail?id=1' });
   openWith(page);
@@ -582,4 +675,255 @@ test('runJourney returns an error and closes the context when the page fails to 
   expect(result.error).toEqual(
     'Failed to run journey at "http://localhost:3227/form": net::ERR_CONNECTION_REFUSED'
   );
+});
+
+test('runJourney set writes through the block setValue of an input block', async () => {
+  const state = { rating: 1 };
+  const window = createLowdefyWindow({
+    state,
+    blocks: { rating: createInputBlock({ blockId: 'rating', state, type: 'Rating' }) },
+  });
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { set: { blockId: 'rating', value: 4 } },
+      { expect: { state: { path: 'rating', equals: 4 } } },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(result.state).toEqual({ rating: 4 });
+  expect(page.fills).toEqual([]);
+});
+
+test('runJourney set reports a block that is not an input by its type', async () => {
+  const window = createLowdefyWindow({
+    blocks: { title: { blockId: 'title', type: 'Title' } },
+  });
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ set: { blockId: 'title', value: 'x' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual('block "title" to be an input block');
+  expect(result.failure.actual).toEqual('Title');
+  expect(result.failure.message).toEqual(
+    'Block "title" has type "Title", which is not an input block, so "set" has no value to write. Use "click" for a block that is not an input.'
+  );
+});
+
+test('runJourney set reports a block that is not on the page', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ set: { blockId: 'missing', value: 'x' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toEqual('Block "missing" is not on page "form".');
+  expect(result.failure.actual).toBeNull();
+});
+
+test('runJourney fill falls back to set semantics when the block has no input or textarea', async () => {
+  const state = {};
+  const window = createLowdefyWindow({
+    state,
+    blocks: { body: createInputBlock({ blockId: 'body', state, type: 'TipTap' }) },
+  });
+  const page = createPage({ window });
+  page.locatorCounts['#bl-body input, textarea'] = 0;
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'body', value: 'Hello' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.fills).toEqual([]);
+  expect(result.state).toEqual({ body: 'Hello' });
+});
+
+test('runJourney fill reports a block that can neither be typed into nor set', async () => {
+  const window = createLowdefyWindow({ blocks: { card: { blockId: 'card', type: 'Card' } } });
+  const page = createPage({ window });
+  page.locatorCounts['#bl-card input, textarea'] = 0;
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ fill: { blockId: 'card', value: 'Hello' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toMatch(
+    /Block "card" has type "Card", which is not an input block, so "fill" has no value to write/
+  );
+});
+
+test('runJourney scopes select options to the dropdown that was just opened', async () => {
+  const page = createPage();
+  page.locatorCounts['.ant-select-dropdown:not(.ant-select-dropdown-hidden)'] = 2;
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ select: { blockId: 'country', value: 'Chile' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    '#bl-country',
+    '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option, [role="option"]',
+  ]);
+});
+
+test('runJourney asserts a class the block holds and one it does not', async () => {
+  const page = createPage();
+  page.attributes['#bl-submit@class'] = 'ant-btn ant-btn-primary';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { dom: { blockId: 'submit', hasClass: 'ant-btn-primary' } } },
+      { expect: { dom: { blockId: 'submit', notHasClass: 'ant-btn-disabled' } } },
+      { expect: { dom: { blockId: 'submit', notHasClass: 'ant-btn' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'failed']);
+  expect(result.failure.expected).toEqual('block "submit" not to have class "ant-btn"');
+  expect(result.failure.actual).toEqual('ant-btn ant-btn-primary');
+});
+
+test('runJourney reports a class assertion against a block with no class attribute', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { dom: { blockId: 'submit', hasClass: 'ant-btn-primary' } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toEqual(
+    'Expected block "submit" to have class "ant-btn-primary" but found null.'
+  );
+});
+
+test('runJourney asserts an attribute value and a descendant selector', async () => {
+  const page = createPage();
+  page.attributes['#bl-total@aria-disabled'] = 'true';
+  page.locatorCounts['#bl-total span.amount'] = 1;
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { dom: { blockId: 'total', attribute: 'aria-disabled', equals: 'true' } } },
+      { expect: { dom: { blockId: 'total', matches: 'span.amount' } } },
+      { expect: { dom: { blockId: 'total', matches: 'span.currency' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'failed']);
+  expect(result.failure.expected).toEqual(
+    'block "total" to contain an element matching "span.currency"'
+  );
+  expect(result.failure.actual).toEqual(0);
+});
+
+test('runJourney fails an attribute assertion with the value it found', async () => {
+  const page = createPage();
+  page.attributes['#bl-total@aria-disabled'] = 'false';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { dom: { blockId: 'total', attribute: 'aria-disabled', equals: 'true' } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.actual).toEqual('false');
+  expect(result.failure.message).toEqual(
+    'Expected block "total" attribute "aria-disabled" to equal "true" but found "false".'
+  );
+});
+
+test('runJourney asserts the previous step duration with expect.durationMsUnder', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { wait: { ms: 1 } },
+      { expect: { durationMsUnder: 5000 } },
+      { wait: { ms: 1 } },
+      { expect: { durationMsUnder: 0 } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok', 'failed']);
+  expect(result.failure.expected).toEqual('step 2 to take less than 0ms');
+  expect(result.failure.message).toMatch(
+    /Expected step 2 to take less than 0ms but it took \d+ms\./
+  );
+});
+
+test('runJourney waits for the page id to change before settling after a navigating click', async () => {
+  const state = {};
+  const window = createLowdefyWindow({ state });
+  window.lowdefy.contexts['page:detail'] = {
+    state: { id: '1' },
+    requests: {},
+    websockets: {},
+    _internal: { onInitDone: true, onInitAsyncDone: true, RootSlots: { map: {} } },
+  };
+  const page = createPage({ window });
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '#bl-row') {
+      locator.click.mockImplementation(async () => {
+        page.currentUrl = 'http://localhost:3227/detail?id=1';
+        window.lowdefy.pageId = 'detail';
+        page.clicks.push(selector);
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'row' }, { expect: { url: { contains: '/detail' } } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.waitForFunction).toHaveBeenCalledTimes(2);
+  expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
+  expect(page.waitForFunction.mock.calls[1][1]).toEqual('detail');
+  expect(result.state).toEqual({ id: '1' });
 });

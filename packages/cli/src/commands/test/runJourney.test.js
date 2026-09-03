@@ -123,3 +123,57 @@ test('runJourney reports a file that failed to parse using its file path as the 
     message: 'Invalid YAML: boom',
   });
 });
+
+test('runJourney reports a typod top level key per file instead of ignoring it', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/typo.yaml',
+      journey: { name: 'n', pageID: 'form', steps: [{ click: 'submit' }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'n',
+    filePath: '/app/tests/journeys/typo.yaml',
+    passed: false,
+    message:
+      'Invalid journey file: Journey has unknown key "pageID". Journey keys are: name, pageId, steps, urlQuery, user.',
+  });
+});
+
+// The CLI and the dev server share one grammar, so a step malformed below the
+// key level is a file error with a path, not a runtime failure discovered after
+// a browser has opened.
+test('runJourney reports a step malformed below the key level per file', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/steps.yaml',
+      journey: { name: 'n', pageId: 'form', steps: [{ click: 'a' }, { fill: 'title' }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.passed).toBe(false);
+  expect(result.filePath).toEqual('/app/tests/journeys/steps.yaml');
+  expect(result.message).toEqual(
+    'Invalid journey file: Step 1 "fill" requires { blockId, value }. Received "title".'
+  );
+});
+
+test('runJourney reports an unknown expect form per file', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/expect.yaml',
+      journey: { name: 'n', pageId: 'form', steps: [{ expect: { count: 2 } }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.message).toEqual(
+    'Invalid journey file: Step 0 "expect" requires exactly one of "state", "visible", "text", "url", "dom", "durationMsUnder". Received {"count":2}.'
+  );
+});

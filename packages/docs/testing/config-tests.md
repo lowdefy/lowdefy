@@ -31,9 +31,11 @@ Files run in file-name order, and journeys run one at a time — each journey op
   steps:
     - click: new_control
     - fill: { blockId: title, value: Access reviews }
+    - set: { blockId: priority, value: 3 }
     - click: submit
     - wait: { request: get_controls }
     - expect: { state: { path: controls.0.title, equals: Access reviews } }
+    - expect: { dom: { blockId: submit, notHasClass: ant-btn-loading } }
 
 - name: guest sees the empty state
   pageId: controls
@@ -53,22 +55,44 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
 
-| Step                                      | Meaning                                                                                                   |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `click: blockId`                          | Click the block.                                                                                          |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block.                                                             |
-| `select: { blockId, value }`              | Open the selector block and choose the option whose text is `value`.                                      |
-| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.             |
-| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                              |
-| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                              |
-| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                          |
-| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them. |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                            |
-| `expect: { visible: blockId }`            | The block is visible.                                                                                     |
-| `expect: { text: { blockId, contains } }` | The block's rendered text contains the string.                                                            |
-| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                      |
+| Step                                              | Meaning                                                                                                                                                          |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `click: blockId`                                  | Click the block.                                                                                                                                                 |
+| `fill: { blockId, value }`                        | Type `value` into the `input` or `textarea` inside the block. A block that has neither — a rich text editor, a slider, a rating — falls back to `set` semantics. |
+| `set: { blockId, value }`                         | Write `value` straight through the engine's `setValue` for the block. Only for input blocks; a block that holds no value is an error naming its type.            |
+| `select: { blockId, value }`                      | Open the selector block and choose the option whose text is `value`. Options are looked up inside the dropdown the click opened.                                 |
+| `press: Enter`                                    | Press a key or chord on the page. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                        |
+| `press: { blockId, key }`                         | Press the key on that block instead of the page, for a key handler bound to one input.                                                                           |
+| `wait: { ms }`                                    | Pause for `ms` milliseconds.                                                                                                                                     |
+| `wait: { request: requestId }`                    | Wait until the request has finished loading.                                                                                                                     |
+| `wait: { state: path }`                           | Wait until the state value at `path` is defined.                                                                                                                 |
+| `screenshot: name`                                | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                        |
+| `expect: { state: { path, equals } }`             | The page state at `path` deep-equals `equals`.                                                                                                                   |
+| `expect: { visible: blockId } `                   | The block is visible.                                                                                                                                            |
+| `expect: { text: { blockId, contains } }`         | The block's rendered text contains the string.                                                                                                                   |
+| `expect: { text: { blockId, equals } }`           | The block's rendered text, trimmed, is exactly the string.                                                                                                       |
+| `expect: { text: { blockId, notContains } }`      | The block's rendered text does not contain the string — what proves a row was removed.                                                                           |
+| `expect: { url: { contains } }`                   | The browser URL contains the string.                                                                                                                             |
+| `expect: { dom: { blockId, hasClass } }`          | The block's element carries the class.                                                                                                                           |
+| `expect: { dom: { blockId, notHasClass } }`       | The block's element does not carry the class.                                                                                                                    |
+| `expect: { dom: { blockId, matches } }`           | At least one descendant of the block matches the CSS selector.                                                                                                   |
+| `expect: { dom: { blockId, attribute, equals } }` | The block's attribute equals the string.                                                                                                                         |
+| `expect: { durationMsUnder: ms }`                 | The step before this one took less than `ms`. It cannot be the first step.                                                                                       |
 
-The full grammar, including the failure shape the route returns, is documented with the [journey tool](/ai-agent-docs). The CLI and the MCP tool share one implementation, so a journey an agent verifies interactively can be committed as-is.
+Each step is an object with exactly **one** key, and each `expect` and `wait` names exactly **one**
+form. `expect: { dom: ... }` takes exactly one of `hasClass`, `notHasClass`, `matches`, or
+`attribute` together with `equals`.
+
+Journeys run under a fixed locale (`en-US`), timezone (`UTC`) and colour scheme, so an assertion on
+a formatted date reads the same on your machine and in CI.
+
+After a step that navigates, the runner waits for the new page to be committed before it waits for
+the page's events and requests to settle, so the next step asserts against the page that was opened.
+
+The step grammar is one implementation shared by `lowdefy test` and the dev server's
+[journey tool](/ai-agent-docs), so a journey an agent verifies interactively can be committed as-is,
+and a file with a typo — an unknown top-level key, a step with two keys, a `fill:` with no `blockId`
+— is reported with its file path and step index before a browser is opened.
 
 ## Request tests
 
@@ -118,7 +142,7 @@ my-app/
 | `payload`    | No       | The request or endpoint payload. Defaults to `{}`.                                                                                                                                                                          |
 | `fixtures`   | No       | Names of shared fixtures (`fixtures/<name>.yaml`) to load before the test runs, in order, before `seed`. See [Fixtures](/fixtures).                                                                                         |
 | `seed`       | No       | Documents to load before the test runs, keyed by `connectionId`. See below.                                                                                                                                                 |
-| `expect`     | Yes      | What the response must look like: a literal subset, or `{ schema }`.                                                                                                                                                        |
+| `expect`     | Yes      | What the response must look like: a literal subset, `{ schema }`, `{ contains }` or `{ reject }`. See below.                                                                                                                |
 
 A test names exactly one target: `pageId` together with `requestId`, or `endpointId`. Requests whose type is not declared read-only (for example `MongoDBInsertOne`) also need `cli.agentTools.allowWriteRequests: true`; a refused test fails with the reason and how to enable it.
 
@@ -144,11 +168,27 @@ Seeded tests need a server the command started; `--url` fails with `Seeded reque
 
 ### Expectations
 
-`expect` has two forms.
+`expect` has four forms.
 
 A **literal subset**: every key in `expect` must be present in the response with a deep-equal value; keys the response has that `expect` does not name are ignored. Arrays are compared element by element with the same rule and must have the same length, so `expect: [{ title: Access reviews }]` asserts exactly one row whose `title` is `Access reviews`, whatever else the row contains.
 
 A **JSON schema**: `expect: { schema: { ... } }` validates the response against the schema instead. Use it when values are not predictable — ids, timestamps, counts.
+
+A **membership assertion**: `expect: { contains: [{ title: Access reviews }] }` asserts that every element listed appears somewhere in the response array, in any order, and lets the response hold more. Use it for "the list includes the open controls"; a bare array stays exact, including its length.
+
+A **rejection**: `expect: { reject: { messageContains, name } }` asserts that the request refuses instead of returning data — a routine's `:reject`, a payload-schema refusal, a tenant-wall or write-gate refusal. At least one of `messageContains` (a substring of the error message) or `name` (the error class name, or `Refused` for a gate refusal) must be given, and both must hold when both are given. A request that succeeds fails the test with `Expected request <id> to reject, it returned ...`.
+
+```yaml
+- name: a member may not close another org's control
+  pageId: controls
+  requestId: close_control
+  user: member
+  payload: { _id: c1 }
+  expect:
+    reject: { messageContains: not authorized to close this ticket }
+```
+
+> **Reserved keys.** `schema`, `contains` and `reject` are markers, not data: an `expect` that is an object with only one of those keys is read as an assertion form. A response whose only asserted top-level key is literally `schema` cannot be matched as a literal subset — write `expect: { '~schema': { ... } }` to assert a JSON schema and leave a plain `{ schema: ... }` matchable, or name a second key alongside it.
 
 A failing request test prints the path of the first mismatch, with `expected` and `actual`:
 
@@ -196,7 +236,7 @@ A failing journey stops at its first failing step and prints the step's index, t
 | `0`       | Every test passed, or there are no journeys or request tests (a note is printed).                                                             |
 | `1`       | At least one test failed, a test file was invalid, seeding needed a package that is not installed, or an explicit `--filter` matched nothing. |
 
-A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
+A journey file that is not valid YAML, is empty, or does not match the journey format (a missing `name`, a typo'd top-level key such as `pageID`, a step with two keys, an unknown step key, or a step malformed below its key such as `fill: title`) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
 ## Continuous integration
 

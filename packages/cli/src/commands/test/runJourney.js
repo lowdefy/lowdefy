@@ -16,8 +16,7 @@
 
 import axios from 'axios';
 import { type } from '@lowdefy/helpers';
-
-import validateJourney from './validateJourney.js';
+import { validateJourney } from '@lowdefy/node-utils';
 
 function describeHttpError(error) {
   if (type.isNone(error.response)) {

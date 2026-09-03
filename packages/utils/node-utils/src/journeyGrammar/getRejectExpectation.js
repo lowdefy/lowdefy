@@ -13,17 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { validate } from '@lowdefy/ajv';
 
-import requestTestSchema from './requestTestSchema.js';
+import { type } from '@lowdefy/helpers';
 
-function validateRequestTest({ test }) {
-  try {
-    validate({ schema: requestTestSchema, data: test });
-  } catch (error) {
-    return { valid: false, message: error.message };
+import getStepKey from './getStepKey.js';
+
+// A request test's `expect` that is an object with exactly the one key `reject`
+// asserts a refusal instead of a response, so the runner must invert its
+// success/failure branch. Returns the rejection params, or undefined.
+function getRejectExpectation(expected) {
+  if (getStepKey(expected) !== 'reject') {
+    return undefined;
   }
-  return { valid: true };
+  if (!type.isObject(expected.reject)) {
+    return undefined;
+  }
+  return expected.reject;
 }
 
-export default validateRequestTest;
+export default getRejectExpectation;

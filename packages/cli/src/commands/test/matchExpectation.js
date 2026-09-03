@@ -122,11 +122,17 @@ function matchContains({ expected, actual }) {
 }
 
 // A single-key object naming a reserved marker is an assertion form rather than
-// data. New forms (a rejection assertion, for one) are added here.
+// data. The collision is the price of the shorthand: a response whose only
+// top-level key is literally "schema" or "contains" cannot be asserted as a
+// literal subset. "~schema" is the escape hatch — it asserts the same schema
+// while leaving a plain { schema: ... } response matchable through it.
+// `reject` is the third reserved marker; it is resolved before the request runs
+// (runRequestTest), because it asserts a refusal instead of a response.
 const markers = {
   contains: (expected, actual) =>
     type.isArray(expected) ? matchContains({ expected, actual }) : null,
   schema: (expected, actual) => matchSchema({ schema: expected, actual }),
+  '~schema': (expected, actual) => matchSchema({ schema: expected, actual }),
 };
 
 function getMarker(expected) {
@@ -140,8 +146,9 @@ function getMarker(expected) {
   return { key, run: markers[key] };
 }
 
-// Compares a response against a test's `expect`: { schema } validates with ajv,
-// { contains } asserts membership in an array, anything else is a literal subset.
+// Compares a response against a test's `expect`: { schema } (or { '~schema' })
+// validates with ajv, { contains } asserts membership in an array, anything
+// else is a literal subset.
 // The result names the exact path of the first mismatch so a failure reads as
 // "response.0.status expected open, got closed".
 function matchExpectation({ expected, actual }) {

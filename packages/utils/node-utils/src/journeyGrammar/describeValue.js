@@ -14,17 +14,10 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
-
-import journeySchema from './journeySchema.js';
-
-function validateJourney({ journey }) {
-  try {
-    validate({ schema: journeySchema, data: journey });
-  } catch (error) {
-    return { valid: false, message: error.message };
-  }
-  return { valid: true };
+// Grammar errors are read by an agent, so every message ends with the value
+// that was actually written in the config.
+function describeValue(value) {
+  return JSON.stringify(value);
 }
 
-export default validateJourney;
+export default describeValue;

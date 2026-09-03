@@ -35,6 +35,11 @@ function readJourneyFile({ filePath }) {
   if (type.isArray(parsed)) {
     return parsed.map((journey) => ({ filePath, journey }));
   }
+  // A file whose YAML parses to null is empty or fully commented out; saying so
+  // is clearer than "Journey should be an object. Received null."
+  if (type.isNone(parsed)) {
+    return [{ filePath, journey: undefined, error: 'Journey file is empty.' }];
+  }
   return [{ filePath, journey: parsed }];
 }
 
