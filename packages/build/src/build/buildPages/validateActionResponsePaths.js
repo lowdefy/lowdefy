@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
+import { getSchemaAtPath } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import collectExceptions from '../../utils/collectExceptions.js';
 import extractOperatorPath from '../../utils/extractOperatorPath.js';
 import findSimilarString from '../../utils/findSimilarString.js';
-import resolveSchemaPath from '../../utils/resolveSchemaPath.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 // A CallAPI action's record is { type, response, index } where response is the
@@ -64,9 +64,10 @@ function validateActionResponsePaths({ page, endpointConfigs, context }) {
     if (type.isUndefined(target)) return;
     if (record !== 'response' || envelope !== 'response' || restSegments.length === 0) return;
     const rest = restSegments.join('.');
-    const { resolved, declared, segment, candidates } = resolveSchemaPath({
+    const { resolved, declared, segment, candidates } = getSchemaAtPath({
       schema: target.responseSchema,
       path: rest,
+      explain: true,
     });
     if (resolved) return;
     const suggestion = findSimilarString({ input: segment, candidates });

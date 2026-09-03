@@ -161,7 +161,10 @@ async function createMcpServer({ context }) {
       const result = {
         content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }],
       };
-      if (!type.isNone(endpointConfig.responseSchema)) {
+      // MCP requires structuredContent to be a JSON object; an endpoint that
+      // returns an array or a scalar has its result in `content` only, rather
+      // than a field strict clients reject.
+      if (!type.isNone(endpointConfig.responseSchema) && type.isObject(deserializedResponse)) {
         result.structuredContent = deserializedResponse;
       }
       return result;

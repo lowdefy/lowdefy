@@ -1119,6 +1119,7 @@ test('callRequest resolves collectionSchema from the evaluated connection collec
   expect(mockTestRequest.mock.calls[0][0].collectionSchema).toEqual({
     name: 'answers',
     fields: collectionsArtifact.answers.fields,
+    required: [],
   });
   expect(mockTestRequest.mock.calls[0][0].connection).toEqual({ collection: 'answers' });
 });
@@ -1223,5 +1224,6 @@ test('callRequest runs a conforming and a violating write through the resolver w
   expect(mockTestRequestCheckWrite.mock.calls[1][0].collectionSchema).toEqual({
     name: 'answers',
     fields: collectionsArtifact.answers.fields,
+    required: [],
   });
 });

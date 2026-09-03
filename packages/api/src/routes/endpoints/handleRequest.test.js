@@ -315,6 +315,7 @@ test('a step resolves collectionSchema from the evaluated connection collection'
   expect(mockTenantRequest.mock.calls[0][0].collectionSchema).toEqual({
     name: 'answers',
     fields: collectionsArtifact.answers.fields,
+    required: [],
   });
   expect(mockTenantRequest.mock.calls[1][0].collectionSchema).toBe(null);
 });

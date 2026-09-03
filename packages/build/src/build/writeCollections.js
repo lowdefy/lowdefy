@@ -32,6 +32,11 @@ function writeCollections({ context }) {
     if (!type.isUndefined(collection.fields)) {
       artifact.fields = collection.fields;
     }
+    // The JSON Schema array form, so { type: object, properties: fields,
+    // required } compiles as-is for every consumer.
+    if (type.isArray(collection.required) && collection.required.length > 0) {
+      artifact.required = collection.required;
+    }
     artifact.relations = {};
     Object.keys(collection.relations).forEach((fieldName) => {
       const { collection: target, field } = collection.relations[fieldName];

@@ -116,8 +116,10 @@ function getContext({
     requests: {},
     state: {},
     // The page state contract, nested into one root JSON schema so blocks can
-    // look up their declared type and Validate can check the whole state.
-    stateSchema: type.isObject(config.stateSchema)
+    // look up their declared type and Validate can check the whole state. Named
+    // apart from the artifact's `stateSchema` (the dotted map) because the two
+    // are different shapes and were read as one.
+    stateSchemaRoot: type.isObject(config.stateSchema)
       ? nestSchemaPaths({ paths: config.stateSchema })
       : undefined,
     _internal: {

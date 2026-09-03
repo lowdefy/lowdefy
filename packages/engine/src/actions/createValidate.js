@@ -44,14 +44,13 @@ function errorStatePath({ error, prefix }) {
   return joinPath(prefix, path);
 }
 
+// A Validate action that targets a contract the page does not declare, or a
+// path the contract does not name, is a build error (checkValidateActionSchemas)
+// - not something the engine re-checks. The path miss below survives only for
+// an app that suppressed that check.
 function getSchemaValidator({ context, schema }) {
-  if (type.isNone(context.stateSchema)) {
-    throw new Error(
-      `Validate "schema" requires a state contract, but page "${context.pageId}" declares no "state".`
-    );
-  }
   const path = schema === true ? '' : schema;
-  const fragment = getSchemaAtPath({ schema: context.stateSchema, path });
+  const fragment = getSchemaAtPath({ schema: context.stateSchemaRoot, path });
   if (fragment === null) {
     throw new Error(
       `Validate "schema" path "${schema}" is not part of the state contract of page "${context.pageId}".`

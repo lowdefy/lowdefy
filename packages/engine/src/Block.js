@@ -386,9 +386,22 @@ class Block {
 
   // The JSON schema type the page state contract declares for this block's
   // state path, or undefined when the page has no contract or leaves it open.
+  // Resolved once: blockId already carries this block's array indices and the
+  // contract cannot change without a page rebuild, so re-walking the schema on
+  // every state change would buy nothing.
   getDeclaredStateType = () => {
-    if (type.isNone(this.context.stateSchema)) return undefined;
-    const fragment = getSchemaAtPath({ schema: this.context.stateSchema, path: this.blockId });
+    if (type.isNone(this.declaredStateType)) {
+      this.declaredStateType = { value: this.resolveDeclaredStateType() };
+    }
+    return this.declaredStateType.value;
+  };
+
+  resolveDeclaredStateType = () => {
+    if (type.isNone(this.context.stateSchemaRoot)) return undefined;
+    const fragment = getSchemaAtPath({
+      schema: this.context.stateSchemaRoot,
+      path: this.blockId,
+    });
     return fragment === null ? undefined : fragment.type;
   };
 

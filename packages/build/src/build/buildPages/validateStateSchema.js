@@ -19,6 +19,7 @@ import { isStateWritingCategory } from '@lowdefy/block-utils';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import checkValidateActionSchemas from './checkValidateActionSchemas.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import findSimilarString from '../../utils/findSimilarString.js';
 import collectStateUsage, { resolveStatePath } from './collectStateUsage.js';
@@ -61,6 +62,10 @@ function validateFragments({ page, context }) {
 }
 
 function validateStateSchema({ page, context }) {
+  // Runs whether or not the page declares a contract: a Validate action that
+  // targets one is wrong precisely when there is none.
+  checkValidateActionSchemas({ page, context });
+
   if (!type.isObject(page.stateSchema)) return;
 
   validateFragments({ page, context });

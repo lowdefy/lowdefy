@@ -169,6 +169,7 @@ test('callConnectionRequest resolves the collection schema and hands it to the r
   expect(mockInsertMany.mock.calls[0][0].collectionSchema).toEqual({
     name: 'controls',
     fields: { _id: { type: 'string' }, label: { type: 'string' } },
+    required: [],
   });
 });
 

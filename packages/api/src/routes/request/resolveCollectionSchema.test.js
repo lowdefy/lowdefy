@@ -42,7 +42,7 @@ function createContext(artifact = collections) {
 test('resolveCollectionSchema returns the name and fields of a collection that declares fields', async () => {
   const context = createContext();
   const res = await resolveCollectionSchema(context, { collectionName: 'answers' });
-  expect(res).toEqual({ name: 'answers', fields: collections.answers.fields });
+  expect(res).toEqual({ name: 'answers', fields: collections.answers.fields, required: [] });
   expect(res.fields).toBe(collections.answers.fields);
   expect(context.readConfigFile).toHaveBeenCalledWith('collections.json');
 });

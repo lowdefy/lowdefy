@@ -20,11 +20,13 @@ import { UserError } from '@lowdefy/errors';
 const compileCalls = [];
 jest.unstable_mockModule('@lowdefy/ajv', async () => {
   const actual = await import('../../../../utils/ajv/src/compile.js');
+  const { default: toJsonShape } = await import('../../../../utils/ajv/src/toJsonShape.js');
   return {
     compile: jest.fn((args) => {
       compileCalls.push(args);
       return actual.default(args);
     }),
+    toJsonShape,
   };
 });
 
@@ -122,8 +124,8 @@ test('validatePayload strips build-artifact markers from the schema before compi
   ).toThrow("at (root): must have required property 'quantity'.");
 });
 
-test('validatePayload caches the compiled validator per endpoint while the schema object is unchanged', () => {
-  const endpointConfig = { endpointId: 'cached', payloadSchema: schema };
+test('validatePayload caches the compiled validator while the schema object is unchanged', () => {
+  const endpointConfig = { endpointId: 'cached', payloadSchema: { ...schema } };
   validatePayload({ endpointConfig, payload: { quantity: 1 } });
   validatePayload({ endpointConfig, payload: { quantity: 2 } });
   validatePayload({ endpointConfig: { ...endpointConfig }, payload: { quantity: 3 } });
@@ -131,7 +133,7 @@ test('validatePayload caches the compiled validator per endpoint while the schem
 });
 
 test('validatePayload recompiles when the endpoint carries a new schema object', () => {
-  const endpointConfig = { endpointId: 'rebuilt', payloadSchema: schema };
+  const endpointConfig = { endpointId: 'rebuilt', payloadSchema: { ...schema } };
   validatePayload({ endpointConfig, payload: { quantity: 1 } });
   expect(compileCalls).toHaveLength(1);
 
@@ -152,4 +154,25 @@ test('validatePayload surfaces a schema ajv cannot compile as the thrown compile
       payload: {},
     })
   ).toThrow(/schema is invalid/);
+});
+
+// R6: payloadSchema describes the JSON shape the caller sent, so `date-time`
+// means the same thing here as it does in a responseSchema or a collections
+// field declaration.
+test('validatePayload accepts a client-sent date against a date-time format', () => {
+  const endpointConfig = {
+    endpointId: 'dated',
+    payloadSchema: {
+      type: 'object',
+      properties: { from: { type: 'string', format: 'date-time' } },
+      required: ['from'],
+    },
+  };
+  expect(() => validatePayload({ endpointConfig, payload: { from: new Date(0) } })).not.toThrow();
+  expect(() =>
+    validatePayload({ endpointConfig, payload: { from: '1970-01-01T00:00:00.000Z' } })
+  ).not.toThrow();
+  expect(() => validatePayload({ endpointConfig, payload: { from: 'yesterday' } })).toThrow(
+    UserError
+  );
 });

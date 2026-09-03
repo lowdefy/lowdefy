@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
+import { getSchemaAtPath } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../../../utils/collectExceptions.js';
 import findSimilarString from '../../../utils/findSimilarString.js';
-import resolveSchemaPath from '../../../utils/resolveSchemaPath.js';
 import traverseConfig from '../../../utils/traverseConfig.js';
 
 // The _event operator reads a path as a string, or as { key } in the object
@@ -52,7 +52,7 @@ function checkEventPayloadRefs({ block, context, event, eventConfigKey, eventNam
       if (obj._event === undefined) return;
       const path = getEventPath(obj._event);
       if (path === null) return;
-      const result = resolveSchemaPath({ schema: payload, path });
+      const result = getSchemaAtPath({ schema: payload, path, explain: true });
       if (result.resolved) return;
       const payloadList = payloadKeys.length > 0 ? payloadKeys.join(', ') : 'none';
       // Collected, not thrown, so every bad path in the event is reported in
