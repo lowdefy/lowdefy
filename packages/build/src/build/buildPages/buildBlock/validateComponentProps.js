@@ -41,7 +41,7 @@ function validateComponentProps({ def, useProps, instanceId, configKey }) {
             : '';
       throw new ConfigError(
         `Component "${def.id}" used at "${instanceId}" has no prop "${name}".${suffix}`,
-        { configKey }
+        { configKey, checkSlug: 'component' }
       );
     }
   }
@@ -58,7 +58,7 @@ function validateComponentProps({ def, useProps, instanceId, configKey }) {
         `Component "${def.id}" used at "${instanceId}" requires prop "${name}"` +
           (propDef.description ? `\n  - ${propDef.description}` : '') +
           '.',
-        { configKey }
+        { configKey, checkSlug: 'component' }
       );
     }
 
@@ -76,8 +76,10 @@ function validateComponentProps({ def, useProps, instanceId, configKey }) {
       !matchesType
     ) {
       throw new ConfigError(
-        `Component "${def.id}" used at "${instanceId}" prop "${name}" should be type "${propDef.type}" but received "${type.typeOf(value)}".`,
-        { received: value, configKey }
+        `Component "${def.id}" used at "${instanceId}" prop "${name}" should be type "${
+          propDef.type
+        }" but received "${type.typeOf(value)}".`,
+        { received: value, configKey, checkSlug: 'component' }
       );
     }
   }

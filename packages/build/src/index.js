@@ -141,12 +141,6 @@ async function build(options) {
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
 
-    // Phase 3.1: Extract runtime component definitions into context.componentDefs
-    // before operator precompute/validation runs, so component bodies (which
-    // carry _prop and _slot markers) never reach the unknown-operator or
-    // precompute passes. Expansion re-inserts them per use site in buildBlock.
-    tryBuildStep(buildComponents, 'buildComponents', { components, context });
-
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after
     // module manifests are merged (replacing the old per-region folds in buildRefs,
@@ -201,6 +195,13 @@ async function build(options) {
     });
     // Block schemas must be in context before any block is built (validateBlockProperties).
     await loadBlockSchemas({ components, context });
+    // Extract runtime component definitions into context.componentDefs. The
+    // definitions stay in the config tree until here so precompute folds build
+    // operators in component bodies and testSchema validates the definitions
+    // (_prop/_slot survive precompute as registered dynamic identifiers), and
+    // so the block-type collision check reads a populated context.blockMetas.
+    // Expansion re-inserts a body per use site in buildBlock.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before

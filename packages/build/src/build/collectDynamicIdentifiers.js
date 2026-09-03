@@ -16,8 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
+// _prop and _slot are build-time component markers, not operators: expandComponent
+// resolves them per use site, long after precompute. They are registered here so
+// precompute leaves a component body's markers alone while still folding the build
+// operators around them, and so a marker is never mistaken for an operator typo.
+const COMPONENT_MARKER_IDENTIFIERS = ['_prop', '_slot'];
+
 function collectDynamicIdentifiers({ operators }) {
-  const dynamicIdentifiers = new Set();
+  const dynamicIdentifiers = new Set(COMPONENT_MARKER_IDENTIFIERS);
 
   Object.entries(operators).forEach(([operatorName, operatorFn]) => {
     if (!type.isFunction(operatorFn)) return;

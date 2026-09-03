@@ -24,7 +24,7 @@ class WebParser {
     this.parse = this.parse.bind(this);
   }
 
-  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_', props }) {
+  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -90,7 +90,6 @@ class WebParser {
           pageId,
           params,
           parser: this,
-          props,
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,
