@@ -28,6 +28,7 @@ export const VALID_CHECK_SLUGS = {
   'connection-refs': 'Nonexistent connection ID references',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',
+  secrets: 'Environment variable names that are not set in the build environment',
 };
 
 /**
