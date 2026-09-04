@@ -74,6 +74,7 @@
     "@lowdefy/layout": "5.5.1",
     "@lowdefy/logger": "5.5.1",
     "@lowdefy/node-utils": "5.5.1",
+    "@lowdefy/operators-dayjs": "5.5.1",
     "@lowdefy/operators-js": "5.5.1",
     "@lowdefy/plugin-better-auth": "5.5.1",
     "@lowdefy/websockets-core": "5.5.1",
