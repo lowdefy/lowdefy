@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-// The key resolveJourneySession writes in @lowdefy/client. Read, never
-// written: a report must not mint a session the recorder never used, and a
-// session that was not sampled carries no journey_event lines to pull - the
-// report is still worth having, it just has no trace beside it.
-const STORAGE_KEY = 'lowdefy_journey_session';
+import journeySessionKey from '@lowdefy/client/journey/journeySessionKey.js';
+
+// Read, never written: a report must not mint a session the recorder never
+// used, and a session that was not sampled carries no journey_event lines to
+// pull - the report is still worth having, it just has no trace beside it.
+const STORAGE_KEY = journeySessionKey;
 
 function readJourneySessionId(window) {
   try {
