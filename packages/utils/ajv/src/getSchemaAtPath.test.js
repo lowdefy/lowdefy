@@ -163,3 +163,14 @@ test('getSchemaAtPath explain lists candidates from combinator branches', () => 
     candidates: ['a', 'b'],
   });
 });
+
+test('getSchemaAtPath opens an undeclared member when additionalProperties is true beside declared properties', () => {
+  const schema = {
+    type: 'object',
+    properties: { value: { type: 'string' } },
+    additionalProperties: true,
+  };
+  expect(getSchemaAtPath({ schema, path: 'value' })).toEqual({ type: 'string' });
+  expect(getSchemaAtPath({ schema, path: 'anything.nested' })).toEqual({});
+});
+

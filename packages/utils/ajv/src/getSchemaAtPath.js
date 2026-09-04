@@ -90,6 +90,10 @@ function stepInto(node, segment) {
   if (type.isObject(node.additionalProperties)) {
     return node.additionalProperties;
   }
+  // `additionalProperties: true` opens the node beside its declared members.
+  if (node.additionalProperties === true) {
+    return {};
+  }
   // A declared `properties` map is the complete member list. Without one, an
   // object-typed (or untyped) fragment leaves its members open.
   if (type.isNone(node.properties) && isOpenObject(node)) {
