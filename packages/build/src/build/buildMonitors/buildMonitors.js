@@ -29,7 +29,7 @@ function buildMonitors({ components, context }) {
   return [
     ...collectEndpointMonitors({ components, context, defaults }),
     ...collectPageRequestMonitors({ components, context, defaults }),
-    ...collectNotificationMonitors({ components, context }),
+    ...collectNotificationMonitors({ components, context, defaults }),
     ...collectConnectionMonitors({ components, context, defaults }),
   ];
 }

@@ -21,7 +21,10 @@ import reportingSessions from './reportingSessions.js';
 import resolveEventPolicy from './resolveEventPolicy.js';
 
 // The one emitter for wide events: `request_completed`, `step_completed`,
-// `endpoint_completed`, `agent_tool_completed` and their `*_failed` twins.
+// `endpoint_completed`, `agent_tool_completed` and their `*_failed` twins, plus
+// `notification_delivered` / `notification_failed` for the one send the
+// framework makes itself - an auth email, which does not pass through the
+// request resolver and so writes no request line of its own.
 //
 // A line carries `config_key`, never a resolved `source`. `source` is a pure
 // function of (config_key, git_sha) - both are on every line, git_sha through

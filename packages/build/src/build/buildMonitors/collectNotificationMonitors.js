@@ -30,27 +30,42 @@ import resolveMonitorSource from './resolveMonitorSource.js';
     second one over the same lines.
   - The framework, for a notification wired to an auth email flow: the server
     sends it itself through auth.email.connectionId, bypassing the request
-    resolver (packages/api/src/routes/auth/createSendEmail.js), so no wide event
-    is written at all. That is a real blind spot and the entry says so.
+    resolver, so no request line covers it. That send emits its own wide event
+    instead (packages/api/src/routes/auth/createSendEmail.js writes
+    notification_delivered / notification_failed), and this is the one
+    notification entry with a rule of its own.
 
   Every notification gets an entry either way: the artifact is the app's full
   inventory of what is worth watching, and an entry that says who delivers and
   what watches it is what tells a silent notification from a covered one.
 */
-function describeDelivery({ notificationId, sites, dynamicEndpoints, authConnectionId }) {
+function describeDelivery({ notificationId, sites, dynamicEndpoints, authConnectionId, defaults }) {
   const endpoints = sites?.endpoints ?? [];
   const auth_flows = sites?.auth_flows ?? [];
   const covered_by = endpoints.map((endpointId) => `endpoint:${endpointId}:error_rate`);
 
   if (auth_flows.length > 0) {
     const connection = authConnectionId ?? 'auth.email.connectionId';
+    const filter = { notification_id: notificationId };
     return {
       delivery: { owner: 'framework', endpoints, auth_flows },
       covered_by,
-      status: 'no-event-yet',
+      event: 'notification_failed',
+      description: `Auth email "${notificationId}" is failing to send more than ${
+        defaults.error_rate * 100
+      }% of the time.`,
+      rule: {
+        type: 'error_rate',
+        window_minutes: defaults.window_minutes,
+        threshold: defaults.error_rate,
+        comparison: 'above',
+        failure: { event: 'notification_failed', filter },
+        total: { events: ['notification_delivered', 'notification_failed'], filter },
+      },
+      status: 'active',
       note: `Delivered by the framework: auth email flow(s) ${auth_flows.join(
         ', '
-      )} send this notification through the "${connection}" connection, outside the request resolver, so no wide event is written and a failed send is invisible. Emit a "notification_delivered" wide event (fields: notification_id, channel, success, duration_ms, error) from the auth send path to make this monitor pushable.`,
+      )} send this notification through the "${connection}" connection, outside the request resolver, so the send emits its own "notification_delivered" / "notification_failed" event and this rule watches it.`,
     };
   }
 
@@ -86,7 +101,7 @@ function describeDelivery({ notificationId, sites, dynamicEndpoints, authConnect
   };
 }
 
-function collectNotificationMonitors({ components, context }) {
+function collectNotificationMonitors({ components, context, defaults }) {
   const { delivery, dynamicEndpoints, authConnectionId } = collectNotificationDelivery({
     components,
   });
@@ -100,13 +115,15 @@ function collectNotificationMonitors({ components, context }) {
         sites: delivery.get(notificationId),
         dynamicEndpoints,
         authConnectionId,
+        defaults,
       });
       return {
         id: `notification:${notificationId}:delivery_failure`,
         unit: { type: 'notification', id: notificationId },
-        event: null,
-        description: `Notification "${notificationId}" is failing to deliver.`,
-        rule: null,
+        event: described.event ?? null,
+        description:
+          described.description ?? `Notification "${notificationId}" is failing to deliver.`,
+        rule: described.rule ?? null,
         config_key: configKey ?? null,
         source: resolveMonitorSource({ configKey, context }),
         delivery: described.delivery,

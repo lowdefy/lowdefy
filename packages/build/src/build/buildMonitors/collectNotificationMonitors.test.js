@@ -17,9 +17,10 @@
 import collectNotificationMonitors from './collectNotificationMonitors.js';
 
 const context = { keyMap: {}, refMap: {} };
+const defaults = { error_rate: 0.05, p95_ms: 2000, window_minutes: 5 };
 
 function collect(components) {
-  return collectNotificationMonitors({ components, context });
+  return collectNotificationMonitors({ components, context, defaults });
 }
 
 test('collectNotificationMonitors returns an entry for every declared notification', () => {
@@ -80,19 +81,46 @@ test('collectNotificationMonitors lists every endpoint that renders the same not
   expect(monitors[0].covered_by).toEqual(['endpoint:one:error_rate', 'endpoint:two:error_rate']);
 });
 
-test('collectNotificationMonitors marks an auth email notification no-event-yet and names the connection', () => {
+test('collectNotificationMonitors watches an auth email notification with a notification_failed rate rule', () => {
   const monitors = collect({
     notifications: [{ notificationId: 'verify' }],
     auth: { email: { connectionId: 'smtp', templates: { verifyEmail: 'verify' } } },
   });
-  expect(monitors[0].status).toBe('no-event-yet');
+  expect(monitors[0].status).toBe('active');
   expect(monitors[0].delivery).toEqual({
     owner: 'framework',
     endpoints: [],
     auth_flows: ['verifyEmail'],
   });
+  expect(monitors[0].event).toBe('notification_failed');
+  expect(monitors[0].rule).toEqual({
+    type: 'error_rate',
+    window_minutes: 5,
+    threshold: 0.05,
+    comparison: 'above',
+    failure: { event: 'notification_failed', filter: { notification_id: 'verify' } },
+    total: {
+      events: ['notification_delivered', 'notification_failed'],
+      filter: { notification_id: 'verify' },
+    },
+  });
+  expect(monitors[0].description).toBe(
+    'Auth email "verify" is failing to send more than 5% of the time.'
+  );
   expect(monitors[0].note).toMatch('"smtp" connection');
-  expect(monitors[0].note).toMatch('notification_delivered');
+});
+
+test('collectNotificationMonitors uses the app error_rate default for the auth email rule', () => {
+  const monitors = collectNotificationMonitors({
+    components: {
+      notifications: [{ notificationId: 'verify' }],
+      auth: { email: { connectionId: 'smtp', templates: { verifyEmail: 'verify' } } },
+    },
+    context,
+    defaults: { error_rate: 0.2, p95_ms: 500, window_minutes: 10 },
+  });
+  expect(monitors[0].rule.threshold).toBe(0.2);
+  expect(monitors[0].rule.window_minutes).toBe(10);
 });
 
 test('collectNotificationMonitors keeps the framework owner when a routine also renders the auth notification', () => {
@@ -108,7 +136,7 @@ test('collectNotificationMonitors keeps the framework owner when a routine also 
       },
     ],
   });
-  expect(monitors[0].status).toBe('no-event-yet');
+  expect(monitors[0].status).toBe('active');
   expect(monitors[0].delivery).toEqual({
     owner: 'framework',
     endpoints: ['resend'],
@@ -141,6 +169,7 @@ test('collectNotificationMonitors reports an operator notificationId as delivery
 test('collectNotificationMonitors resolves source to file:line for the notification config', () => {
   const monitors = collectNotificationMonitors({
     components: { notifications: [{ notificationId: 'welcome', '~k': 'k1' }] },
+    defaults,
     context: {
       keyMap: { k1: { key: 'root.notifications[0:welcome]', '~r': 'r1', '~l': 4 } },
       refMap: { r1: { path: 'notifications/welcome.yaml' } },

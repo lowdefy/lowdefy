@@ -179,6 +179,7 @@ _ref:
             | `step_completed` / `step_failed` | A routine step (controls like `:if` are structure and write no line; the steps inside them do) |
             | `endpoint_completed` / `endpoint_failed` | An endpoint routine, with `entry` naming how it was called: `api`, `call_api`, `scheduled`, `webhook`, `detached`, or `background` for an `async: true` run that answered its caller before the routine finished |
             | `agent_tool_completed` / `agent_tool_failed` | A tool call - an MCP `tools/call` (`transport: mcp`) or an agent calling one of its tools (`transport: agent`) |
+            | `notification_delivered` / `notification_failed` | An auth email the server sends itself through `auth.email.connectionId` - the one notification send the framework makes, so the only one that does not already write a `request_*` line |
             | `process_started` | Written once when a server process starts |
             | `migrations_checked` | Written once when the migration preflight first resolves |
 
@@ -190,6 +191,7 @@ _ref:
             | `rid` | The request id, shared by every line of one request (honours an upstream `x-request-id`) |
             | `page_id`, `block_id` | The page and block the work belongs to, where there is one |
             | `request_id`, `endpoint_id`, `step_id` | The ids of the unit that ran |
+            | `notification_id`, `channel`, `connection_id` | On a notification line: which notification was sent, over what (`email`), through which connection. The recipient address, subject and body are never logged |
             | `config_key` | The config location key of the unit - see below |
             | `duration_ms` | Wall-clock duration of the unit |
             | `success` | Whether the unit completed |
@@ -432,7 +434,7 @@ _ref:
             | Scheduled endpoint | Freshness: no `endpoint_completed` for that `endpoint_id` in twice the longest gap its cron leaves |
             | Page request | p95 `duration_ms` above 2000ms, and an error rate on `request_failed` |
             | Connection | Rate of `request_failed` with `error.name == "ServiceError"` - the service being down, not a bad query |
-            | Notification | No rule of its own - the entry names who delivers it and which monitor covers that send (see below) |
+            | Notification | Auth emails: rate of `notification_failed` over `notification_delivered + notification_failed` for that `notification_id`. Every other notification names who delivers it and which monitor covers that send (see below) |
 
             Every entry carries `config_key` and `source` (`file:line`), so an
             alert points at the config that declared the unit. The file is
@@ -448,13 +450,13 @@ _ref:
             | `status` | Meaning |
             | --- | --- |
             | `covered` | `delivery.owner: app`. A routine renders the notification and sends it with the request step that follows, so a failed send fails that step and its endpoint. `covered_by` names the endpoint monitors that already watch it. |
-            | `no-event-yet` | `delivery.owner: framework`. The notification is wired to an auth email flow (`auth.email.templates`), which the server sends itself through `auth.email.connectionId`, outside the request resolver. No wide event is written on that path, so a failed auth email is invisible today. |
+            | `active` | `delivery.owner: framework`. The notification is wired to an auth email flow (`auth.email.templates`), which the server sends itself through `auth.email.connectionId`, outside the request resolver. That send writes its own `notification_delivered` / `notification_failed` line, and the entry carries a rate rule over it, keyed on `notification_id` at your `logger.monitors.defaults.error_rate`. |
             | `delivery-unknown` | Either nothing renders the notification and no auth flow uses it, or an endpoint builds the `notificationId` with an operator, so the build cannot attribute the send. The `note` says which. |
 
-            Notification entries are never pushed to a sink - they carry no rule
-            - but `monitors:push` prints each one it skips with its status and
-            note, so a notification nobody sends, or one on the auth path with
-            no event, shows up on every deploy rather than staying quiet.
+            Only the auth email entries carry a rule and are pushed to a sink;
+            the rest are inventory. `monitors:push` prints each entry it skips
+            with its status and note, so a notification nobody sends shows up on
+            every deploy rather than staying quiet.
 
             ### Pushing them to a sink
 

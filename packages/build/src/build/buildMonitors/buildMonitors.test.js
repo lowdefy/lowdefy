@@ -165,6 +165,22 @@ test('buildMonitors points a rendered notification at the endpoint monitor that 
   expect(byId(monitors, 'endpoint:dispatch_invite:error_rate')).toBeDefined();
 });
 
+test('buildMonitors makes an auth email notification an active rule at the app error rate', () => {
+  const monitors = buildMonitors({
+    components: {
+      logger: { monitors: { defaults: { error_rate: 0.1 } } },
+      notifications: [{ notificationId: 'verify' }],
+      auth: { email: { connectionId: 'smtp', templates: { verifyEmail: 'verify' } } },
+    },
+    context: createContext(),
+  });
+  const notification = byId(monitors, 'notification:verify:delivery_failure');
+  expect(notification.status).toBe('active');
+  expect(notification.event).toBe('notification_failed');
+  expect(notification.rule.threshold).toBe(0.1);
+  expect(notification.rule.failure.filter).toEqual({ notification_id: 'verify' });
+});
+
 test('buildMonitors resolves source to file:line from the keyMap', () => {
   const monitors = buildMonitors({
     components: { api: [{ endpointId: 'send_invoice', '~k': 'k1' }] },
