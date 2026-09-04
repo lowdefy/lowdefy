@@ -213,7 +213,7 @@ The dev server builds migrations too, for the stage it resolves (`STAGE`, else `
 
 ## Worked examples
 
-All four are complete `migrations/<id>.yaml` files, and all are idempotent: re-running one is a no-op because its filter matches only unmigrated documents, or its write is conditional.
+All of these are complete `migrations/<id>.yaml` files, and all are idempotent: re-running one is a no-op because its filter matches only unmigrated documents, its write is conditional, or the operation is idempotent in the database.
 
 ### Add-field backfill
 
@@ -234,6 +234,33 @@ routine:
         $set:
           active: true
 ```
+
+### Creating indexes
+
+`collections.<name>.indexes` declares the indexes a collection should have; a `MongoDBCreateIndexes` step is what creates them. The request mirrors the declaration verbatim, so the declaration and the migration that realises it read the same in one diff:
+
+```yaml
+# migrations/2026-07-02-01-answers-indexes.yaml
+name: Create the answers indexes
+routine:
+  - id: create_indexes
+    type: MongoDBCreateIndexes
+    connectionId: answers
+    tenant: none # an index is a property of the collection, not of an organization
+    properties:
+      indexes:
+        - keys: { organization_id: 1, status: 1, created_at: -1 }
+        - keys: { external_ref: 1 }
+          options: { unique: true, name: by_external_ref }
+```
+
+The step returns `{ indexNames: [...] }`, the names MongoDB gave the indexes it created. `createIndexes` is idempotent for an index that already exists with the same keys and options, so the step is safe to replay when a migration re-runs after a mid-way failure. An index that exists under the same *name* with different keys is a driver error, reported as a request error — give the changed index a new name.
+
+An index on a large collection can take a long time and holds a lock on some deployments; run the migration in a window where that is acceptable, and note that `lowdefy migrate` has no per-step ledger, so a run interrupted during index creation replays the whole migration.
+
+Which indexes to declare is not a guess: `lowdefy check` derives candidates from the queries the app authors and names the ones nothing covers — see [Index candidates](/collections#index-candidates).
+
+**There is no drop.** Lowdefy ships no request type that removes an index and never suggests removing one. An index this app no longer queries may be the one a report, a backup job or another application depends on, and the failure this whole feature exists for is an automated tool dropping an index a job still needed. Removing an index is a hand operation against the database.
 
 ### Rename — copy, verify, unset
 
@@ -376,6 +403,7 @@ routine:
 ## Non-goals
 
 - **No schema-diffing or auto-generated migrations.** The build never derives a migration from a [`collections`](/collections) change — a generated backfill is a data-destroying guess.
+- **No index drops.** `MongoDBCreateIndexes` creates; nothing removes. See [Creating indexes](#creating-indexes).
 - **No down migrations.** Forward-only; correct a mistake with a new migration.
 - **No cross-collection transactions.** A migration touching several collections is not atomic; idempotency, not rollback, is the recovery model.
 - **No migrations for non-database connections** in v1. The worked shapes and the document counts are MongoDB; the routine grammar could express an HTTP or storage migration later, and the file ledger would record it unchanged.

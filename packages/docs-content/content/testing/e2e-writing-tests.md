@@ -76,7 +76,7 @@ await ldf.block('submit_btn').expect.text('Submit');
 
 ### Raw locator access
 
-If you need to do something not covered by the block helpers, you can get the raw Playwright locator:
+If you need to do something not covered by the block helpers, you can get the raw Playwright locator. It resolves to the element the block itself renders (its `data-testid` root), and falls back to the `#bl-<blockId>` layout wrapper only for blocks that render no root of their own, or render it into a portal:
 
 ```javascript
 const locator = ldf.block('my_block').locator();

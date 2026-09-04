@@ -1,6 +1,6 @@
 # Page archetypes
 
-A **page archetype** is a framework-owned page `type` with a large, typed set of `properties` that the build expands into ordinary blocks and requests. A list page is thirty lines with one way to be right instead of four hundred with hundreds of ways to be subtly wrong.
+A **page archetype** is a framework-owned page `type` with a large, typed set of `props` that the build expands into ordinary blocks and requests. A list page is thirty lines with one way to be right instead of four hundred with hundreds of ways to be subtly wrong.
 
 ## Experimental
 
@@ -25,7 +25,7 @@ Lists records from a collection: a request with `projection`, `sort` and `limit`
 # pages/controls.yaml
 id: controls
 type: ListPage
-properties:
+props:
   collection: controls
   columns: [title, framework_id, status]
   filters: [framework_id, status]
@@ -35,9 +35,9 @@ properties:
 
 With `controls` declared under [`collections`](/collections), the build knows `status` is an enum of four values (rendered as a `Selector` filter and a `Tag` cell) and that `framework_id` is a plain field (a text filter). The `rowLink` `$_id` token becomes a read of the row's `_id` from the list response.
 
-### Properties
+### Props
 
-| Property | Type | Required | Notes |
+| Prop | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `collection` | string | yes | Must be declared in `collections:`. |
 | `connectionId` | string | no | Read connection; derived from the collection when exactly one reads it. |
@@ -89,7 +89,7 @@ An archetype you cannot extend has to be deleted the first time it is 10% wrong.
 ```yaml
 id: controls
 type: ListPage
-properties:
+props:
   collection: controls
 slots:
   rowActions:

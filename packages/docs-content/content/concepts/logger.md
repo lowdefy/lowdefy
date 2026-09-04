@@ -188,6 +188,84 @@ logger:
 
 `process_started` carries `app_version`, `git_sha`, the Lowdefy version and the Node version. On a long-lived server that is one line per deploy; on serverless it is one line per cold start, per replica - so group by `git_sha` in your queries, never by line count. `migrations_checked` follows on the first request, naming the stage and the migrations the build recorded as applied.
 
+## Journey recorder
+
+A Lowdefy page already knows what the user did in structured terms:
+the engine records one entry per completed block event, naming the
+block, the event, every action in the chain and every request it
+fired. The journey recorder turns that entry into one trace event
+and beacons it to `/api/journey`, where the server emits it as a
+`journey_event` wide event alongside everything else.
+
+Nothing is instrumented and nothing is named twice: the recorder
+records config ids - the `id:` you wrote in your YAML - never DOM
+selectors, so a recorded journey survives every restyle.
+
+### A recorded event
+
+```json
+{
+  "event": "journey_event",
+  "rid": "01J9V0X2N4",
+  "t": "2026-09-04T10:00:00.000Z",
+  "session_id": "0f0d9f6a-3f2f-4a1b-9f3e-7a4f2b1c8d55",
+  "page_instance": "0f0d9f6a-3f2f-4a1b-9f3e-7a4f2b1c8d55:1",
+  "page_id": "orders",
+  "block_id": "save_button",
+  "event_name": "onClick",
+  "success": true,
+  "error_name": null,
+  "config_key": null,
+  "actions": [{ "id": "save", "type": "Request", "config_key": "k1", "outcome": "ok" }],
+  "requests": [{ "request_id": "save_order", "success": true, "duration_ms": 42 }],
+  "state_writes": [{ "path": "order.total", "type": "number" }],
+  "url_after": "https://app.example.com/orders"
+}
+```
+
+An action's `outcome` is `ok`, `skipped`, `error`, or `pending` for
+an `async: true` action that had not resolved when the event
+completed. A debounced event that bounced is not a step the user
+took and is never recorded.
+
+### Values are the privacy line
+
+In production a trace event carries **paths and JSON types only** -
+never the event payload, never a written value. In development it
+carries both, because the developer is the user. This is structural:
+the value-carrying branch of the recorder exists only in the
+development client build, so a production app cannot be configured
+into sending one.
+
+The server drops any `state_writes` entry whose last path segment is
+a field your `collections` declaration marked `pii: true`, so a
+recorded path never names a person's data even by accident.
+
+The browser sends no identity at all. The server stamps `user.id`
+and `org` from its own session, and - like every other wide event -
+only when `logger.events.identity` is on.
+
+### Configuration
+
+```yaml
+# lowdefy.yaml
+logger:
+  journeys:
+    # On by default.
+    enabled: true
+    # Share of sessions recorded, 0 to 1. The decision is made once
+    # per session, so a recorded session is a complete story rather
+    # than a scatter of unrelated clicks. Raise it to fill your
+    # journey corpus faster.
+    sample_rate: 0.05
+```
+
+`lowdefy dev` records every session regardless of `sample_rate`.
+
+Events are batched in the browser and sent when the batch reaches 20
+events, 5 seconds pass, or the page goes away - by `sendBeacon`,
+chunked so a long session's final flush is never silently refused.
+
 ## Shipping logs to an observability platform
 
 Lowdefy writes JSON log lines to stdout, which is all a platform that
@@ -258,6 +336,31 @@ The exporter is a sink and never fails a request: an export that fails
 is retried once and then dropped, with at most one console warning a
 minute. Your platform's own log stream still has every line.
 
+### Querying the sink back from your dev MCP
+
+Once the lines are in a sink, the dev server's four `lowdefy_prod_*`
+MCP tools can read them back and resolve each row's `config_key` to a
+`file:line` in your working tree - production failure to yaml line in
+one hop. That needs a **read-only query credential**, which is a
+different credential from the ingest token above:
+
+```
+# .env.development - never the ingest token from LOWDEFY_SECRET_*
+LOWDEFY_OPS_QUERY_URL=https://api.axiom.co
+LOWDEFY_OPS_READ_TOKEN=xaqt-your-read-only-token
+LOWDEFY_OPS_DATASET=my-dataset
+```
+
+If `LOWDEFY_OPS_READ_TOKEN` holds the same value as any
+`LOWDEFY_SECRET_*` variable, or as a `logger.otlp.headers` value, every
+query is refused: a credential that can write to the sink is never
+accepted as the query token. The tools also refuse on any non-loopback
+host, and an app can turn them off entirely with
+`config.ops.enabled: false`. Point `LOWDEFY_OPS_QUERY_URL` at a
+`file://` path to run the same tools over a saved JSONL export with no
+network access. See
+[AI agent docs](/concepts/ai-agent-docs) for the full contract.
+
 ## Monitors
 
 Wide events only help if something is watching them. Every build
@@ -273,11 +376,29 @@ an alert.
 | Scheduled endpoint | Freshness: no `endpoint_completed` for that `endpoint_id` in twice the longest gap its cron leaves |
 | Page request | p95 `duration_ms` above 2000ms, and an error rate on `request_failed` |
 | Connection | Rate of `request_failed` with `error.name == "ServiceError"` - the service being down, not a bad query |
-| Notification | Written with `status: "no-event-yet"`: the notification path logs no structured delivery event yet, so the entry records the gap rather than hiding it |
+| Notification | No rule of its own - the entry names who delivers it and which monitor covers that send (see below) |
 
 Every entry carries `config_key` and `source` (`file:line`), so an
-alert points at the config that declared the unit, not just at an id.
-The file is always written, as `[]` when the app declares nothing.
+alert points at the config that declared the unit. The file is
+always written, as `[]` when the app declares nothing.
+
+### Notifications: who delivers
+
+A notification is not a unit of work, so it emits no event of its
+own. What can fail is its delivery, and delivery has an owner - so
+each notification entry carries a `delivery` block, a `covered_by`
+list, and one of three statuses:
+
+| `status` | Meaning |
+| --- | --- |
+| `covered` | `delivery.owner: app`. A routine renders the notification and sends it with the request step that follows, so a failed send fails that step and its endpoint. `covered_by` names the endpoint monitors that already watch it. |
+| `no-event-yet` | `delivery.owner: framework`. The notification is wired to an auth email flow (`auth.email.templates`), which the server sends itself through `auth.email.connectionId`, outside the request resolver. No wide event is written on that path, so a failed auth email is invisible today. |
+| `delivery-unknown` | Either nothing renders the notification and no auth flow uses it, or an endpoint builds the `notificationId` with an operator, so the build cannot attribute the send. The `note` says which. |
+
+Notification entries are never pushed to a sink - they carry no rule
+- but `monitors:push` prints each one it skips with its status and
+note, so a notification nobody sends, or one on the auth path with
+no event, shows up on every deploy rather than staying quiet.
 
 ### Pushing them to a sink
 
@@ -295,6 +416,33 @@ are named `lowdefy:<app slug>:<monitor id>`, so re-running it on every
 deploy updates the same monitors instead of duplicating them, and the
 notifiers you attached in Axiom are left alone. `--dry-run` prints the
 payloads and calls nothing.
+
+### Alert delivery is the sink's
+
+Lowdefy never sends an alert. A monitor fires and the sink delivers
+it to the notifiers attached to that monitor - so a monitor with no
+notifier, or one pointing at a notifier that has since been deleted,
+looks exactly like a healthy monitor: it just never tells anyone.
+The push resolves routing for every monitor before it writes the
+first one, and fails the whole push, naming the monitor, when:
+
+- a `--notifier` you named does not exist in Axiom (the message
+  lists the notifiers that do);
+- a monitor already in Axiom points at a notifier that has been
+  deleted;
+- a monitor would end up with no notifier at all.
+
+Name the notifiers on the push, or attach them in Axiom once and
+they are kept:
+
+```
+AXIOM_TOKEN=xaat-... AXIOM_ORG_ID=my-org AXIOM_DATASET=my-dataset \
+  pnpm monitors:push .lowdefy/build --notifier oncall --notifier slack-alerts
+```
+
+`--notifier` is repeatable and `AXIOM_NOTIFIERS=oncall,slack-alerts`
+is its CI form. Pass `--allow-silent` to push unrouted monitors
+deliberately.
 
 The artifact is not Axiom-shaped. Any sink that accepts the same
 events - Grafana, Datadog, Honeycomb, or your own alerting - can

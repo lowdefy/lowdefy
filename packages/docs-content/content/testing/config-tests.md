@@ -56,7 +56,13 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
+Blocks are addressed by their `blockId`. A step resolves the block to the element the block itself
+renders — every block carries `id="<blockId>"` and `data-testid="<blockId>"` on its own root — and
+falls back to the `#bl-<blockId>` layout wrapper for the few blocks that render no root of their own
+(`Icon`, `Throw`, `GoogleMapsScript`) or that render it into a portal. So `expect: { dom: ... }`
+reads the classes, attributes and descendants of the block, including the `class:` and `style:` you
+set on it in your config. Every step has a 5 second timeout by default; a step that does not
+complete in time fails the journey.
 
 | Step                                              | Meaning                                                                                                                                                          |
 | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -325,13 +331,141 @@ when the key is `Enter`), and a `wait: { request: ... }` covers that request.
 
 Read the number as coverage of what the app _can_ do, not of what its users _do_: a page
 nobody visits and a page everybody visits weigh the same, and a click that navigates to
-another page is credited to the page the journey started on. When the production
-interaction recorder lands, the same command reports a trace-weighted denominator — the
-share of the triples users actually fire — and this static number becomes the offline
+another page is credited to the page the journey started on. For coverage of what users
+_do_, run `lowdefy journeys coverage` against a recorded trace — see
+[Recorded journeys](#recorded-journeys) — and read this static number as the offline
 fallback.
 
 `--coverage` also writes `.lowdefy/test/journeyIndex.json`, a `page -> journeys` map, so a
 pre-commit hook or CI step can run only the journeys that touch the pages a change edited.
+
+## Recorded journeys
+
+A deployed Lowdefy app records what its users do. Every completed block event becomes one
+`journey_event` line in the app's log: the page, the block, the event name, whether it
+succeeded, the actions and requests it ran, and the state paths it wrote. Export those
+lines to a file — one JSON object per line — and the framework turns them into journeys.
+
+```
+pnpx lowdefy@5 journeys compile prod-trace.jsonl
+```
+
+Sessions that drove the same `(page, block, event)` sequence are one journey done more
+than once, so they compile to a single candidate under `tests/journeys/_candidates/`,
+named `<pageId>-<hash>.yaml`. `lowdefy test` does not run that directory: a candidate is a
+proposal, and promoting it is moving the file into `tests/journeys/`.
+
+```yaml
+# tests/journeys/_candidates/orders-5e9f5687.yaml
+# Recorded candidate, compiled by `lowdefy journeys compile`.
+# `lowdefy test` does not run this directory. To promote it: move the file into
+# tests/journeys/, name it something a human would recognise, add the fixtures it
+# needs, and run `lowdefy test --update` to fill the expectations left unfilled.
+#
+# origin:
+#   sequence_hash: 5e9f5687
+#   sessions: 2
+#   failures: 1
+#   first_seen: 2026-09-01T11:00:00.000Z
+#   last_seen: 2026-09-02T09:00:02.000Z
+#   rank:
+#     by_failures: 1
+#     by_sessions: 1
+#   sample_rids:
+#     - rid-b
+#   failure:
+#     block_id: submit
+#     error: RequestError
+#     event_name: onClick
+#     page_id: orders
+#     rid: rid-b
+#     config_key: pages.orders.blocks.2.events.onClick.0
+
+name: orders recorded 5e9f5687
+pageId: orders
+steps:
+  # onInit on "page" is not a step: no interaction reaches it.
+  - set:
+      blockId: search
+      value: x
+  - expect:
+      state:
+        path: search
+        equals: x
+  - click: submit
+```
+
+### What compiles to what
+
+| Recorded event                                                      | Step                                                                                        |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `onClick`                                                           | `click: <blockId>`                                                                          |
+| `onChange` on a block whose type has a `valueType` (an input block) | `set: { blockId, value }`                                                                   |
+| `onEnter`, or `onKeyDown` with a key                                | `press: { blockId, key }`                                                                   |
+| an action of type `Link` that succeeded                             | `expect: { url: { contains } } }`, and the journey carries on from the page it landed on    |
+| any other event name                                                | no step, and a comment above the next step naming the event                                 |
+| after each event                                                    | up to five `expect: { state: { path, equals } }` for the paths it wrote, leaf scalars first |
+| an event that failed                                                | the journey ends at that step, with the failure in `origin`                                 |
+
+There is no verb that fires an event through the engine without the interaction: a journey
+that skips the click can pass while the button that should fire it is hidden, disabled or
+gone. An event no interaction reaches is named in a comment for you to decide about.
+
+A failing event ends the journey at its own step, so a candidate compiled from a failure is
+a failing test until the bug is fixed — the expectation is simply that the step succeeds.
+
+### Values, and why a promoted candidate needs `--update`
+
+Production traces carry **no values**: state writes record the path and the JSON type, and
+event payloads are dropped. So a `set` compiled from production reads
+`value: null` with `from: recorded-shape`, and a state expectation is written with a `path`
+and no `equals`. Both are proposals. Run `lowdefy test --update` after promoting the file
+to fill them from what the app does, and review the values it writes — an auto-filled
+expectation asserts "this is what the app does today", which is a regression assertion,
+not a specification. Dev traces do carry values, so a candidate compiled from a dev trace
+arrives filled.
+
+A journey is also worthless without the rows it ran against. Add
+[`fixtures`](#data-for-a-journey) to the promoted file before committing it.
+
+### Compiling from the build
+
+`journeys compile` reads `plugins/blockMetas.json` and the pages the trace names from the
+build, because only the build knows which blocks are input blocks. Run `lowdefy build`
+first, or have `lowdefy dev` running; without a build, a change on an input block compiles
+to a comment rather than a `set`.
+
+### Reruns
+
+A rerun never rewrites a candidate's steps. When it recognises the sequence hash it
+rewrites only the `origin` block of the existing file, so a name, a fixture list or an
+expectation you filled survives. A sequence it has not seen gets a new file. `sessions` and
+`failures` count the trace that was just compiled; `first_seen` and `sample_rids` accumulate
+across runs.
+
+### Coverage of what users do
+
+```
+pnpx lowdefy@5 journeys coverage prod-trace.jsonl
+```
+
+```
+412 sessions in prod-trace.jsonl drove 37 (page, block, event) triples.
+Journey coverage: 22/37 (59%) across 8 committed journeys.
+Uncovered, most-used first:
+  orders refresh onClick - 96 sessions
+  orders export onClick - 41 sessions
+```
+
+That list is the next test to write, in order. Two caveats: the recorder only sees events
+the config declares a handler for, and a sampling rate below 1 makes the denominator itself
+a sample. Track the trend; do not gate a build on the number.
+
+### From a production error
+
+An agent connected to the dev server's MCP endpoint can go from a request id in an error
+report straight to a journey: `lowdefy_prod_repro({ rid })` returns the events that request
+recorded, compiled into a journey that ends at the failure.
 
 ## Continuous integration
 

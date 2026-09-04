@@ -230,6 +230,12 @@
       "path": "content/concepts/notifications.md"
     },
     {
+      "slug": "concepts/feedback",
+      "title": "User Feedback",
+      "section": "Concepts",
+      "path": "content/concepts/feedback.md"
+    },
+    {
       "slug": "concepts/dynamic-page-content",
       "title": "Dynamic Page Content",
       "section": "Concepts",
@@ -468,12 +474,6 @@
       "title": "MongoDBAdapter",
       "section": "Other",
       "path": "content/other/mongodbadapter.md"
-    },
-    {
-      "slug": "callback-reference/auth0logoutcallback",
-      "title": "Auth0LogoutCallback",
-      "section": "Callback Reference",
-      "path": "content/callback-reference/auth0logoutcallback.md"
     },
     {
       "slug": "testing/config-tests",
@@ -1282,6 +1282,14 @@
       "typeName": "Footer"
     },
     {
+      "slug": "container-blocks/grid",
+      "title": "Grid",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/grid.md",
+      "kind": "block",
+      "typeName": "Grid"
+    },
+    {
       "slug": "container-blocks/googlemaps",
       "title": "GoogleMaps",
       "section": "Container Blocks",
@@ -1352,6 +1360,22 @@
       "path": "content/container-blocks/modal.md",
       "kind": "block",
       "typeName": "Modal"
+    },
+    {
+      "slug": "container-blocks/row",
+      "title": "Row",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/row.md",
+      "kind": "block",
+      "typeName": "Row"
+    },
+    {
+      "slug": "container-blocks/stack",
+      "title": "Stack",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/stack.md",
+      "kind": "block",
+      "typeName": "Stack"
     },
     {
       "slug": "container-blocks/pageheadermenu",

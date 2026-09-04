@@ -16,6 +16,11 @@ Every page × user pair is written to `snapshots/<pageId>/<user>/` in the config
 | `dom.html`       | The app root's HTML, one tag per line, with generated values normalised: Ant Design hash classes become `css-[HASH]`, `rc_select_<n>` ids become `rc-select-[N]`, ISO timestamps `[TS]`, UUIDs `[UUID]`.          |
 | `state.json`     | The page's `state`, pretty-printed with sorted keys, with ISO timestamps written as `[TS]` and UUIDs as `[UUID]`. Request results and the event log are call logs, not rendered output, so they are not captured. |
 
+Every block now renders `id="<blockId>"` and `data-testid="<blockId>"` on its own root element, so
+`dom.html` changed for every page in the release that introduced it. Run `lowdefy snapshot --update`
+once after upgrading and commit the re-captured goldens; the drift `--check` reports before that is
+the new attributes, not your config.
+
 Snapshots are taken through the development server's `GET /lowdefy-docs/snapshot/{pageId}` route (also the `lowdefy_snapshot` MCP tool), so an agent can take a single snapshot to see what its change did without running the whole set. Commit the `snapshots/` directory; add `.lowdefy/` to `.gitignore` if it is not already — the pixel diffs `--check` writes live under `.lowdefy/snapshot-diff/`.
 
 ## Running

@@ -1,25 +1,82 @@
 # File Plugins
 
-File plugins are single files in the app's own config directory that define a block, an action or an operator, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
-
-> File plugins are under active development. This release discovers them and registers their type names; emitting the imports that load them is the next step, so a file plugin is not yet usable in a page.
+File plugins are single files in the app's own config directory that define a block, an action, an operator or a connection, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
 
 ### The directory convention
 
-| Directory                  | Kind                           | File name       |
-| -------------------------- | ------------------------------ | --------------- |
-| `plugins/blocks`           | Block                          | `Card.jsx`      |
-| `plugins/actions`          | Action                         | `CopyRow.js`    |
-| `plugins/operators/build`  | Build operator                 | `_env.js`       |
-| `plugins/operators/client` | Client operator                | `_slug.js`      |
-| `plugins/operators/server` | Server operator                | `_lookup.js`    |
-| `plugins/operators/shared` | Client **and** server operator | `_titleCase.js` |
+| Directory                  | Kind                            | File name          |
+| -------------------------- | ------------------------------- | ------------------ |
+| `plugins/blocks`           | Block                           | `Card.jsx`         |
+| `plugins/actions`          | Action                          | `CopyRow.js`       |
+| `plugins/operators/build`  | Build operator                  | `_env.js`          |
+| `plugins/operators/client` | Client operator                 | `_slug.js`         |
+| `plugins/operators/server` | Server operator                 | `_lookup.js`       |
+| `plugins/operators/shared` | Client **and** server operator  | `_titleCase.js`    |
+| `plugins/connections`      | Connection **and** its requests | `Stripe/Stripe.js` |
 
 Blocks may be `.jsx` or `.js`; every other kind is `.js`. Only files directly in these directories are plugins - a file whose name has more than one segment, like `Card.test.jsx`, is a source file that lives beside a plugin, not a plugin.
 
 An operator in `plugins/operators/shared` is registered as both a client and a server operator, which is how the shipped operator packages list a shared operator in both barrels.
 
-Connections and requests are not file plugins yet; they still need a plugin package.
+### A connection is a directory
+
+A connection is the one kind that is a directory rather than a single file, because a connection is only ever used through its requests:
+
+```
+plugins/connections/Stripe/Stripe.js
+plugins/connections/Stripe/Stripe.json
+plugins/connections/Stripe/requests/StripeCharge.js
+plugins/connections/Stripe/requests/StripeCharge.json
+```
+
+The directory name is the connection type, and it must hold a file with the same name. Every file directly under its `requests` directory defines one request type, named after the file. Both are PascalCase, and a request type name collides with a package request type the same way any other type name does.
+
+`Stripe.js` exports the connection object a package connection exports, minus the barrel - the build assembles the `requests` map from the files under `requests/`, so a resolver is never wired up twice:
+
+```js
+export default {};
+```
+
+`requests/StripeCharge.js` exports the resolver, which is called with the connection's properties and the request's properties:
+
+```js
+async function StripeCharge({ connection, request }) {
+  if (!request.amount) {
+    throw new Error('StripeCharge requires an "amount" property.');
+  }
+  const response = await fetch('https://api.stripe.com/v1/charges', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${connection.apiKey}` },
+    body: new URLSearchParams({ amount: request.amount }),
+  });
+  return response.json();
+}
+
+export default StripeCharge;
+```
+
+The connection's schema goes in `Stripe.json`, and the request's schema and meta in `StripeCharge.json`:
+
+```json
+{
+  "meta": { "checkRead": true, "checkWrite": true },
+  "schema": {
+    "type": "object",
+    "required": ["amount"],
+    "properties": { "amount": { "type": "integer" } }
+  }
+}
+```
+
+`meta.checkRead` and `meta.checkWrite` are the gates the request layer checks against the connection's `read` and `write` properties. A request that declares neither is gated on both - a file plugin can never open a connection wider by staying silent - and the build warns, naming the JSON file to declare them in.
+
+Under `auth.organizations.policy: tenant` every connection type must declare whether it implements the tenant scoping contract, and a connection file plugin declares it as `meta.tenant` in `Stripe.json` - the same declaration a connection package makes in its `types.js` `connectionMetas`:
+
+```json
+{ "meta": { "tenant": true } }
+```
+
+`true` means the connection's resolvers enforce the wall: they merge the tenant filter into every read and stamp the tenant field onto every write, from the verdict the request layer passes them. Its connections are then scoped by default and opt out only with `tenant: shared`. `false` means the type is not scopable at all (object storage, mail), and its connections are never scoped. Only these two values are accepted; a type that declares neither can not be used under the tenant policy. The same `meta` is merged onto the connection at runtime, so the declaration is made once.
 
 ### The type name is the file name
 
@@ -57,4 +114,147 @@ plugins/blocks/Card.json
 }
 ```
 
-Blocks use `meta` and `schema`; actions and operators use `schema`, and operators use `hazards`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
+Blocks use `meta` and `schema`; actions and operators use `schema`, operators use `hazards`, and connections and requests use `schema` and `meta`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
+
+### A block file plugin must declare a meta
+
+A block's `meta` is not optional: the build reads `category` from it to know how the block is
+rendered, exactly as it does for a package block. A block file plugin with no sibling JSON, or a
+sibling JSON with no `meta`, is a build error:
+
+```
+Block type "Card" from "plugins/blocks/Card.jsx": has no meta. Declare it in "plugins/blocks/Card.json" as { "meta": { ... } } with at least { category }.
+```
+
+When the sibling JSON has a `meta` but no `schema`, the block schema is generated from
+`meta.properties`, the same way a package block's schema is.
+
+### The plugin exports the type as its default export
+
+A file plugin's module exports one thing - the block component, the action function or the
+operator function - as its `default` export:
+
+`plugins/blocks/Card.jsx`:
+
+```jsx
+function Card({ blockId, properties }) {
+  return <div id={blockId}>{properties.title}</div>;
+}
+
+export default Card;
+```
+
+A plugin may import from other files beside it with a relative path, and from any package the
+app's own `package.json` depends on.
+
+### Dev and production
+
+In development the generated import points at the file where you wrote it, so Vite serves it and
+hot-replaces it: editing a block or an action refreshes the browser without a restart. A server
+operator or a build operator is held in the server's module cache instead, so the dev server
+restarts when you edit one.
+
+For a production build every plugin file, and every file it imports relatively, is copied into the
+server directory, and the generated imports point at the copy - the deployed server runs without
+the config directory. Bare package imports resolve from the server's `node_modules`, so the
+dependencies declared in the app's `package.json` are installed into the server whenever the app
+has a `plugins` directory. A dependency the server already ships (`react`, `antd`, `dayjs`) keeps
+the server's version.
+
+`package.json`, beside `lowdefy.yaml`:
+
+```json
+{
+  "dependencies": {
+    "stripe": "18.0.0"
+  }
+}
+```
+
+### Examples, so the agent can see the plugin it just wrote
+
+A file plugin's usage examples go in a YAML file named after the plugin, beside it:
+
+```
+plugins/blocks/Card.jsx
+plugins/blocks/Card.examples.yaml
+```
+
+The file holds a list of `{ title, blocks }` entries - the same shape a plugin package's
+`examples.yaml` uses:
+
+```yaml
+- title: Default
+  blocks:
+    - id: card
+      type: Card
+      properties:
+        title: Hello
+```
+
+`lowdefy_get_examples` serves this file. When it is missing, the tool answers with the path to
+create rather than "no examples", so an agent writing config for the plugin knows the convention.
+
+### Documentation in the sibling JSON
+
+A `readme` field in the sibling JSON is the file plugin's documentation. `lowdefy_get_plugin_doc`
+serves it, looked up by the type name or by the path `lowdefy_list_types` reports:
+
+```json
+{
+  "meta": { "category": "display" },
+  "readme": "# Card\n\nA card with a title and a body slot."
+}
+```
+
+### File plugins in the docs and MCP tools
+
+A file plugin is a first-class type in the dev server's docs endpoints and MCP tools.
+`lowdefy_list_types` lists it beside the package types, with no package name and two extra fields
+naming where it lives:
+
+```json
+{
+  "type": "Card",
+  "kind": "blocks",
+  "package": null,
+  "source": "file plugin",
+  "file": "plugins/blocks/Card.jsx",
+  "used": true
+}
+```
+
+`lowdefy_get_schema` returns the sibling JSON's `schema` and `meta`, and the same `source` and
+`file` fields. A file action or operator with no sibling JSON is still answered, with
+`"schema": null` - it exists, it just declares no contract.
+
+### Plugin files are linted at build
+
+Every plugin file is parsed at build and its names are resolved, the same way a `_js` body is:
+
+- A syntax error is a build error naming the file and the line, rather than a browser overlay
+  once the page renders.
+- A name that is neither imported, declared, nor a global of the environment the plugin runs in
+  is a build error. A block, an action or a client operator has the browser globals and `React`;
+  a server or build operator, a connection and a request have the server globals; an operator under
+  `plugins/operators/shared` has only what both environments have, so reaching for `document` or
+  `process` there is an error.
+- A top-level declaration that is never used is a warning.
+
+Both are reported under the `js-lint` check slug, so `~ignoreBuildChecks: [js-lint]` suppresses
+them where a plugin genuinely needs a global the build does not know about.
+
+### Plugin API version
+
+A file plugin may declare the plugin API version it was written against in its sibling JSON:
+
+```json
+{
+  "pluginApiVersion": 1
+}
+```
+
+Declaring nothing means the version the Lowdefy in the app implements, which is the normal case:
+the file lives in the app it is built with. A file plugin that declares a different version is the
+same build error a plugin package declaring one is - see
+[Plugin API Versioning](/plugin-api-versioning).

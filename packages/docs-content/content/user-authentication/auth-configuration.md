@@ -142,9 +142,9 @@ A strategy caller carries the configured `roles` and `attributes` and its `auth_
 
 ## Mock User for Testing (Dev Server Only)
 
-When developing and testing Lowdefy apps, you can bypass the login flow by configuring a mock user. This is useful for testing authenticated flows without going through OAuth login.
+When developing and testing Lowdefy apps, you can bypass the login flow by signing the dev server in as a declared caller. This is useful for testing authenticated flows without going through OAuth login.
 
-The mock user can be configured in three ways:
+The browser's caller can be set in three ways:
 
 ### CLI Flag
 
@@ -154,7 +154,7 @@ Pass `--mock-user` to `lowdefy dev` to start the server as a mock user for that 
 lowdefy dev --mock-user '{"id":"test-user","email":"test@example.com","roles":["admin"]}'
 ```
 
-The flag sets `LOWDEFY_DEV_USER` for the dev server process, so it takes precedence over `auth.dev.mockUser` in the config file.
+The flag sets `LOWDEFY_DEV_USER` for the dev server process, so it takes precedence over `auth.dev.browserUser` in the config file.
 
 ### Environment Variable
 
@@ -166,9 +166,9 @@ LOWDEFY_DEV_USER='{"id":"test-user","email":"test@example.com","roles":["admin"]
 
 ### Config File
 
-Add the `auth.dev.mockUser` section to your `lowdefy.yaml`:
+Declare the caller under [`auth.dev.users`](#named-dev-users-dev-server-only) and name it with `auth.dev.browserUser`:
 
-###### Configure a mock user for development
+###### Sign the dev browser in as a declared user
 ```yaml
 lowdefy: 5.5.1
 
@@ -182,25 +182,31 @@ auth:
         clientSecret:
           _secret: GOOGLE_CLIENT_SECRET
   dev:
-    mockUser:
-      id: test-user
-      email: test@example.com
-      name: Test User
-      roles:
-        - admin
+    browserUser: test
+    users:
+      test:
+        id: test-user
+        email: test@example.com
+        name: Test User
+        roles:
+          - admin
 ```
 
-When a mock user is configured:
+`browserUser` must name a declared `dev.users` entry — a name that is not declared fails the build listing the ones that are. One map declares every dev caller; the headless tools take an entry name as their `user`, and `browserUser` says which of them the browser is.
+
+When a dev browser user is configured:
 - The environment variable takes precedence over the config file if both are set
 - A warning is logged at dev server startup: "Mock user active - login bypassed"
-- The mock user is injected as a pre-resolved caller — its `roles` are authoritative
-- The `_user` operator returns values from the mock user, on the server and in the browser client — the dev server serves the mock session to both
-- Protected pages are accessible based on the mock user's roles
-- The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as the mock user, so it can capture pages with roles the default user lacks
+- The user is injected as a pre-resolved caller — its `roles` are authoritative
+- The `_user` operator returns its values, on the server and in the browser client — the dev server serves the session to both
+- Protected pages are accessible based on its roles
+- The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as it, so it can capture pages with roles the default user lacks
 
-> **Note:** Mock users only work with the development server (`lowdefy dev`). The production server ignores mock user configuration for security.
+> **Note:** This only works with the development server (`lowdefy dev`). The production server ignores it for security.
 
-> **Note:** `dev.mockUser` bypasses the auth engine rather than exercising it — a config whose only auth substance is `dev.mockUser` still fails the "no auth mechanism" build check, and [auth steps](/auth-steps) (which need the running auth engine) are unavailable under a mock user.
+> **Note:** Bypassing login bypasses the auth engine rather than exercising it — a config whose only auth substance is a dev user still fails the "no auth mechanism" build check, and [auth steps](/auth-steps) (which need the running auth engine) are unavailable under it.
+
+> **Deprecated:** `auth.dev.mockUser` declared an anonymous browser caller inline. It still works in v8 and warns at build (check slug `auth-dev-mock-user`); it is removed in v9. Move it into a `dev.users` entry and select it with `dev.browserUser`. Declaring both is a build error.
 
 ## Named Dev Users (Dev Server Only)
 
@@ -233,6 +239,6 @@ GET /lowdefy-docs/screenshot/users?user=admin
 
 A name that is not declared is refused with a `400` that lists the declared names. It never falls back to the default roleless caller, which would render an empty page that looks like a working one.
 
-> **Note:** Fixtures do not bypass login. They only name the caller a dev tool acts as — the developer's own browser still signs in normally. Use `dev.mockUser` above to bypass login for the whole dev server.
+> **Note:** Declaring an entry does not bypass login. It names a caller a dev tool can act as — the developer's own browser still signs in normally. Select one with `dev.browserUser` above to bypass login for the whole dev server.
 
 > **Note:** Named dev users only work with the development server (`lowdefy dev`). The production server ignores them.

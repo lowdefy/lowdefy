@@ -133,6 +133,38 @@ Most types are written as standard Javascript functions, and blocks are written 
 
 Lowdefy uses object [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
 
+### The block root contract
+
+Every block must render `blockRootProps` from `@lowdefy/block-utils` on its root — the outermost element the block itself owns:
+
+```jsx
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
+
+function MyBlock({ blockId, classNames, properties, styles }) {
+  return <div {...blockRootProps({ blockId, classNames, styles })}>{properties.title}</div>;
+}
+
+export default withBlockDefaults(MyBlock);
+```
+
+It returns `id` and `data-testid` set to the `blockId`, so the block is addressable as `#<blockId>` in journeys, end-to-end tests and by an agent reading the page; a `className` merging the `block` and `element` slots of the app author's `class:`; and a `style` merging the same two slots of `style:`. Because the block root carries them, the app author's `class:` and `style:` do not depend on a layout wrapper being rendered around the block.
+
+Pass the block's own default classes and styles as the optional `className` and `style` arguments. They are merged first, so the app author's config always wins:
+
+```jsx
+<div
+  {...blockRootProps({
+    blockId,
+    classNames,
+    styles,
+    className: cn('flex flex-col', GAP[properties.gap]),
+    style: { cursor: events.onClick && 'pointer' },
+  })}
+/>
+```
+
+Do not append `classNames.element` or spread `styles.element` yourself — the helper adds both slots. Other css keys (`classNames.icon`, `styles.label`, …) are still applied by the block wherever they belong.
+
 ### Localizing plugin strings
 
 Plugins can ship locale-keyed default messages so consumers see translated strings out-of-the-box, and translate strings at runtime via `methods.translate(key, values)` in block / action code. See [i18n](/i18n) for the full plugin-author contract — `./messages` export shape, `package.json` `exports` registration, namespacing convention, and merge precedence.

@@ -105,6 +105,7 @@ LOWDEFY_SECRET_MONGODB_URI = mongodb+srv://username:password@server.example.com/
 Request types:
   - MongoDBAggregation
   - MongoDBBulkWrite
+  - MongoDBCreateIndexes
   - MongoDBDeleteMany
   - MongoDBDeleteOne
   - MongoDBFind
@@ -253,6 +254,42 @@ requests:
               type: "tofu"
               size: "small"
               price: 4
+```
+
+### MongoDBCreateIndexes
+
+The `MongoDBCreateIndexes` request creates indexes on the collection specified in the connectionId. It is the consumer of the root [`collections`](/collections) object's `indexes` declaration: the declaration says which indexes a collection should have, and a `MongoDBCreateIndexes` step in a [migration](/migrations#creating-indexes) creates them. It is a write request (`write: true` is required on the connection).
+
+`createIndexes` is idempotent for an index that already exists with the same keys and options, so the step is safe to replay when a migration re-runs. An index that already exists under the same *name* with different keys is a driver error — give the changed index a new name.
+
+The tenant verdict is not applied: an index is a property of the collection, not of a document, so there is nothing to scope. Under `auth.organizations.policy: tenant` a migration step still declares `tenant: none` like any other step on a walled connection.
+
+**There is no request type that drops an index**, and nothing in Lowdefy suggests dropping one: an index this app no longer queries may be the one an external consumer depends on. Removing an index is a hand operation against the database.
+
+#### Properties
+- `indexes: array`: __Required__ - The indexes to create, each written in the same shape as a `collections.<name>.indexes` entry:
+  - `keys: object`: __Required__ - The index key specification, for example `{ organization_id: 1, created_at: -1 }`.
+  - `options: object`: Optional [createIndexes options](https://www.mongodb.com/docs/manual/reference/command/createIndexes/) for this index, such as `unique`, `name`, `partialFilterExpression`, `expireAfterSeconds`, `sparse` or `collation`.
+
+#### Response
+- `indexNames: string[]`: The names MongoDB gave the created indexes.
+
+#### Examples
+
+###### Create the indexes declared for a collection:
+```yaml
+# migrations/2026-07-02-01-answers-indexes.yaml
+name: Create the answers indexes
+routine:
+  - id: create_indexes
+    type: MongoDBCreateIndexes
+    connectionId: answers
+    tenant: none
+    properties:
+      indexes:
+        - keys: { organization_id: 1, status: 1, created_at: -1 }
+        - keys: { external_ref: 1 }
+          options: { unique: true, name: by_external_ref }
 ```
 
 ### MongoDBDeleteMany

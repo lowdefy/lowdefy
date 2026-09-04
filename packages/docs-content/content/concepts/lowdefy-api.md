@@ -207,7 +207,7 @@ api:
 
 Declaring it does three things:
 
-- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the api record, whose own `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields one level up — `_actions.<actionId>.response.status`, `success`, `error`, `responseTime` — are not the endpoint's and are never checked. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
+- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields beside the response — `_actions.<actionId>.type`, `index`, `error` — are not the endpoint's and are never checked; the call's `status`, `success` and `responseTime` are read with [`_api`](/_api). Before v8 the endpoint result sat one level deeper, at `_actions.<actionId>.response.response.<path>`; the build rewrites that spelling with a warning (`actions-response-envelope`) and it is removed in v9. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
 
   ```yaml
   events:
@@ -223,9 +223,9 @@ Declaring it does three things:
         type: SetState
         params:
           results:
-            _actions: search.response.response.results # checked
+            _actions: search.response.results # checked
           total:
-            _actions: search.response.response.totl # build error: Did you mean "total"?
+            _actions: search.response.totl # build error: Did you mean "total"?
           ok:
             _actions: search.response.success # action record, untouched
   ```
@@ -841,7 +841,7 @@ blocks:
           type: SetState
           params:
             user_data:
-              _actions: call_user_api.response.response.user
+              _actions: call_user_api.response.user
 
   - id: user_display
     type: Descriptions
@@ -874,7 +874,7 @@ events:
         type: SetState
         params:
           result:
-            _actions: call_process_data_api.response.response
+            _actions: call_process_data_api.response
 
     catch:
       - id: update_state

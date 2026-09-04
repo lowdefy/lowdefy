@@ -80,15 +80,14 @@ connections:
   # Scope on a field other than the default organization_id.
   - id: legacy_records
     type: MongoDBCollection
-    tenant:
-      field: tenant_id
+    tenant: tenant_id
     properties:
       databaseUri:
         _secret: MONGODB_URI
       collection: legacy
 ```
 
-`tenant` on a connection is either the string `shared` or `{ field: <name> }` (a non-empty name with no dots). The default scoping field is `organization_id`. There is deliberately **no `tenant: true`** — under `tenant` policy a capable connection is already scoped, so `true` would only restate the default; the build rejects it.
+`tenant` on a connection is either the string `shared` or the bare name of the top-level field that carries the tenant id (a non-empty name with no dots) — the same grammar [`collections.<name>.tenant`](/collections) uses. The default scoping field is `organization_id`. The v7 object form `tenant: { field: <name> }` still builds and warns (check slug `tenant-grammar`); it is removed in v9. There is deliberately **no `tenant: true`** — under `tenant` policy a capable connection is already scoped, so `true` would only restate the default; the build rejects it.
 
 **Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 
@@ -101,6 +100,8 @@ The wall scopes mechanically, but a few operations need an explicit opt-out or o
 | Request | `none` | Opt this request out of scoping entirely. |
 | Request | `authored` | The request authors its own tenant clause (audited at runtime). |
 | Websocket | `none` | Opt out. `authored` is not allowed — change streams are always scoped mechanically. |
+
+**`tenant: none` on a request or step is deprecated in v8 and is removed in v9.** Every declaration emits a build warning (check slug `tenant-none-deprecated`) naming `runAs` as its replacement. `tenant: none` on a **websocket** is not deprecated: a change stream has no `runAs` form, so it stays the only opt-out there.
 
 **Prefer `runAs` over `tenant: none` for caller-less chains.** A scheduled job, a detached call, a webhook or an auth hook runs with no session, so a walled step fails closed for it. Switching the wall off with `tenant: none` and hand-writing the organization clause into every filter and document is unscoped access by construction. If the routine knows which organization it is processing, declare it with [`runAs`](#running-a-routine-as-an-organization-runas) and keep the wall on.
 

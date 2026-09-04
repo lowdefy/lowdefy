@@ -300,6 +300,7 @@ form: a check you have not named stays on.
 | `websocket-refs` | Invalid websocket action reference warnings |
 | `event-payload` | _event paths checked against the block event payload schema |
 | `request-state-empty` | _state reads in request properties, which are always empty |
+| `ref-njk-runtime-operator` | Runtime operators written in a .njk template that renders to text at build |
 | `block-types` | Block type names that are used but not defined |
 | `action-types` | Action type names that are used but not defined |
 | `operator-types` | Operator names that are used but not defined |
@@ -315,13 +316,16 @@ form: a check you have not named stays on.
 | `state-schema` | Page state contract violations (undeclared or mistyped state paths) |
 | `payload-schema` | Api endpoint payloadSchema is not a valid JSON schema |
 | `response-schema` | Endpoint responseSchema checks on _actions and _step response paths |
+| `actions-response-envelope` | The deprecated _actions.<id>.response.response.<path> spelling of a CallAPI result |
 | `component` | Component definition and prop validation |
 | `events` | Block event name validation |
 | `icons` | Unresolvable icon name warnings |
 | `duplicate-block-id` | Two blocks on one page sharing a block id |
 | `archetype` | Page archetype expansion: collection, field and prop resolution |
-| `js-lint` | Unresolved and unused names in _js bodies |
+| `js-lint` | Unresolved and unused names in _js bodies and file plugins, and plugin file syntax errors |
 | `js-modules` | _js module reference resolution and export checks |
+| `tenant-grammar` | The deprecated { field } object form of connection "tenant" |
+| `tenant-none-deprecated` | Endpoint and request "tenant: none" declarations, deprecated in favour of runAs |
 | `tenant-run-as` | Endpoint runAs organizationId source validation |
 | `tenant-authored` | Requests declaring tenant: authored without an authored tenant field |
 | `tenant-unscoped` | Requests declaring tenant: none without naming a tenant field |
@@ -334,9 +338,13 @@ form: a check you have not named stays on.
 | `collections-dynamic` | Connections whose collection name is an operator, not a literal |
 | `collections-untenanted` | Connections on a tenanted collection that carry no tenant wall |
 | `collections-field-migration` | Declared collection fields that no migration creates |
+| `collections-index` | Query key sets in the app that no declared collections.indexes entry covers |
 | `migration-files` | Migration file discovery, ids, YAML parsing and ledger checks |
 | `migration-routine` | Migration routine shape and step validation |
+| `branch-merge` | Ids added on both branches, and migration order, reported by "lowdefy check --against". |
+| `layout-deprecated` | Per-block layout: and area-level layout keys, deprecated in favour of the Row, Grid and Stack container blocks |
 | `secrets` | _secret names that are not set in the environment |
+| `auth-dev-mock-user` | The deprecated auth.dev.mockUser key, superseded by auth.dev.users + auth.dev.browserUser |
 | `plugin-api-version` | A plugin package declaring a plugin API version the framework does not provide. |
 <!-- check-slugs:end -->
 

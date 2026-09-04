@@ -31,7 +31,7 @@ It provides these tools:
 | `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification                                                                                                                                                                                           |
 | `lowdefy_find_config`            | Which yaml file (and line) defines a given page, block, or request id                                                                                                                                                                                                   |
 | `lowdefy_scaffold_page`          | Create a new page yaml file with a canonical minimal structure                                                                                                                                                                                                          |
-| `lowdefy_app_brief`              | A page (or the whole app) in one deterministic brief: what it reads and writes, the journeys and request tests covering it, its uncovered `(blockId, event)` triples, and what changed since a git ref
+| `lowdefy_app_brief`              | A page (or the whole app) in one deterministic brief: what it reads and writes, the journeys and request tests covering it, its uncovered `(blockId, event)` triples, and what changed since a git ref                                                                  |
 | `lowdefy_app_map`                | The whole-app graph: every page, menu, connection, endpoint, and agent in one call                                                                                                                                                                                      |
 | `lowdefy_data_model`             | The app's data layer in one call: every collection with fields, relations, indexes, tenant verdict, connections, and which requests/steps/websockets read or write it                                                                                                   |
 | `lowdefy_inspect_state`          | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless                                                                                                                                               |
@@ -46,8 +46,13 @@ It provides these tools:
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                                                                                                  |
 | `lowdefy_check`                  | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout                                                                      |
+| `lowdefy_measure_page`           | Measure what one state change costs the engine on a page: blocks re-evaluated, operator parses (total and per block expression), nodes copied, and p50/p95/max ms per update — with an optional journey to measure a real interaction                                   |
 | `lowdefy_snapshot`               | Golden snapshot of a page as a named user under deterministic browser settings: the viewport PNG, the app root DOM, the page state and the page's `~snapshotIgnore` paths — what `lowdefy snapshot --check` diffs                                                       |
 | `lowdefy_seed_fixture`           | Load a named fixture (`fixtures/<name>.yaml`) into the dev database through the connection layer so a page has data to show (needs `allowWriteRequests`; `reset` empties first)                                                                                         |
+| `lowdefy_prod_errors`            | Production failures from the app log sink, grouped by `source`, `org`, `page` or `endpoint`, since the deploy or an ISO time — each group carries a resolved `source` and a `sample_rid`                                                                                |
+| `lowdefy_prod_trace`             | Every production event carrying one `rid`, oldest first, each with its `source` or `config_key`                                                                                                                                                                         |
+| `lowdefy_prod_slow`              | The slowest production work by duration percentile, grouped by event, endpoint, step, request and page                                                                                                                                                                  |
+| `lowdefy_prod_repro`             | The events behind one `rid` with the page and block ids involved, as the raw material for a journey (`note: "compiler pending"`)                                                                                                                                        |
 
 ## Hazards — what the schema cannot tell you
 
@@ -293,6 +298,28 @@ A step that fails **stops the journey and comes back as data**, never as a tool 
 Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
 
 Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
+
+## Measuring a page — `lowdefy_measure_page`
+
+A page that feels slow to type in is usually not slow to render — it is slow to evaluate. Every state change makes the engine walk every block on the page and parse nine expressions per block (`visible`, `properties`, `required`, `class`, `style`, `layout`, `loading`, `skeleton`, `slotsLayout`) plus one per validation test, and a change that flips a block's visibility runs the whole cascade again, up to twenty times. `lowdefy_measure_page` (or `POST /lowdefy-docs/measure-page`) opens the page headless, turns the engine's counters on once the page has settled, drives it, and reports what one state change actually cost:
+
+```json
+{
+  "pageId": "customers",
+  "blocks": 214,
+  "updates": 6,
+  "blockVisits": 1284,
+  "parses": { "total": 11556, "byKind": { "properties": 1284, "visible": 1284 } },
+  "copyNodes": 98342,
+  "msPerUpdate": { "p50": 8.4, "p95": 19.1, "max": 22.7 },
+  "heaviestBlocks": [{ "blockId": "row_total", "parses": 60, "ms": 14.2, "nodes": 3120 }],
+  "verdict": "1926 parses per state update on 214 blocks (6 updates from 6 synthetic updates, p50 8.4ms, p95 19.1ms per update)."
+}
+```
+
+Pass `steps` (the `lowdefy_run_journey` grammar) to measure a real interaction — typing into a form is the case that matters — and omit them to measure synthetic state updates on the loaded page. The counters cost nothing when nobody asks for them: the engine only allocates them for a session that turned them on, and only a dev build exposes the switch.
+
+Measure before optimising and again after, on the same page and the same steps. The `verdict` line is the number that decides whether operator evaluation is worth compiling away rather than tuning config: if a keystroke on the heaviest page is a few hundred parses and a millisecond, the walker is not the problem and the page's own config is.
 
 ## Explaining a request — `explain: true`
 
@@ -555,7 +582,44 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `GET/POST /lowdefy-docs/checkpoints` + `/revert`                  | Config-file checkpoints                                                                                                      |
 | `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints                                                                                                     |
 | `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s)                                          |
+| `GET /lowdefy-docs/ops/errors?since=&group_by=&limit=`            | Production failures from the log sink, grouped (the `lowdefy_prod_errors` twin)                                              |
+| `GET /lowdefy-docs/ops/trace/{rid}`                               | Every production event carrying one request id                                                                               |
+| `GET /lowdefy-docs/ops/slow?endpoint_id=&page_id=&percentile=`    | The slowest production work by duration percentile                                                                           |
+| `GET /lowdefy-docs/ops/repro/{rid}`                               | The events behind one request id, with the page and block ids involved                                                       |
 | `ALL /lowdefy-docs/mcp`                                           | The MCP endpoint (streamable HTTP) exposing all of the above as tools                                                        |
+
+## Production telemetry — the `lowdefy_prod_*` tools, and how they are locked
+
+The four `lowdefy_prod_*` tools query the log sink your app ships events to with [`logger.otlp`](/concepts/logger), so an agent can go from a production failure to the yaml line that caused it in one hop. Every row carries `source` (a `file:line`) when the event's `git_sha` matches the build the dev server is running, resolved through that build's `keyMap.json`; when the shas differ the row keeps its raw `config_key` and says why, so you know to check out that revision. Feed `source` to `lowdefy_find_config` and `sample_rid` to `lowdefy_prod_trace`.
+
+**Retention is the sink's, not Lowdefy's.** Nothing older than the sink's retention window can be queried — assume 30 days unless your sink is configured otherwise. A `rid` from last quarter returns no events, not an error.
+
+The dev MCP endpoint has **no authentication of its own** — the loopback bind is its entire security boundary — and these tools put production data behind it. So they are locked, and the lock is checked on **every call**, not at startup:
+
+1. **Separate read-only credentials.** All three of `LOWDEFY_OPS_QUERY_URL`, `LOWDEFY_OPS_READ_TOKEN` and `LOWDEFY_OPS_DATASET` must be set in the dev environment.
+2. **The read token may never be a write credential.** If `LOWDEFY_OPS_READ_TOKEN` holds the same value as any `LOWDEFY_SECRET_*` variable, or as a header written inline under `logger.otlp.headers`, every query is refused and names the collision. Issue a read-only query token at the sink.
+3. **Loopback only.** If the dev server was reached on anything but `localhost` / `127.0.0.0/8` / `::1` — a tunnel, a port forward, `--host 0.0.0.0` reached on a LAN address — the tools refuse. The check is on the host the request arrived with, so a tunnel in front of a loopback bind is caught too.
+4. **The app can refuse them outright.** Set `config.ops.enabled: false` in `lowdefy.yaml` and no credential enables them. Recommended for apps whose connections are tenant-walled — a dev server with ops credentials logs one `warn` line at boot to say so.
+
+The tools are always **registered** and refuse at call time with a `howToEnable` message, so an agent learns what the tool is and what you have to do rather than never seeing it.
+
+**Every query is audited.** Each call — the ones that ran and the ones that were refused — writes an `ops_query` line to the dev terminal and a dev notice, so `lowdefy_build_status` shows you what production data was asked for while you were not watching.
+
+```yaml
+# lowdefy.yaml
+config:
+  ops:
+    enabled: false # refuse the dev MCP ops tools for this app
+```
+
+```bash
+# .env.development — a read-only query credential, never the ingest token
+LOWDEFY_OPS_QUERY_URL=https://api.axiom.co
+LOWDEFY_OPS_READ_TOKEN=xaqt-read-only-...
+LOWDEFY_OPS_DATASET=my-app-prod
+```
+
+Set `LOWDEFY_OPS_QUERY_URL` to a `file://` path instead and the same four tools run over a saved JSONL export of your logs, with no network access at all — useful on a laptop, or when you only have a downloaded log file.
 
 ## Local plugins
 
