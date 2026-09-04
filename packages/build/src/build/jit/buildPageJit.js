@@ -46,6 +46,7 @@ import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import loadBlockSchemas from '../loadBlockSchemas.js';
+import loadFilePluginBlockSchemas from '../filePlugins/loadFilePluginBlockSchemas.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -101,6 +102,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   // schemas loaded by shallowBuild are not on it; load them once and reuse.
   if (type.isUndefined(buildContext.blockSchemas)) {
     await loadBlockSchemas({ components: {}, context: buildContext });
+    // File blocks carry their schema in a sibling JSON; without this a file block's
+    // properties would be unvalidated on JIT dev pages.
+    loadFilePluginBlockSchemas({ context: buildContext });
   }
 
   // Restore the skeleton-built collections map so a page archetype
