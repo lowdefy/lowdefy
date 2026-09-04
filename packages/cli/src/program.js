@@ -69,7 +69,7 @@ const options = {
     .env('LOWDEFY_LOG_LEVEL'),
   mockUser: new Option(
     '--mock-user [user]',
-    'Start the dev server authenticated as a mock user (auth.dev.mockUser). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
+    'Start the dev server authenticated as a named dev user (auth.dev.browserUser, from auth.dev.users). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
   ).env('LOWDEFY_DEV_USER'),
   port: new Option(
     '--port <port>',
