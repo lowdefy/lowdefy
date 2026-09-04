@@ -16,7 +16,11 @@
 
 import { expect, test } from '@playwright/test';
 
-import { knownMismatches, scanBlockPropertyConsumption } from './blockPropertyConsumption.mjs';
+import {
+  knownMismatches,
+  readPropertyNames,
+  scanBlockPropertyConsumption,
+} from './blockPropertyConsumption.mjs';
 
 // A source scan, like no-deprecated-antd-props beside it: it reads block sources
 // and their metas, never the browser, so it holds whatever the app under test is
@@ -42,6 +46,13 @@ test.describe('block property consumption', () => {
     const found = new Set(scan.findings.map(describeFinding));
     const stale = knownMismatches.filter((mismatch) => !found.has(describeFinding(mismatch)));
     expect(stale.map(describeFinding)).toEqual([]);
+  });
+
+  test("only reads of the block's own properties count as a property read", () => {
+    expect([...readPropertyNames('const a = link.properties.shortcut;')]).toEqual([]);
+    expect([...readPropertyNames('const a = properties.title;')]).toEqual(['title']);
+    expect([...readPropertyNames('const a = this.props.properties.title;')]).toEqual(['title']);
+    expect([...readPropertyNames("const a = properties?.['size'];")]).toEqual(['size']);
   });
 
   // A scan that stopped finding blocks would pass the checks above while testing

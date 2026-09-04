@@ -31,37 +31,11 @@ import { FRAGMENT_MARKER, isFragment, readFences, scanDocsFences } from './docsF
 // quietly and cannot rot, the same contract as blocks-antd's
 // no-deprecated-antd-props scan.
 
-// cause: 'docs'     - the example is wrong; the schema is right.
-//        'schema'   - the plugin accepts what the docs show; its schema is too
-//                     narrow, so the documented config fails a real build.
-//        'obsolete' - a migration page showing config from the version being
-//                     migrated away from. Deliberately no longer valid.
-const knownMismatches = [
-  // Deliberately looks a key up that is not there, to show `default`. Its `key`
-  // is outside the schema's enum for that reason.
-  {
-    cause: 'docs',
-    file: 'content/operators/_media.md',
-    problem: '_media params/ must match exactly one schema in oneOf',
-  },
-
-  // The "Before (v4)" half of a v4 -> v5 migration example.
-  ...['bodyStyle', 'headerStyle'].map((property) => ({
-    cause: 'obsolete',
-    file: 'content/migration/v4-to-v5.md',
-    problem: `Card properties/ must NOT have additional properties ("${property}")`,
-  })),
-  // Auth0LogoutCallback, and the `auth.callbacks` key that registered it, were
-  // removed with the v4 auth stack - no plugin, config key or AUTH0_LOGOUT
-  // callbackUrl for it is left in the repo. The page still documents it, so its
-  // example cannot validate against a schema that no longer has the key.
-  {
-    cause: 'obsolete',
-    file: 'content/callback-reference/auth0logoutcallback.md',
-    problem:
-      'lowdefy.yaml/auth App "auth" contains an unknown property. Auth keys are registered explicitly; check for typos.',
-  },
-];
+// The list is empty: every mismatch it recorded has been paid. A migration page's
+// "before" example now shows the keys it is migrating rather than a whole block,
+// so it claims no schema; the page for the removed Auth0LogoutCallback is gone
+// with the feature; and _media's default example uses a key the operator has.
+const knownMismatches = [];
 
 // extractAgentDocs renders every example value as yaml, so no fence is left
 // holding the literal `[object Object]` that String() used to write.

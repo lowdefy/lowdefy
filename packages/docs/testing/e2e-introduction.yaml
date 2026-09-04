@@ -88,7 +88,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Auth0LogoutCallback
-            previous_page_id: Auth0LogoutCallback
+            previous_page_title: MongoDBAuthAdapter
+            previous_page_id: MongoDBAuthAdapter
             next_page_title: Getting Started
             next_page_id: e2e-getting-started

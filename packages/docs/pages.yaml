@@ -83,7 +83,6 @@
 - _ref: users/reference/OpenIDConnectProvider.yaml
 - _ref: users/reference/MongoDBAuthAdapter.yaml
 - _ref: users/reference/MongoDBAdapter.yaml
-- _ref: users/reference/Auth0LogoutCallback.yaml
 
 - _ref: testing/config-tests.yaml
 - _ref: testing/fixtures.yaml

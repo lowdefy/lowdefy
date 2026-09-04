@@ -444,14 +444,6 @@
             - id: MongoDBAuthAdapter
               type: MenuLink
               pageId: MongoDBAuthAdapter
-        - id: auth_callback_reference
-          type: MenuGroup
-          properties:
-            title: Callback Reference
-          links:
-            - id: Auth0LogoutCallback
-              type: MenuLink
-              pageId: Auth0LogoutCallback
 
     - id: testing
       type: MenuGroup

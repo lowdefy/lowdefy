@@ -48,34 +48,10 @@ const consumedElsewhere = [
 
 // Mismatches that exist today, each with why it is wrong. Closed in both
 // directions - an unrecorded mismatch fails, and a recorded one that has been
-// fixed fails as stale - so the list can neither grow quietly nor rot.
-const knownMismatches = [
-  {
-    block: 'Label',
-    direction: 'unconsumed',
-    package: 'blocks-antd',
-    property: 'span',
-    reason:
-      "Consumed, but out of the scan's reach: getLabelCol and getWrapperCol take the properties object as `value` and read `value.span`, which is not a `properties.span` read. Renaming that parameter to `properties` would close it.",
-  },
-  ...[
-    {
-      block: 'DropdownMenu',
-      reason:
-        'Declared on the links items, not on the block. The scan compares reads against the top-level declarations only, and a block-level `shortcut` would be config that does nothing.',
-    },
-    {
-      block: 'Menu',
-      reason:
-        'Declared on the links items, not on the block. The scan compares reads against the top-level declarations only, and a block-level `shortcut` would be config that does nothing.',
-    },
-  ].map((entry) => ({
-    ...entry,
-    direction: 'undeclared',
-    package: 'blocks-antd',
-    property: 'shortcut',
-  })),
-];
+// fixed fails as stale - so the list can neither grow quietly nor rot. It is
+// empty: every property the two packages declare is read, and every property
+// they read is declared.
+const knownMismatches = [];
 
 // A block's own files, and the local modules they reach, are two different
 // questions. Which properties the block *reads* must come from its own directory
@@ -121,6 +97,12 @@ function readReachableSource(entryFiles) {
 // a string literal, a destructuring of properties, and a properties object built
 // for a child block. A destructuring is matched through any member chain, because
 // a class component reads `this.props.properties`, not `props.properties`.
+//
+// A member read is matched only on the block's own properties - `properties`,
+// `props.properties` or `this.props.properties`. `link.properties.shortcut` names
+// a property of a nested config item, which the block never declares itself.
+const OWN_PROPERTIES = String.raw`(?<![\w$.])(?:this\.)?(?:props\.)?properties`;
+
 function readPropertyNames(source) {
   const names = new Set();
   const addBindings = (pattern) => {
@@ -131,10 +113,15 @@ function readPropertyNames(source) {
       if (name !== null) names.add(name[1]);
     }
   };
-  for (const match of source.matchAll(/\bproperties\s*(?:\?\.)?\.([A-Za-z_$][\w$]*)/g)) {
+  const memberRead = new RegExp(`${OWN_PROPERTIES}\\s*(?:\\?\\.)?\\.([A-Za-z_$][\\w$]*)`, 'g');
+  const computedRead = new RegExp(
+    `${OWN_PROPERTIES}\\s*(?:\\?\\.)?\\[\\s*['"]([^'"]+)['"]\\s*\\]`,
+    'g'
+  );
+  for (const match of source.matchAll(memberRead)) {
     names.add(match[1]);
   }
-  for (const match of source.matchAll(/\bproperties\s*(?:\?\.)?\[\s*['"]([^'"]+)['"]\s*\]/g)) {
+  for (const match of source.matchAll(computedRead)) {
     names.add(match[1]);
   }
   for (const match of source.matchAll(/\{([^{}]*)\}\s*=\s*(?:[\w$]+\.)*properties\b/g)) {
