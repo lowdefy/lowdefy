@@ -60,3 +60,12 @@ _ref:
       framework-owned equivalents: they take no antd theme, they express arrangement as
       Tailwind utility classes, and they are what the `layout:` deprecation names as the
       replacement.
+
+      ## Migrating from `layout:`
+
+      Siblings that carried `layout: { flex, grow, shrink, size }` become the children of one
+      `Row`, with those keys as Tailwind utility classes, and the area's `gap`, `align`,
+      `justify` and `wrap` become the `Row`'s properties. `layout:` still works — see
+      [Layout](/layout-overview). `lowdefy check` reports every remaining site under the
+      `layout-deprecated` slug, and `lowdefy upgrade` offers the optional `layout-to-containers`
+      codemod, which does the mechanical rewrite and reports the sites it refuses.

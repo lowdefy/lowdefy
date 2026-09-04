@@ -20,6 +20,34 @@ _ref:
     section: Concepts
     filePath: concepts/layout.yaml
     content:
+      - id: markdown_moving_to_containers
+        type: Markdown
+        properties:
+          content: |
+            > ### Moving to `Row`, `Grid` and `Stack`
+            >
+            > Per-block `layout:` is **deprecated**. It keeps working in v8, and nothing on this page
+            > stops rendering — but new config should use the framework-owned arrangement blocks
+            > [`Row`](/Row), [`Grid`](/Grid) and [`Stack`](/Stack) instead. The container says how its
+            > children are arranged; each child says how big it is, with a Tailwind class.
+            >
+            > | `layout:` | Replacement |
+            > | --- | --- |
+            > | `span`, `offset` on siblings | Wrap them in a [`Grid`](/Grid) (`columns: 24`) and set `class: col-span-N`, with `offset` accumulated into `col-start-N` |
+            > | `flex`, `grow`, `shrink`, `size` | Wrap them in a [`Row`](/Row) and use `class: grow`, `shrink-0`, `basis-[120px]` |
+            > | an area with `direction: column` | Wrap its children in a [`Stack`](/Stack) |
+            > | `selfAlign` | `class: self-start`, `self-center`, `self-end` |
+            > | area `gap`, `align`, `justify`, `wrap` | the container block's `properties` |
+            > | area `overflow` | `class: overflow-auto` on the container |
+            >
+            > `lowdefy check` reports every remaining site under the `layout-deprecated` slug, one
+            > warning per site naming the wrapper it needs, and a final count of sites and files.
+            > `lowdefy upgrade` offers the optional `layout-to-containers` codemod, which does the
+            > mechanical rewrite and reports every site it refuses — operator-valued `layout:` and
+            > responsive breakpoint objects are converted by hand.
+            >
+            > Whether `layout:` is removed in v9 is a later decision, taken on what those counts say.
+
       - id: markdown_intro
         type: Markdown
         properties:

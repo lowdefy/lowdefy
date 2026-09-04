@@ -20,6 +20,8 @@ import jsLint from './jsLint.js';
 import tenantRules from './tenant/index.js';
 import collectionsRules from './collections/index.js';
 import secretsRules from './secrets/index.js';
+import layoutRules from './layout/index.js';
+import filePluginRules from './filePlugins/index.js';
 
 test('runChecks registers the js-lint rule first so normal builds lint _js bodies', () => {
   expect(rules[0]).toBe(jsLint);
@@ -53,6 +55,20 @@ test('runChecks registers the secrets rule after the collections rules, check-on
   expect(rules.slice(secretsIndex, secretsIndex + secretsRules.length)).toEqual(secretsRules);
   expect(secretsRules.map((rule) => rule.slug)).toEqual(['secrets']);
   expect(secretsRules.map((rule) => rule.checkOnly)).toEqual([true]);
+});
+
+test('runChecks registers the layout deprecation rule, check-only', () => {
+  layoutRules.forEach((rule) => expect(rules).toContain(rule));
+  expect(layoutRules.map((rule) => rule.slug)).toEqual(['layout-deprecated']);
+  expect(layoutRules.map((rule) => rule.checkOnly)).toEqual([true]);
+});
+
+test('runChecks registers the file-plugin lint last, on every build', () => {
+  const filePluginIndex =
+    1 + tenantRules.length + collectionsRules.length + secretsRules.length + layoutRules.length;
+  expect(rules.slice(filePluginIndex)).toEqual(filePluginRules);
+  expect(filePluginRules.map((rule) => rule.slug)).toEqual(['js-lint']);
+  expect(filePluginRules.map((rule) => rule.checkOnly)).toEqual([false]);
 });
 
 test('runChecks runs a checkOnly rule under check and skips it during a build', () => {

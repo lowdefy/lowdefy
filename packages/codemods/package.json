@@ -11,10 +11,21 @@
   "main": "registry.json",
   "files": [
     "registry.json",
+    "lib/",
     "v*/"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {}
+  "dependencies": {
+    "yaml": "2.9.0"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./registry.json",
+    "./layoutToContainers": "./lib/layoutToContainers/index.js"
+  },
+  "scripts": {
+    "test": "node --test \"lib/**/*.test.js\""
+  }
 }

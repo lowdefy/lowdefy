@@ -59,3 +59,12 @@ _ref:
       `Flex` in `@lowdefy/blocks-antd` stays and keeps working; it is a flex container, not
       a grid. `Row`, `Stack` and `Grid` are the framework-owned arrangement blocks, and they
       are what the `layout:` deprecation names as the replacement.
+
+      ## Migrating from `layout:`
+
+      Siblings that carried `layout: { span, offset }` become the children of one `Grid` with
+      `columns: 24`: `span` becomes `class: col-span-N`, and `offset` — a cumulative margin, not
+      a grid line — is accumulated across the row into `col-start-N`. `layout:` still works —
+      see [Layout](/layout-overview). `lowdefy check` reports every remaining site under the
+      `layout-deprecated` slug, and `lowdefy upgrade` offers the optional `layout-to-containers`
+      codemod, which does the mechanical rewrite and reports the sites it refuses.

@@ -59,3 +59,11 @@ _ref:
       framework-owned equivalents: they take no antd theme, they express arrangement as
       Tailwind utility classes, and they are what the `layout:` deprecation names as the
       replacement.
+
+      ## Migrating from `layout:`
+
+      An area with `direction: column` becomes a `Stack` around its children, and the area's
+      `gap` and `align` become the `Stack`'s properties. `layout:` still works — see
+      [Layout](/layout-overview). `lowdefy check` reports every remaining site under the
+      `layout-deprecated` slug, and `lowdefy upgrade` offers the optional `layout-to-containers`
+      codemod, which does the mechanical rewrite and reports the sites it refuses.

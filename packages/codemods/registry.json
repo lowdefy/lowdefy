@@ -3,7 +3,7 @@
     {
       "version": "8.0.0",
       "from": ">=7.0.0 <8.0.0",
-      "description": "An unsupplied string-form _var is a build error; plugin API v1: removed block methods throw a located BlockError and block meta is validated at build",
+      "description": "An unsupplied string-form _var is a build error; plugin API v1: removed block methods throw a located BlockError and block meta is validated at build; per-block layout: is deprecated in favour of the Row, Grid and Stack container blocks",
       "codemods": [
         {
           "id": "var-default-null",
@@ -14,6 +14,11 @@
           "id": "removed-block-methods",
           "description": "Replace methods.makeCssClass in local block plugins with classNames.<cssKey> (adding cssKeys to meta.js where the element needs an author-facing hook) or an inline style object, and drop methods from sub-components that only received it for this. Standalone, re-runnable step 5b of v5-0-0/21.",
           "path": "v8-0-0/02-removed-block-methods.md"
+        },
+        {
+          "id": "layout-to-containers",
+          "description": "Optional: rewrite per-block layout: (span, offset, flex, grow, shrink, size, selfAlign) and area-level layout keys to the Row, Grid and Stack container blocks with Tailwind classes. Ships a deterministic core; operator-valued and responsive sites are reported, not rewritten. layout: keeps working in v8.",
+          "path": "v8-0-0/03-layout-to-containers.md"
         }
       ]
     },

@@ -96,6 +96,10 @@ const VALID_CHECK_SLUGS = {
   'branch-merge':
     'Ids added on both branches, and migration order, reported by "lowdefy check --against".',
 
+  // Layout
+  'layout-deprecated':
+    'Per-block layout: and area-level layout keys, deprecated in favour of the Row, Grid and Stack container blocks',
+
   // Secrets
   secrets: '_secret names that are not set in the environment',
   'plugin-api-version':
