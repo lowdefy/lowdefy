@@ -66,6 +66,14 @@ _ref:
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
+            ### Per-page type imports
+
+            A production build writes a type-import module per page, listing exactly the blocks, actions and client operators that page uses. The client loads a page's module as it navigates to the page, so the bundler code-splits the block, action and operator packages per page instead of shipping every type an app uses in one chunk. Types used by many pages, and the small set every page needs (the basic and loader blocks, `Message`, `SetDarkMode`, `_not` and `_type`), are hoisted into shared chunks and loaded once.
+
+            The app-wide barrels are kept as the fallback. A page that carries a type its module does not list — a [Dynamic block](/dynamic-page-content) whose content is resolved when the page is fetched — loads them once, on demand. The development server always uses the barrels, because it builds pages just in time and cannot know a page's types before serving the client.
+
+            Set `config.experimental.perPageImports: false` to turn the split off and serve every type from the barrels.
+
             ## check
 
             The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules — the `_js` lint and the [tenant wall audits](/organizations#audits) (`tenant: none` reads with no tenant clause, tenant values taken from the caller, unstamped writes, and the inventory of every unscoped request and step) — and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.

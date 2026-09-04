@@ -17,17 +17,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import Client from '@lowdefy/client';
+import createPageTypeLoader from '@lowdefy/client/createPageTypeLoader.js';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 import { serializer } from '@lowdefy/helpers';
 
-import actions from '../build/plugins/actions.js';
 import blockMetas from '../build/plugins/blockMetas.json';
-import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
-import operators from '../build/plugins/operators/client.js';
+import pageTypeModules from '../build/plugins/pages/index.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import rawLowdefyConfig from '../build/config.json';
 import FeedbackWidget from './feedback/FeedbackWidget.jsx';
@@ -35,10 +34,41 @@ import FeedbackWidget from './feedback/FeedbackWidget.jsx';
 // Deserialize to restore arrays (feedback.roles) from ~arr markers.
 const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
+// Block components, client actions and client operators arrive per page, so
+// the app-wide barrels stay out of the main chunk. The registries are mutated
+// in place as each page's module loads — the renderer resolves every type by
+// name at render time.
+const types = { actions: {}, blockMetas, blocks: {}, icons, operators: {} };
+
+const loadPageTypes = createPageTypeLoader({
+  loadFullTypes: () =>
+    Promise.all([
+      import('../build/plugins/actions.js'),
+      import('../build/plugins/blocks.js'),
+      import('../build/plugins/operators/client.js'),
+    ]).then(([actions, blocks, operators]) => ({
+      actions: actions.default,
+      blocks: blocks.default,
+      operators: operators.default,
+    })),
+  pageTypeModules,
+  types,
+});
+
 // Replaces lib/client/Page.js. The first page renders from the config
 // embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
 function Page({ auth, config, lowdefy }) {
   const [pageConfig, setPageConfig] = useState(config.pageConfig);
+  // The first page renders only once its types have loaded — the shell paints
+  // nothing before hydration either, so no loading state is skipped.
+  const [typesReady, setTypesReady] = useState(false);
+
+  useEffect(() => {
+    loadPageTypes({
+      pageConfig: config.pageConfig,
+      pageId: config.pageConfig.pageId,
+    }).then(() => setTypesReady(true));
+  }, []);
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -85,6 +115,8 @@ function Page({ auth, config, lowdefy }) {
         }
         const { pageConfig: nextPageConfig } = await res.json();
         if (token !== latestNavRef.current) return;
+        await loadPageTypes({ pageConfig: nextPageConfig, pageId: nextPageConfig.pageId });
+        if (token !== latestNavRef.current) return;
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
@@ -99,6 +131,8 @@ function Page({ auth, config, lowdefy }) {
     });
     return unsubscribe;
   }, []);
+
+  if (!typesReady) return null;
 
   return (
     <>
@@ -118,13 +152,7 @@ function Page({ auth, config, lowdefy }) {
         jsMap={jsMap}
         lowdefy={lowdefy}
         router={router}
-        types={{
-          actions,
-          blockMetas,
-          blocks,
-          icons,
-          operators,
-        }}
+        types={types}
         window={window}
       />
     </>

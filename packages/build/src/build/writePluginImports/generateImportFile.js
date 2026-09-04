@@ -14,15 +14,9 @@
   limitations under the License.
 */
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import { LowdefyInternalError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
 
-import filePluginImportSpecifier from '../filePlugins/filePluginImportSpecifier.js';
-import findFilePlugin from '../filePlugins/findFilePlugin.js';
+import addFilePluginSpecifiers from './addFilePluginSpecifiers.js';
 
-// A package plugin is reached through its package subpath barrel; a file plugin
-// has no package, so it is reached by path — the file in place in dev, the copy
-// under the server directory in prod — and it exports the type as its default.
 const template = `{%- for import in imports -%}
 {% if import.filePluginSpecifier %}import {{ import.typeName }} from '{{ import.filePluginSpecifier }}';
 {% else %}import { {{ import.originalTypeName }} as {{ import.typeName }} } from '{{ import.package }}/{{ importPath }}';
@@ -32,26 +26,6 @@ export default {
   {{ import.typeName }},
   {% endfor -%}
 };`;
-
-function addFilePluginSpecifiers({ artifactPath, context, imports, kind }) {
-  return (imports ?? []).map((imported) => {
-    if (!type.isNone(imported.package)) {
-      return imported;
-    }
-    const record = findFilePlugin({ context, kind, typeName: imported.typeName });
-    if (type.isNone(record)) {
-      // Every type with no package is a discovered file plugin: buildImports
-      // reads the same typesMap discovery wrote into.
-      throw new LowdefyInternalError(
-        `No file plugin was discovered for ${kind} type "${imported.typeName}".`
-      );
-    }
-    return {
-      ...imported,
-      filePluginSpecifier: filePluginImportSpecifier({ artifactPath, context, record }),
-    };
-  });
-}
 
 function generateImportFile({ artifactPath, context, imports, importPath, kind }) {
   const templateFn = nunjucksFunction(template);

@@ -59,6 +59,7 @@ function createContext({
     directories,
     errors: [],
     jsBodies: [],
+    pageTypes: {},
     envReferences: [],
     jsMap: {},
     jsModules: { client: {}, server: {} },

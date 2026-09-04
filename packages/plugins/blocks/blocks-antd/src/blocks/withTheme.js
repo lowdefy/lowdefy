@@ -20,7 +20,9 @@ import { type } from '@lowdefy/helpers';
 
 function withTheme(antdComponentName, BlockComponent) {
   const Wrapped = (props) => {
-    const { theme, ...restProperties } = props.properties;
+    // A block composed internally by another block (a page layout rendering Layout) may pass
+    // no properties at all; theme is then simply absent.
+    const { theme, ...restProperties } = props.properties ?? {};
     // Only intercept object themes (design tokens for ConfigProvider).
     // String themes (e.g. Menu's 'dark'/'light') pass through to the component.
     if (!type.isObject(theme)) {
