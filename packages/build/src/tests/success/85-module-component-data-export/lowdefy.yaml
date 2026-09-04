@@ -15,12 +15,13 @@ modules:
 pages:
   - id: dashboard
     type: Box
+    # Box carries arbitrary data properties in this fixture; the check is off for the page.
+    ~ignoreBuildChecks:
+      - block-properties
     blocks:
       # Full change_stamp (uses default — no app override)
       - id: save-section
         type: Box
-        ~ignoreBuildChecks:
-          - block-properties
         properties:
           stamp:
             _ref:

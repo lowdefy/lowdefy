@@ -19,12 +19,13 @@ modules:
 pages:
   - id: app-home
     type: Box
+    # Box carries arbitrary data properties in this fixture; the check is off for the page.
+    ~ignoreBuildChecks:
+      - block-properties
     blocks:
       # Direct consumption of core's stamp
       - id: direct-stamp
         type: Box
-        ~ignoreBuildChecks:
-          - block-properties
         properties:
           stamp:
             _ref:

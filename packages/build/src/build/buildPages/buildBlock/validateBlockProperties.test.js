@@ -410,7 +410,7 @@ test('validateBlockProperties error is not suppressed by an unrelated check slug
   const components = componentsWithBlock({
     id: 'submit',
     type: 'Button',
-    '~ignoreBuildChecks': ['types'],
+    '~ignoreBuildChecks': ['block-types'],
     properties: { titel: 'Save' },
   });
   addKeys({ components, context });
