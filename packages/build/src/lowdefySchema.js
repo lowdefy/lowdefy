@@ -14,6 +14,13 @@
   limitations under the License.
 */
 
+// Every block list — a block's "blocks", a slot's or area's "blocks", and a
+// component body — holds blocks, plus the build-time slot marker { _slot: name }
+// that a component body writes where a use site's slot content is placed.
+const blockListItems = {
+  $ref: '#/definitions/blockListItem',
+};
+
 // The block definition's properties, shared with the page definition. A page is a
 // block plus the page-only keys below; JSON Schema additionalProperties: false
 // cannot see through allOf, so both definitions are built from one object here.
@@ -90,9 +97,7 @@ const blockProperties = {
   loading: {},
   blocks: {
     type: 'array',
-    items: {
-      $ref: '#/definitions/block',
-    },
+    items: blockListItems,
     errorMessage: {
       type: 'Block "blocks" should be an array.',
     },
@@ -202,9 +207,7 @@ const blockProperties = {
         properties: {
           blocks: {
             type: 'array',
-            items: {
-              $ref: '#/definitions/block',
-            },
+            items: blockListItems,
             errorMessage: {
               type: 'Block "slots.{slotKey}.blocks" should be an array.',
             },
@@ -227,9 +230,7 @@ const blockProperties = {
         properties: {
           blocks: {
             type: 'array',
-            items: {
-              $ref: '#/definitions/block',
-            },
+            items: blockListItems,
             errorMessage: {
               type: 'Block "areas.{areaKey}.blocks" should be an array.',
             },
@@ -1900,6 +1901,35 @@ export default {
           'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
       },
     },
+    slotMarker: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['_slot'],
+      properties: {
+        '~r': {},
+        '~l': {},
+        _slot: {
+          type: 'string',
+          description:
+            "A build-time marker in a component body: the use site's content for the named slot is placed here. Not an operator - nothing resolves it at runtime.",
+          errorMessage: {
+            type: 'A "_slot" marker should name one of the component\'s declared slots as a string.',
+          },
+        },
+      },
+      errorMessage: {
+        additionalProperties:
+          'A "_slot" marker may only contain "_slot". Write the slot name as the only key of the list element.',
+      },
+    },
+    // A block list element is either a block or a { _slot: name } marker. if/then
+    // keeps the block errors specific: an element without "_slot" is only ever
+    // reported against the block definition.
+    blockListItem: {
+      if: { type: 'object', required: ['_slot'] },
+      then: { $ref: '#/definitions/slotMarker' },
+      else: { $ref: '#/definitions/block' },
+    },
     block: {
       type: 'object',
       additionalProperties: false,
@@ -1987,9 +2017,7 @@ export default {
         },
         blocks: {
           type: 'array',
-          items: {
-            $ref: '#/definitions/block',
-          },
+          items: blockListItems,
           description:
             'The component body: the block tree inserted at every use site, with every { _prop } and { _slot } marker resolved at build against that use.',
           errorMessage: {

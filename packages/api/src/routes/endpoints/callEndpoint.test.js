@@ -414,6 +414,33 @@ test('callEndpoint rejects a payload that violates the payloadSchema with a User
   expect(result.response).toBe('ran');
 });
 
+test('callEndpoint validates an omitted payload as an empty object', async () => {
+  const mockReadConfigFile = jest.fn((path) => {
+    if (path === 'api/ping.json') {
+      return {
+        endpointId: 'ping',
+        type: 'Api',
+        auth: { public: true },
+        payloadSchema: { type: 'object' },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    readConfigFile: mockReadConfigFile,
+    user: { id: 'user_1' },
+  });
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'ping',
+    pageId: 'pageId',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('ran');
+});
+
 // runAs: the endpoint's declaration is resolved against the fresh routine
 // context and scopes every walled step of the run.
 const tenantRequest = jest.fn(({ tenant }) => tenant);

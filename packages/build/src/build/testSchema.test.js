@@ -1095,3 +1095,59 @@ test('an unknown config ops property emits an additional properties warning', ()
     'App "config.ops" contains an unknown property. The known properties are "enabled".'
   );
 });
+
+test('a _slot marker in a component body block list emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    components: {
+      AnswerPill: {
+        id: 'AnswerPill',
+        slots: ['footer'],
+        blocks: [
+          {
+            id: 'root',
+            type: 'Box',
+            blocks: [{ _slot: 'footer' }],
+            slots: { extra: { blocks: [{ _slot: 'footer' }] } },
+          },
+        ],
+      },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('a _slot marker with additional keys emits an additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    components: {
+      AnswerPill: {
+        id: 'AnswerPill',
+        slots: ['footer'],
+        blocks: [{ id: 'root', type: 'Box', blocks: [{ _slot: 'footer', type: 'Box' }] }],
+      },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'A "_slot" marker may only contain "_slot". Write the slot name as the only key of the list element.'
+  );
+});
+
+test('a _slot marker that is not a string emits a type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    components: {
+      AnswerPill: {
+        id: 'AnswerPill',
+        slots: ['footer'],
+        blocks: [{ id: 'root', type: 'Box', blocks: [{ _slot: 3 }] }],
+      },
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'A "_slot" marker should name one of the component\'s declared slots as a string.'
+  );
+});

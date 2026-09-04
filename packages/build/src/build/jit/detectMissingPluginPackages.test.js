@@ -230,3 +230,26 @@ test('detectMissingPluginPackages detects missing server operator package', () =
     types: ['_mongo_aggregate'],
   });
 });
+
+test('detectMissingPluginPackages does not report a file plugin type as missing', () => {
+  const context = makeContext({
+    blockCounts: ['MyFileBlock'],
+    actionCounts: ['MyFileAction'],
+    typesMap: {
+      blocks: {
+        MyFileBlock: { package: null, version: null, packageId: 'file-plugin' },
+      },
+      actions: {
+        MyFileAction: { package: null, version: null, packageId: 'file-plugin' },
+      },
+      operators: { client: {}, server: {} },
+    },
+  });
+
+  const result = detectMissingPluginPackages({
+    context,
+    installedPluginPackages: new Set(),
+  });
+
+  expect(result.size).toBe(0);
+});

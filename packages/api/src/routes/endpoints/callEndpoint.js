@@ -59,7 +59,12 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload, tra
 
   // Validated once here, before the routine context exists, so REST, MCP and
   // the async fork below all run on a payload that matches the declared schema.
-  const deserializedPayload = serializer.deserialize(payload);
+  // A caller that sends no payload - a CallAPI action without params.payload, a
+  // REST body without the key - is calling with an empty payload. It is
+  // defaulted here, at the single boundary every caller enters through, so a
+  // payloadSchema sees the same `{}` it sees when the key is sent explicitly.
+  const sentPayload = serializer.deserialize(payload);
+  const deserializedPayload = type.isNone(sentPayload) ? {} : sentPayload;
   validatePayload({ endpointConfig, payload: deserializedPayload });
 
   const routineContext = {
