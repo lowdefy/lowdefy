@@ -1,6 +1,6 @@
 File plugins are single files in the app's own config directory that define a block, an action or an operator, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
 
-> File plugins are under active development. Blocks, actions and operators work end to end; connections and requests still need a plugin package, and a file plugin is not yet listed by the docs and MCP endpoints.
+> File plugins are under active development. Blocks, actions and operators work end to end; connections and requests still need a plugin package.
 
 ### The directory convention
 
@@ -111,3 +111,91 @@ the server's version.
   }
 }
 ```
+
+### Examples, so the agent can see the plugin it just wrote
+
+A file plugin's usage examples go in a YAML file named after the plugin, beside it:
+
+```
+plugins/blocks/Card.jsx
+plugins/blocks/Card.examples.yaml
+```
+
+The file holds a list of `{ title, blocks }` entries - the same shape a plugin package's
+`examples.yaml` uses:
+
+```yaml
+- title: Default
+  blocks:
+    - id: card
+      type: Card
+      properties:
+        title: Hello
+```
+
+`lowdefy_get_examples` serves this file. When it is missing, the tool answers with the path to
+create rather than "no examples", so an agent writing config for the plugin knows the convention.
+
+### Documentation in the sibling JSON
+
+A `readme` field in the sibling JSON is the file plugin's documentation. `lowdefy_get_plugin_doc`
+serves it, looked up by the type name or by the path `lowdefy_list_types` reports:
+
+```json
+{
+  "meta": { "category": "display" },
+  "readme": "# Card\n\nA card with a title and a body slot."
+}
+```
+
+### File plugins in the docs and MCP tools
+
+A file plugin is a first-class type in the dev server's docs endpoints and MCP tools.
+`lowdefy_list_types` lists it beside the package types, with no package name and two extra fields
+naming where it lives:
+
+```json
+{
+  "type": "Card",
+  "kind": "blocks",
+  "package": null,
+  "source": "file plugin",
+  "file": "plugins/blocks/Card.jsx",
+  "used": true
+}
+```
+
+`lowdefy_get_schema` returns the sibling JSON's `schema` and `meta`, and the same `source` and
+`file` fields. A file action or operator with no sibling JSON is still answered, with
+`"schema": null` - it exists, it just declares no contract.
+
+### Plugin files are linted at build
+
+Every plugin file is parsed at build and its names are resolved, the same way a `_js` body is:
+
+- A syntax error is a build error naming the file and the line, rather than a browser overlay
+  once the page renders.
+- A name that is neither imported, declared, nor a global of the environment the plugin runs in
+  is a build error. A block, an action or a client operator has the browser globals and `React`;
+  a server or build operator has the server globals; an operator under
+  `plugins/operators/shared` has only what both environments have, so reaching for `document` or
+  `process` there is an error.
+- A top-level declaration that is never used is a warning.
+
+Both are reported under the `js-lint` check slug, so `~ignoreBuildChecks: [js-lint]` suppresses
+them where a plugin genuinely needs a global the build does not know about.
+
+### Plugin API version
+
+A file plugin may declare the plugin API version it was written against in its sibling JSON:
+
+```json
+{
+  "pluginApiVersion": 1
+}
+```
+
+Declaring nothing means the version the Lowdefy in the app implements, which is the normal case:
+the file lives in the app it is built with. A file plugin that declares a different version is the
+same build error a plugin package declaring one is - see
+[Plugin API Versioning](/plugin-api-versioning).

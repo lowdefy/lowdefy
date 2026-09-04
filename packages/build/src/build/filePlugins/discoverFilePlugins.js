@@ -57,6 +57,10 @@ function readSiblingJson({ absolutePath, errors, relativePath, stem }) {
   if (parsed.meta !== undefined) sibling.meta = parsed.meta;
   if (parsed.schema !== undefined) sibling.schema = parsed.schema;
   if (parsed.hazards !== undefined) sibling.hazards = parsed.hazards;
+  // A file plugin has no package.json to declare lowdefy.pluginApiVersion, so
+  // the sibling JSON is where it declares one. Absent means the version this
+  // framework implements: the file is written against the Lowdefy it sits in.
+  if (parsed.pluginApiVersion !== undefined) sibling.pluginApiVersion = parsed.pluginApiVersion;
   return sibling;
 }
 

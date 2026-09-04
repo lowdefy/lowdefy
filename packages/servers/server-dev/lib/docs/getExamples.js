@@ -23,11 +23,51 @@ import resolvePluginDir from './resolvePluginDir.js';
 
 const EXAMPLE_FILES = ['gallery.yaml', 'examples.yaml', 'tests.yaml'];
 
+// The synthetic package identity discoverFilePlugins gives a plugin that is a
+// file in the config directory rather than an installed package.
+const FILE_PLUGIN_PACKAGE_ID = 'file-plugin';
+
+// A file plugin's examples sit beside the plugin, named after it, and the
+// build knows the absolute path it was discovered at.
+function filePluginDefinition({ availableTypes, typeName }) {
+  const stores = [
+    availableTypes.blocks,
+    availableTypes.actions,
+    availableTypes.operators?.client,
+    availableTypes.operators?.server,
+  ];
+  for (const store of stores) {
+    const definition = store?.[typeName];
+    if (definition?.packageId === FILE_PLUGIN_PACKAGE_ID) {
+      return definition;
+    }
+  }
+  return null;
+}
+
+function filePluginExamples({ definition, typeName }) {
+  const stem = path.basename(definition.file, path.extname(definition.file));
+  const examplesPath = path.join(path.dirname(definition.file), `${stem}.examples.yaml`);
+  const result = { type: typeName, source: 'file plugin', file: definition.relativePath };
+  if (!fs.existsSync(examplesPath)) {
+    const relativeExamples = definition.relativePath.replace(/\.[^./]+$/, '.examples.yaml');
+    return {
+      ...result,
+      note: `No examples file for "${typeName}"; add "${relativeExamples}" beside the plugin. It holds a list of { title, blocks } entries, the same shape a plugin package's examples.yaml uses.`,
+    };
+  }
+  return { ...result, files: { 'examples.yaml': fs.readFileSync(examplesPath, 'utf8') } };
+}
+
 // Block example yaml ships in plugin dist by convention
 // (dist/blocks/<Block>/gallery.yaml). Local plugins may only ship some of
 // these files, or none — return whatever exists, never throw.
 function getExamples({ type: typeName }) {
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
+  const filePlugin = filePluginDefinition({ availableTypes, typeName });
+  if (!type.isNone(filePlugin)) {
+    return filePluginExamples({ definition: filePlugin, typeName });
+  }
   const definition = availableTypes.blocks?.[typeName];
   if (type.isNone(definition)) {
     return null;

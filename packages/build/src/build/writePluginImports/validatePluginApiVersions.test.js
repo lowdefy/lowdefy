@@ -23,8 +23,8 @@ jest.unstable_mockModule('./readPluginPackageJson.js', () => ({
 const { default: readPluginPackageJson } = await import('./readPluginPackageJson.js');
 const { default: validatePluginApiVersions } = await import('./validatePluginApiVersions.js');
 
-function createContext() {
-  return { errors: [], handleWarning: jest.fn() };
+function createContext({ filePlugins = [] } = {}) {
+  return { errors: [], handleWarning: jest.fn(), filePlugins };
 }
 
 const components = {
@@ -86,6 +86,45 @@ test('validatePluginApiVersions warns rather than errors when a package declares
     '"@acme/actions" does not declare a plugin API version'
   );
   expect(context.handleWarning.mock.calls[0][0].message).toContain('"pluginApiVersion": 1');
+});
+
+test('validatePluginApiVersions treats a file plugin that declares nothing as the current version', () => {
+  readPluginPackageJson.mockImplementation(() => null);
+  const context = createContext({
+    filePlugins: [{ relativePath: 'plugins/blocks/Card.jsx', kind: 'blocks' }],
+  });
+  validatePluginApiVersions({ components, context });
+  expect(context.errors).toEqual([]);
+  expect(context.handleWarning).not.toHaveBeenCalled();
+});
+
+test('validatePluginApiVersions errors on a file plugin declaring another version, located at its file', () => {
+  readPluginPackageJson.mockImplementation(() => null);
+  const context = createContext({
+    filePlugins: [{ relativePath: 'plugins/blocks/Card.jsx', kind: 'blocks', pluginApiVersion: 2 }],
+  });
+  validatePluginApiVersions({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain(
+    'File plugin "plugins/blocks/Card.jsx" was built for plugin API v2'
+  );
+  expect(context.errors[0].message).toContain('this Lowdefy version implements v1');
+  expect(context.errors[0].message).toContain('plugin-api-versioning');
+  expect(context.errors[0].filePath).toBe('plugins/blocks/Card.jsx');
+  expect(context.errors[0].checkSlug).toBe('plugin-api-version');
+});
+
+test('validatePluginApiVersions reports a shared file operator once, not once per kind', () => {
+  readPluginPackageJson.mockImplementation(() => null);
+  const record = { relativePath: 'plugins/operators/shared/_titleCase.js', pluginApiVersion: 99 };
+  const context = createContext({
+    filePlugins: [
+      { ...record, kind: 'operators.client' },
+      { ...record, kind: 'operators.server' },
+    ],
+  });
+  validatePluginApiVersions({ components, context });
+  expect(context.errors).toHaveLength(1);
 });
 
 test('validatePluginApiVersions skips a package that is not installed yet', () => {

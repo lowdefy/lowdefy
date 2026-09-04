@@ -29,6 +29,28 @@ const SCHEMA_ARTIFACTS = {
   requests: 'plugins/requestSchemas.json',
 };
 
+// The synthetic package identity discoverFilePlugins gives a plugin that is a
+// file in the config directory rather than an installed package.
+const FILE_PLUGIN_PACKAGE_ID = 'file-plugin';
+
+// A file plugin's schema and meta come from its sibling JSON, which the build
+// has already written into the same schema maps a package plugin's do. Only
+// the source needs naming, so an agent knows which file to edit.
+function filePluginDefinition({ kind, typeName }) {
+  const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
+  const stores =
+    kind === 'operators'
+      ? [availableTypes.operators?.client, availableTypes.operators?.server]
+      : [availableTypes[kind]];
+  for (const store of stores) {
+    const definition = store?.[typeName];
+    if (definition?.packageId === FILE_PLUGIN_PACKAGE_ID) {
+      return definition;
+    }
+  }
+  return null;
+}
+
 // An agent has no other way to learn a legal ~ignoreBuildChecks slug: the key
 // is stripped before the JSON schema runs, so the build's own error message was
 // the only source. Serve the catalogue here instead.
@@ -70,11 +92,16 @@ function getSchema({ kind, type: typeName }) {
   }
   const schemas = readBuildArtifact({ name: SCHEMA_ARTIFACTS[normalizedKind] }) ?? {};
   const entry = schemas[typeName];
-  if (type.isNone(entry)) {
+  const filePlugin = filePluginDefinition({ kind: normalizedKind, typeName });
+  // A file action or operator may ship no sibling JSON at all, and is then a
+  // real type with no schema - saying so beats a "no such type" answer.
+  if (type.isNone(entry) && type.isNone(filePlugin)) {
     return null;
   }
   const result = { kind: normalizedKind, type: typeName };
-  if (normalizedKind === 'connections') {
+  if (type.isNone(entry)) {
+    result.schema = null;
+  } else if (normalizedKind === 'connections') {
     result.schema = entry.schema ?? entry;
     if (entry.requests) {
       result.requests = entry.requests;
@@ -91,6 +118,13 @@ function getSchema({ kind, type: typeName }) {
     const blockMetas = readBuildArtifact({ name: 'plugins/blockMetas.json' }) ?? {};
     if (blockMetas[typeName]) {
       result.meta = blockMetas[typeName];
+    }
+  }
+  if (!type.isNone(filePlugin)) {
+    result.source = 'file plugin';
+    result.file = filePlugin.relativePath;
+    if (!type.isNone(filePlugin.meta)) {
+      result.meta = filePlugin.meta;
     }
   }
   result.hazards = getHazards({ kind: normalizedKind, type: typeName });

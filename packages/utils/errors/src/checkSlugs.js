@@ -69,7 +69,7 @@ const VALID_CHECK_SLUGS = {
   archetype: 'Page archetype expansion: collection, field and prop resolution',
 
   // JavaScript
-  'js-lint': 'Unresolved and unused names in _js bodies',
+  'js-lint': 'Unresolved and unused names in _js bodies and file plugins, and plugin file syntax errors',
   'js-modules': '_js module reference resolution and export checks',
 
   // Tenant wall

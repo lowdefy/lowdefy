@@ -175,3 +175,20 @@ test('discoverFilePlugins errors when a sibling JSON file cannot be parsed', () 
   expect(errors[0].message).toMatch('Could not parse plugins/blocks/Card.json');
   expect(errors[0].filePath).toEqual('plugins/blocks/Card.json');
 });
+
+test('discoverFilePlugins reads pluginApiVersion from a sibling JSON file', () => {
+  writeFixture('plugins/blocks/Card.jsx');
+  writeFixture(
+    'plugins/blocks/Card.json',
+    JSON.stringify({ meta: { category: 'display' }, pluginApiVersion: 2 })
+  );
+  const { records } = discoverFilePlugins({ configDirectory });
+  expect(records[0].pluginApiVersion).toEqual(2);
+});
+
+test('discoverFilePlugins leaves pluginApiVersion undefined when the sibling JSON omits it', () => {
+  writeFixture('plugins/blocks/Card.jsx');
+  writeFixture('plugins/blocks/Card.json', JSON.stringify({ meta: { category: 'display' } }));
+  const { records } = discoverFilePlugins({ configDirectory });
+  expect(records[0].pluginApiVersion).toBeUndefined();
+});

@@ -15,8 +15,9 @@
 */
 import { jest } from '@jest/globals';
 
+const artifacts = {};
 jest.unstable_mockModule('./readBuildArtifact.js', () => ({
-  default: jest.fn(() => ({})),
+  default: jest.fn(({ name }) => artifacts[name] ?? {}),
 }));
 jest.unstable_mockModule('./getHazards.js', () => ({
   default: jest.fn(() => []),
@@ -63,4 +64,74 @@ test('getSchema names checks among the kinds it accepts', () => {
 
 test('getSchema still returns null for a plugin type with no schema artifact entry', () => {
   expect(getSchema({ kind: 'blocks', type: 'Button' })).toBe(null);
+});
+
+test('getSchema returns the sibling-JSON schema and meta of a file block, naming the file', () => {
+  artifacts['plugins/blockSchemas.json'] = { Card: { type: 'object' } };
+  artifacts['plugins/blockMetas.json'] = { Card: { category: 'display' } };
+  artifacts['plugins/availableTypes.json'] = {
+    blocks: {
+      Card: { package: null, packageId: 'file-plugin', relativePath: 'plugins/blocks/Card.jsx' },
+    },
+  };
+  try {
+    expect(getSchema({ kind: 'blocks', type: 'Card' })).toEqual({
+      kind: 'blocks',
+      type: 'Card',
+      schema: { type: 'object' },
+      meta: { category: 'display' },
+      source: 'file plugin',
+      file: 'plugins/blocks/Card.jsx',
+      hazards: [],
+    });
+  } finally {
+    Object.keys(artifacts).forEach((name) => delete artifacts[name]);
+  }
+});
+
+test('getSchema reports a file action that ships no schema rather than answering not found', () => {
+  artifacts['plugins/availableTypes.json'] = {
+    actions: {
+      CopyRow: {
+        package: null,
+        packageId: 'file-plugin',
+        relativePath: 'plugins/actions/CopyRow.js',
+      },
+    },
+  };
+  try {
+    expect(getSchema({ kind: 'actions', type: 'CopyRow' })).toEqual({
+      kind: 'actions',
+      type: 'CopyRow',
+      schema: null,
+      source: 'file plugin',
+      file: 'plugins/actions/CopyRow.js',
+      hazards: [],
+    });
+  } finally {
+    Object.keys(artifacts).forEach((name) => delete artifacts[name]);
+  }
+});
+
+test('getSchema finds a shared file operator through the client operator store', () => {
+  artifacts['plugins/operatorSchemas.json'] = { _titleCase: { type: 'string' } };
+  artifacts['plugins/availableTypes.json'] = {
+    operators: {
+      client: {},
+      server: {
+        _titleCase: {
+          package: null,
+          packageId: 'file-plugin',
+          relativePath: 'plugins/operators/shared/_titleCase.js',
+        },
+      },
+    },
+  };
+  try {
+    expect(getSchema({ kind: 'operators', type: '_titleCase' }).file).toBe(
+      'plugins/operators/shared/_titleCase.js'
+    );
+  } finally {
+    Object.keys(artifacts).forEach((name) => delete artifacts[name]);
+  }
 });
