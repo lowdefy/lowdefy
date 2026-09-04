@@ -187,6 +187,15 @@ function AgentChat({
       }
     },
     onError: (error) => {
+      // A request that fails after the stream's `start` chunk leaves the
+      // assistant shell the SDK pushed on that chunk — id set, parts: [] — in
+      // the message list. Left there, every later send fails UIMessage
+      // validation ("Message must contain at least one part") and the
+      // conversation is dead until a reload. Drop empty shells so the user can
+      // simply try again; there is nothing in them to show or to send.
+      setMessages((prev) =>
+        prev.filter((m) => m.role !== 'assistant' || (m.parts?.length ?? 0) > 0)
+      );
       methods.triggerEvent({
         name: 'onError',
         event: { message: error.message },
