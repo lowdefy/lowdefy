@@ -3,7 +3,7 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/J8-undefined-state-in-ref-page/pages/home.yaml:7\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
+        "{{fixturesDir}}/J8-undefined-state-in-ref-page/pages/home.yaml:7\n[ConfigWarning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState. If the state is set at runtime (for example by a custom action calling setState), declare it under the page's \"state:\" schema, or suppress this check with \"~ignoreBuildChecks: [state-refs]\" on the reference."
       ]
     }
   ]
