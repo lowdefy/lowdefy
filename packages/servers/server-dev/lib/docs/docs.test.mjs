@@ -151,10 +151,7 @@ test('getSchema returns hazards for a block: type-attached first, then framework
 
 test('getSchema returns hazards for a request, including a meta.hazards entry', () => {
   const result = getSchema({ kind: 'requests', type: 'WriteRequest' });
-  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
-    'write-request-hazard',
-    'state-in-request-properties',
-  ]);
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual(['write-request-hazard']);
 });
 
 test('getSchema returns connection schema with request list', () => {
@@ -224,7 +221,10 @@ test('getCoreDoc resolves a request doc on its connection page but keeps request
   // from the request kind the caller asked about.
   const doc = getCoreDoc({ kind: 'request', type: 'MongoDBFind' });
   expect(doc.slug).toEqual('connections/mongodb');
-  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['state-in-request-properties']);
+  // The framework's request-level hazard was retired by the request-state-empty
+  // check, so a request with no meta.hazards resolves to none — and never to the
+  // connection page's hazards.
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual([]);
 });
 
 test('getCoreDoc returns null for unknown slug', () => {
@@ -339,16 +339,12 @@ test('findConfig fires tenant-wall-lookup on a request over a walled connection 
   expect(walled.matches.length).toEqual(1);
   expect(walled.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
     'write-request-hazard',
-    'state-in-request-properties',
     'tenant-wall-lookup',
   ]);
 
   const shared = await findConfig({ id: 'req-shared', pageId: 'other' });
   expect(shared.matches.length).toEqual(1);
-  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
-    'write-request-hazard',
-    'state-in-request-properties',
-  ]);
+  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual(['write-request-hazard']);
 });
 
 test('findConfig resolves a request connection across pages when no pageId is given', async () => {
