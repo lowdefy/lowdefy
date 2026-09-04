@@ -25,7 +25,7 @@ import Head from '@lowdefy/client/adapters/Head.js';
 import { serializer } from '@lowdefy/helpers';
 
 import blockMetas from '../build/plugins/blockMetas.json';
-import icons from '../build/plugins/icons.js';
+import iconNames from '../build/plugins/iconNames.js';
 import pageTypeModules from '../build/plugins/pages/index.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import rawLowdefyConfig from '../build/config.json';
@@ -34,13 +34,17 @@ import FeedbackWidget from './feedback/FeedbackWidget.jsx';
 // Deserialize to restore arrays (feedback.roles) from ~arr markers.
 const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
 
-// Block components, client actions and client operators arrive per page, so
-// the app-wide barrels stay out of the main chunk. The registries are mutated
-// in place as each page's module loads — the renderer resolves every type by
-// name at render time.
-const types = { actions: {}, blockMetas, blocks: {}, icons, operators: {} };
+// Block components, client actions, client operators and icons arrive per
+// page, so the app-wide barrels stay out of the main chunk. The registries are
+// mutated in place as each page's module loads — the renderer resolves every
+// type by name at render time. iconNames is the barrel's index, not its
+// components: the loader needs it to know which names the barrel could still
+// supply.
+const types = { actions: {}, blockMetas, blocks: {}, icons: {}, operators: {} };
 
 const loadPageTypes = createPageTypeLoader({
+  iconNames,
+  loadFullIcons: () => import('../build/plugins/icons.js').then((icons) => icons.default),
   loadFullTypes: () =>
     Promise.all([
       import('../build/plugins/actions.js'),

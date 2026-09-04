@@ -15,27 +15,32 @@
 */
 import addFilePluginSpecifiers from './addFilePluginSpecifiers.js';
 
-// The import path under each plugin package, per type class.
+// The subpath under each plugin package, per type class. Icons are exported
+// from the react-icons package root, so they have no subpath.
 const importPaths = {
-  actions: 'actions',
-  blocks: 'blocks',
-  operators: 'operators/client',
+  actions: '/actions',
+  blocks: '/blocks',
+  icons: '',
+  operators: '/operators/client',
 };
 
 const kinds = {
   actions: 'actions',
   blocks: 'blocks',
+  icons: 'icons',
   operators: 'operators.client',
 };
 
+const typeClasses = ['actions', 'blocks', 'icons', 'operators'];
+
 // Local identifiers are generated, never derived from a type name: a page
-// module carries three type classes in one scope, and a block and an action
-// may share a name.
+// module carries every type class in one scope, and a block and an action may
+// share a name.
 function generatePageImportFile({ artifactPath, context, imports }) {
   const lines = [];
   const exports = [];
   let counter = 0;
-  ['actions', 'blocks', 'operators'].forEach((typeClass) => {
+  typeClasses.forEach((typeClass) => {
     const entries = addFilePluginSpecifiers({
       artifactPath,
       context,
@@ -49,7 +54,7 @@ function generatePageImportFile({ artifactPath, context, imports }) {
       } else {
         lines.push(
           `import { ${imported.originalTypeName} as ${identifier} } from ${JSON.stringify(
-            `${imported.package}/${importPaths[typeClass]}`
+            `${imported.package}${importPaths[typeClass]}`
           )};`
         );
       }

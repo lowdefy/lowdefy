@@ -48,6 +48,7 @@ function template({
   assets,
   basePath = '',
   config,
+  pageId,
   themeConfig = {},
   title,
 }) {
@@ -61,7 +62,10 @@ function template({
   const cssLinks = assets.css
     .map((file) => `<link rel="stylesheet" href="${basePath}/${file}" />`)
     .join('\n    ');
-  const modulePreloads = assets.imports
+  // The entry's own imports, plus the chunks this page's type-import module
+  // needs — a page with no module of its own (a 404, a page the build did not
+  // split) adds nothing.
+  const modulePreloads = [...assets.imports, ...(assets.pages[pageId] ?? [])]
     .map((file) => `<link rel="modulepreload" href="${basePath}/${file}" />`)
     .join('\n    ');
 

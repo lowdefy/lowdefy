@@ -26,11 +26,25 @@ export default {
 {%- endfor %}
 };`;
 
+// The names in the app-wide barrel, without the components. The client reads
+// it to tell an icon name a page module is missing from a string that merely
+// looks like one — it is the only way to know what the barrel could still
+// provide without loading the barrel itself.
+function iconNames({ packages }) {
+  const names = new Set();
+  packages.forEach(({ icons }) => icons.forEach((icon) => names.add(icon)));
+  return [...names];
+}
+
 async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
   await context.writeBuildArtifact(
     'plugins/icons.js',
     templateFn({ packages: components.imports.icons })
+  );
+  await context.writeBuildArtifact(
+    'plugins/iconNames.js',
+    `export default ${JSON.stringify(iconNames({ packages: components.imports.icons }))};\n`
   );
 }
 

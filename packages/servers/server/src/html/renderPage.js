@@ -103,6 +103,7 @@ async function renderPage(c, { pageId, status = 200 }) {
       sentryDsn: process.env.SENTRY_DSN ?? null,
       user: user ?? null,
     },
+    pageId: resolvedPageId,
     themeConfig,
     title: pageConfig.properties?.title ?? resolvedPageId,
   });

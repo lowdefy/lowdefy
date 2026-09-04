@@ -23,13 +23,17 @@ const Button = () => 'Button';
 const Card = () => 'Card';
 const Link = () => 'Link';
 const _state = () => '_state';
+const AiFillHome = () => 'AiFillHome';
+const MdSettings = () => 'MdSettings';
 
 function makeTypes() {
-  return { actions: {}, blocks: {}, operators: {} };
+  return { actions: {}, blocks: {}, icons: {}, operators: {} };
 }
 
-function makeLoader({ loadFullTypes, pageTypeModules, types }) {
+function makeLoader({ iconNames, loadFullIcons, loadFullTypes, pageTypeModules, types }) {
   return createPageTypeLoader({
+    iconNames: iconNames ?? ['AiFillHome', 'MdSettings'],
+    loadFullIcons: loadFullIcons ?? jest.fn(async () => ({ AiFillHome, MdSettings })),
     loadFullTypes:
       loadFullTypes ??
       jest.fn(async () => ({
@@ -48,7 +52,12 @@ test('createPageTypeLoader registers a page module into the type registries', as
   const loadPageTypes = makeLoader({
     loadFullTypes,
     pageTypeModules: {
-      one: async () => ({ actions: { Link }, blocks: { Box, Button }, operators: { _state } }),
+      one: async () => ({
+        actions: { Link },
+        blocks: { Box, Button },
+        icons: { AiFillHome },
+        operators: { _state },
+      }),
     },
     types,
   });
@@ -59,6 +68,7 @@ test('createPageTypeLoader registers a page module into the type registries', as
   expect(types.blocks).toEqual({ Box, Button });
   expect(types.actions).toEqual({ Link });
   expect(types.operators).toEqual({ _state });
+  expect(types.icons).toEqual({ AiFillHome });
   expect(loadFullTypes).not.toHaveBeenCalled();
 });
 
@@ -125,4 +135,73 @@ test('createPageTypeLoader falls back to the full barrels when a page chunk fail
   await loadPageTypes({ pageConfig: { type: 'Box' }, pageId: 'one' });
   expect(loadFullTypes).toHaveBeenCalledTimes(1);
   expect(types.blocks).toEqual({ Box, Button, Card });
+});
+
+test('createPageTypeLoader registers only the icons a page module carries', async () => {
+  const types = makeTypes();
+  const loadFullIcons = jest.fn(async () => ({ AiFillHome, MdSettings }));
+  const loadPageTypes = makeLoader({
+    loadFullIcons,
+    pageTypeModules: {
+      two: async () => ({ actions: {}, blocks: { Box }, icons: { MdSettings }, operators: {} }),
+    },
+    types,
+  });
+  await loadPageTypes({
+    pageConfig: { type: 'Box', blocks: [{ type: 'Box', properties: { icon: 'MdSettings' } }] },
+    pageId: 'two',
+  });
+  expect(types.icons).toEqual({ MdSettings });
+  expect(loadFullIcons).not.toHaveBeenCalled();
+});
+
+test('createPageTypeLoader loads the icon barrel for an icon the page module lacks', async () => {
+  const types = makeTypes();
+  const loadFullIcons = jest.fn(async () => ({ AiFillHome, MdSettings }));
+  const loadFullTypes = jest.fn(async () => ({
+    actions: { Link },
+    blocks: { Box, Button, Card },
+    operators: { _state },
+  }));
+  const loadPageTypes = makeLoader({
+    loadFullIcons,
+    loadFullTypes,
+    pageTypeModules: {
+      one: async () => ({ actions: {}, blocks: { Box }, icons: { AiFillHome }, operators: {} }),
+    },
+    types,
+  });
+  // A Dynamic block resolved at page-get time names an icon the build did not
+  // see on this page.
+  await loadPageTypes({
+    pageConfig: { type: 'Box', blocks: [{ type: 'Box', properties: { icon: 'MdSettings' } }] },
+    pageId: 'one',
+  });
+  expect(loadFullIcons).toHaveBeenCalledTimes(1);
+  expect(loadFullTypes).not.toHaveBeenCalled();
+  expect(types.icons).toEqual({ AiFillHome, MdSettings });
+});
+
+test('createPageTypeLoader ignores a string that only looks like an icon name', async () => {
+  const types = makeTypes();
+  const loadFullIcons = jest.fn(async () => ({ AiFillHome, MdSettings }));
+  const loadPageTypes = makeLoader({
+    loadFullIcons,
+    pageTypeModules: {
+      one: async () => ({ actions: {}, blocks: { Box }, icons: { AiFillHome }, operators: {} }),
+    },
+    types,
+  });
+  await loadPageTypes({
+    pageConfig: { type: 'Box', id: 'GoBack', properties: { title: 'IoT' } },
+    pageId: 'one',
+  });
+  expect(loadFullIcons).not.toHaveBeenCalled();
+});
+
+test('createPageTypeLoader loads the icon barrel for a page with no module', async () => {
+  const types = makeTypes();
+  const loadPageTypes = makeLoader({ pageTypeModules: {}, types });
+  await loadPageTypes({ pageConfig: { type: 'Box' }, pageId: '404' });
+  expect(types.icons).toEqual({ AiFillHome, MdSettings });
 });

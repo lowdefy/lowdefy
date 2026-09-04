@@ -17,6 +17,7 @@ import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 
 import generatePageImportFile from './generatePageImportFile.js';
+import iconPackages from '../buildImports/iconPackages.js';
 
 // The client shell renders Message and the progress bar, loaders render
 // skeletons while a block's request runs, form validation evaluates _not and
@@ -29,11 +30,55 @@ const runtimeTypes = {
   operators: ['_not', '_type'],
 };
 
+// createIcon renders the spinner for a loading icon and the exclamation for an
+// icon name it cannot resolve, so every page module carries both.
+const runtimeIcons = ['AiOutlineExclamationCircle', 'AiOutlineLoading3Quarters'];
+
 function selectImports({ imports, typeNames }) {
   return imports.filter((imported) => typeNames.has(imported.typeName));
 }
 
-function pageImports({ components, pageTypes }) {
+// The icon names a config fragment references, found the same way the app-wide
+// barrel finds them — react-icons names are string values, not a type key.
+function findIconNames(value) {
+  const json = JSON.stringify(value ?? null);
+  const names = new Set();
+  Object.values(iconPackages).forEach((regex) => {
+    [...json.matchAll(regex)].forEach((match) => names.add(match[1]));
+  });
+  return names;
+}
+
+// A block type may render icons its config never names — the block's meta
+// declares them, and typesMap.icons carries them per type.
+function findBlockDefaultIconNames({ blockTypeNames, context }) {
+  const names = new Set();
+  blockTypeNames.forEach((typeName) => {
+    (context.typesMap.icons[typeName] ?? []).forEach((icon) => {
+      findIconNames(icon).forEach((name) => names.add(name));
+    });
+  });
+  return names;
+}
+
+// components.imports.icons is grouped by package and already validated against
+// the installed react-icons packages, so selecting from it keeps a page module
+// free of names that do not resolve. react-icons/io and io5 both export the
+// IoIos* names; the first package wins, as it does in the app-wide barrel.
+function selectIcons({ imports, iconNames }) {
+  const selected = [];
+  const seen = new Set();
+  imports.forEach(({ icons, package: iconPackage }) => {
+    icons.forEach((icon) => {
+      if (!iconNames.has(icon) || seen.has(icon)) return;
+      seen.add(icon);
+      selected.push({ typeName: icon, originalTypeName: icon, package: iconPackage });
+    });
+  });
+  return selected;
+}
+
+function pageImports({ components, iconNames, pageTypes }) {
   return {
     actions: selectImports({
       imports: components.imports.actions,
@@ -43,6 +88,7 @@ function pageImports({ components, pageTypes }) {
       imports: components.imports.blocks,
       typeNames: new Set([...pageTypes.blocks, ...runtimeTypes.blocks]),
     }),
+    icons: selectIcons({ imports: components.imports.icons, iconNames }),
     operators: selectImports({
       imports: components.imports.operators.client,
       typeNames: new Set([...pageTypes.operators, ...runtimeTypes.operators]),
@@ -51,7 +97,7 @@ function pageImports({ components, pageTypes }) {
 }
 
 // Per-page type imports: the client loads exactly the block components, client
-// actions and client operators one page renders with, so the bundler
+// actions, client operators and icons one page renders with, so the bundler
 // code-splits the plugin packages per page instead of shipping every type in
 // the app's main chunk. The full barrels stay as the client's fallback for a
 // type a page module lacks (a JIT dev page, an unbuilt page, or a type that
@@ -64,17 +110,31 @@ async function writePageImports({ components, context }) {
     context.stage === 'prod' && components.config?.experimental?.perPageImports !== false;
   const pages = enabled ? components.pages ?? [] : [];
 
+  // The menus and the global object render on every page, so their icons are
+  // part of every page's set.
+  const sharedIconNames = new Set([
+    ...runtimeIcons,
+    ...findIconNames(components.global),
+    ...findIconNames(components.menus),
+  ]);
+
   await Promise.all(
-    pages.map((page) =>
-      context.writeBuildArtifact(
+    pages.map((page) => {
+      const pageTypes = context.pageTypes[page.pageId];
+      const iconNames = new Set([
+        ...sharedIconNames,
+        ...findIconNames(page),
+        ...findBlockDefaultIconNames({ blockTypeNames: pageTypes.blocks, context }),
+      ]);
+      return context.writeBuildArtifact(
         `plugins/pages/${page.pageId}.js`,
         generatePageImportFile({
           artifactPath: `plugins/pages/${page.pageId}.js`,
           context,
-          imports: pageImports({ components, pageTypes: context.pageTypes[page.pageId] }),
+          imports: pageImports({ components, iconNames, pageTypes }),
         })
-      )
-    )
+      );
+    })
   );
 
   // Written even when the split is off, as an empty map: the client imports it

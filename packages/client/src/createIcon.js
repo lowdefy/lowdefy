@@ -17,7 +17,7 @@
 import React from 'react';
 import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
-import { cn, withBlockDefaults, ErrorBoundary } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults, ErrorBoundary } from '@lowdefy/block-utils';
 
 import iconStyles from './style.module.css';
 
@@ -39,9 +39,6 @@ const lowdefyProps = [
 ];
 
 const createIcon = (Icons) => {
-  const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
-  const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
-
   const formatTitle = (title) => {
     if (!title || !type.isString(title)) {
       return '';
@@ -60,16 +57,26 @@ const createIcon = (Icons) => {
     styles = {},
     ...props
   }) => {
+    // The registry fills up as each page's icons load, so every lookup —
+    // the spinner and the unresolved-name fallback included — is made at
+    // render time, never captured when the component was created.
+    const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
+    const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
     const iconProps = {
-      id: blockId,
-      className: cn(classNames.element, { [iconStyles['icon-spin']]: spin }),
-      style: {
-        cursor: onClick || events.onClick ? 'pointer' : undefined,
-        ...styles.element,
-      },
+      // The icon svg is the root the Icon block owns, so it carries the block
+      // root contract: id, data-testid, and both the block and element slots of
+      // the app author's class and style. Nothing upstream applies them - the
+      // layout wrapper is skipped for a block with no layout.
+      ...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: cn({ [iconStyles['icon-spin']]: spin }),
+        style: { cursor: onClick || events.onClick ? 'pointer' : undefined },
+      }),
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,
       title: propertiesObj.title ?? formatTitle(propertiesObj.name),
@@ -90,7 +97,6 @@ const createIcon = (Icons) => {
             fallback={() => <AiOutlineExclamationCircle {...{ ...iconProps, color: '#F00' }} />}
           >
             <IconComp
-              id={blockId}
               onClick={
                 onClick ||
                 (events.onClick &&
