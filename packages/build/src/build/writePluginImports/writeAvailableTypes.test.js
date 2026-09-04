@@ -139,3 +139,33 @@ test('writeAvailableTypes writes auth type stores', async () => {
   expect(written.auth.adapters.MongoDBAdapter).toBeDefined();
   expect(written.auth.providers).toEqual({});
 });
+
+test('writeAvailableTypes lists a file plugin with its packageId and relative path', async () => {
+  const context = {
+    installedPackages: new Set(['@lowdefy/blocks-antd']),
+    typesMap: makeTypesMap({
+      blocks: {
+        Badge: {
+          package: null,
+          packageId: 'file-plugin',
+          version: null,
+          originalTypeName: 'Badge',
+          relativePath: 'plugins/blocks/Badge.jsx',
+        },
+        Uninstalled: { package: '@lowdefy/blocks-basic', originalTypeName: 'Uninstalled' },
+      },
+    }),
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeAvailableTypes({ context });
+  const availableTypes = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(availableTypes.blocks).toEqual({
+    Badge: {
+      package: null,
+      packageId: 'file-plugin',
+      version: null,
+      originalTypeName: 'Badge',
+      relativePath: 'plugins/blocks/Badge.jsx',
+    },
+  });
+});

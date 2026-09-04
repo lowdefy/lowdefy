@@ -146,6 +146,29 @@ blocks:
           args:
             total:
               _state: total
+  - id: filter_badge
+    type: StatusBadge
+    properties:
+      label:
+        _titleCase:
+          _state: filter
+      tone: neutral
+  - id: copy_first
+    type: Button
+    visible:
+      _gt:
+        - _state: total
+        - 0
+    properties:
+      title: Copy first id
+      size: small
+    events:
+      onClick:
+        - id: copy_row
+          type: CopyRow
+          params:
+            rowId:
+              _state: items.0._id
   - id: empty_state
     type: Alert
     visible:

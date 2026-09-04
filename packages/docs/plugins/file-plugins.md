@@ -1,6 +1,6 @@
 File plugins are single files in the app's own config directory that define a block, an action or an operator, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
 
-> File plugins are under active development. This release discovers them and registers their type names; emitting the imports that load them is the next step, so a file plugin is not yet usable in a page.
+> File plugins are under active development. Blocks, actions and operators work end to end; connections and requests still need a plugin package, and a file plugin is not yet listed by the docs and MCP endpoints.
 
 ### The directory convention
 
@@ -56,3 +56,58 @@ plugins/blocks/Card.json
 ```
 
 Blocks use `meta` and `schema`; actions and operators use `schema`, and operators use `hazards`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
+
+### A block file plugin must declare a meta
+
+A block's `meta` is not optional: the build reads `category` from it to know how the block is
+rendered, exactly as it does for a package block. A block file plugin with no sibling JSON, or a
+sibling JSON with no `meta`, is a build error:
+
+```
+Block type "Card" from "plugins/blocks/Card.jsx": has no meta. Declare it in "plugins/blocks/Card.json" as { "meta": { ... } } with at least { category }.
+```
+
+When the sibling JSON has a `meta` but no `schema`, the block schema is generated from
+`meta.properties`, the same way a package block's schema is.
+
+### The plugin exports the type as its default export
+
+A file plugin's module exports one thing - the block component, the action function or the
+operator function - as its `default` export:
+
+`plugins/blocks/Card.jsx`:
+
+```jsx
+function Card({ blockId, properties }) {
+  return <div id={blockId}>{properties.title}</div>;
+}
+
+export default Card;
+```
+
+A plugin may import from other files beside it with a relative path, and from any package the
+app's own `package.json` depends on.
+
+### Dev and production
+
+In development the generated import points at the file where you wrote it, so Vite serves it and
+hot-replaces it: editing a block or an action refreshes the browser without a restart. A server
+operator or a build operator is held in the server's module cache instead, so the dev server
+restarts when you edit one.
+
+For a production build every plugin file, and every file it imports relatively, is copied into the
+server directory, and the generated imports point at the copy - the deployed server runs without
+the config directory. Bare package imports resolve from the server's `node_modules`, so the
+dependencies declared in the app's `package.json` are installed into the server whenever the app
+has a `plugins` directory. A dependency the server already ships (`react`, `antd`, `dayjs`) keeps
+the server's version.
+
+`package.json`, beside `lowdefy.yaml`:
+
+```json
+{
+  "dependencies": {
+    "stripe": "18.0.0"
+  }
+}
+```

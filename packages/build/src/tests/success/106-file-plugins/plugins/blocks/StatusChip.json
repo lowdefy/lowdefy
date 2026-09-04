@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "category": "display",
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The text to show in the badge."
+        },
+        "tone": {
+          "type": "string",
+          "enum": ["positive", "negative", "neutral"],
+          "description": "The badge colour."
+        }
+      }
+    }
+  }
+}

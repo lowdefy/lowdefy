@@ -20,8 +20,11 @@ async function writeActionImports({ components, context }) {
   await context.writeBuildArtifact(
     'plugins/actions.js',
     generateImportFile({
+      artifactPath: 'plugins/actions.js',
+      context,
       imports: components.imports.actions,
       importPath: 'actions',
+      kind: 'actions',
     })
   );
 }

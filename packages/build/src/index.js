@@ -17,6 +17,7 @@
 */
 
 import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { moduleLockfileName, readModuleLockfile, writeModuleLockfile } from '@lowdefy/node-utils';
 
 import check from './check.js';
 import checkAgainst from './check/checkAgainst.js';
@@ -25,7 +26,9 @@ import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import addFilePluginTypes from './build/filePlugins/addFilePluginTypes.js';
+import copyFilePlugins from './build/filePlugins/copyFilePlugins.js';
 import discoverFilePlugins from './build/filePlugins/discoverFilePlugins.js';
+import loadFilePluginBlockSchemas from './build/filePlugins/loadFilePluginBlockSchemas.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import serializeBuildException from './utils/serializeBuildException.js';
@@ -54,9 +57,6 @@ import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import loadBlockSchemas from './build/loadBlockSchemas.js';
-import moduleLockfileName from './build/moduleLockfileName.js';
-import readModuleLockfile from './build/readModuleLockfile.js';
-import writeModuleLockfile from './build/writeModuleLockfile.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
@@ -201,6 +201,10 @@ async function build(options) {
     });
     // Block schemas must be in context before any block is built (validateBlockProperties).
     await loadBlockSchemas({ components, context });
+    tryBuildStep(loadFilePluginBlockSchemas, 'loadFilePluginBlockSchemas', {
+      components,
+      context,
+    });
     // Extract runtime component definitions into context.componentDefs. The
     // definitions stay in the config tree until here so precompute folds build
     // operators in component bodies and testSchema validates the definitions
@@ -268,6 +272,7 @@ async function build(options) {
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
     await copyJsModules({ context });
+    await copyFilePlugins({ context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

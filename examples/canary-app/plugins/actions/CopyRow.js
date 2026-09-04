@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import generateImportFile from './generateImportFile.js';
-
-async function writeBlockImports({ components, context }) {
-  await context.writeBuildArtifact(
-    'plugins/blocks.js',
-    generateImportFile({
-      artifactPath: 'plugins/blocks.js',
-      context,
-      imports: components.imports.blocks,
-      importPath: 'blocks',
-      kind: 'blocks',
-    })
-  );
+// A file plugin: one .js file under plugins/actions. The default export is the
+// action; its params schema is in the sibling CopyRow.json.
+function CopyRow({ methods: { setState }, params }) {
+  if (!params.rowId) {
+    throw new Error('CopyRow requires a "rowId" parameter.');
+  }
+  setState({ copied_row_id: params.rowId });
 }
 
-export default writeBlockImports;
+export default CopyRow;

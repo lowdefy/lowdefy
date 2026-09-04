@@ -304,3 +304,46 @@ test('validateBlockMeta accepts styles as a known key and rejects a non-string l
     'meta.styles must be an array of strings. Received "a.css".'
   );
 });
+
+const filePlugin = {
+  checkSlug: 'block-types',
+  relativePath: 'plugins/blocks/Badge.jsx',
+};
+
+test('validateBlockMeta fails a file block with no sibling JSON meta and points at the JSON', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({ context, filePlugin, meta: undefined, typeName: 'Badge' });
+  expect(valid).toBe(false);
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0]).toBeInstanceOf(ConfigError);
+  expect(context.errors[0].message).toEqual(
+    'Block type "Badge" from "plugins/blocks/Badge.jsx": has no meta. Declare it in "plugins/blocks/Badge.json" as { "meta": { ... } } with at least { category }.'
+  );
+  expect(context.errors[0].checkSlug).toEqual('block-types');
+});
+
+test('validateBlockMeta holds a file block meta to the same contract as a package block', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({
+    context,
+    filePlugin,
+    meta: { category: 'not-a-category' },
+    typeName: 'Badge',
+  });
+  expect(valid).toBe(false);
+  expect(context.errors[0].message).toContain(
+    'Block type "Badge" from "plugins/blocks/Badge.jsx": meta.category must be one of'
+  );
+});
+
+test('validateBlockMeta accepts a valid file block meta', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({
+    context,
+    filePlugin,
+    meta: { category: 'display' },
+    typeName: 'Badge',
+  });
+  expect(valid).toBe(true);
+  expect(context.errors).toHaveLength(0);
+});

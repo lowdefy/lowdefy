@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
+import { FILE_PLUGIN_PACKAGE_ID } from '../filePlugins/discoverFilePlugins.js';
+
+// A file plugin is never installed as a package — it is available because the
+// file is there — so it is listed on its packageId, carrying the relative path
+// the docs surfaces show instead of a package name.
 function filterInstalled({ store, installedPackages }) {
   const filtered = {};
   for (const [typeName, definition] of Object.entries(store ?? {})) {
-    if (installedPackages.has(definition.package)) {
+    if (
+      definition.packageId === FILE_PLUGIN_PACKAGE_ID ||
+      installedPackages.has(definition.package)
+    ) {
       filtered[typeName] = definition;
     }
   }

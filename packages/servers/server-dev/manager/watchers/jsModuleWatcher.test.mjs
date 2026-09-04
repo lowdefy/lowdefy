@@ -44,9 +44,20 @@ let root;
 let context;
 let watcher;
 let artifactPath;
+let filePluginArtifactPath;
 
 function writeArtifact(paths) {
   fs.writeFileSync(artifactPath, JSON.stringify(paths));
+}
+
+function writeFilePluginArtifact(paths) {
+  fs.writeFileSync(filePluginArtifactPath, JSON.stringify(paths));
+}
+
+function writeFilePlugin(name, source) {
+  const filePath = path.join(root, 'app', 'plugins', 'operators', 'server', name);
+  fs.writeFileSync(filePath, source);
+  return filePath;
 }
 
 function writeModule(name, source) {
@@ -60,7 +71,9 @@ beforeEach(() => {
   const build = path.join(root, 'server', 'build');
   fs.mkdirSync(path.join(build, 'js'), { recursive: true });
   fs.mkdirSync(path.join(root, 'app', 'lib'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'app', 'plugins', 'operators', 'server'), { recursive: true });
   artifactPath = path.join(build, 'js', 'serverModules.json');
+  filePluginArtifactPath = path.join(build, 'js', 'serverFilePlugins.json');
   context = {
     directories: { build, config: path.join(root, 'app') },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
@@ -87,7 +100,7 @@ test('editing a listed server module restarts the server', async () => {
   expect(context.restartServer).toHaveBeenCalledTimes(1);
   expect(context.logger.info).toHaveBeenCalledWith(
     { spin: 'start' },
-    'Server-side _js module changed - restarting server.'
+    'Server-side _js module or file plugin changed - restarting server.'
   );
 });
 
@@ -114,6 +127,34 @@ test('a build that adds a module restarts and extends the watch set', async () =
   // Chokidar needs a moment to start watching the added path.
   await sleep(300);
   fs.writeFileSync(second, 'export default 2;');
+  await waitFor(() => context.restartServer.mock.calls.length === 2);
+});
+
+test('editing a listed server-side file plugin restarts the server', async () => {
+  const pluginPath = writeFilePlugin('_titleCase.js', 'export default () => 1;');
+  writeArtifact([]);
+  writeFilePluginArtifact([pluginPath]);
+
+  watcher = await jsModuleWatcher(context);
+  fs.writeFileSync(pluginPath, 'export default () => 2;');
+  await waitFor(() => context.restartServer.mock.calls.length > 0);
+
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
+});
+
+test('a build that adds a server-side file plugin restarts and extends the watch set', async () => {
+  const modulePath = writeModule('rows.js', 'export const a = 1;');
+  writeArtifact([modulePath]);
+  writeFilePluginArtifact([]);
+
+  watcher = await jsModuleWatcher(context);
+  const pluginPath = writeFilePlugin('_titleCase.js', 'export default () => 1;');
+  writeFilePluginArtifact([pluginPath]);
+  await waitFor(() => context.restartServer.mock.calls.length === 1);
+
+  // Chokidar needs a moment to start watching the added path.
+  await sleep(300);
+  fs.writeFileSync(pluginPath, 'export default () => 2;');
   await waitFor(() => context.restartServer.mock.calls.length === 2);
 });
 

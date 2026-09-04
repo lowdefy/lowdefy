@@ -146,3 +146,42 @@ test('writeActionSchemaMap groups multiple actions from same package', async () 
   expect(written.Wait).toBeDefined();
   expect(written.SetState).toBeDefined();
 });
+
+test('writeActionSchemaMap reads a file plugin schema from its discovered record', async () => {
+  const schema = { params: { type: 'object', properties: { rowId: { type: 'string' } } } };
+  const components = {
+    imports: { actions: [{ package: null, typeName: 'CopyRow', originalTypeName: 'CopyRow' }] },
+  };
+  const context = {
+    filePlugins: [
+      {
+        kind: 'actions',
+        typeName: 'CopyRow',
+        relativePath: 'plugins/actions/CopyRow.js',
+        schema,
+      },
+    ],
+    typesMap: { schemas: { actions: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeActionSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith(
+    'plugins/actionSchemas.json',
+    JSON.stringify({ CopyRow: schema })
+  );
+});
+
+test('writeActionSchemaMap omits a file plugin that declares no schema', async () => {
+  const components = {
+    imports: { actions: [{ package: null, typeName: 'CopyRow', originalTypeName: 'CopyRow' }] },
+  };
+  const context = {
+    filePlugins: [
+      { kind: 'actions', typeName: 'CopyRow', relativePath: 'plugins/actions/CopyRow.js' },
+    ],
+    typesMap: { schemas: { actions: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeActionSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/actionSchemas.json', '{}');
+});

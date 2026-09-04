@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import generateImportFile from './generateImportFile.js';
-
-async function writeBlockImports({ components, context }) {
-  await context.writeBuildArtifact(
-    'plugins/blocks.js',
-    generateImportFile({
-      artifactPath: 'plugins/blocks.js',
-      context,
-      imports: components.imports.blocks,
-      importPath: 'blocks',
-      kind: 'blocks',
-    })
+/**
+ * The discovered file-plugin record for one type name of one kind, or undefined
+ * when the type came from a package.
+ *
+ * Import records carry only the type names — the file a type was discovered at,
+ * and the meta/schema/hazards read from its sibling JSON, stay on the record.
+ */
+function findFilePlugin({ context, kind, typeName }) {
+  return (context.filePlugins ?? []).find(
+    (record) => record.kind === kind && record.typeName === typeName
   );
 }
 
-export default writeBlockImports;
+export default findFilePlugin;

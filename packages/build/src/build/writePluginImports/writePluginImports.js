@@ -30,6 +30,7 @@ import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import validatePluginApiVersions from './validatePluginApiVersions.js';
 import writeStepImports from './writeStepImports.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
+import writeServerFilePlugins from './writeServerFilePlugins.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
 
 async function writePluginImports({ components, context }) {
@@ -49,6 +50,7 @@ async function writePluginImports({ components, context }) {
   await writeStepImports({ components, context });
   await writeWebsocketImports({ components, context });
   await writeAvailableTypes({ context });
+  await writeServerFilePlugins({ context });
   await writeGlobalsCss({ components, context });
 
   // Write block package names — available as a vite.config.js escape hatch

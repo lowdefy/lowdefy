@@ -65,23 +65,39 @@ function isMethodDefinition(value) {
   return type.isUndefined(value.params) || isObjectOfStrings(value.params);
 }
 
+// A file plugin declares its meta in the sibling JSON beside the file, a
+// package block in the package's metas module. Both are held to this contract;
+// only the source named in the message differs.
+function siblingJsonPath(filePlugin) {
+  return filePlugin.relativePath.replace(/\.[^./]+$/, '.json');
+}
+
 // Checks the meta a block plugin exports for one block type. Every violation
 // is collected as a ConfigError so one bad plugin reports all of its bad
 // fields in a single build; unknown keys are a ConfigWarning and stay allowed.
 // Returns true when the meta is usable by buildBlockSchema and the client.
-function validateBlockMeta({ meta, typeName, packageName, context }) {
+function validateBlockMeta({ context, filePlugin, meta, packageName, typeName }) {
   const errors = [];
+  const source = filePlugin ? `from "${filePlugin.relativePath}"` : `from package "${packageName}"`;
+  const location = filePlugin
+    ? { filePath: filePlugin.relativePath, lineNumber: 1, checkSlug: filePlugin.checkSlug }
+    : {};
   const fail = (message, value) => {
     errors.push(
-      new ConfigError(`Block type "${typeName}" from package "${packageName}": ${message}`, {
+      new ConfigError(`Block type "${typeName}" ${source}: ${message}`, {
         received: value,
+        ...location,
       })
     );
   };
 
   if (type.isNone(meta)) {
     fail(
-      `has no meta. Export it from "${packageName}/metas" as { ${typeName}: meta } with at least { category }.`,
+      filePlugin
+        ? `has no meta. Declare it in "${siblingJsonPath(
+            filePlugin
+          )}" as { "meta": { ... } } with at least { category }.`
+        : `has no meta. Export it from "${packageName}/metas" as { ${typeName}: meta } with at least { category }.`,
       meta
     );
   } else if (!type.isObject(meta)) {
@@ -217,7 +233,7 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
     if (unknownKeys.length > 0) {
       context.handleWarning(
         new ConfigWarning(
-          `Block type "${typeName}" from package "${packageName}": meta has unknown keys ${received(
+          `Block type "${typeName}" ${source}: meta has unknown keys ${received(
             unknownKeys
           )}. Known keys are ${received(
             KNOWN_KEYS

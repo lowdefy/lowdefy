@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import generateImportFile from './generateImportFile.js';
-
-async function writeBlockImports({ components, context }) {
-  await context.writeBuildArtifact(
-    'plugins/blocks.js',
-    generateImportFile({
-      artifactPath: 'plugins/blocks.js',
-      context,
-      imports: components.imports.blocks,
-      importPath: 'blocks',
-      kind: 'blocks',
-    })
-  );
+// A file plugin under plugins/operators/shared, so it is registered as both a
+// client and a server operator.
+function _titleCase({ params }) {
+  if (typeof params !== 'string') {
+    throw new Error('_titleCase takes a string.');
+  }
+  return params.replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
 }
 
-export default writeBlockImports;
+export default _titleCase;
