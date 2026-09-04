@@ -53,6 +53,9 @@ async function appDependencies({ context }) {
 
 async function addCustomPluginsAsDeps({ context, directory }) {
   const packageJsonPath = path.join(directory, 'package.json');
+  // With `lowdefy: local` no server is installed here (getServer returns
+  // early), so there is nothing to merge into.
+  if (!fs.existsSync(packageJsonPath)) return;
   const packageJson = JSON.parse(await readFile(packageJsonPath));
 
   const dependencies = packageJson.dependencies;

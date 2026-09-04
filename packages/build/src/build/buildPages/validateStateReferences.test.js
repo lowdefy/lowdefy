@@ -168,3 +168,20 @@ test('validateStateReferences does not warn for _state inside request.properties
   validateStateReferences({ page, context });
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
+
+test('validateStateReferences accepts a key declared in the page state schema', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    state: { highlighted_part: { type: ['string', 'null'] } },
+    blocks: [
+      {
+        properties: {
+          title: { _state: 'highlighted_part' },
+        },
+      },
+    ],
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});

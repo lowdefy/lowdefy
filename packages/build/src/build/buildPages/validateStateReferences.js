@@ -36,6 +36,9 @@ function validateStateReferences({ page, context }) {
   usage.setStateKeys.forEach(({ key }) => {
     setStateKeys.add(topLevelKey(key));
   });
+  // A key declared in the page's state: schema is defined by contract, however
+  // it is written at runtime (a custom action calling setState, for example).
+  const declaredKeys = new Set(Object.keys(page.state ?? {}).map(topLevelKey));
   usage.stateRefs.forEach(({ path, configKey }) => {
     const key = topLevelKey(path);
     if (key && !stateRefs.has(key)) {
@@ -46,7 +49,13 @@ function validateStateReferences({ page, context }) {
   // Filter to only undefined references and warn
   stateRefs.forEach((configKey, topLevelKey) => {
     // Skip if state key is from an input block or SetState action
-    if (blockIds.has(topLevelKey) || setStateKeys.has(topLevelKey)) return;
+    if (
+      blockIds.has(topLevelKey) ||
+      setStateKeys.has(topLevelKey) ||
+      declaredKeys.has(topLevelKey)
+    ) {
+      return;
+    }
 
     const message =
       `_state references "${topLevelKey}" on page "${page.pageId}", ` +
@@ -54,7 +63,8 @@ function validateStateReferences({ page, context }) {
       `State keys are created from input block ids. ` +
       `Check for typos, add an input block with this id, or initialize the state with SetState. ` +
       `If the state is set at runtime (for example by a custom action calling setState), ` +
-      `suppress this check with "~ignoreBuildChecks: [state-refs]" on the reference.`;
+      `declare it under the page's "state:" schema, or suppress this check with ` +
+      `"~ignoreBuildChecks: [state-refs]" on the reference.`;
 
     // This check is a heuristic: state written at runtime — custom actions
     // calling setState, dynamic SetState wrappers — is statically invisible,

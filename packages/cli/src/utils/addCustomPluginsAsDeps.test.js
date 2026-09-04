@@ -110,3 +110,15 @@ test('addCustomPluginsAsDeps merges app dependencies when the only file plugin i
   await addCustomPluginsAsDeps({ context: createContext(), directory: serverDirectory });
   expect(readServerDependencies()).toEqual({ ioredis: '5.0.0', react: '19.0.0' });
 });
+
+test('addCustomPluginsAsDeps does nothing when the server directory has no package.json', async () => {
+  fs.mkdirSync(path.join(configDirectory, 'plugins', 'blocks'), { recursive: true });
+  writeJson(path.join(configDirectory, 'package.json'), {
+    name: 'my-app',
+    dependencies: { stripe: '18.0.0' },
+  });
+  fs.rmSync(path.join(serverDirectory, 'package.json'));
+  await expect(
+    addCustomPluginsAsDeps({ context: createContext(), directory: serverDirectory })
+  ).resolves.toBeUndefined();
+});
