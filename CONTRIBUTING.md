@@ -15,6 +15,7 @@ Run Lowdefy servers locally by adding your Lowdefy config to the `app/` folder. 
 - `pnpm app:dev`: Starts the development server.
 - `pnpm app:build`: Creates a production build.
 - `pnpm app:start`: Starts the production server.
+- `pnpm app:test`: Runs the app's config tests (`tests/journeys/*.yaml`, `tests/requests/*.test.yaml`) against a server prepared from the monorepo in `_server/test`, on port 3113. `lowdefy test` cannot fetch a server for an app pinned to `lowdefy: local`, so use this script instead of the CLI command in this repo.
 
 ### Running a specific app directory
 
