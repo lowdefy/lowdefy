@@ -29,6 +29,7 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import getStepKey from './journeyGrammar/getStepKey.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPortAvailable from './isPortAvailable.js';
+import listConfigFiles from './discovery/listConfigFiles.js';
 import moduleLockfileName from './modules/moduleLockfileName.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
@@ -82,6 +83,7 @@ export {
   getStepKey,
   installIfPackageJsonChanged,
   isPortAvailable,
+  listConfigFiles,
   moduleLockfileName,
   spawnProcess,
   readFile,

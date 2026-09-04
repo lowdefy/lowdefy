@@ -61,7 +61,7 @@ function makeContext() {
 test('validateActionResponsePaths does nothing when no endpoint declares a responseSchema', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.nope' }),
+    page: makePage({ actionsPath: 'search.response.nope' }),
     endpointConfigs: [{ id: 'endpoint:search', endpointId: 'search', type: 'Api' }],
     context,
   });
@@ -71,7 +71,7 @@ test('validateActionResponsePaths does nothing when no endpoint declares a respo
 test('validateActionResponsePaths accepts a path that resolves through items and properties', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.results[0].title' }),
+    page: makePage({ actionsPath: 'search.response.results[0].title' }),
     endpointConfigs,
     context,
   });
@@ -81,7 +81,7 @@ test('validateActionResponsePaths accepts a path that resolves through items and
 test('validateActionResponsePaths accepts the object form of the operator', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: { key: 'search.response.response.total' } }),
+    page: makePage({ actionsPath: { key: 'search.response.total' } }),
     endpointConfigs,
     context,
   });
@@ -91,7 +91,7 @@ test('validateActionResponsePaths accepts the object form of the operator', () =
 test('validateActionResponsePaths reports a mistyped leaf with the response-schema slug and a suggestion', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.totl' }),
+    page: makePage({ actionsPath: 'search.response.totl' }),
     endpointConfigs,
     context,
   });
@@ -99,7 +99,7 @@ test('validateActionResponsePaths reports a mistyped leaf with the response-sche
   const error = context.errors[0];
   expect(error).toBeInstanceOf(ConfigError);
   expect(error.message).toBe(
-    '_actions "search.response.response.totl" reads "totl" from endpoint "search", whose responseSchema does not declare it. Declared: results, total. Did you mean "total"?'
+    '_actions "search.response.totl" reads "totl" from endpoint "search", whose responseSchema does not declare it. Declared: results, total. Did you mean "total"?'
   );
   expect(error.checkSlug).toBe('response-schema');
   expect(error.configKey).toBe('k_ref');
@@ -108,7 +108,7 @@ test('validateActionResponsePaths reports a mistyped leaf with the response-sche
 test('validateActionResponsePaths reports a nested property the items schema does not declare', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.results[0].name' }),
+    page: makePage({ actionsPath: 'search.response.results[0].name' }),
     endpointConfigs,
     context,
   });
@@ -118,22 +118,30 @@ test('validateActionResponsePaths reports a nested property the items schema doe
 
 test('validateActionResponsePaths leaves the action record fields alone', () => {
   const context = makeContext();
-  [
-    'search.response.status',
-    'search.response.success',
-    'search.response.error.message',
-    'search.response',
-  ].forEach((actionsPath) => {
-    validateActionResponsePaths({ page: makePage({ actionsPath }), endpointConfigs, context });
-  });
+  ['search.type', 'search.index', 'search.error.message', 'search.response'].forEach(
+    (actionsPath) => {
+      validateActionResponsePaths({ page: makePage({ actionsPath }), endpointConfigs, context });
+    }
+  );
   expect(context.errors).toEqual([]);
+});
+
+test('validateActionResponsePaths reports an api record field read through the collapsed envelope', () => {
+  const context = makeContext();
+  validateActionResponsePaths({
+    page: makePage({ actionsPath: 'search.response.success' }),
+    endpointConfigs,
+    context,
+  });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain('reads "success" from endpoint "search"');
 });
 
 test('validateActionResponsePaths skips an operator-valued endpointId', () => {
   const context = makeContext();
   validateActionResponsePaths({
     page: makePage({
-      actionsPath: 'search.response.response.nope',
+      actionsPath: 'search.response.nope',
       endpointId: { _state: 'which' },
     }),
     endpointConfigs,
@@ -145,7 +153,7 @@ test('validateActionResponsePaths skips an operator-valued endpointId', () => {
 test('validateActionResponsePaths ignores actions targeting endpoints without a responseSchema', () => {
   const context = makeContext();
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.nope', endpointId: 'untyped' }),
+    page: makePage({ actionsPath: 'search.response.nope', endpointId: 'untyped' }),
     endpointConfigs,
     context,
   });
@@ -156,7 +164,7 @@ test('validateActionResponsePaths is suppressed by ~ignoreBuildChecks response-s
   const context = makeContext();
   context.keyMap = { k_ref: { '~ignoreBuildChecks': ['response-schema'] } };
   validateActionResponsePaths({
-    page: makePage({ actionsPath: 'search.response.response.totl' }),
+    page: makePage({ actionsPath: 'search.response.totl' }),
     endpointConfigs,
     context,
   });

@@ -23,12 +23,13 @@ import extractOperatorPath from '../../utils/extractOperatorPath.js';
 import findSimilarString from '../../utils/findSimilarString.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
-// A CallAPI action's record is { type, response, index } where response is the
-// api record built by the engine, whose own response field is the endpoint's
-// :return value - so the endpoint result sits at
-// _actions.<actionId>.response.response.<rest>. The record fields one level up
-// (status, success, error, responseTime, ...) are not the endpoint's and are
-// left alone.
+// A CallAPI action's record is { type, response, index }, where response is the
+// endpoint's :return value - so the endpoint result sits at
+// _actions.<actionId>.response.<rest>. The record's siblings (type, index,
+// error) are not the endpoint's and are left alone; the api record fields
+// (status, success, responseTime, ...) are read through _api.<endpointId>.
+// The pre-v8 double-envelope spelling is rewritten to this one, with a warning,
+// by deprecateActionResponseEnvelope before this check runs.
 function validateActionResponsePaths({ page, endpointConfigs, context }) {
   const schemasByEndpointId = new Map();
   endpointConfigs.forEach((config) => {
@@ -59,10 +60,10 @@ function validateActionResponsePaths({ page, endpointConfigs, context }) {
   actionRefs.forEach((obj) => {
     const path = extractOperatorPath({ operatorValue: obj._actions });
     if (path === null) return;
-    const [actionId, record, envelope, ...restSegments] = path.split('.');
+    const [actionId, record, ...restSegments] = path.split('.');
     const target = targetsByActionId.get(actionId);
     if (type.isUndefined(target)) return;
-    if (record !== 'response' || envelope !== 'response' || restSegments.length === 0) return;
+    if (record !== 'response' || restSegments.length === 0) return;
     const rest = restSegments.join('.');
     const { resolved, declared, segment, candidates } = getSchemaAtPath({
       schema: target.responseSchema,

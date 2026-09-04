@@ -16,13 +16,14 @@
 import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
+import { listConfigFiles } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 const REQUEST_TESTS_DIRECTORY = path.join('tests', 'requests');
-
-function isRequestTestFile(fileName) {
-  return fileName.endsWith('.test.yaml') || fileName.endsWith('.test.yml');
-}
+// The ".test." infix is the marker that distinguishes a request test from the
+// fixture or helper file an author may keep beside it; the directory is
+// otherwise walked by the shared discovery rule.
+const REQUEST_TEST_SUFFIXES = ['.test.yaml', '.test.yml'];
 
 function readRequestTestFile({ filePath }) {
   let parsed;
@@ -37,20 +38,15 @@ function readRequestTestFile({ filePath }) {
   return [{ filePath, test: parsed }];
 }
 
-// Reads tests/requests/*.test.yaml: one request test or a list per file. Returns
-// items of { filePath, test } (or { filePath, error } for unparseable YAML) so a
-// broken file is reported as a failed test rather than aborting the run.
+// Reads tests/requests/**/*.test.{yaml,yml} through the shared discovery rule
+// (listConfigFiles): recursive, byte-sorted, skipping "_" and "." prefixed
+// names. One request test or a list per file. Returns items of
+// { filePath, test } (or { filePath, error } for unparseable YAML) so a broken
+// file is reported as a failed test rather than aborting the run.
 function discoverRequestTests({ context }) {
   const directory = path.join(context.directories.config, REQUEST_TESTS_DIRECTORY);
-  if (!fs.existsSync(directory)) {
-    return [];
-  }
-  const fileNames = fs
-    .readdirSync(directory)
-    .filter(isRequestTestFile)
-    .sort((a, b) => a.localeCompare(b));
-  return fileNames.flatMap((fileName) =>
-    readRequestTestFile({ filePath: path.join(directory, fileName) })
+  return listConfigFiles({ directory, suffixes: REQUEST_TEST_SUFFIXES }).flatMap(({ filePath }) =>
+    readRequestTestFile({ filePath })
   );
 }
 

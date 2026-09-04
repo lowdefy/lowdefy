@@ -23,9 +23,9 @@ import collectMigrationFiles, { checksumOf } from './collectMigrationFiles.js';
 let configDirectory;
 
 function writeMigration(fileName, content) {
-  const dir = path.join(configDirectory, 'migrations');
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, fileName), content);
+  const filePath = path.join(configDirectory, 'migrations', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
 }
 
 beforeEach(() => {
@@ -79,9 +79,9 @@ test('collectMigrationFiles ignores non-yaml files', async () => {
 
 test('collectMigrationFiles throws a ConfigError on invalid YAML', async () => {
   writeMigration('2026-08-30-01-bad.yaml', 'routine: [unclosed\n');
-  await expect(
-    collectMigrationFiles({ directories: { config: configDirectory } })
-  ).rejects.toThrow('Migration "2026-08-30-01-bad" is not valid YAML');
+  await expect(collectMigrationFiles({ directories: { config: configDirectory } })).rejects.toThrow(
+    'Migration "2026-08-30-01-bad" is not valid YAML'
+  );
 });
 
 test('collectMigrationFiles sorts by code units, not locale collation', async () => {
@@ -94,25 +94,35 @@ test('collectMigrationFiles sorts by code units, not locale collation', async ()
   expect(result.map((m) => m.id)).toEqual(['Z', 'a-B', 'a-a']);
 });
 
-test('collectMigrationFiles throws a ConfigError on a typo\'d key', async () => {
+test("collectMigrationFiles throws a ConfigError on a typo'd key", async () => {
   writeMigration(
     '2026-08-30-01-a.yaml',
     ['name: backfill active', 'routines:', '  - id: s1', '    type: MongoDBUpdateMany'].join('\n')
   );
-  await expect(
-    collectMigrationFiles({ directories: { config: configDirectory } })
-  ).rejects.toThrow(
+  await expect(collectMigrationFiles({ directories: { config: configDirectory } })).rejects.toThrow(
     'Migration "2026-08-30-01-a" is invalid: A migration file has an unknown property. The only allowed properties are "name" and "routine".'
   );
 });
 
 test('collectMigrationFiles throws a ConfigError when routine is missing', async () => {
   writeMigration('2026-08-30-01-a.yaml', 'name: backfill active\n');
-  await expect(
-    collectMigrationFiles({ directories: { config: configDirectory } })
-  ).rejects.toThrow(
+  await expect(collectMigrationFiles({ directories: { config: configDirectory } })).rejects.toThrow(
     'Migration "2026-08-30-01-a" is invalid: A migration file requires a "routine".'
   );
+});
+
+test('collectMigrationFiles discovers migrations in nested directories, byte-sorted', async () => {
+  writeMigration('0002-b.yaml', 'name: b\nroutine: []\n');
+  writeMigration(path.join('2026', '0001-a.yaml'), 'name: a\nroutine: []\n');
+  const migrations = await collectMigrationFiles({ directories: { config: configDirectory } });
+  expect(migrations.map((migration) => migration.id)).toEqual(['0002-b', '2026/0001-a']);
+});
+
+test('collectMigrationFiles skips underscore prefixed directories', async () => {
+  writeMigration('0001-a.yaml', 'name: a\nroutine: []\n');
+  writeMigration(path.join('_drafts', '0002-b.yaml'), 'name: b\nroutine: []\n');
+  const migrations = await collectMigrationFiles({ directories: { config: configDirectory } });
+  expect(migrations.map((migration) => migration.id)).toEqual(['0001-a']);
 });
 
 test('collectMigrationFiles throws when two files share one migration id', async () => {

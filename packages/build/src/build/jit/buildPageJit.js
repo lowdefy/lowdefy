@@ -23,6 +23,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
+import deprecateActionResponseEnvelope from '../buildPages/deprecateActionResponseEnvelope.js';
 import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -110,10 +111,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   // Restore the skeleton-built collections map so a page archetype
   // (expandArchetype) can resolve its columns/filters against collections: in
   // the JIT page build, the same way authConfigProjection is restored above.
-  if (
-    type.isNone(buildContext.collections) &&
-    type.isString(buildContext.directories?.build)
-  ) {
+  if (type.isNone(buildContext.collections) && type.isString(buildContext.directories?.build)) {
     const collectionsPath = path.join(buildContext.directories.build, 'collections.json');
     try {
       const content = await fs.promises.readFile(collectionsPath, 'utf8');
@@ -418,6 +416,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateStateSchema({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
+    deprecateActionResponseEnvelope({ page: processed, context: buildContext });
     validateActionResponsePaths({ page: processed, endpointConfigs, context: buildContext });
 
     // Collect Tailwind class candidates before _js extraction — jsMapParser

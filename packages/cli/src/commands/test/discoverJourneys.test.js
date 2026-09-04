@@ -33,10 +33,10 @@ afterEach(() => {
 });
 
 function writeJourneyFile(fileName, content) {
-  const directory = path.join(configDirectory, 'tests', 'journeys');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, fileName), content);
-  return path.join(directory, fileName);
+  const filePath = path.join(configDirectory, 'tests', 'journeys', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+  return filePath;
 }
 
 test('discoverJourneys returns an empty array when tests/journeys does not exist', () => {
@@ -131,4 +131,19 @@ steps:
   expect(discoverJourneys({ context }).map(({ journey }) => journey.name)).toEqual([
     'submits the form',
   ]);
+});
+
+test('discoverJourneys discovers journeys in nested directories, byte-sorted', () => {
+  writeJourneyFile('b.yaml', 'name: b\npageId: home\nsteps: []\n');
+  writeJourneyFile(path.join('checkout', 'a.yaml'), 'name: a\npageId: home\nsteps: []\n');
+  expect(discoverJourneys({ context }).map((item) => item.journey.name)).toEqual(['b', 'a']);
+});
+
+test('discoverJourneys skips the _candidates directory', () => {
+  writeJourneyFile('kept.yaml', 'name: kept\npageId: home\nsteps: []\n');
+  writeJourneyFile(
+    path.join('_candidates', 'draft.yaml'),
+    'name: draft\npageId: home\nsteps: []\n'
+  );
+  expect(discoverJourneys({ context }).map((item) => item.journey.name)).toEqual(['kept']);
 });

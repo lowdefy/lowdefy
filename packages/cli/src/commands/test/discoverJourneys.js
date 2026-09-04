@@ -17,13 +17,10 @@
 import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
+import { listConfigFiles } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 const JOURNEYS_DIRECTORY = path.join('tests', 'journeys');
-
-function isJourneyFile(fileName) {
-  return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
-}
 
 function readJourneyFile({ filePath }) {
   let parsed;
@@ -46,23 +43,15 @@ function readJourneyFile({ filePath }) {
   return [{ filePath, journey: parsed }];
 }
 
+// tests/journeys/**/*.{yaml,yml} through the shared discovery rule
+// (listConfigFiles): recursive, byte-sorted, and skipping "_" and "." prefixed
+// names. D11: tests/journeys/_candidates holds what `lowdefy journeys compile`
+// wrote from a production trace - a proposal with unfilled expectations and no
+// fixtures - and the skipped "_" prefix is what keeps it out of a run;
+// promotion is moving the file up out of that directory.
 function discoverJourneys({ context }) {
   const directory = path.join(context.directories.config, JOURNEYS_DIRECTORY);
-  if (!fs.existsSync(directory)) {
-    return [];
-  }
-  // D11: tests/journeys/_candidates holds what `lowdefy journeys compile` wrote
-  // from a production trace. A candidate is a proposal with unfilled
-  // expectations and no fixtures; promotion is moving the file up a directory.
-  // Reading files only, and never a subdirectory, is what keeps it out.
-  const fileNames = fs
-    .readdirSync(directory, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && isJourneyFile(entry.name))
-    .map((entry) => entry.name)
-    .sort((a, b) => a.localeCompare(b));
-  return fileNames.flatMap((fileName) =>
-    readJourneyFile({ filePath: path.join(directory, fileName) })
-  );
+  return listConfigFiles({ directory }).flatMap(({ filePath }) => readJourneyFile({ filePath }));
 }
 
 export default discoverJourneys;

@@ -18,16 +18,17 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import authJson from '../../build/auth.js';
 
-// auth.dev.users names callers for the dev server's headless tools. Unlike
-// dev.mockUser it does not bypass login for the developer's own browser, so it
-// does not require auth to be configured - a fixture only names who a headless
-// tool call acts as.
+// auth.dev.users is the one declaration of a dev caller: the headless tools
+// take an entry name as their "user" parameter, and auth.dev.browserUser names
+// the entry the developer's own browser is signed in as. Naming an entry here
+// does not require auth to be configured - only selecting one as the browser
+// user does (getMockUser), because that is what bypasses login.
 let devUsers;
 
 function getDevUsers() {
   if (type.isNone(devUsers)) {
     // Deserialize to restore arrays from ~arr markers and remove other build
-    // markers, the same way getMockUser does for dev.mockUser.
+    // markers, the same way getMockUser does for the deprecated dev.mockUser.
     devUsers = serializer.deserialize(authJson.dev?.users) ?? {};
   }
   return devUsers;

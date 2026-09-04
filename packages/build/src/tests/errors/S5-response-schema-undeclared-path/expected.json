@@ -2,11 +2,9 @@
   "tests": [
     {
       "mode": "dev",
-      "errors": [
-        "whose responseSchema does not declare it"
-      ],
+      "errors": ["whose responseSchema does not declare it"],
       "errorContains": [
-        "_actions \"search.response.response.totl\" reads \"totl\" from endpoint \"search\", whose responseSchema does not declare it. Declared: total. Did you mean \"total\"?",
+        "_actions \"search.response.totl\" reads \"totl\" from endpoint \"search\", whose responseSchema does not declare it. Declared: total. Did you mean \"total\"?",
         "lowdefy.yaml:36"
       ],
       "expectThrow": true

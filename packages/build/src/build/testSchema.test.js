@@ -448,7 +448,7 @@ test('connection tenant true emits warning - the key was removed with the invert
   // B-43: the oneOf errorMessage is the only message that lists the legal
   // forms, so it wins the path over the first branch's raw const error.
   expect(mockLogWarn.mock.calls[0][0]).toContain(
-    'Connection "tenant" should be "shared" or an object with a "field"'
+    'Connection "tenant" should be "shared" or a top-level tenant field name'
   );
 });
 
@@ -467,6 +467,15 @@ test('connection tenant with a field object emits no warnings', () => {
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
+test('connection tenant accepts a bare tenant field name', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [{ id: 'mongo', type: 'MongoDBCollection', tenant: 'organizationId' }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
 test('connection tenant with an invalid shape emits warning', () => {
   const components = {
     lowdefy: '1.0.0',
@@ -474,13 +483,13 @@ test('connection tenant with an invalid shape emits warning', () => {
       {
         id: 'mongo',
         type: 'MongoDBCollection',
-        tenant: 'organizationId',
+        tenant: { organizationId: true },
       },
     ],
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls[0][0]).toContain(
-    'Connection "tenant" should be "shared" or an object with a "field"'
+    'Connection "tenant" should be "shared" or a top-level tenant field name'
   );
 });
 
@@ -777,7 +786,7 @@ test('connection tenant oneOf errorMessage wins the path over a branch error', (
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls[0][0]).toContain(
-    'Connection "tenant" should be "shared" or an object with a "field"'
+    'Connection "tenant" should be "shared" or a top-level tenant field name'
   );
 });
 

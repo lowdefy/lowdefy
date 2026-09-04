@@ -94,7 +94,7 @@ test('collections rules warn on undeclared, dynamic and untenanted connections',
     [
       'k_answers_rw',
       'collections-untenanted',
-      'Connection "answers_rw" declares no tenant but addresses collection "answers", which is declared tenant-scoped on "organization_id". If the connection is meant to be walled on that field declare tenant: { field: organization_id }; if it is a deliberate admin path, leave it and this note stands as the record.',
+      'Connection "answers_rw" declares no tenant but addresses collection "answers", which is declared tenant-scoped on "organization_id". If the connection is meant to be walled on that field declare tenant: organization_id; if it is a deliberate admin path, leave it and this note stands as the record.',
     ],
   ]);
 });
@@ -105,7 +105,7 @@ test('untenanted rule does not fire for a shared collection or a tenanted connec
       {
         id: 'a',
         type: 'MongoDBCollection',
-        tenant: { field: 'organization_id' },
+        tenant: 'organization_id',
         properties: { databaseUri: 'x', collection: 'answers' },
       },
       {

@@ -19,6 +19,7 @@
 import { type } from '@lowdefy/helpers';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import deprecateActionResponseEnvelope from '../buildPages/deprecateActionResponseEnvelope.js';
 import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -117,6 +118,7 @@ function buildPages({ components, context }) {
     validateStateSchema({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
+    deprecateActionResponseEnvelope({ page, context });
     validateActionResponsePaths({ page, endpointConfigs, context });
   });
 

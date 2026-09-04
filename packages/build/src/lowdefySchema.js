@@ -1678,10 +1678,20 @@ export default {
           properties: {
             '~r': {},
             '~l': {},
+            browserUser: {
+              type: 'string',
+              minLength: 1,
+              description:
+                'The name of the "dev.users" entry the developer\'s own browser is signed in as, bypassing login for the whole dev server. Dev server only; the LOWDEFY_DEV_USER environment variable takes precedence.',
+              errorMessage: {
+                type: 'Auth "dev.browserUser" should be the name of a "dev.users" entry.',
+                minLength: 'Auth "dev.browserUser" should be the name of a "dev.users" entry.',
+              },
+            },
             mockUser: {
               type: 'object',
               description:
-                'Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
+                'Deprecated - declare the caller under "dev.users" and select it with "dev.browserUser". Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
             },
             users: {
               type: 'object',
@@ -2437,8 +2447,14 @@ export default {
           },
         },
         tenant: {
+          description:
+            'How the connection is walled: "shared" for data every tenant reads, or the name of the top-level field that carries the tenant id, eg. organization_id — the same bare-string grammar collections use. The { field: <name> } object form is deprecated. Under auth.organizations.policy: tenant a scoping-capable connection is scoped by default and declares only its exception.',
           oneOf: [
-            { const: 'shared' },
+            {
+              type: 'string',
+              minLength: 1,
+              pattern: '^[^.]+$',
+            },
             {
               type: 'object',
               additionalProperties: false,
@@ -2454,7 +2470,7 @@ export default {
           ],
           errorMessage: {
             oneOf:
-              'Connection "tenant" should be "shared" or an object with a "field" top-level field name (non-empty, no dots), eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
+              'Connection "tenant" should be "shared" or a top-level tenant field name (non-empty, no dots), eg. tenant: organization_id — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception. The { field: <name> } object form is deprecated.',
           },
         },
       },
@@ -2852,11 +2868,19 @@ export default {
                 type: 'App "config.experimental.archetypes" should be a boolean.',
               },
             },
+            perPageImports: {
+              type: 'boolean',
+              description:
+                'Code-split block, action and operator packages per page in production builds. Defaults to true; set to false to serve every type from the app-wide barrels.',
+              errorMessage: {
+                type: 'App "config.experimental.perPageImports" should be a boolean.',
+              },
+            },
           },
           errorMessage: {
             type: 'App "config.experimental" should be an object.',
             additionalProperties:
-              'App "config.experimental" contains an unknown property. The known properties are "archetypes".',
+              'App "config.experimental" contains an unknown property. The known properties are "archetypes" and "perPageImports".',
           },
         },
         basePath: {

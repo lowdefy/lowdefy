@@ -22,9 +22,9 @@ import readFixture from './readFixture.js';
 let configDirectory;
 
 function writeFixture(fileName, content) {
-  const directory = path.join(configDirectory, 'fixtures');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, fileName), content);
+  const filePath = path.join(configDirectory, 'fixtures', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
 }
 
 beforeEach(() => {
@@ -115,7 +115,7 @@ test('readFixture throws on invalid YAML', async () => {
   );
 });
 
-test('readFixture rejects names that are not strings or that contain path segments', async () => {
+test('readFixture rejects names that are not strings or that escape the fixtures directory', async () => {
   await expect(readFixture({ configDirectory, name: undefined })).rejects.toThrow(
     'Fixture name must be a non-empty string. Received undefined.'
   );
@@ -123,9 +123,32 @@ test('readFixture rejects names that are not strings or that contain path segmen
     'Fixture name must be a non-empty string. Received "".'
   );
   await expect(readFixture({ configDirectory, name: '../lowdefy' })).rejects.toThrow(
-    'Fixture name must not contain path segments. Received "../lowdefy".'
+    'Fixture name must be a path below fixtures/, with no "..", leading "/" or empty segment. Received "../lowdefy".'
   );
-  await expect(readFixture({ configDirectory, name: 'sub/base' })).rejects.toThrow(
-    'Fixture name must not contain path segments. Received "sub/base".'
+  await expect(readFixture({ configDirectory, name: 'sub/../../lowdefy' })).rejects.toThrow(
+    'Fixture name must be a path below fixtures/, with no "..", leading "/" or empty segment. Received "sub/../../lowdefy".'
+  );
+  await expect(readFixture({ configDirectory, name: '/etc/passwd' })).rejects.toThrow(
+    'Fixture name must be a path below fixtures/, with no "..", leading "/" or empty segment. Received "/etc/passwd".'
+  );
+  await expect(readFixture({ configDirectory, name: 'sub\\base' })).rejects.toThrow(
+    'Fixture name must be a path below fixtures/, with no "..", leading "/" or empty segment. Received "sub\\\\base".'
+  );
+});
+
+test('readFixture reads a fixture in a subdirectory', async () => {
+  writeFixture(path.join('orders', 'base.yaml'), 'orders_connection: []\n');
+  const fixture = await readFixture({ configDirectory, name: 'orders/base' });
+  expect(fixture).toEqual({
+    name: 'orders/base',
+    connections: [{ connectionId: 'orders_connection', docs: [] }],
+  });
+});
+
+test('readFixture names the declared fixtures when one is not found', async () => {
+  writeFixture('base.yaml', 'a_connection: []\n');
+  writeFixture(path.join('orders', 'seed.yaml'), 'a_connection: []\n');
+  await expect(readFixture({ configDirectory, name: 'bse' })).rejects.toThrow(
+    'Fixture "bse" not found. Expected fixtures/bse.yaml. Declared fixtures: base, orders/seed.'
   );
 });

@@ -54,7 +54,7 @@ _ref:
 
             ## Schema
 
-            - `tenant: string`: Either `shared` for a collection that carries no tenant field and is read across organizations, or the name of the top-level field the [tenant wall](/organizations) stamps and matches. The build normalises a field name to `{ field: <name> }`, the same shape a connection's `tenant` uses.
+            - `tenant: string`: Either `shared` for a collection that carries no tenant field and is read across organizations, or the name of the top-level field the [tenant wall](/organizations) stamps and matches. A connection's `tenant` takes the same bare-string grammar; the build normalises both to one internal model.
             - `fields: object`: A map of field name to type. A field is [JSON Schema](https://json-schema.org/), written with the same shorthand every other Lowdefy schema surface accepts (a page's `state:`, an endpoint's `payloadSchema` and `responseSchema`, a block's `meta.properties`). Each value takes one of three forms, all expanded to a plain JSON Schema fragment:
               - A type name: `string`, `number`, `integer`, `boolean`, `date`, `object` or `array`. `date` expands to `{ type: string, format: date-time }` - a date is its serialized ISO-8601 form on every surface.
               - A one-element array shorthand, `[string]`, for an array of that type: `{ type: array, items: { type: string } }`.

@@ -1,7 +1,7 @@
 # 102: Response schema app
 # =======================
 # An endpoint declaring a responseSchema and a page reading its result at
-# _actions.<id>.response.response.<path>, plus a routine reading it at
+# _actions.<id>.response.<path>, plus a routine reading it at
 # _step.<id>.<path>. Proves the declaration reaches build/api/<endpointId>.json.
 
 lowdefy: local
@@ -67,10 +67,10 @@ pages:
               type: SetState
               params:
                 results:
-                  _actions: search.response.response.results
+                  _actions: search.response.results
                 first_title:
-                  _actions: search.response.response.results.0.title
+                  _actions: search.response.results.0.title
                 total:
-                  _actions: search.response.response.total
+                  _actions: search.response.total
                 ok:
-                  _actions: search.response.success
+                  _api: search_controls.success

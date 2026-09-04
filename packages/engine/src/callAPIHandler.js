@@ -79,7 +79,12 @@ async function callAPIHandler(context, { blockId, params }) {
     throw serializer.deserialize(error);
   }
 
-  return api;
+  // The endpoint's :return value, not the api record: the action's return value
+  // is what lands at '_actions.<id>.response', so returning the record would
+  // put the endpoint result at '_actions.<id>.response.response'. The record's
+  // own fields (status, success, responseTime, ...) are read through
+  // '_api.<endpointId>', which is where they are declared to live.
+  return api.response;
 }
 
 export default callAPIHandler;

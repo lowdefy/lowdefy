@@ -274,7 +274,7 @@ test('buildConnections throws when tenant field is a dotted path', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+    'Connection "tenant" should name a non-empty top-level field (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
   );
 });
 
@@ -294,7 +294,7 @@ test('buildConnections throws when tenant field is an empty string', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
+    'Connection "tenant" should name a non-empty top-level field (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
   );
 });
 
@@ -314,11 +314,11 @@ test('buildConnections throws when tenant is false', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or a tenant field name at connection "connection1".'
   );
 });
 
-test('buildConnections throws when tenant is an arbitrary string', () => {
+test('buildConnections normalises a bare-string tenant field to the { field } model', () => {
   const components = {
     connections: [
       {
@@ -328,14 +328,70 @@ test('buildConnections throws when tenant is an arbitrary string', () => {
       },
     ],
   };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildContext.warnings = [];
+  const res = buildConnections({ components, context: buildContext });
+  expect(res.connections[0].tenant).toEqual({ field: 'organizationId' });
+  expect(buildContext.warnings).toEqual([]);
+});
+
+test('buildConnections throws when a bare-string tenant field is a dotted path', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: 'meta.organizationId',
+      },
+    ],
+  };
   expect(() =>
     buildConnections({
       components,
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should name a non-empty top-level field (no dots) at connection "connection1" — the tenant wall stamps and matches it as a single document key.'
   );
+});
+
+test('buildConnections warns that the { field } tenant object form is deprecated', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'TestType',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildContext.warnings = [];
+  const res = buildConnections({ components, context: buildContext });
+  expect(res.connections[0].tenant).toEqual({ field: 'organization_id' });
+  expect(buildContext.warnings.length).toBe(1);
+  expect(buildContext.warnings[0].checkSlug).toBe('tenant-grammar');
+  expect(buildContext.warnings[0].message).toEqual(
+    'Connection "tenant: { field: organization_id }" is deprecated at connection "connection1". Write the tenant field name as a bare string — tenant: organization_id — the grammar collections: already uses.'
+  );
+});
+
+test('buildConnections populates tenantConnections from a bare-string tenant field', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'walled',
+        type: 'TestType',
+        tenant: 'tenant_id',
+      },
+    ],
+  };
+  const buildContext = tenantContext({ connectionMetas: { TestType: { tenant: true } } });
+  buildConnections({ components, context: buildContext });
+  expect([...buildContext.tenantConnections]).toEqual([
+    ['walled', { type: 'TestType', field: 'tenant_id' }],
+  ]);
 });
 
 test('buildConnections throws when tenant object has no field', () => {
@@ -354,7 +410,7 @@ test('buildConnections throws when tenant object has no field', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or a tenant field name at connection "connection1".'
   );
 });
 
@@ -374,7 +430,7 @@ test('buildConnections throws when tenant field is not a string', () => {
       context: tenantContext({ connectionMetas: { TestType: { tenant: true } } }),
     })
   ).toThrow(
-    'Connection "tenant" should be "shared" or an object with a "field" string at connection "connection1".'
+    'Connection "tenant" should be "shared" or a tenant field name at connection "connection1".'
   );
 });
 

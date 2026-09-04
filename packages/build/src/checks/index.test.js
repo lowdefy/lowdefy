@@ -33,6 +33,7 @@ test('runChecks registers the tenant rules after js-lint, the build-failing ones
   expect(tenantRules.map((rule) => rule.slug)).toEqual([
     'tenant-authored',
     'tenant-unscoped',
+    'tenant-none-deprecated',
     'tenant-unscoped',
     'tenant-caller-source',
     'tenant-unstamped-write',
@@ -40,6 +41,7 @@ test('runChecks registers the tenant rules after js-lint, the build-failing ones
     'tenant-inventory',
   ]);
   expect(tenantRules.map((rule) => rule.checkOnly)).toEqual([
+    false,
     false,
     false,
     true,

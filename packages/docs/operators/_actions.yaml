@@ -42,6 +42,8 @@ _ref:
       type: string,
       ```
 
+      `response` is the value the action returned. For a [`CallAPI`](/CallAPI) action that is the endpoint's `:return` value, so the endpoint's data is read at `_actions.<id>.response.<path>`; the call's `status`, `success` and `responseTime` are read with [`_api`](/_api). Before v8 `CallAPI` returned the whole api record, putting the endpoint's data at `_actions.<id>.response.response.<path>`. The v8 build rewrites that spelling and warns (check slug `actions-response-envelope`); it is removed in v9.
+
       Actions the event does not execute for a control-flow reason — actions in an untaken [`:if`](/:if) branch, in an unmatched [`:switch`](/:switch) case, or after a [`:return`](/:return) — are recorded as `skipped: true`, the same as actions skipped by their own `skip` field. Their operators are not evaluated, and `_actions` lookups on them return the skipped response object. Skipped entries are recorded in config order: when a branch executes, untaken branches written above it (an untaken `:then` when `:else` runs, or already-unmatched earlier cases) are recorded and readable, while branches below it are only recorded once the control completes. Actions after the control can read all of them.
     arguments: |
       ###### string

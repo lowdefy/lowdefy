@@ -53,6 +53,18 @@ test('callAPIHandler stores response and resolves', async () => {
   expect(context._internal.lowdefy.apiResponses.ep_one[0].holdValue).toBeUndefined();
 });
 
+test('callAPIHandler resolves the endpoint response, not the api record', async () => {
+  const callAPI = jest
+    .fn()
+    .mockResolvedValue({ response: { items: [1, 2] }, status: 'success', success: true });
+  const context = createContext({ callAPI });
+  const res = await callAPIHandler(context, {
+    blockId: 'block_id',
+    params: { endpointId: 'ep_one', payload: {} },
+  });
+  expect(res).toEqual({ items: [1, 2] });
+});
+
 test('callAPIHandler holdValue keeps previous response while loading', async () => {
   let resolveSecond;
   const callAPI = jest
