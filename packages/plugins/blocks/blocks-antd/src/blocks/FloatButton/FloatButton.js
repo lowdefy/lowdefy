@@ -17,7 +17,7 @@
 import React from 'react';
 import { FloatButton } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const FloatButtonBlock = ({
@@ -30,9 +30,7 @@ const FloatButtonBlock = ({
   styles = {},
 }) => (
   <FloatButton
-    id={blockId}
-    className={classNames.element}
-    style={styles.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     type={properties.type}
     shape={properties.shape}
     description={properties.description}

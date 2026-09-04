@@ -16,11 +16,11 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import cssStyles from './style.module.css';
 
-const Spinner = ({ classNames, properties, styles }) => {
+const Spinner = ({ blockId, classNames, properties, styles }) => {
   let size = properties.size ?? 20;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -36,15 +36,18 @@ const Spinner = ({ classNames, properties, styles }) => {
   }
   return (
     <span
-      className={classNames?.element}
-      style={{
-        height: size,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'var(--ant-color-text-quaternary)',
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          height: size,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--ant-color-text-quaternary)',
+        },
+      })}
     >
       <svg
         viewBox="0 0 1024 1024"

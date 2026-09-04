@@ -91,7 +91,9 @@ const PageSiderMenu = ({
       blockId={blockId}
       components={{ Icon, Link, ShortcutBadge }}
       events={events}
+      classNames={{ block: classNames.block, element: classNames.element }}
       styles={{
+        block: styles.block,
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
       content={{

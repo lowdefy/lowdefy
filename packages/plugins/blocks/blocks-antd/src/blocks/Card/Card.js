@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -30,7 +30,12 @@ const CardBlock = ({
   styles = {},
 }) => (
   <Card
-    id={blockId}
+    {...blockRootProps({
+      blockId,
+      classNames,
+      styles,
+      style: { outline: 'none', cursor: events.onClick && 'pointer' },
+    })}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
     variant={properties.bordered === false ? 'borderless' : properties.variant}
     cover={content.cover && content.cover()}
@@ -39,7 +44,6 @@ const CardBlock = ({
     size={properties.size}
     type={properties.inner ? 'inner' : null}
     onClick={() => methods.triggerEvent({ name: 'onClick' })}
-    className={classNames.element}
     classNames={{
       header: classNames.header,
       body: classNames.body,
@@ -47,7 +51,6 @@ const CardBlock = ({
       actions: classNames.actions,
       extra: classNames.extra,
     }}
-    style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles.element }}
     styles={{ header: styles.header, body: styles.body }}
   >
     {content.content && content.content()}

@@ -16,7 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const getSlides = ({ content, properties }) => {
@@ -54,7 +54,7 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
   return (
     <Carousel
       {...properties}
-      id={blockId}
+      {...blockRootProps({ blockId, classNames, styles })}
       afterChange={(current) => {
         methods.triggerEvent({
           name: 'afterChange',
@@ -69,8 +69,6 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
       }}
       onInit={() => methods.triggerEvent({ name: 'onInit' })}
       onSwipe={() => methods.triggerEvent({ name: 'onSwipe' })}
-      className={classNames.element}
-      style={styles.element}
       ref={carousel}
     >
       {slides?.map((slide) => (

@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { Tree } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -49,15 +49,13 @@ const TreeInput = ({ blockId, classNames = {}, properties, methods, styles = {},
 
   return (
     <Tree
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       checkable={properties.checkable}
       disabled={properties.disabled}
       defaultExpandAll={properties.defaultExpandAll}
       showLine={properties.showLine}
       selectable={properties.selectable}
       multiple={false}
-      style={styles.element}
       treeData={treeData}
       onSelect={onSelect}
       onExpand={(keys) => setExpandedKeys(keys)}

@@ -19,7 +19,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonButton = ({ classNames, properties, styles }) => {
+const SkeletonButton = ({ blockId, classNames, properties, styles }) => {
   let height;
   switch (properties.size) {
     case 'small':
@@ -34,8 +34,10 @@ const SkeletonButton = ({ classNames, properties, styles }) => {
   const borderRadius = properties.shape === 'round' ? height / 2 : 'var(--ant-border-radius, 6px)';
   return (
     <Skeleton
+      blockId={blockId}
       classNames={classNames}
       styles={{
+        ...styles,
         element: {
           borderRadius,
           ...styles?.element,

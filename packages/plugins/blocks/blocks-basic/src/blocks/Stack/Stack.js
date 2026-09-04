@@ -15,23 +15,24 @@
 */
 
 import React from 'react';
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
 import { ALIGN, CHILD_SIZE_RESET, GAP, SLOT_DISPLAY_CONTENTS } from '../../arrangement.js';
 
 const Stack = ({ blockId, classNames, content, properties, styles }) => {
   return (
     <div
-      id={blockId}
-      data-testid={blockId}
-      className={cn(
-        'flex flex-col',
-        CHILD_SIZE_RESET,
-        GAP[properties.gap] ?? GAP.md,
-        ALIGN[properties.align] ?? ALIGN.stretch,
-        classNames?.element
-      )}
-      style={styles?.element}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: cn(
+          'flex flex-col',
+          CHILD_SIZE_RESET,
+          GAP[properties.gap] ?? GAP.md,
+          ALIGN[properties.align] ?? ALIGN.stretch
+        ),
+      })}
     >
       {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
     </div>

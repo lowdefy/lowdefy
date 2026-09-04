@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const createChangeHandler =
@@ -81,8 +81,7 @@ const PaginationBlock = ({
       };
   return (
     <Pagination
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       disabled={properties.disabled || loading}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
@@ -94,7 +93,6 @@ const PaginationBlock = ({
       showTotal={showTotal}
       simple={!!properties.simple}
       size={properties.size}
-      style={styles.element}
       total={properties.total !== undefined ? properties.total : 100}
       current={state.current}
     />

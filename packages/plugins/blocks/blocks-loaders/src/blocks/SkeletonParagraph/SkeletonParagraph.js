@@ -15,22 +15,25 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonParagraph = ({ classNames, properties, styles }) => {
+const SkeletonParagraph = ({ blockId, classNames, properties, styles }) => {
   const lines = [...Array(properties.lines ?? 4).keys()];
   return (
     <div
-      className={classNames?.element}
-      style={{
-        width: properties.width ?? '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          width: properties.width ?? '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem',
+        },
+      })}
     >
       {lines.map((key) => (
         <Skeleton

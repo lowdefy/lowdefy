@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Alert } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -47,15 +47,14 @@ const AlertBlock = ({
   const { element: elementStyle, ...subStyles } = styles;
   return (
     <Alert
+      {...blockRootProps({ blockId, classNames, styles })}
       action={content.action && content.action()}
       afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
       banner={properties.banner}
       closable={properties.closable}
       closeText={properties.closeText}
-      className={elementClass}
       classNames={subClasses}
       description={renderHtml({ html: properties.description, methods })}
-      id={blockId}
       message={
         type.isNone(properties.message) ? (
           <div style={{ marginBottom: -4 }} />
@@ -65,7 +64,6 @@ const AlertBlock = ({
       }
       onClose={() => methods.triggerEvent({ name: 'onClose' })}
       showIcon={properties.showIcon === false ? false : true}
-      style={elementStyle}
       styles={subStyles}
       type={properties.type}
       {...additionalProps}

@@ -15,6 +15,7 @@
 */
 
 import blockDefaultProps from './blockDefaultProps.js';
+import blockRootProps from './blockRootProps.js';
 import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
 import cn from './cn.js';
@@ -30,6 +31,7 @@ import withBlockDefaults from './withBlockDefaults.js';
 
 export {
   blockDefaultProps,
+  blockRootProps,
   blockSchema,
   buildBlockSchema,
   cn,

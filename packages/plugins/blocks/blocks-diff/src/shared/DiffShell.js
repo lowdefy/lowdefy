@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Empty, Space, Typography } from 'antd';
-import { renderHtml } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml } from '@lowdefy/block-utils';
 
 const { Title } = Typography;
 
@@ -41,7 +41,7 @@ function DiffShell({
   );
 
   return (
-    <div id={blockId} className={classNames.element} style={styles.element}>
+    <div {...blockRootProps({ blockId, classNames, styles })}>
       <Space direction="vertical" size="middle" style={{ display: 'flex', width: '100%' }}>
         {title && (
           <Title level={5} className={classNames.title} style={{ margin: 0, ...styles.title }}>

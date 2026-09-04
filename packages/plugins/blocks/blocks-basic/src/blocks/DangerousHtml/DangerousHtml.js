@@ -16,7 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 class DangerousHtml extends React.Component {
@@ -59,15 +59,12 @@ class DangerousHtml extends React.Component {
     const { blockId, classNames, styles } = this.props;
     return (
       <div
-        id={blockId}
-        data-testid={blockId}
+        {...blockRootProps({ blockId, classNames, styles })}
         ref={(el) => {
           if (el) {
             this.div = el;
           }
         }}
-        className={classNames?.element}
-        style={styles?.element}
       />
     );
   }

@@ -20,7 +20,7 @@ import { type, get } from '@lowdefy/helpers';
 
 const SiderContext = Layout._InternalSiderContext;
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
 import { buildMenuItems } from '../buildMenuItems.js';
@@ -120,9 +120,7 @@ function MenuComp({
 
   return (
     <Menu
-      id={blockId}
-      className={classNames.element}
-      style={{ ...horizontalStyles, ...styles.element }}
+      {...blockRootProps({ blockId, classNames, styles, style: horizontalStyles })}
       items={items}
       expandIcon={
         properties.expandIcon && (

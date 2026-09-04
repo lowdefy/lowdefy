@@ -17,7 +17,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Input, Skeleton, theme } from 'antd';
 import { Virtuoso } from 'react-virtuoso';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { get, serializer, type } from '@lowdefy/helpers';
 
@@ -327,8 +327,8 @@ const ListSelector = ({
   );
 
   const containerStyle = useWindowScroll
-    ? styles.element
-    : { display: 'flex', flexDirection: 'column', height: properties.height, ...styles.element };
+    ? undefined
+    : { display: 'flex', flexDirection: 'column', height: properties.height };
 
   const headerStyle = {
     position: searchSticky ? 'sticky' : undefined,
@@ -358,7 +358,7 @@ const ListSelector = ({
 
   if (loading) {
     return (
-      <div id={blockId} className={classNames.element} style={containerStyle}>
+      <div {...blockRootProps({ blockId, classNames, styles, style: containerStyle })}>
         {renderSearch()}
         {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
           <div key={`${blockId}_skeleton_${i}`} style={{ paddingBottom: gap }}>
@@ -378,7 +378,7 @@ const ListSelector = ({
 
   if (data.length === 0) {
     return (
-      <div id={blockId} className={classNames.element} style={containerStyle}>
+      <div {...blockRootProps({ blockId, classNames, styles, style: containerStyle })}>
         <div className={classNames.noData} style={placeholderStyle}>
           {noDataText}
         </div>
@@ -390,7 +390,7 @@ const ListSelector = ({
   const virtuosoStyle = useWindowScroll ? undefined : { flex: '1 1 auto', minHeight: 0 };
 
   return (
-    <div id={blockId} className={classNames.element} style={containerStyle}>
+    <div {...blockRootProps({ blockId, classNames, styles, style: containerStyle })}>
       {renderSearch()}
       {filterActive && filteredEntries.length === 0 ? (
         <div className={classNames.noResults} style={placeholderStyle}>

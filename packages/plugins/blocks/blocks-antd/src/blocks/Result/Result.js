@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Result } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -31,12 +31,10 @@ const ResultBlock = ({
   styles = {},
 }) => (
   <Result
-    id={blockId}
-    className={classNames.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     title={renderHtml({ html: properties.title, methods })}
     subTitle={renderHtml({ html: properties.subTitle, methods })}
     status={properties.status}
-    style={styles.element}
     icon={
       properties.icon && (
         <Icon

@@ -18,7 +18,7 @@ import React from 'react';
 import { Affix } from 'antd';
 import { get } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const AffixBlock = ({
@@ -31,11 +31,9 @@ const AffixBlock = ({
   styles = {},
 }) => (
   <Affix
-    id={blockId}
-    className={classNames.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     offsetBottom={properties.offsetBottom}
     offsetTop={properties.offsetTop}
-    style={styles.element}
     onChange={(affixed) => {
       methods.triggerEvent({
         name: get(rename, 'events.onChange', { default: 'onChange' }),

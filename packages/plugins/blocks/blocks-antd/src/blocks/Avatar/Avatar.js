@@ -17,7 +17,7 @@
 import React from 'react';
 import { Avatar } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const AvatarBlock = ({
@@ -32,12 +32,12 @@ const AvatarBlock = ({
   if (properties.group) {
     return (
       <Avatar.Group
-        id={blockId}
-        className={classNames.element}
-        style={{
-          cursor: events.onClick && 'pointer',
-          ...styles.element,
-        }}
+        {...blockRootProps({
+          blockId,
+          classNames,
+          styles,
+          style: { cursor: events.onClick && 'pointer' },
+        })}
         maxCount={properties.group.maxCount}
         maxPopoverPlacement={properties.group.maxPopoverPlacement}
         maxPopoverTrigger={properties.group.maxPopoverTrigger}
@@ -76,19 +76,21 @@ const AvatarBlock = ({
 
   return (
     <Avatar
-      id={blockId}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          backgroundColor: !properties.src && properties.color,
+          cursor: events.onClick && 'pointer',
+        },
+      })}
       alt={properties.alt}
-      className={classNames.element}
       gap={properties.gap}
       shape={properties.shape}
       size={properties.size}
       src={properties.src}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      style={{
-        backgroundColor: !properties.src && properties.color,
-        cursor: events.onClick && 'pointer',
-        ...styles.element,
-      }}
       icon={
         properties.icon && (
           <Icon

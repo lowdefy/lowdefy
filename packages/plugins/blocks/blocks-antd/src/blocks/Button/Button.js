@@ -17,7 +17,7 @@
 import React from 'react';
 import { Button, ConfigProvider } from 'antd';
 import { get, type } from '@lowdefy/helpers';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -75,9 +75,8 @@ const ButtonBlock = ({
 
   const button = (
     <Button
+      {...blockRootProps({ blockId, classNames, styles })}
       block={properties.block}
-      className={classNames.element}
-      style={styles.element}
       classNames={{ icon: classNames.icon }}
       styles={{ icon: styles.icon }}
       color={resolvedColor}
@@ -87,7 +86,6 @@ const ButtonBlock = ({
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
-      id={blockId}
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}

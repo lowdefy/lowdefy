@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Upload as AntdUpload } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../../withTheme.js';
 
@@ -44,9 +44,7 @@ const Download = ({ blockId, classNames = {}, methods, properties, styles = {} }
   const showRemoveIcon = properties.showRemoveIcon ?? false;
   return (
     <AntdUpload
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       fileList={properties.fileList ?? []}
       onPreview={async (file) => await downloadFile({ file, methods })}
       onDownload={async (file) => await downloadFile({ file, methods })}

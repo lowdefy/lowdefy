@@ -17,7 +17,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 import SearchModal from './SearchModal.js';
@@ -120,7 +120,7 @@ function SearchBlock({
   }, [properties.shortcut, open, handleOpen, handleClose]);
 
   return (
-    <div id={blockId} className={cn(classNames.element)} style={styles.element}>
+    <div {...blockRootProps({ blockId, classNames, styles })}>
       <Button
         className={cn('lf-search-trigger', classNames.trigger)}
         style={styles.trigger}

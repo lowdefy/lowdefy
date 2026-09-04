@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
+import { blockRootProps } from '@lowdefy/block-utils';
 import { Conversations } from '@ant-design/x';
 import { Button } from 'antd';
 
-function AgentConversations({ blockId, methods, properties }) {
+function AgentConversations({ blockId, classNames, methods, properties, styles }) {
   const { items, activeKey, menu, creation, groupable, width } = properties;
 
   function handleNew() {
@@ -58,8 +59,12 @@ function AgentConversations({ blockId, methods, properties }) {
 
   return (
     <div
-      id={blockId}
-      style={{ width: width ?? 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: { width: width ?? 250, borderRight: '1px solid #f0f0f0', overflow: 'auto' },
+      })}
     >
       {!creationConfig && (
         <div style={{ padding: '12px 16px' }}>

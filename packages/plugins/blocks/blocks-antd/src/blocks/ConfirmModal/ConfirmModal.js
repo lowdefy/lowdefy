@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { App } from 'antd';
-import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 const ConfirmModal = ({
   blockId,
@@ -107,7 +107,17 @@ const ConfirmModal = ({
       });
     });
   });
-  return <div id={blockId} />;
+  // The element class and style slots are consumed by the modal instance, which antd renders in
+  // a portal, so only the block slots are merged into this placeholder.
+  return (
+    <div
+      {...blockRootProps({
+        blockId,
+        classNames: { block: classNames.block },
+        styles: { block: styles.block },
+      })}
+    />
+  );
 };
 
 export default withBlockDefaults(ConfirmModal);

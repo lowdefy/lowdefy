@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
@@ -50,8 +50,7 @@ const ParagraphInput = ({
   };
   return (
     <Paragraph
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -143,7 +142,6 @@ const ParagraphInput = ({
       italic={properties.italic}
       mark={properties.mark}
       strong={properties.strong}
-      style={styles.element}
       type={properties.type}
       underline={properties.underline}
     >

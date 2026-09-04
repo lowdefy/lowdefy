@@ -17,16 +17,14 @@
 import React from 'react';
 import { Splitter } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
   const panels = properties.panels ?? [];
   return (
     <Splitter
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       layout={properties.orientation ?? properties.layout}
       lazy={properties.lazy}
       onResize={(sizes) => {

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import antdStyles from '../../ag-grid-antd.module.css';
 import { sizeConfig, themeForSize, useGridTheme } from '../../theme/themeLowdefy.js';
@@ -24,6 +24,7 @@ import AgGridInput from '../../AgGridInput.js';
 
 const AgGridLowdefyInput = ({
   blockId,
+  classNames,
   events,
   loading,
   methods,
@@ -41,15 +42,18 @@ const AgGridLowdefyInput = ({
 
   return (
     <div
-      id={blockId}
-      className={antdStyles.antdTheme}
-      style={{
-        width: '100%',
-        height: properties.height ?? 500,
-        '--lf-avatar-size': `${avatarSize}px`,
-        '--lf-avatar-font-size': `${avatarFontSize}px`,
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: antdStyles.antdTheme,
+        style: {
+          width: '100%',
+          height: properties.height ?? 500,
+          '--lf-avatar-size': `${avatarSize}px`,
+          '--lf-avatar-font-size': `${avatarFontSize}px`,
+        },
+      })}
     >
       <AgGridInput
         blockId={blockId}

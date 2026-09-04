@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
 import {
   ALIGN,
@@ -29,18 +29,19 @@ import {
 const Row = ({ blockId, classNames, content, properties, styles }) => {
   return (
     <div
-      id={blockId}
-      data-testid={blockId}
-      className={cn(
-        'flex flex-row',
-        CHILD_SIZE_RESET,
-        GAP[properties.gap] ?? GAP.md,
-        WRAP[properties.wrap] ?? WRAP.wrap,
-        ALIGN[properties.align] ?? ALIGN.stretch,
-        JUSTIFY[properties.justify] ?? JUSTIFY.start,
-        classNames?.element
-      )}
-      style={styles?.element}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: cn(
+          'flex flex-row',
+          CHILD_SIZE_RESET,
+          GAP[properties.gap] ?? GAP.md,
+          WRAP[properties.wrap] ?? WRAP.wrap,
+          ALIGN[properties.align] ?? ALIGN.stretch,
+          JUSTIFY[properties.justify] ?? JUSTIFY.start
+        ),
+      })}
     >
       {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
     </div>

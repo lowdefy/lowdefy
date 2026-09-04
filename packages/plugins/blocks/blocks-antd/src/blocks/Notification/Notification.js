@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -84,7 +84,9 @@ const NotificationBlock = ({
       });
     });
   });
-  return <div id={blockId} />;
+  // The element slot is applied to the antd notification instance above, not to this
+  // placeholder, so only the block's identity is rendered here.
+  return <div {...blockRootProps({ blockId })} />;
 };
 
 export default withBlockDefaults(NotificationBlock);

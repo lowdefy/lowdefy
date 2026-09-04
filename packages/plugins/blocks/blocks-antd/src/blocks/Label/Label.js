@@ -18,7 +18,7 @@
 // MIT Copyright (c) 2015-present Ant UED, https://xtech.antfin.com/ - 2020-09-08
 
 import React from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Col, Row, Tooltip } from 'antd';
 import classNames from 'classnames';
@@ -88,7 +88,17 @@ const Label = ({
     : properties.tooltip;
 
   return (
-    <Row id={blockId} className={rowClassName} style={rowStyle}>
+    <Row
+      {...blockRootProps({
+        blockId,
+        // The element slot belongs to the input control this label wraps, not to the
+        // label root, so only the block slot is merged here.
+        classNames: { block: blockClassNames.block },
+        styles: { block: styles.block },
+        className: rowClassName,
+        style: rowStyle,
+      })}
+    >
       {label && (
         <Col {...labelCol} className={labelColClassName} style={labelColStyle}>
           <label htmlFor={`${blockId}_input`} className={labelClassName} style={labelStyle}>

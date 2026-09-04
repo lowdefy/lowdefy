@@ -15,17 +15,19 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 const ImgBlock = ({ blockId, classNames, events, properties, methods, styles }) => {
   return (
     <img
       {...properties}
-      id={blockId}
-      data-testid={blockId}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: { outline: 'none', cursor: events.onClick && 'pointer' },
+      })}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      className={classNames?.element}
-      style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     />
   );
 };

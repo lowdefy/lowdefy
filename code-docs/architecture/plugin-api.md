@@ -26,6 +26,33 @@ function MyBlock({ blockId, classNames, methods, properties, styles }) { ... }
 export default withBlockDefaults(MyBlock);
 ```
 
+### The block root contract
+
+Every block renders `blockRootProps` from `@lowdefy/block-utils` on the element it owns outermost — its root:
+
+```javascript
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
+
+function MyBlock({ blockId, classNames, content, styles }) {
+  return <div {...blockRootProps({ blockId, classNames, styles })}>{content.content()}</div>;
+}
+```
+
+It returns four props:
+
+| Prop          | Value                                                 | Why                                                                                                    |
+| ------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `id`          | `blockId`                                             | the block is addressable as `#<blockId>` — journeys, e2e locators and an agent reading the DOM find it |
+| `data-testid` | `blockId`                                             | the same handle for testing libraries that do not use css selectors                                    |
+| `className`   | `cn(className, classNames.block, classNames.element)` | the app author's `class:` lands on the block, not on a layout wrapper that may not exist               |
+| `style`       | `{ ...style, ...styles.block, ...styles.element }`    | the same for `style:`                                                                                  |
+
+The optional `className` and `style` arguments are the block's **own** defaults; they are merged first so the app author's config always wins. A block that composes several classes for its root passes them through `className: cn(...)` rather than appending `classNames.element` itself — the helper adds the slots.
+
+Today the client's `BlockLayout` wrapper also renders `id="bl-<blockId>"` and applies `class.block`/`style.block`. The contract makes the block itself lossless, so the wrapper can stop doing either without any block losing its styling.
+
+Two blocks are exempt, and both are recorded with a reason in the invariant scan (`packages/plugins/blocks/blocks-antd/e2e/tests/blockRootContract.mjs`): a block that renders no DOM of its own, and a block whose whole root is another Lowdefy component that already applies the contract (the antd `Label`, `blocks-basic` `Box`, the client's `Icon`). The scan fails on any block main file that neither calls the helper nor is recorded.
+
 ### Props every block receives
 
 | Prop         | Type                           | Source                                                                                                       |
@@ -221,6 +248,7 @@ Additions never bump the version. A change that is neither a removal nor a contr
 
 | File                                                                       | Purpose                                                                         |
 | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `packages/utils/block-utils/src/blockRootProps.js`                         | the block root contract helper                                                  |
 | `packages/utils/block-utils/src/pluginApi.js`                              | `PLUGIN_API_VERSION`, `REMOVED_BLOCK_METHODS`                                   |
 | `packages/client/src/block/createBlockMethods.js`                          | the dev-only proxy that turns a missing method call into a located `BlockError` |
 | `packages/build/src/build/writePluginImports/validatePluginApiVersions.js` | compares each plugin package's declared `pluginApiVersion`                      |

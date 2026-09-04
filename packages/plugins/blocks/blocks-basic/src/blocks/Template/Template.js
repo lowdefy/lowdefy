@@ -17,7 +17,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { createTemplateFunction } from '@lowdefy/nunjucks';
 
@@ -112,7 +112,7 @@ const TemplateBlock = ({ blockId, classNames, content = {}, properties, styles }
   if (hasCss) assertBalancedCss(properties.css);
 
   return (
-    <div id={blockId} data-testid={blockId} className={classNames?.element} style={styles?.element}>
+    <div {...blockRootProps({ blockId, classNames, styles })}>
       {/* An attribute selector, not #bl-<id>: a blockId inside a List is dotted (rows.0.card), */}
       {/* which an id selector reads as an id plus two class names and matches nothing. */}
       {hasCss && <style>{`[id="bl-${blockId}"] { ${properties.css} }`}</style>}

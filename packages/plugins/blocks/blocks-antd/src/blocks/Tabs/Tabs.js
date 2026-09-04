@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
 import withTheme from '../withTheme.js';
@@ -85,20 +85,18 @@ function TabsBlock({
 
   return (
     <Tabs
+      {...blockRootProps({ blockId, classNames, styles })}
       activeKey={key}
       animated={properties.animated !== undefined ? properties.animated : true}
-      id={blockId}
       onChange={(activeKey) => fireTabChange(activeKey)}
       size={properties.size ?? 'default'}
       tabPlacement={properties.tabPlacement ?? 'top'}
       type={properties.tabType ?? 'line'}
-      className={classNames.element}
       classNames={{
         tabBar: classNames.tabBar,
         tabPane: classNames.tabPane,
         inkBar: classNames.inkBar,
       }}
-      style={styles.element}
       styles={{ tabBar: styles.tabBar }}
       items={tabs.map((tab) => ({
         id: `${blockId}_${tab.key}`,

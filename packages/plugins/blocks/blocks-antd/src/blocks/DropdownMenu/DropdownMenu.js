@@ -18,7 +18,7 @@ import React, { useCallback } from 'react';
 import { Dropdown } from 'antd';
 import { get } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
 import { buildMenuItems, flattenLinks } from '../buildMenuItems.js';
@@ -76,9 +76,7 @@ function DropdownMenuBlock({
 
   return (
     <Dropdown
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       menu={{
         items,
         onClick: ({ key, keyPath }) => {

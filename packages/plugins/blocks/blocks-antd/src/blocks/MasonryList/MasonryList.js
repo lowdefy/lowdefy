@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { Masonry } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const MasonryListBlock = ({ blockId, classNames = {}, list, methods, properties, styles = {} }) => {
@@ -34,9 +34,7 @@ const MasonryListBlock = ({ blockId, classNames = {}, list, methods, properties,
   }));
   return (
     <Masonry
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       columns={properties.columns}
       fresh={properties.fresh}
       gutter={properties.gutter}

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
 import {
   CHILD_SIZE_RESET,
@@ -30,19 +30,20 @@ import {
 const Grid = ({ blockId, classNames, content, properties, styles }) => {
   return (
     <div
-      id={blockId}
-      data-testid={blockId}
-      className={cn(
-        'grid',
-        CHILD_SIZE_RESET,
-        COLUMNS[properties.columns] ?? COLUMNS[24],
-        COLUMNS_SM[properties.columnsSm],
-        COLUMNS_MD[properties.columnsMd],
-        ROWS[properties.rows],
-        GAP[properties.gap] ?? GAP.md,
-        classNames?.element
-      )}
-      style={styles?.element}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: cn(
+          'grid',
+          CHILD_SIZE_RESET,
+          COLUMNS[properties.columns] ?? COLUMNS[24],
+          COLUMNS_SM[properties.columnsSm],
+          COLUMNS_MD[properties.columnsMd],
+          ROWS[properties.rows],
+          GAP[properties.gap] ?? GAP.md
+        ),
+      })}
     >
       {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
     </div>

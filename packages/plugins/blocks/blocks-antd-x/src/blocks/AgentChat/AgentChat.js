@@ -24,6 +24,7 @@ import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
+import { blockRootProps } from '@lowdefy/block-utils';
 import { isReserved, setKey, type } from '@lowdefy/helpers';
 import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
 import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
@@ -37,7 +38,16 @@ import MessageList from './MessageList.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageId, properties }) {
+function AgentChat({
+  blockId,
+  classNames,
+  components: { Icon, Link },
+  events,
+  methods,
+  pageId,
+  properties,
+  styles,
+}) {
   const {
     agentId,
     urlQuery,
@@ -592,15 +602,19 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
 
   const chatContent = (
     <div
-      id={blockId}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
-        maxWidth: properties.maxWidth ?? 800,
-        margin: '0 auto',
-        width: '100%',
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+          maxWidth: properties.maxWidth ?? 800,
+          margin: '0 auto',
+          width: '100%',
+        },
+      })}
     >
       <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
         {isEmpty && !welcome?.tracks ? (

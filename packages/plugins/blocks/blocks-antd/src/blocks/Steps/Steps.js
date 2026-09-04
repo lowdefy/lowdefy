@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { type } from '@lowdefy/helpers';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Steps } from 'antd';
 
 import withTheme from '../withTheme.js';
@@ -45,9 +45,7 @@ function StepsBlock({
 
   return (
     <Steps
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       current={current}
       initial={properties.initial}
       status={properties.status}

@@ -15,19 +15,23 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import cssStyles from './style.module.css';
 
-const Skeleton = ({ classNames, properties, styles }) => {
+const Skeleton = ({ blockId, classNames, properties, styles }) => {
   return (
     <div
-      className={cssStyles.skeleton + (classNames?.element ? ' ' + classNames.element : '')}
-      style={{
-        width: properties.width ?? '100%',
-        height: properties.height ?? '100%',
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: cssStyles.skeleton,
+        style: {
+          width: properties.width ?? '100%',
+          height: properties.height ?? '100%',
+        },
+      })}
     />
   );
 };

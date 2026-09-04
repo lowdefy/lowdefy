@@ -20,7 +20,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonAvatar = ({ classNames, properties, styles }) => {
+const SkeletonAvatar = ({ blockId, classNames, properties, styles }) => {
   let size = properties.size ?? 32;
   if (type.isString(size)) {
     switch (properties.size) {
@@ -38,8 +38,10 @@ const SkeletonAvatar = ({ classNames, properties, styles }) => {
     properties.shape === 'square' ? 'var(--ant-border-radius-lg, 8px)' : size / 2;
   return (
     <Skeleton
+      blockId={blockId}
       classNames={classNames}
       styles={{
+        ...styles,
         element: {
           borderRadius,
           ...styles?.element,

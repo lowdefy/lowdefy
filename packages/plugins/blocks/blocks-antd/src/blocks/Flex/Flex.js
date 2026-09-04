@@ -17,14 +17,12 @@
 import React from 'react';
 import { Flex } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Flex
-    id={blockId}
-    className={classNames.element}
-    style={styles.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     vertical={properties.vertical}
     wrap={properties.wrap}
     justify={properties.justify}

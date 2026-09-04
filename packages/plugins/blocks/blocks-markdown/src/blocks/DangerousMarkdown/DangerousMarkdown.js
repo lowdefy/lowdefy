@@ -16,7 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -35,7 +35,7 @@ class DangerousMarkdown extends React.Component {
   render() {
     const { blockId, classNames, properties, styles } = this.props;
     return (
-      <div id={blockId} className={classNames?.element} style={styles?.element}>
+      <div {...blockRootProps({ blockId, classNames, styles })}>
         <ReactMarkdown
           className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
           remarkPlugins={[gfm]}

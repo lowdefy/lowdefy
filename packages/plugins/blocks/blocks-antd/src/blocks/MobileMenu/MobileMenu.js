@@ -16,7 +16,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { mergeObjects, get } from '@lowdefy/helpers';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
@@ -49,7 +49,7 @@ const MobileMenu = ({
     });
   });
   return (
-    <div id={blockId} className={classNames.element} style={styles.element}>
+    <div {...blockRootProps({ blockId, classNames, styles })}>
       <Button
         blockId={`${blockId}_button`}
         components={components}

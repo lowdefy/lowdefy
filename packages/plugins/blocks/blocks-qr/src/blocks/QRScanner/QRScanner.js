@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { Html5Qrcode } from 'html5-qrcode';
 
 const codes = {
@@ -88,7 +88,7 @@ class QRScanner extends React.Component {
 
   render() {
     const { blockId, classNames, styles } = this.props;
-    return <div id={blockId} className={classNames?.element} style={styles?.element} />;
+    return <div {...blockRootProps({ blockId, classNames, styles })} />;
   }
 }
 

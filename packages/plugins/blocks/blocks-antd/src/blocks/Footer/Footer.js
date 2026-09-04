@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -24,9 +24,13 @@ const Footer = Layout.Footer;
 
 const FooterBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Footer
-    id={blockId}
-    className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
-    style={{ margin: 'auto', ...styles.element }}
+    {...blockRootProps({
+      blockId,
+      classNames,
+      styles,
+      className: 'hide-on-print',
+      style: { margin: 'auto' },
+    })}
   >
     {content.content && content.content()}
   </Footer>

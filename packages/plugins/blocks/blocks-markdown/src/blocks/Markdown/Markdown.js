@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import ReactMarkdown from 'react-markdown';
 
 import gfm from 'remark-gfm';
@@ -24,7 +24,7 @@ import markdownStyles from '../../style.module.css';
 import codeblockStyles from '../../codeblock.module.css';
 
 const Markdown = ({ blockId, classNames, properties, styles }) => (
-  <div id={blockId} className={classNames?.element} style={styles?.element}>
+  <div {...blockRootProps({ blockId, classNames, styles })}>
     <ReactMarkdown
       className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
       skipHtml={properties.skipHtml}

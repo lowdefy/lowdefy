@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 // Server-resolved container. The server fills the content slot at page get by
 // calling the configured api endpoint — by the time config reaches the client,
@@ -23,11 +23,13 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 const Dynamic = ({ blockId, classNames, content, events, methods, styles }) => {
   return (
     <div
-      id={blockId}
-      data-testid={blockId}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: { outline: 'none', cursor: events.onClick && 'pointer' },
+      })}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      className={classNames?.element}
-      style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >
       {content.content && content.content()}
     </div>

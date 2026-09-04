@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Typography } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -32,10 +32,10 @@ const TitleBlock = ({
   methods,
   styles = {},
 }) => {
+  const rootProps = blockRootProps({ blockId, classNames, styles });
   const titleEl = (
     <Title
-      id={blockId}
-      className={classNames.element}
+      {...rootProps}
       code={properties.code}
       copyable={
         type.isObject(properties.copyable)
@@ -115,7 +115,7 @@ const TitleBlock = ({
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
-      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
+      style={{ ...rootProps.style, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
     >

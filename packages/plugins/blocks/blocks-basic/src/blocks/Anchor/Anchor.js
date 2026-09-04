@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { get } from '@lowdefy/helpers';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 const AnchorBlock = ({
   blockId,
@@ -31,12 +31,12 @@ const AnchorBlock = ({
   const { icon, title, ...linkProperties } = properties;
   return (
     <Link
-      id={blockId}
-      className={classNames?.element}
-      style={{
-        ...(disabled ? { color: '#BEBEBE', cursor: 'not-allowed' } : {}),
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: disabled ? { color: '#BEBEBE', cursor: 'not-allowed' } : {},
+      })}
       disabled={disabled}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       {...linkProperties}

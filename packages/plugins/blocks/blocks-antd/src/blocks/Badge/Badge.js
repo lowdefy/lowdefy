@@ -18,7 +18,7 @@ import React from 'react';
 import { type } from '@lowdefy/helpers';
 import { Badge } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const BadgeBlock = ({
@@ -31,8 +31,7 @@ const BadgeBlock = ({
   styles = {},
 }) => (
   <Badge
-    id={blockId}
-    className={classNames.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     color={properties.color}
     dot={properties.dot}
     offset={properties.offset}
@@ -40,7 +39,6 @@ const BadgeBlock = ({
     showZero={properties.showZero}
     size={properties.size}
     status={properties.status}
-    style={styles.element}
     text={properties.text}
     title={properties.title}
     count={
