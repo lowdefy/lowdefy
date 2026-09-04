@@ -68,6 +68,7 @@ test('buildTraceEvent composes a trace event of config ids, action outcomes and 
     page_instance: 'sess-1:1',
     page_id: 'orders',
     block_id: 'save_button',
+    block_type: null,
     event_name: 'onClick',
     success: true,
     error: null,
