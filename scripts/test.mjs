@@ -52,6 +52,7 @@ import copyServer from './lib/copyServer.mjs';
 import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins from './lib/addPlugins.mjs';
+import addAppDependencies from './lib/addAppDependencies.mjs';
 import createWorkspace from './lib/createWorkspace.mjs';
 
 const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
@@ -130,6 +131,7 @@ if (skipPrepare) {
   logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
   addPlugins({ configDirectory, targetDir: testDir, logger });
+  addAppDependencies({ configDirectory, targetDir: testDir, logger });
 
   logger.info({ spin: 'start' }, 'Creating isolated pnpm workspace...');
   createWorkspace({ targetDir: testDir });

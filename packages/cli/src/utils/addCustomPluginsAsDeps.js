@@ -25,6 +25,7 @@ const FILE_PLUGIN_DIRECTORIES = [
   ['plugins', 'blocks'],
   ['plugins', 'actions'],
   ['plugins', 'operators'],
+  ['plugins', 'connections'],
 ];
 
 function hasFilePlugins(configDirectory) {

@@ -41,13 +41,19 @@ import copyServer from './lib/copyServer.mjs';
 import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins, { readLowdefyYaml } from './lib/addPlugins.mjs';
+import addAppDependencies from './lib/addAppDependencies.mjs';
 import createWorkspace from './lib/createWorkspace.mjs';
 
 const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
 
 // -- Arg parsing --
 
-const { configDirectory, logLevel, skipBuild, values: args } = parse({
+const {
+  configDirectory,
+  logLevel,
+  skipBuild,
+  values: args,
+} = parse({
   open: { type: 'boolean', default: false },
   port: { type: 'string', default: '3000' },
   watch: { type: 'string', multiple: true, default: [] },
@@ -111,6 +117,7 @@ logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 // -- Step 6: Handle custom plugins from lowdefy.yaml --
 
 addPlugins({ configDirectory, targetDir: devDir, logger });
+addAppDependencies({ configDirectory, targetDir: devDir, logger });
 
 // -- Step 7: Create isolated workspace --
 
