@@ -56,6 +56,10 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   writeFileIfChanged: jest.fn(),
   writeMigrationLedger: jest.fn(),
   installIfPackageJsonChanged: jest.fn(),
+  listConfigFiles: jest.fn(async () => []),
+  moduleLockfileName: 'lowdefy.modules.lock',
+  readModuleLockfile: jest.fn(),
+  writeModuleLockfile: jest.fn(),
 }));
 
 jest.unstable_mockModule('node:module', () => ({

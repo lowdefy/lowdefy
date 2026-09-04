@@ -640,7 +640,7 @@ test('seedFixture returns a missing fixture as data once writes are allowed', as
       refused: false,
       error: {
         name: 'ConfigError',
-        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
+        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml. Declared fixtures: base.',
       },
     });
   } finally {

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import { execFile } from 'child_process';
+import { jest } from '@jest/globals';
 import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
@@ -60,6 +61,10 @@ async function exists(filePath) {
 
 // A throwaway repository: a base commit, a "develop" branch that adds page
 // orders and migration 002-b, and a HEAD that adds page orders and 001-a.
+// Real git in a throwaway repository: under a full monorepo test run the
+// default 5 s hook timeout is not enough for init plus three commits.
+jest.setTimeout(30000);
+
 beforeEach(async () => {
   repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'lowdefy-worktree-test-'));
   configDirectory = path.join(repoRoot, 'app');
