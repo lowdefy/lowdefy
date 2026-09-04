@@ -108,7 +108,21 @@ Full-size or compact calendar for date display and selection, with support for d
 ```
 
 ```yaml
-[object Object]```
+- id: calendar_events
+  type: Calendar
+  properties:
+    fullscreen: false
+  events:
+    onSelect:
+      - id: show_date
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Selected: "
+              - _event: date
+          duration: 2
+```
 
 ```yaml
 - id: themed_calendar

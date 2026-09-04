@@ -39,7 +39,7 @@ blocks:
           vars:
             title: Name
             description: Your name and surname.
-            descriptionTextColor: '#546358'
+            labelAlign: right
   - id: age
     type: NumberInput
     properties:
@@ -58,11 +58,10 @@ extra:
   _var: description
 span: 8
 colon: false
-extraStyle:
-  color:
-    _var:
-      key: descriptionTextColor
-      default: '#333333'
+align:
+  _var:
+    key: labelAlign
+    default: left
 ```
 Returns:
 ```yaml
@@ -75,8 +74,7 @@ blocks:
         extra: Your name and surname.
         span: 8
         colon: false
-        extraStyle:
-          color: '#546358'
+        align: right
   - id: age
     type: NumberInput
     properties:
@@ -85,6 +83,5 @@ blocks:
         extra: Your age.
         span: 8
         colon: false
-        extraStyle:
-          color: '#333333'
+        align: left
 ```

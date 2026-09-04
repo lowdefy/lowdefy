@@ -14,6 +14,7 @@ collections:
       evidence_ids: [string]
       superseded: boolean
       created_at: date
+    required: [test_id, result]
     relations:
       test_id: tests._id
       evidence_ids: evidence._id
@@ -25,17 +26,18 @@ collections:
     fields: { title: string, framework_id: string }
 ```
 
-Every key inside a collection is optional. Anything other than `tenant`, `fields`, `relations` and `indexes` is a build error.
+Every key inside a collection is optional. Anything other than `tenant`, `fields`, `required`, `relations` and `indexes` is a build error.
 
 ## Schema
 
 - `tenant: string`: Either `shared` for a collection that carries no tenant field and is read across organizations, or the name of the top-level field the [tenant wall](/organizations) stamps and matches. The build normalises a field name to `{ field: <name> }`, the same shape a connection's `tenant` uses.
-- `fields: object`: A map of field name to type. Each value takes one of three forms, all normalised to a JSON Schema fragment:
-  - A type name: `string`, `number`, `integer`, `boolean`, `date`, `object` or `array`. `date` becomes `{ instanceof: Date }`, since JSON Schema has no date type.
+- `fields: object`: A map of field name to type. A field is [JSON Schema](https://json-schema.org/), written with the same shorthand every other Lowdefy schema surface accepts (a page's `state:`, an endpoint's `payloadSchema` and `responseSchema`, a block's `meta.properties`). Each value takes one of three forms, all expanded to a plain JSON Schema fragment:
+  - A type name: `string`, `number`, `integer`, `boolean`, `date`, `object` or `array`. `date` expands to `{ type: string, format: date-time }` - a date is its serialized ISO-8601 form on every surface.
   - A one-element array shorthand, `[string]`, for an array of that type: `{ type: array, items: { type: string } }`.
-  - An object with `type`, `enum`, `items` and `required`. A bare `enum` infers no type.
+  - An object of JSON Schema keywords: `type`, `enum`, `items`, `properties` and `description`. A bare `enum` infers no type; `properties` declares a nested object shape.
 
   An unknown type name is a build error listing the accepted names. There is no `objectId` type: a validator cannot check a constructor it does not know, so declare an `ObjectId` field as `object` or leave it undeclared.
+- `required: array`: The names of the fields a document must carry, the JSON Schema array form - `required: [test_id, result]`. A `required: true` beside a field's type is still accepted for one release and folded into this array with a build warning naming the new form; it will be removed in the next major version.
 - `relations: object`: A map of field name to `"<collection>.<field>"`. The target collection must be declared, and the target field must be one of its declared fields unless the target declares no `fields` at all.
 - `indexes: array`: Each entry has a `keys` object and an optional `options` object, in the MongoDB `createIndex` shape. The shape is validated and passed through. **Declaring an index does not create it** - index creation belongs to `lowdefy migrate`.
 
@@ -73,6 +75,7 @@ The build always writes `build/collections.json`, as `{}` when nothing is declar
       "test_id": { "type": "string" },
       "evidence_ids": { "type": "array", "items": { "type": "string" } }
     },
+    "required": ["test_id"],
     "relations": { "test_id": { "collection": "tests", "field": "_id" } },
     "indexes": [{ "keys": { "organization_id": 1, "test_id": 1 }, "options": { "unique": true } }],
     "connections": [
@@ -91,16 +94,17 @@ When a collection declares `fields`, every MongoDB write request on a connection
 What is validated:
 
 - `MongoDBInsertOne`, `MongoDBInsertMany`, `MongoDBInsertConsecutiveId` and `MongoDBInsertManyConsecutiveIds` check each inserted document.
-- `MongoDBUpdateOne`, `MongoDBUpdateMany` and `MongoDBVersionedUpdateOne` check the values of `$set` and `$setOnInsert` only, resolving dotted keys (`evidence_ids.0`, `tags.$[el]`) into the field's `items`. Other update operators (`$inc`, `$push`, `$unset`, `$rename`, ...) express deltas over the stored value rather than the shape it will hold, and an aggregation-pipeline update is opaque, so they are not checked. `MongoDBVersionedUpdateOne` also checks the version copy it re-inserts.
+- `MongoDBUpdateOne`, `MongoDBUpdateMany` and `MongoDBVersionedUpdateOne` check the values of `$set` and `$setOnInsert`, resolving dotted keys (`evidence_ids.0`, `tags.$[el]`) into the field's `items`; the operands of `$push` and `$addToSet` (including every element of a `$each`) against the field's `items`; and refuse a `$unset` of a field named in `required`. An update run with `upsert: true` also checks that every `required` field is named by the filter, `$set` or `$setOnInsert`, since that is the one update shape that creates a document. Other update operators (`$inc`, `$mul`, `$rename`, ...) express deltas over the stored value rather than the shape it will hold, and an aggregation-pipeline update is opaque, so they are not checked. `MongoDBVersionedUpdateOne` also checks the version copy it re-inserts.
 - `MongoDBBulkWrite` checks each operation by kind: `insertOne` documents and `replaceOne` replacements as documents, `updateOne` and `updateMany` as updates. Deletes carry no shape.
 
 Rules:
 
 - **Undeclared fields pass.** A declaration describes the fields it knows about; rejecting the rest would break every write that adds a field before the declaration catches up. There is no `additionalProperties: false`.
 - `null` passes for any field that is not `required` - it is how a field is cleared (`$set: { closed_at: null }`), and the shorthand has no way to say `[string, null]`.
-- A field declared `required: true` must be present and non-null in an insert or replacement document. Presence is not checked on updates. The tenant wall stamps its field before validation runs, so a contract may declare the tenant field required.
-- A `date` field passes on a real `Date` - the request is deserialized (`~d` markers restored) before the check. There is no `objectId` type; an `ObjectId` instance passes a field declared `object`.
+- A field named in `required` must be present and non-null in an insert or replacement document, cannot be `$unset`, and must be named by an upserting update. Presence is not checked on a non-upserting update. The tenant wall stamps its field before validation runs, so a contract may declare the tenant field required.
+- A `date` field is `{ type: string, format: date-time }` and passes on a real `Date`: the driver's `Date` is rendered as its ISO string before the check, so one spelling of `date` works on both sides of the serialize boundary. There is no `objectId` type; an `ObjectId` instance passes a field declared `object`.
 - Reads are not validated. A document already in the database that violates the contract is a migration concern, not a request error.
+- **This is a typo net for the common write shapes, not an invariant.** It checks the values a write states outright. It cannot see an aggregation-pipeline update, `$rename`, a document written by another application, or a document that predates the declaration, and it never rejects an undeclared key. Treat a passing write as "nothing obviously wrong was stated", not as "the collection matches the contract".
 
 A violation is a request error naming the field, the expectation and the value, so the write that is wrong (or the declaration that is) can be fixed without reading the collection:
 

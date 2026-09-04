@@ -161,7 +161,45 @@ Render a Nunjucks template into HTML, with CSS scoped to the block and slots tha
 ```
 
 ```yaml
-[object Object]```
+- id: slot_card
+  type: Template
+  properties:
+    context:
+      title: Answer card
+      summary: A templated card with a real Button in its footer slot.
+    css: >
+      .card { border: 1px solid var(--ant-color-border); border-radius: 8px;
+      padding: 16px; }
+
+      .footer { margin-top: 12px; display: flex; justify-content: flex-end; }
+    template: |
+      <div class="card">
+        <h3>{{ title }}</h3>
+        <p>{{ summary }}</p>
+        <div class="footer">{% slot "footer" %}</div>
+      </div>
+  slots:
+    footer:
+      blocks:
+        - id: slot_card_approve
+          type: Button
+          properties:
+            title: Approve
+          events:
+            onClick:
+              - id: set_approved
+                type: SetState
+                params:
+                  slot_card_approved: true
+- id: slot_card_result
+  type: Template
+  properties:
+    context:
+      approved:
+        _state: slot_card_approved
+    template: |
+      <p>Approved: <strong>{{ approved | default(false, true) }}</strong></p>
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

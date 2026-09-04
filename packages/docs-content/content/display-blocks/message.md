@@ -628,103 +628,6 @@ Message with inline border style
           method: open
 ```
 
-Custom background via theme token
-
-Extra padding via theme token
-
-Custom z-index via theme token
-
-Combined theme overrides
-
-```yaml
-- id: theme_bg_msg
-  type: Message
-  properties:
-    status: success
-    content: Custom background via theme token
-- id: theme_padding_msg
-  type: Message
-  properties:
-    status: info
-    content: Extra padding via theme token
-    theme:
-      contentPadding: 14px 20px
-- id: theme_zindex_msg
-  type: Message
-  properties:
-    status: warning
-    content: Custom z-index via theme token
-    theme:
-      zIndexPopup: 2000
-- id: theme_combined_msg
-  type: Message
-  properties:
-    status: info
-    content: Combined theme overrides
-    theme:
-      contentPadding: 16px 24px
-- id: btn_theme_bg
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Background
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_bg
-        type: CallMethod
-        params:
-          blockId: theme_bg_msg
-          method: open
-- id: btn_theme_padding
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Extra Padding
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_padding
-        type: CallMethod
-        params:
-          blockId: theme_padding_msg
-          method: open
-- id: btn_theme_zindex
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Z-Index
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_zindex
-        type: CallMethod
-        params:
-          blockId: theme_zindex_msg
-          method: open
-- id: btn_theme_combined
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Combined Tokens
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_combined
-        type: CallMethod
-        params:
-          blockId: theme_combined_msg
-          method: open
-```
-
 Thank you for your feedback!
 
 Please fill in all required fields.
@@ -923,10 +826,6 @@ Upload failed. Please try again.
 | `duration` | number | `4.5` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
 | `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize message icon. |
 | `status` | string | `"info"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design message tokens](https://ant.design/components/message#design-token). |
-| `theme.zIndexPopup` | number | `1080` | Z-index of the message popup. |
-| `theme.contentBg` | string | - | Background color of the message content. |
-| `theme.contentPadding` | string | - | Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

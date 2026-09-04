@@ -15,7 +15,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
-[object Object]```
+basic_card_list:
+  _state: basic_card_list
+```
 
 Selected:
 
@@ -55,10 +57,46 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+- id: select_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    data:
+      - id: 1
+        name: Starter
+        price: $0
+      - id: 2
+        name: Pro
+        price: $20
+      - id: 3
+        name: Enterprise
+        price: $99
+    html: |
+      <strong>{{ item.name }}</strong>
+      <div style="color:#666;">{{ item.price }} / month</div>
+  events:
+    onChange:
+      - id: capture_selected
+        type: SetState
+        params:
+          selected_plan:
+            _event: value
+- id: selected_plan_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: "Selected: {{ selected_plan.name }}"
+        on:
+          _state: true
+```
 
 ```yaml
-[object Object]```
+select_list:
+  _state: select_list
+selected_plan_display:
+  _state: selected_plan_display
+```
 
 ```yaml
 - id: readonly_list
@@ -74,7 +112,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+readonly_list:
+  _state: readonly_list
+```
 
 ```yaml
 - id: empty_list
@@ -87,7 +127,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+empty_list:
+  _state: empty_list
+```
 
 ```yaml
 - id: people_card_list
@@ -114,7 +156,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+people_card_list:
+  _state: people_card_list
+```
 
 ```yaml
 - id: click_card_list
@@ -141,10 +185,33 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+- id: click_card_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    data:
+      - id: 1
+        label: First
+      - id: 2
+        label: Second
+      - id: 3
+        label: Third
+    html: |
+      <h4>{{ item.label }}</h4>
+      <p>Click to see which row was selected.</p>
+  events:
+    onClick:
+      - id: capture_clicked
+        type: SetState
+        params:
+          clicked_card:
+            _event: true
+```
 
 ```yaml
-[object Object]```
+click_card_list:
+  _state: click_card_list
+```
 
 ```yaml
 - id: compact_card_list
@@ -162,7 +229,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+compact_card_list:
+  _state: compact_card_list
+```
 
 ```yaml
 - id: large_card_list
@@ -185,10 +254,29 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+- id: large_card_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    height: 480
+    data:
+      _string.split:
+        on:
+          _string.repeat:
+            on: x,
+            count: 999
+        separator: ","
+    html: >
+      <h4>Row {{ index + 1 }}</h4>
+
+      <p>This list renders one thousand cards. Only rows in (and near) the
+      viewport are mounted in the DOM.</p>
+```
 
 ```yaml
-[object Object]```
+large_card_list:
+  _state: large_card_list
+```
 
 ```yaml
 - id: search_all_card_list
@@ -221,7 +309,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+search_all_card_list:
+  _state: search_all_card_list
+```
 
 ```yaml
 - id: search_fields_card_list
@@ -250,7 +340,9 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+search_fields_card_list:
+  _state: search_fields_card_list
+```
 
 Selected plan id: —
 
@@ -292,10 +384,48 @@ Selected plan id: —
 ```
 
 ```yaml
-[object Object]```
+- id: keyed_list
+  type: ListSelector
+  properties:
+    valueKey: id
+    primaryKey: id
+    data:
+      - id: 1
+        name: Starter
+        price: $0
+      - id: 2
+        name: Pro
+        price: $20
+      - id: 3
+        name: Enterprise
+        price: $99
+    html: |
+      <strong>{{ item.name }}</strong>
+      <div style="color:#888;">{{ item.price }} / month</div>
+  events:
+    onChange:
+      - id: capture_keyed
+        type: SetState
+        params:
+          keyed_plan_id:
+            _event: value
+- id: keyed_plan_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected plan id: {{ keyed_plan_id if keyed_plan_id != null else "—"
+          }}'
+        on:
+          _state: true
+```
 
 ```yaml
-[object Object]```
+keyed_list:
+  _state: keyed_list
+keyed_plan_display:
+  _state: keyed_plan_display
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

@@ -169,8 +169,7 @@ _ref:
             _var: description
           span: 8
           colon: false
-          extraStyle:
-            color: '#546358'
+          align: right
           ```
           Returns:
           ```yaml
@@ -183,8 +182,7 @@ _ref:
                   extra: Your name and surname.
                   span: 8
                   colon: false
-                  extraStyle:
-                    color: '#546358'
+                  align: right
             - id: age
               type: NumberInput
               properties:
@@ -193,8 +191,7 @@ _ref:
                   extra: Your age.
                   span: 8
                   colon: false
-                  extraStyle:
-                    color: '#546358'
+                  align: right
           ```
 
           ###### Use key:

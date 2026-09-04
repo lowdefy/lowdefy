@@ -137,6 +137,14 @@ export default {
         additionalProperties: false,
         properties: {},
       },
+      iconsColor: {
+        type: 'string',
+        description:
+          'Color for the notification, profile, and dark mode toggle icons. Use when the header has a dark background color.',
+        docs: {
+          displayType: 'color',
+        },
+      },
       sider: {
         type: 'object',
         description: 'Sider properties.',
@@ -200,6 +208,13 @@ export default {
       content: {
         type: 'object',
         description: 'Content properties.',
+        additionalProperties: false,
+        properties: {},
+      },
+      layout: {
+        type: 'object',
+        description:
+          'Layout properties for the Layout wrapping the sider and content. hasSider is always true.',
         additionalProperties: false,
         properties: {},
       },

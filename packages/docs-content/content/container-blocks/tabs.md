@@ -1662,7 +1662,49 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 ```
 
 ```yaml
-[object Object]```
+- id: shortcut_tabs
+  type: Tabs
+  properties:
+    tabs:
+      - key: overview
+        title: Overview
+        shortcut: mod+1
+      - key: details
+        title: Details
+        shortcut: mod+2
+      - key: history
+        title: History
+        shortcut: mod+3
+  events:
+    onChange:
+      - id: shortcut_tab_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Switched to: "
+              - _event: activeKey
+          status: info
+  slots:
+    overview:
+      blocks:
+        - id: shortcut_overview_content
+          type: Paragraph
+          properties:
+            content: Press Cmd+1 (Mac) or Ctrl+1 (Windows) to jump to this tab.
+    details:
+      blocks:
+        - id: shortcut_details_content
+          type: Paragraph
+          properties:
+            content: Press Cmd+2 (Mac) or Ctrl+2 (Windows) to jump to this tab.
+    history:
+      blocks:
+        - id: shortcut_history_content
+          type: Paragraph
+          properties:
+            content: Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

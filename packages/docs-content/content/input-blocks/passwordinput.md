@@ -23,7 +23,13 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: toggle_on
@@ -48,7 +54,13 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+toggle_on:
+  _state: toggle_on
+toggle_off:
+  _state: toggle_off
+toggle_disabled:
+  _state: toggle_disabled
+```
 
 ```yaml
 - id: placeholder_default
@@ -68,7 +80,13 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+placeholder_default:
+  _state: placeholder_default
+placeholder_hint:
+  _state: placeholder_hint
+placeholder_none:
+  _state: placeholder_none
+```
 
 ```yaml
 - id: disabled_empty
@@ -87,7 +105,11 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+disabled_empty:
+  _state: disabled_empty
+disabled_no_toggle:
+  _state: disabled_no_toggle
+```
 
 ```yaml
 - id: borderless_default
@@ -106,7 +128,11 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+borderless_default:
+  _state: borderless_default
+borderless_disabled:
+  _state: borderless_disabled
+```
 
 ```yaml
 - id: autofocus_on
@@ -124,7 +150,11 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+autofocus_on:
+  _state: autofocus_on
+autofocus_off:
+  _state: autofocus_off
+```
 
 ```yaml
 - id: label_default
@@ -163,7 +193,17 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_custom_title:
+  _state: label_custom_title
+label_no_colon:
+  _state: label_no_colon
+label_right_align:
+  _state: label_right_align
+label_disabled:
+  _state: label_disabled
+```
 
 ```yaml
 - id: inline_default
@@ -194,7 +234,13 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+inline_default:
+  _state: inline_default
+inline_right:
+  _state: inline_right
+inline_wide:
+  _state: inline_wide
+```
 
 ```yaml
 - id: label_extra
@@ -222,7 +268,13 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+label_extra:
+  _state: label_extra
+label_extra_html:
+  _state: label_extra_html
+label_no_feedback:
+  _state: label_no_feedback
+```
 
 ```yaml
 - id: style_element
@@ -280,7 +332,19 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+style_element:
+  _state: style_element
+style_label:
+  _state: style_label
+style_extra:
+  _state: style_extra
+style_feedback:
+  _state: style_feedback
+class_element:
+  _state: class_element
+class_custom:
+  _state: class_custom
+```
 
 ```yaml
 - id: combo_large_no_toggle
@@ -302,7 +366,11 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+combo_large_no_toggle:
+  _state: combo_large_no_toggle
+combo_small_disabled_toggle:
+  _state: combo_small_disabled_toggle
+```
 
 ```yaml
 - id: theme_large_radius
@@ -355,7 +423,17 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+theme_large_radius:
+  _state: theme_large_radius
+theme_purple:
+  _state: theme_purple
+theme_large_pill:
+  _state: theme_large_pill
+theme_font_padding:
+  _state: theme_font_padding
+theme_inline_pink:
+  _state: theme_inline_pink
+```
 
 ```yaml
 - id: login_card
@@ -402,7 +480,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+login_card:
+  _state: login_card
+```
 
 ```yaml
 - id: applied2_security_card
@@ -450,7 +530,9 @@ Password input with visibility toggle.
 ```
 
 ```yaml
-[object Object]```
+applied2_security_card:
+  _state: applied2_security_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

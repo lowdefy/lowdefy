@@ -40,10 +40,10 @@ auth:
       reports:
         - sales-report
         - operations-report
-    api:
-      protected: true
-      roles:
-        user-admin:
-          - create-user
-          - update-user
+  api:
+    protected: true
+    roles:
+      user-admin:
+        - create-user
+        - update-user
 ````

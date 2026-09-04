@@ -24,6 +24,7 @@ import { Col, Row, Tooltip } from 'antd';
 import classNames from 'classnames';
 import CSSMotion from '@rc-component/motion';
 
+import withTheme from '../withTheme.js';
 import labelLogic from './labelLogic.js';
 import './style.css';
 
@@ -143,4 +144,4 @@ const Label = ({
   );
 };
 
-export default withBlockDefaults(Label);
+export default withTheme('Form', withBlockDefaults(Label));

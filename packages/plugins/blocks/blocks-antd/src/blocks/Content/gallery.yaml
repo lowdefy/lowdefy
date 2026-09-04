@@ -66,11 +66,11 @@
           blocks:
             - id: content_full_page_header_title
               type: Title
+              style:
+                margin: 0
               properties:
                 content: My Application
                 level: 4
-                style:
-                  margin: 0
         - id: content_full_page_main
           type: Content
           style:
@@ -113,11 +113,11 @@
           blocks:
             - id: content_sider_header_title
               type: Title
+              style:
+                margin: 0
               properties:
                 content: App with Sidebar
                 level: 4
-                style:
-                  margin: 0
         - id: content_sider_inner
           type: Layout
           properties:
@@ -332,11 +332,11 @@
               type: Title
               layout:
                 flex: 0 0 auto
+              style:
+                margin: 0
               properties:
                 content: Analytics Dashboard
                 level: 4
-                style:
-                  margin: 0
             - id: content_dashboard_header_btn
               type: Button
               layout:
@@ -472,11 +472,11 @@
           blocks:
             - id: content_settings_header_title
               type: Title
+              style:
+                margin: 0
               properties:
                 content: Account Settings
                 level: 4
-                style:
-                  margin: 0
         - id: content_settings_main
           type: Content
           style:

@@ -86,6 +86,12 @@ export default {
         description:
           'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
+      okButtonType: {
+        type: 'string',
+        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+        default: 'primary',
+        description: 'Button type of the ok button.',
+      },
       okButtonProps: {
         type: 'object',
         description: 'Set additional properties for the ok button.',

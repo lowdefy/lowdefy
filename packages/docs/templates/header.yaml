@@ -29,7 +29,6 @@
         placeholder: Search docs...
         shortcut: mod+k
         label: Search
-        icon: AiOutlineSearch
         showShortcut: true
         maxResults: 15
         highlightMatches: true

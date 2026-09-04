@@ -67,11 +67,11 @@ Content works within a Layout alongside Header and Footer blocks to form a compl
       blocks:
         - id: content_full_page_header_title
           type: Title
+          style:
+            margin: 0
           properties:
             content: My Application
             level: 4
-            style:
-              margin: 0
     - id: content_full_page_main
       type: Content
       style:
@@ -121,11 +121,11 @@ When used alongside a Sider block, Content fills the remaining horizontal space.
       blocks:
         - id: content_sider_header_title
           type: Title
+          style:
+            margin: 0
           properties:
             content: App with Sidebar
             level: 4
-            style:
-              margin: 0
     - id: content_sider_inner
       type: Layout
       properties:
@@ -380,11 +380,11 @@ New team member Sarah joined — 1 hour ago
           type: Title
           layout:
             flex: 0 0 auto
+          style:
+            margin: 0
           properties:
             content: Analytics Dashboard
             level: 4
-            style:
-              margin: 0
         - id: content_dashboard_header_btn
           type: Button
           layout:
@@ -525,11 +525,11 @@ Update your personal details and preferences below.
       blocks:
         - id: content_settings_header_title
           type: Title
+          style:
+            margin: 0
           properties:
             content: Account Settings
             level: 4
-            style:
-              margin: 0
     - id: content_settings_main
       type: Content
       style:
@@ -597,7 +597,7 @@ Update your personal details and preferences below.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
 
 No events defined.
 

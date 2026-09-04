@@ -57,7 +57,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_editable_object:
+  _state: basic_editable_object
+basic_not_editable:
+  _state: basic_not_editable
+basic_empty:
+  _state: basic_empty
+basic_long:
+  _state: basic_long
+```
 
 ```yaml
 - id: tooltip_short
@@ -96,7 +106,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+tooltip_short:
+  _state: tooltip_short
+tooltip_descriptive:
+  _state: tooltip_descriptive
+tooltip_instructional:
+  _state: tooltip_instructional
+```
 
 ```yaml
 - id: icon_highlight
@@ -153,7 +169,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+icon_highlight:
+  _state: icon_highlight
+icon_form:
+  _state: icon_form
+icon_edit:
+  _state: icon_edit
+icon_custom_color:
+  _state: icon_custom_color
+```
 
 ```yaml
 - id: maxlen_20
@@ -207,7 +231,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+maxlen_20:
+  _state: maxlen_20
+maxlen_50:
+  _state: maxlen_50
+maxlen_100:
+  _state: maxlen_100
+maxlen_200:
+  _state: maxlen_200
+```
 
 ```yaml
 - id: autosize_true
@@ -269,7 +301,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+autosize_true:
+  _state: autosize_true
+autosize_min_max:
+  _state: autosize_min_max
+autosize_min_only:
+  _state: autosize_min_only
+autosize_max_only:
+  _state: autosize_max_only
+```
 
 ```yaml
 - id: editing_true
@@ -298,7 +338,11 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+editing_true:
+  _state: editing_true
+editing_false:
+  _state: editing_false
+```
 
 ```yaml
 - id: editable_full
@@ -349,7 +393,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+editable_full:
+  _state: editable_full
+editable_icon_tooltip_max:
+  _state: editable_icon_tooltip_max
+editable_autosize_maxlen:
+  _state: editable_autosize_maxlen
+```
 
 ```yaml
 - id: type_default
@@ -411,7 +461,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+type_default:
+  _state: type_default
+type_secondary:
+  _state: type_secondary
+type_success:
+  _state: type_success
+type_warning:
+  _state: type_warning
+type_danger:
+  _state: type_danger
+```
 
 ```yaml
 - id: style_strong
@@ -472,7 +532,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+style_strong:
+  _state: style_strong
+style_italic:
+  _state: style_italic
+style_underline:
+  _state: style_underline
+style_delete:
+  _state: style_delete
+style_mark:
+  _state: style_mark
+```
 
 ```yaml
 - id: combo_strong_italic
@@ -541,7 +611,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+combo_strong_italic:
+  _state: combo_strong_italic
+combo_underline_mark:
+  _state: combo_underline_mark
+combo_strong_underline:
+  _state: combo_strong_underline
+combo_strong_italic_underline:
+  _state: combo_strong_italic_underline
+combo_all_styles:
+  _state: combo_all_styles
+```
 
 ```yaml
 - id: type_success_strong
@@ -608,7 +688,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+type_success_strong:
+  _state: type_success_strong
+type_warning_italic:
+  _state: type_warning_italic
+type_danger_underline:
+  _state: type_danger_underline
+type_secondary_mark:
+  _state: type_secondary_mark
+type_success_strong_italic:
+  _state: type_success_strong_italic
+```
 
 ```yaml
 - id: copyable_true
@@ -636,7 +726,11 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+copyable_true:
+  _state: copyable_true
+copyable_false:
+  _state: copyable_false
+```
 
 ```yaml
 - id: copyable_text_different
@@ -678,7 +772,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+copyable_text_different:
+  _state: copyable_text_different
+copyable_text_url:
+  _state: copyable_text_url
+copyable_text_code:
+  _state: copyable_text_code
+```
 
 ```yaml
 - id: copyable_tooltips_array
@@ -724,7 +824,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+copyable_tooltips_array:
+  _state: copyable_tooltips_array
+copyable_tooltips_single:
+  _state: copyable_tooltips_single
+copyable_tooltips_descriptive:
+  _state: copyable_tooltips_descriptive
+```
 
 ```yaml
 - id: copyable_icon_single
@@ -779,7 +885,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+copyable_icon_single:
+  _state: copyable_icon_single
+copyable_icon_array:
+  _state: copyable_icon_array
+copyable_icon_colored:
+  _state: copyable_icon_colored
+```
 
 ```yaml
 - id: copyable_full
@@ -803,7 +915,9 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+copyable_full:
+  _state: copyable_full
+```
 
 ```yaml
 - id: ellipsis_true
@@ -837,7 +951,11 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+ellipsis_true:
+  _state: ellipsis_true
+ellipsis_false:
+  _state: ellipsis_false
+```
 
 ```yaml
 - id: ellipsis_rows_1
@@ -910,7 +1028,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+ellipsis_rows_1:
+  _state: ellipsis_rows_1
+ellipsis_rows_2:
+  _state: ellipsis_rows_2
+ellipsis_rows_3:
+  _state: ellipsis_rows_3
+ellipsis_rows_5:
+  _state: ellipsis_rows_5
+```
 
 ```yaml
 - id: ellipsis_expandable_2
@@ -966,7 +1092,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+ellipsis_expandable_2:
+  _state: ellipsis_expandable_2
+ellipsis_expandable_3:
+  _state: ellipsis_expandable_3
+ellipsis_expandable_1:
+  _state: ellipsis_expandable_1
+```
 
 ```yaml
 - id: ellipsis_suffix_author
@@ -1021,7 +1153,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+ellipsis_suffix_author:
+  _state: ellipsis_suffix_author
+ellipsis_suffix_expandable:
+  _state: ellipsis_suffix_expandable
+ellipsis_suffix_date:
+  _state: ellipsis_suffix_date
+```
 
 ```yaml
 - id: disabled_basic
@@ -1099,7 +1237,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+disabled_basic:
+  _state: disabled_basic
+disabled_with_copyable:
+  _state: disabled_with_copyable
+disabled_styled:
+  _state: disabled_styled
+disabled_with_type:
+  _state: disabled_with_type
+disabled_warning:
+  _state: disabled_warning
+disabled_danger_italic:
+  _state: disabled_danger_italic
+```
 
 ```yaml
 - id: default_short
@@ -1169,7 +1319,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+default_short:
+  _state: default_short
+default_long:
+  _state: default_long
+default_with_styles:
+  _state: default_with_styles
+default_with_type:
+  _state: default_with_type
+default_empty:
+  _state: default_empty
+default_multiline:
+  _state: default_multiline
+```
 
 ```yaml
 - id: style_custom_bg
@@ -1252,7 +1414,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+style_custom_bg:
+  _state: style_custom_bg
+style_custom_border:
+  _state: style_custom_border
+style_custom_text_color:
+  _state: style_custom_text_color
+style_full_custom:
+  _state: style_full_custom
+style_card_like:
+  _state: style_card_like
+```
 
 ```yaml
 - id: class_rounded
@@ -1302,7 +1474,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+class_rounded:
+  _state: class_rounded
+class_shadow:
+  _state: class_shadow
+class_border:
+  _state: class_border
+class_gradient_bg:
+  _state: class_gradient_bg
+```
 
 ```yaml
 - id: theme_color_text
@@ -1374,7 +1554,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+theme_color_text:
+  _state: theme_color_text
+theme_font_serif:
+  _state: theme_font_serif
+theme_font_size_24:
+  _state: theme_font_size_24
+theme_weight_900:
+  _state: theme_weight_900
+theme_combined_elegant:
+  _state: theme_combined_elegant
+```
 
 ```yaml
 - id: feat_editable_copyable
@@ -1407,7 +1597,11 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+feat_editable_copyable:
+  _state: feat_editable_copyable
+feat_editable_copyable_configured:
+  _state: feat_editable_copyable_configured
+```
 
 ```yaml
 - id: feat_copyable_success
@@ -1452,7 +1646,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+feat_copyable_success:
+  _state: feat_copyable_success
+feat_copyable_warning:
+  _state: feat_copyable_warning
+feat_copyable_danger:
+  _state: feat_copyable_danger
+```
 
 ```yaml
 - id: feat_ellipsis_strong
@@ -1510,7 +1710,13 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+feat_ellipsis_strong:
+  _state: feat_ellipsis_strong
+feat_ellipsis_italic_mark:
+  _state: feat_ellipsis_italic_mark
+feat_ellipsis_danger:
+  _state: feat_ellipsis_danger
+```
 
 ```yaml
 - id: feat_edit_copy_ellipsis
@@ -1538,7 +1744,9 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+feat_edit_copy_ellipsis:
+  _state: feat_edit_copy_ellipsis
+```
 
 ```yaml
 - id: full_success
@@ -1690,7 +1898,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
-[object Object]```
+full_success:
+  _state: full_success
+full_warning:
+  _state: full_warning
+full_themed:
+  _state: full_themed
+full_danger_card:
+  _state: full_danger_card
+full_article_preview:
+  _state: full_article_preview
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

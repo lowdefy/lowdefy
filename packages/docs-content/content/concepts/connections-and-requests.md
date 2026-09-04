@@ -328,7 +328,7 @@ Set the data from the result of this request in state by using the [`SetState`](
 This is done as follows:
 
 ###### lowdefy.yaml
-```yaml
+````yaml
 lowdefy: 5.5.1
 
 connections:
@@ -408,7 +408,7 @@ pages:
                   - |
                     ```
 
-```
+````
 
 ### TLDR
   - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.

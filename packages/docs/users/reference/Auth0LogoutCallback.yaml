@@ -46,25 +46,26 @@ _ref:
 
                 ```yaml
                 lowdefy: {{ version }}
-                providers:
-                  - id: auth0
-                    type: Auth0Provider
-                    properties:
-                      clientId:
-                        _secret: AUTH0_CLIENT_ID
-                      clientSecret:
-                        _secret: AUTH0_CLIENT_SECRET
-                      issuer:
-                        _secret: AUTH0_ISSUER
-                callbacks:
-                  - id: auth0_logout
-                    type: Auth0LogoutCallback
-                    properties:
-                      clientId:
-                        _secret: AUTH0_CLIENT_ID
-                      issuer:
-                        _secret: AUTH0_ISSUER
-                      returnToPagedId: logged-out
+                auth:
+                  providers:
+                    - id: auth0
+                      type: Auth0Provider
+                      properties:
+                        clientId:
+                          _secret: AUTH0_CLIENT_ID
+                        clientSecret:
+                          _secret: AUTH0_CLIENT_SECRET
+                        issuer:
+                          _secret: AUTH0_ISSUER
+                  callbacks:
+                    - id: auth0_logout
+                      type: Auth0LogoutCallback
+                      properties:
+                        clientId:
+                          _secret: AUTH0_CLIENT_ID
+                        issuer:
+                          _secret: AUTH0_ISSUER
+                        returnToPagedId: logged-out
                 ```
 
                 The Auth0 allowed logout URLS should be set to `https://my-app.com/logged-out` for production and `http://localhost:3000/logged-out` for development.

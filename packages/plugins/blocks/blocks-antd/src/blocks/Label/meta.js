@@ -62,6 +62,11 @@ export default {
         type: 'string',
         description: 'Extra text to display beneath the content - supports html.',
       },
+      hasFeedback: {
+        type: 'boolean',
+        default: true,
+        description: 'Display feedback extra from validation, this does not disable validation.',
+      },
       size: {
         type: 'string',
         enum: ['small', 'default', 'large'],

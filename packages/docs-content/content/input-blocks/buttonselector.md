@@ -44,7 +44,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+style_solid:
+  _state: style_solid
+style_outline:
+  _state: style_outline
+solid_outline_alignment:
+  _state: solid_outline_alignment
+```
 
 ```yaml
 - id: string_options
@@ -95,7 +101,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+string_options:
+  _state: string_options
+status_options:
+  _state: status_options
+html_labels:
+  _state: html_labels
+html_emoji_labels:
+  _state: html_emoji_labels
+```
 
 ```yaml
 - id: size_small
@@ -130,7 +144,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: size_small_outline
@@ -165,7 +185,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+size_small_outline:
+  _state: size_small_outline
+size_default_outline:
+  _state: size_default_outline
+size_large_outline:
+  _state: size_large_outline
+```
 
 ```yaml
 - id: many_options
@@ -202,7 +228,11 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+many_options:
+  _state: many_options
+two_options:
+  _state: two_options
+```
 
 ```yaml
 - id: disabled_solid
@@ -263,7 +293,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+disabled_solid:
+  _state: disabled_solid
+disabled_outline:
+  _state: disabled_outline
+disabled_option_solid:
+  _state: disabled_option_solid
+disabled_multiple_options:
+  _state: disabled_multiple_options
+```
 
 ```yaml
 - id: option_styles
@@ -320,7 +358,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+option_styles:
+  _state: option_styles
+option_styles_solid:
+  _state: option_styles_solid
+option_styles_mixed:
+  _state: option_styles_mixed
+```
 
 ```yaml
 - id: color_default
@@ -377,7 +421,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+color_default:
+  _state: color_default
+color_red:
+  _state: color_red
+color_green:
+  _state: color_green
+color_purple:
+  _state: color_purple
+```
 
 ```yaml
 - id: color_hex_coral
@@ -423,7 +475,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+color_hex_coral:
+  _state: color_hex_coral
+color_hex_teal:
+  _state: color_hex_teal
+color_hex_indigo:
+  _state: color_hex_indigo
+color_hex_light:
+  _state: color_hex_light
+```
 
 ```yaml
 - id: color_outline_red
@@ -459,7 +519,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+color_outline_red:
+  _state: color_outline_red
+color_outline_green:
+  _state: color_outline_green
+color_outline_hex:
+  _state: color_outline_hex
+```
 
 ```yaml
 - id: dark_mode_box
@@ -497,7 +563,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+dark_mode_box:
+  _state: dark_mode_box
+```
 
 ```yaml
 - id: label_title
@@ -567,7 +635,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+label_title:
+  _state: label_title
+label_extra:
+  _state: label_extra
+label_no_colon:
+  _state: label_no_colon
+label_inline:
+  _state: label_inline
+no_label_solid:
+  _state: no_label_solid
+```
 
 ```yaml
 - id: html_title
@@ -591,7 +669,11 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+html_title:
+  _state: html_title
+html_title_colored:
+  _state: html_title_colored
+```
 
 ```yaml
 - id: style_custom_width
@@ -608,7 +690,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+style_custom_width:
+  _state: style_custom_width
+```
 
 ```yaml
 - id: class_padding
@@ -653,7 +737,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+class_padding:
+  _state: class_padding
+class_shadow_rounded:
+  _state: class_shadow_rounded
+class_background:
+  _state: class_background
+```
 
 ```yaml
 - id: theme_large_radius
@@ -740,7 +830,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+theme_large_radius:
+  _state: theme_large_radius
+theme_button_bg:
+  _state: theme_button_bg
+theme_button_color:
+  _state: theme_button_color
+theme_pill_selector:
+  _state: theme_pill_selector
+theme_compact_selector:
+  _state: theme_compact_selector
+```
 
 ```yaml
 - id: applied_survey_card
@@ -808,10 +908,74 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+- id: applied_survey_card
+  type: Card
+  properties:
+    title: Customer Satisfaction Survey
+  blocks:
+    - id: applied_survey_name
+      type: TextInput
+      properties:
+        title: Your Name
+        placeholder: Enter your full name
+    - id: applied_survey_rating
+      type: ButtonSelector
+      properties:
+        title: How satisfied are you with our service?
+        variant: solid
+        color: "#1677ff"
+        options:
+          - label: Very Unsatisfied
+            value: 1
+          - label: Unsatisfied
+            value: 2
+          - label: Neutral
+            value: 3
+          - label: Satisfied
+            value: 4
+          - label: Very Satisfied
+            value: 5
+    - id: applied_survey_recommend
+      type: ButtonSelector
+      properties:
+        title: Would you recommend us to a friend?
+        variant: solid
+        options:
+          - label: Definitely
+            value: definitely
+          - label: Probably
+            value: probably
+          - label: Not Sure
+            value: not_sure
+          - label: Unlikely
+            value: unlikely
+    - id: applied_survey_comments
+      type: TextArea
+      properties:
+        title: Additional Comments
+        placeholder: Tell us more about your experience...
+    - id: applied_survey_submit
+      type: Button
+      properties:
+        title: Submit Survey
+        type: primary
+        icon: AiOutlineSend
+      events:
+        onClick:
+          - id: survey_submit_action
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - "Thank you for your feedback! Rating: "
+                  - _state: applied_survey_rating
+              status: success
+```
 
 ```yaml
-[object Object]```
+applied_survey_card:
+  _state: applied_survey_card
+```
 
 ```yaml
 - id: applied_settings_card
@@ -890,10 +1054,85 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+- id: applied_settings_card
+  type: Card
+  properties:
+    title: Display Settings
+  blocks:
+    - id: applied_settings_theme
+      type: ButtonSelector
+      properties:
+        title: Theme
+        variant: solid
+        options:
+          - label: Light
+            value: light
+          - label: Dark
+            value: dark
+          - label: System
+            value: system
+      events:
+        onChange:
+          - id: theme_change_action
+            type: SetState
+            params:
+              selected_theme:
+                _state: applied_settings_theme
+    - id: applied_settings_language
+      type: ButtonSelector
+      properties:
+        title: Language
+        variant: outlined
+        options:
+          - label: English
+            value: en
+          - label: Spanish
+            value: es
+          - label: French
+            value: fr
+          - label: German
+            value: de
+    - id: applied_settings_font_size
+      type: ButtonSelector
+      properties:
+        title: Font Size
+        variant: solid
+        size: small
+        options:
+          - label: Small
+            value: small
+          - label: Medium
+            value: medium
+          - label: Large
+            value: large
+    - id: applied_settings_save
+      type: Button
+      properties:
+        title: Save Settings
+        type: primary
+        icon: AiOutlineSave
+      events:
+        onClick:
+          - id: settings_save_action
+            type: DisplayMessage
+            params:
+              content: Settings saved successfully
+              status: success
+          - id: settings_set_global
+            type: SetGlobal
+            params:
+              theme:
+                _state: applied_settings_theme
+              language:
+                _state: applied_settings_language
+              fontSize:
+                _state: applied_settings_font_size
+```
 
 ```yaml
-[object Object]```
+applied_settings_card:
+  _state: applied_settings_card
+```
 
 ```yaml
 - id: per_option_color_outline
@@ -929,7 +1168,11 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+per_option_color_outline:
+  _state: per_option_color_outline
+per_option_color_solid:
+  _state: per_option_color_solid
+```
 
 ```yaml
 - id: data_button_selector
@@ -948,7 +1191,9 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
-[object Object]```
+data_button_selector:
+  _state: data_button_selector
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

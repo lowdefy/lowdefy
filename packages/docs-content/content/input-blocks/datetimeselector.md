@@ -20,7 +20,13 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_size_small:
+  _state: dts_size_small
+dts_size_default:
+  _state: dts_size_default
+dts_size_large:
+  _state: dts_size_large
+```
 
 ```yaml
 - id: dts_variant_outlined
@@ -47,7 +53,13 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_variant_outlined:
+  _state: dts_variant_outlined
+dts_variant_filled:
+  _state: dts_variant_filled
+dts_variant_borderless:
+  _state: dts_variant_borderless
+```
 
 ```yaml
 - id: dts_tf_hours_minutes
@@ -77,7 +89,13 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_tf_hours_minutes:
+  _state: dts_tf_hours_minutes
+dts_tf_with_seconds:
+  _state: dts_tf_with_seconds
+dts_tf_hours_only:
+  _state: dts_tf_hours_only
+```
 
 ```yaml
 - id: dts_step_hour_2
@@ -120,7 +138,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_step_hour_2:
+  _state: dts_step_hour_2
+dts_step_minute_10:
+  _state: dts_step_minute_10
+dts_step_minute_15:
+  _state: dts_step_minute_15
+dts_step_minute_30:
+  _state: dts_step_minute_30
+dts_step_second_10:
+  _state: dts_step_second_10
+```
 
 ```yaml
 - id: dts_fmt_iso
@@ -161,7 +189,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_fmt_iso:
+  _state: dts_fmt_iso
+dts_fmt_slash:
+  _state: dts_fmt_slash
+dts_fmt_us:
+  _state: dts_fmt_us
+dts_fmt_long:
+  _state: dts_fmt_long
+dts_fmt_dot:
+  _state: dts_fmt_dot
+```
 
 ```yaml
 - id: dts_ph_default
@@ -194,7 +232,15 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_ph_default:
+  _state: dts_ph_default
+dts_ph_custom:
+  _state: dts_ph_custom
+dts_ph_descriptive:
+  _state: dts_ph_descriptive
+dts_ph_appointment:
+  _state: dts_ph_appointment
+```
 
 ```yaml
 - id: dts_clear_enabled
@@ -214,7 +260,11 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_clear_enabled:
+  _state: dts_clear_enabled
+dts_clear_disabled:
+  _state: dts_clear_disabled
+```
 
 ```yaml
 - id: dts_today_enabled
@@ -256,7 +306,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_today_enabled:
+  _state: dts_today_enabled
+dts_today_disabled:
+  _state: dts_today_disabled
+dts_now_enabled:
+  _state: dts_now_enabled
+dts_now_disabled:
+  _state: dts_now_disabled
+dts_both_disabled:
+  _state: dts_both_disabled
+```
 
 ```yaml
 - id: dts_utc_off
@@ -276,7 +336,11 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_utc_off:
+  _state: dts_utc_off
+dts_utc_on:
+  _state: dts_utc_on
+```
 
 ```yaml
 - id: dts_dis_outlined
@@ -311,7 +375,15 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_dis_outlined:
+  _state: dts_dis_outlined
+dts_dis_filled:
+  _state: dts_dis_filled
+dts_dis_borderless:
+  _state: dts_dis_borderless
+dts_dis_with_label:
+  _state: dts_dis_with_label
+```
 
 ```yaml
 - id: dts_icon_default
@@ -355,7 +427,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_icon_default:
+  _state: dts_icon_default
+dts_icon_clock:
+  _state: dts_icon_clock
+dts_icon_schedule:
+  _state: dts_icon_schedule
+dts_icon_custom_color:
+  _state: dts_icon_custom_color
+dts_icon_heart:
+  _state: dts_icon_heart
+```
 
 ```yaml
 - id: dts_dd_min
@@ -401,7 +483,15 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_dd_min:
+  _state: dts_dd_min
+dts_dd_range:
+  _state: dts_dd_range
+dts_dd_specific:
+  _state: dts_dd_specific
+dts_dd_ranges:
+  _state: dts_dd_ranges
+```
 
 ```yaml
 - id: dts_presets_relative
@@ -471,10 +561,80 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+- id: dts_presets_relative
+  type: DateTimeSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Now
+        value:
+          _date: now
+      - label: An hour ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - hour
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+- id: dts_presets_start_of_day
+  type: DateTimeSelector
+  properties:
+    title: Start of Day
+    label:
+      disabled: true
+    presets:
+      - label: Today 09:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 9
+                - hours
+      - label: Today 17:00
+        value:
+          _dayjs:
+            - now
+            - startOf: day
+            - add:
+                - 17
+                - hours
+- id: dts_presets_utc
+  type: DateTimeSelector
+  properties:
+    title: UTC Presets
+    selectUTC: true
+    label:
+      extra: With selectUTC, preset dates are read as UTC.
+    presets:
+      - label: Now (UTC)
+        value:
+          _date: now
+      - label: Midnight UTC
+        value:
+          _dayjs:
+            - now
+            - utc
+            - startOf: day
+```
 
 ```yaml
-[object Object]```
+dts_presets_relative:
+  _state: dts_presets_relative
+dts_presets_start_of_day:
+  _state: dts_presets_start_of_day
+dts_presets_utc:
+  _state: dts_presets_utc
+```
 
 ```yaml
 - id: dts_lbl_default
@@ -517,7 +677,19 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_lbl_default:
+  _state: dts_lbl_default
+dts_lbl_colon_off:
+  _state: dts_lbl_colon_off
+dts_lbl_right:
+  _state: dts_lbl_right
+dts_lbl_inline:
+  _state: dts_lbl_inline
+dts_lbl_extra:
+  _state: dts_lbl_extra
+dts_lbl_hidden:
+  _state: dts_lbl_hidden
+```
 
 ```yaml
 - id: dts_lbl_span_4
@@ -544,7 +716,13 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_lbl_span_4:
+  _state: dts_lbl_span_4
+dts_lbl_span_8:
+  _state: dts_lbl_span_8
+dts_lbl_span_12:
+  _state: dts_lbl_span_12
+```
 
 ```yaml
 - id: dts_style_width
@@ -574,7 +752,13 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_style_width:
+  _state: dts_style_width
+dts_style_element:
+  _state: dts_style_element
+dts_style_label:
+  _state: dts_style_label
+```
 
 ```yaml
 - id: dts_class_rounded
@@ -594,7 +778,11 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_class_rounded:
+  _state: dts_class_rounded
+dts_class_border:
+  _state: dts_class_border
+```
 
 ```yaml
 - id: dts_theme_primary
@@ -642,7 +830,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_theme_primary:
+  _state: dts_theme_primary
+dts_theme_radius:
+  _state: dts_theme_radius
+dts_theme_bg:
+  _state: dts_theme_bg
+dts_theme_tall:
+  _state: dts_theme_tall
+dts_theme_active_border:
+  _state: dts_theme_active_border
+```
 
 ```yaml
 - id: dts_combo_appointment
@@ -722,7 +920,17 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+dts_combo_appointment:
+  _state: dts_combo_appointment
+dts_combo_minimal:
+  _state: dts_combo_minimal
+dts_combo_restricted:
+  _state: dts_combo_restricted
+dts_combo_utc_large:
+  _state: dts_combo_utc_large
+dts_combo_themed:
+  _state: dts_combo_themed
+```
 
 ```yaml
 - id: applied2_appt_card
@@ -782,7 +990,9 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+applied2_appt_card:
+  _state: applied2_appt_card
+```
 
 ```yaml
 - id: applied3_meeting_card
@@ -831,7 +1041,9 @@ Combined date and time picker.
 ```
 
 ```yaml
-[object Object]```
+applied3_meeting_card:
+  _state: applied3_meeting_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

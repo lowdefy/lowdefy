@@ -13,7 +13,9 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
 ```
 
 ```yaml
-[object Object]```
+captcha_basic:
+  _state: captcha_basic
+```
 
 ```yaml
 - id: captcha_compact
@@ -26,7 +28,9 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
 ```
 
 ```yaml
-[object Object]```
+captcha_compact:
+  _state: captcha_compact
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

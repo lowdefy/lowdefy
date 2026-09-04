@@ -145,8 +145,7 @@ extra:
   _var: description
 span: 8
 colon: false
-extraStyle:
-  color: '#546358'
+align: right
 ```
 Returns:
 ```yaml
@@ -159,8 +158,7 @@ blocks:
         extra: Your name and surname.
         span: 8
         colon: false
-        extraStyle:
-          color: '#546358'
+        align: right
   - id: age
     type: NumberInput
     properties:
@@ -169,8 +167,7 @@ blocks:
         extra: Your age.
         span: 8
         colon: false
-        extraStyle:
-          color: '#546358'
+        align: right
 ```
 
 ###### Use key:

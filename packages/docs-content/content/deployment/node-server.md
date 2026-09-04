@@ -16,7 +16,9 @@ The production server can then be run using:
 
 Copy that folder (with its `node_modules`, or run `pnpm install --prod` inside it on the target machine) to your server and run:
 
-```node src/index.js```
+```sh
+node src/index.js
+```
 
 from inside the folder, or `pnpm start`. The server listens on `PORT` (default 3000).
 

@@ -28,7 +28,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_custom_icon:
+  _state: basic_custom_icon
+```
 
 ```yaml
 - id: accept_images
@@ -61,7 +67,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+accept_images:
+  _state: accept_images
+accept_pdf:
+  _state: accept_pdf
+accept_specific:
+  _state: accept_specific
+```
 
 ```yaml
 - id: limit_single
@@ -95,7 +107,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_images:
+  _state: limit_single_images
+```
 
 ```yaml
 - id: button_primary
@@ -126,7 +144,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+button_primary:
+  _state: button_primary
+button_large:
+  _state: button_large
+button_different_icon:
+  _state: button_different_icon
+```
 
 ```yaml
 - id: disabled_default
@@ -152,7 +176,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+disabled_primary:
+  _state: disabled_primary
+disabled_hidden_list:
+  _state: disabled_hidden_list
+```
 
 ```yaml
 - id: list_visible
@@ -186,7 +216,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_single_hidden:
+  _state: list_single_hidden
+```
 
 ```yaml
 - id: label_default
@@ -212,7 +248,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_inline:
+  _state: label_inline
+label_extra:
+  _state: label_extra
+```
 
 ```yaml
 - id: style_element_bg
@@ -250,7 +292,13 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+style_element_bg:
+  _state: style_element_bg
+style_label:
+  _state: style_label
+style_tailwind:
+  _state: style_tailwind
+```
 
 ```yaml
 - id: doc_mgmt_card
@@ -316,7 +364,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+doc_mgmt_card:
+  _state: doc_mgmt_card
+```
 
 ```yaml
 - id: profile_card
@@ -368,7 +418,9 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
-[object Object]```
+profile_card:
+  _state: profile_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

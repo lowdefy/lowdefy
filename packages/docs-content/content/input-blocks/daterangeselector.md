@@ -20,7 +20,13 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_size_small:
+  _state: drs_size_small
+drs_size_default:
+  _state: drs_size_default
+drs_size_large:
+  _state: drs_size_large
+```
 
 ```yaml
 - id: drs_variant_outlined
@@ -47,7 +53,13 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_variant_outlined:
+  _state: drs_variant_outlined
+drs_variant_filled:
+  _state: drs_variant_filled
+drs_variant_borderless:
+  _state: drs_variant_borderless
+```
 
 ```yaml
 - id: drs_format_iso
@@ -88,7 +100,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_format_iso:
+  _state: drs_format_iso
+drs_format_slash:
+  _state: drs_format_slash
+drs_format_us:
+  _state: drs_format_us
+drs_format_long:
+  _state: drs_format_long
+drs_format_dot:
+  _state: drs_format_dot
+```
 
 ```yaml
 - id: drs_ph_default
@@ -136,7 +158,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_ph_default:
+  _state: drs_ph_default
+drs_ph_custom:
+  _state: drs_ph_custom
+drs_ph_hotel:
+  _state: drs_ph_hotel
+drs_ph_project:
+  _state: drs_ph_project
+drs_ph_report:
+  _state: drs_ph_report
+```
 
 ```yaml
 - id: drs_sep_tilde
@@ -177,7 +209,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_sep_tilde:
+  _state: drs_sep_tilde
+drs_sep_dash:
+  _state: drs_sep_dash
+drs_sep_to:
+  _state: drs_sep_to
+drs_sep_arrow:
+  _state: drs_sep_arrow
+drs_sep_pipe:
+  _state: drs_sep_pipe
+```
 
 ```yaml
 - id: drs_icon_default
@@ -221,7 +263,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_icon_default:
+  _state: drs_icon_default
+drs_icon_clock:
+  _state: drs_icon_clock
+drs_icon_schedule:
+  _state: drs_icon_schedule
+drs_icon_custom_color:
+  _state: drs_icon_custom_color
+drs_icon_heart:
+  _state: drs_icon_heart
+```
 
 ```yaml
 - id: drs_dis_default
@@ -258,7 +310,15 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_dis_default:
+  _state: drs_dis_default
+drs_dis_outlined:
+  _state: drs_dis_outlined
+drs_dis_filled:
+  _state: drs_dis_filled
+drs_dis_borderless:
+  _state: drs_dis_borderless
+```
 
 ```yaml
 - id: drs_dd_min
@@ -304,7 +364,15 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_dd_min:
+  _state: drs_dd_min
+drs_dd_range:
+  _state: drs_dd_range
+drs_dd_specific:
+  _state: drs_dd_specific
+drs_dd_ranges:
+  _state: drs_dd_ranges
+```
 
 ```yaml
 - id: drs_presets_relative
@@ -486,10 +554,196 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+- id: drs_presets_relative
+  type: DateRangeSelector
+  properties:
+    title: Relative Ranges
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Last 7 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 14 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 14
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 30 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 30
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Last 90 Days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 90
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+- id: drs_presets_to_date
+  type: DateRangeSelector
+  properties:
+    title: Period To Date
+    label:
+      disabled: true
+    presets:
+      - label: Week to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: week
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Month to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: month
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: Year to date
+        value:
+          - _dayjs:
+              - now
+              - startOf: year
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+- id: drs_presets_fixed
+  type: DateRangeSelector
+  properties:
+    title: Fixed Ranges
+    label:
+      disabled: true
+    presets:
+      - label: 2026 Q1
+        value:
+          - 2026-01-01
+          - 2026-03-31
+      - label: 2026 Q2
+        value:
+          - 2026-04-01
+          - 2026-06-30
+      - label: 2026 Q3
+        value:
+          - 2026-07-01
+          - 2026-09-30
+      - label: 2026 Q4
+        value:
+          - 2026-10-01
+          - 2026-12-31
+- id: drs_presets_html_label
+  type: DateRangeSelector
+  properties:
+    title: Html Labels
+    label:
+      disabled: true
+    presets:
+      - label: <b>Today</b>
+        value:
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - format: YYYY-MM-DD
+      - label: '<span style="color: #1677ff">This month</span>'
+        value:
+          - _dayjs:
+              - now
+              - startOf: month
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - endOf: month
+              - format: YYYY-MM-DD
+- id: drs_presets_disabled_dates
+  type: DateRangeSelector
+  properties:
+    title: Presets And Disabled Dates
+    label:
+      extra: Future dates are disabled. "Last 7 days" selects the allowed part of the
+        range, and "Next 7 days" has nothing to select, so it is listed as
+        disabled.
+    disabledDates:
+      min: 2026-01-01
+      max:
+        _dayjs:
+          - now
+          - format: YYYY-MM-DD
+    presets:
+      - label: Last 7 days
+        value:
+          - _dayjs:
+              - now
+              - subtract:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+      - label: Next 7 days
+        value:
+          - _dayjs:
+              - now
+              - add:
+                  - 1
+                  - day
+              - format: YYYY-MM-DD
+          - _dayjs:
+              - now
+              - add:
+                  - 7
+                  - days
+              - format: YYYY-MM-DD
+```
 
 ```yaml
-[object Object]```
+drs_presets_relative:
+  _state: drs_presets_relative
+drs_presets_to_date:
+  _state: drs_presets_to_date
+drs_presets_fixed:
+  _state: drs_presets_fixed
+drs_presets_html_label:
+  _state: drs_presets_html_label
+drs_presets_disabled_dates:
+  _state: drs_presets_disabled_dates
+```
 
 ```yaml
 - id: drs_label_default
@@ -550,7 +804,23 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_label_default:
+  _state: drs_label_default
+drs_label_colon_off:
+  _state: drs_label_colon_off
+drs_label_right:
+  _state: drs_label_right
+drs_label_inline:
+  _state: drs_label_inline
+drs_label_extra:
+  _state: drs_label_extra
+drs_label_extra_html:
+  _state: drs_label_extra_html
+drs_label_hidden:
+  _state: drs_label_hidden
+drs_label_allow_clear:
+  _state: drs_label_allow_clear
+```
 
 ```yaml
 - id: drs_label_inline_4
@@ -577,7 +847,13 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_label_inline_4:
+  _state: drs_label_inline_4
+drs_label_inline_8:
+  _state: drs_label_inline_8
+drs_label_inline_12:
+  _state: drs_label_inline_12
+```
 
 ```yaml
 - id: drs_html_bold
@@ -601,7 +877,13 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_html_bold:
+  _state: drs_html_bold
+drs_html_color:
+  _state: drs_html_color
+drs_html_italic:
+  _state: drs_html_italic
+```
 
 ```yaml
 - id: drs_style_width
@@ -639,7 +921,15 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_style_width:
+  _state: drs_style_width
+drs_style_narrow:
+  _state: drs_style_narrow
+drs_style_element:
+  _state: drs_style_element
+drs_style_label:
+  _state: drs_style_label
+```
 
 ```yaml
 - id: drs_class_rounded
@@ -666,7 +956,13 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_class_rounded:
+  _state: drs_class_rounded
+drs_class_border:
+  _state: drs_class_border
+drs_class_shadow:
+  _state: drs_class_shadow
+```
 
 ```yaml
 - id: drs_theme_primary
@@ -712,7 +1008,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_theme_primary:
+  _state: drs_theme_primary
+drs_theme_radius:
+  _state: drs_theme_radius
+drs_theme_bg:
+  _state: drs_theme_bg
+drs_theme_brand:
+  _state: drs_theme_brand
+drs_theme_cell_range:
+  _state: drs_theme_cell_range
+```
 
 ```yaml
 - id: drs_combo_hotel
@@ -806,7 +1112,17 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+drs_combo_hotel:
+  _state: drs_combo_hotel
+drs_combo_minimal:
+  _state: drs_combo_minimal
+drs_combo_restricted:
+  _state: drs_combo_restricted
+drs_combo_themed:
+  _state: drs_combo_themed
+drs_combo_contract:
+  _state: drs_combo_contract
+```
 
 ```yaml
 - id: applied2_report_card
@@ -870,7 +1186,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+applied2_report_card:
+  _state: applied2_report_card
+```
 
 ```yaml
 - id: applied3_vacation_card
@@ -926,7 +1244,9 @@ Date range picker for selecting start and end dates.
 ```
 
 ```yaml
-[object Object]```
+applied3_vacation_card:
+  _state: applied3_vacation_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

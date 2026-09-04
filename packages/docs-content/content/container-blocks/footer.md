@@ -88,11 +88,11 @@ Made with Lowdefy
                 variant: link
         - id: footer_links_copyright
           type: Paragraph
+          style:
+            marginTop: 8px
+            color: "#999"
           properties:
             content: Made with Lowdefy
-            style:
-              marginTop: 8px
-              color: "#999"
 ```
 
 Main website content goes here.
@@ -149,10 +149,10 @@ Company
                     level: 5
                 - id: footer_corp_col1_desc
                   type: Paragraph
+                  style:
+                    color: "#666"
                   properties:
                     content: Building better tools for modern teams since 2020.
-                    style:
-                      color: "#666"
             - id: footer_corp_col2
               type: Box
               layout:
@@ -231,11 +231,11 @@ Company
               type: Paragraph
               layout:
                 flex: 0 0 auto
+              style:
+                color: "#999"
+                margin: 0
               properties:
                 content: © 2026 Acme Corp. All rights reserved.
-                style:
-                  color: "#999"
-                  margin: 0
             - id: footer_corp_social
               type: Box
               layout:
@@ -356,17 +356,17 @@ Admin Portal v2.4.1 - Powered by Lowdefy
           blocks:
             - id: footer_admin_text
               type: Paragraph
+              style:
+                color: "#999"
+                margin: 0
+                fontSize: 12px
               properties:
                 content: Admin Portal v2.4.1 - Powered by Lowdefy
-                style:
-                  color: "#999"
-                  margin: 0
-                  fontSize: 12px
 ```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
 
 No events defined.
 

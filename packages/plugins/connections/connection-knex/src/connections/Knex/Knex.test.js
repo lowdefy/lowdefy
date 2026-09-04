@@ -58,3 +58,32 @@ test('client missing', () => {
     'Knex connection should have required property "connection".'
   );
 });
+
+test('valid connection schema, searchPath as an array of strings', () => {
+  const connection = {
+    client: 'pg',
+    connection: 'postgresql://user:password@database.server.com:5432/db',
+    searchPath: ['knex', 'public'],
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('valid connection schema, searchPath as a string', () => {
+  const connection = {
+    client: 'pg',
+    connection: 'postgresql://user:password@database.server.com:5432/db',
+    searchPath: 'public',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('searchPath as a number', () => {
+  const connection = {
+    client: 'pg',
+    connection: 'postgresql://user:password@database.server.com:5432/db',
+    searchPath: 1,
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'Knex connection property "searchPath" should be a string or an array of strings.'
+  );
+});

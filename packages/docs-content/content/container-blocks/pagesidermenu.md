@@ -218,10 +218,10 @@ Tom Wilson
               type: Paragraph
               layout:
                 flex: 1 1 0
+              style:
+                margin: 0
               properties:
                 content: Jane Cooper
-                style:
-                  margin: 0
             - id: psm_grp_tag_1
               type: Tag
               layout:
@@ -249,10 +249,10 @@ Tom Wilson
               type: Paragraph
               layout:
                 flex: 1 1 0
+              style:
+                margin: 0
               properties:
                 content: Tom Wilson
-                style:
-                  margin: 0
             - id: psm_grp_tag_2
               type: Tag
               layout:
@@ -401,12 +401,12 @@ Sprint Progress
           blocks:
             - id: psm_full_progress_label
               type: Paragraph
+              style:
+                margin: 0 0 8px 0
+                fontSize: 12
+                color: "#999"
               properties:
                 content: Sprint Progress
-                style:
-                  margin: 0 0 8px 0
-                  fontSize: 12
-                  color: "#999"
             - id: psm_full_progress
               type: Progress
               properties:
@@ -415,13 +415,13 @@ Sprint Progress
       blocks:
         - id: psm_full_footer_text
           type: Paragraph
+          style:
+            textAlign: center
+            margin: 0
+            color: "#999"
+            fontSize: 12
           properties:
             content: Admin Panel v2.4.1
-            style:
-              textAlign: center
-              margin: 0
-              color: "#999"
-              fontSize: 12
   blocks:
     - id: psm_full_title
       type: Title
@@ -524,7 +524,50 @@ Profile from _menu
 ```
 
 ```yaml
-[object Object]```
+- id: psm_menu_op
+  type: PageSiderMenu
+  properties:
+    darkModeToggle: true
+    sider:
+      width: 220
+      hideToggleButton: true
+    notifications:
+      count: 4
+      link:
+        pageId: home
+    profile:
+      avatar:
+        content: JC
+        color: "#6366f1"
+      links:
+        _menu: default
+    menu:
+      links:
+        - id: psm_mo_dash
+          type: MenuLink
+          properties:
+            title: Dashboard
+            icon: AiOutlineDashboard
+        - id: psm_mo_users
+          type: MenuLink
+          properties:
+            title: Users
+            icon: AiOutlineTeam
+  blocks:
+    - id: psm_mo_title
+      type: Title
+      properties:
+        content: Profile from _menu
+        level: 3
+    - id: psm_mo_info
+      type: Alert
+      properties:
+        message: The profile dropdown links are populated using _menu operator, pulling
+          from the menus defined in lowdefy.yaml. Click the avatar to see the
+          dropdown.
+        type: info
+        showIcon: true
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -534,6 +577,7 @@ Profile from _menu
 | `logo.breakpoint` | number | - | Viewport width breakpoint (in px) for switching between mobile and desktop logo. Default is 577. |
 | `logo.alt` | string | `"Lowdefy"` | Logo image alt text. |
 | `header` | object | - | Header properties. |
+| `iconsColor` | string | - | Color for the notification, profile, and dark mode toggle icons. Use when the header has a dark background color. |
 | `sider` | object | - | Sider properties. |
 | `sider.breakpoint` | string | `"sm"` | Breakpoint of the responsive layout. Enum: `xs`, `sm`, `md`, `lg`, `xl`. |
 | `sider.collapsedWidth` | integer | - | Width of the collapsed sidebar, by setting to 0 a special trigger will appear. |
@@ -545,6 +589,7 @@ Profile from _menu
 | `toggleSiderButton` | object | - | Toggle sider button properties. |
 | `footer` | object | - | Footer properties. |
 | `content` | object | - | Content properties. |
+| `layout` | object | - | Layout properties for the Layout wrapping the sider and content. hasSider is always true. |
 | `breadcrumb` | object | - | Breadcrumb properties. |
 | `breadcrumb.separator` | string | `"/"` | Use a custom separator string. |
 | `breadcrumb.list` | array | - | List of breadcrumb links. |

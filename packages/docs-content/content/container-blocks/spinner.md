@@ -254,7 +254,67 @@ Loading orders...
 ```
 
 ```yaml
-[object Object]```
+- id: spinner_btn_loading_card
+  type: Card
+  properties:
+    title: Submit Application
+  blocks:
+    - id: spinner_btn_loading_form_name
+      type: TextInput
+      properties:
+        label:
+          title: Full Name
+        placeholder: Enter your name
+    - id: spinner_btn_loading_form_email
+      type: TextInput
+      properties:
+        label:
+          title: Email Address
+        placeholder: you@example.com
+    - id: spinner_btn_loading_row
+      type: Box
+      layout:
+        gap: 12
+        align: center
+        justify: end
+      blocks:
+        - id: spinner_btn_loading_indicator
+          type: Spinner
+          layout:
+            flex: 0 0 auto
+          class:
+            element: text-blue-500
+          visible:
+            _if:
+              test:
+                _eq:
+                  - _state: submitting
+                  - true
+              then: true
+              else: false
+          properties:
+            size: small
+        - id: spinner_btn_loading_submit
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Submit
+            color: primary
+            variant: solid
+            icon: AiOutlineSend
+          events:
+            onClick:
+              - id: spinner_btn_loading_set_state
+                type: SetState
+                params:
+                  submitting: true
+              - id: spinner_btn_loading_msg
+                type: DisplayMessage
+                params:
+                  content: Application submitted successfully!
+                  duration: 3
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

@@ -32,7 +32,9 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 ```
 
 ```yaml
-[object Object]```
+basic_tree_selector:
+  _state: basic_tree_selector
+```
 
 Selected code: —
 
@@ -84,10 +86,58 @@ Selected code: —
 ```
 
 ```yaml
-[object Object]```
+- id: value_tree_selector
+  type: TreeSelector
+  properties:
+    title: Region
+    placeholder: Pick a region...
+    primaryKey: id
+    parentKey: parentId
+    valueKey: code
+    html: "{{ item.label }}"
+    treeDefaultExpandAll: true
+    data:
+      - id: 1
+        label: Europe
+        code: eu
+      - id: 2
+        label: Germany
+        code: de
+        parentId: 1
+      - id: 3
+        label: France
+        code: fr
+        parentId: 1
+      - id: 4
+        label: Americas
+        code: am
+      - id: 5
+        label: United States
+        code: us
+        parentId: 4
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          region:
+            _event: value
+- id: value_tree_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected code: {{ region if region != null else "—" }}'
+        on:
+          _state: true
+```
 
 ```yaml
-[object Object]```
+value_tree_selector:
+  _state: value_tree_selector
+value_tree_display:
+  _state: value_tree_display
+```
 
 ```yaml
 - id: options_tree_selector
@@ -111,7 +161,9 @@ Selected code: —
 ```
 
 ```yaml
-[object Object]```
+options_tree_selector:
+  _state: options_tree_selector
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

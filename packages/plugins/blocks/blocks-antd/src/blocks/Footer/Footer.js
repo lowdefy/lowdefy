@@ -18,6 +18,8 @@ import React from 'react';
 import { Layout } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
+import withTheme from '../withTheme.js';
+
 const Footer = Layout.Footer;
 
 const FooterBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
@@ -30,4 +32,4 @@ const FooterBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Footer>
 );
 
-export default withBlockDefaults(FooterBlock);
+export default withTheme('Layout', withBlockDefaults(FooterBlock));

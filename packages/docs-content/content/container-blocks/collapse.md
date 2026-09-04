@@ -1300,6 +1300,7 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. Maps to antd's `destroyOnHidden`. |
 | `expandIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block for expand icon on the right of selector. |
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
+| `expandIconPosition` | string | - | Deprecated - use expandIconPlacement instead. Antd renamed the property; this alias is read only when expandIconPlacement is not set. Enum: `start`, `end`. |
 | `forceRender` | boolean | `"false"` | Force render for all panels. |
 | `panels` | array | - |  |
 | `panels.$.title` | string | - | Title of the panel - supports html. |

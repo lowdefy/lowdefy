@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "5.5.1",
-    "@lowdefy/nunjucks": "5.5.1"
+    "@lowdefy/nunjucks": "5.5.1",
+    "yaml": "2.9.0"
   },
   "publishConfig": {
     "access": "public"

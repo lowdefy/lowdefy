@@ -57,6 +57,6 @@ _menu: 0
 ```
 ```yaml
 _menu:
-  value: 0
+  index: 0
 ```
 Returns: A `menu` object.

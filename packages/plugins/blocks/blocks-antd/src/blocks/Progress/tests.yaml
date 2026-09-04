@@ -91,24 +91,24 @@
     gapDegree: 60
     type: circle
     percent: 30
-- id: 'properties.gapPosition: left'
+- id: 'properties.gapPlacement: left'
   type: Progress
   properties:
-    gapPosition: left
+    gapPlacement: left
     gapDegree: 60
     type: circle
     percent: 30
-- id: 'properties.gapPosition: right'
+- id: 'properties.gapPlacement: right'
   type: Progress
   properties:
-    gapPosition: right
+    gapPlacement: right
     gapDegree: 60
     type: circle
     percent: 30
-- id: 'properties.gapPosition: bottom'
+- id: 'properties.gapPlacement: bottom'
   type: Progress
   properties:
-    gapPosition: bottom
+    gapPlacement: bottom
     gapDegree: 60
     type: circle
     percent: 30

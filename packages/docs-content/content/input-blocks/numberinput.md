@@ -28,7 +28,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_with_value:
+  _state: basic_with_value
+basic_no_label:
+  _state: basic_no_label
+```
 
 ```yaml
 - id: size_small
@@ -51,7 +57,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: min_max
@@ -95,7 +107,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+min_max:
+  _state: min_max
+min_only:
+  _state: min_only
+step_5:
+  _state: step_5
+step_decimal:
+  _state: step_decimal
+step_negative:
+  _state: step_negative
+```
 
 ```yaml
 - id: precision_0
@@ -125,7 +147,15 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+precision_0:
+  _state: precision_0
+precision_1:
+  _state: precision_1
+precision_2:
+  _state: precision_2
+precision_4:
+  _state: precision_4
+```
 
 ```yaml
 - id: separator_default
@@ -144,7 +174,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+separator_default:
+  _state: separator_default
+separator_comma:
+  _state: separator_comma
+```
 
 ```yaml
 - id: controls_default
@@ -171,7 +205,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+controls_default:
+  _state: controls_default
+controls_off:
+  _state: controls_off
+controls_with_step:
+  _state: controls_with_step
+```
 
 ```yaml
 - id: keyboard_enabled
@@ -189,7 +229,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+keyboard_enabled:
+  _state: keyboard_enabled
+keyboard_disabled:
+  _state: keyboard_disabled
+```
 
 ```yaml
 - id: disabled_empty
@@ -224,7 +268,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+disabled_empty:
+  _state: disabled_empty
+disabled_with_value:
+  _state: disabled_with_value
+disabled_controls:
+  _state: disabled_controls
+```
 
 ```yaml
 - id: borderless_empty
@@ -247,7 +297,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+borderless_empty:
+  _state: borderless_empty
+borderless_with_value:
+  _state: borderless_with_value
+```
 
 ```yaml
 - id: placeholder_default
@@ -278,7 +332,15 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+placeholder_default:
+  _state: placeholder_default
+placeholder_quantity:
+  _state: placeholder_quantity
+placeholder_price:
+  _state: placeholder_price
+placeholder_percentage:
+  _state: placeholder_percentage
+```
 
 ```yaml
 - id: formatter_currency
@@ -320,10 +382,50 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+- id: formatter_currency
+  type: NumberInput
+  properties:
+    title: Currency Formatter
+    placeholder: Enter amount
+    min: 0
+    precision: 2
+    formatter:
+      _function:
+        __intl.numberFormat:
+          on:
+            __args: 0.value
+          params:
+            locale: en-US
+            options:
+              style: currency
+              currency: USD
+- id: formatter_percent
+  type: NumberInput
+  properties:
+    title: Percentage Formatter
+    placeholder: Enter percentage
+    min: 0
+    max: 100
+    formatter:
+      _function:
+        __if:
+          test:
+            __ne:
+              - __args: 0.value
+              - null
+          then:
+            __string.concat:
+              - __args: 0.value
+              - "%"
+          else: ""
+```
 
 ```yaml
-[object Object]```
+formatter_currency:
+  _state: formatter_currency
+formatter_percent:
+  _state: formatter_percent
+```
 
 *Note: autoFocus is best demonstrated on page load. Set `autoFocus: true` to focus the input when the page renders.*
 
@@ -342,7 +444,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+autofocus_off:
+  _state: autofocus_off
+autofocus_note:
+  _state: autofocus_note
+```
 
 ```yaml
 - id: label_default
@@ -382,7 +488,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_no_colon:
+  _state: label_no_colon
+label_right_align:
+  _state: label_right_align
+label_extra:
+  _state: label_extra
+label_disabled:
+  _state: label_disabled
+```
 
 ```yaml
 - id: label_span_4
@@ -412,7 +528,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+label_span_4:
+  _state: label_span_4
+label_span_8:
+  _state: label_span_8
+label_span_12:
+  _state: label_span_12
+```
 
 ```yaml
 - id: title_bold
@@ -433,7 +555,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+title_bold:
+  _state: title_bold
+title_colored:
+  _state: title_colored
+title_icon_html:
+  _state: title_icon_html
+```
 
 ```yaml
 - id: combined_price
@@ -496,7 +624,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+combined_price:
+  _state: combined_price
+combined_quantity:
+  _state: combined_quantity
+combined_percentage:
+  _state: combined_percentage
+combined_temperature:
+  _state: combined_temperature
+combined_borderless_disabled:
+  _state: combined_borderless_disabled
+```
 
 ```yaml
 - id: step_1
@@ -537,7 +675,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+step_1:
+  _state: step_1
+step_0_5:
+  _state: step_0_5
+step_0_25:
+  _state: step_0_25
+step_100:
+  _state: step_100
+step_0_001:
+  _state: step_0_001
+```
 
 ```yaml
 - id: style_width
@@ -585,7 +733,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+style_width:
+  _state: style_width
+style_background:
+  _state: style_background
+style_border:
+  _state: style_border
+style_font:
+  _state: style_font
+style_label:
+  _state: style_label
+```
 
 ```yaml
 - id: class_element
@@ -605,7 +763,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+class_element:
+  _state: class_element
+class_label:
+  _state: class_label
+```
 
 ```yaml
 - id: theme_colors
@@ -650,7 +812,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+theme_colors:
+  _state: theme_colors
+theme_large_handles:
+  _state: theme_large_handles
+theme_shadows:
+  _state: theme_shadows
+theme_handle_colors:
+  _state: theme_handle_colors
+theme_small_pill:
+  _state: theme_small_pill
+```
 
 ```yaml
 - id: use_age
@@ -711,7 +883,17 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+use_age:
+  _state: use_age
+use_weight:
+  _state: use_weight
+use_rating:
+  _state: use_rating
+use_latitude:
+  _state: use_latitude
+use_order_quantity:
+  _state: use_order_quantity
+```
 
 **Inline Labels:**
 
@@ -819,7 +1001,19 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+form_row_label:
+  _state: form_row_label
+form_inline_row:
+  _state: form_inline_row
+form_stacked_label:
+  _state: form_stacked_label
+form_stacked_row:
+  _state: form_stacked_row
+form_no_label_label:
+  _state: form_no_label_label
+form_no_label_row:
+  _state: form_no_label_row
+```
 
 *Validation status is controlled by the Lowdefy validation system. These examples show the visual appearance using theme tokens.*
 
@@ -846,7 +1040,13 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
-[object Object]```
+warning_note:
+  _state: warning_note
+theme_error_colors:
+  _state: theme_error_colors
+theme_warning_colors:
+  _state: theme_warning_colors
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

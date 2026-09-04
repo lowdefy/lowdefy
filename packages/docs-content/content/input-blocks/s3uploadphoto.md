@@ -22,7 +22,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_html_title:
+  _state: basic_html_title
+```
 
 ```yaml
 - id: limit_single
@@ -47,7 +53,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_hidden:
+  _state: limit_single_hidden
+```
 
 ```yaml
 - id: list_visible
@@ -72,7 +84,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_multi_hidden:
+  _state: list_multi_hidden
+```
 
 ```yaml
 - id: disabled_default
@@ -96,7 +114,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+disabled_custom_title:
+  _state: disabled_custom_title
+disabled_hidden_list:
+  _state: disabled_hidden_list
+```
 
 ```yaml
 - id: style_rounded
@@ -125,7 +149,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+style_rounded:
+  _state: style_rounded
+style_large:
+  _state: style_large
+style_colored:
+  _state: style_colored
+```
 
 ```yaml
 - id: style_element_bg
@@ -156,7 +186,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+style_element_bg:
+  _state: style_element_bg
+style_element_border:
+  _state: style_element_border
+style_tailwind:
+  _state: style_tailwind
+```
 
 ```yaml
 - id: profile_card
@@ -204,7 +240,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+profile_card:
+  _state: profile_card
+```
 
 ```yaml
 - id: product_card
@@ -271,7 +309,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
-[object Object]```
+product_card:
+  _state: product_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

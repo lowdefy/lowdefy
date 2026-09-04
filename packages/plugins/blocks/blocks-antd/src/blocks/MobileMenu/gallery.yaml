@@ -852,12 +852,12 @@
           blocks:
             - id: mdc_extra
               type: Paragraph
+              style:
+                padding: 16px
+                color: '#999'
+
               properties:
                 content: Additional content below the menu items.
-                style:
-                  padding: 16px
-                  color: '#999'
-
 - title: Drawer Footer Slot
   blocks:
     - id: mm_drawer_footer_example
@@ -875,14 +875,14 @@
           blocks:
             - id: mdf_footer
               type: Paragraph
+              style:
+                textAlign: center
+                margin: 0
+                color: '#aaa'
+                fontSize: 12
+
               properties:
                 content: App v2.1.0
-                style:
-                  textAlign: center
-                  margin: 0
-                  color: '#aaa'
-                  fontSize: 12
-
 - title: MobileMenu in Admin Dashboard
   blocks:
     - id: admin_header

@@ -136,13 +136,6 @@ export default {
         description: 'Trigger button text.',
         default: 'Search',
       },
-      icon: {
-        type: ['string', 'object'],
-        description: 'Trigger button icon name or Icon block properties.',
-        docs: {
-          displayType: 'icon',
-        },
-      },
       showShortcut: {
         type: 'boolean',
         description: 'Show keyboard shortcut badge on the trigger button.',

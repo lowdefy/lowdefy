@@ -1129,6 +1129,7 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
 | `mask` | boolean | `true` | Whether show mask or not. |
 | `maskClosable` | boolean | `true` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |
+| `okButtonType` | string | `"primary"` | Button type of the ok button. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `okButtonProps` | object | - | Set additional properties for the ok button. |
 | `cancelText` | string | - | Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `cancelButtonProps` | object | - | Set additional properties for the cancel button. |

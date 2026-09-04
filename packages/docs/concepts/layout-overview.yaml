@@ -754,6 +754,7 @@ _ref:
                               type: Block
                               layout:
                                 span: 12
+                    ```
               - id: ex_area_align_c1
                 type: Box
                 style:
@@ -909,6 +910,7 @@ _ref:
                               type: Block
                               layout:
                                 size: auto
+                    ```
               - id: ex_area_direction_c1
                 type: Box
                 style:
@@ -1078,6 +1080,7 @@ _ref:
                             - id: block6
                               type: Block
 
+                    ```
               - id: ex_area_gutter_c1
                 type: Box
                 style:
@@ -1248,6 +1251,7 @@ _ref:
                               type: Block
                               layout:
                                 size: auto
+                    ```
               - id: ex_area_justify_c1
                 type: Box
                 style:

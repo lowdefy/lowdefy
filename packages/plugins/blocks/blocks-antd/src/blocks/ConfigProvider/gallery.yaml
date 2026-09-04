@@ -568,54 +568,6 @@
                   title: Themed Input
                   colon: false
 
-- title: Theme Property (antd Design Tokens)
-  fullWidth: true
-  blocks:
-    - id: cp_theme
-      type: ConfigProvider
-      properties:
-        theme:
-          colorPrimary: '#13c2c2'
-          colorInfo: '#13c2c2'
-          borderRadius: 12
-      blocks:
-        - id: cp_theme_card
-          type: Card
-          properties:
-            title: Theme Overrides via theme Property
-          blocks:
-            - id: cp_theme_text
-              type: Paragraph
-              properties:
-                content: The theme property provides antd design token overrides for this block and all its descendants. It works similarly to token but is applied at the block level through the antd theme system.
-            - id: cp_theme_btn_row
-              type: Box
-              layout:
-                gap: 8
-              blocks:
-                - id: cp_theme_btn1
-                  type: Button
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: Teal Primary
-                    color: primary
-                    variant: solid
-                - id: cp_theme_btn2
-                  type: Button
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: Teal Outlined
-                    color: primary
-                    variant: outlined
-            - id: cp_theme_switch
-              type: Switch
-              properties:
-                label:
-                  title: Teal themed switch
-                  colon: false
-
 - title: Styled ConfigProvider (Tailwind CSS)
   fullWidth: true
   blocks:

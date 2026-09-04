@@ -18,6 +18,8 @@ import fs from 'fs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import YAML from 'yaml';
+
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
@@ -40,6 +42,60 @@ function sectionKind(section) {
   return undefined;
 }
 
+// Build-time reference and key markers, which are config bookkeeping rather than
+// anything a reader of the docs should see in an example.
+function isMarkerKey(key) {
+  return type.isString(key) && key.length >= 2 && key[0] === '~';
+}
+
+function stripMarkers(value) {
+  if (type.isArray(value)) {
+    return value.map(stripMarkers);
+  }
+  if (!type.isObject(value)) {
+    return value;
+  }
+  const stripped = {};
+  for (const key of Object.keys(value)) {
+    if (isMarkerKey(key)) continue;
+    stripped[key] = stripMarkers(value[key]);
+  }
+  return stripped;
+}
+
+// Docs example panels hand a config object to a template as
+// `_custom_yaml_stringify`, an operator the docs app resolves in the browser.
+// Extraction happens before that, so the operator is resolved here the same way
+// packages/docs/src/operators/client/yaml_stringify.js resolves it.
+function yamlStringifyParams(params) {
+  if (type.isArray(params)) return { input: params[0], options: params[1] };
+  if (type.isObject(params) && 'on' in params) return { input: params.on, options: params.options };
+  return { input: params };
+}
+
+// Nunjucks renders a variable with String(), so an object reaches the page as the
+// literal `[object Object]` - a fence that carries no config at all. Every docs
+// example variable is config, so an object is rendered as the yaml the reader is
+// meant to copy.
+function renderTemplateVar(value) {
+  if (!type.isObject(value) && !type.isArray(value)) return value;
+  const { input, options } =
+    type.isObject(value) && '_custom_yaml_stringify' in value
+      ? yamlStringifyParams(value._custom_yaml_stringify)
+      : { input: value };
+  if (type.isNone(input)) return '';
+  return YAML.stringify(stripMarkers(input), options);
+}
+
+function renderTemplateVars(on) {
+  if (!type.isObject(on)) return {};
+  const rendered = {};
+  for (const key of Object.keys(on)) {
+    rendered[key] = renderTemplateVar(on[key]);
+  }
+  return rendered;
+}
+
 // Docs pages wrap prose in _nunjucks to interpolate release facts, for example
 // packages/docs/concepts/api.yaml. The build walker has already inlined the
 // _refs that carry the template and its vars, so the template renders here.
@@ -55,7 +111,7 @@ function resolveContent(value) {
     return nunjucksFunction(params)({});
   }
   if (type.isObject(params) && type.isString(params.template)) {
-    return nunjucksFunction(params.template)(type.isObject(params.on) ? params.on : {});
+    return nunjucksFunction(params.template)(renderTemplateVars(params.on));
   }
   return null;
 }

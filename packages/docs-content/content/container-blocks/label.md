@@ -701,6 +701,7 @@ Form label wrapper with title, description, and validation feedback.
 | `colon` | boolean | `true` | Append label with colon. |
 | `disabled` | boolean | `false` | Disable to not render a label title. |
 | `extra` | string | - | Extra text to display beneath the content - supports html. |
+| `hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Label title - supports html. |
 | `tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |

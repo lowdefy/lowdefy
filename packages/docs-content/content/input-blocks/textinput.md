@@ -27,7 +27,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_with_value:
+  _state: basic_with_value
+basic_placeholder_only:
+  _state: basic_placeholder_only
+```
 
 ```yaml
 - id: size_small
@@ -51,7 +57,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_middle:
+  _state: size_middle
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: variant_outlined
@@ -74,7 +86,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+variant_outlined:
+  _state: variant_outlined
+variant_filled:
+  _state: variant_filled
+variant_borderless:
+  _state: variant_borderless
+```
 
 ```yaml
 - id: type_text
@@ -114,7 +132,17 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+type_text:
+  _state: type_text
+type_email:
+  _state: type_email
+type_password:
+  _state: type_password
+type_tel:
+  _state: type_tel
+type_url:
+  _state: type_url
+```
 
 ```yaml
 - id: adorn_prefix_text
@@ -151,7 +179,17 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+adorn_prefix_text:
+  _state: adorn_prefix_text
+adorn_suffix_text:
+  _state: adorn_suffix_text
+adorn_both:
+  _state: adorn_both
+adorn_prefix_icon:
+  _state: adorn_prefix_icon
+adorn_suffix_icon:
+  _state: adorn_suffix_icon
+```
 
 ```yaml
 - id: icon_custom_color
@@ -179,7 +217,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+icon_custom_color:
+  _state: icon_custom_color
+icon_both_custom:
+  _state: icon_both_custom
+icon_mixed:
+  _state: icon_mixed
+```
 
 ```yaml
 - id: clear_basic
@@ -214,7 +258,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+clear_basic:
+  _state: clear_basic
+clear_with_icon:
+  _state: clear_with_icon
+clear_disabled:
+  _state: clear_disabled
+```
 
 ```yaml
 - id: count_with_max
@@ -239,7 +289,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+count_with_max:
+  _state: count_with_max
+count_no_max:
+  _state: count_no_max
+max_no_count:
+  _state: max_no_count
+```
 
 ```yaml
 - id: replace_numbers_only
@@ -272,7 +328,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+replace_numbers_only:
+  _state: replace_numbers_only
+replace_alpha_only:
+  _state: replace_alpha_only
+replace_no_spaces:
+  _state: replace_no_spaces
+```
 
 ```yaml
 - id: label_title_html
@@ -313,7 +375,17 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+label_title_html:
+  _state: label_title_html
+label_extra:
+  _state: label_extra
+label_inline:
+  _state: label_inline
+label_no_colon:
+  _state: label_no_colon
+label_hidden:
+  _state: label_hidden
+```
 
 ```yaml
 - id: disabled_empty
@@ -348,7 +420,13 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+disabled_empty:
+  _state: disabled_empty
+disabled_with_value:
+  _state: disabled_with_value
+disabled_with_prefix:
+  _state: disabled_with_prefix
+```
 
 ```yaml
 - id: css_shadow
@@ -387,7 +465,15 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+css_shadow:
+  _state: css_shadow
+css_rounded:
+  _state: css_rounded
+css_custom_bg:
+  _state: css_custom_bg
+css_full_custom:
+  _state: css_full_custom
+```
 
 ```yaml
 - id: theme_pill
@@ -436,7 +522,15 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+theme_pill:
+  _state: theme_pill
+theme_green:
+  _state: theme_green
+theme_purple:
+  _state: theme_purple
+theme_filled_warm:
+  _state: theme_filled_warm
+```
 
 ```yaml
 - id: reg_name
@@ -535,7 +629,17 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+reg_name:
+  _state: reg_name
+reg_email:
+  _state: reg_email
+reg_password:
+  _state: reg_password
+reg_username:
+  _state: reg_username
+reg_actions:
+  _state: reg_actions
+```
 
 ```yaml
 - id: search_bar
@@ -592,10 +696,67 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 ```
 
 ```yaml
-[object Object]```
+- id: search_bar
+  type: TextInput
+  properties:
+    prefixIcon: AiOutlineSearch
+    allowClear: true
+    placeholder: Search products, categories, or brands...
+    size: large
+    label:
+      disabled: true
+    theme:
+      borderRadius: 20
+  events:
+    onPressEnter:
+      - id: search_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Searching for: "
+              - _state: search_bar
+          status: info
+- id: search_coupon
+  type: TextInput
+  properties:
+    title: Coupon Code
+    placeholder: Enter code
+    showCount: true
+    maxLength: 16
+    size: small
+    replaceInput:
+      pattern: "[^A-Z0-9]"
+      flags: g
+      replacement: ""
+    label:
+      extra: Letters and numbers only.
+- id: search_apply
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Apply Coupon
+    color: primary
+    variant: solid
+    size: small
+  events:
+    onClick:
+      - id: apply_msg
+        type: DisplayMessage
+        params:
+          content: Coupon applied!
+          status: success
+```
 
 ```yaml
-[object Object]```
+search_bar:
+  _state: search_bar
+search_coupon:
+  _state: search_coupon
+search_apply:
+  _state: search_apply
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

@@ -17,8 +17,14 @@
 export default {
   type: 'object',
   params: {
-    type: 'integer',
-    minimum: 0,
+    oneOf: [
+      {
+        type: 'integer',
+        minimum: 0,
+        description: 'Index of the list block nesting level to return the array index for.',
+      },
+      { type: 'boolean', enum: [true], description: 'Return all array indices.' },
+    ],
     description: 'Returns the current array index when used inside a list block.',
   },
 };

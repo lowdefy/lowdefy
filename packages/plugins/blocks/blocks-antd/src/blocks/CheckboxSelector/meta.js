@@ -18,7 +18,7 @@ import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import options from '../../schemas/options.js';
 import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
-import { disabled, inputTitle } from '../../schemas/inputProperties.js';
+import { disabled, inputTitle, sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -95,6 +95,10 @@ export default {
       valueKey,
       primaryKey,
       label,
+      size: {
+        ...sizeSmallDefaultLarge,
+        description: 'Size of the block label.',
+      },
       title: inputTitle,
       theme: {
         type: 'object',

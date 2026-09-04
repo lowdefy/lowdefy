@@ -76,7 +76,7 @@ pages:
                   type: Validate
 ```
 
-```yaml
+````yaml
 - id: code_yaml
   type: MarkdownWithCode
   properties:
@@ -120,7 +120,7 @@ pages:
                       - id: validate
                         type: Validate
       ```
-```
+````
 
 ```javascript
 function buildConnections({ components, context }) {
@@ -141,7 +141,7 @@ function buildConnections({ components, context }) {
 export default buildConnections;
 ```
 
-```yaml
+````yaml
 - id: code_javascript
   type: MarkdownWithCode
   properties:
@@ -167,7 +167,7 @@ export default buildConnections;
       export default buildConnections;
 
       ```
-```
+````
 
 ```json
 {
@@ -196,7 +196,7 @@ export default buildConnections;
 }
 ```
 
-```yaml
+````yaml
 - id: code_json
   type: MarkdownWithCode
   properties:
@@ -227,7 +227,7 @@ export default buildConnections;
         }
       }
       ```
-```
+````
 
 ```python
 import json
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     print(f"Valid: {loader.validate()}")
 ```
 
-```yaml
+````yaml
 - id: code_python
   type: MarkdownWithCode
   properties:
@@ -289,7 +289,7 @@ if __name__ == "__main__":
           config = loader.load()
           print(f"Valid: {loader.validate()}")
       ```
-```
+````
 
 ```typescript
 interface BlockMeta {
@@ -317,7 +317,7 @@ function createBlock<P>(
 }
 ```
 
-```yaml
+````yaml
 - id: code_typescript
   type: MarkdownWithCode
   properties:
@@ -347,7 +347,7 @@ function createBlock<P>(
         return block;
       }
       ```
-```
+````
 
 ```html
 <!DOCTYPE html>
@@ -374,7 +374,7 @@ function createBlock<P>(
 </html>
 ```
 
-```yaml
+````yaml
 - id: code_html
   type: MarkdownWithCode
   properties:
@@ -406,7 +406,7 @@ function createBlock<P>(
       </html>
 
       ```
-```
+````
 
 ```nunjucks
 {# Lowdefy docs page template #}
@@ -431,7 +431,7 @@ _ref:
       {% endfor %}
 ```
 
-```yaml
+````yaml
 - id: code_nunjucks
   type: MarkdownWithCode
   properties:
@@ -458,7 +458,7 @@ _ref:
                 {{ example.properties | dump | safe }}
             {% endfor %}
       ```
-```
+````
 
 ## Building a Form with Lowdefy
 
@@ -508,7 +508,7 @@ Use an action to process the form data:
 
 For the complete guide, see the [Lowdefy documentation](https://docs.lowdefy.com).
 
-```yaml
+````yaml
 - id: mixed_tutorial
   type: MarkdownWithCode
   properties:
@@ -579,7 +579,7 @@ For the complete guide, see the [Lowdefy documentation](https://docs.lowdefy.com
 
       For the complete guide, see the [Lowdefy
       documentation](https://docs.lowdefy.com).
-```
+````
 
 ### Configuration vs Code
 
@@ -612,7 +612,7 @@ function getGreeting(state) {
 }
 ```
 
-```yaml
+````yaml
 - id: multi_language
   type: MarkdownWithCode
   properties:
@@ -647,7 +647,7 @@ function getGreeting(state) {
         return 'Please log in to continue.';
       }
       ```
-```
+````
 
 **skipHtml: false (default)**
 
@@ -691,7 +691,7 @@ style:
     borderRadius: 8
 ```
 
-```yaml
+````yaml
 - id: style_element
   type: MarkdownWithCode
   style:
@@ -713,7 +713,7 @@ style:
           padding: 16
           borderRadius: 8
       ```
-```
+````
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

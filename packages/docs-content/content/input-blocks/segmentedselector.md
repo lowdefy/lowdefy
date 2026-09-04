@@ -31,7 +31,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+basic_strings:
+  _state: basic_strings
+basic_numbers:
+  _state: basic_numbers
+basic_two:
+  _state: basic_two
+```
 
 ```yaml
 - id: label_value_basic
@@ -78,7 +84,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+label_value_basic:
+  _state: label_value_basic
+label_value_roles:
+  _state: label_value_roles
+label_value_many:
+  _state: label_value_many
+```
 
 ```yaml
 - id: size_small
@@ -113,7 +125,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: size_small_lv
@@ -160,7 +178,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+size_small_lv:
+  _state: size_small_lv
+size_default_lv:
+  _state: size_default_lv
+size_large_lv:
+  _state: size_large_lv
+```
 
 ```yaml
 - id: shape_default
@@ -231,7 +255,17 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+shape_default:
+  _state: shape_default
+shape_round:
+  _state: shape_round
+block_segmented:
+  _state: block_segmented
+block_round:
+  _state: block_round
+block_round_large:
+  _state: block_round_large
+```
 
 ```yaml
 - id: icon_view_mode
@@ -299,7 +333,15 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+icon_view_mode:
+  _state: icon_view_mode
+icon_small:
+  _state: icon_small
+icon_block:
+  _state: icon_block
+icon_round:
+  _state: icon_round
+```
 
 ```yaml
 - id: vertical_basic
@@ -345,7 +387,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+vertical_basic:
+  _state: vertical_basic
+vertical_icons:
+  _state: vertical_icons
+vertical_large:
+  _state: vertical_large
+```
 
 ```yaml
 - id: disabled_all
@@ -390,7 +438,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+disabled_all:
+  _state: disabled_all
+disabled_multiple:
+  _state: disabled_multiple
+disabled_icons:
+  _state: disabled_icons
+```
 
 ```yaml
 - id: label_default
@@ -460,7 +514,17 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_extra:
+  _state: label_extra
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+no_label_segmented:
+  _state: no_label_segmented
+```
 
 ```yaml
 - id: style_background
@@ -507,7 +571,13 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+style_background:
+  _state: style_background
+style_border:
+  _state: style_border
+class_shadow:
+  _state: class_shadow
+```
 
 ```yaml
 - id: theme_dark_track
@@ -598,7 +668,17 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+theme_dark_track:
+  _state: theme_dark_track
+theme_green:
+  _state: theme_green
+theme_purple:
+  _state: theme_purple
+theme_round_dark:
+  _state: theme_round_dark
+theme_block_gradient:
+  _state: theme_block_gradient
+```
 
 ```yaml
 - id: applied2_dashboard_card
@@ -657,10 +737,65 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+- id: applied2_dashboard_card
+  type: Card
+  properties:
+    title: Sales Dashboard
+  blocks:
+    - id: applied2_dashboard_view_toggle
+      type: SegmentedSelector
+      properties:
+        title: View
+        block: true
+        size: large
+        label:
+          disabled: true
+        options:
+          - label: Overview
+            value: overview
+            icon: AiOutlineDashboard
+          - label: Charts
+            value: charts
+            icon: AiOutlineBarChart
+          - label: Table
+            value: table
+            icon: AiOutlineTable
+      events:
+        onChange:
+          - id: view_changed_action
+            type: SetState
+            params:
+              applied2_dashboard_view:
+                _state: applied2_dashboard_view_toggle
+    - id: applied2_dashboard_date_range
+      type: DateRangeSelector
+      properties:
+        title: Date Range
+        placeholder:
+          - From
+          - To
+        format: DD MMM YYYY
+        label:
+          disabled: true
+    - id: applied2_dashboard_refresh_btn
+      type: Button
+      properties:
+        title: Refresh Data
+        icon: AiOutlineReload
+        type: primary
+      events:
+        onClick:
+          - id: refresh_action
+            type: DisplayMessage
+            params:
+              content: Dashboard data refreshed.
+              duration: 2
+```
 
 ```yaml
-[object Object]```
+applied2_dashboard_card:
+  _state: applied2_dashboard_card
+```
 
 ```yaml
 - id: applied3_settings_card
@@ -742,10 +877,88 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+- id: applied3_settings_card
+  type: Card
+  properties:
+    title: Application Settings
+  blocks:
+    - id: applied3_theme_selector
+      type: SegmentedSelector
+      properties:
+        title: Theme
+        block: true
+        options:
+          - label: Light
+            value: light
+            icon: AiOutlineBulb
+          - label: Dark
+            value: dark
+            icon: AiOutlineEyeInvisible
+          - label: System
+            value: system
+            icon: AiOutlineLaptop
+      events:
+        onChange:
+          - id: theme_changed_action
+            type: SetState
+            params:
+              applied3_theme:
+                _state: applied3_theme_selector
+    - id: applied3_language_selector
+      type: SegmentedSelector
+      properties:
+        title: Language
+        options:
+          - label: English
+            value: en
+          - label: French
+            value: fr
+          - label: German
+            value: de
+      events:
+        onChange:
+          - id: language_changed_action
+            type: SetState
+            params:
+              applied3_language:
+                _state: applied3_language_selector
+    - id: applied3_notifications_toggle
+      type: SegmentedSelector
+      properties:
+        title: Notifications
+        options:
+          - label: All
+            value: all
+          - label: Important
+            value: important
+          - label: None
+            value: none
+      events:
+        onChange:
+          - id: notifications_changed_action
+            type: SetState
+            params:
+              applied3_notifications:
+                _state: applied3_notifications_toggle
+    - id: applied3_save_btn
+      type: Button
+      properties:
+        title: Save Settings
+        icon: AiOutlineSave
+        type: primary
+      events:
+        onClick:
+          - id: save_settings_action
+            type: DisplayMessage
+            params:
+              content: Settings saved successfully.
+              duration: 2
+```
 
 ```yaml
-[object Object]```
+applied3_settings_card:
+  _state: applied3_settings_card
+```
 
 ```yaml
 - id: data_segmented_selector
@@ -764,7 +977,9 @@ Segmented control for switching between options.
 ```
 
 ```yaml
-[object Object]```
+data_segmented_selector:
+  _state: data_segmented_selector
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

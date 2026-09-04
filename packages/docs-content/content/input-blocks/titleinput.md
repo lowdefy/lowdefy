@@ -61,7 +61,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+heading_level_1:
+  _state: heading_level_1
+heading_level_2:
+  _state: heading_level_2
+heading_level_3:
+  _state: heading_level_3
+heading_level_4:
+  _state: heading_level_4
+heading_level_5:
+  _state: heading_level_5
+```
 
 ```yaml
 - id: type_default
@@ -126,7 +136,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+type_default:
+  _state: type_default
+type_secondary:
+  _state: type_secondary
+type_success:
+  _state: type_success
+type_warning:
+  _state: type_warning
+type_danger:
+  _state: type_danger
+```
 
 ```yaml
 - id: style_italic
@@ -192,7 +212,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+style_italic:
+  _state: style_italic
+style_underline:
+  _state: style_underline
+style_delete:
+  _state: style_delete
+style_mark:
+  _state: style_mark
+style_code:
+  _state: style_code
+```
 
 ```yaml
 - id: combined_italic_underline
@@ -265,7 +295,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+combined_italic_underline:
+  _state: combined_italic_underline
+combined_mark_code:
+  _state: combined_mark_code
+combined_italic_delete:
+  _state: combined_italic_delete
+combined_underline_mark:
+  _state: combined_underline_mark
+combined_all_styles:
+  _state: combined_all_styles
+```
 
 ```yaml
 - id: color_blue
@@ -331,7 +371,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+color_blue:
+  _state: color_blue
+color_green:
+  _state: color_green
+color_purple:
+  _state: color_purple
+color_coral:
+  _state: color_coral
+color_teal:
+  _state: color_teal
+```
 
 ```yaml
 - id: copyable_boolean
@@ -393,7 +443,15 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+copyable_boolean:
+  _state: copyable_boolean
+copyable_custom_text:
+  _state: copyable_custom_text
+copyable_custom_tooltips:
+  _state: copyable_custom_tooltips
+copyable_custom_text_and_tooltips:
+  _state: copyable_custom_text_and_tooltips
+```
 
 ```yaml
 - id: editable_boolean_true
@@ -458,7 +516,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+editable_boolean_true:
+  _state: editable_boolean_true
+editable_boolean_false:
+  _state: editable_boolean_false
+editable_custom_tooltip:
+  _state: editable_custom_tooltip
+editable_max_length:
+  _state: editable_max_length
+editable_editing_state:
+  _state: editable_editing_state
+```
 
 ```yaml
 - id: ellipsis_boolean
@@ -546,7 +614,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+ellipsis_boolean:
+  _state: ellipsis_boolean
+ellipsis_two_rows:
+  _state: ellipsis_two_rows
+ellipsis_three_rows_expandable:
+  _state: ellipsis_three_rows_expandable
+ellipsis_with_suffix:
+  _state: ellipsis_with_suffix
+ellipsis_expandable_with_suffix:
+  _state: ellipsis_expandable_with_suffix
+```
 
 ```yaml
 - id: disabled_level_1
@@ -599,7 +677,15 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+disabled_level_1:
+  _state: disabled_level_1
+disabled_level_3:
+  _state: disabled_level_3
+disabled_with_styles:
+  _state: disabled_with_styles
+disabled_secondary:
+  _state: disabled_secondary
+```
 
 ```yaml
 - id: default_value_simple
@@ -658,7 +744,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+default_value_simple:
+  _state: default_value_simple
+default_value_long:
+  _state: default_value_long
+default_value_with_type:
+  _state: default_value_with_type
+default_value_with_styles:
+  _state: default_value_with_styles
+no_default_value:
+  _state: no_default_value
+```
 
 ```yaml
 - id: level_1_secondary
@@ -724,7 +820,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+level_1_secondary:
+  _state: level_1_secondary
+level_2_success:
+  _state: level_2_success
+level_3_warning:
+  _state: level_3_warning
+level_4_danger:
+  _state: level_4_danger
+level_5_success:
+  _state: level_5_success
+```
 
 ```yaml
 - id: theme_color_text
@@ -799,7 +905,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+theme_color_text:
+  _state: theme_color_text
+theme_font_family:
+  _state: theme_font_family
+theme_font_weight_strong:
+  _state: theme_font_weight_strong
+theme_font_size_heading3:
+  _state: theme_font_size_heading3
+theme_multiple_tokens:
+  _state: theme_multiple_tokens
+```
 
 ```yaml
 - id: combined_copyable_editable
@@ -891,7 +1007,17 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+combined_copyable_editable:
+  _state: combined_copyable_editable
+combined_type_styles_copyable:
+  _state: combined_type_styles_copyable
+combined_color_styles_editable:
+  _state: combined_color_styles_editable
+combined_ellipsis_copyable_editable:
+  _state: combined_ellipsis_copyable_editable
+combined_full_featured:
+  _state: combined_full_featured
+```
 
 ```yaml
 - id: style_override_inline
@@ -942,7 +1068,13 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+style_override_inline:
+  _state: style_override_inline
+style_override_tailwind:
+  _state: style_override_tailwind
+style_override_combined:
+  _state: style_override_combined
+```
 
 ```yaml
 - id: applied2_doc_editor_card
@@ -1010,7 +1142,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+applied2_doc_editor_card:
+  _state: applied2_doc_editor_card
+```
 
 ```yaml
 - id: applied3_blog_editor_card
@@ -1072,7 +1206,9 @@ Editable title heading with levels, copyable, and text styles.
 ```
 
 ```yaml
-[object Object]```
+applied3_blog_editor_card:
+  _state: applied3_blog_editor_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

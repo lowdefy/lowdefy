@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import _not from './not.js';
+import schema from './not.schema.js';
 
 const location = 'location';
 
@@ -29,4 +30,9 @@ test('_not returns false', () => {
   expect(_not({ params: true, location })).toEqual(false);
   expect(_not({ params: [0, 0], location })).toEqual(false);
   expect(_not({ params: 'string', location })).toEqual(false);
+});
+
+test('_not schema does not restrict params to a boolean, since any value is negated', () => {
+  expect(schema.params.type).toBeUndefined();
+  expect(_not({ params: 100, location })).toEqual(false);
 });

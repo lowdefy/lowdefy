@@ -32,7 +32,9 @@ Searchable multiple-select tree dropdown (tags or checkboxes). Driven by flat `d
 ```
 
 ```yaml
-[object Object]```
+basic_tree_multiple:
+  _state: basic_tree_multiple
+```
 
 Selected:
 
@@ -79,10 +81,53 @@ Selected:
 ```
 
 ```yaml
-[object Object]```
+- id: checkable_tree_multiple
+  type: TreeMultipleSelector
+  properties:
+    title: Permissions
+    checkable: true
+    showCheckedStrategy: SHOW_CHILD
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: "{{ item.label }}"
+    treeDefaultExpandAll: true
+    data:
+      - id: 1
+        label: Read
+      - id: 2
+        label: Write
+      - id: 3
+        label: Create
+        parentId: 2
+      - id: 4
+        label: Update
+        parentId: 2
+      - id: 5
+        label: Admin
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          perms:
+            _event: value
+- id: checkable_tree_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: "Selected: {{ perms }}"
+        on:
+          _state: true
+```
 
 ```yaml
-[object Object]```
+checkable_tree_multiple:
+  _state: checkable_tree_multiple
+checkable_tree_display:
+  _state: checkable_tree_display
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

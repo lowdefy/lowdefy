@@ -287,6 +287,7 @@ The properties that can be set are:
           type: Block
           layout:
             span: 12
+```
 
 ##### Area 1 - `align: top`
 
@@ -342,6 +343,7 @@ The properties that can be set are:
           type: Block
           layout:
             size: auto
+```
 
 ##### Area 1 - `direction: row`
 
@@ -382,6 +384,8 @@ The properties that can be set are:
             span: 12
         - id: block6
           type: Block
+
+```
 
 ##### Area 1 - `gap: 16`
 
@@ -466,6 +470,7 @@ The properties that can be set are:
           type: Block
           layout:
             size: auto
+```
 
 ##### Area 1 - `justify: start`
 

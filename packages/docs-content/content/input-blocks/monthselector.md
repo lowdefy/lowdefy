@@ -20,7 +20,13 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_size_small:
+  _state: month_size_small
+month_size_default:
+  _state: month_size_default
+month_size_large:
+  _state: month_size_large
+```
 
 ```yaml
 - id: month_variant_outlined
@@ -47,7 +53,13 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_variant_outlined:
+  _state: month_variant_outlined
+month_variant_filled:
+  _state: month_variant_filled
+month_variant_borderless:
+  _state: month_variant_borderless
+```
 
 ```yaml
 - id: month_format_default
@@ -88,7 +100,17 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_format_default:
+  _state: month_format_default
+month_format_long:
+  _state: month_format_long
+month_format_short:
+  _state: month_format_short
+month_format_numeric:
+  _state: month_format_numeric
+month_format_month_only:
+  _state: month_format_month_only
+```
 
 ```yaml
 - id: month_placeholder_default
@@ -122,7 +144,15 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_placeholder_default:
+  _state: month_placeholder_default
+month_placeholder_custom:
+  _state: month_placeholder_custom
+month_placeholder_descriptive:
+  _state: month_placeholder_descriptive
+month_placeholder_format_hint:
+  _state: month_placeholder_format_hint
+```
 
 ```yaml
 - id: month_clear_enabled
@@ -142,7 +172,11 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_clear_enabled:
+  _state: month_clear_enabled
+month_clear_disabled:
+  _state: month_clear_disabled
+```
 
 ```yaml
 - id: month_today_enabled
@@ -162,7 +196,11 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_today_enabled:
+  _state: month_today_enabled
+month_today_disabled:
+  _state: month_today_disabled
+```
 
 ```yaml
 - id: month_icon_default
@@ -206,7 +244,17 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_icon_default:
+  _state: month_icon_default
+month_icon_clock:
+  _state: month_icon_clock
+month_icon_schedule:
+  _state: month_icon_schedule
+month_icon_custom_color:
+  _state: month_icon_custom_color
+month_icon_heart:
+  _state: month_icon_heart
+```
 
 ```yaml
 - id: month_disabled_default
@@ -243,7 +291,15 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_disabled_default:
+  _state: month_disabled_default
+month_disabled_outlined:
+  _state: month_disabled_outlined
+month_disabled_filled:
+  _state: month_disabled_filled
+month_disabled_borderless:
+  _state: month_disabled_borderless
+```
 
 ```yaml
 - id: month_autofocus_off
@@ -263,7 +319,11 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_autofocus_off:
+  _state: month_autofocus_off
+month_autofocus_on:
+  _state: month_autofocus_on
+```
 
 ```yaml
 - id: month_disabled_dates_min
@@ -317,7 +377,17 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_disabled_dates_min:
+  _state: month_disabled_dates_min
+month_disabled_dates_max:
+  _state: month_disabled_dates_max
+month_disabled_dates_range:
+  _state: month_disabled_dates_range
+month_disabled_specific:
+  _state: month_disabled_specific
+month_disabled_date_ranges:
+  _state: month_disabled_date_ranges
+```
 
 ```yaml
 - id: ms_presets_relative
@@ -373,10 +443,64 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+- id: ms_presets_relative
+  type: MonthSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: Last month
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+      - label: 3 months ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 3
+                - months
+            - format: YYYY-MM-DD
+      - label: A year ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - year
+            - format: YYYY-MM-DD
+- id: ms_presets_fixed
+  type: MonthSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: Start of 2026
+        value: 2026-01-01
+      - label: Mid 2026
+        value: 2026-07-01
+      - label: End of 2026
+        value: 2026-12-01
+```
 
 ```yaml
-[object Object]```
+ms_presets_relative:
+  _state: ms_presets_relative
+ms_presets_fixed:
+  _state: ms_presets_fixed
+```
 
 ```yaml
 - id: month_label_default
@@ -415,7 +539,17 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_label_default:
+  _state: month_label_default
+month_label_extra:
+  _state: month_label_extra
+month_label_inline_right:
+  _state: month_label_inline_right
+month_label_hidden:
+  _state: month_label_hidden
+month_label_feedback_on:
+  _state: month_label_feedback_on
+```
 
 ```yaml
 - id: month_label_inline_4
@@ -442,7 +576,13 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_label_inline_4:
+  _state: month_label_inline_4
+month_label_inline_8:
+  _state: month_label_inline_8
+month_label_inline_12:
+  _state: month_label_inline_12
+```
 
 ```yaml
 - id: month_html_title_bold
@@ -466,7 +606,13 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_html_title_bold:
+  _state: month_html_title_bold
+month_html_title_color:
+  _state: month_html_title_color
+month_html_title_italic:
+  _state: month_html_title_italic
+```
 
 ```yaml
 - id: month_style_width
@@ -496,7 +642,13 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_style_width:
+  _state: month_style_width
+month_style_element:
+  _state: month_style_element
+month_style_label:
+  _state: month_style_label
+```
 
 ```yaml
 - id: month_class_rounded
@@ -516,7 +668,11 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_class_rounded:
+  _state: month_class_rounded
+month_class_border:
+  _state: month_class_border
+```
 
 ```yaml
 - id: month_theme_primary_color
@@ -564,7 +720,17 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_theme_primary_color:
+  _state: month_theme_primary_color
+month_theme_large_radius:
+  _state: month_theme_large_radius
+month_theme_custom_bg:
+  _state: month_theme_custom_bg
+month_theme_brand_color:
+  _state: month_theme_brand_color
+month_theme_tall:
+  _state: month_theme_tall
+```
 
 ```yaml
 - id: month_combined_full
@@ -627,7 +793,15 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+month_combined_full:
+  _state: month_combined_full
+month_combined_minimal:
+  _state: month_combined_minimal
+month_combined_restricted:
+  _state: month_combined_restricted
+month_combined_themed:
+  _state: month_combined_themed
+```
 
 ```yaml
 - id: applied2_budget_card
@@ -688,7 +862,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+applied2_budget_card:
+  _state: applied2_budget_card
+```
 
 ```yaml
 - id: applied3_billing_card
@@ -744,7 +920,9 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-[object Object]```
+applied3_billing_card:
+  _state: applied3_billing_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

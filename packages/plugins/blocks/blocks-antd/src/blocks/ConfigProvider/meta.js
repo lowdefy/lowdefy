@@ -78,14 +78,6 @@ export default {
         enum: ['outlined', 'filled', 'borderless', 'underlined'],
         description: 'Global input variant style for all child components.',
       },
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-        },
-      },
     },
   },
 };

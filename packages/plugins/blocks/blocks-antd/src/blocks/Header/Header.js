@@ -19,6 +19,7 @@ import { Layout } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
+import withTheme from '../withTheme.js';
 import { renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
 
 const Header = Layout.Header;
@@ -71,4 +72,4 @@ const HeaderBlock = ({
   );
 };
 
-export default withBlockDefaults(HeaderBlock);
+export default withTheme('Layout', withBlockDefaults(HeaderBlock));

@@ -16,6 +16,7 @@
 
 import LabelMeta from '../Label/meta.js';
 import tooltip from '../../schemas/labelTooltip.js';
+import { sizeSmallDefaultLarge } from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -106,6 +107,10 @@ export default {
             description: 'Render input and label inline.',
           },
         },
+      },
+      size: {
+        ...sizeSmallDefaultLarge,
+        description: 'Size of the block label.',
       },
       title: {
         type: 'string',

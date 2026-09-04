@@ -83,7 +83,27 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_text_default:
+  _state: ig_text_default
+ig_text_prefix:
+  _state: ig_text_prefix
+ig_text_count:
+  _state: ig_text_count
+ig_password:
+  _state: ig_password
+ig_number:
+  _state: ig_number
+ig_number_no_controls:
+  _state: ig_number_no_controls
+ig_textarea:
+  _state: ig_textarea
+ig_textarea_auto:
+  _state: ig_textarea_auto
+ig_autocomplete:
+  _state: ig_autocomplete
+ig_phone:
+  _state: ig_phone
+```
 
 ```yaml
 - id: ig_selector
@@ -175,7 +195,17 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_selector:
+  _state: ig_selector
+ig_selector_search:
+  _state: ig_selector_search
+ig_multi:
+  _state: ig_multi
+ig_multi_tags:
+  _state: ig_multi_tags
+ig_tree:
+  _state: ig_tree
+```
 
 ```yaml
 - id: ig_radio
@@ -259,7 +289,23 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_radio:
+  _state: ig_radio
+ig_radio_vertical:
+  _state: ig_radio_vertical
+ig_checkbox:
+  _state: ig_checkbox
+ig_checkbox_vertical:
+  _state: ig_checkbox_vertical
+ig_button_sel:
+  _state: ig_button_sel
+ig_button_sel_outline:
+  _state: ig_button_sel_outline
+ig_segmented:
+  _state: ig_segmented
+ig_segmented_block:
+  _state: ig_segmented_block
+```
 
 ```yaml
 - id: ig_switch
@@ -290,7 +336,15 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_switch:
+  _state: ig_switch
+ig_switch_text:
+  _state: ig_switch_text
+ig_switch_icon:
+  _state: ig_switch_icon
+ig_checkbox_sw:
+  _state: ig_checkbox_sw
+```
 
 ```yaml
 - id: ig_date
@@ -325,7 +379,17 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_date:
+  _state: ig_date
+ig_datetime:
+  _state: ig_datetime
+ig_daterange:
+  _state: ig_daterange
+ig_month:
+  _state: ig_month
+ig_week:
+  _state: ig_week
+```
 
 ```yaml
 - id: ig_colorselector
@@ -370,7 +434,11 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_colorselector:
+  _state: ig_colorselector
+ig_colorselector_presets:
+  _state: ig_colorselector_presets
+```
 
 ```yaml
 - id: ig_rating
@@ -401,7 +469,15 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_rating:
+  _state: ig_rating
+ig_rating_custom:
+  _state: ig_rating_custom
+ig_pagination:
+  _state: ig_pagination
+ig_pagination_full:
+  _state: ig_pagination_full
+```
 
 ```yaml
 - id: ig_title_input
@@ -419,7 +495,15 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_title_input:
+  _state: ig_title_input
+ig_title_input_level:
+  _state: ig_title_input_level
+ig_paragraph_input:
+  _state: ig_paragraph_input
+ig_paragraph_copyable:
+  _state: ig_paragraph_copyable
+```
 
 ```yaml
 - id: ig_size_sm_text
@@ -474,7 +558,19 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_size_sm_text:
+  _state: ig_size_sm_text
+ig_size_md_text:
+  _state: ig_size_md_text
+ig_size_lg_text:
+  _state: ig_size_lg_text
+ig_size_sm_sel:
+  _state: ig_size_sm_sel
+ig_size_md_sel:
+  _state: ig_size_md_sel
+ig_size_lg_sel:
+  _state: ig_size_lg_sel
+```
 
 ```yaml
 - id: ig_var_outlined
@@ -500,7 +596,13 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_var_outlined:
+  _state: ig_var_outlined
+ig_var_filled:
+  _state: ig_var_filled
+ig_var_borderless:
+  _state: ig_var_borderless
+```
 
 ```yaml
 - id: ig_dis_text
@@ -544,4 +646,14 @@ A visual reference of every input block available in Lowdefy. Each section shows
 ```
 
 ```yaml
-[object Object]```
+ig_dis_text:
+  _state: ig_dis_text
+ig_dis_sel:
+  _state: ig_dis_sel
+ig_dis_radio:
+  _state: ig_dis_radio
+ig_dis_switch:
+  _state: ig_dis_switch
+ig_dis_date:
+  _state: ig_dis_date
+```

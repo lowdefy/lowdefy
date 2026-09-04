@@ -344,6 +344,12 @@
       "path": "content/plugins/plugins-dev.md"
     },
     {
+      "slug": "plugins/file-plugins",
+      "title": "File Plugins",
+      "section": "Plugins",
+      "path": "content/plugins/file-plugins.md"
+    },
+    {
       "slug": "plugins/plugin-api-versioning",
       "title": "Plugin API Versioning",
       "section": "Plugins",

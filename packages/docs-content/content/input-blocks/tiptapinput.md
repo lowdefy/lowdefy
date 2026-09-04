@@ -11,7 +11,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_default:
+  _state: tiptap_default
+```
 
 ```yaml
 - id: tiptap_prepopulated
@@ -34,7 +36,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_prepopulated:
+  _state: tiptap_prepopulated
+```
 
 ```yaml
 - id: tiptap_disabled
@@ -52,7 +56,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_disabled:
+  _state: tiptap_disabled
+```
 
 ```yaml
 - id: tiptap_borderless
@@ -64,7 +70,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_borderless:
+  _state: tiptap_borderless
+```
 
 ```yaml
 - id: tiptap_rows_2
@@ -76,7 +84,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_rows_2:
+  _state: tiptap_rows_2
+```
 
 ```yaml
 - id: tiptap_autosize_range
@@ -90,7 +100,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_autosize_range:
+  _state: tiptap_autosize_range
+```
 
 ```yaml
 - id: tiptap_validation
@@ -121,10 +133,39 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+- id: tiptap_validation
+  type: TiptapInput
+  required: true
+  properties:
+    title: Release notes (required)
+    placeholder: Type at least 10 characters, then click Validate.
+    rows: 3
+  validate:
+    - status: error
+      message: Release notes must be at least 10 characters.
+      pass:
+        _gte:
+          - _string.length:
+              _state: tiptap_validation.text
+          - 10
+- id: tiptap_validation_button
+  type: Button
+  properties:
+    title: Validate
+  events:
+    onClick:
+      - id: tiptap_validation_run
+        type: Validate
+        params:
+          - tiptap_validation
+```
 
 ```yaml
-[object Object]```
+tiptap_validation:
+  _state: tiptap_validation
+tiptap_validation_button:
+  _state: tiptap_validation_button
+```
 
 ```yaml
 - id: tiptap_autosize_true
@@ -136,7 +177,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_autosize_true:
+  _state: tiptap_autosize_true
+```
 
 ```yaml
 - id: tiptap_minimal
@@ -153,7 +196,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_minimal:
+  _state: tiptap_minimal
+```
 
 ```yaml
 - id: tiptap_starterkit
@@ -168,7 +213,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_starterkit:
+  _state: tiptap_starterkit
+```
 
 ```yaml
 - id: tiptap_with_table
@@ -199,7 +246,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_with_table:
+  _state: tiptap_with_table
+```
 
 ```yaml
 - id: tiptap_links
@@ -219,7 +268,9 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
-[object Object]```
+tiptap_links:
+  _state: tiptap_links
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

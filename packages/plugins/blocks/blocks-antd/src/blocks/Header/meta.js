@@ -293,6 +293,7 @@ export default {
           'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/layout#design-token',
         },
       },
     },

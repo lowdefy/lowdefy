@@ -299,7 +299,7 @@ blocks:
   - id: 404_result
     type: Result
     properties:
-      status: 404
+      status: '404'
       title: '404'
       subTitle: Sorry, the page you are visiting does not exist.
 ```
@@ -312,7 +312,7 @@ type: Result
 style:
   minHeight: 100vh
 properties:
-  status: 404
+  status: '404'
   title: '404'
   subTitle: Sorry, the page you are visiting does not exist.
 ```

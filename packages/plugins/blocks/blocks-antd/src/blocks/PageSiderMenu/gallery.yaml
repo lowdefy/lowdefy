@@ -216,10 +216,10 @@
                   type: Paragraph
                   layout:
                     flex: 1 1 0
+                  style:
+                    margin: 0
                   properties:
                     content: Jane Cooper
-                    style:
-                      margin: 0
                 - id: psm_grp_tag_1
                   type: Tag
                   layout:
@@ -247,10 +247,10 @@
                   type: Paragraph
                   layout:
                     flex: 1 1 0
+                  style:
+                    margin: 0
                   properties:
                     content: Tom Wilson
-                    style:
-                      margin: 0
                 - id: psm_grp_tag_2
                   type: Tag
                   layout:
@@ -395,12 +395,12 @@
               blocks:
                 - id: psm_full_progress_label
                   type: Paragraph
+                  style:
+                    margin: 0 0 8px 0
+                    fontSize: 12
+                    color: '#999'
                   properties:
                     content: Sprint Progress
-                    style:
-                      margin: 0 0 8px 0
-                      fontSize: 12
-                      color: '#999'
                 - id: psm_full_progress
                   type: Progress
                   properties:
@@ -409,13 +409,13 @@
           blocks:
             - id: psm_full_footer_text
               type: Paragraph
+              style:
+                textAlign: center
+                margin: 0
+                color: '#999'
+                fontSize: 12
               properties:
                 content: Admin Panel v2.4.1
-                style:
-                  textAlign: center
-                  margin: 0
-                  color: '#999'
-                  fontSize: 12
       blocks:
         - id: psm_full_title
           type: Title

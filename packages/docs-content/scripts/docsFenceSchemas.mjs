@@ -143,32 +143,45 @@ function listContentFiles(directory = contentDirectory, files = []) {
   return files.sort();
 }
 
-// A markdown fence opens on a line whose first non-space characters are ``` and
-// closes on the next line ending in ```. Closing backticks are matched at the end
-// of a line rather than on a line of their own because extractAgentDocs can emit
-// a body and its closing fence on one line; a scanner that demands a bare ```
-// pairs that opener with the next fence's opener and mis-slices the rest of the
-// file. An opener left unclosed at EOF is reported, never silently dropped.
+// A markdown fence opens on a line whose first non-space characters are three or
+// more backticks and closes on the next line ending in a run of at least that
+// many. The length matters: a docs example of a markdown block holds a fence of
+// its own, and the page wraps it in a longer one, so a scanner that treats every
+// ``` alike closes the outer fence on the inner one and calls the rest of the
+// page unterminated. Closing backticks are matched at the end of a line rather
+// than on a line of their own because extractAgentDocs can emit a body and its
+// closing fence on one line; a scanner that demands a bare ``` pairs that opener
+// with the next fence's opener and mis-slices the rest of the file. An opener
+// left unclosed at EOF is reported, never silently dropped.
 function readFences({ markdown }) {
   const fences = [];
   let open = null;
   markdown.split('\n').forEach((line, index) => {
     if (open === null) {
-      const opening = line.match(/^\s*```(.*)$/);
+      const opening = line.match(/^\s*(`{3,})(.*)$/);
       if (opening === null) return;
-      open = { body: [], language: opening[1].trim(), line: index + 1 };
+      open = {
+        body: [],
+        language: opening[2].trim(),
+        line: index + 1,
+        marker: opening[1].length,
+      };
       return;
     }
-    const closing = line.match(/^(.*?)\s*```\s*$/);
-    if (closing === null) {
+    const closing = line.match(/^(.*?)\s*(`{3,})\s*$/);
+    if (closing === null || closing[2].length < open.marker) {
       open.body.push(line);
       return;
     }
     if (closing[1] !== '') open.body.push(closing[1]);
-    fences.push({ ...open, body: open.body.join('\n') });
+    const { marker, ...fence } = open;
+    fences.push({ ...fence, body: open.body.join('\n') });
     open = null;
   });
-  if (open !== null) fences.push({ ...open, body: open.body.join('\n'), unterminated: true });
+  if (open !== null) {
+    const { marker, ...fence } = open;
+    fences.push({ ...fence, body: open.body.join('\n'), unterminated: true });
+  }
   return fences;
 }
 
@@ -280,9 +293,10 @@ function collapseBranchErrors(errors) {
   });
 }
 
-function validateAgainst({ data, key, schema }) {
+function validateAgainst({ data, key, omit = [], schema }) {
   const literal = copyLiteralNodes(data);
   if (literal === OMIT) return [];
+  for (const property of omit) delete literal[property];
   if (!validators.has(key)) {
     validators.set(key, compileSchema({ schema: stripRequired(schema) }));
   }
@@ -314,6 +328,17 @@ function classifyFence({ document, schemas }) {
   if (schemas.requests[document.type]) return { kind: 'request' };
   if (schemas.connections[document.type]) return { kind: 'connection' };
   return { kind: 'skipped', reason: `unknown type "${document.type}"` };
+}
+
+// `properties.title` on a page's root block sets the browser tab title (the
+// client's Head.js) whatever the block type, and the build exempts it there -
+// see validateBlockProperties' isPageRootBlock. A fence reaches a page root two
+// ways: as an entry of a `pages` array, or as a whole document, which is the
+// shape of a page file.
+function omitsPageTitle({ kind, nodePath, schema }) {
+  if (kind !== 'block') return false;
+  if (nodePath !== '' && !/^\/pages\/\d+$/.test(nodePath)) return false;
+  return schema.properties?.title === undefined;
 }
 
 // Block, request and connection schemas each describe the `properties` object of
@@ -366,6 +391,7 @@ function walkNodes({ document, path: nodePath, report, schemas, visit }) {
     validateAgainst({
       data: document.properties,
       key: `${kind}:${document.type}`,
+      omit: omitsPageTitle({ kind, nodePath, schema }) ? ['title'] : [],
       schema,
     }).forEach((message) =>
       report({ node: nodePath, problem: `${document.type} properties${message}` })

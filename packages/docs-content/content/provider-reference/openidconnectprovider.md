@@ -29,16 +29,17 @@ Usually only the `wellKnown`, `clientId` and `clientSecret` properties need to b
 
 ```yaml
 lowdefy: 5.5.1
-providers:
-  - id: my_provider
-    type: OpenIDConnectProvider
-    properties:
-      wellKnown:
-        _secret: OPENID_CONNECT_WELLKNOWN
-      clientId:
-        _secret: OPENID_CONNECT_CLIENT_ID
-      clientSecret:
-        _secret: OPENID_CONNECT_CLIENT_SECRET
+auth:
+  providers:
+    - id: my_provider
+      type: OpenIDConnectProvider
+      properties:
+        wellKnown:
+          _secret: OPENID_CONNECT_WELLKNOWN
+        clientId:
+          _secret: OPENID_CONNECT_CLIENT_ID
+        clientSecret:
+          _secret: OPENID_CONNECT_CLIENT_SECRET
 ```
 
 where `LOWDEFY_SECRET_OPENID_CONNECT_WELLKNOWN` usually has the format `https://my-provider.com/.well-known/openid-configuration`

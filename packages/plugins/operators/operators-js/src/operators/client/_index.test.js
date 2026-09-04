@@ -41,3 +41,11 @@ test('_index calls getFromObject', async () => {
     ],
   ]);
 });
+
+test('_index schema allows true, the documented form for all indices', async () => {
+  const schema = (await import('./index.schema.js')).default;
+
+  expect(schema.params.oneOf).toEqual(
+    expect.arrayContaining([expect.objectContaining({ type: 'boolean', enum: [true] })])
+  );
+});

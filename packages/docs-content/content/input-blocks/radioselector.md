@@ -48,7 +48,15 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+basic_label_value:
+  _state: basic_label_value
+basic_string_options:
+  _state: basic_string_options
+basic_number_options:
+  _state: basic_number_options
+basic_boolean_options:
+  _state: basic_boolean_options
+```
 
 ```yaml
 - id: horizontal_default
@@ -82,7 +90,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+horizontal_default:
+  _state: horizontal_default
+horizontal_many:
+  _state: horizontal_many
+```
 
 ```yaml
 - id: vertical_radio
@@ -113,7 +125,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+vertical_radio:
+  _state: vertical_radio
+vertical_with_disabled:
+  _state: vertical_with_disabled
+```
 
 ```yaml
 - id: wrap_enabled
@@ -157,7 +173,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+wrap_enabled:
+  _state: wrap_enabled
+wrap_disabled:
+  _state: wrap_disabled
+```
 
 ```yaml
 - id: align_start
@@ -203,7 +223,15 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+align_start:
+  _state: align_start
+align_center:
+  _state: align_center
+align_end:
+  _state: align_end
+align_baseline:
+  _state: align_baseline
+```
 
 ```yaml
 - id: color_green
@@ -269,7 +297,17 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_purple:
+  _state: color_purple
+color_red:
+  _state: color_red
+color_hex_custom:
+  _state: color_hex_custom
+```
 
 ```yaml
 - id: disabled_all
@@ -300,7 +338,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+disabled_all:
+  _state: disabled_all
+disabled_vertical:
+  _state: disabled_vertical
+```
 
 ```yaml
 - id: disabled_single_option
@@ -333,7 +375,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+disabled_single_option:
+  _state: disabled_single_option
+disabled_multiple_options:
+  _state: disabled_multiple_options
+```
 
 ```yaml
 - id: styled_options
@@ -393,7 +439,13 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+styled_options:
+  _state: styled_options
+styled_colored_labels:
+  _state: styled_colored_labels
+styled_vertical_cards:
+  _state: styled_vertical_cards
+```
 
 ```yaml
 - id: html_bold_labels
@@ -422,7 +474,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+html_bold_labels:
+  _state: html_bold_labels
+html_rich_labels:
+  _state: html_rich_labels
+```
 
 ```yaml
 - id: label_default
@@ -490,7 +546,17 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_with_extra:
+  _state: label_with_extra
+label_colon_false:
+  _state: label_colon_false
+label_inline:
+  _state: label_inline
+label_right_align:
+  _state: label_right_align
+```
 
 ```yaml
 - id: no_label_radio
@@ -521,7 +587,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+no_label_radio:
+  _state: no_label_radio
+no_label_vertical:
+  _state: no_label_vertical
+```
 
 ```yaml
 - id: style_border
@@ -576,7 +646,13 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+style_border:
+  _state: style_border
+style_background:
+  _state: style_background
+class_override:
+  _state: class_override
+```
 
 ```yaml
 - id: theme_large_radio
@@ -655,7 +731,17 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+theme_large_radio:
+  _state: theme_large_radio
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_spacing:
+  _state: theme_spacing
+theme_combined:
+  _state: theme_combined
+theme_green:
+  _state: theme_green
+```
 
 ```yaml
 - id: object_values
@@ -697,7 +783,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+object_values:
+  _state: object_values
+mixed_disabled_styled:
+  _state: mixed_disabled_styled
+```
 
 ```yaml
 - id: example_payment
@@ -765,7 +855,15 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+example_payment:
+  _state: example_payment
+example_frequency:
+  _state: example_frequency
+example_rating:
+  _state: example_rating
+example_priority:
+  _state: example_priority
+```
 
 ```yaml
 - id: radio_per_option_color
@@ -785,7 +883,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+radio_per_option_color:
+  _state: radio_per_option_color
+```
 
 ```yaml
 - id: data_radio_selector
@@ -804,7 +904,9 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+data_radio_selector:
+  _state: data_radio_selector
+```
 
 ```yaml
 - id: radio_columns_two
@@ -867,7 +969,15 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
-[object Object]```
+radio_columns_two:
+  _state: radio_columns_two
+radio_columns_responsive:
+  _state: radio_columns_responsive
+radio_columns_gutter:
+  _state: radio_columns_gutter
+radio_columns_per_option_color:
+  _state: radio_columns_per_option_color
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -901,6 +1011,7 @@ Radio group for selecting a single option.
 | `html` | string | - | Nunjucks template that renders each option label when using `data`. The context exposes `item` (the current row) and `index` (the zero-based row index). Ignored when `options` is used. |
 | `valueKey` | string | - | Field used as the selected value. With `options` it names the value field (defaults to "value"). With `data` it names the field stored when an option is selected; omit it to store the whole row. Supports dotted paths (e.g. "user.id"). |
 | `primaryKey` | string | - | Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. "id") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths. |
+| `size` | string | `"default"` | Size of the block label. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design radio tokens](https://ant.design/components/radio#design-token). |
 | `theme.radioSize` | number | `16` | Size of the radio button circle. |

@@ -52,6 +52,15 @@ function stripMarkers(value) {
   return value;
 }
 
+// A block example can itself hold markdown with a fence - a MarkdownWithCode
+// block whose content shows a code block. The fence that wraps the example must
+// be longer than any backtick run inside it, or the example's own fence closes it
+// and the rest of the page renders as prose.
+function fenceFor(content) {
+  const runs = [...content.matchAll(/`+/g)].map((match) => match[0].length + 1);
+  return '`'.repeat(Math.max(3, ...runs));
+}
+
 function hasOperators(obj) {
   if (Array.isArray(obj)) {
     return obj.some(hasOperators);
@@ -112,6 +121,7 @@ function buildStatePanel({ slug, blocks }) {
 function buildConfigPanel({ slug, configBlocks }) {
   // Build-time YAML: operators are preserved as literal text
   const yamlStr = YAML.stringify(stripMarkers(configBlocks), { sortKeys: false });
+  const fence = fenceFor(yamlStr);
   return {
     blocks: [
       {
@@ -129,7 +139,7 @@ function buildConfigPanel({ slug, configBlocks }) {
               whiteSpace: 'pre',
             },
             properties: {
-              content: '```yaml\n' + yamlStr + '```\n',
+              content: `${fence}yaml\n${yamlStr}${fence}\n`,
             },
           },
         ],
@@ -139,6 +149,9 @@ function buildConfigPanel({ slug, configBlocks }) {
 }
 
 function buildResolvedPanel({ slug, configBlocks }) {
+  // Resolving operators changes values, not the literal strings the example
+  // spells out, so the config yaml is what decides how long the fence must be.
+  const fence = fenceFor(YAML.stringify(stripMarkers(configBlocks), { sortKeys: false }));
   return {
     blocks: [
       {
@@ -158,7 +171,7 @@ function buildResolvedPanel({ slug, configBlocks }) {
             properties: {
               content: {
                 _nunjucks: {
-                  template: '```yaml\n{{ blocks | safe }}```\n',
+                  template: `${fence}yaml\n{{ blocks | safe }}${fence}\n`,
                   on: {
                     blocks: {
                       _custom_yaml_stringify: [configBlocks, { sortKeys: false }],

@@ -37,7 +37,11 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+basic_selector:
+  _state: basic_selector
+basic_placeholder:
+  _state: basic_placeholder
+```
 
 ```yaml
 - id: string_options
@@ -137,7 +141,17 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+string_options:
+  _state: string_options
+number_options_mixed:
+  _state: number_options_mixed
+html_labels:
+  _state: html_labels
+styled_options:
+  _state: styled_options
+disabled_options:
+  _state: disabled_options
+```
 
 ```yaml
 - id: filter_string
@@ -206,7 +220,13 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+filter_string:
+  _state: filter_string
+filter_string_html:
+  _state: filter_string_html
+search_disabled:
+  _state: search_disabled
+```
 
 ```yaml
 - id: allow_clear_false
@@ -279,7 +299,17 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+allow_clear_false:
+  _state: allow_clear_false
+bordered_false:
+  _state: bordered_false
+arrow_hidden:
+  _state: arrow_hidden
+disabled_selector:
+  _state: disabled_selector
+no_label_selector:
+  _state: no_label_selector
+```
 
 ```yaml
 - id: size_small
@@ -320,7 +350,13 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: custom_suffix_icon
@@ -382,7 +418,15 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+custom_suffix_icon:
+  _state: custom_suffix_icon
+custom_suffix_icon_object:
+  _state: custom_suffix_icon_object
+custom_clear_icon:
+  _state: custom_clear_icon
+custom_clear_icon_object:
+  _state: custom_clear_icon_object
+```
 
 ```yaml
 - id: placeholder_default
@@ -429,7 +473,15 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+placeholder_default:
+  _state: placeholder_default
+placeholder_custom:
+  _state: placeholder_custom
+loading_placeholder:
+  _state: loading_placeholder
+not_found_content:
+  _state: not_found_content
+```
 
 ```yaml
 - id: label_default
@@ -486,7 +538,17 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_no_colon:
+  _state: label_no_colon
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+label_extra:
+  _state: label_extra
+```
 
 ```yaml
 - id: css_element
@@ -552,7 +614,15 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+css_element:
+  _state: css_element
+css_label:
+  _state: css_label
+css_extra:
+  _state: css_extra
+css_options:
+  _state: css_options
+```
 
 ```yaml
 - id: class_element
@@ -583,7 +653,11 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+class_element:
+  _state: class_element
+class_label:
+  _state: class_label
+```
 
 ```yaml
 - id: many_options
@@ -678,7 +752,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+many_options:
+  _state: many_options
+```
 
 ```yaml
 - id: theme_custom_colors
@@ -773,7 +849,17 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_border_colors:
+  _state: theme_border_colors
+theme_option_size:
+  _state: theme_option_size
+theme_size_sm:
+  _state: theme_size_sm
+theme_combined:
+  _state: theme_combined
+```
 
 ```yaml
 - id: combined_search_styled
@@ -871,7 +957,15 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+combined_search_styled:
+  _state: combined_search_styled
+combined_large_custom:
+  _state: combined_large_custom
+combined_borderless_small:
+  _state: combined_borderless_small
+combined_inline_themed:
+  _state: combined_inline_themed
+```
 
 ```yaml
 - id: applied2_registration_card
@@ -965,7 +1059,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+applied2_registration_card:
+  _state: applied2_registration_card
+```
 
 ```yaml
 - id: applied3_order_card
@@ -1053,10 +1149,94 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+- id: applied3_order_card
+  type: Card
+  properties:
+    title: Place an Order
+  blocks:
+    - id: applied3_product
+      type: Selector
+      properties:
+        title: Product
+        showSearch: true
+        placeholder: Select a product...
+        suffixIcon: AiOutlineShopping
+        options:
+          - label: Laptop Pro 15"
+            value: laptop_pro
+          - label: Wireless Mouse
+            value: mouse
+          - label: Mechanical Keyboard
+            value: keyboard
+          - label: USB-C Hub
+            value: hub
+          - label: Monitor 27"
+            value: monitor
+      events:
+        onChange:
+          - id: set_product_state
+            type: SetState
+            params:
+              selected_product:
+                _state: applied3_product
+    - id: applied3_quantity
+      type: Selector
+      properties:
+        title: Quantity
+        allowClear: false
+        placeholder: Select quantity...
+        options:
+          - label: "1"
+            value: 1
+          - label: "2"
+            value: 2
+          - label: "5"
+            value: 5
+          - label: "10"
+            value: 10
+      events:
+        onChange:
+          - id: set_quantity_state
+            type: SetState
+            params:
+              selected_quantity:
+                _state: applied3_quantity
+    - id: applied3_shipping
+      type: Selector
+      properties:
+        title: Shipping Method
+        placeholder: Choose shipping...
+        options:
+          - label: Standard (5-7 days)
+            value: standard
+          - label: Express (2-3 days)
+            value: express
+          - label: Overnight
+            value: overnight
+            style:
+              color: "#1677ff"
+              fontWeight: bold
+    - id: applied3_place_order_btn
+      type: Button
+      properties:
+        title: Place Order
+        icon: AiOutlineCheckCircle
+        type: primary
+        size: large
+        block: true
+      events:
+        onClick:
+          - id: order_confirmation
+            type: DisplayMessage
+            params:
+              content: Order placed successfully!
+              duration: 3
+```
 
 ```yaml
-[object Object]```
+applied3_order_card:
+  _state: applied3_order_card
+```
 
 ```yaml
 - id: selector_color_solid
@@ -1092,7 +1272,11 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+selector_color_solid:
+  _state: selector_color_solid
+selector_color_outlined:
+  _state: selector_color_outlined
+```
 
 ```yaml
 - id: data_selector
@@ -1112,7 +1296,9 @@ Dropdown selector with search, clear, and custom icons.
 ```
 
 ```yaml
-[object Object]```
+data_selector:
+  _state: data_selector
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

@@ -35,10 +35,10 @@ export default {
       },
     },
     searchPath: {
-      type: 'string',
+      oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
       description: 'Set PostgreSQL search path.',
       errorMessage: {
-        type: 'Knex connection property "searchPath" should be a string.',
+        oneOf: 'Knex connection property "searchPath" should be a string or an array of strings.',
       },
     },
     version: {

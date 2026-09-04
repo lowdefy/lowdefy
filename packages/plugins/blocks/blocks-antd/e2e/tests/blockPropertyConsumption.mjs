@@ -50,89 +50,31 @@ const consumedElsewhere = [
 // directions - an unrecorded mismatch fails, and a recorded one that has been
 // fixed fails as stale - so the list can neither grow quietly nor rot.
 const knownMismatches = [
-  // meta describes `theme` as "antd design token overrides for this block", but
-  // these components are not wrapped in withTheme, which is what reads it. A
-  // theme set on one of these blocks is dropped.
-  ...['ConfigProvider', 'Content', 'Footer', 'Header', 'Label', 'Layout', 'Message'].map(
-    (block) => ({
-      block,
-      direction: 'unconsumed',
-      package: 'blocks-antd',
-      property: 'theme',
-      reason: 'Declared as an antd design token override, but the block does not use withTheme.',
-    })
-  ),
   {
     block: 'Label',
     direction: 'unconsumed',
     package: 'blocks-antd',
     property: 'span',
-    reason: 'Documented as "Label inline span"; the component never reads it.',
-  },
-  {
-    block: 'Search',
-    direction: 'unconsumed',
-    package: 'blocks-antd',
-    property: 'icon',
-    reason: 'The component always renders SearchOutlined; the configured icon is ignored.',
-  },
-  {
-    block: 'Progress',
-    direction: 'unconsumed',
-    package: 'blocks-antd',
-    property: 'gapPosition',
-    reason: 'antd renamed the prop to gapPlacement; the component moved, the meta did not.',
-  },
-  {
-    block: 'Progress',
-    direction: 'undeclared',
-    package: 'blocks-antd',
-    property: 'gapPlacement',
-    reason: 'The name the component reads, which no schema lets an app set.',
+    reason:
+      "Consumed, but out of the scan's reach: getLabelCol and getWrapperCol take the properties object as `value` and read `value.span`, which is not a `properties.span` read. Renaming that parameter to `properties` would close it.",
   },
   ...[
-    { block: 'Card', property: 'variant', reason: 'antd v6 replacement for bordered.' },
     {
-      block: 'Label',
-      property: 'hasFeedback',
+      block: 'DropdownMenu',
       reason:
-        'labelLogic reads it; the input blocks declare it as label.hasFeedback but Label itself does not.',
+        'Declared on the links items, not on the block. The scan compares reads against the top-level declarations only, and a block-level `shortcut` would be config that does nothing.',
     },
     {
-      block: 'CheckboxSelector',
-      property: 'size',
-      reason: 'Passed to the block label; only theme.fontSize is declared.',
+      block: 'Menu',
+      reason:
+        'Declared on the links items, not on the block. The scan compares reads against the top-level declarations only, and a block-level `shortcut` would be config that does nothing.',
     },
-    {
-      block: 'CheckboxSwitch',
-      property: 'size',
-      reason: 'Passed to the block label; only theme.fontSize is declared.',
-    },
-    {
-      block: 'Collapse',
-      property: 'expandIconPosition',
-      reason: 'Read straight onto the antd Collapse.',
-    },
-    { block: 'Drawer', property: 'getContainer', reason: 'Read straight onto the antd Drawer.' },
-    { block: 'DropdownMenu', property: 'shortcut', reason: 'Read when building menu items.' },
-    { block: 'Menu', property: 'shortcut', reason: 'Read when building menu items.' },
-    { block: 'Modal', property: 'okButtonType', reason: 'Read for the ok button type.' },
-    {
-      block: 'PageHeaderMenu',
-      property: 'iconsColor',
-      reason: 'Read for the header icon colour.',
-    },
-    { block: 'PageSiderMenu', property: 'iconsColor', reason: 'Read for the header icon colour.' },
-    { block: 'PageSiderMenu', property: 'layout', reason: 'Read for the page layout.' },
-    { block: 'RadioSelector', property: 'size', reason: 'Passed to the block label.' },
-    {
-      block: 'RatingSlider',
-      property: 'CheckboxInput',
-      reason: 'Merged into the embedded CheckboxInput block properties.',
-    },
-    { block: 'RatingSlider', property: 'marks', reason: 'Read as the slider marks override.' },
-    { block: 'RatingSlider', property: 'size', reason: 'Passed to the block label.' },
-  ].map((entry) => ({ ...entry, direction: 'undeclared', package: 'blocks-antd' })),
+  ].map((entry) => ({
+    ...entry,
+    direction: 'undeclared',
+    package: 'blocks-antd',
+    property: 'shortcut',
+  })),
 ];
 
 // A block's own files, and the local modules they reach, are two different
@@ -177,7 +119,8 @@ function readReachableSource(entryFiles) {
 
 // The four ways a component names a property: a member read, a computed read with
 // a string literal, a destructuring of properties, and a properties object built
-// for a child block.
+// for a child block. A destructuring is matched through any member chain, because
+// a class component reads `this.props.properties`, not `props.properties`.
 function readPropertyNames(source) {
   const names = new Set();
   const addBindings = (pattern) => {
@@ -194,7 +137,7 @@ function readPropertyNames(source) {
   for (const match of source.matchAll(/\bproperties\s*(?:\?\.)?\[\s*['"]([^'"]+)['"]\s*\]/g)) {
     names.add(match[1]);
   }
-  for (const match of source.matchAll(/\{([^{}]*)\}\s*=\s*(?:\w+\.)?properties\b/g)) {
+  for (const match of source.matchAll(/\{([^{}]*)\}\s*=\s*(?:[\w$]+\.)*properties\b/g)) {
     addBindings(match[1]);
   }
   for (const match of source.matchAll(/\bproperties\s*:\s*\{([^{}]*)\}/g)) {
@@ -211,7 +154,7 @@ function readPropertyNames(source) {
 function forwardsAllProperties(source) {
   if (/\.\.\.\s*properties\b/.test(source)) return true;
   const restBindings = [
-    ...source.matchAll(/\{[^{}]*\.\.\.\s*([A-Za-z_$][\w$]*)\s*\}\s*=\s*(?:\w+\.)?properties\b/g),
+    ...source.matchAll(/\{[^{}]*\.\.\.\s*([A-Za-z_$][\w$]*)\s*\}\s*=\s*(?:[\w$]+\.)*properties\b/g),
     ...source.matchAll(/=\s*\(\s*\{[^)]*\.\.\.\s*([A-Za-z_$][\w$]*)\s*\}\s*\)/g),
   ];
   return restBindings.some(([, name]) => new RegExp(`\\{\\s*\\.\\.\\.\\s*${name}\\b`).test(source));

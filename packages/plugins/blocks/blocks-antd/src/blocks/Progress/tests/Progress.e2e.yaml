@@ -154,7 +154,7 @@ blocks:
       type: dashboard
       percent: 75
       gapDegree: 90
-      gapPosition: bottom
+      gapPlacement: bottom
 
   # ============================================
   # STEPS TESTS

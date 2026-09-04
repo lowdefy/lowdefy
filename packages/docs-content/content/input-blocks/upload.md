@@ -28,7 +28,13 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_custom_icon:
+  _state: basic_custom_icon
+```
 
 ```yaml
 - id: accept_images
@@ -52,7 +58,11 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+accept_images:
+  _state: accept_images
+accept_pdf:
+  _state: accept_pdf
+```
 
 ```yaml
 - id: limit_single
@@ -76,7 +86,11 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+```
 
 ```yaml
 - id: emit_file_content
@@ -91,7 +105,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+emit_file_content:
+  _state: emit_file_content
+```
 
 ```yaml
 - id: disabled_default
@@ -102,7 +118,9 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+```
 
 ```yaml
 - id: label_default
@@ -120,7 +138,11 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_extra:
+  _state: label_extra
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

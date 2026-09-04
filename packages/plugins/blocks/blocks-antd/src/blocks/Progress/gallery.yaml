@@ -317,40 +317,40 @@
         percent: 60
         gapDegree: 150
 
-- title: Dashboard Gap Position
+- title: Dashboard Gap Placement
   blocks:
-    - id: gappos_top
+    - id: gapplacement_top
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
         percent: 65
-        gapPosition: top
-    - id: gappos_bottom
+        gapPlacement: top
+    - id: gapplacement_bottom
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
         percent: 65
-        gapPosition: bottom
-    - id: gappos_left
+        gapPlacement: bottom
+    - id: gapplacement_left
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
         percent: 65
-        gapPosition: left
-    - id: gappos_right
+        gapPlacement: left
+    - id: gapplacement_right
       type: Progress
       layout:
         flex: 0 0 auto
       properties:
         type: dashboard
         percent: 65
-        gapPosition: right
+        gapPlacement: right
 
 - title: Style and CSS
   blocks:

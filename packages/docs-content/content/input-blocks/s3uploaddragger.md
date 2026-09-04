@@ -22,7 +22,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_html_title:
+  _state: basic_html_title
+```
 
 ```yaml
 - id: accept_images
@@ -46,7 +52,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+accept_images:
+  _state: accept_images
+accept_pdfs:
+  _state: accept_pdfs
+accept_specific:
+  _state: accept_specific
+```
 
 ```yaml
 - id: limit_single
@@ -71,7 +83,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_images:
+  _state: limit_single_images
+```
 
 ```yaml
 - id: style_light_blue
@@ -100,7 +118,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+style_light_blue:
+  _state: style_light_blue
+style_dashed_border:
+  _state: style_dashed_border
+style_large_padding:
+  _state: style_large_padding
+```
 
 ```yaml
 - id: disabled_default
@@ -124,7 +148,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+disabled_custom_title:
+  _state: disabled_custom_title
+disabled_hidden_list:
+  _state: disabled_hidden_list
+```
 
 ```yaml
 - id: list_visible
@@ -149,7 +179,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_single_hidden:
+  _state: list_single_hidden
+```
 
 ```yaml
 - id: style_element_bg
@@ -180,7 +216,13 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+style_element_bg:
+  _state: style_element_bg
+style_element_border:
+  _state: style_element_border
+style_class_tailwind:
+  _state: style_class_tailwind
+```
 
 ```yaml
 - id: submission_card
@@ -244,7 +286,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+submission_card:
+  _state: submission_card
+```
 
 ```yaml
 - id: gallery_card
@@ -291,7 +335,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
-[object Object]```
+gallery_card:
+  _state: gallery_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

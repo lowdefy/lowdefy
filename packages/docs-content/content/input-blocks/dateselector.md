@@ -20,7 +20,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: variant_outlined
@@ -47,7 +53,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+variant_outlined:
+  _state: variant_outlined
+variant_filled:
+  _state: variant_filled
+variant_borderless:
+  _state: variant_borderless
+```
 
 ```yaml
 - id: format_iso
@@ -88,7 +100,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+format_iso:
+  _state: format_iso
+format_slash:
+  _state: format_slash
+format_us:
+  _state: format_us
+format_long:
+  _state: format_long
+format_dot:
+  _state: format_dot
+```
 
 ```yaml
 - id: placeholder_default
@@ -114,7 +136,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+placeholder_default:
+  _state: placeholder_default
+placeholder_custom:
+  _state: placeholder_custom
+placeholder_descriptive:
+  _state: placeholder_descriptive
+```
 
 ```yaml
 - id: clear_enabled
@@ -134,7 +162,11 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+clear_enabled:
+  _state: clear_enabled
+clear_disabled:
+  _state: clear_disabled
+```
 
 ```yaml
 - id: today_enabled
@@ -154,7 +186,11 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+today_enabled:
+  _state: today_enabled
+today_disabled:
+  _state: today_disabled
+```
 
 ```yaml
 - id: icon_default
@@ -198,7 +234,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+icon_default:
+  _state: icon_default
+icon_clock:
+  _state: icon_clock
+icon_schedule:
+  _state: icon_schedule
+icon_custom_color:
+  _state: icon_custom_color
+icon_heart:
+  _state: icon_heart
+```
 
 ```yaml
 - id: disabled_default
@@ -235,7 +281,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+disabled_outlined:
+  _state: disabled_outlined
+disabled_filled:
+  _state: disabled_filled
+disabled_borderless:
+  _state: disabled_borderless
+```
 
 ```yaml
 - id: autofocus_off
@@ -255,7 +309,11 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+autofocus_off:
+  _state: autofocus_off
+autofocus_on:
+  _state: autofocus_on
+```
 
 ```yaml
 - id: disabled_dates_min
@@ -309,7 +367,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+disabled_dates_min:
+  _state: disabled_dates_min
+disabled_dates_max:
+  _state: disabled_dates_max
+disabled_dates_range:
+  _state: disabled_dates_range
+disabled_specific:
+  _state: disabled_specific
+disabled_date_ranges:
+  _state: disabled_date_ranges
+```
 
 ```yaml
 - id: ds_presets_relative
@@ -389,10 +457,90 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+- id: ds_presets_relative
+  type: DateSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Today
+        value:
+          _dayjs:
+            - now
+            - format: YYYY-MM-DD
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+            - format: YYYY-MM-DD
+      - label: A week ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - week
+            - format: YYYY-MM-DD
+      - label: A month ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+- id: ds_presets_boundaries
+  type: DateSelector
+  properties:
+    title: Period Boundaries
+    label:
+      disabled: true
+    presets:
+      - label: Start of month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: End of month
+        value:
+          _dayjs:
+            - now
+            - endOf: month
+            - format: YYYY-MM-DD
+      - label: Start of year
+        value:
+          _dayjs:
+            - now
+            - startOf: year
+            - format: YYYY-MM-DD
+- id: ds_presets_fixed
+  type: DateSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: New Year's Day
+        value: 2026-01-01
+      - label: Midsummer
+        value: 2026-06-21
+      - label: Christmas
+        value: 2026-12-25
+```
 
 ```yaml
-[object Object]```
+ds_presets_relative:
+  _state: ds_presets_relative
+ds_presets_boundaries:
+  _state: ds_presets_boundaries
+ds_presets_fixed:
+  _state: ds_presets_fixed
+```
 
 ```yaml
 - id: label_default
@@ -435,7 +583,19 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+label_default:
+  _state: label_default
+label_colon_off:
+  _state: label_colon_off
+label_right:
+  _state: label_right
+label_inline:
+  _state: label_inline
+label_extra:
+  _state: label_extra
+label_hidden:
+  _state: label_hidden
+```
 
 ```yaml
 - id: label_inline_4
@@ -462,7 +622,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+label_inline_4:
+  _state: label_inline_4
+label_inline_8:
+  _state: label_inline_8
+label_inline_12:
+  _state: label_inline_12
+```
 
 ```yaml
 - id: html_title_bold
@@ -480,7 +646,11 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+html_title_bold:
+  _state: html_title_bold
+html_title_color:
+  _state: html_title_color
+```
 
 ```yaml
 - id: style_width
@@ -510,7 +680,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+style_width:
+  _state: style_width
+style_element:
+  _state: style_element
+style_label:
+  _state: style_label
+```
 
 ```yaml
 - id: class_rounded
@@ -530,7 +706,11 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+class_rounded:
+  _state: class_rounded
+class_border:
+  _state: class_border
+```
 
 ```yaml
 - id: theme_primary_color
@@ -578,7 +758,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+theme_primary_color:
+  _state: theme_primary_color
+theme_large_radius:
+  _state: theme_large_radius
+theme_custom_bg:
+  _state: theme_custom_bg
+theme_tall:
+  _state: theme_tall
+theme_brand_color:
+  _state: theme_brand_color
+```
 
 ```yaml
 - id: combined_full
@@ -641,7 +831,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+combined_full:
+  _state: combined_full
+combined_minimal:
+  _state: combined_minimal
+combined_restricted:
+  _state: combined_restricted
+combined_themed:
+  _state: combined_themed
+```
 
 ```yaml
 - id: applied2_event_reg_card
@@ -694,7 +892,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+applied2_event_reg_card:
+  _state: applied2_event_reg_card
+```
 
 ```yaml
 - id: applied3_profile_card
@@ -749,7 +949,9 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
-[object Object]```
+applied3_profile_card:
+  _state: applied3_profile_card
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

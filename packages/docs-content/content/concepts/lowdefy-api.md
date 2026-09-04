@@ -230,11 +230,15 @@ Declaring it does three things:
             _actions: search.response.success # action record, untouched
   ```
 
-- **Dev notices.** The dev server validates the real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — against the schema. A mismatch is reported as a `ResponseSchemaWarning` in `build_status` and the ErrorBar with the endpoint's config location and the failing path. It is a notice, not a failure: the response is still returned. Production performs no response validation — a mismatch there is the app's data changing, not a config fault the framework should turn into a 500.
+- **Notices.** The real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — is validated against the schema. A mismatch is never a failure: the response is still returned, because an endpoint whose data has drifted is the app changing, not a config fault to turn into a 500. Only the channel differs by stage. In development it is a `ResponseSchemaWarning` in `build_status` and the ErrorBar, with the endpoint's config location and the failing path. In production it is one `logger.warn` line per endpoint per process — enough to know a contract callers were built against has stopped holding, without a line per request for a condition that does not change between requests.
 
-- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content, so an MCP client can rely on the shape.
+- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content when the response is a JSON object, so an MCP client can rely on the shape.
 
 Both `payloadSchema` and `responseSchema` are compiled at build, so a schema that is not valid JSON Schema is a build error naming the endpoint.
+
+### Schemas describe the serialized shape
+
+Every schema surface in Lowdefy — `payloadSchema`, `responseSchema`, a page's `state:`, a block's `meta.properties`, a block event's `payload` and a [collection's `fields`](/collections) — describes the **JSON shape** of the value, the shape a caller actually receives, not the in-process object. A date is therefore `{ type: string, format: date-time }` everywhere, and both checks render a live `Date` as its ISO string before validating. One schema is then truthful in all three places it is used: the build-time path check, the runtime notice, and the MCP `outputSchema` an agent reads.
 
 ## Async Endpoints
 

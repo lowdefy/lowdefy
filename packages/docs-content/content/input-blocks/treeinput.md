@@ -45,10 +45,51 @@ Selected: —
 ```
 
 ```yaml
-[object Object]```
+- id: tree_basic
+  type: TreeInput
+  properties:
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: "{{ item.label }}"
+    defaultExpandAll: true
+    data:
+      - id: 1
+        label: Engineering
+      - id: 2
+        label: Frontend
+        parentId: 1
+      - id: 3
+        label: Backend
+        parentId: 1
+      - id: 4
+        label: Operations
+      - id: 5
+        label: SRE
+        parentId: 4
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          dept:
+            _event: value
+- id: tree_basic_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected: {{ dept if dept != null else "—" }}'
+        on:
+          _state: true
+```
 
 ```yaml
-[object Object]```
+tree_basic:
+  _state: tree_basic
+tree_basic_display:
+  _state: tree_basic_display
+```
 
 ```yaml
 - id: tree_line
@@ -78,7 +119,9 @@ Selected: —
 ```
 
 ```yaml
-[object Object]```
+tree_line:
+  _state: tree_line
+```
 
 ```yaml
 - id: tree_options
@@ -101,7 +144,9 @@ Selected: —
 ```
 
 ```yaml
-[object Object]```
+tree_options:
+  _state: tree_options
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

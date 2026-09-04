@@ -17,7 +17,11 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+```
 
 ```yaml
 - id: height_number
@@ -33,7 +37,11 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
-[object Object]```
+height_number:
+  _state: height_number
+height_string:
+  _state: height_string
+```
 
 ```yaml
 - id: emit_file_content
@@ -44,7 +52,9 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
-[object Object]```
+emit_file_content:
+  _state: emit_file_content
+```
 
 ```yaml
 - id: disabled_default
@@ -55,7 +65,9 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

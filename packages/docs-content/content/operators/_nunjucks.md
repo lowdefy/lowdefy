@@ -60,7 +60,7 @@ Returns:
 
 ```yaml
 _nunjucks:
-  template: {{ date | date('D MMM YYYY') }}
+  template: "{{ date | date('D MMM YYYY') }}"
   on:
     date:
       _date: 2022-08-01
@@ -106,7 +106,7 @@ Returns:
 
 ```yaml
 _nunjucks:
-  template: {{ url | urlQuery(params) | safe }}
+  template: '{{ url | urlQuery(params) | safe }}'
   on:
     url: www.lowdefy.com
     params:

@@ -41,7 +41,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+basic_multi:
+  _state: basic_multi
+basic_placeholder:
+  _state: basic_placeholder
+```
 
 ```yaml
 - id: prim_strings
@@ -68,7 +72,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+prim_strings:
+  _state: prim_strings
+prim_numbers:
+  _state: prim_numbers
+```
 
 ```yaml
 - id: size_small
@@ -103,7 +111,13 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
 
 ```yaml
 - id: toggle_allow_clear
@@ -145,7 +159,13 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+toggle_allow_clear:
+  _state: toggle_allow_clear
+toggle_no_arrow:
+  _state: toggle_no_arrow
+toggle_auto_focus:
+  _state: toggle_auto_focus
+```
 
 ```yaml
 - id: bordered_true
@@ -175,7 +195,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+bordered_true:
+  _state: bordered_true
+bordered_false:
+  _state: bordered_false
+```
 
 ```yaml
 - id: max_tags_3
@@ -233,7 +257,13 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+max_tags_3:
+  _state: max_tags_3
+max_tags_2:
+  _state: max_tags_2
+max_tags_1:
+  _state: max_tags_1
+```
 
 ```yaml
 - id: custom_placeholder
@@ -267,7 +297,13 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+custom_placeholder:
+  _state: custom_placeholder
+custom_not_found:
+  _state: custom_not_found
+custom_loading_placeholder:
+  _state: custom_loading_placeholder
+```
 
 ```yaml
 - id: auto_clear_true
@@ -305,7 +341,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+auto_clear_true:
+  _state: auto_clear_true
+auto_clear_false:
+  _state: auto_clear_false
+```
 
 ```yaml
 - id: custom_suffix_icon
@@ -363,7 +403,15 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+custom_suffix_icon:
+  _state: custom_suffix_icon
+custom_suffix_icon_object:
+  _state: custom_suffix_icon_object
+custom_clear_icon:
+  _state: custom_clear_icon
+custom_selected_icon:
+  _state: custom_selected_icon
+```
 
 ```yaml
 - id: tags_preset_colors
@@ -520,7 +568,17 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+tags_preset_colors:
+  _state: tags_preset_colors
+tags_named_colors:
+  _state: tags_named_colors
+tags_hex_colors:
+  _state: tags_hex_colors
+tags_custom_titles:
+  _state: tags_custom_titles
+render_tags_false:
+  _state: render_tags_false
+```
 
 ```yaml
 - id: tags_with_icons
@@ -576,7 +634,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+tags_with_icons:
+  _state: tags_with_icons
+tags_icons_colors_titles:
+  _state: tags_icons_colors_titles
+```
 
 ```yaml
 - id: disabled_multi
@@ -611,7 +673,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+disabled_multi:
+  _state: disabled_multi
+disabled_options:
+  _state: disabled_options
+```
 
 ```yaml
 - id: options_filter_string
@@ -669,7 +735,13 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+options_filter_string:
+  _state: options_filter_string
+options_styled:
+  _state: options_styled
+options_allow_clear_false:
+  _state: options_allow_clear_false
+```
 
 ```yaml
 - id: label_with_colon
@@ -775,7 +847,23 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+label_with_colon:
+  _state: label_with_colon
+label_no_colon:
+  _state: label_no_colon
+label_right_align:
+  _state: label_right_align
+label_left_align:
+  _state: label_left_align
+label_extra:
+  _state: label_extra
+label_extra_html:
+  _state: label_extra_html
+label_no_label:
+  _state: label_no_label
+label_feedback_on:
+  _state: label_feedback_on
+```
 
 ```yaml
 - id: label_inline
@@ -809,7 +897,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+label_inline:
+  _state: label_inline
+label_inline_wide:
+  _state: label_inline_wide
+```
 
 ```yaml
 - id: scrollable_selector
@@ -868,7 +960,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+scrollable_selector:
+  _state: scrollable_selector
+```
 
 ```yaml
 - id: style_border
@@ -932,7 +1026,15 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+style_border:
+  _state: style_border
+style_background:
+  _state: style_background
+class_tailwind_element:
+  _state: class_tailwind_element
+class_tailwind_label:
+  _state: class_tailwind_label
+```
 
 ```yaml
 - id: theme_custom_colors
@@ -1018,7 +1120,17 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_hover_active:
+  _state: theme_hover_active
+theme_multiple_item:
+  _state: theme_multiple_item
+theme_large_tags:
+  _state: theme_large_tags
+theme_small_tags:
+  _state: theme_small_tags
+```
 
 ```yaml
 - id: combined_full
@@ -1102,7 +1214,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+combined_full:
+  _state: combined_full
+combined_themed:
+  _state: combined_themed
+```
 
 ```yaml
 - id: applied2_team_card
@@ -1175,7 +1291,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+applied2_team_card:
+  _state: applied2_team_card
+```
 
 ```yaml
 - id: applied_filter_card
@@ -1248,10 +1366,79 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+- id: applied_filter_card
+  type: Card
+  properties:
+    title: Filter Products
+  blocks:
+    - id: applied_filter_categories
+      type: MultipleSelector
+      properties:
+        title: Categories
+        placeholder: Select categories to filter...
+        renderTags: true
+        options:
+          - label: Electronics
+            value: electronics
+            tag:
+              color: blue
+          - label: Clothing
+            value: clothing
+            tag:
+              color: green
+          - label: Books
+            value: books
+            tag:
+              color: purple
+          - label: Home & Garden
+            value: home
+            tag:
+              color: orange
+          - label: Sports
+            value: sports
+            tag:
+              color: cyan
+      events:
+        onChange:
+          - id: filter_set_categories
+            type: SetState
+            params:
+              selected_categories:
+                _state: applied_filter_categories
+    - id: applied_filter_price_range
+      type: Selector
+      properties:
+        title: Price Range
+        placeholder: Select a price range...
+        options:
+          - label: Under $25
+            value: under_25
+          - label: $25 - $50
+            value: 25_50
+          - label: $50 - $100
+            value: 50_100
+          - label: Over $100
+            value: over_100
+    - id: applied_filter_apply_btn
+      type: Button
+      properties:
+        title: Apply Filters
+        icon: AiOutlineFilter
+        type: primary
+        block: true
+      events:
+        onClick:
+          - id: filter_apply_action
+            type: DisplayMessage
+            params:
+              content: Filters applied successfully.
+              duration: 3
+```
 
 ```yaml
-[object Object]```
+applied_filter_card:
+  _state: applied_filter_card
+```
 
 ```yaml
 - id: multiple_color_solid
@@ -1287,7 +1474,11 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+multiple_color_solid:
+  _state: multiple_color_solid
+multiple_color_outlined:
+  _state: multiple_color_outlined
+```
 
 ```yaml
 - id: data_multiple_selector
@@ -1309,7 +1500,9 @@ Multi-select dropdown with tags, search, and custom rendering.
 ```
 
 ```yaml
-[object Object]```
+data_multiple_selector:
+  _state: data_multiple_selector
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

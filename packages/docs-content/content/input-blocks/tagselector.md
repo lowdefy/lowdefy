@@ -16,7 +16,9 @@ Single-select input rendered as a row of toggleable, colored tag pills.
 ```
 
 ```yaml
-[object Object]```
+basic_strings:
+  _state: basic_strings
+```
 
 ```yaml
 - id: label_value
@@ -36,7 +38,9 @@ Single-select input rendered as a row of toggleable, colored tag pills.
 ```
 
 ```yaml
-[object Object]```
+label_value:
+  _state: label_value
+```
 
 ```yaml
 - id: explicit_colors
@@ -66,7 +70,11 @@ Single-select input rendered as a row of toggleable, colored tag pills.
 ```
 
 ```yaml
-[object Object]```
+explicit_colors:
+  _state: explicit_colors
+single_accent:
+  _state: single_accent
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

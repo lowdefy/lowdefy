@@ -17,7 +17,11 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
-[object Object]```
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+```
 
 ```yaml
 - id: limit_single
@@ -33,7 +37,11 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
-[object Object]```
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+```
 
 ```yaml
 - id: emit_file_content
@@ -44,7 +52,9 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
-[object Object]```
+emit_file_content:
+  _state: emit_file_content
+```
 
 ```yaml
 - id: disabled_default
@@ -55,7 +65,9 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
-[object Object]```
+disabled_default:
+  _state: disabled_default
+```
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

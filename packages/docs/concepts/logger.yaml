@@ -232,6 +232,88 @@ _ref:
 
             `process_started` carries `app_version`, `git_sha`, the Lowdefy version and the Node version. On a long-lived server that is one line per deploy; on serverless it is one line per cold start, per replica - so group by `git_sha` in your queries, never by line count. `migrations_checked` follows on the first request, naming the stage and the migrations the build recorded as applied.
 
+      - id: md_journeys
+        type: Markdown
+        properties:
+          content: |
+            ## Journey recorder
+
+            A Lowdefy page already knows what the user did in structured terms:
+            the engine records one entry per completed block event, naming the
+            block, the event, every action in the chain and every request it
+            fired. The journey recorder turns that entry into one trace event
+            and beacons it to `/api/journey`, where the server emits it as a
+            `journey_event` wide event alongside everything else.
+
+            Nothing is instrumented and nothing is named twice: the recorder
+            records config ids - the `id:` you wrote in your YAML - never DOM
+            selectors, so a recorded journey survives every restyle.
+
+            ### A recorded event
+
+            ```json
+            {
+              "event": "journey_event",
+              "rid": "01J9V0X2N4",
+              "t": "2026-09-04T10:00:00.000Z",
+              "session_id": "0f0d9f6a-3f2f-4a1b-9f3e-7a4f2b1c8d55",
+              "page_instance": "0f0d9f6a-3f2f-4a1b-9f3e-7a4f2b1c8d55:1",
+              "page_id": "orders",
+              "block_id": "save_button",
+              "event_name": "onClick",
+              "success": true,
+              "error_name": null,
+              "config_key": null,
+              "actions": [{ "id": "save", "type": "Request", "config_key": "k1", "outcome": "ok" }],
+              "requests": [{ "request_id": "save_order", "success": true, "duration_ms": 42 }],
+              "state_writes": [{ "path": "order.total", "type": "number" }],
+              "url_after": "https://app.example.com/orders"
+            }
+            ```
+
+            An action's `outcome` is `ok`, `skipped`, `error`, or `pending` for
+            an `async: true` action that had not resolved when the event
+            completed. A debounced event that bounced is not a step the user
+            took and is never recorded.
+
+            ### Values are the privacy line
+
+            In production a trace event carries **paths and JSON types only** -
+            never the event payload, never a written value. In development it
+            carries both, because the developer is the user. This is structural:
+            the value-carrying branch of the recorder exists only in the
+            development client build, so a production app cannot be configured
+            into sending one.
+
+            The server drops any `state_writes` entry whose last path segment is
+            a field your `collections` declaration marked `pii: true`, so a
+            recorded path never names a person's data even by accident.
+
+            The browser sends no identity at all. The server stamps `user.id`
+            and `org` from its own session, and - like every other wide event -
+            only when `logger.events.identity` is on.
+
+            ### Configuration
+
+            ```yaml
+            # lowdefy.yaml
+            logger:
+              journeys:
+                # On by default.
+                enabled: true
+                # Share of sessions recorded, 0 to 1. The decision is made once
+                # per session, so a recorded session is a complete story rather
+                # than a scatter of unrelated clicks. Raise it to fill your
+                # journey corpus faster.
+                sample_rate: 0.05
+            ```
+
+            `lowdefy dev` records every session regardless of `sample_rate`.
+
+            Events are batched in the browser and sent when the batch reaches 20
+            events, 5 seconds pass, or the page goes away - by `sendBeacon`,
+            chunked so a long session's final flush is never silently refused.
+
       - id: md4
         type: Markdown
         properties:
