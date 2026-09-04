@@ -88,8 +88,15 @@ const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
 const mockPruneMessages = jest.fn().mockReturnValue([]);
 const mockValidateUIMessages = jest.fn().mockResolvedValue([]);
 
+class MockTypeValidationError extends Error {
+  static isInstance(error) {
+    return error instanceof MockTypeValidationError;
+  }
+}
+
 jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
+  TypeValidationError: MockTypeValidationError,
   convertToModelMessages: mockConvertToModelMessages,
   createAgentUIStream: mockCreateAgentUIStream,
   createUIMessageStream: mockCreateUIMessageStream,
@@ -194,6 +201,7 @@ test('creates ToolLoopAgent with correct parameters', async () => {
   );
   expect(mockCreateUIMessageStream).toHaveBeenCalledWith({
     execute: expect.any(Function),
+    onError: expect.any(Function),
   });
   expect(mockCreateUIMessageStreamResponse).toHaveBeenCalledWith({
     stream: { type: 'readable-stream' },
@@ -2387,4 +2395,83 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
 
   consoleSpy.mockRestore();
   mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
+});
+
+test('messages without parts are dropped before the agent runs', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  const user = { id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] };
+  // The shell the client keeps when a turn fails after the stream's start chunk.
+  const emptyShell = { id: 'msg-2', role: 'assistant', parts: [] };
+  const retry = { id: 'msg-3', role: 'user', parts: [{ type: 'text', text: 'again' }] };
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [user, emptyShell, retry],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
+
+  expect(mockCreateAgentUIStream).toHaveBeenCalledWith(
+    expect.objectContaining({ uiMessages: [user, retry] })
+  );
+});
+
+test('a validation failure is logged and written to the stream as an error, not thrown', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  const validationError = new MockTypeValidationError('Type validation failed: Value: [...]');
+  mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const writer = { write: jest.fn(), onError: (error) => `redacted: ${error.message}` };
+  await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
+
+  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Agent stream failed'));
+  expect(writer.write).toHaveBeenCalledWith({
+    type: 'error',
+    errorText: 'redacted: Type validation failed: Value: [...]',
+  });
+  consoleSpy.mockRestore();
+});
+
+test('stream onError hides the value dump of a TypeValidationError from the client', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o' } },
+      messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+    },
+    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+  });
+
+  const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
+  expect(onError(new MockTypeValidationError('Type validation failed: Value: [{"id":"x"}]'))).toBe(
+    'The conversation could not be sent: a message failed validation.'
+  );
+  expect(onError(new Error('Rate limit exceeded'))).toBe('Rate limit exceeded');
 });
