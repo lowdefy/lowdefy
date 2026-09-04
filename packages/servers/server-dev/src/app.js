@@ -23,6 +23,7 @@ import apiContext from './middleware/apiContext.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
+import journeyHandler from './routes/journey.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
@@ -50,6 +51,10 @@ import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsMigrateHandler from './routes/docs/migrate.js';
 import docsMigrationsStatusHandler from './routes/docs/migrationsStatus.js';
+import docsOpsErrorsHandler from './routes/docs/opsErrors.js';
+import docsOpsReproHandler from './routes/docs/opsRepro.js';
+import docsOpsSlowHandler from './routes/docs/opsSlow.js';
+import docsOpsTraceHandler from './routes/docs/opsTrace.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
 import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
@@ -72,6 +77,7 @@ import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import warnOpsTenantData from '../lib/docs/ops/warnOpsTenantData.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
@@ -132,6 +138,9 @@ function createApp() {
   // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
   // tool result in createDocsMcpServer — merging fields into the envelope
   // instead would put unknown members on a strictly-validated message.
+  // One warn line at boot when an app whose connections are tenant-walled also
+  // has ops query credentials in the environment (R19).
+  warnOpsTenantData({ logger });
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
   // Flags every other docs response while the last build failed. Registered
   // twice: hono's `/*` pattern does not match the bare path.
@@ -155,6 +164,14 @@ function createApp() {
   app.post('/lowdefy-docs/seed-fixture', docsSeedFixtureHandler);
   app.get('/lowdefy-docs/migrations', docsMigrationsStatusHandler);
   app.post('/lowdefy-docs/migrate', docsMigrateHandler);
+  // Ops query twins of the four lowdefy_prod_* MCP tools. Access control runs
+  // per call inside the tool (loopback origin, read-only token, credentials,
+  // config.ops.enabled), so a refusal is a 200 carrying howToEnable — the same
+  // answer the MCP tool gives.
+  app.get('/lowdefy-docs/ops/errors', docsOpsErrorsHandler);
+  app.get('/lowdefy-docs/ops/trace/:rid', docsOpsTraceHandler);
+  app.get('/lowdefy-docs/ops/slow', docsOpsSlowHandler);
+  app.get('/lowdefy-docs/ops/repro/:rid', docsOpsReproHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
   app.get('/lowdefy-docs/app-brief', docsAppBriefHandler);
   app.get('/lowdefy-docs/app-brief/:pageId', docsAppBriefHandler);
@@ -201,6 +218,7 @@ function createApp() {
   app.get('/api/cron/*', cronHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
+  app.all('/api/journey', bodyLimit({ maxSize: 256 * 1024 }), journeyHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);

@@ -2924,6 +2924,30 @@ export default {
             },
           },
         },
+        ops: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Production telemetry query tools in the dev MCP (lowdefy_prod_errors, lowdefy_prod_trace, lowdefy_prod_slow, lowdefy_prod_repro). They read the app log sink into an AI agent context and are already gated on read-only sink credentials and a loopback dev server; this is the app-level kill switch.',
+          errorMessage: {
+            type: 'App "config.ops" should be an object.',
+            additionalProperties:
+              'App "config.ops" contains an unknown property. The known properties are "enabled".',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description:
+                'Set to false to refuse the dev MCP ops query tools for this app, whatever credentials the developer has. Recommended for apps whose connections are tenant-walled.',
+              errorMessage: {
+                type: 'App "config.ops.enabled" should be a boolean.',
+              },
+            },
+          },
+        },
         homePageId: {
           type: 'string',
           description:
@@ -3262,6 +3286,32 @@ export default {
           errorMessage:
             'App "logger.events" should be "errors", "all", or an object with "level" ("errors" or "all"), "sample_rate" (a number between 0 and 1) and "identity" (a boolean).',
         },
+        journeys: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'The recorded journey corpus. The client records one trace event per completed block event and beacons it to /api/journey, which emits it as a "journey_event" wide event.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description: 'Record user journeys. Default true.',
+            },
+            sample_rate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              description:
+                'Share of sessions recorded, 0 to 1, decided once per session so a recorded session is complete. Default 0.05; the dev server records every session.',
+            },
+          },
+          errorMessage: {
+            type: 'App "logger.journeys" should be an object.',
+            additionalProperties:
+              'App "logger.journeys" has an unknown key. Valid keys: enabled, sample_rate.',
+          },
+        },
         monitors: {
           type: 'object',
           additionalProperties: false,
@@ -3280,12 +3330,14 @@ export default {
                   type: 'number',
                   minimum: 0,
                   maximum: 1,
-                  description: 'Error-rate threshold (0 to 1) for endpoint, request and connection rules. Default 0.05.',
+                  description:
+                    'Error-rate threshold (0 to 1) for endpoint, request and connection rules. Default 0.05.',
                 },
                 p95_ms: {
                   type: 'number',
                   exclusiveMinimum: 0,
-                  description: 'p95 duration threshold in milliseconds for page request rules. Default 2000.',
+                  description:
+                    'p95 duration threshold in milliseconds for page request rules. Default 2000.',
                 },
               },
               errorMessage: {

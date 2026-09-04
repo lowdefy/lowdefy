@@ -992,3 +992,32 @@ test('theme with an unknown property emits an additional properties warning', ()
     'App "theme" contains an unknown property. The known properties are "mode", "density", "radius", "antd", "tailwind" and "darkMode".'
   );
 });
+
+test('config ops enabled false emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { ops: { enabled: false } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('config ops enabled as a string emits a type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { ops: { enabled: 'no' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('App "config.ops.enabled" should be a boolean.');
+});
+
+test('an unknown config ops property emits an additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { ops: { dataset: 'prod' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "config.ops" contains an unknown property. The known properties are "enabled".'
+  );
+});

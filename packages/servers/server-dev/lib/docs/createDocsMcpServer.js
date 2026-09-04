@@ -32,6 +32,10 @@ import getMigrationsStatus from './getMigrationsStatus.js';
 import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
 import getPluginDoc from './getPluginDoc.js';
+import getProdErrors from './ops/getProdErrors.js';
+import getProdRepro from './ops/getProdRepro.js';
+import getProdSlow from './ops/getProdSlow.js';
+import getProdTrace from './ops/getProdTrace.js';
 import getSchema from './getSchema.js';
 import getStaleStatus from './getStaleStatus.js';
 import inspectState from './inspectState.js';
@@ -451,6 +455,89 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       }
       return textResult(revertConfigCheckpoint({ id }));
     }
+  );
+
+  // Ops tools (R19). Registered unconditionally and refused at call time with
+  // howToEnable — a tool that vanishes from the manifest teaches an agent
+  // nothing, and credentials that appear after the MCP session started would
+  // leave a stale manifest behind. The refusal is data on the result, not an
+  // isError, because "not enabled here" is an answer.
+  server.registerTool(
+    'lowdefy_prod_errors',
+    {
+      description:
+        "Production failures from the app log sink, grouped. Every group carries `source` (file:line, resolved through this build's keyMap when the row's git_sha matches the running build, otherwise the raw `config_key` and a note saying why) and a `sample_rid` — feed `source` to lowdefy_find_config and `sample_rid` to lowdefy_prod_trace. Reads only what the sink retained (30 days unless the sink says otherwise). Needs LOWDEFY_OPS_QUERY_URL, LOWDEFY_OPS_READ_TOKEN and LOWDEFY_OPS_DATASET, a loopback dev server, and an app that does not set config.ops.enabled: false; otherwise the result is a refusal carrying howToEnable.",
+      inputSchema: {
+        since: z
+          .string()
+          .optional()
+          .describe(
+            '"deploy" (the default) searches from the first process_started event carrying the newest deployed git_sha, or an ISO 8601 timestamp.'
+          ),
+        group_by: z
+          .enum(['source', 'org', 'page', 'endpoint'])
+          .optional()
+          .describe(
+            'Group failures by config location (default), organization (only populated when the app sets logger.events.identity), page or endpoint.'
+          ),
+        limit: z.number().optional().describe('Maximum groups to return. Defaults to 20.'),
+      },
+    },
+    async ({ since, group_by: groupBy, limit }) =>
+      textResult(await getProdErrors({ origin, since, group_by: groupBy, limit }))
+  );
+
+  server.registerTool(
+    'lowdefy_prod_trace',
+    {
+      description:
+        'Every production event carrying one request id (rid), oldest first: the request, the endpoint steps under it, and the agent tool calls it made, each with its `source` or `config_key`. Use the `sample_rid` from lowdefy_prod_errors, then lowdefy_find_config on the source. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        rid: z.string().describe('The request id from a log line or a lowdefy_prod_errors group.'),
+      },
+    },
+    async ({ rid }) => textResult(await getProdTrace({ origin, rid }))
+  );
+
+  server.registerTool(
+    'lowdefy_prod_slow',
+    {
+      description:
+        'The slowest production work by duration percentile, grouped by event, endpoint, step, request and page, each row carrying `source` or `config_key` for lowdefy_find_config. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        endpoint_id: z.string().optional().describe('Restrict to one endpoint id.'),
+        page_id: z.string().optional().describe('Restrict to one page id.'),
+        percentile: z
+          .number()
+          .optional()
+          .describe('Duration percentile to rank by, 0 < p < 100. Defaults to 95.'),
+        since: z.string().optional().describe('"deploy" (the default) or an ISO 8601 timestamp.'),
+        limit: z.number().optional().describe('Maximum groups to return. Defaults to 20.'),
+      },
+    },
+    async ({ endpoint_id: endpointId, page_id: pageId, percentile, since, limit }) =>
+      textResult(
+        await getProdSlow({
+          origin,
+          endpoint_id: endpointId,
+          page_id: pageId,
+          percentile,
+          since,
+          limit,
+        })
+      )
+  );
+
+  server.registerTool(
+    'lowdefy_prod_repro',
+    {
+      description:
+        'The raw material for reproducing a production failure: every event carrying the rid, in order, with the page and block ids involved and each event\'s `source`. The trace-to-journey compiler is not landed yet, so the result says note: "compiler pending" and you write the tests/journeys/*.yaml steps yourself from these events (lowdefy_find_config on a source locates the block). Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        rid: z.string().describe('The request id of the failing session.'),
+      },
+    },
+    async ({ rid }) => textResult(await getProdRepro({ origin, rid }))
   );
 
   server.registerTool(
