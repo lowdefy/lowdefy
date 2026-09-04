@@ -18,7 +18,14 @@ import getProdTrace from '../../../lib/docs/ops/getProdTrace.js';
 
 // REST twin of the lowdefy_prod_trace MCP tool.
 async function docsOpsTraceHandler(c) {
-  return c.json(await getProdTrace({ origin: new URL(c.req.url).origin, rid: c.req.param('rid') }));
+  // /ops/trace/:rid or /ops/trace?session_id=… — the same two keys the MCP tool takes.
+  return c.json(
+    await getProdTrace({
+      origin: new URL(c.req.url).origin,
+      rid: c.req.param('rid'),
+      session_id: c.req.query('session_id'),
+    })
+  );
 }
 
 export default docsOpsTraceHandler;
