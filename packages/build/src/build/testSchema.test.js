@@ -1018,6 +1018,46 @@ test('theme with an unknown property emits an additional properties warning', ()
   );
 });
 
+test('config feedback with enabled and roles emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { feedback: { enabled: true, roles: ['support', 'admin'] } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('config feedback enabled as a string emits a type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { feedback: { enabled: 'yes' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('App "config.feedback.enabled" should be a boolean.');
+});
+
+test('config feedback roles as a string emits a type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { feedback: { roles: 'support' } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "config.feedback.roles" should be an array of strings.'
+  );
+});
+
+test('an unknown config feedback property emits an additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    config: { feedback: { screenshots: true } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'App "config.feedback" contains an unknown property. The known properties are "enabled" and "roles".'
+  );
+});
+
 test('config ops enabled false emits no warnings', () => {
   const components = {
     lowdefy: '1.0.0',

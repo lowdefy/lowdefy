@@ -22,21 +22,33 @@ import runOpsTool from './runOpsTool.js';
 
 const TRACE_LIMIT = 500;
 
-// Every event carrying one rid, oldest first: the request that failed, the
-// endpoint steps under it, the agent tool calls it made. `source` is resolved
-// per event, so the next call is lowdefy_find_config on a file:line rather
-// than a grep for a config_key.
-async function getProdTrace({ origin, rid }) {
-  if (!type.isString(rid) || rid === '') {
-    throw new Error(`lowdefy_prod_trace requires a "rid" string. Received ${JSON.stringify(rid)}.`);
+// Every event carrying one rid - the request that failed, the endpoint steps
+// under it, the agent tool calls it made - or, given a session_id, every
+// journey_event and feedback_submitted line of one browser session. Oldest
+// first either way. `source` is resolved per event, so the next call is
+// lowdefy_find_config on a file:line rather than a grep for a config_key.
+//
+// The session is the second axis on purpose: a feedback report carries the
+// session_id of the tab it was written in, so one call turns "this is broken"
+// into the ordered steps that led to it.
+async function getProdTrace({ origin, rid, session_id: sessionId }) {
+  const bySession = type.isString(sessionId) && sessionId !== '';
+  if (!bySession && (!type.isString(rid) || rid === '')) {
+    throw new Error(
+      `lowdefy_prod_trace requires a "rid" or "session_id" string. Received ${JSON.stringify({
+        rid,
+        session_id: sessionId,
+      })}.`
+    );
   }
+  const filter = bySession ? ['session_id', 'eq', sessionId] : ['rid', 'eq', rid];
   return runOpsTool({
     origin,
     tool: 'lowdefy_prod_trace',
-    params: { rid },
+    params: bySession ? { session_id: sessionId } : { rid },
     run: async ({ adapter }) => {
       const rows = await adapter.query({
-        where: [['rid', 'eq', rid]],
+        where: [filter],
         order: 'asc',
         limit: TRACE_LIMIT,
       });
@@ -51,6 +63,8 @@ async function getProdTrace({ origin, rid }) {
         request_id: getEventField(row, 'request_id'),
         endpoint_id: getEventField(row, 'endpoint_id'),
         step_id: getEventField(row, 'step_id'),
+        session_id: getEventField(row, 'session_id'),
+        text: getEventField(row, 'text'),
         error_name: getEventField(row, 'error.name'),
         error_message: getEventField(row, 'error.message'),
         error_hint: getEventField(row, 'error.hint'),
@@ -61,12 +75,14 @@ async function getProdTrace({ origin, rid }) {
           gitSha: getEventField(row, 'git_sha'),
         }),
       }));
+      const key = bySession ? `session_id ${sessionId}` : `rid ${rid}`;
       return {
-        rid,
+        rid: bySession ? null : rid,
+        session_id: bySession ? sessionId : null,
         events,
         note:
           events.length === 0
-            ? 'No event carries this rid. The sink only holds its retention window (30 days unless the sink is configured otherwise), so a rid older than that is gone.'
+            ? `No event carries this ${key}. The sink only holds its retention window (30 days unless the sink is configured otherwise), so anything older than that is gone. A session is also only in the sink if it was sampled (logger.journeys.sample_rate).`
             : null,
       };
     },

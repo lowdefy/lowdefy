@@ -138,6 +138,11 @@
           pageId: notifications
           properties:
             title: Notifications
+        - id: feedback
+          type: MenuLink
+          pageId: feedback
+          properties:
+            title: User Feedback
         - id: dynamic-page-content
           type: MenuLink
           pageId: dynamic-page-content

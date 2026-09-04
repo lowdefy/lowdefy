@@ -2924,6 +2924,39 @@ export default {
             },
           },
         },
+        feedback: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'In-app feedback reports from end users. When enabled, a signed-in user presses Cmd/Ctrl+/ and sends a short report; the server emits one "feedback_submitted" wide event carrying the text, the page, the url and the journey session_id of the tab, so the recorded journey that led to the report can be pulled with lowdefy_prod_trace({ session_id }). Off unless enabled.',
+          errorMessage: {
+            type: 'App "config.feedback" should be an object.',
+            additionalProperties:
+              'App "config.feedback" contains an unknown property. The known properties are "enabled" and "roles".',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description:
+                'Set to true to accept feedback reports at POST /api/feedback and offer the in-app affordance. Reports are always signed - an unauthenticated caller is refused.',
+              errorMessage: {
+                type: 'App "config.feedback.enabled" should be a boolean.',
+              },
+            },
+            roles: {
+              type: 'array',
+              items: { type: 'string' },
+              description:
+                'Roles allowed to send feedback. A caller holding any one of them is accepted. Omitted or empty means every signed-in user may report.',
+              errorMessage: {
+                type: 'App "config.feedback.roles" should be an array of strings.',
+              },
+            },
+          },
+        },
         ops: {
           type: 'object',
           additionalProperties: false,

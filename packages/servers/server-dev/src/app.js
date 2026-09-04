@@ -23,6 +23,7 @@ import apiContext from './middleware/apiContext.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
+import appFeedbackHandler from './routes/appFeedback.js';
 import journeyHandler from './routes/journey.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
@@ -219,6 +220,7 @@ function createApp() {
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/journey', bodyLimit({ maxSize: 256 * 1024 }), journeyHandler);
+  app.all('/api/feedback', bodyLimit({ maxSize: 512 * 1024 }), appFeedbackHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);

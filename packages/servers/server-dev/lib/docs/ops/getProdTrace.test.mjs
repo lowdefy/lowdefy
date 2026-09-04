@@ -60,6 +60,23 @@ const events = [
     duration_ms: 55,
   },
   { time: '2026-09-01T09:00:00.000Z', event: 'request_completed', rid: 'other', success: true },
+  {
+    time: '2026-09-01T08:59:00.000Z',
+    event: 'journey_event',
+    rid: 'rid-0',
+    session_id: 'sess-1',
+    page_id: 'checkout',
+    block_id: 'submit_button',
+    success: false,
+  },
+  {
+    time: '2026-09-01T09:01:00.000Z',
+    event: 'feedback_submitted',
+    rid: 'rid-2',
+    session_id: 'sess-1',
+    page_id: 'checkout',
+    text: 'Submitting the order does nothing.',
+  },
 ];
 const logPath = path.join(fixtureDir, 'events.jsonl');
 fs.writeFileSync(logPath, events.map((event) => JSON.stringify(event)).join('\n'));
@@ -89,10 +106,28 @@ test('getProdTrace names retention when no event carries the rid', async () => {
   expect(result.note).toContain('30 days');
 });
 
-test('getProdTrace requires a rid string', async () => {
+test('getProdTrace requires a rid or a session_id string', async () => {
   await expect(getProdTrace({ origin: ORIGIN, rid: '' })).rejects.toThrow(
-    'lowdefy_prod_trace requires a "rid" string.'
+    'lowdefy_prod_trace requires a "rid" or "session_id" string.'
   );
+});
+
+test('getProdTrace returns one browser session, journey steps and feedback report, oldest first', async () => {
+  const result = await getProdTrace({ origin: ORIGIN, session_id: 'sess-1' });
+  expect(result.session_id).toBe('sess-1');
+  expect(result.rid).toBeNull();
+  expect(result.note).toBeNull();
+  expect(result.events.map((event) => event.event)).toEqual([
+    'journey_event',
+    'feedback_submitted',
+  ]);
+  expect(result.events[1].text).toBe('Submitting the order does nothing.');
+});
+
+test('getProdTrace names retention and sampling when no event carries the session_id', async () => {
+  const result = await getProdTrace({ origin: ORIGIN, session_id: 'never-seen' });
+  expect(result.events).toEqual([]);
+  expect(result.note).toContain('sample_rate');
 });
 
 test('getProdRepro returns the events with the page and block ids and says the compiler is pending', async () => {

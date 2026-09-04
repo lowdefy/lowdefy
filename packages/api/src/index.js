@@ -42,6 +42,7 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import logFeedbackReport from './routes/feedback/logFeedbackReport.js';
 import logJourneyBatch from './routes/journey/logJourneyBatch.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
@@ -81,6 +82,7 @@ export {
   getPageConfig,
   getRootConfig,
   logClientError,
+  logFeedbackReport,
   logJourneyBatch,
   normalizeInjectedCaller,
   redactErrorResponse,

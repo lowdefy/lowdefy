@@ -491,12 +491,20 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_prod_trace',
     {
       description:
-        'Every production event carrying one request id (rid), oldest first: the request, the endpoint steps under it, and the agent tool calls it made, each with its `source` or `config_key`. Use the `sample_rid` from lowdefy_prod_errors, then lowdefy_find_config on the source. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+        'Every production event carrying one request id (rid), oldest first: the request, the endpoint steps under it, and the agent tool calls it made, each with its `source` or `config_key`. Use the `sample_rid` from lowdefy_prod_errors, then lowdefy_find_config on the source. Given `session_id` instead, it returns one browser session: the recorded journey_event steps and any feedback_submitted report, oldest first - the `session_id` on a feedback report is what turns it into a reproduction. Pass exactly one of the two. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
       inputSchema: {
-        rid: z.string().describe('The request id from a log line or a lowdefy_prod_errors group.'),
+        rid: z
+          .string()
+          .optional()
+          .describe('The request id from a log line or a lowdefy_prod_errors group.'),
+        session_id: z
+          .string()
+          .optional()
+          .describe('The journey session id, as carried on a feedback_submitted report.'),
       },
     },
-    async ({ rid }) => textResult(await getProdTrace({ origin, rid }))
+    async ({ rid, session_id: sessionId }) =>
+      textResult(await getProdTrace({ origin, rid, session_id: sessionId }))
   );
 
   server.registerTool(

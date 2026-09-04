@@ -15,10 +15,10 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: dynamic-page-content
-    pageTitle: Dynamic Page Content
+    pageId: feedback
+    pageTitle: User Feedback
     section: Concepts
-    filePath: concepts/dynamic-page-content.yaml
+    filePath: concepts/feedback.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -31,12 +31,12 @@ _ref:
                 version:
                   _ref: version.yaml
               template:
-                _ref: concepts/dynamic-page-content.md
+                _ref: concepts/feedback.md
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: User Feedback
-            previous_page_id: feedback
-            next_page_title: Docs for AI Agents
-            next_page_id: ai-agent-docs
+            previous_page_title: Notifications
+            previous_page_id: notifications
+            next_page_title: Dynamic Page Content
+            next_page_id: dynamic-page-content
