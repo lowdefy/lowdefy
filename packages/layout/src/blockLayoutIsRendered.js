@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import Area from './Area.js';
-import areaIsRendered from './areaIsRendered.js';
-import BlockLayout from './BlockLayout.js';
-import blockLayoutIsRendered from './blockLayoutIsRendered.js';
-import hasAreaKeys from './hasAreaKeys.js';
 import hasLayoutKeys from './hasLayoutKeys.js';
 
-export { Area, areaIsRendered, BlockLayout, blockLayoutIsRendered, hasAreaKeys, hasLayoutKeys };
+// Whether a block renders its `lf-col` BlockLayout. Either the block is laid out
+// itself, or it sits in a slot that renders an Area - a flex row sizes its items,
+// so a block in one needs the column that carries the 24-span default.
+// Otherwise the block's own root is the node in the DOM: the block root contract
+// guarantees the id, the data-testid, the class and the style are on it.
+function blockLayoutIsRendered({ inArea, layout }) {
+  return inArea === true || hasLayoutKeys(layout);
+}
+
+export default blockLayoutIsRendered;

@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { BlockLayout } from '@lowdefy/layout';
 import { type } from '@lowdefy/helpers';
 
 import InputContainer from './InputContainer.js';
@@ -24,8 +23,9 @@ import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
 import createBlockMethods from './createBlockMethods.js';
 import resolveClassNames from './resolveClassNames.js';
+import withBlockLayout from './withBlockLayout.js';
 
-const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
+const CategorySwitch = ({ block, Blocks, context, inArea, loading, lowdefy }) => {
   if (!block.eval) return null; // TODO: check Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
@@ -35,11 +35,13 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (loading && type.isObject(block.eval.skeleton)) {
     return (
       <LoadingBlock
+        blockId={block.blockId}
         blockLayout={block.eval.layout}
         blockProperties={block.eval.properties}
         blockStyle={block.eval.style?.block}
         blockClass={classNames}
         context={context}
+        inArea={inArea}
         lowdefy={lowdefy}
         skeleton={block.eval.skeleton}
       />
@@ -55,6 +57,7 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           Blocks={Blocks}
           Component={Component}
           context={context}
+          inArea={inArea}
           loading={loading}
           lowdefy={lowdefy}
         />
@@ -66,48 +69,43 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           Blocks={Blocks}
           Component={Component}
           context={context}
+          inArea={inArea}
           loading={loading}
           lowdefy={lowdefy}
         />
       );
     case 'input':
-      return (
-        <BlockLayout
-          id={`bl-${block.blockId}`}
-          style={block.eval.style?.block}
-          className={classNames.block}
-          layout={block.eval.layout}
-        >
-          <Component
-            methods={createBlockMethods({
-              blockId: block.blockId,
-              blockType: block.type,
-              configKey: block.eval?.configKey,
-              methods: Object.assign(block.methods, {
-                getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-                registerEvent: block.registerEvent,
-                registerMethod: block.registerMethod,
-                setValue: block.setValue,
-                translate: lowdefy._internal.translate,
-                triggerEvent: block.triggerEvent,
-              }),
-            })}
-            basePath={lowdefy.basePath}
-            blockId={block.blockId}
-            classNames={classNames}
-            components={lowdefy._internal.components}
-            events={block.eval.events ?? {}}
-            key={block.blockId}
-            loading={loading}
-            menus={lowdefy.menus}
-            pageId={lowdefy.pageId}
-            properties={block.eval.properties}
-            required={block.eval.required}
-            styles={block.eval.style ?? {}}
-            validation={block.eval.validation}
-            value={block.value}
-          />
-        </BlockLayout>
+      return withBlockLayout(
+        { id: `bl-${block.blockId}`, inArea, layout: block.eval.layout },
+        <Component
+          methods={createBlockMethods({
+            blockId: block.blockId,
+            blockType: block.type,
+            configKey: block.eval?.configKey,
+            methods: Object.assign(block.methods, {
+              getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              registerEvent: block.registerEvent,
+              registerMethod: block.registerMethod,
+              setValue: block.setValue,
+              translate: lowdefy._internal.translate,
+              triggerEvent: block.triggerEvent,
+            }),
+          })}
+          basePath={lowdefy.basePath}
+          blockId={block.blockId}
+          classNames={classNames}
+          components={lowdefy._internal.components}
+          events={block.eval.events ?? {}}
+          key={block.blockId}
+          loading={loading}
+          menus={lowdefy.menus}
+          pageId={lowdefy.pageId}
+          properties={block.eval.properties}
+          required={block.eval.required}
+          styles={block.eval.style ?? {}}
+          validation={block.eval.validation}
+          value={block.value}
+        />
       );
     case 'input-container':
       return (
@@ -116,46 +114,41 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           Blocks={Blocks}
           Component={Component}
           context={context}
+          inArea={inArea}
           loading={loading}
           lowdefy={lowdefy}
         />
       );
     default:
-      return (
-        <BlockLayout
-          id={`bl-${block.blockId}`}
-          style={block.eval.style?.block}
-          className={classNames.block}
-          layout={block.eval.layout}
-        >
-          <Component
-            methods={createBlockMethods({
-              blockId: block.blockId,
-              blockType: block.type,
-              configKey: block.eval?.configKey,
-              methods: Object.assign(block.methods, {
-                getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-                registerEvent: block.registerEvent,
-                registerMethod: block.registerMethod,
-                translate: lowdefy._internal.translate,
-                triggerEvent: block.triggerEvent,
-              }),
-            })}
-            basePath={lowdefy.basePath}
-            blockId={block.blockId}
-            classNames={classNames}
-            components={lowdefy._internal.components}
-            events={block.eval.events ?? {}}
-            key={block.blockId}
-            loading={loading}
-            menus={lowdefy.menus}
-            pageId={lowdefy.pageId}
-            properties={block.eval.properties}
-            required={block.eval.required}
-            styles={block.eval.style ?? {}}
-            validation={block.eval.validation}
-          />
-        </BlockLayout>
+      return withBlockLayout(
+        { id: `bl-${block.blockId}`, inArea, layout: block.eval.layout },
+        <Component
+          methods={createBlockMethods({
+            blockId: block.blockId,
+            blockType: block.type,
+            configKey: block.eval?.configKey,
+            methods: Object.assign(block.methods, {
+              getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+              registerEvent: block.registerEvent,
+              registerMethod: block.registerMethod,
+              translate: lowdefy._internal.translate,
+              triggerEvent: block.triggerEvent,
+            }),
+          })}
+          basePath={lowdefy.basePath}
+          blockId={block.blockId}
+          classNames={classNames}
+          components={lowdefy._internal.components}
+          events={block.eval.events ?? {}}
+          key={block.blockId}
+          loading={loading}
+          menus={lowdefy.menus}
+          pageId={lowdefy.pageId}
+          properties={block.eval.properties}
+          required={block.eval.required}
+          styles={block.eval.style ?? {}}
+          validation={block.eval.validation}
+        />
       );
   }
 };

@@ -40,6 +40,10 @@ const blocksDirectory = path.resolve(
 // on their behalf. Editing one of these to render its own root means moving it
 // out of this list.
 const delegatedRoots = [
+  {
+    file: 'blocks-basic/src/blocks/Icon/Icon.js',
+    via: 'client Icon (packages/client/src/createIcon.js)',
+  },
   { file: 'blocks-antd/src/blocks/AutoComplete/AutoComplete.js', via: 'Label' },
   { file: 'blocks-antd/src/blocks/ButtonSelector/ButtonSelector.js', via: 'Label' },
   { file: 'blocks-antd/src/blocks/CheckboxSelector/CheckboxSelector.js', via: 'Label' },
@@ -86,11 +90,6 @@ const delegatedRoots = [
 // a reason that says why the block owns no root element, not that adding one is
 // inconvenient.
 const exemptBlocks = [
-  {
-    file: 'blocks-basic/src/blocks/Icon/Icon.js',
-    reason:
-      'renders the client-provided Icon component (packages/client/src/createIcon.js), which owns the root and applies id and the element slot itself',
-  },
   {
     file: 'blocks-basic/src/blocks/Throw/Throw.js',
     reason: 'throws instead of rendering, so it has no root element',

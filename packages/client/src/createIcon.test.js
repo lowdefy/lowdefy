@@ -40,6 +40,9 @@ beforeAll(() => {
 
 const Icons = {
   AiIcon: (props) => <svg {...props} data-testid="AiIcon" />,
+  // react-icons spreads the props it is given last, so the block root contract
+  // reaches the svg. The AiIcon mock above overwrites data-testid instead.
+  AiRootIcon: (props) => <svg data-testid="AiRootIcon" {...props} />,
   AiOutlineExclamationCircle: (props) => (
     <svg {...props} data-testid="AiOutlineExclamationCircle" />
   ),
@@ -96,6 +99,24 @@ test('Icon styles.element', () => {
     />
   );
   expect(container.firstChild).toMatchSnapshot();
+});
+
+test('Icon renders the block root contract on the icon it owns', () => {
+  const IconComponent = createIcon(Icons);
+  const { container } = render(
+    <IconComponent
+      blockId="my_icon"
+      classNames={{ block: 'bg-red-500', element: 'p-4' }}
+      methods={methods}
+      properties={{ name: 'AiRootIcon' }}
+      styles={{ block: { margin: '1px' }, element: { background: 'yellow' } }}
+    />
+  );
+  const icon = container.querySelector('#my_icon');
+  expect(icon.getAttribute('data-testid')).toBe('my_icon');
+  expect(icon.getAttribute('class')).toBe('bg-red-500 p-4');
+  expect(icon.style.margin).toBe('1px');
+  expect(icon.style.background).toBe('yellow');
 });
 
 test('Icon properties.name error', () => {

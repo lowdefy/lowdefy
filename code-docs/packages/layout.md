@@ -8,12 +8,37 @@ This package provides:
 
 - `BlockLayout` - Wrapper for individual blocks with responsive sizing
 - `Area` - Container for groups of blocks with grid layout
+- `hasLayoutKeys`, `hasAreaKeys`, `blockLayoutIsRendered`, `areaIsRendered` - the rule the client
+  uses to decide whether either wrapper is rendered at all
 
 ## Key Exports
 
 ```javascript
-import { Area, BlockLayout } from '@lowdefy/layout';
+import {
+  Area,
+  areaIsRendered,
+  BlockLayout,
+  blockLayoutIsRendered,
+  hasAreaKeys,
+  hasLayoutKeys,
+} from '@lowdefy/layout';
 ```
+
+## Conditional Wrapping
+
+Neither wrapper is unconditional. `blockLayoutIsRendered` returns true when the block's evaluated
+`layout` carries any block key (`span`, `offset`, `push`, `pull`, `order`, `flex`, `grow`, `shrink`,
+`size`, `selfAlign`, `xs`-`2xl`, `disabled`) or when the block sits in a rendered Area - a `.lf-col`
+is sized as a flex item of its `.lf-row`, so a column needs its row. `areaIsRendered` returns true
+when the slot or the container's `layout` carries an arrangement key (`gap`, `align`, `justify`,
+`direction`, `wrap`, `overflow`, or a deprecated `content*` alias), when the slot has a class or
+style, when the container block passes a content style into `content.<slot>(style)`, or when any
+block in the slot is laid out.
+
+Both read **key presence, not value**: an operator in `layout:` that evaluates to `null` on one
+render must not restructure the DOM. Where no wrapper renders, the block's own root is the node -
+`blockRootProps` guarantees `id`, `data-testid`, `class` and `style` are on it, so the wrapper
+applies layout and nothing else, and never repeats the block's class or style.
 
 ## Architecture
 

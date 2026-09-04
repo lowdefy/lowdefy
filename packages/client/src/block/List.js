@@ -15,88 +15,104 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout } from '@lowdefy/layout';
+import { Area, areaIsRendered } from '@lowdefy/layout';
 import { cn } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 
 import Block from './Block.js';
 import createBlockMethods from './createBlockMethods.js';
 import resolveClassNames from './resolveClassNames.js';
+import withBlockLayout from './withBlockLayout.js';
 
-const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+const List = ({ block, Blocks, Component, context, inArea, loading, lowdefy }) => {
   const classNames = resolveClassNames(block.eval.class);
   const content = {};
   const contentList = [];
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
       if (SBlock.slots[slotKey].blocks.length === 0) return;
-      content[slotKey] = (contentStyle) => (
-        <Area
-          area={block.eval.slots[slotKey]}
-          areaKey={slotKey}
-          style={{ ...block.eval.slots[slotKey]?.style, ...contentStyle }}
-          className={cn(block.eval.class?.[slotKey])}
-          id={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
-          key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
-          layout={block.eval.layout}
-        >
-          {SBlock.slots[slotKey].blocks.map((bl) => (
-            <Block
-              block={bl}
-              Blocks={SBlock}
-              context={context}
-              key={`ls-${bl.blockId}`}
-              lowdefy={lowdefy}
-              parentLoading={loading}
-            />
-          ))}
-        </Area>
-      );
+      content[slotKey] = (contentStyle) => {
+        const style = { ...block.eval.slots[slotKey]?.style, ...contentStyle };
+        const className = cn(block.eval.class?.[slotKey]);
+        const renderArea = areaIsRendered({
+          area: block.eval.slots[slotKey],
+          areaKey: slotKey,
+          blockLayouts: SBlock.slots[slotKey].blocks.map((bl) => bl.eval?.layout),
+          className,
+          layout: block.eval.layout,
+          style,
+        });
+        const children = SBlock.slots[slotKey].blocks.map((bl) => (
+          <Block
+            block={bl}
+            Blocks={SBlock}
+            context={context}
+            inArea={renderArea}
+            key={`ls-${bl.blockId}`}
+            lowdefy={lowdefy}
+            parentLoading={loading}
+          />
+        ));
+        if (!renderArea) {
+          return (
+            <React.Fragment key={`ls-${block.blockId}-${SBlock.id}-${slotKey}`}>
+              {children}
+            </React.Fragment>
+          );
+        }
+        return (
+          <Area
+            area={block.eval.slots[slotKey]}
+            areaKey={slotKey}
+            style={style}
+            className={className}
+            id={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
+            key={`ar-${block.blockId}-${SBlock.id}-${slotKey}`}
+            layout={block.eval.layout}
+          >
+            {children}
+          </Area>
+        );
+      };
     });
     contentList.push({ ...content });
   });
-  return (
-    <BlockLayout
-      style={block.eval.style?.block}
-      className={classNames.block}
-      id={`bl-${block.blockId}`}
-      layout={block.eval.layout}
-    >
-      <Component
-        methods={createBlockMethods({
-          blockId: block.blockId,
-          blockType: block.type,
-          configKey: block.eval?.configKey,
-          methods: Object.assign(block.methods, {
-            getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
-            moveItemDown: block.moveItemDown,
-            moveItemUp: block.moveItemUp,
-            pushItem: block.pushItem,
-            registerEvent: block.registerEvent,
-            registerMethod: block.registerMethod,
-            removeItem: block.removeItem,
-            translate: lowdefy._internal.translate,
-            triggerEvent: block.triggerEvent,
-            unshiftItem: block.unshiftItem,
-          }),
-        })}
-        basePath={lowdefy.basePath}
-        blockId={block.blockId}
-        classNames={classNames}
-        components={lowdefy._internal.components}
-        events={block.eval.events ?? {}}
-        key={block.blockId}
-        list={contentList}
-        value={get(context.state, block.blockId) ?? []}
-        loading={loading}
-        menus={lowdefy.menus}
-        pageId={lowdefy.pageId}
-        properties={block.eval.properties}
-        required={block.eval.required}
-        styles={block.eval.style ?? {}}
-        validation={block.eval.validation}
-      />
-    </BlockLayout>
+  return withBlockLayout(
+    { id: `bl-${block.blockId}`, inArea, layout: block.eval.layout },
+    <Component
+      methods={createBlockMethods({
+        blockId: block.blockId,
+        blockType: block.type,
+        configKey: block.eval?.configKey,
+        methods: Object.assign(block.methods, {
+          getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
+          moveItemDown: block.moveItemDown,
+          moveItemUp: block.moveItemUp,
+          pushItem: block.pushItem,
+          registerEvent: block.registerEvent,
+          registerMethod: block.registerMethod,
+          removeItem: block.removeItem,
+          translate: lowdefy._internal.translate,
+          triggerEvent: block.triggerEvent,
+          unshiftItem: block.unshiftItem,
+        }),
+      })}
+      basePath={lowdefy.basePath}
+      blockId={block.blockId}
+      classNames={classNames}
+      components={lowdefy._internal.components}
+      events={block.eval.events ?? {}}
+      key={block.blockId}
+      list={contentList}
+      value={get(context.state, block.blockId) ?? []}
+      loading={loading}
+      menus={lowdefy.menus}
+      pageId={lowdefy.pageId}
+      properties={block.eval.properties}
+      required={block.eval.required}
+      styles={block.eval.style ?? {}}
+      validation={block.eval.validation}
+    />
   );
 };
 

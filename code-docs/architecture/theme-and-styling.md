@@ -487,9 +487,11 @@ theme:
 
 The `style` property applies inline CSS to a block, with optional slot targeting using `.` prefix keys.
 
-### Simple Style (Layout Wrapper)
+### Simple Style (Block Slot)
 
-Plain CSS properties (without `.` prefix) are applied to the block's layout wrapper (`.lf-col`):
+Plain CSS properties (without `.` prefix) land in the `block` slot, which every block applies to
+its own root element through `blockRootProps`. The layout wrapper (`.lf-col`) never carries them -
+it only exists when the block is laid out, and it carries layout alone:
 
 ```yaml
 blocks:
@@ -509,7 +511,7 @@ blocks:
   - id: my_input
     type: TextInput
     style:
-      padding: 16 # plain CSS → layout wrapper (block slot)
+      padding: 16 # plain CSS → block slot → block root element
       .element: # → block component root element
         border: '2px solid blue'
       .label: # → label element (input blocks)
