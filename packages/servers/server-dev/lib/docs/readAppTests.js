@@ -16,6 +16,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { listConfigFiles } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 import { getJourneyTouches } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
@@ -28,43 +29,32 @@ const JOURNEYS_DIRECTORY = path.join('tests', 'journeys');
 const REQUEST_TESTS_DIRECTORY = path.join('tests', 'requests');
 const JOURNEY_INDEX_PATH = path.join('.lowdefy', 'test', 'journeyIndex.json');
 
-function readYamlDocuments({ configDirectory, relativeDirectory, isTestFile, unreadable }) {
+// The same discovery rule `lowdefy test` uses (recursive, byte-sorted, `_`/`.`
+// prefixed names skipped), so the brief sees exactly the tests the runner runs.
+function readYamlDocuments({ configDirectory, relativeDirectory, suffixes, unreadable }) {
   const directory = path.resolve(configDirectory, relativeDirectory);
-  if (!fs.existsSync(directory)) {
-    return [];
-  }
-  return fs
-    .readdirSync(directory)
-    .filter(isTestFile)
-    .sort((a, b) => a.localeCompare(b))
-    .flatMap((fileName) => {
-      const filePath = path.join(directory, fileName);
-      const file = path.join(relativeDirectory, fileName);
-      let parsed;
-      try {
-        parsed = YAML.parse(fs.readFileSync(filePath, 'utf8'));
-      } catch (error) {
-        unreadable.push({ file, reason: `Invalid YAML: ${error.message}` });
-        return [];
-      }
-      if (type.isArray(parsed)) {
-        return parsed.map((document) => ({ file, document }));
-      }
-      if (type.isNone(parsed)) {
-        unreadable.push({ file, reason: 'File is empty.' });
-        return [];
-      }
-      return [{ file, document: parsed }];
-    });
+  return listConfigFiles({ directory, suffixes }).flatMap(({ fileName, filePath }) => {
+    const file = path.join(relativeDirectory, fileName);
+    let parsed;
+    try {
+      parsed = YAML.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (error) {
+      unreadable.push({ file, reason: `Invalid YAML: ${error.message}` });
+      return [];
+    }
+    if (type.isArray(parsed)) {
+      return parsed.map((document) => ({ file, document }));
+    }
+    if (type.isNone(parsed)) {
+      unreadable.push({ file, reason: 'File is empty.' });
+      return [];
+    }
+    return [{ file, document: parsed }];
+  });
 }
 
-function isJourneyFile(fileName) {
-  return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
-}
-
-function isRequestTestFile(fileName) {
-  return fileName.endsWith('.test.yaml') || fileName.endsWith('.test.yml');
-}
+const JOURNEY_SUFFIXES = ['.yaml', '.yml'];
+const REQUEST_TEST_SUFFIXES = ['.test.yaml', '.test.yml'];
 
 function readJourneyIndex({ configDirectory }) {
   const filePath = path.resolve(configDirectory, JOURNEY_INDEX_PATH);
@@ -83,7 +73,7 @@ function readAppTests({ configDirectory }) {
   const journeys = readYamlDocuments({
     configDirectory,
     relativeDirectory: JOURNEYS_DIRECTORY,
-    isTestFile: isJourneyFile,
+    suffixes: JOURNEY_SUFFIXES,
     unreadable,
   })
     .filter(({ document }) => type.isObject(document))
@@ -101,7 +91,7 @@ function readAppTests({ configDirectory }) {
   const requestTests = readYamlDocuments({
     configDirectory,
     relativeDirectory: REQUEST_TESTS_DIRECTORY,
-    isTestFile: isRequestTestFile,
+    suffixes: REQUEST_TEST_SUFFIXES,
     unreadable,
   })
     .filter(({ document }) => type.isObject(document))
