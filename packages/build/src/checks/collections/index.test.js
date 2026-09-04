@@ -20,7 +20,7 @@ import buildConnections from '../../build/buildConnections.js';
 import testContext from '../../test-utils/testContext.js';
 
 function check(components) {
-  const context = testContext();
+  const context = testContext({ logger: { debug: () => {} } });
   context.errors = [];
   context.warnings = [];
   context.handleWarning = (warning) => context.warnings.push(warning);
@@ -62,6 +62,7 @@ test('each collections rule is check-only under its own slug', () => {
     'collections-dynamic',
     'collections-untenanted',
     'collections-field-migration',
+    'collections-index',
   ]);
   collectionsRules.forEach((rule) => {
     expect(rule.checkOnly).toBe(true);

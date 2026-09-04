@@ -63,7 +63,7 @@ _ref:
               An unknown type name is a build error listing the accepted names. There is no `objectId` type: a validator cannot check a constructor it does not know, so declare an `ObjectId` field as `object` or leave it undeclared.
             - `required: array`: The names of the fields a document must carry, the JSON Schema array form - `required: [test_id, result]`. A `required: true` beside a field's type is still accepted for one release and folded into this array with a build warning naming the new form; it will be removed in the next major version.
             - `relations: object`: A map of field name to `"<collection>.<field>"`. The target collection must be declared, and the target field must be one of its declared fields unless the target declares no `fields` at all.
-            - `indexes: array`: Each entry has a `keys` object and an optional `options` object, in the MongoDB `createIndex` shape. The shape is validated and passed through. **Declaring an index does not create it** - index creation belongs to `lowdefy migrate`.
+            - `indexes: array`: Each entry has a `keys` object and an optional `options` object, in the MongoDB `createIndex` shape. The shape is validated and passed through. **Declaring an index does not create it** - a migration does, with a [`MongoDBCreateIndexes`](/MongoDB#mongodbcreateindexes) step. `lowdefy check` compares the declared entries against the queries the app actually authors and names the ones that are missing; see [Index candidates](#index-candidates).
 
             ## Tenancy agreement
 
@@ -79,13 +79,40 @@ _ref:
 
             ## Checks
 
-            `lowdefy check` runs three notes under the `collections` slug, all silent when the app declares no `collections` at all:
+            `lowdefy check` runs these notes, all silent when the app declares no `collections` at all, each under its own slug so suppressing one never hides another:
 
-            - a connection addresses a collection the app does not declare - the contract is opt-in, so this is a gap, not a fault;
-            - a connection names its collection with an operator, so it cannot be joined to the declaration and opts out of the tenancy agreement, `tenant-lookup` and data model checks;
-            - a connection with no `tenant` addresses a collection declared with a tenant field.
+            - `collections-undeclared`: a connection addresses a collection the app does not declare - the contract is opt-in, so this is a gap, not a fault;
+            - `collections-dynamic`: a connection names its collection with an operator, so it cannot be joined to the declaration and opts out of the tenancy agreement, `tenant-lookup` and data model checks;
+            - `collections-untenanted`: a connection with no `tenant` addresses a collection declared with a tenant field;
+            - `collections-field-migration`: a field declared `required` that no migration file names;
+            - `collections-index`: a query the app authors that no declared index covers - see [Index candidates](#index-candidates).
 
-            Suppress them on a connection with `~ignoreBuildChecks: [collections]`.
+            Suppress one on a connection or a request with `~ignoreBuildChecks: [<slug>]`.
+
+            ## Index candidates
+
+            An index that is not written down is an index something else can remove. The `collections-index` check reads the queries the app itself authors - every page request and every request step in an endpoint routine on a connection bound to a declared collection - and reports the key sets no declared `indexes` entry covers:
+
+            ```
+            Collection "answers" is queried with equality on organization_id, status with a sort on created_at by request "get_answers" on page "list", and no declared index covers it. Declare it under collections.answers.indexes as { keys: { organization_id: 1, status: 1, created_at: -1 } } and create it with a MongoDBCreateIndexes step in a migration. Nothing is dropped for you — an index is removed by hand, and only when no query needs it.
+            ```
+
+            What it reads: the `query` and `filter` of any request, its `options.sort`, and the leading run of `$match` and `$sort` stages of a `pipeline` (once a `$group` or `$project` has rewritten the documents, no index on the collection can serve what follows). A `$lookup` becomes a candidate on the collection it joins *from*, on its `foreignField`, which is the join that scans once per input document.
+
+            How the suggestion is ordered: equality fields first, then the sort, then the ranges - the order MongoDB can walk a compound index in. The tenant field is included when the [tenant wall](/organizations) will merge it into the filter at runtime, because the index the database is asked for has a key the config does not show.
+
+            What counts as covered: a declared index whose leading keys are the candidate's equality fields, in any order, followed by the candidate's sort keys in the index's own order. A longer index still covers a shorter query - a query on `{ status }` is served by an index on `{ status, created_at }`. Ranges are not required to be in the index.
+
+            Two things are reported at `debug` rather than as warnings, and appear only with `--log-level debug`:
+
+            - a single-field equality on a key-shaped field name (`*_id`, `*_key`, `email`, `slug`, ...), which is almost always a point lookup the author will index deliberately, often `unique: true`;
+            - a declared index that no query in this app uses. It may be serving a report, a backup job or another application, so it is a note, never a warning, and never a suggestion to drop it.
+
+            The check runs offline. It cannot read the collection's real indexes, its size or its cardinality, so it is a heuristic and always a warning - a small collection needs no index at all, and a suggestion may be redundant with one you keep in the database by hand. Suppress a false positive on the request with `~ignoreBuildChecks: [collections-index]`.
+
+            ### Why nothing is ever dropped
+
+            The incident this check exists for is an automated tool removing an index the app still needed: a de-duplication index disappeared and a bulk job that used to finish ran into a twenty-minute timeout. So Lowdefy offers no request type that drops an index, and never suggests dropping one. An index the app does not query may be the one an external consumer depends on, and a build check that has never seen the database is in no position to say otherwise. Removing an index is a hand operation against the database, taken with the knowledge of who else reads it.
 
             ## The build artifact
 
@@ -145,4 +172,4 @@ _ref:
             - The `tenant-lookup` build check reads `tenant` to refuse scoped pipelines that join shared collections.
             - The dev server's `lowdefy_data_model` MCP tool (`GET /lowdefy-docs/data-model`) prints every collection with its fields, relations, indexes and tenant verdict, the connections addressing it, and every request, routine step and websocket that reads or writes it — see [Docs for AI Agents](/ai-agent-docs#data-model-lowdefy_data_model). It works without a declaration too, but only a declaration gives it fields and relations to print.
             - Every MongoDB write request checks documents and `$set` / `$setOnInsert` values against `fields` before the driver is called (see [Validation on write](#validation-on-write)).
-            - `lowdefy migrate` creates the declared `indexes` and migrates data toward the declared shape.
+            - `lowdefy check` compares the declared `indexes` against the app's own queries (see [Index candidates](#index-candidates)), and a `MongoDBCreateIndexes` step in a migration creates them - see [Migrations](/migrations#creating-indexes).

@@ -60,6 +60,8 @@ const VALID_CHECK_SLUGS = {
   'state-schema': 'Page state contract violations (undeclared or mistyped state paths)',
   'payload-schema': 'Api endpoint payloadSchema is not a valid JSON schema',
   'response-schema': 'Endpoint responseSchema checks on _actions and _step response paths',
+  'actions-response-envelope':
+    'The deprecated _actions.<id>.response.response.<path> spelling of a CallAPI result',
   component: 'Component definition and prop validation',
 
   // Blocks, events and assets
@@ -69,10 +71,14 @@ const VALID_CHECK_SLUGS = {
   archetype: 'Page archetype expansion: collection, field and prop resolution',
 
   // JavaScript
-  'js-lint': 'Unresolved and unused names in _js bodies and file plugins, and plugin file syntax errors',
+  'js-lint':
+    'Unresolved and unused names in _js bodies and file plugins, and plugin file syntax errors',
   'js-modules': '_js module reference resolution and export checks',
 
   // Tenant wall
+  'tenant-grammar': 'The deprecated { field } object form of connection "tenant"',
+  'tenant-none-deprecated':
+    'Endpoint and request "tenant: none" declarations, deprecated in favour of runAs',
   'tenant-run-as': 'Endpoint runAs organizationId source validation',
   'tenant-authored': 'Requests declaring tenant: authored without an authored tenant field',
   'tenant-unscoped': 'Requests declaring tenant: none without naming a tenant field',
@@ -87,6 +93,8 @@ const VALID_CHECK_SLUGS = {
   'collections-dynamic': 'Connections whose collection name is an operator, not a literal',
   'collections-untenanted': 'Connections on a tenanted collection that carry no tenant wall',
   'collections-field-migration': 'Declared collection fields that no migration creates',
+  'collections-index':
+    'Query key sets in the app that no declared collections.indexes entry covers',
 
   // Migrations
   'migration-files': 'Migration file discovery, ids, YAML parsing and ledger checks',
@@ -102,6 +110,11 @@ const VALID_CHECK_SLUGS = {
 
   // Secrets
   secrets: '_secret names that are not set in the environment',
+
+  // Auth
+  'auth-dev-mock-user':
+    'The deprecated auth.dev.mockUser key, superseded by auth.dev.users + auth.dev.browserUser',
+
   'plugin-api-version':
     'A plugin package declaring a plugin API version the framework does not provide.',
 };

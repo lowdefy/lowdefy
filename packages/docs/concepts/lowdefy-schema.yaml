@@ -403,6 +403,7 @@ _ref:
             | `collections-dynamic` | Connections whose collection name is an operator, not a literal |
             | `collections-untenanted` | Connections on a tenanted collection that carry no tenant wall |
             | `collections-field-migration` | Declared collection fields that no migration creates |
+            | `collections-index` | Query key sets in the app that no declared collections.indexes entry covers |
             | `migration-files` | Migration file discovery, ids, YAML parsing and ledger checks |
             | `migration-routine` | Migration routine shape and step validation |
             | `branch-merge` | Ids added on both branches, and migration order, reported by "lowdefy check --against". |
