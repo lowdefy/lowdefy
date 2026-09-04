@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-import expandComponent from './expandComponent.js';
+import { resolveConfigLocation, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
-function makeContext(componentDefs, warnings = []) {
+import expandComponent from './expandComponent.js';
+import setNonEnumerableProperty from '../../../utils/setNonEnumerableProperty.js';
+
+function makeContext(componentDefs, warnings = [], keyMap = {}) {
   return {
     context: {
       componentDefs,
       handleWarning: (warning) => warnings.push(warning),
+      keyMap,
     },
     pageId: 'home',
   };
@@ -354,4 +358,140 @@ test('expandComponent ignores a block whose type is not a component', () => {
   const block = { id: 'b', type: 'Box' };
   expandComponent(block, makeContext({}));
   expect(block).toEqual({ id: 'b', type: 'Box' });
+});
+
+// --- Instance keys (~k) ---
+
+// A component body and the prop expressions inlined into it are copies, and a
+// copy carries the ~k of the node it was copied from. Every expansion has to
+// issue fresh keys, or two instances are one config location.
+function pillKeyMap() {
+  return {
+    body: { key: 'root.components.Pill.blocks', '~r': 'component', '~l': 6 },
+    wrap: { key: 'root.components.Pill.blocks[0:wrap]', '~r': 'component', '~l': 7 },
+    label: {
+      key: 'root.components.Pill.blocks[0:wrap].blocks[0:label]',
+      '~r': 'component',
+      '~l': 9,
+    },
+    labelProperties: {
+      key: 'root.components.Pill.blocks[0:wrap].blocks[0:label].properties',
+      '~r': 'component',
+      '~l': 10,
+    },
+    use_a: { key: 'root.pages[0:home].blocks[0:pill_a]', '~r': 'page', '~l': 20 },
+    use_a_result: {
+      key: 'root.pages[0:home].blocks[0:pill_a].props.result',
+      '~r': 'page',
+      '~l': 21,
+    },
+    use_b: { key: 'root.pages[0:home].blocks[0:pill_b]', '~r': 'page', '~l': 30 },
+    use_b_result: {
+      key: 'root.pages[0:home].blocks[0:pill_b].props.result',
+      '~r': 'page',
+      '~l': 31,
+    },
+  };
+}
+
+function pillDefs() {
+  const properties = { content: { _prop: 'result' } };
+  setNonEnumerableProperty(properties, '~k', 'labelProperties');
+  const label = { id: 'label', type: 'Title', properties };
+  setNonEnumerableProperty(label, '~k', 'label');
+  const wrap = { id: 'wrap', type: 'Box', blocks: [label] };
+  setNonEnumerableProperty(wrap, '~k', 'wrap');
+  const blocks = [wrap];
+  setNonEnumerableProperty(blocks, '~k', 'body');
+  return {
+    Pill: { id: 'Pill', props: { result: { type: 'string' } }, slots: ['footer'], blocks },
+  };
+}
+
+function instanceBlock(id, key) {
+  const result = { _state: 'answer' };
+  setNonEnumerableProperty(result, '~k', `${key}_result`);
+  const block = { id, type: 'Pill', props: { result } };
+  setNonEnumerableProperty(block, '~k', key);
+  return block;
+}
+
+function collectKeys(node, keys = []) {
+  if (Array.isArray(node) || (node !== null && typeof node === 'object')) {
+    if (typeof node['~k'] === 'string') keys.push(node['~k']);
+    Object.keys(node).forEach((key) => collectKeys(node[key], keys));
+  }
+  return keys;
+}
+
+test('expandComponent gives two instances of one component disjoint ~k sets', () => {
+  const keyMap = pillKeyMap();
+  const defs = pillDefs();
+  const a = instanceBlock('pill_a', 'use_a');
+  const b = instanceBlock('pill_b', 'use_b');
+  expandComponent(a, makeContext(defs, [], keyMap));
+  expandComponent(b, makeContext(defs, [], keyMap));
+
+  const keysA = collectKeys(a.blocks);
+  const keysB = collectKeys(b.blocks);
+  // wrap, label, the label's properties, and the inlined prop expression.
+  expect(keysA).toHaveLength(4);
+  expect(keysB).toHaveLength(4);
+  expect(keysA.filter((key) => keysB.includes(key))).toEqual([]);
+  // The template's own keys are never reused by an instance.
+  expect(keysA.filter((key) => ['body', 'wrap', 'label', 'labelProperties'].includes(key))).toEqual(
+    []
+  );
+});
+
+test('expandComponent resolves an error inside an instance to the component body line', () => {
+  const keyMap = pillKeyMap();
+  const refMap = { component: { path: 'components/pill.yaml' }, page: { path: 'pages/home.yaml' } };
+  const a = instanceBlock('pill_a', 'use_a');
+  expandComponent(a, makeContext(pillDefs(), [], keyMap));
+
+  const labelKey = a.blocks[0].blocks[0]['~k'];
+  expect(resolveConfigLocation({ configKey: labelKey, keyMap, refMap })).toEqual({
+    source: 'components/pill.yaml:9',
+    config: 'root.components.Pill.blocks[0:wrap].blocks[0:label]',
+  });
+
+  // An inlined prop expression is a copy of the use site, so it resolves to the
+  // page that supplied it, not to the component body.
+  const propKey = a.blocks[0].blocks[0].properties.content['~k'];
+  expect(resolveConfigLocation({ configKey: propKey, keyMap, refMap })).toEqual({
+    source: 'pages/home.yaml:21',
+    config: 'root.pages[0:home].blocks[0:pill_a].props.result',
+  });
+});
+
+test('expandComponent keeps ~ignoreBuildChecks on one instance from suppressing another', () => {
+  const keyMap = pillKeyMap();
+  keyMap.use_a['~ignoreBuildChecks'] = ['block-properties'];
+  const defs = pillDefs();
+  const a = instanceBlock('pill_a', 'use_a');
+  const b = instanceBlock('pill_b', 'use_b');
+  expandComponent(a, makeContext(defs, [], keyMap));
+  expandComponent(b, makeContext(defs, [], keyMap));
+
+  const inA = { configKey: a.blocks[0].blocks[0]['~k'], checkSlug: 'block-properties' };
+  const inB = { configKey: b.blocks[0].blocks[0]['~k'], checkSlug: 'block-properties' };
+  expect(shouldSuppressBuildCheck(inA, keyMap)).toBe(true);
+  expect(shouldSuppressBuildCheck(inB, keyMap)).toBe(false);
+});
+
+test('expandComponent leaves a slot filler with the key it was authored with', () => {
+  const keyMap = pillKeyMap();
+  keyMap.filler = { key: 'root.pages[0:home].blocks[0:pill_a].slots.footer.blocks[0:approve]' };
+  const defs = pillDefs();
+  const slotMarker = { _slot: 'footer' };
+  defs.Pill.blocks[0].blocks.push(slotMarker);
+  const filler = { id: 'approve', type: 'Button' };
+  setNonEnumerableProperty(filler, '~k', 'filler');
+  const block = instanceBlock('pill_a', 'use_a');
+  block.slots = { footer: { blocks: [filler] } };
+  expandComponent(block, makeContext(defs, [], keyMap));
+
+  expect(block.blocks[0].blocks[1].id).toBe('approve');
+  expect(block.blocks[0].blocks[1]['~k']).toBe('filler');
 });

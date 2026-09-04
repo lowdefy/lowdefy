@@ -80,9 +80,9 @@ const operators = createTestOperators({
   reentrant: operatorNames.filter((_, index) => index % 7 === 2),
 });
 
-// Runtime components and archetypes clone `~k` onto every instance, so one key
-// can name two structurally different sites on one page. The emitter refuses to
-// key those; V-57 cannot ship until expansion issues fresh keys.
+// Component and archetype expansion issue a fresh `~k` for every node they
+// clone (rekeyInstance), so no key names two structurally different sites and
+// the emitter has no page to refuse. The empty list below is the assertion.
 const duplicateKeyPages = [];
 const parityCases = [];
 
@@ -141,9 +141,8 @@ describe.each(['web', 'server'])('%s corpus parity', (env) => {
   });
 });
 
-test('the only pages the emitter refuses are the ones whose expansion reuses ~k', () => {
-  expect(duplicateKeyPages.map((page) => `${page.fixture}/${page.artefact}`)).toEqual([
-    '103-runtime-components/pages/controls.json',
-  ]);
-  expect(duplicateKeyPages[0].message).toMatch(/names two different operator sites/);
+test('the emitter refuses no page in the corpus', () => {
+  expect(
+    duplicateKeyPages.map((page) => `${page.fixture}/${page.artefact}: ${page.message}`)
+  ).toEqual([]);
 });

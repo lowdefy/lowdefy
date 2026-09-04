@@ -51,6 +51,21 @@ const keyMap = {
     '~r': 'cyclicRef',
     '~l': 3,
   },
+  // A node cloned into a component instance: its own key names the instance
+  // site, ~k_source names the authored node it was cloned from.
+  instanceNode: {
+    key: 'stale.instance.path',
+    '~r': 'ref2',
+    '~l': 99,
+    '~k_parent': 'abc123',
+    '~k_source': 'abc123',
+  },
+  instanceNodeUnknownSource: {
+    key: 'root.pages[0:home].blocks[0:pill].blocks[0:label]',
+    '~r': 'ref1',
+    '~l': 7,
+    '~k_source': 'notInThisBuild',
+  },
 };
 
 const refMap = {
@@ -203,5 +218,25 @@ test('resolveConfigLocation with null refMap uses lowdefy.yaml', () => {
   expect(result).toEqual({
     source: 'lowdefy.yaml:5',
     config: 'root.pages[0:home].blocks[0:header]',
+  });
+});
+
+test('resolveConfigLocation resolves a cloned instance node to the node it was cloned from', () => {
+  const result = resolveConfigLocation({ configKey: 'instanceNode', keyMap, refMap });
+  expect(result).toEqual({
+    source: 'pages/home.yaml:5',
+    config: 'root.pages[0:home].blocks[0:header]',
+  });
+});
+
+test('resolveConfigLocation falls back to the entry when ~k_source is not in the keyMap', () => {
+  const result = resolveConfigLocation({
+    configKey: 'instanceNodeUnknownSource',
+    keyMap,
+    refMap,
+  });
+  expect(result).toEqual({
+    source: 'pages/home.yaml:7',
+    config: 'root.pages[0:home].blocks[0:pill].blocks[0:label]',
   });
 });

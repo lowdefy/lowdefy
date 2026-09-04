@@ -20,7 +20,22 @@ import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import archetypes from './registry.js';
+import rekeyInstance from '../buildPages/buildBlock/rekeyInstance.js';
 import validateComponentProps from '../buildPages/buildBlock/validateComponentProps.js';
+
+// The consumer's own blocks, placed into the generated tree as they were
+// authored. They are not clones, so they keep their keys.
+function collectSlotFillers(slots) {
+  const fillers = new Set();
+  if (!type.isObject(slots)) return fillers;
+  Object.values(slots).forEach((slot) => {
+    if (!type.isObject(slot) || !type.isArray(slot.blocks)) return;
+    slot.blocks.forEach((block) => {
+      if (type.isObject(block)) fillers.add(block);
+    });
+  });
+  return fillers;
+}
 
 // The config key an archetype declaration reads its props from. Named once so
 // a future rename is a one-line change here rather than a sweep through every
@@ -123,6 +138,8 @@ function expandArchetype(block, pageContext) {
     context: pageContext.context,
   });
 
+  const slotFillers = collectSlotFillers(block.slots);
+
   const { layoutType, layoutProperties, events, requests, blocks } = def.generate({
     properties,
     slots: block.slots,
@@ -141,6 +158,23 @@ function expandArchetype(block, pageContext) {
   delete block.props;
   delete block.slots;
   delete block.areas;
+
+  // A generator reads the author's props and may place one prop node at more
+  // than one site in the tree it generates. Those nodes carry the author's ~k,
+  // so each site is given a key of its own that still resolves to the prop's
+  // line. Generated nodes with no key of their own are keyed by the next
+  // addKeys pass, as before.
+  rekeyInstance({
+    tree: {
+      blocks: block.blocks,
+      events: block.events,
+      properties: block.properties,
+      requests: block.requests,
+    },
+    instanceKey: configKey,
+    keyMap: pageContext.context.keyMap,
+    skip: slotFillers,
+  });
 }
 
 export { ARCHETYPE_PROPS_KEY, LEGACY_ARCHETYPE_PROPS_KEY, EXPERIMENTAL_FLAG };

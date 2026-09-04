@@ -20,6 +20,7 @@ import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import namespaceBlockId from './namespaceBlockId.js';
+import rekeyInstance from './rekeyInstance.js';
 import setNonEnumerableProperty from '../../../utils/setNonEnumerableProperty.js';
 import validateComponentProps from './validateComponentProps.js';
 
@@ -171,6 +172,9 @@ function transformBlockList(list, ctx) {
       blocks.forEach((b) => {
         if (type.isObject(b)) {
           setNonEnumerableProperty(b, '__componentAncestry', ctx.consumerAncestry);
+          // Not a clone: the filler keeps the key it was authored with, so
+          // rekeyInstance must leave it and its subtree alone.
+          ctx.slotFillers.add(b);
         }
         result.push(b);
       });
@@ -305,10 +309,22 @@ function expandComponent(block, pageContext) {
     declaredSlots,
     instanceId,
     propExprs,
+    slotFillers: new Set(),
     useSlots,
   };
   const expanded = transformBlockList(body, transformCtx);
   assertNoResidualMarkers(expanded, `${instanceId}.blocks`, transformCtx);
+
+  // The body and every inlined prop expression are copies, and a copy carries
+  // the ~k of the node it was copied from. Two instances of one component would
+  // otherwise name the same config location and share each other's
+  // ~ignoreBuildChecks.
+  rekeyInstance({
+    tree: expanded,
+    instanceKey: configKey,
+    keyMap: context.keyMap,
+    skip: transformCtx.slotFillers,
+  });
 
   // Rewrite the instance block into a Box wrapper. The wrapper keeps the
   // instance id (its inner blocks are prefixed under it, so two instances never

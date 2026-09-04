@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { resolveConfigLocation } from '@lowdefy/errors';
+
 import expandArchetype from './expandArchetype.js';
+import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 
 const collections = {
   controls: {
@@ -33,7 +36,12 @@ function pageContext(overrides = {}) {
   return {
     pageId: 'controls',
     rootBlockId: 'controls',
-    context: { collections, lowdefyConfig: experimentalOn, handleWarning: () => {} },
+    context: {
+      collections,
+      keyMap: {},
+      lowdefyConfig: experimentalOn,
+      handleWarning: () => {},
+    },
     ...overrides,
   };
 }
@@ -187,13 +195,19 @@ test('expandArchetype still reads "properties:" for one release, with a deprecat
   expandArchetype(
     block,
     pageContext({
-      context: { collections, lowdefyConfig: experimentalOn, handleWarning: (w) => warnings.push(w) },
+      context: {
+        collections,
+        lowdefyConfig: experimentalOn,
+        handleWarning: (w) => warnings.push(w),
+      },
     })
   );
   expect(block.type).toBe('Box');
   expect(block.requests).toHaveLength(1);
   expect(warnings).toHaveLength(1);
-  expect(warnings[0].message).toMatch(/"properties:", which is deprecated for archetypes.*"props:"/);
+  expect(warnings[0].message).toMatch(
+    /"properties:", which is deprecated for archetypes.*"props:"/
+  );
   expect(warnings[0].checkSlug).toBe('archetype');
 });
 
@@ -209,10 +223,74 @@ test('expandArchetype prefers "props:" over "properties:" when both are present'
   expandArchetype(
     block,
     pageContext({
-      context: { collections, lowdefyConfig: experimentalOn, handleWarning: (w) => warnings.push(w) },
+      context: {
+        collections,
+        lowdefyConfig: experimentalOn,
+        handleWarning: (w) => warnings.push(w),
+      },
     })
   );
   expect(warnings).toHaveLength(0);
   expect(block.type).toBe('Box');
   expect(block.requests).toHaveLength(1);
+});
+
+// --- Instance keys (~k) ---
+
+test('expandArchetype gives an author prop node placed in the generated tree its own key', () => {
+  const keyMap = {
+    k1: { key: 'root.pages[0:controls]', '~r': 'page', '~l': 4 },
+    layoutProperties: {
+      key: 'root.pages[0:controls].props.layout.properties',
+      '~r': 'page',
+      '~l': 8,
+    },
+  };
+  const layoutProperties = { gap: 16 };
+  setNonEnumerableProperty(layoutProperties, '~k', 'layoutProperties');
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    props: { collection: 'controls', layout: { properties: layoutProperties } },
+  };
+  const context = pageContext();
+  context.context.keyMap = keyMap;
+  expandArchetype(block, context);
+
+  const generatedKey = block.properties['~k'];
+  expect(generatedKey).not.toBe('layoutProperties');
+  expect(keyMap[generatedKey]['~k_source']).toBe('layoutProperties');
+  expect(keyMap[generatedKey]['~k_parent']).toBe('k1');
+  expect(
+    resolveConfigLocation({
+      configKey: generatedKey,
+      keyMap,
+      refMap: { page: { path: 'pages/controls.yaml' } },
+    })
+  ).toEqual({
+    source: 'pages/controls.yaml:8',
+    config: 'root.pages[0:controls].props.layout.properties',
+  });
+});
+
+test('expandArchetype leaves a slot filler with the key it was authored with', () => {
+  const keyMap = {
+    k1: { key: 'root.pages[0:controls]' },
+    filler: { key: 'root.pages[0:controls].slots.header.blocks[0:new]' },
+  };
+  const filler = { id: 'new', type: 'Button' };
+  setNonEnumerableProperty(filler, '~k', 'filler');
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    props: { collection: 'controls' },
+    slots: { header: { blocks: [filler] } },
+  };
+  const context = pageContext();
+  context.context.keyMap = keyMap;
+  expandArchetype(block, context);
+
+  expect(filler['~k']).toBe('filler');
 });
