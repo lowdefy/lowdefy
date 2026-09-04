@@ -26,7 +26,22 @@ import hasLayoutKeys from './hasLayoutKeys.js';
 // wrapped and the Area is rendered to hold them. The class and style arguments
 // also force the Area - they have nowhere else to land, which is what keeps
 // `content.<slot>(style)` working for the blocks that pass one.
-function areaIsRendered({ area, areaKey, blockLayouts = [], className, layout, style }) {
+//
+// `selfLayout` is the opt-out for a container that lays its children out with its
+// own CSS - Row, Stack and Grid are flex and grid containers themselves. Their
+// children must be the container's own flex or grid items, so no Area and no
+// per-child column may come between them. A child that asks for layout keys still
+// gets its own column, by blockLayoutIsRendered.
+function areaIsRendered({
+  area,
+  areaKey,
+  blockLayouts = [],
+  className,
+  layout,
+  selfLayout,
+  style,
+}) {
+  if (selfLayout === true) return false;
   if (hasAreaKeys({ area, areaKey, layout })) return true;
   if (!type.isNone(className) && className !== '') return true;
   if (type.isObject(style) && Object.keys(style).length > 0) return true;

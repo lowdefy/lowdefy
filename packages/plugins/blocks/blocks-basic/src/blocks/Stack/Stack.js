@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
-import { ALIGN, CHILD_SIZE_RESET, GAP, SLOT_DISPLAY_CONTENTS } from '../../arrangement.js';
+import { ALIGN, GAP, SELF_LAYOUT } from '../../arrangement.js';
 
 const Stack = ({ blockId, classNames, content, properties, styles }) => {
   return (
@@ -28,13 +28,12 @@ const Stack = ({ blockId, classNames, content, properties, styles }) => {
         styles,
         className: cn(
           'flex flex-col',
-          CHILD_SIZE_RESET,
           GAP[properties.gap] ?? GAP.md,
           ALIGN[properties.align] ?? ALIGN.stretch
         ),
       })}
     >
-      {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
+      {content.content && content.content(undefined, SELF_LAYOUT)}
     </div>
   );
 };

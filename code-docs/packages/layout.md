@@ -33,12 +33,26 @@ is sized as a flex item of its `.lf-row`, so a column needs its row. `areaIsRend
 when the slot or the container's `layout` carries an arrangement key (`gap`, `align`, `justify`,
 `direction`, `wrap`, `overflow`, or a deprecated `content*` alias), when the slot has a class or
 style, when the container block passes a content style into `content.<slot>(style)`, or when any
-block in the slot is laid out.
+block in the slot is laid out. An Area that renders wraps **every** block in the slot in a column,
+laid out or not - that invariant is what makes the row/column sizing coherent.
 
 Both read **key presence, not value**: an operator in `layout:` that evaluates to `null` on one
 render must not restructure the DOM. Where no wrapper renders, the block's own root is the node -
 `blockRootProps` guarantees `id`, `data-testid`, `class` and `style` are on it, so the wrapper
 applies layout and nothing else, and never repeats the block's class or style.
+
+### Self laying out slots
+
+A container whose own CSS lays its children out - `Row` and `Stack` (flex), `Grid` (grid) - opts its
+slot out by calling `content.<slot>(style, { selfLayout: true })`, which the client forwards to
+`areaIsRendered` as `selfLayout` and which short-circuits every other rule to `false`. Nothing may
+come between such a container and its children: an Area, or a per-child `.lf-col`, would become the
+flex or grid item and the child's own `class: grow`, `ml-auto` or `md:col-span-2` would be inert.
+The children's own root elements are therefore the direct children of the container's element.
+Because the slot renders no Area, a `class:` or `style:` on that slot has nowhere to land and is not
+applied - these blocks expose only the `element` css key. A child that sets `layout:` keys of its
+own still gets its `.lf-col` (by `blockLayoutIsRendered`), and only that child: its siblings stay
+unwrapped.
 
 ## Architecture
 

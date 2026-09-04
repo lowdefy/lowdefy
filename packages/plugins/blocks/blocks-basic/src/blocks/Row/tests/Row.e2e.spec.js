@@ -19,7 +19,7 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
 // Row renders a flex row with id={blockId}.
-// Structure: #bl-{blockId} (layout wrapper) > #{blockId} (flex container)
+// Structure: #{blockId} (flex container) > the children's own roots
 const getRowElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Row Block', () => {
@@ -34,7 +34,7 @@ test.describe('Row Block', () => {
     await expect(row).toHaveCSS('flex-direction', 'row');
   });
 
-  test('lays children out side by side and keeps their #bl- wrappers', async ({ page }) => {
+  test('lays children out side by side as its own flex items', async ({ page }) => {
     const first = getBlock(page, 'row_basic_first');
     const second = getBlock(page, 'row_basic_second');
     await expect(first).toBeVisible();

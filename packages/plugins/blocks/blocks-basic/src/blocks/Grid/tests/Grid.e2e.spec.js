@@ -19,7 +19,7 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
 // Grid renders a CSS grid with id={blockId}.
-// Structure: #bl-{blockId} (layout wrapper) > #{blockId} (grid container)
+// Structure: #{blockId} (grid container) > the children's own roots
 const getGridElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Grid Block', () => {

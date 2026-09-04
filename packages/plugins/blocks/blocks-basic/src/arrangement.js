@@ -110,34 +110,12 @@ const ROWS = {
 };
 
 /*
-  The client renders a slot's children inside an Area (.lf-row) and wraps each child
-  in a BlockLayout (.lf-col) that carries the child's #bl-<id>, class: and style:.
-  `display: contents` on the Area removes only the Area's own box, so each child box
-  becomes a direct flex or grid item of the arrangement block while every id, class
-  and style stays exactly where it was.
+  Row, Stack and Grid are flex and grid containers themselves: their children must
+  be their own flex or grid items, so the client must render neither the slot's
+  Area (.lf-row) nor a per-child column (.lf-col) between them. This is the slot
+  option that says so — see areaIsRendered in @lowdefy/layout. A child that asks
+  for `layout:` keys of its own still gets its column, and is sized by them.
 */
-const SLOT_DISPLAY_CONTENTS = { display: 'contents' };
+const SELF_LAYOUT = { selfLayout: true };
 
-/*
-  .lf-col carries the legacy 24-column rule `flex: 0 0 <span/24>` and a matching
-  max-width, which would make every child of a Row full width. These two utilities
-  clear it. They live in Tailwind's utilities layer, which globals.css orders after
-  the components layer grid.css writes into, so they win against .lf-col; :where()
-  drops them to zero specificity, so a class on the child (`grow`, `basis-1/3`,
-  `w-64`, `col-span-8`) still wins against them.
-*/
-const CHILD_SIZE_RESET =
-  '[:where(&>.lf-row>.lf-col)]:basis-auto [:where(&>.lf-row>.lf-col)]:max-w-none';
-
-export {
-  ALIGN,
-  CHILD_SIZE_RESET,
-  COLUMNS,
-  COLUMNS_MD,
-  COLUMNS_SM,
-  GAP,
-  JUSTIFY,
-  ROWS,
-  SLOT_DISPLAY_CONTENTS,
-  WRAP,
-};
+export { ALIGN, COLUMNS, COLUMNS_MD, COLUMNS_SM, GAP, JUSTIFY, ROWS, SELF_LAYOUT, WRAP };

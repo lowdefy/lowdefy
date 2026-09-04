@@ -19,7 +19,7 @@ import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
 // Stack renders a flex column with id={blockId}.
-// Structure: #bl-{blockId} (layout wrapper) > #{blockId} (flex container)
+// Structure: #{blockId} (flex container) > the children's own roots
 const getStackElement = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
 
 test.describe('Stack Block', () => {
@@ -34,7 +34,7 @@ test.describe('Stack Block', () => {
     await expect(stack).toHaveCSS('flex-direction', 'column');
   });
 
-  test('stacks children vertically and keeps their #bl- wrappers', async ({ page }) => {
+  test('stacks children vertically as its own flex items', async ({ page }) => {
     const first = getBlock(page, 'stack_basic_first');
     const second = getBlock(page, 'stack_basic_second');
     await expect(first).toBeVisible();

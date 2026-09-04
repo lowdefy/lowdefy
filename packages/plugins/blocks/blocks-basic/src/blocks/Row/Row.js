@@ -17,14 +17,7 @@
 import React from 'react';
 import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
-import {
-  ALIGN,
-  CHILD_SIZE_RESET,
-  GAP,
-  JUSTIFY,
-  SLOT_DISPLAY_CONTENTS,
-  WRAP,
-} from '../../arrangement.js';
+import { ALIGN, GAP, JUSTIFY, SELF_LAYOUT, WRAP } from '../../arrangement.js';
 
 const Row = ({ blockId, classNames, content, properties, styles }) => {
   return (
@@ -35,7 +28,6 @@ const Row = ({ blockId, classNames, content, properties, styles }) => {
         styles,
         className: cn(
           'flex flex-row',
-          CHILD_SIZE_RESET,
           GAP[properties.gap] ?? GAP.md,
           WRAP[properties.wrap] ?? WRAP.wrap,
           ALIGN[properties.align] ?? ALIGN.stretch,
@@ -43,7 +35,7 @@ const Row = ({ blockId, classNames, content, properties, styles }) => {
         ),
       })}
     >
-      {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
+      {content.content && content.content(undefined, SELF_LAYOUT)}
     </div>
   );
 };

@@ -30,6 +30,13 @@ const BoxLike = ({ blockId, classNames, content, properties, styles }) => (
   </div>
 );
 
+// Row, Stack and Grid shape: the block lays its children out with its own CSS.
+const SelfLayoutLike = ({ blockId, classNames, content, styles }) => (
+  <div {...blockRootProps({ blockId, classNames, styles, className: 'flex' })}>
+    {content.content && content.content(undefined, { selfLayout: true })}
+  </div>
+);
+
 const ListLike = ({ blockId, classNames, list, styles }) => (
   <div {...blockRootProps({ blockId, classNames, styles })}>
     {list.map((item, i) => (
@@ -40,11 +47,18 @@ const ListLike = ({ blockId, classNames, list, styles }) => (
   </div>
 );
 
-const blockComponents = { Box: BoxLike, Leaf, ListBlock: ListLike, Skeleton: Leaf };
+const blockComponents = {
+  Box: BoxLike,
+  Leaf,
+  ListBlock: ListLike,
+  RowLike: SelfLayoutLike,
+  Skeleton: Leaf,
+};
 const blockMetas = {
   Box: { category: 'container' },
   Leaf: { category: 'display' },
   ListBlock: { category: 'list' },
+  RowLike: { category: 'container' },
   Skeleton: { category: 'display' },
 };
 
@@ -231,6 +245,58 @@ test('a slot class renders the Area that carries it', () => {
     Blocks: createBlocks(container_block, children),
   });
   expect(container.querySelector('.lf-row').className).toContain('p-4');
+});
+
+test('a self laying out container renders the children roots as its own direct children', () => {
+  const container_block = createBlock({ id: 'my_row', type: 'RowLike' });
+  const children = [
+    createBlock({ id: 'one', eval: { class: { block: 'grow' } } }),
+    createBlock({ id: 'two' }),
+  ];
+  const { container } = renderBlock({
+    block: container_block,
+    Blocks: createBlocks(container_block, children),
+  });
+  expect(container.querySelectorAll('.lf-row')).toHaveLength(0);
+  expect(container.querySelectorAll('.lf-col')).toHaveLength(0);
+  expect([...container.querySelector('#my_row').children].map((el) => el.id)).toEqual([
+    'one',
+    'two',
+  ]);
+  expect(container.querySelector('#one').className).toBe('grow');
+});
+
+test('a laid out child of a self laying out container keeps its column, its siblings do not', () => {
+  const container_block = createBlock({ id: 'my_row', type: 'RowLike' });
+  const children = [
+    createBlock({ id: 'one' }),
+    createBlock({ id: 'two', eval: { layout: { span: 12 } } }),
+  ];
+  const { container } = renderBlock({
+    block: container_block,
+    Blocks: createBlocks(container_block, children),
+  });
+  expect(container.querySelectorAll('.lf-row')).toHaveLength(0);
+  expect([...container.querySelectorAll('.lf-col')].map((el) => el.id)).toEqual(['bl-two']);
+  expect([...container.querySelector('#my_row').children].map((el) => el.id)).toEqual([
+    'one',
+    'bl-two',
+  ]);
+});
+
+test('a slot class does not force an Area on a self laying out container', () => {
+  const container_block = createBlock({
+    id: 'my_row',
+    type: 'RowLike',
+    eval: { class: { content: 'p-4' }, slots: { content: { gap: 16 } } },
+  });
+  const children = [createBlock({ id: 'one' })];
+  const { container } = renderBlock({
+    block: container_block,
+    Blocks: createBlocks(container_block, children),
+  });
+  expect(container.querySelectorAll('.lf-row')).toHaveLength(0);
+  expect(container.querySelector('#my_row').firstChild.id).toBe('one');
 });
 
 test('a list renders one row per item, and no wrappers when nothing is laid out', () => {

@@ -62,11 +62,19 @@ _ref:
             > slot is wrapped in a row (`div.lf-row`, id `ar-<blockId>-<slot>`) when the slot or the
             > container's `layout:` sets any arrangement key — `gap`, `align`, `justify`,
             > `direction`, `wrap`, `overflow` — when the slot has a `class:` or `style:` of its own,
-            > when the container block passes a content style into the slot (`Row`, `Grid`, `Stack`,
-            > `Result`, `PageHeaderMenu` and `PageSiderMenu` do), or when any block in the slot is
-            > laid out. Otherwise neither `div` exists and the block's own root element is the node
+            > when the container block passes a content style into the slot (`Result`,
+            > `PageHeaderMenu` and `PageSiderMenu` do), or when any block in the slot is
+            > laid out. A row that is rendered wraps **every** block in the slot in a column, laid
+            > out or not. Otherwise neither `div` exists and the block's own root element is the node
             > in the page: every block renders its `id`, its `data-testid`, its `class:` and its
             > `style:` on the element it owns, so a `Title` with no layout really is an `<h1>`.
+            >
+            > [`Row`](/Row), [`Grid`](/Grid) and [`Stack`](/Stack) are the exception: they are flex
+            > and grid containers themselves, so their content slot never renders a row, and their
+            > children's own root elements are the flex or grid items sized by the child's `class:`
+            > (`grow`, `basis-1/3`, `w-64`, `col-span-8`). A child of one of them that still sets
+            > `layout:` keys keeps its own column — that one child only, its siblings are untouched
+            > — and is sized by the 24 column grid instead of by its class.
             >
             > The decision reads which keys are present, not what they evaluate to, so an operator
             > in `layout:` that resolves to `null` on one render does not restructure the DOM.

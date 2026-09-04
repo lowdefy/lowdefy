@@ -17,15 +17,7 @@
 import React from 'react';
 import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 
-import {
-  CHILD_SIZE_RESET,
-  COLUMNS,
-  COLUMNS_MD,
-  COLUMNS_SM,
-  GAP,
-  ROWS,
-  SLOT_DISPLAY_CONTENTS,
-} from '../../arrangement.js';
+import { COLUMNS, COLUMNS_MD, COLUMNS_SM, GAP, ROWS, SELF_LAYOUT } from '../../arrangement.js';
 
 const Grid = ({ blockId, classNames, content, properties, styles }) => {
   return (
@@ -36,7 +28,6 @@ const Grid = ({ blockId, classNames, content, properties, styles }) => {
         styles,
         className: cn(
           'grid',
-          CHILD_SIZE_RESET,
           COLUMNS[properties.columns] ?? COLUMNS[24],
           COLUMNS_SM[properties.columnsSm],
           COLUMNS_MD[properties.columnsMd],
@@ -45,7 +36,7 @@ const Grid = ({ blockId, classNames, content, properties, styles }) => {
         ),
       })}
     >
-      {content.content && content.content(SLOT_DISPLAY_CONTENTS)}
+      {content.content && content.content(undefined, SELF_LAYOUT)}
     </div>
   );
 };

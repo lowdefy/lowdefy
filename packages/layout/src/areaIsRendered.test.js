@@ -82,6 +82,20 @@ test('areaIsRendered is true when the slot has a class of its own', () => {
   ).toBe(true);
 });
 
+test('areaIsRendered is false when the container lays its content slot out itself', () => {
+  expect(
+    areaIsRendered({
+      area: { gap: 16 },
+      areaKey: 'content',
+      blockLayouts: [{}, { span: 12 }],
+      className: 'p-4',
+      layout: { direction: 'column' },
+      selfLayout: true,
+      style: { display: 'contents' },
+    })
+  ).toBe(false);
+});
+
 test('blockLayoutIsRendered wraps every block in a rendered area, laid out or not', () => {
   expect(blockLayoutIsRendered({ inArea: true, layout: {} })).toBe(true);
   expect(blockLayoutIsRendered({ inArea: false, layout: {} })).toBe(false);

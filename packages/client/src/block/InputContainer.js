@@ -30,7 +30,7 @@ const InputContainer = ({ block, Blocks, Component, context, inArea, loading, lo
   const slots = Blocks.subSlots[block.id][0].slots;
   Object.keys(slots).forEach((slotKey, i) => {
     if (slots[slotKey].blocks.length === 0) return;
-    content[slotKey] = (contentStyle) => {
+    content[slotKey] = (contentStyle, { selfLayout } = {}) => {
       const style = { ...block.eval.slots[slotKey]?.style, ...contentStyle };
       const className = cn(block.eval.class?.[slotKey]);
       const renderArea = areaIsRendered({
@@ -39,6 +39,7 @@ const InputContainer = ({ block, Blocks, Component, context, inArea, loading, lo
         blockLayouts: slots[slotKey].blocks.map((bl) => bl.eval?.layout),
         className,
         layout: block.eval.layout,
+        selfLayout,
         style,
       });
       const children = slots[slotKey].blocks.map((bl, k) => (

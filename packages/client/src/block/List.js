@@ -31,7 +31,7 @@ const List = ({ block, Blocks, Component, context, inArea, loading, lowdefy }) =
   Blocks.subSlots[block.id].forEach((SBlock) => {
     Object.keys(SBlock.slots).forEach((slotKey) => {
       if (SBlock.slots[slotKey].blocks.length === 0) return;
-      content[slotKey] = (contentStyle) => {
+      content[slotKey] = (contentStyle, { selfLayout } = {}) => {
         const style = { ...block.eval.slots[slotKey]?.style, ...contentStyle };
         const className = cn(block.eval.class?.[slotKey]);
         const renderArea = areaIsRendered({
@@ -40,6 +40,7 @@ const List = ({ block, Blocks, Component, context, inArea, loading, lowdefy }) =
           blockLayouts: SBlock.slots[slotKey].blocks.map((bl) => bl.eval?.layout),
           className,
           layout: block.eval.layout,
+          selfLayout,
           style,
         });
         const children = SBlock.slots[slotKey].blocks.map((bl) => (
