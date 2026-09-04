@@ -65,7 +65,7 @@ function createJourneyRecorder({ basePath = '', config, stage, window }) {
   const pageInstances = new WeakMap();
   let pageInstanceCount = 0;
 
-  return function recordJourneyEvent({ actions, context, record, stateBefore }) {
+  return function recordJourneyEvent({ actions, blockType, context, record, stateBefore }) {
     // A debounced event that never ran its actions is not a step a user took.
     if (record.bounced === true) {
       return;
@@ -76,6 +76,7 @@ function createJourneyRecorder({ basePath = '', config, stage, window }) {
     }
     batcher.add(
       buildTraceEvent({
+        blockType,
         actions,
         context,
         pageInstance: pageInstances.get(context),

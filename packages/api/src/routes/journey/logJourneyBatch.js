@@ -78,6 +78,7 @@ async function logJourneyBatch(context, { batch, journeys }) {
         page_instance: event.page_instance ?? null,
         page_id: event.page_id,
         block_id: event.block_id,
+        block_type: type.isString(event.block_type) ? event.block_type : null,
         event_name: event.event_name,
         success: event.success,
         config_key: event.error?.config_key ?? null,

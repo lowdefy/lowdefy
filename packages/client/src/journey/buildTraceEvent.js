@@ -36,6 +36,7 @@ function actionOutcome({ action, response }) {
 // branch: the event payload and the written values are attached here and
 // nowhere else, so a production recorder that never sets it cannot leak one.
 function buildTraceEvent({
+  blockType,
   actions,
   context,
   pageInstance,
@@ -52,6 +53,8 @@ function buildTraceEvent({
     page_instance: pageInstance,
     page_id: context.pageId,
     block_id: record.blockId,
+    // The block's type lets the compiler map onChange to a `set` step without a build.
+    block_type: blockType ?? null,
     event_name: record.eventName,
     success: record.success !== false,
     error: type.isNone(record.error)

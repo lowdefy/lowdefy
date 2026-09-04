@@ -99,6 +99,7 @@ class Events {
       // the action was declared.
       recordJourneyEvent?.({
         actions: [...eventDescription.actions, ...eventDescription.catchActions],
+        blockType: this.block.type,
         context: this.context,
         record: res,
         stateBefore,
