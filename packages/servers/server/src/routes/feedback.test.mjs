@@ -91,6 +91,10 @@ test.each([
   ['a cross-origin post', { host: 'app.test', origin: 'https://evil.test' }],
   ['a post with no origin', { host: 'app.test' }],
   ['a post with an unparsable origin', { host: 'app.test', origin: 'not a url' }],
+  [
+    'a post a browser marked cross-site',
+    { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'cross-site' },
+  ],
 ])('feedbackHandler answers 403 to %s and logs nothing', async (_, headers) => {
   const res = await post({ headers });
 
@@ -103,4 +107,13 @@ test('feedbackHandler answers 405 to a GET rather than raising a fault', async (
 
   expect(res.status).toEqual(405);
   expect(mockLogFeedbackReport).not.toHaveBeenCalled();
+});
+
+test('feedbackHandler accepts a post a browser marked same-origin', async () => {
+  mockLogFeedbackReport.mockReturnValue({ status: 'ok' });
+  const res = await post({
+    headers: { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'same-origin' },
+  });
+
+  expect(res.status).toEqual(204);
 });

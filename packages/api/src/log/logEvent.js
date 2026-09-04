@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import isRidSampled from './isRidSampled.js';
+import reportingSessions from './reportingSessions.js';
 import resolveEventPolicy from './resolveEventPolicy.js';
 
 // The one emitter for wide events: `request_completed`, `step_completed`,
@@ -29,13 +30,16 @@ import resolveEventPolicy from './resolveEventPolicy.js';
 // on every step of every request.
 //
 // Failures are always `info`. Successes are `debug` unless the app asked for
-// them: `logger.events: all`, or a `sample_rate` this request id falls under.
+// them: `logger.events: all`, a `sample_rate` this request id falls under, or
+// a `session_id` that reported feedback - the trace a developer opens from a
+// report has to be whole, so sampling is overridden for that session.
 function logEvent({ context, event, fields = {} }) {
   const policy = resolveEventPolicy(context.logger.eventsConfig);
   const failed = event.endsWith('_failed');
   const level =
     failed ||
     policy.level === 'all' ||
+    reportingSessions.has(fields.session_id) ||
     isRidSampled({ rid: context.rid, sampleRate: policy.sampleRate })
       ? 'info'
       : 'debug';

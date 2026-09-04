@@ -55,7 +55,9 @@ lowdefy_prod_trace({ session_id: '...' })
 
 That returns the session's `journey_event` steps and the `feedback_submitted` report, oldest first — which page, which block, which action, which request failed, in order, ending at the user's own account of it. This is the `lowdefy_prod_trace` tool from the dev server's [ops tools](/ai-agent-docs); it takes either a `rid` or a `session_id`.
 
-Two things make a session come back empty. Journeys are sampled (`logger.journeys.sample_rate`, 5% by default), so an unsampled session records no steps — the report still arrives, it just has no trace beside it. Raise the rate if reports matter more than log volume. And the sink only holds its retention window, 30 days unless configured otherwise.
+From the moment a report arrives, the server stops sampling that session: every wide event carrying the same `session_id` is written at `info`, whatever `logger.events.sample_rate` would have decided, so the trace a developer opens is not half a story. The server instance that took the report remembers the 100 most recently reporting sessions and forgets the oldest beyond that; it is a per-instance memory, so on a multi-instance or serverless deployment only the instance that answered the report keeps the following events. The report line itself is always kept, on every instance.
+
+Two things make a session come back empty. Journeys are sampled in the browser (`logger.journeys.sample_rate`, 5% by default), so a tab that was never recording sends no steps — the report still arrives, it just has no trace beside it, and nothing the server does after the fact can recover steps that were never recorded. Raise the rate if reports matter more than log volume. And the sink only holds its retention window, 30 days unless configured otherwise.
 
 ## Screenshots
 
@@ -63,7 +65,7 @@ A report may carry a screenshot as an image data URL of at most 256 KB, sent as 
 
 ## Posting a report yourself
 
-The route is same-origin, `POST /api/feedback`, with a JSON body:
+The route is same-origin, `POST /api/feedback`, with a JSON body. It is a browser route: the request must carry an `Origin` matching the app's own host, and a request a browser marks as cross-site is refused with a `403` before anything is read — the same defence `/api/journey` and `/api/client-error` use. Server-to-server callers have no path in.
 
 ```json
 {

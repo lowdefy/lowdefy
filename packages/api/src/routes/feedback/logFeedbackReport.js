@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import logEvent from '../../log/logEvent.js';
+import reportingSessions from '../../log/reportingSessions.js';
 import resolveEventPolicy from '../../log/resolveEventPolicy.js';
 import validateFeedbackReport from './validateFeedbackReport.js';
 
@@ -61,6 +62,10 @@ function logFeedbackReport(context, { feedback, report }) {
   if (validation.valid === false) {
     return { message: validation.message, status: 'invalid' };
   }
+
+  // Ahead of the report line: from here on every wide event of this session is
+  // kept at info, so the trace the developer opens from the report is whole.
+  reportingSessions.keep(report.session_id);
 
   logEvent({
     context: pinPolicyToSignedInfo(context),

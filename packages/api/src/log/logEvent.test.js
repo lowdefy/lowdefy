@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import logEvent from './logEvent.js';
+import reportingSessions from './reportingSessions.js';
 
 function testContext({ eventsConfig, rid = 'rid_1', user = { id: 'user_1' } } = {}) {
   return {
@@ -139,4 +140,24 @@ test('logEvent writes no success at info when sample_rate is 0', () => {
   logEvent({ context, event: 'agent_tool_completed', fields: {} });
   expect(context.logger.info).not.toHaveBeenCalled();
   expect(context.logger.debug).toHaveBeenCalled();
+});
+
+test('logEvent keeps a sampled-out event whose session reported feedback', () => {
+  const context = testContext({ eventsConfig: { sample_rate: 0 } });
+  logEvent({
+    context,
+    event: 'journey_event',
+    fields: { session_id: 'sess-not-reporting' },
+  });
+  expect(context.logger.info).not.toHaveBeenCalled();
+
+  reportingSessions.keep('sess-reporting');
+  const reporting = testContext({ eventsConfig: { sample_rate: 0 } });
+  logEvent({
+    context: reporting,
+    event: 'journey_event',
+    fields: { session_id: 'sess-reporting' },
+  });
+  expect(reporting.logger.info).toHaveBeenCalled();
+  expect(reporting.logger.debug).not.toHaveBeenCalled();
 });

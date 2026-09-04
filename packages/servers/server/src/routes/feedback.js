@@ -16,7 +16,10 @@
 
 import { logFeedbackReport } from '@lowdefy/api';
 
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 import lowdefyConfig from '../../lib/build/config.js';
+
+const guardSameOrigin = createSameOriginGuard();
 
 // An end user's "this is broken" report. Unlike the journey beacon this is a
 // signed write: the app must have turned feedback on, and the caller must be
@@ -27,16 +30,9 @@ async function feedbackHandler(c) {
     return c.json({ error: 'Method not allowed.' }, 405);
   }
 
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
-    return c.json({ error: 'Forbidden' }, 403);
+  const forbidden = guardSameOrigin(c);
+  if (forbidden) {
+    return forbidden;
   }
 
   const context = c.get('lowdefyContext');

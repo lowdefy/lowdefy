@@ -17,7 +17,9 @@
 import { jest } from '@jest/globals';
 
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
+import logEvent from '../../log/logEvent.js';
 import logFeedbackReport from './logFeedbackReport.js';
+import reportingSessions from '../../log/reportingSessions.js';
 
 const report = {
   text: 'The save button does nothing on this order.',
@@ -146,4 +148,38 @@ test.each([
 
   expect(result.status).toBe('invalid');
   expect(context.logger.info).not.toHaveBeenCalled();
+});
+
+test('logFeedbackReport keeps the reporting session, so its later sampled-out events are kept', () => {
+  const session_id = 'sess-force-sampled';
+  const before = testContext({ events: { sample_rate: 0 }, user });
+  logEvent({
+    context: before,
+    event: 'journey_event',
+    fields: { session_id },
+  });
+  expect(before.logger.info).not.toHaveBeenCalled();
+
+  logFeedbackReport(testContext({ user }), {
+    feedback: { enabled: true },
+    report: { ...report, session_id },
+  });
+
+  const after = testContext({ events: { sample_rate: 0 }, user });
+  logEvent({
+    context: after,
+    event: 'journey_event',
+    fields: { session_id },
+  });
+  expect(after.logger.info).toHaveBeenCalledTimes(1);
+  expect(after.logger.debug).not.toHaveBeenCalled();
+});
+
+test('logFeedbackReport does not keep a report that carries no session_id', () => {
+  logFeedbackReport(testContext({ user }), {
+    feedback: { enabled: true },
+    report: { ...report, session_id: undefined },
+  });
+
+  expect(reportingSessions.has(undefined)).toBe(false);
 });
