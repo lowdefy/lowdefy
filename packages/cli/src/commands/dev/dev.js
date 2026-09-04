@@ -17,6 +17,7 @@
 import { findAvailablePort } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import checkAppDependencies from './checkAppDependencies.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import installServer from '../../utils/installServer.js';
 import runDevServer from './runDevServer.js';
@@ -24,6 +25,7 @@ import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
   const directory = context.directories.dev;
+  await checkAppDependencies({ context });
   context.logger.info('Starting development server.');
   const port = await findAvailablePort({ port: context.options.port });
   if (port !== context.options.port) {

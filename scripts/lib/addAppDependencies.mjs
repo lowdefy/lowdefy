@@ -17,27 +17,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// Mirrors @lowdefy/build filePluginDirectories.js and the CLI's
-// addCustomPluginsAsDeps: a file plugin imports its npm dependencies by bare
-// specifier and resolves them against the server's node_modules, so the app's
-// package.json dependencies are merged into the copied server. Same rules as
-// the CLI: a name the server already declares keeps the server's version, and
-// devDependencies never reach the server.
-const FILE_PLUGIN_DIRECTORIES = [
-  ['plugins', 'blocks'],
-  ['plugins', 'actions'],
-  ['plugins', 'operators'],
-  ['plugins', 'connections'],
-];
+import hasFilePlugins from './hasFilePlugins.mjs';
 
-function hasFilePlugins(configDirectory) {
-  return FILE_PLUGIN_DIRECTORIES.some((segments) =>
-    fs.existsSync(path.join(configDirectory, ...segments))
-  );
-}
-
+// Mirrors the CLI's addCustomPluginsAsDeps: a file plugin imports its npm
+// dependencies by bare specifier, and a plugin copied into the server resolves
+// them against the server's node_modules, so the app's package.json
+// dependencies are merged into the copied server. Same rules as the CLI: a name
+// the server already declares keeps the server's version, and devDependencies
+// never reach the server. The app's own node_modules, which the in-place dev
+// plugin resolves against, is installAppDependencies' job.
 function addAppDependencies({ configDirectory, targetDir, logger }) {
-  if (!hasFilePlugins(configDirectory)) return;
+  if (!hasFilePlugins({ configDirectory })) return;
   const appPackageJsonPath = path.join(configDirectory, 'package.json');
   if (!fs.existsSync(appPackageJsonPath)) return;
   const appDependencies =

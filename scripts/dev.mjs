@@ -42,6 +42,7 @@ import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins, { readLowdefyYaml } from './lib/addPlugins.mjs';
 import addAppDependencies from './lib/addAppDependencies.mjs';
+import installAppDependencies from './lib/installAppDependencies.mjs';
 import createWorkspace from './lib/createWorkspace.mjs';
 
 const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
@@ -118,6 +119,7 @@ logger.info({ spin: 'succeed' }, 'Rewrote package.json files.');
 
 addPlugins({ configDirectory, targetDir: devDir, logger });
 addAppDependencies({ configDirectory, targetDir: devDir, logger });
+installAppDependencies({ configDirectory, logger });
 
 // -- Step 7: Create isolated workspace --
 

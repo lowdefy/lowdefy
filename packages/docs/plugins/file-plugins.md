@@ -154,12 +154,12 @@ restarts when you edit one.
 
 For a production build every plugin file, and every file it imports relatively, is copied into the
 server directory, and the generated imports point at the copy - the deployed server runs without
-the config directory. Bare package imports resolve from the server's `node_modules`, so the
-dependencies declared in the app's `package.json` are installed into the server whenever the app
-has a `plugins` directory. A dependency the server already ships (`react`, `antd`, `dayjs`) keeps
-the server's version.
+the config directory.
 
-`package.json`, beside `lowdefy.yaml`:
+### The dependency contract
+
+An npm package a file plugin imports is declared once, in the app's `package.json` beside
+`lowdefy.yaml`:
 
 ```json
 {
@@ -168,6 +168,23 @@ the server's version.
   }
 }
 ```
+
+It is then installed in two places, because the plugin is loaded from two places:
+
+- **In development, install it yourself in the config directory** - `pnpm install` (or npm, or
+  yarn) where the app's `package.json` is. The plugin is loaded in place from the config
+  directory, so its bare imports resolve against the app's own `node_modules`. `lowdefy dev`
+  checks every declared dependency before it starts and stops with the names that are missing,
+  rather than letting the page fail later with `Cannot find module`.
+- **For production, Lowdefy installs it in the server for you** - whenever the app has a `plugins`
+  directory the dependencies from the app's `package.json` are merged into the server's
+  `package.json` and installed there, next to the copied plugin files.
+
+Two rules follow from the second one. `devDependencies` are never merged, so a package the plugin
+imports belongs in `dependencies`, and the app's test and lint tooling stays out of the deployed
+server. And a name the server already declares keeps the server's version - `react`, `antd`,
+`dayjs` and the rest of the client runtime are pinned by the server, and a second copy of one of
+them would break the bundle.
 
 ### Examples, so the agent can see the plugin it just wrote
 
