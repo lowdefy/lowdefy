@@ -770,6 +770,15 @@
         - id: Box
           type: MenuLink
           pageId: Box
+        - id: Grid
+          type: MenuLink
+          pageId: Grid
+        - id: Row
+          type: MenuLink
+          pageId: Row
+        - id: Stack
+          type: MenuLink
+          pageId: Stack
         - id: Card
           type: MenuLink
           pageId: Card

@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: A 24 column Grid
+  blocks:
+    - id: grid_basic
+      type: Grid
+      blocks:
+        - id: grid_basic_main
+          type: Box
+          class: col-span-16 p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: col-span-16
+        - id: grid_basic_side
+          type: Box
+          class: col-span-8 p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: col-span-8
+
+- title: Responsive children
+  blocks:
+    - id: grid_responsive
+      type: Grid
+      properties:
+        gap: lg
+      blocks:
+        - id: grid_responsive_form
+          type: Box
+          class: col-span-24 md:col-span-16 p-2 rounded bg-green-500/10
+          properties:
+            content: Full width on small screens, two thirds from md up.
+        - id: grid_responsive_side
+          type: Box
+          class: col-span-24 md:col-span-8 p-2 rounded bg-orange-500/10
+          properties:
+            content: Full width on small screens, one third from md up.
+
+- title: An even column count
+  blocks:
+    - id: grid_tiles
+      type: Grid
+      properties:
+        columns: 2
+        columnsMd: 4
+        gap: sm
+      blocks:
+        - id: grid_tiles_users
+          type: Box
+          class: p-4 rounded border border-blue-500/20 bg-blue-500/5
+          properties:
+            content: Users
+        - id: grid_tiles_revenue
+          type: Box
+          class: p-4 rounded border border-green-500/20 bg-green-500/5
+          properties:
+            content: Revenue
+        - id: grid_tiles_tasks
+          type: Box
+          class: p-4 rounded border border-orange-500/20 bg-orange-500/5
+          properties:
+            content: Tasks
+        - id: grid_tiles_errors
+          type: Box
+          class: p-4 rounded border border-red-500/20 bg-red-500/5
+          properties:
+            content: Errors

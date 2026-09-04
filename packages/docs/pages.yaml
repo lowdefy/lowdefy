@@ -190,6 +190,7 @@
 - _ref: blocks/container/DropdownMenu.yaml
 - _ref: blocks/container/Flex.yaml
 - _ref: blocks/container/Footer.yaml
+- _ref: blocks/container/Grid.yaml
 - _ref: blocks/container/GoogleMaps.yaml
 - _ref: blocks/container/GoogleMapsHeatmap.yaml
 - _ref: blocks/container/GoogleMapsScript.yaml
@@ -199,6 +200,8 @@
 - _ref: blocks/container/Masonry.yaml
 - _ref: blocks/container/MobileMenu.yaml
 - _ref: blocks/container/Modal.yaml
+- _ref: blocks/container/Row.yaml
+- _ref: blocks/container/Stack.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSidebarLayout.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
