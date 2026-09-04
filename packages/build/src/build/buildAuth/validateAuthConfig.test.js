@@ -135,12 +135,22 @@ test('validateAuthConfig throws when strategies is not an array', () => {
   );
 });
 
-test('validateAuthConfig throws when only dev.mockUser is set, since it is not a mechanism', () => {
+test('validateAuthConfig does not demand a mechanism when only dev.mockUser is set', () => {
   const components = {
     auth: {
       dev: {
         mockUser: { id: 'user-1', roles: ['admin'] },
       },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when dev.mockUser is set alongside a runtime auth key', () => {
+  const components = {
+    auth: {
+      dev: { mockUser: { id: 'user-1', roles: ['admin'] } },
+      secret: validSecret,
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
@@ -1275,4 +1285,37 @@ test('validateAuthConfig does not require oauthProvider.postLoginPage under the 
     },
   };
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig does not require an auth mechanism when auth only declares dev users', () => {
+  const components = {
+    auth: {
+      dev: {
+        browserUser: 'admin',
+        users: { admin: { id: 'u1', roles: ['admin'] } },
+      },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig still schema-checks an auth block that only declares dev users', () => {
+  const components = {
+    auth: {
+      dev: { users: { admin: { id: 'u1', notACallerField: true } } },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(/unknown property/);
+});
+
+test('validateAuthConfig throws when auth declares dev users alongside a key that needs a mechanism', () => {
+  const components = {
+    auth: {
+      dev: { users: { admin: { id: 'u1' } } },
+      secret: validSecret,
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth is configured without an authentication mechanism.'
+  );
 });

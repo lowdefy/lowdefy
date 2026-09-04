@@ -98,12 +98,13 @@ test('getMockUser throws when LOWDEFY_DEV_USER is not valid JSON', async () => {
   expect(() => getMockUser()).toThrow('Invalid JSON in LOWDEFY_DEV_USER environment variable.');
 });
 
-test('getMockUser throws when a dev browser user is set but auth is not configured', async () => {
+test('getMockUser resolves the browser user when auth.dev is the only auth config', async () => {
   const getMockUser = await importGetMockUser({
-    auth: { dev: { browserUser: 'admin', users: { admin: { id: 'dev-admin' } } } },
+    auth: {
+      configured: false,
+      dev: { browserUser: 'admin', users: { admin: { id: 'dev-admin', roles: ['admin'] } } },
+    },
   });
 
-  expect(() => getMockUser()).toThrow(
-    'A dev browser user is configured but auth is not configured in lowdefy.yaml.'
-  );
+  expect(getMockUser()).toEqual({ id: 'dev-admin', roles: ['admin'] });
 });

@@ -80,6 +80,18 @@ test('logFeedbackReport refuses when the app has not enabled feedback', () => {
   expect(context.logger.info).not.toHaveBeenCalled();
 });
 
+// In dev an app whose only auth key is auth.dev has no auth stack, and the dev
+// server injects auth.dev.browserUser as a pre-resolved, organization-less
+// caller. The feedback gate is a signed-write check on that caller, not on
+// whether the app configured an auth engine, so the report is accepted.
+test('logFeedbackReport accepts an injected dev browser user with no organization', () => {
+  const context = testContext({ user: { id: 'dev-ada', roles: ['support'], attributes: {} } });
+  const result = logFeedbackReport(context, { feedback: { enabled: true }, report });
+
+  expect(result).toEqual({ status: 'ok' });
+  expect(context.logger.info).toHaveBeenCalledTimes(1);
+});
+
 test('logFeedbackReport refuses an unauthenticated caller', () => {
   const context = testContext();
   const result = logFeedbackReport(context, { feedback: { enabled: true }, report });

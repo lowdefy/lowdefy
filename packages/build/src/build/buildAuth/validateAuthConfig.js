@@ -20,6 +20,7 @@ import { isReserved, type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
 import lowdefySchema from '../../lowdefySchema.js';
+import getAuthKeys from './getAuthKeys.js';
 import isAuthConfigured from './isAuthConfigured.js';
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
@@ -70,11 +71,18 @@ function validateAuthConfig({ components }) {
     throw new ConfigError('lowdefy.auth is not an object.', { configKey: components['~k'] });
   }
 
-  if (!isAuthConfigured({ components })) {
+  if (getAuthKeys({ components }).length === 0) {
     return components;
   }
 
   validateSchema({ components });
+
+  // The checks below describe a runtime auth stack. A block whose only
+  // substance is auth.dev declares none - it names dev-server callers - so it
+  // is schema-checked (above) and by validateAuthDev, and stops here.
+  if (!isAuthConfigured({ components })) {
+    return components;
+  }
 
   const auth = components.auth;
   const configKey = auth['~k'];
@@ -87,8 +95,8 @@ function validateAuthConfig({ components }) {
     emailAndPasswordEnabled || magicLinkEnabled || phoneNumberEnabled || hasProviders;
   const hasStrategies = type.isArray(auth.strategies) && auth.strategies.length > 0;
 
-  // dev.mockUser is a server-dev-only bypass, not a mechanism - a block whose
-  // only substance is dev.mockUser still fails this check.
+  // dev.mockUser is a server-dev-only bypass, never a mechanism: it cannot
+  // satisfy this check for a block that also declares runtime auth keys.
   if (!hasLoginMethod && !hasStrategies) {
     throw new ConfigError(
       'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',

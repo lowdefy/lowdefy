@@ -20,9 +20,9 @@ import authJson from '../../build/auth.js';
 
 // auth.dev.users is the one declaration of a dev caller: the headless tools
 // take an entry name as their "user" parameter, and auth.dev.browserUser names
-// the entry the developer's own browser is signed in as. Naming an entry here
-// does not require auth to be configured - only selecting one as the browser
-// user does (getMockUser), because that is what bypasses login.
+// the entry the developer's own browser is signed in as. Neither requires an
+// auth stack: auth.dev is a dev-only concern, so an app whose only auth key is
+// auth.dev still resolves these callers.
 let devUsers;
 
 function getDevUsers() {

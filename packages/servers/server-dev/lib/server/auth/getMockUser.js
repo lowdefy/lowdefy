@@ -29,6 +29,10 @@ import resolveDevUser from './resolveDevUser.js';
 // same resolveDevUser the headless tools use. auth.dev.mockUser is the
 // deprecated v7 spelling of an anonymous entry and is removed in v9.
 // LOWDEFY_DEV_USER (an inline JSON user) takes precedence over both.
+//
+// A dev browser user needs no auth stack behind it: auth.dev is a dev-only
+// concern, so an app whose only auth key is auth.dev runs signed out in
+// production and has this caller in the dev server.
 function getMockUser() {
   const devUserJson = process.env.LOWDEFY_DEV_USER;
   let browserUser;
@@ -52,13 +56,6 @@ function getMockUser() {
 
   if (type.isNone(browserUser)) {
     return null;
-  }
-
-  if (authJson.configured !== true) {
-    throw new ConfigError(
-      'A dev browser user is configured but auth is not configured in lowdefy.yaml. ' +
-        'Add auth configuration to bypass login in the dev server.'
-    );
   }
 
   // The roles/attributes floor is applied at injection by

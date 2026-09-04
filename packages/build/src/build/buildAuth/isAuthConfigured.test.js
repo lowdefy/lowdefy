@@ -52,3 +52,26 @@ test('isAuthConfigured returns true when auth has a non-marker key', () => {
   };
   expect(isAuthConfigured({ components })).toBe(true);
 });
+
+test('isAuthConfigured returns false when auth only declares dev users', () => {
+  const components = {
+    auth: {
+      '~k': '1',
+      dev: {
+        browserUser: 'admin',
+        users: { admin: { id: 'u1', roles: ['admin'] } },
+      },
+    },
+  };
+  expect(isAuthConfigured({ components })).toBe(false);
+});
+
+test('isAuthConfigured returns true when auth declares dev users alongside a mechanism', () => {
+  const components = {
+    auth: {
+      dev: { users: { admin: {} } },
+      emailAndPassword: { enabled: true },
+    },
+  };
+  expect(isAuthConfigured({ components })).toBe(true);
+});

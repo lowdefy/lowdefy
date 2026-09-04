@@ -30,7 +30,9 @@ function checkMockUserWarning(context) {
       const authJsonPath = path.join(context.directories.build, 'auth.json');
       const authJsonContent = await readFile(authJsonPath, 'utf8');
       const authJson = JSON.parse(authJsonContent);
-      if (authJson.dev?.mockUser) {
+      // browserUser is the supported spelling; mockUser is the deprecated one.
+      // Either means the browser is a pre-resolved caller and never signs in.
+      if (authJson.dev?.browserUser || authJson.dev?.mockUser) {
         context.logger.warn('Mock user active - login bypassed');
       }
     } catch {

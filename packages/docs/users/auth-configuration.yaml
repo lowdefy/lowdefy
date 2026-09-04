@@ -233,7 +233,9 @@ _ref:
 
                 > **Note:** This only works with the development server (`lowdefy dev`). The production server ignores it for security.
 
-                > **Note:** Bypassing login bypasses the auth engine rather than exercising it — a config whose only auth substance is a dev user still fails the "no auth mechanism" build check, and [auth steps](/auth-steps) (which need the running auth engine) are unavailable under it.
+                > **Note:** Bypassing login bypasses the auth engine rather than exercising it, so [auth steps](/auth-steps) (which need the running auth engine) are unavailable under it.
+
+                `auth.dev` needs no auth stack behind it. An `auth` block whose only key is `dev` is not an auth configuration: it demands no login method, no `secret` and no `database`, the app builds and runs signed out in production, and in the dev server the browser is the caller `dev.browserUser` names. Adding any other `auth` key declares a real auth stack, and the build then requires a mechanism, a secret and (for a login method) a database as usual.
 
                 > **Deprecated:** `auth.dev.mockUser` declared an anonymous browser caller inline. It still works in v8 and warns at build (check slug `auth-dev-mock-user`); it is removed in v9. Move it into a `dev.users` entry and select it with `dev.browserUser`. Declaring both is a build error.
 
@@ -269,6 +271,8 @@ _ref:
                 A name that is not declared is refused with a `400` that lists the declared names. It never falls back to the default roleless caller, which would render an empty page that looks like a working one.
 
                 > **Note:** Declaring an entry does not bypass login. It names a caller a dev tool can act as — the developer's own browser still signs in normally. Select one with `dev.browserUser` above to bypass login for the whole dev server.
+
+                > **Note:** `dev.users` on its own is not an auth configuration either. An app with no login method can declare dev callers for its headless tools and still build, run and deploy signed out.
 
                 > **Note:** Named dev users only work with the development server (`lowdefy dev`). The production server ignores them.
 
