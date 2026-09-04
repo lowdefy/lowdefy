@@ -15,8 +15,10 @@
 */
 
 import renderAxiomMonitor, { monitorName } from './renderAxiomMonitor.mjs';
+import resolveNotifierIds from './resolveNotifierIds.mjs';
 
 const API_URL = 'https://api.axiom.co/v2/monitors';
+const NOTIFIERS_URL = 'https://api.axiom.co/v2/notifiers';
 
 async function request({ fetchImpl, url, method, token, orgId, body }) {
   const response = await fetchImpl(url, {
@@ -39,7 +41,10 @@ async function request({ fetchImpl, url, method, token, orgId, body }) {
   Idempotent by monitor name: every monitor this app owns is named
   `lowdefy:<app>:<id>`, so a second run updates the same monitors instead of
   creating a second set. An existing monitor's notifierIds are kept — routing is
-  the operator's, not the build's.
+  the operator's, not the build's — but they are verified against the notifiers
+  Axiom actually has, and every monitor is resolved before the first write, so a
+  routing mistake fails the whole push instead of leaving half the monitors
+  updated and the rest silent.
 */
 async function syncMonitors({
   monitors,
@@ -47,6 +52,8 @@ async function syncMonitors({
   dataset,
   token,
   orgId,
+  notifiers = [],
+  allowSilent = false,
   fetchImpl = fetch,
   dryRun = false,
   log = console.log,
@@ -61,17 +68,36 @@ async function syncMonitors({
     ? []
     : await request({ fetchImpl, url: API_URL, method: 'GET', token, orgId });
   const existingByName = new Map((existing ?? []).map((monitor) => [monitor.name, monitor]));
+  const available = dryRun
+    ? []
+    : await request({ fetchImpl, url: NOTIFIERS_URL, method: 'GET', token, orgId });
 
-  const results = [];
-  for (const monitor of active) {
+  if (dryRun && active.length > 0) {
+    log(
+      'dry-run: no call is made, so notifier routing is not resolved — every payload below prints with an empty notifierIds.'
+    );
+  }
+  const planned = active.map((monitor) => {
     const name = monitorName({ app, monitor });
     const current = existingByName.get(name);
-    const payload = renderAxiomMonitor({
-      monitor,
-      app,
-      dataset,
-      notifierIds: current?.notifierIds ?? [],
-    });
+    const notifierIds = dryRun
+      ? []
+      : resolveNotifierIds({
+          monitorName: name,
+          requested: notifiers,
+          existingNotifierIds: current?.notifierIds ?? [],
+          available: available ?? [],
+          allowSilent,
+        });
+    return {
+      name,
+      current,
+      payload: renderAxiomMonitor({ monitor, app, dataset, notifierIds }),
+    };
+  });
+
+  const results = [];
+  for (const { name, current, payload } of planned) {
     if (dryRun) {
       log(JSON.stringify(payload, null, 2));
       results.push({ action: 'dry-run', name, payload });
@@ -104,5 +130,5 @@ async function syncMonitors({
   return { results, skipped: skipped.map((monitor) => monitor.id) };
 }
 
-export { API_URL };
+export { API_URL, NOTIFIERS_URL };
 export default syncMonitors;

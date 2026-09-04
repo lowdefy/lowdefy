@@ -22,8 +22,16 @@
 
   Usage:
     AXIOM_TOKEN=... AXIOM_ORG_ID=... AXIOM_DATASET=... \
-      node scripts/monitors/pushAxiom.mjs [build-directory] [--dry-run] [--app <slug>]
+      node scripts/monitors/pushAxiom.mjs [build-directory] [--dry-run] [--app <slug>] \
+        [--notifier <name>] [--allow-silent]
     pnpm monitors:push .lowdefy/build --dry-run
+
+  Axiom, not Lowdefy, delivers the alert: a monitor fires and Axiom sends it to
+  the notifiers attached to it. Name them with --notifier (repeatable) or
+  AXIOM_NOTIFIERS, or attach them in Axiom and the push keeps them. A monitor
+  that would end up with no notifier, or one whose notifier no longer exists,
+  fails the push - a monitor nobody hears from looks exactly like a healthy one.
+  Pass --allow-silent to push unrouted monitors anyway.
 
   The framework produces the payload; this script makes the call. Any sink that
   accepts the same wide events can consume the same artifact — add a renderer
@@ -33,21 +41,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import parsePushArgs from './parsePushArgs.mjs';
 import syncMonitors from './syncMonitors.mjs';
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function parseArgs(argv) {
-  const flags = argv.filter((arg) => arg.startsWith('--'));
-  const positional = argv.filter((arg) => !arg.startsWith('--'));
-  const appIndex = argv.indexOf('--app');
-  return {
-    buildDirectory: path.resolve(positional[0] ?? '.lowdefy/build'),
-    dryRun: flags.includes('--dry-run'),
-    app: appIndex === -1 ? null : argv[appIndex + 1],
-  };
 }
 
 function resolveApp({ buildDirectory, app }) {
@@ -61,7 +59,13 @@ function resolveApp({ buildDirectory, app }) {
 }
 
 async function run() {
-  const { buildDirectory, dryRun, app: appArg } = parseArgs(process.argv.slice(2));
+  const {
+    buildDirectory,
+    dryRun,
+    allowSilent,
+    app: appArg,
+    notifiers,
+  } = parsePushArgs({ argv: process.argv.slice(2), env: process.env });
   const monitorsPath = path.join(buildDirectory, 'monitors.json');
   if (!fs.existsSync(monitorsPath)) {
     console.error(
@@ -94,6 +98,8 @@ async function run() {
     dataset,
     token,
     orgId,
+    notifiers,
+    allowSilent,
     dryRun,
   });
   console.log(

@@ -126,16 +126,43 @@ test('buildMonitors keys the connection monitor on the ServiceError name', () =>
   expect(monitors[0].rule.total.filter).toEqual({ connection_id: 'db' });
 });
 
-test('buildMonitors marks a notification monitor no-event-yet because nothing logs delivery', () => {
+test('buildMonitors marks a notification nothing delivers as delivery-unknown', () => {
   const monitors = buildMonitors({
     components: { notifications: [{ notificationId: 'welcome', type: 'EmailTemplate' }] },
     context: createContext(),
   });
   expect(monitors[0].id).toBe('notification:welcome:delivery_failure');
-  expect(monitors[0].status).toBe('no-event-yet');
+  expect(monitors[0].status).toBe('delivery-unknown');
   expect(monitors[0].event).toBe(null);
   expect(monitors[0].rule).toBe(null);
-  expect(monitors[0].note).toMatch('No delivery event is emitted yet');
+  expect(monitors[0].delivery).toEqual({ owner: 'none', endpoints: [], auth_flows: [] });
+  expect(monitors[0].note).toMatch('Nothing delivers "welcome"');
+});
+
+test('buildMonitors points a rendered notification at the endpoint monitor that covers its send', () => {
+  const monitors = buildMonitors({
+    components: {
+      notifications: [{ notificationId: 'invite', type: 'EmailTemplate' }],
+      api: [
+        {
+          endpointId: 'dispatch_invite',
+          routine: [
+            { id: 'render', type: 'RenderNotification', properties: { notificationId: 'invite' } },
+          ],
+        },
+      ],
+    },
+    context: createContext(),
+  });
+  const notification = byId(monitors, 'notification:invite:delivery_failure');
+  expect(notification.status).toBe('covered');
+  expect(notification.delivery).toEqual({
+    owner: 'app',
+    endpoints: ['dispatch_invite'],
+    auth_flows: [],
+  });
+  expect(notification.covered_by).toEqual(['endpoint:dispatch_invite:error_rate']);
+  expect(byId(monitors, 'endpoint:dispatch_invite:error_rate')).toBeDefined();
 });
 
 test('buildMonitors resolves source to file:line from the keyMap', () => {

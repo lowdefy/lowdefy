@@ -1339,8 +1339,18 @@
       "rule": null,
       "config_key": "10",
       "source": "<CONFIG_DIR>/modules/invites/notifications/invite-user.yaml:1",
-      "status": "no-event-yet",
-      "note": "No delivery event is emitted yet. RenderNotification logs only debug lines; add a wide `notification_delivered` / `notification_failed` event to the notification path to make this monitor pushable."
+      "delivery": {
+        "owner": "app",
+        "endpoints": [
+          "invites/dispatch-invite"
+        ],
+        "auth_flows": []
+      },
+      "covered_by": [
+        "endpoint:invites/dispatch-invite:error_rate"
+      ],
+      "status": "covered",
+      "note": "Delivered by the app: endpoint(s) invites/dispatch-invite render this notification and send it with a request step, so a failed send fails that step and its endpoint. Watched by endpoint:invites/dispatch-invite:error_rate. Lowdefy writes no notification-scoped delivery event."
     }
   ],
   "notifications/invites/invite-user.json": {

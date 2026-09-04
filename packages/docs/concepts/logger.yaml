@@ -432,11 +432,29 @@ _ref:
             | Scheduled endpoint | Freshness: no `endpoint_completed` for that `endpoint_id` in twice the longest gap its cron leaves |
             | Page request | p95 `duration_ms` above 2000ms, and an error rate on `request_failed` |
             | Connection | Rate of `request_failed` with `error.name == "ServiceError"` - the service being down, not a bad query |
-            | Notification | Written with `status: "no-event-yet"`: the notification path logs no structured delivery event yet, so the entry records the gap rather than hiding it |
+            | Notification | No rule of its own - the entry names who delivers it and which monitor covers that send (see below) |
 
             Every entry carries `config_key` and `source` (`file:line`), so an
-            alert points at the config that declared the unit, not just at an id.
-            The file is always written, as `[]` when the app declares nothing.
+            alert points at the config that declared the unit. The file is
+            always written, as `[]` when the app declares nothing.
+
+            ### Notifications: who delivers
+
+            A notification is not a unit of work, so it emits no event of its
+            own. What can fail is its delivery, and delivery has an owner - so
+            each notification entry carries a `delivery` block, a `covered_by`
+            list, and one of three statuses:
+
+            | `status` | Meaning |
+            | --- | --- |
+            | `covered` | `delivery.owner: app`. A routine renders the notification and sends it with the request step that follows, so a failed send fails that step and its endpoint. `covered_by` names the endpoint monitors that already watch it. |
+            | `no-event-yet` | `delivery.owner: framework`. The notification is wired to an auth email flow (`auth.email.templates`), which the server sends itself through `auth.email.connectionId`, outside the request resolver. No wide event is written on that path, so a failed auth email is invisible today. |
+            | `delivery-unknown` | Either nothing renders the notification and no auth flow uses it, or an endpoint builds the `notificationId` with an operator, so the build cannot attribute the send. The `note` says which. |
+
+            Notification entries are never pushed to a sink - they carry no rule
+            - but `monitors:push` prints each one it skips with its status and
+            note, so a notification nobody sends, or one on the auth path with
+            no event, shows up on every deploy rather than staying quiet.
 
             ### Pushing them to a sink
 
@@ -454,6 +472,33 @@ _ref:
             deploy updates the same monitors instead of duplicating them, and the
             notifiers you attached in Axiom are left alone. `--dry-run` prints the
             payloads and calls nothing.
+
+            ### Alert delivery is the sink's
+
+            Lowdefy never sends an alert. A monitor fires and the sink delivers
+            it to the notifiers attached to that monitor - so a monitor with no
+            notifier, or one pointing at a notifier that has since been deleted,
+            looks exactly like a healthy monitor: it just never tells anyone.
+            The push resolves routing for every monitor before it writes the
+            first one, and fails the whole push, naming the monitor, when:
+
+            - a `--notifier` you named does not exist in Axiom (the message
+              lists the notifiers that do);
+            - a monitor already in Axiom points at a notifier that has been
+              deleted;
+            - a monitor would end up with no notifier at all.
+
+            Name the notifiers on the push, or attach them in Axiom once and
+            they are kept:
+
+            ```
+            AXIOM_TOKEN=xaat-... AXIOM_ORG_ID=my-org AXIOM_DATASET=my-dataset \
+              pnpm monitors:push .lowdefy/build --notifier oncall --notifier slack-alerts
+            ```
+
+            `--notifier` is repeatable and `AXIOM_NOTIFIERS=oncall,slack-alerts`
+            is its CI form. Pass `--allow-silent` to push unrouted monitors
+            deliberately.
 
             The artifact is not Axiom-shaped. Any sink that accepts the same
             events - Grafana, Datadog, Honeycomb, or your own alerting - can
