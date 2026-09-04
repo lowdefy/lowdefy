@@ -60,7 +60,6 @@ function createContext({
     errors: [],
     jsBodies: [],
     pageTypes: {},
-    envReferences: [],
     jsMap: {},
     jsModules: { client: {}, server: {} },
     warnings: [],

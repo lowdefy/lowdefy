@@ -131,17 +131,3 @@ test('missingSecrets reports one missing secret once per config location', () =>
   });
   expect(context.warnings.map((warning) => warning.configKey)).toEqual(['key:a', 'key:b']);
 });
-
-test('missingSecrets warns for a _build.env name the walker recorded that the environment does not set', () => {
-  const context = createContext();
-  context.envReferences = [
-    { name: 'LDF_TEST_ENV_MISSING', hasDefault: false, configKey: 'k_env_1' },
-    { name: 'LDF_TEST_ENV_DEFAULTED', hasDefault: true, configKey: 'k_env_2' },
-    { name: 'PATH', hasDefault: false, configKey: 'k_env_3' },
-  ];
-  missingSecrets.run({ components: {}, context });
-  expect(context.warnings).toHaveLength(1);
-  expect(context.warnings[0].message).toContain('Environment variable "LDF_TEST_ENV_MISSING" is not set');
-  expect(context.warnings[0].configKey).toBe('k_env_1');
-});
-

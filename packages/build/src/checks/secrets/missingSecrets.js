@@ -58,22 +58,6 @@ function run({ components, context }) {
     );
   });
 
-  // _build.env names, recorded by the ref walker before it inlined them.
-  const envReported = new Set();
-  (context.envReferences ?? []).forEach(({ name, hasDefault, configKey }) => {
-    if (hasDefault) return;
-    const site = `${name} ${configKey}`;
-    if (envReported.has(site)) return;
-    envReported.add(site);
-    if (!type.isUndefined(process.env[name])) return;
-    context.handleWarning(
-      new ConfigWarning(
-        `Environment variable "${name}" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default.`,
-        { configKey, checkSlug: 'secrets' }
-      )
-    );
-  });
-
   if (dynamic > 0) {
     context.logger.debug(
       `${dynamic} _secret ${

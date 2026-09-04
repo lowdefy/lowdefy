@@ -2812,3 +2812,38 @@ type: Box
     expect(res.modules[0].vars).toEqual({ title: 'My Title' });
   });
 });
+
+test('buildRefs warns at the inline site when _build.env names a variable the environment does not set', async () => {
+  delete process.env.LDF_TEST_UNSET_VAR;
+  context.warnings = [];
+  mockReadConfigFile.mockImplementation(
+    readConfigFileMockImplementation([
+      { path: 'lowdefy.yaml', content: `field:\n  _build.env: LDF_TEST_UNSET_VAR` },
+    ])
+  );
+  const res = await buildRefs({ context });
+  expect(res.field).toBeNull();
+  expect(context.warnings).toHaveLength(1);
+  expect(context.warnings[0].message).toContain(
+    'Environment variable "LDF_TEST_UNSET_VAR" is not set'
+  );
+  expect(context.warnings[0].checkSlug).toBe('secrets');
+  context.warnings = undefined;
+});
+
+test('buildRefs does not warn when an unset _build.env variable has a default', async () => {
+  delete process.env.LDF_TEST_UNSET_VAR;
+  context.warnings = [];
+  mockReadConfigFile.mockImplementation(
+    readConfigFileMockImplementation([
+      {
+        path: 'lowdefy.yaml',
+        content: `field:\n  _build.env:\n    key: LDF_TEST_UNSET_VAR\n    default: fallback`,
+      },
+    ])
+  );
+  const res = await buildRefs({ context });
+  expect(res.field).toBe('fallback');
+  expect(context.warnings).toEqual([]);
+  context.warnings = undefined;
+});
