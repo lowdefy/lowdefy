@@ -44,6 +44,7 @@ It provides these tools:
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                                                                                                  |
 | `lowdefy_check`                  | Run every production build check offline — including the prod-only checks `lowdefy dev` hides — plus the check-only rules (js lint). Returns located errors and warnings; the same report as `lowdefy check --json`. Call before telling the developer a change is done |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout                                                                      |
+| `lowdefy_measure_page`           | Measure what one state change costs the engine on a page: blocks re-evaluated, operator parses (total and per block expression), nodes copied, and p50/p95/max ms per update — with an optional journey to measure a real interaction                                   |
 | `lowdefy_snapshot`               | Golden snapshot of a page as a named user under deterministic browser settings: the viewport PNG, the app root DOM, the page state and the page's `~snapshotIgnore` paths — what `lowdefy snapshot --check` diffs                                                       |
 | `lowdefy_seed_fixture`           | Load a named fixture (`fixtures/<name>.yaml`) into the dev database through the connection layer so a page has data to show (needs `allowWriteRequests`; `reset` empties first)                                                                                         |
 | `lowdefy_prod_errors`            | Production failures from the app log sink, grouped by `source`, `org`, `page` or `endpoint`, since the deploy or an ISO time — each group carries a resolved `source` and a `sample_rid`                                                                                |
@@ -295,6 +296,28 @@ A step that fails **stops the journey and comes back as data**, never as a tool 
 Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
 
 Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
+
+## Measuring a page — `lowdefy_measure_page`
+
+A page that feels slow to type in is usually not slow to render — it is slow to evaluate. Every state change makes the engine walk every block on the page and parse nine expressions per block (`visible`, `properties`, `required`, `class`, `style`, `layout`, `loading`, `skeleton`, `slotsLayout`) plus one per validation test, and a change that flips a block's visibility runs the whole cascade again, up to twenty times. `lowdefy_measure_page` (or `POST /lowdefy-docs/measure-page`) opens the page headless, turns the engine's counters on once the page has settled, drives it, and reports what one state change actually cost:
+
+```json
+{
+  "pageId": "customers",
+  "blocks": 214,
+  "updates": 6,
+  "blockVisits": 1284,
+  "parses": { "total": 11556, "byKind": { "properties": 1284, "visible": 1284 } },
+  "copyNodes": 98342,
+  "msPerUpdate": { "p50": 8.4, "p95": 19.1, "max": 22.7 },
+  "heaviestBlocks": [{ "blockId": "row_total", "parses": 60, "ms": 14.2, "nodes": 3120 }],
+  "verdict": "1926 parses per state update on 214 blocks (6 updates from 6 synthetic updates, p50 8.4ms, p95 19.1ms per update)."
+}
+```
+
+Pass `steps` (the `lowdefy_run_journey` grammar) to measure a real interaction — typing into a form is the case that matters — and omit them to measure synthetic state updates on the loaded page. The counters cost nothing when nobody asks for them: the engine only allocates them for a session that turned them on, and only a dev build exposes the switch.
+
+Measure before optimising and again after, on the same page and the same steps. The `verdict` line is the number that decides whether operator evaluation is worth compiling away rather than tuning config: if a keystroke on the heaviest page is a few hundred parses and a millisecond, the walker is not the problem and the page's own config is.
 
 ## Explaining a request — `explain: true`
 

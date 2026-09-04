@@ -125,6 +125,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/ops/trace/{rid}` | Every wide event for one request id, in order |',
     '| `GET /lowdefy-docs/ops/slow?endpoint_id=&page_id=&percentile=` | Slowest units by `duration_ms` percentile |',
     '| `GET /lowdefy-docs/ops/repro/{rid}` | The events before a failure, shaped for the journey compiler |',
+    '| `POST /lowdefy-docs/measure-page` | What one state change costs a page: blocks re-evaluated, operator parses by kind, p50/p95/max ms per update, the heaviest blocks and a verdict; pass journey `steps` to measure a real interaction |',
     '| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints: list, create, revert |',
     '| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints: capture/restore live app state |',
     '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; poll build-status) |',

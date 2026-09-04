@@ -68,6 +68,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
   'lowdefy_run_journey',
+  'lowdefy_measure_page',
   'lowdefy_snapshot',
   'lowdefy_scaffold_page',
   'lowdefy_inspect_state',
@@ -182,6 +183,7 @@ test('MCP tools that render a page headless advertise an optional user parameter
   [
     'lowdefy_screenshot_page',
     'lowdefy_run_journey',
+    'lowdefy_measure_page',
     'lowdefy_snapshot',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',

@@ -54,3 +54,36 @@ test('initLowdefyContext sets lowdefyGlobal from rootConfig', () => {
   const result = initLowdefyContext(args);
   expect(result.lowdefyGlobal).toEqual({ key: 'value' });
 });
+
+test('initLowdefyContext exposes no perf helpers on a production build', () => {
+  const result = initLowdefyContext(baseArgs());
+  expect(result.startPerf).toBeUndefined();
+  expect(result.readPerf).toBeUndefined();
+  expect(result.perf).toBeUndefined();
+});
+
+test('startPerf turns engine counters on for the contexts a dev session already built', () => {
+  const args = { ...baseArgs(), stage: 'dev' };
+  const perf = { snapshot: () => ({ updates: 3 }) };
+  const result = initLowdefyContext(args);
+  const internal = {
+    RootSlots: { map: { a: {}, b: {} } },
+    enablePerf: () => {
+      internal.perf = perf;
+    },
+  };
+  result.contexts = { 'page:home': { _internal: internal } };
+
+  expect(result.perf).toBeUndefined();
+  result.startPerf();
+
+  expect(result.perf).toBe(true);
+  expect(result.readPerf()).toEqual([{ id: 'page:home', blocks: 2, updates: 3 }]);
+});
+
+test('readPerf skips contexts that are not counting', () => {
+  const args = { ...baseArgs(), stage: 'dev' };
+  const result = initLowdefyContext(args);
+  result.contexts = { 'page:home': { _internal: { perf: undefined } } };
+  expect(result.readPerf()).toEqual([]);
+});

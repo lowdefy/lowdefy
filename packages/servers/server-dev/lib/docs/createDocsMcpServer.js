@@ -43,6 +43,7 @@ import listConfigCheckpoints from './listConfigCheckpoints.js';
 import listPlugins from './listPlugins.js';
 import listTypes from './listTypes.js';
 import loadState from './loadState.js';
+import measurePage from './measurePage.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
 import runEndpoint from './runEndpoint.js';
@@ -702,6 +703,38 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
         ],
       };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_measure_page',
+    {
+      description:
+        'Measure what one state change costs the engine on a page: how many blocks it re-evaluates, how many operator parses that is (total and per block expression — visible, properties, required, class, style, layout, loading, skeleton, slotsLayout, validate), how many nodes the parser copies, and the p50/p95/max milliseconds per update. Returns a one-line `verdict` ("N parses per state update on M blocks") plus the heaviest blocks. Give `steps` (lowdefy_run_journey grammar) to measure a real interaction such as typing into a form; without steps it triggers synthetic updates on the loaded page. Use it to find out whether a slow page is slow because of operator evaluation before changing anything, and run it again afterwards on the same page and steps.',
+      inputSchema: {
+        pageId: z.string().describe('The page id to measure.'),
+        steps: z
+          .array(z.record(z.any()))
+          .optional()
+          .describe(
+            'Journey steps (same grammar as lowdefy_run_journey) to drive the page while counting, e.g. [{"fill": {"blockId": "name", "value": "abc"}}]. Omit to measure synthetic state updates on the loaded page.'
+          ),
+        user: userSchema,
+        urlQuery: z
+          .record(z.any())
+          .optional()
+          .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+      },
+    },
+    async ({ pageId, steps, user, urlQuery }) => {
+      if (!origin) {
+        return notFoundResult('Measure unavailable: server origin unknown for this transport.');
+      }
+      const result = await measurePage({ origin, pageId, steps, user, urlQuery });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
   );
 

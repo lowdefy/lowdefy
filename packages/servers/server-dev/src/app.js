@@ -50,6 +50,7 @@ import docsDevUsersHandler from './routes/docs/devUsers.js';
 import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
+import docsMeasurePageHandler from './routes/docs/measurePage.js';
 import docsMigrateHandler from './routes/docs/migrate.js';
 import docsMigrationsStatusHandler from './routes/docs/migrationsStatus.js';
 import docsOpsErrorsHandler from './routes/docs/opsErrors.js';
@@ -158,6 +159,7 @@ function createApp() {
   app.get('/lowdefy-docs/snapshot/:pageId', docsSnapshotHandler);
   app.get('/lowdefy-docs/dev-users', docsDevUsersHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
+  app.post('/lowdefy-docs/measure-page', docsMeasurePageHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
@@ -171,6 +173,8 @@ function createApp() {
   // answer the MCP tool gives.
   app.get('/lowdefy-docs/ops/errors', docsOpsErrorsHandler);
   app.get('/lowdefy-docs/ops/trace/:rid', docsOpsTraceHandler);
+  // The query form: /lowdefy-docs/ops/trace?session_id=… (every event of one recorded session).
+  app.get('/lowdefy-docs/ops/trace', docsOpsTraceHandler);
   app.get('/lowdefy-docs/ops/slow', docsOpsSlowHandler);
   app.get('/lowdefy-docs/ops/repro/:rid', docsOpsReproHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);

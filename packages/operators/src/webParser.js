@@ -24,7 +24,12 @@ class WebParser {
     this.parse = this.parse.bind(this);
   }
 
-  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
+  // `kind` is measurement-only: it labels the caller's expression (visible,
+  // properties, a validation test) so the engine's perf counters can report
+  // parses by kind. It never affects evaluation.
+  parse({ actions, args, arrayIndices, event, input, kind, location, operatorPrefix = '_' }) {
+    const perf = this.context._internal?.perf;
+    if (perf) perf.countParse(kind ?? 'other');
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -52,7 +57,9 @@ class WebParser {
       user,
       _internal,
     } = this.context._internal.lowdefy;
+    let nodes = 0;
     const reviver = (_, value) => {
+      if (perf) nodes += 1;
       if (!type.isObject(value)) return value;
 
       if (Object.keys(value).length !== 1) return value;
@@ -121,10 +128,16 @@ class WebParser {
         return null;
       }
     };
-    return {
-      output: serializer.copy(input, { reviver }),
-      errors,
-    };
+    if (!perf) {
+      return {
+        output: serializer.copy(input, { reviver }),
+        errors,
+      };
+    }
+    const start = performance.now();
+    const output = serializer.copy(input, { reviver });
+    perf.countCopy({ location, ms: performance.now() - start, nodes });
+    return { output, errors };
   }
 }
 

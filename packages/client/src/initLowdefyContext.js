@@ -90,6 +90,24 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     });
 
     if (stage === 'dev' || stage === 'e2e') {
+      // Engine evaluation counters, off until something asks for them: the
+      // engine allocates them per context only while lowdefy.perf is true, so
+      // a normal dev session pays nothing. startPerf switches counting on for
+      // the contexts already built and for every context built after, and a
+      // second call is how a measurement resets between phases. The dev
+      // server's lowdefy_measure_page drives both from a headless tab.
+      lowdefy.startPerf = () => {
+        lowdefy.perf = true;
+        Object.values(lowdefy.contexts).forEach((context) => context._internal.enablePerf());
+      };
+      lowdefy.readPerf = () =>
+        Object.keys(lowdefy.contexts)
+          .filter((id) => lowdefy.contexts[id]._internal.perf)
+          .map((id) => ({
+            id,
+            blocks: Object.keys(lowdefy.contexts[id]._internal.RootSlots.map).length,
+            ...lowdefy.contexts[id]._internal.perf.snapshot(),
+          }));
       window.lowdefy = lowdefy;
     }
   }

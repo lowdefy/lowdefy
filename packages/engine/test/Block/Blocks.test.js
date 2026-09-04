@@ -857,11 +857,13 @@ test('max recuse limit', async () => {
 
   let count = 0;
 
-  const updateStateFromRoot = context._internal.RootSlots.updateStateFromRoot;
+  // evalUntilStable is the recursive body updateStateFromRoot wraps — counting
+  // it counts the visibility re-runs, which is what the 20-run cap bounds.
+  const evalUntilStable = context._internal.RootSlots.evalUntilStable;
 
-  context._internal.RootSlots.updateStateFromRoot = () => {
+  context._internal.RootSlots.evalUntilStable = () => {
     count += 1;
-    updateStateFromRoot();
+    evalUntilStable();
   };
 
   c.setValue('show d');
