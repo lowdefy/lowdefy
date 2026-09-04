@@ -65,6 +65,15 @@ const setOpenState = ({ open, methods, rename, setOpen }) => {
   }
 };
 
+// antd v6 replaced the separate `width`/`height` Drawer props with a single `size` prop
+// whose meaning depends on `placement`: width for left/right, height for top/bottom.
+const getDrawerSize = ({ placement, width, height }) => {
+  if (placement === 'top' || placement === 'bottom') {
+    return height;
+  }
+  return width;
+};
+
 const DrawerBlock = ({
   blockId,
   classNames = {},
@@ -95,8 +104,11 @@ const DrawerBlock = ({
       mask={properties.mask === false ? false : { closable: properties.maskClosable }}
       title={properties.title}
       open={openState}
-      width={properties.width}
-      height={properties.height}
+      size={getDrawerSize({
+        placement: properties.placement,
+        width: properties.width,
+        height: properties.height,
+      })}
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
@@ -116,7 +128,8 @@ const DrawerBlock = ({
         footer: classNames.footer,
         mask: classNames.mask,
         wrapper: classNames.wrapper,
-        content: classNames.content,
+        // antd v6 renamed the Drawer content area from `content` to `section`.
+        section: classNames.content,
       }}
       styles={{
         header: styles.header,
@@ -124,7 +137,7 @@ const DrawerBlock = ({
         footer: styles.footer,
         mask: styles.mask,
         wrapper: styles.wrapper,
-        content: styles.content,
+        section: styles.content,
       }}
     >
       {content.content && content.content()}
