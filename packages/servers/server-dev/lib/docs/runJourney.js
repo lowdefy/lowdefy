@@ -83,9 +83,9 @@ async function actOnBlock({ blockId, action }) {
   }
 }
 
-// The #bl-<id> wrapper spans the full row while the control inside it (an
-// antd button, a link, a checkbox) is usually narrower, so a click at the
-// wrapper's centre can land beside the control. The block's own e2e helpers
+// A block's root spans the full row while the control inside it (an antd
+// button, a link, a checkbox) is usually narrower, so a click at the root's
+// centre can land beside the control. The block's own e2e helpers
 // target the inner control for the same reason; a block with no interactive
 // descendant (a Box with its own onClick) is clicked directly.
 const INTERACTIVE_CONTROL = [

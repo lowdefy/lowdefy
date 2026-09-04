@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId, getBlock } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
 const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}_input`);
-const wrapper = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .ant-checkbox-wrapper`);
+const wrapper = (page, blockId) => getBlock(page, blockId).locator('.ant-checkbox-wrapper');
 
 export default createBlockHelper({
   locator,

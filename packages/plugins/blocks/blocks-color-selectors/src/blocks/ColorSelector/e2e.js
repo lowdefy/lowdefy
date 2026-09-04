@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, getBlock } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .color-picker-swatch`);
+const locator = (page, blockId) => getBlock(page, blockId).locator('.color-picker-swatch');
 
 export default createBlockHelper({
   locator,
   do: {
     click: (page, blockId) => locator(page, blockId).click(),
     fill: (page, blockId, value) =>
-      page.locator(`#bl-${escapeId(blockId)} .color-picker-input`).fill(value),
+      getBlock(page, blockId).locator('.color-picker-input').fill(value),
   },
   expect: {
     color: (page, blockId, rgb) =>
@@ -32,11 +32,11 @@ export default createBlockHelper({
     size: (page, blockId, size) =>
       expect(locator(page, blockId)).toHaveClass(new RegExp(`color-picker-swatch-${size}`)),
     value: (page, blockId, hex) =>
-      expect(page.locator(`#bl-${escapeId(blockId)} .color-picker-input`)).toHaveValue(hex),
+      expect(getBlock(page, blockId).locator('.color-picker-input')).toHaveValue(hex),
     popoverVisible: (page, blockId) =>
-      expect(page.locator(`#bl-${escapeId(blockId)} .color-picker-popover`)).toBeVisible(),
+      expect(getBlock(page, blockId).locator('.color-picker-popover')).toBeVisible(),
     popoverHidden: (page, blockId) =>
-      expect(page.locator(`#bl-${escapeId(blockId)} .color-picker-popover`)).not.toBeVisible(),
+      expect(getBlock(page, blockId).locator('.color-picker-popover')).not.toBeVisible(),
     disabled: (page, blockId) =>
       expect(locator(page, blockId)).toHaveClass(/color-picker-swatch-disabled/),
     enabled: (page, blockId) =>

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, getBlock } from '@lowdefy/e2e-utils';
 
 // Icon renders an SVG without a blockId on the root element — use the block wrapper.
-const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
+const locator = (page, blockId) => getBlock(page, blockId);
 
 export default createBlockHelper({
   locator,

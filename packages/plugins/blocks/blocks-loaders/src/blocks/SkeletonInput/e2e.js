@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, getBlock } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)} .skeleton`).first();
+const locator = (page, blockId) => getBlock(page, blockId).locator('.skeleton').first();
 
 export default createBlockHelper({
   locator,
   expect: {
     skeletonCount: (page, blockId, count) =>
-      expect(page.locator(`#bl-${escapeId(blockId)} .skeleton`)).toHaveCount(count),
+      expect(getBlock(page, blockId).locator('.skeleton')).toHaveCount(count),
     height: (page, blockId, height) =>
-      expect(page.locator(`#bl-${escapeId(blockId)} .skeleton`).last()).toHaveCSS('height', height),
+      expect(getBlock(page, blockId).locator('.skeleton').last()).toHaveCSS('height', height),
   },
 });

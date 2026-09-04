@@ -54,7 +54,13 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
+Blocks are addressed by their `blockId`. A step resolves the block to the element the block itself
+renders — every block carries `id="<blockId>"` and `data-testid="<blockId>"` on its own root — and
+falls back to the `#bl-<blockId>` layout wrapper for the few blocks that render no root of their own
+(`Icon`, `Throw`, `GoogleMapsScript`) or that render it into a portal. So `expect: { dom: ... }`
+reads the classes, attributes and descendants of the block, including the `class:` and `style:` you
+set on it in your config. Every step has a 5 second timeout by default; a step that does not
+complete in time fails the journey.
 
 | Step                                              | Meaning                                                                                                                                                          |
 | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |

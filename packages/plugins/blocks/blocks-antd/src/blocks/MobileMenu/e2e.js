@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, getBlock } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#bl-${escapeId(blockId)}`);
+const locator = (page, blockId) => getBlock(page, blockId);
 
-// Menu items render inside a Drawer portal, not inside #bl-${blockId}.
+// Menu items render inside a Drawer portal, not inside the block itself.
 const drawerMenu = (page) => page.locator('.ant-drawer .ant-menu');
 
 export default createBlockHelper({

@@ -74,11 +74,19 @@ function createLowdefyWindow({ pageId = 'form', state = {}, requests = {}, block
   };
 }
 
+// The block locator contract getBlock builds: the block root's own test id, with
+// the layout wrapper as the fallback for a root that does not carry it. The fake
+// page keys everything on the selector string, so the tests build it the same way.
+function blockSelector(blockId) {
+  const testId = `[data-testid="${blockId}"]`;
+  return `${testId}, #bl-${blockId.replace(/([^\w-])/g, '\\$1')}:not(:has(${testId}))`;
+}
+
 function createLocator({ selector, page }) {
   const locator = {
     selector,
     click: jest.fn(async () => {
-      if (page.missingBlocks.some((id) => selector === `#bl-${id}`)) {
+      if (page.missingBlocks.some((id) => selector === blockSelector(id))) {
         throw new Error(
           `locator.click: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('${selector}')\u001b[22m`
         );
@@ -101,7 +109,7 @@ function createLocator({ selector, page }) {
     getAttribute: jest.fn(async (name) => page.attributes[`${selector}@${name}`] ?? null),
     press: jest.fn(async (key) => page.presses.push({ selector, key })),
     waitFor: jest.fn(async () => {
-      if (page.hiddenBlocks.some((id) => selector === `#bl-${id}`)) {
+      if (page.hiddenBlocks.some((id) => selector === blockSelector(id))) {
         throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
       }
     }),
@@ -232,7 +240,7 @@ test('runJourney fills, clicks and asserts state, returning passed with the fina
   const context = openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
-    if (selector === '#bl-submit') {
+    if (selector === blockSelector('submit')) {
       locator.click.mockImplementation(async () => {
         window.lowdefy.contexts['page:form'].state.saved = true;
         page.clicks.push(selector);
@@ -254,8 +262,10 @@ test('runJourney fills, clicks and asserts state, returning passed with the fina
   expect(result.error).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(result.failure).toBeUndefined();
-  expect(page.fills).toEqual([{ selector: '#bl-name input, textarea', value: 'Ada' }]);
-  expect(page.clicks).toEqual(['#bl-submit']);
+  expect(page.fills).toEqual([
+    { selector: `${blockSelector('name')} input, textarea`, value: 'Ada' },
+  ]);
+  expect(page.clicks).toEqual([blockSelector('submit')]);
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok']);
   expect(result.steps[1]).toMatchObject({ index: 1, step: { click: 'submit' } });
   expect(typeof result.steps[0].durationMs).toBe('number');
@@ -271,7 +281,7 @@ test('runJourney clicks the interactive control inside a block when there is one
     const locator = createLocator({ selector, page });
     locator.locator.mockImplementation((child) => {
       const inner = createLocator({ selector: `${selector} ${child}`, page });
-      if (selector === '#bl-submit' && child.startsWith('button')) {
+      if (selector === blockSelector('submit') && child.startsWith('button')) {
         inner.count.mockResolvedValue(1);
       }
       return inner;
@@ -287,8 +297,10 @@ test('runJourney clicks the interactive control inside a block when there is one
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([
-    `#bl-submit button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
-    '#bl-card',
+    `${blockSelector(
+      'submit'
+    )} button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
+    blockSelector('card'),
   ]);
 });
 
@@ -308,7 +320,9 @@ test('runJourney fills a numeric value as a string', async () => {
   const page = createPage();
   openWith(page);
   await runJourney({ origin, pageId: 'form', steps: [{ fill: { blockId: 'age', value: 42 } }] });
-  expect(page.fills).toEqual([{ selector: '#bl-age input, textarea', value: '42' }]);
+  expect(page.fills).toEqual([
+    { selector: `${blockSelector('age')} input, textarea`, value: '42' },
+  ]);
 });
 
 test('runJourney reports a failing expect.state with expected and actual and skips the rest', async () => {
@@ -369,18 +383,22 @@ test('runJourney reports a click on a missing block as a failure instead of thro
   expect(result.failure.step).toEqual({ click: 'nope' });
   expect(result.failure.expected).toEqual('block "nope" to be actionable');
   expect(result.failure.actual).toEqual(
-    "locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('#bl-nope')"
+    `locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator('${blockSelector(
+      'nope'
+    )}')`
   );
   expect(result.failure.message).toMatch(/Block "nope" was not actionable/);
   expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
   expect(context.close).toHaveBeenCalledTimes(1);
 });
 
-test('runJourney escapes block ids in the #bl- selector', async () => {
+test('runJourney escapes block ids in both halves of the block locator', async () => {
   const page = createPage();
   openWith(page);
   await runJourney({ origin, pageId: 'form', steps: [{ click: 'rows.0.edit' }] });
-  expect(page.clicks).toEqual(['#bl-rows\\.0\\.edit']);
+  expect(page.clicks).toEqual([
+    '[data-testid="rows.0.edit"], #bl-rows\\.0\\.edit:not(:has([data-testid="rows.0.edit"]))',
+  ]);
 });
 
 test('runJourney collects screenshots in step order with default and given names', async () => {
@@ -446,7 +464,7 @@ test('runJourney presses on the block control when press names a blockId', async
   });
 
   expect(result.passed).toBe(true);
-  expect(page.presses).toEqual([{ selector: '#bl-title', key: 'Meta+Enter' }]);
+  expect(page.presses).toEqual([{ selector: blockSelector('title'), key: 'Meta+Enter' }]);
   expect(page.keyboard.press).not.toHaveBeenCalled();
 });
 
@@ -498,7 +516,10 @@ test('runJourney selects a dropdown option by exact visible text', async () => {
   });
 
   expect(result.passed).toBe(true);
-  expect(page.clicks).toEqual(['#bl-country', '.ant-select-item-option, [role="option"]']);
+  expect(page.clicks).toEqual([
+    blockSelector('country'),
+    '.ant-select-item-option, [role="option"]',
+  ]);
   expect(filters[0].hasText.test('Chile')).toBe(true);
   expect(filters[0].hasText.test('Chile (CL)')).toBe(false);
   expect(filters[1]).toEqual({ visible: true });
@@ -531,7 +552,7 @@ test('runJourney reports a dropdown option that never appears by its text', asyn
 
 test('runJourney fails expect.text with the actual text when it does not contain the string', async () => {
   const page = createPage();
-  page.texts['#bl-title'] = 'Hello world';
+  page.texts[blockSelector('title')] = 'Hello world';
   openWith(page);
 
   const result = await runJourney({
@@ -550,7 +571,7 @@ test('runJourney fails expect.text with the actual text when it does not contain
 
 test('runJourney checks expect.text equals against the trimmed text', async () => {
   const page = createPage();
-  page.texts['#bl-title'] = '  Hello world\n';
+  page.texts[blockSelector('title')] = '  Hello world\n';
   openWith(page);
 
   const result = await runJourney({
@@ -571,7 +592,7 @@ test('runJourney checks expect.text equals against the trimmed text', async () =
 
 test('runJourney checks expect.text notContains, which is what proves a row was removed', async () => {
   const page = createPage();
-  page.texts['#bl-rows'] = 'Access reviews';
+  page.texts[blockSelector('rows')] = 'Access reviews';
   openWith(page);
 
   const result = await runJourney({
@@ -747,7 +768,7 @@ test('runJourney fill falls back to set semantics when the block has no input or
     blocks: { body: createInputBlock({ blockId: 'body', state, type: 'TipTap' }) },
   });
   const page = createPage({ window });
-  page.locatorCounts['#bl-body input, textarea'] = 0;
+  page.locatorCounts[`${blockSelector('body')} input, textarea`] = 0;
   openWith(page);
 
   const result = await runJourney({
@@ -764,7 +785,7 @@ test('runJourney fill falls back to set semantics when the block has no input or
 test('runJourney fill reports a block that can neither be typed into nor set', async () => {
   const window = createLowdefyWindow({ blocks: { card: { blockId: 'card', type: 'Card' } } });
   const page = createPage({ window });
-  page.locatorCounts['#bl-card input, textarea'] = 0;
+  page.locatorCounts[`${blockSelector('card')} input, textarea`] = 0;
   openWith(page);
 
   const result = await runJourney({
@@ -792,14 +813,14 @@ test('runJourney scopes select options to the dropdown that was just opened', as
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([
-    '#bl-country',
+    blockSelector('country'),
     '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option, [role="option"]',
   ]);
 });
 
 test('runJourney asserts a class the block holds and one it does not', async () => {
   const page = createPage();
-  page.attributes['#bl-submit@class'] = 'ant-btn ant-btn-primary';
+  page.attributes[`${blockSelector('submit')}@class`] = 'ant-btn ant-btn-primary';
   openWith(page);
 
   const result = await runJourney({
@@ -815,6 +836,23 @@ test('runJourney asserts a class the block holds and one it does not', async () 
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'failed']);
   expect(result.failure.expected).toEqual('block "submit" not to have class "ant-btn"');
   expect(result.failure.actual).toEqual('ant-btn ant-btn-primary');
+});
+
+test('runJourney reads expect.dom.hasClass off the block root, not the layout wrapper', async () => {
+  const page = createPage();
+  // Only the wrapper carries the class. The block's own `class:` lives on its root,
+  // which is what the assertion must read.
+  page.attributes['#bl-submit@class'] = 'ant-btn ant-btn-primary';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { dom: { blockId: 'submit', hasClass: 'ant-btn-primary' } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.actual).toBeNull();
 });
 
 test('runJourney reports a class assertion against a block with no class attribute', async () => {
@@ -835,8 +873,8 @@ test('runJourney reports a class assertion against a block with no class attribu
 
 test('runJourney asserts an attribute value and a descendant selector', async () => {
   const page = createPage();
-  page.attributes['#bl-total@aria-disabled'] = 'true';
-  page.locatorCounts['#bl-total span.amount'] = 1;
+  page.attributes[`${blockSelector('total')}@aria-disabled`] = 'true';
+  page.locatorCounts[`${blockSelector('total')} span.amount`] = 1;
   openWith(page);
 
   const result = await runJourney({
@@ -858,7 +896,7 @@ test('runJourney asserts an attribute value and a descendant selector', async ()
 
 test('runJourney fails an attribute assertion with the value it found', async () => {
   const page = createPage();
-  page.attributes['#bl-total@aria-disabled'] = 'false';
+  page.attributes[`${blockSelector('total')}@aria-disabled`] = 'false';
   openWith(page);
 
   const result = await runJourney({
@@ -909,7 +947,7 @@ test('runJourney waits for the page id to change before settling after a navigat
   openWith(page);
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
-    if (selector === '#bl-row') {
+    if (selector === blockSelector('row')) {
       locator.click.mockImplementation(async () => {
         page.currentUrl = 'http://localhost:3227/detail?id=1';
         window.lowdefy.pageId = 'detail';
