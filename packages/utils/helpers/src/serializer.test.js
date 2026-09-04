@@ -1459,3 +1459,14 @@ test('deserialize revives the auth gate errors as their own classes', () => {
   expect(revived.authorization.name).toBe('AuthorizationError');
   expect(revived.twoFactor).toBeInstanceOf(TwoFactorEnrolmentRequiredError);
 });
+
+test('serializer keeps ~k on an object whose child is a Date', () => {
+  const obj = { when: new Date(0) };
+  Object.defineProperty(obj, '~k', { value: 'k1', enumerable: false });
+  const copied = serializer.copy({ node: obj }, {});
+  expect(copied.node['~k']).toBe('k1');
+  expect(copied.node.when).toEqual(new Date(0));
+  const json = serializer.serializeToString({ node: obj });
+  expect(JSON.parse(json).node['~k']).toBe('k1');
+});
+

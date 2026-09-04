@@ -89,6 +89,15 @@ const makeReplacer =
       return { '~e': extractErrorProps(newValue, { omit: omitErrorProps }) };
     }
     if (type.isObject(newValue)) {
+      // Capture the markers before any shallow copy: a spread drops non-enumerable
+      // properties, and the Date replacement below spreads the object, so reading
+      // the markers after it would lose the ~k of every object with a Date child.
+      const markers = skipMarkers
+        ? []
+        : MARKER_KEYS.filter((marker) => newValue[marker] !== undefined).map((marker) => [
+            marker,
+            newValue[marker],
+          ]);
       Object.keys(newValue).forEach((k) => {
         if (type.isDate(newValue[k])) {
           // shallow copy original value before reassigning a value in order not to mutate original value
@@ -97,10 +106,6 @@ const makeReplacer =
         }
       });
       if (!skipMarkers) {
-        // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
-        const markers = MARKER_KEYS.filter((marker) => newValue[marker] !== undefined).map(
-          (marker) => [marker, newValue[marker]]
-        );
         if (markers.length > 0) {
           // Shallow copy to avoid mutating the original object's property descriptors
           if (newValue === value) {

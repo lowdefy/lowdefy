@@ -96,14 +96,6 @@ function emitOperatorClosures({ tree, env, operators, operatorPrefix = '_' }) {
   // arguments before the call. Every non-operator node emits as a fresh literal
   // per call, so no structure is shared between evaluations.
   function markers(node, expression) {
-    // Bug-for-bug parity with serializer.js makeReplacer: an object holding a
-    // Date-valued property is shallow-copied before its markers are captured, so
-    // the parsers lose every marker on such a node. Emitting the markers here
-    // would make closure output differ from parser output. Drop this branch when
-    // the serializer stops losing them.
-    if (type.isObject(node) && Object.keys(node).some((key) => type.isDate(node[key]))) {
-      return expression;
-    }
     const present = MARKER_KEYS.filter((marker) => node[marker] !== undefined);
     if (present.length === 0) return expression;
     usesMarkers = true;

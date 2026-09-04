@@ -274,8 +274,8 @@ describe('server-only contract', () => {
   });
 });
 
-describe('known parser divergences the emitter reproduces on purpose', () => {
-  test('markers are lost on an object with a Date child, because serializer.copy loses them', () => {
+describe('markers on objects with Date children', () => {
+  test('markers are kept on an object with a Date child by both the walker and the closure', () => {
     const harness = createParityHarness({ env: 'web', operators });
     const tree = normalize({
       '~k': 'root',
@@ -289,8 +289,8 @@ describe('known parser divergences the emitter reproduces on purpose', () => {
       closure: module.closures.root,
     });
     expectParity(result);
-    expect(result.walker.output.dated['~k']).toBeUndefined();
-    expect(result.closure.output.dated['~k']).toBeUndefined();
+    expect(result.walker.output.dated['~k']).toBe('dated');
+    expect(result.closure.output.dated['~k']).toBe('dated');
   });
 });
 
