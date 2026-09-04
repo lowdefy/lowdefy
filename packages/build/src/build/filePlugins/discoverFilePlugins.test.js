@@ -192,3 +192,86 @@ test('discoverFilePlugins leaves pluginApiVersion undefined when the sibling JSO
   const { records } = discoverFilePlugins({ configDirectory });
   expect(records[0].pluginApiVersion).toBeUndefined();
 });
+
+test('discoverFilePlugins builds a connection record and one record per request file', () => {
+  const connectionFile = writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  const requestFile = writeFixture('plugins/connections/MemoryStore/requests/MemoryGet.js');
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(errors).toEqual([]);
+  expect(records).toEqual([
+    {
+      kind: 'connections',
+      typeName: 'MemoryStore',
+      originalTypeName: 'MemoryStore',
+      typeClass: 'Connection',
+      checkSlug: 'connection-types',
+      package: null,
+      packageId: 'file-plugin',
+      version: null,
+      file: connectionFile,
+      relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+    },
+    {
+      kind: 'requests',
+      typeName: 'MemoryGet',
+      originalTypeName: 'MemoryGet',
+      typeClass: 'Request',
+      checkSlug: 'request-types',
+      connectionType: 'MemoryStore',
+      package: null,
+      packageId: 'file-plugin',
+      version: null,
+      file: requestFile,
+      relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+    },
+  ]);
+});
+
+test('discoverFilePlugins reads schema and meta from a request sibling JSON file', () => {
+  writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  writeFixture(
+    'plugins/connections/MemoryStore/MemoryStore.json',
+    JSON.stringify({ schema: { type: 'object' } })
+  );
+  writeFixture('plugins/connections/MemoryStore/requests/MemoryGet.js');
+  writeFixture(
+    'plugins/connections/MemoryStore/requests/MemoryGet.json',
+    JSON.stringify({ schema: { type: 'object' }, meta: { checkRead: true, checkWrite: false } })
+  );
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(errors).toEqual([]);
+  expect(records[0].schema).toEqual({ type: 'object' });
+  expect(records[1].schema).toEqual({ type: 'object' });
+  expect(records[1].meta).toEqual({ checkRead: true, checkWrite: false });
+});
+
+test('discoverFilePlugins errors when a connection directory has no file named after it', () => {
+  writeFixture('plugins/connections/MemoryStore/requests/MemoryGet.js');
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(records).toEqual([]);
+  expect(errors).toHaveLength(1);
+  expect(errors[0].message).toEqual(
+    'Connection file plugin "plugins/connections/MemoryStore" has no "MemoryStore.js". A connection directory is named after the connection type it defines.'
+  );
+  expect(errors[0].filePath).toEqual('plugins/connections/MemoryStore');
+  expect(errors[0].checkSlug).toEqual('connection-types');
+});
+
+test('discoverFilePlugins errors when a request file name is not PascalCase', () => {
+  writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  writeFixture('plugins/connections/MemoryStore/requests/memoryGet.js');
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(records.map((record) => record.kind)).toEqual(['connections']);
+  expect(errors).toHaveLength(1);
+  expect(errors[0].message).toEqual(
+    'Request file plugin "plugins/connections/MemoryStore/requests/memoryGet.js" must be named in PascalCase.'
+  );
+  expect(errors[0].checkSlug).toEqual('request-types');
+});
+
+test('discoverFilePlugins discovers a connection directory with no requests directory', () => {
+  writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(errors).toEqual([]);
+  expect(records.map((record) => record.kind)).toEqual(['connections']);
+});

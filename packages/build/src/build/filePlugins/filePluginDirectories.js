@@ -21,9 +21,11 @@
 // into the client and the server store, which is how the shipped packages list
 // a shared operator in both barrels.
 //
-// plugins/connections is deliberately absent: a connection needs a second
-// directory for its requests, which is a third shape, and it lands after the
-// three kinds here.
+// plugins/connections is the one directory-shaped entry: a connection is a
+// directory holding the connection file and a requests directory, so it
+// populates two stores at once — `kinds` lists both, which is also what keeps
+// a stale file-plugin request out of a reused typesMap
+// (withoutFilePluginTypes reads this list).
 const filePluginDirectories = [
   {
     directory: 'plugins/blocks',
@@ -74,6 +76,25 @@ const filePluginDirectories = [
     typeClass: 'Operator',
     checkSlug: 'operator-types',
     naming: 'operator',
+  },
+  {
+    directory: 'plugins/connections',
+    extensions: ['.js'],
+    kinds: ['connections', 'requests'],
+    typeClass: 'Connection',
+    checkSlug: 'connection-types',
+    naming: 'PascalCase',
+    // plugins/connections/<Type>/<Type>.js, with one resolver per file under
+    // plugins/connections/<Type>/requests. A connection type is only ever used
+    // through its requests, so the two are discovered together.
+    layout: 'connection',
+    requests: {
+      directory: 'requests',
+      kind: 'requests',
+      typeClass: 'Request',
+      checkSlug: 'request-types',
+      naming: 'PascalCase',
+    },
   },
 ];
 

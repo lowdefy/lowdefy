@@ -16,7 +16,7 @@
 // Kinds the Node processes load directly and hold in their ESM module cache.
 // Blocks, actions and client operators are bundled by Vite, which hot-replaces
 // the file in place - only these need a restart when the author edits them.
-const SERVER_KINDS = ['operators.build', 'operators.server'];
+const SERVER_KINDS = ['operators.build', 'operators.server', 'connections', 'requests'];
 
 // The dev manager's jsModuleWatcher restarts the server when one of these files
 // changes, exactly as it does for the server-side _js modules writeJs lists in

@@ -24,7 +24,16 @@ function sourceLabel(definition) {
   return definition.relativePath;
 }
 
-function toDefinition({ file, hazards, meta, originalTypeName, packageId, relativePath, schema }) {
+function toDefinition({
+  connectionType,
+  file,
+  hazards,
+  meta,
+  originalTypeName,
+  packageId,
+  relativePath,
+  schema,
+}) {
   const definition = {
     package: null,
     packageId,
@@ -33,6 +42,9 @@ function toDefinition({ file, hazards, meta, originalTypeName, packageId, relati
     file,
     relativePath,
   };
+  // A request type is only reachable through the connection that owns it, so
+  // the docs surfaces need the connection name beside the request name.
+  if (connectionType !== undefined) definition.connectionType = connectionType;
   if (meta !== undefined) definition.meta = meta;
   if (schema !== undefined) definition.schema = schema;
   if (hazards !== undefined) definition.hazards = hazards;

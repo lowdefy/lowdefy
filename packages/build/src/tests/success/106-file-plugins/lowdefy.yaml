@@ -1,10 +1,21 @@
 # 106: single-file local plugins
 # A block, an action and a shared operator are each one file under plugins/,
-# with an optional sibling JSON carrying meta, schema and hazards. The build
-# discovers them, emits a path import into the generated barrels (the copy
-# under the server directory for a prod build) and reads their schemas from the
-# sibling JSON instead of a package barrel.
+# with an optional sibling JSON carrying meta, schema and hazards. A connection
+# is a directory instead: plugins/connections/MemoryStore/MemoryStore.js plus
+# one resolver per file under its requests/ directory, which the build
+# assembles into the connection's requests map. The build discovers them all,
+# emits a path import into the generated barrels (the copy under the server
+# directory for a prod build) and reads their schemas from the sibling JSON
+# instead of a package barrel.
 lowdefy: local
+
+connections:
+  - id: memory_store
+    type: MemoryStore
+    properties:
+      rows:
+        - key: greeting
+          value: hello world
 
 pages:
   - _ref: pages/home.yaml

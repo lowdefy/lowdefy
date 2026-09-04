@@ -1,5 +1,11 @@
 id: home
 type: Box
+requests:
+  - id: greeting
+    type: MemoryGet
+    connectionId: memory_store
+    properties:
+      key: greeting
 blocks:
   - id: status_chip
     type: StatusChip

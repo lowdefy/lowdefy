@@ -17,8 +17,49 @@
 import { ConfigError } from '@lowdefy/errors';
 
 import collectExceptions from '../../utils/collectExceptions.js';
+import { FILE_PLUGIN_PACKAGE_ID } from '../filePlugins/discoverFilePlugins.js';
 import importPluginModule from './importPluginModule.js';
 import validateHazardsShape from './validateHazardsShape.js';
+
+// A file plugin declares its schema and meta in its sibling JSON, which
+// discovery already read onto the typesMap definition - the build never
+// imports a connection's source, so a driver is never opened to answer a docs
+// request. The gates default the same way the generated barrel defaults them:
+// a request that declares neither is gated on both.
+function addFilePluginSchemas({ connectionSchemas, context, requestSchemas, typesMap }) {
+  const requests = Object.entries(typesMap.requests ?? {}).filter(
+    ([, definition]) => definition.packageId === FILE_PLUGIN_PACKAGE_ID
+  );
+  for (const [typeName, definition] of Object.entries(typesMap.connections ?? {})) {
+    if (definition.packageId !== FILE_PLUGIN_PACKAGE_ID) continue;
+    connectionSchemas[typeName] = {
+      schema: definition.schema ?? {},
+      requests: requests
+        .filter(([, request]) => request.connectionType === typeName)
+        .map(([requestTypeName]) => requestTypeName),
+    };
+  }
+  for (const [typeName, definition] of requests) {
+    const hazardsProblem = validateHazardsShape(definition.meta?.hazards);
+    if (hazardsProblem !== null) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Request file plugin "${definition.relativePath}": meta.${hazardsProblem}`,
+          {
+            received: definition.meta.hazards,
+            filePath: definition.relativePath,
+            lineNumber: 1,
+          }
+        )
+      );
+    }
+    requestSchemas[typeName] = {
+      schema: definition.schema ?? {},
+      meta: { checkRead: true, checkWrite: true, ...definition.meta },
+    };
+  }
+}
 
 // Connection and request schemas live as statics on the connection classes
 // (Connection.schema, Connection.requests[Request].schema), not behind a
@@ -34,6 +75,12 @@ async function writeConnectionSchemaMap({ context }) {
   }
   const connectionSchemas = {};
   const requestSchemas = {};
+  addFilePluginSchemas({
+    connectionSchemas,
+    context,
+    requestSchemas,
+    typesMap: context.typesMap,
+  });
 
   const typesMapConnectionSchemas = context.typesMap.schemas?.connections ?? {};
   const typesMapRequestSchemas = context.typesMap.schemas?.requests ?? {};

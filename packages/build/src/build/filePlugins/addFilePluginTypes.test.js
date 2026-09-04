@@ -155,3 +155,44 @@ test('addFilePluginTypes writes a shared operator into both the client and the s
   expect(typesMap.operators.client._titleCase.file).toEqual(shared.file);
   expect(typesMap.operators.server._titleCase.file).toEqual(shared.file);
 });
+
+test('addFilePluginTypes keeps the connection a request type belongs to on its definition', () => {
+  const typesMap = { connections: {}, requests: {} };
+  const collisions = addFilePluginTypes({
+    records: [
+      blockRecord({
+        kind: 'connections',
+        typeName: 'MemoryStore',
+        originalTypeName: 'MemoryStore',
+        typeClass: 'Connection',
+        checkSlug: 'connection-types',
+        file: '/app/plugins/connections/MemoryStore/MemoryStore.js',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+      }),
+      blockRecord({
+        kind: 'requests',
+        typeName: 'MemoryGet',
+        originalTypeName: 'MemoryGet',
+        typeClass: 'Request',
+        checkSlug: 'request-types',
+        connectionType: 'MemoryStore',
+        meta: { checkRead: true, checkWrite: false },
+        file: '/app/plugins/connections/MemoryStore/requests/MemoryGet.js',
+        relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+      }),
+    ],
+    typesMap,
+  });
+  expect(collisions).toEqual([]);
+  expect(typesMap.connections.MemoryStore.connectionType).toBeUndefined();
+  expect(typesMap.requests.MemoryGet).toEqual({
+    package: null,
+    packageId: 'file-plugin',
+    originalTypeName: 'MemoryGet',
+    version: null,
+    file: '/app/plugins/connections/MemoryStore/requests/MemoryGet.js',
+    relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+    connectionType: 'MemoryStore',
+    meta: { checkRead: true, checkWrite: false },
+  });
+});

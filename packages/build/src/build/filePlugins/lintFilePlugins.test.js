@@ -145,3 +145,29 @@ export default Card;
     { name: 'tone', line: 3, column: 6 },
   ]);
 });
+
+test('lintFilePlugins lints a connection and its requests as server code', () => {
+  const connectionFile = path.join(directory, 'MemoryStore.js');
+  fs.writeFileSync(connectionFile, 'export default { schema: { type: "object" } };\n');
+  const requestFile = path.join(directory, 'MemoryGet.js');
+  fs.writeFileSync(
+    requestFile,
+    'function MemoryGet({ request }) {\n  return process.env[request.key];\n}\n\nexport default MemoryGet;\n'
+  );
+  const results = lintFilePlugins({
+    filePlugins: [
+      {
+        kind: 'connections',
+        file: connectionFile,
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+      },
+      {
+        kind: 'requests',
+        file: requestFile,
+        relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+      },
+    ],
+  });
+  expect(results.map((result) => result.environment)).toEqual(['server', 'server']);
+  expect(results[1].undefinedNames).toEqual([]);
+});

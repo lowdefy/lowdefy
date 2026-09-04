@@ -1,23 +1,74 @@
-File plugins are single files in the app's own config directory that define a block, an action or an operator, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
-
-> File plugins are under active development. Blocks, actions and operators work end to end; connections and requests still need a plugin package.
+File plugins are single files in the app's own config directory that define a block, an action, an operator or a connection, without an npm package, a `types.js` barrel or a `plugins:` entry in `lowdefy.yaml`. They are found by convention: the build walks the `plugins` directory of the config directory on every build.
 
 ### The directory convention
 
-| Directory                  | Kind                           | File name       |
-| -------------------------- | ------------------------------ | --------------- |
-| `plugins/blocks`           | Block                          | `Card.jsx`      |
-| `plugins/actions`          | Action                         | `CopyRow.js`    |
-| `plugins/operators/build`  | Build operator                 | `_env.js`       |
-| `plugins/operators/client` | Client operator                | `_slug.js`      |
-| `plugins/operators/server` | Server operator                | `_lookup.js`    |
-| `plugins/operators/shared` | Client **and** server operator | `_titleCase.js` |
+| Directory                  | Kind                            | File name          |
+| -------------------------- | ------------------------------- | ------------------ |
+| `plugins/blocks`           | Block                           | `Card.jsx`         |
+| `plugins/actions`          | Action                          | `CopyRow.js`       |
+| `plugins/operators/build`  | Build operator                  | `_env.js`          |
+| `plugins/operators/client` | Client operator                 | `_slug.js`         |
+| `plugins/operators/server` | Server operator                 | `_lookup.js`       |
+| `plugins/operators/shared` | Client **and** server operator  | `_titleCase.js`    |
+| `plugins/connections`      | Connection **and** its requests | `Stripe/Stripe.js` |
 
 Blocks may be `.jsx` or `.js`; every other kind is `.js`. Only files directly in these directories are plugins - a file whose name has more than one segment, like `Card.test.jsx`, is a source file that lives beside a plugin, not a plugin.
 
 An operator in `plugins/operators/shared` is registered as both a client and a server operator, which is how the shipped operator packages list a shared operator in both barrels.
 
-Connections and requests are not file plugins yet; they still need a plugin package.
+### A connection is a directory
+
+A connection is the one kind that is a directory rather than a single file, because a connection is only ever used through its requests:
+
+```
+plugins/connections/Stripe/Stripe.js
+plugins/connections/Stripe/Stripe.json
+plugins/connections/Stripe/requests/StripeCharge.js
+plugins/connections/Stripe/requests/StripeCharge.json
+```
+
+The directory name is the connection type, and it must hold a file with the same name. Every file directly under its `requests` directory defines one request type, named after the file. Both are PascalCase, and a request type name collides with a package request type the same way any other type name does.
+
+`Stripe.js` exports the connection object a package connection exports, minus the barrel - the build assembles the `requests` map from the files under `requests/`, so a resolver is never wired up twice:
+
+```js
+export default {};
+```
+
+`requests/StripeCharge.js` exports the resolver, which is called with the connection's properties and the request's properties:
+
+```js
+async function StripeCharge({ connection, request }) {
+  if (!request.amount) {
+    throw new Error('StripeCharge requires an "amount" property.');
+  }
+  const response = await fetch('https://api.stripe.com/v1/charges', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${connection.apiKey}` },
+    body: new URLSearchParams({ amount: request.amount }),
+  });
+  return response.json();
+}
+
+export default StripeCharge;
+```
+
+The connection's schema goes in `Stripe.json`, and the request's schema and meta in `StripeCharge.json`:
+
+```json
+{
+  "meta": { "checkRead": true, "checkWrite": true },
+  "schema": {
+    "type": "object",
+    "required": ["amount"],
+    "properties": { "amount": { "type": "integer" } }
+  }
+}
+```
+
+`meta.checkRead` and `meta.checkWrite` are the gates the request layer checks against the connection's `read` and `write` properties. A request that declares neither is gated on both - a file plugin can never open a connection wider by staying silent - and the build warns, naming the JSON file to declare them in.
+
+A connection file plugin does not declare a tenant capability, so it can not be used under `auth.organizations.policy: tenant`, which requires every connection type to declare whether it implements the tenant scoping contract. Use a connection package for tenant-scoped data.
 
 ### The type name is the file name
 
@@ -55,7 +106,7 @@ plugins/blocks/Card.json
 }
 ```
 
-Blocks use `meta` and `schema`; actions and operators use `schema`, and operators use `hazards`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
+Blocks use `meta` and `schema`; actions and operators use `schema`, operators use `hazards`, connections use `schema`, and requests use `schema` and `meta`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
 
 ### A block file plugin must declare a meta
 
@@ -177,7 +228,7 @@ Every plugin file is parsed at build and its names are resolved, the same way a 
   once the page renders.
 - A name that is neither imported, declared, nor a global of the environment the plugin runs in
   is a build error. A block, an action or a client operator has the browser globals and `React`;
-  a server or build operator has the server globals; an operator under
+  a server or build operator, a connection and a request have the server globals; an operator under
   `plugins/operators/shared` has only what both environments have, so reaching for `document` or
   `process` there is an error.
 - A top-level declaration that is never used is a warning.

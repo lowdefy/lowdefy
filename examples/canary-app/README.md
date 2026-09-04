@@ -28,7 +28,7 @@ One page (or endpoint) per feature area, so a regression anywhere lands on a red
 | `pages/detail.yaml`                  | `_url_query`, `Descriptions`, a `Modal` opened with `CallMethod`                       |
 | `api/save-item.yaml`                 | An `Api` endpoint with `payloadSchema`, `responseSchema`, `:try`/`:catch`, `MongoDBInsertOne`, `:return` |
 | `lib/items.js`                       | The module the `_js` references resolve to                                             |
-| `plugins/**`                         | File plugins: a `.jsx` block, an action and a shared operator, each with a sibling JSON meta/schema, used on `pages/list.yaml` |
+| `plugins/**`                         | File plugins: a `.jsx` block, an action, a shared operator and a `StaticRows` connection with one request, each with a sibling JSON meta/schema, used on `pages/list.yaml` |
 | `tests/journeys/*.yaml`              | Two journeys: form submit and list filter                                              |
 | `tests/requests/save-item.test.yaml` | Request tests for the endpoint and the list request, seeded into an in-memory MongoDB   |
 

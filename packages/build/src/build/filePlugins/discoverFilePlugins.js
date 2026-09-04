@@ -87,6 +87,166 @@ function checkTypeName({ checkSlug, errors, naming, relativePath, typeClass, typ
   return true;
 }
 
+function createRecord({ absolutePath, checkSlug, kind, relativePath, sibling, typeClass, stem }) {
+  return {
+    kind,
+    typeName: stem,
+    originalTypeName: stem,
+    typeClass,
+    checkSlug,
+    package: null,
+    packageId: FILE_PLUGIN_PACKAGE_ID,
+    version: null,
+    file: absolutePath,
+    relativePath,
+    ...sibling,
+  };
+}
+
+function pluginFileNames({ absoluteDirectory, extensions }) {
+  return fs
+    .readdirSync(absoluteDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && extensions.includes(path.extname(entry.name)))
+    .map((entry) => entry.name)
+    .sort();
+}
+
+function collectFlatDirectory({ absoluteDirectory, descriptor, errors, records }) {
+  const { checkSlug, directory, extensions, kinds, naming, typeClass } = descriptor;
+  for (const fileName of pluginFileNames({ absoluteDirectory, extensions })) {
+    const stem = path.basename(fileName, path.extname(fileName));
+    // A plugin file name is a single-segment type name, so Card.test.jsx and
+    // Card.stories.jsx are sources that live beside a plugin, not plugins.
+    if (stem.includes('.')) continue;
+
+    const relativePath = `${directory}/${fileName}`;
+    if (!checkTypeName({ checkSlug, errors, naming, relativePath, typeClass, typeName: stem })) {
+      continue;
+    }
+
+    const absolutePath = path.join(absoluteDirectory, fileName);
+    const sibling = readSiblingJson({ absolutePath, errors, relativePath, stem });
+
+    for (const kind of kinds) {
+      records.push(
+        createRecord({ absolutePath, checkSlug, kind, relativePath, sibling, stem, typeClass })
+      );
+    }
+  }
+}
+
+function collectConnectionRequests({
+  connectionDirectory,
+  connectionType,
+  descriptor,
+  errors,
+  records,
+}) {
+  const { extensions, requests } = descriptor;
+  const absoluteDirectory = path.join(connectionDirectory, requests.directory);
+  if (!isDirectory(absoluteDirectory)) return;
+  for (const fileName of pluginFileNames({ absoluteDirectory, extensions })) {
+    const stem = path.basename(fileName, path.extname(fileName));
+    if (stem.includes('.')) continue;
+
+    const relativePath = `${descriptor.directory}/${connectionType}/${requests.directory}/${fileName}`;
+    if (
+      !checkTypeName({
+        checkSlug: requests.checkSlug,
+        errors,
+        naming: requests.naming,
+        relativePath,
+        typeClass: requests.typeClass,
+        typeName: stem,
+      })
+    ) {
+      continue;
+    }
+
+    const absolutePath = path.join(absoluteDirectory, fileName);
+    const sibling = readSiblingJson({ absolutePath, errors, relativePath, stem });
+
+    records.push({
+      ...createRecord({
+        absolutePath,
+        checkSlug: requests.checkSlug,
+        kind: requests.kind,
+        relativePath,
+        sibling,
+        stem,
+        typeClass: requests.typeClass,
+      }),
+      connectionType,
+    });
+  }
+}
+
+// plugins/connections/<Type>/<Type>.js defines the connection, and every file
+// under plugins/connections/<Type>/requests defines one of its request types.
+function collectConnectionDirectory({ absoluteDirectory, descriptor, errors, records }) {
+  const { checkSlug, directory, kinds, naming, typeClass } = descriptor;
+  const connectionTypes = fs
+    .readdirSync(absoluteDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+
+  for (const connectionType of connectionTypes) {
+    const relativeDirectory = `${directory}/${connectionType}`;
+    if (
+      !checkTypeName({
+        checkSlug,
+        errors,
+        naming,
+        relativePath: relativeDirectory,
+        typeClass,
+        typeName: connectionType,
+      })
+    ) {
+      continue;
+    }
+
+    const connectionDirectory = path.join(absoluteDirectory, connectionType);
+    const fileName = `${connectionType}.js`;
+    const absolutePath = path.join(connectionDirectory, fileName);
+    const relativePath = `${relativeDirectory}/${fileName}`;
+    if (!fs.existsSync(absolutePath)) {
+      errors.push(
+        new ConfigError(
+          `Connection file plugin "${relativeDirectory}" has no "${fileName}". A connection directory is named after the connection type it defines.`,
+          { filePath: relativeDirectory, lineNumber: 1, checkSlug }
+        )
+      );
+      continue;
+    }
+
+    const sibling = readSiblingJson({
+      absolutePath,
+      errors,
+      relativePath,
+      stem: connectionType,
+    });
+    records.push(
+      createRecord({
+        absolutePath,
+        checkSlug,
+        kind: kinds[0],
+        relativePath,
+        sibling,
+        stem: connectionType,
+        typeClass,
+      })
+    );
+    collectConnectionRequests({
+      connectionDirectory,
+      connectionType,
+      descriptor,
+      errors,
+      records,
+    });
+  }
+}
+
 /**
  * Walks the file-plugin directory convention under the config directory and
  * returns one record per type name it defines, in a deterministic order.
@@ -101,53 +261,14 @@ function discoverFilePlugins({ configDirectory }) {
     return { records, errors };
   }
 
-  for (const {
-    checkSlug,
-    directory,
-    extensions,
-    kinds,
-    naming,
-    typeClass,
-  } of filePluginDirectories) {
-    const absoluteDirectory = path.join(configDirectory, ...directory.split('/'));
+  for (const descriptor of filePluginDirectories) {
+    const absoluteDirectory = path.join(configDirectory, ...descriptor.directory.split('/'));
     if (!isDirectory(absoluteDirectory)) continue;
-
-    const fileNames = fs
-      .readdirSync(absoluteDirectory, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && extensions.includes(path.extname(entry.name)))
-      .map((entry) => entry.name)
-      .sort();
-
-    for (const fileName of fileNames) {
-      const stem = path.basename(fileName, path.extname(fileName));
-      // A plugin file name is a single-segment type name, so Card.test.jsx and
-      // Card.stories.jsx are sources that live beside a plugin, not plugins.
-      if (stem.includes('.')) continue;
-
-      const relativePath = `${directory}/${fileName}`;
-      if (!checkTypeName({ checkSlug, errors, naming, relativePath, typeClass, typeName: stem })) {
-        continue;
-      }
-
-      const absolutePath = path.join(absoluteDirectory, fileName);
-      const sibling = readSiblingJson({ absolutePath, errors, relativePath, stem });
-
-      for (const kind of kinds) {
-        records.push({
-          kind,
-          typeName: stem,
-          originalTypeName: stem,
-          typeClass,
-          checkSlug,
-          package: null,
-          packageId: FILE_PLUGIN_PACKAGE_ID,
-          version: null,
-          file: absolutePath,
-          relativePath,
-          ...sibling,
-        });
-      }
+    if (descriptor.layout === 'connection') {
+      collectConnectionDirectory({ absoluteDirectory, descriptor, errors, records });
+      continue;
     }
+    collectFlatDirectory({ absoluteDirectory, descriptor, errors, records });
   }
 
   return { records, errors };
