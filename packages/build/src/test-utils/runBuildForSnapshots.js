@@ -198,6 +198,7 @@ const snapshotTypesMap = {
       _gt: { package: '@lowdefy/operators-js' },
       _gte: { package: '@lowdefy/operators-js' },
       _and: { package: '@lowdefy/operators-js' },
+      _api: { package: '@lowdefy/operators-js' },
       _or: { package: '@lowdefy/operators-js' },
       _not: { package: '@lowdefy/operators-js' },
       _type: { package: '@lowdefy/operators-js' },
