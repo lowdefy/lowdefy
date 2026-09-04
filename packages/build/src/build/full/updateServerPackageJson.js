@@ -15,6 +15,7 @@
 */
 
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 async function updateServerPackageJson({ components, context }) {
@@ -24,14 +25,21 @@ async function updateServerPackageJson({ components, context }) {
 
   const dependencies = packageJson.dependencies;
   function getPackages(types) {
-    Object.values(types).forEach((type) => {
+    Object.values(types).forEach((pluginType) => {
+      // A file plugin is a file in the app, not a package: it carries
+      // package: null and there is nothing to install for it. Writing it here
+      // would add a dependency literally named "null" with a null version,
+      // which the package manager rejects.
+      if (type.isNone(pluginType.package)) {
+        return;
+      }
       // Deployment tooling may have rewritten a workspace plugin to a link:
       // path — overwriting it with the configured version (e.g. workspace:*)
       // would break installs outside the monorepo workspace.
-      if (dependencies[type.package]?.startsWith('link:')) {
+      if (dependencies[pluginType.package]?.startsWith('link:')) {
         return;
       }
-      dependencies[type.package] = type.version;
+      dependencies[pluginType.package] = pluginType.version;
     });
   }
   getPackages(components.types.actions);

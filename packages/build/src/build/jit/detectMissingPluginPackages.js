@@ -14,11 +14,18 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function collectMissing({ counter, definitions, installedPluginPackages, missingPackages }) {
   const counts = counter.getCounts();
   for (const typeName of Object.keys(counts)) {
     const def = definitions[typeName];
     if (!def) continue;
+    // A file plugin is a file in the app, not a package: it carries
+    // package: null, is never in installedPluginPackages, and has nothing to
+    // install. Left in, it is reported missing on every build and the dev
+    // server reinstalls and restarts forever.
+    if (type.isNone(def.package)) continue;
     if (installedPluginPackages.has(def.package)) continue;
 
     if (!missingPackages.has(def.package)) {
