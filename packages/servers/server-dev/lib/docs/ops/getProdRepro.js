@@ -14,19 +14,61 @@
   limitations under the License.
 */
 
+import { collectBlockTypes, compileTrace } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import createResolveEventSource from './createResolveEventSource.js';
 import getEventField from './getEventField.js';
+import readBuildArtifact from '../readBuildArtifact.js';
 import runOpsTool from './runOpsTool.js';
 
 const TRACE_LIMIT = 500;
 
-// P2's trace → journey compiler is not landed yet, so this returns the raw
-// material it will consume rather than pretending to compile: the session's
-// events in order with the page and block ids an agent needs to write the
-// journey by hand today. The note says so explicitly — a tool that quietly
-// returned an empty journey would read as "nothing to reproduce".
+const TRACE_FIELDS = [
+  'actions',
+  'block_id',
+  'config_key',
+  'error_name',
+  'event_name',
+  'page_id',
+  'page_instance',
+  'payload',
+  'requests',
+  'rid',
+  'session_id',
+  'state_writes',
+  'success',
+  'url_after',
+];
+
+// A sink writes a wide event either nested or flattened, so every field is read
+// through getEventField before the compiler sees it.
+function toTraceRow(row) {
+  const traceRow = { t: getEventField(row, 't') ?? row._time ?? null };
+  TRACE_FIELDS.forEach((field) => {
+    const value = getEventField(row, field);
+    if (!type.isNone(value)) traceRow[field] = value;
+  });
+  return traceRow;
+}
+
+// The block types of the pages the trace touched, so a change on an input block
+// compiles to a `set` step. Resolved against this working tree's build, the
+// same way `source` is.
+function readBlockTypes({ traceRows }) {
+  const blockTypes = {};
+  [...new Set(traceRows.map((row) => row.page_id).filter(type.isString))].forEach((pageId) => {
+    const page = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
+    if (type.isNone(page)) return;
+    collectBlockTypes({ blockTypes, page, pageId });
+  });
+  return blockTypes;
+}
+
+// Everything one rid recorded, compiled into a journey. The compiler stops at
+// the event that failed, so what comes back is the reproduction: the steps that
+// led to the failure and the expectation that the last one succeeds, which is a
+// failing test until the bug is fixed.
 async function getProdRepro({ origin, rid }) {
   if (!type.isString(rid) || rid === '') {
     throw new Error(`lowdefy_prod_repro requires a "rid" string. Received ${JSON.stringify(rid)}.`);
@@ -58,18 +100,37 @@ async function getProdRepro({ origin, rid }) {
           gitSha: getEventField(row, 'git_sha'),
         }),
       }));
-      const pageIds = [
-        ...new Set(events.map((event) => event.page_id).filter((id) => !type.isNone(id))),
-      ];
-      const blockIds = [
-        ...new Set(events.map((event) => event.block_id).filter((id) => !type.isNone(id))),
-      ];
+
+      const traceRows = rows
+        .filter((row) => getEventField(row, 'event') === 'journey_event')
+        .map(toTraceRow);
+      const { candidates, dropped } = compileTrace({
+        blockMetas: readBuildArtifact({ name: 'plugins/blockMetas.json' }) ?? {},
+        blockTypes: readBlockTypes({ traceRows }),
+        trace: traceRows,
+      });
+      // A rid can carry more than one session's beacon, and the one that failed
+      // is the one being reproduced.
+      const candidate =
+        candidates.find((entry) => !type.isUndefined(entry.origin.failure)) ?? candidates[0];
+
       return {
-        note: 'compiler pending',
         rid,
-        page_ids: pageIds,
-        block_ids: blockIds,
+        journey: candidate?.journey ?? null,
+        journey_yaml: candidate?.contents ?? null,
+        journey_origin: candidate?.origin ?? null,
+        other_candidates: candidates.length > 1 ? candidates.length - 1 : 0,
+        dropped,
+        page_ids: [
+          ...new Set(events.map((event) => event.page_id).filter((id) => !type.isNone(id))),
+        ],
+        block_ids: [
+          ...new Set(events.map((event) => event.block_id).filter((id) => !type.isNone(id))),
+        ],
         events,
+        note: type.isUndefined(candidate)
+          ? 'No journey_event carries this rid, so there is nothing to compile. The events below are what the rid did record.'
+          : 'Move journey_yaml into tests/journeys/, add the fixtures it needs and run `lowdefy test --update` to fill the expectations left unfilled.',
         retention:
           'Only events inside the sink retention window (30 days unless the sink is configured otherwise) can be reproduced.',
       };

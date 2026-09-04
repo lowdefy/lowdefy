@@ -130,9 +130,10 @@ test('getProdTrace names retention and sampling when no event carries the sessio
   expect(result.note).toContain('sample_rate');
 });
 
-test('getProdRepro returns the events with the page and block ids and says the compiler is pending', async () => {
+test('getProdRepro returns the events with the page and block ids when there is no journey to compile', async () => {
   const result = await getProdRepro({ origin: ORIGIN, rid: 'rid-1' });
-  expect(result.note).toBe('compiler pending');
+  expect(result.journey).toBeNull();
+  expect(result.note).toContain('nothing to compile');
   expect(result.page_ids).toEqual(['checkout']);
   expect(result.block_ids).toEqual(['submit_button']);
   expect(result.events).toHaveLength(2);

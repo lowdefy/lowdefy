@@ -15,6 +15,9 @@
 */
 
 import cleanDirectory from './cleanDirectory.js';
+import collectBlockTypes from './journeyCompiler/collectBlockTypes.js';
+import compileSession from './journeyCompiler/compileSession.js';
+import compileTrace from './journeyCompiler/compileTrace.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import findAvailablePort from './findAvailablePort.js';
 import findIncompleteExpectation from './journeyGrammar/findIncompleteExpectation.js';
@@ -64,6 +67,9 @@ export {
   REQUEST_TEST_KEYS,
   WAIT_KEYS,
   cleanDirectory,
+  collectBlockTypes,
+  compileSession,
+  compileTrace,
   copyFileOrDirectory,
   findAvailablePort,
   findIncompleteExpectation,

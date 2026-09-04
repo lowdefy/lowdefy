@@ -51,9 +51,14 @@ function discoverJourneys({ context }) {
   if (!fs.existsSync(directory)) {
     return [];
   }
+  // D11: tests/journeys/_candidates holds what `lowdefy journeys compile` wrote
+  // from a production trace. A candidate is a proposal with unfilled
+  // expectations and no fixtures; promotion is moving the file up a directory.
+  // Reading files only, and never a subdirectory, is what keeps it out.
   const fileNames = fs
-    .readdirSync(directory)
-    .filter(isJourneyFile)
+    .readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && isJourneyFile(entry.name))
+    .map((entry) => entry.name)
     .sort((a, b) => a.localeCompare(b));
   return fileNames.flatMap((fileName) =>
     readJourneyFile({ filePath: path.join(directory, fileName) })

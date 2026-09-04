@@ -28,6 +28,8 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initMigrations from './commands/init-migrations/initMigrations.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import modulesUpdate from './commands/modules/modulesUpdate.js';
 import snapshot from './commands/snapshot/snapshot.js';
 import migrate from './commands/migrate/migrate.js';
@@ -256,6 +258,35 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: initVercel }));
+
+const journeys = program
+  .command('journeys')
+  .description('Work with the journeys the app recorded in production.');
+
+journeys
+  .command('compile <trace>')
+  .description(
+    'Compile a recorded trace (JSONL) into candidate journeys, one per distinct session sequence.'
+  )
+  .usage('<trace> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .option('--out <path>', 'Write the candidates here instead of tests/journeys/_candidates.')
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('coverage <trace>')
+  .description(
+    'Report the share of the (page, block, event) triples in a recorded trace that a committed journey exercises.'
+  )
+  .usage('<trace> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .action(runCommand({ cliVersion, handler: journeysCoverage }));
 
 const modules = program.command('modules').description('Manage Lowdefy modules.');
 

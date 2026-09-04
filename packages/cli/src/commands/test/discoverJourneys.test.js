@@ -108,3 +108,27 @@ test('discoverJourneys reports an empty journey file as empty', () => {
     { filePath, journey: undefined, error: 'Journey file is empty.' },
   ]);
 });
+
+test('discoverJourneys ignores the _candidates directory the journey compiler writes', () => {
+  writeJourneyFile(
+    'form.yaml',
+    `name: submits the form
+pageId: form
+steps:
+  - click: submit
+`
+  );
+  const candidates = path.join(configDirectory, 'tests', 'journeys', '_candidates');
+  fs.mkdirSync(candidates, { recursive: true });
+  fs.writeFileSync(
+    path.join(candidates, 'form-1a2b3c4d.yaml'),
+    `name: form recorded 1a2b3c4d
+pageId: form
+steps:
+  - click: submit
+`
+  );
+  expect(discoverJourneys({ context }).map(({ journey }) => journey.name)).toEqual([
+    'submits the form',
+  ]);
+});
