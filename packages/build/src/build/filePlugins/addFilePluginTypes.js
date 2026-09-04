@@ -51,6 +51,19 @@ function toDefinition({
   return definition;
 }
 
+// A connection's capability meta lives in typesMap.connectionMetas, beside the
+// package declarations from types.js connectionMetas, because that is the one
+// map buildConnections reads to know whether a connection type implements the
+// tenant scoping contract. Without this a file connection would declare
+// nothing and be refused under auth.organizations.policy: tenant.
+function addConnectionMeta({ record, typesMap }) {
+  if (record.kind !== 'connections' || type.isNone(record.meta)) return;
+  if (!type.isObject(typesMap.connectionMetas)) {
+    typesMap.connectionMetas = {};
+  }
+  typesMap.connectionMetas[record.typeName] = record.meta;
+}
+
 /**
  * Writes discovered file-plugin records into a typesMap, keyed by type name
  * under the record's kind.
@@ -83,6 +96,7 @@ function addFilePluginTypes({ records, typesMap }) {
       continue;
     }
     store[record.typeName] = toDefinition(record);
+    addConnectionMeta({ record, typesMap });
   }
   return collisions;
 }

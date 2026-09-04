@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import filePluginDirectories from './filePluginDirectories.js';
 
@@ -62,6 +63,24 @@ function readSiblingJson({ absolutePath, errors, relativePath, stem }) {
   // framework implements: the file is written against the Lowdefy it sits in.
   if (parsed.pluginApiVersion !== undefined) sibling.pluginApiVersion = parsed.pluginApiVersion;
   return sibling;
+}
+
+// A connection type declares its tenant capability in its meta, the same
+// declaration a connection package makes in types.js connectionMetas:
+// true implements the tenant scoping contract, false is non-scopable. Only
+// the two booleans mean anything to buildConnections, so any other value is
+// refused here rather than read as "declares nothing" - which under
+// auth.organizations.policy: tenant would report a missing declaration for a
+// file that plainly makes one.
+function checkConnectionMeta({ checkSlug, errors, jsonRelativePath, meta }) {
+  if (!type.isObject(meta) || type.isUndefined(meta.tenant)) return;
+  if (type.isBoolean(meta.tenant)) return;
+  errors.push(
+    new ConfigError(
+      `Connection file plugin "${jsonRelativePath}": meta.tenant should be true (implements the tenant scoping contract) or false (non-scopable).`,
+      { received: meta.tenant, filePath: jsonRelativePath, lineNumber: 1, checkSlug }
+    )
+  );
 }
 
 function checkTypeName({ checkSlug, errors, naming, relativePath, typeClass, typeName }) {
@@ -225,6 +244,12 @@ function collectConnectionDirectory({ absoluteDirectory, descriptor, errors, rec
       errors,
       relativePath,
       stem: connectionType,
+    });
+    checkConnectionMeta({
+      checkSlug,
+      errors,
+      jsonRelativePath: `${relativeDirectory}/${connectionType}.json`,
+      meta: sibling.meta,
     });
     records.push(
       createRecord({

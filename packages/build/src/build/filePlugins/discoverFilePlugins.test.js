@@ -245,6 +245,32 @@ test('discoverFilePlugins reads schema and meta from a request sibling JSON file
   expect(records[1].meta).toEqual({ checkRead: true, checkWrite: false });
 });
 
+test('discoverFilePlugins carries a connection tenant capability from its sibling JSON', () => {
+  writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  writeFixture(
+    'plugins/connections/MemoryStore/MemoryStore.json',
+    JSON.stringify({ meta: { tenant: true } })
+  );
+  const { records, errors } = discoverFilePlugins({ configDirectory });
+  expect(errors).toEqual([]);
+  expect(records[0].meta).toEqual({ tenant: true });
+});
+
+test('discoverFilePlugins errors when a connection meta declares a non-boolean tenant', () => {
+  writeFixture('plugins/connections/MemoryStore/MemoryStore.js');
+  writeFixture(
+    'plugins/connections/MemoryStore/MemoryStore.json',
+    JSON.stringify({ meta: { tenant: 'shared' } })
+  );
+  const { errors } = discoverFilePlugins({ configDirectory });
+  expect(errors.length).toEqual(1);
+  expect(errors[0].message).toEqual(
+    'Connection file plugin "plugins/connections/MemoryStore/MemoryStore.json": meta.tenant should be true (implements the tenant scoping contract) or false (non-scopable).'
+  );
+  expect(errors[0].filePath).toEqual('plugins/connections/MemoryStore/MemoryStore.json');
+  expect(errors[0].checkSlug).toEqual('connection-types');
+});
+
 test('discoverFilePlugins errors when a connection directory has no file named after it', () => {
   writeFixture('plugins/connections/MemoryStore/requests/MemoryGet.js');
   const { records, errors } = discoverFilePlugins({ configDirectory });

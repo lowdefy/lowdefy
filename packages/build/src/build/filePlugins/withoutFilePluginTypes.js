@@ -62,6 +62,18 @@ function withoutFilePluginTypes(typesMap) {
     }
     node[storeName] = withoutFilePluginDefinitions(node[storeName]);
   }
+  // A connectionMetas entry carries no packageId, so a file connection's meta is
+  // dropped by name: any meta whose type no longer survives above was a file
+  // plugin's (or shadowed a package's) and must not outlive it.
+  if (type.isObject(result.connectionMetas)) {
+    const kept = {};
+    for (const [typeName, meta] of Object.entries(result.connectionMetas)) {
+      if (!type.isUndefined(result.connections?.[typeName])) {
+        kept[typeName] = meta;
+      }
+    }
+    result.connectionMetas = kept;
+  }
   return result;
 }
 

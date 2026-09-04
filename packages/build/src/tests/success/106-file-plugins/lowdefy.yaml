@@ -9,6 +9,21 @@
 # instead of a package barrel.
 lowdefy: local
 
+# The connection declares meta.tenant in MemoryStore.json, the file-plugin
+# spelling of a package's types.js connectionMetas, so it can be walled under
+# the tenant policy: memory_store is scoped by default, shared_store opts out.
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: file_plugin_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
 connections:
   - id: memory_store
     type: MemoryStore
@@ -16,6 +31,13 @@ connections:
       rows:
         - key: greeting
           value: hello world
+  - id: shared_store
+    type: MemoryStore
+    tenant: shared
+    properties:
+      rows:
+        - key: motto
+          value: shared across organizations
 
 pages:
   - _ref: pages/home.yaml

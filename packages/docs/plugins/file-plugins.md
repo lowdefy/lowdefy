@@ -68,7 +68,13 @@ The connection's schema goes in `Stripe.json`, and the request's schema and meta
 
 `meta.checkRead` and `meta.checkWrite` are the gates the request layer checks against the connection's `read` and `write` properties. A request that declares neither is gated on both - a file plugin can never open a connection wider by staying silent - and the build warns, naming the JSON file to declare them in.
 
-A connection file plugin does not declare a tenant capability, so it can not be used under `auth.organizations.policy: tenant`, which requires every connection type to declare whether it implements the tenant scoping contract. Use a connection package for tenant-scoped data.
+Under `auth.organizations.policy: tenant` every connection type must declare whether it implements the tenant scoping contract, and a connection file plugin declares it as `meta.tenant` in `Stripe.json` - the same declaration a connection package makes in its `types.js` `connectionMetas`:
+
+```json
+{ "meta": { "tenant": true } }
+```
+
+`true` means the connection's resolvers enforce the wall: they merge the tenant filter into every read and stamp the tenant field onto every write, from the verdict the request layer passes them. Its connections are then scoped by default and opt out only with `tenant: shared`. `false` means the type is not scopable at all (object storage, mail), and its connections are never scoped. Only these two values are accepted; a type that declares neither can not be used under the tenant policy. The same `meta` is merged onto the connection at runtime, so the declaration is made once.
 
 ### The type name is the file name
 
@@ -106,7 +112,7 @@ plugins/blocks/Card.json
 }
 ```
 
-Blocks use `meta` and `schema`; actions and operators use `schema`, operators use `hazards`, connections use `schema`, and requests use `schema` and `meta`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
+Blocks use `meta` and `schema`; actions and operators use `schema`, operators use `hazards`, and connections and requests use `schema` and `meta`. The file is optional - a plugin with no sibling JSON file is registered without a schema and is not schema-validated. The build reads this file rather than the plugin's own source so that it never has to execute client React code to learn a block's schema, and it is the same `meta` and `schema` shape a package block ships beside its component.
 
 ### A block file plugin must declare a meta
 

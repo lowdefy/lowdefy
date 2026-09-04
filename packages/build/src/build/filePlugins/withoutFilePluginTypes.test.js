@@ -68,3 +68,21 @@ test('withoutFilePluginTypes leaves stores the typesMap does not have alone', ()
 test('withoutFilePluginTypes returns a typesMap that is not an object unchanged', () => {
   expect(withoutFilePluginTypes(undefined)).toBeUndefined();
 });
+
+test('withoutFilePluginTypes drops a connectionMetas entry whose connection was a file plugin', () => {
+  const typesMap = {
+    connections: {
+      MongoDBCollection: { package: '@lowdefy/connection-mongodb' },
+      MemoryStore: filePlugin('plugins/connections/MemoryStore/MemoryStore.js'),
+    },
+    connectionMetas: {
+      MongoDBCollection: { tenant: true },
+      MemoryStore: { tenant: true },
+    },
+  };
+  expect(withoutFilePluginTypes(typesMap)).toEqual({
+    connections: { MongoDBCollection: { package: '@lowdefy/connection-mongodb' } },
+    connectionMetas: { MongoDBCollection: { tenant: true } },
+  });
+  expect(typesMap.connectionMetas.MemoryStore).toEqual({ tenant: true });
+});

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import addFilePluginTypes from './filePlugins/addFilePluginTypes.js';
 import buildConnections from './buildConnections.js';
 import testContext from '../test-utils/testContext.js';
 
@@ -728,4 +729,67 @@ test('buildConnections still validates the tenant contract under the pinned poli
   ).toThrow(
     'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1".'
   );
+});
+
+// A file connection declares its capability in its sibling JSON, which
+// discovery carries onto the record addFilePluginTypes writes - so the
+// typesMap buildConnections reads is assembled here the way the build
+// assembles it, not hand-written.
+function filePluginTenantContext({ meta } = {}) {
+  const buildContext = testContext();
+  const typesMap = { connections: {}, requests: {} };
+  addFilePluginTypes({
+    records: [
+      {
+        kind: 'connections',
+        typeName: 'MemoryStore',
+        originalTypeName: 'MemoryStore',
+        typeClass: 'Connection',
+        checkSlug: 'connection-types',
+        package: null,
+        packageId: 'file-plugin',
+        version: null,
+        file: '/app/plugins/connections/MemoryStore/MemoryStore.js',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+        ...(meta === undefined ? {} : { meta }),
+      },
+    ],
+    typesMap,
+  });
+  buildContext.typesMap = typesMap;
+  return buildContext;
+}
+
+test('buildConnections walls a file plugin connection that declares tenant: true in its sibling JSON', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [{ id: 'memory_store', type: 'MemoryStore' }],
+  };
+  const buildContext = filePluginTenantContext({ meta: { tenant: true } });
+  const res = buildConnections({ components, context: buildContext });
+  expect(res.connections[0].tenantCapability).toBe(true);
+  expect([...buildContext.tenantConnections]).toEqual([
+    ['memory_store', { type: 'MemoryStore', field: 'organization_id' }],
+  ]);
+});
+
+test('buildConnections throws under the tenant policy when a file plugin connection declares no capability', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [{ id: 'memory_store', type: 'MemoryStore' }],
+  };
+  expect(() => buildConnections({ components, context: filePluginTenantContext() })).toThrow(
+    'Connection type "MemoryStore" declares no tenant capability at connection "memory_store". Under auth.organizations.policy: tenant every connection type must declare connectionMetas tenant: true (implements the tenant scoping contract) or tenant: false (non-scopable), so no connection is ever silently unscoped.'
+  );
+});
+
+test('buildConnections does not wall a file plugin connection that declares tenant: false', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [{ id: 'memory_store', type: 'MemoryStore' }],
+  };
+  const buildContext = filePluginTenantContext({ meta: { tenant: false } });
+  const res = buildConnections({ components, context: buildContext });
+  expect(res.connections[0].tenantCapability).toBe(false);
+  expect([...buildContext.tenantConnections]).toEqual([]);
 });

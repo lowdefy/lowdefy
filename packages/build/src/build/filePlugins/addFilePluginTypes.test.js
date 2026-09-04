@@ -196,3 +196,68 @@ test('addFilePluginTypes keeps the connection a request type belongs to on its d
     meta: { checkRead: true, checkWrite: false },
   });
 });
+
+test('addFilePluginTypes writes a connection tenant capability into connectionMetas', () => {
+  const typesMap = { connections: {}, requests: {} };
+  const collisions = addFilePluginTypes({
+    records: [
+      blockRecord({
+        kind: 'connections',
+        typeName: 'MemoryStore',
+        originalTypeName: 'MemoryStore',
+        typeClass: 'Connection',
+        checkSlug: 'connection-types',
+        meta: { tenant: true },
+        file: '/app/plugins/connections/MemoryStore/MemoryStore.js',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+      }),
+    ],
+    typesMap,
+  });
+  expect(collisions).toEqual([]);
+  expect(typesMap.connectionMetas).toEqual({ MemoryStore: { tenant: true } });
+});
+
+test('addFilePluginTypes does not write connectionMetas for a connection with no meta', () => {
+  const typesMap = { connections: {}, requests: {}, connectionMetas: {} };
+  addFilePluginTypes({
+    records: [
+      blockRecord({
+        kind: 'connections',
+        typeName: 'MemoryStore',
+        originalTypeName: 'MemoryStore',
+        typeClass: 'Connection',
+        checkSlug: 'connection-types',
+        file: '/app/plugins/connections/MemoryStore/MemoryStore.js',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+      }),
+    ],
+    typesMap,
+  });
+  expect(typesMap.connectionMetas).toEqual({});
+});
+
+test('addFilePluginTypes keeps the package connectionMetas when a connection type collides', () => {
+  const typesMap = {
+    connections: { MemoryStore: { package: '@lowdefy/connection-memory' } },
+    requests: {},
+    connectionMetas: { MemoryStore: { tenant: false } },
+  };
+  const collisions = addFilePluginTypes({
+    records: [
+      blockRecord({
+        kind: 'connections',
+        typeName: 'MemoryStore',
+        originalTypeName: 'MemoryStore',
+        typeClass: 'Connection',
+        checkSlug: 'connection-types',
+        meta: { tenant: true },
+        file: '/app/plugins/connections/MemoryStore/MemoryStore.js',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+      }),
+    ],
+    typesMap,
+  });
+  expect(collisions.length).toEqual(1);
+  expect(typesMap.connectionMetas).toEqual({ MemoryStore: { tenant: false } });
+});
