@@ -20,6 +20,7 @@ import path from 'path';
 import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap } from '@lowdefy/build';
+import addFilePluginTypesToMap from './addFilePluginTypesToMap.mjs';
 import YAML from 'yaml';
 
 const require = createRequire(import.meta.url);
@@ -78,6 +79,8 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       typePrefix: plugin.typePrefix,
     });
   }
+
+  addFilePluginTypesToMap({ directories, typesMap: customTypesMap });
 
   return customTypesMap;
 }

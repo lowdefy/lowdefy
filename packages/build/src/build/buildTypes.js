@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 import collectExceptions from '../utils/collectExceptions.js';
+import { FILE_PLUGIN_PACKAGE_ID } from './filePlugins/discoverFilePlugins.js';
 import findSimilarString from '../utils/findSimilarString.js';
 
 function buildTypeClass(context, { checkSlug, counter, definitions, store, typeClass }) {
@@ -42,11 +43,24 @@ function buildTypeClass(context, { checkSlug, counter, definitions, store, typeC
       version: definitions[typeName].version,
       count: counts[typeName],
     };
+    // A file plugin has no package to import from, so the import and schema-map
+    // writers need the file it was discovered at instead.
+    if (definitions[typeName].packageId === FILE_PLUGIN_PACKAGE_ID) {
+      store[typeName].packageId = FILE_PLUGIN_PACKAGE_ID;
+      store[typeName].file = definitions[typeName].file;
+      store[typeName].relativePath = definitions[typeName].relativePath;
+    }
   });
 }
 
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
+
+  // Type-name collisions and bad file-plugin names are found while the typesMap
+  // is assembled in createContext, before there is anywhere to collect them.
+  (context.filePluginExceptions ?? []).forEach((exception) => {
+    collectExceptions(context, exception);
+  });
 
   // Add Mandatory Types
   // Add operators used by form validation

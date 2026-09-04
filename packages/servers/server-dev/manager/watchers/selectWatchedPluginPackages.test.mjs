@@ -143,3 +143,28 @@ test('an exports condition object resolves to the entry directory', () => {
     path.join(dir, 'build')
   );
 });
+
+// A file plugin has `package: null` - there is no package directory to watch,
+// and the selection must skip it rather than fail on the missing package name.
+test('a server-side file plugin is skipped and does not stop other packages being watched', () => {
+  const dir = addLinkedPackage('@app/db-plugin');
+  const customTypesMap = {
+    connections: { MyDb: { package: '@app/db-plugin', version: '1.0.0' } },
+    operators: {
+      server: {
+        _lookup: {
+          package: null,
+          packageId: 'file-plugin',
+          originalTypeName: '_lookup',
+          version: null,
+          file: path.join(configDirectory, 'plugins/operators/server/_lookup.js'),
+          relativePath: 'plugins/operators/server/_lookup.js',
+        },
+      },
+    },
+  };
+
+  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
+    { package: '@app/db-plugin', dir, watchDir: path.join(dir, 'src') },
+  ]);
+});

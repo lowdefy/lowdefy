@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 
@@ -175,4 +177,55 @@ test('buildTypes suppresses an unknown operator under ~ignoreBuildChecks operato
   const components = {};
   buildTypes({ components, context });
   expect(context.errors).toEqual([]);
+});
+
+test('buildTypes collects the file-plugin collisions found while the typesMap was assembled', () => {
+  const context = createTypesMapContext();
+  context.errors = [];
+  context.filePluginExceptions = [
+    new ConfigError(
+      'Block type "Card" is defined by plugins/blocks/Card.jsx and by @lowdefy/blocks-antd.',
+      { filePath: 'plugins/blocks/Card.jsx', lineNumber: 1, checkSlug: 'block-types' }
+    ),
+    new ConfigError(
+      'Operator type "_slug" is defined by plugins/operators/client/_slug.js and by plugins/operators/shared/_slug.js.',
+      { filePath: 'plugins/operators/client/_slug.js', lineNumber: 1, checkSlug: 'operator-types' }
+    ),
+  ];
+  const components = {};
+  buildTypes({ components, context });
+  expect(context.errors.map((error) => error.message)).toEqual([
+    'Block type "Card" is defined by plugins/blocks/Card.jsx and by @lowdefy/blocks-antd.',
+    'Operator type "_slug" is defined by plugins/operators/client/_slug.js and by plugins/operators/shared/_slug.js.',
+  ]);
+  expect(context.errors[0].checkSlug).toEqual('block-types');
+  expect(context.errors[1].checkSlug).toEqual('operator-types');
+});
+
+test('buildTypes carries the file and relative path of a file plugin into components.types', () => {
+  const context = createTypesMapContext({
+    blocks: {
+      ...createDefinitions([...basicTypes.blocks, ...loaderTypes.blocks, 'Message']),
+      Panel: {
+        package: null,
+        packageId: 'file-plugin',
+        originalTypeName: 'Panel',
+        version: null,
+        file: '/app/plugins/blocks/Panel.jsx',
+        relativePath: 'plugins/blocks/Panel.jsx',
+      },
+    },
+  });
+  context.typeCounters.blocks.increment('Panel', 'configKey1');
+  const components = {};
+  buildTypes({ components, context });
+  expect(components.types.blocks.Panel).toEqual({
+    originalTypeName: 'Panel',
+    package: null,
+    version: null,
+    count: 1,
+    packageId: 'file-plugin',
+    file: '/app/plugins/blocks/Panel.jsx',
+    relativePath: 'plugins/blocks/Panel.jsx',
+  });
 });

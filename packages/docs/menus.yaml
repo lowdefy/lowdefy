@@ -331,6 +331,11 @@
           pageId: plugins-dev
           properties:
             title: Developing Plugins
+        - id: file-plugins
+          type: MenuLink
+          pageId: file-plugins
+          properties:
+            title: File Plugins
         - id: plugin-api-versioning
           type: MenuLink
           pageId: plugin-api-versioning

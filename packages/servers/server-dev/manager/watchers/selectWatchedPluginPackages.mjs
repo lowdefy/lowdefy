@@ -38,6 +38,8 @@ function collectServerSidePackages(customTypesMap) {
   for (const kind of serverSideKinds) {
     const store = get(customTypesMap, kind, { default: {} });
     for (const definition of Object.values(store ?? {})) {
+      // A file plugin has `package: null` - there is no package directory to
+      // watch. Its own file watcher lands with the path emitter.
       if (type.isString(definition?.package)) {
         packages.add(definition.package);
       }

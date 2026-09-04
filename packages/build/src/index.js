@@ -24,6 +24,8 @@ import collectAppIds from './check/collectAppIds.js';
 import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import addFilePluginTypes from './build/filePlugins/addFilePluginTypes.js';
+import discoverFilePlugins from './build/filePlugins/discoverFilePlugins.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import serializeBuildException from './utils/serializeBuildException.js';
@@ -287,10 +289,12 @@ async function build(options) {
 // The CLI's "modules update" command reads and rewrites the same lockfile the
 // build owns, and must do it by exactly the same rules.
 export {
+  addFilePluginTypes,
   check,
   checkAgainst,
   collectAppIds,
   createPluginTypesMap,
+  discoverFilePlugins,
   moduleLockfileName,
   readModuleLockfile,
   writeModuleLockfile,
