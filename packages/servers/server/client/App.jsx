@@ -57,7 +57,12 @@ function App({ config }) {
   });
 
   const usageDataRef = useRef({});
-  const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+  // journeys is the app's logger.journeys policy, read by the journey recorder
+  // that initLowdefyContext builds on this same object.
+  const lowdefyRef = useRef({
+    eventCallback: createLogUsage({ usageDataRef }),
+    journeys: loggerConfig.journeys,
+  });
   if (rootConfig?.theme) {
     lowdefyRef.current.theme = rootConfig.theme;
   }

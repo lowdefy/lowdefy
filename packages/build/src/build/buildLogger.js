@@ -35,6 +35,15 @@ const eventsDefaults = {
   identity: false,
 };
 
+// The journey recorder is on by default; volume is the only reason to turn it
+// down. Sampling is per session, so a recorded session is a complete story -
+// raising the rate is how an app fills its journey corpus faster. The dev
+// server records every session regardless of this rate.
+const journeysDefaults = {
+  enabled: true,
+  sample_rate: 0.05,
+};
+
 const otlpBatchDefaults = {
   size: 50,
   flush_ms: 2000,
@@ -57,6 +66,9 @@ function buildLogger({ components }) {
 
   // Always written, so the runtime reads a policy instead of defaulting one.
   components.logger.events = resolveEvents(components.logger.events);
+
+  // Always written, so the client reads a policy instead of defaulting one.
+  components.logger.journeys = { ...journeysDefaults, ...components.logger.journeys };
 
   // The OTLP exporter is off unless an endpoint is configured. Header values
   // are left exactly as authored - a "_secret" operator node stays an operator

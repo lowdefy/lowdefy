@@ -881,6 +881,31 @@ test('a logger events sample_rate above 1 is a warning', () => {
   expect(mockLogWarn.mock.calls[0][0]).toContain('logger.events');
 });
 
+// --- logger.journeys (recorded journeys, review H P2.1 / R17) ---
+
+test('logger journeys with enabled and sample_rate emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    logger: { journeys: { enabled: false, sample_rate: 0.5 } },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('a logger journeys sample_rate above 1 is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { journeys: { sample_rate: 2 } } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.journeys');
+});
+
+test('an unknown logger journeys key is a warning', () => {
+  const components = { lowdefy: '1.0.0', logger: { journeys: { rate: 1 } } };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalled();
+  expect(mockLogWarn.mock.calls[0][0]).toContain('logger.journeys');
+});
+
 // --- logger.otlp (OTLP export, review H P1.2 / R16) ---
 
 test('logger otlp with an endpoint, secret headers, resource and batch emits no warnings', () => {

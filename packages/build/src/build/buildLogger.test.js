@@ -17,12 +17,13 @@
 import buildLogger from './buildLogger.js';
 
 const eventsDefaults = { level: 'errors', identity: false };
+const journeysDefaults = { enabled: true, sample_rate: 0.05 };
 
 test('buildLogger no logger defined', () => {
   const components = {};
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: { events: eventsDefaults },
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
   });
 });
 
@@ -30,7 +31,7 @@ test('buildLogger empty logger object', () => {
   const components = { logger: {} };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: { events: eventsDefaults },
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
   });
 });
 
@@ -38,7 +39,7 @@ test('buildLogger logger null', () => {
   const components = { logger: null };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: { events: eventsDefaults },
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
   });
 });
 
@@ -64,12 +65,36 @@ test('buildLogger events preserves a zero sample_rate', () => {
   expect(result.logger.events.sample_rate).toBe(0);
 });
 
+test('buildLogger journeys defaults to on at a 5% sample rate', () => {
+  expect(buildLogger({ components: {} }).logger.journeys).toEqual({
+    enabled: true,
+    sample_rate: 0.05,
+  });
+});
+
+test('buildLogger journeys keeps an authored enabled and sample_rate', () => {
+  const components = { logger: { journeys: { enabled: false, sample_rate: 1 } } };
+  expect(buildLogger({ components }).logger.journeys).toEqual({
+    enabled: false,
+    sample_rate: 1,
+  });
+});
+
+test('buildLogger journeys preserves a zero sample_rate', () => {
+  const components = { logger: { journeys: { sample_rate: 0 } } };
+  expect(buildLogger({ components }).logger.journeys).toEqual({
+    enabled: true,
+    sample_rate: 0,
+  });
+});
+
 test('buildLogger sentry with defaults', () => {
   const components = { logger: { sentry: {} } };
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
       events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: true,
         server: true,
@@ -89,6 +114,7 @@ test('buildLogger sentry with custom tracesSampleRate', () => {
   expect(result).toEqual({
     logger: {
       events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: true,
         server: true,
@@ -153,6 +179,7 @@ test('buildLogger sentry all custom values', () => {
   expect(result).toEqual({
     logger: {
       events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: false,
         server: true,
@@ -172,7 +199,7 @@ test('buildLogger returns components object', () => {
   const result = buildLogger({ components });
   expect(result.pages).toEqual([]);
   expect(result.menus).toEqual([]);
-  expect(result.logger).toEqual({ events: eventsDefaults });
+  expect(result.logger).toEqual({ events: eventsDefaults, journeys: journeysDefaults });
 });
 
 test('buildLogger sentry null does not apply defaults', () => {

@@ -3297,6 +3297,9 @@ export default {
             enabled: {
               type: 'boolean',
               description: 'Record user journeys. Default true.',
+              errorMessage: {
+                type: 'App "logger.journeys.enabled" should be a boolean.',
+              },
             },
             sample_rate: {
               type: 'number',
@@ -3304,6 +3307,11 @@ export default {
               maximum: 1,
               description:
                 'Share of sessions recorded, 0 to 1, decided once per session so a recorded session is complete. Default 0.05; the dev server records every session.',
+              errorMessage: {
+                type: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+                minimum: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+                maximum: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+              },
             },
           },
           errorMessage: {
