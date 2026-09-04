@@ -1,6 +1,6 @@
 id: items
 type: ListPage
-properties:
+props:
   layout:
     type: PageHeaderMenu
     properties:

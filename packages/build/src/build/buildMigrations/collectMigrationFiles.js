@@ -18,7 +18,10 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
+import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
+
+import migrationFileSchema from './migrationFileSchema.js';
 
 const MIGRATION_FILE = /\.ya?ml$/;
 
@@ -78,6 +81,16 @@ async function collectMigrationFiles({ directories }) {
       parsed = YAML.parse(text);
     } catch (error) {
       throw new ConfigError(`Migration "${id}" is not valid YAML: ${error.message}`, {
+        checkSlug: 'migration-files',
+      });
+    }
+    const { valid, errors } = validate({
+      schema: migrationFileSchema,
+      data: parsed,
+      returnErrors: true,
+    });
+    if (!valid) {
+      throw new ConfigError(`Migration "${id}" is invalid: ${errors[0].message}.`, {
         checkSlug: 'migration-files',
       });
     }

@@ -33,7 +33,7 @@ function pageContext(overrides = {}) {
   return {
     pageId: 'controls',
     rootBlockId: 'controls',
-    context: { collections, lowdefyConfig: experimentalOn },
+    context: { collections, lowdefyConfig: experimentalOn, handleWarning: () => {} },
     ...overrides,
   };
 }
@@ -43,7 +43,7 @@ test('expandArchetype rewrites a ListPage root into its layout with blocks and r
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls', columns: ['title', 'status'] },
+    props: { collection: 'controls', columns: ['title', 'status'] },
   };
   expandArchetype(block, pageContext());
   expect(block.type).toBe('Box');
@@ -71,7 +71,7 @@ test('expandArchetype errors when an archetype is used on a nested block', () =>
     id: 'nested',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls' },
+    props: { collection: 'controls' },
   };
   expect(() => expandArchetype(block, pageContext())).toThrow(/can only be a page's root type/);
 });
@@ -81,13 +81,13 @@ test('expandArchetype rejects an unknown archetype prop with a suggestion', () =
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls', column: ['title'] },
+    props: { collection: 'controls', column: ['title'] },
   };
   expect(() => expandArchetype(block, pageContext())).toThrow(/has no prop "column".*columns/s);
 });
 
 test('expandArchetype requires the collection prop', () => {
-  const block = { id: 'controls', type: 'ListPage', '~k': 'k1', properties: {} };
+  const block = { id: 'controls', type: 'ListPage', '~k': 'k1', props: {} };
   expect(() => expandArchetype(block, pageContext())).toThrow(/requires prop "collection"/);
 });
 
@@ -98,7 +98,7 @@ test('expandArchetype rejects an operator-valued prop loudly', () => {
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls', title: { _state: 'page_title' } },
+    props: { collection: 'controls', title: { _state: 'page_title' } },
   };
   expect(() => expandArchetype(block, pageContext())).toThrow(
     'Archetype "ListPage" prop "title" on page "controls" is an operator (_state). Archetype props are resolved at build time and must be literal values.'
@@ -110,7 +110,7 @@ test('expandArchetype accepts an integer pageSize literal', () => {
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls', pageSize: 25 },
+    props: { collection: 'controls', pageSize: 25 },
   };
   expandArchetype(block, pageContext());
   expect(block.requests[0].properties.options.limit).toBe(25);
@@ -121,7 +121,7 @@ test('expandArchetype refuses to build an archetype without the experimental fla
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls' },
+    props: { collection: 'controls' },
   };
   expect(() =>
     expandArchetype(block, {
@@ -141,7 +141,7 @@ test('expandArchetype refuses to discard requests the author declared on the pag
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls' },
+    props: { collection: 'controls' },
     requests: [{ id: 'frameworks', type: 'MongoDBFind', connectionId: 'controls' }],
   };
   expect(() => expandArchetype(block, pageContext())).toThrow(
@@ -154,7 +154,7 @@ test('expandArchetype refuses to discard events the author declared on the page 
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls' },
+    props: { collection: 'controls' },
     events: { onInit: [{ id: 'a', type: 'SetState', params: {} }] },
   };
   expect(() => expandArchetype(block, pageContext())).toThrow(
@@ -168,10 +168,51 @@ test('expandArchetype passes the archetype slots to the generator and removes th
     id: 'controls',
     type: 'ListPage',
     '~k': 'k1',
-    properties: { collection: 'controls', columns: ['title'] },
+    props: { collection: 'controls', columns: ['title'] },
     slots: { footer: { blocks: [footer] } },
   };
   expandArchetype(block, pageContext());
   expect(block.slots).toBeUndefined();
   expect(block.blocks[block.blocks.length - 1]).toBe(footer);
+});
+
+test('expandArchetype still reads "properties:" for one release, with a deprecation warning', () => {
+  const warnings = [];
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    properties: { collection: 'controls', columns: ['title'] },
+  };
+  expandArchetype(
+    block,
+    pageContext({
+      context: { collections, lowdefyConfig: experimentalOn, handleWarning: (w) => warnings.push(w) },
+    })
+  );
+  expect(block.type).toBe('Box');
+  expect(block.requests).toHaveLength(1);
+  expect(warnings).toHaveLength(1);
+  expect(warnings[0].message).toMatch(/"properties:", which is deprecated for archetypes.*"props:"/);
+  expect(warnings[0].checkSlug).toBe('archetype');
+});
+
+test('expandArchetype prefers "props:" over "properties:" when both are present', () => {
+  const warnings = [];
+  const block = {
+    id: 'controls',
+    type: 'ListPage',
+    '~k': 'k1',
+    props: { collection: 'controls', columns: ['title'] },
+    properties: { collection: 'ignored' },
+  };
+  expandArchetype(
+    block,
+    pageContext({
+      context: { collections, lowdefyConfig: experimentalOn, handleWarning: (w) => warnings.push(w) },
+    })
+  );
+  expect(warnings).toHaveLength(0);
+  expect(block.type).toBe('Box');
+  expect(block.requests).toHaveLength(1);
 });

@@ -17,10 +17,10 @@
 import path from 'node:path';
 
 import YAML from 'yaml';
-import { readFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import readFile from '../readFile.js';
 import moduleLockfileName from './moduleLockfileName.js';
 
 async function readModuleLockfile({ configDirectory }) {

@@ -34,7 +34,7 @@ connections:
 pages:
   - id: controls
     type: ListPage
-    properties:
+    props:
       collection: controls
       columns: [title, framework_id, status]
       filters: [framework_id, status]

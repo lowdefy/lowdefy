@@ -17,15 +17,19 @@
 */
 
 import { getOperatorType, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import archetypes from './registry.js';
 import validateComponentProps from '../buildPages/buildBlock/validateComponentProps.js';
 
 // The config key an archetype declaration reads its props from. Named once so
-// the rename to `props:` (aligning archetypes with components) is a one-line
-// change here rather than a sweep through every generator.
-const ARCHETYPE_PROPS_KEY = 'properties';
+// a future rename is a one-line change here rather than a sweep through every
+// generator. Aligned with components (R10): archetypes read `props:`.
+const ARCHETYPE_PROPS_KEY = 'props';
+
+// Pre-rename key, kept working for one release with a ConfigWarning so an app
+// written against the old `properties:` name is not broken by the rename.
+const LEGACY_ARCHETYPE_PROPS_KEY = 'properties';
 
 // The archetype expansion is allowed to change within a minor release, and
 // `lowdefy expand` — the way out — is new. Until both the command and the
@@ -78,7 +82,18 @@ function expandArchetype(block, pageContext) {
     );
   });
 
-  const properties = type.isObject(block[ARCHETYPE_PROPS_KEY]) ? block[ARCHETYPE_PROPS_KEY] : {};
+  let properties = {};
+  if (type.isObject(block[ARCHETYPE_PROPS_KEY])) {
+    properties = block[ARCHETYPE_PROPS_KEY];
+  } else if (type.isObject(block[LEGACY_ARCHETYPE_PROPS_KEY])) {
+    pageContext.context.handleWarning(
+      new ConfigWarning(
+        `Archetype "${archetypeName}" on page "${pageContext.pageId}" uses "properties:", which is deprecated for archetypes. Use "props:" instead.`,
+        { configKey, checkSlug: 'archetype' }
+      )
+    );
+    properties = block[LEGACY_ARCHETYPE_PROPS_KEY];
+  }
 
   // An archetype expands at build — an operator can never be evaluated before
   // generation, so an operator-valued prop cannot be honoured. Failing loud
@@ -128,5 +143,5 @@ function expandArchetype(block, pageContext) {
   delete block.areas;
 }
 
-export { ARCHETYPE_PROPS_KEY, EXPERIMENTAL_FLAG };
+export { ARCHETYPE_PROPS_KEY, LEGACY_ARCHETYPE_PROPS_KEY, EXPERIMENTAL_FLAG };
 export default expandArchetype;

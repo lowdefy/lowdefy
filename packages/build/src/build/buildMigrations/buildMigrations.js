@@ -119,12 +119,6 @@ async function buildMigrations({ components, context }) {
         field: 'Migration id',
         location: `migration file "${migration.id}"`,
       });
-      if (type.isNone(migration.routine)) {
-        throw new ConfigError(
-          `Migration "${migration.id}" has no "routine". A migration file must declare a "routine" of steps.`,
-          { checkSlug: 'migration-routine' }
-        );
-      }
       if (!type.isArray(migration.routine)) {
         throw new ConfigError(
           `Migration "${

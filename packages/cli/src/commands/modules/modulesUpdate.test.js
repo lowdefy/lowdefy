@@ -65,8 +65,7 @@ function logLines(context) {
 beforeEach(async () => {
   jest.clearAllMocks();
   modulesUpdate = (await import('./modulesUpdate.js')).default;
-  readModuleLockfile = (await import('./readModuleLockfile.js')).default;
-  writeModuleLockfile = (await import('./writeModuleLockfile.js')).default;
+  ({ readModuleLockfile, writeModuleLockfile } = await import('@lowdefy/node-utils'));
   runLowdefyBuild = (await import('../../utils/runLowdefyBuild.js')).default;
   runClientBuild = (await import('../../utils/runClientBuild.js')).default;
   getServer = (await import('../../utils/getServer.js')).default;

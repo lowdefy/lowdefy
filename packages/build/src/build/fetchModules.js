@@ -19,15 +19,13 @@ import path from 'node:path';
 
 import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+import { moduleLockfileName, readModuleLockfile, writeModuleLockfile } from '@lowdefy/node-utils';
 
 import fetchGitHubModule from './fetchGitHubModule.js';
 import getGitHubHeaders from './getGitHubHeaders.js';
 import isImmutableRef from './isImmutableRef.js';
-import moduleLockfileName from './moduleLockfileName.js';
 import parseModuleSource from './parseModuleSource.js';
-import readModuleLockfile from './readModuleLockfile.js';
 import resolveGitHubCommit from './resolveGitHubCommit.js';
-import writeModuleLockfile from './writeModuleLockfile.js';
 
 // A lock entry only pins anything if its commit is a full git object id; a
 // hand-edited "commit: main" would be passed to the fetch as a ref and

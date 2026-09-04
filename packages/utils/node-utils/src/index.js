@@ -26,10 +26,12 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import getStepKey from './journeyGrammar/getStepKey.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPortAvailable from './isPortAvailable.js';
+import moduleLockfileName from './modules/moduleLockfileName.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import readFixture from './readFixture.js';
 import readMigrationLedger from './migrations/readMigrationLedger.js';
+import readModuleLockfile from './modules/readModuleLockfile.js';
 import resolveMigrationStage from './migrations/resolveMigrationStage.js';
 import validateJourney from './journeyGrammar/validateJourney.js';
 import validateJourneySteps from './journeyGrammar/validateJourneySteps.js';
@@ -37,6 +39,7 @@ import validateRequestTest from './journeyGrammar/validateRequestTest.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import writeMigrationLedger from './migrations/writeMigrationLedger.js';
+import writeModuleLockfile from './modules/writeModuleLockfile.js';
 
 import {
   EXPECT_DOM_KEYS,
@@ -73,10 +76,12 @@ export {
   getStepKey,
   installIfPackageJsonChanged,
   isPortAvailable,
+  moduleLockfileName,
   spawnProcess,
   readFile,
   readFixture,
   readMigrationLedger,
+  readModuleLockfile,
   resolveMigrationStage,
   validateJourney,
   validateJourneySteps,
@@ -84,4 +89,5 @@ export {
   writeFile,
   writeFileIfChanged,
   writeMigrationLedger,
+  writeModuleLockfile,
 };

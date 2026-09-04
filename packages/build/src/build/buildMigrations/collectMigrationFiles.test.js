@@ -94,6 +94,27 @@ test('collectMigrationFiles sorts by code units, not locale collation', async ()
   expect(result.map((m) => m.id)).toEqual(['Z', 'a-B', 'a-a']);
 });
 
+test('collectMigrationFiles throws a ConfigError on a typo\'d key', async () => {
+  writeMigration(
+    '2026-08-30-01-a.yaml',
+    ['name: backfill active', 'routines:', '  - id: s1', '    type: MongoDBUpdateMany'].join('\n')
+  );
+  await expect(
+    collectMigrationFiles({ directories: { config: configDirectory } })
+  ).rejects.toThrow(
+    'Migration "2026-08-30-01-a" is invalid: A migration file has an unknown property. The only allowed properties are "name" and "routine".'
+  );
+});
+
+test('collectMigrationFiles throws a ConfigError when routine is missing', async () => {
+  writeMigration('2026-08-30-01-a.yaml', 'name: backfill active\n');
+  await expect(
+    collectMigrationFiles({ directories: { config: configDirectory } })
+  ).rejects.toThrow(
+    'Migration "2026-08-30-01-a" is invalid: A migration file requires a "routine".'
+  );
+});
+
 test('collectMigrationFiles throws when two files share one migration id', async () => {
   writeMigration('2026-08-30-01-a.yaml', 'routine: []\n');
   writeMigration('2026-08-30-01-a.yml', 'routine: []\n');
