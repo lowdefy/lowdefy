@@ -28,6 +28,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_custom_icon:
+  _state: basic_custom_icon
+```
+
+```yaml
 - id: accept_images
   type: S3UploadButton
   properties:
@@ -55,6 +64,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
       icon: AiOutlinePicture
       title: Upload JPG, PNG, or GIF
       type: default
+```
+
+```yaml
+accept_images:
+  _state: accept_images
+accept_pdf:
+  _state: accept_pdf
+accept_specific:
+  _state: accept_specific
 ```
 
 ```yaml
@@ -89,6 +107,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_images:
+  _state: limit_single_images
+```
+
+```yaml
 - id: button_primary
   type: S3UploadButton
   properties:
@@ -117,6 +144,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+button_primary:
+  _state: button_primary
+button_large:
+  _state: button_large
+button_different_icon:
+  _state: button_different_icon
+```
+
+```yaml
 - id: disabled_default
   type: S3UploadButton
   properties:
@@ -137,6 +173,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     disabled: true
     showUploadList: false
+```
+
+```yaml
+disabled_default:
+  _state: disabled_default
+disabled_primary:
+  _state: disabled_primary
+disabled_hidden_list:
+  _state: disabled_hidden_list
 ```
 
 ```yaml
@@ -171,6 +216,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_single_hidden:
+  _state: list_single_hidden
+```
+
+```yaml
 - id: label_default
   type: S3UploadButton
   properties:
@@ -191,6 +245,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     label:
       extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+```
+
+```yaml
+label_default:
+  _state: label_default
+label_inline:
+  _state: label_inline
+label_extra:
+  _state: label_extra
 ```
 
 ```yaml
@@ -226,6 +289,15 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
       icon: UploadOutlined
       title: Upload
       type: default
+```
+
+```yaml
+style_element_bg:
+  _state: style_element_bg
+style_label:
+  _state: style_label
+style_tailwind:
+  _state: style_tailwind
 ```
 
 ```yaml
@@ -292,6 +364,11 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 ```
 
 ```yaml
+doc_mgmt_card:
+  _state: doc_mgmt_card
+```
+
+```yaml
 - id: profile_card
   type: Card
   properties:
@@ -338,6 +415,11 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
             params:
               content: Profile updated successfully!
               status: success
+```
+
+```yaml
+profile_card:
+  _state: profile_card
 ```
 
 | Property | Type | Default | Description |

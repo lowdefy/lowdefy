@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import LowdefyInternalError from './LowdefyInternalError.js';
+import VALID_CHECK_SLUGS from './checkSlugs.js';
+
 /**
  * Base error class for configuration errors (invalid YAML, schema violations, validation errors).
  *
@@ -60,6 +63,14 @@ class ConfigError extends Error {
     this.name = 'ConfigError';
     this.isLowdefyError = true;
     this.configKey = configKey ?? cause?.configKey ?? null;
+    // A slug that is not in the catalogue produces a check nobody can name in
+    // ~ignoreBuildChecks, so a typo in framework code must fail loudly here
+    // rather than ship a silently unsuppressable check.
+    if (checkSlug !== undefined && checkSlug !== null && !VALID_CHECK_SLUGS[checkSlug]) {
+      throw new LowdefyInternalError(
+        `Unknown checkSlug "${checkSlug}". Add it to VALID_CHECK_SLUGS in @lowdefy/errors.`
+      );
+    }
     this.checkSlug = checkSlug;
 
     // For logger formatting

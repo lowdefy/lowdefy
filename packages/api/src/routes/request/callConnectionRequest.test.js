@@ -68,6 +68,11 @@ beforeEach(() => {
         properties: { collection: 'readonly' },
       };
     }
+    if (name === 'collections.json') {
+      return {
+        controls: { fields: { _id: { type: 'string' }, label: { type: 'string' } } },
+      };
+    }
     return null;
   });
   mockInsertMany.mockResolvedValue({ insertedCount: 2 });
@@ -152,4 +157,52 @@ test('callConnectionRequest validates the request properties against the resolve
     })
   ).rejects.toThrow(ConfigError);
   expect(mockInsertMany).not.toHaveBeenCalled();
+});
+
+test('callConnectionRequest resolves the collection schema and hands it to the resolver', async () => {
+  await callConnectionRequest(context, {
+    connectionId: 'controls',
+    requestId: 'seed:controls',
+    type: 'InsertMany',
+    properties: { docs: [{ _id: 'a', label: 'A' }] },
+  });
+  expect(mockInsertMany.mock.calls[0][0].collectionSchema).toEqual({
+    name: 'controls',
+    fields: { _id: { type: 'string' }, label: { type: 'string' } },
+    required: [],
+  });
+});
+
+test('callConnectionRequest refuses a seeded document that violates collections.fields', async () => {
+  // Stands in for the write resolvers' own field validation, which only runs
+  // when the collection schema reaches them.
+  mockInsertMany.mockImplementation(async ({ collectionSchema, request }) => {
+    const unknown = Object.keys(request.docs[0]).find((field) => !collectionSchema.fields[field]);
+    if (unknown) {
+      throw new ConfigError(`Field "${unknown}" is not declared on collection "controls".`);
+    }
+    return { insertedCount: 1 };
+  });
+  await expect(
+    callConnectionRequest(context, {
+      connectionId: 'controls',
+      requestId: 'seed:controls',
+      type: 'InsertMany',
+      properties: { docs: [{ _id: 'a', lable: 'typo' }] },
+    })
+  ).rejects.toThrow('Field "lable" is not declared on collection "controls".');
+});
+
+test('callConnectionRequest with rawProperties stores an operator-shaped document key verbatim', async () => {
+  const docs = [{ _id: 'a', label: { _secret: 'URI' } }];
+  const result = await callConnectionRequest(context, {
+    connectionId: 'controls',
+    requestId: 'seed:controls',
+    type: 'InsertMany',
+    properties: { docs },
+    rawProperties: true,
+  });
+  expect(mockInsertMany.mock.calls[0][0].request).toEqual({ docs });
+  // The connection's own properties are still evaluated.
+  expect(result.connectionProperties.databaseUri).toEqual('mongodb://secret');
 });

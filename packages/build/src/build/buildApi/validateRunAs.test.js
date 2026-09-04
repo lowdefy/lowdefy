@@ -26,12 +26,16 @@ const logger = { warn: jest.fn(), log: jest.fn() };
 const location = 'Api endpoint "jobs"';
 const configKey = 'endpoint.1';
 
+const stateMessage = `Api endpoint "jobs" "runAs.organizationId" reads "_state" — _state is empty when an endpoint's runAs is evaluated, before any step has run. Use _user, _secret or a step-level runAs.`;
+
 function payloadMessage(operator) {
   return `Api endpoint "jobs" "runAs.organizationId" reads "${operator}" — the organization a routine runs as can not come from the caller. A browser or an API client controls the payload, so any caller could name another organization and read its rows. Derive it from a previous step (_step), from the caller (_user), or from a secret or environment value.`;
 }
 
-test('validateRunAs accepts an undefined runAs', () => {
+test('validateRunAs accepts an undefined or null runAs', () => {
+  // Matches resolveRunAs, which reads both as "no runAs declared".
   expect(() => validateRunAs({ runAs: undefined, location, configKey })).not.toThrow();
+  expect(() => validateRunAs({ runAs: null, location, configKey })).not.toThrow();
 });
 
 test('validateRunAs accepts a literal organization id', () => {
@@ -73,7 +77,27 @@ test('validateRunAs throws when runAs is not an object', () => {
   expect(() => validateRunAs({ runAs: 'org_1', location, configKey })).toThrow(
     'Api endpoint "jobs" "runAs" should be an object with an "organizationId".'
   );
-  expect(() => validateRunAs({ runAs: null, location, configKey })).toThrow(ConfigError);
+  expect(() => validateRunAs({ runAs: 3, location, configKey })).toThrow(ConfigError);
+});
+
+test('validateRunAs throws when organizationId is null', () => {
+  expect(() => validateRunAs({ runAs: { organizationId: null }, location, configKey })).toThrow(
+    'Api endpoint "jobs" "runAs" should be an object with an "organizationId".'
+  );
+});
+
+test('validateRunAs throws when organizationId is an empty string', () => {
+  let error;
+  try {
+    validateRunAs({ runAs: { organizationId: '  ' }, location, configKey });
+  } catch (e) {
+    error = e;
+  }
+  expect(error).toBeInstanceOf(ConfigError);
+  expect(error.message).toBe(
+    'Api endpoint "jobs" "runAs.organizationId" is an empty string. A routine can not run as an unnamed organization - remove the runAs, or give it the id of the organization the routine should be scoped to.'
+  );
+  expect(error.checkSlug).toBe('tenant-run-as');
 });
 
 test('validateRunAs throws when organizationId is missing', () => {
@@ -88,7 +112,7 @@ test('validateRunAs throws when organizationId is missing', () => {
   }
   expect(error).toBeInstanceOf(ConfigError);
   expect(error.configKey).toBe(configKey);
-  expect(error.checkSlug).toBe('tenant');
+  expect(error.checkSlug).toBe('tenant-run-as');
 });
 
 test('validateRunAs throws when organizationId reads _payload at the top level', () => {
@@ -101,14 +125,38 @@ test('validateRunAs throws when organizationId reads _payload at the top level',
   expect(error).toBeInstanceOf(ConfigError);
   expect(error.message).toBe(payloadMessage('_payload'));
   expect(error.configKey).toBe(configKey);
-  expect(error.checkSlug).toBe('tenant');
+  expect(error.checkSlug).toBe('tenant-run-as');
   expect(error.received).toEqual({ _payload: 'orgId' });
 });
 
-test('validateRunAs throws when organizationId reads _state at the top level', () => {
+test('validateRunAs throws with its own message when an endpoint runAs reads _state', () => {
   expect(() =>
     validateRunAs({ runAs: { organizationId: { _state: 'orgId' } }, location, configKey })
-  ).toThrow(payloadMessage('_state'));
+  ).toThrow(stateMessage);
+});
+
+test('validateRunAs accepts _state in a step-level runAs', () => {
+  // On the server `state` starts {} and only a :set_state step writes it, so a
+  // step-level _state is as server-authored as _step.
+  expect(() =>
+    validateRunAs({
+      runAs: { organizationId: { _state: 'orgId' } },
+      location: 'Step "rows" at endpoint "jobs"',
+      configKey,
+      level: 'step',
+    })
+  ).not.toThrow();
+});
+
+test('validateRunAs still refuses _payload in a step-level runAs', () => {
+  expect(() =>
+    validateRunAs({
+      runAs: { organizationId: { _payload: 'orgId' } },
+      location,
+      configKey,
+      level: 'step',
+    })
+  ).toThrow(payloadMessage('_payload'));
 });
 
 test('validateRunAs throws on the dotted _payload.x and _state.x shorthand keys', () => {
@@ -117,7 +165,7 @@ test('validateRunAs throws on the dotted _payload.x and _state.x shorthand keys'
   ).toThrow(payloadMessage('_payload'));
   expect(() =>
     validateRunAs({ runAs: { organizationId: { '_state.orgId': true } }, location, configKey })
-  ).toThrow(payloadMessage('_state'));
+  ).toThrow(stateMessage);
 });
 
 test('validateRunAs does not match operators that merely start with the same letters', () => {
@@ -161,7 +209,7 @@ test('validateRunAs finds _state nested inside an _if branch', () => {
       location,
       configKey,
     })
-  ).toThrow(payloadMessage('_state'));
+  ).toThrow(stateMessage);
 });
 
 // Wiring: the endpoint and step positions in the build.
@@ -239,7 +287,7 @@ test('buildApi accepts runAs on a request step', () => {
   });
 });
 
-test('buildApi throws when a step runAs reads _state, naming the step', () => {
+test('buildApi accepts a step runAs that reads _state', () => {
   const context = testContext({ logger });
   const components = {
     api: [
@@ -257,9 +305,8 @@ test('buildApi throws when a step runAs reads _state, naming the step', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow(
-    'Step "rows" at endpoint "jobs" "runAs.organizationId" reads "_state" — the organization a routine runs as can not come from the caller.'
-  );
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].runAs).toEqual({ organizationId: { _state: 'orgId' } });
 });
 
 test('buildApi throws when a step declares both runAs and tenant none', () => {
@@ -329,5 +376,29 @@ test('buildApi throws when runAs is declared on a CallApi step', () => {
   };
   expect(() => buildApi({ components, context })).toThrow(
     'Step "child" at endpoint "jobs" declares "runAs", which only applies to request steps'
+  );
+});
+
+test('buildApi refuses runAs on a step that names no connection, whatever its type', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'jobs',
+        type: 'Api',
+        routine: [
+          {
+            id: 'rows',
+            type: 'FutureNativeStep',
+            runAs: { organizationId: 'org_1' },
+          },
+        ],
+      },
+    ],
+  };
+  // A request step is one that names a connection: a step type this build does
+  // not know is not silently treated as a request step.
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "rows" at endpoint "jobs" declares "runAs", which only applies to request steps'
   );
 });

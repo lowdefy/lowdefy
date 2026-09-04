@@ -29,10 +29,11 @@ const collections = {
   frameworks: {
     configKey: 'k1',
     fields: {
-      name: { type: 'string', required: true },
-      slug: { type: 'string', required: true },
+      name: { type: 'string' },
+      slug: { type: 'string' },
       notes: { type: 'string' },
     },
+    required: ['name', 'slug'],
   },
 };
 
@@ -53,10 +54,10 @@ test('fieldWithoutMigration warns once per required field no migration names', (
     'declares field "name" as required, but no migration file names it'
   );
   expect(context.warnings[0].configKey).toBe('k1');
-  expect(context.warnings[0].checkSlug).toBe('collections');
+  expect(context.warnings[0].checkSlug).toBe('collections-field-migration');
 });
 
 test('fieldWithoutMigration is a check-only rule under the collections slug', () => {
   expect(fieldWithoutMigration.checkOnly).toBe(true);
-  expect(fieldWithoutMigration.slug).toBe('collections');
+  expect(fieldWithoutMigration.slug).toBe('collections-field-migration');
 });

@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { type } from '@lowdefy/helpers';
 import { ConfigWarning } from '@lowdefy/errors';
 
 // A collections: field declared required is a promise about every document
@@ -27,14 +26,13 @@ function run({ components, context }) {
   if (components.collections === undefined) return;
   const sources = context.migrationSources ?? [];
   Object.entries(context.collections ?? {}).forEach(([collectionName, collection]) => {
-    Object.entries(collection.fields ?? {}).forEach(([fieldName, field]) => {
-      if (!type.isObject(field) || field.required !== true) return;
+    (collection.required ?? []).forEach((fieldName) => {
       const named = sources.some((source) => source.text.includes(fieldName));
       if (named) return;
       context.handleWarning(
         new ConfigWarning(
           `Collection "${collectionName}" declares field "${fieldName}" as required, but no migration file names it. Existing documents may lack it — add a migration under migrations/ that backfills "${fieldName}", or confirm existing documents already carry it.`,
-          { configKey: collection.configKey, checkSlug: 'collections' }
+          { configKey: collection.configKey, checkSlug: 'collections-field-migration' }
         )
       );
     });
@@ -42,7 +40,7 @@ function run({ components, context }) {
 }
 
 const fieldWithoutMigration = {
-  slug: 'collections',
+  slug: 'collections-field-migration',
   checkOnly: true,
   run,
 };

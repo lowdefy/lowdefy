@@ -17,7 +17,7 @@ import authoredTenantField from './authoredTenantField.js';
 import { createTenantContext, pageRequest, endpointStep, mergeComponents } from './testSites.js';
 
 test('authoredTenantField is the tenant rule that also fails builds', () => {
-  expect(authoredTenantField.slug).toBe('tenant');
+  expect(authoredTenantField.slug).toBe('tenant-authored');
   expect(authoredTenantField.checkOnly).toBe(false);
 });
 
@@ -32,7 +32,10 @@ test('authoredTenantField errors when a walled request filters by the tenant fie
   expect(context.errors[0].message).toBe(
     'Request "get_controls" at page "controls" sets "organization_id" itself on tenant connection "controls_db". The wall injects it — an authored value is refused at runtime. Remove the clause; the caller\'s organization is applied automatically.'
   );
-  expect(context.errors[0]).toMatchObject({ configKey: 'k_get_controls', checkSlug: 'tenant' });
+  expect(context.errors[0]).toMatchObject({
+    configKey: 'k_get_controls',
+    checkSlug: 'tenant-authored',
+  });
 });
 
 test('authoredTenantField errors when a walled insert step writes the custom tenant field deep in a document', () => {
@@ -102,4 +105,64 @@ test('authoredTenantField does not fire when the filter never names the field', 
   });
   authoredTenantField.run({ components, context });
   expect(context.errors).toEqual([]);
+});
+
+test('authoredTenantField does not fire on a projection or sort that only reads the tenant field', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBFind',
+    properties: {
+      query: { status: 'active' },
+      options: { projection: { organization_id: 0 }, sort: { organization_id: 1 } },
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toEqual([]);
+});
+
+test('authoredTenantField does not fire on a $group key or an index hint naming the tenant field', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBAggregation',
+    properties: {
+      pipeline: [{ $group: { _id: '$organization_id', n: { $sum: 1 } } }],
+      options: { hint: { organization_id: 1 } },
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toEqual([]);
+});
+
+test('authoredTenantField errors on a $match stage nested in a $lookup sub-pipeline', () => {
+  const context = createTenantContext();
+  const components = pageRequest({
+    type: 'MongoDBAggregation',
+    properties: {
+      pipeline: [
+        { $lookup: { from: 'other', as: 'o', pipeline: [{ $match: { organization_id: 'a' } }] } },
+      ],
+    },
+  });
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toHaveLength(1);
+});
+
+test('authoredTenantField errors on an update that sets the tenant field, and on a bulk operation', () => {
+  const context = createTenantContext();
+  const components = mergeComponents(
+    pageRequest({
+      id: 'update_control',
+      type: 'MongoDBUpdateOne',
+      properties: { filter: { _id: 'a' }, update: { $set: { organization_id: 'b' } } },
+    }),
+    endpointStep({
+      id: 'bulk_controls',
+      type: 'MongoDBBulkWrite',
+      properties: {
+        operations: [{ insertOne: { document: { organization_id: 'b' } } }],
+      },
+    })
+  );
+  authoredTenantField.run({ components, context });
+  expect(context.errors).toHaveLength(2);
 });

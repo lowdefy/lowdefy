@@ -21,6 +21,7 @@ import evaluateOperators from './evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from './getRequestResolver.js';
+import resolveCollectionSchema from './resolveCollectionSchema.js';
 import validateSchemas from './validateSchemas.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -35,7 +36,7 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // null so documents land exactly as written.
 async function callConnectionRequest(
   context,
-  { connectionId, requestId, type, properties = {}, tenant = null }
+  { connectionId, requestId, type, properties = {}, rawProperties = false, tenant = null }
 ) {
   const { logger } = context;
 
@@ -49,12 +50,25 @@ async function callConnectionRequest(
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
 
-  const { connectionProperties, requestProperties } = evaluateOperators(context, {
+  // A fixture document is data, not config: a key like `_secret` or `_js`
+  // inside a seeded document must be stored exactly as it was written, never
+  // executed. rawProperties holds the request's properties back from the
+  // operator pass; the connection's own properties are evaluated either way,
+  // so a databaseUri behind _secret still resolves.
+  const evaluated = evaluateOperators(context, {
     connectionConfig,
     payload: {},
-    requestConfig,
+    requestConfig: rawProperties ? { ...requestConfig, properties: {} } : requestConfig,
     state: {},
     steps: {},
+  });
+  const { connectionProperties } = evaluated;
+  const requestProperties = rawProperties ? properties : evaluated.requestProperties;
+
+  // The same field contract every configured write is held to. Without it a
+  // seeded document could hold data the app itself could never write.
+  const collectionSchema = await resolveCollectionSchema(context, {
+    collectionName: connectionProperties.collection,
   });
 
   checkConnectionRead(context, {
@@ -77,6 +91,7 @@ async function callConnectionRequest(
     requestProperties,
   });
   const response = await callRequestResolver(context, {
+    collectionSchema,
     connectionProperties,
     endpointDepth: 0,
     requestConfig,

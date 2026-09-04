@@ -18,11 +18,60 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 
+import readBuildArtifact from './readBuildArtifact.js';
 import resolvePluginDir from './resolvePluginDir.js';
+
+// The synthetic package identity discoverFilePlugins gives a plugin that is a
+// file in the config directory rather than an installed package.
+const FILE_PLUGIN_PACKAGE_ID = 'file-plugin';
+
+// A file plugin has no package name, so list_types names it by its type and
+// its path — accept either as the handle this tool is called with.
+function filePluginDefinition({ name }) {
+  const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
+  const stores = [
+    availableTypes.blocks,
+    availableTypes.actions,
+    availableTypes.operators?.client,
+    availableTypes.operators?.server,
+  ];
+  for (const store of stores) {
+    for (const [typeName, definition] of Object.entries(store ?? {})) {
+      if (definition.packageId !== FILE_PLUGIN_PACKAGE_ID) continue;
+      if (typeName === name || definition.relativePath === name) {
+        return { definition, typeName };
+      }
+    }
+  }
+  return null;
+}
+
+// A file plugin's documentation is the "readme" field of its sibling JSON —
+// there is no package to hold a README.md.
+function filePluginDoc({ definition, typeName }) {
+  const jsonPath = definition.file.replace(/\.[^./]+$/, '.json');
+  const relativeJson = definition.relativePath.replace(/\.[^./]+$/, '.json');
+  let readme;
+  if (fs.existsSync(jsonPath)) {
+    readme = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).readme;
+  }
+  const result = { type: typeName, source: 'file plugin', file: definition.relativePath };
+  if (type.isNone(readme)) {
+    return {
+      ...result,
+      markdown: `No documentation for "${typeName}"; add a "readme" field to "${relativeJson}" beside the plugin.`,
+    };
+  }
+  return { ...result, readme, markdown: readme };
+}
 
 // Local plugins have no doc convention — probe the common locations and
 // return whatever markdown ships with the package.
 function getPluginDoc({ packageName }) {
+  const filePlugin = filePluginDefinition({ name: packageName });
+  if (!type.isNone(filePlugin)) {
+    return filePluginDoc(filePlugin);
+  }
   const pluginDir = resolvePluginDir({ packageName });
   if (type.isNone(pluginDir)) {
     return null;

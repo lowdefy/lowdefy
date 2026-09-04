@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "checkRead": true,
+    "checkWrite": false
+  },
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["key"],
+    "properties": {
+      "key": {
+        "type": "string",
+        "description": "The key of the row to read."
+      }
+    }
+  }
+}

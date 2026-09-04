@@ -21,7 +21,12 @@ import { jest } from '@jest/globals';
 
 const { default: restartRequestWatcher } = await import('./restartRequestWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
+// Chokidar's fsevents backend is slow to arm under a loaded test run, so both
+// budgets are generous; every one of these resolves in well under a second
+// when the watcher fires.
+jest.setTimeout(30000);
+
+function waitFor(predicate, timeout = 15000) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const tick = () => {

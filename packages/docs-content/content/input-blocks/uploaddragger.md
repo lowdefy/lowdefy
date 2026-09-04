@@ -17,6 +17,13 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+```
+
+```yaml
 - id: height_number
   type: UploadDragger
   properties:
@@ -30,6 +37,13 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
+height_number:
+  _state: height_number
+height_string:
+  _state: height_string
+```
+
+```yaml
 - id: emit_file_content
   type: UploadDragger
   properties:
@@ -38,11 +52,21 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
+emit_file_content:
+  _state: emit_file_content
+```
+
+```yaml
 - id: disabled_default
   type: UploadDragger
   properties:
     uploadPolicyRequestId: upload_policy_request
     disabled: true
+```
+
+```yaml
+disabled_default:
+  _state: disabled_default
 ```
 
 | Property | Type | Default | Description |
@@ -66,12 +90,12 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onBeforeUpload` | `{ file }` | Triggered before a file is uploaded. If an action throws, the upload is cancelled. |
-| `onChange` | \- | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, with the block value ({ file, fileList }) as the event, where file includes the base64 content. |
-| `onProgress` | `{ file, fileList }` | Triggered when the upload state is in progress. |
-| `onSuccess` | `{ file, fileList }` | Triggered when the upload state is done uploading. |
-| `onRemove` | `{ file, fileList }` | Triggered when the upload has been removed. |
-| `onError` | `{ file, fileList }` | Triggered when the upload has failed. |
+| `onBeforeUpload` | `{ file: object }` | Triggered before a file is uploaded. If an action throws, the upload is cancelled. |
+| `onChange` | `{ file: object, fileList: array }` | Triggered when the upload state is changing. With emitFileContent, triggered once the file content has been read, where file includes the base64 content. |
+| `onProgress` | `{ file: object, fileList: array }` | Triggered when the upload state is in progress. |
+| `onSuccess` | `{ file: object, fileList: array }` | Triggered when the upload state is done uploading. |
+| `onRemove` | `{ file: object, fileList: array }` | Triggered when the upload has been removed. |
+| `onError` | `{ file: object, fileList: array }` | Triggered when the upload has failed. |
 
 | Key | Target |
 | --- | --- |

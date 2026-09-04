@@ -14,18 +14,17 @@
   limitations under the License.
 */
 
+import { MongoBulkWriteError, MongoNetworkError, MongoServerError } from 'mongodb';
 import { ConfigError, ServiceError } from '@lowdefy/errors';
 
 import mapMongoError from './mapMongoError.js';
 
 const connection = { collection: 'orders', databaseName: 'app' };
 
-function driverError({ code, message = 'raw driver text', name = 'MongoServerError', ...rest }) {
-  const error = new Error(message);
-  error.name = name;
-  error.code = code;
-  Object.assign(error, rest);
-  return error;
+// Real driver classes, not name-stamped plain errors: the mapping tests the
+// prototype chain, so a stand-in would test nothing the driver does.
+function driverError({ code, message = 'raw driver text', ...rest }) {
+  return new MongoServerError({ message, code, ...rest });
 }
 
 test('mapMongoError maps a duplicate key error to a ServiceError naming the indexed fields', () => {
@@ -150,16 +149,30 @@ test('mapMongoError maps an unlisted code to a generic error naming the code', (
   expect(mapped.hint).toContain('Look up the code in the MongoDB error reference');
 });
 
-test('mapMongoError maps a MongoError as well as a MongoServerError', () => {
-  const mapped = mapMongoError(driverError({ code: 26, name: 'MongoError' }), {
-    connection,
-    requestType: 'MongoDBFind',
-  });
+test('mapMongoError maps a bulk write duplicate key error', () => {
+  const cause = new MongoBulkWriteError(
+    {
+      message:
+        'E11000 duplicate key error collection: app.orders index: orders_ref_1 dup key: { ref: "ORD-1" }',
+      code: 11000,
+      keyPattern: { ref: 1 },
+      keyValue: { ref: 'ORD-1' },
+      writeErrors: [],
+    },
+    {}
+  );
+  expect(cause.name).toBe('MongoBulkWriteError');
+  const mapped = mapMongoError(cause, { connection, requestType: 'MongoDBInsertMany' });
   expect(mapped).toBeInstanceOf(ServiceError);
+  expect(mapped.message).toBe('MongoDB: Duplicate key on collection "orders".');
+  expect(mapped.message).not.toContain('ORD-1');
+  expect(mapped.code).toBe(11000);
+  expect(mapped.cause).toBe(cause);
 });
 
 test('mapMongoError returns a service error unchanged', () => {
-  const error = driverError({ code: 'ECONNREFUSED', name: 'MongoNetworkError' });
+  const error = new MongoNetworkError('connection refused');
+  error.code = 'ECONNREFUSED';
   expect(mapMongoError(error, { connection, requestType: 'MongoDBFind' })).toBe(error);
 });
 

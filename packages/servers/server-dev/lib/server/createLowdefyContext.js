@@ -43,6 +43,7 @@ import getMockUser from './auth/getMockUser.js';
 import getStrategies from './auth/getStrategies.js';
 import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
+import loggerConfig from '../build/logger.js';
 import logRequest from './log/logRequest.js';
 import notifications, {
   interpolateProperties,
@@ -91,7 +92,9 @@ async function createLowdefyContext({ c, user }) {
     i18n: i18nConfig,
     interpolateProperties,
     jsMap,
-    logger: createLogger({ rid }),
+    // eventsConfig is the app's logger.events policy, read by @lowdefy/api's
+    // logEvent - the same field the production server's createLogger sets.
+    logger: Object.assign(createLogger({ rid }), { eventsConfig: loggerConfig.events }),
     notifications,
     operators,
     renderEmail,
@@ -101,6 +104,10 @@ async function createLowdefyContext({ c, user }) {
       hostname: c.req.header('host'),
     },
     secrets,
+    // The incoming request's AbortSignal: the endpoint runner checks it between
+    // steps and loop iterations, so a caller that disconnects stops the routine
+    // instead of leaving it to run to completion for nobody.
+    signal: c.req.raw.signal,
     steps,
     websockets,
   };

@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect, useState } from 'react';
-import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import { Upload as AntdUpload } from 'antd';
 
@@ -66,7 +66,7 @@ const UploadPhoto = ({
     }
   }, [value]);
   return (
-    <div id={blockId} className={cn('lf-upload-photo', classNames.element)} style={styles.element}>
+    <div {...blockRootProps({ blockId, classNames, styles, className: 'lf-upload-photo' })}>
       <AntdUpload
         accept="image/*"
         beforeUpload={loadFileList}

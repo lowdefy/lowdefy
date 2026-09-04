@@ -99,11 +99,11 @@ export default {
         default: 75,
         description: 'The gap degree of half circle.',
       },
-      gapPosition: {
+      gapPlacement: {
         type: 'string',
         enum: ['top', 'bottom', 'left', 'right'],
         default: 'top',
-        description: 'The gap position.',
+        description: 'The position of the gap of a dashboard type progress bar.',
       },
       steps: {
         type: 'number',

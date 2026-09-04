@@ -18,6 +18,7 @@ import { compile } from '@lowdefy/ajv';
 import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../../utils/collectExceptions.js';
 import findSimilarString from '../../../utils/findSimilarString.js';
 
 const MAX_LISTED_PROPERTIES = 10;
@@ -96,19 +97,144 @@ function getValidator({ blockType, propertiesSchema, context }) {
   return context.blockPropertiesValidators[blockType];
 }
 
+// The elements of an array that also holds an operator are validated one at a
+// time against the array's items schema, so the schema node at the array's
+// path must be found. Composition keywords are followed only when exactly one
+// branch describes the step, so an ambiguous schema yields no element checking
+// rather than a wrong error.
+function branchSchemas(node) {
+  const branches = [node];
+  ['anyOf', 'oneOf', 'allOf'].forEach((keyword) => {
+    if (type.isArray(node[keyword])) {
+      node[keyword].forEach((branch) => {
+        if (type.isObject(branch)) branches.push(branch);
+      });
+    }
+  });
+  return branches;
+}
+
+function descendSchema({ node, segment }) {
+  const matches = branchSchemas(node)
+    .map((branch) => {
+      if (type.isInt(segment)) {
+        // A tuple items schema positions its element schemas, so an array whose
+        // length is unknown until an operator runs cannot be checked at all.
+        return type.isObject(branch.items) ? branch.items : undefined;
+      }
+      if (type.isObject(branch.properties) && !type.isNone(branch.properties[segment])) {
+        return branch.properties[segment];
+      }
+      if (type.isObject(branch.additionalProperties)) return branch.additionalProperties;
+      return undefined;
+    })
+    .filter((match) => type.isObject(match));
+  if (matches.length !== 1) return null;
+  return matches[0];
+}
+
+function resolveSchemaNode({ schema, segments }) {
+  let node = schema;
+  for (const segment of segments) {
+    node = descendSchema({ node, segment });
+    if (node === null) return null;
+  }
+  return node;
+}
+
+// An array that holds an operator is left out of the validated data whole, so
+// its literal elements are collected here to be checked one by one.
+function collectPartialArrays({ node, segments, found }) {
+  if (type.isArray(node)) {
+    const elements = [];
+    let omitted = false;
+    node.forEach((item, index) => {
+      const value = copyLiteralNodes(item);
+      if (value === OMIT) {
+        omitted = true;
+        return;
+      }
+      elements.push({ index, value });
+    });
+    if (omitted) found.push({ segments, elements });
+    node.forEach((item, index) =>
+      collectPartialArrays({ node: item, segments: [...segments, index], found })
+    );
+    return;
+  }
+  if (!type.isObject(node)) return;
+  if (getOperatorType(node) !== null) return;
+  Object.keys(node).forEach((key) => {
+    if (key.startsWith('~')) return;
+    collectPartialArrays({ node: node[key], segments: [...segments, key], found });
+  });
+}
+
+function toPathString(segments) {
+  return segments.reduce(
+    (path, segment) => (type.isInt(segment) ? `${path}[${segment}]` : `${path}.${segment}`),
+    'properties'
+  );
+}
+
+// A fragment lifted out of the block schema is compiled on its own, so a $ref
+// in it has nothing to resolve against and the elements go unchecked.
+function hasRef(schema) {
+  return JSON.stringify(schema).includes('"$ref"');
+}
+
+function getItemValidator({ blockType, pathKey, itemsSchema, context }) {
+  const entry = context.blockPropertiesValidators[blockType];
+  if (type.isNone(entry.itemValidators)) {
+    entry.itemValidators = {};
+  }
+  if (type.isNone(entry.itemValidators[pathKey])) {
+    entry.itemValidators[pathKey] = compile({ schema: itemsSchema });
+  }
+  return entry.itemValidators[pathKey];
+}
+
+function describePartialArrayErrors({ block, blockType, context, schema, prefix }) {
+  const found = [];
+  collectPartialArrays({ node: block.properties, segments: [], found });
+  const lines = [];
+  found.forEach(({ segments, elements }) => {
+    const node = resolveSchemaNode({ schema, segments });
+    const itemsSchema = node?.items;
+    if (!type.isObject(itemsSchema) || hasRef(itemsSchema)) return;
+    const pathKey = segments.join('.');
+    const validateItem = getItemValidator({ blockType, pathKey, itemsSchema, context });
+    elements.forEach(({ index, value }) => {
+      const result = validateItem(value);
+      if (result.valid) return;
+      const basePath = toPathString([...segments, index]);
+      collapseBranchErrors(result.errors).forEach((error) => {
+        const errorSchema =
+          error.keyword === 'additionalProperties'
+            ? getSchemaAtPath({ schema: itemsSchema, schemaPath: error.schemaPath }) ?? itemsSchema
+            : itemsSchema;
+        lines.push(
+          `${prefix}${describeError({ error, schema: errorSchema, data: value, basePath })}`
+        );
+      });
+    });
+  });
+  return lines;
+}
+
 function formatReceived(value) {
   if (type.isUndefined(value)) return 'undefined';
   return JSON.stringify(value);
 }
 
-function describeError({ error, schema, data }) {
-  const path = `properties${error.instancePath.replaceAll('/', '.')}`;
+function describeError({ error, schema, data, basePath = 'properties' }) {
+  const path = `${basePath}${error.instancePath.replaceAll('/', '.')}`;
   if (error.keyword === 'additionalProperties') {
     const property = error.params.additionalProperty;
     const validProperties = Object.keys(schema.properties ?? {});
     const nearest = findSimilarString({ input: property, candidates: validProperties });
     let message = `unknown property "${property}"`;
-    if (error.instancePath !== '') {
+    if (error.instancePath !== '' || basePath !== 'properties') {
       message = `${path}: ${message}`;
     }
     if (nearest !== null) {
@@ -156,22 +282,29 @@ function validateBlockProperties(block, pageContext) {
     delete data.title;
   }
   const result = validate(data);
-  if (result.valid) return;
-  const errors = collapseBranchErrors(result.errors);
-
   const prefix = `Block "${block.blockId}" of type "${block.type}": `;
-  const lines = errors.map((error) => {
-    const errorSchema =
-      error.keyword === 'additionalProperties'
-        ? getSchemaAtPath({ schema, schemaPath: error.schemaPath }) ?? schema
-        : schema;
-    return `${prefix}${describeError({ error, schema: errorSchema, data })}`;
-  });
-  throw new ConfigError(lines.join('\n'), {
-    configKey: block['~k'],
-    checkSlug: 'block-properties',
-    received: block.properties,
-  });
+  const lines = result.valid
+    ? []
+    : collapseBranchErrors(result.errors).map((error) => {
+        const errorSchema =
+          error.keyword === 'additionalProperties'
+            ? getSchemaAtPath({ schema, schemaPath: error.schemaPath }) ?? schema
+            : schema;
+        return `${prefix}${describeError({ error, schema: errorSchema, data })}`;
+      });
+  lines.push(
+    ...describePartialArrayErrors({ block, blockType: block.type, context, schema, prefix })
+  );
+  if (lines.length === 0) return;
+
+  collectExceptions(
+    context,
+    new ConfigError(lines.join('\n'), {
+      configKey: block['~k'],
+      checkSlug: 'block-properties',
+      received: block.properties,
+    })
+  );
 }
 
 export default validateBlockProperties;

@@ -92,13 +92,16 @@ _ref:
 
             ## Escaping and boundaries
 
-            - To write a literal string that starts with `${`, double the dollar: `"$${ not code }"`
-              becomes the literal `${ not code }`.
-            - Expressions are **never** compiled inside a [`_js`](/_js) body or a
-              [`_nunjucks`](/_nunjucks) template — those own their own `${ }` and `{{ }}`.
-            - A scalar is only an expression when the **whole** value is a single `${ … }`. There is
-              no interpolation inside a larger string (`"text ${x}"` is a literal) — use `_nunjucks`
-              or `_string.format` for that.
+            - A scalar is an expression only when the **whole** value is a single `${ … }`: the
+              `${` is the first non-space character and the `}` that closes it is the last. Every
+              other string is the literal it has always been — `"${HOME}/data"`, `"${a} ${b}"` and
+              `"text ${x}"` are values, not code, so existing config keeps working. There is no
+              interpolation; use `_nunjucks` or `_string.format` for that.
+            - To write a literal string that *is* a single `${ … }`, double the dollar:
+              `"$${ not code }"` becomes the literal `${ not code }`.
+            - Expressions are **never** compiled in a [`_js`](/_js) body or a
+              [`_nunjucks`](/_nunjucks) template — those own their own `${ }` and `{{ }}`. Only the
+              body is exempt: `_js.args` and `_nunjucks.on` are ordinary config and do compile.
             - Expression syntax is available in YAML config only.
 
             ## Errors

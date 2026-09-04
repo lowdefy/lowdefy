@@ -22,6 +22,10 @@ import { type } from '@lowdefy/helpers';
 // resolves here. Connections cannot read build artifacts; this is the only
 // way the contract reaches them, threaded to the resolver beside `tenant`.
 //
+// `required` is the JSON Schema array form the build writes at the collection
+// level, so { type: object, properties: fields, required } is a compilable
+// schema and the connection needs no preprocessing of its own.
+//
 // The verdict is null - and every write resolver behaves exactly as before -
 // when the connection names no collection, the app declares none, the
 // collection is undeclared, or it declares no fields. A declaration without
@@ -41,7 +45,11 @@ async function resolveCollectionSchema(context, { collectionName }) {
   if (Object.keys(collection.fields).length === 0) {
     return null;
   }
-  return { name: collectionName, fields: collection.fields };
+  return {
+    name: collectionName,
+    fields: collection.fields,
+    required: type.isArray(collection.required) ? collection.required : [],
+  };
 }
 
 export default resolveCollectionSchema;

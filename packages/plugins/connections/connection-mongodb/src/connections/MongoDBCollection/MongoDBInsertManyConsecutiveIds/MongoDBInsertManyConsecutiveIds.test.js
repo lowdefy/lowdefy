@@ -167,7 +167,7 @@ const collectionSchema = {
   fields: {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
   },
 };
 
@@ -182,7 +182,7 @@ test('insertManyConsecutiveIds with a collectionSchema throws a contract violati
       collectionSchema,
     })
   ).rejects.toThrow(
-    'Field "created_at" in an insert document (docs[1]) for collection "answers" does not match the declared contract: must be a Date. Received "yesterday".'
+    'Field "created_at" in an insert document (docs[1]) for collection "answers" does not match the declared contract: must match format "date-time". Received "yesterday".'
   );
   const res = await MongoDBInsertManyConsecutiveIds({
     request: { docs: [{ result: 'pass' }, { result: 'fail' }], prefix: 'M', length: 3 },

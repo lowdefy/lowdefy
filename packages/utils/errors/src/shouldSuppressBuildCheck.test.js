@@ -32,7 +32,7 @@ const keyMap = {
     key: 'root.pages[0:home].blocks[0:header]',
     '~r': 'ref1',
     '~l': 5,
-    '~ignoreBuildChecks': true,
+    '~ignoreBuildChecks': ['state-refs'],
   },
   parentWithPartialIgnore: {
     key: 'root.pages[0:home]',
@@ -53,7 +53,6 @@ test('VALID_CHECK_SLUGS exports valid check slugs', () => {
   expect(VALID_CHECK_SLUGS['payload-refs']).toBeDefined();
   expect(VALID_CHECK_SLUGS['link-refs']).toBeDefined();
   expect(VALID_CHECK_SLUGS['request-refs']).toBeDefined();
-  expect(VALID_CHECK_SLUGS['types']).toBeDefined();
   expect(VALID_CHECK_SLUGS['schema']).toBeDefined();
 });
 
@@ -64,6 +63,31 @@ test('VALID_CHECK_SLUGS includes every slug the build emits', () => {
   expect(VALID_CHECK_SLUGS['dynamic-endpoint-refs']).toBeDefined();
   expect(VALID_CHECK_SLUGS['websocket-refs']).toBeDefined();
   expect(VALID_CHECK_SLUGS['icons']).toBeDefined();
+});
+
+test('VALID_CHECK_SLUGS has one slug per emitting rule, not a grab-bag', () => {
+  // The grab-bag slugs are gone: suppressing an unknown block type must not
+  // also suppress an unknown connection type.
+  expect(VALID_CHECK_SLUGS['types']).toBeUndefined();
+  expect(VALID_CHECK_SLUGS['tenant']).toBeUndefined();
+  expect(VALID_CHECK_SLUGS['migrations']).toBeUndefined();
+  expect(VALID_CHECK_SLUGS['expression']).toBeUndefined();
+  expect(VALID_CHECK_SLUGS['block-types']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['connection-types']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['tenant-run-as']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['tenant-inventory']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['migration-files']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['migration-routine']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['payload-schema']).toBeDefined();
+  expect(VALID_CHECK_SLUGS['duplicate-block-id']).toBeDefined();
+});
+
+test('every VALID_CHECK_SLUGS description is a non-empty string', () => {
+  Object.entries(VALID_CHECK_SLUGS).forEach(([slug, description]) => {
+    expect(typeof description).toBe('string');
+    expect(description.length).toBeGreaterThan(0);
+    expect(slug).toMatch(/^[a-z0-9-]+$/);
+  });
 });
 
 test('returns false for missing configKey', () => {
@@ -83,12 +107,27 @@ test('returns false for entry without ignoreBuildChecks', () => {
   expect(shouldSuppressBuildCheck({ configKey: 'abc123' }, keyMap)).toBe(false);
 });
 
-test('returns true when parent has ignoreBuildChecks: true', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'withParent' }, keyMap)).toBe(true);
+test('returns true when a parent lists the checkSlug', () => {
+  expect(
+    shouldSuppressBuildCheck({ configKey: 'withParent', checkSlug: 'state-refs' }, keyMap)
+  ).toBe(true);
 });
 
-test('returns true when entry itself has ignoreBuildChecks: true', () => {
-  expect(shouldSuppressBuildCheck({ configKey: 'parentWithIgnore' }, keyMap)).toBe(true);
+test('returns true when the entry itself lists the checkSlug', () => {
+  expect(
+    shouldSuppressBuildCheck({ configKey: 'parentWithIgnore', checkSlug: 'state-refs' }, keyMap)
+  ).toBe(true);
+});
+
+test('a check with no slug is never suppressed', () => {
+  expect(shouldSuppressBuildCheck({ configKey: 'withParent' }, keyMap)).toBe(false);
+});
+
+test('ignoreBuildChecks: true no longer suppresses anything', () => {
+  const trueKeyMap = { k1: { key: 'root', '~ignoreBuildChecks': true } };
+  expect(shouldSuppressBuildCheck({ configKey: 'k1', checkSlug: 'state-refs' }, trueKeyMap)).toBe(
+    false
+  );
 });
 
 test('returns true when parent has matching checkSlug in array', () => {
@@ -103,6 +142,6 @@ test('returns true when parent has matching checkSlug in array', () => {
 
 test('returns false when parent has non-matching checkSlug', () => {
   expect(
-    shouldSuppressBuildCheck({ configKey: 'childOfPartial', checkSlug: 'types' }, keyMap)
+    shouldSuppressBuildCheck({ configKey: 'childOfPartial', checkSlug: 'block-types' }, keyMap)
   ).toBe(false);
 });

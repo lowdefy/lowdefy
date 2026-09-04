@@ -4,4 +4,414 @@ In a Lowdefy app you can integrate with other services like API's or databases u
 
 > Sensitive information like passwords or API keys are often required to use external services. The <a href = "./_secret">_secret</a> operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
 
+To implement requests, the following steps are required:
+- Define a connection.
+- Define a request.
+- Call the request using a [Request](/Request) action.
+- Use returned data by making use of the [_request](/_request) operator.
+
+## Connections
+
+Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection. Operators in connection properties are evaluated every time a request is called.
+
+The schema for a Lowdefy connection is:
+
+- `id: string`: __Required__ - A unique identifier for the connection. This is used by requests to specify which connection to use.
+- `type: string`: __Required__ - The connection type to be used.
+- `properties: object`: The settings passed to the connection. __Operators are evaluated__.
+
+###### Connections definition example:
+```yaml
+lowdefy: 5.5.1
+connections:
+  - id: connection1
+    type: ConnectionType1
+    properties:
+      # ...
+  - id: connection2
+    type: ConnectionType2
+    properties:
+      # ...
+pages:
+  # ...
+```
+
+Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require is not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
+
+## Requests
+
+Requests can be defined on any block, and the results of the request can be access using the `_request` operator anywhere on the same page. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
+
+Data that should be passed to the request from the client can be defined in the `payload` field. Operators can be used to create the payload. An example of this would be to use the `_state` operator to include the value of an input block in the payload. The data in the payload can be accessed in the request by making use of the [`_payload`](/_payload) operator in the `properties` field. The operators defined in the properties field are evaluated on the server, while those defined in the payload field are evaluated on the client. Operators in the request are evaluated every time a request is called.
+
 > The <code>_user</code> operator should be used under <code>properties</code> and not <code>payload</code>. This is important since operators under <code>payload</code> are evaluated on the client, and are therefore vulnerable to users with malicious intent.
+
+The schema for a Lowdefy request is:
+
+- `id: string`: __Required__ - A identifier for the request. It must be unique within the page the request is defined in.
+- `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
+- `payload: object`: The operators to be used inside of the request. __Operators are evaluated on the client__.
+- `connectionId: string`: __Required__ - The `id` of the connection that should be used.
+- `properties: object`: The settings passed to the request. Make use of [`_payload`](/_payload) operator to use operators that were evaluated in `payload` mentioned above. __Operators are evaluated on the server__.
+
+###### Requests definition example:
+```yaml
+id: block_with_requests
+type: BlockType
+requests:
+  - id: request1
+    type: RequestType1
+    connectionId: connectionId1 # Connection with id: connectionId1 must be defined
+    payload:
+      field:
+        _state: field
+    properties:
+      # ...
+  - id: request2
+    type: RequestType2
+    connectionId: connectionId2 # Connection with id: connectionId2 must be defined
+    properties:
+      # ...
+properties:
+  # ...
+```
+
+## Tenant scoping
+
+Under `auth.organizations.policy: tenant` a scoping-capable connection is walled by default and a connection opts out with `tenant: shared`; see [Organizations](/organizations). One rule matters when writing aggregation pipelines: the wall injects its tenant `$match` into every `$lookup` / `$unionWith` sub-pipeline, so a `tenant: shared` collection joined from a scoped pipeline matches nothing and the join returns `[]`. The build refuses that pipeline (`tenant-lookup`). Run the pipeline on the shared connection and pass the organization facts in through the request payload, or declare `tenant: authored` on the request and author the organization clause yourself.
+
+## Declaring collections
+
+A connection names the collection it addresses, but nothing on the connection records what a document in that collection contains. The optional app-level [`collections:`](/collections) declaration does: tenancy, fields, relations and indexes for each collection, joined at build to every connection whose `properties.collection` names it and written to `build/collections.json` for the data-layer tooling.
+
+## Request Action
+
+The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads. Read more about the `Request` action [here](/Request).
+
+###### Call a single request:
+```yaml
+- id: call_one_request
+  type: Request
+  params: request1
+```
+
+## _request operator
+
+The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Read more about the `_request` operator [here](/_request). For more detailed information about a request, the [_request_details](/_request_details) operator can be used.
+
+###### Using a request response:
+```yaml
+_request: my_request
+```
+
+## General Example
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: connection1
+    type: ConnectionType1
+    properties:
+      # ...
+
+pages:
+  - id: page1
+    type: PageHeaderMenu
+    properties:
+      title: Page 1
+    requests:
+      - id: request1
+        type: RequestType1
+        connectionId: connection1
+        properties:
+          # ...
+    events:
+      onInit:
+        - id: call_request
+          type: Request
+          params: request1
+    blocks:
+      - id: content_card
+        type: Card
+        blocks:
+          - id: paragraph
+            type: Paragraph
+            properties:
+              content:
+                _request: request1
+```
+
+## Working Example
+
+For this example, a connection to [{JSON}Placeholder](https://jsonplaceholder.typicode.com/) will be used.
+To create this `connection`, define the connection as follows in the `lowdefy.yaml` file:
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+```
+
+To use this connection, a `request` must be defined, which references the corresponding `connectionId`. A request to get the list of users can be added to the home page as follows:
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+
+    requests:
+      - id: get_users
+        type: AxiosHttp
+        connectionId: my_api
+        properties:
+          url: /users
+```
+
+This request should be called when the page is mounted. To do this, the [`Request`](/Request) action will be used during the `onMount` event of the home page[`PageHeaderMenu`](/PageHeaderMenu) block.
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+
+    requests:
+      - id: get_users
+        type: AxiosHttp
+        connectionId: my_api
+        properties:
+          url: /users
+
+    events:
+      onMount:
+        - id: fetch_get_users
+          type: Request
+          params: get_users
+```
+
+A block can be added to the page, that can use or display the data returned by this request. The [`_request`](/_request) operator is used to get the the results of the request.
+In this example, a [`Selector`](/Selector) block will be added. The [`_array.map`](/_array) operator is used to get the data in a form that can be used by the Selector.
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+
+    requests:
+      - id: get_users
+        type: AxiosHttp
+        connectionId: my_api
+        properties:
+          url: /users
+
+    events:
+      onMount:
+        - id: fetch_get_users
+          type: Request
+          params: get_users
+
+    blocks:
+      - id: user_id
+        type: Selector
+        properties:
+          title: Select a User
+          options:
+            _array.map:
+              - _request: get_users.data
+              - _function:
+                  label:
+                    __args: 0.name
+                  value:
+                    __args: 0.id
+```
+
+To get the posts made by the selected user, a new request should be created and called once the value of the Selector changes.
+To do this, create a new request that will make use of a `payload` to get the posts with the selected user id. Add an `onChange` event on the `Selector` block, during which the new request is called.
+
+###### lowdefy.yaml
+```yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+
+    requests:
+      - id: get_users
+        type: AxiosHttp
+        connectionId: my_api
+        properties:
+          url: /users
+      - id: get_posts
+        type: AxiosHttp
+        connectionId: my_api
+        payload:
+          id:
+            _state: user_id
+        properties:
+          url:
+            _string.concat:
+              - /users/
+              - _payload: id
+              - /posts
+
+    events:
+      onMount:
+        - id: fetch_get_users
+          type: Request
+          params: get_users
+
+    blocks:
+      - id: user_id
+        type: Selector
+        properties:
+          title: Select a User
+          options:
+            _array.map:
+              - _request: get_users.data
+              - _function:
+                  label:
+                    __args: 0.name
+                  value:
+                    __args: 0.id
+        events:
+          onChange:
+            - id: fetch_get_posts
+              type: Request
+              params: get_posts
+```
+
+Set the data from the result of this request in state by using the [`SetState`](/SetState) action. To display the posts, make use of a [`List`](/List) block. In this `List` block, display the data returned of each post in a [`Markdown`](/Markdown) block.
+This is done as follows:
+
+###### lowdefy.yaml
+````yaml
+lowdefy: 5.5.1
+
+connections:
+  - id: my_api
+    type: AxiosHttp
+    properties:
+      baseURL: https://jsonplaceholder.typicode.com
+
+pages:
+  - id: home
+    type: PageHeaderMenu
+
+    requests:
+      - id: get_users
+        type: AxiosHttp
+        connectionId: my_api
+        properties:
+          url: /users
+
+      - id: get_posts
+        type: AxiosHttp
+        connectionId: my_api
+        payload:
+          id:
+            _state: user_id
+        properties:
+          url:
+            _string.concat:
+              - /users/
+              - _payload: id
+              - /posts
+
+    events:
+      onMount:
+        - id: fetch_get_users
+          type: Request
+          params: get_users
+
+    blocks:
+      - id: user_id
+        type: Selector
+        properties:
+          title: Select a User
+          options:
+            _array.map:
+              - _request: get_users.data
+              - _function:
+                  label:
+                    __args: 0.name
+                  value:
+                    __args: 0.id
+        events:
+          onChange:
+            - id: fetch_get_posts
+              type: Request
+              params: get_posts
+            - id: set_posts
+              type: SetState
+              params:
+                posts:
+                  _request: get_posts.data
+
+      - id: posts
+        type: List
+        blocks:
+          - id: posts.$
+            type: Markdown
+            style:
+              padding: 10
+            properties:
+              content:
+                _string.concat:
+                  - |
+                    ```yaml
+                  - _custom_yaml_stringify:
+                      - _state: posts.$
+                  - |
+                    ```
+
+````
+
+### TLDR
+  - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
+  - `requests` use connections to make a call to the connected external services.
+  - Use the `payload` object on a request to pass data such as state values from the app client to the server as required.
+  - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.

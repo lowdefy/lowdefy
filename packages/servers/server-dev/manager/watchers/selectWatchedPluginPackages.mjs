@@ -38,6 +38,8 @@ function collectServerSidePackages(customTypesMap) {
   for (const kind of serverSideKinds) {
     const store = get(customTypesMap, kind, { default: {} });
     for (const definition of Object.values(store ?? {})) {
+      // A file plugin has `package: null` - there is no package directory to
+      // watch. Its own file watcher lands with the path emitter.
       if (type.isString(definition?.package)) {
         packages.add(definition.package);
       }
@@ -60,12 +62,52 @@ function resolveLocalPluginDir({ configDirectory, packageName }) {
   return realPath;
 }
 
+// The first string in the package's own entry declaration - `exports['.']`
+// (a string, or the first string in its condition object) or `main`.
+function findEntry(value) {
+  if (type.isString(value)) {
+    return value;
+  }
+  if (!type.isObject(value)) {
+    return null;
+  }
+  for (const nested of Object.values(value)) {
+    const found = findEntry(nested);
+    if (found !== null) {
+      return found;
+    }
+  }
+  return null;
+}
+
+// The server imports the plugin through build/plugins/*.js, which resolves to
+// the package's entry point - `dist/` for a normal package. Watching `src/`
+// alone would restart the server onto the same stale `dist`, and the developer
+// would verify a fix that is not running. Watch what is actually imported, and
+// fall back to `src/` for a package that is its own build output.
+function resolveWatchDir({ dir }) {
+  const src = path.join(dir, 'src');
+  let packageJson;
+  try {
+    packageJson = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8'));
+  } catch {
+    // A linked directory with no readable package.json cannot be imported by
+    // the server either; watching its sources is the best guess left.
+    return src;
+  }
+  const entry = findEntry(packageJson.exports?.['.'] ?? packageJson.exports) ?? packageJson.main;
+  if (!type.isString(entry)) {
+    return src;
+  }
+  return path.dirname(path.resolve(dir, entry));
+}
+
 function selectWatchedPluginPackages({ configDirectory, customTypesMap }) {
   const watched = [];
   for (const packageName of collectServerSidePackages(customTypesMap ?? {})) {
     const dir = resolveLocalPluginDir({ configDirectory, packageName });
     if (dir !== null) {
-      watched.push({ package: packageName, dir });
+      watched.push({ package: packageName, dir, watchDir: resolveWatchDir({ dir }) });
     }
   }
   return watched;

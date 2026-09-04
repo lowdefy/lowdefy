@@ -18,15 +18,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { isReserved, type } from '@lowdefy/helpers';
-import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { ConfigError } from '@lowdefy/errors';
+import { moduleLockfileName, readModuleLockfile, writeModuleLockfile } from '@lowdefy/node-utils';
 
 import fetchGitHubModule from './fetchGitHubModule.js';
 import getGitHubHeaders from './getGitHubHeaders.js';
 import isImmutableRef from './isImmutableRef.js';
 import parseModuleSource from './parseModuleSource.js';
-import readModuleLockfile from './readModuleLockfile.js';
 import resolveGitHubCommit from './resolveGitHubCommit.js';
-import writeModuleLockfile from './writeModuleLockfile.js';
+
+// A lock entry only pins anything if its commit is a full git object id; a
+// hand-edited "commit: main" would be passed to the fetch as a ref and
+// re-enable the drift the lockfile exists to prevent.
+const COMMIT_SHA = /^[0-9a-f]{40}$/;
 
 function findGitRoot(startPath) {
   let dir = startPath;
@@ -73,13 +77,35 @@ async function fetchModules({ moduleEntries, context }) {
       // The lock is keyed on the full source string so a changed owner, repo or
       // path invalidates the entry instead of pinning a foreign commit.
       const isLockValid =
-        type.isObject(locked) && locked.source === entry.source && type.isString(locked.commit);
+        type.isObject(locked) &&
+        locked.source === entry.source &&
+        type.isString(locked.commit) &&
+        COMMIT_SHA.test(locked.commit);
+
+      if (type.isObject(locked) && locked.source === entry.source && !isLockValid) {
+        throw new ConfigError(
+          `Module "${entry.id}" has a lock entry in ${moduleLockfileName} whose commit is not a 40 character sha. ` +
+            `Received ${JSON.stringify(
+              locked.commit
+            )}. Run "lowdefy modules update" to re-resolve it.`
+        );
+      }
 
       let commit;
       if (isLockValid) {
         commit = locked.commit;
         nextLockfile[entry.id] = locked;
       } else {
+        // A build that may rewrite the lockfile fixes the drift itself; a
+        // production build cannot, so it fails here rather than after
+        // resolving and fetching a module it is not allowed to pin.
+        if (!context.writeModuleLock && !isImmutableRef(source.ref)) {
+          throw new ConfigError(
+            `Module "${entry.id}" resolves branch ref "${source.ref}" with no entry in ${moduleLockfileName}. ` +
+              `A production build cannot pin it. Run "lowdefy modules update" and commit the lockfile ` +
+              `so production builds are reproducible.`
+          );
+        }
         if (type.isNone(headers)) {
           headers = await getGitHubHeaders();
         }
@@ -93,20 +119,7 @@ async function fetchModules({ moduleEntries, context }) {
           source: entry.source,
           ref: source.ref,
           commit,
-          fetchedAt: new Date().toISOString(),
         };
-        // A build that may rewrite the lockfile fixes the drift itself, so the
-        // warning is only for production builds that cannot.
-        if (!context.writeModuleLock && !isImmutableRef(source.ref)) {
-          context.handleWarning(
-            new ConfigWarning(
-              `Module "${entry.id}" resolves branch ref "${source.ref}" with no entry in lowdefy-modules.lock.yaml. ` +
-                `The build pinned it to commit ${commit}. Run "lowdefy modules update" and commit the lockfile ` +
-                `so production builds are reproducible.`,
-              { prodError: true }
-            )
-          );
-        }
       }
 
       // A 40 character sha is an immutable ref, so the cache at

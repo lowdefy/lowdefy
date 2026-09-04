@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { registerTheme } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 
@@ -78,13 +78,16 @@ class EChart extends React.Component {
   render() {
     return (
       <div
-        className={this.props.classNames?.element}
-        style={{
-          height: this.props.properties.height ?? 300,
-          width: this.props.properties.width ?? '100%',
-          minWidth: 0,
-          ...this.props.styles?.element,
-        }}
+        {...blockRootProps({
+          blockId: this.props.blockId,
+          classNames: this.props.classNames,
+          styles: this.props.styles,
+          style: {
+            height: this.props.properties.height ?? 300,
+            width: this.props.properties.width ?? '100%',
+            minWidth: 0,
+          },
+        })}
       >
         <ReactECharts
           lazyUpdate={true}

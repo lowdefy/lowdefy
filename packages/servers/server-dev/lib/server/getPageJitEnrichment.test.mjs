@@ -14,7 +14,34 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
 import { getPageJitEnrichment } from './jitPageBuilder.js';
+
+// The /@fs preamble carries the module file's mtime as a cache-busting query,
+// so the module files have to exist on disk.
+let moduleRoot;
+
+function writeModule(relativePath) {
+  const filePath = path.join(moduleRoot, relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, 'export default 1;');
+  return filePath;
+}
+
+function fsUrl(filePath) {
+  return `/@fs${filePath}?t=${Math.trunc(fs.statSync(filePath).mtimeMs)}`;
+}
+
+beforeEach(() => {
+  moduleRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-modules-'));
+});
+
+afterEach(() => {
+  fs.rmSync(moduleRoot, { recursive: true, force: true });
+});
 
 // A stub of cachedBuildContext. getPageJitEnrichment reads jsMap.client and
 // dynamicIconData off it; production omits buildContext so it defaults to the
@@ -110,14 +137,20 @@ test('getPageJitEnrichment omits both fields when the page has no dynamic _js or
 
 test('getPageJitEnrichment emits an await import preamble for module hashes and plain entries otherwise', () => {
   const client = { hashInline: 'return 1;' };
+  const z = writeModule('lib/z.js');
+  const rows = writeModule('pages/lib/rows.js');
   const modules = {
-    hashZ: { absolutePath: '/app/lib/z.js', exportName: 'default', relativePath: 'lib/z.js' },
+    hashZ: { absolutePath: z, exportName: 'default', relativePath: 'lib/z.js' },
     hashA: {
-      absolutePath: '/app/pages/lib/rows.js',
+      absolutePath: rows,
       exportName: 'buildRows',
       relativePath: 'pages/lib/rows.js',
     },
-    hashUnused: { absolutePath: '/app/lib/u.js', exportName: 'u', relativePath: 'lib/u.js' },
+    hashUnused: {
+      absolutePath: writeModule('lib/u.js'),
+      exportName: 'u',
+      relativePath: 'lib/u.js',
+    },
   };
   const pageConfig = {
     id: 'p',
@@ -132,8 +165,8 @@ test('getPageJitEnrichment emits an await import preamble for module hashes and 
     buildContext: buildContext({ client, modules }),
   });
 
-  expect(jsEntries).toBe(`const m0 = await import('/@fs/app/pages/lib/rows.js');
-const m1 = await import('/@fs/app/lib/z.js');
+  expect(jsEntries).toBe(`const m0 = await import('${fsUrl(rows)}');
+const m1 = await import('${fsUrl(z)}');
 export default {
   'hashInline': ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
   'hashA': m0.buildRows,
@@ -142,14 +175,15 @@ export default {
 });
 
 test('getPageJitEnrichment emits module entries when the page has no inline bodies', () => {
+  const a = writeModule('lib/a.js');
   const modules = {
-    hashA: { absolutePath: '/app/lib/a.js', exportName: 'a', relativePath: 'lib/a.js' },
+    hashA: { absolutePath: a, exportName: 'a', relativePath: 'lib/a.js' },
   };
   const { jsEntries } = getPageJitEnrichment({
     pageConfig: { id: 'p', blocks: [{ properties: { a: { _js: { fn: 'hashA' } } } }] },
     buildContext: buildContext({ modules }),
   });
-  expect(jsEntries).toBe(`const m0 = await import('/@fs/app/lib/a.js');
+  expect(jsEntries).toBe(`const m0 = await import('${fsUrl(a)}');
 export default {
   'hashA': m0.a,
   };`);
@@ -162,4 +196,22 @@ test('getPageJitEnrichment emits no preamble when the page references no module'
   });
   expect(jsEntries).not.toContain('await import');
   expect(jsEntries).toContain("'hashInline'");
+});
+
+test('getPageJitEnrichment encodes the /@fs URL and cache-busts it with the module mtime', () => {
+  const filePath = writeModule('lib/my helper#1.js');
+  const { jsEntries } = getPageJitEnrichment({
+    pageConfig: { id: 'p', blocks: [{ properties: { a: { _js: { fn: 'hashA' } } } }] },
+    buildContext: buildContext({
+      modules: {
+        hashA: { absolutePath: filePath, exportName: 'a', relativePath: 'lib/my helper#1.js' },
+      },
+    }),
+  });
+
+  const url = jsEntries.match(/await import\('([^']+)'\)/)[1];
+  expect(url).toContain('%20');
+  expect(url).toContain('%23');
+  expect(url).not.toContain(' ');
+  expect(url).toMatch(new RegExp(`^/@fs/.*\\\\?t=${Math.trunc(fs.statSync(filePath).mtimeMs)}$`));
 });

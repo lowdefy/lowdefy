@@ -345,6 +345,53 @@ Google Map with a heatmap visualization layer for displaying data density. Must 
 ```
 
 ```yaml
+- id: heatmap_events
+  type: GoogleMapsHeatmap
+  properties:
+    map:
+      center:
+        lat: 48.8566
+        lng: 2.3522
+      zoom: 13
+    markers:
+      - position:
+          lat: 48.8584
+          lng: 2.2945
+        label: A
+      - position:
+          lat: 48.8606
+          lng: 2.3376
+        label: B
+    heatmap:
+      data:
+        - lat: 48.8584
+          lng: 2.2945
+        - lat: 48.8606
+          lng: 2.3376
+        - lat: 48.8566
+          lng: 2.3522
+  events:
+    onClick:
+      - id: heatmap_click_display
+        type: DisplayMessage
+        params:
+          content: Map clicked!
+          status: info
+    onMarkerClick:
+      - id: heatmap_marker_click_msg
+        type: DisplayMessage
+        params:
+          content: Marker clicked!
+          status: success
+    onZoomChanged:
+      - id: heatmap_zoom_set_state
+        type: SetState
+        params:
+          currentZoom:
+            _event: zoom
+```
+
+```yaml
 - id: heatmap_css_element
   type: GoogleMapsHeatmap
   class:
@@ -455,6 +502,108 @@ Visualizing customer activity density across downtown locations. Higher intensit
 ```
 
 Real-time air quality index readings from distributed sensor stations. Warmer areas on the heatmap indicate higher pollutant concentrations. Markers show individual sensor locations.
+
+```yaml
+- id: sensor_network_card
+  type: Card
+  properties:
+    title: Air Quality Monitoring - San Francisco Bay Area
+  slots:
+    extra:
+      blocks:
+        - id: sensor_network_refresh_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Refresh Data
+            icon: AiOutlineReload
+            color: primary
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: sensor_refresh_msg
+                type: DisplayMessage
+                params:
+                  content: Sensor data refreshed.
+                  status: success
+  blocks:
+    - id: sensor_network_desc
+      type: Paragraph
+      properties:
+        content: Real-time air quality index readings from distributed sensor stations.
+          Warmer areas on the heatmap indicate higher pollutant concentrations.
+          Markers show individual sensor locations.
+    - id: sensor_network_map
+      type: GoogleMapsHeatmap
+      class:
+        element: rounded-lg
+      properties:
+        autoBounds: false
+        style:
+          height: 500px
+        map:
+          center:
+            lat: 37.775
+            lng: -122.418
+          zoom: 12
+          options:
+            mapTypeControl: false
+            streetViewControl: false
+        markers:
+          - position:
+              lat: 37.7849
+              lng: -122.4094
+            label: "1"
+          - position:
+              lat: 37.7694
+              lng: -122.4862
+            label: "2"
+          - position:
+              lat: 37.7599
+              lng: -122.4148
+            label: "3"
+          - position:
+              lat: 37.7909
+              lng: -122.4
+            label: "4"
+          - position:
+              lat: 37.775
+              lng: -122.435
+            label: "5"
+        heatmap:
+          radius: 40
+          opacity: 0.6
+          data:
+            - lat: 37.7849
+              lng: -122.4094
+            - lat: 37.7694
+              lng: -122.4862
+            - lat: 37.7599
+              lng: -122.4148
+            - lat: 37.7909
+              lng: -122.4
+            - lat: 37.775
+              lng: -122.435
+            - lat: 37.78
+              lng: -122.42
+            - lat: 37.772
+              lng: -122.45
+      events:
+        onMarkerClick:
+          - id: sensor_marker_click_msg
+            type: DisplayMessage
+            params:
+              content: Select a sensor station to view detailed air quality readings.
+              status: info
+        onClick:
+          - id: sensor_map_click_set
+            type: SetState
+            params:
+              selectedLocation:
+                _event: latLng
+```
 
 ```yaml
 - id: sensor_network_card

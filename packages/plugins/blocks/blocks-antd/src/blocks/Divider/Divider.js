@@ -16,18 +16,16 @@
 
 import React from 'react';
 import { Divider } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
 const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, methods }) => (
   <Divider
-    id={blockId}
-    className={classNames.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     dashed={properties.dashed}
     titlePlacement={properties.titlePlacement}
     plain={properties.plain}
-    style={styles.element}
     orientation={properties.orientation}
   >
     {renderHtml({ html: properties.title, methods })}

@@ -74,30 +74,28 @@ test('handleWarning sets received on warning', () => {
 
 // --- Suppression ---
 
-test('handleWarning suppresses when ~ignoreBuildChecks is true', () => {
+test('handleWarning does not suppress a warning that carries no checkSlug', () => {
   const { context, lines } = createContext({
     keyMap: {
-      abc123: { key: 'pages.0', '~ignoreBuildChecks': true },
+      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-refs'] },
     },
   });
   const handleWarning = createHandleWarning({ context });
 
   handleWarning(new ConfigWarning('Suppressed', { configKey: 'abc123' }));
 
-  expect(lines).toHaveLength(0);
+  expect(lines).toHaveLength(1);
 });
 
 test('handleWarning suppresses specific checkSlug', () => {
   const { context, lines } = createContext({
     keyMap: {
-      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-reference'] },
+      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-refs'] },
     },
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(
-    new ConfigWarning('State ref', { configKey: 'abc123', checkSlug: 'state-reference' })
-  );
+  handleWarning(new ConfigWarning('State ref', { configKey: 'abc123', checkSlug: 'state-refs' }));
 
   expect(lines).toHaveLength(0);
 });
@@ -105,14 +103,12 @@ test('handleWarning suppresses specific checkSlug', () => {
 test('handleWarning does not suppress non-matching checkSlug', () => {
   const { context, lines } = createContext({
     keyMap: {
-      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-reference'] },
+      abc123: { key: 'pages.0', '~ignoreBuildChecks': ['state-refs'] },
     },
   });
   const handleWarning = createHandleWarning({ context });
 
-  handleWarning(
-    new ConfigWarning('Link ref', { configKey: 'abc123', checkSlug: 'link-reference' })
-  );
+  handleWarning(new ConfigWarning('Link ref', { configKey: 'abc123', checkSlug: 'link-refs' }));
 
   expect(lines).toHaveLength(1);
 });
@@ -169,6 +165,24 @@ test('handleWarning deduplicates by source when resolved', () => {
   handleWarning(new ConfigWarning('Same source', { configKey: 'k2' }));
 
   expect(lines).toHaveLength(1);
+});
+
+test('handleWarning keeps two different warnings that resolve to the same source', () => {
+  const { context, lines } = createContext({
+    keyMap: {
+      k1: { key: 'pages.0', '~r': 'r1', '~l': 10 },
+      k2: { key: 'pages.1', '~r': 'r1', '~l': 10 },
+    },
+    refMap: {
+      r1: { path: 'pages/home.yaml' },
+    },
+  });
+  const handleWarning = createHandleWarning({ context });
+
+  handleWarning(new ConfigWarning('First finding', { configKey: 'k1' }));
+  handleWarning(new ConfigWarning('Second finding', { configKey: 'k2' }));
+
+  expect(lines).toHaveLength(2);
 });
 
 test('handleWarning deduplicates by message when source not resolved', () => {

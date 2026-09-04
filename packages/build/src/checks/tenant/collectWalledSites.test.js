@@ -34,6 +34,7 @@ test('collectWalledSites names a page request with its connection field and conf
   expect(collectWalledSites({ components, context })).toEqual([
     {
       location: 'Request "get_controls" at page "controls"',
+      kind: 'page',
       connectionId: 'controls_db',
       connectionType: 'MongoDBCollection',
       field: 'organization_id',
@@ -58,6 +59,7 @@ test('collectWalledSites finds a step nested inside routine controls and reads t
   expect(sites).toHaveLength(1);
   expect(sites[0]).toMatchObject({
     location: 'Step "insert_control" at endpoint "create_control"',
+    kind: 'step',
     connectionId: 'tenants_db',
     field: 'tenant_id',
     requestType: 'MongoDBInsertOne',
@@ -79,4 +81,27 @@ test('collectWalledSites defaults missing properties to an empty object', () => 
   const context = createTenantContext();
   const components = pageRequest({ type: 'MongoDBFind' });
   expect(collectWalledSites({ components, context })[0].properties).toEqual({});
+});
+
+test('collectWalledSites walks into a control that carries a stepId of its own', () => {
+  const context = createTenantContext();
+  const components = endpointStep({
+    id: 'read_controls',
+    type: 'MongoDBFind',
+    properties: {},
+  });
+  // A control with a stepId used to end the walk, hiding every walled step
+  // nested under it.
+  components.api[0].routine = [
+    { stepId: 'loop', ':while': true, ':do': components.api[0].routine },
+  ];
+  const sites = collectWalledSites({ components, context });
+  expect(sites).toHaveLength(1);
+  expect(sites[0].location).toBe('Step "read_controls" at endpoint "nightly_sync"');
+});
+
+test('collectWalledSites carries the endpoint routine on a step site so state writes can be read', () => {
+  const context = createTenantContext();
+  const components = endpointStep({ type: 'MongoDBFind', properties: {} });
+  expect(collectWalledSites({ components, context })[0].routine).toBe(components.api[0].routine);
 });

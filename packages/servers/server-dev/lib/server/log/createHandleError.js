@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import path from 'node:path';
+
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import serverErrorStore from '../../docs/serverErrorStore.js';
 
@@ -26,6 +29,24 @@ function shouldStore(error) {
     return false;
   }
   return error.name !== 'UserError';
+}
+
+// A _js error resolves `source` to the YAML node holding the operator, so the
+// file:line inside the author's own JS is nowhere on the wire - omitErrorProps
+// strips the stack. serverErrorStore is a dev-only in-process channel, so keep
+// the first frame that names a file the author wrote and an agent can open.
+function firstAppStackFrame({ error, configDirectory }) {
+  if (!type.isString(error.stack) || !type.isString(configDirectory)) {
+    return null;
+  }
+  for (const line of error.stack.split('\n').slice(1)) {
+    const match = line.match(/\(?(?:file:\/\/)?(\/[^\s)]+):(\d+):\d+\)?$/);
+    if (match === null) continue;
+    const filePath = match[1];
+    if (filePath.includes('node_modules') || !filePath.startsWith(configDirectory)) continue;
+    return `${path.relative(configDirectory, filePath)}:${match[2]}`;
+  }
+  return null;
 }
 
 function createHandleError({ context }) {
@@ -67,6 +88,7 @@ function createHandleError({ context }) {
           endpointId: context.endpointId ?? null,
           requestId: context.requestId ?? null,
           pageId: context.pageId ?? null,
+          stackFrame: firstAppStackFrame({ error, configDirectory: context.configDirectory }),
         });
       }
 

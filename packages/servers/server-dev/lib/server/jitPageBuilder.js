@@ -302,6 +302,27 @@ function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
   return Object.keys(found).length > 0 ? found : undefined;
 }
 
+function toPosix(filePath) {
+  return filePath.split(path.sep).join('/');
+}
+
+// Vite's filesystem URL is `/@fs/<posix absolute path>` — a Windows path needs
+// the separators flipped and the leading slash added, and a path with a space
+// or a `#` needs encoding or the browser reads it as a fragment. The mtime
+// query is what makes an edit visible: the browser's module registry keys on
+// the URL, so without it a re-fetched page config re-imports the module the
+// registry already holds — the function the author just changed. Vite's own
+// HMR appends the same `?t=` for the same reason.
+function fsImportUrl({ absolutePath }) {
+  const posix = toPosix(absolutePath);
+  // encodeURI leaves ? and # alone, and both would end the path here.
+  const url = encodeURI(`/@fs${posix.startsWith('/') ? '' : '/'}${posix}`)
+    .replace(/#/g, '%23')
+    .replace(/\?/g, '%3F');
+  const { mtimeMs } = fs.statSync(absolutePath);
+  return `${url}?t=${Math.trunc(mtimeMs)}`;
+}
+
 // The client compiles _jsEntries with an AsyncFunction (usePageConfig.js), so a
 // static import cannot survive; a module reference becomes a dynamic import of
 // Vite's filesystem URL for the file the author edits, awaited in a preamble
@@ -311,7 +332,9 @@ function generateJitJsEntries({ scopedJsMap, scopedJsModules }) {
   const preamble = moduleHashes
     .map(
       (hash, index) =>
-        `const m${index} = await import('/@fs${scopedJsModules[hash].absolutePath}');`
+        `const m${index} = await import('${fsImportUrl({
+          absolutePath: scopedJsModules[hash].absolutePath,
+        })}');`
     )
     .join('\n');
   const inline = generateClientJsModule(scopedJsMap);

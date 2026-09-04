@@ -697,6 +697,138 @@ Resize the panels. The onResizeStart fires a message and onResizeEnd saves panel
                     else: Resize panels to see sizes here.
 ```
 
+```yaml
+- id: event_splitter
+  type: Splitter
+  style:
+    height: 200px
+    border: 1px solid
+    borderRadius: 8px
+  properties:
+    layout: horizontal
+    panels:
+      - key: evt_left
+        defaultSize: 50
+        collapsible: true
+      - key: evt_right
+        defaultSize: 50
+  events:
+    onResizeEnd:
+      - id: event_resize_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Resize complete. Panel sizes: "
+              - _json.stringify:
+                  on:
+                    _event: sizes
+          duration: 2
+    onCollapse:
+      - id: event_collapse_msg
+        type: DisplayMessage
+        params:
+          content:
+            _if:
+              test:
+                _event: collapsed
+              then: Panel collapsed.
+              else: Panel expanded.
+          duration: 2
+  slots:
+    evt_left:
+      blocks:
+        - id: event_left_box
+          type: Box
+          class: bg-bg-layout h-full p-4
+          blocks:
+            - id: event_left_title
+              type: Paragraph
+              properties:
+                content: <b>Collapsible Panel</b>
+            - id: event_left_desc
+              type: Paragraph
+              properties:
+                content: Collapse this panel or resize the divider to see event messages.
+    evt_right:
+      blocks:
+        - id: event_right_box
+          type: Box
+          class: bg-bg-container h-full p-4
+          blocks:
+            - id: event_right_desc
+              type: Paragraph
+              properties:
+                content: The onResizeEnd and onCollapse events fire DisplayMessage actions to
+                  show the current panel state.
+- id: event_state_splitter
+  type: Splitter
+  style:
+    height: 220px
+    border: 1px solid
+    borderRadius: 8px
+  properties:
+    layout: horizontal
+    panels:
+      - key: es_left
+        defaultSize: 40
+      - key: es_right
+        defaultSize: 60
+  events:
+    onResizeEnd:
+      - id: event_set_state
+        type: SetState
+        params:
+          splitter_sizes:
+            _event: sizes
+    onResizeStart:
+      - id: event_resize_start_msg
+        type: DisplayMessage
+        params:
+          content: Resizing started...
+          duration: 1
+  slots:
+    es_left:
+      blocks:
+        - id: es_left_box
+          type: Box
+          class: bg-bg-layout h-full p-4
+          blocks:
+            - id: es_left_title
+              type: Paragraph
+              properties:
+                content: <b>State Tracking</b>
+            - id: es_left_desc
+              type: Paragraph
+              properties:
+                content: Resize the panels. The onResizeStart fires a message and onResizeEnd
+                  saves panel sizes to state.
+    es_right:
+      blocks:
+        - id: es_right_box
+          type: Box
+          class: bg-bg-container h-full p-4
+          blocks:
+            - id: es_right_title
+              type: Paragraph
+              properties:
+                content: <b>Current sizes:</b>
+            - id: es_right_sizes
+              type: Paragraph
+              properties:
+                content:
+                  _if:
+                    test:
+                      _not:
+                        _not:
+                          _state: splitter_sizes
+                    then:
+                      _json.stringify:
+                        on:
+                          _state: splitter_sizes
+                    else: Resize panels to see sizes here.
+```
+
 <b>Sidebar</b>
 
 Dashboard
@@ -1250,6 +1382,177 @@ Compiled successfully!
                         content: Compiled successfully!
 ```
 
+```yaml
+- id: editor_outer
+  type: Splitter
+  style:
+    height: 420px
+    border: 1px solid
+    borderRadius: 8px
+  properties:
+    layout: horizontal
+    panels:
+      - key: editor_files
+        defaultSize: 18
+        min: 12
+        collapsible: true
+      - key: editor_main
+        defaultSize: 82
+  events:
+    onCollapse:
+      - id: editor_collapse_msg
+        type: DisplayMessage
+        params:
+          content:
+            _if:
+              test:
+                _event: collapsed
+              then: File explorer collapsed.
+              else: File explorer expanded.
+          duration: 2
+  slots:
+    editor_files:
+      blocks:
+        - id: editor_files_box
+          type: Box
+          class: bg-bg-layout h-full p-3
+          blocks:
+            - id: editor_files_title
+              type: Paragraph
+              style:
+                color: "#9ca3af"
+                fontSize: 11px
+                textTransform: uppercase
+                letterSpacing: 1px
+              properties:
+                content: Explorer
+            - id: editor_files_f1
+              type: Paragraph
+              style:
+                color: "#e2e8f0"
+                fontSize: 13px
+              properties:
+                content: src/
+            - id: editor_files_f2
+              type: Paragraph
+              style:
+                color: "#94a3b8"
+                fontSize: 13px
+                paddingLeft: 12px
+              properties:
+                content: index.js
+            - id: editor_files_f3
+              type: Paragraph
+              style:
+                color: "#94a3b8"
+                fontSize: 13px
+                paddingLeft: 12px
+              properties:
+                content: App.js
+            - id: editor_files_f4
+              type: Paragraph
+              style:
+                color: "#94a3b8"
+                fontSize: 13px
+                paddingLeft: 12px
+              properties:
+                content: styles.css
+            - id: editor_files_f5
+              type: Paragraph
+              style:
+                color: "#e2e8f0"
+                fontSize: 13px
+              properties:
+                content: package.json
+    editor_main:
+      blocks:
+        - id: editor_inner
+          type: Splitter
+          style:
+            height: 100%
+          properties:
+            layout: vertical
+            panels:
+              - key: editor_code
+                defaultSize: 65
+              - key: editor_terminal
+                defaultSize: 35
+                min: 15
+                collapsible: true
+          slots:
+            editor_code:
+              blocks:
+                - id: editor_code_box
+                  type: Box
+                  class: bg-bg-layout h-full p-4
+                  blocks:
+                    - id: editor_code_tab
+                      type: Paragraph
+                      style:
+                        color: "#64748b"
+                        fontSize: 12px
+                        borderBottom: 1px solid
+                        paddingBottom: 8px
+                      properties:
+                        content: App.js
+                    - id: editor_code_content
+                      type: Paragraph
+                      style:
+                        color: "#e2e8f0"
+                        fontFamily: monospace
+                        fontSize: 13px
+                        lineHeight: 1.6
+                      properties:
+                        content: <span style="color:#c084fc">import</span> React <span
+                          style="color:#c084fc">from</span> <span
+                          style="color:#a5d6ff">"react"</span>;<br><br><span
+                          style="color:#c084fc">function</span> <span
+                          style="color:#67e8f9">App</span>()
+                          {<br>&nbsp;&nbsp;<span
+                          style="color:#c084fc">return</span>
+                          (<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span
+                          style="color:#67e8f9">div</span> <span
+                          style="color:#79c0ff">className</span>=<span
+                          style="color:#a5d6ff">"app"</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span
+                          style="color:#67e8f9">h1</span>&gt;Hello
+                          World&lt;/<span
+                          style="color:#67e8f9">h1</span>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span
+                          style="color:#67e8f9">div</span>&gt;<br>&nbsp;&nbsp;);<br>}
+            editor_terminal:
+              blocks:
+                - id: editor_terminal_box
+                  type: Box
+                  class: bg-bg-layout h-full p-3
+                  blocks:
+                    - id: editor_terminal_title
+                      type: Paragraph
+                      style:
+                        color: "#64748b"
+                        fontSize: 11px
+                        textTransform: uppercase
+                        letterSpacing: 1px
+                        borderBottom: 1px solid
+                        paddingBottom: 6px
+                      properties:
+                        content: Terminal
+                    - id: editor_terminal_line
+                      type: Paragraph
+                      style:
+                        color: "#22c55e"
+                        fontFamily: monospace
+                        fontSize: 13px
+                      properties:
+                        content: $ npm start
+                    - id: editor_terminal_output
+                      type: Paragraph
+                      style:
+                        color: "#94a3b8"
+                        fontFamily: monospace
+                        fontSize: 13px
+                      properties:
+                        content: Compiled successfully!
+```
+
 Overview
 
 <b>Sarah</b> updated the project plan <i>2 min ago</i>
@@ -1259,6 +1562,164 @@ Overview
 <b>System</b> completed deployment <i>1 hour ago</i>
 
 <b>Alex</b> resolved 5 support tickets <i>3 hours ago</i>
+
+```yaml
+- id: dashboard_outer
+  type: Splitter
+  style:
+    height: 400px
+    border: 1px solid
+    borderRadius: 8px
+  properties:
+    layout: horizontal
+    panels:
+      - key: dash_nav
+        defaultSize: 22
+        min: 15
+        max: 35
+        collapsible: true
+      - key: dash_content
+        defaultSize: 50
+      - key: dash_detail
+        defaultSize: 28
+        min: 20
+        collapsible: true
+  events:
+    onResizeEnd:
+      - id: dash_resize_state
+        type: SetState
+        params:
+          dashboard_layout:
+            _event: sizes
+  slots:
+    dash_nav:
+      blocks:
+        - id: dash_nav_box
+          type: Box
+          class: bg-bg-layout h-full p-0
+          blocks:
+            - id: dash_nav_card
+              type: Card
+              properties:
+                title: Navigation
+                size: small
+                bordered: false
+              blocks:
+                - id: dash_nav_item1
+                  type: Button
+                  properties:
+                    title: Overview
+                    icon: AiOutlineDashboard
+                    variant: text
+                    block: true
+                - id: dash_nav_item2
+                  type: Button
+                  properties:
+                    title: Analytics
+                    icon: AiOutlineBarChart
+                    variant: text
+                    block: true
+                - id: dash_nav_item3
+                  type: Button
+                  properties:
+                    title: Users
+                    icon: AiOutlineTeam
+                    variant: text
+                    block: true
+                - id: dash_nav_item4
+                  type: Button
+                  properties:
+                    title: Settings
+                    icon: AiOutlineSetting
+                    variant: text
+                    block: true
+    dash_content:
+      blocks:
+        - id: dash_content_box
+          type: Box
+          class: h-full p-4
+          blocks:
+            - id: dash_content_title
+              type: Title
+              properties:
+                content: Overview
+                level: 4
+            - id: dash_stats_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: dash_stat_users
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: dash_stat_users_val
+                      type: Statistic
+                      properties:
+                        title: Total Users
+                        value: 2846
+                - id: dash_stat_revenue
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: dash_stat_revenue_val
+                      type: Statistic
+                      properties:
+                        title: Revenue
+                        value: 48200
+                        prefix: $
+            - id: dash_progress_card
+              type: Card
+              properties:
+                title: Monthly Target
+                size: small
+              blocks:
+                - id: dash_progress_bar
+                  type: Progress
+                  properties:
+                    percent: 72
+    dash_detail:
+      blocks:
+        - id: dash_detail_box
+          type: Box
+          class: bg-bg-layout h-full p-0
+          blocks:
+            - id: dash_detail_card
+              type: Card
+              properties:
+                title: Recent Activity
+                size: small
+                bordered: false
+              blocks:
+                - id: dash_detail_item1
+                  type: Paragraph
+                  properties:
+                    content: <b>Sarah</b> updated the project plan <i>2 min ago</i>
+                - id: dash_detail_divider1
+                  type: Divider
+                - id: dash_detail_item2
+                  type: Paragraph
+                  properties:
+                    content: <b>James</b> added 3 team members <i>15 min ago</i>
+                - id: dash_detail_divider2
+                  type: Divider
+                - id: dash_detail_item3
+                  type: Paragraph
+                  properties:
+                    content: <b>System</b> completed deployment <i>1 hour ago</i>
+                - id: dash_detail_divider3
+                  type: Divider
+                - id: dash_detail_item4
+                  type: Paragraph
+                  properties:
+                    content: <b>Alex</b> resolved 5 support tickets <i>3 hours ago</i>
+```
 
 ```yaml
 - id: dashboard_outer
@@ -1642,8 +2103,250 @@ Please review the attached document and share any feedback by end of week. Our n
                   properties:
                     icon: AiOutlineUser
                     size: 32
-                    color: "#fff"
-                    backgroundColor: "#1677ff"
+                    color: "#1677ff"
+                - id: email_preview_sender
+                  type: Box
+                  layout:
+                    flex: 1 1 0
+                  blocks:
+                    - id: email_preview_from
+                      type: Paragraph
+                      style:
+                        fontWeight: 600
+                        fontSize: 14px
+                      properties:
+                        content: Alice Johnson
+                    - id: email_preview_date
+                      type: Paragraph
+                      style:
+                        fontSize: 12px
+                        color: "#94a3b8"
+                      properties:
+                        content: March 13, 2026 at 10:30 AM
+            - id: email_preview_divider
+              type: Divider
+            - id: email_preview_body
+              type: Paragraph
+              properties:
+                content: "Hi team, here are the key takeaways from our Q4 planning meeting
+                  yesterday. We agreed on the following priorities: launching
+                  the new dashboard feature, improving API performance by 30%,
+                  and completing the migration to the new design system."
+            - id: email_preview_body2
+              type: Paragraph
+              properties:
+                content: Please review the attached document and share any feedback by end of
+                  week. Our next sync is scheduled for Monday at 2 PM.
+            - id: email_preview_tags
+              type: Box
+              layout:
+                gap: 8
+              blocks:
+                - id: email_preview_tag1
+                  type: Tag
+                  properties:
+                    title: Planning
+                    color: blue
+                - id: email_preview_tag2
+                  type: Tag
+                  properties:
+                    title: Q4
+                    color: purple
+```
+
+```yaml
+- id: email_outer
+  type: Splitter
+  class:
+    element: rounded-lg shadow-md overflow-hidden
+  style:
+    height: 420px
+  properties:
+    layout: horizontal
+    panels:
+      - key: email_folders
+        defaultSize: 20
+        min: 15
+        collapsible: true
+      - key: email_list
+        defaultSize: 35
+        min: 25
+      - key: email_preview
+        defaultSize: 45
+  events:
+    onCollapse:
+      - id: email_collapse_action
+        type: DisplayMessage
+        params:
+          content:
+            _if:
+              test:
+                _event: collapsed
+              then: Folder panel collapsed. Click the arrow to expand.
+              else: Folder panel expanded.
+          duration: 2
+  slots:
+    email_folders:
+      blocks:
+        - id: email_folders_box
+          type: Box
+          class: bg-bg-layout h-full p-3
+          blocks:
+            - id: email_folders_title
+              type: Paragraph
+              style:
+                fontWeight: 600
+                fontSize: 13px
+                color: "#64748b"
+                textTransform: uppercase
+                letterSpacing: 0.5px
+              properties:
+                content: Folders
+            - id: email_folder_inbox
+              type: Button
+              properties:
+                title: Inbox (12)
+                icon: AiOutlineInbox
+                variant: text
+                block: true
+                size: small
+            - id: email_folder_sent
+              type: Button
+              properties:
+                title: Sent
+                icon: AiOutlineSend
+                variant: text
+                block: true
+                size: small
+            - id: email_folder_drafts
+              type: Button
+              properties:
+                title: Drafts (3)
+                icon: AiOutlineEdit
+                variant: text
+                block: true
+                size: small
+            - id: email_folder_trash
+              type: Button
+              properties:
+                title: Trash
+                icon: AiOutlineDelete
+                variant: text
+                block: true
+                size: small
+    email_list:
+      blocks:
+        - id: email_list_box
+          type: Box
+          class: h-full p-0
+          blocks:
+            - id: email_list_header
+              type: Box
+              class: px-3 py-2 border-b border-border
+              blocks:
+                - id: email_list_search
+                  type: Paragraph
+                  style:
+                    color: "#94a3b8"
+                    fontSize: 13px
+                  properties:
+                    content: Inbox - 12 messages
+            - id: email_msg1
+              type: Box
+              class: px-3 py-2 border-b border-border bg-bg-layout
+              blocks:
+                - id: email_msg1_from
+                  type: Paragraph
+                  style:
+                    fontWeight: 600
+                    fontSize: 13px
+                  properties:
+                    content: Alice Johnson
+                - id: email_msg1_subject
+                  type: Paragraph
+                  style:
+                    fontSize: 13px
+                  properties:
+                    content: Q4 Planning Meeting Notes
+                - id: email_msg1_time
+                  type: Paragraph
+                  style:
+                    fontSize: 11px
+                    color: "#94a3b8"
+                  properties:
+                    content: 10:30 AM
+            - id: email_msg2
+              type: Box
+              class: px-3 py-2 border-b border-border
+              blocks:
+                - id: email_msg2_from
+                  type: Paragraph
+                  style:
+                    fontWeight: 600
+                    fontSize: 13px
+                  properties:
+                    content: Bob Williams
+                - id: email_msg2_subject
+                  type: Paragraph
+                  style:
+                    fontSize: 13px
+                  properties:
+                    content: Design review feedback
+                - id: email_msg2_time
+                  type: Paragraph
+                  style:
+                    fontSize: 11px
+                    color: "#94a3b8"
+                  properties:
+                    content: 9:15 AM
+            - id: email_msg3
+              type: Box
+              class: px-3 py-2 border-b border-border
+              blocks:
+                - id: email_msg3_from
+                  type: Paragraph
+                  style:
+                    fontSize: 13px
+                  properties:
+                    content: Carol Davis
+                - id: email_msg3_subject
+                  type: Paragraph
+                  style:
+                    fontSize: 13px
+                  properties:
+                    content: Updated project timeline
+                - id: email_msg3_time
+                  type: Paragraph
+                  style:
+                    fontSize: 11px
+                    color: "#94a3b8"
+                  properties:
+                    content: Yesterday
+    email_preview:
+      blocks:
+        - id: email_preview_box
+          type: Box
+          class: h-full p-4
+          blocks:
+            - id: email_preview_subject
+              type: Title
+              properties:
+                content: Q4 Planning Meeting Notes
+                level: 4
+            - id: email_preview_meta
+              type: Box
+              layout:
+                gap: 8
+                align: center
+              blocks:
+                - id: email_preview_avatar
+                  type: Avatar
+                  layout:
+                    flex: 0 0 auto
+                  properties:
+                    icon: AiOutlineUser
+                    size: 32
+                    color: "#1677ff"
                 - id: email_preview_sender
                   type: Box
                   layout:
@@ -1722,10 +2425,10 @@ Please review the attached document and share any feedback by end of week. Our n
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCollapse` | `{ collapsed, sizes }` | Trigger action when a panel is collapsed or expanded. |
-| `onResize` | `{ sizes }` | Trigger action when panel sizes change during resize. |
-| `onResizeEnd` | `{ sizes }` | Trigger action when resize ends. |
-| `onResizeStart` | `{ sizes }` | Trigger action when resize starts. |
+| `onCollapse` | `{ collapsed: boolean, sizes: array }` | Trigger action when a panel is collapsed or expanded. |
+| `onResize` | `{ sizes: array }` | Trigger action when panel sizes change during resize. |
+| `onResizeEnd` | `{ sizes: array }` | Trigger action when resize ends. |
+| `onResizeStart` | `{ sizes: array }` | Trigger action when resize starts. |
 
 | Key | Target |
 | --- | --- |

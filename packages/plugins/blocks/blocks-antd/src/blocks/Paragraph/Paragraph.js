@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
 
@@ -33,8 +33,7 @@ const ParagraphBlock = ({
   styles = {},
 }) => (
   <Paragraph
-    id={blockId}
-    className={classNames.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     code={properties.code}
     copyable={
       type.isObject(properties.copyable)
@@ -114,7 +113,6 @@ const ParagraphBlock = ({
     italic={properties.italic}
     mark={properties.mark}
     strong={properties.strong}
-    style={styles.element}
     type={properties.type}
     underline={properties.underline}
   >

@@ -15,11 +15,11 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import Skeleton from '../Skeleton/Skeleton.js';
 
-const SkeletonInput = ({ classNames, properties, styles }) => {
+const SkeletonInput = ({ blockId, classNames, properties, styles }) => {
   let inputHeight;
   switch (properties.size) {
     case 'small':
@@ -33,13 +33,16 @@ const SkeletonInput = ({ classNames, properties, styles }) => {
   }
   return (
     <div
-      className={classNames?.element}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-        ...styles?.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+        },
+      })}
     >
       {properties.label !== false && (
         <Skeleton

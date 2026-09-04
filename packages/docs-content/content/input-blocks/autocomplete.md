@@ -39,6 +39,13 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+basic:
+  _state: basic
+basic_countries:
+  _state: basic_countries
+```
+
+```yaml
 - id: size_small
   type: AutoComplete
   properties:
@@ -71,6 +78,15 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
+
+```yaml
 - id: allow_clear_true
   type: AutoComplete
   properties:
@@ -91,6 +107,13 @@ Text input with auto-complete suggestions from a list of options.
       - Option A
       - Option B
       - Option C
+```
+
+```yaml
+allow_clear_true:
+  _state: allow_clear_true
+allow_clear_false:
+  _state: allow_clear_false
 ```
 
 ```yaml
@@ -123,6 +146,13 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+backfill_enabled:
+  _state: backfill_enabled
+backfill_disabled:
+  _state: backfill_disabled
+```
+
+```yaml
 - id: default_open_true
   type: AutoComplete
   properties:
@@ -135,6 +165,11 @@ Text input with auto-complete suggestions from a list of options.
       - Blue
       - Yellow
       - Purple
+```
+
+```yaml
+default_open_true:
+  _state: default_open_true
 ```
 
 ```yaml
@@ -159,6 +194,13 @@ Text input with auto-complete suggestions from a list of options.
       - Beta
       - Gamma
       - Delta
+```
+
+```yaml
+placeholder_custom:
+  _state: placeholder_custom
+placeholder_default:
+  _state: placeholder_default
 ```
 
 ```yaml
@@ -195,6 +237,15 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+variant_outlined:
+  _state: variant_outlined
+variant_filled:
+  _state: variant_filled
+variant_borderless:
+  _state: variant_borderless
+```
+
+```yaml
 - id: disabled_true
   type: AutoComplete
   properties:
@@ -218,6 +269,13 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+disabled_true:
+  _state: disabled_true
+disabled_false:
+  _state: disabled_false
+```
+
+```yaml
 - id: autofocus_true
   type: AutoComplete
   properties:
@@ -231,6 +289,11 @@ Text input with auto-complete suggestions from a list of options.
       - Mars
       - Jupiter
       - Saturn
+```
+
+```yaml
+autofocus_true:
+  _state: autofocus_true
 ```
 
 ```yaml
@@ -279,6 +342,11 @@ Text input with auto-complete suggestions from a list of options.
       - TypeScript
       - VBA
       - Zig
+```
+
+```yaml
+many_options:
+  _state: many_options
 ```
 
 ```yaml
@@ -357,6 +425,19 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+label_title:
+  _state: label_title
+label_extra:
+  _state: label_extra
+label_no_colon:
+  _state: label_no_colon
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+```
+
+```yaml
 - id: label_hidden
   type: AutoComplete
   properties:
@@ -378,6 +459,13 @@ Text input with auto-complete suggestions from a list of options.
       - First
       - Second
       - Third
+```
+
+```yaml
+label_hidden:
+  _state: label_hidden
+label_hidden_large:
+  _state: label_hidden_large
 ```
 
 ```yaml
@@ -420,6 +508,15 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+style_element:
+  _state: style_element
+style_background:
+  _state: style_background
+style_label:
+  _state: style_label
+```
+
+```yaml
 - id: class_element
   type: AutoComplete
   class:
@@ -431,6 +528,11 @@ Text input with auto-complete suggestions from a list of options.
       - JavaScript
       - TypeScript
       - Python
+```
+
+```yaml
+class_element:
+  _state: class_element
 ```
 
 ```yaml
@@ -524,6 +626,23 @@ Text input with auto-complete suggestions from a list of options.
 ```
 
 ```yaml
+theme_border_radius:
+  _state: theme_border_radius
+theme_font_size:
+  _state: theme_font_size
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_option_selected:
+  _state: theme_option_selected
+theme_option_height:
+  _state: theme_option_height
+theme_control_height:
+  _state: theme_control_height
+theme_combined:
+  _state: theme_combined
+```
+
+```yaml
 - id: disabled_small
   type: AutoComplete
   properties:
@@ -553,6 +672,15 @@ Text input with auto-complete suggestions from a list of options.
     options:
       - Alpha
       - Beta
+```
+
+```yaml
+disabled_small:
+  _state: disabled_small
+disabled_default:
+  _state: disabled_default
+disabled_large:
+  _state: disabled_large
 ```
 
 ```yaml
@@ -588,6 +716,15 @@ Text input with auto-complete suggestions from a list of options.
       - One
       - Two
       - Three
+```
+
+```yaml
+filled_small:
+  _state: filled_small
+filled_default:
+  _state: filled_default
+filled_large:
+  _state: filled_large
 ```
 
 ```yaml
@@ -642,6 +779,65 @@ Text input with auto-complete suggestions from a list of options.
                       - "Searching for: "
                       - _state: applied_search_input
                   else: Please enter a search term
+```
+
+```yaml
+- id: applied_search_form
+  type: Card
+  properties:
+    title: Product Search
+  blocks:
+    - id: applied_search_input
+      type: AutoComplete
+      properties:
+        title: Search Products
+        placeholder: Start typing a product name...
+        size: large
+        options:
+          - MacBook Pro 16"
+          - MacBook Air M3
+          - iPad Pro 13"
+          - iPhone 16 Pro
+          - Apple Watch Ultra
+          - AirPods Pro
+      events:
+        onChange:
+          - id: search_message
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - "Searching for: "
+                  - _state: applied_search_input
+              duration: 1
+    - id: applied_search_button
+      type: Button
+      properties:
+        title: Search
+        icon: AiOutlineSearch
+        type: primary
+        size: large
+      events:
+        onClick:
+          - id: search_action
+            type: DisplayMessage
+            params:
+              content:
+                _if:
+                  test:
+                    _ne:
+                      - _state: applied_search_input
+                      - null
+                  then:
+                    _string.concat:
+                      - "Searching for: "
+                      - _state: applied_search_input
+                  else: Please enter a search term
+```
+
+```yaml
+applied_search_form:
+  _state: applied_search_form
 ```
 
 ```yaml
@@ -700,6 +896,11 @@ Text input with auto-complete suggestions from a list of options.
             params:
               content: Profile saved successfully
               status: success
+```
+
+```yaml
+applied_profile_card:
+  _state: applied_profile_card
 ```
 
 | Property | Type | Default | Description |
@@ -767,10 +968,10 @@ Text input with auto-complete suggestions from a list of options.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when selector loses focus. |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: string }` | Trigger actions when selection is changed. |
 | `onFocus` | \- | Trigger action when an selector gets focus. |
 | `onClear` | \- | Trigger action when selector gets cleared. |
-| `onSearch` | `{ value }` | Called when searching items. |
+| `onSearch` | `{ value: string }` | Called when searching items. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

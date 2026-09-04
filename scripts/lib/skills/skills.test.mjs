@@ -23,16 +23,16 @@ import path from 'node:path';
 import { test } from 'node:test';
 
 import collectSkillMetrics, { formatSkillMetrics } from './collectSkillMetrics.mjs';
-import { firstParagraph } from './createDocsResolver.mjs';
 import { trimGalleryExample } from './createPluginTypesResolver.mjs';
 import generateSkills from './generateSkills.mjs';
-import { countSkillLines, parseFrontmatter } from './skillFile.mjs';
+import { parseFrontmatter } from './skillFile.mjs';
+
+const VERSION = '9.9.9';
 
 const docs = {
   'concepts/lists': {
     slug: 'concepts/lists',
     title: 'Lists',
-    firstParagraph: 'List category blocks render multiple content areas.',
   },
 };
 
@@ -86,6 +86,7 @@ function createStore(initial = {}) {
 
 const manifest = {
   'lowdefy-lists': {
+    kind: 'reference',
     description: 'Use when repeating blocks.',
     title: 'List blocks',
     docSlugs: ['concepts/lists'],
@@ -96,56 +97,111 @@ const manifest = {
 
 test('generateSkills creates a skill with frontmatter, generated reference and recipe stub', async () => {
   const store = createStore();
-  const results = await generateSkills({ manifest, ...createFakes(), ...store });
+  const results = await generateSkills({ manifest, version: VERSION, ...createFakes(), ...store });
   assert.deepEqual(results, [{ name: 'lowdefy-lists', action: 'created' }]);
   const content = store.files['lowdefy-lists'];
   assert.deepEqual(parseFrontmatter(content), {
     name: 'lowdefy-lists',
     description: 'Use when repeating blocks.',
+    kind: 'reference',
+    lowdefyVersion: VERSION,
   });
   assert.match(content, /^# List blocks$/m);
   assert.match(content, /<!-- generated:reference:start -->/);
-  assert.match(content, /`\/lowdefy-docs\/content\/concepts\/lists`/);
-  assert.match(content, /\| `direction` \| string \| {2}\| `"vertical"` \| Dir\. \|/);
-  assert.match(content, /- `onClick`: Clicked\./);
-  assert.match(content, /```yaml\n- id: list\n {2}type: List\n```/);
-  assert.match(content, /\| `test` \| boolean \| yes \| {2}\| Condition\. \|/);
   assert.match(content, /## Recipe\n\nMust cover: list ids\.\n$/);
+});
+
+test('the generated Reference is an index of slugs and type names, not a copy of the schemas', async () => {
+  const store = createStore();
+  await generateSkills({ manifest, version: VERSION, ...createFakes(), ...store });
+  const content = store.files['lowdefy-lists'];
+  assert.match(content, /`lowdefy_get_doc` by slug .*: `concepts\/lists`\./);
+  assert.match(content, /### Blocks\n\n.*`List` \(`@lowdefy\/blocks-basic`\)\./);
+  assert.match(content, /### Operators\n\n.*`_if` \(`@lowdefy\/operators-js`\)\./);
+  // None of the live-schema detail is restated: no property tables, events or example yaml.
+  assert.doesNotMatch(content, /direction/);
+  assert.doesNotMatch(content, /onClick/);
+  assert.doesNotMatch(content, /```yaml/);
+  assert.doesNotMatch(content, /Condition\./);
+});
+
+test('generateSkills rewrites the frontmatter so a version bump reaches an existing skill', async () => {
+  const store = createStore();
+  await generateSkills({ manifest, version: '1.0.0', ...createFakes(), ...store });
+  const results = await generateSkills({ manifest, version: '2.0.0', ...createFakes(), ...store });
+  assert.deepEqual(results, [{ name: 'lowdefy-lists', action: 'updated' }]);
+  assert.equal(parseFrontmatter(store.files['lowdefy-lists']).lowdefyVersion, '2.0.0');
+});
+
+test('generateSkills requires a version to stamp', async () => {
+  await assert.rejects(
+    generateSkills({ manifest, ...createFakes(), ...createStore() }),
+    /generateSkills requires the framework version/
+  );
+});
+
+test('generateSkills rejects an entry without a recipe|reference kind', async () => {
+  const broken = { 'lowdefy-broken': { ...manifest['lowdefy-lists'], kind: 'guide' } };
+  await assert.rejects(
+    generateSkills({ manifest: broken, version: VERSION, ...createFakes(), ...createStore() }),
+    /Skill "lowdefy-broken": kind must be one of recipe \| reference/
+  );
 });
 
 test('generateSkills is deterministic and idempotent', async () => {
   const first = createStore();
-  await generateSkills({ manifest, ...createFakes(), ...first });
+  await generateSkills({ manifest, version: VERSION, ...createFakes(), ...first });
   const second = createStore();
-  await generateSkills({ manifest, ...createFakes(), ...second });
+  await generateSkills({ manifest, version: VERSION, ...createFakes(), ...second });
   assert.equal(first.files['lowdefy-lists'], second.files['lowdefy-lists']);
 
-  const rerun = await generateSkills({ manifest, ...createFakes(), ...first });
+  const rerun = await generateSkills({ manifest, version: VERSION, ...createFakes(), ...first });
   assert.deepEqual(rerun, [{ name: 'lowdefy-lists', action: 'unchanged' }]);
   assert.equal(first.files['lowdefy-lists'], second.files['lowdefy-lists']);
 });
 
 test('generateSkills preserves hand-written content outside the markers byte-for-byte', async () => {
   const store = createStore();
-  await generateSkills({ manifest, ...createFakes(), ...store });
+  await generateSkills({ manifest, version: VERSION, ...createFakes(), ...store });
   const edited = store.files['lowdefy-lists']
     .replace('# List blocks', '# List blocks\n\nA hand-written intro.')
     .replace('Must cover: list ids.', '### Step 1\n\nWrite the list.\n\n### Step 2\n\nDone.');
   store.files['lowdefy-lists'] = edited;
 
-  const results = await generateSkills({ manifest, ...createFakes(), ...store });
+  const results = await generateSkills({ manifest, version: VERSION, ...createFakes(), ...store });
   assert.deepEqual(results, [{ name: 'lowdefy-lists', action: 'unchanged' }]);
   assert.equal(store.files['lowdefy-lists'], edited);
 
+  // A Recipe that talks about the markers themselves is still only text below them.
+  const withLookalikes = store.files['lowdefy-lists'].replace(
+    '### Step 2\n\nDone.',
+    '### Step 2\n\nNever edit between `<!-- generated:reference:start -->` and\n`<!-- generated:reference:end -->`; the generator owns that region.'
+  );
+  store.files['lowdefy-lists'] = withLookalikes;
+  assert.deepEqual(
+    await generateSkills({ manifest, version: VERSION, ...createFakes(), ...store }),
+    [{ name: 'lowdefy-lists', action: 'unchanged' }]
+  );
+  assert.equal(store.files['lowdefy-lists'], withLookalikes);
+  store.files['lowdefy-lists'] = edited;
+
   // A changed source rewrites only the generated region.
-  docs['concepts/lists'].firstParagraph = 'Changed paragraph.';
-  const updated = await generateSkills({ manifest, ...createFakes(), ...store });
+  const withMoreDocs = {
+    'lowdefy-lists': { ...manifest['lowdefy-lists'], docSlugs: ['concepts/lists', 'concepts/x'] },
+  };
+  docs['concepts/x'] = { slug: 'concepts/x', title: 'X' };
+  const updated = await generateSkills({
+    manifest: withMoreDocs,
+    version: VERSION,
+    ...createFakes(),
+    ...store,
+  });
   assert.deepEqual(updated, [{ name: 'lowdefy-lists', action: 'updated' }]);
   const content = store.files['lowdefy-lists'];
-  assert.match(content, /Changed paragraph\./);
+  assert.match(content, /`concepts\/lists`, `concepts\/x`\./);
   assert.match(content, /A hand-written intro\./);
   assert.match(content, /### Step 2\n\nDone\.\n$/);
-  docs['concepts/lists'].firstParagraph = 'List category blocks render multiple content areas.';
+  delete docs['concepts/x'];
 });
 
 test('generateSkills fails naming the entry when a doc slug is missing', async () => {
@@ -154,7 +210,7 @@ test('generateSkills fails naming the entry when a doc slug is missing', async (
   };
   const store = createStore();
   await assert.rejects(
-    generateSkills({ manifest: broken, ...createFakes(), ...store }),
+    generateSkills({ manifest: broken, version: VERSION, ...createFakes(), ...store }),
     (error) =>
       error.message.includes('Skill "lowdefy-broken"') &&
       error.message.includes('doc slug "concepts/renamed-page" is not in @lowdefy/docs-content')
@@ -170,7 +226,7 @@ test('generateSkills fails naming the entry and every missing type', async () =>
     },
   };
   await assert.rejects(
-    generateSkills({ manifest: broken, ...createFakes(), ...createStore() }),
+    generateSkills({ manifest: broken, version: VERSION, ...createFakes(), ...createStore() }),
     (error) =>
       error.message.includes('Skill "lowdefy-broken"') &&
       error.message.includes('blocks type "Lisst"') &&
@@ -183,14 +239,9 @@ test('generateSkills rejects a description that does not start with "Use when"',
     'lowdefy-broken': { ...manifest['lowdefy-lists'], description: 'Lists things.' },
   };
   await assert.rejects(
-    generateSkills({ manifest: broken, ...createFakes(), ...createStore() }),
+    generateSkills({ manifest: broken, version: VERSION, ...createFakes(), ...createStore() }),
     /Skill "lowdefy-broken": description must start with "Use when"/
   );
-});
-
-test('firstParagraph skips the title, blockquotes, headings and code fences', () => {
-  const markdown = `# _js\n\n> Experimental.\n\n\`\`\`\n(function: string): any\n\`\`\`\n\nThe \`_js\` operator enables\ncustom JavaScript.\n\nSecond paragraph.`;
-  assert.equal(firstParagraph(markdown), 'The `_js` operator enables custom JavaScript.');
 });
 
 test('trimGalleryExample returns the first block of the first section, dedented', () => {
@@ -202,36 +253,15 @@ test('trimGalleryExample returns the first block of the first section, dedented'
   assert.equal(trimGalleryExample('- title: Empty\n'), null);
 });
 
-test('countSkillLines splits total, generated and recipe lines', () => {
-  const content = [
-    '---',
-    'name: x',
-    'description: Use when x.',
-    '---',
-    '',
-    '# X',
-    '',
-    '<!-- generated:reference:start -->',
-    '## Reference',
-    'a',
-    '<!-- generated:reference:end -->',
-    '',
-    '## Recipe',
-    '',
-    'Do this.',
-    '',
-  ].join('\n');
-  assert.deepEqual(countSkillLines(content), { total: 15, generated: 4, recipe: 3 });
-});
-
-test('collectSkillMetrics prints one row per skill directory and a total', () => {
+test('collectSkillMetrics reports each skill kind and counts the recipe skills', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-skill-metrics-'));
   try {
-    for (const name of ['lowdefy-b', 'lowdefy-a']) {
+    const kinds = { 'lowdefy-b': 'recipe', 'lowdefy-a': 'reference', 'lowdefy-c': 'recipe' };
+    for (const [name, kind] of Object.entries(kinds)) {
       fs.mkdirSync(path.join(directory, name));
       fs.writeFileSync(
         path.join(directory, name, 'SKILL.md'),
-        '---\nname: n\n---\n<!-- generated:reference:start -->\nx\n<!-- generated:reference:end -->\n## Recipe\nr\n'
+        `---\nname: ${name}\ndescription: Use when x.\nkind: ${kind}\nlowdefyVersion: 9.9.9\n---\n\n# X\n`
       );
     }
     fs.mkdirSync(path.join(directory, 'not-a-skill'));
@@ -239,13 +269,12 @@ test('collectSkillMetrics prints one row per skill directory and a total', () =>
 
     const metrics = collectSkillMetrics({ skillsDirectory: directory });
     assert.deepEqual(metrics.rows, [
-      { name: 'lowdefy-a', total: 8, generated: 3, recipe: 2 },
-      { name: 'lowdefy-b', total: 8, generated: 3, recipe: 2 },
+      { name: 'lowdefy-a', kind: 'reference', lowdefyVersion: '9.9.9' },
+      { name: 'lowdefy-b', kind: 'recipe', lowdefyVersion: '9.9.9' },
+      { name: 'lowdefy-c', kind: 'recipe', lowdefyVersion: '9.9.9' },
     ]);
-    assert.deepEqual(metrics.total, { total: 16, generated: 6, recipe: 4 });
-    const output = formatSkillMetrics(metrics);
-    assert.equal(output.split('\n').length, 4);
-    assert.match(output, /total \(2 skills\)/);
+    assert.deepEqual(metrics.recipes, ['lowdefy-b', 'lowdefy-c']);
+    assert.match(formatSkillMetrics(metrics), /recipe skills: 2 of 3/);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }

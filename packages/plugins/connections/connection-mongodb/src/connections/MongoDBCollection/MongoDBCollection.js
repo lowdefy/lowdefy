@@ -16,6 +16,7 @@
 
 import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
 import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
+import MongoDBCreateIndexes from './MongoDBCreateIndexes/MongoDBCreateIndexes.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
@@ -47,6 +48,7 @@ export default {
   requests: {
     MongoDBAggregation,
     MongoDBBulkWrite,
+    MongoDBCreateIndexes,
     MongoDBDeleteMany,
     MongoDBDeleteOne,
     MongoDBFind,

@@ -39,12 +39,35 @@ function isOpenArray(node) {
   return node.type === 'array';
 }
 
+// An `items` schema is as good a declaration of arrayness as `type: array`.
+function isArrayNode(node) {
+  return isOpenArray(node) || !type.isNone(node.items);
+}
+
+// The property names declared at a node, including those its combinator
+// branches declare, for a "did you mean" suggestion beside a failing segment.
+function candidateKeys(node) {
+  if (!type.isObject(node)) return [];
+  const keys = new Set(Object.keys(node.properties ?? {}));
+  ['anyOf', 'oneOf', 'allOf'].forEach((combinator) => {
+    if (!type.isArray(node[combinator])) return;
+    node[combinator].forEach((branch) => {
+      candidateKeys(branch).forEach((key) => keys.add(key));
+    });
+  });
+  return [...keys].sort();
+}
+
 // One navigation step: the sub-schema that governs `segment` inside `node`,
 // or null when the schema says no such member exists.
 function stepInto(node, segment) {
   if (!type.isObject(node)) return null;
   if (type.isObject(node.properties) && Object.hasOwn(node.properties, segment)) {
     return node.properties[segment];
+  }
+  // `.length` is a valid read on any array, as it is in the expression grammar.
+  if (segment === 'length' && isArrayNode(node)) {
+    return { type: 'integer' };
   }
   if (isIndexSegment(segment)) {
     if (type.isObject(node.items)) return node.items;
@@ -67,6 +90,10 @@ function stepInto(node, segment) {
   if (type.isObject(node.additionalProperties)) {
     return node.additionalProperties;
   }
+  // `additionalProperties: true` opens the node beside its declared members.
+  if (node.additionalProperties === true) {
+    return {};
+  }
   // A declared `properties` map is the complete member list. Without one, an
   // object-typed (or untyped) fragment leaves its members open.
   if (type.isNone(node.properties) && isOpenObject(node)) {
@@ -79,14 +106,30 @@ function stepInto(node, segment) {
 // `items`, `additionalProperties` and combinator branches. Returns the
 // sub-schema at the path ({} when the schema leaves that part open) or null
 // when the path is not part of the schema.
-function getSchemaAtPath({ schema, path }) {
+//
+// `explain: true` returns { resolved, declared, segment, candidates } instead,
+// which is what a build check needs to say which segment failed and what was
+// declared beside it. One walker, so a path that resolves against a page state
+// contract also resolves against a responseSchema or an event payload.
+function getSchemaAtPath({ schema, path, explain = false }) {
   const segments = splitSchemaPath(path);
   let node = schema;
   for (const segment of segments) {
-    node = stepInto(node, segment);
-    if (node === null) return null;
+    const next = stepInto(node, segment);
+    if (next === null) {
+      if (!explain) return null;
+      return {
+        resolved: false,
+        declared: candidateKeys(schema),
+        segment,
+        candidates: candidateKeys(node),
+      };
+    }
+    node = next;
   }
-  return type.isObject(node) ? node : null;
+  const resolved = type.isObject(node) ? node : null;
+  if (!explain) return resolved;
+  return { resolved: resolved !== null, declared: candidateKeys(schema), schema: resolved };
 }
 
 export default getSchemaAtPath;

@@ -58,7 +58,7 @@ _ref:
                 - `class: string | array | object`: CSS class names to apply to the block. Supports Tailwind CSS utility classes. __Operators are evaluated__.
                 - `style: css object`: Inline CSS styles. Flat CSS targets the layout wrapper. Use `.`-prefixed keys (e.g. `.element`, `.header`, `.body`) to target specific block parts. __Operators are evaluated__.
                 - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
-                - `visible: boolean`: Controls whether or not to render a block. Operators are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`. __Operators are evaluated__.
+                - `visible: boolean`: Controls whether or not to render a block. Operators are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`, so the value is removed rather than hidden — style the block hidden instead (for example `style: { display: none }`) to keep its value in `state`. __Operators are evaluated__.
 
                 ## Block types
 

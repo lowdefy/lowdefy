@@ -31,8 +31,22 @@ const collections = {
   },
 };
 
-function run(properties) {
-  return listPage({ properties, pageId: 'controls', collections, configKey: 'k1' });
+const typedCollections = {
+  events: {
+    fields: {
+      _id: { type: 'string' },
+      name: { type: 'string' },
+      occurred_at: { instanceof: 'Date' },
+      count: { type: 'number' },
+      archived: { type: 'boolean' },
+      card: { type: 'string' },
+    },
+    connections: [{ connectionId: 'events', read: true }],
+  },
+};
+
+function run(properties, slots) {
+  return listPage({ properties, slots, pageId: 'controls', collections, configKey: 'k1' });
 }
 
 test('listPage emits a layout, one list request and the block tree', () => {
@@ -126,7 +140,7 @@ test('listPage renders an enum filter as a Selector and a text filter as a TextI
   expect(framework.events.onPressEnter).toBeDefined();
 });
 
-test('listPage renders an enum column as a Tag and a text column as Html', () => {
+test('listPage renders a string column as a labelled Paragraph and an enum column as a Tag', () => {
   const result = run({
     collection: 'controls',
     columns: ['title', 'description', 'status'],
@@ -136,12 +150,75 @@ test('listPage renders an enum column as a Tag and a text column as Html', () =>
   // First column is the card title.
   expect(card.properties.title).toEqual({ _request: 'list.$.title' });
   const cells = card.blocks;
-  const description = cells.find((c) => c.id === 'rows.$.description');
-  const status = cells.find((c) => c.id === 'rows.$.status');
-  expect(description.type).toBe('Html');
-  expect(description.properties.html).toEqual({ _request: 'list.$.description' });
-  expect(status.type).toBe('Tag');
-  expect(status.properties.title).toEqual({ _request: 'list.$.status' });
+  const description = cells.find((c) => c.id === 'rows.$.cell_description');
+  const status = cells.find((c) => c.id === 'rows.$.cell_status');
+  expect(description.type).toBe('Label');
+  expect(description.properties.title).toBe('Description');
+  expect(description.blocks[0].type).toBe('Paragraph');
+  expect(description.blocks[0].properties.content).toEqual({ _request: 'list.$.description' });
+  expect(status.type).toBe('Label');
+  expect(status.properties.title).toBe('Status');
+  expect(status.blocks[0].type).toBe('Tag');
+  expect(status.blocks[0].properties.title).toEqual({ _request: 'list.$.status' });
+});
+
+test('listPage formats a date column with _intl.dateTimeFormat and guards a missing value', () => {
+  const result = listPage({
+    properties: { collection: 'events', columns: ['name', 'occurred_at'] },
+    pageId: 'events',
+    collections: typedCollections,
+    configKey: 'k1',
+  });
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  const cell = card.blocks.find((c) => c.id === 'rows.$.cell_occurred_at');
+  expect(cell.properties.title).toBe('Occurred At');
+  expect(cell.blocks[0].properties.content._if.else).toEqual({
+    '_intl.dateTimeFormat': {
+      on: { _request: 'list.$.occurred_at' },
+      options: { dateStyle: 'medium' },
+    },
+  });
+  expect(cell.blocks[0].properties.content._if.then).toBe(null);
+});
+
+test('listPage formats a number column with _intl.numberFormat', () => {
+  const result = listPage({
+    properties: { collection: 'events', columns: ['name', 'count'] },
+    pageId: 'events',
+    collections: typedCollections,
+    configKey: 'k1',
+  });
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  const cell = card.blocks.find((c) => c.id === 'rows.$.cell_count');
+  expect(cell.blocks[0].properties.content._if.else).toEqual({
+    '_intl.numberFormat': { on: { _request: 'list.$.count' } },
+  });
+});
+
+test('listPage renders a boolean column as Yes/No rather than a blank cell', () => {
+  const result = listPage({
+    properties: { collection: 'events', columns: ['name', 'archived'] },
+    pageId: 'events',
+    collections: typedCollections,
+    configKey: 'k1',
+  });
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  const cell = card.blocks.find((c) => c.id === 'rows.$.cell_archived');
+  expect(cell.blocks[0].properties.content._if.else).toEqual({
+    _if: { test: { _request: 'list.$.archived' }, then: 'Yes', else: 'No' },
+  });
+});
+
+test('listPage namespaces generated cell ids so a field named card cannot collide', () => {
+  const result = listPage({
+    properties: { collection: 'events', columns: ['name', 'card'] },
+    pageId: 'events',
+    collections: typedCollections,
+    configKey: 'k1',
+  });
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  expect(card.id).toBe('rows.$.card');
+  expect(card.blocks.map((block) => block.id)).toEqual(['rows.$.cell_card']);
 });
 
 test('listPage turns a $field rowLink token into a _request row read', () => {
@@ -162,6 +239,21 @@ test('listPage turns a $field rowLink token into a _request row read', () => {
   });
 });
 
+test('listPage defaults sort to the first declared date field, descending', () => {
+  const result = listPage({
+    properties: { collection: 'events', columns: ['name'] },
+    pageId: 'events',
+    collections: typedCollections,
+    configKey: 'k1',
+  });
+  expect(result.requests[0].properties.options.sort).toEqual({ occurred_at: -1 });
+});
+
+test('listPage defaults sort to _id descending when the collection declares no date field', () => {
+  const result = run({ collection: 'controls', columns: ['title'] });
+  expect(result.requests[0].properties.options.sort).toEqual({ _id: -1 });
+});
+
 test('listPage defaults columns to every declared field', () => {
   const result = run({ collection: 'controls' });
   expect(result.requests[0].properties.options.projection).toMatchObject({
@@ -173,13 +265,72 @@ test('listPage defaults columns to every declared field', () => {
   });
 });
 
-test('listPage emits a Result empty state and a per-list skeleton', () => {
+test('listPage gates the empty state on the list request succeeding and being empty', () => {
   const result = run({ collection: 'controls', columns: ['title'] });
   const empty = result.blocks.find((b) => b.id === 'empty');
   expect(empty.type).toBe('Result');
-  expect(empty.visible._and).toHaveLength(2);
+  expect(empty.visible._and).toEqual([
+    { _get: { key: 'success', from: { _request: { key: 'list', status: true } } } },
+    { _get: { key: 'empty', from: { _request: { key: 'list', status: true } } } },
+  ]);
   const rows = result.blocks.find((b) => b.id === 'rows');
   expect(rows.skeleton.blocks[0].type).toBe('Skeleton');
+});
+
+test('listPage emits an error Result carrying the message and a retry button', () => {
+  const result = run({ collection: 'controls', columns: ['title'] });
+  const error = result.blocks.find((b) => b.id === 'load_error');
+  expect(error.type).toBe('Result');
+  expect(error.properties.status).toBe('error');
+  expect(error.properties.subTitle).toEqual({
+    _get: { key: 'error', from: { _request: { key: 'list', status: true } } },
+  });
+  expect(error.visible).toEqual({
+    _not: {
+      _type: {
+        type: 'none',
+        on: { _get: { key: 'error', from: { _request: { key: 'list', status: true } } } },
+      },
+    },
+  });
+  const retry = error.slots.extra.blocks[0];
+  expect(retry.id).toBe('retry_list');
+  expect(retry.events.onClick).toContainEqual({
+    id: 'reload_list',
+    type: 'Request',
+    params: 'list',
+  });
+});
+
+test('listPage places the header, rowActions and footer slots', () => {
+  const headerBlock = { id: 'export', type: 'Button', properties: { title: 'Export' } };
+  const rowActionBlock = { id: 'rows.$.edit', type: 'Button', properties: { title: 'Edit' } };
+  const footerBlock = { id: 'note', type: 'Paragraph', properties: { content: 'note' } };
+  const result = run(
+    { collection: 'controls', columns: ['title', 'status'] },
+    {
+      header: { blocks: [headerBlock] },
+      rowActions: { blocks: [rowActionBlock] },
+      footer: { blocks: [footerBlock] },
+    }
+  );
+  expect(result.blocks.find((b) => b.id === 'header').blocks).toContain(headerBlock);
+  const card = result.blocks.find((b) => b.id === 'rows').blocks[0];
+  const rowActions = card.blocks.find((b) => b.id === 'rows.$.row_actions');
+  expect(rowActions.blocks).toEqual([rowActionBlock]);
+  expect(result.blocks[result.blocks.length - 1]).toBe(footerBlock);
+});
+
+test('listPage rejects a slot that is not an object with a blocks list', () => {
+  expect(() => run({ collection: 'controls', columns: ['title'] }, { footer: [] })).toThrow(
+    /slot "footer" must be an object with a "blocks" list/
+  );
+});
+
+test('listPage rejects an unknown slot name', () => {
+  expect(() =>
+    run({ collection: 'controls', columns: ['title'] }, { headr: { blocks: [] } })
+  ).toThrow(/has no slot "headr". ListPage slots: header, rowActions, footer/);
 });
 
 test('listPage throws when the collection is not declared', () => {

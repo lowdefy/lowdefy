@@ -18,13 +18,18 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
+import { validate } from '@lowdefy/ajv';
 import { ConfigError } from '@lowdefy/errors';
+import { listConfigFiles } from '@lowdefy/node-utils';
+
+import migrationFileSchema from './migrationFileSchema.js';
 
 const MIGRATION_FILE = /\.ya?ml$/;
 
-// The id is the filename stem, so ordering is lexical on the id and the id is
-// the ledger key (design D3). The checksum is over the raw file text — the
-// thing the author edits — so an edit to an applied migration is detectable.
+// The id is the path below migrations/ without the extension, so ordering is
+// lexical on the id and the id is the ledger key (design D3). The checksum is
+// over the raw file text — the thing the author edits — so an edit to an
+// applied migration is detectable.
 function migrationIdFromFileName(fileName) {
   return fileName.replace(MIGRATION_FILE, '');
 }
@@ -33,43 +38,28 @@ function checksumOf(text) {
   return crypto.createHash('sha256').update(text).digest('hex').slice(0, 16);
 }
 
-// Discovers migrations/*.yaml from the config directory, sorted lexically on
-// the id. Reads and checksums the raw text and parses the routine, but does no
-// routine validation — buildMigrations runs each routine through buildRoutine
-// so a migration gets the same step and control checks an endpoint gets.
-// `_ref` inside a migration is not supported (design §3.1): a migration is a
-// self-contained, checksummable unit.
+// Discovers migrations/**/*.yaml from the config directory through the shared
+// discovery rule (listConfigFiles): recursive, byte-sorted, skipping "_" and
+// "." prefixed names. Reads and checksums the raw text and parses the routine,
+// but does no routine validation — buildMigrations runs each routine through
+// buildRoutine so a migration gets the same step and control checks an
+// endpoint gets. `_ref` inside a migration is not supported (design §3.1): a
+// migration is a self-contained, checksummable unit.
 async function collectMigrationFiles({ directories }) {
   const migrationsDir = path.resolve(directories.config, 'migrations');
-  let entries;
-  try {
-    entries = await fs.readdir(migrationsDir, { withFileTypes: true });
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return [];
-    }
-    throw error;
-  }
-  // Plain code-unit sort (not localeCompare): migration order must be
-  // byte-deterministic across machines and locales — the same reason lockfiles
-  // sort plainly.
-  const fileNames = entries
-    .filter((entry) => entry.isFile() && MIGRATION_FILE.test(entry.name))
-    .map((entry) => entry.name)
-    .sort();
+  const files = listConfigFiles({ directory: migrationsDir });
 
   const migrations = [];
   const fileNameById = {};
-  for (const fileName of fileNames) {
-    const filePath = path.join(migrationsDir, fileName);
+  for (const { fileName, filePath } of files) {
     const text = await fs.readFile(filePath, 'utf8');
     const id = migrationIdFromFileName(fileName);
     // "a.yaml" and "a.yml" would share the ledger key "a"; two files answering
     // to one id makes the applied/pending decision ambiguous, so reject it.
     if (fileNameById[id] !== undefined) {
       throw new ConfigError(
-        `Migration id "${id}" is declared by two files: "${fileNameById[id]}" and "${fileName}". Migration ids are filename stems and must be unique.`,
-        { checkSlug: 'migrations' }
+        `Migration id "${id}" is declared by two files: "${fileNameById[id]}" and "${fileName}". Migration ids are file paths below migrations/ without the extension, and must be unique.`,
+        { checkSlug: 'migration-files' }
       );
     }
     fileNameById[id] = fileName;
@@ -78,7 +68,17 @@ async function collectMigrationFiles({ directories }) {
       parsed = YAML.parse(text);
     } catch (error) {
       throw new ConfigError(`Migration "${id}" is not valid YAML: ${error.message}`, {
-        checkSlug: 'migrations',
+        checkSlug: 'migration-files',
+      });
+    }
+    const { valid, errors } = validate({
+      schema: migrationFileSchema,
+      data: parsed,
+      returnErrors: true,
+    });
+    if (!valid) {
+      throw new ConfigError(`Migration "${id}" is invalid: ${errors[0].message}.`, {
+        checkSlug: 'migration-files',
       });
     }
     migrations.push({

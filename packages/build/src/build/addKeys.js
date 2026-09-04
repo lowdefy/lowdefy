@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
+import findSimilarString from '../utils/findSimilarString.js';
 import makeId from '../utils/makeId.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
@@ -110,31 +111,38 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
 
-    // Handle ~ignoreBuildChecks property
+    // ~ignoreBuildChecks is validated here and nowhere else: the key is deleted
+    // from the config below, before testSchema reads the JSON schema.
     if (object['~ignoreBuildChecks'] !== undefined) {
       const checks = object['~ignoreBuildChecks'];
+      const validSlugs = Object.keys(VALID_CHECK_SLUGS);
 
       if (Array.isArray(checks)) {
-        const validSlugs = Object.keys(VALID_CHECK_SLUGS);
         const invalid = checks.filter((slug) => !validSlugs.includes(slug));
-        if (invalid.length > 0) {
+        invalid.forEach((slug) => {
+          let message = `Invalid check slug "${slug}" in ~ignoreBuildChecks.`;
+          const suggestion = findSimilarString({ input: slug, candidates: validSlugs });
+          if (suggestion) {
+            message += ` Did you mean "${suggestion}"?`;
+          }
+          message += ` Valid slugs: ${validSlugs.join(', ')}.`;
           collectExceptions(
             context,
-            new ConfigError(
-              `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(
-                ', '
-              )}`,
-              { configKey: keyMapId }
-            )
+            new ConfigError(message, { received: slug, configKey: keyMapId })
           );
-        }
-      } else if (checks !== true) {
+        });
+      } else {
         collectExceptions(
           context,
-          new ConfigError('~ignoreBuildChecks must be true or an array of check slugs.', {
-            received: checks,
-            configKey: keyMapId,
-          })
+          new ConfigError(
+            `~ignoreBuildChecks must be an array of check slugs. Valid slugs: ${validSlugs.join(
+              ', '
+            )}.`,
+            {
+              received: checks,
+              configKey: keyMapId,
+            }
+          )
         );
       }
 

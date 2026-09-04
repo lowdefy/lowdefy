@@ -41,6 +41,15 @@ export const SERVER_JS_PARAMS = [
   'user',
 ];
 
+// A body written for one prototype and used at the other position fails
+// silently at runtime, so the lint names the environment whose prototype does
+// provide a name the current environment's does not.
+export function parameterEnvironment(name) {
+  if (CLIENT_JS_PARAMS.includes(name)) return 'client';
+  if (SERVER_JS_PARAMS.includes(name)) return 'server';
+  return undefined;
+}
+
 function toPrototype(params) {
   return `{ ${params.join(', ')} }`;
 }

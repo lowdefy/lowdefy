@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
+import { MongoError } from 'mongodb';
 import { ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
-
-const DRIVER_ERROR_NAMES = new Set(['MongoServerError', 'MongoError']);
 
 // The keys of keyPattern name the indexed fields. keyValue is never read here -
 // it holds the caller's document values, which must not reach the browser.
@@ -100,7 +99,11 @@ function mapMongoError(error, { connection, requestType }) {
   if (ServiceError.isServiceError(error)) return error;
   // A ConfigError or other Lowdefy error the request threw itself.
   if (error.isLowdefyError === true) return error;
-  if (!DRIVER_ERROR_NAMES.has(error.name)) return error;
+  // `error.name` is the concrete subclass, so a name set silently misses
+  // MongoBulkWriteError (insertMany, bulkWrite), MongoWriteConcernError and
+  // every future subclass - exactly the writes that raise duplicate keys. The
+  // plugin depends on the driver directly, so the prototype chain is the test.
+  if (!(error instanceof MongoError)) return error;
 
   const collectionName = type.isString(connection?.collection) ? connection.collection : 'unknown';
   const { message, hint } = mapByCode({ code: error.code, collectionName, error, requestType });

@@ -29,7 +29,7 @@ function writeStep(step) {
 }
 
 test('noneWriteWithoutTenantField runs under check only and exports the audited types', () => {
-  expect(noneWriteWithoutTenantField.slug).toBe('tenant');
+  expect(noneWriteWithoutTenantField.slug).toBe('tenant-unstamped-write');
   expect(noneWriteWithoutTenantField.checkOnly).toBe(true);
   expect(INSERT_REQUEST_TYPES).toEqual([
     'MongoDBInsertOne',
@@ -50,7 +50,10 @@ test('noneWriteWithoutTenantField errors when a tenant: none insert has no tenan
   noneWriteWithoutTenantField.run({ components, context });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0].message).toBe(expected);
-  expect(context.errors[0]).toMatchObject({ configKey: 'k_write_control', checkSlug: 'tenant' });
+  expect(context.errors[0]).toMatchObject({
+    configKey: 'k_write_control',
+    checkSlug: 'tenant-unstamped-write',
+  });
 });
 
 test('noneWriteWithoutTenantField errors when one of many inserted docs lacks the field', () => {

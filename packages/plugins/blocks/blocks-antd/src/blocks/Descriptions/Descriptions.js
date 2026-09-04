@@ -16,7 +16,7 @@
 
 import React from 'react';
 
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Descriptions } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -36,7 +36,7 @@ const DescriptionsBlock = ({
   }
   return (
     <Descriptions
-      id={blockId}
+      {...blockRootProps({ blockId, classNames, styles })}
       bordered={properties.bordered}
       colon={properties.colon}
       column={properties.column}
@@ -44,9 +44,7 @@ const DescriptionsBlock = ({
       layout={properties.layout}
       size={properties.size}
       title={renderHtml({ html: properties.title, methods })}
-      className={classNames.element}
       classNames={{ content: classNames.content, label: classNames.label }}
-      style={styles.element}
       styles={{ content: styles.content, label: styles.label }}
     >
       {dataItem.map((item, i) => {

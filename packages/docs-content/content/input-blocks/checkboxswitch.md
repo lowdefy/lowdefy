@@ -20,6 +20,15 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_with_desc:
+  _state: basic_with_desc
+basic_simple:
+  _state: basic_simple
+```
+
+```yaml
 - id: desc_terms
   type: CheckboxSwitch
   properties:
@@ -35,6 +44,15 @@ Single checkbox for boolean input.
   properties:
     title: Agreement
     description: I accept the <b>Terms</b> and <i>Privacy Policy</i>
+```
+
+```yaml
+desc_terms:
+  _state: desc_terms
+desc_marketing:
+  _state: desc_marketing
+desc_html:
+  _state: desc_html
 ```
 
 ```yaml
@@ -57,6 +75,15 @@ Single checkbox for boolean input.
     description: Set active status
     label:
       colon: false
+```
+
+```yaml
+label_default:
+  _state: label_default
+label_colon:
+  _state: label_colon
+label_no_colon:
+  _state: label_no_colon
 ```
 
 ```yaml
@@ -88,6 +115,15 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+inline_basic:
+  _state: inline_basic
+inline_right:
+  _state: inline_right
+inline_wide_span:
+  _state: inline_wide_span
+```
+
+```yaml
 - id: extra_basic
   type: CheckboxSwitch
   properties:
@@ -114,6 +150,15 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+extra_basic:
+  _state: extra_basic
+extra_html:
+  _state: extra_html
+extra_inline:
+  _state: extra_inline
+```
+
+```yaml
 - id: feedback_on
   type: CheckboxSwitch
   properties:
@@ -131,6 +176,13 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+feedback_on:
+  _state: feedback_on
+feedback_off:
+  _state: feedback_off
+```
+
+```yaml
 - id: disabled_unchecked
   type: CheckboxSwitch
   properties:
@@ -145,6 +197,13 @@ Single checkbox for boolean input.
     title: Disabled with Label
     description: Cannot be toggled
     disabled: true
+```
+
+```yaml
+disabled_unchecked:
+  _state: disabled_unchecked
+disabled_with_label:
+  _state: disabled_with_label
 ```
 
 ```yaml
@@ -191,6 +250,19 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_purple:
+  _state: color_purple
+color_red:
+  _state: color_red
+color_cyan:
+  _state: color_cyan
+```
+
+```yaml
 - id: no_label_desc
   type: CheckboxSwitch
   properties:
@@ -208,6 +280,15 @@ Single checkbox for boolean input.
     description: I agree to the <b>Community Guidelines</b> and <i>Code of Conduct</i>
     label:
       disabled: true
+```
+
+```yaml
+no_label_desc:
+  _state: no_label_desc
+no_label_plain:
+  _state: no_label_plain
+no_label_html:
+  _state: no_label_html
 ```
 
 ```yaml
@@ -247,6 +328,15 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+style_background:
+  _state: style_background
+style_warning_bg:
+  _state: style_warning_bg
+style_bold_label:
+  _state: style_bold_label
+```
+
+```yaml
 - id: class_blue
   type: CheckboxSwitch
   class: p-2 rounded-lg border border-border bg-bg-layout
@@ -271,6 +361,15 @@ Single checkbox for boolean input.
     description: Elevated card with a box shadow
     label:
       disabled: true
+```
+
+```yaml
+class_blue:
+  _state: class_blue
+class_green:
+  _state: class_green
+class_shadow:
+  _state: class_shadow
 ```
 
 ```yaml
@@ -329,6 +428,19 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+theme_large_checkbox:
+  _state: theme_large_checkbox
+theme_circle:
+  _state: theme_circle
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_bold_border:
+  _state: theme_bold_border
+theme_combined:
+  _state: theme_combined
+```
+
+```yaml
 - id: applied_reg_card
   type: Card
   properties:
@@ -381,6 +493,129 @@ Single checkbox for boolean input.
             type: DisplayMessage
             params:
               content: Account created successfully!
+              status: success
+```
+
+```yaml
+- id: applied_reg_card
+  type: Card
+  properties:
+    title: Create Account
+  blocks:
+    - id: applied_reg_name
+      type: TextInput
+      properties:
+        title: Full Name
+        placeholder: Enter your full name
+    - id: applied_reg_email
+      type: TextInput
+      properties:
+        title: Email Address
+        placeholder: you@example.com
+    - id: applied_reg_terms
+      type: CheckboxSwitch
+      properties:
+        description: I agree to the <b>Terms of Service</b> and <b>Privacy Policy</b>
+        label:
+          disabled: true
+      validate:
+        - message: You must accept the terms to continue.
+          status: error
+          pass:
+            _eq:
+              - _state: applied_reg_terms
+              - true
+    - id: applied_reg_marketing
+      type: CheckboxSwitch
+      properties:
+        description: Send me product updates and tips (optional)
+        color: "#1677ff"
+        label:
+          disabled: true
+    - id: applied_reg_submit
+      type: Button
+      properties:
+        title: Create Account
+        type: primary
+        icon: AiOutlineUserAdd
+        block: true
+      events:
+        onClick:
+          - id: validate_terms
+            type: Validate
+            params:
+              - applied_reg_terms
+          - id: reg_success
+            type: DisplayMessage
+            params:
+              content: Account created successfully!
+              status: success
+```
+
+```yaml
+applied_reg_card:
+  _state: applied_reg_card
+```
+
+```yaml
+- id: applied_notif_card
+  type: Card
+  properties:
+    title: Notification Settings
+  blocks:
+    - id: applied_notif_email
+      type: CheckboxSwitch
+      properties:
+        title: Email Notifications
+        description: Receive order updates and receipts via email
+        label:
+          inline: true
+          span: 16
+      events:
+        onChange:
+          - id: email_changed
+            type: SetState
+            params:
+              emailEnabled:
+                _state: applied_notif_email
+    - id: applied_notif_sms
+      type: CheckboxSwitch
+      properties:
+        title: SMS Alerts
+        description: Get delivery status updates via text message
+        label:
+          inline: true
+          span: 16
+    - id: applied_notif_push
+      type: CheckboxSwitch
+      properties:
+        title: Push Notifications
+        description: Receive real-time alerts in your browser
+        color: "#1677ff"
+        label:
+          inline: true
+          span: 16
+    - id: applied_notif_marketing
+      type: CheckboxSwitch
+      properties:
+        title: Marketing Communications
+        description: Promotional offers and new feature announcements
+        color: "#722ed1"
+        label:
+          inline: true
+          span: 16
+    - id: applied_notif_save
+      type: Button
+      properties:
+        title: Save Preferences
+        type: primary
+        icon: AiOutlineSave
+      events:
+        onClick:
+          - id: save_notif
+            type: DisplayMessage
+            params:
+              content: Notification preferences saved.
               status: success
 ```
 
@@ -446,6 +681,11 @@ Single checkbox for boolean input.
               status: success
 ```
 
+```yaml
+applied_notif_card:
+  _state: applied_notif_card
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `color` | string | - | Selected checkbox color. |
@@ -464,6 +704,7 @@ Single checkbox for boolean input.
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `size` | string | `"default"` | Size of the block label. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design checkbox tokens](https://ant.design/components/checkbox#design-token). |
 | `theme.colorPrimary` | string | - | Primary color used for the checked state background and border. |
@@ -483,7 +724,7 @@ Single checkbox for boolean input.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: boolean }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

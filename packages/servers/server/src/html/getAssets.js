@@ -24,6 +24,40 @@ import { LowdefyInternalError } from '@lowdefy/errors';
 // In-place deploys must build before restarting (documented).
 let assets = null;
 
+// Vite keys a chunk by its source path relative to the project root, so a
+// page's type-import module is keyed by the artifact the build wrote.
+const pageModulePrefix = 'build/plugins/pages/';
+
+// A page module is fetched by the page's own dynamic import, one round trip
+// after the entry chunk runs. Preloading the chunk and everything it imports
+// statically starts those fetches with the entry's, so the first paint does
+// not wait for them. Dynamic imports of a page chunk are deliberately left
+// out — they are the parts the page loads only if it needs them.
+function collectChunkFiles({ files, key, manifest, visited }) {
+  if (visited.has(key)) return;
+  visited.add(key);
+  const chunk = manifest[key];
+  if (!chunk) return;
+  files.push(chunk.file);
+  (chunk.imports ?? []).forEach((imported) =>
+    collectChunkFiles({ files, key: imported, manifest, visited })
+  );
+}
+
+function getPageFiles({ entryKeys, manifest }) {
+  const pages = {};
+  Object.keys(manifest).forEach((key) => {
+    if (!key.startsWith(pageModulePrefix) || !key.endsWith('.js')) return;
+    const pageId = key.slice(pageModulePrefix.length, -'.js'.length);
+    if (pageId === 'index') return;
+    const files = [];
+    // The entry and the chunks it already preloads are not repeated.
+    collectChunkFiles({ files, key, manifest, visited: new Set(entryKeys) });
+    pages[pageId] = files;
+  });
+  return pages;
+}
+
 function getAssets() {
   if (assets) {
     return assets;
@@ -40,6 +74,10 @@ function getAssets() {
     js: entry.file,
     css: entry.css ?? [],
     imports: (entry.imports ?? []).map((key) => manifest[key]?.file).filter(Boolean),
+    pages: getPageFiles({
+      entryKeys: ['client/main.jsx', ...(entry.imports ?? [])],
+      manifest,
+    }),
   };
   return assets;
 }

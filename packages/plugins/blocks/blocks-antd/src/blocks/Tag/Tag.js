@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Tag } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import withTheme from '../withTheme.js';
@@ -52,11 +52,9 @@ const TagBlock = ({
   }
   return (
     <Tag
-      id={blockId}
+      {...blockRootProps({ blockId, classNames, styles })}
       closable={properties.closable}
       color={properties.color}
-      className={classNames.element}
-      style={styles.element}
       {...additionalProps}
     >
       <>

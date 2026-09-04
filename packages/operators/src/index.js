@@ -15,6 +15,9 @@
 */
 
 import compileExpression from './compileExpression/compileExpression.js';
+import emitOperatorClosures, { hasOperators } from './closures/emitOperatorClosures.js';
+import evaluateClosures from './closures/evaluateClosures.js';
+import evaluateWebClosures from './closures/evaluateWebClosures.js';
 import evaluateOperators, { hasDynamicMarker, hasDynChild } from './evaluateOperators.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
@@ -28,6 +31,10 @@ import WebParser from './webParser.js';
 
 export {
   compileExpression,
+  emitOperatorClosures,
+  evaluateClosures,
+  evaluateWebClosures,
+  hasOperators,
   evaluateOperators,
   hasDynamicMarker,
   hasDynChild,

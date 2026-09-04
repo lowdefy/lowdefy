@@ -244,13 +244,13 @@
           blocks:
             - id: psl_admin_footer_text
               type: Paragraph
+              style:
+                textAlign: center
+                margin: 0
+                color: '#999'
+                fontSize: 12
               properties:
                 content: Admin Panel v2.4.1
-                style:
-                  textAlign: center
-                  margin: 0
-                  color: '#999'
-                  fontSize: 12
       blocks:
         - id: psl_admin_title
           type: Title

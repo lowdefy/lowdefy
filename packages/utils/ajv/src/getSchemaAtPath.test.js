@@ -85,3 +85,92 @@ test('getSchemaAtPath accepts an array of segments', () => {
     enum: ['draft', 'submitted'],
   });
 });
+
+// Semantics pinned when the build's resolveSchemaPath was merged into this
+// walker: one set of rules for state contracts, responseSchemas and event
+// payloads alike.
+
+test('getSchemaAtPath resolves .length on an array', () => {
+  expect(
+    getSchemaAtPath({ schema: { type: 'array', items: { type: 'string' } }, path: 'length' })
+  ).toEqual({ type: 'integer' });
+  expect(
+    getSchemaAtPath({
+      schema: { type: 'object', properties: { rows: { type: 'array' } } },
+      path: 'rows.length',
+    })
+  ).toEqual({ type: 'integer' });
+});
+
+test('getSchemaAtPath rejects a path below a primitive', () => {
+  expect(
+    getSchemaAtPath({
+      schema: { type: 'object', properties: { name: { type: 'string' } } },
+      path: 'name.length',
+    })
+  ).toBe(null);
+  expect(getSchemaAtPath({ schema: { type: 'number' }, path: 'x' })).toBe(null);
+});
+
+test('getSchemaAtPath treats enum and const nodes as closed', () => {
+  expect(getSchemaAtPath({ schema: { enum: ['a', 'b'] }, path: 'a' })).toBe(null);
+  expect(getSchemaAtPath({ schema: { const: 'a' }, path: 'a' })).toBe(null);
+});
+
+test('getSchemaAtPath resolves an open object to {}', () => {
+  expect(getSchemaAtPath({ schema: { type: 'object' }, path: 'anything.at.all' })).toEqual({});
+  expect(getSchemaAtPath({ schema: {}, path: 'anything' })).toEqual({});
+});
+
+test('getSchemaAtPath explain returns the failing segment and its candidates', () => {
+  const schema = {
+    type: 'object',
+    properties: {
+      results: {
+        type: 'array',
+        items: { type: 'object', properties: { title: { type: 'string' } } },
+      },
+    },
+  };
+  expect(getSchemaAtPath({ schema, path: 'results.0.titel', explain: true })).toEqual({
+    resolved: false,
+    declared: ['results'],
+    segment: 'titel',
+    candidates: ['title'],
+  });
+});
+
+test('getSchemaAtPath explain reports a resolved path with the sub-schema', () => {
+  const schema = { type: 'object', properties: { a: { type: 'string' } } };
+  expect(getSchemaAtPath({ schema, path: 'a', explain: true })).toEqual({
+    resolved: true,
+    declared: ['a'],
+    schema: { type: 'string' },
+  });
+});
+
+test('getSchemaAtPath explain lists candidates from combinator branches', () => {
+  const schema = {
+    anyOf: [
+      { type: 'object', properties: { a: {} } },
+      { type: 'object', properties: { b: {} } },
+    ],
+  };
+  expect(getSchemaAtPath({ schema, path: 'c', explain: true })).toEqual({
+    resolved: false,
+    declared: ['a', 'b'],
+    segment: 'c',
+    candidates: ['a', 'b'],
+  });
+});
+
+test('getSchemaAtPath opens an undeclared member when additionalProperties is true beside declared properties', () => {
+  const schema = {
+    type: 'object',
+    properties: { value: { type: 'string' } },
+    additionalProperties: true,
+  };
+  expect(getSchemaAtPath({ schema, path: 'value' })).toEqual({ type: 'string' });
+  expect(getSchemaAtPath({ schema, path: 'anything.nested' })).toEqual({});
+});
+

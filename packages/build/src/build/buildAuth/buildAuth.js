@@ -28,9 +28,11 @@ import { getEntityDefaultProtected } from './getProtectedEntities.js';
 import setAuthConfigured from './setAuthConfigured.js';
 import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
+import validateAuthDev from './validateAuthDev.js';
 
 function buildAuth({ components, context }) {
   validateAuthConfig({ components, context });
+  validateAuthDev({ components, context });
   setAuthConfigured({ components, context });
   setAuthDefaults({ components, context });
   buildRoleCatalog({ components, context });

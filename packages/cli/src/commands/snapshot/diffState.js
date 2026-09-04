@@ -14,42 +14,9 @@
   limitations under the License.
 */
 
-import { serializer, type, unset } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-// Deletes one `~snapshotIgnore` path from a state object. `$` stands for every
-// index of the array at that position (the same wildcard `applyArrayIndices`
-// resolves for block fields), so `rows.$.score` clears `score` from every row.
-function deletePath(value, segments) {
-  if (segments.length === 0 || type.isNone(value)) {
-    return;
-  }
-  const [head, ...rest] = segments;
-  if (head === '$') {
-    if (type.isArray(value)) {
-      value.forEach((item, index) => {
-        if (rest.length === 0) {
-          value[index] = undefined;
-          return;
-        }
-        deletePath(item, rest);
-      });
-    }
-    return;
-  }
-  if (rest.length === 0) {
-    if (type.isArray(value)) {
-      value[Number(head)] = undefined;
-      return;
-    }
-    if (type.isObject(value)) {
-      unset(value, head);
-    }
-    return;
-  }
-  if (type.isObject(value) || type.isArray(value)) {
-    deletePath(value[head], rest);
-  }
-}
+import applyIgnore from './applyIgnore.js';
 
 function collectDifferences({ expected, actual, path, differences }) {
   if (type.isArray(expected) && type.isArray(actual)) {
@@ -84,16 +51,11 @@ function collectDifferences({ expected, actual, path, differences }) {
 }
 
 // diffState deep-compares a golden state.json with a freshly captured state
-// after removing the page's `~snapshotIgnore` paths from both, and reports each
-// differing path with the two values. Neither input is mutated.
+// after removing the ignored paths from both, and reports each differing path
+// with the two values. Neither input is mutated.
 function diffState({ expected, actual, snapshotIgnore = [] }) {
-  const expectedCopy = serializer.copy(expected) ?? {};
-  const actualCopy = serializer.copy(actual) ?? {};
-  snapshotIgnore.forEach((ignorePath) => {
-    const segments = ignorePath.split('.');
-    deletePath(expectedCopy, segments);
-    deletePath(actualCopy, segments);
-  });
+  const expectedCopy = applyIgnore({ state: expected, ignore: snapshotIgnore });
+  const actualCopy = applyIgnore({ state: actual, ignore: snapshotIgnore });
   const differences = [];
   collectDifferences({ expected: expectedCopy, actual: actualCopy, path: '', differences });
   return { changed: differences.length > 0, differences };

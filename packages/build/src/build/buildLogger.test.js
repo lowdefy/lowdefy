@@ -16,11 +16,14 @@
 
 import buildLogger from './buildLogger.js';
 
+const eventsDefaults = { level: 'errors', identity: false };
+const journeysDefaults = { enabled: true, sample_rate: 0.05 };
+
 test('buildLogger no logger defined', () => {
   const components = {};
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
   });
 });
 
@@ -28,7 +31,7 @@ test('buildLogger empty logger object', () => {
   const components = { logger: {} };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
   });
 });
 
@@ -36,7 +39,52 @@ test('buildLogger logger null', () => {
   const components = { logger: null };
   const result = buildLogger({ components });
   expect(result).toEqual({
-    logger: {},
+    logger: { events: eventsDefaults, journeys: journeysDefaults },
+  });
+});
+
+test('buildLogger events string form becomes the level', () => {
+  const components = { logger: { events: 'all' } };
+  const result = buildLogger({ components });
+  expect(result.logger.events).toEqual({ level: 'all', identity: false });
+});
+
+test('buildLogger events object form keeps sample_rate and identity', () => {
+  const components = { logger: { events: { sample_rate: 0.05, identity: true } } };
+  const result = buildLogger({ components });
+  expect(result.logger.events).toEqual({
+    level: 'errors',
+    sample_rate: 0.05,
+    identity: true,
+  });
+});
+
+test('buildLogger events preserves a zero sample_rate', () => {
+  const components = { logger: { events: { sample_rate: 0 } } };
+  const result = buildLogger({ components });
+  expect(result.logger.events.sample_rate).toBe(0);
+});
+
+test('buildLogger journeys defaults to on at a 5% sample rate', () => {
+  expect(buildLogger({ components: {} }).logger.journeys).toEqual({
+    enabled: true,
+    sample_rate: 0.05,
+  });
+});
+
+test('buildLogger journeys keeps an authored enabled and sample_rate', () => {
+  const components = { logger: { journeys: { enabled: false, sample_rate: 1 } } };
+  expect(buildLogger({ components }).logger.journeys).toEqual({
+    enabled: false,
+    sample_rate: 1,
+  });
+});
+
+test('buildLogger journeys preserves a zero sample_rate', () => {
+  const components = { logger: { journeys: { sample_rate: 0 } } };
+  expect(buildLogger({ components }).logger.journeys).toEqual({
+    enabled: true,
+    sample_rate: 0,
   });
 });
 
@@ -45,6 +93,8 @@ test('buildLogger sentry with defaults', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: true,
         server: true,
@@ -63,6 +113,8 @@ test('buildLogger sentry with custom tracesSampleRate', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: true,
         server: true,
@@ -126,6 +178,8 @@ test('buildLogger sentry all custom values', () => {
   const result = buildLogger({ components });
   expect(result).toEqual({
     logger: {
+      events: eventsDefaults,
+      journeys: journeysDefaults,
       sentry: {
         client: false,
         server: true,
@@ -145,7 +199,7 @@ test('buildLogger returns components object', () => {
   const result = buildLogger({ components });
   expect(result.pages).toEqual([]);
   expect(result.menus).toEqual([]);
-  expect(result.logger).toEqual({});
+  expect(result.logger).toEqual({ events: eventsDefaults, journeys: journeysDefaults });
 });
 
 test('buildLogger sentry null does not apply defaults', () => {
@@ -203,4 +257,35 @@ test('buildLogger preserves false boolean values', () => {
   expect(result.logger.sentry.client).toBe(false);
   expect(result.logger.sentry.server).toBe(false);
   expect(result.logger.sentry.feedback).toBe(false);
+});
+
+test('buildLogger writes no otlp config when the app configured none', () => {
+  const result = buildLogger({ components: {} });
+  expect(result.logger.otlp).toBeUndefined();
+});
+
+test('buildLogger defaults otlp headers, resource and batch', () => {
+  const components = { logger: { otlp: { endpoint: 'https://api.axiom.co/v1/logs' } } };
+  const result = buildLogger({ components });
+  expect(result.logger.otlp).toEqual({
+    endpoint: 'https://api.axiom.co/v1/logs',
+    headers: {},
+    resource: {},
+    batch: { size: 50, flush_ms: 2000 },
+  });
+});
+
+test('buildLogger keeps a header _secret operator node unresolved', () => {
+  const components = {
+    logger: {
+      otlp: {
+        endpoint: 'https://api.axiom.co/v1/logs',
+        headers: { Authorization: { _secret: 'AXIOM_TOKEN' } },
+        batch: { size: 10 },
+      },
+    },
+  };
+  const result = buildLogger({ components });
+  expect(result.logger.otlp.headers.Authorization).toEqual({ _secret: 'AXIOM_TOKEN' });
+  expect(result.logger.otlp.batch).toEqual({ size: 10, flush_ms: 2000 });
 });

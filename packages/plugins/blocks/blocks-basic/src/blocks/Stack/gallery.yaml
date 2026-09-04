@@ -1,0 +1,79 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Stack
+  blocks:
+    - id: stack_basic
+      type: Stack
+      blocks:
+        - id: stack_basic_one
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: First
+        - id: stack_basic_two
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: Second
+        - id: stack_basic_three
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: Third
+
+- title: Gap and align
+  blocks:
+    - id: stack_centered
+      type: Stack
+      properties:
+        gap: xs
+        align: center
+      class: p-2 rounded border border-dashed border-gray-400/60
+      blocks:
+        - id: stack_centered_title
+          type: Html
+          properties:
+            html: '<h3 style="margin: 0;">Centered</h3>'
+        - id: stack_centered_body
+          type: Html
+          properties:
+            html: '<span style="opacity: 0.6;">Children keep their own width.</span>'
+
+- title: A Row inside a Stack
+  blocks:
+    - id: stack_nested
+      type: Stack
+      properties:
+        gap: sm
+      blocks:
+        - id: stack_nested_heading
+          type: Html
+          properties:
+            html: '<h3 style="margin: 0;">Invoice 1042</h3>'
+        - id: stack_nested_actions
+          type: Row
+          properties:
+            gap: sm
+          blocks:
+            - id: stack_nested_approve
+              type: Box
+              class: p-2 rounded bg-green-500/10
+              properties:
+                content: Approve
+            - id: stack_nested_reject
+              type: Box
+              class: p-2 rounded bg-red-500/10
+              properties:
+                content: Reject

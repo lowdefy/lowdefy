@@ -1,6 +1,6 @@
 # Html
 
-Render raw HTML content safely.
+Render raw HTML content safely. Content is sanitized with DOMPurify, so `<script>`, inline event handlers and `<style>` are removed, and every value has to be escaped by hand before it is concatenated into the string. For markup that interpolates values, needs CSS, or should hold child blocks, use the [Template](/Template) block instead: it escapes `{{ values }}` by default, scopes `properties.css` CSS to the block, and renders Lowdefy blocks into `{% slot %}` positions.
 
 ```yaml
 - id: basic_paragraph
@@ -297,11 +297,11 @@ Render raw HTML content safely.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. |
+| `html` | string | - | Content to be rendered as Html. Deprecated - use the Template block, which escapes values by default and supports slots. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onTextSelection` | \- | Trigger action when text is selected and pass selected text to the event object. |
+| `onTextSelection` | `{ selection: string }` | Trigger action when text is selected. |
 
 | Key | Target |
 | --- | --- |

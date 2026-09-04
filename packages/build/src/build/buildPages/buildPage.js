@@ -22,7 +22,9 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import buildBlock from './buildBlock/buildBlock.js';
 import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
+import createCheckDuplicateBlockId from './createCheckDuplicateBlockId.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import createPageTypeCounters from './createPageTypeCounters.js';
 import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
 import validateRequestReferences from './validateRequestReferences.js';
@@ -58,16 +60,21 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     page.stateSchema = page.state;
   }
   delete page.state;
+  // The page's own type set, recorded as the page builds and read by
+  // writePageImports to emit the page's type-import module. Initialised here
+  // because buildPage is the only producer, and the full, JIT and dynamic
+  // build paths each construct their own context.
+  if (type.isNone(context.pageTypes)) {
+    context.pageTypes = {};
+  }
+  const pageTypeCounters = createPageTypeCounters({ typeCounters: context.typeCounters });
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
     callApiActionRefs: context.callApiActionRefs ?? [],
     websocketActionRefs: context.websocketActionRefs ?? [],
     dynamicBlockRefs: context.dynamicBlockRefs ?? [],
-    checkDuplicateBlockId: createCheckDuplicateId({
-      message:
-        'Duplicate blockId "{{ id }}" on page "{{ pageId }}". Block ids are the page state keys, so two blocks with one id share a single state value. Rename one of them.',
-    }),
+    checkDuplicateBlockId: createCheckDuplicateBlockId({ context, pageId: page.pageId }),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
@@ -78,7 +85,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     orgClientActionRefs: context.orgClientActionRefs ?? [],
     shortcutRefs,
     linkActionRefs: context.linkActionRefs,
-    typeCounters: context.typeCounters,
+    typeCounters: pageTypeCounters.counters,
   };
   // The page's own block is the only block that receives onInit/onInitAsync.
   pageContext.rootBlockId = page.pageId;
@@ -101,7 +108,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     requestActionRefs,
     orgClientActionRefs: context.orgClientActionRefs ?? [],
     shortcutRefs,
-    typeCounters: context.typeCounters,
+    typeCounters: pageTypeCounters.counters,
     websocketActionRefs: context.websocketActionRefs ?? [],
   });
 
@@ -129,6 +136,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   });
 
   page.requests = requests;
+  context.pageTypes[page.pageId] = pageTypeCounters.types;
 }
 
 export default buildPage;

@@ -32,6 +32,13 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 ```
 
 ```yaml
+basic_tree_selector:
+  _state: basic_tree_selector
+```
+
+Selected code: —
+
+```yaml
 - id: value_tree_selector
   type: TreeSelector
   properties:
@@ -79,6 +86,60 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 ```
 
 ```yaml
+- id: value_tree_selector
+  type: TreeSelector
+  properties:
+    title: Region
+    placeholder: Pick a region...
+    primaryKey: id
+    parentKey: parentId
+    valueKey: code
+    html: "{{ item.label }}"
+    treeDefaultExpandAll: true
+    data:
+      - id: 1
+        label: Europe
+        code: eu
+      - id: 2
+        label: Germany
+        code: de
+        parentId: 1
+      - id: 3
+        label: France
+        code: fr
+        parentId: 1
+      - id: 4
+        label: Americas
+        code: am
+      - id: 5
+        label: United States
+        code: us
+        parentId: 4
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          region:
+            _event: value
+- id: value_tree_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected code: {{ region if region != null else "—" }}'
+        on:
+          _state: true
+```
+
+```yaml
+value_tree_selector:
+  _state: value_tree_selector
+value_tree_display:
+  _state: value_tree_display
+```
+
+```yaml
 - id: options_tree_selector
   type: TreeSelector
   properties:
@@ -99,6 +160,11 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
         label: Operations
 ```
 
+```yaml
+options_tree_selector:
+  _state: options_tree_selector
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
@@ -108,7 +174,7 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 | `parentKey` | string | - | Tree selectors only: names each row’s parent id. Build a flat `data`/`options` array where each row has a `primaryKey` (its own id) and a `parentKey` whose value equals the parent row’s `primaryKey`. Rows whose `parentKey` is empty or points at no row become tree roots. Supports dotted paths. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -166,10 +232,10 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action when the selector loses focus. |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 | `onFocus` | \- | Trigger action when the selector gains focus. |
 | `onClear` | \- | Trigger action when the selector is cleared. |
-| `onSearch` | `{ value }` | Trigger action when the search input changes. |
+| `onSearch` | `{ value: string }` | Trigger action when the search input changes. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

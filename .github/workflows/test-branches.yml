@@ -32,3 +32,82 @@ jobs:
         if: matrix.os == 'windows-latest'
       - run: pnpm test
       - uses: codecov/codecov-action@v3
+
+  canary-app:
+    name: Build the canary app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # examples/canary-app is the downstream app the nightly canary runs against a
+      # published candidate. Without this step a change that breaks its config is
+      # only found the next night, against a candidate that is already on npm.
+      # --skip-build reuses the monorepo build from the previous step.
+      - name: Build examples/canary-app
+        run: node scripts/build.mjs --config-directory examples/canary-app --skip-build --log-level warn
+        env:
+          LOWDEFY_DISABLE_TELEMETRY: '1'
+          # Build never connects; the app's connections only need the references to resolve.
+          LOWDEFY_SECRET_MONGODB_URI: mongodb://localhost:27017/canary
+          LOWDEFY_SECRET_BETTER_AUTH_SECRET: canary-placeholder-secret-canary-placeholder
+
+  # Three servers wrap the same request-and-render core, and every parity bug
+  # between them (a style present in dev and dropped in prod, a custom plugin
+  # type the e2e server loses) has been found by hand, after shipping. The block
+  # e2e specs are the only suite that drives a real browser against a real
+  # server, so the same suite is run against each of the three. Nothing here is
+  # new test code: LOWDEFY_E2E_SERVER picks which server
+  # `createPlaywrightConfig` boots for the specs a block already has.
+  #
+  # Scoped to two packages to bound the PR gate: blocks-basic covers the raw
+  # html/template render path and blocks-antd the themed one, which is where
+  # dropped styles show. Widen by adding --filter arguments.
+  block-e2e:
+    name: Block e2e (${{ matrix.server }} server)
+    runs-on: ubuntu-latest
+    # The dev and e2e legs are new and have never run in CI; they report but do
+    # not block until their first green run. The prod leg blocks.
+    continue-on-error: ${{ matrix.server != 'prod' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        server:
+          - prod
+          - dev
+          - e2e
+    env:
+      LOWDEFY_DISABLE_TELEMETRY: '1'
+      LOWDEFY_E2E_SERVER: ${{ matrix.server }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Install the Playwright browser
+        # Installed through the package that owns the @playwright/test version
+        # the specs run on, so the browser revision cannot drift from it.
+        run: pnpm --filter=@lowdefy/blocks-basic exec playwright install --with-deps chromium
+      - name: Run the block e2e specs
+        # The servers all bind the same port, so the packages run one at a time.
+        run: >
+          pnpm -r --workspace-concurrency=1
+          --filter=@lowdefy/blocks-basic
+          --filter=@lowdefy/blocks-antd
+          e2e
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: block-e2e-${{ matrix.server }}
+          path: packages/plugins/blocks/*/e2e/test-results
+          if-no-files-found: ignore

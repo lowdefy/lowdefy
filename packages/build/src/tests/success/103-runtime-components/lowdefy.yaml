@@ -2,7 +2,8 @@
 lowdefy: local
 
 components:
-  - _ref: components/answer-pill.yaml
+  AnswerPill:
+    _ref: components/answer-pill.yaml
 
 pages:
   - id: controls
@@ -26,3 +27,12 @@ pages:
         props:
           result:
             _state: answer_b
+        # The deprecated "areas" alias must fill the component slot, not be
+        # dropped with the instance's component keys.
+        areas:
+          footer:
+            blocks:
+              - id: approve_b
+                type: Button
+                properties:
+                  title: Approve

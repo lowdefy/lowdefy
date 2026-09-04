@@ -45,13 +45,16 @@ test('validateFieldValue reports undefined as undefined', () => {
   ).toThrow('must be string. Received undefined.');
 });
 
-test('validateFieldValue spells out an enum and an instanceof failure', () => {
+test('validateFieldValue spells out the allowed values of an enum', () => {
   expect(() => validateFieldValue({ ...base, fieldSchema: { enum: [1, 2] }, value: 3 })).toThrow(
     'must be equal to one of the allowed values (1, 2). Received 3.'
   );
-  expect(() =>
-    validateFieldValue({ ...base, fieldSchema: { instanceof: 'Date' }, value: 3 })
-  ).toThrow('must be a Date. Received 3.');
+});
+
+test('validateFieldValue validates a Date against a date-time format', () => {
+  const fieldSchema = { type: 'string', format: 'date-time' };
+  expect(() => validateFieldValue({ ...base, fieldSchema, value: new Date(0) })).not.toThrow();
+  expect(() => validateFieldValue({ ...base, fieldSchema, value: 3 })).toThrow('must be string');
 });
 
 test('validateFieldValue names the nested item path of an array violation', () => {

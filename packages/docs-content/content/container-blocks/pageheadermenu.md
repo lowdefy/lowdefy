@@ -309,12 +309,12 @@ View Expense Reports
       blocks:
         - id: phm_full_footer_text
           type: Paragraph
+          style:
+            margin: 0
+            color: "#888"
+            textAlign: center
           properties:
             content: Acme Corp Intranet - Internal Use Only
-            style:
-              margin: 0
-              color: "#888"
-              textAlign: center
   blocks:
     - id: phm_full_welcome
       type: Title
@@ -502,6 +502,49 @@ Profile from _menu
         showIcon: true
 ```
 
+```yaml
+- id: phm_menu_op
+  type: PageHeaderMenu
+  properties:
+    darkModeToggle: true
+    notifications:
+      count: 2
+      link:
+        pageId: home
+    profile:
+      avatar:
+        content: JD
+        color: "#6366f1"
+      links:
+        _menu: default
+    menu:
+      links:
+        - id: phm_mo_home
+          type: MenuLink
+          properties:
+            title: Home
+            icon: AiOutlineHome
+        - id: phm_mo_settings
+          type: MenuLink
+          properties:
+            title: Settings
+            icon: AiOutlineSetting
+  blocks:
+    - id: phm_mo_title
+      type: Title
+      properties:
+        content: Profile from _menu
+        level: 3
+    - id: phm_mo_info
+      type: Alert
+      properties:
+        message: The profile dropdown links are populated using _menu operator, pulling
+          from the menus defined in lowdefy.yaml. Click the avatar to see the
+          dropdown.
+        type: info
+        showIcon: true
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `logo` | object | - | Header logo settings. By default, images are served from the app public folder and auto-swap between light and dark variants based on dark mode. See [Hosting Files](/hosting-files) for details. |
@@ -510,6 +553,7 @@ Profile from _menu
 | `logo.breakpoint` | number | - | Viewport width breakpoint (in px) for switching between mobile and desktop logo. Default is 577. |
 | `logo.alt` | string | `"Lowdefy"` | Logo image alt text. |
 | `header` | object | - | Header properties. |
+| `iconsColor` | string | - | Color for the notification, profile, and dark mode toggle icons. Use when the header has a dark background color. |
 | `footer` | object | - | Footer properties. |
 | `content` | object | - | Content properties. |
 | `breadcrumb` | object | - | Breadcrumb properties. |
@@ -579,8 +623,8 @@ Profile from _menu
 | `onMenuItemClick` | \- | Trigger action when menu item is clicked. |
 | `onMenuItemSelect` | \- | Trigger action when menu item is selected. |
 | `onOpen` | \- | Trigger action when mobile menu is open. |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 | `onToggleDrawer` | \- | Trigger action when mobile menu drawer is toggled. |
 | `onToggleMenuGroup` | \- | Trigger action when mobile menu group is opened. |
 

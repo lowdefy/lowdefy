@@ -1,5 +1,54 @@
 # Layout
 
+> ### Moving to `Row`, `Grid` and `Stack`
+>
+> Per-block `layout:` is **deprecated**. It keeps working in v8, and nothing on this page
+> stops rendering — but new config should use the framework-owned arrangement blocks
+> [`Row`](/Row), [`Grid`](/Grid) and [`Stack`](/Stack) instead. The container says how its
+> children are arranged; each child says how big it is, with a Tailwind class.
+>
+> | `layout:` | Replacement |
+> | --- | --- |
+> | `span`, `offset` on siblings | Wrap them in a [`Grid`](/Grid) (`columns: 24`) and set `class: col-span-N`, with `offset` accumulated into `col-start-N` |
+> | `flex`, `grow`, `shrink`, `size` | Wrap them in a [`Row`](/Row) and use `class: grow`, `shrink-0`, `basis-[120px]` |
+> | an area with `direction: column` | Wrap its children in a [`Stack`](/Stack) |
+> | `selfAlign` | `class: self-start`, `self-center`, `self-end` |
+> | area `gap`, `align`, `justify`, `wrap` | the container block's `properties` |
+> | area `overflow` | `class: overflow-auto` on the container |
+>
+> `lowdefy check` reports every remaining site under the `layout-deprecated` slug, one
+> warning per site naming the wrapper it needs, and a final count of sites and files.
+> `lowdefy upgrade` offers the optional `layout-to-containers` codemod, which does the
+> mechanical rewrite and reports every site it refuses — operator-valued `layout:` and
+> responsive breakpoint objects are converted by hand.
+>
+> Whether `layout:` is removed in v9 is a later decision, taken on what those counts say.
+
+> ### When is a wrapper rendered?
+>
+> Lowdefy only adds layout `div`s where layout was asked for. A block is wrapped in a
+> column (`div.lf-col`, id `bl-<blockId>`) when its own `layout:` has any block key —
+> `span`, `offset`, `push`, `pull`, `order`, `flex`, `grow`, `shrink`, `size`,
+> `selfAlign`, a responsive breakpoint (`xs`…`2xl`), or `disabled` — or when the slot it
+> sits in renders a row, because a column is sized as a flex item of its row. A content
+> slot is wrapped in a row (`div.lf-row`, id `ar-<blockId>-<slot>`) when the slot or the
+> container's `layout:` sets any arrangement key — `gap`, `align`, `justify`,
+> `direction`, `wrap`, `overflow` — when the slot has a `class:` or `style:` of its own,
+> when the container block passes a content style into the slot (`Row`, `Grid`, `Stack`,
+> `Result`, `PageHeaderMenu` and `PageSiderMenu` do), or when any block in the slot is
+> laid out. Otherwise neither `div` exists and the block's own root element is the node
+> in the page: every block renders its `id`, its `data-testid`, its `class:` and its
+> `style:` on the element it owns, so a `Title` with no layout really is an `<h1>`.
+>
+> The decision reads which keys are present, not what they evaluate to, so an operator
+> in `layout:` that resolves to `null` on one render does not restructure the DOM.
+> A skeleton follows the same rule as the block it stands in for, so a loading page
+> occupies the same boxes as the loaded one. Two consequences worth knowing: the
+> `#bl-<blockId>` and `#ar-<blockId>-<slot>` ids only exist where a wrapper does — target
+> the block's own id instead — and where the flex row is gone, adjacent margins collapse
+> as they do in normal block flow. Golden DOM snapshots change with this release; run
+> `lowdefy snapshot --update` once and review the diff.
+
 Containers blocks are used to arrange blocks on a page. Blocks of category `container` and `list` all function as container blocks. Container blocks have content slots into which a list of blocks are rendered. `List` category blocks can render content slots for each element in the data array.
 
 Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column CSS custom properties grid, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
@@ -103,7 +152,7 @@ Blocks can also be laid out using [CSS flexbox](https://developer.mozilla.org/en
 The `layout` object on blocks can be used to control how a block is placed in the layout. The `layout` properties that can be defined are:
 
 - `selfAlign`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
-- `align`: _Enum_ - Align content area children vertically. Options are `top`, `middle`, and `bottom`. Default `top.` This value flows to the content area as a default.
+- `align`: _Enum_ - Align content area children vertically. Options are `top`, `middle`, and `bottom`. Default `top.` This value flows to the content area as a default. In Lowdefy v4 `layout.align` aligned the block itself within its parent — that is now `layout.selfAlign`. Setting `layout.align` on a block aligns the block's own content, never the block itself.
 - `flex`: _String_ - Set the [`flex`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex) CSS property. This overwrites the `grow`, `shrink`, and `size` properties.
 - `gap`: _Number_ | _Array_ - Set the gap (space) between blocks in the content area. If an array, the first element is the horizontal gap, and the second is the vertical gap. This value flows to the content area as a default.
 - `grow`: _Number_ - Set the [`flex-grow`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default 0.
@@ -287,6 +336,7 @@ The properties that can be set are:
           type: Block
           layout:
             span: 12
+```
 
 ##### Area 1 - `align: top`
 
@@ -342,6 +392,7 @@ The properties that can be set are:
           type: Block
           layout:
             size: auto
+```
 
 ##### Area 1 - `direction: row`
 
@@ -382,6 +433,8 @@ The properties that can be set are:
             span: 12
         - id: block6
           type: Block
+
+```
 
 ##### Area 1 - `gap: 16`
 
@@ -466,6 +519,7 @@ The properties that can be set are:
           type: Block
           layout:
             size: auto
+```
 
 ##### Area 1 - `justify: start`
 

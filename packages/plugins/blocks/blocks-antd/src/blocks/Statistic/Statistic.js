@@ -17,7 +17,7 @@
 import React from 'react';
 import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -36,15 +36,13 @@ const StatisticBlock = ({
   }
   return (
     <Statistic
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       classNames={{ value: classNames.value }}
       groupSeparator={properties.groupSeparator}
-      id={blockId}
       loading={properties.loading}
       precision={properties.precision}
       title={renderHtml({ html: properties.title, methods })}
       value={type.isNone(properties.value) ? '' : properties.value}
-      style={styles.element}
       styles={{ value: styles.value }}
       prefix={
         properties.prefixIcon ? (

@@ -78,3 +78,258 @@ The file path to the referenced file, from the root of the project directory.
 > Within module content, the `module` field can reference a declared dependency name (from the module's `dependencies` in `module.lowdefy.yaml`). The build resolves abstract names to concrete entry IDs via the dependency wiring. From app-level config, `module` is always a concrete entry ID.
 
 #### Examples
+
+###### Reference pages:
+```yaml
+# lowdefy.yaml
+lowdefy: 5.5.1
+pages:
+  - _ref: pages/page1.yaml
+  - _ref: pages/page2.yaml
+```
+```yaml
+# pages/page1.yaml
+id: page1
+type: PageHeaderMenu
+blocks:
+  # ...
+```
+```yaml
+# pages/page2.yaml
+id: page2
+type: PageHeaderMenu
+blocks:
+  # ...
+```
+Returns:
+```
+lowdefy: 5.5.1
+pages:
+  - id: page1
+    type: PageHeaderMenu
+    blocks:
+      # ...
+  - id: page2
+    type: PageHeaderMenu
+    blocks:
+      # ...
+```
+
+###### Using a standardized input label template:
+```yaml
+blocks:
+  - id: name
+    type: TextInput
+    properties:
+      label:
+        _ref:
+          path: label.yaml
+          vars:
+            title: Name
+            description: Your name and surname.
+  - id: age
+    type: NumberInput
+    properties:
+      label:
+        _ref:
+          path: label.yaml
+          vars:
+            title: Age
+            description: Your age.
+```
+```yaml
+# label.yaml
+title:
+  _var: title
+extra:
+  _var: description
+span: 8
+colon: false
+align: right
+```
+Returns:
+```yaml
+blocks:
+  - id: name
+    type: TextInput
+    properties:
+      label:
+        title: Name
+        extra: Your name and surname.
+        span: 8
+        colon: false
+        align: right
+  - id: age
+    type: NumberInput
+    properties:
+      label:
+        title: Age
+        extra: Your age.
+        span: 8
+        colon: false
+        align: right
+```
+
+###### Use key:
+```yaml
+# lowdefy.yaml
+lowdefy: 5.5.1
+version:
+  _ref:
+    path: package.json
+    field: version
+```
+```json
+// package.json
+{
+  "version": "1.0.0"
+}
+```
+Returns:
+```
+lowdefy: 5.5.1
+version: 1.0.0
+```
+
+###### Local or shared resolver:
+
+This resolver function will first look for the configuration file in the current working directory, but if the file is not found it will be read from an adjacent "shared" directory. This pattern can be used to build apps that mostly use a shared configuration, with a few components that are customised per app.
+
+```js
+// resolvers/useLocalOrSharedConfig.js
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+
+const readFilePromise = promisify(fs.readFile);
+
+async function useLocalOrSharedConfig(refPath, vars, context) {
+  let fileContent
+  try {
+    fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+    return fileContent;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+      return fileContent;
+    }
+    throw error;
+  }
+
+
+}
+
+module.exports = useLocalOrSharedConfig;
+```
+
+```yaml
+// lowdefy.yaml
+lowdefy: 5.5.1
+
+cli:
+  refResolver: resolvers/useLocalOrSharedConfig.js
+
+pages:
+  - _ref: pages/local-page.yaml
+  - _ref: pages/shared-page.yaml
+```
+
+###### This transformer adds a standard footer to each page:
+
+```js
+//  transformers/addFooter.js
+
+function addFooter(page, vars) {
+  const footer = {
+    // ...
+  };
+  page.areas.footer = footer;
+  return page;
+}
+module.exports = addFooter;
+```
+```yaml
+// lowdefy.yaml
+lowdefy: 5.5.1
+
+pages:
+  - _ref:
+      path: pages/page1.yaml
+      transformer: transformers/addFooter.js
+```
+###### Reference a module component:
+```yaml
+blocks:
+  - _ref:
+      module: notifications
+      component: notification-badge
+      vars:
+        position: top-right
+```
+
+###### Data export with key extraction:
+```yaml
+icon:
+  _ref:
+    module: events
+    component: event_types
+    key: login.icon
+```
+
+###### Cross-module component ref within a module:
+```yaml
+# contacts module embedding companies' selector
+blocks:
+  - _ref:
+      module: companies    # abstract dependency name
+      component: company-selector
+      vars:
+        field_id: company_id
+```
+
+###### Module menu inside a MenuGroup:
+```yaml
+menus:
+  - id: main
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+      - id: team-admin
+        type: MenuGroup
+        properties:
+          title: Team Admin
+        links:
+          _ref:
+            module: team-users
+            menu: default
+```
+
+###### Using ES Modules with `.mjs` file extension:
+
+```js
+// resolvers/useLocalOrSharedConfig.mjs
+import fs from 'fs';
+import path from 'path';
+import { promisify } from 'util';
+
+const readFilePromise = promisify(fs.readFile);
+
+async function useLocalOrSharedConfig(refPath, vars, context) {
+  let fileContent
+  try {
+    fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+    return fileContent;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+      return fileContent;
+    }
+    throw error;
+  }
+
+
+}
+
+export default useLocalOrSharedConfig;
+```

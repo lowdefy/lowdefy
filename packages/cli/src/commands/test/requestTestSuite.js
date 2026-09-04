@@ -15,17 +15,17 @@
 */
 import discoverRequestTests from './discoverRequestTests.js';
 import formatRequestTestResult from './formatRequestTestResult.js';
-import prepareRequestTests from './prepareRequestTests.js';
 import runRequestTest from './runRequestTest.js';
 
 // The request test suite (tests/requests/*.test.yaml), registered in test.js
-// beside the journey suite. `prepare` runs before the dev server boots so the
-// in-memory MongoDB's URI can be handed to the server as connection overrides.
+// beside the journey suite. `getSeeds` is read before the dev server boots so
+// the in-memory MongoDB's URI can be handed to the server as connection
+// overrides.
 const requestTestSuite = {
   name: 'requests',
   getItemName: (item) => item.test?.name ?? item.filePath,
+  getSeeds: (item) => ({ seed: item.test?.seed, fixtures: item.test?.fixtures }),
   discover: discoverRequestTests,
-  prepare: prepareRequestTests,
   run: runRequestTest,
   format: formatRequestTestResult,
 };

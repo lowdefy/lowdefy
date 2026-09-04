@@ -80,6 +80,17 @@ blocks:
     size: small
 ```
 
+```yaml
+size_default_label:
+  _state: size_default_label
+size_default:
+  _state: size_default
+size_small_label:
+  _state: size_small_label
+size_small:
+  _state: size_small
+```
+
 **Simple (default size):**
 
 **Simple (small size):**
@@ -104,6 +115,17 @@ blocks:
     total: 100
     simple: true
     size: small
+```
+
+```yaml
+simple_default_label:
+  _state: simple_default_label
+simple_default:
+  _state: simple_default
+simple_small_label:
+  _state: simple_small_label
+simple_small:
+  _state: simple_small
 ```
 
 **Boolean (default format):**
@@ -141,6 +163,21 @@ blocks:
     total: 200
     showTotal: true
     size: small
+```
+
+```yaml
+show_total_bool_label:
+  _state: show_total_bool_label
+show_total_bool:
+  _state: show_total_bool
+show_total_string_label:
+  _state: show_total_string_label
+show_total_string:
+  _state: show_total_string
+show_total_small_label:
+  _state: show_total_small_label
+show_total_small:
+  _state: show_total_small
 ```
 
 **Default page size options:**
@@ -186,6 +223,21 @@ blocks:
     size: small
 ```
 
+```yaml
+size_changer_label:
+  _state: size_changer_label
+size_changer_default:
+  _state: size_changer_default
+size_changer_custom_label:
+  _state: size_changer_custom_label
+size_changer_custom:
+  _state: size_changer_custom
+size_changer_small_label:
+  _state: size_changer_small_label
+size_changer_small:
+  _state: size_changer_small
+```
+
 **Quick jumper enabled:**
 
 **Quick jumper (small):**
@@ -210,6 +262,17 @@ blocks:
     total: 500
     showQuickJumper: true
     size: small
+```
+
+```yaml
+quick_jumper_label:
+  _state: quick_jumper_label
+quick_jumper:
+  _state: quick_jumper
+quick_jumper_small_label:
+  _state: quick_jumper_small_label
+quick_jumper_small:
+  _state: quick_jumper_small
 ```
 
 **Default options [10, 20, 30, 40]:**
@@ -258,6 +321,21 @@ blocks:
       - 200
 ```
 
+```yaml
+page_size_default_label:
+  _state: page_size_default_label
+page_size_default:
+  _state: page_size_default
+page_size_custom_label:
+  _state: page_size_custom_label
+page_size_custom:
+  _state: page_size_custom
+page_size_large_label:
+  _state: page_size_large_label
+page_size_large:
+  _state: page_size_large
+```
+
 **Multiple pages (visible):**
 
 **Single page (hidden - nothing renders below):**
@@ -292,6 +370,21 @@ blocks:
   properties:
     total: 5
     hideOnSinglePage: false
+```
+
+```yaml
+hide_single_visible_label:
+  _state: hide_single_visible_label
+hide_single_visible:
+  _state: hide_single_visible
+hide_single_hidden_label:
+  _state: hide_single_hidden_label
+hide_single_hidden:
+  _state: hide_single_hidden
+hide_single_no_hide_label:
+  _state: hide_single_no_hide_label
+hide_single_no_hide:
+  _state: hide_single_no_hide
 ```
 
 **Small total (30):**
@@ -335,6 +428,25 @@ blocks:
   type: Pagination
   properties:
     total: 10000
+```
+
+```yaml
+total_small_label:
+  _state: total_small_label
+total_small:
+  _state: total_small
+total_medium_label:
+  _state: total_medium_label
+total_medium:
+  _state: total_medium
+total_large_label:
+  _state: total_large_label
+total_large:
+  _state: total_large
+total_very_large_label:
+  _state: total_very_large_label
+total_very_large:
+  _state: total_very_large
 ```
 
 **Basic disabled:**
@@ -387,6 +499,25 @@ blocks:
     total: 100
     disabled: true
     simple: true
+```
+
+```yaml
+disabled_basic_label:
+  _state: disabled_basic_label
+disabled_basic:
+  _state: disabled_basic
+disabled_small_label:
+  _state: disabled_small_label
+disabled_small:
+  _state: disabled_small
+disabled_features_label:
+  _state: disabled_features_label
+disabled_features:
+  _state: disabled_features
+disabled_simple_label:
+  _state: disabled_simple_label
+disabled_simple:
+  _state: disabled_simple
 ```
 
 **All features enabled:**
@@ -456,20 +587,26 @@ blocks:
 ```
 
 ```yaml
-- id: with_label_default
-  type: Pagination
-  properties:
-    title: Page Navigation
-    total: 100
-- id: with_label_inline
-  type: Pagination
-  properties:
-    title: Results
-    total: 200
-    showTotal: true
-    label:
-      inline: true
-      span: 6
+combined_all_label:
+  _state: combined_all_label
+combined_all:
+  _state: combined_all
+combined_all_small_label:
+  _state: combined_all_small_label
+combined_all_small:
+  _state: combined_all_small
+combined_total_changer_label:
+  _state: combined_total_changer_label
+combined_total_changer:
+  _state: combined_total_changer
+combined_total_jumper_label:
+  _state: combined_total_jumper_label
+combined_total_jumper:
+  _state: combined_total_jumper
+combined_changer_jumper_label:
+  _state: combined_changer_jumper_label
+combined_changer_jumper:
+  _state: combined_changer_jumper
 ```
 
 **Custom background and padding:**
@@ -521,6 +658,21 @@ blocks:
     total: 100
 ```
 
+```yaml
+style_background_label:
+  _state: style_background_label
+style_background:
+  _state: style_background
+style_centered_label:
+  _state: style_centered_label
+style_centered:
+  _state: style_centered
+style_right_label:
+  _state: style_right_label
+style_right:
+  _state: style_right
+```
+
 **Tailwind background and padding:**
 
 **Tailwind border and centered:**
@@ -555,6 +707,21 @@ blocks:
   class: shadow-md rounded-lg p-3 bg-bg-container
   properties:
     total: 100
+```
+
+```yaml
+class_bg_label:
+  _state: class_bg_label
+class_bg:
+  _state: class_bg
+class_border_label:
+  _state: class_border_label
+class_border:
+  _state: class_border
+class_shadow_label:
+  _state: class_shadow_label
+class_shadow:
+  _state: class_shadow
 ```
 
 **Custom primary color:**
@@ -630,6 +797,29 @@ blocks:
       fontSize: 14
 ```
 
+```yaml
+theme_primary_label:
+  _state: theme_primary_label
+theme_primary:
+  _state: theme_primary
+theme_large_items_label:
+  _state: theme_large_items_label
+theme_large_items:
+  _state: theme_large_items
+theme_small_items_label:
+  _state: theme_small_items_label
+theme_small_items:
+  _state: theme_small_items
+theme_active_color_label:
+  _state: theme_active_color_label
+theme_active_color:
+  _state: theme_active_color
+theme_combined_label:
+  _state: theme_combined_label
+theme_combined:
+  _state: theme_combined
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `total` | integer | `100` | Total number of items to be displayed in pagination. |
@@ -668,8 +858,8 @@ blocks:
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSizeChange` | `{ current, pageSize, skip }` | Triggered when page size is changed. |
-| `onChange` | `{ current, pageSize, skip }` | Triggered when current page is changed. |
+| `onSizeChange` | `{ current: integer, pageSize: integer, skip: integer }` | Triggered when page size is changed. |
+| `onChange` | `{ current: integer, pageSize: integer, skip: integer }` | Triggered when current page is changed. |
 
 | Key | Target |
 | --- | --- |

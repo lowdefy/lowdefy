@@ -18,7 +18,7 @@ import React, { useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { List, Typography } from 'antd';
 
-import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, withBlockDefaults } from '@lowdefy/block-utils';
 import Button from '../Button/Button.js';
 import withTheme from '../withTheme.js';
 
@@ -64,10 +64,8 @@ const ControlledListBlock = ({
   };
   return (
     <List
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       size={properties.size}
-      style={styles.element}
       header={
         (properties.title || (properties.addToFront && !properties.hideAddButton)) && (
           <div

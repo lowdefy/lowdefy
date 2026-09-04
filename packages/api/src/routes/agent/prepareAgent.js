@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import logEvent from '../../log/logEvent.js';
 import authorizeAgent from './authorizeAgent.js';
 import getAgentConfig from './getAgentConfig.js';
 import getAgentResolver from './getAgentResolver.js';
@@ -82,11 +83,29 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
         state: {},
         steps: {},
       }),
+    // The agent calling one of its declared tools. invokeEndpoint emits the
+    // endpoint's own line; this one names the agent that asked for it.
     callEndpoint: async (endpointId, { payload }) => {
+      const startTime = performance.now();
       const { error, response, status } = await invokeEndpoint(context, {
         endpointId,
         payload,
         endpointDepth,
+      });
+      const success = !['error', 'reject'].includes(status);
+      logEvent({
+        context,
+        event: success ? 'agent_tool_completed' : 'agent_tool_failed',
+        fields: {
+          agent_id: agentConfig.agentId,
+          tool: endpointId,
+          endpoint_id: endpointId,
+          transport: 'agent',
+          config_key: agentConfig['~k'],
+          duration_ms: Math.round(performance.now() - startTime),
+          success,
+          error,
+        },
       });
       return buildEndpointResult(context, { error, response, status });
     },

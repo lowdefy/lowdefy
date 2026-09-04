@@ -1,0 +1,6 @@
+{
+  "schema": {
+    "type": "string",
+    "description": "The string to title case."
+  }
+}

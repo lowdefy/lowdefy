@@ -85,10 +85,25 @@ test('reject at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -105,10 +120,25 @@ test('reject at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
 });
@@ -155,10 +185,25 @@ test('reject in the middle of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.error).toEqual(new UserError('Rejected', { isReject: true }));
@@ -203,10 +248,25 @@ test('multiple rejects in routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.error).toEqual(new UserError('First', { isReject: true }));
@@ -261,11 +321,26 @@ test('truthy guard statement reject', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
         result: 'guard statement',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
 });
@@ -318,11 +393,26 @@ test('falsy guard statement reject', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
 });
@@ -365,11 +455,26 @@ test('reject in a try catch block', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_try_reject',
         result: 'try_reject_block',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
 });
@@ -438,11 +543,26 @@ test('deep nested reject', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_first_if',
         result: 'first if',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
     [{ event: 'debug_control_if_run_then' }],
@@ -461,11 +581,26 @@ test('deep nested reject', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_second_if',
         result: 'second if',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
 });

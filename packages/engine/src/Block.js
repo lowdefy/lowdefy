@@ -340,7 +340,7 @@ class Block {
     if (visibleParent === false) {
       this.visibleEval.output = false;
     } else {
-      this.visibleEval = this.parse(this.visible);
+      this.visibleEval = this.parse(this.visible, 'visible');
     }
     if (beforeVisible !== this.visibleEval.output) {
       repeat.value = true;
@@ -351,17 +351,17 @@ class Block {
     }
 
     if (this.visibleEval.output !== false) {
-      this.propertiesEval = this.parse(this.properties);
-      this.requiredEval = this.parse(this.required);
+      this.propertiesEval = this.parse(this.properties, 'properties');
+      this.requiredEval = this.parse(this.required, 'required');
 
       this.validateEval();
 
-      this.classEval = this.parse(this.class);
-      this.styleEval = this.parse(this.style);
-      this.layoutEval = this.parse(this.layout);
-      this.loadingEval = this.parse(this.loading);
-      this.skeletonEval = this.parse(this.skeleton);
-      this.slotsLayoutEval = this.parse(this.slotsLayout);
+      this.classEval = this.parse(this.class, 'class');
+      this.styleEval = this.parse(this.style, 'style');
+      this.layoutEval = this.parse(this.layout, 'layout');
+      this.loadingEval = this.parse(this.loading, 'loading');
+      this.skeletonEval = this.parse(this.skeleton, 'skeleton');
+      this.slotsLayoutEval = this.parse(this.slotsLayout, 'slotsLayout');
     }
 
     if (this.isContainer() || this.isList()) {
@@ -376,9 +376,13 @@ class Block {
     }
   };
 
-  parse = (input) => {
+  // `kind` names which of the block's expressions is being evaluated. It is
+  // carried only so the perf counters can report parses by kind; the parser
+  // ignores it when counting is off.
+  parse = (input, kind) => {
     return this.context._internal.parser.parse({
       input,
+      kind,
       location: this.blockId,
       arrayIndices: this.arrayIndices,
     });
@@ -386,9 +390,22 @@ class Block {
 
   // The JSON schema type the page state contract declares for this block's
   // state path, or undefined when the page has no contract or leaves it open.
+  // Resolved once: blockId already carries this block's array indices and the
+  // contract cannot change without a page rebuild, so re-walking the schema on
+  // every state change would buy nothing.
   getDeclaredStateType = () => {
-    if (type.isNone(this.context.stateSchema)) return undefined;
-    const fragment = getSchemaAtPath({ schema: this.context.stateSchema, path: this.blockId });
+    if (type.isNone(this.declaredStateType)) {
+      this.declaredStateType = { value: this.resolveDeclaredStateType() };
+    }
+    return this.declaredStateType.value;
+  };
+
+  resolveDeclaredStateType = () => {
+    if (type.isNone(this.context.stateSchemaRoot)) return undefined;
+    const fragment = getSchemaAtPath({
+      schema: this.context.stateSchemaRoot,
+      path: this.blockId,
+    });
     return fragment === null ? undefined : fragment.type;
   };
 
@@ -413,7 +430,7 @@ class Block {
     let validationError = false;
     let validationWarning = false;
     validation.forEach((test) => {
-      const parsed = this.parse(test);
+      const parsed = this.parse(test, 'validate');
 
       // for parser errors
       if (parsed.errors.length > 0) {

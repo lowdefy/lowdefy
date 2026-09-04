@@ -17,9 +17,9 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../../../utils/collectExceptions.js';
 import validateId from '../../../utils/validateId.js';
-import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
-import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
+import validateTenantPipeline from '../../validateTenantPipeline.js';
 
 function buildRequest(request, pageContext) {
   const { auth, checkDuplicateRequestId, context, pageId, typeCounters } = pageContext;
@@ -53,9 +53,15 @@ function buildRequest(request, pageContext) {
       );
     }
     if (!context.connectionIds.has(request.connectionId)) {
-      throw new ConfigError(
-        `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
-        { configKey, checkSlug: 'connection-refs' }
+      // Collected: the request still builds, so the page reports the rest of
+      // its errors in the same build and a suppressed check leaves the page
+      // whole.
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
+          { configKey, checkSlug: 'connection-refs' }
+        )
       );
     }
   }
@@ -76,24 +82,18 @@ function buildRequest(request, pageContext) {
     );
   }
 
-  // Best-effort (literal pipelines only): a walled pipeline the wall can not
-  // scope mechanically must declare tenant: authored. Runtime re-checks.
-  validateTenantPipelineEntry({
-    config: request,
-    location: `Request "${request.id}" at page "${pageId}"`,
-    tenantConnections: context.tenantConnections,
-    configKey,
-  });
-  // Best-effort (literal pipelines only): a walled pipeline that joins a
-  // tenant: shared collection gets an injected $match it can never satisfy.
-  validateTenantSharedLookup({
+  // Best-effort (literal pipelines only): every refusal the tenant wall raises
+  // at request time on a walled pipeline, raised at build instead. The walker
+  // returns its findings, so a pipeline with several reports all of them and
+  // the rest of the page keeps building.
+  validateTenantPipeline({
     config: request,
     location: `Request "${request.id}" at page "${pageId}"`,
     tenantConnections: context.tenantConnections,
     tenantCollectionMap: context.tenantCollectionMap,
     collections: context.collections,
     configKey,
-  });
+  }).forEach((error) => collectExceptions(context, error));
 
   if (type.isUndefined(request.payload)) request.payload = {};
 

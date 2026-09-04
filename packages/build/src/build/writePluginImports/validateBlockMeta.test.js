@@ -49,7 +49,21 @@ const validMeta = {
       payload: { type: 'object', properties: { value: { type: 'string' } } },
     },
   },
-  hazards: [{ id: 'trims-value', message: 'The value is trimmed.', see: null }],
+  hazards: [
+    {
+      id: 'trims-value',
+      kind: 'bug',
+      retiredBy: 'V-68',
+      message: 'The value is trimmed.',
+      see: 'input-blocks/textinput',
+    },
+    {
+      id: 'empty-is-null',
+      kind: 'semantics',
+      message: 'An empty input is null, not "".',
+      see: 'concepts/state',
+    },
+  ],
   dynamicEvents: false,
 };
 
@@ -223,20 +237,45 @@ test('validateBlockMeta reports malformed hazards and dynamicEvents', () => {
   expect(context.errors[0].message).toContain(
     'meta.dynamicEvents must be a boolean. Received "yes".'
   );
-  expect(context.errors[1].message).toContain('meta.hazards must be an array of');
+  expect(context.errors[1].message).toContain('meta.every hazard must be');
   expect(context.errors[1].message).toContain('Received [{"id":"x"}].');
 });
 
+test('validateBlockMeta requires a hazard kind, a see slug, and retiredBy for a bug', () => {
+  const cases = [
+    { id: 'a', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'gotcha', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'bug', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'bug', retiredBy: '', message: 'm.', see: 'concepts/state' },
+    { id: 'a', kind: 'semantics', message: 'm.' },
+    { id: 'a', kind: 'semantics', message: 'm.', see: null },
+  ];
+  for (const hazard of cases) {
+    const { valid, context } = validate({ category: 'display', hazards: [hazard] });
+    expect([hazard, valid]).toEqual([hazard, false]);
+    expect(context.errors[0].message).toContain('every hazard must be');
+  }
+});
+
+test('validateBlockMeta accepts a semantics hazard without retiredBy', () => {
+  const { valid, context } = validate({
+    category: 'display',
+    hazards: [{ id: 'a', kind: 'semantics', message: 'm.', see: 'concepts/state' }],
+  });
+  expect(valid).toBe(true);
+  expect(context.errors).toEqual([]);
+});
+
 test('validateBlockMeta warns rather than errors on an unknown key and keeps the meta valid', () => {
-  const { valid, context } = validate({ category: 'display', valueType: null, styles: ['a.css'] });
+  const { valid, context } = validate({ category: 'display', valueType: null, colours: ['red'] });
   expect(valid).toBe(true);
   expect(context.errors).toEqual([]);
   expect(context.handleWarning).toHaveBeenCalledTimes(1);
   const warning = context.handleWarning.mock.calls[0][0];
   expect(warning).toBeInstanceOf(ConfigWarning);
-  expect(warning.message).toContain('meta has unknown keys ["styles"]');
+  expect(warning.message).toContain('meta has unknown keys ["colours"]');
   expect(warning.message).toContain('Known keys are ["category","cssKeys"');
-  expect(warning.received).toEqual(['styles']);
+  expect(warning.received).toEqual(['colours']);
 });
 
 test('validateBlockMeta collects every bad field of one meta instead of stopping at the first', () => {
@@ -252,4 +291,59 @@ test('validateBlockMeta collects every bad field of one meta instead of stopping
 
 test('validateBlockMeta throws immediately when the context has no error collection', () => {
   expect(() => validate({ category: 'widget' }, { handleWarning: jest.fn() })).toThrow(ConfigError);
+});
+
+test('validateBlockMeta accepts styles as a known key and rejects a non-string list', () => {
+  const accepted = validate({ category: 'display', styles: ['a.css'] });
+  expect(accepted.valid).toBe(true);
+  expect(accepted.context.handleWarning).not.toHaveBeenCalled();
+
+  const rejected = validate({ category: 'display', styles: 'a.css' });
+  expect(rejected.valid).toBe(false);
+  expect(rejected.context.errors[0].message).toContain(
+    'meta.styles must be an array of strings. Received "a.css".'
+  );
+});
+
+const filePlugin = {
+  checkSlug: 'block-types',
+  relativePath: 'plugins/blocks/Badge.jsx',
+};
+
+test('validateBlockMeta fails a file block with no sibling JSON meta and points at the JSON', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({ context, filePlugin, meta: undefined, typeName: 'Badge' });
+  expect(valid).toBe(false);
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0]).toBeInstanceOf(ConfigError);
+  expect(context.errors[0].message).toEqual(
+    'Block type "Badge" from "plugins/blocks/Badge.jsx": has no meta. Declare it in "plugins/blocks/Badge.json" as { "meta": { ... } } with at least { category }.'
+  );
+  expect(context.errors[0].checkSlug).toEqual('block-types');
+});
+
+test('validateBlockMeta holds a file block meta to the same contract as a package block', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({
+    context,
+    filePlugin,
+    meta: { category: 'not-a-category' },
+    typeName: 'Badge',
+  });
+  expect(valid).toBe(false);
+  expect(context.errors[0].message).toContain(
+    'Block type "Badge" from "plugins/blocks/Badge.jsx": meta.category must be one of'
+  );
+});
+
+test('validateBlockMeta accepts a valid file block meta', () => {
+  const context = createContext();
+  const valid = validateBlockMeta({
+    context,
+    filePlugin,
+    meta: { category: 'display' },
+    typeName: 'Badge',
+  });
+  expect(valid).toBe(true);
+  expect(context.errors).toHaveLength(0);
 });

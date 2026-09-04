@@ -69,11 +69,26 @@ test('if condition is true', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
         result: 'Was true',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -133,11 +148,26 @@ test('if condition is false', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
         result: 'Was false',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -197,11 +227,26 @@ test('if condition is truthy', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
         result: 'Was true',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -261,11 +306,26 @@ test('if condition is falsey', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
         result: 'Was false',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -325,11 +385,26 @@ test('if condition is null', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
         result: 'Was false',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -393,11 +468,26 @@ test('if condition operators are evaluated', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_false',
         result: 'Was false',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -477,11 +567,26 @@ test('if condition is true with no else', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_true',
         result: 'Was true',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);

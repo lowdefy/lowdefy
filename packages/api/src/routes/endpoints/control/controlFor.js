@@ -15,6 +15,8 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+
+import checkAborted from '../checkAborted.js';
 import runRoutine from '../runRoutine.js';
 
 async function controlFor(context, routineContext, { control }) {
@@ -53,6 +55,7 @@ async function controlFor(context, routineContext, { control }) {
   }
 
   for (const [index, item] of array.entries()) {
+    checkAborted(context, { location: 'the next :for iteration' });
     const updatedItems = { ...items, [itemName]: item };
 
     logger.debug({

@@ -101,7 +101,9 @@ const PageSidebarLayout = ({
       components={{ Icon, Link, ShortcutBadge }}
       events={events}
       properties={{ hasSider: true }}
+      classNames={{ block: classNames.block, element: classNames.element }}
       styles={{
+        block: styles.block,
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
       content={{

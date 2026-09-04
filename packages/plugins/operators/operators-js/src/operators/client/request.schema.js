@@ -17,8 +17,31 @@
 export default {
   type: 'object',
   params: {
-    type: 'string',
+    oneOf: [
+      {
+        type: 'string',
+        description:
+          'Dot-notation path to request response data. First segment is the request ID, remaining segments access nested properties.',
+      },
+      {
+        type: 'object',
+        additionalProperties: false,
+        required: ['key'],
+        properties: {
+          key: {
+            type: 'string',
+            description:
+              'Dot-notation path to request response data, or the request ID alone when status is true.',
+          },
+          status: {
+            type: 'boolean',
+            description:
+              'Return { loading, error, success, empty } for the request instead of its response data.',
+          },
+        },
+      },
+    ],
     description:
-      'Dot-notation path to request response data. First segment is the request ID, remaining segments access nested properties.',
+      'A dot-notation path to request response data, or { key, status: true } to read the request status.',
   },
 };

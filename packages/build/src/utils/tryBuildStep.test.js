@@ -187,7 +187,7 @@ test('tryBuildStep ignores suppressed ConfigError', () => {
       suppressedKey: {
         '~r': 'ref1',
         '~l': 10,
-        '~ignoreBuildChecks': true,
+        '~ignoreBuildChecks': ['state-refs'],
       },
     },
     refMap: {
@@ -199,6 +199,7 @@ test('tryBuildStep ignores suppressed ConfigError', () => {
   const stepFn = jest.fn(() => {
     throw new ConfigError('This error should be suppressed.', {
       configKey: 'suppressedKey',
+      checkSlug: 'state-refs',
     });
   });
 

@@ -24,6 +24,7 @@ function testContext({
   logger = {},
 } = {}) {
   const defaultLogger = {
+  debug: () => {},
     info: () => {},
     log: () => {},
     warn: () => {},

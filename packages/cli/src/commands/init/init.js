@@ -14,30 +14,53 @@
   limitations under the License.
 */
 
-import path from 'path';
+import crypto from 'crypto';
 import fs from 'fs';
-import { writeFile } from '@lowdefy/node-utils';
+import path from 'path';
+import url from 'url';
+import { readFile, writeFile } from '@lowdefy/node-utils';
 
-import lowdefyFile from './lowdefyFile.js';
+import agentSetup from '../agentSetup/agentSetup.js';
+import renderTemplate from './renderTemplate.js';
+import resolveAppName from './resolveAppName.js';
+import templateFiles from './templateFiles.js';
 
 async function init({ context }) {
-  const lowdefyFilePath = path.resolve('./lowdefy.yaml');
-  const fileExists = fs.existsSync(lowdefyFilePath);
-  if (fileExists) {
+  const projectDirectory = context.directories.config;
+  const lowdefyFilePath = path.join(projectDirectory, 'lowdefy.yaml');
+  if (fs.existsSync(lowdefyFilePath)) {
     throw new Error('Cannot initialize a Lowdefy project, a "lowdefy.yaml" file already exists');
   }
   context.logger.info('Initializing Lowdefy project.');
-  await writeFile(lowdefyFilePath, lowdefyFile({ version: context.cliVersion }));
-  context.logger.info("Created 'lowdefy.yaml'.");
-  await writeFile(
-    path.resolve('./.gitignore'),
-    `.lowdefy/**
-!.lowdefy/migrations/
-.lowdefy/migrations/local.json
-.env`
-  );
-  context.logger.info("Created '.gitignore'.");
+
+  const values = {
+    APP_NAME: resolveAppName({ directory: projectDirectory }),
+    LOWDEFY_VERSION: context.cliVersion,
+    BETTER_AUTH_SECRET: crypto.randomBytes(32).toString('hex'),
+  };
+
+  for (const { template, target } of templateFiles) {
+    const targetPath = path.join(projectDirectory, target);
+    // A project can already hold a README or a .gitignore that is not ours;
+    // only lowdefy.yaml is guaranteed absent, and that guarantee is above.
+    if (fs.existsSync(targetPath)) {
+      context.logger.info(`Skipped '${target}', it already exists.`);
+      continue;
+    }
+    const contents = await readFile(
+      url.fileURLToPath(new URL(`./templates/${template}`, import.meta.url))
+    );
+    await writeFile(targetPath, renderTemplate({ template: contents, values }));
+    context.logger.info(`Created '${target}'.`);
+  }
+
   await context.sendTelemetry();
+
+  if (context.options.agentSetup === false) {
+    context.logger.info({ spin: 'succeed' }, 'Project initialized.');
+    return;
+  }
+  await agentSetup({ context });
   context.logger.info({ spin: 'succeed' }, 'Project initialized.');
 }
 

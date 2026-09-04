@@ -1,0 +1,297 @@
+# Page and App State
+
+A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, `media` and `user` objects. Then there are page specific objects like the `state`, `urlQuery` and `input` objects.
+
+## State
+
+Each page in a Lowdefy app has a `state` object which serves as the general data store for that page.
+
+Every [`input` category block](/blocks) inside the page will have a value in the `state` object, with their `id` as the key in the `state` object. If the block is not visible the input value is removed from the state object.
+
+Because a block's `id` is its key in `state`, block ids must be unique within a page — two blocks sharing an id would share a single state value. Duplicate block ids on a page are a build error.
+
+The [`_state`](/_state) operator can be used to read from `state` and the [`SetState`](/SetState) action can be used to modify or add new values in `state` object in the same page from which `SetState` is called.
+
+> See [`operators`](/operators) and [`events-and-actions`](/events-and-actions) for more details.
+
+Page states remain even as users navigate to new pages - so if a user returns to a page, the state as they left it will remain.
+
+### Reading from state
+Here is an example showing how to read `input` block values from `state`:
+```yaml
+id: my-page
+type: PageHeaderMenu
+blocks:
+  - id: Name
+    type: TextInput
+  - id: Age
+    type: NumberInput
+  - id: MyDisplay
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - <b>Name:</b>
+          - _state: Name
+          - <br/><b>Age:</b>
+          - _state: Age
+```
+
+### Modifying state
+The following examples demonstrates how to modify `state`:
+```yaml
+id: my-page
+type: PageHeaderMenu
+blocks:
+  - id: Name
+    type: TextInput
+  - id: Age
+    type: NumberInput
+  - id: Button
+    type: Button
+    events:
+      onClick:
+        - id: set_person_object
+          type: SetState
+          params:
+            person:
+              name:
+                _state: Name
+              age:
+                _state: Age
+              example: true
+```
+
+This will result in a `state` which looks like:
+```json5
+{
+  "Name": "Alice", // The TextInput value
+  "Age": 99, //The NumberInput value
+  "person": {
+    "name": "Alice",
+    "age": 99,
+    "example": true
+  }
+}
+```
+
+## State contract
+
+A page can declare the shape of its `state` with a page-level `state` property: a map of dotted state paths to standard [JSON Schema](https://json-schema.org/) fragments. The declaration is the page's data contract - written once, checked at build, used by `required`, targetable by the [`Validate`](/Validate) action and compared against live state by the dev server's `lowdefy_inspect_state` tool (`stateSchemaDrift`).
+
+```yaml
+id: answer-detail
+type: PageHeaderMenu
+state:
+  data.address:
+    type: object
+    properties:
+      formatted_address: { type: string }
+    required: [formatted_address]
+  data.status: { enum: [draft, submitted, approved] }
+  evidence_ids: { type: array, items: { type: string } }
+```
+
+Fragments are plain JSON Schema: `required` is the standard array of property names at the object level, not a per-property flag. `state` is only allowed on the page itself, not on nested blocks.
+
+### The contract is complete
+
+Declaring `state` means every state path the page uses must be part of it. Every input or list block id, every key set by [`SetState`](/SetState) and every `_state` reference is checked at build, and a path the contract does not cover is a build error:
+
+```
+Page "answer-detail" declares a state contract and "data.address.formated_address" is not part of it. Declared paths: data.address, data.status, evidence_ids. Did you mean "data.address.formatted_address"?
+```
+
+A partial contract could not catch a typo, which is what the declaration is for. To opt out, omit `state`, or suppress the check on a block or reference with `~ignoreBuildChecks: [state-schema]`.
+
+### How paths resolve
+
+A path resolves when it navigates the declared fragments segment by segment: `.` steps into an object's `properties`, and an index (`[0]`, `.0` or the list placeholder `$`) steps into an array's `items`. `data.address.formatted_address` resolves under `data.address`; `data.address.formated_address` does not, because `data.address` declares its `properties`. A fragment that declares an `object` without `properties`, or an `array` without `items`, leaves everything below it open. Each fragment must itself be a valid JSON schema.
+
+### `required` reads the declared type
+
+Without a contract a required block is empty when its value is `null`, `undefined`, `''` or `[]`. When the block's state path is declared, the declared `type` decides instead: `string` keeps `''` empty and `array` keeps `[]` empty, while `number`, `integer`, `boolean` and `object` are empty only when `null` or `undefined` - so a required `NumberInput` accepts `0` and a required `Switch` accepts `false`.
+
+### Validating state against the contract
+
+The [`Validate`](/Validate) action's `schema` param validates the page `state` against the contract: `schema: true` checks the whole contract and a dotted path such as `schema: data.address` checks one fragment. It runs in addition to the blocks selected by `blockIds` or `regex`. A violation at a path that is a block on the page is shown on that block; the rest are reported as `state.<path>: <message>` lines in the action's error.
+
+```yaml
+- id: validate_contract
+  type: Validate
+  params:
+    schema: true
+```
+
+## Global
+The `global` object is a single app level data object defined in the Lowdefy [config root](/lowdefy-schema). This object is the same for every page. The `global` object can be modified using the [`SetGlobal`](/SetGlobal) action.
+
+> Note that when `SetGlobal` is called, `global` will not be consistent between clients, like different users, or a single user with multiple tabs open.
+
+### Reading from global
+This example shows how you can create and read from `global`:
+
+`lowdefy.yaml`
+```yaml
+lowdefy: 5.5.1
+global:
+  key: value
+pages:
+  - id: my-page
+    type: PageSiderMenu
+    blocks:
+      - id: DisplayGlobalKey
+        type: Html
+        properties:
+          html:
+            _global: key ## Returns 'value'
+```
+
+### Modifying global
+The following examples shows how to modify the `global` object:
+
+`lowdefy.yaml`
+```yaml
+lowdefy: 5.5.1
+global:
+  key: value
+pages:
+  - id: my-page
+    type: PageSiderMenu
+    blocks:
+      - id: DisplayGlobalKey
+        type: Html
+        properties:
+          html:
+            _global: key ## Returns `value`
+      - id: ModifyGlobal
+        type: Button
+        events:
+          onClick:
+            - id: modify_global_key
+              type: SetGlobal
+              params:
+                key: New Value
+      - id: DisplayModifiedGlobalKey
+        type: Html
+        properties:
+          html:
+            _global: key ## Returns `New Value`
+```
+## URL query
+The `urlQuery` object is used to access variables set in the URL. URL query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action and read using the [`_url_query`](/_url_query) operator. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onMount`](/events-and-actions) event.
+
+> Note that any variables set to `urlQuery` will be visible to users of the app.
+
+### Example using `urlQuery` and `Link`
+
+`first-page.yaml`
+```yaml
+id: first-page
+type: PageSiderMenu
+blocks:
+  - id: LinkButton
+    type: Button
+    events:
+      - id: link_to_second_page
+        type: Link
+        params:
+          pageId: second-page
+          urlQuery:
+            document-id: ABC123
+```
+
+`second-page.yaml`
+```yaml
+id: second-page
+type: PageSiderMenu
+events:
+  onMount:
+    - id: set_url_id
+      type: SetState
+      params:
+        myDocId:
+          _url_query: document-id ## Returns 'ABC123'
+```
+
+## Input
+
+The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. Variables set to the `input` object are not written to the URL, so they are not visible to app users but also cannot be used to share the data in a link since a `input` object is only consistent between one page and the next to which it links. A `input` object is set using the `input` param of the [`Link`](/Link) action or the `input` property of an [`Anchor`](/Anchor) block when linking from a page to another page in the app and can be read using the [`_input`](/_input) operator.
+
+> Note `input` cannot be passed between pages when using the `newTab: true` param in the [`Link`](/Link) action.
+
+### Example of setting and reading `input`
+
+`first-page.yaml`
+```yaml
+id: first-page
+type: PageSiderMenu
+blocks:
+  - id: LinkButton
+    type: Button
+    events:
+      - id: link_to_second_page
+        type: Link
+        params:
+          pageId: second-page
+          input:
+            document-id: 1234
+```
+
+`second-page.yaml`
+```yaml
+id: second-page
+type: PageSiderMenu
+events:
+  onMount:
+    - id: set_input_id
+      type: SetState
+      params:
+        myDocId:
+          _input: document-id ## Returns '1234'
+```
+## Media
+
+The `media` object contains some information about the client screen size, and can be accessed using the [`_media`](/_media) operator. This can be used to add additional responsive logic to a page.
+
+Here is an example showing how to read the screen size of a smartphone:
+```yaml
+id: DisplayScreenSize
+type: Html
+properties:
+  html:
+    _media: size ## Returns xs if used on phone width screen width < 640px
+```
+
+## User
+
+If authentication is configured and a user is logged in, data about the user can be accessed using the [`_user`](/_user) operator. See [User Authentication](/users-introduction) for more details.
+
+This example shows how to read a logged-in user's username and id:
+```yaml
+id: my-page
+type: PageSiderMenu
+blocks:
+  - id: DisplayUserName
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - <b>Name: </b>
+          - _user: name
+  - id: DisplayUserId
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - <b>ID: </b>
+          - _user: id
+```
+
+#### TLDR
+  - There are app wide and page specific data objects.
+  - App wide are `global`, `media` and `user`.
+  - Page specific are `state`, `urlQuery` and `input`.
+  - All input blocks write their value to `state`, with the their `id` as the key in the `state` object.
+  - Input blocks which are not visible are removed from `state`.
+  - The `SetState` action can also modify the `state` object.

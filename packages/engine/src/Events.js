@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 class Events {
   constructor({ arrayIndices, block, context }) {
@@ -76,6 +76,12 @@ class Events {
     this.context._internal.update();
 
     const actionHandle = async () => {
+      // The journey recorder (client) turns a completed event into one trace
+      // event. It needs the state as it stood before the chain ran to report
+      // what the chain wrote, so the snapshot is taken only when a recorder is
+      // listening - an app that records nothing copies nothing.
+      const recordJourneyEvent = this.context._internal.lowdefy.recordJourneyEvent;
+      const stateBefore = recordJourneyEvent ? serializer.copy(this.context.state) : null;
       const res = await this.context._internal.Actions.callActions({
         actions: eventDescription.actions,
         arrayIndices: this.arrayIndices,
@@ -87,6 +93,17 @@ class Events {
       });
       eventDescription.history.unshift(res);
       this.context.eventLog.unshift(res);
+      // The declared actions travel with the record because the record only
+      // holds responses: an 'async: true' action has no response yet when the
+      // event completes, and the recorder can only call it pending if it knows
+      // the action was declared.
+      recordJourneyEvent?.({
+        actions: [...eventDescription.actions, ...eventDescription.catchActions],
+        blockType: this.block.type,
+        context: this.context,
+        record: res,
+        stateBefore,
+      });
       eventDescription.loading = false;
       this.block.update = true;
       this.context._internal.update();

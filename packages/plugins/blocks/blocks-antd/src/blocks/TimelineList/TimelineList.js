@@ -18,7 +18,7 @@ import React from 'react';
 import { Timeline } from 'antd';
 import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 // TODO: need to pass value to list blocks to render item level settings.
@@ -40,8 +40,12 @@ const TimelineList = ({
   }
   return (
     <Timeline
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: { padding: '5px 0px 0px 5px' },
+      })}
       pending={properties.pending}
       pendingDot={
         properties.pendingDotIcon && (
@@ -55,7 +59,6 @@ const TimelineList = ({
         )
       }
       reverse={properties.reverse}
-      style={{ padding: '5px 0px 0px 5px', ...styles.element }}
       {...other}
     >
       {(list || []).map((child, i) => {

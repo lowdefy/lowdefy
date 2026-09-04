@@ -234,6 +234,57 @@ Navigation breadcrumb showing the current location in a hierarchy.
 ```
 
 ```yaml
+- id: on_click_basic
+  type: Breadcrumb
+  properties:
+    list:
+      - Home
+      - Products
+      - Details
+  events:
+    onClick:
+      - id: on_click_basic_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Clicked: "
+              - _event: link
+          status: info
+- id: on_click_objects
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Dashboard
+      - label: Reports
+      - label: Monthly
+  events:
+    onClick:
+      - id: on_click_objects_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Navigating to item "
+              - _event: index
+          status: info
+- id: on_click_set_state
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Home
+      - label: Settings
+      - label: Profile
+  events:
+    onClick:
+      - id: on_click_set_state_action
+        type: SetState
+        params:
+          last_breadcrumb_click:
+            _event: link
+```
+
+```yaml
 - id: css_tailwind_bg
   type: Breadcrumb
   class: bg-bg-layout p-3 rounded-lg
@@ -329,6 +380,85 @@ Navigation breadcrumb showing the current location in a hierarchy.
 **Two-Factor Authentication**
 
 Add an extra layer of security to your account by enabling two-factor authentication.
+
+```yaml
+- id: settings_card
+  type: Card
+  properties:
+    title: Account Settings
+    size: small
+  blocks:
+    - id: settings_breadcrumb
+      type: Breadcrumb
+      properties:
+        separator: ">"
+        list:
+          - label: Home
+            icon: AiOutlineHome
+            pageId: introduction
+          - label: Settings
+            icon: AiOutlineSetting
+          - label: Security
+            icon: AiOutlineLock
+      events:
+        onClick:
+          - id: settings_click_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - "Navigating to: "
+                  - _event: link.label
+              status: info
+    - id: settings_divider
+      type: Divider
+    - id: settings_description
+      type: Markdown
+      properties:
+        content: >
+          **Two-Factor Authentication**
+
+
+          Add an extra layer of security to your account by enabling two-factor
+          authentication.
+    - id: settings_actions
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: settings_cancel_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Cancel
+            color: default
+            variant: outlined
+          events:
+            onClick:
+              - id: settings_cancel_msg
+                type: DisplayMessage
+                params:
+                  content: Changes discarded
+                  status: info
+        - id: settings_save_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Save Changes
+            color: primary
+            variant: solid
+            icon: AiOutlineSave
+          events:
+            onClick:
+              - id: settings_save_msg
+                type: DisplayMessage
+                params:
+                  content: Settings saved successfully!
+                  status: success
+```
 
 ```yaml
 - id: settings_card
@@ -506,7 +636,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | `{ link, index }` | Triggered when breadcrumb item is clicked. |
+| `onClick` | `{ link: object, index: integer }` | Triggered when breadcrumb item is clicked. |
 
 | Key | Target |
 | --- | --- |

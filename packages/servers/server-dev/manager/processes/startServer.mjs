@@ -16,7 +16,6 @@
 
 import { spawn } from 'child_process';
 
-
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
   return function stdErrLineHandler(line) {
@@ -30,9 +29,9 @@ function createStdErrLineHandler({ context }) {
   };
 }
 
+// Spawns the child only - restartServer owns the shutdown and awaits the old
+// child's exit before calling this, so a second shutdown here would race it.
 function startServer(context) {
-  context.shutdownServer();
-
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never
   // drops the listener that browsers, SSE reload streams and MCP agents hold.

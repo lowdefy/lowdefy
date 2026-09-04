@@ -21,6 +21,9 @@ import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
+import addFilePluginTypes from './build/filePlugins/addFilePluginTypes.js';
+import discoverFilePlugins from './build/filePlugins/discoverFilePlugins.js';
+import withoutFilePluginTypes from './build/filePlugins/withoutFilePluginTypes.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
@@ -35,6 +38,18 @@ function createContext({
   validateOnly = false,
   writeModuleLock,
 }) {
+  // Package plugins are declared and installed; file plugins are found by
+  // walking the config directory, so the typesMap cannot be assembled until
+  // that walk has run.
+  const filePlugins = discoverFilePlugins({ configDirectory: directories?.config });
+  const typesMap = mergeObjects([defaultTypesMap, withoutFilePluginTypes(customTypesMap)]);
+  // A file plugin never overrides a package type. addFilePluginTypes returns
+  // the collisions instead of throwing so buildTypes can report every one.
+  const filePluginExceptions = [
+    ...filePlugins.errors,
+    ...addFilePluginTypes({ records: filePlugins.records, typesMap }),
+  ];
+
   const context = {
     defaultPackageNames: new Set(defaultPackages),
     agentIds: new Set(),
@@ -44,6 +59,8 @@ function createContext({
     directories,
     errors: [],
     jsBodies: [],
+    pageTypes: {},
+    envReferences: [],
     jsMap: {},
     jsModules: { client: {}, server: {} },
     warnings: [],
@@ -81,7 +98,9 @@ function createContext({
         server: createCounter('server'),
       },
     },
-    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    filePlugins: filePlugins.records,
+    filePluginExceptions,
+    typesMap,
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
   };
 

@@ -73,24 +73,24 @@ test('docsRunEndpointHandler leaves the original request body readable', async (
   await expect(c.req.raw.json()).resolves.toEqual({ endpointId: 'create_order' });
 });
 
-test('docsRunEndpointHandler returns 400 when user is malformed JSON', async () => {
-  const c = createContext({ endpointId: 'create_order', user: '{"roles":' });
+test('docsRunEndpointHandler passes a dev user fixture name through unresolved', async () => {
+  // runEndpoint resolves it: one resolver, so REST and MCP refuse an unknown
+  // name with the same message, as the ConfigError case below.
+  const c = createContext({ endpointId: 'create_order', user: 'admin' });
 
-  const result = await docsRunEndpointHandler(c);
+  await docsRunEndpointHandler(c);
 
-  expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/The "user" param must be JSON/);
-  expect(mockRunEndpoint).not.toHaveBeenCalled();
+  expect(mockRunEndpoint).toHaveBeenCalledWith(expect.objectContaining({ user: 'admin' }));
 });
 
-test('docsRunEndpointHandler returns 400 when user names an undeclared dev user', async () => {
+test('docsRunEndpointHandler returns 400 when runEndpoint refuses an undeclared dev user', async () => {
+  mockRunEndpoint.mockRejectedValue(new ConfigError('Unknown dev user "nope".'));
   const c = createContext({ endpointId: 'create_order', user: 'nope' });
 
   const result = await docsRunEndpointHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/No dev users are declared/);
-  expect(mockRunEndpoint).not.toHaveBeenCalled();
+  expect(result.data.error).toEqual('Unknown dev user "nope".');
 });
 
 test('docsRunEndpointHandler passes an undefined user when the body omits it', async () => {

@@ -15,8 +15,12 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout } from '@lowdefy/layout';
+import { Area, areaIsRendered } from '@lowdefy/layout';
+import { type } from '@lowdefy/helpers';
+
 import LoadingBlock from './LoadingBlock.js';
+import resolveClassNames from './resolveClassNames.js';
+import withBlockLayout from './withBlockLayout.js';
 
 const LoadingList = ({
   blockClass,
@@ -26,54 +30,73 @@ const LoadingList = ({
   blockStyle,
   Component,
   context,
+  inArea,
   lowdefy,
   skeleton,
 }) => {
+  const classNames = type.isNone(skeleton.class) ? blockClass : resolveClassNames(skeleton.class);
+  const styles = { block: skeleton.style ?? blockStyle };
+  const layout = skeleton.layout ?? blockLayout;
   const content = {};
   const contentList = [];
   new Array(3).forEach(() => {
     Object.keys(skeleton.slots).forEach((slotKey, i) => {
-      content[slotKey] = () => (
-        <Area
-          area={skeleton.slots[slotKey]}
-          areaKey={slotKey}
-          style={skeleton.slots[slotKey]?.style}
-          id={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
-          key={`s-ar-${blockId}-${skeleton.id}-${slotKey}-${i}`}
-          layout={skeleton.layout ?? blockLayout}
-        >
-          {skeleton.slots[slotKey].blocks.map((skl, k) => (
-            <LoadingBlock
-              blockId={blockId}
-              context={context}
-              key={`s-co-${skl.id}-${k}`}
-              lowdefy={lowdefy}
-              skeleton={skl}
-            />
-          ))}
-        </Area>
-      );
+      content[slotKey] = (contentStyle) => {
+        const style = { ...skeleton.slots[slotKey]?.style, ...contentStyle };
+        const renderArea = areaIsRendered({
+          area: skeleton.slots[slotKey],
+          areaKey: slotKey,
+          blockLayouts: skeleton.slots[slotKey].blocks.map((skl) => skl.layout),
+          layout,
+          style,
+        });
+        const children = skeleton.slots[slotKey].blocks.map((skl, k) => (
+          <LoadingBlock
+            blockId={blockId}
+            context={context}
+            inArea={renderArea}
+            key={`s-co-${skl.id}-${k}`}
+            lowdefy={lowdefy}
+            skeleton={skl}
+          />
+        ));
+        if (!renderArea) {
+          return (
+            <React.Fragment key={`s-co-${blockId}-${skeleton.id}-${slotKey}-${i}`}>
+              {children}
+            </React.Fragment>
+          );
+        }
+        return (
+          <Area
+            area={skeleton.slots[slotKey]}
+            areaKey={slotKey}
+            style={style}
+            id={`s-ar-${blockId}-${skeleton.id}-${slotKey}`}
+            key={`s-ar-${blockId}-${skeleton.id}-${slotKey}-${i}`}
+            layout={layout}
+          >
+            {children}
+          </Area>
+        );
+      };
     });
     contentList.push({ ...content });
   });
-  return (
-    <BlockLayout
-      style={skeleton.style ?? blockStyle}
-      id={`s-bl-${blockId}-${skeleton.id}`}
-      layout={skeleton.layout ?? blockLayout}
-      className={skeleton.class ?? blockClass}
-    >
-      <Component
-        basePath={lowdefy.basePath}
-        blockId={blockId}
-        components={lowdefy._internal.components}
-        list={contentList}
-        menus={lowdefy.menus}
-        methods={{}}
-        pageId={lowdefy.pageId}
-        properties={skeleton.properties ?? blockProperties}
-      />
-    </BlockLayout>
+  return withBlockLayout(
+    { id: `s-bl-${blockId}-${skeleton.id}`, inArea, layout },
+    <Component
+      basePath={lowdefy.basePath}
+      blockId={blockId}
+      classNames={classNames}
+      components={lowdefy._internal.components}
+      list={contentList}
+      menus={lowdefy.menus}
+      methods={{}}
+      pageId={lowdefy.pageId}
+      properties={skeleton.properties ?? blockProperties}
+      styles={styles}
+    />
   );
 };
 

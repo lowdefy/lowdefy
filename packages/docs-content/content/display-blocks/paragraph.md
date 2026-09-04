@@ -632,7 +632,7 @@ Maintenance window scheduled for Sunday 02:00-04:00 UTC.
 | --- | --- | --- |
 | `onExpand` | \- | Trigger action when ellipse expand is clicked. |
 | `onCopy` | \- | Trigger action when copy text is clicked. |
-| `onTextSelection` | \- | Trigger action when text is selected and pass selected text to the event object. |
+| `onTextSelection` | `{ selection: string }` | Trigger action when text is selected. |
 
 | Key | Target |
 | --- | --- |

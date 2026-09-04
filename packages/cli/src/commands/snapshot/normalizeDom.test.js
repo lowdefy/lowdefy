@@ -66,3 +66,17 @@ test('normalizeDom is idempotent', () => {
   const once = normalizeDom({ dom });
   expect(normalizeDom({ dom: once })).toBe(once);
 });
+
+test('normalizeDom replaces rc ids whose name has several segments or camelCase', () => {
+  const dom =
+    '<div id="rc-picker-panel-3"><span id="rc_virtualList_12"></span><li id="rc-tabs-0-panel-x"></li></div>';
+  expect(normalizeDom({ dom })).toBe(
+    '<div id="rc-picker-panel-[N]">\n<span id="rc-virtualList-[N]">\n</span>\n<li id="rc-tabs-[N]-panel-x">\n</li>\n</div>'
+  );
+});
+
+test('normalizeDom keeps the rc-menu uuid rule ahead of the general rc rule', () => {
+  expect(normalizeDom({ dom: '<li data-menu-id="rc-menu-uuid-49081-settings"></li>' })).toBe(
+    '<li data-menu-id="rc-menu-uuid-[UUID]-settings">\n</li>'
+  );
+});

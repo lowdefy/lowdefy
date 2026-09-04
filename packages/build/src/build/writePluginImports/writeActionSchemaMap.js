@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import findFilePlugin from '../filePlugins/findFilePlugin.js';
 import importPluginModule from './importPluginModule.js';
 
 async function writeActionSchemaMap({ components, context }) {
@@ -23,6 +26,15 @@ async function writeActionSchemaMap({ components, context }) {
 
   const actionsByPackage = {};
   for (const action of components.imports.actions) {
+    // A file plugin has no package barrel to import a schema from: the schema
+    // is the "schema" key of the sibling JSON discovery read.
+    if (type.isNone(action.package)) {
+      const record = findFilePlugin({ context, kind: 'actions', typeName: action.typeName });
+      if (!type.isNone(record?.schema)) {
+        schemas[action.typeName] = record.schema;
+      }
+      continue;
+    }
     if (!actionsByPackage[action.package]) {
       actionsByPackage[action.package] = [];
     }

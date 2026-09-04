@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["rows"],
+    "properties": {
+      "rows": {
+        "type": "array",
+        "description": "The rows this connection serves.",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

@@ -770,6 +770,114 @@ Manage your blog posts here. Use the sidebar to navigate between sections.
               - 2 pages updated
 ```
 
+```yaml
+- id: admin_layout
+  type: Box
+  layout:
+    direction: row
+    gap: 0
+  blocks:
+    - id: admin_sidebar
+      type: Box
+      layout:
+        flex: 0 0 256px
+      blocks:
+        - id: admin_logo
+          type: Markdown
+          class: px-4 py-3 font-bold text-lg border-b border-border
+          properties:
+            content: Admin Panel
+        - id: admin_menu
+          type: Menu
+          style:
+            width: 256
+          properties:
+            mode: inline
+            defaultOpenKeys:
+              - adm_content
+            selectedKeys:
+              - adm_posts
+            links:
+              - id: adm_overview
+                type: MenuLink
+                properties:
+                  title: Overview
+                  icon: AiOutlineDashboard
+              - id: adm_content
+                type: MenuGroup
+                properties:
+                  title: Content
+                  icon: AiOutlineFileText
+                links:
+                  - id: adm_posts
+                    type: MenuLink
+                    properties:
+                      title: Posts
+                  - id: adm_pages
+                    type: MenuLink
+                    properties:
+                      title: Pages
+                  - id: adm_media
+                    type: MenuLink
+                    properties:
+                      title: Media
+              - id: adm_users
+                type: MenuGroup
+                properties:
+                  title: Users
+                  icon: AiOutlineTeam
+                links:
+                  - id: adm_all_users
+                    type: MenuLink
+                    properties:
+                      title: All Users
+                  - id: adm_roles
+                    type: MenuLink
+                    properties:
+                      title: Roles
+              - id: adm_divider
+                type: MenuDivider
+              - id: adm_danger_zone
+                type: MenuLink
+                properties:
+                  title: Danger Zone
+                  icon: AiOutlineWarning
+                  danger: true
+          events:
+            onSelect:
+              - id: adm_select_msg
+                type: DisplayMessage
+                params:
+                  content:
+                    _string.concat:
+                      - "Navigated to: "
+                      - _event: key
+                  status: info
+    - id: admin_main
+      type: Card
+      layout:
+        flex: 1 1 auto
+      properties:
+        title: Posts
+        size: small
+      blocks:
+        - id: admin_welcome
+          type: Markdown
+          properties:
+            content: >
+              Manage your blog posts here. Use the sidebar to navigate between
+              sections.
+
+
+              **Recent Activity:**
+
+              - 3 new posts published this week
+
+              - 12 comments pending review
+
+              - 2 pages updated
+```
+
 ## Configuration Guide
 
 Learn how to configure your Lowdefy application with YAML configuration files.
@@ -779,6 +887,94 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 - Page definitions
 - Block properties
 - Event handling
+
+```yaml
+- id: docs_header_box
+  type: Box
+  class: border-b border-border
+  blocks:
+    - id: docs_nav_menu
+      type: Menu
+      properties:
+        mode: horizontal
+        selectedKeys:
+          - docs_guides
+        theme:
+          horizontalItemSelectedColor: "#1677ff"
+          horizontalItemHoverColor: "#4096ff"
+          activeBarHeight: 3
+        links:
+          - id: docs_getting_started
+            type: MenuLink
+            properties:
+              title: Getting Started
+              icon: AiOutlineRocket
+          - id: docs_guides
+            type: MenuLink
+            properties:
+              title: Guides
+              icon: AiOutlineBook
+          - id: docs_api_ref
+            type: MenuGroup
+            properties:
+              title: API Reference
+            links:
+              - id: docs_rest
+                type: MenuLink
+                properties:
+                  title: REST API
+              - id: docs_graphql
+                type: MenuLink
+                properties:
+                  title: GraphQL
+              - id: docs_api_divider
+                type: MenuDivider
+              - id: docs_changelog
+                type: MenuLink
+                properties:
+                  title: Changelog
+          - id: docs_examples
+            type: MenuLink
+            properties:
+              title: Examples
+              icon: AiOutlineCode
+      events:
+        onClick:
+          - id: docs_click_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - "Opening: "
+                  - _event: key
+              status: success
+- id: docs_content_card
+  type: Card
+  properties:
+    title: Guides
+    size: small
+  blocks:
+    - id: docs_content
+      type: Markdown
+      properties:
+        content: >
+          ## Configuration Guide
+
+
+          Learn how to configure your Lowdefy application with YAML
+          configuration files.
+
+
+          **Topics covered:**
+
+          - App configuration
+
+          - Page definitions
+
+          - Block properties
+
+          - Event handling
+```
 
 ```yaml
 - id: docs_header_box
@@ -994,6 +1190,44 @@ Learn how to configure your Lowdefy application with YAML configuration files.
           status: info
 ```
 
+```yaml
+- id: ks_menu
+  type: Menu
+  style:
+    width: 256
+  properties:
+    mode: vertical
+    links:
+      - id: ks_home
+        type: MenuLink
+        properties:
+          title: Home
+          icon: AiOutlineHome
+          shortcut: mod+1
+      - id: ks_search
+        type: MenuLink
+        properties:
+          title: Search
+          icon: AiOutlineSearch
+          shortcut: mod+k
+      - id: ks_settings
+        type: MenuLink
+        properties:
+          title: Settings
+          icon: AiOutlineSetting
+          shortcut: mod+,
+  events:
+    onSelect:
+      - id: ks_select_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Selected: "
+              - _event: key
+          status: info
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `expandIcon` | string \| object | - | Menu expand icon. |
@@ -1006,7 +1240,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
+| `theme` | string \| object | - | The Menu color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
 | `theme.dropdownWidth` | number | `160` | Width of dropdown submenus. |
 | `theme.zIndexPopup` | number | `1050` | Z-index for popup submenus. |
 | `theme.itemBorderRadius` | number | `8` | Border radius for menu items. |
@@ -1107,9 +1341,9 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ key }` | Trigger action when menu item is selected. |
-| `onClick` | `{ key }` | Trigger action when menu item is clicked. |
-| `onToggleMenuGroup` | `{ openKeys }` | Trigger action when mobile menu group is opened. |
+| `onSelect` | `{ key: string }` | Trigger action when menu item is selected. |
+| `onClick` | `{ key: string }` | Trigger action when menu item is clicked. |
+| `onToggleMenuGroup` | `{ openKeys: array }` | Trigger action when mobile menu group is opened. |
 
 | Key | Target |
 | --- | --- |

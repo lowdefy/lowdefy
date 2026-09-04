@@ -72,6 +72,10 @@ async function handleRequest(context, routineContext, { request }) {
       type: connectionConfig.type,
       tenant: tenant ?? null,
     };
+    // The request type, not the connection type: the explain note names the
+    // request the agent asked about (MongoDBFind), not the connection it runs
+    // on (MongoDBCollection).
+    trace.requestType = requestConfig.type;
   }
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
@@ -85,9 +89,14 @@ async function handleRequest(context, routineContext, { request }) {
   if (trace) {
     trace.properties = requestProperties;
   }
-  const collectionSchema = await resolveCollectionSchema(context, {
-    collectionName: connectionProperties.collection,
-  });
+  // Only write types consult the collection contract, so a read path never
+  // pays for the artifact lookup.
+  const collectionSchema =
+    requestResolver.meta.checkWrite === true
+      ? await resolveCollectionSchema(context, {
+          collectionName: connectionProperties.collection,
+        })
+      : null;
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,
@@ -107,6 +116,12 @@ async function handleRequest(context, routineContext, { request }) {
     requestResolver,
     requestProperties,
   });
+  // trace.dispatched separates a run that reached the resolver from one that
+  // failed before it - an operator error, a wall refusal, a schema violation -
+  // so the explain note can say which.
+  if (trace) {
+    trace.dispatched = true;
+  }
   const result = await callRequestResolver(context, {
     collectionSchema,
     connectionProperties,

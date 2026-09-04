@@ -62,13 +62,19 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   }
 
   const keyEntry = keyMap[configKey];
-  const refId = keyEntry['~r'];
-  const lineNumber = keyEntry['~l'];
-  const columnNumber = keyEntry['~c'];
+  // A node cloned into a component instance or an archetype expansion is given
+  // a key of its own so two instances are two sites; ~k_source names the
+  // authored node it was cloned from, which is the file and line a developer
+  // has to open to change it.
+  const sourceKey = keyEntry['~k_source'];
+  const locationEntry = keyMap[sourceKey] ?? keyEntry;
+  const refId = locationEntry['~r'];
+  const lineNumber = locationEntry['~l'];
+  const columnNumber = locationEntry['~c'];
   const filePath = resolveRefPath({ refId, refMap });
 
   // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
-  const config = keyEntry.key;
+  const config = locationEntry.key;
 
   // Use absolute path when configDirectory is available for clickable terminal links
   let resolvedPath = filePath;

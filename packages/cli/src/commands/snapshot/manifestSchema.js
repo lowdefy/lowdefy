@@ -42,6 +42,14 @@ const manifestSchema = {
             type: 'object',
             errorMessage: { type: 'Snapshot page "urlQuery" should be an object.' },
           },
+          ignore: {
+            type: 'array',
+            items: {
+              type: 'string',
+              errorMessage: { type: 'Snapshot page "ignore" should be state path strings.' },
+            },
+            errorMessage: { type: 'Snapshot page "ignore" should be an array of state paths.' },
+          },
           journey: {
             type: 'string',
             errorMessage: {

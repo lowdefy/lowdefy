@@ -22,8 +22,13 @@ const mockSeedFixtures = jest.fn();
 jest.unstable_mockModule('./seedFixtures.js', () => ({ default: mockSeedFixtures }));
 
 const url = 'http://localhost:3229';
-const context = { directories: { dev: '/app/.lowdefy/dev' } };
-const session = { client: { tag: 'client' } };
+const context = {
+  commandLineOptions: {},
+  directories: { config: '/app', dev: '/app/.lowdefy/dev' },
+};
+const seeded = new Map();
+const ObjectId = { tag: 'ObjectId' };
+const session = { client: { tag: 'client' }, seeded, ObjectId };
 
 function pageTest(overrides = {}) {
   return {
@@ -62,7 +67,6 @@ test('runRequestTest posts a page request to run-request and passes on a subset 
     payload: { status: 'open' },
     user: 'admin',
   });
-  expect(mockSeedFixtures).not.toHaveBeenCalled();
   expect(result).toEqual({
     name: 'lists open controls',
     filePath: '/app/tests/requests/controls.test.yaml',
@@ -103,9 +107,11 @@ test('runRequestTest seeds before calling the route and compares ~d dates as Dat
   const result = await runRequestTest({ context, item, url, session });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed,
     fixtures: [],
+    seeded,
+    ObjectId,
   });
   expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
     mockPost.mock.invocationCallOrder[0]
@@ -245,6 +251,8 @@ test('runRequestTest seeds the named fixtures in list order together with seed b
   const seed = { answers: [{ _id: 'a1' }] };
   const fixtureSession = {
     client: session.client,
+    seeded,
+    ObjectId,
     fixtures: new Map([
       ['base', { fixture: base }],
       ['org-a', { fixture: orgA }],
@@ -258,9 +266,11 @@ test('runRequestTest seeds the named fixtures in list order together with seed b
   });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed,
     fixtures: [orgA, base],
+    seeded,
+    ObjectId,
   });
   expect(mockSeedFixtures.mock.invocationCallOrder[0]).toBeLessThan(
     mockPost.mock.invocationCallOrder[0]
@@ -275,13 +285,20 @@ test('runRequestTest seeds a test with fixtures and no seed', async () => {
     context,
     item: pageTest({ fixtures: ['base'] }),
     url,
-    session: { client: session.client, fixtures: new Map([['base', { fixture: base }]]) },
+    session: {
+      client: session.client,
+      seeded,
+      ObjectId,
+      fixtures: new Map([['base', { fixture: base }]]),
+    },
   });
   expect(mockSeedFixtures).toHaveBeenCalledWith({
     client: session.client,
-    devDirectory: '/app/.lowdefy/dev',
+    devDirectory: '/app/.lowdefy/test',
     seed: undefined,
     fixtures: [base],
+    seeded,
+    ObjectId,
   });
   expect(result.passed).toBe(true);
 });
@@ -316,4 +333,134 @@ test('runRequestTest fails an invalid fixtures field without calling the route',
   expect(mockPost).not.toHaveBeenCalled();
   expect(result.passed).toBe(false);
   expect(result.message).toContain('"fixtures" should be a list of fixture names');
+});
+
+test('runRequestTest clears the run before a test that seeds nothing of its own', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({ data: { success: true, response: [] } });
+  const result = await runRequestTest({
+    context,
+    item: pageTest({ expect: [] }),
+    url,
+    session,
+  });
+  expect(mockSeedFixtures).toHaveBeenCalledWith({
+    client: session.client,
+    devDirectory: '/app/.lowdefy/test',
+    seed: undefined,
+    fixtures: [],
+    seeded,
+    ObjectId,
+  });
+  expect(result.passed).toBe(true);
+});
+
+test('runRequestTest does not seed when the run has no memory server', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({ data: { success: true, response: [] } });
+  await runRequestTest({
+    context,
+    item: pageTest({ expect: [] }),
+    url,
+    session: { client: null, fixtures: new Map() },
+  });
+  expect(mockSeedFixtures).not.toHaveBeenCalled();
+});
+
+test('runRequestTest passes an expect.reject when the message contains the string', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: {
+      refused: false,
+      error: { name: 'RequestError', message: 'You are not authorized to close this ticket.' },
+    },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized to close' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result).toEqual({
+    name: 'lists open controls',
+    filePath: item.filePath,
+    passed: true,
+    durationMs: expect.any(Number),
+  });
+});
+
+test('runRequestTest passes an expect.reject matching the error name', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'AuthorizationError', message: 'Refused.' } },
+  });
+  const item = pageTest({ expect: { reject: { name: 'AuthorizationError' } } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest passes an expect.reject against a refusal by the write gate', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: true, reason: 'Api endpoint routines are not classified read-only.' },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not classified read-only' } } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest fails an expect.reject when the request succeeded', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.passed).toBe(false);
+  expect(result.message).toEqual(
+    'Expected request controls.get_controls to reject, it returned [{"title":"Access reviews","status":"open"}].'
+  );
+});
+
+test('runRequestTest fails an expect.reject whose message does not match, naming both', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'RequestError', message: 'Collection not found.' } },
+  });
+  const item = pageTest({ expect: { reject: { messageContains: 'not authorized' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.passed).toBe(false);
+  expect(result.mismatch).toEqual({
+    path: 'reject.messageContains',
+    expected: 'not authorized',
+    actual: 'Collection not found.',
+  });
+});
+
+test('runRequestTest fails an expect.reject whose error name does not match', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: { refused: false, error: { name: 'RequestError', message: 'Refused.' } },
+  });
+  const item = pageTest({ expect: { reject: { name: 'AuthorizationError' } } });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(result.mismatch).toEqual({
+    path: 'reject.name',
+    expected: 'AuthorizationError',
+    actual: 'RequestError',
+  });
+});
+
+test('runRequestTest passes an expect.contains that ignores extra rows', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  mockPost.mockResolvedValue({
+    data: {
+      refused: false,
+      success: true,
+      response: [{ title: 'Access reviews' }, { title: 'Vendor reviews' }],
+    },
+  });
+  const item = pageTest({ expect: { contains: [{ title: 'Vendor reviews' }] } });
+  expect((await runRequestTest({ context, item, url, session })).passed).toBe(true);
+});
+
+test('runRequestTest rejects a test file with an unknown key before calling the route', async () => {
+  const { default: runRequestTest } = await import('./runRequestTest.js');
+  const item = pageTest({ request: 'get_controls' });
+  const result = await runRequestTest({ context, item, url, session });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result.message).toEqual(
+    'Invalid request test: Request test has unknown key "request". Request test keys are: endpointId, expect, fixtures, name, pageId, payload, requestId, seed, user.'
+  );
 });

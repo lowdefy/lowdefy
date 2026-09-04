@@ -15,19 +15,21 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 const Box = ({ blockId, classNames, content, events, methods, properties, styles }) => {
   return (
     <div
-      id={blockId}
-      data-testid={blockId}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: { outline: 'none', cursor: events.onClick && 'pointer' },
+      })}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
       onPaste={(e) =>
         methods.triggerEvent({ name: 'onPaste', event: { text: e.clipboardData.getData('text') } })
       }
-      className={classNames?.element}
-      style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >
       {properties.content || (content.content && content.content())}
     </div>

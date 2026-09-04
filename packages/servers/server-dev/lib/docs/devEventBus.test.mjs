@@ -105,10 +105,31 @@ test('publish keeps the entry timestamp when the entry carries one', () => {
   expect(send.mock.calls[0][0].timestamp).toEqual('2026-01-02T03:04:05.000Z');
 });
 
-test('publish rejects an unknown event type', () => {
-  expect(() => publish({ type: 'nope' })).toThrow(
-    'devEventBus event type must be one of build, client_error, server_error, restart, fixture_seeded, migrations. Received "nope".'
+test('publish logs and drops an unknown event type instead of throwing at the producer', () => {
+  const send = jest.fn();
+  const unsubscribe = subscribe(send);
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  expect(() => publish({ type: 'nope' })).not.toThrow();
+
+  expect(send).not.toHaveBeenCalled();
+  expect(consoleError).toHaveBeenCalledWith(
+    'devEventBus dropped an event: type must be one of build, client_error, server_error, dev_notice, restart, fixture_seeded, migrations. Received "nope".'
   );
+  consoleError.mockRestore();
+  unsubscribe();
+});
+
+test('publish delivers a dev_notice event', () => {
+  const send = jest.fn();
+  const unsubscribe = subscribe(send);
+
+  publish({ type: 'dev_notice', configKey: 'request.7' });
+
+  expect(send).toHaveBeenCalledWith(
+    expect.objectContaining({ type: 'dev_notice', configKey: 'request.7' })
+  );
+  unsubscribe();
 });
 
 test('subscribe rejects a non-function send', () => {
@@ -222,4 +243,26 @@ test('the watcher closes when the last subscriber leaves so a later write publis
   await sleep(500);
 
   expect(send).not.toHaveBeenCalled();
+});
+
+test('a build event caps its errors and warnings and says the lists are truncated', async () => {
+  const pending = nextEvent('build');
+  await sleep(200);
+  fs.writeFileSync(
+    statusPath,
+    JSON.stringify({
+      status: 'error',
+      timestamp: '2026-02-03T04:05:06.000Z',
+      errors: Array.from({ length: 30 }, (_, index) => ({ message: `error ${index}` })),
+      warnings: [],
+    })
+  );
+
+  const event = await pending;
+  // publish never awaits a send, so a stalled SSE client would queue every
+  // entry of a whole-directory failure. The counts stay honest.
+  expect(event.errorCount).toBe(30);
+  expect(event.errors.length).toBe(20);
+  expect(event.errors[0]).toEqual({ message: 'error 0' });
+  expect(event.truncated).toBe(true);
 });

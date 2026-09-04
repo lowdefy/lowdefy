@@ -37,7 +37,7 @@ If the `_media` operator is called with boolean argument `true`, the entire `med
 
 ###### object
   - `all: boolean`: If `all` is set to `true`, the entire `media` object is returned. One of `all` or `key` are required.
-  - `key: string`: The value of the key in the `media` object is returned. If the value is not found, `null`, or the specified default value is returned. One of `all` or `key` are required.
+  - `key: string`: The value of the key in the `media` object is returned. Must be one of `size`, `width`, `height`, `darkMode` or `darkModePreference`. If the value is not found, `null`, or the specified default value is returned. One of `all` or `key` are required.
   - `default: any`: A value to return if the `key` is not found in `media`. By default, `null` is returned if a value is not found.
 
 #### Examples
@@ -74,10 +74,10 @@ _media: darkModePreference
 ```
 Returns: `'system'`, `'light'`, or `'dark'`.
 
-###### Return a default value if the value is not found:
+###### Return a default value if the key is not found:
 ```yaml
 _media:
-  key: does_not_exist
-  default: Not there
+  key: darkModePreference
+  default: system
 ```
-Returns: `"Not there"`.
+Returns: The value of `darkModePreference`, or `"system"` if `media` does not carry the key.

@@ -14,6 +14,8 @@ Request parameters:
 - `payload: object`: The payload data object passed to the request. Operators are evaluated on the client before the payload is passed to the server request function.
 - `request: object`: The request `properties` defined by the user in the Lowdefy configuration. Operators are evaluated before the properties are passed to the request.
 - `requestId: object`: The requestId of the request.
+- `tenant: object | null`: The [tenant wall](/organizations#the-tenant-wall) verdict for this request — `{ field, value }` (plus `authored: true` for a `tenant: authored` request) when the connection is scoped, `null` otherwise. A connection type that declares tenant support in its `types.js` meta must enforce it: stamp writes, merge filters, inject pipeline matches.
+- `trace: object | undefined`: An optional dev-only collector, present only when the request was run through the dev tools with `explain: true` (see [AI agent docs](/ai-agent-docs#explaining-a-request-explain-true)). A resolver that supports it sets `trace.effective` to the value it is about to send to its driver, immediately before the call, and pushes one `{ at, injected }` entry onto `trace.rewritten` for every clause it injects (`at` is a path into the authored `request` properties). A resolver that ignores `trace` behaves exactly as before — it must never change behaviour based on its presence.
 
 #### Calling another endpoint
 

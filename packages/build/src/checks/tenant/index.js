@@ -16,16 +16,23 @@
 import authoredTenantField from './authoredTenantField.js';
 import noneWithoutTenantField from './noneWithoutTenantField.js';
 import noneFromCaller from './noneFromCaller.js';
+import noneSupersededByRunAs from './noneSupersededByRunAs.js';
 import noneWriteWithoutTenantField from './noneWriteWithoutTenantField.js';
+import requestStateEmpty from './requestStateEmpty.js';
+import runAsScopeDiscarded from './runAsScopeDiscarded.js';
 import unscopedInventory from './unscopedInventory.js';
 
-// Design §4 P7.4, in rule order: F1 fails builds; F2-F4 and the R1 inventory
-// run under `lowdefy check` only.
+// Design §4 P7.4, in rule order: F1, the discarded-scope warning and the
+// `tenant: none` deprecation run on every build; F2-F4, the _state read and
+// the R1 inventory run under `lowdefy check` only.
 const tenantRules = [
   authoredTenantField,
+  runAsScopeDiscarded,
+  noneSupersededByRunAs,
   noneWithoutTenantField,
   noneFromCaller,
   noneWriteWithoutTenantField,
+  requestStateEmpty,
   unscopedInventory,
 ];
 

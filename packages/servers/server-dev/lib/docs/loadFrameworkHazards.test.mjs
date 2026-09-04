@@ -24,6 +24,15 @@ test('loadFrameworkHazards loads the shipped hazards.json with well-formed uniqu
   for (const hazard of hazards) {
     expect(hazard.id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
     expect(typeof hazard.message).toBe('string');
+    expect(['bug', 'semantics']).toContain(hazard.kind);
+    // A bug hazard is a workaround the framework owes the user, so it names
+    // the task that removes it; documented semantics are permanent.
+    if (hazard.kind === 'bug') {
+      expect(typeof hazard.retiredBy).toBe('string');
+      expect(hazard.retiredBy).not.toEqual('');
+    } else {
+      expect(hazard.retiredBy).toBeUndefined();
+    }
     expect(hazard.see === null || typeof hazard.see === 'string').toBe(true);
     const { kinds, types, when } = hazard.appliesTo;
     expect(kinds !== undefined || types !== undefined).toBe(true);

@@ -386,26 +386,24 @@ _ref:
             | [Descriptions](/Descriptions) | `contentStyle`, `labelStyle` | `style: { .content }`, `style: { .label }` |
             | [Tooltip](/Tooltip) | `overlayStyle` | `style: { .inner }` |
 
+            For example, on a `Card` block:
+
             #### Before (v4)
             ```yaml
-            - id: my_card
-              type: Card
-              properties:
-                bodyStyle:
-                  backgroundColor: "#f0f0f0"
-                headerStyle:
-                  fontWeight: bold
+            properties:
+              bodyStyle:
+                backgroundColor: "#f0f0f0"
+              headerStyle:
+                fontWeight: bold
             ```
 
             #### After (v5)
             ```yaml
-            - id: my_card
-              type: Card
-              style:
-                .body:
-                  backgroundColor: "#f0f0f0"
-                .header:
-                  fontWeight: bold
+            style:
+              .body:
+                backgroundColor: "#f0f0f0"
+              .header:
+                fontWeight: bold
             ```
 
             ## Theme migration

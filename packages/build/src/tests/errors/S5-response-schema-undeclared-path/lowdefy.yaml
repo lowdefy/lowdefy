@@ -1,6 +1,6 @@
 # S5: Undeclared response path
 # ============================
-# A page reads _actions.search.response.response.totl from an endpoint whose
+# A page reads _actions.search.response.totl from an endpoint whose
 # responseSchema declares "total"; the build fails with a suggestion.
 
 lowdefy: local
@@ -34,4 +34,4 @@ pages:
               type: SetState
               params:
                 total:
-                  _actions: search.response.response.totl
+                  _actions: search.response.totl

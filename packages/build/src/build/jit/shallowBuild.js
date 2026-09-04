@@ -71,6 +71,9 @@ import writeMigrations from '../buildMigrations/writeMigrations.js';
 import writeMcp from '../writeMcp.js';
 import writeNotifications from '../writeNotifications.js';
 import writeGlobal from '../writeGlobal.js';
+import addFilePluginInstalledTypes from '../filePlugins/addFilePluginInstalledTypes.js';
+import copyFilePlugins from '../filePlugins/copyFilePlugins.js';
+import loadFilePluginBlockSchemas from '../filePlugins/loadFilePluginBlockSchemas.js';
 import copyJsModules from '../buildJs/copyJsModules.js';
 import writeJs from '../buildJs/writeJs.js';
 import writeWebsockets from '../writeWebsockets.js';
@@ -141,13 +144,6 @@ async function shallowBuild(options) {
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
 
-    // Extract runtime component definitions into context.componentDefs before
-    // the precompute/validation passes, mirroring the full build (index.js
-    // Phase 3.1). Runs after collectSkeletonSourceFiles so component files
-    // count as skeleton sources — a component edit rebuilds the skeleton and
-    // refreshes componentDefs.json for the JIT page builds.
-    tryBuildStep(buildComponents, 'buildComponents', { components, context });
-
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline
     // pages, slot content, module components consumed into them — reaches
@@ -207,6 +203,16 @@ async function shallowBuild(options) {
 
     // Block schemas must be in context before any block is built (validateBlockProperties).
     await loadBlockSchemas({ components, context });
+    tryBuildStep(loadFilePluginBlockSchemas, 'loadFilePluginBlockSchemas', {
+      components,
+      context,
+    });
+    // Components are registered after the block schemas so the component-vs-block-type
+    // collision check sees every installed block, and after precompute so build
+    // operators inside component bodies fold, mirroring the full build. Component
+    // files were already collected as skeleton sources above, so a component edit
+    // still rebuilds the skeleton and refreshes componentDefs.json.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
@@ -221,6 +227,12 @@ async function shallowBuild(options) {
     await updateServerPackageJson({ components, context });
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
+    // A file plugin has no package to be installed, so the JIT dev build counts
+    // it here for the same reason addInstalledTypes counts package types.
+    tryBuildStep(addFilePluginInstalledTypes, 'addFilePluginInstalledTypes', {
+      components,
+      context,
+    });
     tryBuildStep(buildImports, 'buildImports', { components, context });
     tryBuildStep(runChecks, 'checks', { components, context });
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -309,6 +321,7 @@ async function shallowBuild(options) {
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
     await copyJsModules({ context });
+    await copyFilePlugins({ context });
 
     return { components, pageRegistry, context };
   } catch (err) {

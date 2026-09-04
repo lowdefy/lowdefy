@@ -205,7 +205,7 @@ api:
 
 Declaring it does three things:
 
-- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the api record, whose own `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields one level up — `_actions.<actionId>.response.status`, `success`, `error`, `responseTime` — are not the endpoint's and are never checked. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
+- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields beside the response — `_actions.<actionId>.type`, `index`, `error` — are not the endpoint's and are never checked; the call's `status`, `success` and `responseTime` are read with [`_api`](/_api). Before v8 the endpoint result sat one level deeper, at `_actions.<actionId>.response.response.<path>`; the build rewrites that spelling with a warning (`actions-response-envelope`) and it is removed in v9. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
 
   ```yaml
   events:
@@ -221,18 +221,22 @@ Declaring it does three things:
         type: SetState
         params:
           results:
-            _actions: search.response.response.results # checked
+            _actions: search.response.results # checked
           total:
-            _actions: search.response.response.totl # build error: Did you mean "total"?
+            _actions: search.response.totl # build error: Did you mean "total"?
           ok:
             _actions: search.response.success # action record, untouched
   ```
 
-- **Dev notices.** The dev server validates the real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — against the schema. A mismatch is reported as a `ResponseSchemaWarning` in `build_status` and the ErrorBar with the endpoint's config location and the failing path. It is a notice, not a failure: the response is still returned. Production performs no response validation — a mismatch there is the app's data changing, not a config fault the framework should turn into a 500.
+- **Notices.** The real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — is validated against the schema. A mismatch is never a failure: the response is still returned, because an endpoint whose data has drifted is the app changing, not a config fault to turn into a 500. Only the channel differs by stage. In development it is a `ResponseSchemaWarning` in `build_status` and the ErrorBar, with the endpoint's config location and the failing path. In production it is one `logger.warn` line per endpoint per process — enough to know a contract callers were built against has stopped holding, without a line per request for a condition that does not change between requests.
 
-- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content, so an MCP client can rely on the shape.
+- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content when the response is a JSON object, so an MCP client can rely on the shape.
 
 Both `payloadSchema` and `responseSchema` are compiled at build, so a schema that is not valid JSON Schema is a build error naming the endpoint.
+
+### Schemas describe the serialized shape
+
+Every schema surface in Lowdefy — `payloadSchema`, `responseSchema`, a page's `state:`, a block's `meta.properties`, a block event's `payload` and a [collection's `fields`](/collections) — describes the **JSON shape** of the value, the shape a caller actually receives, not the in-process object. A date is therefore `{ type: string, format: date-time }` everywhere, and both checks render a live `Date` as its ISO string before validating. One schema is then truthful in all three places it is used: the build-time path check, the runtime notice, and the MCP `outputSchema` an agent reads.
 
 ## Async Endpoints
 
@@ -835,7 +839,7 @@ blocks:
           type: SetState
           params:
             user_data:
-              _actions: call_user_api.response.response.user
+              _actions: call_user_api.response.user
 
   - id: user_display
     type: Descriptions
@@ -868,7 +872,7 @@ events:
         type: SetState
         params:
           result:
-            _actions: call_process_data_api.response.response
+            _actions: call_process_data_api.response
 
     catch:
       - id: update_state

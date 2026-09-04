@@ -57,7 +57,6 @@ export default {
       '_operator',
       '_or',
       '_product',
-      '_prop',
       '_random',
       '_regex',
       '_request',

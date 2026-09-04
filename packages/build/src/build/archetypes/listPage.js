@@ -22,6 +22,10 @@ import humanizeFieldName from './humanizeFieldName.js';
 
 const LIST_REQUEST_ID = 'list';
 const ROWS_BLOCK_ID = 'rows';
+// Every generated cell id carries this prefix so no collection field name can
+// ever collide with a generated block id (a field named "card" would otherwise
+// produce a second "rows.$.card").
+const CELL_ID_PREFIX = 'cell_';
 
 // A column/filter/field entry is either a bare field name (string) or an object
 // carrying a `field` key plus overrides. Normalise to { field, overrides }.
@@ -52,9 +56,7 @@ function resolveConnectionId({ properties, collection, collectionName, pageId, c
     return readConnections[0].connectionId;
   }
   throw new ConfigError(
-    `ListPage on page "${pageId}" cannot derive a read connection for collection "${collectionName}" (${
-      readConnections.length
-    } candidates). Set the "connectionId" property.`,
+    `ListPage on page "${pageId}" cannot derive a read connection for collection "${collectionName}" (${readConnections.length} candidates). Set the "connectionId" property.`,
     { configKey, checkSlug: 'archetype' }
   );
 }
@@ -72,6 +74,14 @@ function resolveRowTokens(map) {
     }
   });
   return out;
+}
+
+// One of loading | error | success | empty from the list request's status form
+// (_request { key, status: true }). Empty is a *successful* request that
+// returned nothing, so an empty state and a failure state never both render,
+// and a failure is never mistaken for an empty result.
+function listStatus(key) {
+  return { _get: { key, from: { _request: { key: LIST_REQUEST_ID, status: true } } } };
 }
 
 // The action pair every load and every filter change runs: fetch, then copy the
@@ -140,19 +150,122 @@ function buildSearchQueryDrop(searchFields) {
   };
 }
 
-function buildRowCell({ resolved }) {
-  const id = `${ROWS_BLOCK_ID}.$.${resolved.field}`;
+// The rendered value of one cell, chosen by the field's *declared* type — the
+// whole point of resolving the field against collections:. A Date read straight
+// into a text block stringifies as an ISO string; a boolean false renders as
+// nothing at all. Both are formatted here instead.
+function buildCellValue({ resolved }) {
   const value = { _request: `${LIST_REQUEST_ID}.$.${resolved.field}` };
-  if (resolved.isEnum) {
-    return { id, type: 'Tag', properties: { title: value } };
+  if (resolved.dataType === 'date') {
+    return {
+      _if: {
+        test: { _type: { type: 'empty', on: value } },
+        then: null,
+        else: { '_intl.dateTimeFormat': { on: value, options: { dateStyle: 'medium' } } },
+      },
+    };
   }
-  return { id, type: 'Html', properties: { html: value } };
+  if (resolved.dataType === 'boolean') {
+    return {
+      _if: {
+        test: { _type: { type: 'empty', on: value } },
+        then: null,
+        else: { _if: { test: value, then: 'Yes', else: 'No' } },
+      },
+    };
+  }
+  if (resolved.dataType === 'number' || resolved.dataType === 'integer') {
+    return {
+      _if: {
+        test: { _type: { type: 'empty', on: value } },
+        then: null,
+        else: { '_intl.numberFormat': { on: value } },
+      },
+    };
+  }
+  return value;
+}
+
+// A cell is its label and its value: resolveCollectionField already humanises
+// the field name, and a column of bare values with no heading is unreadable.
+function buildRowCell({ resolved, overrides }) {
+  const id = `${ROWS_BLOCK_ID}.$.${CELL_ID_PREFIX}${resolved.field}`;
+  const value = buildCellValue({ resolved });
+  const valueBlock = resolved.isEnum
+    ? { id: `${id}.value`, type: 'Tag', properties: { title: value } }
+    : { id: `${id}.value`, type: 'Paragraph', properties: { content: value } };
+  return {
+    id,
+    type: 'Label',
+    properties: {
+      title: overrides.label ?? resolved.label,
+      inline: true,
+      size: 'small',
+    },
+    blocks: [valueBlock],
+  };
+}
+
+// The default sort must name a field the collection actually declares. The
+// first declared date field is the app's own "when did this happen" column
+// whatever it is called; _id descending is the only honest fallback.
+function defaultSort(collection) {
+  const fields = collection.fields ?? {};
+  const dateField = Object.keys(fields).find(
+    (field) => fields[field]?.type === 'date' || fields[field]?.instanceof === 'Date'
+  );
+  if (type.isUndefined(dateField)) return { _id: -1 };
+  return { [dateField]: -1 };
+}
+
+// The author's escape hatches. An archetype that cannot be extended has to be
+// deleted and rewritten the first time it is 10% wrong, so a ListPage takes
+// three named block lists placed at the obvious positions.
+const SLOT_NAMES = ['header', 'rowActions', 'footer'];
+
+function resolveSlots({ slots, pageId, configKey }) {
+  if (type.isNone(slots)) return { header: [], rowActions: [], footer: [] };
+  if (!type.isObject(slots)) {
+    throw new ConfigError(
+      `ListPage on page "${pageId}" slots must be an object. Received ${JSON.stringify(slots)}.`,
+      { configKey, checkSlug: 'archetype' }
+    );
+  }
+  const unknown = Object.keys(slots).filter((name) => !SLOT_NAMES.includes(name));
+  if (unknown.length > 0) {
+    throw new ConfigError(
+      `ListPage on page "${pageId}" has no slot "${unknown[0]}". ListPage slots: ${SLOT_NAMES.join(
+        ', '
+      )}.`,
+      { configKey, checkSlug: 'archetype' }
+    );
+  }
+  const resolved = {};
+  SLOT_NAMES.forEach((name) => {
+    const slot = slots[name];
+    if (type.isNone(slot)) {
+      resolved[name] = [];
+      return;
+    }
+    // The block schema's slot shape, so an archetype slot is written exactly
+    // like any other block slot.
+    if (!type.isObject(slot) || !type.isArray(slot.blocks)) {
+      throw new ConfigError(
+        `ListPage on page "${pageId}" slot "${name}" must be an object with a "blocks" list. Received ${JSON.stringify(
+          slot
+        )}.`,
+        { configKey, checkSlug: 'archetype' }
+      );
+    }
+    resolved[name] = slot.blocks;
+  });
+  return resolved;
 }
 
 // Generates a ListPage's layout, blocks and requests from its properties and
 // the declared collection. Pure: no build context mutation, so it is unit
 // testable in isolation.
-function listPage({ properties, pageId, collections, configKey }) {
+function listPage({ properties, slots, pageId, collections, configKey }) {
   if (!type.isString(properties.collection)) {
     throw new ConfigError(`ListPage on page "${pageId}" requires a "collection" property.`, {
       configKey,
@@ -167,6 +280,7 @@ function listPage({ properties, pageId, collections, configKey }) {
     pageId,
     configKey,
   });
+  const slotBlocks = resolveSlots({ slots, pageId, configKey });
 
   const resolveField = (fieldName) =>
     resolveCollectionField({
@@ -217,10 +331,7 @@ function listPage({ properties, pageId, collections, configKey }) {
   });
 
   const pageSize = type.isInt(properties.pageSize) ? properties.pageSize : 50;
-  let sort = properties.sort;
-  if (type.isNone(sort)) {
-    sort = Object.hasOwn(collection.fields ?? {}, 'created_at') ? { created_at: -1 } : { _id: -1 };
-  }
+  const sort = type.isNone(properties.sort) ? defaultSort(collection) : properties.sort;
 
   // Projection: displayed columns + _id (for the row link) + rowLink token
   // fields + search fields, so the row link and rendering never miss a field.
@@ -264,13 +375,16 @@ function listPage({ properties, pageId, collections, configKey }) {
   };
 
   // ---- blocks ----
-  const title = type.isString(properties.title) ? properties.title : humanizeFieldName(collectionName);
+  const title = type.isString(properties.title)
+    ? properties.title
+    : humanizeFieldName(collectionName);
   const headerBlocks = [
     { id: 'list_title', type: 'Title', properties: { content: title, level: 4 } },
   ];
   if (type.isArray(properties.actions)) {
     properties.actions.forEach((action) => headerBlocks.push(action));
   }
+  slotBlocks.header.forEach((block) => headerBlocks.push(block));
 
   const filterBlocks = filters.map((f) => buildFilterBlock(f));
   if (searchFields.length > 0) {
@@ -294,8 +408,17 @@ function listPage({ properties, pageId, collections, configKey }) {
   }
 
   // The row: a Card titled by the first column, with the remaining columns as
-  // cells, and the row link on click.
+  // labelled cells, and the row link on click.
   const [firstColumn, ...restColumns] = columns;
+  const cardBlocks = restColumns.map((column) => buildRowCell(column));
+  if (slotBlocks.rowActions.length > 0) {
+    cardBlocks.push({
+      id: `${ROWS_BLOCK_ID}.$.row_actions`,
+      type: 'Box',
+      layout: { gap: 8 },
+      blocks: slotBlocks.rowActions,
+    });
+  }
   const card = {
     id: `${ROWS_BLOCK_ID}.$.card`,
     type: 'Card',
@@ -303,7 +426,7 @@ function listPage({ properties, pageId, collections, configKey }) {
       size: 'small',
       title: { _request: `${LIST_REQUEST_ID}.$.${firstColumn.resolved.field}` },
     },
-    blocks: restColumns.map((column) => buildRowCell(column)),
+    blocks: cardBlocks,
   };
   if (rowLink) {
     const linkParams = {};
@@ -341,18 +464,39 @@ function listPage({ properties, pageId, collections, configKey }) {
     {
       id: 'empty',
       type: 'Result',
-      visible: {
-        _and: [
-          { _type: { type: 'array', on: { _request: LIST_REQUEST_ID } } },
-          { _type: { type: 'empty', on: { _request: LIST_REQUEST_ID } } },
-        ],
-      },
+      visible: { _and: [listStatus('success'), listStatus('empty')] },
       properties: {
         status: emptyStateProps.status ?? 'info',
         title: emptyStateProps.title ?? `No ${title.toLowerCase()} found`,
         ...(type.isString(emptyStateProps.subTitle) ? { subTitle: emptyStateProps.subTitle } : {}),
       },
     },
+    // A failed request leaves the response null, which is not an empty result —
+    // without this block the page renders a header, a filter row and nothing
+    // else, with the reason only in the browser console.
+    {
+      id: 'load_error',
+      type: 'Result',
+      visible: { _not: { _type: { type: 'none', on: listStatus('error') } } },
+      properties: {
+        status: 'error',
+        title: `Could not load ${title.toLowerCase()}`,
+        subTitle: listStatus('error'),
+      },
+      slots: {
+        extra: {
+          blocks: [
+            {
+              id: 'retry_list',
+              type: 'Button',
+              properties: { title: 'Retry' },
+              events: { onClick: reloadActions() },
+            },
+          ],
+        },
+      },
+    },
+    ...slotBlocks.footer,
   ];
 
   const layout = type.isObject(properties.layout) ? properties.layout : {};
@@ -365,4 +509,5 @@ function listPage({ properties, pageId, collections, configKey }) {
   };
 }
 
+export { SLOT_NAMES };
 export default listPage;

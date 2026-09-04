@@ -2,7 +2,7 @@
 # =================================
 # Tests that specifying the wrong check slug does not suppress warnings.
 #
-# The block has ~ignoreBuildChecks: ['types'] but the warning is for
+# The block has ~ignoreBuildChecks: ['block-types'] but the warning is for
 # a state-refs issue. The warning should still appear.
 #
 # Expected: Warning for undefinedKey should still appear.
@@ -16,7 +16,7 @@ pages:
       - id: stateRef
         type: Paragraph
         ~ignoreBuildChecks:
-          - types
+          - block-types
         properties:
           content:
             _state: undefinedKey

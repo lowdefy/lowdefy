@@ -16,16 +16,14 @@
 
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
+import { moduleLockfileName, readModuleLockfile, writeModuleLockfile } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
-import moduleLockfileName from './moduleLockfileName.js';
-import readModuleLockfile from './readModuleLockfile.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
-import writeModuleLockfile from './writeModuleLockfile.js';
 
 function shortCommit(commit) {
   if (!type.isString(commit)) return 'none';

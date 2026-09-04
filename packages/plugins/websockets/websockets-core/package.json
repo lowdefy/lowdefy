@@ -23,6 +23,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "lowdefy": {
+    "pluginApiVersion": 1
+  },
   "exports": {
     "./websockets": "./dist/websockets.js",
     "./schemas": "./dist/schemas.js",

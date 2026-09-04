@@ -1,5 +1,51 @@
 # 2. Creating a page
 
+Let's create a page for a web form where users can log a new ticket.
+
+#### 2.1. Create `new-ticket.yaml`
+
+Create a new YAML file in the project directory (the same directory as the `lowdefy.yaml` file) called `new-ticket.yaml`, with the following content:
+
+```yaml
+id: new-ticket
+type: PageHeaderMenu
+properties:
+  title: New ticket # The title in the browser tab.
+layout:
+  justify: center # Center the contents of the page.
+blocks:
+  - id: content_card
+    type: Card
+    layout:
+      size: 800 # Set the size of the card so it does not fill the full screen.
+      gap: 16 # Make a 16px gap between all blocks in this card.
+    blocks:
+      - id: page_heading
+        type: Title
+        properties:
+          content: Log a ticket # Change the title on the page.
+          level: 3 # Make the title a little smaller (an html `<h3>`).
+```
+
+#### 2.2. Update `lowdefy.yaml`
+
+Change the `lowdefy.yaml` to look like this:
+
+```yaml
+name: lowdefy-project-template
+lowdefy: 5.5.1
+
+pages:
+################ -------- Copy from here -------- ################
+  - _ref: new-ticket.yaml
+################ -------- Copy to here ---------- ################
+  - id: welcome
+    type: PageHeaderMenu
+    properties:
+      title: Welcome
+    # ...
+```
+
 > Indentation is important
 
 #### 2.3. Navigate to the new page

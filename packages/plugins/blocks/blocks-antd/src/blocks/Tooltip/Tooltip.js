@@ -16,28 +16,26 @@
 
 import React from 'react';
 import { Tooltip } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
 const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => (
   <Tooltip
-    id={blockId}
+    {...blockRootProps({ blockId, classNames, styles })}
     title={renderHtml({ html: properties.title, methods })}
     arrowPointAtCenter={properties.arrowPointAtCenter}
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
     defaultOpen={properties.defaultOpen}
-    destroyTooltipOnHide={properties.destroyTooltipOnHide}
+    destroyOnHidden={properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}
     trigger={properties.trigger ?? 'hover'}
     zIndex={properties.zIndex}
     onOpenChange={() => methods.triggerEvent({ name: 'onOpenChange' })}
-    className={classNames.element}
     classNames={{ inner: classNames.inner }}
-    style={styles.element}
     styles={{ inner: styles.inner }}
   >
     {content.content && content.content()}

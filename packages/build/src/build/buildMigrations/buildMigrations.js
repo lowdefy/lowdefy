@@ -41,13 +41,13 @@ function resolveStage({ context, migrationCount }) {
   try {
     stage = resolveMigrationStage({ env: process.env, buildStage: context.stage });
   } catch (error) {
-    throw new ConfigError(error.message, { checkSlug: 'migrations' });
+    throw new ConfigError(error.message, { checkSlug: 'migration-files' });
   }
   // `lowdefy check` validates offline and is not made for an environment.
   if (stage === null && migrationCount > 0 && !context.validateOnly) {
     throw new ConfigError(
       `The app has ${migrationCount} migration(s) but no STAGE names the environment this build is for. Set STAGE (e.g. STAGE=prod lowdefy build) so the build carries that environment's migration ledger from .lowdefy/migrations/<stage>.json.`,
-      { checkSlug: 'migrations' }
+      { checkSlug: 'migration-files' }
     );
   }
   return stage;
@@ -60,7 +60,7 @@ async function readLedger({ context, stage }) {
   try {
     return await readMigrationLedger({ configDirectory: context.directories.config, stage });
   } catch (error) {
-    throw new ConfigError(error.message, { checkSlug: 'migrations' });
+    throw new ConfigError(error.message, { checkSlug: 'migration-files' });
   }
 }
 
@@ -119,24 +119,18 @@ async function buildMigrations({ components, context }) {
         field: 'Migration id',
         location: `migration file "${migration.id}"`,
       });
-      if (type.isNone(migration.routine)) {
-        throw new ConfigError(
-          `Migration "${migration.id}" has no "routine". A migration file must declare a "routine" of steps.`,
-          { checkSlug: 'migrations' }
-        );
-      }
       if (!type.isArray(migration.routine)) {
         throw new ConfigError(
           `Migration "${
             migration.id
           }" "routine" must be an array of steps. Received ${JSON.stringify(migration.routine)}.`,
-          { received: migration.routine, checkSlug: 'migrations' }
+          { received: migration.routine, checkSlug: 'migration-routine' }
         );
       }
       if (migration.routine.length === 0) {
         throw new ConfigError(
           `Migration "${migration.id}" "routine" is empty. A migration must declare at least one step.`,
-          { checkSlug: 'migrations' }
+          { checkSlug: 'migration-routine' }
         );
       }
       buildRoutine(migration.routine, {
@@ -157,7 +151,7 @@ async function buildMigrations({ components, context }) {
         context.handleWarning(
           new ConfigWarning(
             `Migration "${migration.id}" has changed since it was applied to stage "${ledger.stage}" (ledger checksum ${ledgerEntry.checksum}, file checksum ${migration.checksum}). An applied migration is immutable history; correct a mistake with a new forward migration, or run "lowdefy migrate --allow-checksum-mismatch" for a known no-op edit.`,
-            { checkSlug: 'migrations' }
+            { checkSlug: 'migration-files' }
           )
         );
       }

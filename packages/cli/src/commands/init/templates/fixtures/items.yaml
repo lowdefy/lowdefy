@@ -1,0 +1,16 @@
+# A named set of documents, keyed by connectionId. A request test that lists
+# this file under `fixtures:` gets these documents and nothing else: the runner
+# drops the collections a fixture names before it inserts.
+items:
+  - _id: item_1
+    title: Read the docs
+    status: open
+    created_at: { '~d': '2026-01-03T00:00:00.000Z' }
+  - _id: item_2
+    title: Run lowdefy test
+    status: open
+    created_at: { '~d': '2026-01-02T00:00:00.000Z' }
+  - _id: item_3
+    title: Ship something
+    status: done
+    created_at: { '~d': '2026-01-01T00:00:00.000Z' }

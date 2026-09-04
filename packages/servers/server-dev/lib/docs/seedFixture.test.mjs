@@ -119,6 +119,7 @@ test('seedFixture inserts every connection through the connection layer with ten
     requestId: 'seed_fixture:organizations',
     type: 'MongoDBInsertMany',
     properties: { docs: [{ _id: 'org_a', created_at: createdAt }] },
+    rawProperties: true,
     tenant: null,
   });
   expect(mockCallConnectionRequest).toHaveBeenNthCalledWith(2, context, {
@@ -126,6 +127,7 @@ test('seedFixture inserts every connection through the connection layer with ten
     requestId: 'seed_fixture:controls',
     type: 'MongoDBInsertMany',
     properties: { docs: [{ _id: 'c1' }, { _id: 'c2' }] },
+    rawProperties: true,
     tenant: null,
   });
   expect(result).toEqual({
@@ -207,7 +209,20 @@ test('seedFixture returns the fixture loader error as data', async () => {
   expect(mockPublish).not.toHaveBeenCalled();
 });
 
-test('seedFixture returns a connection layer failure as data with what was seeded so far and publishes nothing', async () => {
+test('seedFixture sends fixture documents as raw properties so an operator-shaped key is stored, not evaluated', async () => {
+  mockReadFixture.mockResolvedValue({
+    name: 'raw',
+    connections: [
+      { connectionId: 'controls', docs: [{ _id: 'c1', label: { _secret: 'NOT_A_SECRET' } }] },
+    ],
+  });
+  await seedFixture({ name: 'raw', honoContext });
+  const [, params] = mockCallConnectionRequest.mock.calls[0];
+  expect(params.rawProperties).toBe(true);
+  expect(params.properties.docs).toEqual([{ _id: 'c1', label: { _secret: 'NOT_A_SECRET' } }]);
+});
+
+test('seedFixture returns a connection layer failure as data with what was seeded so far and publishes what was written', async () => {
   mockCallConnectionRequest.mockImplementation(async (_, { connectionId }) => {
     if (connectionId === 'controls') {
       throw new ConfigError('Connection "controls" does not allow writes.');
@@ -222,7 +237,14 @@ test('seedFixture returns a connection layer failure as data with what was seede
       { connectionId: 'organizations', collection: 'organizations_col', deleted: 0, inserted: 1 },
     ],
   });
-  expect(mockPublish).not.toHaveBeenCalled();
+  // The database changed under any agent watching, whether or not every
+  // connection made it.
+  expect(mockPublish).toHaveBeenCalledWith({
+    type: 'fixture_seeded',
+    name: 'base',
+    reset: false,
+    seeded: result.seeded,
+  });
 });
 
 test('seedFixture reports collection null when the built connection resolves it with an operator', async () => {

@@ -18,7 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const handleClose = async ({ methods, rename, setOpen }) => {
@@ -87,7 +87,7 @@ const DrawerBlock = ({
 
   return (
     <Drawer
-      id={blockId}
+      {...blockRootProps({ blockId, classNames, styles })}
       closable={properties.closable}
       extra={content.extra && content.extra()}
       footer={content.footer && content.footer()}
@@ -110,7 +110,6 @@ const DrawerBlock = ({
           }))
       }
       afterOpenChange={(drawerOpen) => handleAfterOpenChange({ drawerOpen, methods, rename })}
-      className={classNames.element}
       classNames={{
         header: classNames.header,
         body: classNames.body,
@@ -119,7 +118,6 @@ const DrawerBlock = ({
         wrapper: classNames.wrapper,
         content: classNames.content,
       }}
-      style={styles.element}
       styles={{
         header: styles.header,
         body: styles.body,

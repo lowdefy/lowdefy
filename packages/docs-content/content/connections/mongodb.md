@@ -40,6 +40,7 @@ When the connection has a `changeLog` collection, all write requests log a chang
 - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
 - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
 - `collection: string`: __Required__ - The name of the MongoDB collection.
+  Declare what the collection holds - tenancy, fields, relations, indexes - under the app-level [`collections:`](/collections) key; the build joins every connection to its collection by this name.
 - `changeLog: object`: Log all changes made by write requests to a log collection.
   - `collection: string`: __Required__ - The name of the collection change log records are written to.
   - `meta: object`: Additional data to include in every change log record, for example the user making the change.
@@ -104,6 +105,7 @@ LOWDEFY_SECRET_MONGODB_URI = mongodb+srv://username:password@server.example.com/
 Request types:
   - MongoDBAggregation
   - MongoDBBulkWrite
+  - MongoDBCreateIndexes
   - MongoDBDeleteMany
   - MongoDBDeleteOne
   - MongoDBFind
@@ -116,6 +118,9 @@ Request types:
   - MongoDBUpdateOne
   - MongoDBVersionedUpdateOne
 
+##### Validation on write
+
+When the app declares the collection a connection addresses under the root [`collections`](/collections) object with `fields`, every write request type on that connection validates what it writes against those fields before calling the driver: the insert types check each document, the update types check the values of `$set` and `$setOnInsert`, and `MongoDBBulkWrite` checks each operation by kind. Undeclared fields pass. A violation is a request error naming the field, the expected type and the received value. Nothing is validated when the collection is not declared or declares no `fields`. See [Collections - Validation on write](/collections#validation-on-write) for the rules and the reasons this runs in the connection rather than as a `$jsonSchema` collection validator.
 
 ### MongoDBAggregation
 
@@ -249,6 +254,42 @@ requests:
               type: "tofu"
               size: "small"
               price: 4
+```
+
+### MongoDBCreateIndexes
+
+The `MongoDBCreateIndexes` request creates indexes on the collection specified in the connectionId. It is the consumer of the root [`collections`](/collections) object's `indexes` declaration: the declaration says which indexes a collection should have, and a `MongoDBCreateIndexes` step in a [migration](/migrations#creating-indexes) creates them. It is a write request (`write: true` is required on the connection).
+
+`createIndexes` is idempotent for an index that already exists with the same keys and options, so the step is safe to replay when a migration re-runs. An index that already exists under the same *name* with different keys is a driver error — give the changed index a new name.
+
+The tenant verdict is not applied: an index is a property of the collection, not of a document, so there is nothing to scope. Under `auth.organizations.policy: tenant` a migration step still declares `tenant: none` like any other step on a walled connection.
+
+**There is no request type that drops an index**, and nothing in Lowdefy suggests dropping one: an index this app no longer queries may be the one an external consumer depends on. Removing an index is a hand operation against the database.
+
+#### Properties
+- `indexes: array`: __Required__ - The indexes to create, each written in the same shape as a `collections.<name>.indexes` entry:
+  - `keys: object`: __Required__ - The index key specification, for example `{ organization_id: 1, created_at: -1 }`.
+  - `options: object`: Optional [createIndexes options](https://www.mongodb.com/docs/manual/reference/command/createIndexes/) for this index, such as `unique`, `name`, `partialFilterExpression`, `expireAfterSeconds`, `sparse` or `collation`.
+
+#### Response
+- `indexNames: string[]`: The names MongoDB gave the created indexes.
+
+#### Examples
+
+###### Create the indexes declared for a collection:
+```yaml
+# migrations/2026-07-02-01-answers-indexes.yaml
+name: Create the answers indexes
+routine:
+  - id: create_indexes
+    type: MongoDBCreateIndexes
+    connectionId: answers
+    tenant: none
+    properties:
+      indexes:
+        - keys: { organization_id: 1, status: 1, created_at: -1 }
+        - keys: { external_ref: 1 }
+          options: { unique: true, name: by_external_ref }
 ```
 
 ### MongoDBDeleteMany
@@ -861,3 +902,15 @@ pages:
 ```
 
 The change event payload is available on `_event: messages` in `onMessage` and via the [`_websocket`](/websocket-subscriptions) operator — each message is the MongoDB change event, including `operationType`, `documentKey` and `fullDocument`.
+
+## Errors
+
+When MongoDB rejects an operation, the request fails with a `ServiceError` that carries:
+
+- `code` — the MongoDB error code, for example `11000` for a duplicate key.
+- `message` — a plain sentence naming the collection and the request type, like `MongoDB: Duplicate key on collection "orders".`
+- `hint` — a sentence saying what to do about it, for example to insert with `MongoDBUpdateOne` and `upsert: true`, to add an index covering the filter, or to grant the database user a role.
+
+The driver's own message is never sent to the browser — it can quote values from the document that triggered the error. It is logged on the server instead, where the dev server terminal prints it under the located error line as `Caused by: MongoServerError: E11000 …`.
+
+Network, DNS and TLS failures are also `ServiceError`s, classified by the connection layer rather than by an error code.

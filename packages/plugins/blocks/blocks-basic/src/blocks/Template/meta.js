@@ -26,14 +26,16 @@ export default {
   hazards: [
     {
       id: 'template-safe-filter-unescaped',
+      kind: 'semantics',
       message:
         'Every {{ value }} is HTML-escaped. The "| safe" filter turns escaping off for that value, so never apply it to caller-supplied or database strings - only to markup the app itself produced.',
       see: 'container-blocks/template',
     },
     {
       id: 'template-css-is-text',
+      kind: 'semantics',
       message:
-        'properties.css is CSS text scoped to this block (nested under #bl-<blockId>). The style key stays an object of CSS properties per cssKey; a <style> tag inside the template is stripped.',
+        'properties.css is CSS text scoped to this block (nested under [id="bl-<blockId>"]). Braces must balance - a stray "}" would escape the scope and is rejected. The style key stays an object of CSS properties per cssKey; a <style> tag inside the template is stripped.',
       see: 'container-blocks/template',
     },
   ],

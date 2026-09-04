@@ -2,9 +2,10 @@
   "tests": [
     {
       "mode": "dev",
-      "errors": ["Invalid check slug(s)"],
+      "errors": ["Invalid check slug"],
       "errorContains": [
-        "Invalid check slug(s): \"invalid-slug\". Valid slugs: state-refs, payload-refs, step-refs, link-refs, request-refs, connection-refs, tenant-lookup, callapi-refs, callapi-internal-refs, dynamic-endpoint-refs, websocket-refs, block-properties, icons, events, types, schema, js-lint, state-schema, tenant, js-modules, response-schema, collections, event-payload, migrations, expression, archetype",
+        "Invalid check slug \"invalid-slug\" in ~ignoreBuildChecks.",
+        "Valid slugs: state-refs, payload-refs",
         "lowdefy.yaml:10"
       ],
       "expectThrow": true

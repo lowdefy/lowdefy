@@ -260,6 +260,8 @@ test('a CallApi child runs under its own runAs declaration, not the parent scope
 // evaluated connection collection and hands it to the resolver, like a page
 // request does.
 test('a step resolves collectionSchema from the evaluated connection collection', async () => {
+  // Only write types consult the contract.
+  mockTenantRequest.meta.checkWrite = true;
   const collectionsArtifact = {
     answers: {
       fields: { test_id: { type: 'string' } },
@@ -276,7 +278,7 @@ test('a step resolves collectionSchema from the evaluated connection collection'
         id: 'connection:answers',
         type: 'TestTenantConnection',
         connectionId: 'answers',
-        properties: { collection: { _secret: 'COLLECTION' } },
+        properties: { write: true, collection: { _secret: 'COLLECTION' } },
         '~k': 'connection.1',
       };
     }
@@ -285,7 +287,7 @@ test('a step resolves collectionSchema from the evaluated connection collection'
         id: 'connection:controls',
         type: 'TestTenantConnection',
         connectionId: 'controls',
-        properties: { collection: 'controls' },
+        properties: { write: true, collection: 'controls' },
         '~k': 'connection.2',
       };
     }
@@ -311,10 +313,15 @@ test('a step resolves collectionSchema from the evaluated connection collection'
   });
   expect(res.status).toBe('continue');
   expect(mockTenantRequest).toHaveBeenCalledTimes(2);
-  expect(mockTenantRequest.mock.calls[0][0].connection).toEqual({ collection: 'answers' });
+  expect(mockTenantRequest.mock.calls[0][0].connection).toEqual({
+    write: true,
+    collection: 'answers',
+  });
   expect(mockTenantRequest.mock.calls[0][0].collectionSchema).toEqual({
     name: 'answers',
     fields: collectionsArtifact.answers.fields,
+    required: [],
   });
   expect(mockTenantRequest.mock.calls[1][0].collectionSchema).toBe(null);
+  mockTenantRequest.meta.checkWrite = false;
 });

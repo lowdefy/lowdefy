@@ -1,6 +1,6 @@
 # L2: Undefined Step Reference with ~ignoreBuildCheck
 # ====================================================
-# Tests that _step reference warnings are suppressed with ~ignoreBuildChecks: true.
+# Tests that _step reference warnings are suppressed with ~ignoreBuildChecks.
 # The ~ignoreBuildCheck flag is on the same object as the operator.
 #
 # Expected: NO warning should be shown.
@@ -27,7 +27,8 @@ api:
             name: test
       - :return:
           _step: nonExistentStep
-          ~ignoreBuildChecks: true
+          ~ignoreBuildChecks:
+            - step-refs
 
 pages:
   - id: home

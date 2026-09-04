@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider as AntdConfigProvider, theme } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 const algorithmMap = {
   default: theme.defaultAlgorithm,
@@ -32,7 +32,7 @@ function resolveAlgorithm(algorithm) {
   return algorithmMap[algorithm] ?? algorithm;
 }
 
-const ConfigProviderBlock = ({ blockId, content, properties }) => {
+const ConfigProviderBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => {
   const themeConfig = {};
   if (properties.token) {
     themeConfig.token = properties.token;
@@ -53,7 +53,9 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
       variant={properties.variant}
       theme={Object.keys(themeConfig).length > 0 ? themeConfig : undefined}
     >
-      <div id={blockId}>{content.content && content.content()}</div>
+      <div {...blockRootProps({ blockId, classNames, styles })}>
+        {content.content && content.content()}
+      </div>
     </AntdConfigProvider>
   );
 };

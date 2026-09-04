@@ -17,6 +17,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker, MarkerClusterer, InfoWindow } from '@react-google-maps/api';
+import { blockRootProps } from '@lowdefy/block-utils';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -43,6 +44,7 @@ const MAP_PROPS = {
 const Map = ({ blockId, children, classNames = {}, content, methods, properties, styles = {} }) => {
   const [map, setMap] = useState();
   const [bounds, setBounds] = useState();
+  const rootProps = blockRootProps({ blockId, classNames, styles, style: STYLE_DEFAULTS });
 
   useEffect(() => {
     methods.registerMethod('fitBounds', (args) => {
@@ -105,9 +107,11 @@ const Map = ({ blockId, children, classNames = {}, content, methods, properties,
   return (
     <GoogleMap
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
-      id={blockId}
-      mapContainerClassName={classNames.element}
-      mapContainerStyle={{ ...STYLE_DEFAULTS, ...styles.element }}
+      // GoogleMap renders its own container and forwards nothing, so the contract is
+      // applied through the three props it does expose. It has no prop for data-testid.
+      id={rootProps.id}
+      mapContainerClassName={rootProps.className}
+      mapContainerStyle={rootProps.style}
       center={MAP_PROPS.center}
       zoom={MAP_PROPS.zoom}
       onLoad={(newMap, event) => {

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import DOMPurify from 'dompurify';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 class DangerousHtml extends React.Component {
@@ -25,37 +25,46 @@ class DangerousHtml extends React.Component {
     this.div = {
       innerHTML: '',
     };
-    // we do not revaluate DOMPurifyOptions improve options safety by not making options dynamic.
+    // The sanitizer options are fixed at mount on purpose: a later, operator-driven
+    // value could loosen the sanitizer from state. A change is refused loudly
+    // rather than ignored silently.
     this.DOMPurifyOptions = props.properties.DOMPurifyOptions;
+    this.warnedOptionsChange = false;
+  }
+
+  sanitize() {
+    const { html, DOMPurifyOptions } = this.props.properties;
+    if (
+      !this.warnedOptionsChange &&
+      JSON.stringify(DOMPurifyOptions) !== JSON.stringify(this.DOMPurifyOptions)
+    ) {
+      this.warnedOptionsChange = true;
+      console.warn(
+        `DangerousHtml block "${this.props.blockId}": DOMPurifyOptions changed after mount and the change is ignored. The sanitizer options are fixed at the first render; write them as a literal, not from state.`
+      );
+    }
+    const htmlString = type.isNone(html) ? '' : html.toString();
+    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
   }
 
   componentDidMount() {
-    const htmlString = type.isNone(this.props.properties.html)
-      ? ''
-      : this.props.properties.html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
+    this.sanitize();
   }
 
   componentDidUpdate() {
-    const htmlString = type.isNone(this.props.properties.html)
-      ? ''
-      : this.props.properties.html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
+    this.sanitize();
   }
 
   render() {
     const { blockId, classNames, styles } = this.props;
     return (
       <div
-        id={blockId}
-        data-testid={blockId}
+        {...blockRootProps({ blockId, classNames, styles })}
         ref={(el) => {
           if (el) {
             this.div = el;
           }
         }}
-        className={classNames?.element}
-        style={styles?.element}
       />
     );
   }

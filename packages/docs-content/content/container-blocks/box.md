@@ -111,6 +111,76 @@ This content property overrides the content area below.
 ```
 
 ```yaml
+- id: box_onclick
+  type: Box
+  style:
+    .element:
+      background: rgba(22, 119, 255, 0.08)
+      border: 1px solid rgba(22, 119, 255, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_message
+        type: DisplayMessage
+        params:
+          content: Box clicked!
+          status: info
+  blocks:
+    - id: box_onclick_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #1677ff;">Click this box to trigger a
+          DisplayMessage action.</p>'
+- id: box_onclick_setstate
+  type: Box
+  style:
+    .element:
+      background: rgba(82, 196, 26, 0.08)
+      border: 1px solid rgba(82, 196, 26, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_set
+        type: SetState
+        params:
+          box_click_count:
+            _sum:
+              - _state: box_click_count
+              - 1
+  blocks:
+    - id: box_onclick_counter_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #52c41a;">Click this box to increment a
+          counter with SetState.</p>'
+- id: box_onclick_link
+  type: Box
+  style:
+    .element:
+      background: rgba(250, 140, 22, 0.08)
+      border: 1px solid rgba(250, 140, 22, 0.3)
+      padding: 16
+      borderRadius: 8
+      cursor: pointer
+  events:
+    onClick:
+      - id: box_onclick_link_action
+        type: Link
+        params:
+          url: /
+  blocks:
+    - id: box_onclick_link_text
+      type: Html
+      properties:
+        html: '<p style="margin: 0; color: #fa8c16;">Click this box to navigate using
+          the Link action.</p>'
+```
+
+```yaml
 - id: box_onpaste
   type: Box
   style:
@@ -1441,7 +1511,7 @@ Fixed 100px
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onClick` | \- | Trigger actions when the Box is clicked. |
-| `onPaste` | \- | Trigger actions when the element is focused and a paste event is triggered. |
+| `onPaste` | `{ text: string }` | Trigger actions when the element is focused and a paste event is triggered. |
 
 | Key | Target |
 | --- | --- |

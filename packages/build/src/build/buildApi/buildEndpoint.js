@@ -31,6 +31,9 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
     tenantConnections: context.tenantConnections,
     tenantCollectionMap: context.tenantCollectionMap,
     collections: context.collections,
+    // Lets step checks collect every finding for the endpoint in one build
+    // instead of throwing the first.
+    context,
   });
 
   // Validate that _step references point to defined step IDs

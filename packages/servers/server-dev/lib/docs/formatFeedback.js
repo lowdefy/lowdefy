@@ -43,7 +43,9 @@ function formatBatch(batch) {
 
   if (batch.screenshotPath) {
     lines.push('');
-    lines.push(`Annotated screenshot: ${batch.screenshotPath} (read this image to see the drawings)`);
+    lines.push(
+      `Annotated screenshot: ${batch.screenshotPath} (read this image to see the drawings)`
+    );
   }
 
   lines.push('');

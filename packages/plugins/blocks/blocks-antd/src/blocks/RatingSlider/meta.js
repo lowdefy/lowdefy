@@ -17,7 +17,12 @@
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
-import { disabled, inputTitle, autoFocus } from '../../schemas/inputProperties.js';
+import {
+  disabled,
+  inputTitle,
+  autoFocus,
+  sizeSmallDefaultLarge,
+} from '../../schemas/inputProperties.js';
 
 export default {
   category: 'input',
@@ -67,6 +72,14 @@ export default {
         default: false,
         description: 'Disables the N/A option left of slider.',
       },
+      CheckboxInput: {
+        type: 'object',
+        description:
+          'Properties for the CheckboxSelector rendering the N/A option, merged over the defaults the RatingSlider sets.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       minIcon: {
         ...icon,
         default: 'AiOutlineFrown',
@@ -100,6 +113,14 @@ export default {
         default: true,
         description: 'Shows dots at values between step values when true.',
       },
+      marks: {
+        type: 'object',
+        description:
+          'Slider marks, keyed by the value each mark sits on. Replaces the marks generated from min, max and step, and takes precedence over showMarks.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       showMarks: {
         type: 'boolean',
         default: true,
@@ -116,6 +137,10 @@ export default {
         enum: ['never', 'onClick', 'always'],
         default: 'onClick',
         description: 'When tooltip should be visible.',
+      },
+      size: {
+        ...sizeSmallDefaultLarge,
+        description: 'Size of the block label.',
       },
       title: inputTitle,
       theme: {

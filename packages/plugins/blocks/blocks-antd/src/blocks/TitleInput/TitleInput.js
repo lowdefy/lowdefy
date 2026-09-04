@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const Title = Typography.Title;
@@ -34,6 +34,7 @@ const TitleInput = ({
   styles = {},
   value,
 }) => {
+  const rootProps = blockRootProps({ blockId, classNames, styles });
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -50,13 +51,12 @@ const TitleInput = ({
   };
   const titleEl = (
     <Title
-      id={blockId}
-      className={classNames.element}
+      {...rootProps}
       code={properties.code}
       italic={properties.italic}
       level={properties.level}
       mark={properties.mark}
-      style={{ ...styles.element, ...(properties.color && { color: properties.color }) }}
+      style={{ ...rootProps.style, ...(properties.color && { color: properties.color }) }}
       type={properties.type}
       underline={properties.underline}
       copyable={

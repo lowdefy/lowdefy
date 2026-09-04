@@ -110,10 +110,49 @@ describe('memoisation', () => {
 
   test('creates basic print when CI is true', async () => {
     process.env.CI = 'true';
-    const { default: createCliLogger } = await import('./createCliLogger.js');
-    const logger = createCliLogger({ logLevel: 'info' });
-    logger.info('Test log');
-    expect(mockConsoleLog.mock.calls).toEqual([['Test log']]);
+    const mockWrite = jest.fn();
+    const origWrite = process.stderr.write;
+    process.stderr.write = mockWrite;
+    try {
+      const { default: createCliLogger } = await import('./createCliLogger.js');
+      const logger = createCliLogger({ logLevel: 'info' });
+      logger.info('Test log');
+      expect(mockWrite.mock.calls).toEqual([['Test log\n']]);
+    } finally {
+      process.stderr.write = origWrite;
+    }
+  });
+
+  test('basic print writes every level to stderr and nothing to stdout', async () => {
+    process.env.CI = 'true';
+    const mockStderrWrite = jest.fn();
+    const mockStdoutWrite = jest.fn();
+    const origStderrWrite = process.stderr.write;
+    const origStdoutWrite = process.stdout.write;
+    process.stderr.write = mockStderrWrite;
+    process.stdout.write = mockStdoutWrite;
+    try {
+      const { default: createCliLogger } = await import('./createCliLogger.js');
+      const logger = createCliLogger({ logLevel: 'debug' });
+      logger.info({ spin: 'start' }, 'Spinning');
+      logger.info({ spin: 'succeed' }, 'Done');
+      logger.info('Info');
+      logger.warn('Warn');
+      logger.error('Error');
+      logger.debug('Debug');
+      expect(mockStdoutWrite.mock.calls).toEqual([]);
+      expect(mockStderrWrite.mock.calls).toEqual([
+        ['Spinning\n'],
+        ['Done\n'],
+        ['Info\n'],
+        ['Warn\n'],
+        ['Error\n'],
+        ['Debug\n'],
+      ]);
+    } finally {
+      process.stderr.write = origStderrWrite;
+      process.stdout.write = origStdoutWrite;
+    }
   });
 });
 

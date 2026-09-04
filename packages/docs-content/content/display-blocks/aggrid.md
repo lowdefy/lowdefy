@@ -614,6 +614,124 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+- id: lowdefy_events_row_click
+  type: AgGridLowdefy
+  properties:
+    height: 300
+    defaultColDef:
+      sortable: true
+      flex: 1
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+      - field: department
+        headerName: Department
+      - field: status
+        headerName: Status
+        width: 120
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+        department: Engineering
+        status: Active
+      - name: Bob Smith
+        role: Designer
+        department: Design
+        status: Active
+      - name: Charlie Lee
+        role: Manager
+        department: Sales
+        status: On Leave
+      - name: Diana Patel
+        role: Analyst
+        department: Finance
+        status: Active
+      - name: Erik Johansson
+        role: DevOps
+        department: Engineering
+        status: Active
+  events:
+    onRowClick:
+      - id: row_click_message
+        type: DisplayMessage
+        params:
+          content:
+            _nunjucks:
+              on:
+                _event: row
+              template: "Clicked: {{ name }} ({{ role }}, {{ department }})"
+          duration: 3
+    onCellClick:
+      - id: cell_click_message
+        type: DisplayMessage
+        params:
+          status: info
+          content:
+            _nunjucks:
+              on:
+                name:
+                  _event: cell.column
+                value:
+                  _event: cell.value
+              template: "Cell: {{ name }} = {{ value }}"
+          duration: 3
+- id: lowdefy_events_row_selected
+  type: AgGridLowdefy
+  properties:
+    height: 300
+    rowSelection:
+      mode: multiRow
+      checkboxes: false
+      headerCheckbox: false
+      enableClickSelection: true
+    defaultColDef:
+      sortable: true
+      flex: 1
+    columnDefs:
+      - field: task
+        headerName: Task
+        flex: 2
+      - field: assignee
+        headerName: Assignee
+      - field: priority
+        headerName: Priority
+        width: 120
+    rowData:
+      - task: Design login page
+        assignee: Alice
+        priority: High
+      - task: Implement API
+        assignee: Bob
+        priority: High
+      - task: Write tests
+        assignee: Charlie
+        priority: Medium
+      - task: Update docs
+        assignee: Diana
+        priority: Low
+      - task: Code review
+        assignee: Erik
+        priority: Medium
+  events:
+    onRowSelected:
+      - id: row_selected_message
+        type: DisplayMessage
+        params:
+          status: success
+          content:
+            _nunjucks:
+              on:
+                row:
+                  _event: row.task
+                count:
+                  _event: selected.length
+              template: Selected "{{ row }}" ({{ count }} total selected)
+          duration: 3
+```
+
+```yaml
 - id: lowdefy_styled_columns
   type: AgGridLowdefy
   properties:
@@ -749,6 +867,60 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
         last_seen: null
         verified: null
         completion: null
+```
+
+```yaml
+- id: lowdefy_linked_cells_demo
+  type: AgGridLowdefy
+  properties:
+    height: 240
+    defaultColDef:
+      resizable: true
+      flex: 1
+    columnDefs:
+      - headerName: Task ID
+        field: _id
+        width: 140
+        cell:
+          type: link
+          pageId: tasks-view
+          urlQuery:
+            _id: _id
+      - headerName: Assignee
+        field: assignee
+        cell:
+          type: avatar
+          nameField: assignee
+          idField: _id
+          link:
+            pageId: user
+            urlQuery:
+              userId: _id
+      - headerName: Priority
+        field: priority
+        width: 120
+        cell:
+          type: tag
+          colorMap:
+            High: red
+            Medium: orange
+            Low: default
+    rowData:
+      - _id: TSK-001
+        assignee: Alice Johnson
+        priority: High
+      - _id: TSK-002
+        assignee: Bob Smith
+        priority: Medium
+      - _id: TSK-003
+        assignee: Charlie Lee
+        priority: Low
+  events:
+    onCellLink:
+      - id: navigate
+        type: Link
+        params:
+          _event: link
 ```
 
 ```yaml
@@ -957,6 +1129,33 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 ```
 
 ```yaml
+- id: lowdefy_loading_demo_switch
+  type: Switch
+  properties:
+    title: Toggle loading overlay
+- id: lowdefy_loading_demo_grid
+  type: AgGridLowdefy
+  loading:
+    _state: lowdefy_loading_demo_switch
+  properties:
+    height: 260
+    defaultColDef:
+      flex: 1
+    columnDefs:
+      - field: name
+        headerName: Name
+      - field: role
+        headerName: Role
+    rowData:
+      - name: Alice Johnson
+        role: Developer
+      - name: Bob Smith
+        role: Designer
+      - name: Charlie Lee
+        role: Manager
+```
+
+```yaml
 - id: lowdefy_tag_array_demo
   type: AgGridLowdefy
   properties:
@@ -1112,6 +1311,174 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
             _string.concat:
               - "Delete "
               - _event: row.name
+```
+
+```yaml
+- id: lowdefy_buttons_cell_demo
+  type: AgGridLowdefy
+  properties:
+    height: 260
+    defaultColDef:
+      resizable: true
+      flex: 1
+    columnDefs:
+      - headerName: Task
+        field: name
+      - headerName: Status
+        field: status
+        width: 120
+        cell:
+          type: tag
+          colorMap:
+            Open: blue
+            Locked: red
+            Archived: default
+      - headerName: Actions
+        field: _id
+        width: 220
+        cell:
+          type: buttons
+          buttons:
+            - eventName: onEditClick
+              title: Edit
+              icon: AiOutlineEdit
+              type: primary
+            - eventName: onDeleteClick
+              title: Delete
+              icon: AiOutlineDelete
+              danger: true
+              disabledField: locked
+              hiddenField: archived
+    rowData:
+      - _id: TSK-001
+        name: Wire main switchboard
+        status: Open
+        locked: false
+        archived: false
+      - _id: TSK-002
+        name: HVAC balancing
+        status: Locked
+        locked: true
+        archived: false
+      - _id: TSK-003
+        name: Utility connections
+        status: Archived
+        locked: false
+        archived: true
+  events:
+    onEditClick:
+      - id: edit_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Edit "
+              - _event: row._id
+    onDeleteClick:
+      - id: delete_msg
+        type: DisplayMessage
+        params:
+          status: warning
+          content:
+            _string.concat:
+              - "Delete "
+              - _event: row.name
+```
+
+```yaml
+- id: lowdefy_selector_cell_demo
+  type: AgGridLowdefy
+  properties:
+    height: 280
+    defaultColDef:
+      resizable: true
+    columnDefs:
+      - headerName: Task
+        field: name
+        flex: 1
+      - headerName: Priority
+        field: priority
+        width: 200
+        cell:
+          type: selector
+          eventName: onPriorityChange
+          options:
+            - label: Low
+              value: low
+              color: green
+            - label: Medium
+              value: medium
+              color: orange
+            - label: High
+              value: high
+              color: red
+      - headerName: Labels
+        field: labels
+        width: 340
+        cell:
+          type: multipleSelector
+          eventName: onLabelsChange
+          placeholder: Add labels
+          options:
+            - bug
+            - feature
+            - docs
+            - urgent
+    rowData:
+      - id: r1
+        name: Wire main switchboard
+        priority:
+          _state:
+            key: sel_priority.r1
+            default: high
+        labels:
+          _state:
+            key: sel_labels.r1
+            default:
+              - urgent
+      - id: r2
+        name: HVAC balancing
+        priority:
+          _state:
+            key: sel_priority.r2
+            default: medium
+        labels:
+          _state:
+            key: sel_labels.r2
+            default: []
+      - id: r3
+        name: Utility connections
+        priority:
+          _state:
+            key: sel_priority.r3
+            default: low
+        labels:
+          _state:
+            key: sel_labels.r3
+            default:
+              - docs
+              - feature
+  events:
+    onPriorityChange:
+      - id: persist_priority
+        type: SetState
+        params:
+          sel_priority:
+            _object.assign:
+              - _state: sel_priority
+              - _object.fromEntries:
+                  - - _event: row.id
+                    - _event: newValue
+    onLabelsChange:
+      - id: persist_labels
+        type: SetState
+        params:
+          sel_labels:
+            _object.assign:
+              - _state: sel_labels
+              - _object.fromEntries:
+                  - - _event: row.id
+                    - _event: newValue
 ```
 
 ```yaml
@@ -1301,6 +1668,97 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
                     - _event: newValue
 ```
 
+```yaml
+- id: lowdefy_input_cell_demo
+  type: AgGridLowdefy
+  properties:
+    height: 260
+    defaultColDef:
+      resizable: true
+    rowData:
+      - id: t1
+        name:
+          _state:
+            key: inp_name.t1
+            default: Wire main switchboard
+        active:
+          _state:
+            key: inp_active.t1
+            default: true
+        notes:
+          _state:
+            key: inp_notes.t1
+            default: Awaiting sign-off from the project engineer.
+      - id: t2
+        name:
+          _state:
+            key: inp_name.t2
+            default: HVAC balancing
+        active:
+          _state:
+            key: inp_active.t2
+            default: false
+        notes:
+          _state:
+            key: inp_notes.t2
+            default: Waiting on updated ductwork drawings.
+    columnDefs:
+      - headerName: Task
+        field: name
+        width: 260
+        cell:
+          type: textInput
+          eventName: onNameChange
+          placeholder: Task name
+      - headerName: Active
+        field: active
+        width: 110
+        cell:
+          type: switch
+          eventName: onActiveChange
+          checkedText: on
+          uncheckedText: off
+      - headerName: Notes
+        field: notes
+        flex: 1
+        cell:
+          type: paragraphInput
+          eventName: onNotesChange
+          ellipsis:
+            rows: 2
+  events:
+    onNameChange:
+      - id: persist_name
+        type: SetState
+        params:
+          inp_name:
+            _object.assign:
+              - _state: inp_name
+              - _object.fromEntries:
+                  - - _event: row.id
+                    - _event: newValue
+    onActiveChange:
+      - id: persist_active
+        type: SetState
+        params:
+          inp_active:
+            _object.assign:
+              - _state: inp_active
+              - _object.fromEntries:
+                  - - _event: row.id
+                    - _event: newValue
+    onNotesChange:
+      - id: persist_notes
+        type: SetState
+        params:
+          inp_notes:
+            _object.assign:
+              - _state: inp_notes
+              - _object.fromEntries:
+                  - - _event: row.id
+                    - _event: newValue
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | string | `"middle"` | Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes. Enum: `small`, `middle`, `large`. |
@@ -1320,7 +1778,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.sortable` | boolean | `false` | Set to true to allow sorting on this column. |
 | `columnDefs.$.resizable` | boolean | `false` | Set to true to allow this column should be resized. |
 | `columnDefs.$.width` | number | - | Initial width in pixels for the cell. |
-| `columnDefs.$.cellStyle` | number | - | An object of css values returning an object of css values for a particular cell. |
+| `columnDefs.$.cellStyle` | object | - | An object of css values returning an object of css values for a particular cell. |
 | `columnDefs.$.cellRenderer` | object | - | Provide your own cell Renderer function (using the `_function` operator) for this column's cells. |
 | `columnDefs.$.valueFormatter` | object \| string | - | A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering. |
 | `columnDefs.$.tooltipField` | string | - | The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component. |
@@ -1438,15 +1896,15 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. |
-| `onFilterChanged` | `{ rows, filter }` | Trigger event when the filter changes. |
-| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. |
-| `onRowSelected` | `{ row, rowIndex, selected }` | Trigger event when a row is selected. |
-| `onSelectionChanged` | `{ selected }` | Triggered when the selected rows are changed. |
-| `onSortChanged` | `{ rows, sort }` | Trigger event when the sort changes. |
-| `onCellLink` | `{ link, row, value }` | Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate. |
-| `onCellButton` | `{ row, value, button, buttonIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`). |
-| `onCellMenuItem` | `{ row, value, item, itemIndex }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`). |
+| `onCellClick` | `{ cell: object, colId: string, row: object, rowIndex: integer, selected: array }` | Trigger event when a cell is clicked. |
+| `onFilterChanged` | `{ rows: array, filter: object }` | Trigger event when the filter changes. |
+| `onRowClick` | `{ row: object, selected: array, rowIndex: integer }` | Trigger event when a row is clicked. |
+| `onRowSelected` | `{ row: object, rowIndex: integer, selected: array }` | Trigger event when a row is selected. |
+| `onSelectionChanged` | `{ selected: array }` | Triggered when the selected rows are changed. |
+| `onSortChanged` | `{ rows: array, sort: array }` | Trigger event when the sort changes. |
+| `onCellLink` | `{ link: object, row: object, value: any }` | Triggered when a built-in `cell.type: link` (or avatar with `link`) cell is clicked. Wire to a `Link` action with `params: { _event: link }` to navigate. |
+| `onCellButton` | `{ row: object, value: any, button: object, buttonIndex: integer }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.buttons[]` entry. Wire any number of named events on the block (e.g. `onApprove`, `onDelete`). |
+| `onCellMenuItem` | `{ row: object, value: any, item: object, itemIndex: integer }` | Documentation reference — the actual event name fired is the `eventName` string declared on each `cell.items[]` entry of a `cell.type: menu` cell. Wire any number of named events on the block (e.g. `onRename`, `onDelete`). |
 
 | Key | Target |
 | --- | --- |

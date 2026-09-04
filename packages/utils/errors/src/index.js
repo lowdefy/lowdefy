@@ -91,7 +91,8 @@ import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
 import ServiceError from './ServiceError.js';
-import shouldSuppressBuildCheck, { VALID_CHECK_SLUGS } from './shouldSuppressBuildCheck.js';
+import shouldSuppressBuildCheck from './shouldSuppressBuildCheck.js';
+import VALID_CHECK_SLUGS from './checkSlugs.js';
 import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
 

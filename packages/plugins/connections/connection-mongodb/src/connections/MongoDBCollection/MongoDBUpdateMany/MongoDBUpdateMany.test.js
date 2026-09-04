@@ -504,7 +504,7 @@ const collectionSchema = {
   fields: {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
   },
 };
 
@@ -525,7 +525,7 @@ test('updateMany with a collectionSchema rejects a violating $set and applies a 
       collectionSchema,
     })
   ).rejects.toThrow(
-    'Field "created_at" in $set of an update for collection "answers" does not match the declared contract: must be a Date. Received "2026".'
+    'Field "created_at" in $set of an update for collection "answers" does not match the declared contract: must match format "date-time". Received "2026".'
   );
   const res = await MongoDBUpdateMany({
     request: {

@@ -21,7 +21,12 @@ import { jest } from '@jest/globals';
 
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
+// Chokidar's fsevents backend is slow to arm under a loaded test run, so both
+// budgets are generous; every one of these resolves in well under a second
+// when the watcher fires.
+jest.setTimeout(30000);
+
+function waitFor(predicate, timeout = 15000) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const tick = () => {
@@ -74,16 +79,68 @@ afterEach(async () => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('resolves immediately without watching when no local server-side plugin exists', async () => {
+test('watches nothing but the type map when no local server-side plugin exists', async () => {
   addLinkedPackage('@app/ui-plugin');
   writeCustomTypesMap({ blocks: { Fancy: { package: '@app/ui-plugin', version: '1.0.0' } } });
 
-  await expect(pluginSourceWatcher(context)).resolves.toBeUndefined();
+  watcher = await pluginSourceWatcher(context);
+
   expect(context.restartServer).not.toHaveBeenCalled();
 });
 
-test('resolves immediately when customTypesMap.json is missing', async () => {
-  await expect(pluginSourceWatcher(context)).resolves.toBeUndefined();
+test('starts even when customTypesMap.json is missing', async () => {
+  watcher = await pluginSourceWatcher(context);
+
+  expect(context.restartServer).not.toHaveBeenCalled();
+});
+
+test('a rebuild that does not change the package list does not restart the server', async () => {
+  const map = { requests: { Find: { package: '@app/db-plugin', version: '1.0.0' } } };
+  addLinkedPackage('@app/db-plugin');
+  writeCustomTypesMap(map);
+
+  watcher = await pluginSourceWatcher(context);
+  // Every build rewrites the map; the same package list is not news.
+  writeCustomTypesMap(map);
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  expect(context.restartServer).not.toHaveBeenCalled();
+});
+
+test('a plugin package added mid-session is picked up when the type map is rewritten', async () => {
+  writeCustomTypesMap({});
+  const dir = addLinkedPackage('@app/late-plugin');
+  fs.writeFileSync(path.join(dir, 'src', 'find.js'), 'export default 1;');
+
+  watcher = await pluginSourceWatcher(context);
+  writeCustomTypesMap({ requests: { Find: { package: '@app/late-plugin', version: '1.0.0' } } });
+  await waitFor(() => context.logger.info.mock.calls.some((call) => `${call[0]}`.includes(dir)));
+
+  fs.writeFileSync(path.join(dir, 'src', 'find.js'), 'export default 2;');
+  await waitFor(() => context.restartServer.mock.calls.length > 0);
+
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
+});
+
+test('a package with a build step restarts on its built output, not on its src', async () => {
+  const dir = addLinkedPackage('@app/built-plugin');
+  fs.writeFileSync(
+    path.join(dir, 'package.json'),
+    JSON.stringify({ name: '@app/built-plugin', main: './dist/index.js' })
+  );
+  fs.mkdirSync(path.join(dir, 'dist'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'dist', 'index.js'), 'export default 1;');
+  writeCustomTypesMap({
+    connections: { MyDb: { package: '@app/built-plugin', version: '1.0.0' } },
+  });
+
+  watcher = await pluginSourceWatcher(context);
+  // The restart has to land on the built output, which is what the server
+  // imports - a restart onto a stale dist verifies a fix that is not running.
+  fs.writeFileSync(path.join(dir, 'dist', 'index.js'), 'export default 2;');
+  await waitFor(() => context.restartServer.mock.calls.length > 0);
+
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
 });
 
 test('editing a request implementation under src restarts the server', async () => {

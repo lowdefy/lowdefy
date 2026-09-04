@@ -47,11 +47,31 @@ test('single stage', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -88,11 +108,31 @@ test('array with single stage', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -138,11 +178,31 @@ test('array with two stages', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request_1',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
         result: 1,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request_1',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -159,11 +219,31 @@ test('array with two stages', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        request_id: 'test_request_2',
+        request_type: 'TestRequest',
+        connection_id: 'test',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
         result: 2,
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        step_id: 'test_request_2',
+        step_type: 'TestRequest',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(res.response).toEqual(undefined);
@@ -387,7 +467,7 @@ test('a UserError is returned as an error status without going through handleErr
   };
   const context = {
     handleError,
-    logger: { debug: jest.fn() },
+    logger: { debug: jest.fn(), info: jest.fn() },
     evaluateOperators: () => {
       throw error;
     },
@@ -450,13 +530,17 @@ test('routineContext.trace gains one entry per request step, carrying its stepId
       stepId: 'first',
       rewritten: [],
       connection: { id: 'test', type: 'TestConnection', tenant: null },
+      requestType: 'TestRequest',
       properties: { response: 1 },
+      dispatched: true,
     },
     {
       stepId: 'second',
       rewritten: [],
       connection: { id: 'test', type: 'TestConnection', tenant: null },
+      requestType: 'TestRequest',
       properties: { response: 2 },
+      dispatched: true,
     },
   ]);
 });
@@ -471,4 +555,31 @@ test('a routine without trace leaves routineContext.trace undefined', async () =
   };
   const { routineContext } = await runTest({ routine });
   expect(routineContext.trace).toBeUndefined();
+});
+
+test('runRoutine stops between steps when the request is aborted', async () => {
+  // Aborted after the first step: the routine gets no further.
+  let checks = 0;
+  const signal = {
+    get aborted() {
+      checks += 1;
+      return checks > 2;
+    },
+  };
+  const routine = [{ ':set_state': { first: true } }, { ':set_state': { second: true } }];
+  const { res, routineContext } = await runTest({ routine, signal });
+  expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ServiceError');
+  expect(res.error.message).toContain('The request was aborted before the next step ran.');
+  expect(routineContext.state).toEqual({ first: true });
+});
+
+test('runRoutine runs every step when the request is not aborted', async () => {
+  const routine = [{ ':set_state': { first: true } }, { ':set_state': { second: true } }];
+  const { res, routineContext } = await runTest({
+    routine,
+    signal: new AbortController().signal,
+  });
+  expect(res.status).toEqual('continue');
+  expect(routineContext.state).toEqual({ first: true, second: true });
 });

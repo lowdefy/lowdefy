@@ -18,9 +18,12 @@ import path from 'path';
 
 import findProjectRoot from './findProjectRoot.js';
 import getDevCommand from './getDevCommand.js';
+import postEditHookScript from './postEditHookScript.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
-import upsertClaudeSettings from './upsertClaudeSettings.js';
+import upsertClaudeSettings, { POST_EDIT_HOOK_SCRIPT_PATH } from './upsertClaudeSettings.js';
 import upsertMcpServer from './upsertMcpServer.js';
+import writeGitHooks from './writeGitHooks.js';
+import writeHookScript from './writeHookScript.js';
 import writeSkillFile from './writeSkillFile.js';
 
 // Resolves where agent files should be written (the project root an agent is
@@ -59,13 +62,23 @@ async function agentSetup({ context }) {
   const runCommand = appPath === '' ? devCommand : `cd ${appPath} && ${devCommand}`;
 
   await upsertMcpServer({ context, projectDirectory, port });
+  await writeHookScript({
+    context,
+    projectDirectory,
+    relativePath: POST_EDIT_HOOK_SCRIPT_PATH,
+    content: postEditHookScript({ appPath }),
+  });
   await upsertClaudeSettings({ context, projectDirectory });
+  if (context.options.gitHooks) {
+    await writeGitHooks({ context, projectDirectory, appPath });
+  }
   await writeSkillFile({
     context,
     projectDirectory,
     appPath,
     port,
     skills: context.options.skills,
+    forceSkills: context.options.forceSkills,
   });
   await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
 

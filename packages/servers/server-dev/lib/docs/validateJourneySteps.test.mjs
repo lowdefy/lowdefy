@@ -14,90 +14,51 @@
   limitations under the License.
 */
 
-import validateJourneySteps from './validateJourneySteps.js';
+import { JOURNEY_STEP_KEYS, validateJourneySteps as shared } from '@lowdefy/node-utils';
+
+import validateJourneySteps, { getStepKey, STEP_KEYS } from './validateJourneySteps.js';
+
+// The grammar itself is tested in @lowdefy/node-utils. What must hold here is
+// that the dev server has no grammar of its own: the CLI and this server accept
+// exactly the same steps.
+test('validateJourneySteps is the shared grammar validator, not a copy', () => {
+  expect(validateJourneySteps).toBe(shared);
+  expect(STEP_KEYS).toBe(JOURNEY_STEP_KEYS);
+});
 
 test('validateJourneySteps accepts every step of the grammar', () => {
-  const result = validateJourneySteps({
-    steps: [
-      { click: 'submit' },
-      { fill: { blockId: 'name', value: 'Ada' } },
-      { fill: { blockId: 'age', value: 0 } },
-      { select: { blockId: 'country', value: 'Chile' } },
-      { press: 'Mod+k' },
-      { wait: { ms: 100 } },
-      { wait: { request: 'get_rows' } },
-      { wait: { state: 'rows' } },
-      { screenshot: 'after' },
-      { screenshot: true },
-      { screenshot: null },
-      { expect: { state: { path: 'saved', equals: true } } },
-      { expect: { state: { path: 'missing', equals: null } } },
-      { expect: { visible: 'modal' } },
-      { expect: { text: { blockId: 'title', contains: 'Hello' } } },
-      { expect: { url: { contains: '/detail' } } },
-    ],
-  });
-  expect(result).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [
+        { click: 'submit' },
+        { fill: { blockId: 'title', value: 'Access reviews' } },
+        { set: { blockId: 'rating', value: 4 } },
+        { select: { blockId: 'country', value: 'Chile' } },
+        { press: 'Mod+k' },
+        { press: { blockId: 'title', key: 'Enter' } },
+        { wait: { ms: 10 } },
+        { wait: { request: 'get_controls' } },
+        { wait: { state: 'controls' } },
+        { screenshot: 'after' },
+        { expect: { state: { path: 'saved', equals: true } } },
+        { expect: { visible: 'modal' } },
+        { expect: { text: { blockId: 'title', notContains: 'Deleted' } } },
+        { expect: { url: { contains: '/detail' } } },
+        { expect: { dom: { blockId: 'submit', hasClass: 'ant-btn-primary' } } },
+        { expect: { durationMsUnder: 2000 } },
+      ],
+    })
+  ).toEqual({});
 });
 
-test('validateJourneySteps rejects steps that are not an array', () => {
-  expect(validateJourneySteps({ steps: undefined }).error).toMatch(
-    /requires "steps" to be an array. Received undefined/
-  );
-  expect(validateJourneySteps({ steps: 'click' }).error).toMatch(/Received "click"/);
-});
-
-test('validateJourneySteps names the index and key of an unknown step', () => {
-  const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
-  expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.'
+test('validateJourneySteps reports a located error for a malformed step', () => {
+  expect(validateJourneySteps({ steps: [{ click: 'a' }, { fill: 'title' }] }).error).toEqual(
+    'Step 1 "fill" requires { blockId, value }. Received "title".'
   );
 });
 
-test('validateJourneySteps rejects a step with more than one key', () => {
-  const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
-  expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, wait, screenshot, expect.'
-  );
-});
-
-test('validateJourneySteps rejects a step that is not an object', () => {
-  expect(validateJourneySteps({ steps: ['click submit'] }).error).toMatch(
-    /Step 0: Journey steps must be objects with one key. Received "click submit"/
-  );
-});
-
-test.each([
-  [{ click: 7 }, /Step "click" requires a blockId string. Received 7/],
-  [{ fill: 'name' }, /Step "fill" requires \{ blockId, value \}/],
-  [{ fill: { blockId: 1, value: 'x' } }, /Step "fill" requires a "blockId" string. Received 1/],
-  [{ fill: { blockId: 'name' } }, /Step "fill" requires a "value"/],
-  [{ select: { value: 'x' } }, /Step "select" requires a "blockId" string/],
-  [{ press: ['Enter'] }, /Step "press" requires a key string/],
-  [{ wait: 100 }, /Step "wait" requires one of \{ ms \}, \{ request \}, \{ state \}/],
-  [
-    { wait: { ms: 1, request: 'r' } },
-    /Step "wait" requires exactly one of "ms", "request", "state"/,
-  ],
-  [{ wait: { until: 'x' } }, /Step "wait" requires exactly one of/],
-  [{ wait: { ms: '100' } }, /Step "wait" requires "ms" to be a number. Received "100"/],
-  [{ wait: { request: 1 } }, /Step "wait" requires "request" to be a string. Received 1/],
-  [{ screenshot: 3 }, /Step "screenshot" takes an optional name string. Received 3/],
-  [
-    { expect: 'visible' },
-    /Step "expect" requires one of \{ state \}, \{ visible \}, \{ text \}, \{ url \}/,
-  ],
-  [
-    { expect: { count: 1 } },
-    /Step "expect" requires exactly one of "state", "visible", "text", "url"/,
-  ],
-  [{ expect: { state: { path: 'a' } } }, /Step "expect.state" requires \{ path, equals \}/],
-  [{ expect: { state: 'a' } }, /Step "expect.state" requires \{ path, equals \}/],
-  [{ expect: { visible: { blockId: 'a' } } }, /Step "expect.visible" requires a blockId string/],
-  [{ expect: { text: { blockId: 'a' } } }, /Step "expect.text" requires \{ blockId, contains \}/],
-  [{ expect: { url: '/detail' } }, /Step "expect.url" requires \{ contains \}/],
-])('validateJourneySteps rejects malformed step %j', (step, expected) => {
-  const result = validateJourneySteps({ steps: [step] });
-  expect(result.error).toMatch(/^Step 0: /);
-  expect(result.error).toMatch(expected);
+test('getStepKey returns the single key of a step and undefined otherwise', () => {
+  expect(getStepKey({ click: 'a' })).toEqual('click');
+  expect(getStepKey({ click: 'a', press: 'Enter' })).toBeUndefined();
+  expect(getStepKey('click')).toBeUndefined();
 });

@@ -20,7 +20,9 @@ import { ConfigError } from '@lowdefy/errors';
 import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import detachRequestSignal from './detachRequestSignal.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import logEndpointCompleted from './logEndpointCompleted.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
@@ -33,6 +35,8 @@ import validatePayload from './validatePayload.js';
 // cron-only endpoint that is never client-callable.
 async function runScheduledEndpoint(context, { endpointId, cron }) {
   const { logger } = context;
+
+  detachRequestSignal(context);
 
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);
@@ -92,7 +96,7 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
   // async: true — acknowledge the cron trigger immediately and run in the
   // background; transport auth (CRON_SECRET) already passed at the route.
   if (endpointConfig.async === true) {
-    scheduleBackground(context, { event: 'background_scheduled_endpoint', endpointId }, () =>
+    scheduleBackground(context, { endpointConfig, event: 'background_scheduled_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );
     return {
@@ -103,8 +107,16 @@ async function runScheduledEndpoint(context, { endpointId, cron }) {
     };
   }
 
+  const startTime = performance.now();
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
+  });
+  logEndpointCompleted(context, {
+    endpointConfig,
+    entry: 'scheduled',
+    error,
+    startTime,
+    status,
   });
 
   return buildEndpointResult(context, { error, response, status });

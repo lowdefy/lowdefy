@@ -73,10 +73,25 @@ test('throw at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -93,10 +108,25 @@ test('throw at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -145,10 +175,25 @@ test('throw in the middle of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -199,10 +244,25 @@ test('multiple throws in routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -259,11 +319,26 @@ test('truthy guard statement throw', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
         result: 'guard statement',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -307,11 +382,26 @@ test('throw in a try block with catch return', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_catch' }],
     [{ event: 'debug_control_return', response: { message: 'Error was caught' } }],
@@ -356,11 +446,26 @@ test('throw in a try block with missing catch', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -406,11 +511,26 @@ test('throw in a try block with error in finally', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_catch' }],
     [{ event: 'debug_control_finally' }],
@@ -460,11 +580,26 @@ test('throw in try block with cause', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
@@ -509,11 +644,26 @@ test('throw in try block with empty catch', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_catch' }],
   ]);
@@ -559,11 +709,26 @@ test('throw in try block with return in finally block', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_finally' }],
     [{ event: 'debug_control_return', response: { message: 'Error ignored' } }],
@@ -620,11 +785,26 @@ test('throw in try block with request in finally block', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_finally' }],
     [
@@ -642,11 +822,26 @@ test('throw in try block with request in finally block', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end_2',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);

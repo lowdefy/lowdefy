@@ -28,26 +28,28 @@ test('getFieldValidator compiles a field schema once and memoises it by schema o
   expect(getFieldValidator({ fieldSchema: { type: 'string' } })).not.toBe(first);
 });
 
-test('getFieldValidator strips the build presence flag required before compiling', () => {
-  expect(() => compile({ schema: { type: 'string', required: true } })).toThrow();
-  const validator = getFieldValidator({
-    fieldSchema: {
-      type: 'array',
-      required: true,
-      items: {
-        type: 'object',
-        required: true,
-        properties: { a: { type: 'string', required: true } },
-      },
+// The build now writes valid JSON Schema - `required` is the array form at the
+// collection level - so the artifact compiles with nothing stripped from it.
+test('getFieldValidator compiles the build artifact untouched', () => {
+  const fieldSchema = {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      required: ['a'],
     },
-  });
+  };
+  expect(() => compile({ schema: fieldSchema })).not.toThrow();
+  const validator = getFieldValidator({ fieldSchema });
   expect(validator([{ a: 'x' }]).valid).toBe(true);
   expect(validator([{ a: 1 }]).valid).toBe(false);
+  expect(validator([{}]).valid).toBe(false);
 });
 
-test('getFieldValidator supports instanceof Date and enum without a type', () => {
-  expect(getFieldValidator({ fieldSchema: { instanceof: 'Date' } })(new Date()).valid).toBe(true);
-  expect(getFieldValidator({ fieldSchema: { instanceof: 'Date' } })('2026').valid).toBe(false);
+test('getFieldValidator supports a date-time format and an enum without a type', () => {
+  const dateValidator = getFieldValidator({ fieldSchema: { type: 'string', format: 'date-time' } });
+  expect(dateValidator(new Date(0).toISOString()).valid).toBe(true);
+  expect(dateValidator('2026').valid).toBe(false);
   const enumValidator = getFieldValidator({ fieldSchema: { enum: ['a', 1] } });
   expect(enumValidator(1).valid).toBe(true);
   expect(enumValidator('b').valid).toBe(false);

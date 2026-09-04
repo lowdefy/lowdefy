@@ -15,21 +15,34 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import antdStyles from '../../ag-grid-antd.module.css';
 import { themeBalhamAntd, useGridTheme } from '../../theme/themeLowdefy.js';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridBalham = ({ blockId, components, events, loading, methods, properties, styles }) => {
+const AgGridBalham = ({
+  blockId,
+  classNames,
+  components,
+  events,
+  loading,
+  methods,
+  properties,
+  styles,
+}) => {
   const theme = useGridTheme(themeBalhamAntd, properties.themeParams);
 
   return (
     <div
-      id={blockId}
-      className={`ag-theme-balham ${antdStyles.antdTheme}`}
-      style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: `ag-theme-balham ${antdStyles.antdTheme}`,
+        style: { width: '100%', height: properties.height ?? 500 },
+      })}
     >
       <AgGrid
         components={components}

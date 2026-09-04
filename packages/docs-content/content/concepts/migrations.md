@@ -59,7 +59,7 @@ A **stage** names an environment — `dev`, `sandbox`, `staging`, `prod` — and
 
 The stage resolves in this order: `--stage` on the command line, then `STAGE` from the environment (including `.env`), then **`local`**. `local` is each developer's own database: its ledger is gitignored, the dev server defaults to it, and it is never a deploy target.
 
-A production build (`lowdefy build`) that has migrations and no `STAGE` is a **build error**: a build is made _for_ an environment and must carry that environment's ledger. `lowdefy check` does not need a stage.
+A production build (`lowdefy build`) that has migrations and no `STAGE` is a **build error**: a build is made *for* an environment and must carry that environment's ledger. `lowdefy check` does not need a stage.
 
 ## The ledger
 
@@ -92,7 +92,7 @@ The record of what has been applied is a **file in the repository, one per stage
 
 - **One ledger per stage.** `prod.json` says what has been applied to the production database, `dev.json` to the dev one. The stage that selects the connection secrets is the stage that selects the ledger, so the two cannot be mixed by accident.
 - **The build bakes the ledger in.** `lowdefy build` reads the stage's ledger and writes `build/migrations.json` as `{ stage, migrations: [{ id, checksum, applied }] }`, so the serving preflight is a file comparison with no database round trip.
-- **It lives under `.lowdefy/`** with the CLI's other state. `lowdefy init` ignores `.lowdefy/**`, so it also writes the two `.gitignore` lines that un-ignore the ledgers and re-ignore `local.json`; `lowdefy init-migrations` adds them to an existing project.
+- **It lives under `.lowdefy/`** with the CLI's other state. `lowdefy init` ignores `.lowdefy/*` (direct children only, because git cannot re-include a file under a `.lowdefy/**` match), and writes the two `.gitignore` lines that un-ignore the ledgers and re-ignore `local.json`; `lowdefy init-migrations` adds them to an existing project and repairs a `.lowdefy/**` line. Because the ledger records a *stage*, not a database, a database restored from a backup or pointed at a fresh cluster must have that stage's ledger reset (delete the entries the restore undid, or the whole file) before `lowdefy migrate` runs, or the framework will believe the migrations are applied.
 - **The ledger holds no data and no secrets** — ids, checksums, timestamps and who ran it. It is not in a database, so it sits outside the tenant wall by construction and records a migration over any connection type the same way.
 
 The `checksum` is the first 16 hex characters of a SHA-256 of the **raw file text** — the file you edit is the source of truth for "did this change". A ledger entry whose checksum no longer matches the file is a build warning and a migrate-time refusal (see below).
@@ -169,7 +169,7 @@ Migrations are designed to run in the pipeline, per stage, before the deploy. Th
 
 Turn the preflight off with `config.migrations.preflight: false` for an app that manages migration ordering entirely in its pipeline, or one deliberately deploying new code ahead of a migration. It is on by default because the failure it prevents — new code reading a collection the migration has not reshaped — is silent and data-shaped.
 
-**The ordering the pipeline must keep.** Because the ledger is baked into the build, a deploy built from a commit _before_ the ledger commit refuses to serve until the next deploy. Chain your deploy job after the migrate job with `needs: migrate` (the generated workflow carries a commented placeholder), or trigger your deploy workflow from the migrate workflow.
+**The ordering the pipeline must keep.** Because the ledger is baked into the build, a deploy built from a commit *before* the ledger commit refuses to serve until the next deploy. Chain your deploy job after the migrate job with `needs: migrate` (the generated workflow carries a commented placeholder), or trigger your deploy workflow from the migrate workflow.
 
 ## `lowdefy init-migrations`
 
@@ -199,7 +199,7 @@ During a rolling deploy the previous version's instances keep serving while the 
 - **Expand** migrations — add a field and backfill it, add a collection, widen an enum — are safe in a rolling deploy: old code ignores the new field, new code uses it, both run against the migrated shape.
 - **Contract** migrations — drop a field, remove an enum value, delete a collection — must ship in a **later** deploy, once no running instance reads the old shape.
 
-A rename is expand-then-contract across two deploys: deploy 1 adds `name` and backfills it from `title` (both present, old code reads `title`, new code reads `name`); deploy 2, once every instance runs the new code, drops `title`. The framework cannot know which fields the previously-deployed code read, so it does not enforce this discipline — but the preflight plus the forward-only ledger make the _ordering_ reliable, which is the half the framework can guarantee.
+A rename is expand-then-contract across two deploys: deploy 1 adds `name` and backfills it from `title` (both present, old code reads `title`, new code reads `name`); deploy 2, once every instance runs the new code, drops `title`. The framework cannot know which fields the previously-deployed code read, so it does not enforce this discipline — but the preflight plus the forward-only ledger make the *ordering* reliable, which is the half the framework can guarantee.
 
 ## Environments and secrets
 
@@ -209,11 +209,11 @@ The runner reads `.env` and the process environment exactly as the build and ser
 
 The dev server builds migrations too, for the stage it resolves (`STAGE`, else `local`). Its build status carries a `migrations` section — the stage and the ids pending or changed against that stage's ledger — so an agent editing the app is told, in its own feedback channel, that the dev database is behind the config. Two MCP tools on `/lowdefy-docs/mcp` complete the loop: `lowdefy_migrations_status` reports every migration with its applied flag and the ledger entries, and `lowdefy_migrate` applies the pending ones to the dev database (`dryRun: true` plans only; applying needs `cli.agentTools.allowWriteRequests`). The same are available as `GET /lowdefy-docs/migrations` and `POST /lowdefy-docs/migrate`. A change to a ledger file rebuilds.
 
-`lowdefy check` adds a check-only warning, `migrations`, for a [`collections`](/collections) field declared `required` that no migration file names — a nudge that existing documents may lack it.
+`lowdefy check` adds a check-only warning under the `collections` slug for a [`collections`](/collections) field declared `required` that no migration file names — a nudge that existing documents may lack it.
 
 ## Worked examples
 
-All four are complete `migrations/<id>.yaml` files, and all are idempotent: re-running one is a no-op because its filter matches only unmigrated documents, or its write is conditional.
+All of these are complete `migrations/<id>.yaml` files, and all are idempotent: re-running one is a no-op because its filter matches only unmigrated documents, its write is conditional, or the operation is idempotent in the database.
 
 ### Add-field backfill
 
@@ -234,6 +234,33 @@ routine:
         $set:
           active: true
 ```
+
+### Creating indexes
+
+`collections.<name>.indexes` declares the indexes a collection should have; a `MongoDBCreateIndexes` step is what creates them. The request mirrors the declaration verbatim, so the declaration and the migration that realises it read the same in one diff:
+
+```yaml
+# migrations/2026-07-02-01-answers-indexes.yaml
+name: Create the answers indexes
+routine:
+  - id: create_indexes
+    type: MongoDBCreateIndexes
+    connectionId: answers
+    tenant: none # an index is a property of the collection, not of an organization
+    properties:
+      indexes:
+        - keys: { organization_id: 1, status: 1, created_at: -1 }
+        - keys: { external_ref: 1 }
+          options: { unique: true, name: by_external_ref }
+```
+
+The step returns `{ indexNames: [...] }`, the names MongoDB gave the indexes it created. `createIndexes` is idempotent for an index that already exists with the same keys and options, so the step is safe to replay when a migration re-runs after a mid-way failure. An index that exists under the same *name* with different keys is a driver error, reported as a request error — give the changed index a new name.
+
+An index on a large collection can take a long time and holds a lock on some deployments; run the migration in a window where that is acceptable, and note that `lowdefy migrate` has no per-step ledger, so a run interrupted during index creation replays the whole migration.
+
+Which indexes to declare is not a guess: `lowdefy check` derives candidates from the queries the app authors and names the ones nothing covers — see [Index candidates](/collections#index-candidates).
+
+**There is no drop.** Lowdefy ships no request type that removes an index and never suggests removing one. An index this app no longer queries may be the one a report, a backup job or another application depends on, and the failure this whole feature exists for is an automated tool dropping an index a job still needed. Removing an index is a hand operation against the database.
 
 ### Rename — copy, verify, unset
 
@@ -376,6 +403,7 @@ routine:
 ## Non-goals
 
 - **No schema-diffing or auto-generated migrations.** The build never derives a migration from a [`collections`](/collections) change — a generated backfill is a data-destroying guess.
+- **No index drops.** `MongoDBCreateIndexes` creates; nothing removes. See [Creating indexes](#creating-indexes).
 - **No down migrations.** Forward-only; correct a mistake with a new migration.
 - **No cross-collection transactions.** A migration touching several collections is not atomic; idempotency, not rollback, is the recovery model.
 - **No migrations for non-database connections** in v1. The worked shapes and the document counts are MongoDB; the routine grammar could express an HTTP or storage migration later, and the file ledger would record it unchanged.

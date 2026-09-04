@@ -76,7 +76,7 @@ async function renderAuthEmail({ flow, vars, authEmailConfig, baseURL, context }
       theme,
       links: {},
     });
-    return { subject: interpolated.subject, html, text };
+    return { subject: interpolated.subject, html, text, notificationId };
   }
 
   const Template = stockTemplates[flow];
@@ -92,7 +92,7 @@ async function renderAuthEmail({ flow, vars, authEmailConfig, baseURL, context }
     links: {},
   });
   const subject = type.isFunction(Template.subject) ? Template.subject(vars) : Template.subject;
-  return { subject, html, text };
+  return { subject, html, text, notificationId: null };
 }
 
 export default renderAuthEmail;

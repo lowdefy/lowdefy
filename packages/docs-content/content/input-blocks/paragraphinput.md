@@ -57,6 +57,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_editable_object:
+  _state: basic_editable_object
+basic_not_editable:
+  _state: basic_not_editable
+basic_empty:
+  _state: basic_empty
+basic_long:
+  _state: basic_long
+```
+
+```yaml
 - id: tooltip_short
   type: ParagraphInput
   properties:
@@ -90,6 +103,15 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           tooltip_instructional: Tooltip with editing instructions.
+```
+
+```yaml
+tooltip_short:
+  _state: tooltip_short
+tooltip_descriptive:
+  _state: tooltip_descriptive
+tooltip_instructional:
+  _state: tooltip_instructional
 ```
 
 ```yaml
@@ -147,6 +169,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+icon_highlight:
+  _state: icon_highlight
+icon_form:
+  _state: icon_form
+icon_edit:
+  _state: icon_edit
+icon_custom_color:
+  _state: icon_custom_color
+```
+
+```yaml
 - id: maxlen_20
   type: ParagraphInput
   properties:
@@ -195,6 +228,17 @@ Editable paragraph text with copyable and ellipsis support.
         params:
           maxlen_200: This paragraph allows up to 200 characters. It provides ample space
             for short descriptions while still enforcing a reasonable limit.
+```
+
+```yaml
+maxlen_20:
+  _state: maxlen_20
+maxlen_50:
+  _state: maxlen_50
+maxlen_100:
+  _state: maxlen_100
+maxlen_200:
+  _state: maxlen_200
 ```
 
 ```yaml
@@ -257,6 +301,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+autosize_true:
+  _state: autosize_true
+autosize_min_max:
+  _state: autosize_min_max
+autosize_min_only:
+  _state: autosize_min_only
+autosize_max_only:
+  _state: autosize_max_only
+```
+
+```yaml
 - id: editing_true
   type: ParagraphInput
   properties:
@@ -280,6 +335,13 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           editing_false: This paragraph starts in display mode. Click the icon to edit.
+```
+
+```yaml
+editing_true:
+  _state: editing_true
+editing_false:
+  _state: editing_false
 ```
 
 ```yaml
@@ -328,6 +390,15 @@ Editable paragraph text with copyable and ellipsis support.
           editable_autosize_maxlen: Auto-sizing text area with a 250 character limit. This
             is useful for description fields where you want the input to be
             comfortable but bounded.
+```
+
+```yaml
+editable_full:
+  _state: editable_full
+editable_icon_tooltip_max:
+  _state: editable_icon_tooltip_max
+editable_autosize_maxlen:
+  _state: editable_autosize_maxlen
 ```
 
 ```yaml
@@ -390,6 +461,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+type_default:
+  _state: type_default
+type_secondary:
+  _state: type_secondary
+type_success:
+  _state: type_success
+type_warning:
+  _state: type_warning
+type_danger:
+  _state: type_danger
+```
+
+```yaml
 - id: style_strong
   type: ParagraphInput
   properties:
@@ -445,6 +529,19 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           style_mark: Marked (highlighted) paragraph text.
+```
+
+```yaml
+style_strong:
+  _state: style_strong
+style_italic:
+  _state: style_italic
+style_underline:
+  _state: style_underline
+style_delete:
+  _state: style_delete
+style_mark:
+  _state: style_mark
 ```
 
 ```yaml
@@ -514,6 +611,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+combo_strong_italic:
+  _state: combo_strong_italic
+combo_underline_mark:
+  _state: combo_underline_mark
+combo_strong_underline:
+  _state: combo_strong_underline
+combo_strong_italic_underline:
+  _state: combo_strong_italic_underline
+combo_all_styles:
+  _state: combo_all_styles
+```
+
+```yaml
 - id: type_success_strong
   type: ParagraphInput
   properties:
@@ -578,6 +688,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+type_success_strong:
+  _state: type_success_strong
+type_warning_italic:
+  _state: type_warning_italic
+type_danger_underline:
+  _state: type_danger_underline
+type_secondary_mark:
+  _state: type_secondary_mark
+type_success_strong_italic:
+  _state: type_success_strong_italic
+```
+
+```yaml
 - id: copyable_true
   type: ParagraphInput
   properties:
@@ -600,6 +723,13 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           copyable_false: This paragraph does not have a copy button.
+```
+
+```yaml
+copyable_true:
+  _state: copyable_true
+copyable_false:
+  _state: copyable_false
 ```
 
 ```yaml
@@ -639,6 +769,15 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           copyable_text_code: Copy this block to get a code snippet.
+```
+
+```yaml
+copyable_text_different:
+  _state: copyable_text_different
+copyable_text_url:
+  _state: copyable_text_url
+copyable_text_code:
+  _state: copyable_text_code
 ```
 
 ```yaml
@@ -682,6 +821,15 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           copyable_tooltips_descriptive: Descriptive copy tooltips for user guidance.
+```
+
+```yaml
+copyable_tooltips_array:
+  _state: copyable_tooltips_array
+copyable_tooltips_single:
+  _state: copyable_tooltips_single
+copyable_tooltips_descriptive:
+  _state: copyable_tooltips_descriptive
 ```
 
 ```yaml
@@ -737,6 +885,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+copyable_icon_single:
+  _state: copyable_icon_single
+copyable_icon_array:
+  _state: copyable_icon_array
+copyable_icon_colored:
+  _state: copyable_icon_colored
+```
+
+```yaml
 - id: copyable_full
   type: ParagraphInput
   properties:
@@ -755,6 +912,11 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           copyable_full: Fully configured copyable paragraph.
+```
+
+```yaml
+copyable_full:
+  _state: copyable_full
 ```
 
 ```yaml
@@ -786,6 +948,13 @@ Editable paragraph text with copyable and ellipsis support.
           ellipsis_false: This paragraph has ellipsis disabled and will display all text
             regardless of length. The content will wrap naturally across
             multiple lines without any truncation applied.
+```
+
+```yaml
+ellipsis_true:
+  _state: ellipsis_true
+ellipsis_false:
+  _state: ellipsis_false
 ```
 
 ```yaml
@@ -859,6 +1028,17 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+ellipsis_rows_1:
+  _state: ellipsis_rows_1
+ellipsis_rows_2:
+  _state: ellipsis_rows_2
+ellipsis_rows_3:
+  _state: ellipsis_rows_3
+ellipsis_rows_5:
+  _state: ellipsis_rows_5
+```
+
+```yaml
 - id: ellipsis_expandable_2
   type: ParagraphInput
   properties:
@@ -912,6 +1092,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+ellipsis_expandable_2:
+  _state: ellipsis_expandable_2
+ellipsis_expandable_3:
+  _state: ellipsis_expandable_3
+ellipsis_expandable_1:
+  _state: ellipsis_expandable_1
+```
+
+```yaml
 - id: ellipsis_suffix_author
   type: ParagraphInput
   properties:
@@ -961,6 +1150,15 @@ Editable paragraph text with copyable and ellipsis support.
           ellipsis_suffix_date: A news article excerpt that shows a date suffix. The date
             remains visible regardless of how much content is truncated,
             ensuring the reader always knows when the content was published.
+```
+
+```yaml
+ellipsis_suffix_author:
+  _state: ellipsis_suffix_author
+ellipsis_suffix_expandable:
+  _state: ellipsis_suffix_expandable
+ellipsis_suffix_date:
+  _state: ellipsis_suffix_date
 ```
 
 ```yaml
@@ -1039,6 +1237,21 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+disabled_basic:
+  _state: disabled_basic
+disabled_with_copyable:
+  _state: disabled_with_copyable
+disabled_styled:
+  _state: disabled_styled
+disabled_with_type:
+  _state: disabled_with_type
+disabled_warning:
+  _state: disabled_warning
+disabled_danger_italic:
+  _state: disabled_danger_italic
+```
+
+```yaml
 - id: default_short
   type: ParagraphInput
   properties:
@@ -1103,6 +1316,21 @@ Editable paragraph text with copyable and ellipsis support.
             Third paragraph of content. This shows how ParagraphInput handles
             multi-line default values with natural line wrapping across the
             available width.
+```
+
+```yaml
+default_short:
+  _state: default_short
+default_long:
+  _state: default_long
+default_with_styles:
+  _state: default_with_styles
+default_with_type:
+  _state: default_with_type
+default_empty:
+  _state: default_empty
+default_multiline:
+  _state: default_multiline
 ```
 
 ```yaml
@@ -1186,6 +1414,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+style_custom_bg:
+  _state: style_custom_bg
+style_custom_border:
+  _state: style_custom_border
+style_custom_text_color:
+  _state: style_custom_text_color
+style_full_custom:
+  _state: style_full_custom
+style_card_like:
+  _state: style_card_like
+```
+
+```yaml
 - id: class_rounded
   type: ParagraphInput
   class: rounded-lg bg-bg-layout p-4
@@ -1230,6 +1471,17 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           class_gradient_bg: Tailwind gradient background with padding and rounded corners.
+```
+
+```yaml
+class_rounded:
+  _state: class_rounded
+class_shadow:
+  _state: class_shadow
+class_border:
+  _state: class_border
+class_gradient_bg:
+  _state: class_gradient_bg
 ```
 
 ```yaml
@@ -1302,6 +1554,19 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+theme_color_text:
+  _state: theme_color_text
+theme_font_serif:
+  _state: theme_font_serif
+theme_font_size_24:
+  _state: theme_font_size_24
+theme_weight_900:
+  _state: theme_weight_900
+theme_combined_elegant:
+  _state: theme_combined_elegant
+```
+
+```yaml
 - id: feat_editable_copyable
   type: ParagraphInput
   properties:
@@ -1329,6 +1594,13 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           feat_editable_copyable_configured: Fully configured editable and copyable paragraph.
+```
+
+```yaml
+feat_editable_copyable:
+  _state: feat_editable_copyable
+feat_editable_copyable_configured:
+  _state: feat_editable_copyable_configured
 ```
 
 ```yaml
@@ -1371,6 +1643,15 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           feat_copyable_danger: Copyable danger paragraph.
+```
+
+```yaml
+feat_copyable_success:
+  _state: feat_copyable_success
+feat_copyable_warning:
+  _state: feat_copyable_warning
+feat_copyable_danger:
+  _state: feat_copyable_danger
 ```
 
 ```yaml
@@ -1429,6 +1710,15 @@ Editable paragraph text with copyable and ellipsis support.
 ```
 
 ```yaml
+feat_ellipsis_strong:
+  _state: feat_ellipsis_strong
+feat_ellipsis_italic_mark:
+  _state: feat_ellipsis_italic_mark
+feat_ellipsis_danger:
+  _state: feat_ellipsis_danger
+```
+
+```yaml
 - id: feat_edit_copy_ellipsis
   type: ParagraphInput
   properties:
@@ -1451,6 +1741,11 @@ Editable paragraph text with copyable and ellipsis support.
             simultaneously, giving the user full control over the paragraph
             content. They can edit inline, copy to clipboard, and expand to read
             the full text.
+```
+
+```yaml
+feat_edit_copy_ellipsis:
+  _state: feat_edit_copy_ellipsis
 ```
 
 ```yaml
@@ -1602,6 +1897,19 @@ Editable paragraph text with copyable and ellipsis support.
             experience typical of content management interfaces.
 ```
 
+```yaml
+full_success:
+  _state: full_success
+full_warning:
+  _state: full_warning
+full_themed:
+  _state: full_themed
+full_danger_card:
+  _state: full_danger_card
+full_article_preview:
+  _state: full_article_preview
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `code` | boolean | `false` | Apply code style. |
@@ -1651,8 +1959,8 @@ Editable paragraph text with copyable and ellipsis support.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onExpand` | \- | Trigger action when ellipse expand is clicked. |
-| `onCopy` | `{ value }` | Trigger action when copy text is clicked. |
-| `onChange` | `{ value }` | Trigger action when paragraph is changed. |
+| `onCopy` | `{ value: string }` | Trigger action when copy text is clicked. |
+| `onChange` | `{ value: string }` | Trigger action when paragraph is changed. |
 
 | Key | Target |
 | --- | --- |

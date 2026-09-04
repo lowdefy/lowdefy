@@ -84,7 +84,7 @@ requests:
     properties:
       customers:
         list:
-          limit: 30
+          - limit: 30
 ```
 
 ###### Create a payment intent

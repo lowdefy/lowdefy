@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { Upload as AntdUpload, theme as antdTheme } from 'antd';
-import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import useFileList from '../utils/useFileList.js';
@@ -68,13 +68,14 @@ const UploadDragger = ({ blockId, classNames = {}, methods, properties, styles =
   const height = type.isNone(properties.height) ? token.controlHeight : properties.height;
   return (
     <div
-      id={blockId}
-      className={cn('lf-upload-dragger', classNames.element)}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: 'lf-upload-dragger',
+        style: { '--lf-dragger-height': type.isNumber(height) ? `${height}px` : height },
+      })}
       onPaste={onPaste}
-      style={{
-        '--lf-dragger-height': type.isNumber(height) ? `${height}px` : height,
-        ...styles.element,
-      }}
     >
       <Dragger
         accept={properties.accept ?? '*'}

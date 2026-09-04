@@ -17,7 +17,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
@@ -73,6 +73,11 @@ function validateConnection(connection, context) {
 // exception — "shared", or { field } to scope on a non-default field.
 // tenant: true restates the default and is rejected naming its replacement.
 //
+// The value grammar is the one every tenant declaration uses: "shared", or
+// the bare name of the top-level field that carries the tenant id - the same
+// spelling collections.<name>.tenant takes. The { field } object form is the
+// v7 spelling and is deprecated; it normalises to the same internal model.
+//
 // The wall is only real if the connection type implements the scoping
 // contract — a declared-but-unenforced wall would read as protection while
 // providing none — so any tenant: declaration on a type without the contract
@@ -94,7 +99,7 @@ function validateTenant(connection, context, { tenantPolicy }) {
           { configKey }
         )
       );
-      return;
+      return false;
     }
     if (connection.tenant === 'none' || connection.tenant === 'authored') {
       collectExceptions(
@@ -104,37 +109,37 @@ function validateTenant(connection, context, { tenantPolicy }) {
           { configKey }
         )
       );
-      return;
+      return false;
     }
     const valid =
-      connection.tenant === 'shared' ||
+      type.isString(connection.tenant) ||
       (type.isObject(connection.tenant) && type.isString(connection.tenant.field));
     if (!valid) {
       collectExceptions(
         context,
         new ConfigError(
-          `Connection "tenant" should be "shared" or an object with a "field" string at connection "${connection.id}".`,
+          `Connection "tenant" should be "shared" or a tenant field name at connection "${connection.id}".`,
           { received: connection.tenant, configKey }
         )
       );
-      return;
+      return false;
     }
     // The wall stamps and matches the field as a single top-level document
     // key ({ [field]: value }), so a dotted path would stamp a literal
     // dotted key that path-based read filters never match, and the authored
     // scan could not see nested writes onto it - both silent wall breaks.
-    if (
-      type.isObject(connection.tenant) &&
-      (connection.tenant.field === '' || connection.tenant.field.includes('.'))
-    ) {
-      collectExceptions(
-        context,
-        new ConfigError(
-          `Connection "tenant.field" should be a non-empty top-level field name (no dots) at connection "${connection.id}" — the tenant wall stamps and matches it as a single document key.`,
-          { received: connection.tenant.field, configKey }
-        )
-      );
-      return;
+    if (connection.tenant !== 'shared') {
+      const field = type.isString(connection.tenant) ? connection.tenant : connection.tenant.field;
+      if (field === '' || field.includes('.')) {
+        collectExceptions(
+          context,
+          new ConfigError(
+            `Connection "tenant" should name a non-empty top-level field (no dots) at connection "${connection.id}" — the tenant wall stamps and matches it as a single document key.`,
+            { received: field, configKey }
+          )
+        );
+        return false;
+      }
     }
     if (connectionMeta?.tenant !== true) {
       collectExceptions(
@@ -144,7 +149,7 @@ function validateTenant(connection, context, { tenantPolicy }) {
           { configKey }
         )
       );
-      return;
+      return false;
     }
   }
   if (tenantPolicy && type.isUndefined(connectionMeta?.tenant)) {
@@ -156,6 +161,26 @@ function validateTenant(connection, context, { tenantPolicy }) {
       )
     );
   }
+  return true;
+}
+
+// One internal model for the tenant declaration: "shared", or { field }. The
+// artifact the runtime reads (resolveTenant) and every build consumer
+// (tenantConnections, connectionCollections, buildCollections) see the object
+// form whichever spelling the author used, so the grammar change is a build
+// concern only.
+function normalizeTenant(connection, context) {
+  if (type.isUndefined(connection.tenant) || connection.tenant === 'shared') return;
+  if (type.isObject(connection.tenant)) {
+    context.handleWarning(
+      new ConfigWarning(
+        `Connection "tenant: { field: ${connection.tenant.field} }" is deprecated at connection "${connection.id}". Write the tenant field name as a bare string — tenant: ${connection.tenant.field} — the grammar collections: already uses.`,
+        { configKey: connection['~k'], checkSlug: 'tenant-grammar' }
+      )
+    );
+    return;
+  }
+  connection.tenant = { field: connection.tenant };
 }
 
 function literalBoolean(value, fallback) {
@@ -170,7 +195,7 @@ function buildConnections({ components, context }) {
   context.connectionIds = new Set();
   // Walled connection id -> { type, field } - scoping-capable type, no
   // tenant: shared - for the best-effort entry-stage check on requests and
-  // steps (validateTenantPipelineEntry) and the tenant audit rules in
+  // steps (validateTenantPipeline) and the tenant audit rules in
   // checks/tenant, which need the tenant field name each connection stamps
   // and matches. Populated only under the tenant policy - the wall does not
   // engage under pinned, so demanding an authored clause there would be a
@@ -179,7 +204,7 @@ function buildConnections({ components, context }) {
   // Collection name -> { shared: [connectionId], scoped: [connectionId] } for
   // every scoping-capable connection with a literal properties.collection.
   // A pipeline names collections, connections name collections; joining the
-  // two at build is what lets validateTenantSharedLookup refuse a scoped
+  // two at build is what lets validateTenantPipeline refuse a scoped
   // pipeline that $lookups a tenant: shared collection the injected $match
   // can never satisfy. An operator-valued collection name is unknowable here
   // and is left out rather than guessed. Same policy guard as
@@ -208,7 +233,9 @@ function buildConnections({ components, context }) {
 
     checkDuplicateConnectionId({ id: connection.id, configKey });
     validateId({ id: connection.id, field: 'Connection id', configKey });
-    validateTenant(connection, context, { tenantPolicy });
+    if (validateTenant(connection, context, { tenantPolicy })) {
+      normalizeTenant(connection, context);
+    }
 
     // Track type usage for buildTypes validation
     context.typeCounters.connections.increment(connection.type, configKey);

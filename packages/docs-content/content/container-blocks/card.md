@@ -563,8 +563,7 @@ Advanced analytics
           properties:
             icon: AiOutlineUser
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: rich_profile_info
           type: Box
           layout:
@@ -1157,6 +1156,7 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 | `inner` | boolean | `false` | Change the card style to inner. |
 | `size` | string | `"default"` | Size of the card. Enum: `default`, `small`. |
 | `title` | string | - | Title to show in the title area - supports html. Overwritten by blocks in the title content area. |
+| `variant` | string | `"outlined"` | Border style of the card. Setting bordered to false forces the borderless variant. Enum: `outlined`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design card tokens](https://ant.design/components/card#design-token). |
 | `theme.headerBg` | string | `"transparent"` | Background color of the card header. |
 | `theme.headerFontSize` | number | `16` | Font size of the card header title. |

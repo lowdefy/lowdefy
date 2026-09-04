@@ -480,7 +480,7 @@ const collectionSchema = {
   fields: {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
   },
 };
 

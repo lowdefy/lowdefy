@@ -47,3 +47,11 @@ test('truncateResponse slices an oversized response and flags it', () => {
   expect(truncated.error).toBeNull();
   expect(result.truncated).toBeUndefined();
 });
+
+test('truncateResponse returns the result untouched when the response is undefined', () => {
+  // A routine that ends without :return, and a resolver that returns nothing,
+  // both land here - JSON.stringify(undefined) is undefined, not a string.
+  const result = { status: 'success', success: true, response: undefined };
+  expect(truncateResponse(result)).toBe(result);
+  expect(truncateResponse({})).toEqual({});
+});

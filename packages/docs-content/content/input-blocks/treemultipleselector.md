@@ -32,6 +32,13 @@ Searchable multiple-select tree dropdown (tags or checkboxes). Driven by flat `d
 ```
 
 ```yaml
+basic_tree_multiple:
+  _state: basic_tree_multiple
+```
+
+Selected:
+
+```yaml
 - id: checkable_tree_multiple
   type: TreeMultipleSelector
   properties:
@@ -73,6 +80,55 @@ Searchable multiple-select tree dropdown (tags or checkboxes). Driven by flat `d
           _state: true
 ```
 
+```yaml
+- id: checkable_tree_multiple
+  type: TreeMultipleSelector
+  properties:
+    title: Permissions
+    checkable: true
+    showCheckedStrategy: SHOW_CHILD
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: "{{ item.label }}"
+    treeDefaultExpandAll: true
+    data:
+      - id: 1
+        label: Read
+      - id: 2
+        label: Write
+      - id: 3
+        label: Create
+        parentId: 2
+      - id: 4
+        label: Update
+        parentId: 2
+      - id: 5
+        label: Admin
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          perms:
+            _event: value
+- id: checkable_tree_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: "Selected: {{ perms }}"
+        on:
+          _state: true
+```
+
+```yaml
+checkable_tree_multiple:
+  _state: checkable_tree_multiple
+checkable_tree_display:
+  _state: checkable_tree_display
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
@@ -82,7 +138,7 @@ Searchable multiple-select tree dropdown (tags or checkboxes). Driven by flat `d
 | `parentKey` | string | - | Tree selectors only: names each row’s parent id. Build a flat `data`/`options` array where each row has a `primaryKey` (its own id) and a `parentKey` whose value equals the parent row’s `primaryKey`. Rows whose `parentKey` is empty or points at no row become tree roots. Supports dotted paths. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -143,10 +199,10 @@ Searchable multiple-select tree dropdown (tags or checkboxes). Driven by flat `d
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action when the selector loses focus. |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: array }` | Trigger action when selection is changed. |
 | `onFocus` | \- | Trigger action when the selector gains focus. |
 | `onClear` | \- | Trigger action when the selector is cleared. |
-| `onSearch` | `{ value }` | Trigger action when the search input changes. |
+| `onSearch` | `{ value: string }` | Trigger action when the search input changes. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

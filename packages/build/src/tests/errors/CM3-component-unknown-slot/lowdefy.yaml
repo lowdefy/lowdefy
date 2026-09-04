@@ -1,6 +1,6 @@
 lowdefy: local
 components:
-  - id: Pill
+  Pill:
     slots: [footer]
     blocks:
       - id: root

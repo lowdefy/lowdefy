@@ -177,7 +177,7 @@ test('insertMany mongodb error', async () => {
   };
   await MongoDBInsertMany({ request, connection });
   await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
-    'E11000 duplicate key error'
+    'Duplicate key on collection "insertMany"'
   );
 });
 
@@ -230,7 +230,7 @@ const collectionSchema = {
   fields: {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
   },
 };
 

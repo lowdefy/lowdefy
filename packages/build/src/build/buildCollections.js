@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
+import { normalizeSchemaShorthand } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import collectExceptions from '../utils/collectExceptions.js';
 
-const COLLECTION_KEYS = ['tenant', 'fields', 'relations', 'indexes'];
-const FIELD_TYPES = ['string', 'number', 'integer', 'boolean', 'date', 'object', 'array'];
-const FIELD_KEYS = ['type', 'enum', 'items', 'required'];
+const COLLECTION_KEYS = ['tenant', 'fields', 'relations', 'indexes', 'required'];
+const FIELD_KEYS = ['type', 'enum', 'items', 'properties', 'required', 'description', 'pii'];
 
 // A collection is a property of the database, not of a connection: one
 // collection is routinely addressed by several connections (a read-only one,
@@ -29,7 +29,7 @@ const FIELD_KEYS = ['type', 'enum', 'items', 'required'];
 // root and the build joins it to connections by properties.collection. The
 // normalised result is written to build/collections.json for the data-layer
 // consumers (data model tool, write validation, migrations) and consulted by
-// validateTenantSharedLookup as its first source of sharedness.
+// validateTenantPipeline as its first source of sharedness.
 
 function collectionError(message, { configKey, received }) {
   return new ConfigError(message, { configKey, received, checkSlug: 'collections' });
@@ -50,66 +50,25 @@ function normalizeTenant({ name, tenant, configKey }) {
   );
 }
 
-function normalizeFieldType({ name, fieldName, typeName, configKey }) {
-  if (!FIELD_TYPES.includes(typeName)) {
-    throw collectionError(
-      `Collection "${name}" field "${fieldName}" has unknown type ${JSON.stringify(
-        typeName
-      )}. Accepted types: ${FIELD_TYPES.join(', ')}.`,
-      { configKey, received: typeName }
-    );
-  }
-  // ajv-keywords' instanceof is registered on the shared ajv instance; a JSON
-  // Schema "date" type does not exist, so a Date field is a constructor check.
-  if (typeName === 'date') {
-    return { instanceof: 'Date' };
-  }
-  return { type: typeName };
-}
-
+// A field declaration is JSON Schema, written with the shared shorthand:
+// `string`, `[string]`, `{ enum: [...] }`, `date`. normalizeSchemaShorthand
+// owns the expansion so `fields:`, `state:`, `payloadSchema` and
+// `responseSchema` all read one vocabulary; `date` becomes
+// { type: string, format: date-time }, the shape a date has on the wire.
 function normalizeField({ name, fieldName, field, configKey }) {
-  if (type.isString(field)) {
-    return normalizeFieldType({ name, fieldName, typeName: field, configKey });
-  }
-  if (type.isArray(field)) {
-    if (field.length !== 1 || !type.isString(field[0])) {
+  if (type.isObject(field)) {
+    const unknownKeys = Object.keys(field).filter(
+      (key) => !FIELD_KEYS.includes(key) && !key.startsWith('~')
+    );
+    if (unknownKeys.length > 0) {
       throw collectionError(
-        `Collection "${name}" field "${fieldName}" array shorthand must hold exactly one type name, eg. [string]. Received ${JSON.stringify(
-          field
-        )}.`,
-        { configKey, received: field }
+        `Collection "${name}" field "${fieldName}" has unknown key(s) "${unknownKeys.join(
+          '", "'
+        )}". Valid keys: ${FIELD_KEYS.join(', ')}.`,
+        { configKey: field['~k'] ?? configKey, received: field }
       );
     }
-    return {
-      type: 'array',
-      items: normalizeFieldType({ name, fieldName, typeName: field[0], configKey }),
-    };
-  }
-  if (!type.isObject(field)) {
-    throw collectionError(
-      `Collection "${name}" field "${fieldName}" must be a type name, a [type] array shorthand or an object with type, enum, items or required. Received ${JSON.stringify(
-        field
-      )}.`,
-      { configKey, received: field }
-    );
-  }
-  const unknownKeys = Object.keys(field).filter(
-    (key) => !FIELD_KEYS.includes(key) && !key.startsWith('~')
-  );
-  if (unknownKeys.length > 0) {
-    throw collectionError(
-      `Collection "${name}" field "${fieldName}" has unknown key(s) "${unknownKeys.join(
-        '", "'
-      )}". Valid keys: ${FIELD_KEYS.join(', ')}.`,
-      { configKey: field['~k'] ?? configKey, received: field }
-    );
-  }
-  const schema = {};
-  if (!type.isUndefined(field.type)) {
-    Object.assign(schema, normalizeFieldType({ name, fieldName, typeName: field.type, configKey }));
-  }
-  if (!type.isUndefined(field.enum)) {
-    if (!type.isArray(field.enum) || field.enum.length === 0) {
+    if (!type.isUndefined(field.enum) && (!type.isArray(field.enum) || field.enum.length === 0)) {
       throw collectionError(
         `Collection "${name}" field "${fieldName}" enum must be a non-empty array. Received ${JSON.stringify(
           field.enum
@@ -117,28 +76,97 @@ function normalizeField({ name, fieldName, field, configKey }) {
         { configKey: field['~k'] ?? configKey, received: field.enum }
       );
     }
-    schema.enum = field.enum;
-  }
-  if (!type.isUndefined(field.items)) {
-    schema.items = normalizeField({ name, fieldName, field: field.items, configKey });
-  }
-  if (!type.isUndefined(field.required)) {
-    if (!type.isBoolean(field.required)) {
+    if (!type.isUndefined(field.required) && !type.isBoolean(field.required)) {
       throw collectionError(
-        `Collection "${name}" field "${fieldName}" required must be a boolean. Received ${JSON.stringify(
+        `Collection "${name}" field "${fieldName}" required must be a boolean. Use the collection-level "required: [${fieldName}]" array instead. Received ${JSON.stringify(
           field.required
         )}.`,
         { configKey: field['~k'] ?? configKey, received: field.required }
       );
     }
-    schema.required = field.required;
+  } else if (!type.isString(field) && !type.isArray(field)) {
+    throw collectionError(
+      `Collection "${name}" field "${fieldName}" must be a type name, a [type] array shorthand or an object with type, enum, items, properties or required. Received ${JSON.stringify(
+        field
+      )}.`,
+      { configKey, received: field }
+    );
   }
-  return schema;
+  if (type.isObject(field) && !type.isUndefined(field.pii) && !type.isBoolean(field.pii)) {
+    throw collectionError(
+      `Collection "${name}" field "${fieldName}" pii must be a boolean. Received ${JSON.stringify(
+        field.pii
+      )}.`,
+      { configKey: field['~k'] ?? configKey, received: field.pii }
+    );
+  }
+  try {
+    // pii is a Lowdefy annotation, not a JSON Schema keyword; it is collected
+    // on the collection (see normalizeFields) and kept out of the fragment.
+    const declaration = type.isObject(field) ? { ...field } : field;
+    if (type.isObject(declaration)) delete declaration.pii;
+    return normalizeSchemaShorthand({ schema: stripMarkers(declaration) });
+  } catch (error) {
+    throw collectionError(
+      `Collection "${name}" field "${fieldName}" is not a valid declaration: ${error.message}`,
+      { configKey: field?.['~k'] ?? configKey, received: field }
+    );
+  }
 }
 
-function normalizeFields({ name, fields, configKey }) {
+// `required: true` beside a field's type is the one place Lowdefy config spelt
+// `required` differently from JSON Schema, and it made build/collections.json
+// uncompilable. It is folded into the parent's `required` array - at every
+// depth, so a nested `properties` map is valid JSON Schema too - and reported
+// once per field so the declaration can be moved.
+function foldRequiredFlags({ node, onFolded }) {
+  if (!type.isObject(node)) return node;
+  const folded = { ...node };
+  const requiredNames = type.isArray(folded.required) ? [...folded.required] : [];
+  if (folded.required === true) delete folded.required;
+  if (type.isObject(folded.properties)) {
+    const properties = {};
+    Object.keys(folded.properties).forEach((key) => {
+      const child = folded.properties[key];
+      if (type.isObject(child) && child.required === true) {
+        requiredNames.push(key);
+        onFolded(key);
+      }
+      properties[key] = foldRequiredFlags({ node: child, onFolded });
+    });
+    folded.properties = properties;
+  }
+  if (type.isObject(folded.items)) {
+    folded.items = foldRequiredFlags({ node: folded.items, onFolded });
+  }
+  if (requiredNames.length > 0) {
+    folded.required = [...new Set(requiredNames)];
+  }
+  return folded;
+}
+
+function normalizeRequired({ name, required, configKey }) {
+  if (type.isUndefined(required)) return [];
+  if (!type.isArray(required) || required.some((entry) => !type.isString(entry))) {
+    throw collectionError(
+      `Collection "${name}" required must be an array of field names. Received ${JSON.stringify(
+        required
+      )}.`,
+      { configKey, received: required }
+    );
+  }
+  return [...required];
+}
+
+function normalizeFields({ name, declaration, configKey, context }) {
+  const { fields } = declaration;
+  const declaredRequired = normalizeRequired({
+    name,
+    required: declaration.required,
+    configKey,
+  });
   if (type.isUndefined(fields)) {
-    return undefined;
+    return { fields: undefined, required: declaredRequired, pii: [] };
   }
   if (!type.isObject(fields)) {
     throw collectionError(
@@ -149,8 +177,12 @@ function normalizeFields({ name, fields, configKey }) {
     );
   }
   const normalized = {};
+  const pii = [];
   Object.keys(fields).forEach((fieldName) => {
     if (fieldName.startsWith('~')) return;
+    if (type.isObject(fields[fieldName]) && fields[fieldName].pii === true) {
+      pii.push(fieldName);
+    }
     normalized[fieldName] = normalizeField({
       name,
       fieldName,
@@ -158,7 +190,18 @@ function normalizeFields({ name, fields, configKey }) {
       configKey: fields['~k'] ?? configKey,
     });
   });
-  return normalized;
+  const root = foldRequiredFlags({
+    node: { properties: normalized, required: declaredRequired },
+    onFolded: (fieldName) => {
+      context.handleWarning(
+        new ConfigWarning(
+          `Collection "${name}" field "${fieldName}" declares "required: true". Declare it as the collection-level array instead: required: [${fieldName}].`,
+          { configKey, checkSlug: 'collections' }
+        )
+      );
+    },
+  });
+  return { fields: root.properties, required: root.required ?? [], pii };
 }
 
 function normalizeIndexes({ name, indexes, configKey }) {
@@ -264,8 +307,11 @@ function normalizeCollection({ name, declaration, context }) {
       { configKey, received: declaration }
     );
   }
+  const { fields, required, pii } = normalizeFields({ name, declaration, configKey, context });
   const collection = {
-    fields: normalizeFields({ name, fields: declaration.fields, configKey }),
+    fields,
+    required,
+    pii,
     relations: parseRelations({ name, relations: declaration.relations, configKey }),
     indexes: normalizeIndexes({ name, indexes: declaration.indexes, configKey }),
     connections: [],

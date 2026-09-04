@@ -15,7 +15,14 @@
 */
 
 import renderReference from './renderReference.mjs';
-import { createSkillFile, replaceGeneratedRegion, wrapGenerated } from './skillFile.mjs';
+import {
+  createSkillFile,
+  renderFrontmatter,
+  replaceFrontmatter,
+  replaceGeneratedRegion,
+  SKILL_KINDS,
+  wrapGenerated,
+} from './skillFile.mjs';
 
 const TYPE_KINDS = ['blocks', 'operators', 'actions', 'connections', 'requests'];
 
@@ -29,6 +36,9 @@ function validateEntry({ name, entry }) {
   }
   if (typeof entry.recipe !== 'string' || entry.recipe === '') {
     problems.push('recipe is required');
+  }
+  if (!SKILL_KINDS.includes(entry.kind)) {
+    problems.push(`kind must be one of ${SKILL_KINDS.join(' | ')}`);
   }
   if (!Array.isArray(entry.docSlugs)) {
     problems.push('docSlugs must be an array');
@@ -77,7 +87,17 @@ async function resolveEntry({ name, entry, resolveDoc, resolveType }) {
 // Generates every skill in the manifest. readSkill(name) returns the current file content or
 // null; writeSkill(name, content) persists it. Fails on the first entry with a missing source so
 // a renamed doc page or type cannot silently empty a skill.
-async function generateSkills({ manifest, resolveDoc, resolveType, readSkill, writeSkill }) {
+async function generateSkills({
+  manifest,
+  resolveDoc,
+  resolveType,
+  readSkill,
+  writeSkill,
+  version,
+}) {
+  if (typeof version !== 'string' || version === '') {
+    throw new Error('generateSkills requires the framework version to stamp into each skill.');
+  }
   const results = [];
   for (const [name, entry] of Object.entries(manifest)) {
     validateEntry({ name, entry });
@@ -90,13 +110,23 @@ async function generateSkills({ manifest, resolveDoc, resolveType, readSkill, wr
       content = createSkillFile({
         name,
         description: entry.description,
+        kind: entry.kind,
+        version,
         title: entry.title,
         generated: renderReference({ resolved }),
         recipe: entry.recipe,
       });
       action = 'created';
     } else {
-      content = replaceGeneratedRegion({ content: existing, generated });
+      content = replaceFrontmatter({
+        content: replaceGeneratedRegion({ content: existing, generated }),
+        frontmatter: renderFrontmatter({
+          name,
+          description: entry.description,
+          kind: entry.kind,
+          version,
+        }),
+      });
       action = content === existing ? 'unchanged' : 'updated';
     }
     if (action !== 'unchanged') {

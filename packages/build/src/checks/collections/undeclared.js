@@ -27,14 +27,14 @@ function run({ components, context }) {
     context.handleWarning(
       new ConfigWarning(
         `Connection "${binding.connectionId}" addresses collection "${binding.collection}", which the app does not declare under collections:. Declare it so its tenancy, fields and relations are checked and appear in the data model.`,
-        { configKey: binding.configKey, checkSlug: 'collections' }
+        { configKey: binding.configKey, checkSlug: 'collections-undeclared' }
       )
     );
   });
 }
 
 const undeclared = {
-  slug: 'collections',
+  slug: 'collections-undeclared',
   checkOnly: true,
   run,
 };

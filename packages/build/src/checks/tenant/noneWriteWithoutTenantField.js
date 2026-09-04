@@ -79,14 +79,14 @@ function run({ components, context }) {
       context,
       new ConfigError(
         `${site.location} declares "tenant: none" and inserts a document without "${site.field}". The row would belong to no organization and be invisible to every walled read. Add the field, or scope the step with runAs.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-unstamped-write' }
       )
     );
   });
 }
 
 const noneWriteWithoutTenantField = {
-  slug: 'tenant',
+  slug: 'tenant-unstamped-write',
   checkOnly: true,
   run,
 };

@@ -86,3 +86,17 @@ test('readManifest throws when users is not an array of strings', () => {
     /Snapshot page "users" should be an array of dev user names/
   );
 });
+
+test('readManifest parses a page ignore list', () => {
+  writeManifest('pages:\n  - pageId: a\n    ignore: [form.created_at, rows.$.score]\n');
+  expect(readManifest({ configDirectory })).toEqual({
+    pages: [{ pageId: 'a', ignore: ['form.created_at', 'rows.$.score'] }],
+  });
+});
+
+test('readManifest throws when ignore is not an array of strings', () => {
+  writeManifest('pages:\n  - pageId: a\n    ignore: form.created_at\n');
+  expect(() => readManifest({ configDirectory })).toThrow(
+    /Snapshot page "ignore" should be an array of state paths/
+  );
+});

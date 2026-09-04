@@ -36,7 +36,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Notifications
-            previous_page_id: notifications
+            previous_page_title: User Feedback
+            previous_page_id: feedback
             next_page_title: Docs for AI Agents
             next_page_id: ai-agent-docs

@@ -201,3 +201,57 @@ test('exposes setDarkMode via window.__lowdefy_setDarkMode and toggles token/bac
   expect(document.documentElement.style.backgroundColor).toBe('rgb(15, 17, 23)');
   expect(document.documentElement.style.colorScheme).toBe('dark');
 });
+
+function algorithmNames(algorithm) {
+  const list = Array.isArray(algorithm) ? algorithm : [algorithm];
+  return list.map((fn) => fn({}).__algo);
+}
+
+test('composes the compact algorithm with dark mode', () => {
+  const { result } = renderHook(() =>
+    useDarkMode({ antd: { algorithm: 'compact' }, configDarkMode: 'dark' })
+  );
+  expect(algorithmNames(result.current.algorithm)).toEqual(['compact', 'dark']);
+});
+
+test('keeps the compact algorithm in light mode', () => {
+  const { result } = renderHook(() =>
+    useDarkMode({ antd: { algorithm: 'compact' }, configDarkMode: 'light' })
+  );
+  expect(algorithmNames(result.current.algorithm)).toEqual(['compact']);
+});
+
+test('system mode takes the dark algorithm from matchMedia on mount', () => {
+  setupMatchMedia(true);
+  const { result } = renderHook(() =>
+    useDarkMode({ antd: { algorithm: 'compact' }, configDarkMode: 'system' })
+  );
+  expect(algorithmNames(result.current.algorithm)).toEqual(['compact', 'dark']);
+  expect(document.documentElement.style.colorScheme).toBe('dark');
+});
+
+test('system mode takes the default algorithm from matchMedia on mount', () => {
+  setupMatchMedia(false);
+  const { result } = renderHook(() => useDarkMode({ antd: {}, configDarkMode: 'system' }));
+  expect(algorithmNames(result.current.algorithm)).toEqual(['default']);
+  expect(document.documentElement.style.colorScheme).toBe('light');
+});
+
+test('an explicit borderRadius token is passed through unchanged', () => {
+  const { result } = renderHook(() =>
+    useDarkMode({ antd: { token: { borderRadius: 12 } }, configDarkMode: 'light' })
+  );
+  expect(result.current.token).toEqual({ borderRadius: 12 });
+});
+
+test('useDarkMode toggles the dark class on the document element for the Tailwind dark variant', () => {
+  document.documentElement.classList.remove('dark');
+  const { rerender } = renderHook(
+    ({ darkMode }) => useDarkMode({ antd: {}, configDarkMode: darkMode }),
+    { initialProps: { darkMode: 'dark' } }
+  );
+  expect(document.documentElement.classList.contains('dark')).toBe(true);
+  rerender({ darkMode: 'light' });
+  expect(document.documentElement.classList.contains('dark')).toBe(false);
+});
+

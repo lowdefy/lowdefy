@@ -70,6 +70,78 @@ Notes
 ```
 
 ```yaml
+- id: notes_header
+  type: Box
+  layout:
+    justify: space-between
+    align: center
+  blocks:
+    - id: notes_title
+      type: Title
+      layout:
+        flex: 0 0 auto
+      properties:
+        content: Notes
+        level: 4
+    - id: notes_add
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Add Note
+        icon: AiOutlinePlus
+        color: primary
+        variant: solid
+        size: small
+      events:
+        onClick:
+          - id: notes_push
+            type: CallMethod
+            params:
+              blockId: notes
+              method: pushItem
+- id: notes
+  type: List
+  properties:
+    direction: row
+  blocks:
+    - id: notes.$.text
+      type: TextInput
+      layout:
+        flex: 1 1 0
+      properties:
+        label:
+          disabled: true
+        placeholder: Type a note...
+    - id: notes.$.rm
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineClose
+        color: default
+        variant: text
+        shape: circle
+        size: small
+      events:
+        onClick:
+          - id: rm_note
+            type: CallMethod
+            params:
+              blockId: notes
+              method: removeItem
+              args:
+                - _index: 0
+```
+
+```yaml
+notes_header:
+  _state: notes_header
+notes:
+  _state: notes
+```
+
+```yaml
 - id: skills
   type: List
   properties:
@@ -95,6 +167,39 @@ Notes
               method: removeItem
               args:
                 - _index: 0
+```
+
+```yaml
+- id: skills
+  type: List
+  properties:
+    direction: row
+    wrap: wrap
+  blocks:
+    - id: skills.$.label
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title:
+          _state: skills.$.label
+        color:
+          _state: skills.$.color
+        closable: true
+      events:
+        onClose:
+          - id: rm_skill
+            type: CallMethod
+            params:
+              blockId: skills
+              method: removeItem
+              args:
+                - _index: 0
+```
+
+```yaml
+skills:
+  _state: skills
 ```
 
 Tasks
@@ -272,6 +377,188 @@ Tasks
               status: success
 ```
 
+```yaml
+- id: tasks_header
+  type: Box
+  layout:
+    justify: space-between
+    align: center
+  blocks:
+    - id: tasks_title
+      type: Title
+      layout:
+        flex: 0 0 auto
+      properties:
+        content: Tasks
+        level: 4
+    - id: tasks_add
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Add Task
+        icon: AiOutlinePlus
+        color: primary
+        variant: solid
+        size: small
+      events:
+        onClick:
+          - id: tasks_push
+            type: CallMethod
+            params:
+              blockId: tasks
+              method: pushItem
+- id: tasks
+  type: List
+  blocks:
+    - id: tasks.$.done
+      type: Switch
+      layout:
+        flex: 0 0 auto
+      properties:
+        label:
+          disabled: true
+        size: small
+    - id: tasks.$.name
+      type: TextInput
+      required: true
+      layout:
+        flex: 1 1 0
+      properties:
+        label:
+          disabled: true
+        placeholder: Task name
+        size: small
+    - id: tasks.$.priority
+      type: Selector
+      layout:
+        flex: 0 0 140px
+      properties:
+        label:
+          disabled: true
+        placeholder: Priority
+        size: small
+        options:
+          - High
+          - Medium
+          - Low
+    - id: tasks.$.pri_tag
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title:
+          _if_none:
+            - _state: tasks.$.priority
+            - ""
+        color:
+          _if:
+            test:
+              _eq:
+                - _state: tasks.$.priority
+                - High
+            then: red
+            else:
+              _if:
+                test:
+                  _eq:
+                    - _state: tasks.$.priority
+                    - Medium
+                then: orange
+                else: green
+    - id: tasks.$.up
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineArrowUp
+        color: default
+        variant: text
+        size: small
+        shape: circle
+      events:
+        onClick:
+          - id: tasks_up
+            type: CallMethod
+            params:
+              blockId: tasks
+              method: moveItemUp
+              args:
+                - _index: 0
+    - id: tasks.$.down
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineArrowDown
+        color: default
+        variant: text
+        size: small
+        shape: circle
+      events:
+        onClick:
+          - id: tasks_down
+            type: CallMethod
+            params:
+              blockId: tasks
+              method: moveItemDown
+              args:
+                - _index: 0
+    - id: tasks.$.rm
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineDelete
+        color: danger
+        variant: text
+        size: small
+        shape: circle
+      events:
+        onClick:
+          - id: tasks_rm
+            type: CallMethod
+            params:
+              blockId: tasks
+              method: removeItem
+              args:
+                - _index: 0
+- id: tasks_footer
+  type: Box
+  layout:
+    justify: flex-end
+  blocks:
+    - id: tasks_save
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Save Tasks
+        icon: AiOutlineSave
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: tasks_validate
+            type: Validate
+            params:
+              regex: ^tasks
+          - id: tasks_msg
+            type: DisplayMessage
+            params:
+              content: Tasks saved!
+              status: success
+```
+
+```yaml
+tasks_header:
+  _state: tasks_header
+tasks:
+  _state: tasks
+tasks_footer:
+  _state: tasks_footer
+```
+
 User Directory
 
 ```yaml
@@ -370,6 +657,111 @@ User Directory
         title:
           _state: users.$.company.name
         color: blue
+```
+
+```yaml
+- id: users_header
+  type: Box
+  layout:
+    justify: space-between
+    align: center
+  blocks:
+    - id: users_title
+      type: Title
+      layout:
+        flex: 0 0 auto
+      properties:
+        content: User Directory
+        level: 4
+    - id: users_btns
+      type: Box
+      layout:
+        flex: 0 0 auto
+        gap: 8
+      blocks:
+        - id: users_load
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Load Users
+            icon: AiOutlineCloudDownload
+            color: primary
+            variant: solid
+            size: small
+          events:
+            onClick:
+              - id: fetch_users
+                type: Fetch
+                params:
+                  url: https://jsonplaceholder.typicode.com/users
+                  responseFunction: json
+              - id: set_users
+                type: SetState
+                params:
+                  users:
+                    _actions: fetch_users.response
+        - id: users_clear
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Clear
+            color: default
+            variant: outlined
+            size: small
+          events:
+            onClick:
+              - id: clear_users
+                type: SetState
+                params:
+                  users: []
+- id: users
+  type: List
+  blocks:
+    - id: users.$.avatar
+      type: Avatar
+      layout:
+        flex: 0 0 auto
+      properties:
+        content:
+          _string.charAt:
+            on:
+              _if_none:
+                - _state: users.$.name
+                - "?"
+            index: 0
+        color: "#1677ff"
+    - id: users.$.disp_name
+      type: Paragraph
+      layout:
+        flex: 1 1 0
+      properties:
+        content:
+          _state: users.$.name
+    - id: users.$.disp_email
+      type: Paragraph
+      layout:
+        flex: 1 1 0
+      properties:
+        content:
+          _state: users.$.email
+        type: secondary
+    - id: users.$.disp_company
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title:
+          _state: users.$.company.name
+        color: blue
+```
+
+```yaml
+users_header:
+  _state: users_header
+users:
+  _state: users
 ```
 
 Invoice #1042
@@ -507,6 +899,150 @@ Invoice #1042
             params:
               content: Invoice submitted!
               status: success
+```
+
+```yaml
+- id: inv_header
+  type: Box
+  layout:
+    justify: space-between
+    align: center
+  blocks:
+    - id: inv_title
+      type: Title
+      layout:
+        flex: 0 0 auto
+      properties:
+        content: "Invoice #1042"
+        level: 4
+    - id: inv_add
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Add Line
+        icon: AiOutlinePlus
+        color: primary
+        variant: dashed
+        size: small
+      events:
+        onClick:
+          - id: inv_push
+            type: CallMethod
+            params:
+              blockId: inv
+              method: pushItem
+- id: inv
+  type: List
+  blocks:
+    - id: inv.$.desc
+      type: TextInput
+      required: true
+      layout:
+        flex: 3 1 0
+      properties:
+        label:
+          disabled: true
+        placeholder: Description
+    - id: inv.$.qty
+      type: NumberInput
+      required: true
+      layout:
+        flex: 1 1 0
+      properties:
+        label:
+          disabled: true
+        placeholder: Qty
+        min: 1
+    - id: inv.$.price
+      type: NumberInput
+      required: true
+      layout:
+        flex: 1 1 0
+      properties:
+        label:
+          disabled: true
+        placeholder: Unit price
+        min: 0
+        step: 0.01
+    - id: inv.$.total
+      type: Paragraph
+      layout:
+        flex: 0 0 100px
+      properties:
+        content:
+          _js: |
+            const qty = state('inv.$.qty') || 0;
+            const price = state('inv.$.price') || 0;
+            return '$' + (qty * price).toFixed(2);
+    - id: inv.$.rm
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        icon: AiOutlineMinusCircle
+        color: danger
+        variant: text
+        size: small
+        shape: circle
+      events:
+        onClick:
+          - id: inv_rm
+            type: CallMethod
+            params:
+              blockId: inv
+              method: removeItem
+              args:
+                - _index: 0
+- id: inv_footer
+  type: Box
+  layout:
+    gap: 16
+    justify: flex-end
+    align: center
+  blocks:
+    - id: inv_total
+      type: Statistic
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Total
+        prefix: $
+        precision: 2
+        value:
+          _js: |
+            const items = state('inv') || [];
+            return items.reduce((sum, item) =>
+              sum + ((item.qty || 0) * (item.price || 0)), 0);
+    - id: inv_submit
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Submit Invoice
+        icon: AiOutlineSend
+        color: primary
+        variant: solid
+      events:
+        onClick:
+          - id: inv_validate
+            type: Validate
+            params:
+              regex: ^inv
+          - id: inv_msg
+            type: DisplayMessage
+            params:
+              content: Invoice submitted!
+              status: success
+```
+
+```yaml
+inv_header:
+  _state: inv_header
+inv:
+  _state: inv
+inv_footer:
+  _state: inv_footer
 ```
 
 | Property | Type | Default | Description |

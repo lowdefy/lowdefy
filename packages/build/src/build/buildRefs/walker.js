@@ -217,8 +217,22 @@ function tagRefDeep(node, refId) {
   }
 }
 
+// A _build.env read is inlined here, so a name the environment does not set
+// becomes a literal null before any check can see it. Record the literal
+// names so the secrets check can report the missing ones.
+function recordEnvReference(node, ctx) {
+  const params = node['_build.env'];
+  const name = type.isString(params) ? params : params?.key;
+  if (!type.isString(name)) return;
+  const hasDefault = type.isObject(params) && Object.hasOwn(params, 'default');
+  ctx.buildContext.envReferences?.push({ name, hasDefault, configKey: node['~k'] });
+}
+
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
+  if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
+    recordEnvReference(node, ctx);
+  }
   const { output, errors } = evaluateOperators({
     input: node,
     operators: ctx.operators,

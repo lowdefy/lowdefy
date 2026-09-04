@@ -20,11 +20,11 @@ import compareSnapshot from './compareSnapshot.js';
 import fetchSnapshot, { fetchAppPageIds, fetchDevUsers } from './fetchSnapshot.js';
 import readManifest from './readManifest.js';
 import resolveTargets from './resolveTargets.js';
-import startDevServer from '../test/startDevServer.js';
+import resolveTestServer from '../test/resolveTestServer.js';
 import writeSnapshot from './writeSnapshot.js';
 
 const USAGE =
-  'Usage: lowdefy snapshot (--check | --update) [--pages a,b] [--users admin,member] [--pixel-tolerance 0.001]. Exactly one of --check and --update is required.';
+  'Usage: lowdefy snapshot (--check | --update) [--pages a,b] [--users admin,member] [--pixel-tolerance 0.001] [--fail-on-pixel] [--url http://localhost:3000]. Exactly one of --check and --update is required.';
 
 function parseTolerance(value) {
   if (type.isNone(value)) {
@@ -64,19 +64,37 @@ async function resolveAllTargets({ context, manifest, url }) {
   });
 }
 
+// Advisory drift (pixels, unless --fail-on-pixel) is printed with its diff.png
+// but does not fail the run, so the exit code only ever means "the app renders
+// different DOM or holds different state".
 function logComparison({ context, comparison, target }) {
   const drifted = comparison.results.filter((result) => result.changed);
-  if (drifted.length === 0) {
-    context.logger.info(`PASS  ${target.pageId} as ${target.user}`);
-    return false;
-  }
-  drifted.forEach((result) => {
+  const fatal = drifted.filter((result) => !result.advisory);
+  const advisory = drifted.filter((result) => result.advisory);
+  advisory.forEach((result) => {
+    context.logger.warn(
+      `ADVISORY ${target.pageId} as ${target.user}  ${comparison.label}/${result.artefact}`
+    );
+    result.lines.forEach((line) => context.logger.warn(`      ${line}`));
+    context.logger.warn('      pixel drift does not fail --check; use --fail-on-pixel to make it.');
+  });
+  fatal.forEach((result) => {
     context.logger.error(
       `FAIL  ${target.pageId} as ${target.user}  ${comparison.label}/${result.artefact}`
     );
     result.lines.forEach((line) => context.logger.error(`      ${line}`));
   });
-  return true;
+  if (fatal.length === 0) {
+    context.logger.info(`PASS  ${target.pageId} as ${target.user}`);
+  }
+  return { fatal: fatal.length > 0, advisory: advisory.length > 0 };
+}
+
+// The paths a snapshot drops from its state: the page's own `~snapshotIgnore`
+// (deprecated) plus the manifest entry's `ignore`, so a target can be made
+// deterministic without editing the page it captures.
+function ignorePathsFor({ captured, target }) {
+  return [...(captured.snapshotIgnore ?? []), ...(target.ignore ?? [])];
 }
 
 async function snapshot({ context }) {
@@ -95,13 +113,10 @@ async function snapshot({ context }) {
     return;
   }
 
-  let server;
-  try {
-    server = await startDevServer({ context });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
+  // Snapshots only read pages, so a development server already running for this
+  // app is the right one to capture from; resolveTestServer boots one in
+  // .lowdefy/test only when there is none.
+  const server = await resolveTestServer({ context });
   let interrupted = false;
   async function onSigint() {
     interrupted = true;
@@ -112,6 +127,7 @@ async function snapshot({ context }) {
   process.once('SIGINT', onSigint);
 
   let drifted = 0;
+  let advised = 0;
   let written = 0;
   let failed = 0;
   let targets = [];
@@ -146,11 +162,13 @@ async function snapshot({ context }) {
         if (captured.ready === false) {
           context.logger.warn(`${target.pageId} as ${target.user}: ${captured.note}`);
         }
+        const ignore = ignorePathsFor({ captured, target });
         if (update) {
           const paths = writeSnapshot({
             configDirectory: context.directories.config,
             target,
             snapshot: captured,
+            ignore,
           });
           written += 1;
           context.logger.info(`WROTE ${paths.label}`);
@@ -161,9 +179,15 @@ async function snapshot({ context }) {
           target,
           snapshot: captured,
           pixelTolerance,
+          ignore,
+          failOnPixel: Boolean(context.options.failOnPixel),
         });
-        if (logComparison({ context, comparison, target })) {
+        const outcome = logComparison({ context, comparison, target });
+        if (outcome.fatal) {
           drifted += 1;
+        }
+        if (outcome.advisory) {
+          advised += 1;
         }
       } catch (error) {
         failed += 1;
@@ -194,7 +218,9 @@ async function snapshot({ context }) {
     return;
   }
   const passed = targets.length - drifted - failed;
-  const summary = `${passed} passed, ${drifted} changed, ${failed} failed of ${targets.length} snapshots`;
+  const summary = `${passed} passed, ${drifted} changed, ${failed} failed of ${
+    targets.length
+  } snapshots${advised > 0 ? `, ${advised} with advisory pixel drift` : ''}`;
   if (drifted > 0 || failed > 0) {
     fail({ context, message: summary });
     return;

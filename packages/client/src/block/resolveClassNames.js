@@ -15,9 +15,14 @@
 */
 
 import { cn } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
+// A block's `class:` is normalised to slots by the build, but a skeleton's is
+// not - it reaches the client as the string, array or slot object the app author
+// wrote. A bare value is the block slot.
 function resolveClassNames(evalClass) {
   if (!evalClass) return {};
+  if (!type.isObject(evalClass)) return { block: cn(evalClass) };
   const resolved = {};
   for (const [key, value] of Object.entries(evalClass)) {
     resolved[key] = cn(value);

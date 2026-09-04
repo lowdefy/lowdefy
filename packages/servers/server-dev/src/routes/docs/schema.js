@@ -27,7 +27,9 @@ function docsSchemaHandler(c) {
   }
   if (schema === null) {
     return c.json(
-      { error: `No schema found for ${kind} type "${type}". See GET /lowdefy-docs/${kind} for available types.` },
+      {
+        error: `No schema found for ${kind} type "${type}". See GET /lowdefy-docs/${kind} for available types.`,
+      },
       404
     );
   }

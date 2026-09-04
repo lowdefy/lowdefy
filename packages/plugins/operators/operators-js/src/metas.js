@@ -21,8 +21,9 @@ export const _js = {
   hazards: [
     {
       id: 'js-two-prototypes',
+      kind: 'semantics',
       message:
-        'A _js body in a page receives { actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }, while the same body in a request, connection or endpoint receives { args, item, lowdefyApp, payload, secret, state, step, user }. Only where the operator sits in the config decides which, so a body written for one place fails silently in the other.',
+        'A _js body in a page receives { actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }, while the same body in a request, connection or endpoint receives { args, item, lowdefyApp, payload, secret, state, step, user }. Only where the operator sits in the config decides which, so a body written for one place fails silently in the other. The build lint names the environment a parameter belongs to when a body reads one the other prototype provides.',
       see: 'operators/_js',
     },
   ],

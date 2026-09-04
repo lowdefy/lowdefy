@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import reloadPage from './reloadPage.js';
 import resolveTarget from './resolveTarget.js';
 
 function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
@@ -53,7 +54,10 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       ...props,
       pathname: target.pathname,
       query: target.query,
-      setInput: getSetInput({ lowdefy, props }),
+      // The anchor renderer calls link() while rendering and only calls this
+      // callback when the link is followed, so navigation-time work rides on
+      // it rather than running here.
+      setInput: getOnNavigate({ lowdefy, props, target }),
     });
   }
   return link;
@@ -73,6 +77,44 @@ function getSetInput({ lowdefy, props }) {
     };
   }
   return () => {};
+}
+
+// A trailing slash names the same page, and the browser path carries the
+// basePath the resolved target never does.
+function toAppPathname({ lowdefy, pathname }) {
+  const basePath = lowdefy.basePath ?? '';
+  const appPathname = pathname.startsWith(basePath) ? pathname.slice(basePath.length) : pathname;
+  if (appPathname.length > 1 && appPathname.endsWith('/')) {
+    return appPathname.slice(0, -1);
+  }
+  return appPathname;
+}
+
+function isCurrentPathname({ lowdefy, pathname }) {
+  const currentPathname = lowdefy._internal?.globals?.window?.location?.pathname;
+  if (!type.isString(currentPathname)) {
+    return false;
+  }
+  return (
+    toAppPathname({ lowdefy, pathname: currentPathname }) === toAppPathname({ lowdefy, pathname })
+  );
+}
+
+// `reload: true` on a link to the page already open re-runs that page's mount
+// chains - the navigation itself is a no-op there, so without it onMount never
+// fires again. On a link to another page the mount chains run anyway.
+function getOnNavigate({ lowdefy, props, target }) {
+  const setInput = getSetInput({ lowdefy, props });
+  if (props.reload !== true || !isCurrentPathname({ lowdefy, pathname: target.pathname })) {
+    return setInput;
+  }
+  // The reload promise is returned rather than awaited here: the anchor's
+  // onClick and the action's push both call this synchronously and navigate
+  // on, while a caller that wants to know when the chains finished can await.
+  return () => {
+    setInput();
+    return reloadPage({ lowdefy });
+  };
 }
 
 export default createLink;

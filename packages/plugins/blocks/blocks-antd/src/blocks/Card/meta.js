@@ -65,6 +65,13 @@ export default {
         description:
           'Title to show in the title area - supports html. Overwritten by blocks in the title content area.',
       },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'borderless'],
+        default: 'outlined',
+        description:
+          'Border style of the card. Setting bordered to false forces the borderless variant.',
+      },
       theme: {
         type: 'object',
         description:

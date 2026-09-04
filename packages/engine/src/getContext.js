@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
+import createPerfCounters from './createPerfCounters.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
@@ -116,8 +117,10 @@ function getContext({
     requests: {},
     state: {},
     // The page state contract, nested into one root JSON schema so blocks can
-    // look up their declared type and Validate can check the whole state.
-    stateSchema: type.isObject(config.stateSchema)
+    // look up their declared type and Validate can check the whole state. Named
+    // apart from the artifact's `stateSchema` (the dotted map) because the two
+    // are different shapes and were read as one.
+    stateSchemaRoot: type.isObject(config.stateSchema)
       ? nestSchemaPaths({ paths: config.stateSchema })
       : undefined,
     _internal: {
@@ -126,6 +129,10 @@ function getContext({
       // which fetch this context was built from.
       pageConfig: config,
       rootBlock: blockData(config), // filter block to prevent circular structure
+      // Evaluation counters, allocated only for an app that opted in. Every
+      // counting site reads this one property, so an app that did not opt in
+      // pays a single undefined check per parse and per block visit.
+      perf: lowdefy.perf === true ? createPerfCounters() : undefined,
       update: () => {}, // Initialize update since Requests might call it during context creation
       // React updaters register here per block id when the context's Block
       // components mount — scoped per context so rebuilding over a live
@@ -135,6 +142,13 @@ function getContext({
     },
   };
   const _internal = ctx._internal;
+  // A measurement session starts after the page has loaded, so it needs to turn
+  // counting on for a context that already exists; a fresh counter set is also
+  // how a measurement resets between phases.
+  _internal.enablePerf = () => {
+    _internal.perf = createPerfCounters();
+    return _internal.perf;
+  };
   _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);

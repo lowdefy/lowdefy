@@ -95,6 +95,11 @@ export default {
         default: true,
         description: 'Whether support press esc to close.',
       },
+      getContainer: {
+        type: ['string', 'boolean'],
+        description:
+          'Where the Drawer is mounted. A CSS selector for the mount node, or false to render the Drawer in place instead of in a portal on the document body.',
+      },
       theme: {
         type: 'object',
         description:

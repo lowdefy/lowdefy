@@ -22,6 +22,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_html_title:
+  _state: basic_html_title
+```
+
+```yaml
 - id: accept_images
   type: S3UploadDragger
   properties:
@@ -40,6 +49,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     s3PostPolicyRequestId: s3_upload_policy_request
     title: Drag image files here (.jpg, .png, .gif)
     accept: .jpg,.png,.gif
+```
+
+```yaml
+accept_images:
+  _state: accept_images
+accept_pdfs:
+  _state: accept_pdfs
+accept_specific:
+  _state: accept_specific
 ```
 
 ```yaml
@@ -62,6 +80,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     title: Upload a single image
     singleFile: true
     accept: image/*
+```
+
+```yaml
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_images:
+  _state: limit_single_images
 ```
 
 ```yaml
@@ -91,6 +118,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+style_light_blue:
+  _state: style_light_blue
+style_dashed_border:
+  _state: style_dashed_border
+style_large_padding:
+  _state: style_large_padding
+```
+
+```yaml
 - id: disabled_default
   type: S3UploadDragger
   properties:
@@ -109,6 +145,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     disabled: true
     title: Disabled with hidden list
     showUploadList: false
+```
+
+```yaml
+disabled_default:
+  _state: disabled_default
+disabled_custom_title:
+  _state: disabled_custom_title
+disabled_hidden_list:
+  _state: disabled_hidden_list
 ```
 
 ```yaml
@@ -131,6 +176,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
     title: Single file, list hidden
     singleFile: true
     showUploadList: false
+```
+
+```yaml
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_single_hidden:
+  _state: list_single_hidden
 ```
 
 ```yaml
@@ -159,6 +213,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     title: Tailwind rounded with shadow
+```
+
+```yaml
+style_element_bg:
+  _state: style_element_bg
+style_element_border:
+  _state: style_element_border
+style_class_tailwind:
+  _state: style_class_tailwind
 ```
 
 ```yaml
@@ -223,6 +286,11 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
 ```
 
 ```yaml
+submission_card:
+  _state: submission_card
+```
+
+```yaml
 - id: gallery_card
   type: Card
   properties:
@@ -264,6 +332,11 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
                 params:
                   content: Photos uploaded to album!
                   status: success
+```
+
+```yaml
+gallery_card:
+  _state: gallery_card
 ```
 
 | Property | Type | Default | Description |

@@ -19,12 +19,13 @@ import parseUserParam from './parseUserParam.js';
 
 // Loads a state checkpoint back into the running app. mode: 'headless'
 // (default) drives a headless page and injects state directly for an agent
-// to verify; mode: 'registry-only' just loads the recorded requests into
-// devMockRegistry and returns a URL for a human to open in a real browser
-// tab (client/Inspector.jsx does the state injection there).
+// to verify; mode: 'registry-only' just returns a URL for a human to open in
+// a real browser tab (client/Inspector.jsx does the state injection there).
+// Both modes leave the checkpoint's recorded requests replaying for the whole
+// app until the next build, unless replayRequests is false.
 async function docsLoadStateHandler(c) {
   const body = await c.req.json();
-  const { name, mode } = body;
+  const { name, mode, replayRequests } = body;
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it
   // just connected to), regardless of how the server is bound.
@@ -35,7 +36,7 @@ async function docsLoadStateHandler(c) {
     return c.json({ error: userError }, 400);
   }
 
-  const result = await loadState({ origin, name, mode, user });
+  const result = await loadState({ origin, name, mode, replayRequests, user });
   if (result.error) {
     // A contradictory call (`user` in 'registry-only' mode) is the caller's
     // mistake, not a failed render — 502 would read as "the renderer broke" and

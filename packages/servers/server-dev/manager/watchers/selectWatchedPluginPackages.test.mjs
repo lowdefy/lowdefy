@@ -23,9 +23,12 @@ const { default: selectWatchedPluginPackages } = await import('./selectWatchedPl
 let root;
 let configDirectory;
 
-function addLinkedPackage(name) {
+function addLinkedPackage(name, packageJson) {
   const dir = path.join(root, 'plugins', name);
   fs.mkdirSync(path.join(dir, 'src'), { recursive: true });
+  if (packageJson) {
+    fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify(packageJson));
+  }
   fs.mkdirSync(path.dirname(path.join(configDirectory, 'node_modules', name)), {
     recursive: true,
   });
@@ -54,7 +57,7 @@ test('a linked connections-only package is watched', () => {
   };
 
   expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/db-plugin', dir },
+    { package: '@app/db-plugin', dir, watchDir: path.join(dir, 'src') },
   ]);
 });
 
@@ -81,7 +84,7 @@ test('a linked package with both blocks and requests is watched once', () => {
   };
 
   expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/mixed-plugin', dir },
+    { package: '@app/mixed-plugin', dir, watchDir: path.join(dir, 'src') },
   ]);
 });
 
@@ -102,11 +105,66 @@ test('auth kinds count as server-side and a missing package is skipped', () => {
   };
 
   expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/auth-plugin', dir },
+    { package: '@app/auth-plugin', dir, watchDir: path.join(dir, 'src') },
   ]);
 });
 
 test('an empty or missing customTypesMap watches nothing', () => {
   expect(selectWatchedPluginPackages({ configDirectory, customTypesMap: {} })).toEqual([]);
   expect(selectWatchedPluginPackages({ configDirectory, customTypesMap: null })).toEqual([]);
+});
+
+test('a package with a build step is watched at the entry point the server imports, not its src', () => {
+  // The server imports build/plugins/*.js, which resolves to the package's
+  // entry - restarting on a src edit would reload the same stale dist.
+  const dir = addLinkedPackage('@app/built-plugin', {
+    name: '@app/built-plugin',
+    main: './dist/index.js',
+  });
+  const customTypesMap = {
+    connections: { MyDb: { package: '@app/built-plugin', version: '1.0.0' } },
+  };
+
+  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
+    { package: '@app/built-plugin', dir, watchDir: path.join(dir, 'dist') },
+  ]);
+});
+
+test('an exports condition object resolves to the entry directory', () => {
+  const dir = addLinkedPackage('@app/exports-plugin', {
+    name: '@app/exports-plugin',
+    exports: { '.': { import: './build/index.js', require: './cjs/index.cjs' } },
+  });
+  const customTypesMap = {
+    requests: { Find: { package: '@app/exports-plugin', version: '1.0.0' } },
+  };
+
+  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })[0].watchDir).toEqual(
+    path.join(dir, 'build')
+  );
+});
+
+// A file plugin has `package: null` - there is no package directory to watch,
+// and the selection must skip it rather than fail on the missing package name.
+test('a server-side file plugin is skipped and does not stop other packages being watched', () => {
+  const dir = addLinkedPackage('@app/db-plugin');
+  const customTypesMap = {
+    connections: { MyDb: { package: '@app/db-plugin', version: '1.0.0' } },
+    operators: {
+      server: {
+        _lookup: {
+          package: null,
+          packageId: 'file-plugin',
+          originalTypeName: '_lookup',
+          version: null,
+          file: path.join(configDirectory, 'plugins/operators/server/_lookup.js'),
+          relativePath: 'plugins/operators/server/_lookup.js',
+        },
+      },
+    },
+  };
+
+  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
+    { package: '@app/db-plugin', dir, watchDir: path.join(dir, 'src') },
+  ]);
 });

@@ -1,0 +1,22 @@
+id: items
+type: ListPage
+props:
+  layout:
+    type: PageHeaderMenu
+    properties:
+      title: Items
+  collection: items
+  columns: [title, status, created_at]
+  filters: [status]
+  search: [title]
+  emptyState:
+    title: No items yet
+    subTitle: Post one to the add_item endpoint, or seed fixtures/items.yaml.
+slots:
+  header:
+    blocks:
+      - id: items_caption
+        type: Paragraph
+        properties:
+          type: secondary
+          content: Generated from the ListPage archetype and the items collection.

@@ -541,7 +541,7 @@ The footer slot replaces the default Ok/Cancel buttons with custom content. This
           Save/Cancel on the right.
 ```
 
-The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
+The `.wrapper` style key applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 ```yaml
 - id: modal_wrapper_style_trigger
@@ -565,15 +565,16 @@ The wrapperStyle property applies CSS to the modal wrapper element. This can con
   type: Modal
   properties:
     title: Wrapper Style Modal
-    wrapperStyle:
+  style:
+    .wrapper:
       overflow: hidden
   blocks:
     - id: modal_wrapper_style_content
       type: Paragraph
       properties:
-        content: The wrapperStyle property applies CSS to the modal wrapper element.
-          This can control overflow, positioning, and other layout aspects of
-          the wrapper container.
+        content: The `.wrapper` style key applies CSS to the modal wrapper element. This
+          can control overflow, positioning, and other layout aspects of the
+          wrapper container.
 ```
 
 This modal uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
@@ -944,8 +945,7 @@ Senior Product Designer
           properties:
             icon: AiOutlineUser
             size: 72
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: modal_profile_info
           type: Box
           layout:
@@ -1129,6 +1129,7 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
 | `mask` | boolean | `true` | Whether show mask or not. |
 | `maskClosable` | boolean | `true` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |
+| `okButtonType` | string | `"primary"` | Button type of the ok button. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `okButtonProps` | object | - | Set additional properties for the ok button. |
 | `cancelText` | string | - | Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `cancelButtonProps` | object | - | Set additional properties for the cancel button. |

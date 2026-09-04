@@ -16,6 +16,15 @@
 
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
 
+// _prop and _slot are build-time component markers, always registered so
+// precompute leaves a component body's markers alone.
+const COMPONENT_MARKERS = ['_prop', '_slot'];
+
+test('collectDynamicIdentifiers always registers the component markers', () => {
+  const result = collectDynamicIdentifiers({ operators: {} });
+  expect([...result]).toEqual(COMPONENT_MARKERS);
+});
+
 test('collectDynamicIdentifiers returns empty Set for all static operators', () => {
   const staticOp1 = () => {};
   staticOp1.dynamic = false;
@@ -29,7 +38,7 @@ test('collectDynamicIdentifiers returns empty Set for all static operators', () 
   };
 
   const result = collectDynamicIdentifiers({ operators });
-  expect(result.size).toBe(0);
+  expect([...result]).toEqual(COMPONENT_MARKERS);
 });
 
 test('collectDynamicIdentifiers collects dynamic operators', () => {
@@ -45,7 +54,7 @@ test('collectDynamicIdentifiers collects dynamic operators', () => {
   };
 
   const result = collectDynamicIdentifiers({ operators });
-  expect(result.size).toBe(1);
+  expect(result.size).toBe(COMPONENT_MARKERS.length + 1);
   expect(result.has('_dynamic')).toBe(true);
   expect(result.has('_static')).toBe(false);
 });
@@ -64,7 +73,7 @@ test('collectDynamicIdentifiers collects dynamic methods from meta', () => {
   };
 
   const result = collectDynamicIdentifiers({ operators });
-  expect(result.size).toBe(1);
+  expect(result.size).toBe(COMPONENT_MARKERS.length + 1);
   expect(result.has('_math.random')).toBe(true);
   expect(result.has('_math')).toBe(false);
   expect(result.has('_math.abs')).toBe(false);
@@ -95,7 +104,7 @@ test('collectDynamicIdentifiers collects both operator-level and method-level dy
   };
 
   const result = collectDynamicIdentifiers({ operators });
-  expect(result.size).toBe(3);
+  expect(result.size).toBe(COMPONENT_MARKERS.length + 3);
   expect(result.has('_state')).toBe(true);
   expect(result.has('_math.random')).toBe(true);
   expect(result.has('_date.now')).toBe(true);
@@ -112,6 +121,6 @@ test('collectDynamicIdentifiers ignores non-function values', () => {
   };
 
   const result = collectDynamicIdentifiers({ operators });
-  expect(result.size).toBe(1);
+  expect(result.size).toBe(COMPONENT_MARKERS.length + 1);
   expect(result.has('_dynamic')).toBe(true);
 });

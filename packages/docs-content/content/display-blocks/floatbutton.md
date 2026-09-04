@@ -93,6 +93,96 @@ Floating action button with tooltip, badge, and icon.
 ```
 
 ```yaml
+- id: float_demo
+  type: FloatButton
+  visible:
+    _state: float_active
+  properties:
+    type:
+      _state: float_props.type
+    shape:
+      _state: float_props.shape
+    icon:
+      _state: float_props.icon
+    tooltip:
+      _state: float_props.tooltip
+    description:
+      _state: float_props.description
+    badge:
+      _state: float_props.badge
+    href:
+      _state: float_props.href
+    target:
+      _state: float_props.target
+    theme:
+      _state: float_props.theme
+  events:
+    onClick:
+      - id: float_click_msg
+        type: DisplayMessage
+        params:
+          content: FloatButton clicked!
+          status: info
+- id: btn_type_default
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Default
+    color: default
+    variant: outlined
+    icon: AiOutlineQuestionCircle
+  events:
+    onClick:
+      - id: set_type_default
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            type: default
+            icon: AiOutlineQuestionCircle
+            tooltip: Default type
+- id: btn_type_primary
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Primary
+    color: primary
+    variant: outlined
+    icon: AiOutlineQuestionCircle
+  events:
+    onClick:
+      - id: set_type_primary
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            type: primary
+            icon: AiOutlineQuestionCircle
+            tooltip: Primary type
+- id: btn_type_support
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Support
+    color: primary
+    variant: outlined
+    icon: AiOutlineCustomerService
+  events:
+    onClick:
+      - id: set_type_support
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            type: primary
+            icon: AiOutlineCustomerService
+            tooltip: Contact support
+```
+
+```yaml
 - id: btn_shape_circle
   type: Button
   layout:

@@ -30,7 +30,9 @@ jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
 }));
 
 const mockGetMock = jest.fn(() => null);
+const mockClaimMockLog = jest.fn(() => true);
 jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
+  claimMockLog: mockClaimMockLog,
   getMock: mockGetMock,
 }));
 
@@ -38,13 +40,16 @@ const { default: requestHandler } = await import('./request.js');
 
 const callOrder = [];
 
+let loggerInfo;
+
 function createApp() {
   const app = new Hono();
+  loggerInfo = jest.fn();
   app.use('*', async (c, next) => {
     c.set('lowdefyContext', {
       buildDirectory: '/build',
       configDirectory: '/config',
-      logger: { debug: jest.fn(), info: jest.fn(), error: jest.fn() },
+      logger: { debug: jest.fn(), info: loggerInfo, error: jest.fn() },
     });
     await next();
   });
@@ -77,6 +82,8 @@ afterEach(() => {
   mockBuildPageIfNeeded.mockReset();
   mockGetMock.mockReset();
   mockGetMock.mockImplementation(() => null);
+  mockClaimMockLog.mockReset();
+  mockClaimMockLog.mockImplementation(() => true);
 });
 
 test('requestHandler builds the page JIT before calling the request', async () => {
@@ -107,12 +114,36 @@ test('requestHandler builds nested page ids as one page', async () => {
 });
 
 test('requestHandler replays a dev mock without building or calling the request', async () => {
-  mockGetMock.mockImplementation(() => ({ response: { rows: [1] } }));
+  mockGetMock.mockImplementation(() => ({ response: { rows: [1] }, checkpoint: 'broken-refund' }));
   const res = await post(createApp(), '/api/request/dashboard/get_rows');
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({ success: true, response: { rows: [1] } });
   expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
   expect(mockCallRequest).not.toHaveBeenCalled();
+  expect(loggerInfo).toHaveBeenCalledWith(
+    expect.objectContaining({
+      event: 'dev_mock_request',
+      pageId: 'dashboard',
+      requestId: 'get_rows',
+      msg: expect.stringContaining('answered from checkpoint "broken-refund"'),
+    })
+  );
+});
+
+// A replayed page re-fires its requests on every render; the log line is the
+// developer's one signal that the page is not reaching the database, and it
+// must not become noise.
+test('requestHandler logs a replayed request only the first time for a pageId/requestId', async () => {
+  mockGetMock.mockImplementation(() => ({ response: { rows: [1] }, checkpoint: 'broken-refund' }));
+  mockClaimMockLog.mockImplementationOnce(() => true).mockImplementation(() => false);
+  const app = createApp();
+
+  await post(app, '/api/request/dashboard/get_rows');
+  await post(app, '/api/request/dashboard/get_rows');
+
+  expect(mockClaimMockLog).toHaveBeenCalledTimes(2);
+  expect(mockClaimMockLog).toHaveBeenCalledWith({ pageId: 'dashboard', requestId: 'get_rows' });
+  expect(loggerInfo).toHaveBeenCalledTimes(1);
 });
 
 // A GET to the request route is client-caused, so it must answer 405 rather

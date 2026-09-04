@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import { getBrowser, openPage } from './getBrowser.js';
-import { loadMocks } from './devMockRegistry.js';
+import { clearMocks, loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
 import unsettledPageNote from './unsettledPageNote.js';
 
@@ -27,7 +27,7 @@ const READY_TIMEOUT = 15000;
 
 // Loads a state checkpoint's recorded requests into devMockRegistry (shared
 // by both modes below — src/routes/request.js consults it regardless of how
-// the page was opened), then either:
+// the page was opened) unless `replayRequests` is false, then either:
 //   - 'headless': drives a headless page to the checkpoint's pageId/urlQuery,
 //     injects its recorded state directly into the live context, and verifies
 //     a few keys round-tripped. Good for an agent verifying its own change.
@@ -36,9 +36,18 @@ const READY_TIMEOUT = 15000;
 //   - 'registry-only': just returns a URL a human can open in a real browser
 //     tab — client/Inspector.jsx's `?_checkpoint=` bootstrap does the state
 //     injection client-side once that tab loads.
-async function loadState({ origin, name, mode = 'headless', user }) {
+async function loadState({ origin, name, mode = 'headless', replayRequests = true, user }) {
   if (type.isNone(name) || !type.isString(name)) {
     return { error: `loadState requires a "name" string. Received ${JSON.stringify(name)}.` };
+  }
+
+  if (!type.isBoolean(replayRequests)) {
+    return {
+      error: `loadState "replayRequests" must be a boolean. Received ${JSON.stringify(
+        replayRequests
+      )}.`,
+      invalidInput: true,
+    };
   }
 
   // `user` only reaches a page this function opens itself. In 'registry-only'
@@ -64,7 +73,16 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     return { error: `Checkpoint "${name}" has no recorded pageId.` };
   }
 
-  loadMocks({ pageId, mocks: checkpoint.requests });
+  // Replay is what makes the restored page reproducible, but it also means
+  // the page stops seeing the database. `replayRequests: false` is the way to
+  // restore the state and still exercise the real connections — and it must
+  // clear whatever a previous load left behind, or the previous checkpoint's
+  // responses would silently answer this one's requests.
+  if (replayRequests) {
+    loadMocks({ pageId, checkpoint: name, mocks: checkpoint.requests });
+  } else {
+    clearMocks();
+  }
 
   const basePath = lowdefyConfig.basePath ?? '';
   const urlQuery = checkpoint.urlQuery ?? '';
@@ -76,8 +94,10 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     )}`;
     return {
       url,
-      instructions:
-        'Open this URL in a browser — state is injected on load, requests serve recorded data.',
+      replayRequests,
+      instructions: replayRequests
+        ? 'Open this URL in a browser — state is injected on load, requests serve recorded data.'
+        : 'Open this URL in a browser — state is injected on load, requests hit the real connections.',
     };
   }
 
@@ -147,7 +167,13 @@ async function loadState({ origin, name, mode = 'headless', user }) {
       { id: pageId, keys: verifyKeys }
     );
 
-    const result = { loaded: true, mode, url: opened.url, verifiedKeys };
+    const result = {
+      loaded: true,
+      mode,
+      replayRequests,
+      url: opened.url,
+      verifiedKeys,
+    };
     if (!opened.ready) {
       return { ...result, ready: false, note: unsettledPageNote({ timeout: READY_TIMEOUT }) };
     }

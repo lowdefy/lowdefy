@@ -128,3 +128,25 @@ test('POST /lowdefy-docs/mcp stays stateless and does not subscribe to dev event
   const message = await readFirstFrame(res);
   expect(message.result.capabilities).toEqual({ logging: {} });
 });
+
+test('a GET subscriber that never closes is pruned once the stream cap is reached', async () => {
+  // The transport's send returns silently when no stream is open, so the bus
+  // never learns about a stream that died without onclose or abort. Every
+  // reconnect would otherwise add another subscribed McpServer.
+  const app = createApp();
+  const controllers = [];
+  for (let i = 0; i < 5; i++) {
+    const controller = new AbortController();
+    controllers.push(controller);
+    const res = await app.request('/lowdefy-docs/mcp', {
+      headers: { accept: 'text/event-stream' },
+      signal: controller.signal,
+    });
+    await readFirstFrame(res);
+  }
+
+  expect(mockSubscribeMcpServerToDevEvents).toHaveBeenCalledTimes(5);
+  // Four streams are held; the fifth connection evicted the oldest.
+  expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
+  controllers.forEach((controller) => controller.abort());
+});

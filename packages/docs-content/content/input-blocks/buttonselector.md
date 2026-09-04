@@ -44,6 +44,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+style_solid:
+  _state: style_solid
+style_outline:
+  _state: style_outline
+solid_outline_alignment:
+  _state: solid_outline_alignment
+```
+
+```yaml
 - id: string_options
   type: ButtonSelector
   properties:
@@ -92,6 +101,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+string_options:
+  _state: string_options
+status_options:
+  _state: status_options
+html_labels:
+  _state: html_labels
+html_emoji_labels:
+  _state: html_emoji_labels
+```
+
+```yaml
 - id: size_small
   type: ButtonSelector
   properties:
@@ -121,6 +141,15 @@ Radio group styled as toggle buttons.
       - Small
       - Medium
       - Large
+```
+
+```yaml
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
 ```
 
 ```yaml
@@ -156,6 +185,15 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+size_small_outline:
+  _state: size_small_outline
+size_default_outline:
+  _state: size_default_outline
+size_large_outline:
+  _state: size_large_outline
+```
+
+```yaml
 - id: many_options
   type: ButtonSelector
   properties:
@@ -187,6 +225,13 @@ Radio group styled as toggle buttons.
         value: true
       - label: No
         value: false
+```
+
+```yaml
+many_options:
+  _state: many_options
+two_options:
+  _state: two_options
 ```
 
 ```yaml
@@ -248,6 +293,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+disabled_solid:
+  _state: disabled_solid
+disabled_outline:
+  _state: disabled_outline
+disabled_option_solid:
+  _state: disabled_option_solid
+disabled_multiple_options:
+  _state: disabled_multiple_options
+```
+
+```yaml
 - id: option_styles
   type: ButtonSelector
   properties:
@@ -299,6 +355,15 @@ Radio group styled as toggle buttons.
         value: muted
         style:
           opacity: 0.6
+```
+
+```yaml
+option_styles:
+  _state: option_styles
+option_styles_solid:
+  _state: option_styles_solid
+option_styles_mixed:
+  _state: option_styles_mixed
 ```
 
 ```yaml
@@ -356,6 +421,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+color_default:
+  _state: color_default
+color_red:
+  _state: color_red
+color_green:
+  _state: color_green
+color_purple:
+  _state: color_purple
+```
+
+```yaml
 - id: color_hex_coral
   type: ButtonSelector
   properties:
@@ -399,6 +475,17 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+color_hex_coral:
+  _state: color_hex_coral
+color_hex_teal:
+  _state: color_hex_teal
+color_hex_indigo:
+  _state: color_hex_indigo
+color_hex_light:
+  _state: color_hex_light
+```
+
+```yaml
 - id: color_outline_red
   type: ButtonSelector
   properties:
@@ -429,6 +516,15 @@ Radio group styled as toggle buttons.
       - Option A
       - Option B
       - Option C
+```
+
+```yaml
+color_outline_red:
+  _state: color_outline_red
+color_outline_green:
+  _state: color_outline_green
+color_outline_hex:
+  _state: color_outline_hex
 ```
 
 ```yaml
@@ -464,6 +560,11 @@ Radio group styled as toggle buttons.
               - Option A
               - Option B
               - Option C
+```
+
+```yaml
+dark_mode_box:
+  _state: dark_mode_box
 ```
 
 ```yaml
@@ -534,6 +635,19 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+label_title:
+  _state: label_title
+label_extra:
+  _state: label_extra
+label_no_colon:
+  _state: label_no_colon
+label_inline:
+  _state: label_inline
+no_label_solid:
+  _state: no_label_solid
+```
+
+```yaml
 - id: html_title
   type: ButtonSelector
   properties:
@@ -555,6 +669,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+html_title:
+  _state: html_title
+html_title_colored:
+  _state: html_title_colored
+```
+
+```yaml
 - id: style_custom_width
   type: ButtonSelector
   properties:
@@ -569,8 +690,14 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+style_custom_width:
+  _state: style_custom_width
+```
+
+```yaml
 - id: class_padding
   type: ButtonSelector
+  class: p-4
   properties:
     title: Tailwind Padding
     variant: solid
@@ -581,9 +708,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: p-4
 - id: class_shadow_rounded
   type: ButtonSelector
+  class: shadow-md rounded-lg p-2
   properties:
     title: Shadow and Rounded
     variant: solid
@@ -594,9 +721,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: shadow-md rounded-lg p-2
 - id: class_background
   type: ButtonSelector
+  class: bg-bg-layout p-3 rounded
   properties:
     title: Background Color
     variant: solid
@@ -607,7 +734,15 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: bg-bg-layout p-3 rounded
+```
+
+```yaml
+class_padding:
+  _state: class_padding
+class_shadow_rounded:
+  _state: class_shadow_rounded
+class_background:
+  _state: class_background
 ```
 
 ```yaml
@@ -695,6 +830,19 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+theme_large_radius:
+  _state: theme_large_radius
+theme_button_bg:
+  _state: theme_button_bg
+theme_button_color:
+  _state: theme_button_color
+theme_pill_selector:
+  _state: theme_pill_selector
+theme_compact_selector:
+  _state: theme_compact_selector
+```
+
+```yaml
 - id: applied_survey_card
   type: Card
   properties:
@@ -757,6 +905,76 @@ Radio group styled as toggle buttons.
                   - "Thank you for your feedback! Rating: "
                   - _state: applied_survey_rating
               status: success
+```
+
+```yaml
+- id: applied_survey_card
+  type: Card
+  properties:
+    title: Customer Satisfaction Survey
+  blocks:
+    - id: applied_survey_name
+      type: TextInput
+      properties:
+        title: Your Name
+        placeholder: Enter your full name
+    - id: applied_survey_rating
+      type: ButtonSelector
+      properties:
+        title: How satisfied are you with our service?
+        variant: solid
+        color: "#1677ff"
+        options:
+          - label: Very Unsatisfied
+            value: 1
+          - label: Unsatisfied
+            value: 2
+          - label: Neutral
+            value: 3
+          - label: Satisfied
+            value: 4
+          - label: Very Satisfied
+            value: 5
+    - id: applied_survey_recommend
+      type: ButtonSelector
+      properties:
+        title: Would you recommend us to a friend?
+        variant: solid
+        options:
+          - label: Definitely
+            value: definitely
+          - label: Probably
+            value: probably
+          - label: Not Sure
+            value: not_sure
+          - label: Unlikely
+            value: unlikely
+    - id: applied_survey_comments
+      type: TextArea
+      properties:
+        title: Additional Comments
+        placeholder: Tell us more about your experience...
+    - id: applied_survey_submit
+      type: Button
+      properties:
+        title: Submit Survey
+        type: primary
+        icon: AiOutlineSend
+      events:
+        onClick:
+          - id: survey_submit_action
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - "Thank you for your feedback! Rating: "
+                  - _state: applied_survey_rating
+              status: success
+```
+
+```yaml
+applied_survey_card:
+  _state: applied_survey_card
 ```
 
 ```yaml
@@ -836,6 +1054,87 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+- id: applied_settings_card
+  type: Card
+  properties:
+    title: Display Settings
+  blocks:
+    - id: applied_settings_theme
+      type: ButtonSelector
+      properties:
+        title: Theme
+        variant: solid
+        options:
+          - label: Light
+            value: light
+          - label: Dark
+            value: dark
+          - label: System
+            value: system
+      events:
+        onChange:
+          - id: theme_change_action
+            type: SetState
+            params:
+              selected_theme:
+                _state: applied_settings_theme
+    - id: applied_settings_language
+      type: ButtonSelector
+      properties:
+        title: Language
+        variant: outlined
+        options:
+          - label: English
+            value: en
+          - label: Spanish
+            value: es
+          - label: French
+            value: fr
+          - label: German
+            value: de
+    - id: applied_settings_font_size
+      type: ButtonSelector
+      properties:
+        title: Font Size
+        variant: solid
+        size: small
+        options:
+          - label: Small
+            value: small
+          - label: Medium
+            value: medium
+          - label: Large
+            value: large
+    - id: applied_settings_save
+      type: Button
+      properties:
+        title: Save Settings
+        type: primary
+        icon: AiOutlineSave
+      events:
+        onClick:
+          - id: settings_save_action
+            type: DisplayMessage
+            params:
+              content: Settings saved successfully
+              status: success
+          - id: settings_set_global
+            type: SetGlobal
+            params:
+              theme:
+                _state: applied_settings_theme
+              language:
+                _state: applied_settings_language
+              fontSize:
+                _state: applied_settings_font_size
+```
+
+```yaml
+applied_settings_card:
+  _state: applied_settings_card
+```
+
+```yaml
 - id: per_option_color_outline
   type: ButtonSelector
   properties:
@@ -869,6 +1168,13 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+per_option_color_outline:
+  _state: per_option_color_outline
+per_option_color_solid:
+  _state: per_option_color_solid
+```
+
+```yaml
 - id: data_button_selector
   type: ButtonSelector
   properties:
@@ -884,6 +1190,11 @@ Radio group styled as toggle buttons.
     valueKey: id
 ```
 
+```yaml
+data_button_selector:
+  _state: data_button_selector
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `variant` | string | `"solid"` | Visual variant of the selected option button, matching the Button block. Enum: `solid`, `outlined`. |
@@ -892,7 +1203,7 @@ Radio group styled as toggle buttons.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -950,7 +1261,7 @@ Radio group styled as toggle buttons.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import logEndpointCompleted from './logEndpointCompleted.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import validateEndpointResponse from './validateEndpointResponse.js';
@@ -56,8 +57,16 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
     source: 'endpoint',
   });
 
+  const startTime = performance.now();
   const result = await runRoutine(context, childRoutineContext, {
     routine: endpointConfig.routine,
+  });
+  logEndpointCompleted(context, {
+    endpointConfig,
+    entry: 'call_api',
+    error: result.error,
+    startTime,
+    status: result.status,
   });
   if (result.status === 'return') {
     validateEndpointResponse(context, { endpointConfig, response: result.response });

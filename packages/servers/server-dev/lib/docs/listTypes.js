@@ -20,6 +20,10 @@ import getDocsManifest from './getDocsManifest.js';
 import normalizeTypeKind from './normalizeTypeKind.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
+// The synthetic package identity discoverFilePlugins gives a plugin that is a
+// file in the config directory rather than an installed package.
+const FILE_PLUGIN_PACKAGE_ID = 'file-plugin';
+
 function usedTypeNames({ store }) {
   const used = new Set();
   for (const [typeName, definition] of Object.entries(store ?? {})) {
@@ -52,7 +56,9 @@ function listTypes({ kind }) {
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(normalizedKind)) {
     throw new Error(
-      `Unknown type kind. Received ${JSON.stringify(kind)}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
+      `Unknown type kind. Received ${JSON.stringify(
+        kind
+      )}. Use one of: blocks, operators, actions, connections, requests, agents, notifications, websockets.`
     );
   }
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
@@ -88,6 +94,10 @@ function listTypes({ kind }) {
         version: definition.version,
         used: used.has(typeName),
       };
+      if (definition.packageId === FILE_PLUGIN_PACKAGE_ID) {
+        entry.source = 'file plugin';
+        entry.file = definition.relativePath;
+      }
       if (definition.environments) {
         entry.environments = definition.environments;
       }

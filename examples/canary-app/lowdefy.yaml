@@ -21,10 +21,6 @@ license: Apache-2.0
 
 cli:
   disableTelemetry: true
-  agentTools:
-    # The save_item endpoint test runs through the dev server's run-endpoint
-    # route, which refuses routines unless writes are allowed.
-    allowWriteRequests: true
 
 auth:
   database:
@@ -90,6 +86,15 @@ connections:
         _secret: MONGODB_URI
       read: true
       write: false
+  # A file-plugin connection: plugins/connections/StaticRows.
+  - id: regions
+    type: StaticRows
+    properties:
+      rows:
+        - code: eu
+          label: Europe
+        - code: us
+          label: North America
 
 api:
   - _ref: api/save-item.yaml

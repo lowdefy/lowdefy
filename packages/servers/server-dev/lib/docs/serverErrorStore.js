@@ -14,27 +14,34 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import createRingBuffer from './createRingBuffer.js';
 import { publish } from './devEventBus.js';
 
 // Module-level ring buffer of recent server-side errors (request, endpoint, MCP
 // and agent tool failures) — feeds the getBuildStatus feedback endpoint so
 // agents can see server errors, with their config source, without tailing
 // server logs. Deliberately in-memory only: entries are lost on server
-// restart, which is fine since this is a live-session debugging aid.
+// restart, which is fine since this is a live-session debugging aid, and
+// lowdefy_restart says so.
+//
+// The same failure raised again — a request in a :for loop, a page the
+// developer keeps reloading — collapses onto the entry already held with a
+// count, so one broken request cannot evict every other error.
 const MAX_ENTRIES = 50;
 
-const entries = [];
-
-function push(entry) {
-  entries.push(entry);
-  if (entries.length > MAX_ENTRIES) {
-    entries.shift();
+function dedupeKey(entry) {
+  if (type.isNone(entry.name) && type.isNone(entry.message)) {
+    return null;
   }
-  publish({ type: 'server_error', ...entry });
+  return JSON.stringify([entry.name ?? null, entry.message ?? null, entry.source ?? null]);
 }
 
-function list() {
-  return [...entries];
-}
-
-export default { push, list };
+export default createRingBuffer({
+  max: MAX_ENTRIES,
+  dedupeKey,
+  // Spread first: an entry key named `type` must not be able to overwrite the
+  // event type and make the bus drop the event.
+  onStore: (entry) => publish({ ...entry, type: 'server_error' }),
+});

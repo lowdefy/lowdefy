@@ -1,0 +1,70 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: Grid
+    pageTitle: Grid
+    section: Container Blocks
+    filePath: blocks/container/Grid.yaml
+    block_type: Grid
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Grid
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Grid/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Grid/gallery.yaml
+    description: >
+      Arranges its children on a CSS grid, 24 columns by default. `Row`, `Stack` and `Grid`
+      are the framework-owned arrangement blocks: the container says how the children are
+      arranged, and each child says how big it is.
+    guide: |
+      ## Sizing a child
+
+      A `Grid` sets the track count with `columns` — 24 by default, matching the 24-column
+      `layout.span` grid it replaces — and the space between children with `gap`. A child's
+      size is a Tailwind class on the child, set with the `class` key:
+
+      ```yaml
+      - id: body
+        type: Grid
+        blocks:
+          - id: form
+            type: Card
+            class: col-span-24 md:col-span-16
+          - id: side
+            type: Card
+            class: col-span-24 md:col-span-8
+      ```
+
+      `col-span-N`, `col-start-N`, `row-span-N` and their responsive variants all work,
+      because the class lands on the element that is the grid item. A child with no span
+      class occupies a single column.
+
+      Use `columnsSm` and `columnsMd` to change the track count itself from the 640px and
+      768px breakpoints up; use the children's own responsive classes to change how much of
+      the grid each child takes.
+
+      ## Grid and Flex
+
+      `Flex` in `@lowdefy/blocks-antd` stays and keeps working; it is a flex container, not
+      a grid. `Row`, `Stack` and `Grid` are the framework-owned arrangement blocks, and they
+      are what the `layout:` deprecation names as the replacement.
+
+      ## Migrating from `layout:`
+
+      Siblings that carried `layout: { span, offset }` become the children of one `Grid` with
+      `columns: 24`: `span` becomes `class: col-span-N`, and `offset` — a cumulative margin, not
+      a grid line — is accumulated across the row into `col-start-N`. `layout:` still works —
+      see [Layout](/layout-overview). `lowdefy check` reports every remaining site under the
+      `layout-deprecated` slug, and `lowdefy upgrade` offers the optional `layout-to-containers`
+      codemod, which does the mechanical rewrite and reports the sites it refuses.

@@ -17,8 +17,9 @@
 import React, { useEffect } from 'react';
 import { Layout } from 'antd';
 import { type } from '@lowdefy/helpers';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
+import withTheme from '../withTheme.js';
 import { renderHeaderActions, registerDarkModeMethod } from '../headerActions.js';
 
 const Header = Layout.Header;
@@ -46,14 +47,17 @@ const HeaderBlock = ({
 
   return (
     <Header
-      id={blockId}
-      className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
-      style={{
-        background: properties.color ?? 'var(--ant-color-bg-container)',
-        display: 'flex',
-        alignItems: 'center',
-        ...styles.element,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: 'hide-on-print',
+        style: {
+          background: properties.color ?? 'var(--ant-color-bg-container)',
+          display: 'flex',
+          alignItems: 'center',
+        },
+      })}
     >
       {content.content && content.content({ flex: '1 1 auto', minWidth: 0, alignItems: 'center' })}
       {hasActions &&
@@ -71,4 +75,4 @@ const HeaderBlock = ({
   );
 };
 
-export default withBlockDefaults(HeaderBlock);
+export default withTheme('Layout', withBlockDefaults(HeaderBlock));

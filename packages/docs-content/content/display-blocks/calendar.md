@@ -108,6 +108,23 @@ Full-size or compact calendar for date display and selection, with support for d
 ```
 
 ```yaml
+- id: calendar_events
+  type: Calendar
+  properties:
+    fullscreen: false
+  events:
+    onSelect:
+      - id: show_date
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Selected: "
+              - _event: date
+          duration: 2
+```
+
+```yaml
 - id: themed_calendar
   type: Calendar
   properties:
@@ -144,9 +161,9 @@ Full-size or compact calendar for date display and selection, with support for d
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value, date }` | Trigger actions when the selected date changes. |
-| `onSelect` | `{ value, date, source }` | Trigger actions when a date cell is clicked. |
-| `onPanelChange` | `{ value, date, mode }` | Trigger actions when the calendar panel mode or date changes. |
+| `onChange` | `{ value: any, date: string }` | Trigger actions when the selected date changes. |
+| `onSelect` | `{ value: any, date: string, source: string }` | Trigger actions when a date cell is clicked. |
+| `onPanelChange` | `{ value: any, date: string, mode: string }` | Trigger actions when the calendar panel mode or date changes. |
 
 | Key | Target |
 | --- | --- |

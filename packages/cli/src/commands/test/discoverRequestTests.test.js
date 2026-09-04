@@ -22,9 +22,9 @@ import discoverRequestTests from './discoverRequestTests.js';
 let configDirectory;
 
 function writeFile(fileName, content) {
-  const directory = path.join(configDirectory, 'tests', 'requests');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, fileName), content);
+  const filePath = path.join(configDirectory, 'tests', 'requests', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
 }
 
 beforeEach(() => {
@@ -57,4 +57,24 @@ test('discoverRequestTests returns an error item for invalid YAML', () => {
   expect(items).toHaveLength(1);
   expect(items[0].test).toBeUndefined();
   expect(items[0].error).toMatch(/^Invalid YAML: /);
+});
+
+test('discoverRequestTests discovers tests in nested directories, byte-sorted', () => {
+  writeFile('b.test.yaml', 'name: b\n');
+  writeFile(path.join('orders', 'a.test.yaml'), 'name: a\n');
+  expect(
+    discoverRequestTests({ context: { directories: { config: configDirectory } } }).map(
+      (item) => item.test.name
+    )
+  ).toEqual(['b', 'a']);
+});
+
+test('discoverRequestTests still requires the .test. infix', () => {
+  writeFile('kept.test.yaml', 'name: kept\n');
+  writeFile('helper.yaml', 'name: helper\n');
+  expect(
+    discoverRequestTests({ context: { directories: { config: configDirectory } } }).map(
+      (item) => item.test.name
+    )
+  ).toEqual(['kept']);
 });

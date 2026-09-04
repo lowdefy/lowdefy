@@ -16,7 +16,7 @@
 
 import React, { useMemo } from 'react';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import { theme as antdTheme } from 'antd';
 import ReactMarkdown from 'react-markdown';
 
@@ -89,7 +89,7 @@ const MarkdownWithCode = ({ blockId, classNames, properties, styles }) => {
   const isDark = (r * 299 + g * 587 + b * 114) / 1000 < 128;
   const components = useMemo(() => makeComponents(isDark), [isDark]);
   return (
-    <div id={blockId} className={classNames?.element} style={styles?.element}>
+    <div {...blockRootProps({ blockId, classNames, styles })}>
       <ReactMarkdown
         className={markdownStyles['markdown-body']}
         skipHtml={properties.skipHtml}

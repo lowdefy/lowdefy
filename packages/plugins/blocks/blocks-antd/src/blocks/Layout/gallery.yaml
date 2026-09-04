@@ -432,11 +432,11 @@
               type: Title
               layout:
                 flex: 0 0 auto
+              style:
+                margin: 0
               properties:
                 content: DevDocs
                 level: 4
-                style:
-                  margin: 0
             - id: layout_docs_version_tag
               type: Tag
               layout:

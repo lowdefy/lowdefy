@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["Invalid check slug"],
+      "errorContains": [
+        "Invalid check slug \"state-ref\" in ~ignoreBuildChecks. Did you mean \"state-refs\"?"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

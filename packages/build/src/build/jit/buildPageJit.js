@@ -23,6 +23,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 import addKeys from '../addKeys.js';
 import buildPage from '../buildPages/buildPage.js';
+import deprecateActionResponseEnvelope from '../buildPages/deprecateActionResponseEnvelope.js';
 import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -46,6 +47,7 @@ import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import loadBlockSchemas from '../loadBlockSchemas.js';
+import loadFilePluginBlockSchemas from '../filePlugins/loadFilePluginBlockSchemas.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -101,15 +103,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   // schemas loaded by shallowBuild are not on it; load them once and reuse.
   if (type.isUndefined(buildContext.blockSchemas)) {
     await loadBlockSchemas({ components: {}, context: buildContext });
+    // File blocks carry their schema in a sibling JSON; without this a file block's
+    // properties would be unvalidated on JIT dev pages.
+    loadFilePluginBlockSchemas({ context: buildContext });
   }
 
   // Restore the skeleton-built collections map so a page archetype
   // (expandArchetype) can resolve its columns/filters against collections: in
   // the JIT page build, the same way authConfigProjection is restored above.
-  if (
-    type.isNone(buildContext.collections) &&
-    type.isString(buildContext.directories?.build)
-  ) {
+  if (type.isNone(buildContext.collections) && type.isString(buildContext.directories?.build)) {
     const collectionsPath = path.join(buildContext.directories.build, 'collections.json');
     try {
       const content = await fs.promises.readFile(collectionsPath, 'utf8');
@@ -155,7 +157,8 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
-  buildContext.jsBodies = [];
+  const buildJsBodies = [];
+  buildContext.jsBodies = buildJsBodies;
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -413,6 +416,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     validateStateSchema({ page: processed, context: buildContext });
     validatePayloadReferences({ page: processed, context: buildContext });
     validateServerStateReferences({ page: processed, context: buildContext });
+    deprecateActionResponseEnvelope({ page: processed, context: buildContext });
     validateActionResponsePaths({ page: processed, endpointConfigs, context: buildContext });
 
     // Collect Tailwind class candidates before _js extraction — jsMapParser
@@ -438,7 +442,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const finalPage = { ...cleanPage, requests: cleanRequests };
     // The page pipeline has no checks step, so the js-lint rule is run directly
     // on the bodies the two jsMapParser calls above queued.
-    jsLint.run({ components: finalPage, context: buildContext });
+    jsLint.run({ components: finalPage, context: buildContext, jsBodies: buildJsBodies });
 
     // Check for collected errors from validation steps
     if (buildErrors.length > 0) {

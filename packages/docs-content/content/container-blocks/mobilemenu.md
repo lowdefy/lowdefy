@@ -843,11 +843,11 @@ Additional content below the menu items.
       blocks:
         - id: mdc_extra
           type: Paragraph
+          style:
+            padding: 16px
+            color: "#999"
           properties:
             content: Additional content below the menu items.
-            style:
-              padding: 16px
-              color: "#999"
 ```
 
 App v2.1.0
@@ -868,13 +868,13 @@ App v2.1.0
       blocks:
         - id: mdf_footer
           type: Paragraph
+          style:
+            textAlign: center
+            margin: 0
+            color: "#aaa"
+            fontSize: 12
           properties:
             content: App v2.1.0
-            style:
-              textAlign: center
-              margin: 0
-              color: "#aaa"
-              fontSize: 12
 ```
 
 **Admin Panel**
@@ -1024,6 +1024,162 @@ Use the navigation menu to manage your application.
 Browse our latest collection across all categories.
 
 **Free shipping** on orders over $50. Use the menu to explore departments.
+
+```yaml
+- id: shop_header
+  type: Box
+  class: bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3
+  layout:
+    direction: row
+    align: center
+    justify: space-between
+  blocks:
+    - id: shop_left
+      type: Box
+      layout:
+        direction: row
+        align: center
+        gap: 12
+        flex: 0 0 auto
+      blocks:
+        - id: shop_nav
+          type: MobileMenu
+          layout:
+            flex: 0 0 auto
+          properties:
+            toggleMenuButton:
+              type: primary
+              ghost: true
+              icon: AiOutlineMenu
+            drawer:
+              title: Shop Categories
+              width: 300
+            theme: light
+            selectedKeys:
+              - sn_clothing
+            links:
+              - id: sn_home
+                type: MenuLink
+                url: /
+                properties:
+                  title: Home
+                  icon: AiOutlineHome
+              - id: sn_divider_top
+                type: MenuDivider
+              - id: sn_clothing
+                type: MenuGroup
+                properties:
+                  title: Clothing
+                  icon: AiOutlineSkin
+                links:
+                  - id: sn_mens
+                    type: MenuLink
+                    properties:
+                      title: Men's Wear
+                  - id: sn_womens
+                    type: MenuLink
+                    properties:
+                      title: Women's Wear
+                  - id: sn_kids
+                    type: MenuLink
+                    properties:
+                      title: Kids
+              - id: sn_electronics
+                type: MenuGroup
+                properties:
+                  title: Electronics
+                  icon: AiOutlineLaptop
+                links:
+                  - id: sn_phones
+                    type: MenuLink
+                    properties:
+                      title: Phones & Tablets
+                  - id: sn_computers
+                    type: MenuLink
+                    properties:
+                      title: Computers
+              - id: sn_divider_bottom
+                type: MenuDivider
+                properties:
+                  dashed: true
+              - id: sn_deals
+                type: MenuLink
+                properties:
+                  title: Today's Deals
+                  icon: AiOutlineThunderbolt
+              - id: sn_orders
+                type: MenuLink
+                pageId: orders
+                properties:
+                  title: My Orders
+                  icon: AiOutlineShoppingCart
+          events:
+            onMenuItemSelect:
+              - id: shop_select_msg
+                type: DisplayMessage
+                params:
+                  content: Loading category...
+                  status: info
+            onToggleDrawer:
+              - id: shop_toggle_state
+                type: SetState
+                params:
+                  menuOpen:
+                    _not:
+                      _state: menuOpen
+        - id: shop_brand
+          type: Markdown
+          layout:
+            flex: 0 0 auto
+          style:
+            .element:
+              color: white
+          properties:
+            content: "**ShopNow**"
+    - id: shop_right
+      type: Box
+      layout:
+        direction: row
+        align: center
+        gap: 8
+        flex: 0 0 auto
+      blocks:
+        - id: shop_search
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineSearch
+            hideTitle: true
+            variant: text
+            ghost: true
+            color: default
+        - id: shop_cart
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineShoppingCart
+            hideTitle: true
+            variant: text
+            ghost: true
+            color: default
+- id: shop_content
+  type: Card
+  properties:
+    title: Featured Products
+    size: small
+  blocks:
+    - id: shop_desc
+      type: Markdown
+      properties:
+        content: >
+          Browse our latest collection across all categories.
+
+
+          **Free shipping** on orders over $50. Use the menu to explore
+          departments.
+```
 
 ```yaml
 - id: shop_header

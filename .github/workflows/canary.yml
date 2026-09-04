@@ -28,12 +28,55 @@ on:
 concurrency: canary
 
 jobs:
+  # The promotion cron string is compared in three places (publish, record-green,
+  # promote). Comparing it inline in each `if` means a schedule change has to be
+  # made in three places and a missed one silently flips a job's meaning, so the
+  # comparison is made once here and the answer is passed down as job outputs.
+  schedule-gate:
+    name: Schedule gate
+    runs-on: ubuntu-latest
+    if: github.repository == 'lowdefy/lowdefy'
+    outputs:
+      publish: ${{ steps.gate.outputs.publish }}
+      promote: ${{ steps.gate.outputs.promote }}
+      nightly: ${{ steps.gate.outputs.nightly }}
+    steps:
+      - name: Decide what this run is
+        id: gate
+        env:
+          PROMOTION_CRON: '15 4 * * 1'
+          SCHEDULE: ${{ github.event.schedule }}
+          PROMOTE_INPUT: ${{ inputs.promote }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          promote=false
+          if [ "$SCHEDULE" = "$PROMOTION_CRON" ] || [ "$PROMOTE_INPUT" = "true" ]; then
+            promote=true
+          fi
+          publish=true
+          if [ "$promote" = "true" ]; then
+            publish=false
+          fi
+          # A green tag is earned by the nightly cron only - a manual dispatch is a
+          # rehearsal and must not feed the weekly promotion.
+          nightly=false
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$SCHEDULE" != "$PROMOTION_CRON" ]; then
+            nightly=true
+          fi
+          {
+            echo "publish=$publish"
+            echo "promote=$promote"
+            echo "nightly=$nightly"
+          } >> "$GITHUB_OUTPUT"
+          echo "publish=$publish promote=$promote nightly=$nightly"
+
   publish-candidate:
     name: Publish candidate
     runs-on: ubuntu-latest
+    needs: schedule-gate
     # Nightly cron and manual dispatch only; the weekly cron (and a manual
     # promote dispatch) promotes, it does not publish.
-    if: github.repository == 'lowdefy/lowdefy' && github.event.schedule != '15 4 * * 1' && inputs.promote != true
+    if: needs.schedule-gate.outputs.publish == 'true'
     environment: publish
     permissions:
       contents: read
@@ -80,7 +123,7 @@ jobs:
 
   canary:
     name: Canary (${{ matrix.app }})
-    needs: publish-candidate
+    needs: [schedule-gate, publish-candidate]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -124,11 +167,35 @@ jobs:
         with:
           node-version: 24
 
+      - name: Config census
+        # The design's corpus metrics (escape-hatch share, files over 80 lines,
+        # comment lines carrying a rule) were hand-run once and went stale. This
+        # runs the committed scan against the app's own config so every release
+        # leaves a dated reading behind. Informational: it never fails the job,
+        # and there is no threshold to trip.
+        continue-on-error: true
+        run: |
+          node scripts/census/census.mjs ${{ matrix.path }} | tee census-${{ matrix.app }}.txt
+          node scripts/census/census.mjs ${{ matrix.path }} --json > census-${{ matrix.app }}.json
+
+      - name: Upload the census
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: census-${{ matrix.app }}
+          path: |
+            census-${{ matrix.app }}.txt
+            census-${{ matrix.app }}.json
+          if-no-files-found: ignore
+
       - name: Install Playwright browser
-        # Pinned to the playwright-core version @lowdefy/server-dev drives
-        # (packages/servers/server-dev/package.json), so the installed browser
-        # revision matches the journey runner.
-        run: npx --yes playwright@1.59.1 install --with-deps chromium
+        # The installed browser revision has to match the playwright-core version
+        # @lowdefy/server-dev drives, so it is read from that package.json rather
+        # than pinned here, where it would drift on the next dependency bump.
+        run: |
+          PLAYWRIGHT_VERSION=$(node -p "require('./packages/servers/server-dev/package.json').dependencies['playwright-core']")
+          echo "Installing Playwright $PLAYWRIGHT_VERSION"
+          npx --yes playwright@"$PLAYWRIGHT_VERSION" install --with-deps chromium
 
       - name: Prepare the app pinned to the candidate
         # The copy lives OUTSIDE the monorepo so the CLI's server install cannot
@@ -175,6 +242,83 @@ jobs:
             echo "No tests/ directory; skipping lowdefy test for ${{ matrix.app }}."
           fi
 
+      - name: Dev server smoke
+        if: matrix.app == 'canary-app'
+        working-directory: ${{ runner.temp }}/canary/${{ matrix.app }}
+        # `lowdefy build`, `check` and `test` all run the build pipeline; none of
+        # them starts the dev server, so every dev-only regression (the
+        # /.well-known probe 404, file watching, the manager lock, snapshot
+        # determinism) has shipped unnoticed. This drives the real `lowdefy dev`
+        # in the prepared app and asserts each of them.
+        run: |
+          fail() {
+            echo "::error::$1"
+            echo '--- lowdefy dev log ---'
+            cat dev-server.log || true
+            exit 1
+          }
+          status() { node -p "require('$PWD/build-status.json').build.$1"; }
+
+          npx --yes lowdefy@"$VERSION" dev --port 3111 --no-open > dev-server.log 2>&1 &
+          DEV_PID=$!
+          trap 'kill "$DEV_PID" 2>/dev/null || true' EXIT
+
+          # The first dev run installs its own server directory before it serves
+          # anything, so readiness gets a far longer budget than the build itself.
+          deadline=$((SECONDS + 600))
+          until curl -sf http://localhost:3111/lowdefy-docs/build-status -o build-status.json; do
+            kill -0 "$DEV_PID" 2>/dev/null || fail "lowdefy dev exited before serving /lowdefy-docs/build-status."
+            [ "$SECONDS" -lt "$deadline" ] || fail "lowdefy dev did not serve /lowdefy-docs/build-status within 600s."
+            sleep 2
+          done
+
+          # `unknown` is what getBuildStatus reports until the build manager has
+          # written build/buildStatus.json; `ok` and `error` are the settled states.
+          deadline=$((SECONDS + 120))
+          while [ "$(status status)" = "unknown" ]; do
+            [ "$SECONDS" -lt "$deadline" ] || fail 'build-status stayed "unknown" for 120s.'
+            sleep 2
+            curl -sf http://localhost:3111/lowdefy-docs/build-status -o build-status.json || true
+          done
+          [ "$(status status)" = "ok" ] || fail "The dev build failed: $(cat build-status.json)"
+
+          # A probe for an unknown well-known path must 404, not be swallowed by the
+          # page router and answered with an app page (regression 7ce7e5f79).
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3111/.well-known/oauth-protected-resource)
+          [ "$CODE" = "404" ] || fail "/.well-known/oauth-protected-resource answered $CODE, expected 404 (regression 7ce7e5f79)."
+
+          # The watcher has to engage on Linux inotify, not only on macOS
+          # (regression cffb0a83a). Every build writes a fresh timestamp.
+          BEFORE=$(status timestamp)
+          touch lib/items.js
+          deadline=$((SECONDS + 30))
+          while [ "$(status timestamp)" = "$BEFORE" ]; do
+            [ "$SECONDS" -lt "$deadline" ] || fail "Touching lib/items.js triggered no rebuild within 30s (regression cffb0a83a)."
+            sleep 2
+            curl -sf http://localhost:3111/lowdefy-docs/build-status -o build-status.json || true
+          done
+
+          # The canary app commits no snapshots, so `snapshot --check` has nothing to
+          # check against. Determinism is the property worth asserting anyway: two
+          # captures of the same app must agree. Screenshots carry rendering noise,
+          # so only dom.html and state.json are compared.
+          npx --yes lowdefy@"$VERSION" snapshot --update > snapshot.log 2>&1 || fail "lowdefy snapshot --update failed: $(cat snapshot.log)"
+          cp -r snapshots snapshots-first || fail 'lowdefy snapshot --update wrote no snapshots/ directory.'
+          npx --yes lowdefy@"$VERSION" snapshot --update >> snapshot.log 2>&1 || fail "The second lowdefy snapshot --update failed: $(cat snapshot.log)"
+          diff -r --exclude=screenshot.png snapshots-first snapshots || fail "snapshot --update is not deterministic: dom.html/state.json changed between two captures."
+
+          # Two managers racing the same build directory wedge the dev server, so the
+          # second one must refuse to start (regression af814a54f).
+          set +e
+          npx --yes lowdefy@"$VERSION" dev --port 3112 --no-open > second-dev.log 2>&1
+          SECOND=$?
+          set -e
+          [ "$SECOND" -ne 0 ] || fail "A second lowdefy dev in the same directory exited 0; the manager lock did not hold (regression af814a54f)."
+          grep -q 'is already running for this app' second-dev.log || fail "The second lowdefy dev failed without the manager-lock message: $(cat second-dev.log)"
+
+          kill "$DEV_PID" 2>/dev/null || true
+          echo 'Dev server smoke passed.'
+
       - name: Upload reports on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -183,11 +327,14 @@ jobs:
           path: |
             ${{ runner.temp }}/canary/${{ matrix.app }}/check-report.json
             ${{ runner.temp }}/canary/${{ matrix.app }}/test-report.log
+            ${{ runner.temp }}/canary/${{ matrix.app }}/dev-server.log
+            ${{ runner.temp }}/canary/${{ matrix.app }}/second-dev.log
+            ${{ runner.temp }}/canary/${{ matrix.app }}/snapshot.log
           if-no-files-found: ignore
 
   record-green:
     name: Record green candidate
-    needs: [publish-candidate, canary]
+    needs: [schedule-gate, publish-candidate, canary]
     runs-on: ubuntu-latest
     # Nightly cron only: a passing nightly candidate earns a green tag. A manual
     # dispatch is a rehearsal and must not feed the weekly promotion.
@@ -196,9 +343,7 @@ jobs:
     # also true when a needed job was skipped, which would tag a candidate that was
     # never published or never canaried.
     if: >-
-      github.repository == 'lowdefy/lowdefy'
-      && github.event_name == 'schedule'
-      && github.event.schedule != '15 4 * * 1'
+      needs.schedule-gate.outputs.nightly == 'true'
       && needs.publish-candidate.result == 'success'
       && needs.canary.result == 'success'
     permissions:
@@ -221,8 +366,9 @@ jobs:
   promote:
     name: Promote known-good
     runs-on: ubuntu-latest
+    needs: schedule-gate
     # Weekly cron, or a manual dispatch with promote: true.
-    if: github.repository == 'lowdefy/lowdefy' && (github.event.schedule == '15 4 * * 1' || inputs.promote == true)
+    if: needs.schedule-gate.outputs.promote == 'true'
     environment: publish
     permissions:
       contents: write

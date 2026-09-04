@@ -1,0 +1,13 @@
+{
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["rowId"],
+    "properties": {
+      "rowId": {
+        "type": "string",
+        "description": "The id of the row to copy."
+      }
+    }
+  }
+}

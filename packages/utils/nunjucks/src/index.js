@@ -16,6 +16,7 @@
 
 import nunjucks from 'nunjucks';
 import { LRUCache, type } from '@lowdefy/helpers';
+import createRenderFunction from './createRenderFunction.js';
 import dateFilter from './dateFilter.js';
 import uniqueFilter from './uniqueFilter.js';
 import urlQueryFilter from './urlQueryFilter.js';
@@ -55,26 +56,10 @@ export const validNunjucksString = (templateString, returnError = false) => {
 
 // fast
 // Compiles a nunjucks string only once per distinct source, bounded by an LRU cache.
-export const nunjucksFunction = (templateString) => {
-  // Non-string templates render as themselves. Nothing to compile, so nothing to cache - and
-  // caching them would key every object argument to the same "[object Object]" slot.
-  if (!type.isString(templateString)) return () => templateString;
-
-  const cached = nunjucksTemplates.get(templateString);
-  if (cached) return cached;
-
-  const template = nunjucks.compile(templateString, nunjucksEnv);
-  // Execute once to surface template errors at compile time.
-  template.render({});
-  const render = (value) => {
-    if (type.isPrimitive(value)) {
-      return template.render({ value });
-    }
-    return template.render(value);
-  };
-  nunjucksTemplates.set(templateString, render);
-  return render;
-};
+export const nunjucksFunction = createRenderFunction({
+  environment: nunjucksEnv,
+  cache: nunjucksTemplates,
+});
 
 // Templates for the Template block: autoescaped, with the {% slot %} tag registered. Kept apart
 // from nunjucksEnv so the extension never changes how the rest of Lowdefy renders strings.
@@ -82,21 +67,9 @@ const templateEnv = createEnvironment({ autoescape: true });
 templateEnv.addExtension('SlotExtension', new SlotExtension());
 
 const compiledTemplates = new LRUCache({ maxSize: 500 });
-export const createTemplateFunction = (templateString) => {
-  if (!type.isString(templateString)) return () => templateString;
+export const createTemplateFunction = createRenderFunction({
+  environment: templateEnv,
+  cache: compiledTemplates,
+});
 
-  const cached = compiledTemplates.get(templateString);
-  if (cached) return cached;
-
-  const template = nunjucks.compile(templateString, templateEnv);
-  // Execute once to surface template errors at compile time.
-  template.render({});
-  const render = (value) => {
-    if (type.isPrimitive(value)) {
-      return template.render({ value });
-    }
-    return template.render(value);
-  };
-  compiledTemplates.set(templateString, render);
-  return render;
-};
+export { createRenderFunction };

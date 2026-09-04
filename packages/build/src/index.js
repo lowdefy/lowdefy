@@ -17,11 +17,18 @@
 */
 
 import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { moduleLockfileName, readModuleLockfile, writeModuleLockfile } from '@lowdefy/node-utils';
 
 import check from './check.js';
+import checkAgainst from './check/checkAgainst.js';
+import collectAppIds from './check/collectAppIds.js';
 import runChecks from './checks/index.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import addFilePluginTypes from './build/filePlugins/addFilePluginTypes.js';
+import copyFilePlugins from './build/filePlugins/copyFilePlugins.js';
+import discoverFilePlugins from './build/filePlugins/discoverFilePlugins.js';
+import loadFilePluginBlockSchemas from './build/filePlugins/loadFilePluginBlockSchemas.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
 import serializeBuildException from './utils/serializeBuildException.js';
@@ -75,6 +82,7 @@ import writeConnections from './build/writeConnections.js';
 import writeApi from './build/writeApi.js';
 import writeMigrations from './build/buildMigrations/writeMigrations.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeJourneyCoverage from './build/writeJourneyCoverage.js';
 import writeMcp from './build/writeMcp.js';
 import writeWebsockets from './build/writeWebsockets.js';
 import codegenI18nLocales from './build/codegenI18nLocales.js';
@@ -85,6 +93,7 @@ import writeJs from './build/buildJs/writeJs.js';
 import writeLogger from './build/writeLogger.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
+import writeMonitors from './build/buildMonitors/writeMonitors.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
@@ -137,12 +146,6 @@ async function build(options) {
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
-
-    // Phase 3.1: Extract runtime component definitions into context.componentDefs
-    // before operator precompute/validation runs, so component bodies (which
-    // carry _prop and _slot markers) never reach the unknown-operator or
-    // precompute passes. Expansion re-inserts them per use site in buildBlock.
-    tryBuildStep(buildComponents, 'buildComponents', { components, context });
 
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after
@@ -198,6 +201,17 @@ async function build(options) {
     });
     // Block schemas must be in context before any block is built (validateBlockProperties).
     await loadBlockSchemas({ components, context });
+    tryBuildStep(loadFilePluginBlockSchemas, 'loadFilePluginBlockSchemas', {
+      components,
+      context,
+    });
+    // Extract runtime component definitions into context.componentDefs. The
+    // definitions stay in the config tree until here so precompute folds build
+    // operators in component bodies and testSchema validates the definitions
+    // (_prop/_slot survive precompute as registered dynamic identifiers), and
+    // so the block-type collision check reads a populated context.blockMetas.
+    // Expansion re-inserts a body per use site in buildBlock.
+    tryBuildStep(buildComponents, 'buildComponents', { components, context });
     tryBuildStep(buildPages, 'buildPages', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -241,12 +255,14 @@ async function build(options) {
     await writeNotifications({ components, context });
     await writeRequests({ components, context });
     await writePages({ components, context });
+    await writeJourneyCoverage({ components, context });
     await writeConfig({ components, context });
     await writeGlobal({ components, context });
     await writeTheme({ components, context });
     await writeI18n({ components, context });
     await codegenI18nLocales({ components, context });
     await writeLogger({ components, context });
+    await writeMonitors({ components, context });
     await writeMaps({ components, context });
     await writeMenus({ components, context });
     await writeTypes({ components, context });
@@ -256,6 +272,7 @@ async function build(options) {
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
     await copyJsModules({ context });
+    await copyFilePlugins({ context });
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;
@@ -274,6 +291,18 @@ async function build(options) {
   }
 }
 
-export { check, createPluginTypesMap };
+// The CLI's "modules update" command reads and rewrites the same lockfile the
+// build owns, and must do it by exactly the same rules.
+export {
+  addFilePluginTypes,
+  check,
+  checkAgainst,
+  collectAppIds,
+  createPluginTypesMap,
+  discoverFilePlugins,
+  moduleLockfileName,
+  readModuleLockfile,
+  writeModuleLockfile,
+};
 
 export default build;

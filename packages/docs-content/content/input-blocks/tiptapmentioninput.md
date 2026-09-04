@@ -169,6 +169,33 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+- id: tiptap_mention_default
+  type: TiptapMentionInput
+  properties:
+    title: Ticket note
+    placeholder: Type @ to mention someone.
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+            name: Alice
+        - label: Bob
+          value:
+            _id: user_2
+            name: Bob
+        - label: Carol
+          value:
+            _id: user_3
+            name: Carol
+```
+
+```yaml
+tiptap_mention_default:
+  _state: tiptap_mention_default
+```
+
+```yaml
 - id: tiptap_mention_prepopulated
   type: TiptapMentionInput
   events:
@@ -194,6 +221,36 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+- id: tiptap_mention_prepopulated
+  type: TiptapMentionInput
+  events:
+    onMount:
+      - id: tiptap_mention_prepopulated_set
+        type: SetState
+        params:
+          tiptap_mention_prepopulated:
+            html: >
+              <p>Thanks <span class="tiptap-mention">@Alice</span> for the
+              review. Assigning follow-up to <span
+              class="tiptap-mention">@Bob</span>.</p>
+  properties:
+    title: Ticket summary
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+        - label: Bob
+          value:
+            _id: user_2
+```
+
+```yaml
+tiptap_mention_prepopulated:
+  _state: tiptap_mention_prepopulated
+```
+
+```yaml
 - id: tiptap_mention_hashtags
   type: TiptapMentionInput
   properties:
@@ -212,6 +269,32 @@ A mixed `options` array — people alongside group options carrying `tag.section
         - label: needs-triage
           value:
             _id: tag_triage
+```
+
+```yaml
+- id: tiptap_mention_hashtags
+  type: TiptapMentionInput
+  properties:
+    title: Tag the ticket
+    placeholder: "Type # to add a tag."
+    mentions:
+      char: "#"
+      allowSpaces: false
+      options:
+        - label: bug
+          value:
+            _id: tag_bug
+        - label: feature
+          value:
+            _id: tag_feature
+        - label: needs-triage
+          value:
+            _id: tag_triage
+```
+
+```yaml
+tiptap_mention_hashtags:
+  _state: tiptap_mention_hashtags
 ```
 
 ```yaml
@@ -236,6 +319,32 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+- id: tiptap_mention_links
+  type: TiptapMentionInput
+  properties:
+    title: Link mentions to profile pages
+    placeholder: Type @ — selections render as <a>.
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+        - label: Bob
+          value:
+            _id: user_2
+      getHref:
+        _function:
+          __string.concat:
+            - /users/
+            - __args: 0.value._id
+```
+
+```yaml
+tiptap_mention_links:
+  _state: tiptap_mention_links
+```
+
+```yaml
 - id: tiptap_mention_autosize
   type: TiptapMentionInput
   properties:
@@ -252,6 +361,30 @@ A mixed `options` array — people alongside group options carrying `tag.section
         - label: Bob
           value:
             _id: user_2
+```
+
+```yaml
+- id: tiptap_mention_autosize
+  type: TiptapMentionInput
+  properties:
+    title: Grows between 2 and 5 rows
+    placeholder: Type @ to mention. Scrolls past 5 rows.
+    autoSize:
+      minRows: 2
+      maxRows: 5
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+        - label: Bob
+          value:
+            _id: user_2
+```
+
+```yaml
+tiptap_mention_autosize:
+  _state: tiptap_mention_autosize
 ```
 
 ```yaml
@@ -291,6 +424,49 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+- id: tiptap_mention_validation
+  type: TiptapMentionInput
+  required: true
+  properties:
+    title: Mention a teammate (required)
+    placeholder: Type @ and pick someone, then click Validate.
+    rows: 3
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+        - label: Bob
+          value:
+            _id: user_2
+  validate:
+    - status: error
+      message: Please mention at least one teammate.
+      pass:
+        _gt:
+          - _string.length:
+              _state: tiptap_mention_validation.text
+          - 0
+- id: tiptap_mention_validation_button
+  type: Button
+  properties:
+    title: Validate
+  events:
+    onClick:
+      - id: tiptap_mention_validation_run
+        type: Validate
+        params:
+          - tiptap_mention_validation
+```
+
+```yaml
+tiptap_mention_validation:
+  _state: tiptap_mention_validation
+tiptap_mention_validation_button:
+  _state: tiptap_mention_validation_button
+```
+
+```yaml
 - id: tiptap_mention_disabled
   type: TiptapMentionInput
   events:
@@ -304,6 +480,11 @@ A mixed `options` array — people alongside group options carrying `tag.section
   properties:
     title: Read only
     disabled: true
+```
+
+```yaml
+tiptap_mention_disabled:
+  _state: tiptap_mention_disabled
 ```
 
 ```yaml
@@ -345,6 +526,52 @@ A mixed `options` array — people alongside group options carrying `tag.section
             _id: role_devs
           tag:
             section: Roles
+```
+
+```yaml
+- id: tiptap_mention_sectioned
+  type: TiptapMentionInput
+  properties:
+    title: Mention people or roles
+    placeholder: Type @ — options are grouped, each section capped at 3.
+    mentions:
+      limit: 3
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+          tag:
+            section: People
+        - label: Bob
+          value:
+            _id: user_2
+          tag:
+            section: People
+        - label: Carol
+          value:
+            _id: user_3
+          tag:
+            section: People
+        - label: Dave
+          value:
+            _id: user_4
+          tag:
+            section: People
+        - label: Finance
+          value:
+            _id: role_finance
+          tag:
+            section: Roles
+        - label: Developers
+          value:
+            _id: role_devs
+          tag:
+            section: Roles
+```
+
+```yaml
+tiptap_mention_sectioned:
+  _state: tiptap_mention_sectioned
 ```
 
 ```yaml
@@ -398,6 +625,61 @@ A mixed `options` array — people alongside group options carrying `tag.section
 ```
 
 ```yaml
+- id: tiptap_mention_groups
+  type: TiptapMentionInput
+  properties:
+    title: Mention people or groups
+    placeholder: Type @ — groups render as coloured chips, people as links.
+    mentions:
+      groupMembers:
+        finance:
+          - name: Jane Doe
+            email: jane@example.com
+          - name: John Smith
+            email: john@example.com
+        devs:
+          - name: Ada Lovelace
+            email: ada@example.com
+          - name: Alan Turing
+            email: alan@example.com
+      getHref:
+        _function:
+          __args: 0.value.href
+      options:
+        - label: Alice
+          value:
+            name: Alice
+            href: /contacts?_id=user_1
+          tag:
+            section: People
+        - label: Bob
+          value:
+            name: Bob
+            href: /contacts?_id=user_2
+          tag:
+            section: People
+        - label: Finance
+          value:
+            role: finance-admin
+          tag:
+            section: Roles
+            group: finance
+            color: "#722ed1"
+        - label: Developers
+          value:
+            role: developer
+          tag:
+            section: Roles
+            group: devs
+            color: "#13c2c2"
+```
+
+```yaml
+tiptap_mention_groups:
+  _state: tiptap_mention_groups
+```
+
+```yaml
 - id: tiptap_mention_minimal
   type: TiptapMentionInput
   properties:
@@ -417,6 +699,33 @@ A mixed `options` array — people alongside group options carrying `tag.section
         - label: Bob
           value:
             _id: user_2
+```
+
+```yaml
+- id: tiptap_mention_minimal
+  type: TiptapMentionInput
+  properties:
+    title: Chat-style
+    placeholder: Type @ to mention.
+    image:
+      disabled: true
+    table:
+      disabled: true
+    highlight:
+      disabled: true
+    mentions:
+      options:
+        - label: Alice
+          value:
+            _id: user_1
+        - label: Bob
+          value:
+            _id: user_2
+```
+
+```yaml
+tiptap_mention_minimal:
+  _state: tiptap_mention_minimal
 ```
 
 | Property | Type | Default | Description |

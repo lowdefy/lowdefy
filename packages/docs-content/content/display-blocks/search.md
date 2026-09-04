@@ -178,6 +178,102 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 ```
 
 ```yaml
+- id: example_search_prebuilt
+  type: Search
+  properties:
+    indexUrl: /search-index.json
+    placeholder: Search pages...
+    result:
+      title: title
+      description: snippet
+      category: section
+      pageId: pageId
+    groups:
+      - label: Concepts
+        match:
+          section: Concepts
+        icon: AiOutlineBulb
+      - label: Blocks
+        match:
+          section: Blocks
+        icon: AiOutlineLayout
+  events:
+    onSelect:
+      - id: navigate
+        type: Link
+        params:
+          pageId:
+            _event: pageId
+```
+
+```yaml
+- id: example_search_runtime
+  type: Search
+  properties:
+    documents:
+      - id: users
+        title: User Management
+        body: Create, edit, and deactivate user accounts. Assign roles and permissions.
+        category: Admin
+      - id: billing
+        title: Billing & Invoices
+        body: View invoices, update payment methods, and download receipts.
+        category: Finance
+      - id: reports
+        title: Analytics Reports
+        body: Dashboard with charts for revenue, signups, and engagement metrics.
+        category: Analytics
+      - id: settings
+        title: App Settings
+        body: Configure notifications, theme, language, and integration API keys.
+        category: Admin
+      - id: api-keys
+        title: API Keys
+        body: Generate and revoke API keys for third-party integrations.
+        category: Admin
+    fields:
+      - title
+      - body
+    storeFields:
+      - title
+      - category
+      - id
+    searchOptions:
+      boost:
+        title: 2
+      fuzzy: 0.2
+    result:
+      title: title
+      description: body
+      category: category
+    groups:
+      - label: Admin
+        match:
+          category: Admin
+        icon: AiOutlineSetting
+      - label: Finance
+        match:
+          category: Finance
+        icon: AiOutlineDollar
+      - label: Analytics
+        match:
+          category: Analytics
+        icon: AiOutlineBarChart
+    placeholder: Search features...
+    label: Find
+    shortcut: mod+k
+  events:
+    onSelect:
+      - id: show_result
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Selected: "
+              - _event: title
+```
+
+```yaml
 - id: example_search_runtime
   type: Search
   properties:
@@ -262,6 +358,58 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 ```
 
 ```yaml
+- id: example_search_custom_shortcut
+  type: Search
+  properties:
+    indexUrl: /search-index.json
+    shortcut: mod+j
+    label: Quick Find
+    placeholder: Quick find...
+  events:
+    onSelect:
+      - id: navigate
+        type: Link
+        params:
+          pageId:
+            _event: pageId
+```
+
+```yaml
+- id: example_search_analytics
+  type: Search
+  properties:
+    indexUrl: /search-index.json
+  events:
+    onSearch:
+      - id: track_search
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - 'Search: "'
+              - _event: value
+              - '" ('
+              - _event: resultCount
+              - " results)"
+    onSelect:
+      - id: track_click
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - Clicked "
+              - _event: title
+              - '" for query "'
+              - _event: query
+              - '"'
+      - id: navigate
+        type: Link
+        params:
+          pageId:
+            _event: pageId
+```
+
+```yaml
 - id: example_search_analytics
   type: Search
   properties:
@@ -308,7 +456,6 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `searchOptions.prefix` | boolean | `true` | Enable prefix matching. |
 | `searchOptions.combineWith` | string | `"OR"` | How to combine search terms. Enum: `OR`, `AND`. |
 | `label` | string | `"Search"` | Trigger button text. |
-| `icon` | string \| object | - | Trigger button icon name or Icon block properties. |
 | `showShortcut` | boolean | `true` | Show keyboard shortcut badge on the trigger button. |
 | `placeholder` | string | `"Search..."` | Search input placeholder text. |
 | `shortcut` | string | `"mod+k"` | Keyboard shortcut to open the modal. Renders a shortcut badge on the trigger button (see showShortcut). Use "mod" for Cmd on Mac, Ctrl elsewhere. |
@@ -334,8 +481,8 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ query, resultCount }` | Trigger actions when a search result is selected. Result item stored fields are spread into the event object. |
-| `onSearch` | `{ value, resultCount }` | Trigger actions when the search query changes. |
+| `onSelect` | `{ query: string, resultCount: integer }` | Trigger actions when a search result is selected. Result item stored fields are spread into the event object. |
+| `onSearch` | `{ value: string, resultCount: integer }` | Trigger actions when the search query changes. |
 | `onOpen` | \- | Trigger actions when the search modal opens. |
 | `onClose` | \- | Trigger actions when the search modal closes. |
 

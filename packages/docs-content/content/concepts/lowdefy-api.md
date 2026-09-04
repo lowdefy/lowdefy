@@ -1,0 +1,1072 @@
+# Lowdefy APIs
+
+Lowdefy APIs allow you to create custom server-side API endpoints within your Lowdefy application. These endpoints can execute complex server-side logic, orchestrate multiple database or external API calls, perform data transformations, and implement business workflows that require server-side processing.
+
+APIs are particularly useful when you need to:
+
+- Coordinate multiple requests in a specific sequence.
+- Implement complex business logic that should run on the server.
+- Transform or aggregate data from multiple sources.
+- Create reusable endpoints that can be called from multiple pages.
+- Build webhook endpoints for external services.
+- Keep sensitive operations and data on the server.
+
+## How Lowdefy APIs Work
+
+Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a `routine` i.e. a sequence of steps and control structures that define the execution flow. When an API endpoint is called from the client using the [`CallAPI`](/CallAPI) action, the routine executes on the server with access to connections, secrets, and server-side operators.
+
+The API execution flow:
+
+1. Client calls the API endpoint using the [`CallAPI`](/CallAPI) action with an optional payload.
+2. Server checks authorization based on the auth configuration in `lowdefy.yaml`.
+3. The endpoint routine executes sequentially (or in parallel where specified).
+4. Each step can make requests to connections, transform data, or control flow.
+5. The endpoint returns a response to the client.
+
+## API Endpoint Definition
+
+API endpoints are defined in the `api` array at the root of your Lowdefy configuration. Each endpoint should have an `id` that is unique among all API endpoints in the app. The `endpointId` is used by the [`CallAPI`](/CallAPI) action to specify which endpoint to execute.
+
+The schema for a Lowdefy API is:
+
+- `id: string`: **Required** - A unique identifier for the API endpoint.
+- `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
+- `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
+- `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
+- `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
+- `responseSchema: object`: **Optional** - A JSON Schema describing the value the routine's `:return` produces. Declaring it turns on build-time checks of every `_actions` and `_step` read of the response, dev-time notices when the real response misses it, and publishes it as the MCP tool's `outputSchema`. See [Response Schema](#response-schema).
+- `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
+- `runAs: object`: **Optional** - `{ organizationId }`: run the routine scoped to that organization under the `tenant` organizations policy. The tenant wall filters and stamps as if a member of that organization made the call, so caller-less runs (schedules, detached calls, webhooks) stay walled instead of needing `tenant: none`. `organizationId` may be a literal or an operator (`_step`, `_user`, `_secret`, ...) but never `_payload` or `_state`. Steps accept the same key. See [Running as an organization](/organizations#running-a-routine-as-an-organization-runas).
+- `schedules: array`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object.
+
+###### API definition example:
+
+```yaml
+lowdefy: '5.5.1'
+
+connections:
+  - id: users
+    type: MongoDBCollection
+    properties:
+      collection: users
+      databaseUri:
+        _secret: MONGODB_URI
+
+api:
+  - id: get_user_data
+    type: Api
+    routine:
+      - id: fetch_user
+        type: MongoDBFindOne
+        connectionId: users
+        properties:
+          query:
+            user_id:
+              _payload: user_id
+      - :return:
+          _step: fetch_user
+
+pages:
+  # ... your pages
+```
+
+## Authentication and Authorization
+
+Lowdefy APIs use the same [authorization configuration](/protected-pages-apis) as pages. By default, API endpoints are public (accessible without authentication), just like pages. Authorization is configured in the `auth.api` section of the `lowdefy.yaml` file.
+
+Unlike requests which are defined on a specific page and inherit the authorization of the page they are defined on, API endpoints can be called from any page in the app. Thus they do not inherit the authorization of the page they are called from, and authorization should be configured separately.
+
+```yaml
+lowdefy: '5.5.1'
+
+auth:
+  # Configure which APIs require authentication
+  api:
+    protected: true
+    public:
+      - health_check
+    roles:
+      admin:
+        - admin_api
+        - manage_users
+      manager:
+        - manager_reports
+        - team_data
+
+api:
+  # Your API definitions
+  # ...
+```
+
+## Scheduled Endpoints (Cron)
+
+An endpoint can declare `schedules` to run its routine on a timer instead of (or in addition to) being called from the client. This is currently supported on [Vercel deployments](/deployment-vercel), where each schedule becomes a native Vercel cron job.
+
+```yaml
+api:
+  - id: purge_stale_conversations
+    type: Api
+    schedules:
+      - cron: '0 6 * * *'
+        payload: { mode: full }
+      - cron: '*/15 * * * *'
+        payload: { mode: incremental }
+    routine:
+      - id: purge
+        type: MongoDBDeleteMany
+        connectionId: conversations
+        properties:
+          filter:
+            updatedAt:
+              $lt:
+                _payload: cutoff
+```
+
+Each schedule item has:
+
+- `cron: string`: **Required** - A 5-field cron expression (`minute hour day-of-month month day-of-week`), evaluated in **UTC**. Named values like `MON`/`JAN` are not supported, and day-of-month and day-of-week are mutually exclusive (one must be `*`). Cron expressions must be unique within an endpoint.
+- `payload: object`: **Optional** - The payload passed to the routine for this schedule, available via the `_payload` operator. Different schedules can pass different payloads to the same routine.
+
+When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
+
+See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
+
+## Payload Schema
+
+An endpoint can declare a `payloadSchema` — a [JSON Schema](https://json-schema.org/) describing the payload it accepts. A declared schema is a contract, not documentation: **every** payload is validated against it before the routine starts, whatever the caller is — the [`CallAPI`](/CallAPI) action from a page, an MCP `tools/call`, an [agent tool call](/ai-agent-docs), a nested `CallApi` from another endpoint, or a scheduled run's `schedule.payload`. Every `_payload` read in the routine can then rely on the shape.
+
+```yaml
+api:
+  - id: create_order
+    type: Api
+    payloadSchema:
+      type: object
+      required: [sku, quantity]
+      properties:
+        sku: { type: string }
+        quantity: { type: number, minimum: 1 }
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: orders
+        properties:
+          doc:
+            sku:
+              _payload: sku
+            quantity:
+              _payload: quantity
+```
+
+A payload that does not match is refused before the routine runs, with a message naming the endpoint, the failing location and the reason, for example:
+
+```
+Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.
+```
+
+- A REST call (`POST /api/endpoints/<endpointId>`) answers `400` with `{ name: 'UserError', message }`.
+- An MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
+- An agent tool call surfaces the message to the model as a tool error.
+- A scheduled run fails with the message — an authored `schedule.payload` that breaks its own endpoint's contract is a bug, not something to skip silently.
+
+A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
+
+There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
+
+## Response Schema
+
+An endpoint can declare a `responseSchema` — a [JSON Schema](https://json-schema.org/) describing what its routine's `:return` produces. It is the output half of the endpoint's contract, the counterpart of `payloadSchema`:
+
+```yaml
+api:
+  - id: search_controls
+    type: Api
+    payloadSchema:
+      type: object
+      properties:
+        query: { type: string }
+    responseSchema:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              title: { type: string }
+        total: { type: integer }
+      required: [results, total]
+    routine:
+      # ...
+      ':return':
+        results:
+          _step: find.results
+        total:
+          _step: count.total
+```
+
+Declaring it does three things:
+
+- **Build checks.** Every read of the endpoint's response is resolved against the schema at build. On a page, a [`CallAPI`](/CallAPI) action's result is stored as an action record whose `response` is the endpoint's `:return` value — so the endpoint result sits at `_actions.<actionId>.response.<path>`, and that is the path the build checks. In a routine, a `CallApi` step stores the `:return` value directly, so the checked path is `_step.<stepId>.<path>`. A path the schema does not declare is a build error (`response-schema` check slug) that names the declared keys and the nearest match. Action-record fields beside the response — `_actions.<actionId>.type`, `index`, `error` — are not the endpoint's and are never checked; the call's `status`, `success` and `responseTime` are read with [`_api`](/_api). Before v8 the endpoint result sat one level deeper, at `_actions.<actionId>.response.response.<path>`; the build rewrites that spelling with a warning (`actions-response-envelope`) and it is removed in v9. A `CallAPI` action whose `endpointId` is an operator is skipped: nothing to resolve at build.
+
+  ```yaml
+  events:
+    onClick:
+      - id: search
+        type: CallAPI
+        params:
+          endpointId: search_controls
+          payload:
+            query:
+              _state: q
+      - id: store
+        type: SetState
+        params:
+          results:
+            _actions: search.response.results # checked
+          total:
+            _actions: search.response.totl # build error: Did you mean "total"?
+          ok:
+            _actions: search.response.success # action record, untouched
+  ```
+
+- **Notices.** The real `:return` value of every call — an HTTP `CallAPI`, an MCP tool call or a nested `CallApi` step — is validated against the schema. A mismatch is never a failure: the response is still returned, because an endpoint whose data has drifted is the app changing, not a config fault to turn into a 500. Only the channel differs by stage. In development it is a `ResponseSchemaWarning` in `build_status` and the ErrorBar, with the endpoint's config location and the failing path. In production it is one `logger.warn` line per endpoint per process — enough to know a contract callers were built against has stopped holding, without a line per request for a condition that does not change between requests.
+
+- **MCP.** An endpoint exposed as an [MCP tool](/mcp) publishes its `responseSchema` as the tool's `outputSchema`, and the tool's result carries `structuredContent` beside the text content when the response is a JSON object, so an MCP client can rely on the shape.
+
+Both `payloadSchema` and `responseSchema` are compiled at build, so a schema that is not valid JSON Schema is a build error naming the endpoint.
+
+### Schemas describe the serialized shape
+
+Every schema surface in Lowdefy — `payloadSchema`, `responseSchema`, a page's `state:`, a block's `meta.properties`, a block event's `payload` and a [collection's `fields`](/collections) — describes the **JSON shape** of the value, the shape a caller actually receives, not the in-process object. A date is therefore `{ type: string, format: date-time }` everywhere, and both checks render a live `Date` as its ISO string before validating. One schema is then truthful in all three places it is used: the build-time path check, the runtime notice, and the MCP `outputSchema` an agent reads.
+
+## Async Endpoints
+
+An endpoint with `async: true` responds with `{ accepted: true }` immediately and runs its routine in the background. The caller does not wait for the routine to finish — the same way `async: true` [actions](/events-and-actions) do not block the rest of an action chain.
+
+```yaml
+api:
+  - id: rebuild_search_index
+    type: Api
+    async: true
+    routine:
+      # long-running work ...
+```
+
+- Authorization is checked **before** the call is accepted — an unauthorized caller gets an error, not `{ accepted: true }`.
+- The routine's result never reaches the caller. Completion or failure is written to the server logs; anything else the caller needs to see must be written by the routine itself (for example a status document in a database).
+- `async: true` also applies to scheduled runs — the cron trigger is acknowledged immediately and the routine runs in the background.
+- On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/deployment-vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
+
+## Webhook Endpoints
+
+An endpoint with `webhook: true` is a receiver for third-party webhooks (AWS SNS, Azure Event Grid, Stripe, GitHub, ...). It is served on the same `POST /api/endpoints/<endpointId>` URL as every other endpoint, but the request is handled raw:
+
+- The routine's `payload` is `{ body, query, headers }` — the caller's own body format (parsed as JSON when possible, the raw string otherwise; content-type is ignored since services like SNS post JSON as `text/plain`), plus the URL query parameters and request headers.
+- The routine's `:return` value is sent back **verbatim** as the response body — webhook handshakes like Event Grid's `{ validationResponse }` require exact response shapes, so no `{ error, response, status }` envelope is applied.
+- The routine runs as a system context (no user session; `_user` resolves to undefined), and the endpoint's `auth` config is not applied — **authenticating the caller is the routine's own first step**, typically a shared-secret query parameter (`?t=<token>`) compared against a stored value, or a signature header. Because the session check never applies, a webhook endpoint must resolve to public under `auth.api` — the build fails if it is protected by `auth.api.protected` or roles; list it in `auth.api.public` (or remove the flag) to make the intent explicit.
+
+```yaml
+id: stripe-webhook
+type: Api
+webhook: true
+routine:
+  - :if:
+      _ne:
+        - _payload: query.t
+        - _secret: STRIPE_WEBHOOK_TOKEN
+    :then:
+      - :return:
+          error: unauthorized
+  - id: handle_event
+    type: MongoDBInsertOne
+    connectionId: stripe_events
+    properties:
+      doc:
+        _payload: body
+  - :return:
+      received: true
+```
+
+:::warning
+A `webhook: true` endpoint is publicly reachable by design — never declare it on an endpoint that does not authenticate its caller inside the routine.
+:::
+
+Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.
+
+## Routines
+
+Routines define the execution logic of your API endpoint. Routines are defined as a nested combination of routines (subroutines). A routine can be one of:
+
+- **Request**: A Lowdefy request definition.
+- **Control**: A control structure, which often contain nested subroutines.
+- **Array of Subroutines**: An array of subroutines to execute sequentially.
+
+### Requests
+
+[Requests and connections](/connections-and-requests) can be used in API endpoints. Requests use the same connections defined in the `connections` section of the `lowdefy.yaml` file.
+
+The `payload` property should not be defined for requests used in an API endpoint, the payload is specified by the [CallAPI](/CallAPI) action.
+
+A single request definition is a valid routine definition.
+
+```yaml
+id: log_message
+type: Api
+routine:
+  id: insert_log_message
+  type: MongoDBInsertOne
+  connectionId: logs
+  properties:
+    message:
+      _payload: message
+    doc:
+      timestamp:
+        _date: now
+```
+
+### Arrays of Subroutines
+
+Subroutines in an array execute one after another:
+
+```yaml
+id: my_endpoint
+type: Api
+routine:
+  - id: step_1
+    type: MongoDBFindOne
+    connectionId: users
+    properties:
+      query:
+        _id:
+          _payload: user_id
+
+  - id: step_2
+    type: MongoDBInsertOne
+    connectionId: audit-log
+    properties:
+      doc:
+        user_id:
+          _step: step_1._id
+        action: 'user_viewed'
+        timestamp:
+          _date: now
+
+  - :return:
+      user:
+        _step: step_1
+      logged: true
+```
+
+Arrays can also be nested. This is useful when referencing shared subroutines that might be an array
+
+```yaml
+# my_endpoint.yaml
+id: my_endpoint
+type: Api
+routine:
+  - _ref: shared_routine.yaml
+  - :return:
+      user:
+        _step: step_1
+      logged: true
+```
+
+```yaml
+# shared_routine.yaml
+- id: step_1
+  type: MongoDBFindOne
+  connectionId: users
+  properties:
+    query:
+      _id:
+        _payload: user_id
+
+- id: step_2
+  type: MongoDBInsertOne
+  connectionId: audit-log
+  properties:
+    doc:
+      user_id:
+        _step: step_1._id
+      action: 'user_viewed'
+      timestamp:
+        _date: now
+```
+
+### Control Structures
+
+Control structures allow you to implement complex logic flows within your API routines. The following controls can be used in API routines:
+
+- [`:for`](/for) - Iterate over an array sequentially.
+- [`:if`](/if) - Execute different routines based on a condition.
+- [`:log`](/log) - Output messages to the server console.
+- [`:parallel`](/parallel) - Execute multiple routines simultaneously.
+- [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
+- [`:reject`](/reject) - Return a user-facing error response. Not caught by [`:try`](/try)/`:catch` — it flows past every enclosing `:catch`, though `:finally` still runs.
+- [`:return`](/return) - Return a successful response with data.
+- [`:set_state`](/set_state) - Set values in server-side state.
+- [`:switch`](/switch) - Handle multiple conditions with different outcomes.
+- [`:throw`](/throw) - Throw a system error that can be caught.
+- [`:try`](/try) - Handle errors with catch and finally blocks.
+
+## Calling Other Endpoints
+
+API endpoints can call other endpoints server-side using `CallApi` steps. This enables you to compose complex workflows from smaller, reusable endpoints without HTTP overhead.
+
+A `CallApi` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: CallApi`: **Required** - Identifies this as an endpoint call step.
+- `properties.endpointId: string`: **Required** - The id of the target endpoint. **Operators are evaluated**.
+- `properties.payload: object`: Optional payload to pass to the target endpoint. **Operators are evaluated**.
+- `properties.detached: boolean`: Optional - Fire-and-forget: dispatch the call and continue immediately, running the target in a separate server invocation. See [Detached Endpoint Calls](#detached-endpoint-calls).
+
+The called endpoint runs in an isolated context — it has its own `_step` results and `_payload`. Its internal step results do not appear in the calling endpoint's `_step` namespace. Only the value returned by the called endpoint's `:return` is stored as the step result.
+
+```yaml
+api:
+  - id: process_order
+    type: Api
+    routine:
+      - id: validate
+        type: MongoDBFindOne
+        connectionId: orders
+        properties:
+          query:
+            _id:
+              _payload: order_id
+
+      - id: send_notification
+        type: CallApi
+        properties:
+          endpointId: send_email
+          payload:
+            to:
+              _step: validate.customer_email
+            subject: 'Order received'
+
+      - :return:
+          order:
+            _step: validate
+          email_sent:
+            _step: send_notification # Contains the :return value from send_email
+
+  - id: send_email
+    type: Api
+    routine:
+      - id: send
+        type: SendGridMail
+        connectionId: email
+        properties:
+          to:
+            _payload: to
+          subject:
+            _payload: subject
+      - :return:
+          success: true
+```
+
+Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws an error — this prevents accidental infinite recursion.
+
+Connection plugin resolvers can also invoke endpoints from inside their JS code using the `callApi` function on the resolver argument bag. The semantics — depth cap, isolated routine context, caller's user identity, `InternalApi` reachable — match the `CallApi` step. See [Connection and Request Plugins](/plugins-connections) for the resolver-side API.
+
+### Detached Endpoint Calls
+
+A `CallApi` step with `detached: true` does not wait for — or ever see — the target's result. The step dispatches the call and immediately continues, storing `{ detached: true, endpointId }` as its step result. The target runs as a new HTTP request to the deployment itself, which matters on serverless hosts: it executes in its **own** function invocation with a fresh `maxDuration` budget, so chained detached calls can process work that outlives any single invocation, without needing a queue.
+
+```yaml
+- id: spawn_worker
+  type: CallApi
+  properties:
+    endpointId: process_batch
+    detached: true
+    payload:
+      batch_id:
+        _step: create_batch._id
+```
+
+Detached calls differ from normal `CallApi` steps in important ways:
+
+- **System context**: like a scheduled run, the target executes with no user — `_user` is `undefined` — regardless of who called the parent endpoint. `InternalApi` endpoints are callable.
+- **At-most-once, no retry**: if the dispatch or the target fails, nothing retries it. Design targets to be idempotent. The target's outcome exists only in the server logs and whatever its routine writes.
+- **Requires `CRON_SECRET`**: the dispatch authenticates against the deployment's own `/api/detached` route with the `CRON_SECRET` environment variable (the same secret that secures cron, fail closed). The step fails with a config error if it is not set.
+- **No depth cap across detached calls**: each detached target starts at call depth 0, so the 10-level nesting limit does not protect against detached recursion. An endpoint that (directly or indirectly) detaches back into itself will loop forever — spawning a new invocation each time.
+
+## Running Agents As A Routine Step
+
+Routines can run an [agent](/agents-introduction) to completion using `CallAgent` steps. The agent runs headlessly — no chat UI, no streaming — looping through its tools until it finishes, and the result is stored as the step result. This lets endpoints delegate open-ended, multi-step work to an agent, while the surrounding routine stays explicit. For a single model call without tools, prefer the one-shot `GenerateText` / `GenerateObject` [request types](/Anthropic) — they are cheaper and more predictable.
+
+A `CallAgent` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: CallAgent`: **Required** - Identifies this as an agent call step.
+- `properties.agentId: string`: **Required** - The id of the agent to run. **Operators are evaluated**.
+- `properties.prompt: string`: **Required** - The task prompt for the agent run. **Operators are evaluated**.
+
+The step result contains:
+
+- `text: string`: The agent's final text output.
+- `finishReason: string`: Why the run ended (`stop`, `length`, `tool-calls`, ...).
+- `usage: object`: Accumulated token usage across all steps (`{ inputTokens, outputTokens, totalTokens, reasoningTokens, cacheReadTokens, cacheWriteTokens }`).
+- `toolCalls: object[]`: The tool calls the agent made (`{ toolCallId, toolName, input }`).
+- `toolResults: object[]`: The corresponding tool results (`{ toolCallId, toolName, output }`).
+
+```yaml
+agents:
+  - id: research_agent
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5
+      instructions: You research signup data and summarize findings.
+      maxSteps: 5
+    tools:
+      - lookup-signups
+
+api:
+  - id: daily-research
+    type: Api
+    routine:
+      - id: research
+        type: CallAgent
+        properties:
+          agentId: research_agent
+          prompt: Summarize yesterday's signups and flag anomalies.
+
+      - id: send_report
+        type: SendGridMail
+        connectionId: email
+        properties:
+          to: team@example.com
+          subject: Daily signup report
+          text:
+            _step: research.text
+```
+
+Headless agent runs differ from interactive chat in a few ways:
+
+- **Tool approval is not supported.** Tools configured with `confirm: true` auto-execute — there is no client to approve them. The build emits a warning when a `CallAgent` step references an agent with confirm tools.
+- **No page context.** The `update-page-state` tool is not available, and no conversation title is generated.
+- **Hooks still fire.** Agent [server hooks](/agent-server-hooks) (`onStart`, `onStepFinish`, `onFinish`, etc.) run as endpoint calls — useful for logging and persistence. `dataParts` returned by `onFinish` endpoints are ignored (there is no stream to write to), and the `messages` in the `onFinish` payload are model messages rather than UI messages.
+- **Authorization is per tool endpoint.** Each tool call authorizes against that endpoint's `auth` config with the caller's identity. In a system context with no user, tools calling protected endpoints will fail.
+
+Agent tool and hook endpoint calls share the same depth cap of 10 as `CallApi`, so mutually recursive agent and endpoint configurations terminate with an error instead of looping forever.
+
+## Validating Data As A Routine Step
+
+API routines can validate any value against a JSON Schema using `ValidateSchema` steps. This is useful for guarding endpoint inputs that need stricter checks than the endpoint's request schema enforces, or for asserting the shape of data returned by a prior step before it flows downstream.
+
+`ValidateSchema` is a built-in step. It requires no `connectionId` and no plugin install. It runs against the shared Ajv instance used by the rest of Lowdefy, so all standard JSON Schema features are available:
+
+- All formats from [ajv-formats](https://ajv.js.org/packages/ajv-formats.html) (`email`, `uri`, `uuid`, `date`, `date-time`, `ipv4`, `ipv6`, …).
+- The `instanceof`, `transform`, and `regexp` keywords from [ajv-keywords](https://ajv.js.org/packages/ajv-keywords.html).
+- The `errorMessage` keyword from [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) for custom error messages.
+
+See [ajv.js.org](https://ajv.js.org/json-schema.html) for the full keyword reference.
+
+A `ValidateSchema` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: ValidateSchema`: **Required** - Identifies this as a validation step.
+- `properties.schema: object`: **Required** - The JSON Schema to validate against. **Operators are evaluated**, so `_ref` and `_var` work for sourcing schemas from files or app state.
+- `properties.data: any`: **Required** - The value to validate. **Operators are evaluated**.
+- `properties.throwOnInvalid: boolean`: Optional, default `true`. When `true`, invalid data short-circuits the routine with an error response and the AJV errors attached as `error.cause`. When `false`, the routine continues and the validation result is exposed as the step result for downstream branching.
+
+The step always records `{ valid, errors }` as its result, available downstream as `_step.<stepId>.valid` and `_step.<stepId>.errors`.
+
+###### Guard endpoint input (default throw)
+
+```yaml
+api:
+  - id: create_user
+    type: Api
+    routine:
+      - id: validate_input
+        type: ValidateSchema
+        properties:
+          schema:
+            type: object
+            required: [email, name]
+            additionalProperties: false
+            properties:
+              email: { type: string, format: email }
+              name: { type: string, minLength: 1, maxLength: 80 }
+              age: { type: integer, minimum: 0 }
+          data:
+            _payload: true
+
+      - id: insert_user
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          collection: users
+          doc:
+            _payload: true
+
+      - :return:
+          userId:
+            _step: insert_user.insertedId
+```
+
+If the request payload is missing `email`, the routine errors out with the AJV failure details and `insert_user` never runs.
+
+###### Inspect-and-branch (`throwOnInvalid: false`)
+
+Set `throwOnInvalid: false` to keep going on failure — then use `:if` to react to `_step.<stepId>.valid`:
+
+```yaml
+routine:
+  - id: check_input
+    type: ValidateSchema
+    properties:
+      schema:
+        type: object
+        required: [email]
+        properties:
+          email: { type: string, format: email }
+      data:
+        _payload: true
+      throwOnInvalid: false
+
+  - :if:
+      _eq:
+        - _step: check_input.valid
+        - false
+    :then:
+      - :reject:
+          message: 'Invalid input'
+          errors:
+            _step: check_input.errors
+
+  - id: send_welcome
+    type: SendgridMailSend
+    connectionId: mailer
+    properties:
+      to:
+        _payload: email
+      template: welcome
+```
+
+###### Validate a prior step's output
+
+`schema` and `data` are both operator-evaluated, so any value reachable in the routine context can be checked — payload, prior step results, items in a loop, etc.
+
+```yaml
+routine:
+  - id: load_profile
+    type: MongoDBFindOne
+    connectionId: app_db
+    properties:
+      collection: profiles
+      query:
+        _id:
+          _payload: userId
+
+  - id: assert_profile_shape
+    type: ValidateSchema
+    properties:
+      schema:
+        type: object
+        required: [_id, tier]
+        properties:
+          _id: { type: string }
+          tier: { type: string, enum: [free, pro, enterprise] }
+      data:
+        _step: load_profile
+```
+
+## Rendering Notifications As A Routine Step
+
+API routines render a [notification](/notifications) to an email with `RenderNotification` steps. The step renders one notification item against a template defined in the app's `notifications:` section and returns the rendered content — it does **not** store or send anything. Storing a record, sending the email, and tracking delivery are ordinary routine steps you compose around it (or that the [`modules-mongodb` notifications module](https://github.com/lowdefy/modules-mongodb) composes for you).
+
+`RenderNotification` is a built-in step. It requires no `connectionId` and no plugin install.
+
+A `RenderNotification` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: RenderNotification`: **Required** - Identifies this as a render step.
+- `properties.notificationId: string`: **Required** - The id of the notification in the `notifications:` section to render. **Operators are evaluated**.
+- `properties.data: object`: **Required** - The data for **one** notification (the recipient and template data). Must be a single object — to render a batch, iterate with a [`:for`](/for) control and render one item per step. **Operators are evaluated**.
+- `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Required when the item carries page links.
+- `properties.landingPage: string`: A page path to route email links through (for example `/notifications/link`), so a landing page can mark the notification read before redirecting. When unset, links go directly to their target pages.
+- `properties.recordId: string`: The record id embedded in landing-page link URLs. Required when `landingPage` is set and the item has links — usually a `_uuid` minted earlier in the routine.
+
+The step result contains:
+
+- `subject: string`: The interpolated subject line.
+- `title: string`: The interpolated title (falls back to `subject`).
+- `preview: string`: A short preview string for inbox listings (the template's `preview`, else a markdown-stripped excerpt of the message).
+- `html: string`: The rendered email as HTML.
+- `text: string`: The rendered email as plain text.
+- `data: object`: The item with its links resolved to URLs.
+
+```yaml
+api:
+  - id: notify-task-assigned
+    type: Api
+    routine:
+      - id: render
+        type: RenderNotification
+        # Render one item; see /notifications for the notifications: section.
+        properties:
+          notificationId: task-assigned
+          data:
+            _payload: item
+          serverUrl: https://myapp.com
+
+      - id: send
+        type: SMTPMailSend
+        connectionId: smtp
+        properties:
+          to:
+            _payload: item.contact.email
+          subject:
+            _step: render.subject
+          html:
+            _step: render.html
+          text:
+            _step: render.text
+```
+
+See [Notifications](/notifications) for the `notifications:` section, the built-in templates, and how link URLs are composed.
+
+## Internal API Endpoints
+
+Endpoints with `type: InternalApi` are only callable from other endpoints via `CallApi` steps. They cannot be called from client pages using the `CallAPI` action, and HTTP requests to them return a "does not exist" error.
+
+Use `InternalApi` for endpoints that contain sensitive server-side logic that should never be triggered directly from the client — for example, sending emails, processing payments, or auditing events.
+
+```yaml
+api:
+  - id: charge_payment
+    type: InternalApi
+    routine:
+      - id: charge
+        type: AxiosHttp
+        connectionId: payment-gateway
+        properties:
+          data:
+            amount:
+              _payload: amount
+            token:
+              _payload: payment_token
+      - :return:
+          _step: charge
+
+  - id: checkout
+    type: Api # Callable from the client
+    routine:
+      - id: process_payment
+        type: CallApi
+        properties:
+          endpointId: charge_payment # Can call InternalApi endpoints
+          payload:
+            amount:
+              _payload: total
+            payment_token:
+              _payload: token
+      - :return:
+          payment:
+            _step: process_payment
+```
+
+If a client-side `CallAPI` action targets an `InternalApi` endpoint, the build produces a warning in dev mode and an error in production builds.
+
+## Operators
+
+The following operators are specific to API endpoints:
+
+- [`_item`](/_item) - Access current item in :for and :parallel_for loops.
+- [`_state`](/_state) - Access server-side state set with :set_state.
+- [`_step`](/_step) - Access results from requests in previous steps.
+
+API endpoints also have access to all operators available on the server, including:
+
+- [`_payload`](/_payload) - Access the payload sent from the client.
+- [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
+- [`_user`](/_user) - Access authenticated user information.
+
+### Accessing Step Results
+
+Use the [`_step`](/_step) operator to access results from previously executed steps:
+
+```yaml
+- id: get_user
+  type: MongoDBFindOne
+  connectionId: users
+  properties:
+    query:
+      email:
+        _payload: email
+
+- id: get_orders
+  type: MongoDBAggregation
+  connectionId: orders
+  properties:
+    pipeline:
+      - $match:
+          user_id:
+            _step: get_user._id # Access the _id from the get_user request
+```
+
+## CallAPI Action
+
+Use the `CallAPI` action to call your API endpoints from pages. Read more about the `CallAPI` action [here](/CallAPI).
+
+###### Basic example:
+
+```yaml
+blocks:
+  - id: user_id_input
+    type: TextInput
+    properties:
+      title: User ID
+
+  - id: fetch_user_btn
+    type: Button
+    properties:
+      title: Fetch User Data
+    events:
+      onClick:
+        - id: call_user_api
+          type: CallAPI
+          params:
+            endpoint_id: get_user_data
+            payload:
+              user_id:
+                _state: user_id_input
+
+        - id: set_user_data
+          type: SetState
+          params:
+            user_data:
+              _actions: call_user_api.response.user
+
+  - id: user_display
+    type: Descriptions
+    properties:
+      items:
+        _state: user_data
+```
+
+###### Error handling example:
+
+```yaml
+events:
+  onClick:
+    try:
+      - id: call_process_data_api
+        type: CallAPI
+        params:
+          endpoint_id: process_data
+          payload:
+            data:
+              _state: form_data
+
+      - id: show_success
+        type: DisplayMessage
+        params:
+          content: 'Data processed successfully!'
+          status: success
+
+      - id: update_state
+        type: SetState
+        params:
+          result:
+            _actions: call_process_data_api.response
+
+    catch:
+      - id: update_state
+        type: SetState
+        params:
+          error_message:
+            _actions: call_process_data_api.error.message
+```
+
+### \_api Operator
+
+The [`_api`](/_api) operator returns the response value of an API call. If the API has not yet been called, or is still executing, the returned value is `null`.
+
+###### Using an API response:
+
+```yaml
+blocks:
+  - id: loading_text
+    type: Html
+    visible:
+      _api: fetch_data.loading
+    properties:
+      html: '<div class="secondary">Loading...</div>'
+
+  - id: error_alert
+    type: Alert
+    visible:
+      _not:
+        _api: fetch_data.success
+    properties:
+      type: error
+      message:
+        _api: fetch_data.error.message
+
+  - id: data_display
+    type: Descriptions
+    properties:
+      items:
+        _api: fetch_data.response
+```
+
+## Complex Example: Order Processing API
+
+Here's a comprehensive example showing various features:
+
+```yaml
+lowdefy: '5.5.1'
+auth:
+  api:
+    protected: true
+    roles:
+      user:
+        - process_order
+
+api:
+  - id: process_order
+    type: Api
+    routine:
+      # Validate order
+      - id: validate_order
+        type: MongoDBFindOne
+        connectionId: orders
+        properties:
+          query:
+            _id:
+              _payload: order_id
+            status: 'pending'
+            user_id:
+              _user: id # Ensure user owns this order
+
+      - :if:
+          _not:
+            _step: validate_order
+        :then:
+          :reject: 'Order not found or already processed'
+
+      # Process items in parallel
+      - :parallel_for: item
+        :in:
+          _step: validate_order.items
+        :do:
+          - id: check_inventory
+            type: MongoDBFindOne
+            connectionId: products
+            properties:
+              query:
+                _id:
+                  _item: item.product_id
+                inventory:
+                  $gte:
+                    _item: item.quantity
+
+          - :if:
+              _not:
+                _step: check_inventory
+            :then:
+              :throw: 'Insufficient inventory'
+
+      # Try payment processing
+      - :try:
+          - id: process_payment
+            type: AxiosHttp
+            connectionId: payment-gateway
+            properties:
+              data:
+                amount:
+                  _step: validate_order.total
+                currency: 'USD'
+                source:
+                  _payload: payment_token
+
+        :catch:
+          - id: mark_payment_failed
+            type: MongoDBUpdateOne
+            connectionId: orders
+            properties:
+              filter:
+                _id:
+                  _payload: order_id
+              update:
+                $set:
+                  status: 'payment_failed'
+                  failed_at:
+                    _date: now
+
+          - :reject: 'Payment processing failed'
+
+      # Update order status
+      - id: complete_order
+        type: MongoDBUpdateOne
+        connectionId: orders
+        properties:
+          filter:
+            _id:
+              _payload: order_id
+          update:
+            $set:
+              status: 'completed'
+              payment_id:
+                _step: process_payment.data.id
+              completed_at:
+                _date: now
+
+      # Update inventory
+      - :for: item
+        :in:
+          _step: validate_order.items
+        :do:
+          - id: reduce_inventory
+            type: MongoDBUpdateOne
+            connectionId: products
+            properties:
+              filter:
+                _id:
+                  _item: item.product_id
+              update:
+                $inc:
+                  inventory: -1
+
+      # Send confirmation email
+      - id: send_confirmation
+        type: SendGridMail
+        connectionId: email-service
+        properties:
+          to:
+            _step: validate_order.customer_email
+          template_id: 'order_confirmation'
+          dynamic_template_data:
+            order_id:
+              _payload: order_id
+            total:
+              _step: validate_order.total
+
+      # Return success
+      - :return:
+          success: true
+          order_id:
+            _payload: order_id
+          payment_id:
+            _step: process_payment.data.id
+          message: 'Order processed successfully'
+```
+
+### TLDR
+
+- Lowdefy APIs create custom server-side endpoints that execute complex logic.
+- Routines define the execution flow using arrays, requests and control structures.
+- Control structures like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
+- Requests make requests to connections and can access results using [`_step`](/_step).
+- `CallApi` steps call other endpoints server-side with isolated `_step` and `_payload` namespaces.
+- `InternalApi` endpoints are server-only — callable from other endpoints but not from client pages.
+- The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
+- Server-side execution provides access to secrets, connections, and server operators.
+- Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
+- A [`:reject`](/:reject) is a reply, not an exception, and is never caught by [`:try`](/:try)/`:catch`; [`:throw`](/:throw) is.

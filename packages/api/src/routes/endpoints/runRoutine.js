@@ -17,6 +17,7 @@
 import { LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import checkAborted from './checkAborted.js';
 import handleAgentCall from './handleAgentCall.js';
 import handleAuthStep from './handleAuthStep.js';
 import handleControl from './control/handleControl.js';
@@ -24,41 +25,64 @@ import handleEndpointCall from './handleEndpointCall.js';
 import handleRenderNotification from './handleRenderNotification.js';
 import handleRequest from './handleRequest.js';
 import handleValidateSchema from './handleValidateSchema.js';
+import logEvent from '../../log/logEvent.js';
+
+// The identifiers of one built step. Only a step carries a stepId - a control
+// (`:if`, `:for`, ...) is structure and emits no line of its own; the steps
+// inside it do.
+function stepEventFields({ context, routine, startTime }) {
+  return {
+    endpoint_id: routine.endpointId ?? context.endpointId,
+    step_id: routine.stepId,
+    step_type: routine.type,
+    config_key: routine['~k'],
+    duration_ms: Math.round(performance.now() - startTime),
+  };
+}
 
 async function runRoutine(context, routineContext, { routine }) {
+  const startTime = performance.now();
   try {
+    checkAborted(context, { location: 'the next step' });
     if (type.isObject(routine)) {
+      let result;
       if (routine.id?.startsWith?.('request:')) {
-        return await handleRequest(context, routineContext, {
+        result = await handleRequest(context, routineContext, {
           request: routine,
         });
-      }
-      if (routine.id?.startsWith?.('endpoint:')) {
-        return await handleEndpointCall(context, routineContext, {
+      } else if (routine.id?.startsWith?.('endpoint:')) {
+        result = await handleEndpointCall(context, routineContext, {
           step: routine,
         });
-      }
-      if (routine.id?.startsWith?.('validate:')) {
-        return await handleValidateSchema(context, routineContext, {
+      } else if (routine.id?.startsWith?.('validate:')) {
+        result = await handleValidateSchema(context, routineContext, {
           step: routine,
         });
-      }
-      if (routine.id?.startsWith?.('agent:')) {
-        return await handleAgentCall(context, routineContext, {
+      } else if (routine.id?.startsWith?.('agent:')) {
+        result = await handleAgentCall(context, routineContext, {
           step: routine,
         });
-      }
-      if (routine.id?.startsWith?.('auth:')) {
-        return await handleAuthStep(context, routineContext, {
+      } else if (routine.id?.startsWith?.('auth:')) {
+        result = await handleAuthStep(context, routineContext, {
           step: routine,
         });
-      }
-      if (routine.id?.startsWith?.('notification:')) {
-        return await handleRenderNotification(context, routineContext, {
+      } else if (routine.id?.startsWith?.('notification:')) {
+        result = await handleRenderNotification(context, routineContext, {
           step: routine,
         });
+      } else {
+        return await handleControl(context, routineContext, { control: routine });
       }
-      return await handleControl(context, routineContext, { control: routine });
+      logEvent({
+        context,
+        event: 'step_completed',
+        fields: {
+          ...stepEventFields({ context, routine, startTime }),
+          status: result.status,
+          success: !['error', 'reject'].includes(result.status),
+        },
+      });
+      return result;
     }
     if (type.isArray(routine)) {
       for (const item of routine) {
@@ -73,6 +97,17 @@ async function runRoutine(context, routineContext, { routine }) {
     }
     throw new LowdefyInternalError('Invalid routine.', { cause: { routine } });
   } catch (error) {
+    if (!type.isNone(routine?.stepId)) {
+      logEvent({
+        context,
+        event: 'step_failed',
+        fields: {
+          ...stepEventFields({ context, routine, startTime }),
+          success: false,
+          error,
+        },
+      });
+    }
     if (error.isReject) {
       return { status: 'reject', error };
     }

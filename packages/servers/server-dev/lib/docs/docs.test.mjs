@@ -40,6 +40,9 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
 }));
 const mockCreateLowdefyContext = jest.fn(async () => ({
   logger: { info: jest.fn(), debug: jest.fn(), warn: jest.fn(), error: jest.fn() },
+  // The server's error sink: runRequest hands it a fault so the failure lands
+  // in serverErrorStore with its config source resolved.
+  handleError: jest.fn(),
 }));
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
@@ -148,10 +151,7 @@ test('getSchema returns hazards for a block: type-attached first, then framework
 
 test('getSchema returns hazards for a request, including a meta.hazards entry', () => {
   const result = getSchema({ kind: 'requests', type: 'WriteRequest' });
-  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
-    'write-request-hazard',
-    'state-in-request-properties',
-  ]);
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual(['write-request-hazard']);
 });
 
 test('getSchema returns connection schema with request list', () => {
@@ -209,9 +209,11 @@ test('getCoreDoc returns hazards for the requested type when resolved by kind an
   expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['get-fixture-hazard']);
 });
 
-test('getCoreDoc does not attach hazards when resolved by slug', () => {
+test('getCoreDoc attaches the page type hazards when resolved by slug', () => {
+  // A slug is the natural follow-up to searchDocs, so it must carry the same
+  // hazards as the kind/type call for the type the page documents.
   const doc = getCoreDoc({ slug: 'operators/_get' });
-  expect(doc.hazards).toBeUndefined();
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['get-fixture-hazard']);
 });
 
 test('getCoreDoc resolves a request doc on its connection page but keeps request hazards', () => {
@@ -219,7 +221,10 @@ test('getCoreDoc resolves a request doc on its connection page but keeps request
   // from the request kind the caller asked about.
   const doc = getCoreDoc({ kind: 'request', type: 'MongoDBFind' });
   expect(doc.slug).toEqual('connections/mongodb');
-  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['state-in-request-properties']);
+  // The framework's request-level hazard was retired by the request-state-empty
+  // check, so a request with no meta.hazards resolves to none — and never to the
+  // connection page's hazards.
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual([]);
 });
 
 test('getCoreDoc returns null for unknown slug', () => {
@@ -283,11 +288,11 @@ test('getBuildStatus returns the build artifact plus reported client and server 
   expect(result.serverErrors).toEqual([
     { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
   ]);
-  expect(result.tenantNotices).toEqual([notice]);
+  expect(result.devNotices).toEqual([notice]);
 });
 
-test('getBuildStatus returns an empty tenantNotices list shape when no tenant none request ran', () => {
-  expect(Array.isArray(getBuildStatus().tenantNotices)).toBe(true);
+test('getBuildStatus returns an empty devNotices list shape when no tenant none request ran', () => {
+  expect(Array.isArray(getBuildStatus().devNotices)).toBe(true);
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
@@ -322,11 +327,11 @@ test('findConfig resolves a known pageId to its source file', async () => {
   expect(result.matches[0].location.source).toContain('pages/home.yaml');
 });
 
-test('findConfig returns hazards per match for the matched node type', async () => {
+test('findConfig returns no hazards for a block type that declares none', async () => {
+  // Button declares no hazards and no framework hazard applies to every block,
+  // so a match must not pick one up from a broader kind.
   const result = await findConfig({ id: 'my_button', pageId: 'home' });
-  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
-    'visible-false-prunes-state',
-  ]);
+  expect(result.matches[0].hazards).toEqual([]);
 });
 
 test('findConfig fires tenant-wall-lookup on a request over a walled connection only', async () => {
@@ -334,16 +339,12 @@ test('findConfig fires tenant-wall-lookup on a request over a walled connection 
   expect(walled.matches.length).toEqual(1);
   expect(walled.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
     'write-request-hazard',
-    'state-in-request-properties',
     'tenant-wall-lookup',
   ]);
 
   const shared = await findConfig({ id: 'req-shared', pageId: 'other' });
   expect(shared.matches.length).toEqual(1);
-  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
-    'write-request-hazard',
-    'state-in-request-properties',
-  ]);
+  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual(['write-request-hazard']);
 });
 
 test('findConfig resolves a request connection across pages when no pageId is given', async () => {
@@ -511,7 +512,7 @@ test('runRequest returns a structured error instead of throwing when callRequest
   mockCallRequest.mockRejectedValueOnce(new Error('boom'));
   const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
   expect(result.refused).toBe(false);
-  expect(result.error).toEqual({ name: 'Error', message: 'boom' });
+  expect(result.error).toEqual({ name: 'Error', message: 'boom', source: null, configKey: null });
 });
 
 test('runRequest truncates responses larger than the size cap', async () => {
@@ -639,7 +640,7 @@ test('seedFixture returns a missing fixture as data once writes are allowed', as
       refused: false,
       error: {
         name: 'ConfigError',
-        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml.',
+        message: 'Fixture "nope" not found. Expected fixtures/nope.yaml. Declared fixtures: base.',
       },
     });
   } finally {

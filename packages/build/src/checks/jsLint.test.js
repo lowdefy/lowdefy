@@ -124,3 +124,50 @@ test('jsLint drains the queue so a body is reported once per pipeline run', () =
   expect(context.jsBodies).toEqual([]);
   expect(context.errors).toHaveLength(1);
 });
+
+test('jsLint caches analysed bodies on the context, not across contexts', () => {
+  const first = lint({ input: { x: withKey({ _js: 'return unlinked;' }, 'k1') } });
+  expect(first.jsLintCache.size).toBe(1);
+
+  const second = createContext();
+  expect(second.jsLintCache).toBeUndefined();
+});
+
+test('jsLint drains the list it is given rather than the one on the context', () => {
+  const context = createContext();
+  jsMapParser({
+    input: { x: withKey({ _js: 'return unlinked;' }, 'k1') },
+    jsMap: {},
+    env: 'client',
+    context,
+  });
+  const jsBodies = context.jsBodies;
+  // A concurrent JIT build reassigns context.jsBodies while this build runs.
+  context.jsBodies = [];
+  jsLint.run({ components: {}, context, jsBodies });
+
+  expect(context.errors).toHaveLength(1);
+  expect(jsBodies).toEqual([]);
+});
+
+test('jsLint names the server as the provider of "payload" used in a client body', () => {
+  const context = lint({ input: { x: withKey({ _js: 'return payload.id;' }, 'k1') } });
+
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    '_js body references "payload", which is not defined, at line 1. "payload" is a server _js parameter, and this body runs on the client. Available: actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user, and the JavaScript standard library.'
+  );
+  expect(context.errors[0].checkSlug).toBe('js-lint');
+});
+
+test('jsLint names the client as the provider of "urlQuery" used in a server body', () => {
+  const context = lint({
+    input: { x: withKey({ _js: { fn: 'return urlQuery.id;' } }, 'k1') },
+    env: 'server',
+  });
+
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    '_js body references "urlQuery", which is not defined, at line 1. "urlQuery" is a client _js parameter, and this body runs on the server. Available: args, item, lowdefyApp, payload, secret, state, step, user, and the JavaScript standard library.'
+  );
+});

@@ -17,14 +17,12 @@
 import React from 'react';
 import { QRCode } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {} }) => (
   <QRCode
-    id={blockId}
-    className={classNames.element}
-    style={styles.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     value={properties.value ?? ''}
     size={properties.size}
     color={properties.color}

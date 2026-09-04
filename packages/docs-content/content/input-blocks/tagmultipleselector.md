@@ -16,6 +16,11 @@ Multi-select input rendered as a row of toggleable, colored tag pills.
 ```
 
 ```yaml
+basic_strings:
+  _state: basic_strings
+```
+
+```yaml
 - id: label_value
   type: TagMultipleSelector
   properties:
@@ -30,6 +35,11 @@ Multi-select input rendered as a row of toggleable, colored tag pills.
       - label: Archived
         value: archived
         disabled: true
+```
+
+```yaml
+label_value:
+  _state: label_value
 ```
 
 ```yaml
@@ -59,6 +69,13 @@ Multi-select input rendered as a row of toggleable, colored tag pills.
       - Research
 ```
 
+```yaml
+explicit_colors:
+  _state: explicit_colors
+single_accent:
+  _state: single_accent
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `options` | array | - | Options to select from. Primitives, or { label, value, color, disabled } - an explicit color overrides the stable palette color. |
@@ -86,7 +103,7 @@ Multi-select input rendered as a row of toggleable, colored tag pills.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when the selection is changed. |
+| `onChange` | `{ value: array }` | Trigger actions when the selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

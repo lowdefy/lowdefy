@@ -32,6 +32,16 @@ function writeCollections({ context }) {
     if (!type.isUndefined(collection.fields)) {
       artifact.fields = collection.fields;
     }
+    // The JSON Schema array form, so { type: object, properties: fields,
+    // required } compiles as-is for every consumer.
+    if (type.isArray(collection.required) && collection.required.length > 0) {
+      artifact.required = collection.required;
+    }
+    // Field names declared pii: true, as a flat list every consumer (recorder,
+    // log redaction, fixture export) can read without walking the schema.
+    if (type.isArray(collection.pii) && collection.pii.length > 0) {
+      artifact.pii = collection.pii;
+    }
     artifact.relations = {};
     Object.keys(collection.relations).forEach((fieldName) => {
       const { collection: target, field } = collection.relations[fieldName];

@@ -1200,7 +1200,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
             value: 3
           - label: 4+
             value: 4
-          - label: 5
+          - label: "5"
             value: 5
     - id: drawer_filter_panel_in_stock
       type: Switch
@@ -1270,8 +1270,7 @@ Jane Cooper
           properties:
             icon: AiOutlineUser
             size: 64
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: drawer_profile_info
           type: Box
           layout:
@@ -1345,6 +1344,7 @@ Jane Cooper
 | `zIndex` | integer | `1000` | The z-index of the Drawer. |
 | `placement` | string | `"right"` | The placement of the Drawer. Enum: `top`, `right`, `bottom`, `left`. |
 | `keyboard` | boolean | `true` | Whether support press esc to close. |
+| `getContainer` | string \| boolean | - | Where the Drawer is mounted. A CSS selector for the mount node, or false to render the Drawer in place instead of in a portal on the document body. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design drawer tokens](https://ant.design/components/drawer#design-token). |
 | `theme.footerPaddingBlock` | number | `8` | Vertical padding of the footer. |
 | `theme.footerPaddingInline` | number | `16` | Horizontal padding of the footer. |

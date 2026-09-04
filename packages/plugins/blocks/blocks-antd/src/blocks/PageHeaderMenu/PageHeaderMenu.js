@@ -55,7 +55,9 @@ const PageHeaderMenu = ({
       blockId={blockId}
       events={events}
       components={{ Icon, Link, ShortcutBadge }}
+      classNames={{ block: classNames.block, element: classNames.element }}
       styles={{
+        block: styles.block,
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
       content={{

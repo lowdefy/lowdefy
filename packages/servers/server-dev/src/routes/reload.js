@@ -19,7 +19,7 @@ import { randomUUID } from 'node:crypto';
 import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
-import devNoticeChannel from '../../lib/docs/devNoticeChannel.js';
+import { subscribe } from '../../lib/docs/devEventBus.js';
 import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
 
 // SSE endpoint — notifies the client when build/reload is written so it can
@@ -27,8 +27,8 @@ import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
 // the agent-state-xray tab channel (lib/docs/tabChannel.js): a connection
 // that includes ?pageId=<id> is registered as an inspectable dev tab so an
 // agent can push it inspect-request/eval-request SSE events. Every stream
-// also carries dev notices (lib/docs/devNoticeChannel.js) as `dev-notice`
-// events, which Reload.jsx hands to the ErrorBar.
+// also carries dev notices (the dev_notice event on lib/docs/devEventBus.js)
+// as `dev-notice` events, which Reload.jsx hands to the ErrorBar.
 //
 // pageId tracking design: Inspector.jsx (not Reload.jsx) owns this query
 // param, and re-opens its EventSource — new connection, new tab id — every
@@ -53,8 +53,12 @@ async function reloadHandler(c) {
       });
     }
 
-    const unsubscribeNotices = devNoticeChannel.subscribe((entry) => {
-      stream.writeSSE({ event: 'dev-notice', data: JSON.stringify(entry) });
+    // The bus carries every dev event; this stream is the browser's, and the
+    // ErrorBar only renders notices - build and error events reach it through
+    // the page's own runtime error channel.
+    const unsubscribeNotices = subscribe((event) => {
+      if (event.type !== 'dev_notice') return;
+      return stream.writeSSE({ event: 'dev-notice', data: JSON.stringify(event) });
     });
 
     let open = true;

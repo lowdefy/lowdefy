@@ -680,6 +680,70 @@ Clicking Ok or Cancel will update the state and show a message.
           status: info
 ```
 
+```yaml
+- id: confirm_events_trigger
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open with Event Actions
+    color: primary
+    variant: solid
+  events:
+    onClick:
+      - id: confirm_events_open
+        type: CallMethod
+        params:
+          blockId: confirm_events
+          method: open
+- id: confirm_events_result
+  type: Paragraph
+  properties:
+    content:
+      _if:
+        test:
+          _not:
+            _not:
+              _state: confirm_events_action
+        then:
+          _string.concat:
+            - "Last action: "
+            - _state: confirm_events_action
+        else: Click the button above and choose Ok or Cancel.
+- id: confirm_events
+  type: ConfirmModal
+  properties:
+    title: Confirm with Events
+    content: Clicking Ok or Cancel will update the state and show a message.
+    okText: Confirm
+  events:
+    onOpen:
+      - id: confirm_events_on_open_set
+        type: SetState
+        params:
+          confirm_events_action: Modal opened...
+    onOk:
+      - id: confirm_events_on_ok_set
+        type: SetState
+        params:
+          confirm_events_action: Confirmed
+      - id: confirm_events_on_ok_msg
+        type: DisplayMessage
+        params:
+          content: Action confirmed successfully.
+          status: success
+    onCancel:
+      - id: confirm_events_on_cancel_set
+        type: SetState
+        params:
+          confirm_events_action: Cancelled
+      - id: confirm_events_on_cancel_msg
+        type: DisplayMessage
+        params:
+          content: Action was cancelled.
+          status: info
+```
+
 The element CSS key applies Tailwind classes to the modal wrapper. This modal uses rounded-2xl and shadow-2xl on the element key.
 
 The body CSS key targets the modal body area. This modal uses bg-bg-layout and p-6 on the body key for a tinted content area.
@@ -841,8 +905,7 @@ James Park - Engineering Lead
           properties:
             icon: AiOutlineUser
             size: 32
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: delete_flow_name_1
           type: Paragraph
           layout:
@@ -885,8 +948,127 @@ James Park - Engineering Lead
           properties:
             icon: AiOutlineUser
             size: 32
-            color: "#fff"
-            backgroundColor: "#52c41a"
+            color: "#52c41a"
+        - id: delete_flow_name_2
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: James Park - Engineering Lead
+        - id: delete_flow_remove_btn_2
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Remove
+            icon: AiOutlineDelete
+            color: danger
+            variant: text
+            size: small
+          events:
+            onClick:
+              - id: delete_flow_set_member_2
+                type: SetState
+                params:
+                  member_to_remove: James Park
+              - id: delete_flow_open_confirm_2
+                type: CallMethod
+                params:
+                  blockId: delete_flow_confirm
+                  method: open
+- id: delete_flow_confirm
+  type: ConfirmModal
+  properties:
+    title: Remove Team Member
+    status: error
+    icon:
+      name: AiOutlineUserDelete
+      color: "#ff4d4f"
+    okText: Remove
+    okButton:
+      danger: true
+    cancelText: Keep Member
+    content:
+      _string.concat:
+        - "Are you sure you want to remove "
+        - _state: member_to_remove
+        - " from the team? They will lose access to all project resources."
+  events:
+    onOk:
+      - id: delete_flow_ok_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - _state: member_to_remove
+              - " has been removed from the team."
+          status: success
+```
+
+```yaml
+- id: delete_flow_card
+  type: Card
+  properties:
+    title: Team Members
+    size: small
+  blocks:
+    - id: delete_flow_list_item_1
+      type: Box
+      layout:
+        gap: 12
+        align: center
+      blocks:
+        - id: delete_flow_avatar_1
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: 32
+            color: "#1677ff"
+        - id: delete_flow_name_1
+          type: Paragraph
+          layout:
+            flex: 1 1 0
+          properties:
+            content: Sarah Chen - Product Manager
+        - id: delete_flow_remove_btn_1
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Remove
+            icon: AiOutlineDelete
+            color: danger
+            variant: text
+            size: small
+          events:
+            onClick:
+              - id: delete_flow_set_member
+                type: SetState
+                params:
+                  member_to_remove: Sarah Chen
+              - id: delete_flow_open_confirm
+                type: CallMethod
+                params:
+                  blockId: delete_flow_confirm
+                  method: open
+    - id: delete_flow_divider
+      type: Divider
+    - id: delete_flow_list_item_2
+      type: Box
+      layout:
+        gap: 12
+        align: center
+      blocks:
+        - id: delete_flow_avatar_2
+          type: Avatar
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineUser
+            size: 32
+            color: "#52c41a"
         - id: delete_flow_name_2
           type: Paragraph
           layout:

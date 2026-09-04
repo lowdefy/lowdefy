@@ -20,6 +20,15 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_with_placeholder:
+  _state: basic_with_placeholder
+basic_with_title:
+  _state: basic_with_title
+```
+
+```yaml
 - id: region_us
   type: PhoneNumberInput
   properties:
@@ -44,6 +53,17 @@ Phone number input with international country code selector.
     title: Japan
     defaultRegion: JP
     placeholder: 3-1234-5678
+```
+
+```yaml
+region_us:
+  _state: region_us
+region_gb:
+  _state: region_gb
+region_za:
+  _state: region_za
+region_jp:
+  _state: region_jp
 ```
 
 ```yaml
@@ -93,6 +113,17 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+regions_north_america:
+  _state: regions_north_america
+regions_europe:
+  _state: regions_europe
+regions_asia_pacific:
+  _state: regions_asia_pacific
+regions_single:
+  _state: regions_single
+```
+
+```yaml
 - id: size_small
   type: PhoneNumberInput
   properties:
@@ -111,6 +142,15 @@ Phone number input with international country code selector.
     title: Large
     size: large
     placeholder: Large input
+```
+
+```yaml
+size_small:
+  _state: size_small
+size_middle:
+  _state: size_middle
+size_large:
+  _state: size_large
 ```
 
 ```yaml
@@ -143,6 +183,17 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+toggle_disabled:
+  _state: toggle_disabled
+toggle_borderless:
+  _state: toggle_borderless
+toggle_allow_clear:
+  _state: toggle_allow_clear
+toggle_arrow_hidden:
+  _state: toggle_arrow_hidden
+```
+
+```yaml
 - id: maxlength_10
   type: PhoneNumberInput
   properties:
@@ -161,6 +212,15 @@ Phone number input with international country code selector.
     title: Max 7 Characters
     maxLength: 7
     placeholder: Short number
+```
+
+```yaml
+maxlength_10:
+  _state: maxlength_10
+maxlength_15:
+  _state: maxlength_15
+maxlength_7:
+  _state: maxlength_7
 ```
 
 ```yaml
@@ -191,6 +251,17 @@ Phone number input with international country code selector.
       name: AiOutlinePhone
       color: "#1677ff"
     placeholder: Blue phone icon
+```
+
+```yaml
+icon_prefix_phone:
+  _state: icon_prefix_phone
+icon_suffix_check:
+  _state: icon_suffix_check
+icon_both:
+  _state: icon_both
+icon_custom_color:
+  _state: icon_custom_color
 ```
 
 ```yaml
@@ -234,6 +305,19 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+label_colon_false:
+  _state: label_colon_false
+label_align_right:
+  _state: label_align_right
+label_extra:
+  _state: label_extra
+label_disabled:
+  _state: label_disabled
+label_feedback_off:
+  _state: label_feedback_off
+```
+
+```yaml
 - id: inline_span_4
   type: PhoneNumberInput
   properties:
@@ -258,6 +342,15 @@ Phone number input with international country code selector.
     label:
       inline: true
       span: 12
+```
+
+```yaml
+inline_span_4:
+  _state: inline_span_4
+inline_span_8:
+  _state: inline_span_8
+inline_span_12:
+  _state: inline_span_12
 ```
 
 ```yaml
@@ -291,6 +384,15 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+replace_digits_only:
+  _state: replace_digits_only
+replace_digits_spaces_dashes:
+  _state: replace_digits_spaces_dashes
+replace_digits_parens:
+  _state: replace_digits_parens
+```
+
+```yaml
 - id: css_shadow
   type: PhoneNumberInput
   class: shadow-md
@@ -311,6 +413,15 @@ Phone number input with international country code selector.
   properties:
     title: Custom Background
     placeholder: Light blue background via inline style
+```
+
+```yaml
+css_shadow:
+  _state: css_shadow
+css_rounded:
+  _state: css_rounded
+css_custom_bg:
+  _state: css_custom_bg
 ```
 
 ```yaml
@@ -373,6 +484,19 @@ Phone number input with international country code selector.
       activeShadow: 0 0 0 2px rgba(23, 125, 220, 0.2)
     label:
       disabled: true
+```
+
+```yaml
+theme_active_border:
+  _state: theme_active_border
+theme_addon_bg:
+  _state: theme_addon_bg
+theme_combined_green:
+  _state: theme_combined_green
+theme_combined_purple:
+  _state: theme_combined_purple
+theme_combined_dark:
+  _state: theme_combined_dark
 ```
 
 ```yaml
@@ -462,6 +586,19 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+combined_full_us:
+  _state: combined_full_us
+combined_international:
+  _state: combined_international
+combined_compact:
+  _state: combined_compact
+combined_form_field:
+  _state: combined_form_field
+combined_themed_form:
+  _state: combined_themed_form
+```
+
+```yaml
 - id: contact_card
   type: Card
   properties:
@@ -536,6 +673,85 @@ Phone number input with international country code selector.
 ```
 
 ```yaml
+- id: contact_card
+  type: Card
+  properties:
+    title: Contact Us
+  blocks:
+    - id: contact_name
+      type: TextInput
+      required: true
+      properties:
+        title: Full Name
+        prefixIcon: AiOutlineUser
+        placeholder: John Doe
+        label:
+          colon: false
+    - id: contact_email
+      type: TextInput
+      required: true
+      properties:
+        title: Email Address
+        type: email
+        prefixIcon: AiOutlineMail
+        placeholder: john@example.com
+        label:
+          colon: false
+    - id: contact_phone
+      type: PhoneNumberInput
+      required: true
+      properties:
+        title: Phone Number
+        defaultRegion: US
+        allowClear: true
+        prefixIcon: AiOutlinePhone
+        placeholder: (555) 123-4567
+        label:
+          colon: false
+          extra: Include your area code.
+      events:
+        onChange:
+          - id: contact_phone_set
+            type: SetState
+            params:
+              contact_phone:
+                _event: value
+    - id: contact_actions
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: contact_submit
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Send Message
+            color: primary
+            variant: solid
+            icon: AiOutlineSend
+          events:
+            onClick:
+              - id: contact_validate
+                type: Validate
+                params:
+                  - contact_name
+                  - contact_email
+                  - contact_phone
+              - id: contact_success
+                type: DisplayMessage
+                params:
+                  content: Message sent successfully!
+                  status: success
+```
+
+```yaml
+contact_card:
+  _state: contact_card
+```
+
+```yaml
 - id: register_card
   type: Card
   properties:
@@ -565,7 +781,6 @@ Phone number input with international country code selector.
       required: true
       properties:
         title: Password
-        prefixIcon: AiOutlineLock
         placeholder: At least 8 characters
         label:
           colon: false
@@ -606,8 +821,84 @@ Phone number input with international country code selector.
                   status: success
 ```
 
+```yaml
+- id: register_card
+  type: Card
+  properties:
+    title: Create Account
+  blocks:
+    - id: register_phone
+      type: PhoneNumberInput
+      required: true
+      properties:
+        title: Mobile Number
+        defaultRegion: US
+        allowClear: true
+        prefixIcon: AiOutlineMobile
+        placeholder: Enter mobile number
+        label:
+          colon: false
+          extra: We will send a verification code to this number.
+      events:
+        onChange:
+          - id: register_phone_set
+            type: SetState
+            params:
+              register_phone:
+                _event: value
+    - id: register_password
+      type: PasswordInput
+      required: true
+      properties:
+        title: Password
+        placeholder: At least 8 characters
+        label:
+          colon: false
+    - id: register_terms
+      type: CheckboxSwitch
+      required: true
+      properties:
+        title: I agree to the Terms and Conditions
+        label:
+          disabled: true
+    - id: register_actions
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: register_submit
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Create Account
+            color: primary
+            variant: solid
+            icon: AiOutlineArrowRight
+          events:
+            onClick:
+              - id: register_validate
+                type: Validate
+                params:
+                  - register_phone
+                  - register_password
+                  - register_terms
+              - id: register_success
+                type: DisplayMessage
+                params:
+                  content: Account created successfully!
+                  status: success
+```
+
+```yaml
+register_card:
+  _state: register_card
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `showFlags` | boolean | `true` | Show country flags in the country selector and input. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `allowedRegions` | array | - | List of allowed ISO 3166-1 alpha-2 region codes. If allowedRegions is [] or null, the default list of all regions is used. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -635,7 +926,7 @@ Phone number input with international country code selector.
 | `replaceInput.pattern` | string | - | The regular expression pattern to use to sanitize input. |
 | `replaceInput.flags` | string | - | The regex flags to use. The default value is 'gm'. |
 | `replaceInput.replacement` | string | - | The string used to replace the input that matches the pattern. The default value is ''. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
 | `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |
@@ -667,7 +958,7 @@ Phone number input with international country code selector.
 | --- | --- | --- |
 | `onInputChange` | \- | Trigger action when text input is changed. |
 | `onCodeChange` | \- | Trigger action when the selector is changed. |
-| `onChange` | `{ value }` | Trigger action when the number is changed. |
+| `onChange` | `{ value: object }` | Trigger action when the number is changed. |
 | `onBlur` | \- | Trigger action event occurs when input loses focus. |
 | `onFocus` | \- | Trigger action when input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |

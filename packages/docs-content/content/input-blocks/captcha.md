@@ -13,6 +13,11 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
 ```
 
 ```yaml
+captcha_basic:
+  _state: captcha_basic
+```
+
+```yaml
 - id: captcha_compact
   type: Captcha
   properties:
@@ -20,6 +25,11 @@ Renders a captcha widget (Cloudflare Turnstile) and writes the minted token into
     siteKey: 1x00000000000000000000AA
     theme: light
     size: compact
+```
+
+```yaml
+captcha_compact:
+  _state: captcha_compact
 ```
 
 | Property | Type | Default | Description |

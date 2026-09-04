@@ -147,6 +147,34 @@ An Affix block makes its content stick to the viewport when scrolling.
 ```
 
 ```yaml
+- id: affix_on_change
+  type: Affix
+  properties:
+    offsetTop: 10
+  events:
+    onChange:
+      - id: affix_on_change_message
+        type: DisplayMessage
+        params:
+          content:
+            _if:
+              test:
+                _eq:
+                  - _event: affixed
+                  - true
+              then: Affix is now fixed to the viewport.
+              else: Affix returned to its original position.
+          duration: 3
+  blocks:
+    - id: affix_on_change_btn
+      type: Button
+      properties:
+        title: Scroll to trigger onChange
+        color: primary
+        variant: solid
+```
+
+```yaml
 - id: affix_theme_default_z
   type: Affix
   layout:

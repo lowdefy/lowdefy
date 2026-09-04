@@ -16,14 +16,16 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
+
+import withTheme from '../withTheme.js';
 
 const Content = Layout.Content;
 
 const ContentBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Content id={blockId} className={classNames.element} style={styles.element}>
+  <Content {...blockRootProps({ blockId, classNames, styles })}>
     {content.content && content.content()}
   </Content>
 );
 
-export default withBlockDefaults(ContentBlock);
+export default withTheme('Layout', withBlockDefaults(ContentBlock));

@@ -112,3 +112,56 @@ test('matchExpectation treats schema beside other keys as a literal subset', () 
     matchExpectation({ expected: { schema: 'x', other: 1 }, actual: { schema: 'x', other: 1 } })
   ).toEqual({ matched: true });
 });
+
+test('matchExpectation { contains } passes when every expected element is present in any order', () => {
+  expect(
+    matchExpectation({
+      expected: { contains: [{ title: 'Second' }, { title: 'First' }] },
+      actual: [{ title: 'First' }, { title: 'Third' }, { title: 'Second' }],
+    })
+  ).toEqual({ matched: true });
+});
+
+test('matchExpectation { contains } names the element that was not found', () => {
+  const result = matchExpectation({
+    expected: { contains: [{ title: 'First' }, { title: 'Missing' }] },
+    actual: [{ title: 'First' }],
+  });
+  expect(result.matched).toBe(false);
+  expect(result.path).toEqual('contains.1');
+  expect(result.expected).toEqual({ title: 'Missing' });
+});
+
+test('matchExpectation { contains } fails when the response is not an array', () => {
+  expect(matchExpectation({ expected: { contains: [{ a: 1 }] }, actual: { a: 1 } }).matched).toBe(
+    false
+  );
+});
+
+test('matchExpectation keeps exact length as the default for a bare array', () => {
+  const result = matchExpectation({
+    expected: [{ title: 'First' }],
+    actual: [{ title: 'First' }, { title: 'Second' }],
+  });
+  expect(result).toEqual({ matched: false, path: 'length', expected: 1, actual: 2 });
+});
+
+test('matchExpectation treats a non-array contains value as a literal subset', () => {
+  expect(
+    matchExpectation({ expected: { contains: 'text' }, actual: { contains: 'text' } })
+  ).toEqual({ matched: true });
+});
+
+test('matchExpectation validates against a ~schema marker, the escape hatch for a schema key', () => {
+  expect(
+    matchExpectation({
+      expected: { '~schema': { type: 'array' } },
+      actual: [{ schema: 'public' }],
+    })
+  ).toEqual({ matched: true });
+  const result = matchExpectation({
+    expected: { '~schema': { type: 'object' } },
+    actual: [{ schema: 'public' }],
+  });
+  expect(result.matched).toBe(false);
+});

@@ -14,36 +14,17 @@
   limitations under the License.
 */
 
-const getWrapperCol = (value, inline) => {
+const getWrapperCol = (properties, inline) => {
   if (inline) {
     return { flex: '1 1 auto' };
   }
-  const defaultVal = {
+  const wrapperCol = {
     xs: { span: 24 },
     sm: { span: 24 },
   };
-  if (value.span) {
-    defaultVal.md = { span: 24 - value.span };
+  if (properties.span) {
+    wrapperCol.md = { span: 24 - properties.span };
   }
-  if (value.sm?.span) {
-    defaultVal.sm = { span: 24 - value.sm.span };
-    defaultVal.xs = { span: 24 - value.sm.span };
-  }
-  if (value.xs?.span) {
-    defaultVal.xs = { span: 24 - value.xs.span };
-  }
-  if (value.md?.span) {
-    defaultVal.md = { span: 24 - value.md.span };
-  }
-  if (value.lg?.span) {
-    defaultVal.lg = { span: 24 - value.lg.span };
-  }
-  if (value.xl?.span) {
-    defaultVal.xl = { span: 24 - value.xl.span };
-  }
-  if (value.xxl?.span) {
-    defaultVal.xxl = { span: 24 - value.xxl.span };
-  }
-  return defaultVal;
+  return wrapperCol;
 };
 export default getWrapperCol;

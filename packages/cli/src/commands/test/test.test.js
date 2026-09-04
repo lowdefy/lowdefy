@@ -83,7 +83,11 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory },
+    commandLineOptions: {},
+    directories: {
+      config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    },
     options: { port: 3000 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -206,7 +210,7 @@ test('test --url targets a running server and does not boot or stop one', async 
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockStop).not.toHaveBeenCalled();
   expect(mockPost.mock.calls[0][0]).toEqual('http://localhost:3000/lowdefy-docs/journey');
-  expect(logs.info[0]).toEqual('Running tests against http://localhost:3000/.');
+  expect(logs.info[0]).toEqual('Running against http://localhost:3000.');
 });
 
 test('test reports a malformed journey file as a failure and still runs the others', async () => {
@@ -316,7 +320,7 @@ test('test starts a memory MongoDB for seeded request tests, passes the override
   expect(mockSeedFixtures).toHaveBeenCalledTimes(1);
   expect(mockSeedFixtures.mock.calls[0][0].client).toBeInstanceOf(MockMongoClient);
   expect(mockSeedFixtures.mock.calls[0][0].seed).toEqual({ controls: [{ _id: 'c1', title: 'A' }] });
-  expect(logs.info).toContain('Starting in-memory MongoDB for seeded request tests.');
+  expect(logs.info).toContain('Starting in-memory MongoDB for seeded tests.');
   expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 tests');
   expect(mockStop).toHaveBeenCalledTimes(1);
   expect(mockClientClose).toHaveBeenCalledTimes(1);
@@ -349,7 +353,7 @@ test('test exits 1 and refuses seeded request tests against --url', async () => 
   await test({ context });
   expect(mockPost).not.toHaveBeenCalled();
   expect(logs.error).toEqual([
-    'Seeded request tests need a server this command started; --url targets a server whose connections it cannot redirect.',
+    'Seeded tests need a server this command started; --url targets a server whose connections it cannot redirect.',
   ]);
   expect(process.exitCode).toEqual(1);
 });
@@ -372,4 +376,120 @@ test('test prints the mismatch path for a failing request test and exits 1', asy
     '0 passed, 1 failed of 1 tests',
   ]);
   expect(process.exitCode).toEqual(1);
+});
+
+test('test --coverage reports static journey coverage and writes the journey index', async () => {
+  const { default: test } = await import('./test.js');
+  context.options.coverage = true;
+  context.directories.build = path.join(configDirectory, 'build');
+  fs.mkdirSync(context.directories.build, { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'journeyCoverage.json'),
+    JSON.stringify({
+      pages: {
+        form: { events: [{ blockId: 'submit', event: 'onClick' }], requestIds: [] },
+        other: { events: [{ blockId: 'cancel', event: 'onClick' }], requestIds: [] },
+      },
+    })
+  );
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  await test({ context });
+  expect(logs.info).toContain('Journey coverage (static, declared config): 1/2 triples, 50%');
+  expect(logs.info).toContain('  other (1 uncovered)');
+  expect(
+    JSON.parse(
+      fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'journeyIndex.json'), 'utf8')
+    )
+  ).toEqual({ pages: { form: ['first journey'] } });
+});
+
+test('test does not report coverage without --coverage', async () => {
+  const { default: test } = await import('./test.js');
+  context.directories.build = path.join(configDirectory, 'build');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  await test({ context });
+  expect(logs.info.some((line) => line.startsWith('Journey coverage'))).toBe(false);
+});
+
+test('test starts a memory MongoDB for a journey with fixtures and clears it between journeys', async () => {
+  const { default: test } = await import('./test.js');
+  fs.mkdirSync(path.join(configDirectory, 'fixtures'), { recursive: true });
+  fs.writeFileSync(
+    path.join(configDirectory, 'fixtures', 'base.yaml'),
+    'controls:\n  - _id: c1\n    title: A\n'
+  );
+  writeJourneyFile('a.yaml', `${journeyYaml({ name: 'seeded journey' })}fixtures: [base]\n`);
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'plain journey' }));
+  await test({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({
+    context,
+    env: {
+      LOWDEFY_TEST_CONNECTION_OVERRIDES: JSON.stringify({
+        controls: { databaseUri: 'mongodb://127.0.0.1:27999/' },
+      }),
+    },
+  });
+  // Both journeys seed: the second must not read what the first one's fixture left.
+  expect(mockSeedFixtures).toHaveBeenCalledTimes(2);
+  expect(mockSeedFixtures.mock.calls[0][0].fixtures[0].connections[0].connectionId).toEqual(
+    'controls'
+  );
+  expect(mockSeedFixtures.mock.calls[1][0].fixtures).toEqual([]);
+  expect(mockSeedFixtures.mock.calls[1][0].seeded).toBe(mockSeedFixtures.mock.calls[0][0].seeded);
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 tests');
+});
+
+test('test exits 1 and refuses a journey with fixtures against --url', async () => {
+  const { default: test } = await import('./test.js');
+  fs.mkdirSync(path.join(configDirectory, 'fixtures'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, 'fixtures', 'base.yaml'), 'controls: []\n');
+  writeJourneyFile('a.yaml', `${journeyYaml({ name: 'seeded journey' })}fixtures: [base]\n`);
+  context.options.url = 'http://localhost:3000';
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    'Seeded tests need a server this command started; --url targets a server whose connections it cannot redirect.',
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test exits 1 on an expectation with no equals and does not report it as passed', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    journeyYaml({
+      name: 'incomplete journey',
+      steps: '  - click: submit\n  - expect: { state: { path: title } }\n',
+    })
+  );
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toContain(
+    '      Incomplete expectation at step 1: "expect.state" for path "title" has no "equals". Run lowdefy test --update to fill it from the observed state.'
+  );
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test --update fills an empty expectation from the observed state and rewrites the file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    `# a recorded journey\n${journeyYaml({
+      name: 'recorded journey',
+      steps: '  - click: submit\n  - expect: { state: { path: title } }\n',
+    })}`
+  );
+  context.options.update = true;
+  mockPost
+    .mockResolvedValueOnce({ data: { passed: true, steps: [], state: { title: 'done' } } })
+    .mockResolvedValueOnce({ data: { passed: true, steps: [], state: { title: 'done' } } });
+  await test({ context });
+  const written = fs.readFileSync(
+    path.join(configDirectory, 'tests', 'journeys', 'a.yaml'),
+    'utf8'
+  );
+  expect(written).toContain('# a recorded journey');
+  expect(written).toContain('{ state: { path: title, equals: done, from: recorded } }');
+  expect(logs.info).toContain('1 passed, 0 failed of 1 tests');
+  expect(process.exitCode).toBeUndefined();
 });

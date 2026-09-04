@@ -590,57 +590,6 @@ Global design tokens customize the look of all child components. This section us
               colon: false
 ```
 
-The theme property provides antd design token overrides for this block and all its descendants. It works similarly to token but is applied at the block level through the antd theme system.
-
-```yaml
-- id: cp_theme
-  type: ConfigProvider
-  properties:
-    theme:
-      colorPrimary: "#13c2c2"
-      colorInfo: "#13c2c2"
-      borderRadius: 12
-  blocks:
-    - id: cp_theme_card
-      type: Card
-      properties:
-        title: Theme Overrides via theme Property
-      blocks:
-        - id: cp_theme_text
-          type: Paragraph
-          properties:
-            content: The theme property provides antd design token overrides for this block
-              and all its descendants. It works similarly to token but is
-              applied at the block level through the antd theme system.
-        - id: cp_theme_btn_row
-          type: Box
-          layout:
-            gap: 8
-          blocks:
-            - id: cp_theme_btn1
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Teal Primary
-                color: primary
-                variant: solid
-            - id: cp_theme_btn2
-              type: Button
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Teal Outlined
-                color: primary
-                variant: outlined
-        - id: cp_theme_switch
-          type: Switch
-          properties:
-            label:
-              title: Teal themed switch
-              colon: false
-```
-
 Styled Wrapper
 
 Tailwind CSS classes can be applied to the ConfigProvider wrapper div using the class property. Here a gradient background with rounded corners wraps all themed children.
@@ -753,8 +702,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
               properties:
                 icon: AiOutlineShop
                 size: 48
-                color: "#fff"
-                backgroundColor: "#e11d48"
+                color: "#e11d48"
             - id: cp_brand_title
               type: Title
               layout:
@@ -1059,7 +1007,6 @@ A dark-themed admin panel using ConfigProvider to apply the dark algorithm with 
 | `locale` | object | - | Antd locale object to localize built-in component strings (date pickers, pagination, modal, form validation). Pair with the _locale operator and config.i18n to keep the whole subtree in one language. |
 | `token` | object | - | Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc. |
 | `variant` | string | - | Global input variant style for all child components. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 No events defined.
 

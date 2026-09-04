@@ -64,15 +64,52 @@ test('validateEndpointResponse does nothing when the endpoint declares no respon
   expect(handleDevNotice).not.toHaveBeenCalled();
 });
 
-test('validateEndpointResponse compiles nothing without a handleDevNotice hook', () => {
-  // An uncompilable schema would throw from ajv if the hook were not the gate.
-  expect(() =>
-    validateEndpointResponse(
-      {},
-      {
-        endpointConfig: { endpointId: 'prod', responseSchema: { type: 'not-a-type' } },
-        response: 1,
-      }
-    )
-  ).not.toThrow();
+test('validateEndpointResponse warns once per endpoint in production, where there is no dev notice hook', () => {
+  const warn = jest.fn();
+  const endpointConfig = { endpointId: 'prod_endpoint', responseSchema };
+  validateEndpointResponse({ logger: { warn } }, { endpointConfig, response: { total: 'three' } });
+  validateEndpointResponse({ logger: { warn } }, { endpointConfig, response: { total: 'four' } });
+  expect(warn).toHaveBeenCalledTimes(1);
+  expect(warn.mock.calls[0][1]).toBe(
+    'Endpoint "prod_endpoint" returned a response that does not match its responseSchema at /total: must be integer.'
+  );
+});
+
+// R6: one schema describes the JSON shape a caller receives, so the same
+// responseSchema is truthful as the MCP outputSchema and as the dev check.
+test('validateEndpointResponse does not report a Date returned for a date-time field', () => {
+  const handleDevNotice = jest.fn();
+  validateEndpointResponse(
+    { handleDevNotice },
+    {
+      endpointConfig: {
+        endpointId: 'ep',
+        responseSchema: {
+          type: 'object',
+          properties: { created_at: { type: 'string', format: 'date-time' } },
+          required: ['created_at'],
+        },
+      },
+      response: { created_at: new Date(0) },
+    }
+  );
+  expect(handleDevNotice).not.toHaveBeenCalled();
+});
+
+test('validateEndpointResponse reports a non-date value for a date-time field', () => {
+  const handleDevNotice = jest.fn();
+  validateEndpointResponse(
+    { handleDevNotice },
+    {
+      endpointConfig: {
+        endpointId: 'ep2',
+        responseSchema: {
+          type: 'object',
+          properties: { created_at: { type: 'string', format: 'date-time' } },
+        },
+      },
+      response: { created_at: 'yesterday' },
+    }
+  );
+  expect(handleDevNotice).toHaveBeenCalledTimes(1);
 });

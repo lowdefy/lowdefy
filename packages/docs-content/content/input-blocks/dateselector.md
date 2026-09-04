@@ -20,6 +20,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+size_small:
+  _state: size_small
+size_default:
+  _state: size_default
+size_large:
+  _state: size_large
+```
+
+```yaml
 - id: variant_outlined
   type: DateSelector
   properties:
@@ -41,6 +50,15 @@ Date picker with configurable format and disabled dates.
     variant: borderless
     label:
       disabled: true
+```
+
+```yaml
+variant_outlined:
+  _state: variant_outlined
+variant_filled:
+  _state: variant_filled
+variant_borderless:
+  _state: variant_borderless
 ```
 
 ```yaml
@@ -82,6 +100,19 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+format_iso:
+  _state: format_iso
+format_slash:
+  _state: format_slash
+format_us:
+  _state: format_us
+format_long:
+  _state: format_long
+format_dot:
+  _state: format_dot
+```
+
+```yaml
 - id: placeholder_default
   type: DateSelector
   properties:
@@ -105,6 +136,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+placeholder_default:
+  _state: placeholder_default
+placeholder_custom:
+  _state: placeholder_custom
+placeholder_descriptive:
+  _state: placeholder_descriptive
+```
+
+```yaml
 - id: clear_enabled
   type: DateSelector
   properties:
@@ -122,6 +162,13 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+clear_enabled:
+  _state: clear_enabled
+clear_disabled:
+  _state: clear_disabled
+```
+
+```yaml
 - id: today_enabled
   type: DateSelector
   properties:
@@ -136,6 +183,13 @@ Date picker with configurable format and disabled dates.
     showToday: false
     label:
       disabled: true
+```
+
+```yaml
+today_enabled:
+  _state: today_enabled
+today_disabled:
+  _state: today_disabled
 ```
 
 ```yaml
@@ -180,6 +234,19 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+icon_default:
+  _state: icon_default
+icon_clock:
+  _state: icon_clock
+icon_schedule:
+  _state: icon_schedule
+icon_custom_color:
+  _state: icon_custom_color
+icon_heart:
+  _state: icon_heart
+```
+
+```yaml
 - id: disabled_default
   type: DateSelector
   properties:
@@ -214,6 +281,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+disabled_default:
+  _state: disabled_default
+disabled_outlined:
+  _state: disabled_outlined
+disabled_filled:
+  _state: disabled_filled
+disabled_borderless:
+  _state: disabled_borderless
+```
+
+```yaml
 - id: autofocus_off
   type: DateSelector
   properties:
@@ -228,6 +306,13 @@ Date picker with configurable format and disabled dates.
     autoFocus: true
     label:
       disabled: true
+```
+
+```yaml
+autofocus_off:
+  _state: autofocus_off
+autofocus_on:
+  _state: autofocus_on
 ```
 
 ```yaml
@@ -279,6 +364,19 @@ Date picker with configurable format and disabled dates.
           - 2026-03-24
     label:
       disabled: true
+```
+
+```yaml
+disabled_dates_min:
+  _state: disabled_dates_min
+disabled_dates_max:
+  _state: disabled_dates_max
+disabled_dates_range:
+  _state: disabled_dates_range
+disabled_specific:
+  _state: disabled_specific
+disabled_date_ranges:
+  _state: disabled_date_ranges
 ```
 
 ```yaml
@@ -359,6 +457,92 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+- id: ds_presets_relative
+  type: DateSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: Today
+        value:
+          _dayjs:
+            - now
+            - format: YYYY-MM-DD
+      - label: Yesterday
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - day
+            - format: YYYY-MM-DD
+      - label: A week ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - week
+            - format: YYYY-MM-DD
+      - label: A month ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - month
+            - format: YYYY-MM-DD
+- id: ds_presets_boundaries
+  type: DateSelector
+  properties:
+    title: Period Boundaries
+    label:
+      disabled: true
+    presets:
+      - label: Start of month
+        value:
+          _dayjs:
+            - now
+            - startOf: month
+            - format: YYYY-MM-DD
+      - label: End of month
+        value:
+          _dayjs:
+            - now
+            - endOf: month
+            - format: YYYY-MM-DD
+      - label: Start of year
+        value:
+          _dayjs:
+            - now
+            - startOf: year
+            - format: YYYY-MM-DD
+- id: ds_presets_fixed
+  type: DateSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: New Year's Day
+        value: 2026-01-01
+      - label: Midsummer
+        value: 2026-06-21
+      - label: Christmas
+        value: 2026-12-25
+```
+
+```yaml
+ds_presets_relative:
+  _state: ds_presets_relative
+ds_presets_boundaries:
+  _state: ds_presets_boundaries
+ds_presets_fixed:
+  _state: ds_presets_fixed
+```
+
+```yaml
 - id: label_default
   type: DateSelector
   properties:
@@ -399,6 +583,21 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_colon_off:
+  _state: label_colon_off
+label_right:
+  _state: label_right
+label_inline:
+  _state: label_inline
+label_extra:
+  _state: label_extra
+label_hidden:
+  _state: label_hidden
+```
+
+```yaml
 - id: label_inline_4
   type: DateSelector
   properties:
@@ -423,6 +622,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+label_inline_4:
+  _state: label_inline_4
+label_inline_8:
+  _state: label_inline_8
+label_inline_12:
+  _state: label_inline_12
+```
+
+```yaml
 - id: html_title_bold
   type: DateSelector
   properties:
@@ -435,6 +643,13 @@ Date picker with configurable format and disabled dates.
     title: '<span style="color: #1677ff">Blue</span> date selector'
     label:
       disabled: true
+```
+
+```yaml
+html_title_bold:
+  _state: html_title_bold
+html_title_color:
+  _state: html_title_color
 ```
 
 ```yaml
@@ -465,6 +680,15 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+style_width:
+  _state: style_width
+style_element:
+  _state: style_element
+style_label:
+  _state: style_label
+```
+
+```yaml
 - id: class_rounded
   type: DateSelector
   class: rounded-lg shadow-sm
@@ -479,6 +703,13 @@ Date picker with configurable format and disabled dates.
     title: Blue Border
     label:
       disabled: true
+```
+
+```yaml
+class_rounded:
+  _state: class_rounded
+class_border:
+  _state: class_border
 ```
 
 ```yaml
@@ -524,6 +755,19 @@ Date picker with configurable format and disabled dates.
     theme:
       colorPrimary: "#722ed1"
       colorBorder: "#d3adf7"
+```
+
+```yaml
+theme_primary_color:
+  _state: theme_primary_color
+theme_large_radius:
+  _state: theme_large_radius
+theme_custom_bg:
+  _state: theme_custom_bg
+theme_tall:
+  _state: theme_tall
+theme_brand_color:
+  _state: theme_brand_color
 ```
 
 ```yaml
@@ -587,6 +831,17 @@ Date picker with configurable format and disabled dates.
 ```
 
 ```yaml
+combined_full:
+  _state: combined_full
+combined_minimal:
+  _state: combined_minimal
+combined_restricted:
+  _state: combined_restricted
+combined_themed:
+  _state: combined_themed
+```
+
+```yaml
 - id: applied2_event_reg_card
   type: Card
   properties:
@@ -634,6 +889,11 @@ Date picker with configurable format and disabled dates.
             params:
               content: Registration submitted successfully!
               duration: 3
+```
+
+```yaml
+applied2_event_reg_card:
+  _state: applied2_event_reg_card
 ```
 
 ```yaml
@@ -686,6 +946,11 @@ Date picker with configurable format and disabled dates.
             params:
               content: Profile saved successfully!
               duration: 3
+```
+
+```yaml
+applied3_profile_card:
+  _state: applied3_profile_card
 ```
 
 | Property | Type | Default | Description |
@@ -757,7 +1022,7 @@ Date picker with configurable format and disabled dates.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

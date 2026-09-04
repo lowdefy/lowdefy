@@ -48,6 +48,17 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+basic_label_value:
+  _state: basic_label_value
+basic_string_options:
+  _state: basic_string_options
+basic_number_options:
+  _state: basic_number_options
+basic_boolean_options:
+  _state: basic_boolean_options
+```
+
+```yaml
 - id: horizontal_default
   type: RadioSelector
   properties:
@@ -79,6 +90,13 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+horizontal_default:
+  _state: horizontal_default
+horizontal_many:
+  _state: horizontal_many
+```
+
+```yaml
 - id: vertical_radio
   type: RadioSelector
   properties:
@@ -104,6 +122,13 @@ Radio group for selecting a single option.
       - label: Enterprise (Contact Sales)
         value: enterprise
         disabled: true
+```
+
+```yaml
+vertical_radio:
+  _state: vertical_radio
+vertical_with_disabled:
+  _state: vertical_with_disabled
 ```
 
 ```yaml
@@ -148,6 +173,13 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+wrap_enabled:
+  _state: wrap_enabled
+wrap_disabled:
+  _state: wrap_disabled
+```
+
+```yaml
 - id: align_start
   type: RadioSelector
   properties:
@@ -188,6 +220,17 @@ Radio group for selecting a single option.
       - Apple
       - Banana
       - Cherry
+```
+
+```yaml
+align_start:
+  _state: align_start
+align_center:
+  _state: align_center
+align_end:
+  _state: align_end
+align_baseline:
+  _state: align_baseline
 ```
 
 ```yaml
@@ -254,6 +297,19 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_purple:
+  _state: color_purple
+color_red:
+  _state: color_red
+color_hex_custom:
+  _state: color_hex_custom
+```
+
+```yaml
 - id: disabled_all
   type: RadioSelector
   properties:
@@ -279,6 +335,13 @@ Radio group for selecting a single option.
         value: medium
       - label: Large
         value: large
+```
+
+```yaml
+disabled_all:
+  _state: disabled_all
+disabled_vertical:
+  _state: disabled_vertical
 ```
 
 ```yaml
@@ -309,6 +372,13 @@ Radio group for selecting a single option.
         disabled: true
       - label: Basic
         value: basic
+```
+
+```yaml
+disabled_single_option:
+  _state: disabled_single_option
+disabled_multiple_options:
+  _state: disabled_multiple_options
 ```
 
 ```yaml
@@ -369,6 +439,15 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+styled_options:
+  _state: styled_options
+styled_colored_labels:
+  _state: styled_colored_labels
+styled_vertical_cards:
+  _state: styled_vertical_cards
+```
+
+```yaml
 - id: html_bold_labels
   type: RadioSelector
   properties:
@@ -392,6 +471,13 @@ Radio group for selecting a single option.
         value: professional
       - label: <b>Enterprise</b> &mdash; Custom solutions for organizations
         value: enterprise
+```
+
+```yaml
+html_bold_labels:
+  _state: html_bold_labels
+html_rich_labels:
+  _state: html_rich_labels
 ```
 
 ```yaml
@@ -460,6 +546,19 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_with_extra:
+  _state: label_with_extra
+label_colon_false:
+  _state: label_colon_false
+label_inline:
+  _state: label_inline
+label_right_align:
+  _state: label_right_align
+```
+
+```yaml
 - id: no_label_radio
   type: RadioSelector
   properties:
@@ -485,6 +584,13 @@ Radio group for selecting a single option.
         value: weekly
       - label: No emails
         value: none
+```
+
+```yaml
+no_label_radio:
+  _state: no_label_radio
+no_label_vertical:
+  _state: no_label_vertical
 ```
 
 ```yaml
@@ -537,6 +643,15 @@ Radio group for selecting a single option.
         value: dark
       - label: System
         value: system
+```
+
+```yaml
+style_border:
+  _state: style_border
+style_background:
+  _state: style_background
+class_override:
+  _state: class_override
 ```
 
 ```yaml
@@ -616,6 +731,19 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+theme_large_radio:
+  _state: theme_large_radio
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_spacing:
+  _state: theme_spacing
+theme_combined:
+  _state: theme_combined
+theme_green:
+  _state: theme_green
+```
+
+```yaml
 - id: object_values
   type: RadioSelector
   properties:
@@ -652,6 +780,13 @@ Radio group for selecting a single option.
         disabled: true
         style:
           textDecoration: line-through
+```
+
+```yaml
+object_values:
+  _state: object_values
+mixed_disabled_styled:
+  _state: mixed_disabled_styled
 ```
 
 ```yaml
@@ -720,6 +855,17 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+example_payment:
+  _state: example_payment
+example_frequency:
+  _state: example_frequency
+example_rating:
+  _state: example_rating
+example_priority:
+  _state: example_priority
+```
+
+```yaml
 - id: radio_per_option_color
   type: RadioSelector
   properties:
@@ -737,6 +883,11 @@ Radio group for selecting a single option.
 ```
 
 ```yaml
+radio_per_option_color:
+  _state: radio_per_option_color
+```
+
+```yaml
 - id: data_radio_selector
   type: RadioSelector
   properties:
@@ -750,6 +901,11 @@ Radio group for selecting a single option.
         name: Push
     html: "{{ item.name }}"
     valueKey: id
+```
+
+```yaml
+data_radio_selector:
+  _state: data_radio_selector
 ```
 
 ```yaml
@@ -812,6 +968,17 @@ Radio group for selecting a single option.
         color: "#7e22ce"
 ```
 
+```yaml
+radio_columns_two:
+  _state: radio_columns_two
+radio_columns_responsive:
+  _state: radio_columns_responsive
+radio_columns_gutter:
+  _state: radio_columns_gutter
+radio_columns_per_option_color:
+  _state: radio_columns_per_option_color
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
@@ -836,7 +1003,7 @@ Radio group for selecting a single option.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -844,6 +1011,7 @@ Radio group for selecting a single option.
 | `html` | string | - | Nunjucks template that renders each option label when using `data`. The context exposes `item` (the current row) and `index` (the zero-based row index). Ignored when `options` is used. |
 | `valueKey` | string | - | Field used as the selected value. With `options` it names the value field (defaults to "value"). With `data` it names the field stored when an option is selected; omit it to store the whole row. Supports dotted paths (e.g. "user.id"). |
 | `primaryKey` | string | - | Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. "id") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths. |
+| `size` | string | `"default"` | Size of the block label. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design radio tokens](https://ant.design/components/radio#design-token). |
 | `theme.radioSize` | number | `16` | Size of the radio button circle. |
@@ -868,7 +1036,7 @@ Radio group for selecting a single option.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

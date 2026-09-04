@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import { createNodeLogger } from './node/index.js';
+import { createNodeLogger, createOtlpSink } from './node/index.js';
 
-export { createNodeLogger };
+export { createNodeLogger, createOtlpSink };

@@ -13,32 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { type } from '@lowdefy/helpers';
+import collectRoutineSteps from '../../build/buildApi/collectRoutineSteps.js';
 
 // The two places a request on a walled connection is authored: page requests
 // (already flattened onto page.requests by buildPages) and request steps in
 // an endpoint routine (a tree of arrays, control objects and steps; a step is
 // the object carrying the stepId buildStep stamped). Every tenant rule walks
 // the same list so the rules agree on what a "site" is and how it is named.
-function collectRoutineSteps(routine, steps) {
-  if (type.isArray(routine)) {
-    routine.forEach((item) => collectRoutineSteps(item, steps));
-    return;
-  }
-  if (!type.isObject(routine)) {
-    return;
-  }
-  if (type.isString(routine.stepId)) {
-    steps.push(routine);
-    return;
-  }
-  Object.keys(routine).forEach((key) => collectRoutineSteps(routine[key], steps));
-}
-
-function toSite({ location, config, tenantConnections }) {
+//
+// `kind` and `routine` are what tell a rule which runtime it is looking at:
+// state is hardcoded `{}` for a page request, and server-authored by the
+// routine's own `:set_state` controls for a step.
+function toSite({ location, kind, config, tenantConnections, routine }) {
   const connection = tenantConnections.get(config.connectionId);
   return {
     location,
+    kind,
+    routine,
     connectionId: config.connectionId,
     field: connection.field,
     connectionType: connection.type,
@@ -61,6 +52,7 @@ function collectWalledSites({ components, context }) {
       sites.push(
         toSite({
           location: `Request "${request.requestId}" at page "${page.pageId}"`,
+          kind: 'page',
           config: request,
           tenantConnections,
         })
@@ -68,15 +60,15 @@ function collectWalledSites({ components, context }) {
     });
   });
   (components.api ?? []).forEach((endpoint) => {
-    const steps = [];
-    collectRoutineSteps(endpoint.routine, steps);
-    steps.forEach((step) => {
+    collectRoutineSteps(endpoint.routine).forEach((step) => {
       if (!tenantConnections.has(step.connectionId)) return;
       sites.push(
         toSite({
           location: `Step "${step.stepId}" at endpoint "${endpoint.endpointId}"`,
+          kind: 'step',
           config: step,
           tenantConnections,
+          routine: endpoint.routine,
         })
       );
     });

@@ -23,10 +23,13 @@ import check from './commands/check/check.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
+import expand from './commands/expand/expand.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initMigrations from './commands/init-migrations/initMigrations.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import modulesUpdate from './commands/modules/modulesUpdate.js';
 import snapshot from './commands/snapshot/snapshot.js';
 import migrate from './commands/migrate/migrate.js';
@@ -66,7 +69,7 @@ const options = {
     .env('LOWDEFY_LOG_LEVEL'),
   mockUser: new Option(
     '--mock-user [user]',
-    'Start the dev server authenticated as a mock user (auth.dev.mockUser). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
+    'Start the dev server authenticated as a named dev user (auth.dev.browserUser, from auth.dev.users). Pass a JSON user object to set identity/roles, e.g. \'{"sub":"dev","roles":["admin"]}\'. Bare flag uses a default roleless user. Dev only.'
   ).env('LOWDEFY_DEV_USER'),
   port: new Option(
     '--port <port>',
@@ -97,7 +100,7 @@ const options = {
 program
   .command('agent-setup')
   .description(
-    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skills).'
+    'Set up this project for AI coding agents (.mcp.json, AGENTS.md, Claude Code skills and hooks).'
   )
   .usage('[options]')
   .addOption(options.configDirectory)
@@ -109,6 +112,14 @@ program
     '--skills <names>',
     'Comma-separated Lowdefy topic skills to install into .claude/skills/ alongside lowdefy-config, e.g. "lowdefy-list-pages,lowdefy-filters". Use "all" (default) or "none".',
     'all'
+  )
+  .option(
+    '--force-skills',
+    'Overwrite skills already in .claude/skills/ with the versions shipped by this CLI, discarding local edits.'
+  )
+  .option(
+    '--git-hooks',
+    'Also install a pre-commit hook that runs "lowdefy check" and the journeys covering the pages the staged files touch.'
   )
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
@@ -135,6 +146,10 @@ program
   .command('check')
   .description('Validate a Lowdefy app against production rules without building it.')
   .usage('[options]')
+  .option(
+    '--against <ref>',
+    'Also report ids and migrations that collide with the given git ref, relative to the merge base.'
+  )
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .option('--json', 'Print the { errors, warnings } report as JSON and nothing else.')
@@ -177,6 +192,20 @@ program
   .action(runCommand({ cliVersion, handler: emails }));
 
 program
+  .command('expand <pageId>')
+  .description(
+    'Write a built page out as ordinary config (pages/<pageId>.yaml) — the way out of a page archetype.'
+  )
+  .usage('<pageId> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .option('--output <path>', 'Write the expanded page here instead of pages/<pageId>.yaml.')
+  .addOption(options.serverDirectory)
+  .option('--yes', 'Overwrite an existing file without asking.')
+  .action(runCommand({ cliVersion, handler: expand }));
+
+program
   .command('docker-output')
   .description('Assemble a minimal Docker runtime (.lowdefy/docker) from a built app.')
   .usage('[options]')
@@ -192,6 +221,8 @@ program
   .usage('[options]')
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
+  .addOption(options.port)
+  .option('--no-agent-setup', 'Do not run "lowdefy agent-setup" on the new project.')
   .action(runCommand({ cliVersion, handler: init }));
 
 program
@@ -227,6 +258,35 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: initVercel }));
+
+const journeys = program
+  .command('journeys')
+  .description('Work with the journeys the app recorded in production.');
+
+journeys
+  .command('compile <trace>')
+  .description(
+    'Compile a recorded trace (JSONL) into candidate journeys, one per distinct session sequence.'
+  )
+  .usage('<trace> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .option('--out <path>', 'Write the candidates here instead of tests/journeys/_candidates.')
+  .addOption(options.serverDirectory)
+  .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('coverage <trace>')
+  .description(
+    'Report the share of the (page, block, event) triples in a recorded trace that a committed journey exercises.'
+  )
+  .usage('<trace> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .action(runCommand({ cliVersion, handler: journeysCoverage }));
 
 const modules = program.command('modules').description('Manage Lowdefy modules.');
 
@@ -309,6 +369,10 @@ program
       'Fraction of changed pixels above which a screenshot counts as drift. Default is 0.001.'
     )
   )
+  .option(
+    '--fail-on-pixel',
+    'Fail --check on screenshot drift too. Only for a pinned rendering container; pixel drift is advisory by default.'
+  )
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(
@@ -317,13 +381,27 @@ program
       'Comma-separated auth.dev.users names to snapshot as; defaults to every declared dev user.'
     )
   )
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Capture from an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
   .action(runCommand({ cliVersion, handler: snapshot }));
 
 program
   .command('test')
-  .description("Run the app's config tests (tests/journeys/*.yaml).")
+  .description(
+    "Run the app's config tests: journeys (tests/journeys/*.yaml) and request tests (tests/requests/*.test.yaml)."
+  )
   .usage('[options]')
   .addOption(options.configDirectory)
+  .addOption(
+    new Option(
+      '--coverage',
+      'Report journey coverage of the config the app declares, and write .lowdefy/test/journeyIndex.json.'
+    )
+  )
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
   .addOption(
@@ -335,6 +413,12 @@ program
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--update',
+      'Fill every journey expectation written with a state path and no value from the state the run observes, and write it back to the journey file.'
+    )
+  )
   .addOption(
     new Option(
       '--url <url>',

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { serializer, type } from '@lowdefy/helpers';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -46,7 +46,7 @@ const CollapseBlock = ({
   }
   return (
     <Collapse
-      id={blockId}
+      {...blockRootProps({ blockId, classNames, styles })}
       defaultActiveKey={properties.defaultActiveKey || panels[0].key}
       bordered={properties.bordered}
       accordion={properties.accordion}
@@ -65,9 +65,7 @@ const CollapseBlock = ({
       }
       expandIconPlacement={properties.expandIconPlacement ?? properties.expandIconPosition}
       destroyOnHidden={properties.destroyInactivePanel}
-      className={classNames.element}
       classNames={{ header: classNames.header, content: classNames.content }}
-      style={styles.element}
       styles={{ header: styles.header, content: styles.content }}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...additionalProps}

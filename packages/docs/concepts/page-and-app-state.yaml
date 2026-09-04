@@ -169,10 +169,11 @@ _ref:
                   - id: my-page
                     type: PageSiderMenu
                     blocks:
-                      id: DisplayGlobalKey
-                      type: Html
-                      html:
-                        _global: key ## Returns 'value'
+                      - id: DisplayGlobalKey
+                        type: Html
+                        properties:
+                          html:
+                            _global: key ## Returns 'value'
                 ```
 
                 ### Modifying global
@@ -189,8 +190,9 @@ _ref:
                     blocks:
                       - id: DisplayGlobalKey
                         type: Html
-                        html:
-                          _global: key ## Returns `value`
+                        properties:
+                          html:
+                            _global: key ## Returns `value`
                       - id: ModifyGlobal
                         type: Button
                         events:
@@ -201,8 +203,9 @@ _ref:
                                 key: New Value
                       - id: DisplayModifiedGlobalKey
                         type: Html
-                        html:
-                          _global: key ## Returns `New Value`
+                        properties:
+                          html:
+                            _global: key ## Returns `New Value`
                 ```
                 ## URL query
                 The `urlQuery` object is used to access variables set in the URL. URL query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action and read using the [`_url_query`](/_url_query) operator. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onMount`](/events-and-actions) event.

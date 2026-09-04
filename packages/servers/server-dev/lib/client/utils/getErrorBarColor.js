@@ -14,17 +14,16 @@
   limitations under the License.
 */
 
-// Three severities: a real error is red, a warning that fails the production
-// build is dark orange, and a plain warning is yellow. An info-level entry (a
-// dev notice such as an unscoped tenant: none read) is not an error - an app
-// with only notices shows the amber bar.
-function isError(error) {
-  return error.level !== 'info' && error.type !== 'ConfigWarning';
-}
+import entrySeverity, { ERROR, PROD_ERROR } from './entrySeverity.js';
+import selectBarEntry from './selectBarEntry.js';
 
+// Three severities: a real error is red, a warning that fails the production
+// build is dark orange, and a plain warning is yellow. The colour is read off
+// the entry selectBarEntry picked, which is the entry the bar renders.
 function getErrorBarColor(errors) {
-  if (errors.some(isError)) return '#cf1322';
-  if (errors.some((error) => error.prodError === true)) return '#ad4e00';
+  const severity = entrySeverity(selectBarEntry(errors));
+  if (severity === ERROR) return '#cf1322';
+  if (severity === PROD_ERROR) return '#ad4e00';
   return '#d48806';
 }
 

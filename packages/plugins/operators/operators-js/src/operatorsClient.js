@@ -67,7 +67,6 @@ export { default as _location } from './operators/client/location.js';
 export { default as _media } from './operators/client/media.js';
 export { default as _menu } from './operators/client/menu.js';
 export { default as _request_details } from './operators/client/request_details.js';
-export { default as _prop } from './operators/client/prop.js';
 export { default as _request } from './operators/client/request.js';
 export { default as _theme } from './operators/client/theme.js';
 export { default as _url_query } from './operators/client/url_query.js';

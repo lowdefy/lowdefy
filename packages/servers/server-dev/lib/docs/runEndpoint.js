@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { callEndpoint, getEndpointConfig } from '@lowdefy/api';
+import { callEndpoint } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-import resolveDevUser from '../server/auth/resolveDevUser.js';
 import formatExplainTrace from './formatExplainTrace.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
-import truncateResponse from './truncateResponse.js';
+import readBuildArtifact from './readBuildArtifact.js';
+import runWithDevContext from './runWithDevContext.js';
 
 // Executes an Api endpoint routine the same way POST /api/endpoints/<endpointId>
 // does (src/routes/endpoints.js), but gated for agent use. Endpoints are not
@@ -44,16 +44,6 @@ async function runEndpoint({ endpointId, payload = {}, user, explain = false, ho
     );
   }
 
-  // A fixture name declared under auth.dev.users, or an inline caller object -
-  // resolveDevUser is the single place a `user` value becomes a caller, and an
-  // unknown name names the fix rather than falling back to a roleless caller.
-  let caller;
-  try {
-    caller = resolveDevUser({ user });
-  } catch (error) {
-    throw new ConfigError(error.message, { cause: error });
-  }
-
   const allowed = await isWriteRequestsAllowed();
   if (!allowed) {
     return {
@@ -64,19 +54,10 @@ async function runEndpoint({ endpointId, payload = {}, user, explain = false, ho
     };
   }
 
-  // Deferred import: createLowdefyContext statically imports build/plugins/*
-  // artifacts, which only exist in a running server directory - importing it
-  // at module load would break every consumer of this module (e.g. the MCP
-  // server) in environments without a full build.
-  const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext, user: caller });
-
-  // getEndpointConfig needs the context's readConfigFile, so the endpoint is
-  // resolved after the context is built. Its not-found ConfigError is answered
-  // as a refusal rather than allowed to escape.
-  try {
-    await getEndpointConfig(context, { endpointId });
-  } catch {
+  // The endpoint artifact is the same file getEndpointConfig reads through
+  // readConfigFile, so a typo'd id is answered here instead of after a full
+  // context construction (a tenant preflight probe and the dynamic js map).
+  if (readBuildArtifact({ name: `api/${endpointId}.json` }) === null) {
     return {
       refused: true,
       reason:
@@ -85,48 +66,44 @@ async function runEndpoint({ endpointId, payload = {}, user, explain = false, ho
     };
   }
 
-  context.logger.info({ event: 'agent_run_endpoint', endpointId, user });
-
-  const trace = explain === true ? [] : undefined;
-  const formatExplain = () =>
-    trace.map((stepTrace) =>
-      formatExplainTrace({
-        trace: stepTrace,
-        requestType: stepTrace.connection?.type ?? 'unknown',
-        user: context.user,
-      })
-    );
-  try {
+  return runWithDevContext({
+    createTrace: () => [],
+    explain,
+    // callEndpoint records one trace entry per request step; a control-only
+    // routine contributes none and explain comes back as an empty array.
+    formatExplain: ({ context, trace }) =>
+      trace.map((stepTrace) =>
+        formatExplainTrace({
+          trace: stepTrace,
+          requestType: stepTrace.connection?.type ?? 'unknown',
+          secrets: context.secrets,
+          user: context.user,
+        })
+      ),
+    honoContext,
+    // The resolved caller, not the raw argument: a fixture name, an inline
+    // object and the roleless default all read the same in the terminal, and
+    // this is the identity the routine actually ran as.
+    log: ({ context }) =>
+      context.logger.info({
+        event: 'agent_run_endpoint',
+        endpointId,
+        user: { id: context.user?.id ?? null, roles: context.user?.roles ?? [] },
+      }),
     // callEndpoint refuses InternalApi endpoints and enforces the endpoint's
     // auth and payloadSchema exactly as the HTTP route does. A :reject or
     // :throw resolves normally with success: false and the routine's own
-    // error, so neither reaches the catch below.
-    const result = await callEndpoint(context, {
-      blockId: undefined,
-      endpointId,
-      pageId: undefined,
-      payload,
-      trace,
-    });
-    if (trace) {
-      return { refused: false, ...truncateResponse(result), explain: formatExplain() };
-    }
-    return { refused: false, ...truncateResponse(result) };
-  } catch (error) {
-    const failure = {
-      refused: false,
-      error: {
-        name: error.name,
-        message: error.message,
-        source: error.source,
-        configKey: error.configKey,
-      },
-    };
-    if (trace) {
-      failure.explain = formatExplain();
-    }
-    return failure;
-  }
+    // error, so neither reaches the fault path.
+    run: ({ context, trace }) =>
+      callEndpoint(context, {
+        blockId: undefined,
+        endpointId,
+        pageId: undefined,
+        payload,
+        trace,
+      }),
+    user,
+  });
 }
 
 export default runEndpoint;

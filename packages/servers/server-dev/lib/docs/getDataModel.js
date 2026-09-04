@@ -68,6 +68,9 @@ function createCollection({ name, declaration }) {
     declared,
     tenant: declared ? declaration.tenant ?? null : null,
     fields: declared ? declaration.fields ?? {} : {},
+    // The JSON Schema array form, so { type: object, properties: fields,
+    // required } is a schema an agent can compile as it stands.
+    required: declared ? declaration.required ?? [] : [],
     relations: declared ? declaration.relations ?? {} : {},
     indexes: declared ? declaration.indexes ?? [] : [],
     connections: [],

@@ -410,7 +410,7 @@ test('validateBlockProperties error is not suppressed by an unrelated check slug
   const components = componentsWithBlock({
     id: 'submit',
     type: 'Button',
-    '~ignoreBuildChecks': ['types'],
+    '~ignoreBuildChecks': ['block-types'],
     properties: { titel: 'Save' },
   });
   addKeys({ components, context });
@@ -436,4 +436,82 @@ test('validateBlockProperties compiles each block type validator once per contex
   expect(Object.keys(context.blockPropertiesValidators)).toEqual(['Button']);
   expect(context.blockPropertiesValidators.Button.schema.required).toBeUndefined();
   expect(blockSchemas.Button.properties.properties.required).toEqual(['title']);
+});
+
+test('validateBlockProperties validates the literal elements of an array that holds an operator', () => {
+  const context = createContext();
+  const components = componentsWithBlock({
+    id: 'qty',
+    type: 'NumberInput',
+    properties: { options: [{ _state: 'first' }, { b: 1 }] },
+  });
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block "qty" of type "NumberInput": properties.options[1]: unknown property "b". Did you mean "a"?'
+  );
+});
+
+test('validateBlockProperties skips array level keywords for an array that holds an operator', () => {
+  const context = createContext();
+  context.blockSchemas = {
+    Range: {
+      properties: {
+        properties: {
+          type: 'object',
+          properties: {
+            value: { type: 'array', minItems: 3, maxItems: 3, items: { type: 'string' } },
+          },
+        },
+      },
+    },
+  };
+  const components = componentsWithBlock({
+    id: 'range',
+    type: 'Range',
+    properties: { value: [{ _date: 'now' }, 'a'] },
+  });
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('validateBlockProperties reports a wrong element type beside an operator element', () => {
+  const context = createContext();
+  context.blockSchemas = {
+    Range: {
+      properties: {
+        properties: {
+          type: 'object',
+          properties: { value: { type: 'array', items: { type: 'string' } } },
+        },
+      },
+    },
+  };
+  const components = componentsWithBlock({
+    id: 'range',
+    type: 'Range',
+    properties: { value: [{ _date: 'now' }, 7] },
+  });
+  expect(() => buildPages({ components, context })).toThrow(
+    'Block "range" of type "Range": properties.value[1] must be string. Received 7.'
+  );
+});
+
+test('validateBlockProperties leaves the elements unchecked when the items schema is a tuple', () => {
+  const context = createContext();
+  context.blockSchemas = {
+    Pair: {
+      properties: {
+        properties: {
+          type: 'object',
+          properties: {
+            value: { type: 'array', items: [{ type: 'string' }, { type: 'number' }] },
+          },
+        },
+      },
+    },
+  };
+  const components = componentsWithBlock({
+    id: 'pair',
+    type: 'Pair',
+    properties: { value: [{ _date: 'now' }, 'not a number'] },
+  });
+  expect(() => buildPages({ components, context })).not.toThrow();
 });

@@ -37,6 +37,13 @@ import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
 
+// The non-enumerable provenance markers the build stamps on config nodes:
+// ~r (ref file), ~k (key), ~l (line), ~c (column) and ~x (the ${ … } source).
+// They are carried across a copy so an error raised on a node that has been
+// copied — a component body, an expanded ref — still resolves to source.
+// cloneWithMarkers in @lowdefy/build carries the same set; keep them in step.
+const MARKER_KEYS = ['~r', '~k', '~l', '~c', '~x'];
+
 const lowdefyErrorTypes = {
   ActionError,
   AuthenticationError,
@@ -82,6 +89,15 @@ const makeReplacer =
       return { '~e': extractErrorProps(newValue, { omit: omitErrorProps }) };
     }
     if (type.isObject(newValue)) {
+      // Capture the markers before any shallow copy: a spread drops non-enumerable
+      // properties, and the Date replacement below spreads the object, so reading
+      // the markers after it would lose the ~k of every object with a Date child.
+      const markers = skipMarkers
+        ? []
+        : MARKER_KEYS.filter((marker) => newValue[marker] !== undefined).map((marker) => [
+            marker,
+            newValue[marker],
+          ]);
       Object.keys(newValue).forEach((k) => {
         if (type.isDate(newValue[k])) {
           // shallow copy original value before reassigning a value in order not to mutate original value
@@ -90,34 +106,14 @@ const makeReplacer =
         }
       });
       if (!skipMarkers) {
-        // Capture marker values before shallow copy (spread doesn't copy non-enumerable props)
-        const markerR = newValue['~r'];
-        const markerK = newValue['~k'];
-        const markerL = newValue['~l'];
-        if (markerR || markerK || markerL) {
+        if (markers.length > 0) {
           // Shallow copy to avoid mutating the original object's property descriptors
           if (newValue === value) {
             newValue = { ...newValue };
           }
-          if (markerR) {
-            Object.defineProperty(newValue, '~r', {
-              value: markerR,
-              enumerable: true,
-              writable: true,
-              configurable: true,
-            });
-          }
-          if (markerK) {
-            Object.defineProperty(newValue, '~k', {
-              value: markerK,
-              enumerable: true,
-              writable: true,
-              configurable: true,
-            });
-          }
-          if (markerL) {
-            Object.defineProperty(newValue, '~l', {
-              value: markerL,
+          for (const [marker, markerValue] of markers) {
+            Object.defineProperty(newValue, marker, {
+              value: markerValue,
               enumerable: true,
               writable: true,
               configurable: true,
@@ -134,17 +130,15 @@ const makeReplacer =
         }
         return item;
       });
-      // Preserve ~l, ~k, ~r on arrays by wrapping in a marker object
-      if (
-        !skipMarkers &&
-        (newValue['~l'] !== undefined ||
-          newValue['~k'] !== undefined ||
-          newValue['~r'] !== undefined)
-      ) {
+      // Arrays cannot carry the markers through JSON, so wrap them
+      const arrayMarkers = skipMarkers
+        ? []
+        : MARKER_KEYS.filter((marker) => newValue[marker] !== undefined);
+      if (arrayMarkers.length > 0) {
         const wrapper = { '~arr': mappedArray };
-        if (newValue['~r'] !== undefined) wrapper['~r'] = newValue['~r'];
-        if (newValue['~k'] !== undefined) wrapper['~k'] = newValue['~k'];
-        if (newValue['~l'] !== undefined) wrapper['~l'] = newValue['~l'];
+        for (const marker of arrayMarkers) {
+          wrapper[marker] = newValue[marker];
+        }
         return wrapper;
       }
       return mappedArray;
@@ -152,62 +146,31 @@ const makeReplacer =
     return newValue;
   };
 
+// The markers travel through JSON as ordinary keys; restore them as the
+// non-enumerable properties the build reads.
+function restoreMarkers(target, source) {
+  for (const marker of MARKER_KEYS) {
+    if (source[marker] !== undefined) {
+      Object.defineProperty(target, marker, {
+        value: source[marker],
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+  }
+}
+
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
   if (type.isObject(newValue)) {
     // Restore arrays that were wrapped with ~arr marker
     if (type.isArray(newValue['~arr'])) {
       const arr = newValue['~arr'];
-      if (newValue['~r']) {
-        Object.defineProperty(arr, '~r', {
-          value: newValue['~r'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~k']) {
-        Object.defineProperty(arr, '~k', {
-          value: newValue['~k'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~l']) {
-        Object.defineProperty(arr, '~l', {
-          value: newValue['~l'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
+      restoreMarkers(arr, newValue);
       newValue = arr;
     } else {
-      if (newValue['~r']) {
-        Object.defineProperty(newValue, '~r', {
-          value: newValue['~r'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~k']) {
-        Object.defineProperty(newValue, '~k', {
-          value: newValue['~k'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
-      if (newValue['~l']) {
-        Object.defineProperty(newValue, '~l', {
-          value: newValue['~l'],
-          enumerable: false,
-          writable: true,
-          configurable: true,
-        });
-      }
+      restoreMarkers(newValue, newValue);
     }
   }
   if (customReviver) {

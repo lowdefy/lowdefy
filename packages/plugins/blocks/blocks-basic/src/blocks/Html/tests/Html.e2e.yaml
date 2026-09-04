@@ -53,4 +53,4 @@ blocks:
           type: SetState
           params:
             selected_text:
-              _event: selectedText
+              _event: selection

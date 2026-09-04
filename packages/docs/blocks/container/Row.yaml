@@ -1,0 +1,71 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: Row
+    pageTitle: Row
+    section: Container Blocks
+    filePath: blocks/container/Row.yaml
+    block_type: Row
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/Row
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Row/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/Row/gallery.yaml
+    description: >
+      Arranges its children in a flex row. `Row`, `Stack` and `Grid` are the framework-owned
+      arrangement blocks: the container says how the children are arranged, and each child
+      says how big it is.
+    guide: |
+      ## Sizing a child
+
+      A `Row` sets the arrangement — direction, `gap`, `wrap`, `align` and `justify`. A
+      child's size is a Tailwind class on the child, set with the `class` key:
+
+      ```yaml
+      - id: toolbar
+        type: Row
+        properties:
+          gap: sm
+          wrap: nowrap
+        blocks:
+          - id: search
+            type: TextInput
+            class: grow
+          - id: refresh
+            type: Button
+            class: shrink-0
+          - id: settings
+            type: Button
+            class: ml-auto
+      ```
+
+      `grow`, `shrink-0`, `basis-1/3`, `w-64`, `self-center` and their responsive variants
+      (`md:w-full`) all work, because the class lands on the element that is the flex item.
+
+      ## Row and Flex
+
+      `Flex` in `@lowdefy/blocks-antd` stays and keeps working. `Row` and `Stack` are the
+      framework-owned equivalents: they take no antd theme, they express arrangement as
+      Tailwind utility classes, and they are what the `layout:` deprecation names as the
+      replacement.
+
+      ## Migrating from `layout:`
+
+      Siblings that carried `layout: { flex, grow, shrink, size }` become the children of one
+      `Row`, with those keys as Tailwind utility classes, and the area's `gap`, `align`,
+      `justify` and `wrap` become the `Row`'s properties. `layout:` still works — see
+      [Layout](/layout-overview). `lowdefy check` reports every remaining site under the
+      `layout-deprecated` slug, and `lowdefy upgrade` offers the optional `layout-to-containers`
+      codemod, which does the mechanical rewrite and reports the sites it refuses.

@@ -68,7 +68,6 @@ export { default as _js } from './operators/client/js.schema.js';
 export { default as _location } from './operators/client/location.schema.js';
 export { default as _media } from './operators/client/media.schema.js';
 export { default as _menu } from './operators/client/menu.schema.js';
-export { default as _prop } from './operators/client/prop.schema.js';
 export { default as _request } from './operators/client/request.schema.js';
 export { default as _request_details } from './operators/client/request_details.schema.js';
 export { default as _url_query } from './operators/client/url_query.schema.js';

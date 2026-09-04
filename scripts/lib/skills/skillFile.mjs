@@ -59,12 +59,31 @@ export function wrapGenerated(body) {
   return `${GENERATED_START}\n${body}\n${GENERATED_END}`;
 }
 
-export function createSkillFile({ name, description, title, generated, recipe }) {
+export const SKILL_KINDS = ['recipe', 'reference'];
+
+// The frontmatter is generated in full from the manifest and the running framework version, so a
+// changed description or kind reaches an existing skill and every file carries the version it was
+// generated from. Everything below the closing "---" is left untouched.
+export function renderFrontmatter({ name, description, kind, version }) {
   return `---
 name: ${name}
 description: ${description}
+kind: ${kind}
+lowdefyVersion: ${version}
 ---
+`;
+}
 
+export function replaceFrontmatter({ content, frontmatter }) {
+  const match = content.match(/^---\n[\s\S]*?\n---\n/);
+  if (!match) {
+    throw new Error('Skill file has no frontmatter block. Expected it to start with "---".');
+  }
+  return frontmatter + content.slice(match[0].length);
+}
+
+export function createSkillFile({ name, description, kind, version, title, generated, recipe }) {
+  return `${renderFrontmatter({ name, description, kind, version })}
 # ${title}
 
 ${wrapGenerated(generated)}
@@ -73,17 +92,4 @@ ${RECIPE_HEADING}
 
 ${recipe}
 `;
-}
-
-// Line counts for the shrink metric. Generated lines are the marker region inclusive; recipe
-// lines run from the "## Recipe" heading to the end of the file.
-export function countSkillLines(content) {
-  const lines = content.split('\n');
-  const total = content.endsWith('\n') ? lines.length - 1 : lines.length;
-  const startLine = lines.indexOf(GENERATED_START);
-  const endLine = lines.indexOf(GENERATED_END);
-  const generated = startLine === -1 || endLine === -1 ? 0 : endLine - startLine + 1;
-  const recipeLine = lines.indexOf(RECIPE_HEADING);
-  const recipe = recipeLine === -1 ? 0 : total - recipeLine;
-  return { total, generated, recipe };
 }

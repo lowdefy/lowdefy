@@ -18,7 +18,7 @@ import React from 'react';
 import { type, get } from '@lowdefy/helpers';
 import { Breadcrumb } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const BreadcrumbBlock = ({
@@ -34,10 +34,8 @@ const BreadcrumbBlock = ({
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   return (
     <Breadcrumb
-      id={blockId}
-      className={classNames.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       separator={properties.separator}
-      style={styles.element}
       items={(properties.list ?? []).map((link, index) => ({
         key: index,
         title: (

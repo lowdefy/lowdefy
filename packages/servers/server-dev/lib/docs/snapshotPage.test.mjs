@@ -45,11 +45,18 @@ const PNG = Buffer.from('fake-png');
 
 function createPage({ pageId = 'home', state = { a: 1 }, ready = true, rootHtml } = {}) {
   const root = type(rootHtml) ? { outerHTML: rootHtml } : null;
+  // What the capture settle touches: the injected style tag is kept so a test
+  // can assert on it, and fonts/rAF resolve immediately.
+  const head = { children: [], appendChild: (node) => head.children.push(node) };
   const page = {
+    head,
     evaluate: jest.fn(async (fn, id) => {
       globalThis.document = {
         getElementById: (elementId) => (elementId === 'root' ? root : null),
         documentElement: { outerHTML: '<html><body>no root</body></html>' },
+        createElement: () => ({ textContent: '' }),
+        head,
+        fonts: { ready: Promise.resolve() },
       };
       globalThis.window = {
         lowdefy: {
@@ -76,10 +83,17 @@ function type(value) {
   return value !== undefined;
 }
 
+// The capture settle resolves after `document.fonts.ready`, so its rAF call
+// happens once `evaluate` has already restored the process globals.
 beforeEach(() => {
+  globalThis.requestAnimationFrame = (callback) => callback();
   mockGetBrowser.mockResolvedValue({ isConnected: () => true });
   mockReadPageArtifact.mockReturnValue({ id: 'home', type: 'Box' });
   mockRunSteps.mockResolvedValue({ results: [], screenshots: [], failure: undefined });
+});
+
+afterEach(() => {
+  delete globalThis.requestAnimationFrame;
 });
 
 test('snapshotPage returns an error when origin is missing', async () => {
@@ -139,6 +153,18 @@ test('snapshotPage returns screenshot, dom, state and snapshotIgnore', async () 
   });
   expect(mockReadPageArtifact).toHaveBeenCalledWith({ pageId: 'home' });
   expect(context.close).toHaveBeenCalled();
+});
+
+test('snapshotPage freezes animations and transitions before it captures', async () => {
+  const { page } = createPage({ rootHtml: '<div id="root"></div>' });
+
+  await snapshotPage({ origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(page.head.children).toHaveLength(1);
+  expect(page.head.children[0].textContent).toBe(
+    '*, *::before, *::after { animation: none !important; transition: none !important; }'
+  );
+  expect(page.waitForTimeout).not.toHaveBeenCalled();
 });
 
 test('snapshotPage returns an empty snapshotIgnore when the page declares none', async () => {

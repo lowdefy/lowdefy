@@ -277,12 +277,12 @@ A Header for marketing pages with button navigation and call-to-action buttons.
 | `profile.arrow` | boolean \| object | `false` | Show arrow on the dropdown. |
 | `profile.arrow.pointAtCenter` | boolean | - |  |
 | `darkModeToggle` | boolean | `false` | Show a dark mode toggle icon in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onProfileMenuClick` | `{ key, keyPath, pageId, url }` | Trigger action when a profile dropdown menu item is clicked. |
-| `onProfileMenuOpen` | `{ open }` | Trigger action when the profile dropdown opens or closes. |
+| `onProfileMenuClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a profile dropdown menu item is clicked. |
+| `onProfileMenuOpen` | `{ open: boolean }` | Trigger action when the profile dropdown opens or closes. |
 
 | Key | Target |
 | --- | --- |

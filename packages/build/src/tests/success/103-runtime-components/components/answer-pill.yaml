@@ -1,5 +1,4 @@
 # A runtime component with a typed, required prop, a defaulted prop, and a slot.
-id: AnswerPill
 props:
   result:
     type: string
@@ -25,6 +24,15 @@ blocks:
         properties:
           content:
             _prop: tone
+      # A static runtime operator inside a component body must be folded by
+      # the build's precompute pass, exactly as one written on a page is.
+      - id: static_label
+        type: Paragraph
+        properties:
+          content:
+            _string.concat:
+              - Answer
+              - ': '
       - id: footer_wrap
         type: Box
         blocks:

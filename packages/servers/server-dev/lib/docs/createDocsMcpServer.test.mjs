@@ -68,6 +68,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
   'lowdefy_run_journey',
+  'lowdefy_measure_page',
   'lowdefy_snapshot',
   'lowdefy_scaffold_page',
   'lowdefy_inspect_state',
@@ -78,6 +79,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_migrations_status',
   'lowdefy_migrate',
   'lowdefy_restart',
+  'lowdefy_app_brief',
   'lowdefy_app_map',
   'lowdefy_data_model',
   'lowdefy_checkpoint',
@@ -85,7 +87,10 @@ const EXPECTED_TOOLS = [
   'lowdefy_snapshot_state',
   'lowdefy_load_state',
   'lowdefy_list_state_checkpoints',
-  'lowdefy_checkpoint_to_mocks',
+  'lowdefy_prod_errors',
+  'lowdefy_prod_trace',
+  'lowdefy_prod_slow',
+  'lowdefy_prod_repro',
 ];
 
 async function connectClient() {
@@ -178,6 +183,7 @@ test('MCP tools that render a page headless advertise an optional user parameter
   [
     'lowdefy_screenshot_page',
     'lowdefy_run_journey',
+    'lowdefy_measure_page',
     'lowdefy_snapshot',
     'lowdefy_inspect_state',
     'lowdefy_eval_operator',
@@ -238,6 +244,31 @@ test('MCP tools/call lowdefy_seed_fixture passes name and reset through and retu
   await client.close();
 });
 
+test('MCP ops tools are registered without credentials and refuse with howToEnable', async () => {
+  delete process.env.LOWDEFY_OPS_QUERY_URL;
+  delete process.env.LOWDEFY_OPS_READ_TOKEN;
+  delete process.env.LOWDEFY_OPS_DATASET;
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  for (const name of [
+    'lowdefy_prod_errors',
+    'lowdefy_prod_trace',
+    'lowdefy_prod_slow',
+    'lowdefy_prod_repro',
+  ]) {
+    expect(tools.find((tool) => tool.name === name).description).toContain('lowdefy_find_config');
+  }
+  const result = await client.callTool({
+    name: 'lowdefy_prod_errors',
+    arguments: { since: 'deploy', group_by: 'source' },
+  });
+  const parsed = JSON.parse(result.content[0].text);
+  expect(parsed.refused).toBe(true);
+  expect(parsed.reason).toContain('LOWDEFY_OPS_QUERY_URL');
+  expect(parsed.howToEnable).toContain('LOWDEFY_OPS_READ_TOKEN');
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_get_schema returns a block schema', async () => {
   const client = await connectClient();
   const result = await client.callTool({
@@ -275,10 +306,10 @@ test('MCP get_schema, get_doc and find_config describe and return hazards', asyn
 
   const found = await client.callTool({
     name: 'lowdefy_find_config',
-    arguments: { id: 'my_button' },
+    arguments: { id: 'req-tenant' },
   });
   expect(JSON.parse(found.content[0].text).matches[0].hazards[0].id).toEqual(
-    'visible-false-prunes-state'
+    'write-request-hazard'
   );
   await client.close();
 });

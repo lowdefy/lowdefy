@@ -124,6 +124,59 @@ Click to navigate
           newTab: true
 ```
 
+```yaml
+- id: span_click_basic
+  type: Span
+  style:
+    .element:
+      color: "#1677ff"
+      textDecoration: underline
+      cursor: pointer
+  properties:
+    content: Click me to show a message
+  events:
+    onClick:
+      - id: span_click_basic_msg
+        type: DisplayMessage
+        params:
+          content: You clicked the Span!
+          status: success
+- id: span_click_set_state
+  type: Span
+  style:
+    .element:
+      background: "#e6f4ff"
+      padding: 4px 12px
+      borderRadius: 4
+      color: "#1677ff"
+      fontWeight: bold
+  properties:
+    content: Click to update state
+  events:
+    onClick:
+      - id: span_click_set_state_action
+        type: SetState
+        params:
+          spanClicked: true
+          clickedAt:
+            _date: now
+- id: span_click_link
+  type: Span
+  style:
+    .element:
+      color: "#722ed1"
+      textDecoration: underline
+  properties:
+    content: Click to navigate
+  events:
+    onClick:
+      - id: span_click_link_action
+        type: Link
+        params:
+          url: https://docs.lowdefy.com
+          newTab: true
+```
+
 Underlined span
 
 uppercase span

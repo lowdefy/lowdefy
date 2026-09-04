@@ -18,11 +18,6 @@ import { jest } from '@jest/globals';
 
 const mockRunRequest = jest.fn();
 
-// parseUserParam resolves dev user fixtures, which read build/auth.json from a
-// running server directory - the artifact is mocked as an app without fixtures.
-jest.unstable_mockModule('../../../lib/build/auth.js', () => ({
-  default: {},
-}));
 jest.unstable_mockModule('../../../lib/docs/runRequest.js', () => ({
   default: mockRunRequest,
 }));
@@ -62,24 +57,25 @@ test('docsRunRequestHandler passes a user object through to runRequest', async (
   });
 });
 
-test('docsRunRequestHandler returns 400 when user is malformed JSON', async () => {
-  const c = createContext({ pageId: 'home', requestId: 'get_rows', user: '{"roles":' });
+test('docsRunRequestHandler returns 400 when runRequest refuses the user', async () => {
+  const { ConfigError } = await import('@lowdefy/errors');
+  mockRunRequest.mockRejectedValue(new ConfigError('Unknown dev user "adin".'));
+  const c = createContext({ pageId: 'home', requestId: 'get_rows', user: 'adin' });
 
   const result = await docsRunRequestHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/must be JSON/);
-  expect(mockRunRequest).not.toHaveBeenCalled();
+  expect(result.data.error).toEqual('Unknown dev user "adin".');
 });
 
-test('docsRunRequestHandler returns 400 when user names an undeclared dev user', async () => {
+test('docsRunRequestHandler passes a dev user fixture name through unresolved', async () => {
+  // runRequest resolves it: one resolver, so REST and MCP refuse an unknown
+  // name with the same message, as the ConfigError case above.
   const c = createContext({ pageId: 'home', requestId: 'get_rows', user: 'admin' });
 
-  const result = await docsRunRequestHandler(c);
+  await docsRunRequestHandler(c);
 
-  expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/No dev users are declared/);
-  expect(mockRunRequest).not.toHaveBeenCalled();
+  expect(mockRunRequest).toHaveBeenCalledWith(expect.objectContaining({ user: 'admin' }));
 });
 
 test('docsRunRequestHandler passes an undefined user when the body omits it', async () => {

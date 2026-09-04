@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic Row
+  blocks:
+    - id: row_basic
+      type: Row
+      blocks:
+        - id: row_basic_one
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: One
+        - id: row_basic_two
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: Two
+        - id: row_basic_three
+          type: Box
+          class: p-2 rounded border border-blue-500/40 bg-blue-500/10
+          properties:
+            content: Three
+
+- title: Gap, align and justify
+  blocks:
+    - id: row_spaced
+      type: Row
+      properties:
+        gap: lg
+        justify: between
+        align: center
+      class: p-2 rounded border border-dashed border-gray-400/60
+      blocks:
+        - id: row_spaced_title
+          type: Html
+          properties:
+            html: '<h3 style="margin: 0;">Report</h3>'
+        - id: row_spaced_meta
+          type: Html
+          properties:
+            html: '<span style="opacity: 0.6;">Updated today</span>'
+
+- title: Child sizing with classes
+  blocks:
+    - id: row_sized
+      type: Row
+      properties:
+        gap: sm
+        wrap: nowrap
+      blocks:
+        - id: row_sized_fixed
+          type: Box
+          class: w-32 shrink-0 p-2 rounded bg-gray-500/10
+          properties:
+            content: w-32
+        - id: row_sized_fill
+          type: Box
+          class: grow p-2 rounded bg-green-500/10
+          properties:
+            content: grow
+        - id: row_sized_pushed
+          type: Box
+          class: ml-auto p-2 rounded bg-orange-500/10
+          properties:
+            content: ml-auto

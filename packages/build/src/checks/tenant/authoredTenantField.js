@@ -15,6 +15,7 @@
 */
 import { ConfigError } from '@lowdefy/errors';
 
+import collectAuthoredPositions from './collectAuthoredPositions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import collectWalledSites from './collectWalledSites.js';
 import findTenantField from './findTenantField.js';
@@ -28,23 +29,29 @@ import findTenantField from './findTenantField.js';
 // Literal config only: a filter or document composed by an operator is
 // invisible to a static walk, so a site whose value is an operator node is
 // skipped rather than guessed at (the wall still refuses it at runtime).
+//
+// The scan covers the positions the runtime refuses and no others
+// (collectAuthoredPositions): reading the tenant field - a projection, a sort,
+// a $group key - is legitimate and must not fail a build.
 function run({ components, context }) {
   collectWalledSites({ components, context }).forEach((site) => {
     if (site.tenant === 'none' || site.tenant === 'authored') return;
-    const { found } = findTenantField({ value: site.properties, field: site.field });
+    const found = collectAuthoredPositions({ properties: site.properties }).some(
+      (value) => findTenantField({ value, field: site.field }).found
+    );
     if (!found) return;
     collectExceptions(
       context,
       new ConfigError(
         `${site.location} sets "${site.field}" itself on tenant connection "${site.connectionId}". The wall injects it — an authored value is refused at runtime. Remove the clause; the caller's organization is applied automatically.`,
-        { configKey: site.configKey, checkSlug: 'tenant' }
+        { configKey: site.configKey, checkSlug: 'tenant-authored' }
       )
     );
   });
 }
 
 const authoredTenantField = {
-  slug: 'tenant',
+  slug: 'tenant-authored',
   checkOnly: false,
   run,
 };

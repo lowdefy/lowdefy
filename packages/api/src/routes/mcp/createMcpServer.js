@@ -20,6 +20,7 @@ import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
 import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
+import logEvent from '../../log/logEvent.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
 function toToolName(id) {
@@ -113,7 +114,23 @@ async function createMcpServer({ context }) {
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
-    context.logger.info({ event: 'mcp_tool_call', tool: name });
+    const startTime = performance.now();
+    // One wide event per tool call, emitted on every exit below - a call that
+    // named no tool, one the caller may not see, a failed endpoint and a
+    // successful one all leave the same shape behind.
+    const logToolCall = ({ endpointId, error, success }) =>
+      logEvent({
+        context,
+        event: success ? 'agent_tool_completed' : 'agent_tool_failed',
+        fields: {
+          tool: name,
+          endpoint_id: endpointId,
+          transport: 'mcp',
+          duration_ms: Math.round(performance.now() - startTime),
+          success,
+          error,
+        },
+      });
 
     // A role or scope shortfall answers exactly like a name that does not
     // exist: any distinguishable error would let a caller enumerate which
@@ -126,6 +143,7 @@ async function createMcpServer({ context }) {
 
     const endpoint = (mcpConfig.endpoints ?? []).find(({ id }) => toToolName(id) === name);
     if (type.isNone(endpoint)) {
+      logToolCall({ success: false });
       return unknownTool;
     }
 
@@ -135,6 +153,7 @@ async function createMcpServer({ context }) {
         scope: endpoint.scope,
       });
       if (type.isNone(endpointConfig)) {
+        logToolCall({ endpointId: endpoint.id, success: false });
         return unknownTool;
       }
       const { error, response, success } = await callEndpoint(context, {
@@ -145,6 +164,7 @@ async function createMcpServer({ context }) {
       });
       if (!success) {
         const deserialized = serializer.deserialize(error);
+        logToolCall({ endpointId: endpoint.id, error: deserialized, success: false });
         return {
           content: [
             {
@@ -161,9 +181,13 @@ async function createMcpServer({ context }) {
       const result = {
         content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }],
       };
-      if (!type.isNone(endpointConfig.responseSchema)) {
+      // MCP requires structuredContent to be a JSON object; an endpoint that
+      // returns an array or a scalar has its result in `content` only, rather
+      // than a field strict clients reject.
+      if (!type.isNone(endpointConfig.responseSchema) && type.isObject(deserializedResponse)) {
         result.structuredContent = deserializedResponse;
       }
+      logToolCall({ endpointId: endpoint.id, success: true });
       return result;
     } catch (error) {
       // Refused calls to gated tools and payloads that miss the payloadSchema
@@ -182,6 +206,7 @@ async function createMcpServer({ context }) {
       } else {
         await context.handleError(error);
       }
+      logToolCall({ endpointId: endpoint.id, error, success: false });
       return {
         content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,

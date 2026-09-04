@@ -51,6 +51,12 @@ requests:
                   _payload: page.pageSize
             total:
               - $count: count
+  - id: get_regions
+    type: StaticRowsFind
+    connectionId: regions
+    properties:
+      where:
+        code: eu
   - id: get_catalogue
     type: MongoDBFind
     connectionId: catalogue
@@ -70,6 +76,9 @@ events:
           current: 1
           pageSize: 5
   onMount:
+    - id: load_regions
+      type: Request
+      params: get_regions
     - id: load_catalogue
       type: Request
       params: get_catalogue
@@ -146,6 +155,36 @@ blocks:
           args:
             total:
               _state: total
+  - id: region
+    type: Paragraph
+    properties:
+      content:
+        _if_none:
+          - _request: get_regions.0.label
+          - No region
+  - id: filter_badge
+    type: StatusBadge
+    properties:
+      label:
+        _titleCase:
+          _state: filter
+      tone: neutral
+  - id: copy_first
+    type: Button
+    visible:
+      _gt:
+        - _state: total
+        - 0
+    properties:
+      title: Copy first id
+      size: small
+    events:
+      onClick:
+        - id: copy_row
+          type: CopyRow
+          params:
+            rowId:
+              _state: items.0._id
   - id: empty_state
     type: Alert
     visible:

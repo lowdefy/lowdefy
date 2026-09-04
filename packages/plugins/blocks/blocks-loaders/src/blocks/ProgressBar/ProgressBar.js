@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import cssStyles from './style.module.css';
 
@@ -31,15 +31,17 @@ const ProgressBar = ({ blockId, classNames, properties, styles }) => {
 
   return (
     <div
-      id={blockId}
-      className={classNames?.element}
-      style={{
-        ...styles?.element,
-        '--height': `${height}px`,
-        '--progress': `${progress}%`,
-        '--transition': `all ${transitionTime}ms ease`,
-        '--opacity': progress < 100 ? 1 : 0,
-      }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        style: {
+          '--height': `${height}px`,
+          '--progress': `${progress}%`,
+          '--transition': `all ${transitionTime}ms ease`,
+          '--opacity': progress < 100 ? 1 : 0,
+        },
+      })}
     >
       <div className={cssStyles['progress-bar-container']}>
         <div className={cssStyles['progress-bar-loader']}>

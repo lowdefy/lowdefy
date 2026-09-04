@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import addKeys from '../addKeys.js';
 import buildPages from './buildPages.js';
 import testContext from '../../test-utils/testContext.js';
 
@@ -962,4 +963,99 @@ test('same block id may be used on different pages', () => {
       },
     ],
   });
+});
+
+const checkBlockMetas = {
+  Container: { category: 'container' },
+  Button: {
+    category: 'display',
+    events: {
+      onClick: {
+        description: 'Click.',
+        payload: { type: 'object', properties: { value: { type: 'string' } } },
+      },
+    },
+  },
+};
+
+const checkBlockSchemas = {
+  Button: {
+    type: 'object',
+    properties: {
+      properties: {
+        type: 'object',
+        additionalProperties: false,
+        properties: { title: { type: 'string' } },
+      },
+    },
+  },
+};
+
+function createCollectingContext() {
+  const collectingContext = testContext({ blockMetas: checkBlockMetas, logger });
+  collectingContext.blockSchemas = checkBlockSchemas;
+  collectingContext.errors = [];
+  return collectingContext;
+}
+
+// One page carrying a bad block property, a misspelt event name and an _event
+// path that is not in the declared payload, plus a later sibling block.
+function componentsWithThreeCheckErrors(ignoreBuildChecks) {
+  const page = {
+    id: 'page_1',
+    type: 'Container',
+    auth,
+    blocks: [
+      {
+        id: 'first',
+        type: 'Button',
+        properties: { titel: 'Save' },
+        events: {
+          onClik: [{ id: 'a', type: 'Reset' }],
+          onClick: [{ id: 'b', type: 'SetState', params: { x: { _event: 'valu' } } }],
+        },
+      },
+      { id: 'second', type: 'Button', properties: { title: 'Ok' } },
+    ],
+  };
+  if (ignoreBuildChecks) {
+    page['~ignoreBuildChecks'] = ignoreBuildChecks;
+  }
+  return { pages: [page] };
+}
+
+test('buildPages reports a block property, an event name and an event payload error in one build', () => {
+  const collectingContext = createCollectingContext();
+  const components = componentsWithThreeCheckErrors();
+  addKeys({ components, context: collectingContext });
+  buildPages({ components, context: collectingContext });
+
+  expect(collectingContext.errors.map((error) => error.checkSlug).sort()).toEqual([
+    'block-properties',
+    'event-payload',
+    'events',
+  ]);
+});
+
+test('buildPages builds the whole page when its check errors are suppressed', () => {
+  const collectingContext = createCollectingContext();
+  const components = componentsWithThreeCheckErrors([
+    'block-properties',
+    'events',
+    'event-payload',
+  ]);
+  addKeys({ components, context: collectingContext });
+  const res = buildPages({ components, context: collectingContext });
+
+  expect(collectingContext.errors).toEqual([]);
+  const page = res.pages[0];
+  expect(page.id).toBe('page:page_1');
+  expect(page.pageId).toBe('page_1');
+  expect(page.requests).toEqual([]);
+  expect(page.subscriptions).toEqual([]);
+  // The block after the one that failed its checks is still built.
+  expect(page.slots.content.blocks.map((block) => block.id)).toEqual([
+    'block:page_1:first:0',
+    'block:page_1:second:0',
+  ]);
 });

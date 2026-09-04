@@ -42,8 +42,16 @@ beforeEach(() => {
 test('writeAvailableTypes writes installed typesMap types', async () => {
   const context = {
     typesMap: makeTypesMap({
-      blocks: { Button: { package: '@lowdefy/blocks-antd', originalTypeName: 'Button', version: '5.0.0' } },
-      requests: { MongoDBFind: { package: '@lowdefy/connection-mongodb', originalTypeName: 'MongoDBFind', version: '5.0.0' } },
+      blocks: {
+        Button: { package: '@lowdefy/blocks-antd', originalTypeName: 'Button', version: '5.0.0' },
+      },
+      requests: {
+        MongoDBFind: {
+          package: '@lowdefy/connection-mongodb',
+          originalTypeName: 'MongoDBFind',
+          version: '5.0.0',
+        },
+      },
     }),
     installedPackages: new Set(['@lowdefy/blocks-antd', '@lowdefy/connection-mongodb']),
     writeBuildArtifact: mockWriteBuildArtifact,
@@ -85,10 +93,16 @@ test('writeAvailableTypes includes operator client and server stores separately'
   const context = {
     typesMap: makeTypesMap({
       operators: {
-        client: { _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' } },
+        client: {
+          _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' },
+        },
         server: {
           _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' },
-          _secret: { package: '@lowdefy/operators-js', originalTypeName: '_secret', version: '5.0.0' },
+          _secret: {
+            package: '@lowdefy/operators-js',
+            originalTypeName: '_secret',
+            version: '5.0.0',
+          },
         },
       },
     }),
@@ -105,7 +119,13 @@ test('writeAvailableTypes writes auth type stores', async () => {
   const context = {
     typesMap: makeTypesMap({
       auth: {
-        adapters: { MongoDBAdapter: { package: '@lowdefy/connection-mongodb', originalTypeName: 'MongoDBAdapter', version: '5.0.0' } },
+        adapters: {
+          MongoDBAdapter: {
+            package: '@lowdefy/connection-mongodb',
+            originalTypeName: 'MongoDBAdapter',
+            version: '5.0.0',
+          },
+        },
         callbacks: {},
         events: {},
         providers: {},
@@ -118,4 +138,34 @@ test('writeAvailableTypes writes auth type stores', async () => {
   const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
   expect(written.auth.adapters.MongoDBAdapter).toBeDefined();
   expect(written.auth.providers).toEqual({});
+});
+
+test('writeAvailableTypes lists a file plugin with its packageId and relative path', async () => {
+  const context = {
+    installedPackages: new Set(['@lowdefy/blocks-antd']),
+    typesMap: makeTypesMap({
+      blocks: {
+        Badge: {
+          package: null,
+          packageId: 'file-plugin',
+          version: null,
+          originalTypeName: 'Badge',
+          relativePath: 'plugins/blocks/Badge.jsx',
+        },
+        Uninstalled: { package: '@lowdefy/blocks-basic', originalTypeName: 'Uninstalled' },
+      },
+    }),
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeAvailableTypes({ context });
+  const availableTypes = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
+  expect(availableTypes.blocks).toEqual({
+    Badge: {
+      package: null,
+      packageId: 'file-plugin',
+      version: null,
+      originalTypeName: 'Badge',
+      relativePath: 'plugins/blocks/Badge.jsx',
+    },
+  });
 });

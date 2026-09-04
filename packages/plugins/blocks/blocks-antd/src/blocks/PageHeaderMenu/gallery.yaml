@@ -304,12 +304,12 @@
           blocks:
             - id: phm_full_footer_text
               type: Paragraph
+              style:
+                margin: 0
+                color: '#888'
+                textAlign: center
               properties:
                 content: Acme Corp Intranet - Internal Use Only
-                style:
-                  margin: 0
-                  color: '#888'
-                  textAlign: center
       blocks:
         - id: phm_full_welcome
           type: Title

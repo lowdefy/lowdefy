@@ -18,17 +18,14 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import getFieldValidator from './getFieldValidator.js';
+import toContractShape from './toContractShape.js';
 
 // ajv's own wording is kept for the common cases (must be string, must be
-// equal to one of the allowed values); the two it leaves opaque are spelled
-// out: the allowed values of an enum, and the constructor of an instanceof
-// check (a `date` field normalised by the build to { instanceof: Date }).
-function describeViolation({ error, fieldSchema }) {
+// equal to one of the allowed values); the one it leaves opaque is spelled out:
+// the allowed values of an enum.
+function describeViolation({ error }) {
   if (error.keyword === 'enum') {
     return `${error.message} (${error.params.allowedValues.join(', ')})`;
-  }
-  if (error.keyword === 'instanceof') {
-    return `must be a ${error.parentSchema?.instanceof ?? fieldSchema.instanceof}`;
   }
   return error.message;
 }
@@ -59,7 +56,7 @@ function validateFieldValue({ collectionName, fieldName, fieldSchema, position, 
     return;
   }
   const validator = getFieldValidator({ fieldSchema });
-  const { valid, errors } = validator(value);
+  const { valid, errors } = validator(toContractShape({ value }));
   if (valid) {
     return;
   }
@@ -69,7 +66,7 @@ function validateFieldValue({ collectionName, fieldName, fieldSchema, position, 
       fieldName,
       instancePath: error.instancePath,
     })}" in ${position} for collection "${collectionName}" does not match the declared contract: ${describeViolation(
-      { error, fieldSchema }
+      { error }
     )}. Received ${describeReceived(value)}.`
   );
 }

@@ -1,0 +1,37 @@
+id: welcome
+type: PageHeaderMenu
+properties:
+  title: Welcome
+slots:
+  content:
+    justify: center
+    blocks:
+      - id: welcome_card
+        type: Card
+        style:
+          maxWidth: 800
+        blocks:
+          - id: welcome_result
+            type: Result
+            properties:
+              title: Welcome to your Lowdefy app
+              subTitle: Open the Items page to see a generated list, then edit pages/items.yaml.
+              icon:
+                name: AiOutlineHeart
+                color: '#f00'
+            slots:
+              extra:
+                blocks:
+                  - id: docs_button
+                    type: Button
+                    properties:
+                      size: large
+                      title: Read the docs
+                      color: '#1890ff'
+                    events:
+                      onClick:
+                        - id: link_to_docs
+                          type: Link
+                          params:
+                            url: https://docs.lowdefy.com
+                            newTab: true

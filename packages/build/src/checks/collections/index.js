@@ -18,6 +18,7 @@ import undeclared from './undeclared.js';
 import dynamicCollection from './dynamicCollection.js';
 import untenantedConnection from './untenantedConnection.js';
 import fieldWithoutMigration from './fieldWithoutMigration.js';
+import candidateIndexes from './indexes/candidateIndexes.js';
 
 // Check-only rules over the collections: declaration (task 38), plus the
 // collections/migrations correspondence (task 49, D11). All are silent when
@@ -27,6 +28,7 @@ const collectionsRules = [
   dynamicCollection,
   untenantedConnection,
   fieldWithoutMigration,
+  candidateIndexes,
 ];
 
 export default collectionsRules;

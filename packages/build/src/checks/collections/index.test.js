@@ -20,7 +20,7 @@ import buildConnections from '../../build/buildConnections.js';
 import testContext from '../../test-utils/testContext.js';
 
 function check(components) {
-  const context = testContext();
+  const context = testContext({ logger: { debug: () => {} } });
   context.errors = [];
   context.warnings = [];
   context.handleWarning = (warning) => context.warnings.push(warning);
@@ -56,9 +56,15 @@ function connections() {
   ];
 }
 
-test('collections rules are check-only under the collections slug', () => {
+test('each collections rule is check-only under its own slug', () => {
+  expect(collectionsRules.map((rule) => rule.slug)).toEqual([
+    'collections-undeclared',
+    'collections-dynamic',
+    'collections-untenanted',
+    'collections-field-migration',
+    'collections-index',
+  ]);
   collectionsRules.forEach((rule) => {
-    expect(rule.slug).toBe('collections');
     expect(rule.checkOnly).toBe(true);
   });
 });
@@ -77,18 +83,18 @@ test('collections rules warn on undeclared, dynamic and untenanted connections',
   expect(context.warnings.map((w) => [w.configKey, w.checkSlug, w.message])).toEqual([
     [
       'k_legacy',
-      'collections',
+      'collections-undeclared',
       'Connection "legacy" addresses collection "legacy_things", which the app does not declare under collections:. Declare it so its tenancy, fields and relations are checked and appear in the data model.',
     ],
     [
       'k_dynamic',
-      'collections',
+      'collections-dynamic',
       'Connection "dynamic" names its collection with an operator, so it can not be joined to the collections: declaration. It opts out of the tenancy agreement check, the tenant $lookup check and the data model until the collection is a literal string.',
     ],
     [
       'k_answers_rw',
-      'collections',
-      'Connection "answers_rw" declares no tenant but addresses collection "answers", which is declared tenant-scoped on "organization_id". If the connection is meant to be walled on that field declare tenant: { field: organization_id }; if it is a deliberate admin path, leave it and this note stands as the record.',
+      'collections-untenanted',
+      'Connection "answers_rw" declares no tenant but addresses collection "answers", which is declared tenant-scoped on "organization_id". If the connection is meant to be walled on that field declare tenant: organization_id; if it is a deliberate admin path, leave it and this note stands as the record.',
     ],
   ]);
 });
@@ -99,7 +105,7 @@ test('untenanted rule does not fire for a shared collection or a tenanted connec
       {
         id: 'a',
         type: 'MongoDBCollection',
-        tenant: { field: 'organization_id' },
+        tenant: 'organization_id',
         properties: { databaseUri: 'x', collection: 'answers' },
       },
       {

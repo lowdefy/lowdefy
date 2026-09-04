@@ -14,6 +14,277 @@
   limitations under the License.
 */
 
+// The block definition's properties, shared with the page definition. A page is a
+// block plus the page-only keys below; JSON Schema additionalProperties: false
+// cannot see through allOf, so both definitions are built from one object here.
+const blockProperties = {
+  '~r': {},
+  '~l': {},
+  id: {
+    type: 'string',
+    errorMessage: {
+      type: 'Block "id" should be a string.',
+    },
+  },
+  type: {
+    type: 'string',
+    errorMessage: {
+      type: 'Block "type" should be a string.',
+    },
+  },
+  field: {
+    type: 'string',
+    errorMessage: {
+      type: 'Block "field" should be a string.',
+    },
+  },
+  properties: {
+    type: 'object',
+  },
+  props: {
+    type: 'object',
+    description:
+      'Values for the props of the component named by "type", keyed by prop name. Only meaningful when the block type is a component declared under "components:"; the build inlines them wherever the body wrote { _prop: name }.',
+    errorMessage: {
+      type: 'Block "props" should be an object mapping component prop names to values.',
+    },
+  },
+  layout: {
+    type: 'object',
+    errorMessage: {
+      type: 'Block "layout" should be an object.',
+    },
+  },
+  skeleton: {
+    type: 'object',
+    errorMessage: {
+      type: 'Block "skeleton" should be an object.',
+    },
+  },
+  style: {
+    type: 'object',
+    errorMessage: {
+      type: 'Block "style" should be an object.',
+    },
+  },
+  class: {
+    oneOf: [
+      { type: 'string' },
+      { type: 'array', items: { type: 'string' } },
+      {
+        type: 'object',
+        additionalProperties: {
+          oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+        },
+      },
+    ],
+    errorMessage: {
+      type: 'Block "class" should be a string, array of strings, or object.',
+    },
+  },
+  // Any type: a boolean literal or an operator evaluated per render.
+  visible: {
+    description:
+      'Whether the block renders. A boolean, or an operator that evaluates to one on every render. A hidden block keeps its state value; it is not unmounted from state.',
+  },
+  loading: {},
+  blocks: {
+    type: 'array',
+    items: {
+      $ref: '#/definitions/block',
+    },
+    errorMessage: {
+      type: 'Block "blocks" should be an array.',
+    },
+  },
+  requests: {
+    type: 'array',
+    items: {
+      $ref: '#/definitions/request',
+    },
+    errorMessage: {
+      type: 'Block "requests" should be an array.',
+    },
+  },
+  required: {},
+  validate: {
+    type: 'array',
+    items: {
+      type: 'object',
+      errorMessage: {
+        type: 'Block "validate" should be an array of objects.',
+      },
+    },
+    errorMessage: {
+      type: 'Block "validate" should be an array.',
+    },
+  },
+  events: {
+    type: 'object',
+    patternProperties: {
+      '^.*$': {
+        anyOf: [
+          {
+            type: 'array',
+            items: {
+              $ref: '#/definitions/actionOrControl',
+            },
+          },
+          {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              '~r': {},
+              '~l': {},
+              try: {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+              },
+              catch: {
+                type: 'array',
+                items: {
+                  $ref: '#/definitions/actionOrControl',
+                },
+              },
+              debounce: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~r': {},
+                  '~l': {},
+                  immediate: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'Event "debounce.immediate" should be an boolean.',
+                    },
+                  },
+                  ms: {
+                    type: 'number',
+                    errorMessage: {
+                      type: 'Event "debounce.ms" should be a number.',
+                    },
+                  },
+                },
+              },
+              shortcut: {
+                anyOf: [
+                  {
+                    type: 'string',
+                    errorMessage: {
+                      type: 'Event "shortcut" should be a string.',
+                    },
+                  },
+                  {
+                    type: 'array',
+                    items: { type: 'string' },
+                    errorMessage: {
+                      type: 'Event "shortcut" should be a string or array of strings.',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    },
+    errorMessage: {
+      type: 'Block "events" should be an object.',
+    },
+  },
+  slots: {
+    type: 'object',
+    patternProperties: {
+      '^.*$': {
+        type: 'object',
+        properties: {
+          blocks: {
+            type: 'array',
+            items: {
+              $ref: '#/definitions/block',
+            },
+            errorMessage: {
+              type: 'Block "slots.{slotKey}.blocks" should be an array.',
+            },
+          },
+        },
+        errorMessage: {
+          type: 'Block "slots.{slotKey}" should be an object.',
+        },
+      },
+    },
+    errorMessage: {
+      type: 'Block "slots" should be an object.',
+    },
+  },
+  areas: {
+    type: 'object',
+    patternProperties: {
+      '^.*$': {
+        type: 'object',
+        properties: {
+          blocks: {
+            type: 'array',
+            items: {
+              $ref: '#/definitions/block',
+            },
+            errorMessage: {
+              type: 'Block "areas.{areaKey}.blocks" should be an array.',
+            },
+          },
+        },
+        errorMessage: {
+          type: 'Block "areas.{areaKey}" should be an object.',
+        },
+      },
+    },
+    errorMessage: {
+      type: 'Block "areas" should be an object.',
+    },
+  },
+};
+
+const pageProperties = {
+  '~snapshotIgnore': {
+    type: 'array',
+    items: {
+      type: 'string',
+    },
+    description:
+      'State paths a journey snapshot leaves out, so a value that changes on every run (a timestamp, a generated id) does not make the snapshot differ. "$" matches any array index. Page only.',
+    errorMessage: {
+      type: 'Block "~snapshotIgnore" should be an array of state path strings.',
+    },
+  },
+  subscriptions: {
+    type: 'array',
+    items: {
+      $ref: '#/definitions/subscription',
+    },
+    errorMessage: {
+      type: 'Page "subscriptions" should be an array.',
+    },
+  },
+  state: {
+    type: 'object',
+    patternProperties: {
+      '^.*$': {
+        type: 'object',
+        errorMessage: {
+          type: 'Page "state" contract entries should be JSON schema objects, keyed by dotted state path.',
+        },
+      },
+    },
+    description:
+      'The page state contract: a JSON Schema fragment per dotted state path. The build checks every _state reference on the page against it, so a mistyped path is a build error instead of an undefined at runtime. This is a build-time shape contract - "required" and "validate" on an input block are the separate, user-facing runtime validation. Page only.',
+    errorMessage: {
+      type: 'Page "state" should be an object mapping dotted state paths to JSON schema fragments.',
+    },
+  },
+};
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -25,45 +296,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'collections',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         async: {
@@ -209,45 +441,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -376,45 +569,6 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         email: {
@@ -486,45 +640,6 @@ export default {
           'App "auth" contains an unknown property. Auth keys are registered explicitly; check for typos.',
       },
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         database: {
@@ -532,7 +647,6 @@ export default {
           additionalProperties: false,
           required: ['id', 'type'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             id: {
@@ -573,7 +687,6 @@ export default {
           additionalProperties: false,
           required: ['enabled'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -613,7 +726,6 @@ export default {
           additionalProperties: false,
           required: ['enabled'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -651,7 +763,6 @@ export default {
           additionalProperties: false,
           required: ['connectionId'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             connectionId: {
@@ -664,7 +775,6 @@ export default {
               type: 'object',
               additionalProperties: false,
               properties: {
-                '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
                 verifyEmail: {
@@ -717,7 +827,6 @@ export default {
             additionalProperties: false,
             required: ['id', 'type'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               id: {
@@ -766,7 +875,6 @@ export default {
             additionalProperties: false,
             required: ['id'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               id: {
@@ -802,7 +910,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             expiresIn: {
@@ -821,7 +928,6 @@ export default {
               type: 'object',
               additionalProperties: false,
               properties: {
-                '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
                 enabled: {
@@ -845,7 +951,6 @@ export default {
               type: 'object',
               additionalProperties: false,
               properties: {
-                '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
                 enabled: {
@@ -874,14 +979,12 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             accountLinking: {
               type: 'object',
               additionalProperties: false,
               properties: {
-                '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
                 enabled: {
@@ -916,7 +1019,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -946,7 +1048,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -977,7 +1078,6 @@ export default {
           additionalProperties: false,
           required: ['consentPage'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             consentPage: {
@@ -1018,7 +1118,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -1049,7 +1148,6 @@ export default {
           additionalProperties: false,
           required: ['enabled'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -1087,7 +1185,6 @@ export default {
               additionalProperties: false,
               required: ['tempEmailDomain'],
               properties: {
-                '~ignoreBuildChecks': {},
                 '~r': {},
                 '~l': {},
                 tempEmailDomain: {
@@ -1120,7 +1217,6 @@ export default {
           additionalProperties: false,
           required: ['enabled', 'provider', 'siteKey', 'secretKey'],
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             enabled: {
@@ -1187,45 +1283,6 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'tenant-lookup',
-                      'events',
-                      'block-properties',
-                      'types',
-                      'schema',
-                      'js-lint',
-                      'state-schema',
-                      'tenant',
-                      'js-modules',
-                      'response-schema',
-                      'callapi-refs',
-                      'callapi-internal-refs',
-                      'dynamic-endpoint-refs',
-                      'websocket-refs',
-                      'icons',
-                      'collections',
-                      'event-payload',
-                      'migrations',
-                      'expression',
-                      'archetype',
-                    ],
-                  },
-                },
-              ],
-            },
             '~r': {},
             '~l': {},
             protected: {
@@ -1284,45 +1341,6 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'tenant-lookup',
-                      'events',
-                      'block-properties',
-                      'types',
-                      'schema',
-                      'js-lint',
-                      'state-schema',
-                      'tenant',
-                      'js-modules',
-                      'response-schema',
-                      'collections',
-                      'callapi-refs',
-                      'callapi-internal-refs',
-                      'dynamic-endpoint-refs',
-                      'websocket-refs',
-                      'icons',
-                      'event-payload',
-                      'migrations',
-                      'expression',
-                      'archetype',
-                    ],
-                  },
-                },
-              ],
-            },
             '~r': {},
             '~l': {},
             protected: {
@@ -1381,45 +1399,6 @@ export default {
             type: 'App "config.auth.websockets" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'tenant-lookup',
-                      'events',
-                      'block-properties',
-                      'types',
-                      'schema',
-                      'js-lint',
-                      'state-schema',
-                      'tenant',
-                      'js-modules',
-                      'response-schema',
-                      'collections',
-                      'callapi-refs',
-                      'callapi-internal-refs',
-                      'dynamic-endpoint-refs',
-                      'websocket-refs',
-                      'icons',
-                      'event-payload',
-                      'migrations',
-                      'expression',
-                      'archetype',
-                    ],
-                  },
-                },
-              ],
-            },
             '~r': {},
             '~l': {},
             protected: {
@@ -1473,7 +1452,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             signIn: {
@@ -1548,7 +1526,6 @@ export default {
             additionalProperties: false,
             required: ['id', 'point', 'endpointId'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               id: {
@@ -1590,7 +1567,6 @@ export default {
             additionalProperties: false,
             required: ['id', 'type'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               id: {
@@ -1643,7 +1619,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             policy: {
@@ -1701,20 +1676,85 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
+            browserUser: {
+              type: 'string',
+              minLength: 1,
+              description:
+                'The name of the "dev.users" entry the developer\'s own browser is signed in as, bypassing login for the whole dev server. Dev server only; the LOWDEFY_DEV_USER environment variable takes precedence.',
+              errorMessage: {
+                type: 'Auth "dev.browserUser" should be the name of a "dev.users" entry.',
+                minLength: 'Auth "dev.browserUser" should be the name of a "dev.users" entry.',
+              },
+            },
             mockUser: {
               type: 'object',
               description:
-                'Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
+                'Deprecated - declare the caller under "dev.users" and select it with "dev.browserUser". Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
             },
             users: {
               type: 'object',
               additionalProperties: {
                 type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~r': {},
+                  '~l': {},
+                  id: {
+                    type: 'string',
+                    description:
+                      'The caller id, the field BetterAuth resolves a session subject to. Not "sub".',
+                    errorMessage: { type: 'Auth "dev.users" entry "id" should be a string.' },
+                  },
+                  name: {
+                    type: 'string',
+                    errorMessage: { type: 'Auth "dev.users" entry "name" should be a string.' },
+                  },
+                  email: {
+                    type: 'string',
+                    errorMessage: { type: 'Auth "dev.users" entry "email" should be a string.' },
+                  },
+                  roles: {
+                    type: 'array',
+                    items: { type: 'string' },
+                    description:
+                      "The caller's roles. Authoritative - page and endpoint authorization reads them directly.",
+                    errorMessage: {
+                      type: 'Auth "dev.users" entry "roles" should be an array of role name strings, eg. roles: [admin].',
+                    },
+                  },
+                  organizationId: {
+                    type: 'string',
+                    description:
+                      'The organization the caller belongs to, in Lowdefy config spelling.',
+                    errorMessage: {
+                      type: 'Auth "dev.users" entry "organizationId" should be a string.',
+                    },
+                  },
+                  organization_id: {
+                    type: 'string',
+                    description:
+                      'The organization the caller belongs to, in the tenant field spelling the app data uses.',
+                    errorMessage: {
+                      type: 'Auth "dev.users" entry "organization_id" should be a string.',
+                    },
+                  },
+                  attributes: {
+                    type: 'object',
+                    errorMessage: {
+                      type: 'Auth "dev.users" entry "attributes" should be an object.',
+                    },
+                  },
+                  profile: {
+                    type: 'object',
+                    errorMessage: { type: 'Auth "dev.users" entry "profile" should be an object.' },
+                  },
+                },
                 errorMessage: {
                   type: 'Auth "dev.users" entries should be objects.',
+                  additionalProperties:
+                    'Auth "dev.users" entry has an unknown property. The known properties are "id", "name", "email", "roles", "organizationId", "organization_id", "attributes" and "profile".',
                 },
               },
               description:
@@ -1734,7 +1774,6 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        '~ignoreBuildChecks': {},
         '~r': {},
         '~l': {},
         name: {
@@ -1771,7 +1810,6 @@ export default {
             additionalProperties: false,
             required: ['src'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               src: {
@@ -1822,7 +1860,6 @@ export default {
             additionalProperties: false,
             required: ['id', 'scope'],
             properties: {
-              '~ignoreBuildChecks': {},
               '~r': {},
               '~l': {},
               id: {
@@ -1867,377 +1904,7 @@ export default {
       type: 'object',
       additionalProperties: false,
       required: ['id', 'type'],
-      properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
-        '~r': {},
-        '~l': {},
-        '~snapshotIgnore': {
-          type: 'array',
-          items: {
-            type: 'string',
-          },
-          errorMessage: {
-            type: 'Block "~snapshotIgnore" should be an array of state path strings.',
-          },
-        },
-        id: {
-          type: 'string',
-          errorMessage: {
-            type: 'Block "id" should be a string.',
-          },
-        },
-        type: {
-          type: 'string',
-          errorMessage: {
-            type: 'Block "type" should be a string.',
-          },
-        },
-        field: {
-          type: 'string',
-          errorMessage: {
-            type: 'Block "field" should be a string.',
-          },
-        },
-        properties: {
-          type: 'object',
-        },
-        props: {
-          type: 'object',
-          errorMessage: {
-            type: 'Block "props" should be an object mapping component prop names to values.',
-          },
-        },
-        layout: {
-          type: 'object',
-          errorMessage: {
-            type: 'Block "layout" should be an object.',
-          },
-        },
-        skeleton: {
-          type: 'object',
-          errorMessage: {
-            type: 'Block "skeleton" should be an object.',
-          },
-        },
-        style: {
-          type: 'object',
-          errorMessage: {
-            type: 'Block "style" should be an object.',
-          },
-        },
-        class: {
-          oneOf: [
-            { type: 'string' },
-            { type: 'array', items: { type: 'string' } },
-            {
-              type: 'object',
-              additionalProperties: {
-                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
-              },
-            },
-          ],
-          errorMessage: {
-            type: 'Block "class" should be a string, array of strings, or object.',
-          },
-        },
-        visible: {},
-        loading: {},
-        blocks: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/block',
-          },
-          errorMessage: {
-            type: 'Block "blocks" should be an array.',
-          },
-        },
-        requests: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/request',
-          },
-          errorMessage: {
-            type: 'Block "requests" should be an array.',
-          },
-        },
-        subscriptions: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/subscription',
-          },
-          errorMessage: {
-            type: 'Page "subscriptions" should be an array.',
-          },
-        },
-        state: {
-          type: 'object',
-          patternProperties: {
-            '^.*$': {
-              type: 'object',
-              errorMessage: {
-                type: 'Page "state" contract entries should be JSON schema objects, keyed by dotted state path.',
-              },
-            },
-          },
-          errorMessage: {
-            type: 'Page "state" should be an object mapping dotted state paths to JSON schema fragments.',
-          },
-        },
-        required: {},
-        validate: {
-          type: 'array',
-          items: {
-            type: 'object',
-            errorMessage: {
-              type: 'Block "validate" should be an array of objects.',
-            },
-          },
-          errorMessage: {
-            type: 'Block "validate" should be an array.',
-          },
-        },
-        events: {
-          type: 'object',
-          patternProperties: {
-            '^.*$': {
-              anyOf: [
-                {
-                  type: 'array',
-                  items: {
-                    $ref: '#/definitions/actionOrControl',
-                  },
-                },
-                {
-                  type: 'object',
-                  additionalProperties: false,
-                  properties: {
-                    '~ignoreBuildChecks': {
-                      oneOf: [
-                        { const: true },
-                        {
-                          type: 'array',
-                          items: {
-                            type: 'string',
-                            enum: [
-                              'state-refs',
-                              'payload-refs',
-                              'step-refs',
-                              'link-refs',
-                              'request-refs',
-                              'connection-refs',
-                              'tenant-lookup',
-                              'events',
-                              'block-properties',
-                              'types',
-                              'schema',
-                              'js-lint',
-                              'state-schema',
-                              'tenant',
-                              'js-modules',
-                              'response-schema',
-                              'callapi-refs',
-                              'callapi-internal-refs',
-                              'dynamic-endpoint-refs',
-                              'websocket-refs',
-                              'icons',
-                              'collections',
-                              'event-payload',
-                              'migrations',
-                              'expression',
-                              'archetype',
-                            ],
-                          },
-                        },
-                      ],
-                    },
-                    '~r': {},
-                    '~l': {},
-                    try: {
-                      type: 'array',
-                      items: {
-                        $ref: '#/definitions/actionOrControl',
-                      },
-                    },
-                    catch: {
-                      type: 'array',
-                      items: {
-                        $ref: '#/definitions/actionOrControl',
-                      },
-                    },
-                    debounce: {
-                      type: 'object',
-                      additionalProperties: false,
-                      properties: {
-                        '~ignoreBuildChecks': {
-                          oneOf: [
-                            { const: true },
-                            {
-                              type: 'array',
-                              items: {
-                                type: 'string',
-                                enum: [
-                                  'state-refs',
-                                  'payload-refs',
-                                  'step-refs',
-                                  'link-refs',
-                                  'request-refs',
-                                  'connection-refs',
-                                  'tenant-lookup',
-                                  'events',
-                                  'block-properties',
-                                  'types',
-                                  'schema',
-                                  'js-lint',
-                                  'state-schema',
-                                  'tenant',
-                                  'js-modules',
-                                  'response-schema',
-                                  'callapi-refs',
-                                  'callapi-internal-refs',
-                                  'dynamic-endpoint-refs',
-                                  'websocket-refs',
-                                  'icons',
-                                  'collections',
-                                  'event-payload',
-                                  'migrations',
-                                  'expression',
-                                  'archetype',
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                        '~r': {},
-                        '~l': {},
-                        immediate: {
-                          type: 'boolean',
-                          errorMessage: {
-                            type: 'Event "debounce.immediate" should be an boolean.',
-                          },
-                        },
-                        ms: {
-                          type: 'number',
-                          errorMessage: {
-                            type: 'Event "debounce.ms" should be a number.',
-                          },
-                        },
-                      },
-                    },
-                    shortcut: {
-                      anyOf: [
-                        {
-                          type: 'string',
-                          errorMessage: {
-                            type: 'Event "shortcut" should be a string.',
-                          },
-                        },
-                        {
-                          type: 'array',
-                          items: { type: 'string' },
-                          errorMessage: {
-                            type: 'Event "shortcut" should be a string or array of strings.',
-                          },
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-            },
-          },
-          errorMessage: {
-            type: 'Block "events" should be an object.',
-          },
-        },
-        slots: {
-          type: 'object',
-          patternProperties: {
-            '^.*$': {
-              type: 'object',
-              properties: {
-                blocks: {
-                  type: 'array',
-                  items: {
-                    $ref: '#/definitions/block',
-                  },
-                  errorMessage: {
-                    type: 'Block "slots.{slotKey}.blocks" should be an array.',
-                  },
-                },
-              },
-              errorMessage: {
-                type: 'Block "slots.{slotKey}" should be an object.',
-              },
-            },
-          },
-          errorMessage: {
-            type: 'Block "slots" should be an object.',
-          },
-        },
-        areas: {
-          type: 'object',
-          patternProperties: {
-            '^.*$': {
-              type: 'object',
-              properties: {
-                blocks: {
-                  type: 'array',
-                  items: {
-                    $ref: '#/definitions/block',
-                  },
-                  errorMessage: {
-                    type: 'Block "areas.{areaKey}.blocks" should be an array.',
-                  },
-                },
-              },
-              errorMessage: {
-                type: 'Block "areas.{areaKey}" should be an object.',
-              },
-            },
-          },
-          errorMessage: {
-            type: 'Block "areas" should be an object.',
-          },
-        },
-      },
+      properties: blockProperties,
       errorMessage: {
         type: 'Block should be an object.',
         required: {
@@ -2246,10 +1913,22 @@ export default {
         },
       },
     },
+    page: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: { ...blockProperties, ...pageProperties },
+      errorMessage: {
+        type: 'Page should be an object.',
+        required: {
+          id: 'Page should have required property "id".',
+          type: 'Page should have required property "type".',
+        },
+      },
+    },
     component: {
       type: 'object',
       additionalProperties: false,
-      required: ['id'],
       properties: {
         '~r': {},
         '~l': {},
@@ -2261,6 +1940,38 @@ export default {
         },
         props: {
           type: 'object',
+          additionalProperties: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              type: {
+                type: 'string',
+                enum: ['string', 'number', 'integer', 'boolean', 'object', 'array', 'date', 'null'],
+                errorMessage: {
+                  type: 'Component prop "type" should be a string.',
+                  enum: 'Component prop "type" should be one of "string", "number", "integer", "boolean", "object", "array", "date" or "null".',
+                },
+              },
+              required: {
+                type: 'boolean',
+                errorMessage: { type: 'Component prop "required" should be a boolean.' },
+              },
+              default: {},
+              description: {
+                type: 'string',
+                errorMessage: { type: 'Component prop "description" should be a string.' },
+              },
+              '~r': {},
+              '~l': {},
+            },
+            errorMessage: {
+              type: 'Component prop definition should be an object with "type", "required", "default" and "description".',
+              additionalProperties:
+                'Component prop definition has an unknown key. Valid keys: type, required, default, description.',
+            },
+          },
+          description:
+            'The props the component takes, keyed by prop name. Each value declares the prop: { type, required, default, description }. A use site passes values under "props:"; the build inlines each value wherever the body wrote { _prop: name }. There is no runtime _prop operator.',
           errorMessage: {
             type: 'Component "props" should be an object mapping prop names to prop definitions ({ type, required, default, description }).',
           },
@@ -2268,6 +1979,8 @@ export default {
         slots: {
           type: 'array',
           items: { type: 'string' },
+          description:
+            'The named block-tree slots the component accepts. A use site fills a slot under "slots:"; the build places the filler wherever the body wrote { _slot: name }.',
           errorMessage: {
             type: 'Component "slots" should be an array of slot name strings.',
           },
@@ -2277,6 +1990,8 @@ export default {
           items: {
             $ref: '#/definitions/block',
           },
+          description:
+            'The component body: the block tree inserted at every use site, with every { _prop } and { _slot } marker resolved at build against that use.',
           errorMessage: {
             type: 'Component "blocks" should be an array.',
           },
@@ -2294,45 +2009,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -2355,12 +2031,16 @@ export default {
         },
         payloadSchema: {
           type: 'object',
+          description:
+            'JSON Schema the request payload must satisfy. A payload that does not match is rejected before the routine runs. Cannot be combined with "webhook", which receives the raw { body, query, headers } envelope instead.',
           errorMessage: {
             type: 'Api endpoint "payloadSchema" should be an object.',
           },
         },
         responseSchema: {
           type: 'object',
+          description:
+            'JSON Schema describing what the endpoint returns. The build checks _actions and _step response paths against it and it is published as the MCP tool outputSchema; unlike payloadSchema it does not reject a response at runtime, it raises a dev notice.',
           errorMessage: {
             type: 'Api endpoint "responseSchema" should be an object.',
           },
@@ -2467,45 +2147,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -2553,45 +2194,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -2638,45 +2240,6 @@ export default {
       additionalProperties: false,
       required: ['websocketId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         websocketId: {
@@ -2736,20 +2299,36 @@ export default {
         {
           type: 'object',
           additionalProperties: false,
+          // An empty object is a field declared with no type, no enum and no
+          // required flag - it counts as declared for relation targets and for
+          // write validation while validating nothing.
+          minProperties: 1,
           properties: {
             type: { type: 'string' },
             enum: { type: 'array', minItems: 1 },
             items: { $ref: '#/definitions/collectionField' },
+            properties: {
+              type: 'object',
+              additionalProperties: { $ref: '#/definitions/collectionField' },
+            },
             required: { type: 'boolean' },
+            description: { type: 'string' },
+            pii: {
+              type: 'boolean',
+              description:
+                'Marks the field as personal data. Consumed by the journey recorder, log redaction and fixture export; declared once, read by every consumer.',
+            },
             '~k': {},
             '~r': {},
             '~l': {},
           },
         },
       ],
+      description:
+        'The declared shape of one collection field: a type name ("string", "number", "integer", "boolean", "date", "object", "array"), a one-element [type] array for a list of that type, or an object with "type", "enum", "items", "properties", "description" and "pii". Prefer the collection-level "required" array to a per-field "required: true".',
       errorMessage: {
         oneOf:
-          'Collection field should be a type name (string, number, integer, boolean, date, object, array), a one-element [type] array, or an object with "type", "enum", "items" or "required".',
+          'Collection field should be a type name (string, number, integer, boolean, date, object, array), a one-element [type] array, or an object with "type", "enum", "items", "properties", "description" or "pii".',
       },
     },
     collection: {
@@ -2763,6 +2342,8 @@ export default {
           type: 'string',
           minLength: 1,
           pattern: '^[^.]+$',
+          description:
+            'How the collection is walled: "shared" for a collection every tenant reads, or the name of the top-level field that carries the tenant id, eg. organization_id.',
           errorMessage: {
             type: 'Collection "tenant" should be "shared" or a tenant field name, eg. organization_id.',
             minLength:
@@ -2774,6 +2355,8 @@ export default {
         fields: {
           type: 'object',
           additionalProperties: { $ref: '#/definitions/collectionField' },
+          description:
+            'The fields the collection holds, keyed by field name. Declaring a field does not create it - see lowdefy migrate.',
           errorMessage: {
             type: 'Collection "fields" should be an object of field name to type.',
           },
@@ -2788,8 +2371,19 @@ export default {
               pattern: 'Collection relation should be a "<collection>.<field>" string.',
             },
           },
+          description:
+            'Fields of this collection that reference another collection, keyed by field name, each naming its target as "<collection>.<field>".',
           errorMessage: {
             type: 'Collection "relations" should be an object of field name to "<collection>.<field>".',
+          },
+        },
+        required: {
+          type: 'array',
+          items: { type: 'string', minLength: 1 },
+          description:
+            'The names of the fields a document must carry (the JSON Schema array form). A per-field "required: true" is accepted for one release and folded into this array with a build warning.',
+          errorMessage: {
+            type: 'Collection "required" should be an array of field names.',
           },
         },
         indexes: {
@@ -2814,6 +2408,8 @@ export default {
                 'Collection index accepts only "keys" and "options". Declaring an index does not create it - see lowdefy migrate.',
             },
           },
+          description:
+            "The indexes the collection is expected to have, each { keys, options } in the driver's own shape. Declaring an index does not create it - see lowdefy migrate.",
           errorMessage: {
             type: 'Collection "indexes" should be an array.',
           },
@@ -2822,7 +2418,7 @@ export default {
       errorMessage: {
         type: 'Collection should be an object.',
         additionalProperties:
-          'Collection has an unknown key. Valid keys: tenant, fields, relations, indexes.',
+          'Collection has an unknown key. Valid keys: tenant, fields, required, relations, indexes.',
       },
     },
     connection: {
@@ -2830,45 +2426,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -2890,8 +2447,14 @@ export default {
           },
         },
         tenant: {
+          description:
+            'How the connection is walled: "shared" for data every tenant reads, or the name of the top-level field that carries the tenant id, eg. organization_id — the same bare-string grammar collections use. The { field: <name> } object form is deprecated. Under auth.organizations.policy: tenant a scoping-capable connection is scoped by default and declares only its exception.',
           oneOf: [
-            { const: 'shared' },
+            {
+              type: 'string',
+              minLength: 1,
+              pattern: '^[^.]+$',
+            },
             {
               type: 'object',
               additionalProperties: false,
@@ -2907,7 +2470,7 @@ export default {
           ],
           errorMessage: {
             oneOf:
-              'Connection "tenant" should be "shared" or an object with a "field" top-level field name (non-empty, no dots), eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
+              'Connection "tenant" should be "shared" or a top-level tenant field name (non-empty, no dots), eg. tenant: organization_id — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception. The { field: <name> } object form is deprecated.',
           },
         },
       },
@@ -2924,45 +2487,6 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -2999,45 +2523,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -3091,45 +2576,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -3187,45 +2633,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -3294,45 +2701,6 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         name: {
@@ -3367,45 +2735,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
         id: {
@@ -3458,44 +2787,6 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
-    '~ignoreBuildChecks': {
-      oneOf: [
-        { const: true },
-        {
-          type: 'array',
-          items: {
-            type: 'string',
-            enum: [
-              'state-refs',
-              'payload-refs',
-              'step-refs',
-              'link-refs',
-              'request-refs',
-              'connection-refs',
-              'tenant-lookup',
-              'events',
-              'block-properties',
-              'types',
-              'schema',
-              'js-lint',
-              'state-schema',
-              'tenant',
-              'js-modules',
-              'response-schema',
-              'callapi-refs',
-              'callapi-internal-refs',
-              'dynamic-endpoint-refs',
-              'websocket-refs',
-              'icons',
-              'collections',
-              'event-payload',
-              'migrations',
-              'expression',
-            ],
-          },
-        },
-      ],
-    },
     '~r': {},
     '~l': {},
     name: {
@@ -3559,47 +2850,39 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
-              },
-            },
-          ],
-        },
         '~r': {},
         '~l': {},
+        experimental: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Opt in to config surfaces whose behaviour may still change within a minor release.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            archetypes: {
+              type: 'boolean',
+              description:
+                'Enable page archetypes such as ListPage while their expansion may still change within a minor release.',
+              errorMessage: {
+                type: 'App "config.experimental.archetypes" should be a boolean.',
+              },
+            },
+            perPageImports: {
+              type: 'boolean',
+              description:
+                'Code-split block, action and operator packages per page in production builds. Defaults to true; set to false to serve every type from the app-wide barrels.',
+              errorMessage: {
+                type: 'App "config.experimental.perPageImports" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "config.experimental" should be an object.',
+            additionalProperties:
+              'App "config.experimental" contains an unknown property. The known properties are "archetypes" and "perPageImports".',
+          },
+        },
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',
@@ -3661,6 +2944,63 @@ export default {
                 'When true (the default), the server refuses to serve while the build index lists any migration the stage ledger does not record as applied, naming the pending migrations. Set to false to opt out (e.g. when the deploy pipeline manages ordering, or new code is deployed ahead of the migration).',
               errorMessage: {
                 type: 'App "config.migrations.preflight" should be a boolean.',
+              },
+            },
+          },
+        },
+        feedback: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'In-app feedback reports from end users. When enabled, a signed-in user presses Cmd/Ctrl+/ and sends a short report; the server emits one "feedback_submitted" wide event carrying the text, the page, the url and the journey session_id of the tab, so the recorded journey that led to the report can be pulled with lowdefy_prod_trace({ session_id }). Off unless enabled.',
+          errorMessage: {
+            type: 'App "config.feedback" should be an object.',
+            additionalProperties:
+              'App "config.feedback" contains an unknown property. The known properties are "enabled" and "roles".',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description:
+                'Set to true to accept feedback reports at POST /api/feedback and offer the in-app affordance. Reports are always signed - an unauthenticated caller is refused.',
+              errorMessage: {
+                type: 'App "config.feedback.enabled" should be a boolean.',
+              },
+            },
+            roles: {
+              type: 'array',
+              items: { type: 'string' },
+              description:
+                'Roles allowed to send feedback. A caller holding any one of them is accepted. Omitted or empty means every signed-in user may report.',
+              errorMessage: {
+                type: 'App "config.feedback.roles" should be an array of strings.',
+              },
+            },
+          },
+        },
+        ops: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Production telemetry query tools in the dev MCP (lowdefy_prod_errors, lowdefy_prod_trace, lowdefy_prod_slow, lowdefy_prod_repro). They read the app log sink into an AI agent context and are already gated on read-only sink credentials and a loopback dev server; this is the app-level kill switch.',
+          errorMessage: {
+            type: 'App "config.ops" should be an object.',
+            additionalProperties:
+              'App "config.ops" contains an unknown property. The known properties are "enabled".',
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description:
+                'Set to false to refuse the dev MCP ops query tools for this app, whatever credentials the developer has. Recommended for apps whose connections are tenant-walled.',
+              errorMessage: {
+                type: 'App "config.ops.enabled" should be a boolean.',
               },
             },
           },
@@ -3740,17 +3080,65 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        antd: { type: 'object' },
-        tailwind: { type: 'object' },
+        antd: {
+          type: 'object',
+          description:
+            'Ant Design theme configuration (token, components, algorithm, lightToken, darkToken, lightComponents, darkComponents). Merged after "mode", "density" and "radius", so an explicit token always wins.',
+          errorMessage: {
+            type: 'App "theme.antd" should be an object.',
+          },
+        },
+        tailwind: {
+          type: 'object',
+          errorMessage: {
+            type: 'App "theme.tailwind" should be an object.',
+          },
+        },
+        mode: {
+          type: 'string',
+          enum: ['system', 'light', 'dark'],
+          description:
+            'Color mode. "system" follows the OS prefers-color-scheme and updates live (default), "light" forces light mode, "dark" applies the antd dark algorithm.',
+          errorMessage: {
+            type: 'App "theme.mode" should be a string.',
+            enum: 'App "theme.mode" should be one of "system", "light" or "dark".',
+          },
+        },
+        density: {
+          type: 'string',
+          enum: ['default', 'compact'],
+          description:
+            'UI density. "compact" applies the antd compact algorithm, which reduces control heights, paddings and font sizes. Composes with dark mode.',
+          errorMessage: {
+            type: 'App "theme.density" should be a string.',
+            enum: 'App "theme.density" should be one of "default" or "compact".',
+          },
+        },
+        radius: {
+          type: 'number',
+          minimum: 0,
+          description:
+            'Base corner radius in pixels, applied as the antd "borderRadius" token. All derived radius tokens follow from it.',
+          errorMessage: {
+            type: 'App "theme.radius" should be a number.',
+            minimum: 'App "theme.radius" should be greater than or equal to 0.',
+          },
+        },
         darkMode: {
           type: 'string',
           enum: ['system', 'light', 'dark'],
           description:
-            'Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
+            'Deprecated alias for "theme.mode". Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
+          errorMessage: {
+            type: 'App "theme.darkMode" should be a string.',
+            enum: 'App "theme.darkMode" should be one of "system", "light" or "dark".',
+          },
         },
       },
       errorMessage: {
         type: 'App "theme" should be an object.',
+        additionalProperties:
+          'App "theme" contains an unknown property. The known properties are "mode", "density", "radius", "antd", "tailwind" and "darkMode".',
       },
     },
     plugins: {
@@ -3836,19 +3224,31 @@ export default {
     pages: {
       type: 'array',
       items: {
-        $ref: '#/definitions/block',
+        $ref: '#/definitions/page',
       },
       errorMessage: {
         type: 'App "pages" should be an array.',
       },
     },
     components: {
-      type: 'array',
-      items: {
-        $ref: '#/definitions/component',
-      },
+      description:
+        'Reusable block trees declared once and used as block types. A map keyed by component id (the array form with an "id" per entry still builds, but warns).',
+      anyOf: [
+        {
+          type: 'object',
+          additionalProperties: {
+            $ref: '#/definitions/component',
+          },
+        },
+        {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/component',
+          },
+        },
+      ],
       errorMessage: {
-        type: 'App "components" should be an array.',
+        anyOf: 'App "components" should be a map of component definitions keyed by id.',
       },
     },
     modules: {
@@ -3911,47 +3311,194 @@ export default {
         type: 'App "logger" should be an object.',
       },
       properties: {
-        '~ignoreBuildChecks': {
-          oneOf: [
-            { const: true },
+        '~r': {},
+        '~l': {},
+        events: {
+          anyOf: [
             {
-              type: 'array',
-              items: {
-                type: 'string',
-                enum: [
-                  'state-refs',
-                  'payload-refs',
-                  'step-refs',
-                  'link-refs',
-                  'request-refs',
-                  'connection-refs',
-                  'tenant-lookup',
-                  'events',
-                  'block-properties',
-                  'types',
-                  'schema',
-                  'js-lint',
-                  'state-schema',
-                  'tenant',
-                  'js-modules',
-                  'response-schema',
-                  'collections',
-                  'callapi-refs',
-                  'callapi-internal-refs',
-                  'dynamic-endpoint-refs',
-                  'websocket-refs',
-                  'icons',
-                  'event-payload',
-                  'migrations',
-                  'expression',
-                  'archetype',
-                ],
+              type: 'string',
+              enum: ['errors', 'all'],
+            },
+            {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                level: {
+                  type: 'string',
+                  enum: ['errors', 'all'],
+                },
+                sample_rate: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                },
+                identity: {
+                  type: 'boolean',
+                },
               },
             },
           ],
+          errorMessage:
+            'App "logger.events" should be "errors", "all", or an object with "level" ("errors" or "all"), "sample_rate" (a number between 0 and 1) and "identity" (a boolean).',
         },
-        '~r': {},
-        '~l': {},
+        journeys: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'The recorded journey corpus. The client records one trace event per completed block event and beacons it to /api/journey, which emits it as a "journey_event" wide event.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              description: 'Record user journeys. Default true.',
+              errorMessage: {
+                type: 'App "logger.journeys.enabled" should be a boolean.',
+              },
+            },
+            sample_rate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              description:
+                'Share of sessions recorded, 0 to 1, decided once per session so a recorded session is complete. Default 0.05; the dev server records every session.',
+              errorMessage: {
+                type: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+                minimum: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+                maximum: 'App "logger.journeys.sample_rate" should be a number between 0 and 1.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "logger.journeys" should be an object.',
+            additionalProperties:
+              'App "logger.journeys" has an unknown key. Valid keys: enabled, sample_rate.',
+          },
+        },
+        monitors: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'App-wide defaults for the monitor definitions the build writes to build/monitors.json. There is no per-monitor surface.',
+          properties: {
+            '~r': {},
+            '~l': {},
+            defaults: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~r': {},
+                '~l': {},
+                error_rate: {
+                  type: 'number',
+                  minimum: 0,
+                  maximum: 1,
+                  description:
+                    'Error-rate threshold (0 to 1) for endpoint, request and connection rules. Default 0.05.',
+                },
+                p95_ms: {
+                  type: 'number',
+                  exclusiveMinimum: 0,
+                  description:
+                    'p95 duration threshold in milliseconds for page request rules. Default 2000.',
+                },
+              },
+              errorMessage: {
+                type: 'App "logger.monitors.defaults" should be an object.',
+                additionalProperties:
+                  'App "logger.monitors.defaults" has an unknown key. Valid keys: error_rate, p95_ms.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "logger.monitors" should be an object.',
+            additionalProperties: 'App "logger.monitors" has an unknown key. Valid keys: defaults.',
+          },
+        },
+        otlp: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['endpoint'],
+          errorMessage: {
+            type: 'App "logger.otlp" should be an object.',
+            required: {
+              endpoint: 'App "logger.otlp" should have required property "endpoint".',
+            },
+          },
+          properties: {
+            '~r': {},
+            '~l': {},
+            endpoint: {
+              type: 'string',
+              format: 'uri',
+              description:
+                'The OTLP/HTTP logs endpoint log lines are POSTed to as OTLP JSON, for example "https://api.axiom.co/v1/traces".',
+              errorMessage: {
+                type: 'App "logger.otlp.endpoint" should be a string.',
+                format: 'App "logger.otlp.endpoint" should be a valid URL.',
+              },
+            },
+            headers: {
+              type: 'object',
+              description:
+                'Headers sent with every export request, typically an authorization header. A value may be a "_secret" operator, which is resolved on the server when the logger is created.',
+              additionalProperties: {
+                anyOf: [{ type: 'string' }, { type: 'object' }],
+              },
+              errorMessage: {
+                type: 'App "logger.otlp.headers" should be an object.',
+                additionalProperties:
+                  'App "logger.otlp.headers" values should be strings or a "_secret" operator.',
+              },
+            },
+            resource: {
+              type: 'object',
+              description:
+                'Additional OpenTelemetry resource attributes sent with every batch, beside the app name, version and git sha.',
+              additionalProperties: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "logger.otlp.resource" should be an object.',
+                additionalProperties: 'App "logger.otlp.resource" values should be strings.',
+              },
+            },
+            batch: {
+              type: 'object',
+              additionalProperties: false,
+              description: 'Batching settings for the OTLP exporter.',
+              errorMessage: {
+                type: 'App "logger.otlp.batch" should be an object.',
+              },
+              properties: {
+                '~r': {},
+                '~l': {},
+                size: {
+                  type: 'integer',
+                  minimum: 1,
+                  description: 'Number of buffered log lines that triggers an export. Default 50.',
+                  errorMessage: {
+                    type: 'App "logger.otlp.batch.size" should be an integer greater than 0.',
+                    minimum: 'App "logger.otlp.batch.size" should be an integer greater than 0.',
+                  },
+                },
+                flush_ms: {
+                  type: 'integer',
+                  minimum: 1,
+                  description:
+                    'Milliseconds a buffered log line waits before it is exported. Default 2000.',
+                  errorMessage: {
+                    type: 'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
+                    minimum:
+                      'App "logger.otlp.batch.flush_ms" should be an integer greater than 0.',
+                  },
+                },
+              },
+            },
+          },
+        },
         sentry: {
           type: 'object',
           additionalProperties: false,
@@ -3959,45 +3506,6 @@ export default {
             type: 'App "logger.sentry" should be an object.',
           },
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'tenant-lookup',
-                      'events',
-                      'block-properties',
-                      'types',
-                      'schema',
-                      'js-lint',
-                      'state-schema',
-                      'tenant',
-                      'js-modules',
-                      'response-schema',
-                      'collections',
-                      'callapi-refs',
-                      'callapi-internal-refs',
-                      'dynamic-endpoint-refs',
-                      'websocket-refs',
-                      'icons',
-                      'event-payload',
-                      'migrations',
-                      'expression',
-                      'archetype',
-                    ],
-                  },
-                },
-              ],
-            },
             '~r': {},
             '~l': {},
             client: {

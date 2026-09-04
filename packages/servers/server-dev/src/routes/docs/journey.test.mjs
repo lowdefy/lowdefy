@@ -61,13 +61,17 @@ test('docsJourneyHandler runs the journey against the request origin and returns
 
   const result = await docsJourneyHandler(c);
 
-  expect(mockRunJourney).toHaveBeenCalledWith({
-    origin: 'http://localhost:3227',
-    pageId: 'form',
-    steps: [{ click: 'submit' }],
-    user: { roles: ['admin'] },
-    urlQuery: { id: '1' },
-  });
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({
+      origin: 'http://localhost:3227',
+      pageId: 'form',
+      steps: [{ click: 'submit' }],
+      user: { roles: ['admin'] },
+      urlQuery: { id: '1' },
+      fixtures: undefined,
+      honoContext: c,
+    })
+  );
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
   expect(result.data.screenshots).toEqual([{ name: 'after', data: 'cG5n', mimeType: 'image/png' }]);
@@ -107,7 +111,7 @@ test('docsJourneyHandler returns 400 when steps is not an array', async () => {
   const result = await docsJourneyHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/requires "steps" to be an array/);
+  expect(result.data.error).toMatch(/"steps" should be an array of steps/);
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
@@ -118,7 +122,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 0 has unknown key "hover". Steps are: click, fill, set, select, press, wait, screenshot, expect.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });

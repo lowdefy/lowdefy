@@ -1,6 +1,8 @@
 ---
 name: lowdefy-list-pages
 description: Use when building a page that lists records from a request — filters bound to state, a row link with urlQuery, an empty state and a loading skeleton.
+kind: recipe
+lowdefyVersion: 5.5.1
 ---
 
 # List pages
@@ -8,298 +10,27 @@ description: Use when building a page that lists records from a request — filt
 <!-- generated:reference:start -->
 ## Reference
 
-Generated from `@lowdefy/docs-content` and the plugin schemas at release time — do not edit by hand. The running dev server has the live versions: `lowdefy_get_doc` for a doc page, `lowdefy_get_schema` for a type, `lowdefy_get_examples` for block yaml.
+What this skill covers, and the call that returns the live version from the running dev server. Read these before writing config - never write a type name or property from memory.
 
 ### Docs
 
-#### Lists
-
-`/lowdefy-docs/content/concepts/lists`
-
-List category blocks render multiple [`content areas`](/layout), based on data in the [`state`](/page-and-app-state) object.
-
-#### Connections and Requests
-
-`/lowdefy-docs/content/concepts/connections-and-requests`
-
-In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the settings to the external service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling an API end-point.
-
-#### List
-
-`/lowdefy-docs/content/list-blocks/list`
-
-Flex-based list container that renders a template block for each item in an array. Supports column/row direction, wrapping, and scrolling. Use `CallMethod` with `pushItem`, `removeItem`, `moveItemUp`, and `moveItemDown` to manage items. Pair with `Validate` to validate inputs across all list rows.
-
-#### Link
-
-`/lowdefy-docs/content/actions/link`
-
-The `Link` action is used to link a user to another page. An input can be passed to the next page using either the `urlQuery`, which is visible to the user, but persists if the browser is refreshed, or by using the `input` object, which is not visible to the user.
-
-#### _request
-
-`/lowdefy-docs/content/operators/_request`
-
-The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably. The leading segment of a `_request` path is the request id and is matched exactly, so the rule above applies to the part of the path after it. For more detailed information about a request, the [_request_details](/_request_details) operator can be used.
-
-#### _url_query
-
-`/lowdefy-docs/content/operators/_url_query`
-
-The `_url_query` operator gets a value from the [`urlQuery`](/page-and-app-state) object. The `urlQuery` is a data object that is set as the [`https://en.wikipedia.org/wiki/Query_string`] of the app URL. It can be set when linking to a new page using the [`Link`](/link) action, and can be used to set data like a `id` when switching to a new page. Unlike `input`, the `urlQuery` is visible to the user, and can be modified by the user.
-
-#### Skeleton
-
-`/lowdefy-docs/content/display-blocks/skeleton`
-
-Rectangular skeleton loading placeholder.
+`lowdefy_get_doc` by slug (or `GET /lowdefy-docs/content/{slug}`): `concepts/lists`, `concepts/connections-and-requests`, `list-blocks/list`, `actions/link`, `operators/_request`, `operators/_url_query`, `display-blocks/skeleton`.
 
 ### Blocks
 
-Live schema: `lowdefy_get_schema` with kind `blocks`.
-
-#### List
-
-Provided by `@lowdefy/blocks-basic`. Category: `list`, value type: `array`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `direction` | `"row"`, `"column"`, `"row-reverse"`, `"column-reverse"` |  |  | List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block. |
-| `wrap` | `"wrap"`, `"nowrap"`, `"wrap-reverse"` |  |  | Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set. |
-| `scroll` | boolean |  |  | Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set. |
-
-##### Events
-
-- `onClick`: Trigger actions when the List is clicked.
-
-##### Example
-
-```yaml
-- id: notes_header
-  type: Box
-  layout:
-    justify: space-between
-    align: center
-  blocks:
-    - id: notes_title
-      type: Title
-      layout:
-        flex: 0 0 auto
-      properties:
-        content: Notes
-        level: 4
-    - id: notes_add
-      type: Button
-      layout:
-        flex: 0 0 auto
-      properties:
-        title: Add Note
-        icon: AiOutlinePlus
-        color: primary
-        variant: solid
-        size: small
-      events:
-        onClick:
-          - id: notes_push
-            type: CallMethod
-            params:
-              blockId: notes
-              method: pushItem
-```
-
-#### Card
-
-Provided by `@lowdefy/blocks-antd`. Category: `container`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `bordered` | boolean |  | `true` | Toggles rendering of the border around the card. |
-| `hoverable` | boolean |  | `false` | Lift up when hovering card. |
-| `inner` | boolean |  | `false` | Change the card style to inner. |
-| `size` | `"default"`, `"small"` |  | `"default"` | Size of the card. |
-| `title` | string |  |  | Title to show in the title area - supports html. Overwritten by blocks in the title content area. |
-| `theme` | object |  |  | Antd design token overrides for this block. See antd design tokens. |
-
-##### Events
-
-- `onClick`: Trigger actions when the Card is clicked.
-
-##### Example
-
-```yaml
-- id: basic_card
-  type: Card
-  properties:
-    title: Card Title
-  blocks:
-    - id: basic_card_p1
-      type: Paragraph
-      properties:
-        content: Cards provide a flexible and extensible content container with multiple variants. This is the default card with a simple title and body content.
-    - id: basic_card_p2
-      type: Paragraph
-      properties:
-        content: You can place any blocks inside the card body using the standard blocks key.
-```
-
-#### Result
-
-Provided by `@lowdefy/blocks-antd`. Category: `container`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `icon` | string \\| object |  |  | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to use as result image. |
-| `status` | `"success"`, `"error"`, `"info"`, `"warning"`, `"404"`, `"403"`, `"500"` |  | `"info"` | Status of the result. Determines image and color. |
-| `subTitle` | string |  |  | Result subtitle or secondary text - supports html. |
-| `title` | string |  |  | Result title or primary text - supports html. |
-| `theme` | object |  |  | Antd design token overrides for this block. See antd design tokens. |
-
-##### Events
-
-_No events._
-
-##### Example
-
-```yaml
-- id: status_success
-  type: Result
-  properties:
-    status: success
-    title: Successfully Purchased Cloud Server
-    subTitle: 'Order number: 2026-0342-8756-0028. Cloud server configuration takes 1-5 minutes, please wait.'
-```
-
-#### Skeleton
-
-Provided by `@lowdefy/blocks-loaders`. Category: `display`.
-
-##### Properties
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `height` | number \\| string |  |  | Height of the skeleton. |
-| `width` | number \\| string |  |  | Width of the skeleton. |
-
-##### Events
-
-_No events._
-
-##### Example
-
-```yaml
-- id: basic_line
-  type: Skeleton
-  layout:
-    flex: 0 0 auto
-  properties:
-    width: 200
-    height: 16
-```
+`lowdefy_get_schema` with kind `blocks`, then `lowdefy_get_examples` for usage yaml: `List` (`@lowdefy/blocks-basic`), `Card` (`@lowdefy/blocks-antd`), `Result` (`@lowdefy/blocks-antd`), `Skeleton` (`@lowdefy/blocks-loaders`).
 
 ### Operators
 
-Live schema: `lowdefy_get_schema` with kind `operators`.
-
-#### _request
-
-Provided by `@lowdefy/operators-js`.
-
-Accepts string: Dot-notation path to request response data. First segment is the request ID, remaining segments access nested properties.
-
-#### _state
-
-Provided by `@lowdefy/operators-js`.
-
-**Form 1** — string: Dot-notation path to value in state.
-
-**Form 2** — integer: Index to access in state.
-
-**Form 3** — `true`: Return all state.
-
-**Form 4** — object
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `key` | string \\| integer |  |  |  |
-| `default` | any |  |  | Default value if key does not exist. |
-| `all` | boolean |  |  | Return all state. |
-
-#### _url_query
-
-Provided by `@lowdefy/operators-js`.
-
-**Form 1** — string: Dot-notation path to value in URL query params.
-
-**Form 2** — integer: Index to access in URL query params.
-
-**Form 3** — `true`: Return all URL query params.
-
-**Form 4** — object
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `key` | string \\| integer |  |  |  |
-| `default` | any |  |  | Default value if key does not exist. |
-| `all` | boolean |  |  | Return all URL query params. |
-
-#### _if
-
-Provided by `@lowdefy/operators-js`.
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `test` | boolean | yes |  | Boolean condition to evaluate. |
-| `then` | any |  |  | Value returned when test is true. |
-| `else` | any |  |  | Value returned when test is false. |
+`lowdefy_get_schema` with kind `operators`: `_request` (`@lowdefy/operators-js`), `_state` (`@lowdefy/operators-js`), `_url_query` (`@lowdefy/operators-js`), `_if` (`@lowdefy/operators-js`).
 
 ### Actions
 
-Live schema: `lowdefy_get_schema` with kind `actions`.
-
-#### Request
-
-Provided by `@lowdefy/actions-core`.
-
-**Form 1** — string: Shorthand for a single requestId.
-
-**Form 2** — array: An array of requestIds to call.
-
-**Form 3** — object: Request parameters.
-
-#### Link
-
-Provided by `@lowdefy/actions-core`.
-
-**Form 1** — string: Shorthand for pageId.
-
-**Form 2** — object: Link parameters.
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `pageId` | string |  |  | The pageId to link to. |
-| `url` | string |  |  | An external URL to link to. |
-| `newWindow` | boolean |  |  | Open the link in a new window. |
-| `urlQuery` | object |  |  | URL query parameters. |
-| `input` | object |  |  | Input to pass to the linked page. |
+`lowdefy_get_schema` with kind `actions`: `Request` (`@lowdefy/actions-core`), `Link` (`@lowdefy/actions-core`).
 
 ### Requests
 
-Live schema: `lowdefy_get_schema` with kind `requests`.
-
-#### MongoDBFind
-
-Provided by `@lowdefy/connection-mongodb` on connection `MongoDBCollection`. Connection access checked: read.
-
-| Property | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `query` | object | yes |  | A MongoDB query object |
-| `options` | object |  |  | Optional settings. |
+`lowdefy_get_schema` with kind `requests`: `MongoDBFind` (`@lowdefy/connection-mongodb`).
 <!-- generated:reference:end -->
 
 ## Recipe

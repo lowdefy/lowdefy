@@ -16,15 +16,12 @@
 
 import React from 'react';
 import { Layout } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
+
+import withTheme from '../withTheme.js';
 
 const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
-  <Layout
-    id={blockId}
-    className={classNames.element}
-    hasSider={properties.hasSider}
-    style={styles.element}
-  >
+  <Layout {...blockRootProps({ blockId, classNames, styles })} hasSider={properties.hasSider}>
     {content.content &&
       content.content({
         flexDirection: properties.hasSider ? 'row' : 'column',
@@ -33,4 +30,4 @@ const LayoutBlock = ({ blockId, classNames = {}, content, properties, styles = {
   </Layout>
 );
 
-export default withBlockDefaults(LayoutBlock);
+export default withTheme('Layout', withBlockDefaults(LayoutBlock));

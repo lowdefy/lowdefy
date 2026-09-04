@@ -23,6 +23,7 @@ import testContext from '../../test-utils/testContext.js';
 
 const blockMetas = {
   TextInput: { category: 'input' },
+  Selector: { category: 'input-container' },
   List: { category: 'list' },
   Paragraph: { category: 'display' },
   Button: { category: 'display' },
@@ -186,4 +187,16 @@ test('validateStateSchema is suppressed by ~ignoreBuildChecks: [state-schema]', 
     { keyMap }
   );
   expect(errors).toEqual([]);
+});
+
+test('validateStateSchema checks the id of an input-container block against the contract', () => {
+  const errors = run({
+    pageId: 'p',
+    stateSchema,
+    blocks: [{ blockId: 'undeclared_selector', type: 'Selector' }],
+  });
+  expect(errors).toHaveLength(1);
+  expect(errors[0].message).toContain(
+    'Page "p" declares a state contract and "undeclared_selector" is not part of it.'
+  );
 });

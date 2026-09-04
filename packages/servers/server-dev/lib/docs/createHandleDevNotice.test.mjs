@@ -15,7 +15,7 @@
 */
 import { jest } from '@jest/globals';
 
-const { default: devNoticeChannel } = await import('./devNoticeChannel.js');
+const { subscribe } = await import('./devEventBus.js');
 const { default: devNoticeStore } = await import('./devNoticeStore.js');
 const { default: createHandleDevNotice } = await import('./createHandleDevNotice.js');
 
@@ -52,6 +52,15 @@ const notice = {
   },
 };
 
+// The store publishes every notice it stores on the dev event bus; the reload
+// route subscribes to the bus and forwards the dev_notice events to the tabs.
+function subscribeToNotices(send) {
+  return subscribe((event) => {
+    if (event.type !== 'dev_notice') return;
+    send(event);
+  });
+}
+
 function flush() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
@@ -79,7 +88,7 @@ test('handleDevNotice returns synchronously, resolves the source and stores the 
 
 test('handleDevNotice broadcasts the stored entry to subscribed dev tabs once per config site', async () => {
   const send = jest.fn();
-  const unsubscribe = devNoticeChannel.subscribe(send);
+  const unsubscribe = subscribeToNotices(send);
   const handleDevNotice = createHandleDevNotice({ context: createContext() });
   handleDevNotice({ ...notice, configKey: 'request.8' });
   await flush();
@@ -115,7 +124,7 @@ test('handleDevNotice swallows a rejecting readConfigFile and still stores the n
 });
 
 test('handleDevNotice swallows a throwing subscriber', async () => {
-  const unsubscribe = devNoticeChannel.subscribe(() => {
+  const unsubscribe = subscribeToNotices(() => {
     throw new Error('tab gone');
   });
   const handleDevNotice = createHandleDevNotice({ context: createContext() });
@@ -129,4 +138,23 @@ test('handleDevNotice swallows a context with no readConfigFile', async () => {
   const handleDevNotice = createHandleDevNotice({ context: {} });
   expect(() => handleDevNotice({ ...notice, configKey: 'request.12' })).not.toThrow();
   await flush();
+});
+
+test('handleDevNotice broadcasts a notice raised when the store is already at capacity', async () => {
+  // The ring holds 50: a stored entry then also evicts one, leaving the list
+  // length unchanged. Inferring "was it stored?" from that length silently
+  // stopped every notice from the 51st config site onward.
+  for (let i = 0; i < 50; i++) {
+    devNoticeStore.push({ configKey: `capacity-${i}` });
+  }
+  const send = jest.fn();
+  const unsubscribe = subscribeToNotices(send);
+  const handleDevNotice = createHandleDevNotice({ context: createContext() });
+
+  handleDevNotice({ ...notice, configKey: 'past-capacity' });
+  await flush();
+
+  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls[0][0].configKey).toEqual('past-capacity');
+  unsubscribe();
 });

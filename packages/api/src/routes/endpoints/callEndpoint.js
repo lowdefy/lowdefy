@@ -21,6 +21,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import logEndpointCompleted from './logEndpointCompleted.js';
 import resolveRunAs from './resolveRunAs.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
@@ -84,7 +85,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload, tra
   // Auth was already checked above; the outcome lands in logs (scheduleBackground)
   // and in whatever the routine itself records.
   if (endpointConfig.async === true) {
-    scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
+    scheduleBackground(context, { endpointConfig, event: 'background_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );
     return {
@@ -95,8 +96,16 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload, tra
     };
   }
 
+  const startTime = performance.now();
   const { error, response, status } = await runRoutine(context, routineContext, {
     routine: endpointConfig.routine,
+  });
+  logEndpointCompleted(context, {
+    endpointConfig,
+    entry: 'api',
+    error,
+    startTime,
+    status,
   });
   if (status === 'return') {
     validateEndpointResponse(context, { endpointConfig, response });

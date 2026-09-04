@@ -666,8 +666,7 @@ Product Manager
               properties:
                 icon: AiOutlineUser
                 size: 48
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
             - id: mas_team_c1_info
               type: Box
               layout:
@@ -732,8 +731,7 @@ Product Manager
               properties:
                 icon: AiOutlineUser
                 size: 48
-                color: "#fff"
-                backgroundColor: "#52c41a"
+                color: "#52c41a"
             - id: mas_team_c2_info
               type: Box
               layout:
@@ -796,8 +794,7 @@ Product Manager
               properties:
                 icon: AiOutlineUser
                 size: 48
-                color: "#fff"
-                backgroundColor: "#722ed1"
+                color: "#722ed1"
             - id: mas_team_c3_info
               type: Box
               layout:

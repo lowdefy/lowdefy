@@ -79,6 +79,12 @@ export default {
         default: 'start',
         description: 'Set placement of the expand icon.',
       },
+      expandIconPosition: {
+        type: 'string',
+        enum: ['start', 'end'],
+        description:
+          'Deprecated - use expandIconPlacement instead. Antd renamed the property; this alias is read only when expandIconPlacement is not set.',
+      },
       forceRender: {
         type: 'boolean',
         default: 'false',

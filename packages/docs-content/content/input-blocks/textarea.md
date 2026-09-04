@@ -24,6 +24,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+size_small:
+  _state: size_small
+size_middle:
+  _state: size_middle
+size_large:
+  _state: size_large
+```
+
+```yaml
 - id: placeholder_default
   type: TextArea
   properties:
@@ -41,6 +50,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
     title: No Placeholder
     label:
       extra: TextArea with no placeholder text.
+```
+
+```yaml
+placeholder_default:
+  _state: placeholder_default
+placeholder_long:
+  _state: placeholder_long
+placeholder_none:
+  _state: placeholder_none
 ```
 
 ```yaml
@@ -82,6 +100,21 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+rows_1:
+  _state: rows_1
+rows_2:
+  _state: rows_2
+rows_3:
+  _state: rows_3
+rows_4:
+  _state: rows_4
+rows_6:
+  _state: rows_6
+rows_10:
+  _state: rows_10
+```
+
+```yaml
 - id: auto_size_true
   type: TextArea
   properties:
@@ -95,6 +128,13 @@ Multi-line text input with auto-sizing, character count, and clear button.
     title: Auto Size Disabled (Default)
     autoSize: false
     placeholder: Fixed height, does not grow
+```
+
+```yaml
+auto_size_true:
+  _state: auto_size_true
+auto_size_false:
+  _state: auto_size_false
 ```
 
 ```yaml
@@ -140,6 +180,19 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+auto_size_min2_max4:
+  _state: auto_size_min2_max4
+auto_size_min3_max6:
+  _state: auto_size_min3_max6
+auto_size_min1_max10:
+  _state: auto_size_min1_max10
+auto_size_min5_max5:
+  _state: auto_size_min5_max5
+auto_size_min_only:
+  _state: auto_size_min_only
+```
+
+```yaml
 - id: allow_clear_true
   type: TextArea
   properties:
@@ -159,6 +212,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
     allowClear: true
     rows: 4
     placeholder: Clearable with 4 rows
+```
+
+```yaml
+allow_clear_true:
+  _state: allow_clear_true
+allow_clear_false:
+  _state: allow_clear_false
+allow_clear_with_rows:
+  _state: allow_clear_with_rows
 ```
 
 ```yaml
@@ -198,6 +260,19 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+show_count_basic:
+  _state: show_count_basic
+show_count_with_max:
+  _state: show_count_with_max
+show_count_max_200:
+  _state: show_count_max_200
+show_count_max_50:
+  _state: show_count_max_50
+show_count_false:
+  _state: show_count_false
+```
+
+```yaml
 - id: max_length_20
   type: TextArea
   properties:
@@ -220,6 +295,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+max_length_20:
+  _state: max_length_20
+max_length_500:
+  _state: max_length_500
+max_length_with_count:
+  _state: max_length_with_count
+```
+
+```yaml
 - id: bordered_true
   type: TextArea
   properties:
@@ -239,6 +323,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
     bordered: false
     rows: 6
     placeholder: Larger borderless textarea
+```
+
+```yaml
+bordered_true:
+  _state: bordered_true
+bordered_false:
+  _state: bordered_false
+borderless_with_rows:
+  _state: borderless_with_rows
 ```
 
 ```yaml
@@ -274,6 +367,17 @@ Multi-line text input with auto-sizing, character count, and clear button.
     disabled: true
     bordered: false
     placeholder: Disabled without border
+```
+
+```yaml
+disabled_empty:
+  _state: disabled_empty
+disabled_with_value:
+  _state: disabled_with_value
+disabled_with_rows:
+  _state: disabled_with_rows
+disabled_borderless:
+  _state: disabled_borderless
 ```
 
 ```yaml
@@ -313,6 +417,19 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_custom_title:
+  _state: label_custom_title
+label_with_extra:
+  _state: label_with_extra
+label_with_colon:
+  _state: label_with_colon
+label_no_colon:
+  _state: label_no_colon
+```
+
+```yaml
 - id: label_inline
   type: TextArea
   properties:
@@ -347,6 +464,17 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+label_inline_span:
+  _state: label_inline_span
+label_inline_extra:
+  _state: label_inline_extra
+```
+
+```yaml
 - id: label_disabled
   type: TextArea
   properties:
@@ -361,6 +489,13 @@ Multi-line text input with auto-sizing, character count, and clear button.
     label:
       hasFeedback: false
     placeholder: Validation feedback text will not appear
+```
+
+```yaml
+label_disabled:
+  _state: label_disabled
+label_feedback_disabled:
+  _state: label_feedback_disabled
 ```
 
 ```yaml
@@ -388,6 +523,13 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+combo_count_autosize:
+  _state: combo_count_autosize
+combo_count_autosize_clear:
+  _state: combo_count_autosize_clear
+```
+
+```yaml
 - id: combo_small_2rows
   type: TextArea
   properties:
@@ -411,6 +553,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
       minRows: 2
       maxRows: 6
     placeholder: Large auto-growing textarea
+```
+
+```yaml
+combo_small_2rows:
+  _state: combo_small_2rows
+combo_large_6rows:
+  _state: combo_large_6rows
+combo_large_autosize:
+  _state: combo_large_autosize
 ```
 
 ```yaml
@@ -454,6 +605,15 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+combo_disabled_count:
+  _state: combo_disabled_count
+combo_disabled_clear:
+  _state: combo_disabled_clear
+combo_disabled_borderless_value:
+  _state: combo_disabled_borderless_value
+```
+
+```yaml
 - id: usecase_feedback
   type: TextArea
   properties:
@@ -467,6 +627,11 @@ Multi-line text input with auto-sizing, character count, and clear button.
     allowClear: true
     label:
       extra: Please be specific with your feedback. Maximum 1000 characters.
+```
+
+```yaml
+usecase_feedback:
+  _state: usecase_feedback
 ```
 
 ```yaml
@@ -487,6 +652,11 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+usecase_code:
+  _state: usecase_code
+```
+
+```yaml
 - id: usecase_notes
   type: TextArea
   properties:
@@ -496,6 +666,11 @@ Multi-line text input with auto-sizing, character count, and clear button.
     allowClear: true
     label:
       colon: false
+```
+
+```yaml
+usecase_notes:
+  _state: usecase_notes
 ```
 
 ```yaml
@@ -511,6 +686,11 @@ Multi-line text input with auto-sizing, character count, and clear button.
       maxRows: 5
     label:
       extra: A brief description shown on your profile.
+```
+
+```yaml
+usecase_bio:
+  _state: usecase_bio
 ```
 
 ```yaml
@@ -562,6 +742,17 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+css_element:
+  _state: css_element
+css_label:
+  _state: css_label
+css_extra:
+  _state: css_extra
+css_combined:
+  _state: css_combined
+```
+
+```yaml
 - id: class_rounded
   type: TextArea
   class: rounded-lg shadow-md
@@ -576,6 +767,13 @@ Multi-line text input with auto-sizing, character count, and clear button.
     placeholder: Tailwind border classes
     label:
       disabled: true
+```
+
+```yaml
+class_rounded:
+  _state: class_rounded
+class_border:
+  _state: class_border
 ```
 
 ```yaml
@@ -625,12 +823,30 @@ Multi-line text input with auto-sizing, character count, and clear button.
 ```
 
 ```yaml
+theme_active_border:
+  _state: theme_active_border
+theme_font_size:
+  _state: theme_font_size
+theme_padding_combined:
+  _state: theme_padding_combined
+theme_purple:
+  _state: theme_purple
+theme_warm:
+  _state: theme_warm
+```
+
+```yaml
 - id: auto_focus_false
   type: TextArea
   properties:
     title: No Auto Focus (Default)
     autoFocus: false
     placeholder: Does not auto focus
+```
+
+```yaml
+auto_focus_false:
+  _state: auto_focus_false
 ```
 
 | Property | Type | Default | Description |
@@ -698,7 +914,7 @@ Multi-line text input with auto-sizing, character count, and clear button.
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
-| `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onChange` | `{ value: string }` | Trigger action when text input is changed. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

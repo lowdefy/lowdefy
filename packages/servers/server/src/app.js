@@ -26,6 +26,8 @@ import apiPageHandler from './routes/apiPage.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
+import feedbackHandler from './routes/feedback.js';
+import journeyHandler from './routes/journey.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
@@ -118,6 +120,13 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.get('/api/cron/*', cronHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
+  // The journey beacon is chunked to ~16 KiB by the client batcher; the cap
+  // is generous enough for a dev batch carrying values and small enough that
+  // an unauthenticated same-origin path cannot be used to post bulk.
+  app.all('/api/journey', bodyLimit({ maxSize: 256 * 1024 }), journeyHandler);
+  // A feedback report may carry a screenshot data URL, capped at 256 KiB by
+  // validateFeedbackReport; the body cap leaves room for the text beside it.
+  app.all('/api/feedback', bodyLimit({ maxSize: 512 * 1024 }), feedbackHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);

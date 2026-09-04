@@ -15,7 +15,6 @@
 */
 import { loadAndResolveErrorLocation } from '@lowdefy/errors';
 
-import devNoticeChannel from './devNoticeChannel.js';
 import devNoticeStore from './devNoticeStore.js';
 
 async function recordDevNotice({ context, notice }) {
@@ -34,14 +33,10 @@ async function recordDevNotice({ context, notice }) {
     details: notice.details ?? null,
     configKey: notice.configKey ?? null,
   };
-  const before = devNoticeStore.list().length;
+  // The store dedupes by configKey and publishes a dev_notice event on
+  // devEventBus for every entry it stores, so the dev tabs count config sites
+  // rather than executions. Nothing to do here beyond building the entry.
   devNoticeStore.push(entry);
-  // The store dedupes by configKey - a site already reported this process is
-  // not re-broadcast either, so the bar counts config sites, not executions.
-  if (devNoticeStore.list().length === before) {
-    return;
-  }
-  devNoticeChannel.broadcast(entry);
 }
 
 // The dev-only implementation of context.handleDevNotice (see

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
+import { createBlockHelper, escapeId, getBlock } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
 const locator = (page, blockId) =>
@@ -24,8 +24,7 @@ const endInput = (page, blockId) =>
   locator(page, blockId).locator('.ant-picker-input').last().locator('input');
 // The block renders the picker popup into a container inside itself, so the dropdown is scoped to
 // the block rather than to every open picker on the page.
-const pickerDropdown = (page, blockId) =>
-  page.locator(`#bl-${escapeId(blockId)} .ant-picker-dropdown`);
+const pickerDropdown = (page, blockId) => getBlock(page, blockId).locator('.ant-picker-dropdown');
 const presets = (page, blockId) => pickerDropdown(page, blockId).locator('.ant-picker-presets');
 const presetItem = (page, blockId, label) =>
   presets(page, blockId).locator('li', { hasText: label });

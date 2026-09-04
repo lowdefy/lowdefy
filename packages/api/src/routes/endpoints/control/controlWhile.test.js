@@ -45,11 +45,12 @@ test('while loop runs until the condition is false', async () => {
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
   expect(routineContext.state.count).toEqual(3);
-  // Three truthy evaluations, plus the falsy one that ends the loop.
+  // Only the three truthy evaluations: the condition is logged after the break
+  // test, so the falsy one that ends the loop is not logged.
   const logs = whileLogs(context);
-  expect(logs.length).toEqual(4);
-  expect(logs.map((log) => log.iteration)).toEqual([0, 1, 2, 3]);
-  expect(logs.map((log) => log.condition.evaluated)).toEqual([true, true, true, false]);
+  expect(logs.length).toEqual(3);
+  expect(logs.map((log) => log.iteration)).toEqual([0, 1, 2]);
+  expect(logs.map((log) => log.condition.evaluated)).toEqual([true, true, true]);
 });
 
 test('while loop does not run when the condition is false initially', async () => {
@@ -68,13 +69,8 @@ test('while loop does not run when the condition is false initially', async () =
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
   expect(routineContext.steps).toEqual({});
-  expect(whileLogs(context)).toEqual([
-    {
-      event: 'debug_control_while',
-      condition: { input: false, evaluated: false },
-      iteration: 0,
-    },
-  ]);
+  // Nothing is logged for a loop that never runs: the log follows the break test.
+  expect(whileLogs(context)).toEqual([]);
 });
 
 test('while loop evaluates the condition with operators against current state', async () => {
@@ -92,7 +88,7 @@ test('while loop evaluates the condition with operators against current state', 
   const { res, context, routineContext } = await runTest({ routine });
   expect(res.status).toEqual('continue');
   expect(routineContext.state.done).toEqual(true);
-  expect(whileLogs(context).map((log) => log.condition.evaluated)).toEqual([true, false]);
+  expect(whileLogs(context).map((log) => log.condition.evaluated)).toEqual([true]);
 });
 
 test('while loop returns a :return result from its body immediately', async () => {
@@ -200,4 +196,41 @@ test('while loop overwrites the step result of each iteration', async () => {
   expect(res.status).toEqual('return');
   expect(res.response).toEqual({ last: 3 });
   expect(routineContext.steps.test_request).toEqual(3);
+});
+
+test('while loop stops at the next iteration when the request is aborted', async () => {
+  // A signal that fires while the loop is running. The loop is infinite, so
+  // nothing but the abort can end it.
+  let checks = 0;
+  const signal = {
+    get aborted() {
+      checks += 1;
+      return checks > 5;
+    },
+  };
+  const routine = [
+    { ':set_state': { count: 0 } },
+    {
+      ':while': true,
+      ':do': { ':set_state': { count: { _sum: [{ _state: 'count' }, 1] } } },
+    },
+  ];
+  const { res, routineContext } = await runTest({ routine, signal });
+  expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ServiceError');
+  expect(res.error.message).toContain(
+    'The request was aborted before the next :while iteration ran.'
+  );
+  expect(routineContext.state.count).toBeGreaterThan(0);
+});
+
+test('while loop does not start when the request is already aborted', async () => {
+  const routine = {
+    ':while': true,
+    ':do': { ':set_state': { ran: true } },
+  };
+  const { res, routineContext } = await runTest({ routine, signal: AbortSignal.abort() });
+  expect(res.status).toEqual('error');
+  expect(res.error.message).toContain('The request was aborted before the next step ran.');
+  expect(routineContext.state).toEqual({});
 });

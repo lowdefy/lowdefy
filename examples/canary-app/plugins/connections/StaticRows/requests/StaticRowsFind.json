@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "checkRead": true,
+    "checkWrite": false
+  },
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "where": {
+        "type": "object",
+        "description": "Field equality filter applied to the connection rows."
+      }
+    }
+  }
+}

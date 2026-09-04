@@ -94,3 +94,21 @@ test('lintJsBody accepts await inside an async IIFE', () => {
   expect(result.undefinedNames).toEqual([]);
   expect(result.unusedNames).toEqual([]);
 });
+
+test('lintJsBody does not report an unused catch binding', () => {
+  const result = lintClient('try {\n  return state("a");\n} catch (e) {\n  return null;\n}');
+  expect(result.unusedNames).toEqual([]);
+  expect(result.undefinedNames).toEqual([]);
+});
+
+test('lintJsBody accepts typed arrays, AbortSignal and queueMicrotask in a client body', () => {
+  const result = lintClient(
+    'const buffer = new Uint8Array(new ArrayBuffer(8));\nqueueMicrotask(() => performance.now());\nreturn fetch("/x", { signal: AbortSignal.timeout(10) }).then(() => buffer.length);'
+  );
+  expect(result.undefinedNames).toEqual([]);
+});
+
+test('lintJsBody accepts atob and btoa in a server body', () => {
+  const result = lintServer('return atob(btoa("a"));');
+  expect(result.undefinedNames).toEqual([]);
+});

@@ -308,14 +308,14 @@ function getBetterAuthConfig({
     if (sendEmail) {
       options.emailAndPassword.sendResetPassword = async ({ user, url }) => {
         const context = createSystemContext({ auth: getAuth() });
-        const { subject, html, text } = await renderAuthEmail({
+        const { subject, html, text, notificationId } = await renderAuthEmail({
           flow: 'resetPassword',
           vars: { url },
           authEmailConfig: authConfig.email,
           baseURL: baseUrlOrigin,
           context,
         });
-        await sendEmail({ to: user.email, subject, html, text, context });
+        await sendEmail({ to: user.email, subject, html, text, context, notificationId });
       };
     } else {
       // Password reset is implicit in emailAndPassword, so a missing email
@@ -330,14 +330,14 @@ function getBetterAuthConfig({
     options.emailVerification = {
       sendVerificationEmail: async ({ user, url }) => {
         const context = createSystemContext({ auth: getAuth() });
-        const { subject, html, text } = await renderAuthEmail({
+        const { subject, html, text, notificationId } = await renderAuthEmail({
           flow: 'verifyEmail',
           vars: { url },
           authEmailConfig: authConfig.email,
           baseURL: baseUrlOrigin,
           context,
         });
-        await sendEmail({ to: user.email, subject, html, text, context });
+        await sendEmail({ to: user.email, subject, html, text, context, notificationId });
       },
     };
   }
@@ -353,14 +353,14 @@ function getBetterAuthConfig({
         disableSignUp: authConfig.magicLink.disableSignUp,
         sendMagicLink: async ({ email, url }) => {
           const context = createSystemContext({ auth: getAuth() });
-          const { subject, html, text } = await renderAuthEmail({
+          const { subject, html, text, notificationId } = await renderAuthEmail({
             flow: 'magicLink',
             vars: { url },
             authEmailConfig: authConfig.email,
             baseURL: baseUrlOrigin,
             context,
           });
-          await sendEmail({ to: email, subject, html, text, context });
+          await sendEmail({ to: email, subject, html, text, context, notificationId });
         },
       })
     );
@@ -538,7 +538,7 @@ function getBetterAuthConfig({
       ? `${baseUrlOrigin}${basePath}${acceptPath}?invitationId=${invitation.id}`
       : undefined;
     const context = createSystemContext({ auth: getAuth() });
-    const { subject, html, text } = await renderAuthEmail({
+    const { subject, html, text, notificationId } = await renderAuthEmail({
       flow: 'invitation',
       vars: {
         url: acceptUrl,
@@ -549,7 +549,7 @@ function getBetterAuthConfig({
       baseURL: baseUrlOrigin,
       context,
     });
-    await sendEmail({ to: email, subject, html, text, context });
+    await sendEmail({ to: email, subject, html, text, context, notificationId });
   }
 
   options.plugins.push(

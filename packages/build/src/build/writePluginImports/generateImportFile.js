@@ -15,18 +15,24 @@
 */
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
+import addFilePluginSpecifiers from './addFilePluginSpecifiers.js';
+
 const template = `{%- for import in imports -%}
-import { {{ import.originalTypeName }} as {{ import.typeName }} } from '{{ import.package }}/{{ importPath }}';
-{% endfor -%}
+{% if import.filePluginSpecifier %}import {{ import.typeName }} from '{{ import.filePluginSpecifier }}';
+{% else %}import { {{ import.originalTypeName }} as {{ import.typeName }} } from '{{ import.package }}/{{ importPath }}';
+{% endif %}{% endfor -%}
 export default {
   {% for import in imports -%}
   {{ import.typeName }},
   {% endfor -%}
 };`;
 
-function generateImportFile({ imports, importPath }) {
+function generateImportFile({ artifactPath, context, imports, importPath, kind }) {
   const templateFn = nunjucksFunction(template);
-  return templateFn({ imports, importPath });
+  return templateFn({
+    imports: addFilePluginSpecifiers({ artifactPath, context, imports, kind }),
+    importPath,
+  });
 }
 
 export default generateImportFile;

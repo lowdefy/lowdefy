@@ -2,16 +2,41 @@
 
 ```
 (requestId: string): any
+({ key: string, status?: boolean }): any
 ```
 
 The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably. The leading segment of a `_request` path is the request id and is matched exactly, so the rule above applies to the part of the path after it. For more detailed information about a request, the [_request_details](/_request_details) operator can be used.
 
 If the request was called via the [`Request`](/Request) action with `holdValue: true`, `_request` returns the previous response while the new request is loading instead of returning `null`. Use `_request_details: <id>.loading` to detect that a new call is still in-flight, and `_request_details: <id>.error` to detect a failure.
 
+###### Request status
+
+The value form returns `null` for four different situations — never called, loading, failed, and a genuinely null response — so a block that only reads the value cannot tell a failure from an empty result. The object form with `status: true` returns the four states as booleans:
+
+```yaml
+_request:
+  key: my_request
+  status: true
+```
+Returns: `{ loading, error, success, empty }`, where:
+
+- `loading` — a call is in flight.
+- `error` — the error message of the last call, or `null` when it did not fail.
+- `success` — the last call completed without an error.
+- `empty` — `success` is true **and** the response is `null`, `undefined`, `''` or `[]`.
+
+A request that has never been called reports `{ loading: false, error: null, success: false, empty: false }`.
+
+**Empty is not failed.** An empty response is a successful request — `success` stays `true` and `empty` becomes `true`. Gate an empty state on `success` **and** `empty`, and gate a separate error state on `error`; gating an empty state on the value alone renders nothing at all when the request fails.
+
 #### Arguments
 
 ###### string
-The id of the request.
+The id of the request, with an optional dot-notation path into the response.
+
+###### object
+- `key: string`: __required__ - The id of the request, with an optional dot-notation path into the response. When `status` is true, only the request id is read.
+- `status: boolean`: Return `{ loading, error, success, empty }` for the request instead of its response data.
 
 #### Examples
 
@@ -32,4 +57,47 @@ _request: array_request.0
 ###### Using dot notation and block list indexes to get the name field from the element corresponding to the block index of an array response:
 ```yaml
 _request: array_request.$.name
+```
+
+###### Showing an empty state only when the request actually succeeded and returned nothing:
+```yaml
+- id: empty
+  type: Result
+  visible:
+    _get:
+      key: empty
+      from:
+        _request:
+          key: my_request
+          status: true
+  properties:
+    status: info
+    title: Nothing found
+```
+
+###### Showing an error state with the request's error message:
+```yaml
+- id: load_error
+  type: Result
+  visible:
+    _not:
+      _type:
+        type: none
+        on:
+          _get:
+            key: error
+            from:
+              _request:
+                key: my_request
+                status: true
+  properties:
+    status: error
+    title: Could not load the data
+    subTitle:
+      _get:
+        key: error
+        from:
+          _request:
+            key: my_request
+            status: true
 ```

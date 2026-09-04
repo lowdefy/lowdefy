@@ -17,14 +17,12 @@
 import React from 'react';
 import { Watermark } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const WatermarkBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Watermark
-    id={blockId}
-    className={classNames.element}
-    style={styles.element}
+    {...blockRootProps({ blockId, classNames, styles })}
     content={properties.text}
     font={properties.font}
     gap={properties.gap ?? undefined}

@@ -219,10 +219,10 @@ describe('compileExpression golden corpus', () => {
   });
 });
 
-// Negative corpus: each must throw a ConfigError with checkSlug 'expression'
+// Negative corpus: each must throw a located ConfigError
 // and a message matching the shape.
 const errorFixtures = [
-  { expression: '${ state.x ==', match: /unterminated expression/ },
+  { expression: '${ state.x ==', match: /single, closed/ },
   { expression: '${ state.x == 1 } ${ state.y }', match: /single \$\{ … \} expression/ },
   { expression: '${ state.a == }', match: /expected an operand/ },
   { expression: '${ stat.x }', match: /unknown identifier "stat"/ },
@@ -244,6 +244,9 @@ const errorFixtures = [
   // arithmetic is not in the language
   { expression: '${ state.a - 1 > 0 }', match: /unexpected character "-"/ },
   { expression: '${ state.a + 1 > 0 }', match: /unexpected character "\+"/ },
+  // a negative index would emit the nonsense path { _state: 'a.-1' } (B-50)
+  { expression: '${ state.a[-1] }', match: /index must not be negative/ },
+  { expression: '${ len(state.a)[-2] }', match: /index must not be negative/ },
 ];
 
 describe('compileExpression parse errors', () => {
@@ -256,7 +259,9 @@ describe('compileExpression parse errors', () => {
         thrown = error;
       }
       expect(thrown).toBeInstanceOf(ConfigError);
-      expect(thrown.checkSlug).toBe('expression');
+      // No checkSlug: the error is thrown inside buildRefs, before any keyMap
+      // exists, so ~ignoreBuildChecks could never suppress it.
+      expect(thrown.checkSlug).toBeUndefined();
       expect(thrown.message).toMatch(match);
     });
   });

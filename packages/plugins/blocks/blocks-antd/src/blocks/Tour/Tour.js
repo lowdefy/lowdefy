@@ -18,7 +18,7 @@ import React, { useMemo } from 'react';
 import { Tour } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
@@ -34,9 +34,7 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
 
   return (
     <Tour
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      {...blockRootProps({ blockId, classNames, styles })}
       open={properties.open === true}
       steps={steps}
       current={properties.current}

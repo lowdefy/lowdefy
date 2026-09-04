@@ -17,6 +17,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import collectExceptions from '../../utils/collectExceptions.js';
+import validateHazardsShape from './validateHazardsShape.js';
 
 const CATEGORIES = ['display', 'input', 'input-container', 'container', 'list'];
 const VALUE_TYPES = ['any', 'array', 'boolean', 'date', 'number', 'object', 'primitive', 'string'];
@@ -32,6 +33,7 @@ const KNOWN_KEYS = [
   'methods',
   'properties',
   'slots',
+  'styles',
   'valueType',
 ];
 
@@ -63,27 +65,39 @@ function isMethodDefinition(value) {
   return type.isUndefined(value.params) || isObjectOfStrings(value.params);
 }
 
-function isHazard(value) {
-  return type.isObject(value) && type.isString(value.id) && type.isString(value.message);
+// A file plugin declares its meta in the sibling JSON beside the file, a
+// package block in the package's metas module. Both are held to this contract;
+// only the source named in the message differs.
+function siblingJsonPath(filePlugin) {
+  return filePlugin.relativePath.replace(/\.[^./]+$/, '.json');
 }
 
 // Checks the meta a block plugin exports for one block type. Every violation
 // is collected as a ConfigError so one bad plugin reports all of its bad
 // fields in a single build; unknown keys are a ConfigWarning and stay allowed.
 // Returns true when the meta is usable by buildBlockSchema and the client.
-function validateBlockMeta({ meta, typeName, packageName, context }) {
+function validateBlockMeta({ context, filePlugin, meta, packageName, typeName }) {
   const errors = [];
+  const source = filePlugin ? `from "${filePlugin.relativePath}"` : `from package "${packageName}"`;
+  const location = filePlugin
+    ? { filePath: filePlugin.relativePath, lineNumber: 1, checkSlug: filePlugin.checkSlug }
+    : {};
   const fail = (message, value) => {
     errors.push(
-      new ConfigError(`Block type "${typeName}" from package "${packageName}": ${message}`, {
+      new ConfigError(`Block type "${typeName}" ${source}: ${message}`, {
         received: value,
+        ...location,
       })
     );
   };
 
   if (type.isNone(meta)) {
     fail(
-      `has no meta. Export it from "${packageName}/metas" as { ${typeName}: meta } with at least { category }.`,
+      filePlugin
+        ? `has no meta. Declare it in "${siblingJsonPath(
+            filePlugin
+          )}" as { "meta": { ... } } with at least { category }.`
+        : `has no meta. Export it from "${packageName}/metas" as { ${typeName}: meta } with at least { category }.`,
       meta
     );
   } else if (!type.isObject(meta)) {
@@ -123,6 +137,15 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
       !(type.isArray(meta.icons) && meta.icons.every((icon) => type.isString(icon)))
     ) {
       fail(`meta.icons must be an array of strings. Received ${received(meta.icons)}.`, meta.icons);
+    }
+    if (
+      !type.isUndefined(meta.styles) &&
+      !(type.isArray(meta.styles) && meta.styles.every((style) => type.isString(style)))
+    ) {
+      fail(
+        `meta.styles must be an array of strings. Received ${received(meta.styles)}.`,
+        meta.styles
+      );
     }
     if (!type.isUndefined(meta.properties) && !type.isObject(meta.properties)) {
       fail(
@@ -201,23 +224,16 @@ function validateBlockMeta({ meta, typeName, packageName, context }) {
         meta.dynamicEvents
       );
     }
-    if (
-      !type.isUndefined(meta.hazards) &&
-      !(type.isArray(meta.hazards) && meta.hazards.every(isHazard))
-    ) {
-      fail(
-        `meta.hazards must be an array of { id: string, message: string, see?: string | null }. Received ${received(
-          meta.hazards
-        )}.`,
-        meta.hazards
-      );
+    const hazardsProblem = validateHazardsShape(meta.hazards);
+    if (hazardsProblem !== null) {
+      fail(`meta.${hazardsProblem}`, meta.hazards);
     }
 
     const unknownKeys = Object.keys(meta).filter((key) => !KNOWN_KEYS.includes(key));
     if (unknownKeys.length > 0) {
       context.handleWarning(
         new ConfigWarning(
-          `Block type "${typeName}" from package "${packageName}": meta has unknown keys ${received(
+          `Block type "${typeName}" ${source}: meta has unknown keys ${received(
             unknownKeys
           )}. Known keys are ${received(
             KNOWN_KEYS

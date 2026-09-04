@@ -14,34 +14,54 @@
   limitations under the License.
 */
 
-import { compile } from '@lowdefy/ajv';
+import { compile, toJsonShape } from '@lowdefy/ajv';
 import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 
-// Compiled validators keyed by endpointId, compared by schema object identity
-// like validatePayload: a dev rebuild yields a new responseSchema object, so an
-// edited schema is recompiled on its next call.
-const validators = new Map();
+// Keyed by the schema object rather than the endpoint id: two apps served by
+// one process share an id space, and a dev rebuild yields a new schema object
+// that must recompile. The WeakMap lets a replaced schema be collected.
+const validators = new WeakMap();
 
 function getValidator({ endpointConfig }) {
-  const cached = validators.get(endpointConfig.endpointId);
-  if (cached && cached.schema === endpointConfig.responseSchema) {
-    return cached.validate;
+  let validate = validators.get(endpointConfig.responseSchema);
+  if (!validate) {
+    validate = compile({ schema: cleanBuildArtifact(endpointConfig.responseSchema) });
+    validators.set(endpointConfig.responseSchema, validate);
   }
-  const validate = compile({ schema: cleanBuildArtifact(endpointConfig.responseSchema) });
-  validators.set(endpointConfig.endpointId, { schema: endpointConfig.responseSchema, validate });
   return validate;
 }
 
-// A :return value that misses the endpoint's responseSchema is a dev notice,
-// never a failure: the response is still returned, and production - which
-// installs no context.handleDevNotice - compiles nothing. In prod a mismatch
-// is the app's data changing, not a config fault to turn into a 500.
+// One line per endpoint per process in production: an endpoint whose data has
+// drifted from the shape its callers were built against is worth knowing about,
+// and a line per request would be a log flood for a condition that does not
+// change between requests.
+const reportedEndpoints = new Set();
+
+function report(context, { endpointConfig, message, notice }) {
+  if (!type.isNone(context.handleDevNotice)) {
+    context.handleDevNotice(notice);
+    return;
+  }
+  if (reportedEndpoints.has(endpointConfig.endpointId)) return;
+  reportedEndpoints.add(endpointConfig.endpointId);
+  context.logger.warn({ event: 'response_schema_warning', ...notice.details }, message);
+}
+
+// A :return value that misses the endpoint's responseSchema is a notice, never
+// a failure: the response is still returned, because in production a mismatch
+// is the app's data changing, not a config fault to turn into a 500. The check
+// runs in both stages; only the channel differs.
+//
+// The value is validated in its JSON shape, which is what a caller receives and
+// what the same schema is published as through MCP's outputSchema - so a Date
+// returned for a `format: date-time` field is correct rather than a false
+// alarm.
 function validateEndpointResponse(context, { endpointConfig, response }) {
-  if (type.isNone(context.handleDevNotice) || type.isNone(endpointConfig.responseSchema)) {
+  if (type.isNone(endpointConfig.responseSchema)) {
     return;
   }
   const validate = getValidator({ endpointConfig });
-  const { valid, errors } = validate(response);
+  const { valid, errors } = validate(toJsonShape({ value: response }));
   if (valid) {
     return;
   }
@@ -51,16 +71,20 @@ function validateEndpointResponse(context, { endpointConfig, response }) {
   if (errors.length > 1) {
     message += ` (and ${errors.length - 1} more)`;
   }
-  context.handleDevNotice({
-    name: 'ResponseSchemaWarning',
-    level: 'warn',
+  report(context, {
+    endpointConfig,
     message,
-    configKey: endpointConfig['~k'],
-    details: {
-      endpointId: endpointConfig.endpointId,
-      instancePath,
-      errors,
-      received: response,
+    notice: {
+      name: 'ResponseSchemaWarning',
+      level: 'warn',
+      message,
+      configKey: endpointConfig['~k'],
+      details: {
+        endpointId: endpointConfig.endpointId,
+        instancePath,
+        errors,
+        received: response,
+      },
     },
   });
 }

@@ -42,11 +42,17 @@ function restartRequestWatcher(context) {
     const reason = readReason(sentinelPath);
     fs.rmSync(sentinelPath, { force: true });
     context.logger.info({ spin: 'start' }, `Restart requested by the dev tools: ${reason}.`);
-    context.restartServer();
+    await context.restartServer();
   };
 
   // The sentinel does not exist until the first request, so watch the build
-  // directory (non-recursively) and react only to the sentinel itself.
+  // directory (non-recursively) and react only to the sentinel itself. Watching
+  // the sentinel path directly would spare build/ - the hottest directory in
+  // the project - this predicate on every artifact write, but chokidar's
+  // fsevents backend arms a watch on a not-yet-created path through an ancestor
+  // directory, and that took tens of seconds to fire whenever several watchers
+  // were arming at once. A string compare per artifact write is the cheaper
+  // failure mode.
   return setupWatcher({
     callback,
     context,

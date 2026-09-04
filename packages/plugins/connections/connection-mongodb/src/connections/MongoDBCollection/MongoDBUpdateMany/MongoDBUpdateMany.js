@@ -43,7 +43,7 @@ async function MongodbUpdateMany({
     update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true, trace });
   }
   if (collectionSchema) {
-    validateUpdateFields({ update, collectionSchema });
+    validateUpdateFields({ update, collectionSchema, filter, options });
   }
   if (trace) {
     trace.effective = serialize({ filter, update, options });

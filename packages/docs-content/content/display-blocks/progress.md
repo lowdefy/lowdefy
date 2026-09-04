@@ -308,38 +308,38 @@ Progress indicator in line, circle, and dashboard styles.
 ```
 
 ```yaml
-- id: gappos_top
+- id: gapplacement_top
   type: Progress
   layout:
     flex: 0 0 auto
   properties:
     type: dashboard
     percent: 65
-    gapPosition: top
-- id: gappos_bottom
+    gapPlacement: top
+- id: gapplacement_bottom
   type: Progress
   layout:
     flex: 0 0 auto
   properties:
     type: dashboard
     percent: 65
-    gapPosition: bottom
-- id: gappos_left
+    gapPlacement: bottom
+- id: gapplacement_left
   type: Progress
   layout:
     flex: 0 0 auto
   properties:
     type: dashboard
     percent: 65
-    gapPosition: left
-- id: gappos_right
+    gapPlacement: left
+- id: gapplacement_right
   type: Progress
   layout:
     flex: 0 0 auto
   properties:
     type: dashboard
     percent: 65
-    gapPosition: right
+    gapPlacement: right
 ```
 
 ```yaml
@@ -796,7 +796,7 @@ Invite team members
 | `strokeWidth` | number | - | Set the width of the progress bar. |
 | `width` | number | `132` | Set the canvas width of the circular progress. |
 | `gapDegree` | number | `75` | The gap degree of half circle. |
-| `gapPosition` | string | `"top"` | The gap position. Enum: `top`, `bottom`, `left`, `right`. |
+| `gapPlacement` | string | `"top"` | The position of the gap of a dashboard type progress bar. Enum: `top`, `bottom`, `left`, `right`. |
 | `steps` | number | - | Number of steps for a segmented progress bar (line type only). |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design progress tokens](https://ant.design/components/progress#design-token). |
 | `theme.defaultColor` | string | `"#1677ff"` | Default color of the progress bar. |

@@ -6,6 +6,29 @@ Each operators expects arguments with a specific structure. They can be the resu
 
 If an operator errors while evaluating, it returns a `null` value, and logs the error to the console.
 
+## Unknown operators fail the build
+
+From v8, an operator name your app does not have is a build error, not a warning:
+
+```
+Operator type "_stat" was used but is not defined. Did you mean "_state"?
+```
+
+The fix is either the correct operator name, or installing the plugin that provides it and listing it under `plugins` in `lowdefy.yaml`.
+
+Before v8 this was only a warning, and the unresolved object was left in place - so `{ _stat: 'x' }` rendered on the page as the literal `{"_stat":"x"}`. Making it an error means a typo is caught at build time instead of showing up as a wrong value at runtime.
+
+If a key genuinely is not an operator and only looks like one - a single key starting with an underscore, such as a MongoDB `$`-free document field named `_rev` - suppress the check with `~ignoreBuildChecks` on the containing node:
+
+```yaml
+properties:
+  document:
+    _rev: abc123
+    ~ignoreBuildChecks: [types]
+```
+
+The suppression cascades to children, so it can also be declared on the block or the page. See [Lowdefy schema](/lowdefy-schema) for the full list of check slugs.
+
 ## Client or server operators
 
 Some operators are only available on either the client or the server. For example, the [`_menu`](/_menu) operator is only useful on the client and is thus not included in server requests. Likewise, the [`_secret`](/_secret) operator is only available on the server for security reasons.

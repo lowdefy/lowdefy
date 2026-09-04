@@ -20,8 +20,11 @@ async function writeBlockImports({ components, context }) {
   await context.writeBuildArtifact(
     'plugins/blocks.js',
     generateImportFile({
+      artifactPath: 'plugins/blocks.js',
+      context,
       imports: components.imports.blocks,
       importPath: 'blocks',
+      kind: 'blocks',
     })
   );
 }

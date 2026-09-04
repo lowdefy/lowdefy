@@ -10,6 +10,11 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+default_rating:
+  _state: default_rating
+```
+
+```yaml
 - id: range_0_5
   type: RatingSlider
   properties:
@@ -36,6 +41,17 @@ Rating slider with customizable range, icons, and N/A option.
     title: Temperature (-5 to 5)
     min: -5
     max: 5
+```
+
+```yaml
+range_0_5:
+  _state: range_0_5
+range_1_10:
+  _state: range_1_10
+range_0_100_step10:
+  _state: range_0_100_step10
+range_negative:
+  _state: range_negative
 ```
 
 ```yaml
@@ -67,6 +83,17 @@ Rating slider with customizable range, icons, and N/A option.
     min: 0
     max: 5
     step: 0.5
+```
+
+```yaml
+step_1:
+  _state: step_1
+step_2:
+  _state: step_2
+step_5:
+  _state: step_5
+step_half:
+  _state: step_half
 ```
 
 ```yaml
@@ -106,6 +133,19 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+marks_and_dots:
+  _state: marks_and_dots
+marks_only:
+  _state: marks_only
+dots_only:
+  _state: dots_only
+no_marks_no_dots:
+  _state: no_marks_no_dots
+marks_step_2:
+  _state: marks_step_2
+```
+
+```yaml
 - id: tooltip_onclick
   type: RatingSlider
   properties:
@@ -121,6 +161,15 @@ Rating slider with customizable range, icons, and N/A option.
   properties:
     title: Tooltip Never Visible
     tooltipVisible: never
+```
+
+```yaml
+tooltip_onclick:
+  _state: tooltip_onclick
+tooltip_always:
+  _state: tooltip_always
+tooltip_never:
+  _state: tooltip_never
 ```
 
 ```yaml
@@ -151,6 +200,17 @@ Rating slider with customizable range, icons, and N/A option.
     notApplicableLabel: Skip
     min: 1
     max: 5
+```
+
+```yaml
+na_default:
+  _state: na_default
+na_disabled:
+  _state: na_disabled
+na_custom_label:
+  _state: na_custom_label
+na_skip_label:
+  _state: na_skip_label
 ```
 
 ```yaml
@@ -199,6 +259,19 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+icons_default:
+  _state: icons_default
+icons_custom:
+  _state: icons_custom
+icons_star:
+  _state: icons_star
+icons_heart:
+  _state: icons_heart
+icons_object_config:
+  _state: icons_object_config
+```
+
+```yaml
 - id: color_blue
   type: RatingSlider
   properties:
@@ -237,6 +310,19 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+color_blue:
+  _state: color_blue
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_red:
+  _state: color_red
+color_purple:
+  _state: color_purple
+```
+
+```yaml
 - id: disabled_default
   type: RatingSlider
   properties:
@@ -263,6 +349,17 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+disabled_default:
+  _state: disabled_default
+disabled_no_icons:
+  _state: disabled_no_icons
+disabled_no_na:
+  _state: disabled_no_na
+disabled_colored:
+  _state: disabled_colored
+```
+
+```yaml
 - id: autofocus_enabled
   type: RatingSlider
   properties:
@@ -277,6 +374,13 @@ Rating slider with customizable range, icons, and N/A option.
     autoFocus: false
     min: 0
     max: 5
+```
+
+```yaml
+autofocus_enabled:
+  _state: autofocus_enabled
+autofocus_disabled:
+  _state: autofocus_disabled
 ```
 
 ```yaml
@@ -314,6 +418,19 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_with_extra:
+  _state: label_with_extra
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+label_no_colon:
+  _state: label_no_colon
+```
+
+```yaml
 - id: minimal_slider
   type: RatingSlider
   properties:
@@ -341,6 +458,15 @@ Rating slider with customizable range, icons, and N/A option.
     disableNotApplicable: true
     min: 0
     max: 5
+```
+
+```yaml
+minimal_slider:
+  _state: minimal_slider
+minimal_no_marks:
+  _state: minimal_no_marks
+minimal_no_label:
+  _state: minimal_no_label
 ```
 
 ```yaml
@@ -411,6 +537,17 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+combo_survey_satisfaction:
+  _state: combo_survey_satisfaction
+combo_nps:
+  _state: combo_nps
+combo_temperature:
+  _state: combo_temperature
+combo_difficulty:
+  _state: combo_difficulty
+```
+
+```yaml
 - id: style_background
   type: RatingSlider
   properties:
@@ -435,6 +572,13 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+style_background:
+  _state: style_background
+style_wide:
+  _state: style_wide
+```
+
+```yaml
 - id: class_rounded
   type: RatingSlider
   class: rounded-lg shadow-sm p-2 border border-border
@@ -450,6 +594,13 @@ Rating slider with customizable range, icons, and N/A option.
     min: 0
     max: 10
     color: "#722ed1"
+```
+
+```yaml
+class_rounded:
+  _state: class_rounded
+class_gradient_bg:
+  _state: class_gradient_bg
 ```
 
 ```yaml
@@ -503,6 +654,19 @@ Rating slider with customizable range, icons, and N/A option.
       handleActiveColor: "#531dab"
       dotBorderColor: "#d3adf7"
       dotActiveBorderColor: "#722ed1"
+```
+
+```yaml
+theme_large_handle:
+  _state: theme_large_handle
+theme_thick_rail:
+  _state: theme_thick_rail
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_large_dots:
+  _state: theme_large_dots
+theme_purple_slider:
+  _state: theme_purple_slider
 ```
 
 ```yaml
@@ -561,6 +725,66 @@ Rating slider with customizable range, icons, and N/A option.
 ```
 
 ```yaml
+- id: applied_product_review_card
+  type: Card
+  properties:
+    title: Write a Product Review
+  blocks:
+    - id: applied_product_review_rating
+      type: RatingSlider
+      required: true
+      properties:
+        title: Product Rating
+        min: 1
+        max: 5
+        step: 1
+        color: "#fa8c16"
+        minIcon: AiOutlineStar
+        maxIcon: AiFillStar
+        showMarks: true
+        showDots: true
+        disableNotApplicable: true
+        label:
+          extra: How would you rate this product?
+      events:
+        onChange:
+          - id: applied_product_review_set_rating
+            type: SetState
+            params:
+              productRating:
+                _event: value
+    - id: applied_product_review_text
+      type: TextArea
+      properties:
+        title: Your Review
+        label:
+          extra: Tell us more about your experience.
+        rows: 4
+    - id: applied_product_review_submit
+      type: Button
+      properties:
+        title: Submit Review
+        icon: AiOutlineSend
+        type: primary
+        block: true
+      events:
+        onClick:
+          - id: applied_product_review_validate
+            type: Validate
+            params: applied_product_review_rating
+          - id: applied_product_review_message
+            type: DisplayMessage
+            params:
+              content: Thank you for your review!
+              status: success
+```
+
+```yaml
+applied_product_review_card:
+  _state: applied_product_review_card
+```
+
+```yaml
 - id: applied_survey_card
   type: Card
   properties:
@@ -616,6 +840,11 @@ Rating slider with customizable range, icons, and N/A option.
               status: success
 ```
 
+```yaml
+applied_survey_card:
+  _state: applied_survey_card
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -623,6 +852,7 @@ Rating slider with customizable range, icons, and N/A option.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `disableIcons` | boolean | `false` | Hides minimum and maximum icons. |
 | `disableNotApplicable` | boolean | `false` | Disables the N/A option left of slider. |
+| `CheckboxInput` | object | - | Properties for the CheckboxSelector rendering the N/A option, merged over the defaults the RatingSlider sets. |
 | `minIcon` | string \| object | `"AiOutlineFrown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the left of the minimum side of the slider. |
 | `maxIcon` | string \| object | `"AiOutlineSmile"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the right of the maximum side of the slider. |
 | `label` | object | - | Label properties. |
@@ -642,9 +872,11 @@ Rating slider with customizable range, icons, and N/A option.
 | `max` | number | `10` | The maximum value of the slider. |
 | `notApplicableLabel` | string | `"N/A"` | Label shown at the null value of the slider. |
 | `showDots` | boolean | `true` | Shows dots at values between step values when true. |
+| `marks` | object | - | Slider marks, keyed by the value each mark sits on. Replaces the marks generated from min, max and step, and takes precedence over showMarks. |
 | `showMarks` | boolean | `true` | Shows values at specified min, max and step values. |
 | `step` | number | `1` |  The size of the step between values, has to be values greater than 0. |
 | `tooltipVisible` | string | `"onClick"` | When tooltip should be visible. Enum: `never`, `onClick`, `always`. |
+| `size` | string | `"default"` | Size of the block label. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design slider tokens](https://ant.design/components/slider#design-token). |
 | `theme.controlSize` | number | `10` | Size of the slider control element. |
@@ -668,7 +900,7 @@ Rating slider with customizable range, icons, and N/A option.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when rating is changed. |
+| `onChange` | `{ value: number }` | Trigger action when rating is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

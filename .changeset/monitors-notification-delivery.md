@@ -1,0 +1,6 @@
+---
+'@lowdefy/build': minor
+'@lowdefy/docs': patch
+---
+
+`build/monitors.json` now says who delivers each notification and what watches it. A notification is not a unit of work, so it has no event of its own; what can fail is its delivery. Each notification entry carries `delivery` (`owner: app | framework | unknown | none`, the endpoints that render it, the auth email flows that use it) and `covered_by`: a notification a routine renders is sent by the request step that follows, so it is marked `covered` and names the endpoint monitors that already watch that send; a notification wired to an auth email flow is sent by the server itself outside the request resolver and stays `no-event-yet` with a note naming the missing wide event; anything nothing sends is `delivery-unknown` rather than silently fine. On the push side the sink, not Lowdefy, delivers the alert, and a monitor with no notifier, or one pointing at a deleted notifier, looks exactly like a healthy monitor. `pnpm monitors:push` now resolves routing for every monitor before writing the first one and fails the whole push, naming the monitor, in all three cases. Name notifiers with `--notifier <name>` (repeatable) or `AXIOM_NOTIFIERS`, keep the ones already attached, or pass `--allow-silent` to push unrouted monitors deliberately.

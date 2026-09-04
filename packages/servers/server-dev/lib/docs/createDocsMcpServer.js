@@ -18,11 +18,11 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { type } from '@lowdefy/helpers';
 
-import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
+import getAppBrief from './getAppBrief.js';
 import getAppMap from './getAppMap.js';
 import getDataModel from './getDataModel.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -32,6 +32,10 @@ import getMigrationsStatus from './getMigrationsStatus.js';
 import getOverview from './getOverview.js';
 import getPageConfig from './getPageConfig.js';
 import getPluginDoc from './getPluginDoc.js';
+import getProdErrors from './ops/getProdErrors.js';
+import getProdRepro from './ops/getProdRepro.js';
+import getProdSlow from './ops/getProdSlow.js';
+import getProdTrace from './ops/getProdTrace.js';
 import getSchema from './getSchema.js';
 import getStaleStatus from './getStaleStatus.js';
 import inspectState from './inspectState.js';
@@ -39,6 +43,7 @@ import listConfigCheckpoints from './listConfigCheckpoints.js';
 import listPlugins from './listPlugins.js';
 import listTypes from './listTypes.js';
 import loadState from './loadState.js';
+import measurePage from './measurePage.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
 import runEndpoint from './runEndpoint.js';
@@ -63,7 +68,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts, browser/server errors and fixture seeds arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error, fixture_seeded; a build event carries status, errors, warnings and stale; a fixture_seeded event names the fixture and the collections it wrote so you know the data changed under you). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none execution seen this session (unscoped reads, under tenantNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app, and lowdefy_data_model before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, recent server errors (request, endpoint, MCP and agent failures with their config source), and every tenant: none or runAs execution seen this session (under devNotices). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_brief first to understand an existing app — per page it names what it reads and writes end to end, the journeys and request tests covering it, the declared events nothing tests, and what changed since a git ref; lowdefy_app_map is the structural index behind it, and lowdefy_data_model comes before touching any request, endpoint or connection — it names every collection, its fields, relations and tenant field, and which requests, steps and websockets read or write it. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 lowdefy_build_status reports what the dev build saw; lowdefy_check reports what a production build would say — run it before declaring a change done.
 
@@ -71,7 +76,7 @@ Migrations: a shape change to a collection needs a migration file (migrations/<Y
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. When a request returns an empty or unexpected result on a multi-tenant app, re-run it with explain: true BEFORE changing config — it returns the caller, the connection tenancy, the properties after operator evaluation, the effective query the driver received and every clause the tenant wall injected (rewritten); the wall's injected clauses are the usual cause.
 
-Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text or url. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
+Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, set, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text, url, the rendered DOM or how long a step took. The same grammar is what tests/journeys/*.yaml uses, so a journey you verify here can be committed as-is. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
 
 Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
 
@@ -79,7 +84,7 @@ Safety: lowdefy_checkpoint snapshots the config files before risky multi-file ch
 
 Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
 
-State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
+State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically until the next build). When asked to write e2e tests, put the data in with fixtures and request tests rather than exporting a checkpoint.`;
 
 const HAZARDS_NOTE =
   ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
@@ -299,7 +304,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_restart',
     {
       description:
-        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing.",
+        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing. The restart discards the serverErrors and devNotices collected this session, so read anything you still need from build_status first.",
       inputSchema: {
         reason: z
           .string()
@@ -310,7 +315,10 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     ({ reason }) =>
       textResult({
         ...requestRestart({ reason }),
-        note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+        note:
+          'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status ' +
+          'before your next call. The restart discards the serverErrors and devNotices ' +
+          'collected this session — they live in the server process only.',
       })
   );
 
@@ -322,6 +330,36 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {},
     },
     () => textResult(getAppMap())
+  );
+
+  server.registerTool(
+    'lowdefy_app_brief',
+    {
+      description:
+        'What you need before editing, joined from artefacts that already exist — no prose, no guessing. With a pageId: the collections that page reads and writes (its own requests, plus every Api endpoint its CallAPI actions call and what those endpoints read and write), how it is tested (the journeys covering it, the request tests naming it or its endpoints, and every declared (blockId, event) triple no journey exercises), and, with `since`, which of the files changed since that git ref the page is made of and the blocks, requests and endpoints they define. Without a pageId: one line per page — reads, writes, endpoints, journeys, event coverage — sorted changed-first and capped, with what was truncated named. Read this first when picking up work on an existing app; it replaces reading the config files to find out what a page touches.',
+      inputSchema: {
+        pageId: z
+          .string()
+          .optional()
+          .describe('Brief for this page only. Omit for the whole-app brief.'),
+        since: z
+          .string()
+          .optional()
+          .describe(
+            'A git ref (sha, tag or branch). Adds what changed between that ref and the working tree, mapped onto the pages, blocks, requests and endpoints the changed files define.'
+          ),
+      },
+    },
+    ({ pageId, since }) => {
+      const brief = getAppBrief({ pageId, since });
+      if (brief.error) {
+        return notFoundResult(brief.error);
+      }
+      const { markdown, ...data } = brief;
+      // Markdown first for reading, the same brief as JSON after it for
+      // anything the agent wants to address by id.
+      return { content: [{ type: 'text', text: markdown }, textResult(data).content[0]] };
+    }
   );
 
   server.registerTool(
@@ -360,15 +398,21 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_load_state',
     {
       description:
-        "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state.",
+        "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' returns a ?_checkpoint URL the developer can open to manually test the app in that exact state. While replayRequests is true (the default) the app's page requests are answered from the checkpoint's recorded responses instead of the database, for every browser tab, until the next build or revert_checkpoint — pass replayRequests: false to restore the state and still call the real connections.",
       inputSchema: {
         name: z.string().describe('The checkpoint name.'),
         mode: z.enum(['headless', 'registry-only']).optional(),
+        replayRequests: z
+          .boolean()
+          .optional()
+          .describe(
+            "Answer the app's page requests from the checkpoint instead of the database. Default true."
+          ),
         user: userSchema,
       },
     },
-    async ({ name, mode, user }) => {
-      const result = await loadState({ origin, name, mode, user });
+    async ({ name, mode, replayRequests, user }) => {
+      const result = await loadState({ origin, name, mode, replayRequests, user });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -383,24 +427,6 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {},
     },
     () => textResult(listStateCheckpoints())
-  );
-
-  server.registerTool(
-    'lowdefy_checkpoint_to_mocks',
-    {
-      description:
-        'Convert a state checkpoint into @lowdefy/e2e-utils mocks.yaml fixtures (requests/api entries plus rendered yaml). Use when writing e2e tests from a captured scenario.',
-      inputSchema: {
-        name: z.string().describe('The checkpoint name.'),
-      },
-    },
-    ({ name }) => {
-      const result = checkpointToMocks({ name });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
-    }
   );
 
   server.registerTool(
@@ -432,11 +458,102 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     }
   );
 
+  // Ops tools (R19). Registered unconditionally and refused at call time with
+  // howToEnable — a tool that vanishes from the manifest teaches an agent
+  // nothing, and credentials that appear after the MCP session started would
+  // leave a stale manifest behind. The refusal is data on the result, not an
+  // isError, because "not enabled here" is an answer.
+  server.registerTool(
+    'lowdefy_prod_errors',
+    {
+      description:
+        "Production failures from the app log sink, grouped. Every group carries `source` (file:line, resolved through this build's keyMap when the row's git_sha matches the running build, otherwise the raw `config_key` and a note saying why) and a `sample_rid` — feed `source` to lowdefy_find_config and `sample_rid` to lowdefy_prod_trace. Reads only what the sink retained (30 days unless the sink says otherwise). Needs LOWDEFY_OPS_QUERY_URL, LOWDEFY_OPS_READ_TOKEN and LOWDEFY_OPS_DATASET, a loopback dev server, and an app that does not set config.ops.enabled: false; otherwise the result is a refusal carrying howToEnable.",
+      inputSchema: {
+        since: z
+          .string()
+          .optional()
+          .describe(
+            '"deploy" (the default) searches from the first process_started event carrying the newest deployed git_sha, or an ISO 8601 timestamp.'
+          ),
+        group_by: z
+          .enum(['source', 'org', 'page', 'endpoint'])
+          .optional()
+          .describe(
+            'Group failures by config location (default), organization (only populated when the app sets logger.events.identity), page or endpoint.'
+          ),
+        limit: z.number().optional().describe('Maximum groups to return. Defaults to 20.'),
+      },
+    },
+    async ({ since, group_by: groupBy, limit }) =>
+      textResult(await getProdErrors({ origin, since, group_by: groupBy, limit }))
+  );
+
+  server.registerTool(
+    'lowdefy_prod_trace',
+    {
+      description:
+        'Every production event carrying one request id (rid), oldest first: the request, the endpoint steps under it, and the agent tool calls it made, each with its `source` or `config_key`. Use the `sample_rid` from lowdefy_prod_errors, then lowdefy_find_config on the source. Given `session_id` instead, it returns one browser session: the recorded journey_event steps and any feedback_submitted report, oldest first - the `session_id` on a feedback report is what turns it into a reproduction. Pass exactly one of the two. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        rid: z
+          .string()
+          .optional()
+          .describe('The request id from a log line or a lowdefy_prod_errors group.'),
+        session_id: z
+          .string()
+          .optional()
+          .describe('The journey session id, as carried on a feedback_submitted report.'),
+      },
+    },
+    async ({ rid, session_id: sessionId }) =>
+      textResult(await getProdTrace({ origin, rid, session_id: sessionId }))
+  );
+
+  server.registerTool(
+    'lowdefy_prod_slow',
+    {
+      description:
+        'The slowest production work by duration percentile, grouped by event, endpoint, step, request and page, each row carrying `source` or `config_key` for lowdefy_find_config. Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        endpoint_id: z.string().optional().describe('Restrict to one endpoint id.'),
+        page_id: z.string().optional().describe('Restrict to one page id.'),
+        percentile: z
+          .number()
+          .optional()
+          .describe('Duration percentile to rank by, 0 < p < 100. Defaults to 95.'),
+        since: z.string().optional().describe('"deploy" (the default) or an ISO 8601 timestamp.'),
+        limit: z.number().optional().describe('Maximum groups to return. Defaults to 20.'),
+      },
+    },
+    async ({ endpoint_id: endpointId, page_id: pageId, percentile, since, limit }) =>
+      textResult(
+        await getProdSlow({
+          origin,
+          endpoint_id: endpointId,
+          page_id: pageId,
+          percentile,
+          since,
+          limit,
+        })
+      )
+  );
+
+  server.registerTool(
+    'lowdefy_prod_repro',
+    {
+      description:
+        'The raw material for reproducing a production failure: every event carrying the rid, in order, with the page and block ids involved and each event\'s `source`. The trace-to-journey compiler is not landed yet, so the result says note: "compiler pending" and you write the tests/journeys/*.yaml steps yourself from these events (lowdefy_find_config on a source locates the block). Subject to the sink retention window (30 days by default). Refuses with howToEnable when ops queries are not enabled.',
+      inputSchema: {
+        rid: z.string().describe('The request id of the failing session.'),
+      },
+    },
+    async ({ rid }) => textResult(await getProdRepro({ origin, rid }))
+  );
+
   server.registerTool(
     'lowdefy_build_status',
     {
       description:
-        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, recent server errors — request, endpoint, MCP and agent tool failures with their config source — plus every `tenant: none` execution seen this session (unscoped reads) with its config source, under tenantNotices. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
+        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, recent server errors — request, endpoint, MCP and agent tool failures with their config source — plus every `tenant: none` or `runAs` execution seen this session with its config source, under devNotices. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
       inputSchema: {},
     },
     () => textResult(getBuildStatus())
@@ -545,7 +662,13 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         steps: z
           .array(z.record(z.any()))
           .describe(
-            'Ordered steps, one key each: {"click": blockId} | {"fill": {"blockId", "value"}} | {"select": {"blockId", "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": blockId} | {"text": {"blockId", "contains"}} | {"url": {"contains"}}}. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
+            'Ordered steps, one key each: {"click": blockId} | {"fill": {"blockId", "value"}} (types into the input/textarea inside the block, falling back to setting the block value when it has neither) | {"set": {"blockId", "value"}} (writes the value straight through the engine, for an input block with no typeable surface — errors on a block that is not an input) | {"select": {"blockId", "value"}} (option by exact text) | {"press": "Enter" | "Mod+k" | {"key", "blockId"?}} (Mod is Meta/Control per platform; blockId presses on that block instead of the page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": blockId} | {"text": {"blockId", "contains"|"equals"|"notContains"}} | {"url": {"contains"}} | {"dom": {"blockId", "hasClass"|"notHasClass"|"matches"|"attribute"+"equals"}} | {"durationMsUnder": n}}. Exactly one key per step and one form per expect. Each step gets 5s; after an interaction the runner waits for a navigation and then for the page\'s pending events and requests to settle. Pages render under fixed locale, timezone and colour scheme, so formatted dates assert the same here as in CI.'
+          ),
+        fixtures: z
+          .array(z.string())
+          .optional()
+          .describe(
+            "Fixture names (fixtures/<name>.yaml) to seed before the page opens, in order, so the journey runs against known rows. Each fixture's collections are emptied first, and this writes to the dev database, so it needs cli.agentTools.allowWriteRequests: true exactly as lowdefy_seed_fixture does. The same key is valid in a committed tests/journeys/*.yaml journey."
           ),
         user: userSchema,
         urlQuery: z
@@ -554,11 +677,19 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
       },
     },
-    async ({ pageId, steps, user, urlQuery }) => {
+    async ({ fixtures, pageId, steps, user, urlQuery }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
-      const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+      const result = await runJourney({
+        fixtures,
+        honoContext,
+        origin,
+        pageId,
+        steps,
+        user,
+        urlQuery,
+      });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -572,6 +703,38 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
         ],
       };
+    }
+  );
+
+  server.registerTool(
+    'lowdefy_measure_page',
+    {
+      description:
+        'Measure what one state change costs the engine on a page: how many blocks it re-evaluates, how many operator parses that is (total and per block expression — visible, properties, required, class, style, layout, loading, skeleton, slotsLayout, validate), how many nodes the parser copies, and the p50/p95/max milliseconds per update. Returns a one-line `verdict` ("N parses per state update on M blocks") plus the heaviest blocks. Give `steps` (lowdefy_run_journey grammar) to measure a real interaction such as typing into a form; without steps it triggers synthetic updates on the loaded page. Use it to find out whether a slow page is slow because of operator evaluation before changing anything, and run it again afterwards on the same page and steps.',
+      inputSchema: {
+        pageId: z.string().describe('The page id to measure.'),
+        steps: z
+          .array(z.record(z.any()))
+          .optional()
+          .describe(
+            'Journey steps (same grammar as lowdefy_run_journey) to drive the page while counting, e.g. [{"fill": {"blockId": "name", "value": "abc"}}]. Omit to measure synthetic state updates on the loaded page.'
+          ),
+        user: userSchema,
+        urlQuery: z
+          .record(z.any())
+          .optional()
+          .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+      },
+    },
+    async ({ pageId, steps, user, urlQuery }) => {
+      if (!origin) {
+        return notFoundResult('Measure unavailable: server origin unknown for this transport.');
+      }
+      const result = await measurePage({ origin, pageId, steps, user, urlQuery });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
     }
   );
 
@@ -681,13 +844,18 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_get_schema',
     {
       description:
-        "Get the JSON Schema for a specific type: all properties, events, and their descriptions. For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event's actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types." +
+        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. Also serves the ~ignoreBuildChecks catalogue: kind "checks", type "~ignoreBuildChecks".' +
+        " For a block, meta.events maps each event name to { payload } where the block declares one - the JSON Schema of the object _event reads in that event's actions (an _event path outside it is a build error, check slug event-payload); an event with no payload entry declares none. Use the exact type name from lowdefy_list_types." +
         HAZARDS_NOTE,
       inputSchema: {
         kind: z
-          .enum(['blocks', 'operators', 'actions', 'connections', 'requests'])
+          .enum(['blocks', 'operators', 'actions', 'connections', 'requests', 'checks'])
           .describe('The kind of the type.'),
-        type: z.string().describe('The exact type name, e.g. "Button", "_get", "MongoDBFind".'),
+        type: z
+          .string()
+          .describe(
+            'The exact type name, e.g. "Button", "_get", "MongoDBFind". With kind "checks", pass "~ignoreBuildChecks" for the full catalogue of build check slugs, or one slug for its description.'
+          ),
       },
     },
     ({ kind, type }) => {

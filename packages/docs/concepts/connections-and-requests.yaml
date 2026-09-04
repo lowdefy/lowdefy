@@ -380,7 +380,7 @@ _ref:
                 This is done as follows:
 
                 ###### lowdefy.yaml
-                ```yaml
+                ````yaml
                 lowdefy: {{ version }}
 
                 connections:
@@ -460,7 +460,7 @@ _ref:
                                   - |
                                     ```
 
-                ```
+                ````
 
                 ### TLDR
                   - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.

@@ -39,17 +39,40 @@ function skillRelativePath(name) {
   return path.join('.claude', 'skills', name, 'SKILL.md');
 }
 
-// Writes one skill, skipping (and reporting) a file the project already has so local edits
-// are never overwritten. Returns true when a file was written.
-async function writeOneSkill({ context, projectDirectory, name, content }) {
+// The version the generator stamped into the frontmatter. A skill installed by an older CLI, or
+// one a developer wrote by hand, has no stamp - reported as unknown rather than guessed at.
+function installedVersion(content) {
+  const frontmatter = content.match(/^---\n([\s\S]*?)\n---\n/);
+  if (!frontmatter) return null;
+  const version = frontmatter[1].match(/^lowdefyVersion: *(.+?) *$/m);
+  return version ? version[1] : null;
+}
+
+// Writes one skill. An existing file is never overwritten unless --force-skills was given, so
+// local edits survive; the version it was installed at is reported either way, which is what
+// makes an install that has silently fallen behind the running framework visible.
+async function writeOneSkill({ context, projectDirectory, name, content, force, version }) {
   const relativePath = skillRelativePath(name);
   const filePath = path.join(projectDirectory, relativePath);
   if (fs.existsSync(filePath)) {
-    context.logger.info(`'${relativePath}' already exists - skipping.`);
-    return false;
+    const existingVersion = installedVersion(fs.readFileSync(filePath, 'utf8'));
+    const behind = existingVersion !== version;
+    if (!force) {
+      context.logger.info(
+        `'${relativePath}' already exists${
+          behind ? ` at version ${existingVersion ?? 'unknown'}` : ''
+        } - skipping.`
+      );
+      return { written: false, behind };
+    }
+    await writeFile(filePath, content);
+    context.logger.info(
+      `'${relativePath}' overwritten (was version ${existingVersion ?? 'unknown'}).`
+    );
+    return { written: true, behind: false };
   }
   await writeFile(filePath, content);
-  return true;
+  return { written: true, behind: false };
 }
 
 async function writeSkillFile({
@@ -58,6 +81,8 @@ async function writeSkillFile({
   appPath,
   port,
   skills,
+  forceSkills = false,
+  version = context.cliVersion,
   skillsDirectory = resolveSkillsDirectory(),
 }) {
   const available = listAvailableSkills({ skillsDirectory });
@@ -65,25 +90,42 @@ async function writeSkillFile({
 
   let installed = 0;
   let present = 0;
-  const count = (written) => {
-    if (written) {
+  const behind = [];
+  const count = (name, result) => {
+    if (result.written) {
       installed += 1;
     } else {
       present += 1;
     }
+    if (result.behind) {
+      behind.push(name);
+    }
   };
 
   count(
+    CONFIG_SKILL,
     await writeOneSkill({
       context,
       projectDirectory,
       name: CONFIG_SKILL,
-      content: skillMd({ port, appPath }),
+      content: skillMd({ port, appPath, version }),
+      force: forceSkills,
+      version,
     })
   );
   for (const name of selected) {
     const content = fs.readFileSync(path.join(skillsDirectory, name, 'SKILL.md'), 'utf8');
-    count(await writeOneSkill({ context, projectDirectory, name, content }));
+    count(
+      name,
+      await writeOneSkill({
+        context,
+        projectDirectory,
+        name,
+        content,
+        force: forceSkills,
+        version,
+      })
+    );
   }
 
   context.logger.info(
@@ -91,6 +133,15 @@ async function writeSkillFile({
       installed === 1 ? '' : 's'
     } into '.claude/skills/' (${present} already present).`
   );
+  if (behind.length > 0) {
+    context.logger.warn(
+      `${behind.length} installed skill${
+        behind.length === 1 ? ' is' : 's are'
+      } not at version ${version}: ${behind.join(
+        ', '
+      )}. Run 'lowdefy agent-setup --force-skills' to overwrite them.`
+    );
+  }
 }
 
 export default writeSkillFile;

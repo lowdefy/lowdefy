@@ -15,10 +15,12 @@
 */
 import axios from 'axios';
 import { serializer, type } from '@lowdefy/helpers';
+import { getRejectExpectation, validateRequestTest } from '@lowdefy/node-utils';
 
+import getTestServerDirectory from './getTestServerDirectory.js';
 import matchExpectation from './matchExpectation.js';
+import resolveFixtures from './resolveFixtures.js';
 import seedFixtures from './seedFixtures.js';
-import validateRequestTest from './validateRequestTest.js';
 
 function describeHttpError({ route, error }) {
   if (type.isNone(error.response)) {
@@ -50,21 +52,59 @@ function getTarget({ test }) {
   };
 }
 
-// The fixtures a test names were loaded once by prepareRequestTests; a fixture
-// that failed to load fails every test naming it with the loader's message.
-function resolveFixtures({ test, session }) {
-  const fixtures = [];
-  for (const name of test.fixtures ?? []) {
-    const loaded = session.fixtures?.get(name);
-    if (type.isNone(loaded)) {
-      return { error: `Fixture "${name}" was not loaded before the run.` };
+// The two shapes a refusal reaches the runner in: the write gate and the tenant
+// wall refuse before the request runs, a :reject or a connection failure comes
+// back as an error. Both are rejections a test can assert on.
+function readRejection({ result }) {
+  if (result.refused === true) {
+    const lines = [result.reason];
+    if (type.isString(result.howToEnable)) {
+      lines.push(result.howToEnable);
     }
-    if (!type.isNone(loaded.error)) {
-      return { error: loaded.error };
-    }
-    fixtures.push(loaded.fixture);
+    return { name: 'Refused', message: lines.join(' ') };
   }
-  return { fixtures };
+  if (type.isNone(result.error)) {
+    return undefined;
+  }
+  if (type.isObject(result.error)) {
+    return { name: result.error.name ?? 'Error', message: String(result.error.message) };
+  }
+  return { name: 'Error', message: String(result.error) };
+}
+
+function describeRejection({ label, rejection }) {
+  if (rejection.name === 'Refused') {
+    return `Refused: ${rejection.message}`;
+  }
+  return `${label} failed. ${rejection.name}: ${rejection.message}`;
+}
+
+// expect: { reject: { messageContains?, name? } } inverts the outcome - the
+// rejection is the assertion, and a successful response is the failure.
+function matchRejection({ name, filePath, durationMs, fail, label, reject, rejection, result }) {
+  if (type.isNone(rejection)) {
+    return fail({
+      durationMs,
+      message: `Expected ${label} to reject, it returned ${JSON.stringify(result.response)}.`,
+    });
+  }
+  if (!type.isNone(reject.name) && rejection.name !== reject.name) {
+    return fail({
+      durationMs,
+      mismatch: { path: 'reject.name', expected: reject.name, actual: rejection.name },
+    });
+  }
+  if (!type.isNone(reject.messageContains) && !rejection.message.includes(reject.messageContains)) {
+    return fail({
+      durationMs,
+      mismatch: {
+        path: 'reject.messageContains',
+        expected: reject.messageContains,
+        actual: rejection.message,
+      },
+    });
+  }
+  return { name, filePath, passed: true, durationMs };
 }
 
 // Runs one discovered request test: validate, seed, call the dev server's
@@ -83,17 +123,22 @@ async function runRequestTest({ context, item, url, session }) {
     return fail({ message: `Invalid request test: ${validation.message}` });
   }
   const start = Date.now();
-  const { fixtures, error: fixtureError } = resolveFixtures({ test, session });
+  const { fixtures, error: fixtureError } = resolveFixtures({ names: test.fixtures, session });
   if (!type.isNone(fixtureError)) {
     return fail({ message: fixtureError });
   }
-  if (!type.isNone(test.seed) || fixtures.length > 0) {
+  // Seeding runs for every test of a seeded run, not only for tests that declare
+  // their own data: a test without `seed` must still start from a database
+  // cleared of what the previous test wrote.
+  if (!type.isNone(session.client)) {
     try {
       await seedFixtures({
         client: session.client,
-        devDirectory: context.directories.dev,
+        devDirectory: getTestServerDirectory({ context }),
         seed: test.seed,
         fixtures,
+        seeded: session.seeded,
+        ObjectId: session.ObjectId,
       });
     } catch (error) {
       return fail({ message: error.message, durationMs: Date.now() - start });
@@ -111,18 +156,16 @@ async function runRequestTest({ context, item, url, session }) {
   }
   const durationMs = Date.now() - start;
   const result = response.data ?? {};
-  if (result.refused === true) {
-    const lines = [`Refused: ${result.reason}`];
-    if (type.isString(result.howToEnable)) {
-      lines.push(result.howToEnable);
-    }
-    return fail({ message: lines.join(' '), durationMs });
+  // The route returns the response serialized (~d dates), and a test can write
+  // the same markers in expect - deserialize both so dates compare as dates.
+  const expected = serializer.deserialize(test.expect);
+  const reject = getRejectExpectation(expected);
+  const rejection = readRejection({ result });
+  if (!type.isNone(reject)) {
+    return matchRejection({ name, filePath, durationMs, fail, label, reject, rejection, result });
   }
-  if (!type.isNone(result.error)) {
-    const message = type.isObject(result.error)
-      ? `${result.error.name ?? 'Error'}: ${result.error.message}`
-      : String(result.error);
-    return fail({ message: `${label} failed. ${message}`, durationMs });
+  if (!type.isNone(rejection)) {
+    return fail({ message: describeRejection({ label, rejection }), durationMs });
   }
   if (result.success === false) {
     return fail({
@@ -130,10 +173,8 @@ async function runRequestTest({ context, item, url, session }) {
       durationMs,
     });
   }
-  // The route returns the response serialized (~d dates), and a test can write
-  // the same markers in expect - deserialize both so dates compare as dates.
   const match = matchExpectation({
-    expected: serializer.deserialize(test.expect),
+    expected,
     actual: serializer.deserialize(result.response),
   });
   if (match.matched) {

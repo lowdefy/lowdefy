@@ -17,7 +17,7 @@ import noneWithoutTenantField from './noneWithoutTenantField.js';
 import { createTenantContext, pageRequest, endpointStep } from './testSites.js';
 
 test('noneWithoutTenantField runs under check only', () => {
-  expect(noneWithoutTenantField.slug).toBe('tenant');
+  expect(noneWithoutTenantField.slug).toBe('tenant-unscoped');
   expect(noneWithoutTenantField.checkOnly).toBe(true);
 });
 
@@ -35,7 +35,7 @@ test('noneWithoutTenantField errors when a tenant: none step never mentions the 
   );
   expect(context.errors[0]).toMatchObject({
     configKey: 'k_read_all_controls',
-    checkSlug: 'tenant',
+    checkSlug: 'tenant-unscoped',
   });
 });
 

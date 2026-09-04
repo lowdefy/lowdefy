@@ -20,3 +20,156 @@ We will make use of an SQLite database with a table called `tickets`, that has t
 - created_date
 
 The database used in this tutorial can be downloaded <a href="/tutorial/tutorial_db.sqlite" download>here</a>.
+
+Alternatively, install [SQLite](https://www.sqlite.org/) on your computer and use the following to create the needed table:
+
+```
+CREATE TABLE tickets (
+  ticket_title varchar(100),
+  ticket_type varchar(50),
+  ticket_description varchar(200),
+  product varchar(100),
+  purchase_in_last_month real,
+  created_date real
+);
+```
+
+#### 6.2. Setting app environment variables
+
+Create a file called `.env` in your project directory with the following content:
+
+##### `.env`
+```
+LOWDEFY_SECRET_SQLITE_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
+```
+
+#### 5.2.3. Setting the connection environment variable secrets
+
+In your `lowdefy.yaml` file, add the following:
+
+##### `lowdefy.yaml`
+
+```yaml
+name: lowdefy-project-template
+version: 5.5.1
+
+connections:
+  # ...
+################ -------- Copy from here -------- ################
+    - id: knex
+      type: Knex
+      properties:
+        client: sqlite
+        connection:
+          filename:
+            _secret: SQLITE_FILENAME
+################ ------- Copy to here ----------- ################
+
+menus:
+  # ...
+```
+
+#### 6.3. Creating a save data request
+
+In your `new-ticket.yaml` file, add the following request:
+
+##### `pages/new-ticket.yaml`
+
+```yaml
+id: new-ticket
+type: PageHeaderMenu
+requests:
+  # ...
+################ -------- Copy from here -------- ################
+  - id: save_new_ticket
+    type: KnexRaw
+    connectionId: knex
+    payload:
+      _state: true
+    properties:
+      query: |
+        INSERT INTO tickets (
+        ticket_title,
+        ticket_type,
+        ticket_description,
+        product,
+        purchase_in_last_month,
+        created_date)
+        VALUES(
+        :ticket_title,
+        :ticket_type,
+        :ticket_description,
+        :product,
+        :purchase_in_last_month,
+        :created_date)
+      parameters:
+        ticket_title:
+          _payload: ticket_title
+        ticket_type:
+          _payload: ticket_type
+        ticket_description:
+          _payload: ticket_description
+        product:
+          _payload: product
+        purchase_in_last_month:
+          _payload: purchase_in_last_month
+        created_date:
+          _date: now
+################ ------- Copy to here ----------- ################
+
+properties:
+  title: New ticket # The title in the browser tab.
+layout:
+  justify: center # Center the contents of the page
+blocks:
+  # ...
+```
+
+#### 6.4. Triggering the save data request
+
+In your `new-ticket.yaml` file, add the following action to the submit button:
+
+##### `pages/new-ticket.yaml`
+
+```yaml
+id: new-ticket
+# ...
+blocks:
+  - id: content_card
+    # ...
+    blocks:
+      - id: page_heading
+        # ...
+        # ...
+        # ...
+      - id: submit_button
+        type: Button
+        #...
+        events:
+          onClick:
+            - id: validate
+              type: Validate
+            ################ -------- Copy from here -------- ################
+            - id: save_new_ticket # Make a request to the SQLite database
+              type: Request
+              params: save_new_ticket
+            - id: reset # Reset the form once data has been submitted
+              type: Reset
+            ################ ------- Copy to here ----------- ################
+```
+
+If you click the submit button, your form data should be added into the tickets table.
+
+### What happened
+
+We set up the table and column names we will be using in our SQLite database. We need to do this to use the `SQLite` connection.
+
+We defined the `Knex` connection, with the SQLite client.
+
+We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button. This was done by making use of the `onCLick` event on the button to execute the [`Request`](/Request) action to make the API call.
+
+> You can find the final configuration files for this section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-requests-sql).
+
+### Up next
+
+Next, we will add a new page to display all open tickets an a table.

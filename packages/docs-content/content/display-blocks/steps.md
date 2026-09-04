@@ -221,6 +221,54 @@ Navigation steps bar, guiding users through the steps of a task.
 ```
 
 ```yaml
+- id: panel_steps
+  type: Steps
+  properties:
+    type: panel
+    current:
+      _state: panel_current
+    items:
+      - title: Step 1
+        description: This is a description.
+      - title: Step 2
+        description: This is a description.
+      - title: Step 3
+        description: This is a description.
+  events:
+    onChange:
+      - id: panel_set_state
+        type: SetState
+        params:
+          panel_current:
+            _event: current
+- id: panel_steps_icons
+  type: Steps
+  properties:
+    type: panel
+    current:
+      _state: panel_icons_current
+    items:
+      - title: Account
+        description: Create your account
+        icon: AiOutlineUser
+      - title: Settings
+        description: Configure preferences
+        icon: AiOutlineSetting
+      - title: Review
+        description: Review and submit
+        icon: AiOutlineCheck
+      - title: Done
+        description: All finished
+  events:
+    onChange:
+      - id: panel_icons_set_state
+        type: SetState
+        params:
+          panel_icons_current:
+            _event: current
+```
+
+```yaml
 - id: dot_steps
   type: Steps
   properties:
@@ -317,6 +365,28 @@ Navigation steps bar, guiding users through the steps of a task.
 ```
 
 ```yaml
+- id: clickable_steps
+  type: Steps
+  properties:
+    current:
+      _state: clickable_current
+    items:
+      - title: Step 1
+        description: Click to go here
+      - title: Step 2
+        description: Click to go here
+      - title: Step 3
+        description: Click to go here
+  events:
+    onChange:
+      - id: clickable_set_state
+        type: SetState
+        params:
+          clickable_current:
+            _event: current
+```
+
+```yaml
 - id: theme_primary
   type: Steps
   properties:
@@ -354,6 +424,134 @@ Navigation steps bar, guiding users through the steps of a task.
       iconSize: 36
       descriptionMaxWidth: 200
       finishIconBorderColor: "#52c41a"
+```
+
+```yaml
+- id: wizard_card
+  type: Card
+  properties:
+    title: Create Account
+    size: small
+  blocks:
+    - id: wizard_steps
+      type: Steps
+      properties:
+        current:
+          _state: wizard_step
+        items:
+          - title: Account
+            icon: AiOutlineUser
+          - title: Profile
+            icon: AiOutlineIdcard
+          - title: Confirm
+            icon: AiOutlineCheck
+      events:
+        onChange:
+          - id: wizard_set_step
+            type: SetState
+            params:
+              wizard_step:
+                _event: current
+    - id: wizard_divider
+      type: Divider
+    - id: wizard_description
+      type: Markdown
+      properties:
+        content:
+          _if:
+            test:
+              _eq:
+                - _state: wizard_step
+                - 0
+            then: |
+              **Step 1: Account Details**
+
+              Enter your email address and create a password to get started.
+            else:
+              _if:
+                test:
+                  _eq:
+                    - _state: wizard_step
+                    - 1
+                then: >
+                  **Step 2: Profile Information**
+
+
+                  Tell us a bit about yourself so we can personalize your
+                  experience.
+                else: |
+                  **Step 3: Confirmation**
+
+                  Review your information and confirm to complete registration.
+    - id: wizard_actions
+      type: Box
+      layout:
+        gap: 8
+        justify: flex-end
+      blocks:
+        - id: wizard_prev_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Previous
+            color: default
+            variant: outlined
+            disabled:
+              _eq:
+                - _state: wizard_step
+                - 0
+          events:
+            onClick:
+              - id: wizard_prev_action
+                type: SetState
+                params:
+                  wizard_step:
+                    _subtract:
+                      - _state:
+                          key: wizard_step
+                          default: 0
+                      - 1
+        - id: wizard_next_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title:
+              _if:
+                test:
+                  _eq:
+                    - _state: wizard_step
+                    - 2
+                then: Submit
+                else: Next
+            color: primary
+            variant: solid
+          events:
+            onClick:
+              - id: wizard_next_action
+                type: SetState
+                skip:
+                  _eq:
+                    - _state: wizard_step
+                    - 2
+                params:
+                  wizard_step:
+                    _sum:
+                      - _state:
+                          key: wizard_step
+                          default: 0
+                      - 1
+              - id: wizard_done_msg
+                type: DisplayMessage
+                skip:
+                  _not:
+                    _eq:
+                      - _state: wizard_step
+                      - 2
+                params:
+                  content: Account created successfully!
+                  status: success
 ```
 
 ```yaml
@@ -574,7 +772,7 @@ Navigation steps bar, guiding users through the steps of a task.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ current }` | Triggered when a step is clicked. |
+| `onChange` | `{ current: integer }` | Triggered when a step is clicked. |
 
 | Key | Target |
 | --- | --- |

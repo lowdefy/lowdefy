@@ -52,7 +52,7 @@ async function MongoDBVersionedUpdateOne({
     });
   }
   if (collectionSchema) {
-    validateUpdateFields({ update, collectionSchema });
+    validateUpdateFields({ update, collectionSchema, filter, options: updateOptions });
   }
   if (trace) {
     trace.effective = serialize({ filter, update, options });

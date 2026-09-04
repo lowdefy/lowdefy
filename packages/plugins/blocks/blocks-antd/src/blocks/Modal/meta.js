@@ -34,6 +34,7 @@ export default {
   hazards: [
     {
       id: 'modal-keeps-state',
+      kind: 'semantics',
       message:
         'Closing a Modal does not clear the state of the blocks inside it, while visible: false on the Modal does prune that state. Reset the values in onClose if a reopened Modal should start empty.',
       see: 'container-blocks/modal',
@@ -84,6 +85,12 @@ export default {
         type: 'string',
         description:
           'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
+      },
+      okButtonType: {
+        type: 'string',
+        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+        default: 'primary',
+        description: 'Button type of the ok button.',
       },
       okButtonProps: {
         type: 'object',

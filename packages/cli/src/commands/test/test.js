@@ -18,18 +18,21 @@ import { type } from '@lowdefy/helpers';
 
 import discoverJourneys from './discoverJourneys.js';
 import formatJourneyResult from './formatJourneyResult.js';
+import reportJourneyCoverage from './journeyCoverage/reportJourneyCoverage.js';
+import prepareSeeding from './prepareSeeding.js';
 import requestTestSuite from './requestTestSuite.js';
+import resolveTestServer from './resolveTestServer.js';
 import runJourney from './runJourney.js';
-import startDevServer from './startDevServer.js';
 
-// Each suite discovers its own test items and runs one item against the dev server.
-// An optional `prepare({ context, items })` runs before the server boots and returns
-// { env, stop, ...session }: env is merged into the server's environment and the
-// session is passed to every run of that suite.
+// Each suite discovers its own test items and runs one item against the dev
+// server. `getSeeds(item)` declares the data that item needs - a journey's
+// `fixtures`, a request test's `fixtures` and `seed` - which prepareSeeding
+// reads before the server boots.
 const suites = [
   {
     name: 'journeys',
     getItemName: (item) => item.journey?.name ?? item.filePath,
+    getSeeds: (item) => ({ fixtures: item.journey?.fixtures }),
     discover: discoverJourneys,
     run: runJourney,
     format: formatJourneyResult,
@@ -44,44 +47,14 @@ function matchesFilter({ suite, item, filter }) {
   return suite.getItemName(item).toLowerCase().includes(filter.toLowerCase());
 }
 
-async function prepareSuites({ context, selected }) {
-  const sessions = new Map();
-  let env = {};
-  for (const suite of suites) {
-    const items = selected.filter((entry) => entry.suite === suite).map((entry) => entry.item);
-    if (items.length === 0 || type.isNone(suite.prepare)) {
-      sessions.set(suite, {});
-      continue;
-    }
-    const session = await suite.prepare({ context, items });
-    env = { ...env, ...(session.env ?? {}) };
-    sessions.set(suite, session);
-  }
-  async function stop() {
-    for (const session of sessions.values()) {
-      if (!type.isNone(session.stop)) {
-        await session.stop();
-      }
-    }
-  }
-  return { sessions, env, stop };
-}
-
-function trimTrailingSlash(url) {
-  return url.replace(/\/+$/, '');
-}
-
-async function resolveServer({ context, env }) {
-  if (type.isString(context.options.url) && context.options.url !== '') {
-    context.logger.info(`Running tests against ${context.options.url}.`);
-    return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
-  }
-  try {
-    return await startDevServer({ context, env });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
+// A run that seeds needs a server the runner controls: the connection overrides
+// that point every seeded connection at the in-memory MongoDB are handed to the
+// server as environment, which an already running development server never read.
+// Request tests need one too, for the runner-scoped write allowance. A journey
+// that seeds nothing only reads the app, so it runs against whichever server is
+// already up.
+function needsOwnServer({ selected, session }) {
+  return !type.isNone(session.client) || selected.some(({ suite }) => suite === requestTestSuite);
 }
 
 async function test({ context }) {
@@ -105,9 +78,12 @@ async function test({ context }) {
     return;
   }
 
-  let prepared;
+  let session;
   try {
-    prepared = await prepareSuites({ context, selected });
+    session = await prepareSeeding({
+      context,
+      seeds: selected.map(({ suite, item }) => suite.getSeeds(item)),
+    });
   } catch (error) {
     context.logger.error(error.message);
     context.sendTelemetry();
@@ -117,9 +93,13 @@ async function test({ context }) {
 
   let server;
   try {
-    server = await resolveServer({ context, env: prepared.env });
+    server = await resolveTestServer({
+      context,
+      env: session.env,
+      reuseRunningServer: !needsOwnServer({ selected, session }),
+    });
   } catch (error) {
-    await prepared.stop();
+    await session.stop();
     throw error;
   }
   let interrupted = false;
@@ -127,7 +107,7 @@ async function test({ context }) {
     interrupted = true;
     context.logger.warn('Interrupted. Stopping development server.');
     await server.stop();
-    await prepared.stop();
+    await session.stop();
     process.exit(130);
   }
   process.once('SIGINT', onSigint);
@@ -139,7 +119,7 @@ async function test({ context }) {
         context,
         item,
         url: server.url,
-        session: prepared.sessions.get(suite),
+        session,
       });
       results.push(result);
       const lines = suite.format({ result });
@@ -153,8 +133,17 @@ async function test({ context }) {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {
       await server.stop();
-      await prepared.stop();
+      await session.stop();
     }
+  }
+
+  // Coverage is a property of the committed journeys, not of this run, so it is
+  // computed from every discovered journey even when --filter narrowed the run.
+  if (context.options.coverage === true) {
+    reportJourneyCoverage({
+      context,
+      journeys: items.filter(({ suite }) => suite.name === 'journeys').map(({ item }) => item),
+    });
   }
 
   const passed = results.filter((result) => result.passed).length;

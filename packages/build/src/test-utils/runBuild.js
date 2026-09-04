@@ -38,6 +38,9 @@ const testTypesMap = {
   blocks: {
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
+    Grid: { package: '@lowdefy/blocks-basic' },
+    Row: { package: '@lowdefy/blocks-basic' },
+    Stack: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-antd' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
     Dynamic: { package: '@lowdefy/blocks-basic' },

@@ -19,21 +19,31 @@ import YAML from 'yaml';
 import { ConfigError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import listConfigFiles from './discovery/listConfigFiles.js';
 import readFile from './readFile.js';
 
 const FIXTURES_DIRECTORY = 'fixtures';
 
+// The name is the fixture's path below fixtures/ without the extension, the
+// same shape every other convention directory names its files (listConfigFiles)
+// - so "orders/base" is a fixture in a subdirectory. An agent supplies the name
+// over the MCP, so the one thing it must not be able to do is escape the
+// directory: no absolute path, no backslash, no ".." segment.
 function validateName({ name }) {
   if (!type.isString(name) || name === '') {
     throw new ConfigError(
       `Fixture name must be a non-empty string. Received ${JSON.stringify(name)}.`
     );
   }
-  // The name is a file name inside fixtures/, never a path - an agent supplies
-  // it over the MCP, so it must not be able to name a file outside that directory.
-  if (name.includes('/') || name.includes('\\') || name.includes('..')) {
+  const escapes =
+    name.includes('\\') ||
+    name.startsWith('/') ||
+    name.split('/').some((segment) => segment === '' || segment === '.' || segment === '..');
+  if (escapes) {
     throw new ConfigError(
-      `Fixture name must not contain path segments. Received ${JSON.stringify(name)}.`
+      `Fixture name must be a path below fixtures/, with no "..", leading "/" or empty segment. Received ${JSON.stringify(
+        name
+      )}.`
     );
   }
 }
@@ -45,7 +55,12 @@ async function readFixtureFile({ configDirectory, name }) {
     raw = await readFile(path.join(directory, `${name}.yml`));
   }
   if (type.isNone(raw)) {
-    throw new ConfigError(`Fixture "${name}" not found. Expected fixtures/${name}.yaml.`);
+    const declared = listConfigFiles({ directory }).map((file) => file.name);
+    throw new ConfigError(
+      `Fixture "${name}" not found. Expected fixtures/${name}.yaml. Declared fixtures: ${
+        declared.length === 0 ? 'none' : declared.join(', ')
+      }.`
+    );
   }
   try {
     return YAML.parse(raw);
@@ -56,7 +71,8 @@ async function readFixtureFile({ configDirectory, name }) {
   }
 }
 
-// Reads fixtures/<name>.yaml under the config directory: a map keyed by
+// Reads fixtures/<name>.yaml under the config directory - <name> may name a
+// subdirectory - : a map keyed by
 // connectionId - the same key a request test's `seed:` uses - to the documents
 // that connection's collection should hold. Returns the connections in file
 // order with `~d` markers revived to Dates. A pure reader: resolving the

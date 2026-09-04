@@ -34,6 +34,22 @@ function readSnapshotIgnore({ pageId }) {
   return ignore.filter((path) => type.isString(path));
 }
 
+// Runs in the page, immediately before the capture. Freezing animations and
+// transitions removes the only remaining source of pixel drift between two
+// renders of unchanged config: the frame an animation happened to be on.
+function settleForCapture() {
+  const style = document.createElement('style');
+  style.textContent =
+    '*, *::before, *::after { animation: none !important; transition: none !important; }';
+  document.head.appendChild(style);
+  return document.fonts.ready.then(
+    () =>
+      new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      })
+  );
+}
+
 // Runs in the page. `state` only: requests and eventLog are call logs, not
 // rendered output, and would make every snapshot dirty. The JSON round-trip
 // mirrors inspectStateHeadless — functions and undefined dropped, Dates as ISO
@@ -122,9 +138,10 @@ async function snapshotPage({
         };
       }
     }
-    // Fonts and the last paint after the readiness wait — the same settle
-    // screenshotPage uses, so both capture the same frame of the same page.
-    await opened.page.waitForTimeout(300);
+    // A golden is compared pixel for pixel, so the capture waits for the frame
+    // to be final rather than for a fixed number of milliseconds: web fonts
+    // loaded, animations and transitions switched off, and two paints elapsed.
+    await opened.page.evaluate(settleForCapture);
     const captured = await opened.page.evaluate(captureInPage, pageId);
     const buffer = await opened.page.screenshot({ type: 'png' });
     const result = {

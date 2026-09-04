@@ -14,7 +14,42 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
+import findFilePlugin from '../filePlugins/findFilePlugin.js';
+import collectExceptions from '../../utils/collectExceptions.js';
 import importPluginModule from './importPluginModule.js';
+import validateHazardsShape from './validateHazardsShape.js';
+
+// A shared operator is discovered once per store, so the client record is
+// found first and the server record carries the same sibling JSON.
+function writeFileOperator({ context, metas, op, schemas }) {
+  const record =
+    findFilePlugin({ context, kind: 'operators.client', typeName: op.typeName }) ??
+    findFilePlugin({ context, kind: 'operators.server', typeName: op.typeName });
+  if (type.isNone(record)) return;
+  if (!type.isNone(record.schema)) {
+    schemas[op.typeName] = record.schema;
+  }
+  if (type.isNone(record.hazards)) return;
+  const hazardsProblem = validateHazardsShape(record.hazards);
+  if (hazardsProblem !== null) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Operator "${op.typeName}" from "${record.relativePath}": ${hazardsProblem}`,
+        {
+          received: record.hazards,
+          filePath: record.relativePath,
+          lineNumber: 1,
+        }
+      )
+    );
+    return;
+  }
+  metas[op.typeName] = { hazards: record.hazards };
+}
 
 async function writeOperatorSchemaMap({ components, context }) {
   const schemas = {};
@@ -32,6 +67,12 @@ async function writeOperatorSchemaMap({ components, context }) {
 
   const operatorsByPackage = {};
   for (const op of allOperators.values()) {
+    // A file plugin has no package barrel: its schema and hazards are the
+    // "schema" and "hazards" keys of the sibling JSON discovery read.
+    if (type.isNone(op.package)) {
+      writeFileOperator({ context, metas, op, schemas });
+      continue;
+    }
     if (!operatorsByPackage[op.package]) {
       operatorsByPackage[op.package] = [];
     }
@@ -57,6 +98,16 @@ async function writeOperatorSchemaMap({ components, context }) {
       }
       const meta = packageMetas?.[op.originalTypeName];
       if (meta) {
+        const hazardsProblem = validateHazardsShape(meta.hazards);
+        if (hazardsProblem !== null) {
+          collectExceptions(
+            context,
+            new ConfigError(
+              `Operator "${op.typeName}" from package "${packageName}": meta.${hazardsProblem}`,
+              { received: meta.hazards }
+            )
+          );
+        }
         metas[op.typeName] = { hazards: meta.hazards ?? [] };
       }
     }

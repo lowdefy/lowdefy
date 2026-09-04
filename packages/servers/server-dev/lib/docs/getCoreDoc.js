@@ -60,10 +60,15 @@ function getCoreDoc({ slug, kind, type: typeName }) {
   const markdown = fs.readFileSync(path.join(manifest.contentDir, doc.path), 'utf8');
   const result = { slug: doc.slug, title: doc.title, section: doc.section, markdown };
   // Hazards belong to the type the caller asked about, not to the doc page:
-  // findDoc remaps requests onto their connection's page, and a request
-  // must carry its own hazards rather than inherit the connection's.
-  if (type.isNone(slug) && !type.isNone(typeName)) {
-    result.hazards = getHazards({ kind, type: typeName });
+  // findDoc remaps requests onto their connection's page, and a request must
+  // carry its own hazards rather than inherit the connection's. A slug lookup
+  // names no type, so the page's own kind and typeName from the manifest are
+  // the type it is about.
+  const hazardType = type.isNone(slug)
+    ? { kind, typeName }
+    : { kind: doc.kind, typeName: doc.typeName };
+  if (!type.isNone(hazardType.typeName)) {
+    result.hazards = getHazards({ kind: hazardType.kind, type: hazardType.typeName });
   }
   return result;
 }

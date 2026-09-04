@@ -27,6 +27,7 @@ export default {
   requests: [
     'MongoDBAggregation',
     'MongoDBBulkWrite',
+    'MongoDBCreateIndexes',
     'MongoDBDeleteMany',
     'MongoDBDeleteOne',
     'MongoDBFind',

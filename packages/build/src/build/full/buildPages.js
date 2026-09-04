@@ -17,9 +17,9 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import deprecateActionResponseEnvelope from '../buildPages/deprecateActionResponseEnvelope.js';
 import validateActionResponsePaths from '../buildPages/validateActionResponsePaths.js';
 import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
 import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
@@ -56,10 +56,10 @@ function buildPages({ components, context }) {
         failedPageIndices.add(index);
       }
     } catch (error) {
-      // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
-        return;
-      }
+      // Every check that carries a checkSlug decides suppression itself, in
+      // collectExceptions, and returns - so a throw reaching here is a genuine
+      // failure of this page's build, never a suppressed check, and the page is
+      // marked failed rather than silently abandoned half-built.
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
       if (context?.errors) {
         context.errors.push(error);
@@ -118,6 +118,7 @@ function buildPages({ components, context }) {
     validateStateSchema({ page, context });
     validatePayloadReferences({ page, context });
     validateServerStateReferences({ page, context });
+    deprecateActionResponseEnvelope({ page, context });
     validateActionResponsePaths({ page, endpointConfigs, context });
   });
 

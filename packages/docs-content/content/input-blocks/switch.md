@@ -26,6 +26,15 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_small:
+  _state: basic_small
+basic_autofocus:
+  _state: basic_autofocus
+```
+
+```yaml
 - id: text_on_off
   type: Switch
   properties:
@@ -67,6 +76,19 @@ Toggle switch with optional text and icon labels.
     size: small
     label:
       disabled: true
+```
+
+```yaml
+text_on_off:
+  _state: text_on_off
+text_yes_no:
+  _state: text_yes_no
+text_long:
+  _state: text_long
+text_numbers:
+  _state: text_numbers
+text_small_on_off:
+  _state: text_small_on_off
 ```
 
 ```yaml
@@ -115,6 +137,19 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+icon_custom_check:
+  _state: icon_custom_check
+icon_lock:
+  _state: icon_lock
+icon_sound:
+  _state: icon_sound
+icon_visibility:
+  _state: icon_visibility
+icon_power:
+  _state: icon_power
+```
+
+```yaml
 - id: color_green
   type: Switch
   properties:
@@ -153,6 +188,19 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_purple:
+  _state: color_purple
+color_red:
+  _state: color_red
+color_cyan:
+  _state: color_cyan
+```
+
+```yaml
 - id: color_text_green
   type: Switch
   properties:
@@ -180,6 +228,15 @@ Toggle switch with optional text and icon labels.
     uncheckedText: Private
     label:
       disabled: true
+```
+
+```yaml
+color_text_green:
+  _state: color_text_green
+color_text_red:
+  _state: color_text_red
+color_text_purple:
+  _state: color_text_purple
 ```
 
 ```yaml
@@ -227,6 +284,19 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+disabled_off:
+  _state: disabled_off
+disabled_text:
+  _state: disabled_text
+disabled_small:
+  _state: disabled_small
+disabled_color:
+  _state: disabled_color
+disabled_icons:
+  _state: disabled_icons
+```
+
+```yaml
 - id: label_default
   type: Switch
   properties:
@@ -258,6 +328,19 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_extra:
+  _state: label_extra
+label_no_colon:
+  _state: label_no_colon
+label_hidden:
+  _state: label_hidden
+label_feedback:
+  _state: label_feedback
+```
+
+```yaml
 - id: label_inline
   type: Switch
   properties:
@@ -281,6 +364,15 @@ Toggle switch with optional text and icon labels.
     label:
       inline: true
       span: 8
+```
+
+```yaml
+label_inline:
+  _state: label_inline
+label_inline_right:
+  _state: label_inline_right
+label_inline_small:
+  _state: label_inline_small
 ```
 
 ```yaml
@@ -308,6 +400,15 @@ Toggle switch with optional text and icon labels.
     title: Tailwind Classes
     label:
       disabled: true
+```
+
+```yaml
+style_margin:
+  _state: style_margin
+style_label:
+  _state: style_label
+class_tailwind:
+  _state: class_tailwind
 ```
 
 ```yaml
@@ -357,6 +458,19 @@ Toggle switch with optional text and icon labels.
     theme:
       colorPrimary: "#eb2f96"
       colorPrimaryHover: "#f759ab"
+```
+
+```yaml
+theme_large_track:
+  _state: theme_large_track
+theme_small_track:
+  _state: theme_small_track
+theme_no_shadow:
+  _state: theme_no_shadow
+theme_colored_handle:
+  _state: theme_colored_handle
+theme_primary_color:
+  _state: theme_primary_color
 ```
 
 ```yaml
@@ -426,6 +540,77 @@ Toggle switch with optional text and icon labels.
 ```
 
 ```yaml
+- id: comp_settings_card
+  type: Card
+  properties:
+    title: Settings
+    size: small
+  blocks:
+    - id: comp_notifications
+      type: Switch
+      properties:
+        title: Notifications
+        label:
+          inline: true
+          span: 16
+      events:
+        onChange:
+          - id: comp_notifications_action
+            type: SetState
+            params:
+              notifications_enabled:
+                _state: comp_notifications
+    - id: comp_auto_update
+      type: Switch
+      properties:
+        title: Auto-update
+        label:
+          inline: true
+          span: 16
+      events:
+        onChange:
+          - id: comp_auto_update_action
+            type: SetState
+            params:
+              auto_update_enabled:
+                _state: comp_auto_update
+    - id: comp_dark_mode
+      type: Switch
+      properties:
+        title: Dark mode
+        label:
+          inline: true
+          span: 16
+      events:
+        onChange:
+          - id: comp_dark_mode_action
+            type: DisplayMessage
+            params:
+              content: Dark mode toggled.
+              duration: 2
+    - id: comp_analytics
+      type: Switch
+      properties:
+        title: Analytics
+        label:
+          inline: true
+          span: 16
+          extra: Allow anonymous usage data collection.
+      events:
+        onChange:
+          - id: comp_analytics_action
+            type: SetState
+            params:
+              analytics_enabled:
+                _state: comp_analytics
+```
+
+```yaml
+comp_settings_card:
+  _state: comp_settings_card
+```
+
+```yaml
 - id: applied2_privacy_card
   type: Card
   properties:
@@ -491,6 +676,11 @@ Toggle switch with optional text and icon labels.
               duration: 3
 ```
 
+```yaml
+applied2_privacy_card:
+  _state: applied2_privacy_card
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -536,7 +726,7 @@ Toggle switch with optional text and icon labels.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when switch is changed. |
+| `onChange` | `{ value: boolean }` | Trigger action when switch is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

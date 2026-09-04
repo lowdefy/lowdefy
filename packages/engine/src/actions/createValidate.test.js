@@ -1333,22 +1333,67 @@ test('Validate schema combined with blockIds runs both checks', async () => {
   );
 });
 
-test('Validate schema on a page without a contract is an action error', async () => {
+// The build (checkValidateActionSchemas) refuses a Validate whose literal
+// schema path is not in the contract, so the engine's own message is only
+// reachable when the path is computed at runtime.
+test('Validate schema reports an operator-computed path that is not in the contract', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
+    state: { count: { type: 'number' }, pick: { type: 'string' } },
     blocks: [
       {
         id: 'button',
         type: 'Button',
-        events: { onClick: [{ id: 'validate', type: 'Validate', params: { schema: true } }] },
+        events: {
+          onClick: [{ id: 'validate', type: 'Validate', params: { schema: { _state: 'pick' } } }],
+        },
       },
     ],
   };
   const context = await testContext({ lowdefy, pageConfig });
+  context._internal.State.set('pick', 'not_declared');
   const button = context._internal.RootSlots.map['button'];
   await button.triggerEvent({ name: 'onClick' });
   const { error } = button.Events.events.onClick.history[0];
   expect(error.error).toBeInstanceOf(ActionError);
-  expect(error.error.message).toMatch(/declares no "state"/);
+  expect(error.error.message).toMatch(/is not part of the state contract/);
+});
+
+// The declared type decides what "empty" means for a required block. Inside a
+// List the block's id carries its row index (list.0.count), so the contract's
+// `items` has to be walked for the override to apply at all.
+test('the declared state type resolves through a List row so a required 0 passes', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    state: {
+      list: {
+        type: 'array',
+        items: { type: 'object', properties: { count: { type: 'number' } } },
+      },
+    },
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ count: 0 }, { count: null }] },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
+        blocks: [{ id: 'list.$.count', type: 'NumberInput', required: true }],
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  expect(context._internal.RootSlots.map['list.0.count'].getDeclaredStateType()).toBe('number');
+  expect(context._internal.RootSlots.map['list.0.count'].eval.validation.errors).toEqual([]);
+  expect(context._internal.RootSlots.map['list.1.count'].eval.validation.errors).toEqual([
+    'This field is required',
+  ]);
 });

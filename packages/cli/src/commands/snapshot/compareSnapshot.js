@@ -19,6 +19,7 @@ import fs from 'fs';
 import diffDom from './diffDom.js';
 import diffScreenshot from './diffScreenshot.js';
 import diffState from './diffState.js';
+import normalizeState from './normalizeState.js';
 import snapshotPaths from './snapshotPaths.js';
 
 // State diffs are capped the same way diffDom caps its lines, so a page whose
@@ -33,19 +34,31 @@ function truncate(text) {
   return `${text.slice(0, MAX_STATE_VALUE_CHARS)}…`;
 }
 
-function missing(artefact) {
+function missing({ artefact, advisory }) {
   return {
     artefact,
     changed: true,
+    advisory,
     lines: [`no committed ${artefact} — run lowdefy snapshot --update`],
   };
 }
 
 // compareSnapshot checks one fresh snapshot against its committed golden and
-// returns one entry per artefact: { artefact, changed, lines }. A missing
-// golden is drift — a page that was never captured is exactly what a check
-// should refuse to pass. A screenshot that drifted also writes diff.png.
-function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) {
+// returns one entry per artefact: { artefact, changed, advisory, lines }. A
+// missing golden is drift — a page that was never captured is exactly what a
+// check should refuse to pass. A screenshot that drifted also writes diff.png.
+// Pixel results are advisory unless the caller asks for them to fail the run:
+// a font or GPU difference between two machines is not a config change, and a
+// check that cries wolf on it stops being read. DOM and state drift are never
+// advisory.
+function compareSnapshot({
+  configDirectory,
+  target,
+  snapshot,
+  pixelTolerance,
+  ignore = [],
+  failOnPixel = false,
+}) {
   const paths = snapshotPaths({ configDirectory, target });
   const results = [];
 
@@ -61,9 +74,14 @@ function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) 
       fs.writeFileSync(paths.diff, result.diff);
       lines.push(`pixel diff written to ${paths.diff}`);
     }
-    results.push({ artefact: 'screenshot.png', changed: result.changed, lines });
+    results.push({
+      artefact: 'screenshot.png',
+      changed: result.changed,
+      advisory: !failOnPixel,
+      lines,
+    });
   } else {
-    results.push(missing('screenshot.png'));
+    results.push(missing({ artefact: 'screenshot.png', advisory: !failOnPixel }));
   }
 
   if (fs.existsSync(paths.dom)) {
@@ -73,16 +91,21 @@ function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) 
       expected: fs.readFileSync(paths.dom, 'utf8').replace(/\r\n/g, '\n').replace(/\n$/, ''),
       actual: snapshot.dom,
     });
-    results.push({ artefact: 'dom.html', changed: result.changed, lines: result.lines });
+    results.push({
+      artefact: 'dom.html',
+      changed: result.changed,
+      advisory: false,
+      lines: result.lines,
+    });
   } else {
-    results.push(missing('dom.html'));
+    results.push(missing({ artefact: 'dom.html', advisory: false }));
   }
 
   if (fs.existsSync(paths.state)) {
     const result = diffState({
       expected: JSON.parse(fs.readFileSync(paths.state, 'utf8')),
-      actual: snapshot.state ?? {},
-      snapshotIgnore: snapshot.snapshotIgnore ?? [],
+      actual: normalizeState({ state: snapshot.state }),
+      snapshotIgnore: ignore,
     });
     const lines = result.differences
       .slice(0, MAX_STATE_DIFF_LINES)
@@ -96,10 +119,11 @@ function compareSnapshot({ configDirectory, target, snapshot, pixelTolerance }) 
     results.push({
       artefact: 'state.json',
       changed: result.changed,
+      advisory: false,
       lines,
     });
   } else {
-    results.push(missing('state.json'));
+    results.push(missing({ artefact: 'state.json', advisory: false }));
   }
 
   return { label: paths.label, results };

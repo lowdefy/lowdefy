@@ -295,7 +295,7 @@ The `_date.setTime` method sets the [time](https://developer.mozilla.org/en-US/d
 
 The `_date.setUTCDate` method changes the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCDate) of a date, based on UTC time.
 
-## _date.setFullYear
+## _date.setUTCFullYear
 
 ```
 (arguments: {on: date, year: number}): number

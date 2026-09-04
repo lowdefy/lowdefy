@@ -23,6 +23,8 @@ import apiContext from './middleware/apiContext.js';
 import authJson from '../lib/build/auth.js';
 import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
+import appFeedbackHandler from './routes/appFeedback.js';
+import journeyHandler from './routes/journey.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
 import cronHandler from './routes/cron.js';
@@ -30,6 +32,7 @@ import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
+import docsAppBriefHandler from './routes/docs/appBrief.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
 import docsDataModelHandler from './routes/docs/dataModel.js';
 import docsBuildStatusHandler from './routes/docs/buildStatus.js';
@@ -47,8 +50,13 @@ import docsDevUsersHandler from './routes/docs/devUsers.js';
 import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
+import docsMeasurePageHandler from './routes/docs/measurePage.js';
 import docsMigrateHandler from './routes/docs/migrate.js';
 import docsMigrationsStatusHandler from './routes/docs/migrationsStatus.js';
+import docsOpsErrorsHandler from './routes/docs/opsErrors.js';
+import docsOpsReproHandler from './routes/docs/opsRepro.js';
+import docsOpsSlowHandler from './routes/docs/opsSlow.js';
+import docsOpsTraceHandler from './routes/docs/opsTrace.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
 import docsRestartHandler from './routes/docs/restart.js';
 import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
@@ -71,6 +79,7 @@ import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import warnOpsTenantData from '../lib/docs/ops/warnOpsTenantData.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
@@ -131,6 +140,9 @@ function createApp() {
   // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
   // tool result in createDocsMcpServer — merging fields into the envelope
   // instead would put unknown members on a strictly-validated message.
+  // One warn line at boot when an app whose connections are tenant-walled also
+  // has ops query credentials in the environment (R19).
+  warnOpsTenantData({ logger });
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
   // Flags every other docs response while the last build failed. Registered
   // twice: hono's `/*` pattern does not match the bare path.
@@ -147,6 +159,7 @@ function createApp() {
   app.get('/lowdefy-docs/snapshot/:pageId', docsSnapshotHandler);
   app.get('/lowdefy-docs/dev-users', docsDevUsersHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
+  app.post('/lowdefy-docs/measure-page', docsMeasurePageHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
@@ -154,7 +167,19 @@ function createApp() {
   app.post('/lowdefy-docs/seed-fixture', docsSeedFixtureHandler);
   app.get('/lowdefy-docs/migrations', docsMigrationsStatusHandler);
   app.post('/lowdefy-docs/migrate', docsMigrateHandler);
+  // Ops query twins of the four lowdefy_prod_* MCP tools. Access control runs
+  // per call inside the tool (loopback origin, read-only token, credentials,
+  // config.ops.enabled), so a refusal is a 200 carrying howToEnable — the same
+  // answer the MCP tool gives.
+  app.get('/lowdefy-docs/ops/errors', docsOpsErrorsHandler);
+  app.get('/lowdefy-docs/ops/trace/:rid', docsOpsTraceHandler);
+  // The query form: /lowdefy-docs/ops/trace?session_id=… (every event of one recorded session).
+  app.get('/lowdefy-docs/ops/trace', docsOpsTraceHandler);
+  app.get('/lowdefy-docs/ops/slow', docsOpsSlowHandler);
+  app.get('/lowdefy-docs/ops/repro/:rid', docsOpsReproHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
+  app.get('/lowdefy-docs/app-brief', docsAppBriefHandler);
+  app.get('/lowdefy-docs/app-brief/:pageId', docsAppBriefHandler);
   app.get('/lowdefy-docs/data-model', docsDataModelHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
@@ -198,6 +223,8 @@ function createApp() {
   app.get('/api/cron/*', cronHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
+  app.all('/api/journey', bodyLimit({ maxSize: 256 * 1024 }), journeyHandler);
+  app.all('/api/feedback', bodyLimit({ maxSize: 512 * 1024 }), appFeedbackHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);

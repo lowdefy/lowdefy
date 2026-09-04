@@ -20,15 +20,21 @@ async function writeOperatorImports({ components, context }) {
   await context.writeBuildArtifact(
     'plugins/operators/client.js',
     generateImportFile({
+      artifactPath: 'plugins/operators/client.js',
+      context,
       imports: components.imports.operators.client,
       importPath: 'operators/client',
+      kind: 'operators.client',
     })
   );
   await context.writeBuildArtifact(
     'plugins/operators/server.js',
     generateImportFile({
+      artifactPath: 'plugins/operators/server.js',
+      context,
       imports: components.imports.operators.server,
       importPath: 'operators/server',
+      kind: 'operators.server',
     })
   );
 }

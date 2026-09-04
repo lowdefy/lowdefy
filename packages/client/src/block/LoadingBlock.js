@@ -14,9 +14,11 @@
   limitations under the License.
 */
 import React, { useEffect } from 'react';
-import { BlockLayout } from '@lowdefy/layout';
+import { type } from '@lowdefy/helpers';
 import LoadingContainer from './LoadingContainer.js';
 import LoadingList from './LoadingList.js';
+import resolveClassNames from './resolveClassNames.js';
+import withBlockLayout from './withBlockLayout.js';
 
 const blockMethods = {
   moveItemDown: () => {},
@@ -37,6 +39,7 @@ const LoadingBlock = ({
   blockProperties,
   blockStyle,
   context,
+  inArea,
   lowdefy,
   skeleton,
 }) => {
@@ -54,15 +57,27 @@ const LoadingBlock = ({
     Component = lowdefy._internal.blockComponents.Box;
   }
 
+  // The skeleton stands in for the block, so it carries the block's class and
+  // style on its own root the same way the block does - the wrapper carries only
+  // layout, and is skipped on exactly the same rule.
+  const classNames = type.isNone(skeleton.class) ? blockClass : resolveClassNames(skeleton.class);
+  const styles = { block: skeleton.style ?? blockStyle };
+  const layout = skeleton.layout ?? blockLayout;
+
   const resolvedType = Component === lowdefy._internal.blockComponents.Box ? 'Box' : skeleton.type;
   const category = lowdefy._internal.blockMetas[resolvedType]?.category;
   switch (category) {
     case 'list':
       return (
         <LoadingList
+          blockClass={blockClass}
           blockId={blockId}
+          blockLayout={blockLayout}
+          blockProperties={blockProperties}
+          blockStyle={blockStyle}
           Component={Component}
           context={context}
+          inArea={inArea}
           lowdefy={lowdefy}
           skeleton={skeleton}
         />
@@ -77,29 +92,26 @@ const LoadingBlock = ({
           blockStyle={blockStyle}
           Component={Component}
           context={context}
+          inArea={inArea}
           lowdefy={lowdefy}
           skeleton={skeleton}
         />
       );
     default:
-      return (
-        <BlockLayout
-          style={skeleton.style ?? blockStyle}
-          id={`s-bl-${blockId}-${skeleton.id}`}
-          layout={skeleton.layout ?? blockLayout}
-          className={skeleton.class ?? blockClass}
-        >
-          <Component
-            basePath={lowdefy.basePath}
-            blockId={blockId}
-            components={lowdefy._internal.components}
-            key={`s-${blockId}-${skeleton.id}`}
-            menus={lowdefy.menus}
-            methods={blockMethods}
-            pageId={lowdefy.pageId}
-            properties={skeleton.properties ?? blockProperties}
-          />
-        </BlockLayout>
+      return withBlockLayout(
+        { id: `s-bl-${blockId}-${skeleton.id}`, inArea, layout },
+        <Component
+          basePath={lowdefy.basePath}
+          blockId={blockId}
+          classNames={classNames}
+          components={lowdefy._internal.components}
+          key={`s-${blockId}-${skeleton.id}`}
+          menus={lowdefy.menus}
+          methods={blockMethods}
+          pageId={lowdefy.pageId}
+          properties={skeleton.properties ?? blockProperties}
+          styles={styles}
+        />
       );
   }
 };

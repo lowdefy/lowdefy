@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { compile } from '@lowdefy/ajv';
 
 import writeCollections from './writeCollections.js';
 import testContext from '../test-utils/testContext.js';
@@ -34,6 +35,7 @@ test('writeCollections writes the stable artifact shape without build bookkeepin
     answers: {
       tenant: { field: 'organization_id' },
       fields: { test_id: { type: 'string' } },
+      required: ['test_id'],
       relations: { test_id: { collection: 'tests', field: '_id', configKey: 'k1' } },
       indexes: [{ keys: { organization_id: 1, test_id: 1 }, options: { unique: true } }],
       connections: [
@@ -54,6 +56,7 @@ test('writeCollections writes the stable artifact shape without build bookkeepin
     answers: {
       tenant: { field: 'organization_id' },
       fields: { test_id: { type: 'string' } },
+      required: ['test_id'],
       relations: { test_id: { collection: 'tests', field: '_id' } },
       indexes: [{ keys: { organization_id: 1, test_id: 1 }, options: { unique: true } }],
       connections: [
@@ -67,4 +70,24 @@ test('writeCollections writes the stable artifact shape without build bookkeepin
     },
     tests: { relations: {}, indexes: [], connections: [] },
   });
+});
+
+test('writeCollections writes a required field in a form every consumer can compile', async () => {
+  const writeBuildArtifact = jest.fn();
+  const context = testContext({ writeBuildArtifact });
+  context.collections = {
+    answers: {
+      fields: { test_id: { type: 'string' }, created_at: { type: 'string', format: 'date-time' } },
+      required: ['test_id'],
+      relations: {},
+      indexes: [],
+      connections: [],
+    },
+  };
+  await writeCollections({ components: {}, context });
+  const artifact = JSON.parse(writeBuildArtifact.mock.calls[0][1]);
+  const { fields, required } = artifact.answers;
+  const validator = compile({ schema: { type: 'object', properties: fields, required } });
+  expect(validator({ test_id: 'a', created_at: new Date(0).toISOString() }).valid).toBe(true);
+  expect(validator({ created_at: new Date(0).toISOString() }).valid).toBe(false);
 });

@@ -15,6 +15,13 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+basic_card_list:
+  _state: basic_card_list
+```
+
+Selected:
+
+```yaml
 - id: select_list
   type: ListSelector
   properties:
@@ -50,6 +57,48 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+- id: select_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    data:
+      - id: 1
+        name: Starter
+        price: $0
+      - id: 2
+        name: Pro
+        price: $20
+      - id: 3
+        name: Enterprise
+        price: $99
+    html: |
+      <strong>{{ item.name }}</strong>
+      <div style="color:#666;">{{ item.price }} / month</div>
+  events:
+    onChange:
+      - id: capture_selected
+        type: SetState
+        params:
+          selected_plan:
+            _event: value
+- id: selected_plan_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: "Selected: {{ selected_plan.name }}"
+        on:
+          _state: true
+```
+
+```yaml
+select_list:
+  _state: select_list
+selected_plan_display:
+  _state: selected_plan_display
+```
+
+```yaml
 - id: readonly_list
   type: ListSelector
   properties:
@@ -63,6 +112,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+readonly_list:
+  _state: readonly_list
+```
+
+```yaml
 - id: empty_list
   type: ListSelector
   properties:
@@ -70,6 +124,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
     noData: No people to show yet.
     html: |
       <span>{{ item.name }}</span>
+```
+
+```yaml
+empty_list:
+  _state: empty_list
 ```
 
 ```yaml
@@ -97,6 +156,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+people_card_list:
+  _state: people_card_list
+```
+
+```yaml
 - id: click_card_list
   type: ListSelector
   properties:
@@ -121,6 +185,35 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+- id: click_card_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    data:
+      - id: 1
+        label: First
+      - id: 2
+        label: Second
+      - id: 3
+        label: Third
+    html: |
+      <h4>{{ item.label }}</h4>
+      <p>Click to see which row was selected.</p>
+  events:
+    onClick:
+      - id: capture_clicked
+        type: SetState
+        params:
+          clicked_card:
+            _event: true
+```
+
+```yaml
+click_card_list:
+  _state: click_card_list
+```
+
+```yaml
 - id: compact_card_list
   type: ListSelector
   properties:
@@ -133,6 +226,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
       - Four
     html: |
       <span>{{ item }}</span>
+```
+
+```yaml
+compact_card_list:
+  _state: compact_card_list
 ```
 
 ```yaml
@@ -153,6 +251,31 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 
       <p>This list renders one thousand cards. Only rows in (and near) the
       viewport are mounted in the DOM.</p>
+```
+
+```yaml
+- id: large_card_list
+  type: ListSelector
+  properties:
+    hoverable: true
+    height: 480
+    data:
+      _string.split:
+        on:
+          _string.repeat:
+            on: x,
+            count: 999
+        separator: ","
+    html: >
+      <h4>Row {{ index + 1 }}</h4>
+
+      <p>This list renders one thousand cards. Only rows in (and near) the
+      viewport are mounted in the DOM.</p>
+```
+
+```yaml
+large_card_list:
+  _state: large_card_list
 ```
 
 ```yaml
@@ -186,6 +309,11 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 ```
 
 ```yaml
+search_all_card_list:
+  _state: search_all_card_list
+```
+
+```yaml
 - id: search_fields_card_list
   type: ListSelector
   properties:
@@ -209,6 +337,50 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
     html: |
       <strong>{{ item.name }}</strong>
       <div style="color:#666;">{{ item.role }}</div>
+```
+
+```yaml
+search_fields_card_list:
+  _state: search_fields_card_list
+```
+
+Selected plan id: —
+
+```yaml
+- id: keyed_list
+  type: ListSelector
+  properties:
+    valueKey: id
+    primaryKey: id
+    data:
+      - id: 1
+        name: Starter
+        price: $0
+      - id: 2
+        name: Pro
+        price: $20
+      - id: 3
+        name: Enterprise
+        price: $99
+    html: |
+      <strong>{{ item.name }}</strong>
+      <div style="color:#888;">{{ item.price }} / month</div>
+  events:
+    onChange:
+      - id: capture_keyed
+        type: SetState
+        params:
+          keyed_plan_id:
+            _event: value
+- id: keyed_plan_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected plan id: {{ keyed_plan_id if keyed_plan_id != null else "—"
+          }}'
+        on:
+          _state: true
 ```
 
 ```yaml
@@ -248,6 +420,13 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
           _state: true
 ```
 
+```yaml
+keyed_list:
+  _state: keyed_list
+keyed_plan_display:
+  _state: keyed_plan_display
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | `[]` | Array of items. Each item is rendered as one card by passing it to the html Nunjucks template as `item`. |
@@ -283,9 +462,9 @@ Data-driven vertical list of headerless cards that doubles as a single-select in
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value, index, item }` | Triggered when the selection changes (only fires when `selectable` is true). |
-| `onClick` | `{ index, item }` | Triggered when a card is clicked. |
-| `onSearch` | `{ value, resultCount }` | Triggered when the debounced search query changes (only fires when the `search` property is set). |
+| `onChange` | `{ value: any, index: integer, item: any }` | Triggered when the selection changes (only fires when `selectable` is true). |
+| `onClick` | `{ index: integer, item: any }` | Triggered when a card is clicked. |
+| `onSearch` | `{ value: string, resultCount: integer }` | Triggered when the debounced search query changes (only fires when the `search` property is set). |
 
 | Key | Target |
 | --- | --- |

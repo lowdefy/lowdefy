@@ -707,6 +707,42 @@ test('copy preserves non-enumerable ~l values on arrays', () => {
   expect(Object.keys(res.items[0])).toEqual(['id']);
 });
 
+test('copy preserves the expression markers ~c and ~x', () => {
+  // A ${ … } expression compiles to an operator tree carrying its column (~c)
+  // and source text (~x); a copy — expandComponent copies component bodies —
+  // must not lose them or the expression's errors stop resolving to source.
+  const object = { _and: [{ _eq: [{ _state: 'a' }, 1] }] };
+  const markers = [
+    [object, 7, 12, '${ state.a == 1 }'],
+    [object._and, 7, 12, undefined],
+    [object._and[0], 7, 12, undefined],
+  ];
+  markers.forEach(([node, line, column, expression]) => {
+    Object.defineProperty(node, '~l', { value: line, enumerable: false, configurable: true });
+    Object.defineProperty(node, '~c', { value: column, enumerable: false, configurable: true });
+    if (expression) {
+      Object.defineProperty(node, '~x', {
+        value: expression,
+        enumerable: false,
+        configurable: true,
+      });
+    }
+  });
+
+  const res = serializer.copy(object);
+
+  expect(res['~c']).toEqual(12);
+  expect(res['~x']).toEqual('${ state.a == 1 }');
+  expect(res._and['~c']).toEqual(12);
+  expect(res._and[0]['~c']).toEqual(12);
+  expect(res._and[0]['~x']).toBeUndefined();
+
+  // Markers stay non-enumerable, so operator recognition is unaffected
+  expect(Object.keys(res)).toEqual(['_and']);
+  expect(Object.keys(res._and[0])).toEqual(['_eq']);
+  expect(Array.isArray(res._and)).toBe(true);
+});
+
 // ~arr marker tests
 
 test('serialize wraps array with ~l in ~arr marker', () => {
@@ -1423,3 +1459,14 @@ test('deserialize revives the auth gate errors as their own classes', () => {
   expect(revived.authorization.name).toBe('AuthorizationError');
   expect(revived.twoFactor).toBeInstanceOf(TwoFactorEnrolmentRequiredError);
 });
+
+test('serializer keeps ~k on an object whose child is a Date', () => {
+  const obj = { when: new Date(0) };
+  Object.defineProperty(obj, '~k', { value: 'k1', enumerable: false });
+  const copied = serializer.copy({ node: obj }, {});
+  expect(copied.node['~k']).toBe('k1');
+  expect(copied.node.when).toEqual(new Date(0));
+  const json = serializer.serializeToString({ node: obj });
+  expect(JSON.parse(json).node['~k']).toBe('k1');
+});
+

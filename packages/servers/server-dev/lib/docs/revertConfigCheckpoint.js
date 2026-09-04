@@ -18,6 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
+import { clearMocks } from './devMockRegistry.js';
 import {
   getCheckpointsRoot,
   getConfigDirectory,
@@ -39,6 +40,10 @@ function copyFromSnapshot({ snapshotDirectory, configDirectory, relativeFilePath
 // (covering files added after the checkpoint). The manifest — not a diff
 // against the live directory — is the single source of truth for what
 // "restored" means, so reverts are exact and repeatable.
+//
+// Replayed request responses were recorded against the config as it was
+// before the revert, so they are dropped here rather than left answering for
+// a page whose requests may no longer be the ones that were recorded.
 function revertConfigCheckpoint({ id }) {
   if (type.isNone(id) || !type.isString(id)) {
     throw new Error(
@@ -66,6 +71,8 @@ function revertConfigCheckpoint({ id }) {
   deleted.forEach((relativeFilePath) => {
     fs.rmSync(path.join(configDirectory, relativeFilePath));
   });
+
+  clearMocks();
 
   return { restored: manifest.files, deleted };
 }

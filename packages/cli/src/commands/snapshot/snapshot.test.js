@@ -93,7 +93,11 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-snapshot-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory },
+    commandLineOptions: {},
+    directories: {
+      config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    },
     options: { port: 3248 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -149,7 +153,7 @@ test('snapshot --update without a manifest writes every page for every dev user 
   expect(goldenFiles('about', 'member')).toEqual(['dom.html', 'screenshot.png', 'state.json']);
   expect(logs.info).toContain('4 snapshots written');
   expect(mockStop).toHaveBeenCalled();
-  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context, env: {} });
 });
 
 test('snapshot --update passes the snapshot route the user, urlQuery and journey from the manifest', async () => {
@@ -195,8 +199,10 @@ test('snapshot --check exits 1 when no golden has been written', async () => {
   context.options.check = true;
   await snapshot({ context });
   expect(process.exitCode).toBe(1);
-  expect(logs.error.some((line) => /FAIL {2}home as admin .*screenshot.png/.test(line))).toBe(true);
-  expect(logs.error.at(-1)).toBe('0 passed, 4 changed, 0 failed of 4 snapshots');
+  expect(logs.error.some((line) => /FAIL {2}home as admin .*dom.html/.test(line))).toBe(true);
+  expect(logs.error.at(-1)).toBe(
+    '0 passed, 4 changed, 0 failed of 4 snapshots, 4 with advisory pixel drift'
+  );
 });
 
 test('snapshot --check passes on unchanged config after --update', async () => {
@@ -222,17 +228,94 @@ test('snapshot --check fails naming the page, user and drifted artefacts after a
   await snapshot({ context });
   expect(process.exitCode).toBe(1);
   const fails = logs.error.filter((line) => line.startsWith('FAIL'));
-  expect(fails).toHaveLength(2);
-  expect(fails[0]).toMatch(/home as member {2}snapshots\/home\/member\/screenshot.png/);
-  expect(fails[1]).toMatch(/home as member {2}snapshots\/home\/member\/dom.html/);
+  expect(fails).toHaveLength(1);
+  expect(fails[0]).toMatch(/home as member {2}snapshots\/home\/member\/dom.html/);
   expect(logs.error).toContain('      -2 <p>Hello</p>');
   expect(logs.error).toContain('      +2 <p>Goodbye</p>');
+  // Pixel drift is reported, and its diff.png written, without failing the run.
+  const advisories = logs.warn.filter((line) => line.startsWith('ADVISORY'));
+  expect(advisories).toHaveLength(1);
+  expect(advisories[0]).toMatch(/home as member {2}snapshots\/home\/member\/screenshot.png/);
   expect(
     fs.existsSync(
       path.join(configDirectory, '.lowdefy', 'snapshot-diff', 'home', 'member', 'diff.png')
     )
   ).toBe(true);
-  expect(logs.error.at(-1)).toBe('3 passed, 1 changed, 0 failed of 4 snapshots');
+  expect(logs.error.at(-1)).toBe(
+    '3 passed, 1 changed, 0 failed of 4 snapshots, 1 with advisory pixel drift'
+  );
+});
+
+test('snapshot --check passes on pixel drift alone and reports it as advisory', async () => {
+  captures = { 'home/admin': () => capture() };
+  users = ['admin'];
+  pages = ['home'];
+  context.options.update = true;
+  await snapshot({ context });
+  captures['home/admin'] = () => capture({ screenshot: makePng({ dark: true }) });
+  context.options = { port: 3248, check: true };
+  await snapshot({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.warn.filter((line) => line.startsWith('ADVISORY'))).toHaveLength(1);
+  expect(logs.warn).toContain(
+    '      pixel drift does not fail --check; use --fail-on-pixel to make it.'
+  );
+  expect(logs.info).toContain('PASS  home as admin');
+  expect(logs.info.at(-1)).toBe(
+    '1 passed, 0 changed, 0 failed of 1 snapshots, 1 with advisory pixel drift'
+  );
+});
+
+test('snapshot --check --fail-on-pixel exits 1 on pixel drift alone', async () => {
+  captures = { 'home/admin': () => capture() };
+  users = ['admin'];
+  pages = ['home'];
+  context.options.update = true;
+  await snapshot({ context });
+  captures['home/admin'] = () => capture({ screenshot: makePng({ dark: true }) });
+  context.options = { port: 3248, check: true, failOnPixel: true };
+  await snapshot({ context });
+  expect(process.exitCode).toBe(1);
+  const fails = logs.error.filter((line) => line.startsWith('FAIL'));
+  expect(fails).toHaveLength(1);
+  expect(fails[0]).toMatch(/home as admin {2}snapshots\/home\/admin\/screenshot.png/);
+  expect(logs.error.at(-1)).toBe('0 passed, 1 changed, 0 failed of 1 snapshots');
+});
+
+test('snapshot --check treats a manifest ignore path as no drift', async () => {
+  writeManifest(`pages:
+  - pageId: home
+    users: [admin]
+    ignore:
+      - rows.$.score
+`);
+  captures = {
+    'home/admin': () => capture({ state: { rows: [{ id: 1, score: 0.1 }] } }),
+  };
+  context.options.update = true;
+  await snapshot({ context });
+  // The golden never records an ignored path, so it does not churn on --update.
+  expect(
+    fs.readFileSync(path.join(configDirectory, 'snapshots', 'home', 'admin', 'state.json'), 'utf8')
+  ).toBe('{\n  "rows": [\n    {\n      "id": 1\n    }\n  ]\n}\n');
+  captures['home/admin'] = () => capture({ state: { rows: [{ id: 1, score: 0.9 }] } });
+  context.options = { port: 3248, check: true };
+  await snapshot({ context });
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('snapshot --check does not drift on a timestamp state value', async () => {
+  captures = {
+    'home/admin': () => capture({ state: { created_at: '2026-01-01T00:00:00.000Z' } }),
+  };
+  users = ['admin'];
+  pages = ['home'];
+  context.options.update = true;
+  await snapshot({ context });
+  captures['home/admin'] = () => capture({ state: { created_at: '2027-09-09T10:11:12.999Z' } });
+  context.options = { port: 3248, check: true };
+  await snapshot({ context });
+  expect(process.exitCode).toBeUndefined();
 });
 
 test('snapshot --check treats an ignored state path as no drift', async () => {
@@ -348,4 +431,15 @@ test('snapshot --check reports a broken manifest journey as the failure, not a s
   expect(logs.error.at(-1)).toMatch(/Journey file .*missing.yaml.* not found/);
   expect(logs.error.some((line) => /passed,/.test(line))).toBe(false);
   expect(mockStop).toHaveBeenCalled();
+});
+
+test('snapshot --url captures from a running server without booting or stopping one', async () => {
+  context.options.update = true;
+  context.options.url = 'http://localhost:3000/';
+  await snapshot({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockStop).not.toHaveBeenCalled();
+  expect(mockGet.mock.calls[0][0]).toMatch(/^http:\/\/localhost:3000\/lowdefy-docs\//);
+  expect(logs.info[0]).toEqual('Running against http://localhost:3000.');
+  expect(process.exitCode).toBeUndefined();
 });

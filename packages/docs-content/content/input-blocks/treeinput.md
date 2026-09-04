@@ -2,6 +2,8 @@
 
 Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 
+Selected: —
+
 ```yaml
 - id: tree_basic
   type: TreeInput
@@ -43,6 +45,53 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 ```
 
 ```yaml
+- id: tree_basic
+  type: TreeInput
+  properties:
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: "{{ item.label }}"
+    defaultExpandAll: true
+    data:
+      - id: 1
+        label: Engineering
+      - id: 2
+        label: Frontend
+        parentId: 1
+      - id: 3
+        label: Backend
+        parentId: 1
+      - id: 4
+        label: Operations
+      - id: 5
+        label: SRE
+        parentId: 4
+  events:
+    onChange:
+      - id: capture
+        type: SetState
+        params:
+          dept:
+            _event: value
+- id: tree_basic_display
+  type: Paragraph
+  properties:
+    content:
+      _nunjucks:
+        template: 'Selected: {{ dept if dept != null else "—" }}'
+        on:
+          _state: true
+```
+
+```yaml
+tree_basic:
+  _state: tree_basic
+tree_basic_display:
+  _state: tree_basic_display
+```
+
+```yaml
 - id: tree_line
   type: TreeInput
   properties:
@@ -70,6 +119,11 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 ```
 
 ```yaml
+tree_line:
+  _state: tree_line
+```
+
+```yaml
 - id: tree_options
   type: TreeInput
   properties:
@@ -89,6 +143,11 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
         label: Operations
 ```
 
+```yaml
+tree_options:
+  _state: tree_options
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
@@ -98,7 +157,7 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 | `parentKey` | string | - | Tree selectors only: names each row’s parent id. Build a flat `data`/`options` array where each row has a `primaryKey` (its own id) and a `parentKey` whose value equals the parent row’s `primaryKey`. Rows whose `parentKey` is empty or points at no row become tree roots. Supports dotted paths. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -134,7 +193,7 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when selection is changed. |
+| `onChange` | `{ value: any }` | Trigger action when selection is changed. |
 
 | Key | Target |
 | --- | --- |

@@ -16,16 +16,20 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Intent test: a scalar is treated as an expression iff, after trimming, it
-// starts with "${" and not "$${" (the literal escape, §7). Starting with "${"
-// is a strong enough signal that a malformed body (missing "}", interpolation)
-// is a mistake to report rather than a literal to keep — compileExpression
-// validates well-formedness and raises a ConfigError. There is no interpolation:
-// "foo ${x}" does not start with "${" and stays a literal string.
+import findExpressionEnd from './findExpressionEnd.js';
+
+// The recognition rule (design §3): a scalar is an expression iff, after
+// trimming, the "${" is the first thing in it and the "}" that closes it is
+// the last. Anything else stays the literal string it was in v7 —
+// "${HOME}/data", "${a} ${b}" and an unterminated "${ a" are all values, not
+// expressions, so adding the syntax breaks no existing config. A scalar that
+// passes this test is unambiguously an expression, so a body that fails to
+// parse is a hard error rather than a literal (compileExpression).
 function isExpression(value) {
   if (!type.isString(value)) return false;
   const trimmed = value.trim();
-  return trimmed.startsWith('${') && !trimmed.startsWith('$${');
+  const end = findExpressionEnd(trimmed);
+  return end !== -1 && end === trimmed.length - 1;
 }
 
 export default isExpression;

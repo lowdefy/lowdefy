@@ -14,24 +14,24 @@
   limitations under the License.
 */
 
-import { compile } from '@lowdefy/ajv';
+import { compile, toJsonShape } from '@lowdefy/ajv';
 import { UserError } from '@lowdefy/errors';
 import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 
-// Compiled validators keyed by endpointId (the field the build artifact carries). The cached schema is compared by
-// object identity with the endpoint's current payloadSchema: a dev rebuild
+// Compiled validators keyed by the payloadSchema object: a dev rebuild
 // re-reads the config file and yields a new object, so an edited schema is
-// recompiled on its next call, while a stable production artifact compiles once.
-const validators = new Map();
+// recompiled on its next call, while a stable production artifact compiles
+// once. Keying by the object rather than the endpoint id also keeps two apps
+// served by one process from sharing an entry.
+const validators = new WeakMap();
 
 function getValidator({ endpointConfig }) {
-  const cached = validators.get(endpointConfig.endpointId);
-  if (cached && cached.schema === endpointConfig.payloadSchema) {
-    return cached.validate;
+  let validate = validators.get(endpointConfig.payloadSchema);
+  if (!validate) {
+    // A schema ajv cannot compile throws here, on the first call - not swallowed.
+    validate = compile({ schema: cleanBuildArtifact(endpointConfig.payloadSchema) });
+    validators.set(endpointConfig.payloadSchema, validate);
   }
-  // A schema ajv cannot compile throws here, on the first call - not swallowed.
-  const validate = compile({ schema: cleanBuildArtifact(endpointConfig.payloadSchema) });
-  validators.set(endpointConfig.endpointId, { schema: endpointConfig.payloadSchema, validate });
   return validate;
 }
 
@@ -47,12 +47,18 @@ function buildErrorMessage({ endpointConfig, errors }) {
 
 // A declared payloadSchema is enforced on every caller; the only way to not
 // enforce is to not declare one (design decision D2).
+//
+// The payload is validated in its JSON shape - the shape the caller sent and
+// the shape published as the MCP tool's inputSchema - so a date reaches ajv as
+// the ISO string `format: date-time` describes, whether the caller was a
+// browser (a ~d envelope, already deserialized here) or a CallApi step (a live
+// Date).
 function validatePayload({ endpointConfig, payload }) {
   if (type.isNone(endpointConfig.payloadSchema)) {
     return;
   }
   const validate = getValidator({ endpointConfig });
-  const { valid, errors } = validate(payload);
+  const { valid, errors } = validate(toJsonShape({ value: payload }));
   if (valid) {
     return;
   }

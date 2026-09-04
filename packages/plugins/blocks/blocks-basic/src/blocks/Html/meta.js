@@ -23,7 +23,15 @@ export default {
   },
   hazards: [
     {
+      id: 'html-deprecated-use-template',
+      kind: 'semantics',
+      message:
+        'Html is deprecated. Use the Template block: it escapes every value by default (Html renders a string that is only sanitised afterwards), it takes a context of values instead of one concatenated string, and {% slot "name" %} places real Lowdefy blocks inside the markup.',
+      see: 'container-blocks/template',
+    },
+    {
       id: 'html-style-stripped',
+      kind: 'semantics',
       message:
         'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.',
       see: 'display-blocks/html',
@@ -47,7 +55,8 @@ export default {
     properties: {
       html: {
         type: 'string',
-        description: 'Content to be rendered as Html.',
+        description:
+          'Content to be rendered as Html. Deprecated - use the Template block, which escapes values by default and supports slots.',
         docs: {
           displayType: 'text-area',
         },

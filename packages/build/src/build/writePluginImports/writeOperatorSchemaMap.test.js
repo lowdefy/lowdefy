@@ -237,3 +237,86 @@ test('writeOperatorSchemaMap writes an empty operatorMetas map when no package e
   await writeOperatorSchemaMap({ components, context });
   expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/operatorMetas.json', '{}');
 });
+
+test('writeOperatorSchemaMap reads a file operator schema and hazards from its record', async () => {
+  const schema = { type: 'string' };
+  const components = {
+    imports: {
+      operators: {
+        client: [{ package: null, typeName: '_titleCase', originalTypeName: '_titleCase' }],
+        server: [{ package: null, typeName: '_titleCase', originalTypeName: '_titleCase' }],
+      },
+    },
+  };
+  const context = {
+    filePlugins: [
+      {
+        kind: 'operators.client',
+        typeName: '_titleCase',
+        relativePath: 'plugins/operators/shared/_titleCase.js',
+        schema,
+        hazards: [
+          {
+            id: 'nondeterministic',
+            message: 'Returns a different value for the same input.',
+            kind: 'semantics',
+            see: 'operators/_titleCase',
+          },
+        ],
+      },
+    ],
+    typesMap: { schemas: { operators: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeOperatorSchemaMap({ components, context });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith(
+    'plugins/operatorSchemas.json',
+    JSON.stringify({ _titleCase: schema })
+  );
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith(
+    'plugins/operatorMetas.json',
+    JSON.stringify({
+      _titleCase: {
+        hazards: [
+          {
+            id: 'nondeterministic',
+            message: 'Returns a different value for the same input.',
+            kind: 'semantics',
+            see: 'operators/_titleCase',
+          },
+        ],
+      },
+    })
+  );
+});
+
+test('writeOperatorSchemaMap collects an error for bad hazards on a file operator', async () => {
+  const errors = [];
+  const components = {
+    imports: {
+      operators: {
+        client: [{ package: null, typeName: '_titleCase', originalTypeName: '_titleCase' }],
+        server: [],
+      },
+    },
+  };
+  const context = {
+    errors,
+    handleError: (error) => errors.push(error),
+    filePlugins: [
+      {
+        kind: 'operators.client',
+        typeName: '_titleCase',
+        relativePath: 'plugins/operators/shared/_titleCase.js',
+        hazards: 'nondeterministic',
+      },
+    ],
+    typesMap: { schemas: { operators: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeOperatorSchemaMap({ components, context });
+  expect(errors[0].message).toContain(
+    'Operator "_titleCase" from "plugins/operators/shared/_titleCase.js"'
+  );
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith('plugins/operatorMetas.json', '{}');
+});

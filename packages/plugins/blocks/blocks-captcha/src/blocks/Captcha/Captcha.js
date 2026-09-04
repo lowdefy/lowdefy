@@ -15,9 +15,10 @@
 */
 
 import React, { useEffect, useRef } from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
-const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+const TURNSTILE_SCRIPT_SRC =
+  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 let turnstileScriptPromise;
 
@@ -51,7 +52,7 @@ function loadTurnstileScript() {
 // retries. The block is provider-agnostic in config (properties normally fed
 // from the _build.authConfig projection) and dispatches on provider
 // internally - cloudflare-turnstile is the only provider at launch.
-function CaptchaBlock({ blockId, methods, properties }) {
+function CaptchaBlock({ blockId, classNames, methods, properties, styles }) {
   const containerRef = useRef();
   const widgetIdRef = useRef();
 
@@ -111,7 +112,7 @@ function CaptchaBlock({ blockId, methods, properties }) {
     };
   }, []);
 
-  return <div id={blockId} ref={containerRef} />;
+  return <div {...blockRootProps({ blockId, classNames, styles })} ref={containerRef} />;
 }
 
 CaptchaBlock.meta = {

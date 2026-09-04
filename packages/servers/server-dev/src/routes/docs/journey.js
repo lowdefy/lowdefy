@@ -56,7 +56,17 @@ async function docsJourneyHandler(c) {
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+  // fixtures seed through the connection layer, which needs the Hono context
+  // for the write gate and the app context, exactly as the MCP tool passes it.
+  const result = await runJourney({
+    origin,
+    pageId,
+    steps,
+    user,
+    urlQuery,
+    fixtures: body.fixtures,
+    honoContext: c,
+  });
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }

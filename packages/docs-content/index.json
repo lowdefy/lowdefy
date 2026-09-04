@@ -32,6 +32,12 @@
       "path": "content/tutorial/tutorial-actions-operators.md"
     },
     {
+      "slug": "tutorial/tutorial-requests-api",
+      "title": "5. API / HTTP requests",
+      "section": "Tutorial",
+      "path": "content/tutorial/tutorial-requests-api.md"
+    },
+    {
       "slug": "tutorial/tutorial-requests-sql",
       "title": "6. Saving data to SQL",
       "section": "Tutorial",
@@ -86,10 +92,22 @@
       "path": "content/concepts/module-authoring.md"
     },
     {
+      "slug": "concepts/page-and-app-state",
+      "title": "Page and App State",
+      "section": "Concepts",
+      "path": "content/concepts/page-and-app-state.md"
+    },
+    {
       "slug": "concepts/selectors",
       "title": "Driving Selectors",
       "section": "Concepts",
       "path": "content/concepts/selectors.md"
+    },
+    {
+      "slug": "concepts/blocks",
+      "title": "Blocks",
+      "section": "Concepts",
+      "path": "content/concepts/blocks.md"
     },
     {
       "slug": "concepts/layout-overview",
@@ -102,6 +120,24 @@
       "title": "Connections and Requests",
       "section": "Concepts",
       "path": "content/concepts/connections-and-requests.md"
+    },
+    {
+      "slug": "concepts/collections",
+      "title": "Collections",
+      "section": "Concepts",
+      "path": "content/concepts/collections.md"
+    },
+    {
+      "slug": "concepts/archetypes",
+      "title": "Page archetypes",
+      "section": "Concepts",
+      "path": "content/concepts/archetypes.md"
+    },
+    {
+      "slug": "concepts/migrations",
+      "title": "Migrations",
+      "section": "Concepts",
+      "path": "content/concepts/migrations.md"
     },
     {
       "slug": "concepts/events-and-actions",
@@ -126,6 +162,12 @@
       "title": "Operators",
       "section": "Concepts",
       "path": "content/concepts/operators.md"
+    },
+    {
+      "slug": "concepts/expression-syntax",
+      "title": "Expression Syntax",
+      "section": "Concepts",
+      "path": "content/concepts/expression-syntax.md"
     },
     {
       "slug": "concepts/secrets",
@@ -164,16 +206,52 @@
       "path": "content/concepts/custom-styling.md"
     },
     {
+      "slug": "concepts/theming",
+      "title": "Theming",
+      "section": "Concepts",
+      "path": "content/concepts/theming.md"
+    },
+    {
       "slug": "concepts/cli",
       "title": "The CLI",
       "section": "Concepts",
       "path": "content/concepts/cli.md"
     },
     {
+      "slug": "concepts/lowdefy-api",
+      "title": "Lowdefy APIs",
+      "section": "Concepts",
+      "path": "content/concepts/lowdefy-api.md"
+    },
+    {
+      "slug": "concepts/notifications",
+      "title": "Notifications",
+      "section": "Concepts",
+      "path": "content/concepts/notifications.md"
+    },
+    {
+      "slug": "concepts/feedback",
+      "title": "User Feedback",
+      "section": "Concepts",
+      "path": "content/concepts/feedback.md"
+    },
+    {
+      "slug": "concepts/dynamic-page-content",
+      "title": "Dynamic Page Content",
+      "section": "Concepts",
+      "path": "content/concepts/dynamic-page-content.md"
+    },
+    {
       "slug": "concepts/ai-agent-docs",
       "title": "Docs for AI Agents",
       "section": "Concepts",
       "path": "content/concepts/ai-agent-docs.md"
+    },
+    {
+      "slug": "agents/agents-introduction",
+      "title": "Agents",
+      "section": "Agents",
+      "path": "content/agents/agents-introduction.md"
     },
     {
       "slug": "agents/agent-properties",
@@ -218,6 +296,24 @@
       "path": "content/agents/agentconversations.md"
     },
     {
+      "slug": "websockets/websockets-introduction",
+      "title": "WebSockets",
+      "section": "WebSockets",
+      "path": "content/websockets/websockets-introduction.md"
+    },
+    {
+      "slug": "websockets/websocket-subscriptions",
+      "title": "Page Subscriptions",
+      "section": "WebSockets",
+      "path": "content/websockets/websocket-subscriptions.md"
+    },
+    {
+      "slug": "websockets/websocket-publish",
+      "title": "Publish and Actions",
+      "section": "WebSockets",
+      "path": "content/websockets/websocket-publish.md"
+    },
+    {
       "slug": "deployment/docker",
       "title": "Deploy with Docker",
       "section": "Deployment",
@@ -236,6 +332,12 @@
       "path": "content/deployment/vercel.md"
     },
     {
+      "slug": "deployment/framework-versions",
+      "title": "Framework versions",
+      "section": "Deployment",
+      "path": "content/deployment/framework-versions.md"
+    },
+    {
       "slug": "plugins/plugins-introduction",
       "title": "Plugins",
       "section": "Plugins",
@@ -246,6 +348,18 @@
       "title": "Developing Plugins",
       "section": "Plugins",
       "path": "content/plugins/plugins-dev.md"
+    },
+    {
+      "slug": "plugins/file-plugins",
+      "title": "File Plugins",
+      "section": "Plugins",
+      "path": "content/plugins/file-plugins.md"
+    },
+    {
+      "slug": "plugins/plugin-api-versioning",
+      "title": "Plugin API Versioning",
+      "section": "Plugins",
+      "path": "content/plugins/plugin-api-versioning.md"
     },
     {
       "slug": "plugins/plugins-actions",
@@ -290,6 +404,18 @@
       "path": "content/user-authentication/two-factor.md"
     },
     {
+      "slug": "user-authentication/protected-pages-apis",
+      "title": "Protected Pages and APIs",
+      "section": "User Authentication",
+      "path": "content/user-authentication/protected-pages-apis.md"
+    },
+    {
+      "slug": "user-authentication/roles",
+      "title": "Roles",
+      "section": "User Authentication",
+      "path": "content/user-authentication/roles.md"
+    },
+    {
       "slug": "user-authentication/organizations",
       "title": "Organizations &amp; Multi-Tenancy",
       "section": "User Authentication",
@@ -314,16 +440,58 @@
       "path": "content/user-authentication/user-object.md"
     },
     {
+      "slug": "user-authentication/auth-configuration",
+      "title": "Auth Configuration",
+      "section": "User Authentication",
+      "path": "content/user-authentication/auth-configuration.md"
+    },
+    {
+      "slug": "provider-reference/auth-js-providers",
+      "title": "Auth.js Providers",
+      "section": "Provider Reference",
+      "path": "content/provider-reference/auth-js-providers.md"
+    },
+    {
       "slug": "other/next-auth-providers",
       "title": "next-auth-providers",
       "section": "Other",
       "path": "content/other/next-auth-providers.md"
     },
     {
+      "slug": "provider-reference/openidconnectprovider",
+      "title": "OpenIDConnectProvider",
+      "section": "Provider Reference",
+      "path": "content/provider-reference/openidconnectprovider.md"
+    },
+    {
+      "slug": "adapter-reference/mongodbauthadapter",
+      "title": "MongoDBAuthAdapter",
+      "section": "Adapter Reference",
+      "path": "content/adapter-reference/mongodbauthadapter.md"
+    },
+    {
       "slug": "other/mongodbadapter",
       "title": "MongoDBAdapter",
       "section": "Other",
       "path": "content/other/mongodbadapter.md"
+    },
+    {
+      "slug": "testing/config-tests",
+      "title": "Config Tests",
+      "section": "Testing",
+      "path": "content/testing/config-tests.md"
+    },
+    {
+      "slug": "testing/fixtures",
+      "title": "Fixtures",
+      "section": "Testing",
+      "path": "content/testing/fixtures.md"
+    },
+    {
+      "slug": "testing/snapshots",
+      "title": "Golden Snapshots",
+      "section": "Testing",
+      "path": "content/testing/snapshots.md"
     },
     {
       "slug": "testing/e2e-introduction",
@@ -1114,6 +1282,14 @@
       "typeName": "Footer"
     },
     {
+      "slug": "container-blocks/grid",
+      "title": "Grid",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/grid.md",
+      "kind": "block",
+      "typeName": "Grid"
+    },
+    {
       "slug": "container-blocks/googlemaps",
       "title": "GoogleMaps",
       "section": "Container Blocks",
@@ -1184,6 +1360,22 @@
       "path": "content/container-blocks/modal.md",
       "kind": "block",
       "typeName": "Modal"
+    },
+    {
+      "slug": "container-blocks/row",
+      "title": "Row",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/row.md",
+      "kind": "block",
+      "typeName": "Row"
+    },
+    {
+      "slug": "container-blocks/stack",
+      "title": "Stack",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/stack.md",
+      "kind": "block",
+      "typeName": "Stack"
     },
     {
       "slug": "container-blocks/pageheadermenu",
@@ -1264,6 +1456,14 @@
       "path": "content/container-blocks/tabs.md",
       "kind": "block",
       "typeName": "Tabs"
+    },
+    {
+      "slug": "container-blocks/template",
+      "title": "Template",
+      "section": "Container Blocks",
+      "path": "content/container-blocks/template.md",
+      "kind": "block",
+      "typeName": "Template"
     },
     {
       "slug": "container-blocks/tooltip",
@@ -1376,6 +1576,14 @@
       "path": "content/connections/googlecloudstorage.md",
       "kind": "connection",
       "typeName": "Google Cloud Storage"
+    },
+    {
+      "slug": "connections/axioshttp",
+      "title": "AxiosHttp",
+      "section": "Connections",
+      "path": "content/connections/axioshttp.md",
+      "kind": "connection",
+      "typeName": "AxiosHttp"
     },
     {
       "slug": "connections/elasticsearch",
@@ -2236,7 +2444,7 @@
       "title": ":for",
       "section": "Controls",
       "path": "content/controls/for.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":for"
     },
     {
@@ -2244,7 +2452,7 @@
       "title": ":if",
       "section": "Controls",
       "path": "content/controls/if.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":if"
     },
     {
@@ -2252,7 +2460,7 @@
       "title": ":log",
       "section": "Controls",
       "path": "content/controls/log.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":log"
     },
     {
@@ -2260,7 +2468,7 @@
       "title": ":parallel",
       "section": "Controls",
       "path": "content/controls/parallel.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":parallel"
     },
     {
@@ -2268,7 +2476,7 @@
       "title": ":parallel_for",
       "section": "Controls",
       "path": "content/controls/parallel_for.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":parallel_for"
     },
     {
@@ -2276,7 +2484,7 @@
       "title": ":reject",
       "section": "Controls",
       "path": "content/controls/reject.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":reject"
     },
     {
@@ -2284,7 +2492,7 @@
       "title": ":return",
       "section": "Controls",
       "path": "content/controls/return.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":return"
     },
     {
@@ -2292,7 +2500,7 @@
       "title": ":set_state",
       "section": "Controls",
       "path": "content/controls/set_state.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":set_state"
     },
     {
@@ -2300,7 +2508,7 @@
       "title": ":switch",
       "section": "Controls",
       "path": "content/controls/switch.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":switch"
     },
     {
@@ -2308,7 +2516,7 @@
       "title": ":throw",
       "section": "Controls",
       "path": "content/controls/throw.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":throw"
     },
     {
@@ -2316,7 +2524,7 @@
       "title": ":try",
       "section": "Controls",
       "path": "content/controls/try.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":try"
     },
     {
@@ -2324,7 +2532,7 @@
       "title": ":while",
       "section": "Controls",
       "path": "content/controls/while.md",
-      "kind": "block",
+      "kind": "control",
       "typeName": ":while"
     },
     {
@@ -2338,6 +2546,12 @@
       "title": "Auth Upgrade (BetterAuth)",
       "section": "Migration",
       "path": "content/migration/auth-upgrade.md"
+    },
+    {
+      "slug": "migration/v3-to-v4",
+      "title": "Version 3 to Version 4",
+      "section": "Migration",
+      "path": "content/migration/v3-to-v4.md"
     },
     {
       "slug": "migration/v5-to-v6",

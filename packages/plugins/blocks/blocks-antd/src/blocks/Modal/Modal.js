@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 import { Modal } from 'antd';
 
@@ -57,7 +57,9 @@ const ModalBlock = ({
     extraProps.footer = null;
   }
   return (
-    <div id={blockId}>
+    // The element slot is applied to the antd Modal below, which renders in a portal,
+    // so only the block's identity is rendered on this placeholder.
+    <div {...blockRootProps({ blockId })}>
       <Modal
         id={`${blockId}_modal`}
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}

@@ -31,6 +31,13 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+basic_label_value:
+  _state: basic_label_value
+basic_string_options:
+  _state: basic_string_options
+```
+
+```yaml
 - id: horizontal_default
   type: CheckboxSelector
   properties:
@@ -52,6 +59,11 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+horizontal_default:
+  _state: horizontal_default
+```
+
+```yaml
 - id: vertical_checkbox
   type: CheckboxSelector
   properties:
@@ -66,6 +78,11 @@ Checkbox group for selecting multiple options.
         value: push
       - label: In-app notifications
         value: in_app
+```
+
+```yaml
+vertical_checkbox:
+  _state: vertical_checkbox
 ```
 
 ```yaml
@@ -106,6 +123,13 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+wrap_enabled:
+  _state: wrap_enabled
+wrap_disabled:
+  _state: wrap_disabled
+```
+
+```yaml
 - id: align_start
   type: CheckboxSelector
   properties:
@@ -142,6 +166,17 @@ Checkbox group for selecting multiple options.
       - Apple
       - Banana
       - Cherry
+```
+
+```yaml
+align_start:
+  _state: align_start
+align_center:
+  _state: align_center
+align_end:
+  _state: align_end
+align_baseline:
+  _state: align_baseline
 ```
 
 ```yaml
@@ -208,6 +243,19 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+color_green:
+  _state: color_green
+color_orange:
+  _state: color_orange
+color_purple:
+  _state: color_purple
+color_red:
+  _state: color_red
+color_hex_custom:
+  _state: color_hex_custom
+```
+
+```yaml
 - id: disabled_all
   type: CheckboxSelector
   properties:
@@ -220,6 +268,11 @@ Checkbox group for selecting multiple options.
         value: b
       - label: Option C
         value: c
+```
+
+```yaml
+disabled_all:
+  _state: disabled_all
 ```
 
 ```yaml
@@ -240,6 +293,11 @@ Checkbox group for selecting multiple options.
         disabled: true
       - label: Pre-order
         value: pre_order
+```
+
+```yaml
+disabled_some:
+  _state: disabled_some
 ```
 
 ```yaml
@@ -285,6 +343,13 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+styled_options:
+  _state: styled_options
+styled_background:
+  _state: styled_background
+```
+
+```yaml
 - id: html_labels
   type: CheckboxSelector
   properties:
@@ -298,6 +363,11 @@ Checkbox group for selecting multiple options.
         value: blue
       - label: Option with <code>code</code>
         value: code
+```
+
+```yaml
+html_labels:
+  _state: html_labels
 ```
 
 ```yaml
@@ -323,6 +393,13 @@ Checkbox group for selecting multiple options.
         value: true
       - label: No
         value: false
+```
+
+```yaml
+number_options:
+  _state: number_options
+boolean_options:
+  _state: boolean_options
 ```
 
 ```yaml
@@ -380,6 +457,19 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+label_default:
+  _state: label_default
+label_with_colon:
+  _state: label_with_colon
+label_no_colon:
+  _state: label_no_colon
+label_with_extra:
+  _state: label_with_extra
+label_right_aligned:
+  _state: label_right_aligned
+```
+
+```yaml
 - id: label_inline
   type: CheckboxSelector
   properties:
@@ -405,6 +495,13 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+label_inline:
+  _state: label_inline
+label_inline_wide:
+  _state: label_inline_wide
+```
+
+```yaml
 - id: no_label
   type: CheckboxSelector
   properties:
@@ -417,6 +514,11 @@ Checkbox group for selecting multiple options.
         value: marketing
       - label: I agree to the Privacy Policy
         value: privacy
+```
+
+```yaml
+no_label:
+  _state: no_label
 ```
 
 ```yaml
@@ -443,6 +545,13 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+label_feedback_on:
+  _state: label_feedback_on
+label_feedback_off:
+  _state: label_feedback_off
+```
+
+```yaml
 - id: vertical_mixed_disabled
   type: CheckboxSelector
   properties:
@@ -461,6 +570,11 @@ Checkbox group for selecting multiple options.
       - label: AI Assistant (Coming Soon)
         value: ai_assistant
         disabled: true
+```
+
+```yaml
+vertical_mixed_disabled:
+  _state: vertical_mixed_disabled
 ```
 
 ```yaml
@@ -489,6 +603,11 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+many_options_wrap:
+  _state: many_options_wrap
+```
+
+```yaml
 - id: custom_style
   type: CheckboxSelector
   properties:
@@ -511,6 +630,13 @@ Checkbox group for selecting multiple options.
       - Alpha
       - Beta
       - Gamma
+```
+
+```yaml
+custom_style:
+  _state: custom_style
+custom_class:
+  _state: custom_class
 ```
 
 ```yaml
@@ -585,6 +711,19 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+theme_large_checkbox:
+  _state: theme_large_checkbox
+theme_custom_colors:
+  _state: theme_custom_colors
+theme_custom_border:
+  _state: theme_custom_border
+theme_combined:
+  _state: theme_combined
+theme_font_size:
+  _state: theme_font_size
+```
+
+```yaml
 - id: combo_green_vertical
   type: CheckboxSelector
   properties:
@@ -613,6 +752,13 @@ Checkbox group for selecting multiple options.
         value: tag_c
       - label: Tag D
         value: tag_d
+```
+
+```yaml
+combo_green_vertical:
+  _state: combo_green_vertical
+combo_purple_horizontal:
+  _state: combo_purple_horizontal
 ```
 
 ```yaml
@@ -671,6 +817,15 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+example_permissions:
+  _state: example_permissions
+example_newsletter:
+  _state: example_newsletter
+example_survey:
+  _state: example_survey
+```
+
+```yaml
 - id: checkbox_per_option_color
   type: CheckboxSelector
   properties:
@@ -688,6 +843,11 @@ Checkbox group for selecting multiple options.
 ```
 
 ```yaml
+checkbox_per_option_color:
+  _state: checkbox_per_option_color
+```
+
+```yaml
 - id: data_checkbox_selector
   type: CheckboxSelector
   properties:
@@ -701,6 +861,11 @@ Checkbox group for selecting multiple options.
         name: Admin
     html: "{{ item.name }}"
     valueKey: id
+```
+
+```yaml
+data_checkbox_selector:
+  _state: data_checkbox_selector
 ```
 
 ```yaml
@@ -777,6 +942,19 @@ Checkbox group for selecting multiple options.
         color: "#7e22ce"
 ```
 
+```yaml
+columns_two:
+  _state: columns_two
+columns_four:
+  _state: columns_four
+columns_responsive:
+  _state: columns_responsive
+columns_gutter:
+  _state: columns_gutter
+columns_per_option_color:
+  _state: columns_per_option_color
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
@@ -788,7 +966,7 @@ Checkbox group for selecting multiple options.
 | `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
-| `options.$.value` | string \| number \| boolean | - | Option value. |
+| `options.$.value` | - | - | Option value. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
@@ -809,6 +987,7 @@ Checkbox group for selecting multiple options.
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `size` | string | `"default"` | Size of the block label. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design checkbox tokens](https://ant.design/components/checkbox#design-token). |
 | `theme.colorPrimary` | string | - | Primary color for checked checkboxes. |
@@ -827,7 +1006,7 @@ Checkbox group for selecting multiple options.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger actions when selection is changed. |
+| `onChange` | `{ value: array }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

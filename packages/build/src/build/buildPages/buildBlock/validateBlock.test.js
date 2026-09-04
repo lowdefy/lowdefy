@@ -60,12 +60,9 @@ test.each([
   'valueOf',
   'constructor_',
   'Constructor',
-])(
-  'validateBlock allows the valid block id "%s"',
-  (id) => {
-    expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
-  }
-);
+])('validateBlock allows the valid block id "%s"', (id) => {
+  expect(() => callValidateBlock({ id, type: 'Box' })).not.toThrow();
+});
 
 test('validateBlock reserved name error carries the configKey', () => {
   try {
@@ -88,5 +85,20 @@ test('validateBlock reserved name error falls back to the parent configKey when 
 test('validateBlock reports the not-a-string error, not the reserved-name error, when id is not a string', () => {
   expect(() => callValidateBlock({ id: 123, type: 'Box' })).toThrow(
     'Block id is not a string at page "home".'
+  );
+});
+
+// The schema no longer advertises `state` and `subscriptions` on the block
+// definition (they live on the page definition), so this build-time rejection
+// is the only thing left standing between a nested `state:` and silence.
+test('validateBlock throws when a nested block declares a state contract', () => {
+  expect(() =>
+    callValidateBlock({ id: 'nested', type: 'Box', state: { 'a.b': { type: 'string' } } })
+  ).toThrow('State contracts are only allowed on the page, not on block "nested" on page "home".');
+});
+
+test('validateBlock throws when a nested block declares subscriptions', () => {
+  expect(() => callValidateBlock({ id: 'nested', type: 'Box', subscriptions: [] })).toThrow(
+    'Subscriptions are only allowed on the page, not on block "nested" on page "home".'
   );
 });

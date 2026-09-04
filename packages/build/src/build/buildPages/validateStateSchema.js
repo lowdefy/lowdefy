@@ -15,17 +15,16 @@
 */
 
 import { compile, nestSchemaPaths } from '@lowdefy/ajv';
+import { isStateWritingCategory } from '@lowdefy/block-utils';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import checkValidateActionSchemas from './checkValidateActionSchemas.js';
 import collectExceptions from '../../utils/collectExceptions.js';
 import findSimilarString from '../../utils/findSimilarString.js';
 import collectStateUsage, { resolveStatePath } from './collectStateUsage.js';
 
 const CHECK_SLUG = 'state-schema';
-
-// Only blocks in these categories write their id into state.
-const STATE_BLOCK_CATEGORIES = new Set(['input', 'list']);
 
 // Every path the contract names, flattened through `properties` so a typo
 // suggestion can point at `data.address.formatted_address` and not just at the
@@ -63,6 +62,10 @@ function validateFragments({ page, context }) {
 }
 
 function validateStateSchema({ page, context }) {
+  // Runs whether or not the page declares a contract: a Validate action that
+  // targets one is wrong precisely when there is none.
+  checkValidateActionSchemas({ page, context });
+
   if (!type.isObject(page.stateSchema)) return;
 
   validateFragments({ page, context });
@@ -75,8 +78,11 @@ function validateStateSchema({ page, context }) {
 
   const usages = [];
   blockIds.forEach(({ id, type: blockType, configKey }) => {
+    // A block type that is not in blockMetas has no category here; its unknown
+    // type is already reported by buildTypes, so it is skipped rather than
+    // guessed at.
     const category = context.blockMetas?.[blockType]?.category;
-    if (!STATE_BLOCK_CATEGORIES.has(category)) return;
+    if (!isStateWritingCategory(category)) return;
     usages.push({ path: id, configKey });
   });
   setStateKeys.forEach(({ key, configKey }) => usages.push({ path: key, configKey }));

@@ -33,13 +33,11 @@ const teamUsers = {
   source: 'github:acme/team-users@main',
   ref: 'main',
   commit: '4f0a1c9b2e7d5a3f8c1b6e0d9a4f7c2b5e8d1a30',
-  fetchedAt: '2026-08-30T09:14:22.183Z',
 };
 const billing = {
   source: 'github:acme/billing@v2.1.0',
   ref: 'v2.1.0',
   commit: '9c3e5b1f7a2d4e8c0b6f3a9d5e1c7b4a2f6d0e83',
-  fetchedAt: '2026-08-14T11:02:05.774Z',
 };
 
 let modulesUpdate;
@@ -67,8 +65,7 @@ function logLines(context) {
 beforeEach(async () => {
   jest.clearAllMocks();
   modulesUpdate = (await import('./modulesUpdate.js')).default;
-  readModuleLockfile = (await import('./readModuleLockfile.js')).default;
-  writeModuleLockfile = (await import('./writeModuleLockfile.js')).default;
+  ({ readModuleLockfile, writeModuleLockfile } = await import('@lowdefy/node-utils'));
   runLowdefyBuild = (await import('../../utils/runLowdefyBuild.js')).default;
   runClientBuild = (await import('../../utils/runClientBuild.js')).default;
   getServer = (await import('../../utils/getServer.js')).default;
@@ -197,6 +194,42 @@ test('modulesUpdate works when no lockfile exists yet', async () => {
 
   expect(runLowdefyBuild).toHaveBeenCalled();
   expect(fs.existsSync(path.join(configDirectory, lockfileName))).toBe(true);
+
+  fs.rmSync(configDirectory, { recursive: true });
+});
+
+test('modulesUpdate refuses a malformed lockfile instead of wiping every pin', async () => {
+  // A hand-edited or merge-conflicted lockfile used to read as {}, so the
+  // command rewrote it empty and reported success, destroying every pin.
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-modules-update-'));
+  const filePath = path.join(configDirectory, lockfileName);
+  const content = ['<<<<<<< HEAD', 'team-users:', '  ref: main', '=======', '>>>>>>> other'].join(
+    '\n'
+  );
+  fs.writeFileSync(filePath, content);
+  const context = makeContext(configDirectory);
+
+  await expect(modulesUpdate({ context, params: [] })).rejects.toThrow(
+    /Could not parse lowdefy-modules.lock.yaml/
+  );
+
+  expect(fs.readFileSync(filePath, 'utf8')).toEqual(content);
+  expect(runLowdefyBuild).not.toHaveBeenCalled();
+
+  fs.rmSync(configDirectory, { recursive: true });
+});
+
+test('modulesUpdate refuses a lockfile that is not a map of entries', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-modules-update-'));
+  const filePath = path.join(configDirectory, lockfileName);
+  fs.writeFileSync(filePath, '- team-users\n');
+  const context = makeContext(configDirectory);
+
+  await expect(modulesUpdate({ context, params: [] })).rejects.toThrow(
+    /should be a map of module entry ids to lock entries/
+  );
+
+  expect(fs.readFileSync(filePath, 'utf8')).toEqual('- team-users\n');
 
   fs.rmSync(configDirectory, { recursive: true });
 });

@@ -82,10 +82,25 @@ test('return at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -102,10 +117,25 @@ test('return at end of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_2',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [
       {
@@ -162,10 +192,25 @@ test('return in the middle of routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_return', response: { message: 'Successful' } }],
   ]);
@@ -217,10 +262,25 @@ test('multiple returns in routine', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_1',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_return', response: { message: 'First' } }],
   ]);
@@ -276,11 +336,26 @@ test('truthy guard statement return', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_guard_statement',
         result: 'guard statement',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by guard statement' } }],
   ]);
@@ -334,11 +409,26 @@ test('falsy guard statement return', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_end',
         result: 'end',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_return', response: { message: 'made it to the end' } }],
   ]);
@@ -408,11 +498,26 @@ test('deep nested return', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_first_if',
         result: 'first if',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
     [{ event: 'debug_control_if_run_then' }],
@@ -431,11 +536,26 @@ test('deep nested return', async () => {
       },
     ],
     [
+      expect.objectContaining({
+        event: 'request_completed',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
+    ],
+    [
       {
         event: 'debug_end_request',
         id: 'request:test_endpoint:test_request_second_if',
         result: 'second if',
       },
+    ],
+    [
+      expect.objectContaining({
+        event: 'step_completed',
+        status: 'continue',
+        success: true,
+        duration_ms: expect.any(Number),
+      }),
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
   ]);

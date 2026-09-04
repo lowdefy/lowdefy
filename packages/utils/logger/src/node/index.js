@@ -15,5 +15,6 @@
 */
 
 import createNodeLogger from './createNodeLogger.js';
+import createOtlpSink from './createOtlpSink.js';
 
-export { createNodeLogger };
+export { createNodeLogger, createOtlpSink };

@@ -272,7 +272,6 @@ test('operator returns value with ~k present', () => {
             },
             "parse": [Function],
           },
-          "props": undefined,
           "requests": Array [
             Object {
               "requests": true,
@@ -378,4 +377,29 @@ test('operator errors preserve existing configKey', () => {
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].configKey).toBe('existing-key'); // Should preserve existing key
+});
+
+test('parse does not touch perf counters when the context has none', () => {
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ input: { a: { _test: true } }, location });
+  expect(res.output).toEqual({ a: 'test' });
+});
+
+test('parse counts each call by kind, and the nodes it copies, when perf counters are on', () => {
+  const perf = { countParse: jest.fn(), countCopy: jest.fn() };
+  const perfContext = { ...context, _internal: { ...context._internal, perf } };
+  const parser = new WebParser({ context: perfContext, operators });
+
+  parser.parse({ input: { a: { _test: true } }, kind: 'properties', location });
+  parser.parse({ input: undefined, kind: 'skeleton', location });
+  parser.parse({ input: { b: 1 }, location });
+
+  expect(perf.countParse.mock.calls).toEqual([['properties'], ['skeleton'], ['other']]);
+  // An undefined input returns before the copy, so it is a counted call that
+  // did no work.
+  expect(perf.countCopy).toHaveBeenCalledTimes(2);
+  const [call] = perf.countCopy.mock.calls[0];
+  expect(call.location).toBe(location);
+  expect(call.nodes).toBeGreaterThan(0);
+  expect(typeof call.ms).toBe('number');
 });

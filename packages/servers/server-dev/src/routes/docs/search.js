@@ -19,7 +19,10 @@ import searchDocs from '../../../lib/docs/searchDocs.js';
 function docsSearchHandler(c) {
   const query = c.req.query('q');
   if (!query || query.trim() === '') {
-    return c.json({ error: 'Missing search query. Use GET /lowdefy-docs/search?q=your+keywords.' }, 400);
+    return c.json(
+      { error: 'Missing search query. Use GET /lowdefy-docs/search?q=your+keywords.' },
+      400
+    );
   }
   return c.json(searchDocs({ query }));
 }

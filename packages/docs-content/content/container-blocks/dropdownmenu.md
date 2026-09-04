@@ -388,6 +388,55 @@ Right-click anywhere in this card to open the context menu.
 ```
 
 ```yaml
+- id: dropdown_menu_shortcuts
+  type: DropdownMenu
+  layout:
+    flex: 0 0 auto
+  properties:
+    trigger: click
+    links:
+      - id: dm_sc_new
+        type: MenuLink
+        properties:
+          title: New File
+          icon: AiOutlineFileAdd
+          shortcut: mod+shift+N
+      - id: dm_sc_save
+        type: MenuLink
+        properties:
+          title: Save
+          icon: AiOutlineSave
+          shortcut: mod+shift+S
+      - id: dm_sc_div
+        type: MenuDivider
+      - id: dm_sc_close
+        type: MenuLink
+        properties:
+          title: Close
+          icon: AiOutlineClose
+          shortcut: mod+shift+W
+  events:
+    onClick:
+      - id: dropdown_menu_shortcuts_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Shortcut action: "
+              - _event: key
+          duration: 2
+  blocks:
+    - id: dropdown_menu_shortcuts_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: File Menu
+        color: primary
+        variant: solid
+```
+
+```yaml
 - id: dropdown_menu_event
   type: DropdownMenu
   layout:
@@ -420,6 +469,51 @@ Right-click anywhere in this card to open the context menu.
         color: primary
         variant: solid
         icon: AiOutlineBell
+```
+
+```yaml
+- id: dropdown_menu_onclick
+  type: DropdownMenu
+  layout:
+    flex: 0 0 auto
+  properties:
+    trigger: click
+    links:
+      - id: dm_oc_edit
+        type: MenuLink
+        properties:
+          title: Edit
+          icon: AiOutlineEdit
+      - id: dm_oc_copy
+        type: MenuLink
+        properties:
+          title: Copy
+          icon: AiOutlineCopy
+      - id: dm_oc_delete
+        type: MenuLink
+        properties:
+          title: Delete
+          icon: AiOutlineDelete
+          danger: true
+  events:
+    onClick:
+      - id: dropdown_menu_onclick_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Clicked: "
+              - _event: key
+          duration: 2
+  blocks:
+    - id: dropdown_menu_onclick_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Actions
+        color: default
+        variant: outlined
 ```
 
 ```yaml
@@ -547,14 +641,28 @@ Jane Doe
             flex: 0 0 auto
           properties:
             content: JD
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: dropdown_menu_user_name
           type: Paragraph
           layout:
             flex: 0 0 auto
           properties:
             content: Jane Doe
+```
+
+```yaml
+- id: dropdown_menu_op
+  type: DropdownMenu
+  properties:
+    trigger: click
+    links:
+      _menu: default
+  blocks:
+    - id: dropdown_menu_op_trigger
+      type: Button
+      properties:
+        title: Open Menu
+        icon: AiOutlineMenu
 ```
 
 ```yaml
@@ -624,9 +732,9 @@ Jane Doe
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | `{ key, keyPath, pageId, url }` | Trigger action when a menu item is clicked. |
-| `onSelect` | `{ key, selectedKeys, pageId, url }` | Trigger action when a menu item is selected. |
-| `onOpenChange` | `{ open }` | Trigger action when dropdown opens or closes. |
+| `onClick` | `{ key: string, keyPath: array, pageId: string, url: string }` | Trigger action when a menu item is clicked. |
+| `onSelect` | `{ key: string, selectedKeys: array, pageId: string, url: string }` | Trigger action when a menu item is selected. |
+| `onOpenChange` | `{ open: boolean }` | Trigger action when dropdown opens or closes. |
 
 | Key | Target |
 | --- | --- |

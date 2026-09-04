@@ -402,7 +402,72 @@ The width property accepts a number (pixels) or string value. Here the sider is 
               labels or nested navigation.
 ```
 
+Sider state:
+
 The Sider fires onOpen and onClose events when it expands or collapses. Use these events with SetState or other actions to react to sider state changes. Toggle the sider to see the state update above.
+
+```yaml
+- id: events_layout
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: events_sider
+      type: Sider
+      properties:
+        theme: light
+        width: 200
+        collapsible: true
+        initialCollapsed: false
+      events:
+        onOpen:
+          - id: events_on_open_action
+            type: SetState
+            params:
+              siderState: open
+        onClose:
+          - id: events_on_close_action
+            type: SetState
+            params:
+              siderState: closed
+      blocks:
+        - id: events_menu
+          type: Menu
+          properties:
+            mode: inline
+            theme: light
+            links:
+              - id: events_nav_home
+                type: MenuLink
+                properties:
+                  title: Home
+                  icon: AiOutlineHome
+              - id: events_nav_alerts
+                type: MenuLink
+                properties:
+                  title: Alerts
+                  icon: AiOutlineBell
+    - id: events_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: events_state_label
+          type: Paragraph
+          properties:
+            content:
+              _nunjucks:
+                template: "Sider state: {{ siderState }}"
+                on:
+                  _state: true
+        - id: events_content_text
+          type: Paragraph
+          properties:
+            content: The Sider fires onOpen and onClose events when it expands or collapses.
+              Use these events with SetState or other actions to react to sider
+              state changes. Toggle the sider to see the state update above.
+```
 
 ```yaml
 - id: events_layout
@@ -484,9 +549,6 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
         width: 220
         collapsible: true
         initialCollapsed: false
-        designTokens:
-          colorPrimary: "#722ed1"
-          colorText: "#531dab"
       blocks:
         - id: token_menu
           type: Menu
@@ -534,9 +596,6 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
         width: 220
         collapsible: true
         initialCollapsed: false
-        designTokens:
-          colorPrimary: "#52c41a"
-          colorBgContainer: "#1a1a2e"
       blocks:
         - id: token_dark_menu
           type: Menu
@@ -1046,7 +1105,7 @@ Use the sidebar on the left to browse through different sections. On smaller scr
 | `initialCollapsed` | boolean | `true` | Set the initial collapsed state |
 | `reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right |
 | `width` | string \| number | - | width of the sidebar |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | string \| object | - | The Sider color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

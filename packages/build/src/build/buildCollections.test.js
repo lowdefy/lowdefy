@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { compile } from '@lowdefy/ajv';
 
 import buildCollections from './buildCollections.js';
 import buildConnections from './buildConnections.js';
@@ -23,6 +24,7 @@ import testContext from '../test-utils/testContext.js';
 function createContext() {
   const context = testContext();
   context.errors = [];
+  context.warnings = [];
   context.typesMap = { connectionMetas: { MongoDBCollection: { tenant: true } } };
   return context;
 }
@@ -66,7 +68,7 @@ test('buildCollections normalises the three fields forms to JSON Schema fragment
           created_at: 'date',
           evidence_ids: ['string'],
           result: { enum: ['pass', 'fail'] },
-          tags: { type: 'array', items: { type: 'string', enum: ['a'] }, required: true },
+          tags: { type: 'array', items: { type: 'string', enum: ['a'] } },
         },
       },
     },
@@ -74,10 +76,10 @@ test('buildCollections normalises the three fields forms to JSON Schema fragment
   expect(context.errors).toEqual([]);
   expect(context.collections.answers.fields).toEqual({
     test_id: { type: 'string' },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
     evidence_ids: { type: 'array', items: { type: 'string' } },
     result: { enum: ['pass', 'fail'] },
-    tags: { type: 'array', items: { type: 'string', enum: ['a'] }, required: true },
+    tags: { type: 'array', items: { type: 'string', enum: ['a'] } },
   });
 });
 
@@ -87,7 +89,7 @@ test('buildCollections errors on an unknown type name listing the accepted names
   });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0].message).toBe(
-    'Collection "answers" field "owner" has unknown type "objectId". Accepted types: string, number, integer, boolean, date, object, array.'
+    'Collection "answers" field "owner" is not a valid declaration: Unknown type "objectId". Accepted types: string, number, integer, boolean, date, object, array, null.'
   );
   expect(context.errors[0]).toMatchObject({ configKey: 'k_answers', checkSlug: 'collections' });
 });
@@ -98,7 +100,7 @@ test('buildCollections errors on an unknown collection key listing the valid one
   });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0].message).toBe(
-    'Collection "answers" has unknown key(s) "schema". Valid keys: tenant, fields, relations, indexes.'
+    'Collection "answers" has unknown key(s) "schema". Valid keys: tenant, fields, relations, indexes, required.'
   );
   expect(context.errors[0].checkSlug).toBe('collections');
 });
@@ -283,4 +285,122 @@ test('buildCollections keeps collecting after one bad collection', () => {
   expect(context.errors).toHaveLength(1);
   expect(context.collections.good.tenant).toBe('shared');
   expect(jest.isMockFunction(context.writeBuildArtifact)).toBe(false);
+});
+
+test('buildCollections accepts the collection-level required array', () => {
+  const context = run({
+    collections: {
+      answers: {
+        fields: { test_id: 'string', result: { enum: ['pass', 'fail'] } },
+        required: ['test_id', 'result'],
+      },
+    },
+  });
+  expect(context.errors).toEqual([]);
+  expect(context.collections.answers.required).toEqual(['test_id', 'result']);
+  expect(context.collections.answers.fields.test_id).toEqual({ type: 'string' });
+});
+
+test('buildCollections folds a per-field required: true into the array and warns', () => {
+  const context = createContext();
+  const built = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [],
+    collections: {
+      answers: { '~k': 'k_answers', fields: { test_id: { type: 'string', required: true } } },
+    },
+  };
+  buildCollections({ components: built, context });
+  expect(context.errors).toEqual([]);
+  expect(context.collections.answers.required).toEqual(['test_id']);
+  expect(context.collections.answers.fields.test_id).toEqual({ type: 'string' });
+  expect(context.warnings).toHaveLength(1);
+  expect(context.warnings[0].message).toBe(
+    'Collection "answers" field "test_id" declares "required: true". Declare it as the collection-level array instead: required: [test_id].'
+  );
+});
+
+test('buildCollections errors when the collection-level required is not an array of names', () => {
+  const context = run({
+    collections: { answers: { '~k': 'k_answers', fields: { a: 'string' }, required: 'a' } },
+  });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toBe(
+    'Collection "answers" required must be an array of field names. Received "a".'
+  );
+});
+
+test('buildCollections accepts a nested properties declaration', () => {
+  const context = run({
+    collections: {
+      answers: {
+        fields: {
+          address: {
+            type: 'object',
+            properties: { city: 'string', postcode: { type: 'string', required: true } },
+          },
+        },
+      },
+    },
+  });
+  expect(context.errors).toEqual([]);
+  expect(context.collections.answers.fields.address).toEqual({
+    type: 'object',
+    properties: { city: { type: 'string' }, postcode: { type: 'string' } },
+    required: ['postcode'],
+  });
+});
+
+test('buildCollections writes fields every consumer can compile with ajv untouched', () => {
+  const context = run({
+    collections: {
+      answers: {
+        fields: {
+          created_at: 'date',
+          address: { type: 'object', properties: { city: 'string' } },
+          tags: ['string'],
+        },
+        required: ['created_at'],
+      },
+    },
+  });
+  expect(context.errors).toEqual([]);
+  const { fields, required } = context.collections.answers;
+  const validator = compile({ schema: { type: 'object', properties: fields, required } });
+  expect(
+    validator({
+      created_at: new Date(0).toISOString(),
+      address: { city: 'Cape Town' },
+      tags: ['a'],
+    }).valid
+  ).toBe(true);
+  expect(validator({ address: { city: 'Cape Town' } }).valid).toBe(false);
+});
+
+test('buildCollections collects pii field names onto the collection and keeps pii out of the schema fragment', () => {
+  const context = createContext();
+  const components = {
+    collections: {
+      users: {
+        fields: {
+          email: { type: 'string', pii: true },
+          name: { type: 'string', pii: false },
+          age: 'number',
+        },
+      },
+    },
+  };
+  buildCollections({ components, context });
+  expect(context.collections.users.pii).toEqual(['email']);
+  expect(context.collections.users.fields.email).toEqual({ type: 'string' });
+});
+
+test('buildCollections throws when pii is not a boolean', () => {
+  const context = createContext();
+  const components = {
+    collections: { users: { fields: { email: { type: 'string', pii: 'yes' } } } },
+  };
+  buildCollections({ components, context });
+  expect(context.errors).toHaveLength(1);
+  expect(context.errors[0].message).toContain('pii must be a boolean');
 });

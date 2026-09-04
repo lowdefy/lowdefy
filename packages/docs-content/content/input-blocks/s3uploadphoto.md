@@ -22,6 +22,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+basic_default:
+  _state: basic_default
+basic_custom_title:
+  _state: basic_custom_title
+basic_html_title:
+  _state: basic_html_title
+```
+
+```yaml
 - id: limit_single
   type: S3UploadPhoto
   properties:
@@ -41,6 +50,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
     singleFile: true
     showUploadList: false
     title: Single (No List)
+```
+
+```yaml
+limit_single:
+  _state: limit_single
+limit_max_three:
+  _state: limit_max_three
+limit_single_hidden:
+  _state: limit_single_hidden
 ```
 
 ```yaml
@@ -66,6 +84,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+list_visible:
+  _state: list_visible
+list_hidden:
+  _state: list_hidden
+list_multi_hidden:
+  _state: list_multi_hidden
+```
+
+```yaml
 - id: disabled_default
   type: S3UploadPhoto
   properties:
@@ -84,6 +111,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
     disabled: true
     showUploadList: false
     title: Disabled (No List)
+```
+
+```yaml
+disabled_default:
+  _state: disabled_default
+disabled_custom_title:
+  _state: disabled_custom_title
+disabled_hidden_list:
+  _state: disabled_hidden_list
 ```
 
 ```yaml
@@ -113,6 +149,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+style_rounded:
+  _state: style_rounded
+style_large:
+  _state: style_large
+style_colored:
+  _state: style_colored
+```
+
+```yaml
 - id: style_element_bg
   type: S3UploadPhoto
   style:
@@ -138,6 +183,15 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     title: Tailwind Shadow
+```
+
+```yaml
+style_element_bg:
+  _state: style_element_bg
+style_element_border:
+  _state: style_element_border
+style_tailwind:
+  _state: style_tailwind
 ```
 
 ```yaml
@@ -186,6 +240,11 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
 ```
 
 ```yaml
+profile_card:
+  _state: profile_card
+```
+
+```yaml
 - id: product_card
   type: Card
   properties:
@@ -227,10 +286,9 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
       type: NumberInput
       properties:
         title: Price
-        placeholder: 0
+        placeholder: "0.00"
         min: 0
         precision: 2
-        prefix: $
     - id: product_submit
       type: Button
       properties:
@@ -248,6 +306,11 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
             params:
               content: Product listed successfully!
               status: success
+```
+
+```yaml
+product_card:
+  _state: product_card
 ```
 
 | Property | Type | Default | Description |

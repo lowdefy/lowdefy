@@ -17,7 +17,6 @@
 export default {
   type: 'object',
   params: {
-    type: 'boolean',
-    description: 'Boolean value to negate.',
+    description: 'Value to negate. Any value is negated by its truthiness.',
   },
 };

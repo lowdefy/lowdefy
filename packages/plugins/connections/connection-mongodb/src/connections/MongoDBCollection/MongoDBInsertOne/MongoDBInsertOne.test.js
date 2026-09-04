@@ -281,7 +281,7 @@ const collectionSchema = {
   fields: {
     test_id: { type: 'string' },
     result: { enum: ['pass', 'fail', 'partial', 'na'] },
-    created_at: { instanceof: 'Date' },
+    created_at: { type: 'string', format: 'date-time' },
   },
 };
 
@@ -341,7 +341,8 @@ test('insertOne validates after the tenant stamp so a required tenant field pass
     tenant: { field: 'organization_id', value: 'org_a' },
     collectionSchema: {
       name: 'answers',
-      fields: { organization_id: { type: 'string', required: true } },
+      fields: { organization_id: { type: 'string' } },
+      required: ['organization_id'],
     },
   });
   expect(res).toEqual({ acknowledged: true, insertedId: 'tn1' });

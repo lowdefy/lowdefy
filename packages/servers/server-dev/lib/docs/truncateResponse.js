@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // Cap the serialized response so a large request or endpoint result can't blow
 // out an agent's context window.
 const MAX_RESPONSE_CHARS = 100_000;
@@ -23,6 +25,12 @@ const MAX_RESPONSE_CHARS = 100_000;
 // truncated flag and a note carrying the original size, so an agent knows it
 // is reading a partial value rather than the real shape.
 function truncateResponse(result) {
+  // A routine that ends without :return, and a resolver that returns nothing,
+  // both produce an undefined response — which JSON.stringify answers with the
+  // value undefined, not a string. Nothing to measure, nothing to truncate.
+  if (type.isUndefined(result.response)) {
+    return result;
+  }
   const json = JSON.stringify(result.response);
   if (json.length <= MAX_RESPONSE_CHARS) {
     return result;

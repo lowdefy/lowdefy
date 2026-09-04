@@ -19,7 +19,7 @@ import { Button, ConfigProvider, Dropdown, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { get, type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 import useItemShortcuts from '../useItemShortcuts.js';
 
 const ANTD_COLOR_PRESETS = new Set([
@@ -153,7 +153,7 @@ function DropdownButtonBlock({
   function renderContent() {
     if (properties.split) {
       return (
-        <Space.Compact id={blockId} className={classNames.element} style={styles.element}>
+        <Space.Compact {...blockRootProps({ blockId, classNames, styles })}>
           <Button
             color={resolvedColor}
             variant={variant}
@@ -189,12 +189,7 @@ function DropdownButtonBlock({
     }
 
     return (
-      <Dropdown
-        id={blockId}
-        className={classNames.element}
-        style={styles.element}
-        {...dropdownProps}
-      >
+      <Dropdown {...blockRootProps({ blockId, classNames, styles })} {...dropdownProps}>
         <Button
           color={resolvedColor}
           variant={variant}

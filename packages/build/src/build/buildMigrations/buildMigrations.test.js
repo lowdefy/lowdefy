@@ -186,13 +186,15 @@ test('buildMigrations stamps step ids and carries id, checksum and routine', asy
 });
 
 test('buildMigrations collects a ConfigError when a routine is missing', async () => {
+  // Caught by collectMigrationFiles' schema, before buildMigrations' own
+  // per-step checks run.
   writeMigration('2026-08-30-01-empty.yaml', 'name: no routine\n');
   const components = {};
   const context = testContext();
   await buildMigrations({ components, context });
   expect(context.migrations).toEqual([]);
   expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toMatch('has no "routine"');
+  expect(context.errors[0].message).toMatch('requires a "routine"');
 });
 
 test('buildMigrations collects a ConfigError when a routine is empty', async () => {

@@ -77,3 +77,27 @@ test('release leaves a lock that was taken over by a newer manager', () => {
   lock.release();
   expect(fs.existsSync(lock.lockPath)).toBe(true);
 });
+
+test('update adds the public port to the lock file without losing pid or startedAt', () => {
+  // `lowdefy test` reads this file to reuse a dev server already serving the
+  // app, so the port has to be in it once the manager settles on one.
+  const lock = acquireManagerLock({ directory });
+  const before = JSON.parse(fs.readFileSync(lock.lockPath, 'utf8'));
+  expect(before.port).toBeUndefined();
+
+  const updated = lock.update({ port: 3111 });
+
+  expect(updated).toEqual({ pid: process.pid, startedAt: before.startedAt, port: 3111 });
+  expect(JSON.parse(fs.readFileSync(lock.lockPath, 'utf8'))).toEqual({
+    pid: process.pid,
+    startedAt: before.startedAt,
+    port: 3111,
+  });
+});
+
+test('release removes a lock that carries a port', () => {
+  const lock = acquireManagerLock({ directory });
+  lock.update({ port: 3111 });
+  lock.release();
+  expect(fs.existsSync(lock.lockPath)).toBe(false);
+});

@@ -8,6 +8,12 @@
 
 lowdefy: local
 
+# ListPage is experimental: the block tree it expands to may change within a
+# minor release until "lowdefy expand" and the archetype slots have settled.
+config:
+  experimental:
+    archetypes: true
+
 collections:
   controls:
     tenant: shared
@@ -28,7 +34,7 @@ connections:
 pages:
   - id: controls
     type: ListPage
-    properties:
+    props:
       collection: controls
       columns: [title, framework_id, status]
       filters: [framework_id, status]
@@ -39,6 +45,19 @@ pages:
           type: Button
           properties:
             title: New control
+    slots:
+      rowActions:
+        blocks:
+          - id: rows.$.edit
+            type: Button
+            properties:
+              title: Edit
+      footer:
+        blocks:
+          - id: list_footer
+            type: Paragraph
+            properties:
+              content: Showing at most 50 controls.
   - id: control
     type: Box
     blocks:

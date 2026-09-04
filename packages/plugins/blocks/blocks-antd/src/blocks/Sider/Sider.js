@@ -17,7 +17,7 @@
 import React, { useState, useEffect } from 'react';
 import { get } from '@lowdefy/helpers';
 import { Layout } from 'antd';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import { getDarkMode } from '../headerActions.js';
 
@@ -59,19 +59,19 @@ const SiderBlock = ({
   });
   return (
     <Sider
-      id={blockId}
-      className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: 'hide-on-print',
+        style: { overflow: 'auto', background: 'var(--ant-color-bg-container)' },
+      })}
       breakpoint={properties.breakpoint}
       collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
       theme={properties.theme ?? (getDarkMode() ? 'dark' : 'light')}
-      style={{
-        overflow: 'auto',
-        background: 'var(--ant-color-bg-container)',
-        ...styles.element,
-      }}
       width={properties.width}
       onBreakpoint={() => methods.triggerEvent({ name: 'onBreakpoint' })}
     >

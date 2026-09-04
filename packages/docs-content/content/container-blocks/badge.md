@@ -938,8 +938,7 @@ JD
         flex: 0 0 auto
       properties:
         content: JD
-        color: "#fff"
-        backgroundColor: "#1677ff"
+        color: "#1677ff"
 ```
 
 #ORD-1042

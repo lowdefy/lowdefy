@@ -78,7 +78,11 @@ class Slots {
 
   recEval = (visibleParent) => {
     let repeat = { value: false };
-    this.loopBlocks((block) => block.evaluate(visibleParent, repeat));
+    const { perf } = this.context._internal;
+    this.loopBlocks((block) => {
+      if (perf) perf.countBlockVisit();
+      block.evaluate(visibleParent, repeat);
+    });
     return repeat.value;
   };
 
@@ -111,11 +115,24 @@ class Slots {
   };
 
   updateStateFromRoot = () => {
+    const { perf } = this.context._internal;
+    if (!perf) {
+      this.evalUntilStable();
+      return;
+    }
+    // Timed around the whole cascade, visibility re-runs included: what a
+    // measurement needs is the cost of one state change, not of one pass.
+    const start = performance.now();
+    this.evalUntilStable();
+    perf.countUpdate(performance.now() - start);
+  };
+
+  evalUntilStable = () => {
     const repeat = this.recEval(true);
     this.updateState();
     if (repeat && this.recCount < 20) {
       this.recCount += 1;
-      this.updateStateFromRoot();
+      this.evalUntilStable();
     }
     this.recCount = 0;
   };

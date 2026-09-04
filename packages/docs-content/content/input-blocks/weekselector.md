@@ -17,6 +17,13 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_basic_default:
+  _state: ws_basic_default
+ws_basic_with_extra:
+  _state: ws_basic_with_extra
+```
+
+```yaml
 - id: ws_size_small
   type: WeekSelector
   properties:
@@ -31,6 +38,15 @@ Week picker for selecting a week of the year.
   properties:
     title: Large
     size: large
+```
+
+```yaml
+ws_size_small:
+  _state: ws_size_small
+ws_size_default:
+  _state: ws_size_default
+ws_size_large:
+  _state: ws_size_large
 ```
 
 ```yaml
@@ -49,6 +65,15 @@ Week picker for selecting a week of the year.
   properties:
     title: Borderless
     variant: borderless
+```
+
+```yaml
+ws_variant_outlined:
+  _state: ws_variant_outlined
+ws_variant_filled:
+  _state: ws_variant_filled
+ws_variant_borderless:
+  _state: ws_variant_borderless
 ```
 
 ```yaml
@@ -83,6 +108,17 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_fmt_default:
+  _state: ws_fmt_default
+ws_fmt_reversed:
+  _state: ws_fmt_reversed
+ws_fmt_week_prefix:
+  _state: ws_fmt_week_prefix
+ws_fmt_w_prefix:
+  _state: ws_fmt_w_prefix
+```
+
+```yaml
 - id: ws_ph_default
   type: WeekSelector
   properties:
@@ -106,6 +142,15 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_ph_default:
+  _state: ws_ph_default
+ws_ph_custom:
+  _state: ws_ph_custom
+ws_ph_descriptive:
+  _state: ws_ph_descriptive
+```
+
+```yaml
 - id: ws_clear_enabled
   type: WeekSelector
   properties:
@@ -123,6 +168,13 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_clear_enabled:
+  _state: ws_clear_enabled
+ws_clear_disabled:
+  _state: ws_clear_disabled
+```
+
+```yaml
 - id: ws_today_enabled
   type: WeekSelector
   properties:
@@ -137,6 +189,13 @@ Week picker for selecting a week of the year.
     showToday: false
     label:
       disabled: true
+```
+
+```yaml
+ws_today_enabled:
+  _state: ws_today_enabled
+ws_today_disabled:
+  _state: ws_today_disabled
 ```
 
 ```yaml
@@ -172,6 +231,17 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_icon_default:
+  _state: ws_icon_default
+ws_icon_clock:
+  _state: ws_icon_clock
+ws_icon_schedule:
+  _state: ws_icon_schedule
+ws_icon_custom_color:
+  _state: ws_icon_custom_color
+```
+
+```yaml
 - id: ws_dis_default
   type: WeekSelector
   properties:
@@ -187,6 +257,13 @@ Week picker for selecting a week of the year.
     variant: filled
     label:
       disabled: true
+```
+
+```yaml
+ws_dis_default:
+  _state: ws_dis_default
+ws_dis_filled:
+  _state: ws_dis_filled
 ```
 
 ```yaml
@@ -233,6 +310,17 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_dd_min:
+  _state: ws_dd_min
+ws_dd_range:
+  _state: ws_dd_range
+ws_dd_specific:
+  _state: ws_dd_specific
+ws_dd_date_ranges:
+  _state: ws_dd_date_ranges
+```
+
+```yaml
 - id: ws_presets_relative
   type: WeekSelector
   properties:
@@ -276,6 +364,56 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+- id: ws_presets_relative
+  type: WeekSelector
+  properties:
+    title: Relative Presets
+    label:
+      extra: Shortcuts are listed to the left of the calendar.
+    presets:
+      - label: This week
+        value:
+          _dayjs:
+            - now
+            - startOf: week
+            - format: YYYY-MM-DD
+      - label: Last week
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 1
+                - week
+            - format: YYYY-MM-DD
+      - label: 4 weeks ago
+        value:
+          _dayjs:
+            - now
+            - subtract:
+                - 4
+                - weeks
+            - format: YYYY-MM-DD
+- id: ws_presets_fixed
+  type: WeekSelector
+  properties:
+    title: Fixed Presets
+    label:
+      disabled: true
+    presets:
+      - label: First week of 2026
+        value: 2026-01-01
+      - label: Week of 1 July 2026
+        value: 2026-07-01
+```
+
+```yaml
+ws_presets_relative:
+  _state: ws_presets_relative
+ws_presets_fixed:
+  _state: ws_presets_fixed
+```
+
+```yaml
 - id: ws_lbl_default
   type: WeekSelector
   properties:
@@ -303,6 +441,17 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_lbl_default:
+  _state: ws_lbl_default
+ws_lbl_colon_off:
+  _state: ws_lbl_colon_off
+ws_lbl_inline:
+  _state: ws_lbl_inline
+ws_lbl_extra:
+  _state: ws_lbl_extra
+```
+
+```yaml
 - id: ws_lbl_hidden
   type: WeekSelector
   properties:
@@ -321,6 +470,13 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_lbl_hidden:
+  _state: ws_lbl_hidden
+ws_lbl_hidden_filled:
+  _state: ws_lbl_hidden_filled
+```
+
+```yaml
 - id: ws_af_on
   type: WeekSelector
   properties:
@@ -328,6 +484,11 @@ Week picker for selecting a week of the year.
     autoFocus: true
     label:
       disabled: true
+```
+
+```yaml
+ws_af_on:
+  _state: ws_af_on
 ```
 
 ```yaml
@@ -350,6 +511,13 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_style_element_bg:
+  _state: ws_style_element_bg
+ws_style_label:
+  _state: ws_style_label
+```
+
+```yaml
 - id: ws_class_rounded
   type: WeekSelector
   class: rounded-lg shadow-sm
@@ -364,6 +532,13 @@ Week picker for selecting a week of the year.
     title: Blue Border
     label:
       disabled: true
+```
+
+```yaml
+ws_class_rounded:
+  _state: ws_class_rounded
+ws_class_border:
+  _state: ws_class_border
 ```
 
 ```yaml
@@ -414,6 +589,19 @@ Week picker for selecting a week of the year.
 ```
 
 ```yaml
+ws_theme_primary_color:
+  _state: ws_theme_primary_color
+ws_theme_large_radius:
+  _state: ws_theme_large_radius
+ws_theme_tall:
+  _state: ws_theme_tall
+ws_theme_brand_color:
+  _state: ws_theme_brand_color
+ws_theme_popup_highlight:
+  _state: ws_theme_popup_highlight
+```
+
+```yaml
 - id: ws_combined_full
   type: WeekSelector
   properties:
@@ -453,6 +641,15 @@ Week picker for selecting a week of the year.
       max: 2026-12-31
     label:
       extra: Only weeks in fiscal year 2026 are available.
+```
+
+```yaml
+ws_combined_full:
+  _state: ws_combined_full
+ws_combined_minimal:
+  _state: ws_combined_minimal
+ws_combined_restricted:
+  _state: ws_combined_restricted
 ```
 
 ```yaml
@@ -505,6 +702,87 @@ Week picker for selecting a week of the year.
             type: DisplayMessage
             params:
               content: Sprint has been started successfully!
+              status: success
+```
+
+```yaml
+applied_sprint_card:
+  _state: applied_sprint_card
+```
+
+```yaml
+- id: applied_ts_card
+  type: Card
+  properties:
+    title: Log Weekly Hours
+  blocks:
+    - id: applied_ts_week
+      type: WeekSelector
+      properties:
+        title: Work Week
+        placeholder: Select week to log
+        format: YYYY [W]ww
+        disabledDates:
+          min: 2026-01-01
+        label:
+          extra: Select the week you want to submit hours for.
+      events:
+        onChange:
+          - id: week_selected
+            type: SetState
+            params:
+              selectedWeek:
+                _state: applied_ts_week
+    - id: applied_ts_project
+      type: Selector
+      properties:
+        title: Project
+        placeholder: Select project...
+        options:
+          - label: Website Redesign
+            value: web-redesign
+          - label: API Migration
+            value: api-migration
+          - label: Mobile App v2
+            value: mobile-v2
+          - label: Internal Tools
+            value: internal
+    - id: applied_ts_hours
+      type: NumberInput
+      properties:
+        title: Hours Worked
+        placeholder: Enter hours
+        min: 0
+        max: 60
+        precision: 1
+        label:
+          extra: Total hours for the selected week.
+    - id: applied_ts_notes
+      type: TextArea
+      properties:
+        title: Notes
+        placeholder: Describe what you worked on...
+        autoSize:
+          minRows: 2
+          maxRows: 4
+    - id: applied_ts_submit
+      type: Button
+      properties:
+        title: Submit Timesheet
+        icon: AiOutlineCheck
+        type: primary
+        block: true
+      events:
+        onClick:
+          - id: submit_ts
+            type: Validate
+            params:
+              - applied_ts_week
+              - applied_ts_hours
+          - id: ts_success
+            type: DisplayMessage
+            params:
+              content: Timesheet submitted successfully.
               status: success
 ```
 
@@ -584,6 +862,11 @@ Week picker for selecting a week of the year.
               status: success
 ```
 
+```yaml
+applied_ts_card:
+  _state: applied_ts_card
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `true` | Allow the user to clear their input. |
@@ -660,7 +943,7 @@ Week picker for selecting a week of the year.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | `{ value }` | Trigger action when week is changed. |
+| `onChange` | `{ value: any }` | Trigger action when week is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |

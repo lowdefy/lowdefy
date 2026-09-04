@@ -66,9 +66,19 @@ _ref:
             - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
+            ### Per-page type imports
+
+            A production build writes a type-import module per page, listing exactly the blocks, actions and client operators that page uses. The client loads a page's module as it navigates to the page, so the bundler code-splits the block, action and operator packages per page instead of shipping every type an app uses in one chunk. Types used by many pages, and the small set every page needs (the basic and loader blocks, `Message`, `SetDarkMode`, `_not` and `_type`), are hoisted into shared chunks and loaded once.
+
+            The app-wide barrels are kept as the fallback. A page that carries a type its module does not list — a [Dynamic block](/dynamic-page-content) whose content is resolved when the page is fetched — loads them once, on demand. The development server always uses the barrels, because it builds pages just in time and cannot know a page's types before serving the client.
+
+            Set `config.experimental.perPageImports: false` to turn the split off and serve every type from the barrels.
+
             ## check
 
             The `check` command validates a Lowdefy app against production rules without building it — it is the `tsc` of Lowdefy. It runs every validation pass of `lowdefy build` (schema checks, type lookups, id references, operator checks) plus the check-only rules — the `_js` lint and the [tenant wall audits](/organizations#audits) (`tenant: none` reads with no tenant clause, tenant values taken from the caller, unstamped writes, and the inventory of every unscoped request and step) — and then stops: no build artifacts are written, no client is bundled, and no server is started. It is fast and works offline, so it fits a pre-commit hook or a CI step.
+
+            Among the check-only rules is the secrets check: every literal `_secret` name the config reads is looked up in the environment the check runs in (`process.env`, which includes the app's `.env` file), and each name that is not set is reported as a warning under the `secrets` check slug, with the environment variable to set. A missing secret is otherwise silent — `_secret` returns `null` at runtime, on the server, with no error. A `_secret` whose name is computed by an operator cannot be checked statically and is counted at `--log-level debug`. A `_secret` that declares a `default` is not reported: the default says the author meant it to be optional. This is a check-only rule and never fails a build, because the environment a build runs in is rarely the environment the app runs in.
 
             The check always runs with the production rules. Some build warnings are only warnings in `lowdefy dev` but fail `lowdefy build` — those are reported by `check` as errors, exactly as a production build would. Warnings never fail a check.
 
@@ -76,19 +86,29 @@ _ref:
 
             The options are:
 
+            - `--against <ref>`: Also report what merging this branch into the given git ref would collide on. See below.
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
-            - `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. Use this from scripts and AI coding agents.
+            - `--json`: Print the report as a JSON object, `{ "errors": [...], "warnings": [...] }`, and nothing else on stdout. Each entry has `message`, `name`, `source` (file and line), `config` (the config path), `configKey`, `checkSlug` and `prodError`. With `--against`, the object also has an `against` key, `{ "ref": ..., "errors": [...], "warnings": [...] }`, in the same entry shape.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--server-directory <server-directory>`: Change the server directory. The default is `<config-directory>/.lowdefy/server`.
 
             The human-readable output groups problems by source file, one line per problem with its line number, the error name, the message and the check slug in parentheses, and ends with a `N errors, M warnings` summary (or `No problems found.`). A check slug can be used in `~ignoreBuildChecks` to suppress that check on a config node.
 
+            ### Checking against another branch
+
+            Two branches that each add a page id, a request id, a connection or a migration collide silently until they are merged. `lowdefy check --against <ref>` reports those collisions before the merge. It resolves the ref with git, checks the ref and the merge base of `HEAD` and the ref out into temporary worktrees, and compares the ids each side declares:
+
+            - An id declared on both sides but **introduced on each side since the merge base** is a collision, reported per kind (page, request, endpoint, connection, component, collection, migration). An id that already exists at the merge base is the same id, not a collision.
+            - A migration this branch adds that sorts **before** a migration the target branch adds is an error: migration ids sort lexically and lexical order is execution order, so after the merge that migration would be inserted before one that has already run. Rename it with a later id.
+
+            These are reported under the `branch-merge` check slug, in a `Merge against <ref>` section of the human output and under the `against` key of `--json`, and they set the exit code to `1` like any other error. The worktrees are removed when the check finishes, including when it fails.
+
             Exit codes:
 
             - `0`: no errors (warnings may have been reported).
-            - `1`: one or more errors, or the check itself failed to run.
+            - `1`: one or more errors, one or more merge collisions, or the check itself failed to run.
 
             Compared to `lowdefy build`: `build` validates and then writes the production app to the server directory and bundles the client; `check` runs the same validation and stops. `check` is the right command to answer "would `lowdefy build` refuse this?" without waiting for a build.
 
@@ -134,10 +154,32 @@ _ref:
 
             ## init
 
-            The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.
+            The `init` command initializes a Lowdefy application in the working directory. It writes a small but complete app rather than a single welcome page, so `lowdefy dev` and `lowdefy test` both have something real to run:
 
+            | File | What it is |
+            | --- | --- |
+            | `lowdefy.yaml` | The app: a [`collections`](/collections) contract for `items`, a `MongoDBCollection` connection reading `MONGODB_URI` with [`_secret`](/_secret), `auth.dev.users` with one `admin` caller, menus and the page and api refs. |
+            | `pages/items.yaml` | A [`ListPage`](/archetypes) archetype over the `items` collection, with a filter, a search box and a header slot. |
+            | `pages/welcome.yaml` | A plain page. |
+            | `api/add-item.yaml` | An [`Api`](/lowdefy-api) endpoint with a `payloadSchema` that inserts an item. |
+            | `fixtures/items.yaml` | Three documents a request test can seed. |
+            | `tests/journeys/items-list.yaml` | A browser [journey](/testing) over the list page. |
+            | `tests/requests/add-item.test.yaml` | Request tests for the endpoint and the generated list request, seeded from the fixture. |
+            | `README.md` | How to get a database, and what to change next. |
+            | `.env` | `MONGODB_URI` pointed at `mongodb://localhost:27017/<app name>` and a generated `BETTER_AUTH_SECRET`. Gitignored. |
+            | `.env.example` | The same keys, empty, to commit. |
+            | `.gitignore` | Ignores `.lowdefy/*` and `.env`, keeping the [migration ledgers](/migrations). |
+
+            The app name is the working directory's name. A file that already exists is kept, never overwritten; an existing `lowdefy.yaml` stops the command.
+
+            `lowdefy dev` needs a MongoDB at the `MONGODB_URI` in `.env` — run one locally (`docker run -d -p 27017:27017 mongo:7`) or point it at a cluster. The request tests do not: a test that names a `fixtures:` file runs against an in-memory MongoDB, which needs `mongodb` and `mongodb-memory-server` installed as dev dependencies.
+
+            `init` finishes by running [`agent-setup`](#agent-setup) on the new project, so `.mcp.json`, `AGENTS.md` and the Claude Code skills are in place before the first `lowdefy dev`.
+
+            - `--no-agent-setup`: Do not run `agent-setup` on the new project.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: The port the dev server runs on, used in the URLs `agent-setup` generates. The default is `3000`.
 
             ## init-docker
 
@@ -226,16 +268,17 @@ _ref:
 
             ## test
 
-            The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
+            The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml` and the request tests in `tests/requests/*.test.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route and every request test through its request route, prints `PASS`/`FAIL` per test with the failing step, stops the server, and exits with code `1` if any test failed. Journeys are validated against the same step grammar the dev server runs, so a file with a typo — an unknown top-level key, a step with two keys, a `fill` without a `blockId` — is reported with its file path before a browser is opened. See [Config Tests](/config-tests).
 
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--coverage`: After the run, report journey coverage and write the page-to-journeys index to `.lowdefy/test/journeyIndex.json`. See [Journey coverage](/config-tests).
             - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
-            - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+            - `--filter <name>`: Only run journeys and request tests whose `name` contains this string (case-insensitive). Exits with code `1` if nothing matches.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
-            - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
+            - `--url <url>`: Run the tests against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
             ## upgrade
 

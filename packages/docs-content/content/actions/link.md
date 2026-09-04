@@ -9,6 +9,9 @@
   input?: object,
   newTab?:boolean,
   pageId?: string,
+  reload?: boolean,
+  replace?: boolean,
+  scroll?: boolean,
   url?: string,
   urlQuery? object
 }): void
@@ -30,6 +33,9 @@ The pageId of a page in the app to link to.
 - `input: object`: Object to set as the input for the linked page.
 - `newTab: boolean`: Open the link in a new tab.
 - `pageId: string`: The pageId of a page in the app to link to.
+- `reload: boolean`: Re-run the `onMount` and `onMountAsync` events of every block on the page when the link target is the page already open. A link to the page you are on does not remount it, so its mount chains do not fire again — set `reload: true` to run them. This is opt-in, since a menu or breadcrumb link to the current page should stay a no-op, and a same-page link that only writes the `urlQuery` should not re-fetch the page. Defaults to `false`.
+- `replace: boolean`: Replace the current browser history entry instead of pushing a new one, so the browser back button skips this navigation. Defaults to `false`.
+- `scroll: boolean`: Scroll to the top of the page after navigating. Set to `false` to keep the current scroll position, for example when a same-page link only updates the `urlQuery`. Defaults to `true`.
 - `url: string`: Link to an external url.
 - `urlQuery: object`: Object to set as the urlQuery for the linked page.
 
@@ -48,6 +54,15 @@ The pageId of a page in the app to link to.
   type: Link
   params:
     pageId: myPageId
+```
+
+###### Reload the page you are on:
+```yaml
+- id: refresh_page
+  type: Link
+  params:
+    pageId: myPageId
+    reload: true
 ```
 
 ###### Link to home page:
@@ -103,6 +118,19 @@ The pageId of a page in the app to link to.
     input:
       id:
         _args: row.id
+```
+
+###### Reflect state into the urlQuery without moving the page:
+```yaml
+- id: sync_url
+  type: Link
+  params:
+    pageId: my_page_id
+    urlQuery:
+      selected:
+        _state: selected_id
+    replace: true
+    scroll: false
 ```
 
 ###### Go to the previous page:

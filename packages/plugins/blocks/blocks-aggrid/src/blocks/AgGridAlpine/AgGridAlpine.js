@@ -15,21 +15,34 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { blockRootProps, withBlockDefaults } from '@lowdefy/block-utils';
 
 import antdStyles from '../../ag-grid-antd.module.css';
 import { themeAlpineAntd, useGridTheme } from '../../theme/themeLowdefy.js';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridAlpine = ({ blockId, components, events, loading, methods, properties, styles }) => {
+const AgGridAlpine = ({
+  blockId,
+  classNames,
+  components,
+  events,
+  loading,
+  methods,
+  properties,
+  styles,
+}) => {
   const theme = useGridTheme(themeAlpineAntd, properties.themeParams);
 
   return (
     <div
-      id={blockId}
-      className={`ag-theme-alpine ${antdStyles.antdTheme}`}
-      style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
+      {...blockRootProps({
+        blockId,
+        classNames,
+        styles,
+        className: `ag-theme-alpine ${antdStyles.antdTheme}`,
+        style: { width: '100%', height: properties.height ?? 500 },
+      })}
     >
       <AgGrid
         components={components}

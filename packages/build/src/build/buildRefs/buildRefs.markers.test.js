@@ -262,7 +262,7 @@ describe('~ignoreBuildChecks', () => {
 pages:
   - _ref:
       path: page.yaml
-      ~ignoreBuildChecks: true`,
+      ~ignoreBuildChecks: [state-refs]`,
       },
       {
         path: 'page.yaml',
@@ -273,7 +273,7 @@ blocks: []`,
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res.pages[0]['~ignoreBuildChecks']).toBe(true);
+    expect(res.pages[0]['~ignoreBuildChecks']).toEqual(['state-refs']);
   });
 });
 

@@ -21,15 +21,18 @@ import { jest } from '@jest/globals';
 // them and leave runEndpoint's own validation, gating and pass-through under
 // test.
 const mockCallEndpoint = jest.fn();
-const mockGetEndpointConfig = jest.fn();
+const mockReadBuildArtifact = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockCreateLowdefyContext = jest.fn();
 const mockLoggerInfo = jest.fn();
+const mockHandleError = jest.fn();
 const mockGetDevUsers = jest.fn();
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
-  getEndpointConfig: mockGetEndpointConfig,
+}));
+jest.unstable_mockModule('./readBuildArtifact.js', () => ({
+  default: mockReadBuildArtifact,
 }));
 jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
   default: mockIsWriteRequestsAllowed,
@@ -46,13 +49,13 @@ const { MAX_RESPONSE_CHARS } = await import('./truncateResponse.js');
 const { default: runEndpoint } = await import('./runEndpoint.js');
 
 const honoContext = { req: { path: '/lowdefy-docs/run-endpoint' } };
-const context = { logger: { info: mockLoggerInfo } };
+const context = { logger: { info: mockLoggerInfo }, handleError: mockHandleError };
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockIsWriteRequestsAllowed.mockResolvedValue(true);
   mockCreateLowdefyContext.mockResolvedValue(context);
-  mockGetEndpointConfig.mockResolvedValue({ id: 'endpoint:create_order', type: 'Api' });
+  mockReadBuildArtifact.mockReturnValue({ id: 'endpoint:create_order', type: 'Api' });
   mockGetDevUsers.mockReturnValue({ admin: { id: 'dev-admin', roles: ['admin'] } });
   mockCallEndpoint.mockResolvedValue({
     error: null,
@@ -118,7 +121,7 @@ test('runEndpoint refuses every endpoint when agent write access is disabled', a
     howToEnable: 'Set cli.agentTools.allowWriteRequests: true in lowdefy.yaml (dev only).',
   });
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
-  expect(mockGetEndpointConfig).not.toHaveBeenCalled();
+  expect(mockReadBuildArtifact).not.toHaveBeenCalled();
   expect(mockCallEndpoint).not.toHaveBeenCalled();
 });
 
@@ -135,10 +138,8 @@ test('runEndpoint refuses a write-gated endpoint for an impersonated caller too'
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
 });
 
-test('runEndpoint returns a not-found refusal when the endpoint does not exist', async () => {
-  mockGetEndpointConfig.mockRejectedValue(
-    new ConfigError('API Endpoint "missing_endpoint" does not exist.')
-  );
+test('runEndpoint returns a not-found refusal without building a context when the endpoint does not exist', async () => {
+  mockReadBuildArtifact.mockReturnValue(null);
 
   const result = await runEndpoint({ endpointId: 'missing_endpoint', honoContext });
 
@@ -147,7 +148,9 @@ test('runEndpoint returns a not-found refusal when the endpoint does not exist',
     reason:
       'Endpoint "missing_endpoint" was not found. See GET /lowdefy-docs/app-map for the endpoints that exist.',
   });
-  expect(mockGetEndpointConfig).toHaveBeenCalledWith(context, { endpointId: 'missing_endpoint' });
+  expect(mockReadBuildArtifact).toHaveBeenCalledWith({ name: 'api/missing_endpoint.json' });
+  // A typo'd id costs an artifact read, not a context construction.
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
   expect(mockCallEndpoint).not.toHaveBeenCalled();
   expect(mockLoggerInfo).not.toHaveBeenCalled();
 });
@@ -181,8 +184,12 @@ test('runEndpoint defaults the payload to an empty object', async () => {
   expect(mockCallEndpoint).toHaveBeenCalledWith(context, expect.objectContaining({ payload: {} }));
 });
 
-test('runEndpoint passes the user to createLowdefyContext and logs the run', async () => {
+test('runEndpoint passes the user to createLowdefyContext and logs the resolved caller', async () => {
   const user = { roles: ['admin'], organization_id: 'org_1' };
+  mockCreateLowdefyContext.mockResolvedValue({
+    ...context,
+    user: { id: 'u_1', roles: ['admin'], email: 'a@b.c' },
+  });
 
   await runEndpoint({ endpointId: 'create_order', user, honoContext });
 
@@ -190,7 +197,7 @@ test('runEndpoint passes the user to createLowdefyContext and logs the run', asy
   expect(mockLoggerInfo).toHaveBeenCalledWith({
     event: 'agent_run_endpoint',
     endpointId: 'create_order',
-    user,
+    user: { id: 'u_1', roles: ['admin'] },
   });
 });
 
@@ -238,6 +245,7 @@ test('runEndpoint returns faults that escape callEndpoint as an error object', a
 
   const result = await runEndpoint({ endpointId: 'internal_only', honoContext });
 
+  expect(mockHandleError).toHaveBeenCalledWith(fault);
   expect(result).toEqual({
     refused: false,
     error: {
@@ -329,7 +337,28 @@ test('runEndpoint with explain: true returns one explain entry per request step,
       properties: { to: 'a@b.c' },
       effective: null,
       rewritten: [],
-      note: 'Request type SendGridMail does not report an effective query.',
+      note: 'The request did not reach the driver — it failed before the resolver ran, so there is no effective query.',
     },
   ]);
+});
+
+test('runEndpoint returns a routine that ends without :return as a success', async () => {
+  // buildEndpointResult produces response: undefined for a routine with no
+  // :return - an entirely ordinary endpoint, not a failure.
+  mockCallEndpoint.mockResolvedValue({
+    error: null,
+    response: undefined,
+    status: 'success',
+    success: true,
+  });
+
+  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: null,
+    response: undefined,
+    status: 'success',
+    success: true,
+  });
 });

@@ -13,9 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { REMOVED_BLOCK_METHODS } from '@lowdefy/block-utils';
 import { BlockError } from '@lowdefy/errors';
 
 import createBlockMethods from './createBlockMethods.js';
+
+const blockDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 function createMethods() {
   return {
@@ -61,15 +67,49 @@ test('createBlockMethods returns live methods unchanged', () => {
   expect(methods.registerMethod).toBe(bag.registerMethod);
 });
 
-test('createBlockMethods returns undefined for an unknown key that was never a plugin API member', () => {
+test('createBlockMethods throws a located BlockError listing the available methods for a key the bag does not have', () => {
   const methods = createBlockMethods({
     blockId: 'b1',
     blockType: 'Button',
     configKey: 'k-1',
     methods: createMethods(),
   });
-  expect(methods.someUnknownMethod).toBeUndefined();
-  expect(() => methods.someUnknownMethod).not.toThrow();
+  let error;
+  try {
+    methods.someUnknownMethod();
+  } catch (e) {
+    error = e;
+  }
+  expect(error).toBeInstanceOf(BlockError);
+  expect(error.message).toContain('Block "b1" (type Button)');
+  expect(error.message).toContain('block method "someUnknownMethod", which it does not have');
+  expect(error.message).toContain('Available methods: registerEvent, registerMethod, triggerEvent');
+  expect(error.configKey).toBe('k-1');
+});
+
+test('createBlockMethods passes through the keys JavaScript itself probes for', () => {
+  const methods = createBlockMethods({
+    blockId: 'b1',
+    blockType: 'Button',
+    configKey: 'k-1',
+    methods: createMethods(),
+  });
+  expect(methods.then).toBeUndefined();
+  expect(methods.toJSON).toBeUndefined();
+  expect(methods.toString).toBe(Object.prototype.toString);
+  expect(() => JSON.stringify(methods)).not.toThrow();
+});
+
+test('createBlockMethods passes through keys that do not look like method names', () => {
+  const methods = createBlockMethods({
+    blockId: 'b1',
+    blockType: 'Button',
+    configKey: 'k-1',
+    methods: createMethods(),
+  });
+  expect(methods.Component).toBeUndefined();
+  expect(methods['not a method']).toBeUndefined();
+  expect(methods._private).toBeUndefined();
 });
 
 test('createBlockMethods does not throw for a removed name the block registered itself', () => {
@@ -136,4 +176,44 @@ test('createBlockMethods keeps the methods prop referentially stable across rend
     methods: createMethods(),
   });
   expect(other).not.toBe(first);
+});
+
+// Mechanical invariants over whatever files exist, so the next author cannot forget.
+function blockSourceFiles() {
+  return fs
+    .readdirSync(blockDirectory)
+    .filter(
+      (name) =>
+        name.endsWith('.js') && !name.endsWith('.test.js') && name !== 'createBlockMethods.js'
+    )
+    .sort();
+}
+
+test('every render site that hands a block its engine methods wraps them in createBlockMethods', () => {
+  let renderSites = 0;
+  const unwrapped = blockSourceFiles().filter((name) => {
+    const source = fs.readFileSync(path.join(blockDirectory, name), 'utf8');
+    const bags = (source.match(/Object\.assign\(block\.methods,/g) ?? []).length;
+    const wrapped = (source.match(/createBlockMethods\(\{/g) ?? []).length;
+    renderSites += bags;
+    return bags !== wrapped;
+  });
+  expect(unwrapped).toEqual([]);
+  expect(renderSites).toBe(5);
+});
+
+test('no REMOVED_BLOCK_METHODS key is a method the client puts on the bag', () => {
+  const assigned = new Set();
+  for (const name of blockSourceFiles()) {
+    const source = fs.readFileSync(path.join(blockDirectory, name), 'utf8');
+    for (const match of source.matchAll(/methods: Object\.assign\(block\.methods, \{([^}]*)\}/g)) {
+      for (const key of match[1].matchAll(/^\s*([A-Za-z][A-Za-z0-9]*):/gm)) {
+        assigned.add(key[1]);
+      }
+    }
+  }
+  expect(assigned.size).toBeGreaterThan(0);
+  for (const removed of Object.keys(REMOVED_BLOCK_METHODS)) {
+    expect(Array.from(assigned)).not.toContain(removed);
+  }
 });

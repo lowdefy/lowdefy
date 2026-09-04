@@ -28,26 +28,29 @@ import getColumnNumber from './getColumnNumber.js';
 import getLineNumber from './getLineNumber.js';
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';
 
-// Keys whose value subtree is a raw string owned by another language and must
-// never be scanned for ${ … } (§6.6): a _js body is JavaScript (its ${…} are
-// template literals) and a _nunjucks template uses {{ }} but may contain
-// literal ${ text.
-const RAW_OPERATOR_KEYS = new Set(['_js', '_nunjucks']);
+// Operators whose *body* is source in another language and must never be
+// scanned for ${ … } (§6.6): a _js body is JavaScript (its ${…} are template
+// literals) and a _nunjucks template uses {{ }} but may contain literal ${.
+// The exemption is by position, not by subtree: the scalar form is the body,
+// and in the object form only the key named here is — the other keys
+// (_js.args, _nunjucks.on) are ordinary config an author expects to compile.
+// One table so adding a raw-source operator is one line.
+const RAW_SOURCE_BODY_KEY = { _js: 'fn', _nunjucks: 'template' };
 
 // Resolves a scalar to a JS value, compiling a ${ … } expression to an operator
-// tree with source positions stamped, unless it sits inside a raw-operator
-// subtree. Compilation happens here — the single point holding the YAML scalar
+// tree with source positions stamped, unless it is a raw-source body position.
+// Compilation happens here — the single point holding the YAML scalar
 // node (line and column) together with the raw file content — so every later
 // build check sees ordinary operators (§6).
-function resolveScalar({ scalar, content, filePath, insideRawOperator }) {
+function resolveScalar({ scalar, content, filePath, isRawSource }) {
   const value = scalar.value;
-  if (insideRawOperator) {
+  if (isRawSource) {
     return value;
   }
   // The literal escape (§7): "$${ … }" is not an expression — it yields the
-  // literal "${ … }" string. Inside a raw-operator subtree the scalar is
-  // untouched entirely (the other language owns its $ syntax), so the escape
-  // only applies at positions that would otherwise trigger compilation.
+  // literal "${ … }" string. A raw-source scalar is untouched entirely (the
+  // other language owns its $ syntax), so the escape only applies at positions
+  // that would otherwise trigger compilation.
   if (!isExpression(value)) {
     return unescapeExpression(value);
   }
@@ -67,7 +70,7 @@ function resolveScalar({ scalar, content, filePath, insideRawOperator }) {
   return stampPosition({ tree, line, column, expression: value.trim() });
 }
 
-function addLineNumbers(node, content, result, { filePath, insideRawOperator = false } = {}) {
+function addLineNumbers(node, content, result, { filePath, rawBodyKey = null } = {}) {
   if (isMap(node)) {
     const obj = result || {};
     if (node.range) {
@@ -77,7 +80,9 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
       if (isPair(pair) && isScalar(pair.key)) {
         const key = pair.key.value;
         const value = pair.value;
-        const childRaw = insideRawOperator || RAW_OPERATOR_KEYS.has(key);
+        // A raw-source operator's scalar form is its body; its object form
+        // carries the body under one key and ordinary config under the rest.
+        const scalarIsRawSource = Object.hasOwn(RAW_SOURCE_BODY_KEY, key) || key === rawBodyKey;
         // Use key's line number for the value's ~l (more useful for error messages)
         const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
         if (isMap(value)) {
@@ -87,7 +92,7 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
             {},
             {
               filePath,
-              insideRawOperator: childRaw,
+              rawBodyKey: RAW_SOURCE_BODY_KEY[key] ?? null,
             }
           );
           // Override ~l with key's line number if available
@@ -96,10 +101,7 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
           }
           obj[key] = mapResult;
         } else if (isSeq(value)) {
-          const arrResult = addLineNumbers(value, content, [], {
-            filePath,
-            insideRawOperator: childRaw,
-          });
+          const arrResult = addLineNumbers(value, content, [], { filePath });
           // Override ~l with key's line number if available
           if (keyLineNumber) {
             setNonEnumerableProperty(arrResult, '~l', keyLineNumber);
@@ -110,7 +112,7 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
             scalar: value,
             content,
             filePath,
-            insideRawOperator: childRaw,
+            isRawSource: scalarIsRawSource,
           });
         } else {
           obj[key] = value?.toJSON?.() ?? value;
@@ -127,11 +129,11 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
     }
     for (const item of node.items) {
       if (isMap(item)) {
-        arr.push(addLineNumbers(item, content, {}, { filePath, insideRawOperator }));
+        arr.push(addLineNumbers(item, content, {}, { filePath }));
       } else if (isSeq(item)) {
-        arr.push(addLineNumbers(item, content, [], { filePath, insideRawOperator }));
+        arr.push(addLineNumbers(item, content, [], { filePath }));
       } else if (isScalar(item)) {
-        arr.push(resolveScalar({ scalar: item, content, filePath, insideRawOperator }));
+        arr.push(resolveScalar({ scalar: item, content, filePath }));
       } else {
         arr.push(item?.toJSON?.() ?? item);
       }
@@ -140,7 +142,7 @@ function addLineNumbers(node, content, result, { filePath, insideRawOperator = f
   }
 
   if (isScalar(node)) {
-    return resolveScalar({ scalar: node, content, filePath, insideRawOperator });
+    return resolveScalar({ scalar: node, content, filePath });
   }
 
   return node?.toJSON?.() ?? node;

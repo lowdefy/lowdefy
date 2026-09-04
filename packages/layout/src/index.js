@@ -15,6 +15,10 @@
 */
 
 import Area from './Area.js';
+import areaIsRendered from './areaIsRendered.js';
 import BlockLayout from './BlockLayout.js';
+import blockLayoutIsRendered from './blockLayoutIsRendered.js';
+import hasAreaKeys from './hasAreaKeys.js';
+import hasLayoutKeys from './hasLayoutKeys.js';
 
-export { Area, BlockLayout };
+export { Area, areaIsRendered, BlockLayout, blockLayoutIsRendered, hasAreaKeys, hasLayoutKeys };

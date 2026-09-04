@@ -17,12 +17,22 @@
 import jsLint from './jsLint.js';
 import tenantRules from './tenant/index.js';
 import collectionsRules from './collections/index.js';
+import secretsRules from './secrets/index.js';
+import layoutRules from './layout/index.js';
+import filePluginRules from './filePlugins/index.js';
 
 // The single place a check rule is registered. A rule is
 // { slug, checkOnly, run({ components, context }) } and reports through
 // collectExceptions / context.handleWarning like every other build step.
 // checkOnly rules run under `lowdefy check` only; the rest also fail builds.
-const rules = [jsLint, ...tenantRules, ...collectionsRules];
+const rules = [
+  jsLint,
+  ...tenantRules,
+  ...collectionsRules,
+  ...secretsRules,
+  ...layoutRules,
+  ...filePluginRules,
+];
 
 function runChecks({ components, context }) {
   for (const rule of rules) {

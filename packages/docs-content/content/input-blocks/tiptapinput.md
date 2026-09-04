@@ -11,6 +11,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_default:
+  _state: tiptap_default
+```
+
+```yaml
 - id: tiptap_prepopulated
   type: TiptapInput
   events:
@@ -31,6 +36,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_prepopulated:
+  _state: tiptap_prepopulated
+```
+
+```yaml
 - id: tiptap_disabled
   type: TiptapInput
   events:
@@ -46,12 +56,22 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_disabled:
+  _state: tiptap_disabled
+```
+
+```yaml
 - id: tiptap_borderless
   type: TiptapInput
   properties:
     title: Borderless editor
     bordered: false
     placeholder: No border, just content.
+```
+
+```yaml
+tiptap_borderless:
+  _state: tiptap_borderless
 ```
 
 ```yaml
@@ -64,6 +84,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_rows_2:
+  _state: tiptap_rows_2
+```
+
+```yaml
 - id: tiptap_autosize_range
   type: TiptapInput
   properties:
@@ -72,6 +97,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
     autoSize:
       minRows: 2
       maxRows: 5
+```
+
+```yaml
+tiptap_autosize_range:
+  _state: tiptap_autosize_range
 ```
 
 ```yaml
@@ -103,12 +133,52 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+- id: tiptap_validation
+  type: TiptapInput
+  required: true
+  properties:
+    title: Release notes (required)
+    placeholder: Type at least 10 characters, then click Validate.
+    rows: 3
+  validate:
+    - status: error
+      message: Release notes must be at least 10 characters.
+      pass:
+        _gte:
+          - _string.length:
+              _state: tiptap_validation.text
+          - 10
+- id: tiptap_validation_button
+  type: Button
+  properties:
+    title: Validate
+  events:
+    onClick:
+      - id: tiptap_validation_run
+        type: Validate
+        params:
+          - tiptap_validation
+```
+
+```yaml
+tiptap_validation:
+  _state: tiptap_validation
+tiptap_validation_button:
+  _state: tiptap_validation_button
+```
+
+```yaml
 - id: tiptap_autosize_true
   type: TiptapInput
   properties:
     title: Unconstrained
     placeholder: No height cap.
     autoSize: true
+```
+
+```yaml
+tiptap_autosize_true:
+  _state: tiptap_autosize_true
 ```
 
 ```yaml
@@ -126,6 +196,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_minimal:
+  _state: tiptap_minimal
+```
+
+```yaml
 - id: tiptap_starterkit
   type: TiptapInput
   properties:
@@ -135,6 +210,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
       codeBlock: false
       blockquote: false
       horizontalRule: false
+```
+
+```yaml
+tiptap_starterkit:
+  _state: tiptap_starterkit
 ```
 
 ```yaml
@@ -166,6 +246,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
 ```
 
 ```yaml
+tiptap_with_table:
+  _state: tiptap_with_table
+```
+
+```yaml
 - id: tiptap_links
   type: TiptapInput
   events:
@@ -180,6 +265,11 @@ Rich-text editor built on TipTap. Supports bold, italic, strike-through, highlig
     title: Open links in place
     link:
       openOnClick: false
+```
+
+```yaml
+tiptap_links:
+  _state: tiptap_links
 ```
 
 | Property | Type | Default | Description |

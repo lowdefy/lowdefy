@@ -179,3 +179,59 @@ test('writeConnectionSchemaMap skips writing when installedPackages is not set (
   await writeConnectionSchemaMap({ context });
   expect(mockWriteBuildArtifact).not.toHaveBeenCalled();
 });
+
+test('writeConnectionSchemaMap reads a file plugin connection and its requests from the typesMap', async () => {
+  const context = makeContext({
+    connections: {
+      MemoryStore: {
+        package: null,
+        packageId: 'file-plugin',
+        originalTypeName: 'MemoryStore',
+        relativePath: 'plugins/connections/MemoryStore/MemoryStore.js',
+        schema: { type: 'object' },
+      },
+    },
+    requests: {
+      MemoryGet: {
+        package: null,
+        packageId: 'file-plugin',
+        originalTypeName: 'MemoryGet',
+        connectionType: 'MemoryStore',
+        relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+        schema: { type: 'object' },
+        meta: { checkRead: true, checkWrite: false },
+      },
+    },
+    installedPackages: new Set(),
+  });
+  await writeConnectionSchemaMap({ context });
+  const artifacts = writtenArtifacts();
+  expect(artifacts['plugins/connectionSchemas.json'].MemoryStore).toEqual({
+    schema: { type: 'object' },
+    requests: ['MemoryGet'],
+  });
+  expect(artifacts['plugins/requestSchemas.json'].MemoryGet).toEqual({
+    schema: { type: 'object' },
+    meta: { checkRead: true, checkWrite: false },
+  });
+});
+
+test('writeConnectionSchemaMap gates a file plugin request that declares no meta on both', async () => {
+  const context = makeContext({
+    requests: {
+      MemoryGet: {
+        package: null,
+        packageId: 'file-plugin',
+        originalTypeName: 'MemoryGet',
+        connectionType: 'MemoryStore',
+        relativePath: 'plugins/connections/MemoryStore/requests/MemoryGet.js',
+      },
+    },
+    installedPackages: new Set(),
+  });
+  await writeConnectionSchemaMap({ context });
+  expect(writtenArtifacts()['plugins/requestSchemas.json'].MemoryGet).toEqual({
+    schema: {},
+    meta: { checkRead: true, checkWrite: true },
+  });
+});

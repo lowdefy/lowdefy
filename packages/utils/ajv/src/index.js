@@ -18,6 +18,17 @@ import validate from './validate.js';
 import compile from './compile.js';
 import getSchemaAtPath from './getSchemaAtPath.js';
 import nestSchemaPaths from './nestSchemaPaths.js';
+import normalizeSchemaShorthand, { SHORTHAND_TYPE_NAMES } from './normalizeSchemaShorthand.js';
 import splitSchemaPath from './splitSchemaPath.js';
+import toJsonShape from './toJsonShape.js';
 
-export { validate, compile, getSchemaAtPath, nestSchemaPaths, splitSchemaPath };
+export {
+  validate,
+  compile,
+  getSchemaAtPath,
+  nestSchemaPaths,
+  normalizeSchemaShorthand,
+  SHORTHAND_TYPE_NAMES,
+  splitSchemaPath,
+  toJsonShape,
+};

@@ -22,8 +22,11 @@ import {
   getState,
 } from '@lowdefy/e2e-utils/runtime';
 
-import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import { EXPECT_TEXT_KEYS, findIncompleteExpectation } from '@lowdefy/node-utils';
+
+import { getBrowser, openPage, buildPageUrl, deterministicContextOptions } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
+import seedFixture from './seedFixture.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
 
@@ -80,9 +83,9 @@ async function actOnBlock({ blockId, action }) {
   }
 }
 
-// The #bl-<id> wrapper spans the full row while the control inside it (an
-// antd button, a link, a checkbox) is usually narrower, so a click at the
-// wrapper's centre can land beside the control. The block's own e2e helpers
+// A block's root spans the full row while the control inside it (an antd
+// button, a link, a checkbox) is usually narrower, so a click at the root's
+// centre can land beside the control. The block's own e2e helpers
 // target the inner control for the same reason; a block with no interactive
 // descendant (a Box with its own onClick) is clicked directly.
 const INTERACTIVE_CONTROL = [
@@ -118,13 +121,72 @@ async function runClick({ page, step, timeout }) {
   });
 }
 
+// Runs in the page. Writes through the block's own `setValue`, which enforces
+// the block's valueType, clears its schema errors and re-renders — the same
+// path a user typing into the block takes, and the only path that reaches a
+// block whose editable surface is not an <input>.
+function setValueInPage({ pageId, blockId, value }) {
+  const context = window.lowdefy?.contexts?.['page:' + pageId];
+  if (!context) {
+    return { outcome: 'noContext' };
+  }
+  const block = context._internal?.RootSlots?.map?.[blockId];
+  if (!block) {
+    return { outcome: 'noBlock' };
+  }
+  if (typeof block.setValue !== 'function') {
+    return { outcome: 'notInput', blockType: block.type };
+  }
+  block.setValue(value);
+  return { outcome: 'set' };
+}
+
+// `window.lowdefy` is only exposed for the dev and e2e stages, so a journey
+// driving state through the engine can never be replayed against a production
+// build — the dev server is the only host of this verb.
+async function setBlockValue({ page, blockId, value, verb }) {
+  const pageId = await page.evaluate(() => window.lowdefy?.pageId);
+  const { outcome, blockType } = await page.evaluate(setValueInPage, { pageId, blockId, value });
+  if (outcome === 'set') {
+    return;
+  }
+  if (outcome === 'noContext') {
+    throw new JourneyStepError(
+      `Step "${verb}" could not reach the Lowdefy context of page "${pageId}".`,
+      { expected: `page "${pageId}" to expose its Lowdefy context`, actual: null }
+    );
+  }
+  if (outcome === 'noBlock') {
+    throw new JourneyStepError(`Block "${blockId}" is not on page "${pageId}".`, {
+      expected: `block "${blockId}" on page "${pageId}"`,
+      actual: null,
+    });
+  }
+  throw new JourneyStepError(
+    `Block "${blockId}" has type "${blockType}", which is not an input block, so "${verb}" has no value to write. Use "click" for a block that is not an input.`,
+    { expected: `block "${blockId}" to be an input block`, actual: blockType ?? null }
+  );
+}
+
+// `fill` drives the widget the way a user does. A block with no <input> or
+// <textarea> inside it (a rich-text editor, a Slider, an AgGrid cell) has no
+// surface to type into, so it falls back to `set` semantics.
 async function runFill({ page, step, timeout }) {
   const { blockId, value } = step.fill;
+  const input = getBlock(page, blockId).locator('input, textarea').first();
+  if ((await input.count()) === 0) {
+    await setBlockValue({ page, blockId, value, verb: 'fill' });
+    return;
+  }
   await actOnBlock({
     blockId,
-    action: () =>
-      getBlock(page, blockId).locator('input, textarea').first().fill(String(value), { timeout }),
+    action: () => input.fill(String(value), { timeout }),
   });
+}
+
+async function runSet({ page, step }) {
+  const { blockId, value } = step.set;
+  await setBlockValue({ page, blockId, value, verb: 'set' });
 }
 
 // Exact match on the option's text: a regex anchored at both ends, so "Cat"
@@ -133,11 +195,26 @@ function exactText(value) {
   return new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 }
 
+const OPEN_DROPDOWN = '.ant-select-dropdown:not(.ant-select-dropdown-hidden)';
+const OPTION = '.ant-select-item-option, [role="option"]';
+
+// Ant Design renders options into a portal at the end of the body, so a second
+// open select (or a portal still fading out) puts two option lists in the DOM.
+// The dropdown the click just opened is the last one rendered, so options are
+// looked up inside it. A block with no antd dropdown (a plain listbox) has none,
+// and the search falls back to the page.
+async function resolveOptionScope(page) {
+  const dropdown = page.locator(OPEN_DROPDOWN).last();
+  if ((await dropdown.count()) > 0) {
+    return dropdown;
+  }
+  return page;
+}
+
 // A native <select> inside the block is preferred when present (Playwright's
 // selectOption is exact and needs no open dropdown). Otherwise the block is
 // clicked to open its dropdown and the option with exactly `value` as text is
-// clicked — Ant Design renders options into a portal, so they are searched
-// page-wide, restricted to visible ones so the hidden accessibility list is
+// clicked, restricted to visible options so the hidden accessibility list is
 // never matched.
 async function runSelect({ page, step, timeout }) {
   const { blockId, value } = step.select;
@@ -158,8 +235,9 @@ async function runSelect({ page, step, timeout }) {
       await target.click({ timeout });
     },
   });
-  const option = page
-    .locator('.ant-select-item-option, [role="option"]')
+  const scope = await resolveOptionScope(page);
+  const option = scope
+    .locator(OPTION)
     .filter({ hasText: exactText(text) })
     .filter({ visible: true })
     .first();
@@ -178,20 +256,39 @@ async function runSelect({ page, step, timeout }) {
   // click taken during the fade would still see it covering the rows below.
   // Tolerant and short: a multi-select dropdown stays open by design.
   await page
-    .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)')
-    .first()
+    .locator(OPEN_DROPDOWN)
+    .last()
     .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
     .catch(() => {});
 }
 
 // `Mod` in a chord resolves to Meta or Control from the platform the page
 // reports, the way the app's own shortcut handling (tinykeys) does.
-async function runPress({ page, step }) {
+async function resolveChord({ page, key }) {
   const modifier = await getShortcutModifier(page);
-  const key = step.press
+  return key
     .split('+')
     .map((part) => (part === 'Mod' ? modifier : part))
     .join('+');
+}
+
+// A bare string presses on the page, for an app-level shortcut. { blockId, key }
+// presses on the block's own control, which is what a keydown handler bound to
+// one input needs.
+async function runPress({ page, step, timeout }) {
+  const params = step.press;
+  const blockId = type.isString(params) ? undefined : params.blockId;
+  const key = await resolveChord({ page, key: type.isString(params) ? params : params.key });
+  if (!type.isNone(blockId)) {
+    await actOnBlock({
+      blockId,
+      action: async () => {
+        const target = await resolveClickTarget(getBlock(page, blockId));
+        await target.press(key, { timeout });
+      },
+    });
+    return;
+  }
   try {
     await page.keyboard.press(key);
   } catch (error) {
@@ -280,24 +377,119 @@ async function expectVisible({ page, params, timeout }) {
   }
 }
 
-async function expectText({ page, params, timeout }) {
-  const { blockId, contains } = params;
-  let text;
+// Wraps a read of the rendered block so a block that never appeared reads as
+// the expectation it defeated rather than as a bare Playwright timeout.
+async function readFromBlock({ expected, read }) {
   try {
-    text = await getBlock(page, blockId).innerText({ timeout });
+    return await read();
   } catch (error) {
-    throw new JourneyStepError(`Expected block "${blockId}" to contain text "${contains}".`, {
-      expected: `block "${blockId}" text to contain "${contains}"`,
+    throw new JourneyStepError(`Expected ${expected}.`, {
+      expected,
       actual: cleanMessage(error),
     });
   }
-  if (!text.includes(contains)) {
-    throw new JourneyStepError(
-      `Expected block "${blockId}" text to contain "${contains}" but found ${JSON.stringify(
-        text
-      )}.`,
-      { expected: `block "${blockId}" text to contain "${contains}"`, actual: text }
-    );
+}
+
+const TEXT_CLAIMS = {
+  contains: 'to contain',
+  equals: 'to equal',
+  notContains: 'not to contain',
+};
+
+// `equals` compares the trimmed innerText: blocks wrap their content in
+// elements that add surrounding whitespace, which is never what an author
+// means by "the text is X".
+function isTextMatched({ form, text, value }) {
+  if (form === 'equals') {
+    return text.trim() === value;
+  }
+  if (form === 'notContains') {
+    return !text.includes(value);
+  }
+  return text.includes(value);
+}
+
+async function expectText({ page, params, timeout }) {
+  const { blockId } = params;
+  const form = EXPECT_TEXT_KEYS.find((key) => !type.isUndefined(params[key]));
+  const value = params[form];
+  const expected = `block "${blockId}" text ${TEXT_CLAIMS[form]} "${value}"`;
+  const text = await readFromBlock({
+    expected,
+    read: () => getBlock(page, blockId).innerText({ timeout }),
+  });
+  if (!isTextMatched({ form, text, value })) {
+    throw new JourneyStepError(`Expected ${expected} but found ${JSON.stringify(text)}.`, {
+      expected,
+      actual: text,
+    });
+  }
+}
+
+// One claim about the block's rendered element: a class it holds, a class it
+// does not hold, a descendant selector that must match, or an attribute value.
+// This is what `expect.text` and `expect.visible` cannot see — a disabled
+// button, a primary style, an aria state.
+async function expectDom({ page, params, timeout }) {
+  const { blockId, hasClass, notHasClass, matches, attribute, equals } = params;
+  const block = getBlock(page, blockId);
+  if (!type.isUndefined(matches)) {
+    const expected = `block "${blockId}" to contain an element matching "${matches}"`;
+    const count = await readFromBlock({
+      expected,
+      read: () => block.locator(matches).count(),
+    });
+    if (count === 0) {
+      throw new JourneyStepError(`Expected ${expected} but nothing matched.`, {
+        expected,
+        actual: 0,
+      });
+    }
+    return;
+  }
+  if (!type.isUndefined(attribute)) {
+    const expected = `block "${blockId}" attribute "${attribute}" to equal "${equals}"`;
+    const actual = await readFromBlock({
+      expected,
+      read: () => block.getAttribute(attribute, { timeout }),
+    });
+    if (actual !== equals) {
+      throw new JourneyStepError(`Expected ${expected} but found ${JSON.stringify(actual)}.`, {
+        expected,
+        actual,
+      });
+    }
+    return;
+  }
+  const claimed = type.isUndefined(hasClass) ? notHasClass : hasClass;
+  const claim = type.isUndefined(hasClass) ? 'not to have class' : 'to have class';
+  const expected = `block "${blockId}" ${claim} "${claimed}"`;
+  const className = await readFromBlock({
+    expected,
+    read: () => block.getAttribute('class', { timeout }),
+  });
+  const classes = (className ?? '').split(/\s+/).filter((name) => name !== '');
+  const held = classes.includes(claimed);
+  const matched = type.isUndefined(hasClass) ? !held : held;
+  if (!matched) {
+    throw new JourneyStepError(`Expected ${expected} but found ${JSON.stringify(className)}.`, {
+      expected,
+      actual: className,
+    });
+  }
+}
+
+// The previous step's recorded duration, which includes the settle wait after
+// an interaction — the number the result already reports, so a journey can pin
+// a regression in how long a flow takes.
+function expectDurationMsUnder({ params, index, results }) {
+  const previous = results[index - 1];
+  const expected = `step ${index - 1} to take less than ${params}ms`;
+  if (previous.durationMs >= params) {
+    throw new JourneyStepError(`Expected ${expected} but it took ${previous.durationMs}ms.`, {
+      expected,
+      actual: previous.durationMs,
+    });
   }
 }
 
@@ -316,7 +508,7 @@ async function expectUrl({ page, params, timeout }) {
   }
 }
 
-async function runExpect({ page, step, timeout }) {
+async function runExpect({ page, step, timeout, index, results }) {
   const expectation = step.expect;
   const key = getStepKey(expectation);
   const params = expectation[key];
@@ -333,9 +525,35 @@ async function runExpect({ page, step, timeout }) {
     case 'url':
       await expectUrl({ page, params, timeout });
       return;
-    default:
+    case 'dom':
+      await expectDom({ page, params, timeout });
       return;
+    default:
+      expectDurationMsUnder({ params, index, results });
   }
+}
+
+async function readPageId(page) {
+  return page.evaluate(() => window.lowdefy?.pageId);
+}
+
+// A navigating interaction resolves before the new route is committed, so
+// `window.lowdefy.pageId` is still the page that is being torn down. Waiting on
+// readiness for that id would never settle and would burn the whole step
+// timeout on every navigating click, so the navigation is awaited first: a
+// changed URL means the page id must change too, and only then is readiness
+// checked against whatever page is now open.
+const NAVIGATION_TIMEOUT = 2000;
+
+async function settleNavigation({ page, timeout, before }) {
+  if (page.url() === before.url) {
+    return;
+  }
+  await page
+    .waitForFunction((previous) => window.lowdefy?.pageId !== previous, before.pageId, {
+      timeout: Math.min(timeout, NAVIGATION_TIMEOUT),
+    })
+    .catch(() => {});
 }
 
 // After an interaction, waits for the page's own load chain — the event the
@@ -343,25 +561,28 @@ async function runExpect({ page, step, timeout }) {
 // readiness check openPage uses, so the next step asserts against the
 // outcome rather than racing it. Tolerant: a page that never settles (a
 // hung request) simply moves on and lets the next expect report what it
-// finds. Reads the current pageId from the page because a click may have
-// navigated to another page.
-async function settlePage({ page, timeout }) {
-  const pageId = await page.evaluate(() => window.lowdefy?.pageId);
+// finds.
+async function settlePage({ page, timeout, before }) {
+  await settleNavigation({ page, timeout, before });
+  const pageId = await readPageId(page);
   if (type.isNone(pageId)) {
     return;
   }
   await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
 }
 
-const INTERACTION_STEPS = ['click', 'fill', 'select', 'press'];
+const INTERACTION_STEPS = ['click', 'fill', 'set', 'select', 'press'];
 
-async function runStep({ page, step, index, timeout, screenshots }) {
+async function runStep({ page, step, index, timeout, screenshots, results }) {
   switch (getStepKey(step)) {
     case 'click':
       await runClick({ page, step, timeout });
       return;
     case 'fill':
       await runFill({ page, step, timeout });
+      return;
+    case 'set':
+      await runSet({ page, step });
       return;
     case 'select':
       await runSelect({ page, step, timeout });
@@ -375,11 +596,8 @@ async function runStep({ page, step, index, timeout, screenshots }) {
     case 'screenshot':
       await runScreenshot({ page, step, index, screenshots });
       return;
-    case 'expect':
-      await runExpect({ page, step, timeout });
-      return;
     default:
-      return;
+      await runExpect({ page, step, timeout, index, results });
   }
 }
 
@@ -419,10 +637,12 @@ async function runSteps({ page, steps, stepTimeout }) {
       continue;
     }
     const started = Date.now();
+    const interaction = INTERACTION_STEPS.includes(getStepKey(step));
     try {
-      await runStep({ page, step, index, timeout: stepTimeout, screenshots });
-      if (INTERACTION_STEPS.includes(getStepKey(step))) {
-        await settlePage({ page, timeout: stepTimeout });
+      const before = interaction ? { pageId: await readPageId(page), url: page.url() } : undefined;
+      await runStep({ page, step, index, timeout: stepTimeout, screenshots, results });
+      if (interaction) {
+        await settlePage({ page, timeout: stepTimeout, before });
       }
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {
@@ -444,12 +664,32 @@ async function readFinalState({ page }) {
   }
 }
 
+// The rows a journey needs before its page opens, seeded through the same
+// connection layer and the same write gate as lowdefy_seed_fixture. `reset` so
+// the journey starts from the fixture's rows rather than from whatever the last
+// run left; a refusal or a failed insert stops the journey before a browser
+// shows a page built on the wrong data.
+async function seedJourneyFixtures({ fixtures, honoContext }) {
+  for (const name of fixtures) {
+    const result = await seedFixture({ name, reset: true, honoContext });
+    if (result.refused === true) {
+      return `Could not seed fixture "${name}": ${result.reason} ${result.howToEnable}`;
+    }
+    if (!type.isNone(result.error)) {
+      return `Could not seed fixture "${name}": ${result.error.message}`;
+    }
+  }
+  return undefined;
+}
+
 // runJourney drives a page of the running dev server through a declarative
-// list of steps — click, fill, select, press, wait, screenshot, expect — so
+// list of steps — click, fill, set, select, press, wait, screenshot, expect — so
 // an agent can verify behaviour (a form submits, a modal opens, state
 // changes) and not only layout. `timeout` bounds the page open; `stepTimeout`
 // bounds each step, matching Playwright's per-action timeout.
 async function runJourney({
+  fixtures = [],
+  honoContext,
   origin,
   pageId,
   steps,
@@ -477,9 +717,23 @@ async function runJourney({
       )}.`,
     };
   }
+  if (!type.isArray(fixtures) || fixtures.some((name) => !type.isString(name))) {
+    return {
+      error: `runJourney requires "fixtures" to be an array of fixture names. Received ${JSON.stringify(
+        fixtures
+      )}.`,
+    };
+  }
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  // An expectation with a path and no value asserts nothing, so it is refused
+  // rather than reported as a step that passed; only `lowdefy test --update`
+  // fills it.
+  const incomplete = findIncompleteExpectation({ steps });
+  if (!type.isUndefined(incomplete)) {
+    return { error: incomplete.message };
   }
 
   let browser;
@@ -489,6 +743,11 @@ async function runJourney({
     return {
       error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
     };
+  }
+
+  const seedError = await seedJourneyFixtures({ fixtures, honoContext });
+  if (!type.isUndefined(seedError)) {
+    return { error: seedError };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });
@@ -504,6 +763,7 @@ async function runJourney({
       width,
       height,
       timeout,
+      contextOptions: deterministicContextOptions,
     });
     context = opened.context;
     const { results, screenshots, failure } = await runSteps({

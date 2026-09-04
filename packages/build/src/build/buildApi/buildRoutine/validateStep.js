@@ -19,12 +19,12 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
 import validateRunAs from '../validateRunAs.js';
-import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
-import validateTenantSharedLookup from '../../validateTenantSharedLookup.js';
+import validateTenantPipeline from '../../validateTenantPipeline.js';
+import collectExceptions from '../../../utils/collectExceptions.js';
 
 function validateStep(
   step,
-  { endpointId, stepTypes, tenantConnections, tenantCollectionMap, collections }
+  { endpointId, stepTypes, tenantConnections, tenantCollectionMap, collections, context }
 ) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
@@ -56,9 +56,10 @@ function validateStep(
   // step that never reaches the wall, and a declaration that silently did
   // nothing is exactly the unscoped-by-accident state the wall exists to
   // prevent. The shape and source checks run for request steps below.
-  const isRequestStep =
-    !['CallApi', 'CallAgent', 'RenderNotification', 'ValidateSchema'].includes(step.type) &&
-    !stepTypes?.[step.type];
+  // A request step is one that names a connection. Excluding a hardcoded list
+  // of the step types that are not requests would silently accept a runAs that
+  // does nothing on every step type added after this line was written.
+  const isRequestStep = !type.isUndefined(step.connectionId);
   if (!type.isUndefined(step.runAs) && !isRequestStep) {
     throw new ConfigError(
       `Step "${step.id}" at endpoint "${endpointId}" declares "runAs", which only applies to request steps — the tenant wall scopes connections, and a ${step.type} step reaches no connection. Declare runAs on the endpoint or on the request steps instead.`,
@@ -231,6 +232,7 @@ function validateStep(
     runAs: step.runAs,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     configKey,
+    level: 'step',
   });
   if (!type.isUndefined(step.runAs) && step.tenant === 'none') {
     throw new ConfigError(
@@ -239,17 +241,11 @@ function validateStep(
     );
   }
 
-  // Best-effort (literal pipelines only): a walled pipeline the wall can not
-  // scope mechanically must declare tenant: authored. Runtime re-checks.
-  validateTenantPipelineEntry({
-    config: step,
-    location: `Step "${step.id}" at endpoint "${endpointId}"`,
-    tenantConnections,
-    configKey,
-  });
-  // Best-effort (literal pipelines only): a walled pipeline that joins a
-  // tenant: shared collection gets an injected $match it can never satisfy.
-  validateTenantSharedLookup({
+  // Best-effort (literal pipelines only): every refusal the tenant wall raises
+  // at request time on a walled pipeline, raised at build instead. With a build
+  // context every finding is collected so one build reports them all; a caller
+  // without one gets the first finding thrown.
+  const tenantPipelineErrors = validateTenantPipeline({
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnections,
@@ -257,6 +253,11 @@ function validateStep(
     collections,
     configKey,
   });
+  if (tenantPipelineErrors.length === 0) return;
+  if (type.isNone(context)) {
+    throw tenantPipelineErrors[0];
+  }
+  tenantPipelineErrors.forEach((error) => collectExceptions(context, error));
 }
 
 export default validateStep;
