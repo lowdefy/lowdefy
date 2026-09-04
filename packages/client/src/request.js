@@ -16,11 +16,14 @@
 
 import { serializer, translate } from '@lowdefy/helpers';
 
+import getJourneySessionHeaders from './journey/getJourneySessionHeaders.js';
+
 async function request({ url, method = 'GET', body }) {
   const res = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
+      ...getJourneySessionHeaders({ window: globalThis.window }),
     },
     body: JSON.stringify(body),
   });

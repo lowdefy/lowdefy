@@ -36,10 +36,14 @@ import resolveEventPolicy from './resolveEventPolicy.js';
 function logEvent({ context, event, fields = {} }) {
   const policy = resolveEventPolicy(context.logger.eventsConfig);
   const failed = event.endsWith('_failed');
+  // A journey_event or feedback_submitted line names its own session; a
+  // request, step or endpoint line takes the one the calling tab sent on the
+  // request (context.sessionId), so a report ties to the requests too.
+  const sessionId = fields.session_id ?? context.sessionId ?? null;
   const level =
     failed ||
     policy.level === 'all' ||
-    reportingSessions.has(fields.session_id) ||
+    reportingSessions.has(sessionId) ||
     isRidSampled({ rid: context.rid, sampleRate: policy.sampleRate })
       ? 'info'
       : 'debug';
@@ -55,6 +59,9 @@ function logEvent({ context, event, fields = {} }) {
     block_id: context.blockId,
     ...rest,
   };
+  if (type.isNone(line.session_id) && !type.isNone(sessionId)) {
+    line.session_id = sessionId;
+  }
   if (policy.identity) {
     line.user = { id: context.user?.id ?? context.user?.sub ?? null };
     if (!type.isNone(org)) {

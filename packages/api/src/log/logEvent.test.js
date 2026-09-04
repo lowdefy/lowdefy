@@ -19,9 +19,10 @@ import { jest } from '@jest/globals';
 import logEvent from './logEvent.js';
 import reportingSessions from './reportingSessions.js';
 
-function testContext({ eventsConfig, rid = 'rid_1', user = { id: 'user_1' } } = {}) {
+function testContext({ eventsConfig, rid = 'rid_1', sessionId, user = { id: 'user_1' } } = {}) {
   return {
     rid,
+    sessionId,
     user,
     pageId: 'page_1',
     blockId: 'block_1',
@@ -160,4 +161,32 @@ test('logEvent keeps a sampled-out event whose session reported feedback', () =>
   });
   expect(reporting.logger.info).toHaveBeenCalled();
   expect(reporting.logger.debug).not.toHaveBeenCalled();
+});
+
+test('logEvent stamps the calling tab session on a request line and keeps it once that session reported', () => {
+  const sessionId = 'sess-request-line';
+  const context = testContext({ eventsConfig: { sample_rate: 0 }, sessionId });
+  logEvent({ context, event: 'request_completed', fields: { request_id: 'req_1' } });
+  expect(context.logger.info).not.toHaveBeenCalled();
+  expect(context.logger.debug.mock.calls[0][0].session_id).toEqual(sessionId);
+
+  reportingSessions.keep(sessionId);
+  const reporting = testContext({ eventsConfig: { sample_rate: 0 }, sessionId });
+  logEvent({ context: reporting, event: 'step_completed', fields: { step_id: 'step_1' } });
+  expect(reporting.logger.debug).not.toHaveBeenCalled();
+  expect(reporting.logger.info.mock.calls[0][0].session_id).toEqual(sessionId);
+});
+
+test('logEvent leaves a line that names its own session alone', () => {
+  const context = testContext({ eventsConfig: 'all', sessionId: 'sess-header' });
+  logEvent({ context, event: 'journey_event', fields: { session_id: 'sess-body' } });
+
+  expect(context.logger.info.mock.calls[0][0].session_id).toEqual('sess-body');
+});
+
+test('logEvent writes no session_id when the caller sent none', () => {
+  const context = testContext({ eventsConfig: 'all' });
+  logEvent({ context, event: 'request_completed', fields: {} });
+
+  expect(context.logger.info.mock.calls[0][0]).not.toHaveProperty('session_id');
 });

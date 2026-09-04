@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-const STORAGE_KEY = 'lowdefy_journey_session';
+import journeySessionKey from './journeySessionKey.js';
 
 function createSessionId(window) {
   if (typeof window.crypto?.randomUUID === 'function') {
@@ -31,7 +31,7 @@ function createSessionId(window) {
 function resolveJourneySession({ sampleRate, window }) {
   let stored = null;
   try {
-    stored = JSON.parse(window.sessionStorage.getItem(STORAGE_KEY));
+    stored = JSON.parse(window.sessionStorage.getItem(journeySessionKey));
   } catch {
     stored = null;
   }
@@ -40,7 +40,7 @@ function resolveJourneySession({ sampleRate, window }) {
   }
   const session = { sampled: Math.random() < sampleRate, session_id: createSessionId(window) };
   try {
-    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    window.sessionStorage.setItem(journeySessionKey, JSON.stringify(session));
   } catch {
     // Nothing to do: an unstorable session is still a valid session.
   }

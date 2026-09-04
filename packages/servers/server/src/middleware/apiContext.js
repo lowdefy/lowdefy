@@ -34,6 +34,7 @@ import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
+import getJourneySessionId from './getJourneySessionId.js';
 import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
@@ -107,6 +108,10 @@ function apiContext() {
         hostname: c.req.header('host'),
       },
       secrets,
+      // The journey session the calling tab is recording under, when it sent
+      // one: logEvent stamps it on this request's wide events, which is what
+      // ties a feedback report to the requests the session made.
+      sessionId: getJourneySessionId(c),
       // The incoming request's AbortSignal: the endpoint runner checks it
       // between steps and loop iterations, so a caller that disconnects or a
       // platform that times the invocation out stops the routine instead of
