@@ -506,15 +506,6 @@ async function runJourney({
       timeout,
     });
     context = opened.context;
-    // openPage waits for the page context and its initial requests; a journey
-    // additionally needs onInit/onInitAsync and any mount event to have
-    // finished before the first step, so the first click doesn't race the
-    // page's own load chain. Tolerant: an unsettled page still runs its steps
-    // and reports `ready: false` alongside the result.
-    const ready = await opened.page
-      .waitForFunction(isPageReady, pageId, { timeout })
-      .then(() => true)
-      .catch(() => false);
     const { results, screenshots, failure } = await runSteps({
       page: opened.page,
       steps,
@@ -531,7 +522,9 @@ async function runJourney({
     if (!type.isUndefined(failure)) {
       result.failure = failure;
     }
-    if (!ready) {
+    // openPage already waited for the page's async lifecycle; an unsettled page
+    // still runs its steps and reports `ready: false` alongside the result.
+    if (!opened.ready) {
       return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
     }
     return result;

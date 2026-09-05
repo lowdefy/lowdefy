@@ -559,16 +559,14 @@ test('runJourney settles the page after an interaction before the next step', as
     steps: [{ click: 'open' }, { expect: { visible: 'modal' } }],
   });
 
-  // Once for the readiness wait after the page opens, once after the click.
-  expect(page.waitForFunction).toHaveBeenCalledTimes(2);
+  // openPage owns the readiness wait; the runner waits once after the click.
+  expect(page.waitForFunction).toHaveBeenCalledTimes(1);
   expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
-  expect(page.waitForFunction.mock.calls[1][1]).toEqual('form');
 });
 
 test('runJourney reports an unsettled page open with ready: false and a note', async () => {
   const page = createPage();
-  page.waitForFunction.mockRejectedValue(new Error('waitForFunction: Timeout exceeded.'));
-  openWith(page);
+  openWith(page, { ready: false });
 
   const result = await runJourney({ origin, pageId: 'form', steps: [] });
 
