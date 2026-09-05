@@ -356,13 +356,13 @@
       "~l": 8
     },
     "d": {
-      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:send-email:SendGridMailSend]",
+      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:notify/email:SendGridMailSend]",
       "~k_parent": "c",
       "~r": "pages.0",
       "~l": 9
     },
     "e": {
-      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:send-email:SendGridMailSend].properties",
+      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:notify/email:SendGridMailSend].properties",
       "~k_parent": "d",
       "~r": "pages.0",
       "~l": 13
@@ -478,11 +478,11 @@
       "~k_parent": "1a"
     },
     "1g": {
-      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:send-email:SendGridMailSend].payload",
+      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:notify/email:SendGridMailSend].payload",
       "~k_parent": "d"
     },
     "1h": {
-      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:send-email:SendGridMailSend].auth",
+      "key": "root.pages[1:notify/inbox:Box].blocks[0:send-btn:Button].requests[0:notify/email:SendGridMailSend].auth",
       "~k_parent": "d"
     },
     "1i": {

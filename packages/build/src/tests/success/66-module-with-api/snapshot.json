@@ -467,19 +467,19 @@
       "~l": 3
     },
     "p": {
-      "key": "root.api[0:inviter/send-invite:Api].routine[0:send-email:SendGridMailSend]",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend]",
       "~k_parent": "o",
       "~r": "api.0",
       "~l": 4
     },
     "q": {
-      "key": "root.api[0:inviter/send-invite:Api].routine[0:send-email:SendGridMailSend].properties",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend].properties",
       "~k_parent": "p",
       "~r": "api.0",
       "~l": 8
     },
     "r": {
-      "key": "root.api[0:inviter/send-invite:Api].routine[0:send-email:SendGridMailSend].properties.to",
+      "key": "root.api[0:inviter/send-invite:Api].routine[0:inviter/email-conn:SendGridMailSend].properties.to",
       "~k_parent": "q",
       "~r": "api.0",
       "~l": 9

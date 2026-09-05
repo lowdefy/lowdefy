@@ -457,17 +457,17 @@
       "~l": 15
     },
     "c": {
-      "key": "root.api[0:summarize-text:Api].routine[0:summarize:GenerateText]",
+      "key": "root.api[0:summarize-text:Api].routine[0:claude:GenerateText]",
       "~k_parent": "b",
       "~l": 16
     },
     "d": {
-      "key": "root.api[0:summarize-text:Api].routine[0:summarize:GenerateText].properties",
+      "key": "root.api[0:summarize-text:Api].routine[0:claude:GenerateText].properties",
       "~k_parent": "c",
       "~l": 19
     },
     "e": {
-      "key": "root.api[0:summarize-text:Api].routine[0:summarize:GenerateText].properties.prompt",
+      "key": "root.api[0:summarize-text:Api].routine[0:claude:GenerateText].properties.prompt",
       "~k_parent": "d",
       "~l": 22
     },
@@ -497,37 +497,37 @@
       "~l": 30
     },
     "k": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject]",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject]",
       "~k_parent": "j",
       "~l": 31
     },
     "l": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties",
       "~k_parent": "k",
       "~l": 34
     },
     "m": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties.prompt",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties.prompt",
       "~k_parent": "l",
       "~l": 36
     },
     "n": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties.schema",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties.schema",
       "~k_parent": "l",
       "~l": 38
     },
     "o": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties.schema.properties",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties.schema.properties",
       "~k_parent": "n",
       "~l": 40
     },
     "p": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties.schema.properties.category",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties.schema.properties.category",
       "~k_parent": "o",
       "~l": 41
     },
     "q": {
-      "key": "root.api[1:classify-ticket:Api].routine[0:classify:GenerateObject].properties.schema.properties.urgent",
+      "key": "root.api[1:classify-ticket:Api].routine[0:claude:GenerateObject].properties.schema.properties.urgent",
       "~k_parent": "o",
       "~l": 43
     },

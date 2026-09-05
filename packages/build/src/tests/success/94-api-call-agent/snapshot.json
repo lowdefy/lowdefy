@@ -495,17 +495,17 @@
       "~k_parent": "52"
     },
     "a": {
-      "key": "root.agents[0:research_agent:ClaudeAgent]",
+      "key": "root.agents[0:claude:ClaudeAgent]",
       "~k_parent": "9",
       "~l": 13
     },
     "b": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].properties",
+      "key": "root.agents[0:claude:ClaudeAgent].properties",
       "~k_parent": "a",
       "~l": 16
     },
     "c": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].tools",
+      "key": "root.agents[0:claude:ClaudeAgent].tools",
       "~k_parent": "a",
       "~l": 20
     },
@@ -685,23 +685,23 @@
       "~k_parent": "4"
     },
     "1q": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].tools",
+      "key": "root.agents[0:claude:ClaudeAgent].tools",
       "~k_parent": "a"
     },
     "1r": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].tools[0]",
+      "key": "root.agents[0:claude:ClaudeAgent].tools[0]",
       "~k_parent": "1q"
     },
     "1s": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].auth",
+      "key": "root.agents[0:claude:ClaudeAgent].auth",
       "~k_parent": "a"
     },
     "1t": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].mcp",
+      "key": "root.agents[0:claude:ClaudeAgent].mcp",
       "~k_parent": "a"
     },
     "1u": {
-      "key": "root.agents[0:research_agent:ClaudeAgent].agents",
+      "key": "root.agents[0:claude:ClaudeAgent].agents",
       "~k_parent": "a"
     },
     "1v": {

@@ -733,43 +733,43 @@
       "~k_parent": "5"
     },
     "1b": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent]",
+      "key": "root.agents[0:helper/ai:ClaudeAgent]",
       "~k_parent": "1a",
       "~r": "agents.0",
       "~l": 1
     },
     "1c": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].properties",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].properties",
       "~k_parent": "1b",
       "~r": "agents.0",
       "~l": 5
     },
     "1d": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].tools",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].tools",
       "~k_parent": "1b",
       "~r": "agents.0",
       "~l": 9
     },
     "1e": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].tools[0]",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].tools[0]",
       "~k_parent": "1d",
       "~r": "agents.0",
       "~l": 11
     },
     "1f": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].tools[1]",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].tools[1]",
       "~k_parent": "1d",
       "~r": "agents.0",
       "~l": 15
     },
     "1g": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].hooks",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].hooks",
       "~k_parent": "1b",
       "~r": "agents.0",
       "~l": 17
     },
     "1h": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].hooks.onFinish",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].hooks.onFinish",
       "~k_parent": "1g",
       "~r": "agents.0",
       "~l": 18
@@ -919,19 +919,19 @@
       "~k_parent": "12"
     },
     "2t": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].tools",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].tools",
       "~k_parent": "1b"
     },
     "2u": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].auth",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].auth",
       "~k_parent": "1b"
     },
     "2v": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].mcp",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].mcp",
       "~k_parent": "1b"
     },
     "2w": {
-      "key": "root.agents[0:helper/assistant:ClaudeAgent].agents",
+      "key": "root.agents[0:helper/ai:ClaudeAgent].agents",
       "~k_parent": "1b"
     },
     "2x": {

@@ -177,55 +177,55 @@
       "~l": 5
     },
     "21": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne]",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne]",
       "~k_parent": "20",
       "~r": "pages.1",
       "~l": 6
     },
     "22": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].payload",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload",
       "~k_parent": "21",
       "~r": "pages.1",
       "~l": 9
     },
     "23": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].payload.name",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload.name",
       "~k_parent": "22",
       "~r": "pages.1",
       "~l": 10
     },
     "24": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].payload.email",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].payload.email",
       "~k_parent": "22",
       "~r": "pages.1",
       "~l": 12
     },
     "25": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].properties",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties",
       "~k_parent": "21",
       "~r": "pages.1",
       "~l": 14
     },
     "26": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].properties.doc",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc",
       "~k_parent": "25",
       "~r": "pages.1",
       "~l": 15
     },
     "27": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].properties.doc.name",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.name",
       "~k_parent": "26",
       "~r": "pages.1",
       "~l": 16
     },
     "28": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].properties.doc.email",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.email",
       "~k_parent": "26",
       "~r": "pages.1",
       "~l": 18
     },
     "29": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].properties.doc.createdAt",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].properties.doc.createdAt",
       "~k_parent": "26",
       "~r": "pages.1",
       "~l": 20
@@ -243,49 +243,49 @@
       "~l": 5
     },
     "32": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne]",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne]",
       "~k_parent": "31",
       "~r": "pages.2",
       "~l": 6
     },
     "33": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].payload",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].payload",
       "~k_parent": "32",
       "~r": "pages.2",
       "~l": 9
     },
     "34": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].payload.id",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].payload.id",
       "~k_parent": "33",
       "~r": "pages.2",
       "~l": 10
     },
     "35": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].properties",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties",
       "~k_parent": "32",
       "~r": "pages.2",
       "~l": 12
     },
     "36": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].properties.query",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties.query",
       "~k_parent": "35",
       "~r": "pages.2",
       "~l": 13
     },
     "37": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].properties.query._id",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].properties.query._id",
       "~k_parent": "36",
       "~r": "pages.2",
       "~l": 14
     },
     "38": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne]",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne]",
       "~k_parent": "31",
       "~r": "pages.2",
       "~l": 16
     },
     "39": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].payload",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload",
       "~k_parent": "38",
       "~r": "pages.2",
       "~l": 19
@@ -393,7 +393,7 @@
       "~k_parent": "5o"
     },
     "62": {
-      "key": "root.pages[1:create-user:Box].requests[0:createUser:MongoDBInsertOne].auth",
+      "key": "root.pages[1:create-user:Box].requests[0:db:MongoDBInsertOne].auth",
       "~k_parent": "21"
     },
     "63": {
@@ -593,67 +593,67 @@
       "~l": 5
     },
     "j": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind]",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind]",
       "~k_parent": "i",
       "~r": "pages.0",
       "~l": 6
     },
     "k": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].properties",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties",
       "~k_parent": "j",
       "~r": "pages.0",
       "~l": 9
     },
     "l": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].properties.query",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.query",
       "~k_parent": "k",
       "~r": "pages.0",
       "~l": 10
     },
     "m": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].properties.options",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.options",
       "~k_parent": "k",
       "~r": "pages.0",
       "~l": 11
     },
     "n": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].properties.options.sort",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].properties.options.sort",
       "~k_parent": "m",
       "~r": "pages.0",
       "~l": 12
     },
     "o": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne]",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne]",
       "~k_parent": "i",
       "~r": "pages.0",
       "~l": 14
     },
     "p": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].payload",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].payload",
       "~k_parent": "o",
       "~r": "pages.0",
       "~l": 17
     },
     "q": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].payload.id",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].payload.id",
       "~k_parent": "p",
       "~r": "pages.0",
       "~l": 18
     },
     "r": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].properties",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties",
       "~k_parent": "o",
       "~r": "pages.0",
       "~l": 20
     },
     "s": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].properties.filter",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties.filter",
       "~k_parent": "r",
       "~r": "pages.0",
       "~l": 21
     },
     "t": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].properties.filter._id",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].properties.filter._id",
       "~k_parent": "s",
       "~r": "pages.0",
       "~l": 22
@@ -1007,67 +1007,67 @@
       "~l": 1
     },
     "3a": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].payload.id",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.id",
       "~k_parent": "39",
       "~r": "pages.2",
       "~l": 20
     },
     "3b": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].payload.name",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.name",
       "~k_parent": "39",
       "~r": "pages.2",
       "~l": 22
     },
     "3c": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].payload.email",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].payload.email",
       "~k_parent": "39",
       "~r": "pages.2",
       "~l": 24
     },
     "3d": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties",
       "~k_parent": "38",
       "~r": "pages.2",
       "~l": 26
     },
     "3e": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.filter",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.filter",
       "~k_parent": "3d",
       "~r": "pages.2",
       "~l": 27
     },
     "3f": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.filter._id",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.filter._id",
       "~k_parent": "3e",
       "~r": "pages.2",
       "~l": 28
     },
     "3g": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.update",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update",
       "~k_parent": "3d",
       "~r": "pages.2",
       "~l": 30
     },
     "3h": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.update.$set",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set",
       "~k_parent": "3g",
       "~r": "pages.2",
       "~l": 31
     },
     "3i": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.update.$set.name",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.name",
       "~k_parent": "3h",
       "~r": "pages.2",
       "~l": 32
     },
     "3j": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.update.$set.email",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.email",
       "~k_parent": "3h",
       "~r": "pages.2",
       "~l": 34
     },
     "3k": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].properties.update.$set.updatedAt",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].properties.update.$set.updatedAt",
       "~k_parent": "3h",
       "~r": "pages.2",
       "~l": 36
@@ -1307,15 +1307,15 @@
       "~k_parent": "4z"
     },
     "5l": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].payload",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].payload",
       "~k_parent": "j"
     },
     "5m": {
-      "key": "root.pages[0:users:Box].requests[0:getUsers:MongoDBFind].auth",
+      "key": "root.pages[0:users:Box].requests[0:db:MongoDBFind].auth",
       "~k_parent": "j"
     },
     "5n": {
-      "key": "root.pages[0:users:Box].requests[1:deleteUser:MongoDBDeleteOne].auth",
+      "key": "root.pages[0:users:Box].requests[1:db:MongoDBDeleteOne].auth",
       "~k_parent": "o"
     },
     "5o": {
@@ -1387,11 +1387,11 @@
       "~k_parent": "63"
     },
     "6f": {
-      "key": "root.pages[2:edit-user:Box].requests[0:getUser:MongoDBFindOne].auth",
+      "key": "root.pages[2:edit-user:Box].requests[0:db:MongoDBFindOne].auth",
       "~k_parent": "32"
     },
     "6g": {
-      "key": "root.pages[2:edit-user:Box].requests[1:updateUser:MongoDBUpdateOne].auth",
+      "key": "root.pages[2:edit-user:Box].requests[1:db:MongoDBUpdateOne].auth",
       "~k_parent": "38"
     },
     "6h": {
