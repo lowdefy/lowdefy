@@ -41,3 +41,11 @@ test('setAuthConfigured sets configured to false when auth only contains marker 
   const res = setAuthConfigured({ components });
   expect(res.auth.configured).toBe(false);
 });
+
+test('setAuthConfigured sets configured to false when auth only declares dev config', () => {
+  const components = {
+    auth: { dev: { mockUser: { id: 'u1' } } },
+  };
+  const res = setAuthConfigured({ components });
+  expect(res.auth.configured).toBe(false);
+});

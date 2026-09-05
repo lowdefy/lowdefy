@@ -36,7 +36,14 @@ function Auth({ children, user }) {
       </AuthConfigured>
     );
   }
-  return <AuthNotConfigured authConfig={authConfig}>{(auth) => children(auth)}</AuthNotConfigured>;
+  // An app whose only auth key is auth.dev has no auth stack, but the dev
+  // server still resolves a caller for auth.dev.mockUser - pass it through so
+  // _user reads the same identity in the browser as on the server.
+  return (
+    <AuthNotConfigured authConfig={authConfig} user={user}>
+      {(auth) => children(auth)}
+    </AuthNotConfigured>
+  );
 }
 
 export default Auth;

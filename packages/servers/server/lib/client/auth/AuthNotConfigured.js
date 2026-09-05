@@ -25,10 +25,10 @@ function authNotConfigured() {
 // Every key AuthConfigured exposes must be present here, or an auth action in an
 // app without an auth section fails with "auth.x is not a function" instead of
 // the ConfigError that names the missing config.
-function AuthNotConfigured({ authConfig, children }) {
+function AuthNotConfigured({ authConfig, children, user = null }) {
   const auth = {
     authConfig,
-    user: null,
+    user,
     acceptInvitation: authNotConfigured,
     addPasskey: authNotConfigured,
     changePassword: authNotConfigured,

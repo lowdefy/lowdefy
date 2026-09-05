@@ -23,6 +23,10 @@ import authJson from '../../build/auth.js';
 // resolveAuthentication step - no auth engine, no session lookup, no
 // membership wall. Its roles are authoritative. LOWDEFY_DEV_USER takes
 // priority over auth.dev.mockUser from lowdefy.yaml.
+//
+// A dev mock user needs no auth stack behind it: auth.dev is a dev-only
+// concern, so an app whose only auth key is auth.dev runs signed out in
+// production and has this caller in the dev server.
 function getMockUser() {
   const mockUserJson = process.env.LOWDEFY_DEV_USER;
   let mockUser;
@@ -45,13 +49,6 @@ function getMockUser() {
 
   // Deserialize to restore arrays from ~arr markers and remove other build markers
   mockUser = serializer.deserialize(mockUser);
-
-  if (authJson.configured !== true) {
-    throw new ConfigError(
-      'Mock user configured but auth is not configured in lowdefy.yaml. ' +
-        'Add auth configuration to use mock user feature.'
-    );
-  }
 
   // The roles/attributes floor is applied at injection by
   // normalizeInjectedCaller (createLowdefyContext.js) - return the raw user.
