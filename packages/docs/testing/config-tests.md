@@ -41,13 +41,13 @@ Files run in file-name order, and journeys run one at a time — each journey op
     - expect: { visible: empty_state }
 ```
 
-| Field      | Required | Description                                                                                                                                                                     |
-| ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`     | Yes      | A short description. `--filter` matches against it, and it is printed in the results.                                                                                           |
-| `pageId`   | Yes      | The page to open.                                                                                                                                                               |
-| `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user.                                   |
-| `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                         |
-| `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                     |
+| Field      | Required | Description                                                                                                                                    |
+| ---------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | Yes      | A short description. `--filter` matches against it, and it is printed in the results.                                                          |
+| `pageId`   | Yes      | The page to open.                                                                                                                              |
+| `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user. |
+| `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                        |
+| `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                    |
 
 ## Steps
 
