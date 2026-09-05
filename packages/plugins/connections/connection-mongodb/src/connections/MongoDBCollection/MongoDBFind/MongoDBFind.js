@@ -16,6 +16,7 @@
 
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -27,8 +28,13 @@ async function MongodbFind({ request, connection, tenant }) {
     query = applyTenantToFilter({ filter: query, tenant, position: 'a query' });
   }
   const { collection } = await getCollection({ connection });
-  const cursor = await collection.find(query, options);
-  const res = await cursor.toArray();
+  let res;
+  try {
+    const cursor = await collection.find(query, options);
+    res = await cursor.toArray();
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBFind' });
+  }
   return serialize(res);
 }
 

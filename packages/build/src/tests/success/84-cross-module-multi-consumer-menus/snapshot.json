@@ -1492,62 +1492,98 @@
   "plugins/auth/strategies.js": "export default {\n  };",
   "plugins/blockMetas.json": {
     "Box": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Result": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Anchor": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "DangerousHtml": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "dangerous-html-unsanitised",
+          "message": "Content is rendered without sanitising, so never pass caller-supplied or database HTML through it. Use Html for anything a user could have written.",
+          "see": "display-blocks/dangeroushtml"
+        },
+        {
+          "id": "dompurify-options-first-render",
+          "message": "DOMPurifyOptions is read once when the block mounts, so a value that changes after the first render has no effect. Set it statically or remount the block.",
+          "see": "display-blocks/dangeroushtml"
+        }
+      ]
     },
     "Dynamic": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Html": {
-      "category": "display"
+      "category": "display",
+      "hazards": [
+        {
+          "id": "html-style-stripped",
+          "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.",
+          "see": "display-blocks/html"
+        }
+      ]
     },
     "Icon": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Img": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "List": {
       "category": "list",
-      "valueType": "array"
+      "valueType": "array",
+      "hazards": []
     },
     "Span": {
-      "category": "container"
+      "category": "container",
+      "hazards": []
     },
     "Throw": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "ProgressBar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Skeleton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonAvatar": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonButton": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonInput": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "SkeletonParagraph": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Spinner": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "Message": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     }
   },
   "plugins/blockSchemas.json": {
@@ -4652,6 +4688,21 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "progress": {
+              "type": "number",
+              "default": 30,
+              "description": "Progress percentage to show, from 0 to 100."
+            },
+            "shadow": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the glowing shadow at the head of the bar."
+            },
+            "transitionTime": {
+              "type": "number",
+              "default": 1000,
+              "description": "Width transition duration in milliseconds."
+            },
             "height": {
               "type": [
                 "number",
@@ -5296,6 +5347,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "shape": {
+              "type": "string",
+              "default": "default",
+              "description": "Shape of the skeleton; round gives fully rounded ends.",
+              "enum": [
+                "default",
+                "round"
+              ]
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -5513,6 +5573,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "label": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the label skeleton. Set to false for an input without a label."
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -6000,13 +6065,11 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": "string",
-              "description": "Size of the icon spinner.",
-              "enum": [
-                "small",
-                "medium",
-                "large"
-              ]
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
         },
@@ -6144,6 +6207,7 @@
   "plugins/connections.js": "export default {\n  };",
   "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
+  "plugins/operatorMetas.json": {},
   "plugins/operatorSchemas.json": {
     "_not": {
       "type": "object",
@@ -6169,9 +6233,10 @@
               "null",
               "undefined",
               "none",
+              "empty",
               "primitive"
             ],
-            "description": "Type name to test against state value at current location."
+            "description": "Type name to test against state value at current location. The \"empty\" test is true for null, undefined, '' and [], and false for 0, false and {}."
           },
           {
             "type": "object",
@@ -6192,6 +6257,7 @@
                   "null",
                   "undefined",
                   "none",
+                  "empty",
                   "primitive"
                 ],
                 "description": "Type name to test."

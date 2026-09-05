@@ -135,12 +135,31 @@ test('validateAuthConfig throws when strategies is not an array', () => {
   );
 });
 
-test('validateAuthConfig throws when only dev.mockUser is set, since it is not a mechanism', () => {
+test('validateAuthConfig does not demand a mechanism when only dev.mockUser is set', () => {
   const components = {
     auth: {
       dev: {
         mockUser: { id: 'user-1', roles: ['admin'] },
       },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig still schema-checks an auth block that only declares dev config', () => {
+  const components = {
+    auth: {
+      dev: { mockUser: { id: 'user-1' }, notADevField: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow();
+});
+
+test('validateAuthConfig throws when dev.mockUser is set alongside a runtime auth key', () => {
+  const components = {
+    auth: {
+      dev: { mockUser: { id: 'user-1', roles: ['admin'] } },
+      secret: validSecret,
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(

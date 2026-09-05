@@ -29,7 +29,8 @@ fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
 process.chdir(fixtureDir);
 
-const { openPage } = await import('./getBrowser.js');
+const { openPage, buildPageUrl } = await import('./getBrowser.js');
+const { default: isPageReady } = await import('./isPageReady.js');
 
 afterAll(() => {
   process.chdir(originalCwd);
@@ -44,12 +45,14 @@ function createBrowser() {
   };
   const context = {
     addCookies,
+    close: jest.fn().mockResolvedValue(undefined),
     newPage: jest.fn().mockResolvedValue(page),
   };
   return {
     browser: { newContext: jest.fn().mockResolvedValue(context) },
     addCookies,
     context,
+    page,
   };
 }
 
@@ -117,4 +120,77 @@ test('openPage rejects an invalid user before opening a browser context', async 
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'admin' })
   ).rejects.toThrow('Headless "user" must be an object. Received "admin".');
   expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage waits on the isPageReady predicate for the page it opened', async () => {
+  const { browser } = createBrowser();
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, 'home', { timeout: 15000 });
+  expect(opened.ready).toBe(true);
+});
+
+test('openPage resolves with ready false when the readiness wait times out', async () => {
+  const { browser, page } = createBrowser();
+  page.waitForFunction.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(opened.ready).toBe(false);
+  expect(opened.page).toBe(page);
+});
+
+test('openPage closes the context it created when both navigation attempts fail', async () => {
+  const { browser, context, page } = createBrowser();
+  page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Timeout 15000ms exceeded.');
+  expect(page.goto).toHaveBeenCalledTimes(2);
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('openPage closes the context it created when opening a page fails', async () => {
+  const { browser, context } = createBrowser();
+  context.newPage.mockRejectedValue(new Error('Browser crashed.'));
+
+  await expect(
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('Browser crashed.');
+  expect(context.close).toHaveBeenCalledTimes(1);
+});
+
+test('buildPageUrl returns the bare page route without a urlQuery', () => {
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home' })).toEqual(
+    'http://localhost:3001/home'
+  );
+  expect(buildPageUrl({ origin: 'http://localhost:3001', pageId: 'home', urlQuery: {} })).toEqual(
+    'http://localhost:3001/home'
+  );
+});
+
+test('buildPageUrl appends urlQuery the way the engine serializes Link urlQuery', () => {
+  expect(
+    buildPageUrl({
+      origin: 'http://localhost:3001',
+      pageId: 'detail',
+      urlQuery: { id: 'abc 1', page: 2, filter: { open: true } },
+    })
+  ).toEqual('http://localhost:3001/detail?id=abc+1&page=2&filter=%7B%22open%22%3Atrue%7D');
+});
+
+test('openPage opens the page at the urlQuery it was given', async () => {
+  const { browser, page } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'detail',
+    urlQuery: { id: '1' },
+  });
+
+  expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
+  expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });

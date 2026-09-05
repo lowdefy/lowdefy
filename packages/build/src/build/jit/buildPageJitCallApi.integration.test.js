@@ -332,6 +332,7 @@ test('JIT build still warns when a CallAPI targets a genuinely missing endpoint'
   const { warnings } = await buildAndCollectWarnings('missing');
   expect(warnings).toHaveLength(1);
   expect(warnings[0].message).toBe(
-    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist".'
+    'CallAPI action on page "missing" references non-existent endpoint "does_not_exist". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "does_not_exist".'
   );
 });

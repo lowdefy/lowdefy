@@ -77,6 +77,11 @@ function memberMcpAuth(grantedScopes) {
 }
 
 function createContext({ authEnforcement = null, configs = {}, mcpAuth, user = null } = {}) {
+  const operators = {
+    _fail: () => {
+      throw new Error('Boom.');
+    },
+  };
   const files = {
     'mcp.json': mcpJson,
     'api/health.json': healthConfig,
@@ -85,7 +90,7 @@ function createContext({ authEnforcement = null, configs = {}, mcpAuth, user = n
     ...configs,
   };
   const readConfigFile = jest.fn((path) => files[path] ?? null);
-  const context = testContext({ authEnforcement, logger, readConfigFile, user });
+  const context = testContext({ authEnforcement, logger, operators, readConfigFile, user });
   context.mcpAuth = mcpAuth ?? anonymousMcpAuth;
   context.authorizeOutcome = jest.fn(context.authorizeOutcome);
   return context;
@@ -372,4 +377,75 @@ test('scopeCovers grants mcp:write endpoints to write grants only', () => {
 test('scopeCovers covers nothing for an empty grant', () => {
   expect(scopeCovers({ grantedScopes: [], endpointScope: 'mcp:read' })).toBe(false);
   expect(scopeCovers({ grantedScopes: [], endpointScope: 'mcp:write' })).toBe(false);
+});
+
+const failingConfig = {
+  endpointId: 'failing',
+  id: 'endpoint:failing',
+  type: 'Api',
+  auth: { public: true },
+  description: 'Always fails.',
+  payloadSchema: { type: 'object' },
+  // An operator failure is a fault, so runRoutine passes the error through
+  // handleError - unlike :throw, which is a UserError.
+  routine: { ':return': { _fail: true } },
+};
+
+const failingMcpJson = {
+  ...mcpJson,
+  endpoints: [...mcpJson.endpoints, { id: 'failing', scope: 'mcp:read' }],
+};
+
+test('tools/call returns the bare message of a failed routine in production', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain('Boom.');
+  expect(result.content[0].text).not.toContain('(at ');
+});
+
+test('tools/call appends the config source of a failed routine when configDirectory is set', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+  });
+  context.configDirectory = '/app';
+  // Mirrors createHandleError in server-dev, which resolves the location onto the error.
+  context.handleError = jest.fn(async (error) => {
+    error.source = '/app/api/failing.yaml:4';
+    error.handled = true;
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(result.content[0].text).toContain('Boom.');
+  expect(result.content[0].text).toMatch(/ \(at api\/failing\.yaml:4\)$/);
+});
+
+test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
+  const context = createContext();
+  context.configDirectory = '/app';
+  context.handleError = jest.fn(async (error) => {
+    error.source = 'api/get-customer.yaml:2';
+    error.handled = true;
+  });
+  context.authorizeOutcome = jest.fn(() => {
+    throw new Error('Authorization exploded.');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(context.handleError.mock.calls[0][0].message).toEqual('Authorization exploded.');
+  expect(result.content[0].text).toEqual('Authorization exploded. (at api/get-customer.yaml:2)');
+  expect(logger.warn).not.toHaveBeenCalled();
 });

@@ -419,6 +419,11 @@
         title: Testing
         icon: AiOutlineExperiment
       links:
+        - id: config-tests
+          type: MenuLink
+          pageId: config-tests
+          properties:
+            title: Config Tests
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction
@@ -1266,9 +1271,9 @@
         - id: :try
           type: MenuLink
           pageId: :try
-        # - id: :while # TODO: Add back when while control implemented
-        #   type: MenuLink
-        #   pageId: :while
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: migration
       type: MenuGroup
       properties:

@@ -6,6 +6,7 @@ Lowdefy documentation extracted as markdown, for serving to AI coding agents via
 
 - `content/<section>/<slug>.md` — one markdown file per docs page (concepts, tutorial, operators, actions, connections, blocks, ...).
 - `index.json` — manifest of all docs: `{ version, docs: [{ slug, title, section, path, kind?, typeName? }] }`. `kind`/`typeName` map a plugin type (e.g. operator `_get`) to its doc.
+- `hazards.json` — framework-level hazards served by the dev MCP alongside schemas, docs and config lookups: `[{ id, appliesTo: { kinds?, types?, when? }, message, see }]`. This file is hand-authored and committed, not generated — `pnpm docs:content` wipes `content/` but leaves it untouched. Add an entry only for a behaviour verified in the framework source.
 
 ## Regenerating content
 

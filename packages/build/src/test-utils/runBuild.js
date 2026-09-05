@@ -16,6 +16,8 @@
 
 import path from 'path';
 
+import { errorToDisplayString } from '@lowdefy/errors';
+
 import createTestLogger from './createTestLogger.js';
 
 /**
@@ -109,10 +111,15 @@ const testTypesMap = {
   },
 };
 
+// Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
+// what a developer actually reads in the terminal. `received` is left off - the
+// logged line carries the message, not the operator payload.
 function formatLine(line) {
   const source = line.err?.source ?? null;
   const name = line.err?.name ?? null;
-  const message = name ? `[${name}] ${line.msg}` : line.msg;
+  const message = name
+    ? errorToDisplayString({ name, message: line.msg, prodError: line.err?.prodError })
+    : line.msg;
   return source ? `${source}\n${message}` : message;
 }
 

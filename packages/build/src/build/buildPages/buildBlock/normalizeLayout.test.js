@@ -107,11 +107,16 @@ test('normalizeLayout does not overwrite existing new key with deprecated value'
   expect(pageContext.context.handleWarning).toHaveBeenCalledTimes(1);
 });
 
-test('normalizeLayout leaves layout.align untouched (ambiguous at build time)', () => {
+test('normalizeLayout leaves layout.align untouched, with or without layout.selfAlign', () => {
   const pageContext = createPageContext();
-  const block = { blockId: 'b1', layout: { align: 'center' } };
-  normalizeLayout(block, pageContext);
-  expect(block.layout).toEqual({ align: 'center' });
+  const alignOnly = { blockId: 'b1', layout: { align: 'middle' } };
+  normalizeLayout(alignOnly, pageContext);
+  expect(alignOnly.layout).toEqual({ align: 'middle' });
+
+  const bothSet = { blockId: 'b2', layout: { align: 'middle', selfAlign: 'top' } };
+  normalizeLayout(bothSet, pageContext);
+  expect(bothSet.layout).toEqual({ align: 'middle', selfAlign: 'top' });
+
   expect(pageContext.context.handleWarning).not.toHaveBeenCalled();
 });
 

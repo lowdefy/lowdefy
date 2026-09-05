@@ -17,6 +17,9 @@
 import { logClientError } from '@lowdefy/api';
 
 import clientErrorStore from '../../lib/docs/clientErrorStore.js';
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
+
+const guardSameOrigin = createSameOriginGuard();
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
@@ -26,16 +29,9 @@ async function clientErrorHandler(c) {
   }
   const context = c.get('lowdefyContext');
 
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
-    return c.json({ error: 'Forbidden' }, 403);
+  const forbidden = guardSameOrigin(c);
+  if (forbidden) {
+    return forbidden;
   }
 
   // Dev keeps `received` in the payload — it powers error tracing in dev tools.

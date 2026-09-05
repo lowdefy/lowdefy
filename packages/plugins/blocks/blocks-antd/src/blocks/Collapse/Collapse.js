@@ -64,7 +64,7 @@ const CollapseBlock = ({
         ))
       }
       expandIconPlacement={properties.expandIconPlacement ?? properties.expandIconPosition}
-      destroyInactivePanel={properties.destroyInactivePanel}
+      destroyOnHidden={properties.destroyInactivePanel}
       className={classNames.element}
       classNames={{ header: classNames.header, content: classNames.content }}
       style={styles.element}

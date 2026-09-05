@@ -16,6 +16,7 @@
 
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -27,7 +28,12 @@ async function MongodbBulkWrite({ connection, request, tenant }) {
     operations = applyTenantToBulkOperations({ operations, tenant });
   }
   const { collection } = await getCollection({ connection });
-  const response = await collection.bulkWrite(operations, options);
+  let response;
+  try {
+    response = await collection.bulkWrite(operations, options);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBBulkWrite' });
+  }
   return serialize(response);
 }
 

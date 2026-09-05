@@ -7,7 +7,9 @@
 The `:reject` control is used to return a user-friendly error to the client when validation fails or business rules are violated.
 Unlike [`:throw`](/:throw), which indicates a system error, `:reject` represents an expected failure condition that should be communicated to the user.
 The control immediately stops routine execution and returns with a `"reject"` status.
-Importantly, `:reject` does not trigger `:catch` blocks in [`:try`](/:try) statements, making it ideal for handling validation and business logic errors separately from system errors.
+Importantly, `:reject` does not trigger `:catch` blocks in [`:try`](/:try) statements: the reject flows past every enclosing `:try`, so a `:catch` in an outer `:try` never runs either, while `:finally` still runs.
+This makes `:reject` ideal for handling validation and business logic errors separately from system errors.
+Choose [`:throw`](/:throw) when a step failed and the routine may recover; choose `:reject` when the routine decided the request cannot be fulfilled.
 
 #### Keys
 

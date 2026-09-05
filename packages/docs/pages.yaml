@@ -77,6 +77,7 @@
 - _ref: users/reference/MongoDBAdapter.yaml
 - _ref: users/reference/Auth0LogoutCallback.yaml
 
+- _ref: testing/config-tests.yaml
 - _ref: testing/e2e-introduction.yaml
 - _ref: testing/e2e-getting-started.yaml
 - _ref: testing/e2e-writing-tests.yaml
@@ -339,7 +340,7 @@
 - _ref: controls/switch.yaml
 - _ref: controls/throw.yaml
 - _ref: controls/try.yaml
-# - _ref: controls/while.yaml # TODO: Add back when while control implemented
+- _ref: controls/while.yaml
 
 - _ref: migration/upgrade-guide.yaml
 - _ref: migration/auth-upgrade.yaml

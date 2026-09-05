@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import getAuthKeys from './getAuthKeys.js';
 
-const markerKeys = ['~ignoreBuildChecks', '~r', '~l', '~k'];
+// auth.dev names callers for the dev server's own tooling. It configures no
+// login method, no session store and no adapter, so an auth block whose only
+// substance is dev is not an auth configuration: the app runs signed out in
+// production, and in dev the browser is treated as auth.dev.mockUser.
+const devOnlyKeys = ['dev'];
 
-// configured = auth block present and non-empty. Intent, not completeness,
-// is the gate: validation runs on any configured block and errors on missing
-// pieces, instead of silently skipping incomplete auth config.
+// configured = the app declares a runtime auth stack. Intent, not
+// completeness, is the gate: validation runs on any such block and errors on
+// missing pieces, instead of silently skipping incomplete auth config.
 function isAuthConfigured({ components }) {
-  if (!type.isObject(components.auth)) {
-    return false;
-  }
-  return Object.keys(components.auth).some((key) => !markerKeys.includes(key));
+  return getAuthKeys({ components }).some((key) => !devOnlyKeys.includes(key));
 }
 
 export default isAuthConfigured;

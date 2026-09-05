@@ -19,6 +19,7 @@ import { ConfigError, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import getHazards from './getHazards.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
 const MAX_MATCHES = 20;
@@ -45,16 +46,11 @@ function buildIdPattern(id) {
 // (`root.pages[N:pageId]...`) carry the page segment inline, so a containment
 // pattern covers those.
 function buildPageScope({ pageId, keyMap }) {
-  let rootKeyId = findPageRootKeyId({ pageId, keyMap });
-  // A page built during the skeleton build (e.g. the default 404 page) chains
-  // to the global config root, which every skeleton entry shares — useless as
-  // a page discriminator. Those pages' keys carry the page segment inline, so
-  // the pattern branch identifies them instead.
-  if (!type.isNone(rootKeyId) && rootKeyId === findGlobalRootId(keyMap)) {
-    rootKeyId = null;
-  }
+  // A page built during the skeleton build (e.g. the default 404 page) has
+  // no JIT root at all — its keys carry the page segment inline, so the
+  // pattern branch identifies them instead.
   return {
-    rootKeyId,
+    rootKeyId: findPageRootKeyId({ pageId, keyMap }),
     pagePattern: new RegExp(`\\bpages\\[\\d+:${escapeRegExp(pageId)}(:[^\\]]*)?\\]`),
   };
 }
@@ -68,38 +64,32 @@ function findGlobalRootId(keyMap) {
   return null;
 }
 
+// A built page artifact mixes keys from two trees: the skeleton build keys
+// the page stub (its `auth`, for one), chaining to the global config root,
+// while the JIT build keys the page content under its own root. Only the
+// JIT root discriminates pages, so skip keys that chain to the global root.
 function findPageRootKeyId({ pageId, keyMap }) {
   const artifact = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
-  const keyId = findFirstKeyId(artifact);
-  if (type.isNone(keyId)) {
-    return null;
-  }
-  return resolveChainRootId({ keyId, keyMap });
-}
-
-function findFirstKeyId(node) {
-  if (type.isString(node?.['~k'])) {
-    return node['~k'];
-  }
-  if (type.isArray(node)) {
-    for (const item of node) {
-      const keyId = findFirstKeyId(item);
-      if (keyId) {
-        return keyId;
-      }
-    }
-    return null;
-  }
-  if (!type.isObject(node)) {
-    return null;
-  }
-  for (const key of Object.keys(node)) {
-    const keyId = findFirstKeyId(node[key]);
-    if (keyId) {
-      return keyId;
+  const globalRootId = findGlobalRootId(keyMap);
+  for (const keyId of collectKeyIds(artifact)) {
+    const rootKeyId = resolveChainRootId({ keyId, keyMap });
+    if (rootKeyId !== globalRootId) {
+      return rootKeyId;
     }
   }
   return null;
+}
+
+function collectKeyIds(node, keyIds = []) {
+  if (type.isString(node?.['~k'])) {
+    keyIds.push(node['~k']);
+  }
+  if (type.isArray(node)) {
+    node.forEach((item) => collectKeyIds(item, keyIds));
+  } else if (type.isObject(node)) {
+    Object.keys(node).forEach((key) => collectKeyIds(node[key], keyIds));
+  }
+  return keyIds;
 }
 
 // Walk ~k_parent to the top of the entry's subtree. addKeys assigns the tree
@@ -129,7 +119,46 @@ function belongsToPage({ keyId, entry, keyMap, pageScope }) {
   return resolveChainRootId({ keyId, keyMap }) === pageScope.rootKeyId;
 }
 
-function scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope }) {
+// A key path ends in the matched node's own segment, `blocks[2:my_button:Button]`
+// (addKeys recArray writes `name[index:id:type]`), which is all the kind and
+// type information hazards need.
+const NODE_SEGMENT = /([A-Za-z_]+)\[\d+:([^\]:]+)(?::([^\]]*))?\]$/;
+const SEGMENT_KINDS = {
+  blocks: 'blocks',
+  connections: 'connections',
+  pages: 'pages',
+  requests: 'requests',
+};
+
+// writeRequests strips connectionId off the page's requests array after
+// writing the per-request artifact, so a request's connection is only
+// readable there. Without a pageId the match's page is not known, so the
+// registry's pages are tried in turn — a requestId is unique within a page.
+function findRequestConnectionId({ requestId, requestPageIds }) {
+  for (const pageId of requestPageIds) {
+    const request = readBuildArtifact({ name: `pages/${pageId}/requests/${requestId}.json` });
+    if (!type.isNone(request)) {
+      return request.connectionId ?? null;
+    }
+  }
+  return null;
+}
+
+function hazardsForMatch({ keyPath, requestPageIds }) {
+  const segment = NODE_SEGMENT.exec(keyPath);
+  if (type.isNone(segment)) {
+    return [];
+  }
+  const [, arrayName, id, nodeType] = segment;
+  const kind = SEGMENT_KINDS[arrayName] ?? null;
+  let connectionId = null;
+  if (kind === 'requests') {
+    connectionId = findRequestConnectionId({ requestId: id, requestPageIds });
+  }
+  return getHazards({ kind, type: nodeType ?? null, connectionId });
+}
+
+function scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds }) {
   const pattern = buildIdPattern(id);
   const matches = [];
   for (const [keyId, entry] of Object.entries(keyMap)) {
@@ -148,6 +177,7 @@ function scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope }) {
     matches.push({
       keyPath: entry.key,
       location: resolveConfigLocation({ configKey: keyId, keyMap, refMap, configDirectory }),
+      hazards: hazardsForMatch({ keyPath: entry.key, requestPageIds }),
     });
   }
   return matches;
@@ -163,8 +193,8 @@ function deIndexId(id) {
   return id.replace(/\.\d+(?=\.|$)/g, () => '.$');
 }
 
-function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope }) {
-  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope });
+function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds }) {
+  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds });
   if (matches.length > 0) {
     return matches;
   }
@@ -172,7 +202,14 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope 
   if (deIndexedId === id) {
     return matches;
   }
-  return scanKeyMap({ id: deIndexedId, keyMap, refMap, configDirectory, pageScope });
+  return scanKeyMap({
+    id: deIndexedId,
+    keyMap,
+    refMap,
+    configDirectory,
+    pageScope,
+    requestPageIds,
+  });
 }
 
 // Locates a block/request/connection/etc by id, or a page by pageId. Block
@@ -202,6 +239,7 @@ async function findConfig({ id, pageId }) {
       matches.push({
         keyPath: `pages[${id}]`,
         location: { source: path.resolve(configDirectory, refPath) },
+        hazards: getHazards({ kind: 'pages' }),
       });
     }
     return { kind: 'page', pageId: id, file: refPath, matches };
@@ -235,6 +273,7 @@ async function findConfig({ id, pageId }) {
       refMap,
       configDirectory,
       pageScope: buildPageScope({ pageId, keyMap }),
+      requestPageIds: [pageId],
     });
     return matches.length > 0
       ? { matches }
@@ -248,7 +287,13 @@ async function findConfig({ id, pageId }) {
 
   const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
   const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
-  const matches = scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory });
+  const matches = scanKeyMapWithDeIndex({
+    id,
+    keyMap,
+    refMap,
+    configDirectory,
+    requestPageIds: Object.keys(pageRegistry),
+  });
   return {
     matches,
     note:

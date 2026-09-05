@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import unsettledPageNote from './unsettledPageNote.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's
 // live tab, viewport-relative at whatever scroll position they were at
@@ -97,7 +98,11 @@ async function screenshotPage({
     const docClip = await resolveClip({ page: opened.page, clip, scrollX, scrollY });
     const screenshotOptions = docClip ? { type: 'png', clip: docClip } : { type: 'png', fullPage };
     const buffer = await opened.page.screenshot(screenshotOptions);
-    return { data: buffer.toString('base64'), mimeType: 'image/png' };
+    const result = { data: buffer.toString('base64'), mimeType: 'image/png' };
+    if (!opened.ready) {
+      return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
+    }
+    return result;
   } catch (error) {
     return { error: `Failed to screenshot "${url}": ${error.message}` };
   } finally {

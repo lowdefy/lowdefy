@@ -20,8 +20,10 @@ import lowdefyConfig from '../build/config.js';
 import { getBrowser, openPage } from './getBrowser.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
+import unsettledPageNote from './unsettledPageNote.js';
 
 const VERIFY_KEY_COUNT = 3;
+const READY_TIMEOUT = 15000;
 
 // Loads a state checkpoint's recorded requests into devMockRegistry (shared
 // by both modes below — src/routes/request.js consults it regardless of how
@@ -106,12 +108,18 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     // as a plain string, so folding the query string into the pageId segment
     // reproduces the checkpoint's exact URL without needing a query-aware
     // variant of openPage.
-    const opened = await openPage({ browser, origin, pageId: `${pageId}${urlQuery}`, user });
+    const opened = await openPage({
+      browser,
+      origin,
+      pageId: `${pageId}${urlQuery}`,
+      user,
+      timeout: READY_TIMEOUT,
+    });
     context = opened.context;
     const { page } = opened;
 
     await page.waitForFunction((id) => Boolean(window.lowdefy?.contexts?.[`page:${id}`]), pageId, {
-      timeout: 15000,
+      timeout: READY_TIMEOUT,
     });
 
     const stateEntries = Object.entries(checkpoint.state ?? {});
@@ -139,7 +147,11 @@ async function loadState({ origin, name, mode = 'headless', user }) {
       { id: pageId, keys: verifyKeys }
     );
 
-    return { loaded: true, mode, url: opened.url, verifiedKeys };
+    const result = { loaded: true, mode, url: opened.url, verifiedKeys };
+    if (!opened.ready) {
+      return { ...result, ready: false, note: unsettledPageNote({ timeout: READY_TIMEOUT }) };
+    }
+    return result;
   } catch (error) {
     return { error: `Failed to load checkpoint "${name}": ${error.message}` };
   } finally {

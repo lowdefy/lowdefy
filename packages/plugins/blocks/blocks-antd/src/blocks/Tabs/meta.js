@@ -26,6 +26,9 @@ export default {
     tabPane: 'The Tabs tab pane.',
     inkBar: 'The Tabs ink bar.',
   },
+  // Each tab may declare its own eventName, so the event names a Tabs block
+  // fires are authored in its properties and cannot be enumerated here.
+  dynamicEvents: true,
   events: {
     onChange: {
       description: 'Trigger action on any tab change.',

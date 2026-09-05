@@ -61,6 +61,7 @@ const { default: searchDocs } = await import('./searchDocs.js');
 const { default: normalizeTypeKind } = await import('./normalizeTypeKind.js');
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
+const { default: serverErrorStore } = await import('./serverErrorStore.js');
 const { default: getPageConfig } = await import('./getPageConfig.js');
 const { default: readPageArtifact } = await import('./readPageArtifact.js');
 const { default: findConfig } = await import('./findConfig.js');
@@ -113,6 +114,24 @@ test('getSchema returns block schema with meta', () => {
   expect(result.meta.category).toEqual('display');
 });
 
+test('getSchema returns hazards for a block: type-attached first, then framework-level', () => {
+  const result = getSchema({ kind: 'blocks', type: 'TestBlock' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'test-block-hazard',
+    'visible-false-prunes-state',
+  ]);
+  // The plugin's own entry wins a duplicate id.
+  expect(result.hazards[1].message).toEqual('Plugin wording for visible: false.');
+});
+
+test('getSchema returns hazards for a request, including a meta.hazards entry', () => {
+  const result = getSchema({ kind: 'requests', type: 'WriteRequest' });
+  expect(result.hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
+});
+
 test('getSchema returns connection schema with request list', () => {
   const result = getSchema({ kind: 'connections', type: 'AxiosHttp' });
   expect(result.schema).toBeDefined();
@@ -163,6 +182,24 @@ test('getCoreDoc resolves a doc by kind and type name', () => {
   expect(doc.slug).toEqual('operators/_get');
 });
 
+test('getCoreDoc returns hazards for the requested type when resolved by kind and type', () => {
+  const doc = getCoreDoc({ kind: 'operator', type: '_get' });
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['get-fixture-hazard']);
+});
+
+test('getCoreDoc does not attach hazards when resolved by slug', () => {
+  const doc = getCoreDoc({ slug: 'operators/_get' });
+  expect(doc.hazards).toBeUndefined();
+});
+
+test('getCoreDoc resolves a request doc on its connection page but keeps request hazards', () => {
+  // findDoc remaps request → connection to find the page; hazards must come
+  // from the request kind the caller asked about.
+  const doc = getCoreDoc({ kind: 'request', type: 'MongoDBFind' });
+  expect(doc.slug).toEqual('connections/mongodb');
+  expect(doc.hazards.map((hazard) => hazard.id)).toEqual(['state-in-request-properties']);
+});
+
 test('getCoreDoc returns null for unknown slug', () => {
   expect(getCoreDoc({ slug: 'nope/nope' })).toBeNull();
 });
@@ -200,10 +237,14 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client errors', () => {
+test('getBuildStatus returns the build artifact plus reported client and server errors', () => {
+  serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
   const result = getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
+  expect(result.serverErrors).toEqual([
+    { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
+  ]);
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
@@ -236,6 +277,36 @@ test('findConfig resolves a known pageId to its source file', async () => {
   // feedback enrichment read matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].location.source).toContain('pages/home.yaml');
+});
+
+test('findConfig returns hazards per match for the matched node type', async () => {
+  const result = await findConfig({ id: 'my_button', pageId: 'home' });
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'visible-false-prunes-state',
+  ]);
+});
+
+test('findConfig fires tenant-wall-lookup on a request over a walled connection only', async () => {
+  const walled = await findConfig({ id: 'req-tenant', pageId: 'other' });
+  expect(walled.matches.length).toEqual(1);
+  expect(walled.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+    'tenant-wall-lookup',
+  ]);
+
+  const shared = await findConfig({ id: 'req-shared', pageId: 'other' });
+  expect(shared.matches.length).toEqual(1);
+  expect(shared.matches[0].hazards.map((hazard) => hazard.id)).toEqual([
+    'write-request-hazard',
+    'state-in-request-properties',
+  ]);
+});
+
+test('findConfig resolves a request connection across pages when no pageId is given', async () => {
+  const result = await findConfig({ id: 'req-tenant' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].hazards.map((hazard) => hazard.id)).toContain('tenant-wall-lookup');
 });
 
 test('findConfig scans keyMap for a matching id when no pageId is given', async () => {

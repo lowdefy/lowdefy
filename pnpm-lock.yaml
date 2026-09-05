@@ -338,6 +338,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@lowdefy/ajv':
+        specifier: 5.5.1
+        version: link:../utils/ajv
       '@lowdefy/errors':
         specifier: 5.5.1
         version: link:../utils/errors
@@ -2538,6 +2541,9 @@ importers:
       '@lowdefy/docs-content':
         specifier: 5.5.1
         version: link:../../docs-content
+      '@lowdefy/e2e-utils':
+        specifier: 5.5.1
+        version: link:../../utils/e2e-utils
       '@lowdefy/engine':
         specifier: 5.5.1
         version: link:../../engine

@@ -19,7 +19,10 @@ function errorToDisplayString(error) {
   if (error?.message === undefined) return String(error);
 
   const name = error.name || 'Error';
-  let msg = `[${name}] ${error.message}`;
+  // Prod-gated build warnings are not fatal in dev but fail `lowdefy build`, so
+  // the name segment says so wherever the error is displayed.
+  const nameSegment = error.prodError === true ? `${name} · fails in prod` : name;
+  let msg = `[${nameSegment}] ${error.message}`;
 
   if (error.received !== undefined) {
     try {

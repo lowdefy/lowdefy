@@ -137,6 +137,19 @@ _ref:
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+            ## test
+
+            The `test` command runs the app's config tests — the journeys in `tests/journeys/*.yaml`. It starts the development server headless on a free port, runs every journey through the dev server's journey route, prints `PASS`/`FAIL` per journey with the failing step, stops the server, and exits with code `1` if any journey failed. See [Config Tests](/config-tests).
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
+            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
+
             ## upgrade
 
             The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.
