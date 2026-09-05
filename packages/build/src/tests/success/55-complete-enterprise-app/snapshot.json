@@ -9277,7 +9277,7 @@
             },
             "options": {
               "default": [],
-              "oneOf": [
+              "anyOf": [
                 {
                   "type": "array",
                   "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
@@ -16299,6 +16299,21 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "progress": {
+              "type": "number",
+              "default": 30,
+              "description": "Progress percentage to show, from 0 to 100."
+            },
+            "shadow": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the glowing shadow at the head of the bar."
+            },
+            "transitionTime": {
+              "type": "number",
+              "default": 1000,
+              "description": "Width transition duration in milliseconds."
+            },
             "height": {
               "type": [
                 "number",
@@ -16943,6 +16958,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "shape": {
+              "type": "string",
+              "default": "default",
+              "description": "Shape of the skeleton; round gives fully rounded ends.",
+              "enum": [
+                "default",
+                "round"
+              ]
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -17160,6 +17184,11 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "label": {
+              "type": "boolean",
+              "default": true,
+              "description": "Render the label skeleton. Set to false for an input without a label."
+            },
             "size": {
               "type": "string",
               "default": "medium",
@@ -17647,13 +17676,11 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": "string",
-              "description": "Size of the icon spinner.",
-              "enum": [
-                "small",
-                "medium",
-                "large"
-              ]
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
         },
