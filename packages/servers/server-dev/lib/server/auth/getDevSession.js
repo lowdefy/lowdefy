@@ -34,6 +34,10 @@ import getMockUser from './getMockUser.js';
 //    (routes/auth.js) — obtains the session from this one function, so the
 //    two can never diverge.
 //
+// A dev user needs no auth stack behind it: an app whose only auth key is
+// auth.dev is not an auth configuration (auth.configured is false), and its
+// mock user is still the caller here and in the browser.
+//
 // Auth.js sessions carry an expires timestamp (the client SessionProvider
 // schedules refetches off it); dev sessions never expire while the server
 // runs, a day keeps polling calm.
@@ -44,13 +48,6 @@ async function getDevSession(c) {
   if (!user) {
     return undefined;
   }
-  // Without auth configured nothing is protected and there is no session
-  // callback pipeline to run — a dev session would not match any prod
-  // behaviour. (A configured mock user already threw in getMockUser.)
-  if (authJson.configured !== true) {
-    return undefined;
-  }
-
   const sessionCallback = createSessionCallback({
     authConfig: authJson,
     plugins: { callbacks },
