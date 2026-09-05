@@ -59,9 +59,9 @@ test('journeySchema accepts every step key, an inline user and urlQuery', () => 
     ],
   };
   expect(validateJourney({ journey })).toEqual({ valid: true });
-  expect(validateJourney({ journey: { ...journey, user: { sub: 'u1', roles: ['admin'] } } })).toEqual(
-    { valid: true }
-  );
+  expect(
+    validateJourney({ journey: { ...journey, user: { sub: 'u1', roles: ['admin'] } } })
+  ).toEqual({ valid: true });
 });
 
 test('journeySchema rejects a user that is not an object', () => {
