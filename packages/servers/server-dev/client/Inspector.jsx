@@ -14,38 +14,49 @@
   limitations under the License.
 */
 
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import { type, serializer } from '@lowdefy/helpers';
 
-// Dev-only agent-state-xray channel — a sibling of Reload.jsx, but with its
-// own /api/reload SSE connection (rather than reusing Reload's) so that
-// connection can carry ?pageId=<pageId>. routes/reload.js only registers a
-// connection as an inspectable tab (lib/docs/tabChannel.js) when that query
-// param is present, which keeps Reload.jsx's plain reload/ping connection
-// out of the tab registry entirely.
+import DevStreamContext from './DevStreamContext.js';
+
+// Dev-only agent-state-xray channel. Listens for inspect-request/eval-request
+// events on the tab's single /api/reload EventSource (owned by Reload.jsx,
+// shared through DevStreamContext) rather than opening its own — a second
+// stream per tab exhausted the browser's HTTP/1.1 connection pool once a few
+// tabs of the same app were open, and every later fetch queued forever.
 //
-// pageId tracking: this effect depends on `pageId`, so React tears down and
-// reopens the EventSource (a fresh connection, fresh tab id server-side)
-// whenever the developer navigates to a different page — see the longer
-// design note in src/routes/reload.js.
+// pageId tracking: routes/reload.js registers every connection as an
+// inspectable tab (lib/docs/tabChannel.js) and announces the tab id on the
+// stream. This component then posts { tabId, pageId } to
+// /api/dev-inspect/page whenever the developer navigates, so the registry's
+// view of "what page is this tab on" stays current without reconnecting.
 //
 // Never let a bad payload or a plugin's operator error crash the app this is
 // piggybacking on — every handler is wrapped, and the component itself
 // always renders null.
-function postResult({ basePath, requestId, result }) {
+function postJson({ basePath, path, body }) {
   try {
-    fetch(`${basePath}/api/dev-inspect`, {
+    fetch(`${basePath}/api/dev-inspect${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ requestId, result }),
+      body: JSON.stringify(body),
     }).catch(() => {
       // Best-effort — a failed callback just leaves the agent's request to
-      // time out server-side.
+      // time out server-side, and a failed page update leaves the tab
+      // registered on its previous page.
     });
   } catch {
     // JSON.stringify or fetch throwing synchronously — still best-effort.
   }
+}
+
+function postResult({ basePath, requestId, result }) {
+  postJson({ basePath, path: '', body: { requestId, result } });
+}
+
+function postTabPage({ basePath, tabId, pageId }) {
+  postJson({ basePath, path: '/page', body: { tabId, pageId } });
 }
 
 function buildSnapshot({ lowdefy, pageId }) {
@@ -133,17 +144,16 @@ function evalExpression({ lowdefy, pageId, expression }) {
 }
 
 const Inspector = ({ basePath, lowdefy, pageId }) => {
+  const { source, tabId } = useContext(DevStreamContext);
   const pageIdRef = useRef(pageId);
   pageIdRef.current = pageId;
 
   useEffect(() => {
-    if (type.isNone(pageId)) {
+    if (type.isNone(source)) {
       return undefined;
     }
 
-    const sse = new EventSource(`${basePath}/api/reload?pageId=${encodeURIComponent(pageId)}`);
-
-    sse.addEventListener('inspect-request', (message) => {
+    const onInspectRequest = (message) => {
       let requestId;
       try {
         const data = JSON.parse(message.data);
@@ -154,9 +164,9 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
       } catch (error) {
         postResult({ basePath, requestId, result: { error: error.message } });
       }
-    });
+    };
 
-    sse.addEventListener('eval-request', (message) => {
+    const onEvalRequest = (message) => {
       let requestId;
       try {
         const data = JSON.parse(message.data);
@@ -171,12 +181,22 @@ const Inspector = ({ basePath, lowdefy, pageId }) => {
       } catch (error) {
         postResult({ basePath, requestId, result: { error: error.message } });
       }
-    });
-
-    return () => {
-      sse.close();
     };
-  }, [basePath, lowdefy, pageId]);
+
+    source.addEventListener('inspect-request', onInspectRequest);
+    source.addEventListener('eval-request', onEvalRequest);
+    return () => {
+      source.removeEventListener('inspect-request', onInspectRequest);
+      source.removeEventListener('eval-request', onEvalRequest);
+    };
+  }, [basePath, lowdefy, source]);
+
+  useEffect(() => {
+    if (type.isNone(tabId) || type.isNone(pageId)) {
+      return;
+    }
+    postTabPage({ basePath, tabId, pageId });
+  }, [basePath, tabId, pageId]);
 
   useEffect(() => {
     if (type.isNone(pageId)) {

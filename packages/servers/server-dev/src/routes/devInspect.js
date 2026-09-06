@@ -19,7 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
 import { loadMocks } from '../../lib/docs/devMockRegistry.js';
 import getPathSegments from '../lib/getPathSegments.js';
-import { listTabs, resolveTabRequest } from '../../lib/docs/tabChannel.js';
+import { listTabs, resolveTabRequest, updateTabPage } from '../../lib/docs/tabChannel.js';
 
 // Origin/host check mirrors clientError.js — this endpoint accepts a POST
 // from Inspector.jsx (a same-origin dev-only browser component), not from
@@ -62,10 +62,23 @@ function handleCheckpointBootstrap(c, { name }) {
   );
 }
 
+// Inspector.jsx posts { tabId, pageId } here whenever its tab navigates, so
+// the tab registry (lib/docs/tabChannel.js) knows which page each connected
+// tab is on without the tab reconnecting its event stream.
+async function handleTabPage(c) {
+  const { tabId, pageId } = await c.req.json();
+  if (!tabId) {
+    return c.json({ error: 'Missing "tabId".' }, 400);
+  }
+  updateTabPage({ id: tabId, pageId });
+  return c.json({ ok: true });
+}
+
 // GET lists connected tabs for diagnostics (or, under /checkpoint/<name>,
-// bootstraps a human tab from a state checkpoint); POST is the answer leg of
-// the SSE request/response round trip (Inspector.jsx posts back {requestId,
-// result} after handling an inspect-request/eval-request event).
+// bootstraps a human tab from a state checkpoint); POST /page updates the
+// page a connected tab is on; POST at the root is the answer leg of the SSE
+// request/response round trip (Inspector.jsx posts back {requestId, result}
+// after handling an inspect-request/eval-request event).
 async function devInspectHandler(c) {
   if (c.req.method === 'GET') {
     const segments = getPathSegments(c, '/api/dev-inspect/');
@@ -83,6 +96,10 @@ async function devInspectHandler(c) {
 
   if (!checkOrigin(c)) {
     return c.json({ error: 'Forbidden' }, 403);
+  }
+
+  if (getPathSegments(c, '/api/dev-inspect/')[0] === 'page') {
+    return handleTabPage(c);
   }
 
   const { requestId, result } = await c.req.json();
