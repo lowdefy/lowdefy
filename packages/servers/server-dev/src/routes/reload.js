@@ -23,16 +23,18 @@ import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
 
 // SSE endpoint — notifies the client when build/reload is written so it can
 // mutate the SWR cache and refetch config. Also doubles as the transport for
-// the agent-state-xray tab channel (lib/docs/tabChannel.js): a connection
-// that includes ?pageId=<id> is registered as an inspectable dev tab so an
-// agent can push it inspect-request/eval-request SSE events.
+// the agent-state-xray tab channel (lib/docs/tabChannel.js): every
+// connection is a browser tab (client/Reload.jsx opens exactly one per tab),
+// so each is registered as an inspectable dev tab and told its id in a `tab`
+// event, after which an agent can push it inspect-request/eval-request
+// events on the same stream.
 //
-// pageId tracking design: Inspector.jsx (not Reload.jsx) owns this query
-// param, and re-opens its EventSource — new connection, new tab id — every
-// time the developer navigates to a different page. That keeps tabChannel's
-// view of "what page is this tab on" always correct without a separate
-// ping route: Reload.jsx's own connection never sends pageId, so it is never
-// registered as a tab and can't be mistaken for one by requestFromTab.
+// One stream per tab is deliberate: dev serves over HTTP/1.1, where browsers
+// allow six connections per host, and an open event stream holds one for the
+// life of the tab. The tab's page is not carried on this connection — it
+// would force a reconnect on every navigation — but posted by
+// client/Inspector.jsx to /api/dev-inspect/page (routes/devInspect.js) as
+// { tabId, pageId } whenever it changes.
 async function reloadHandler(c) {
   return streamSSE(c, async (stream) => {
     const watcher = chokidar.watch(['./build/reload'], {
@@ -40,24 +42,20 @@ async function reloadHandler(c) {
       ignoreInitial: true,
     });
 
-    const pageId = c.req.query('pageId');
-    const tabId = pageId === undefined ? undefined : randomUUID();
-    if (tabId) {
-      registerTab({
-        id: tabId,
-        pageId,
-        send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
-      });
-    }
+    const tabId = randomUUID();
+    registerTab({
+      id: tabId,
+      send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
+    });
 
     let open = true;
     stream.onAbort(() => {
       open = false;
       watcher.close();
-      if (tabId) {
-        unregisterTab({ id: tabId });
-      }
+      unregisterTab({ id: tabId });
     });
+
+    await stream.writeSSE({ event: 'tab', data: JSON.stringify({ tabId }) });
 
     const reload = () => {
       stream.writeSSE({ event: 'reload', data: JSON.stringify({}) });
