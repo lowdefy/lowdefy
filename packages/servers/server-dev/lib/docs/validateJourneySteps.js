@@ -34,17 +34,93 @@ function getStepKey(step) {
   return keys[0];
 }
 
+// A step's target is a blockId string or an object that narrows the search:
+// `blockId` scopes to the block's #bl- wrapper, `row` and `column` to a grid
+// row (zero-based, as displayed) and cell (by col-id) inside it, `text` to the
+// interactive control with exactly that text, `nth` picks among several
+// matches. `text` alone, with no blockId, searches the whole page — that is
+// how portal-rendered controls (confirm dialog buttons, modal footers,
+// dropdown menu items) are reached, since they render outside every block.
+const TARGET_KEYS = ['blockId', 'text', 'row', 'column', 'nth'];
+
+function isIndex(value) {
+  return type.isInt(value) && value >= 0;
+}
+
+// Validates the target keys of a step object; `extraKeys` are the step's own
+// keys (`value`, `contains`) that may sit beside them. Returns an error
+// message, or undefined when the target is well-formed.
+function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
+  const allowed = [...TARGET_KEYS, ...extraKeys];
+  const unknown = Object.keys(params).filter((k) => !allowed.includes(k));
+  if (unknown.length > 0) {
+    return `Step "${key}" has unknown key${unknown.length > 1 ? 's' : ''} ${unknown
+      .map((k) => `"${k}"`)
+      .join(', ')}. Keys are: ${allowed.join(', ')}.`;
+  }
+  if (!type.isUndefined(params.blockId) && !type.isString(params.blockId)) {
+    return `Step "${key}" requires "blockId" to be a string. Received ${describe(params.blockId)}.`;
+  }
+  if (!type.isUndefined(params.text) && !type.isString(params.text)) {
+    return `Step "${key}" requires "text" to be a string. Received ${describe(params.text)}.`;
+  }
+  if (requireBlockId && type.isUndefined(params.blockId)) {
+    return `Step "${key}" requires a "blockId" string. Received ${describe(params)}.`;
+  }
+  if (type.isUndefined(params.blockId) && type.isUndefined(params.text)) {
+    return `Step "${key}" requires a "blockId" or a "text" to target. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.row) && !isIndex(params.row)) {
+    return `Step "${key}" requires "row" to be a zero-based row index. Received ${describe(
+      params.row
+    )}.`;
+  }
+  if (!type.isUndefined(params.column) && !type.isString(params.column)) {
+    return `Step "${key}" requires "column" to be a column id string. Received ${describe(
+      params.column
+    )}.`;
+  }
+  if (
+    (!type.isUndefined(params.row) || !type.isUndefined(params.column)) &&
+    type.isUndefined(params.blockId)
+  ) {
+    return `Step "${key}" requires a "blockId" (the grid block) when "row" or "column" is given. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.nth) && !isIndex(params.nth)) {
+    return `Step "${key}" requires "nth" to be a zero-based index. Received ${describe(
+      params.nth
+    )}.`;
+  }
+  return undefined;
+}
+
+// click and expect.visible take a blockId string or a target object.
+function validateTarget({ key, params }) {
+  if (type.isString(params)) {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "${key}" requires a blockId string or a target object { blockId, text, row, column, nth }. Received ${describe(
+      params
+    )}.`;
+  }
+  return validateTargetObject({ key, params });
+}
+
+// fill and select take the target keys beside `value`; the block is required
+// because a value is typed into a block's input, never a page-wide control.
 function validateBlockValue({ key, params }) {
   if (!type.isObject(params)) {
     return `Step "${key}" requires { blockId, value }. Received ${describe(params)}.`;
   }
-  if (!type.isString(params.blockId)) {
-    return `Step "${key}" requires a "blockId" string. Received ${describe(params.blockId)}.`;
-  }
   if (type.isUndefined(params.value)) {
     return `Step "${key}" requires a "value". Received ${describe(params)}.`;
   }
-  return undefined;
+  return validateTargetObject({ key, params, extraKeys: ['value'], requireBlockId: true });
 }
 
 function validateWait(params) {
@@ -88,19 +164,17 @@ function validateExpect(params) {
       }
       return undefined;
     case 'visible':
-      if (!type.isString(value)) {
-        return `Step "expect.visible" requires a blockId string. Received ${describe(value)}.`;
-      }
-      return undefined;
+      return validateTarget({ key: 'expect.visible', params: value });
     case 'text':
-      if (
-        !type.isObject(value) ||
-        !type.isString(value.blockId) ||
-        !type.isString(value.contains)
-      ) {
+      if (!type.isObject(value) || !type.isString(value.contains)) {
         return `Step "expect.text" requires { blockId, contains }. Received ${describe(value)}.`;
       }
-      return undefined;
+      return validateTargetObject({
+        key: 'expect.text',
+        params: value,
+        extraKeys: ['contains'],
+        requireBlockId: true,
+      });
     case 'url':
       if (!type.isObject(value) || !type.isString(value.contains)) {
         return `Step "expect.url" requires { contains }. Received ${describe(value)}.`;
@@ -125,10 +199,7 @@ function validateStep(step) {
   const params = step[key];
   switch (key) {
     case 'click':
-      if (!type.isString(params)) {
-        return `Step "click" requires a blockId string. Received ${describe(params)}.`;
-      }
-      return undefined;
+      return validateTarget({ key: 'click', params });
     case 'fill':
     case 'select':
       return validateBlockValue({ key, params });
@@ -169,5 +240,5 @@ function validateJourneySteps({ steps }) {
   return {};
 }
 
-export { STEP_KEYS, getStepKey };
+export { STEP_KEYS, TARGET_KEYS, getStepKey };
 export default validateJourneySteps;

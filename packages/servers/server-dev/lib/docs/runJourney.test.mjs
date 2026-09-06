@@ -69,6 +69,8 @@ function createLocator({ selector, page }) {
     }),
     locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
     first: jest.fn(() => locator),
+    last: jest.fn(() => locator),
+    nth: jest.fn(() => locator),
     filter: jest.fn(() => locator),
     count: jest.fn(async () => 0),
     selectOption: jest.fn(),
@@ -77,7 +79,7 @@ function createLocator({ selector, page }) {
         throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
       }
     }),
-    innerText: jest.fn(async () => page.texts[selector] ?? ''),
+    allInnerTexts: jest.fn(async () => [page.texts[selector] ?? '']),
   };
   return locator;
 }
@@ -252,6 +254,370 @@ test('runJourney clicks the interactive control inside a block when there is one
     `#bl-submit button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
     '#bl-card',
   ]);
+});
+
+const CONTROLS = `button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`;
+
+// Records every filter and nth applied to any locator, however deeply chained,
+// so a test can assert on the text and visibility filters a target resolves to.
+function trackFilters(page) {
+  const filters = [];
+  function instrument(locator) {
+    locator.filter.mockImplementation((filter) => {
+      filters.push({ selector: locator.selector, filter });
+      return locator;
+    });
+    locator.nth.mockImplementation((index) => {
+      page.nths.push({ selector: locator.selector, index });
+      return locator;
+    });
+    locator.locator.mockImplementation((child) =>
+      instrument(createLocator({ selector: `${locator.selector} ${child}`, page }))
+    );
+    return locator;
+  }
+  page.locator.mockImplementation((selector) => instrument(createLocator({ selector, page })));
+  return filters;
+}
+
+test('runJourney clicks a cell button by row and exact text inside a grid block', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 1, text: 'Edit' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`#bl-grid .ag-row[row-index="1"] ${CONTROLS}`]);
+  expect(filters).toHaveLength(2);
+  expect(filters[0].filter.hasText.test('Edit')).toBe(true);
+  expect(filters[0].filter.hasText.test(' Edit ')).toBe(true);
+  expect(filters[0].filter.hasText.test('Edit row')).toBe(false);
+  expect(filters[1].filter).toEqual({ visible: true });
+  expect(page.nths).toEqual([
+    { selector: `#bl-grid .ag-row[row-index="1"] ${CONTROLS}`, index: 0 },
+  ]);
+});
+
+test('runJourney clicks the control inside a grid cell addressed by row and column', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      inner.locator.mockImplementation((grandchild) => {
+        const cell = createLocator({ selector: `${inner.selector} ${grandchild}`, page });
+        cell.locator.mockImplementation((control) => {
+          const found = createLocator({ selector: `${cell.selector} ${control}`, page });
+          found.count.mockResolvedValue(1);
+          return found;
+        });
+        return cell;
+      });
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'actions' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`,
+  ]);
+});
+
+test('runJourney clicks the nth control in a grid cell when several have no text', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'actions', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(true);
+  const selector = `#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="actions"] ${CONTROLS}`;
+  expect(page.clicks).toEqual([selector]);
+  expect(page.nths).toEqual([{ selector, index: 1 }]);
+});
+
+test('runJourney clicks a page-wide control by text when the target has no blockId', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'OK' } }, { click: { text: 'Delete', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([CONTROLS, CONTROLS]);
+  // No menu or dialog is open (every count is 0), so only the page-wide
+  // search filters apply, once per step.
+  const pageWide = filters.filter((f) => f.selector === CONTROLS);
+  expect(pageWide.map((f) => f.filter)).toEqual([
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+    { hasText: expect.any(RegExp) },
+    { visible: true },
+  ]);
+  expect(pageWide[0].filter.hasText.test('OK')).toBe(true);
+  expect(pageWide[0].filter.hasText.test('OKAY')).toBe(false);
+  expect(page.nths).toEqual([
+    { selector: CONTROLS, index: 0 },
+    { selector: CONTROLS, index: 1 },
+  ]);
+});
+
+test('runJourney finds a page-wide text target in the open dialog before the page', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  trackFilters(page);
+  // A dialog is open and it holds a control with the text; the grid behind it
+  // holds one too, but the dialog wins.
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+      locator.locator.mockImplementation((child) => {
+        const inner = createLocator({ selector: `${selector} ${child}`, page });
+        inner.count.mockResolvedValue(1);
+        inner.nth.mockImplementation((index) => {
+          page.nths.push({ selector: inner.selector, index });
+          return inner;
+        });
+        return inner;
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Delete' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`[role="dialog"] ${CONTROLS}`]);
+  expect(page.nths).toEqual([
+    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
+    { selector: `[role="dialog"] ${CONTROLS}`, index: 0 },
+  ]);
+});
+
+test('runJourney prefers an open menu over an open dialog for a page-wide text target', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '[role="menu"]' || selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+      locator.locator.mockImplementation((child) => {
+        const inner = createLocator({ selector: `${selector} ${child}`, page });
+        inner.count.mockResolvedValue(1);
+        return inner;
+      });
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Archive' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([`[role="menu"] ${CONTROLS}`]);
+});
+
+test('runJourney falls through to the page when the open dialog has no control with the text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector === '[role="dialog"]') {
+      locator.count.mockResolvedValue(1);
+      locator.last.mockImplementation(() => locator);
+    }
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Refresh' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([CONTROLS]);
+});
+
+test('runJourney escapes quotes in a column id', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 0, column: 'a"b' } }],
+  });
+
+  expect(page.clicks).toEqual(['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="a\\"b"]']);
+});
+
+test('runJourney describes a failed target by block, row, column and text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    const fail = async () => {
+      throw new Error('locator.click: Timeout 5000ms exceeded.');
+    };
+    locator.click.mockImplementation(fail);
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      inner.click.mockImplementation(fail);
+      inner.locator.mockImplementation((grandchild) => {
+        const deep = createLocator({ selector: `${inner.selector} ${grandchild}`, page });
+        deep.click.mockImplementation(fail);
+        deep.locator.mockImplementation(() => deep);
+        return deep;
+      });
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'grid', row: 2, column: 'actions', text: 'Edit', nth: 1 } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual(
+    'block "grid" row 2 column "actions" control "Edit" nth 1 to be actionable'
+  );
+  expect(result.failure.message).toMatch(
+    /^Block "grid" row 2 column "actions" control "Edit" nth 1 was not actionable: locator.click/
+  );
+});
+
+test('runJourney reports a page-wide control that never appears', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click.mockImplementation(async () => {
+      throw new Error('locator.click: Timeout 5000ms exceeded.');
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { text: 'Confirm' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.expected).toEqual('control "Confirm" to be actionable');
+  expect(result.failure.message).toMatch(/^Control "Confirm" was not actionable/);
+});
+
+test('runJourney fills and selects inside a grid cell addressed by row and column', async () => {
+  const page = createPage();
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [
+      { fill: { blockId: 'grid', row: 1, column: 'name', value: 'Ada' } },
+      { select: { blockId: 'grid', row: 1, column: 'status', value: 'Open' } },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.fills).toEqual([
+    {
+      selector: '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="name"] input, textarea',
+      value: 'Ada',
+    },
+  ]);
+  expect(page.clicks).toEqual([
+    '#bl-grid .ag-row[row-index="1"] .ag-cell[col-id="status"]',
+    '.ant-select-item-option, [role="option"]',
+  ]);
+});
+
+test('runJourney checks visibility and text of a grid row and cell', async () => {
+  const page = createPage();
+  page.texts['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="title"]'] = 'Access reviews';
+  page.texts['#bl-grid .ag-row[row-index="0"]'] = 'Access reviews open Edit';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [
+      { expect: { visible: { blockId: 'grid', row: 0 } } },
+      { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Access' } } },
+      { expect: { text: { blockId: 'grid', row: 0, contains: 'open' } } },
+      { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Closed' } } },
+    ],
+  });
+
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok', 'failed']);
+  expect(result.failure.expected).toEqual(
+    'block "grid" row 0 column "title" text to contain "Closed"'
+  );
+  expect(result.failure.actual).toEqual('Access reviews');
+});
+
+test('runJourney joins the text of every element a row target matches', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      // ag-grid renders the row once per column container.
+      inner.allInnerTexts.mockResolvedValue(['Access reviews', 'Edit Delete']);
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ expect: { text: { blockId: 'grid', row: 0, contains: 'Delete' } } }],
+  });
+
+  expect(result.passed).toBe(true);
 });
 
 test('runJourney reports a missing expect.state value as actual null', async () => {
