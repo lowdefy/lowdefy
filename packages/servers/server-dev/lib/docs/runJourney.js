@@ -68,16 +68,21 @@ function cleanMessage(error) {
 // Wraps a Playwright interaction so a locator that never became actionable
 // (missing block, hidden, disabled, detached) reads as "expected the block
 // to be actionable, actual: <Playwright's message>" instead of a bare error.
-async function actOnBlock({ blockId, action }) {
+async function actOnTarget({ target, action }) {
   try {
     await action();
   } catch (error) {
     const actual = cleanMessage(error);
-    throw new JourneyStepError(`Block "${blockId}" was not actionable: ${actual}`, {
-      expected: `block "${blockId}" to be actionable`,
+    const description = describeTarget(target);
+    throw new JourneyStepError(`${capitalise(description)} was not actionable: ${actual}`, {
+      expected: `${description} to be actionable`,
       actual,
     });
   }
+}
+
+function capitalise(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 // The #bl-<id> wrapper spans the full row while the control inside it (an
@@ -99,38 +104,154 @@ const INTERACTIVE_CONTROL = [
   '[role="menuitem"]',
 ].join(', ');
 
-async function resolveClickTarget(block) {
-  const control = block.locator(INTERACTIVE_CONTROL).first();
+async function resolveClickTarget(scope) {
+  const control = scope.locator(INTERACTIVE_CONTROL).first();
   if ((await control.count()) > 0) {
     return control;
   }
-  return block;
+  return scope;
+}
+
+// Exact match on a control's or option's text: a regex anchored at both ends,
+// so "Cat" does not pick "Category".
+function exactText(value) {
+  return new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
+}
+
+// A step's target is a blockId string or an object narrowing the search (see
+// validateJourneySteps). The string form is the object form with only blockId.
+function normaliseTarget(target) {
+  if (type.isString(target)) {
+    return { blockId: target };
+  }
+  return target;
+}
+
+// Reads back the way an author thinks of it — `block "grid" row 1 control
+// "Edit"` — for the expected/actual pair of a failed step.
+function describeTarget(target) {
+  const parts = [];
+  if (!type.isUndefined(target.blockId)) {
+    parts.push(`block "${target.blockId}"`);
+  }
+  if (!type.isUndefined(target.row)) {
+    parts.push(`row ${target.row}`);
+  }
+  if (!type.isUndefined(target.column)) {
+    parts.push(`column "${target.column}"`);
+  }
+  if (!type.isUndefined(target.text)) {
+    parts.push(`control "${target.text}"`);
+  }
+  if (!type.isUndefined(target.nth)) {
+    parts.push(`nth ${target.nth}`);
+  }
+  return parts.join(' ');
+}
+
+function attributeValue(value) {
+  return `"${String(value).replace(/["\\]/g, '\\$&')}"`;
+}
+
+// The element the target's scope keys name: the block wrapper, narrowed to a
+// grid row (`.ag-row[row-index]`, the row as displayed, which ag-grid renders
+// once per pinned/centre column container) and to a cell (`.ag-cell[col-id]`,
+// the column's field or colId). Undefined for a page-wide `text` target,
+// which has no scope narrower than the page.
+function resolveScope({ page, target }) {
+  if (type.isUndefined(target.blockId)) {
+    return undefined;
+  }
+  let scope = getBlock(page, target.blockId);
+  if (!type.isUndefined(target.row)) {
+    scope = scope.locator(`.ag-row[row-index=${attributeValue(target.row)}]`);
+  }
+  if (!type.isUndefined(target.column)) {
+    scope = scope.locator(`.ag-cell[col-id=${attributeValue(target.column)}]`);
+  }
+  return scope;
+}
+
+// Portal layers, front-most first. A control found by text alone is looked
+// for in the front-most open layer before the page, the way a person reads a
+// screen: an open dropdown menu covers a dialog, a dialog covers the page. A
+// confirm dialog's "Delete" is then found over the grid's "Delete" cell
+// buttons behind its mask, without the author counting buttons.
+const LAYERS = ['[role="menu"]', '[role="dialog"]'];
+
+function controlsWithText({ root, text, nth }) {
+  return root
+    .locator(INTERACTIVE_CONTROL)
+    .filter({ hasText: exactText(text) })
+    .filter({ visible: true })
+    .nth(nth ?? 0);
+}
+
+async function resolvePageWideText({ page, target }) {
+  for (const layer of LAYERS) {
+    const open = page.locator(layer).filter({ visible: true });
+    if ((await open.count()) > 0) {
+      const inLayer = controlsWithText({ root: open.last(), text: target.text });
+      if ((await inLayer.count()) > 0) {
+        return controlsWithText({ root: open.last(), text: target.text, nth: target.nth });
+      }
+    }
+  }
+  return controlsWithText({ root: page, text: target.text, nth: target.nth });
+}
+
+// The element a step acts on or asserts about. With `text` it is the visible
+// interactive control with exactly that text (a cell button, a confirm
+// dialog's OK, a menu item) inside the scope, or in the front-most open layer
+// of the page when there is no blockId — portal-rendered controls live
+// outside every block. With `nth` alone it is the nth interactive control in
+// the scope. Otherwise it is the scope itself, and a click resolves its inner
+// control the way a plain blockId click does.
+async function resolveTarget({ page, target }) {
+  const scope = resolveScope({ page, target });
+  if (!type.isUndefined(target.text)) {
+    if (type.isUndefined(scope)) {
+      return resolvePageWideText({ page, target });
+    }
+    return controlsWithText({ root: scope, text: target.text, nth: target.nth });
+  }
+  if (!type.isUndefined(target.nth)) {
+    return scope.locator(INTERACTIVE_CONTROL).nth(target.nth);
+  }
+  return scope;
+}
+
+// A target that names a control (`text`, `nth`) is clicked as is; a target that
+// names a container (block, row, cell) is clicked on the first control inside
+// it, or on itself when it has none.
+async function resolveClickLocator({ page, target }) {
+  const located = await resolveTarget({ page, target });
+  if (!type.isUndefined(target.text) || !type.isUndefined(target.nth)) {
+    return located;
+  }
+  return resolveClickTarget(located);
 }
 
 async function runClick({ page, step, timeout }) {
-  const blockId = step.click;
-  await actOnBlock({
-    blockId,
+  const target = normaliseTarget(step.click);
+  await actOnTarget({
+    target,
     action: async () => {
-      const target = await resolveClickTarget(getBlock(page, blockId));
-      await target.click({ timeout });
+      const locator = await resolveClickLocator({ page, target });
+      await locator.click({ timeout });
     },
   });
 }
 
 async function runFill({ page, step, timeout }) {
-  const { blockId, value } = step.fill;
-  await actOnBlock({
-    blockId,
-    action: () =>
-      getBlock(page, blockId).locator('input, textarea').first().fill(String(value), { timeout }),
+  const { value, ...target } = step.fill;
+  await actOnTarget({
+    target,
+    action: async () => {
+      const scope = await resolveTarget({ page, target });
+      await scope.locator('input, textarea').first().fill(String(value), { timeout });
+    },
   });
-}
-
-// Exact match on the option's text: a regex anchored at both ends, so "Cat"
-// does not pick "Category".
-function exactText(value) {
-  return new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
 }
 
 // A native <select> inside the block is preferred when present (Playwright's
@@ -140,22 +261,22 @@ function exactText(value) {
 // page-wide, restricted to visible ones so the hidden accessibility list is
 // never matched.
 async function runSelect({ page, step, timeout }) {
-  const { blockId, value } = step.select;
+  const { value, ...target } = step.select;
   const text = String(value);
-  const block = getBlock(page, blockId);
-  const native = block.locator('select');
+  const scope = await resolveTarget({ page, target });
+  const native = scope.locator('select');
   if ((await native.count()) > 0) {
-    await actOnBlock({
-      blockId,
+    await actOnTarget({
+      target,
       action: () => native.first().selectOption({ label: text }, { timeout }),
     });
     return;
   }
-  await actOnBlock({
-    blockId,
+  await actOnTarget({
+    target,
     action: async () => {
-      const target = await resolveClickTarget(block);
-      await target.click({ timeout });
+      const locator = await resolveClickLocator({ page, target });
+      await locator.click({ timeout });
     },
   });
   const option = page
@@ -166,10 +287,11 @@ async function runSelect({ page, step, timeout }) {
   try {
     await option.click({ timeout });
   } catch (error) {
+    const description = describeTarget(target);
     throw new JourneyStepError(
-      `No option with text "${text}" appeared in the dropdown of block "${blockId}".`,
+      `No option with text "${text}" appeared in the dropdown of ${description}.`,
       {
-        expected: `option "${text}" in the dropdown of block "${blockId}"`,
+        expected: `option "${text}" in the dropdown of ${description}`,
         actual: cleanMessage(error),
       }
     );
@@ -269,34 +391,46 @@ async function expectState({ page, params }) {
 }
 
 async function expectVisible({ page, params, timeout }) {
-  const blockId = params;
+  const target = normaliseTarget(params);
+  const description = describeTarget(target);
   try {
-    await getBlock(page, blockId).waitFor({ state: 'visible', timeout });
+    const located = await resolveTarget({ page, target });
+    await located.waitFor({ state: 'visible', timeout });
   } catch (error) {
-    throw new JourneyStepError(`Expected block "${blockId}" to be visible.`, {
-      expected: `block "${blockId}" to be visible`,
+    throw new JourneyStepError(`Expected ${description} to be visible.`, {
+      expected: `${description} to be visible`,
       actual: cleanMessage(error),
     });
   }
 }
 
+// Waits for the target to be in the page, then reads the text of every element
+// it matches. A grid row is rendered once per column container (pinned left,
+// centre, pinned right), so a row target legitimately matches more than one
+// element; joining them reads the whole row.
+async function readTargetText({ page, target, timeout }) {
+  const located = await resolveTarget({ page, target });
+  await located.first().waitFor({ state: 'attached', timeout });
+  const texts = await located.allInnerTexts();
+  return texts.join('\n');
+}
+
 async function expectText({ page, params, timeout }) {
-  const { blockId, contains } = params;
+  const { contains, ...target } = params;
+  const description = describeTarget(target);
   let text;
   try {
-    text = await getBlock(page, blockId).innerText({ timeout });
+    text = await readTargetText({ page, target, timeout });
   } catch (error) {
-    throw new JourneyStepError(`Expected block "${blockId}" to contain text "${contains}".`, {
-      expected: `block "${blockId}" text to contain "${contains}"`,
+    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
+      expected: `${description} text to contain "${contains}"`,
       actual: cleanMessage(error),
     });
   }
   if (!text.includes(contains)) {
     throw new JourneyStepError(
-      `Expected block "${blockId}" text to contain "${contains}" but found ${JSON.stringify(
-        text
-      )}.`,
-      { expected: `block "${blockId}" text to contain "${contains}"`, actual: text }
+      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(text)}.`,
+      { expected: `${description} text to contain "${contains}"`, actual: text }
     );
   }
 }

@@ -445,13 +445,13 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_run_journey',
     {
       description:
-        'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId. A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Always returns the final page state and any screenshots taken (as images after the JSON text).',
+        'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Always returns the final page state and any screenshots taken (as images after the JSON text).',
       inputSchema: {
         pageId: z.string().describe('The page id to open.'),
         steps: z
           .array(z.record(z.any()))
           .describe(
-            'Ordered steps, one key each: {"click": blockId} | {"fill": {"blockId", "value"}} | {"select": {"blockId", "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": blockId} | {"text": {"blockId", "contains"}} | {"url": {"contains"}}}. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
+            'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"select": {...target, "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}}}. A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons and dropdown menu items are reached. fill, select and expect.text need a blockId. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
           ),
         user: userSchema,
         urlQuery: z

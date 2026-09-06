@@ -14,34 +14,34 @@ http://localhost:3000/lowdefy-docs/mcp
 
 It provides these tools:
 
-| Tool                     | Purpose                                                                 |
-| ------------------------ | ----------------------------------------------------------------------- |
-| `lowdefy_overview`       | Start here — what is installed, counts per kind, and how to use the rest |
-| `lowdefy_list_types`     | List ALL available types of a kind (blocks, operators, actions, connections, requests) |
-| `lowdefy_list_plugins`   | Installed plugin packages, including local plugins, and the types each provides |
-| `lowdefy_get_schema`     | JSON Schema for a specific type — all properties and events              |
-| `lowdefy_get_examples`   | Real YAML usage examples for a block type                                |
-| `lowdefy_get_doc`        | A Lowdefy docs page as markdown, by slug or by type name                 |
-| `lowdefy_search_docs`    | Keyword search over the Lowdefy docs                                     |
-| `lowdefy_get_plugin_doc` | Markdown (READMEs, guides) shipped inside an installed plugin package    |
-| `lowdefy_build_status`   | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit |
-| `lowdefy_get_page_config`| The fully built config for a page, or its structured build errors        |
-| `lowdefy_screenshot_page`| PNG screenshot of a rendered page (headless Chromium) for visual verification |
-| `lowdefy_run_journey`    | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout |
-| `lowdefy_find_config`    | Which yaml file (and line) defines a given page, block, or request id    |
-| `lowdefy_scaffold_page`  | Create a new page yaml file with a canonical minimal structure           |
-| `lowdefy_app_map`        | The whole-app graph: every page, menu, connection, endpoint, and agent in one call |
-| `lowdefy_inspect_state`  | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless |
-| `lowdefy_eval_operator`  | Evaluate any operator expression against live page state — a REPL for config |
-| `lowdefy_run_request`    | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in) |
-| `lowdefy_run_endpoint`   | Execute an Api endpoint routine with a test payload, as a given `user`, to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data) |
-| `lowdefy_snapshot_state` | Capture live page state + request responses into a committable checkpoint folder |
-| `lowdefy_load_state`     | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing |
-| `lowdefy_list_state_checkpoints` | List saved state checkpoints |
-| `lowdefy_checkpoint_to_mocks` | Convert a state checkpoint into e2e `mocks.yaml` fixtures |
-| `lowdefy_restart`        | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status` |
-| `lowdefy_checkpoint`     | Snapshot all config files before risky changes                           |
-| `lowdefy_revert_checkpoint` | Restore config files from a checkpoint                                |
+| Tool                             | Purpose                                                                                                                                                                                            |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy_overview`               | Start here — what is installed, counts per kind, and how to use the rest                                                                                                                           |
+| `lowdefy_list_types`             | List ALL available types of a kind (blocks, operators, actions, connections, requests)                                                                                                             |
+| `lowdefy_list_plugins`           | Installed plugin packages, including local plugins, and the types each provides                                                                                                                    |
+| `lowdefy_get_schema`             | JSON Schema for a specific type — all properties and events                                                                                                                                        |
+| `lowdefy_get_examples`           | Real YAML usage examples for a block type                                                                                                                                                          |
+| `lowdefy_get_doc`                | A Lowdefy docs page as markdown, by slug or by type name                                                                                                                                           |
+| `lowdefy_search_docs`            | Keyword search over the Lowdefy docs                                                                                                                                                               |
+| `lowdefy_get_plugin_doc`         | Markdown (READMEs, guides) shipped inside an installed plugin package                                                                                                                              |
+| `lowdefy_build_status`           | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit                                                                          |
+| `lowdefy_get_page_config`        | The fully built config for a page, or its structured build errors                                                                                                                                  |
+| `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification                                                                                                                      |
+| `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout |
+| `lowdefy_find_config`            | Which yaml file (and line) defines a given page, block, or request id                                                                                                                              |
+| `lowdefy_scaffold_page`          | Create a new page yaml file with a canonical minimal structure                                                                                                                                     |
+| `lowdefy_app_map`                | The whole-app graph: every page, menu, connection, endpoint, and agent in one call                                                                                                                 |
+| `lowdefy_inspect_state`          | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless                                                                          |
+| `lowdefy_eval_operator`          | Evaluate any operator expression against live page state — a REPL for config                                                                                                                       |
+| `lowdefy_run_request`            | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in)                                                                                         |
+| `lowdefy_run_endpoint`           | Execute an Api endpoint routine with a test payload, as a given `user`, to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data)                     |
+| `lowdefy_snapshot_state`         | Capture live page state + request responses into a committable checkpoint folder                                                                                                                   |
+| `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing                                                                                                                 |
+| `lowdefy_list_state_checkpoints` | List saved state checkpoints                                                                                                                                                                       |
+| `lowdefy_checkpoint_to_mocks`    | Convert a state checkpoint into e2e `mocks.yaml` fixtures                                                                                                                                          |
+| `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status`                                   |
+| `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                                     |
+| `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                             |
 
 ## Hazards — what the schema cannot tell you
 
@@ -91,12 +91,12 @@ The dev server pushes what changed instead of waiting to be asked. Two channels 
 
 Every event carries `type` and an ISO `timestamp`. The four types:
 
-| Type           | When                                                                    | Carries                                                                                                   |
-| -------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `restart`      | First event on every connection                                          | `bootedAt` — the dev server process start time, so a reconnecting client can tell a restart from a dropped connection |
-| `build`        | Every time a rebuild finishes, success or failure                        | `status`, `errorCount`, `warningCount`, `errors`, `warnings`, and `stale` / `staleSince` (see below)     |
-| `client_error` | A browser reports a runtime error                                        | The same entry `lowdefy_build_status` lists under `clientErrors`                                          |
-| `server_error` | A request, endpoint, MCP tool or agent tool fails on the server          | The same entry `lowdefy_build_status` lists under `serverErrors`                                          |
+| Type           | When                                                            | Carries                                                                                                               |
+| -------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `restart`      | First event on every connection                                 | `bootedAt` — the dev server process start time, so a reconnecting client can tell a restart from a dropped connection |
+| `build`        | Every time a rebuild finishes, success or failure               | `status`, `errorCount`, `warningCount`, `errors`, `warnings`, and `stale` / `staleSince` (see below)                  |
+| `client_error` | A browser reports a runtime error                               | The same entry `lowdefy_build_status` lists under `clientErrors`                                                      |
+| `server_error` | A request, endpoint, MCP tool or agent tool fails on the server | The same entry `lowdefy_build_status` lists under `serverErrors`                                                      |
 
 Events are not buffered: a client that connects after an event missed it, and should call `lowdefy_build_status` — which is derived from the same `build/buildStatus.json` — for the current picture. Act on a `build` event with `status: "error"` immediately; `lowdefy_build_status` remains the full report.
 
@@ -209,20 +209,53 @@ A screenshot shows what rendered; it cannot tell the agent whether the form subm
 
 Every step is an object with exactly one key:
 
-| Step                                              | What it does                                                                                                                                                                     |
-| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `{ "click": blockId }`                            | Clicks the block — its interactive control (button, link, input, checkbox…) when it has one, otherwise the block itself                                                          |
-| `{ "fill": { blockId, value } }`                  | Fills the block's `input` or `textarea` with `value` (converted to a string)                                                                                                     |
-| `{ "select": { blockId, value } }`                | Opens the block's dropdown and clicks the option whose text is exactly `value`; a native `<select>` inside the block is set by label instead                                     |
-| `{ "press": key }`                                | Presses a key or chord, e.g. `"Enter"`, `"Escape"`, `"Mod+k"` — `Mod` becomes `Meta` or `Control` for the platform the page reports, the same way the app's shortcuts resolve it |
-| `{ "wait": { "ms": n } }`                         | Sleeps `n` milliseconds                                                                                                                                                          |
-| `{ "wait": { "request": requestId } }`            | Waits until the request has finished loading                                                                                                                                     |
-| `{ "wait": { "state": path } }`                   | Waits until the state path is defined                                                                                                                                            |
-| `{ "screenshot": name? }`                         | Captures a PNG of the viewport; returned with the result (`true`, `null` or a missing name defaults to `step-<index>`)                                                           |
-| `{ "expect": { "state": { path, equals } } }`     | The state at `path` structurally equals `equals` (key order does not matter)                                                                                                     |
-| `{ "expect": { "visible": blockId } }`            | The block is visible                                                                                                                                                             |
-| `{ "expect": { "text": { blockId, contains } } }` | The block's text contains the string                                                                                                                                             |
-| `{ "expect": { "url": { contains } } }`           | The page url contains the string                                                                                                                                                 |
+| Step                                                | What it does                                                                                                                                                                     |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{ "click": target }`                               | Clicks the block — its interactive control (button, link, input, checkbox…) when it has one, otherwise the block itself — or the control a target object narrows to (below)      |
+| `{ "fill": { ...target, value } }`                  | Fills the block's (or grid cell's) `input` or `textarea` with `value` (converted to a string)                                                                                    |
+| `{ "select": { ...target, value } }`                | Opens the block's (or grid cell's) dropdown and clicks the option whose text is exactly `value`; a native `<select>` inside the block is set by label instead                    |
+| `{ "press": key }`                                  | Presses a key or chord, e.g. `"Enter"`, `"Escape"`, `"Mod+k"` — `Mod` becomes `Meta` or `Control` for the platform the page reports, the same way the app's shortcuts resolve it |
+| `{ "wait": { "ms": n } }`                           | Sleeps `n` milliseconds                                                                                                                                                          |
+| `{ "wait": { "request": requestId } }`              | Waits until the request has finished loading                                                                                                                                     |
+| `{ "wait": { "state": path } }`                     | Waits until the state path is defined                                                                                                                                            |
+| `{ "screenshot": name? }`                           | Captures a PNG of the viewport; returned with the result (`true`, `null` or a missing name defaults to `step-<index>`)                                                           |
+| `{ "expect": { "state": { path, equals } } }`       | The state at `path` structurally equals `equals` (key order does not matter)                                                                                                     |
+| `{ "expect": { "visible": target } }`               | The block, or the control a target narrows to, is visible                                                                                                                        |
+| `{ "expect": { "text": { ...target, contains } } }` | The block's text — or a grid row's or cell's — contains the string                                                                                                               |
+| `{ "expect": { "url": { contains } } }`             | The page url contains the string                                                                                                                                                 |
+
+A **target** is a `blockId` string, or an object that narrows the search to a control that is not itself a block — a grid row's cell buttons, a confirm dialog's OK, a dropdown menu's items:
+
+| Target key | Meaning                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `blockId`  | The block to search inside                                                                                                           |
+| `row`      | A grid row, zero-based as displayed (`AgGrid*` blocks, `.ag-row[row-index]`); needs `blockId`                                        |
+| `column`   | A grid cell in that row, by the column's `field` or `colId` (`.ag-cell[col-id]`); needs `blockId`                                    |
+| `text`     | The visible interactive control whose text is exactly this — a button label, a tab, a menu item (`"Cat"` never matches `"Category"`) |
+| `nth`      | When several controls match, the zero-based one to use                                                                               |
+
+`text` without a `blockId` searches the page, front-most layer first — an open dropdown menu (`[role="menu"]`), then an open dialog (`[role="dialog"]`), then the page — so `{ "click": { "text": "Delete" } }` with a confirm dialog open clicks the dialog's Delete and not the grid's, without counting buttons. `fill`, `select` and `expect.text` always need a `blockId`. Unknown target keys are rejected before a browser opens.
+
+```json
+[
+  { "click": { "blockId": "controls_grid", "row": 1, "text": "Delete" } },
+  { "expect": { "visible": { "text": "Are you sure?" } } },
+  { "click": { "text": "Delete" } },
+  { "wait": { "request": "delete_control" } },
+  {
+    "expect": {
+      "text": {
+        "blockId": "controls_grid",
+        "row": 1,
+        "column": "title",
+        "contains": "Key rotation"
+      }
+    }
+  },
+  { "click": { "blockId": "controls_grid", "row": 0, "column": "more" } },
+  { "click": { "text": "Archive" } }
+]
+```
 
 Each step gets 5 seconds (Playwright's own auto-waiting — a `click` waits for the block to be attached, visible and enabled; nothing is retried). After an interaction the runner waits for the page to settle — the event the interaction fired, the requests it called — using the same readiness check the page open uses, so the next `expect` asserts against the outcome instead of racing it. The page opens with the same headless `user` and `urlQuery` handling as the other tools.
 
@@ -335,30 +368,30 @@ operator expressions against real state, and `lowdefy_snapshot_state` /
 
 Everything the MCP tools serve is also available as plain GET routes — useful for `curl`, scripts, or agents without MCP support:
 
-| Route                       | Purpose                                                        |
-| --------------------------- | -------------------------------------------------------------- |
-| `GET /lowdefy-docs`                 | Overview and route index                                        |
-| `GET /lowdefy-docs/{kind}`          | List all available types of a kind, e.g. `/lowdefy-docs/blocks`         |
-| `GET /lowdefy-docs/plugins`         | Installed plugin packages and the types each provides           |
-| `GET /lowdefy-docs/schema/{kind}/{type}` | JSON schema for a type, e.g. `/lowdefy-docs/schema/blocks/Button` |
-| `GET /lowdefy-docs/examples/{type}` | Example YAML for a block type                                   |
-| `GET /lowdefy-docs/content/{slug}`  | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`    |
-| `GET /lowdefy-docs/search?q={query}`| Search the docs                                                 |
-| `GET /lowdefy-docs/plugin-doc/{package}` | Markdown shipped inside a plugin package                   |
-| `GET /lowdefy-docs/build-status`    | Current build errors/warnings + recent browser runtime errors   |
-| `GET /lowdefy-docs/events`          | SSE stream of `restart`, `build`, `client_error` and `server_error` events |
-| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors               |
-| `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page                         |
-| `POST /lowdefy-docs/journey`        | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64 |
-| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined               |
-| `GET /lowdefy-docs/app-map`         | Whole-app graph: pages, menus, connections, endpoints, agents   |
-| `GET /lowdefy-docs/inspect-state/{pageId}` | Live state/requests/eventLog of a running page (tab or headless) |
-| `POST /lowdefy-docs/eval-operator`  | Evaluate an operator expression against live page state         |
-| `POST /lowdefy-docs/run-request`    | Execute a request with a test payload (read-only unless opted in) |
-| `POST /lowdefy-docs/run-endpoint`   | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data) |
-| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints                            |
-| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints          |
-| `POST /lowdefy-docs/restart`        | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s) |
+| Route                                                             | Purpose                                                                                                             |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `GET /lowdefy-docs`                                               | Overview and route index                                                                                            |
+| `GET /lowdefy-docs/{kind}`                                        | List all available types of a kind, e.g. `/lowdefy-docs/blocks`                                                     |
+| `GET /lowdefy-docs/plugins`                                       | Installed plugin packages and the types each provides                                                               |
+| `GET /lowdefy-docs/schema/{kind}/{type}`                          | JSON schema for a type, e.g. `/lowdefy-docs/schema/blocks/Button`                                                   |
+| `GET /lowdefy-docs/examples/{type}`                               | Example YAML for a block type                                                                                       |
+| `GET /lowdefy-docs/content/{slug}`                                | A docs page as markdown, e.g. `/lowdefy-docs/content/operators/_get`                                                |
+| `GET /lowdefy-docs/search?q={query}`                              | Search the docs                                                                                                     |
+| `GET /lowdefy-docs/plugin-doc/{package}`                          | Markdown shipped inside a plugin package                                                                            |
+| `GET /lowdefy-docs/build-status`                                  | Current build errors/warnings + recent browser runtime errors                                                       |
+| `GET /lowdefy-docs/events`                                        | SSE stream of `restart`, `build`, `client_error` and `server_error` events                                          |
+| `GET /lowdefy-docs/page-config/{pageId}`                          | Fully built page config, or its build errors                                                                        |
+| `GET /lowdefy-docs/screenshot/{pageId}`                           | PNG screenshot of the rendered page                                                                                 |
+| `POST /lowdefy-docs/journey`                                      | Drive a page headless through declarative steps and assert what happens; screenshots returned as base64             |
+| `GET /lowdefy-docs/find/{id}?pageId=`                             | Locate where a page/block/request id is defined                                                                     |
+| `GET /lowdefy-docs/app-map`                                       | Whole-app graph: pages, menus, connections, endpoints, agents                                                       |
+| `GET /lowdefy-docs/inspect-state/{pageId}`                        | Live state/requests/eventLog of a running page (tab or headless)                                                    |
+| `POST /lowdefy-docs/eval-operator`                                | Evaluate an operator expression against live page state                                                             |
+| `POST /lowdefy-docs/run-request`                                  | Execute a request with a test payload (read-only unless opted in)                                                   |
+| `POST /lowdefy-docs/run-endpoint`                                 | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data) |
+| `GET/POST /lowdefy-docs/checkpoints` + `/revert`                  | Config-file checkpoints                                                                                             |
+| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints                                                                                            |
+| `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s)                                 |
 
 ## Local plugins
 
