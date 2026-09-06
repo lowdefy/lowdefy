@@ -623,6 +623,18 @@ const Reload = ({ children, basePath, lowdefy }) => {
 
 Tailwind CSS updates arrive through Vite HMR (`globals.css` is in the dev module graph) — the old `tailwind-jit.css` link cache-bust is gone.
 
+### One Stream Per Tab
+
+Dev serves over HTTP/1.1, where browsers allow six connections per host, and an open event stream holds one for the life of the tab. The `/api/reload` EventSource in `Reload.jsx` is therefore the **only** stream a tab opens, and every other dev-only channel rides it:
+
+- `reload.js` registers each connection as an inspectable tab in `lib/docs/tabChannel.js` and sends the id it chose as the first event (`tab`). Agent inspect/eval requests (`/lowdefy-docs/inspect-state`, `eval-operator`) arrive on the same stream as `inspect-request` / `eval-request` events.
+- `Reload.jsx` publishes `{ source, tabId }` through `client/DevStreamContext.js`; `Inspector.jsx` (rendered inside `Reload`'s render prop) attaches its listeners to that source instead of opening its own EventSource.
+- Page navigation is reported with a POST to `/api/dev-inspect/page` (`{ tabId, pageId }` → `updateTabPage`) rather than reconnecting, so the registry stays current without churning connections or file watchers.
+
+Before this, the inspector opened a second stream per tab and reconnected it on every navigation; three tabs of one app saturated the browser's connection pool and the next fetch on any of them queued forever — the page sat on its skeleton with a request pending and no server error.
+
+The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findTab`.
+
 ### Reload Trigger
 
 **File:** `manager/processes/reloadClients.mjs`

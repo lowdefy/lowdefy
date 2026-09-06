@@ -72,40 +72,43 @@ function Routing({ auth, lowdefy, router }) {
 
   return (
     <>
-      <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
       <FeedbackMount basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
       <OpenInEditorListener basePath={router.basePath} pageId={pageId} />
       <Reload basePath={router.basePath} lowdefy={lowdefy}>
-        {(resetContext) =>
-          // Rendered here, not in Page — Page sits below the Suspense boundary
-          // and cannot render anything while its config fetch is suspended, so
-          // a restarting server would present as "Building page..." forever.
-          resetContext.restarting ? (
-            <RestartingPage />
-          ) : (
-            <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
-              <Page
-                auth={auth}
-                Components={{ Head, Link }}
-                config={{
-                  rootConfig,
-                }}
-                jsMap={staticJsMap}
-                lowdefy={lowdefy}
-                pageId={pageId}
-                resetContext={resetContext}
-                router={router}
-                types={{
-                  actions,
-                  blockMetas,
-                  blocks,
-                  icons,
-                  operators,
-                }}
-              />
-            </Suspense>
-          )
-        }
+        {(resetContext) => (
+          <>
+            {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
+            <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            {/* Rendered here, not in Page — Page sits below the Suspense boundary
+                and cannot render anything while its config fetch is suspended, so
+                a restarting server would present as "Building page..." forever. */}
+            {resetContext.restarting ? (
+              <RestartingPage />
+            ) : (
+              <Suspense key={`${pageId}_${getReloadVersion()}`} fallback={<BuildingPage />}>
+                <Page
+                  auth={auth}
+                  Components={{ Head, Link }}
+                  config={{
+                    rootConfig,
+                  }}
+                  jsMap={staticJsMap}
+                  lowdefy={lowdefy}
+                  pageId={pageId}
+                  resetContext={resetContext}
+                  router={router}
+                  types={{
+                    actions,
+                    blockMetas,
+                    blocks,
+                    icons,
+                    operators,
+                  }}
+                />
+              </Suspense>
+            )}
+          </>
+        )}
       </Reload>
     </>
   );

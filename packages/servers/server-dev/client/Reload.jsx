@@ -16,15 +16,21 @@
 
 import React, { useEffect, useState } from 'react';
 
+import DevStreamContext from './DevStreamContext.js';
 import useMutateCache from '../lib/client/utils/useMutateCache.js';
 import waitForRestartedServer from '../lib/client/utils/waitForRestartedServer.js';
 
 // SSE listener — config rebuilds notify via /api/reload. Tailwind CSS updates
 // arrive through Vite HMR now (globals.css is in the dev module graph), so
 // the old tailwind-jit.css link cache-bust is gone.
+//
+// This is the tab's only EventSource. It is shared through DevStreamContext
+// so Inspector.jsx can listen on the same connection instead of opening a
+// second one — see the connection-limit note in DevStreamContext.js.
 const Reload = ({ children, basePath, lowdefy }) => {
   const [reset, setReset] = useState(false);
   const [restarting, setRestarting] = useState(false);
+  const [devStream, setDevStream] = useState({ source: null, tabId: null });
   // reset is a one-shot boolean the engine lowers only after a page mounts
   // (getContext.js) — while a page is suspended it stays true and setReset(true)
   // bails out of re-rendering. The tick always changes, so every reload event
@@ -35,6 +41,15 @@ const Reload = ({ children, basePath, lowdefy }) => {
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
     const sse = new EventSource(`${basePath}/api/reload`);
+
+    // routes/reload.js registers every connection as an inspectable tab and
+    // announces the id it chose as the first event on the stream. The stream
+    // is published to consumers only then, in one state update, so the page
+    // subtree re-renders once at mount rather than once per field.
+    sse.addEventListener('tab', (message) => {
+      const { tabId } = JSON.parse(message.data);
+      setDevStream({ source: sse, tabId });
+    });
 
     sse.addEventListener('reload', () => {
       // add a update delay to prevent rerender before server is shut down for rebuild, ideally we don't want to do this.
@@ -60,7 +75,11 @@ const Reload = ({ children, basePath, lowdefy }) => {
       sse.close();
     };
   }, []);
-  return <>{children({ reset, setReset, restarting })}</>;
+  return (
+    <DevStreamContext.Provider value={devStream}>
+      {children({ reset, setReset, restarting })}
+    </DevStreamContext.Provider>
+  );
 };
 
 export default Reload;

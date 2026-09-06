@@ -97,6 +97,13 @@ function forwardRequest(context, req, res) {
     });
     req.pipe(proxyReq);
     req.on('error', () => proxyReq.destroy());
+    // A client that goes away mid-response (a closed browser tab holding the
+    // reload SSE stream, an agent dropping its MCP stream) must reach the
+    // child as an aborted request — pipe() only unpipes, so without this the
+    // child keeps the stream open and, for SSE, its tab registered forever.
+    res.on('close', () => {
+      if (!res.writableFinished) proxyReq.destroy();
+    });
   });
 }
 
@@ -122,6 +129,8 @@ function forwardUpgrade(context, req, socket, head) {
     });
     upstream.on('error', () => socket.destroy());
     socket.on('error', () => upstream.destroy());
+    upstream.on('close', () => socket.destroy());
+    socket.on('close', () => upstream.destroy());
   });
 }
 
