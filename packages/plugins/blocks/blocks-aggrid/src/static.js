@@ -16,7 +16,7 @@
 
 /**
  * Static report renderers for blocks-aggrid, aggregated behind the `./static`
- * package export. The three display AgGrid variants share one `grid` renderer,
+ * package export. The four display AgGrid variants share one `grid` renderer,
  * re-exported per block type name so the walker can look it up by `block.type`.
  * This entry stays free of ag-grid and React so the server can load the registry
  * without a browser runtime.
@@ -30,4 +30,5 @@ import { agGridTable } from './agGridTable.static.js';
 
 export const AgGridAlpine = agGridTable;
 export const AgGridBalham = agGridTable;
+export const AgGridLowdefy = agGridTable;
 export const AgGridMaterial = agGridTable;

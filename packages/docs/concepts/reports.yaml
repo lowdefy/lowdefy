@@ -140,7 +140,7 @@ _ref:
                 | `@lowdefy/blocks-basic` | Html, DangerousHtml | the markup laid out with the app's compiled Tailwind and custom CSS |
                 | `@lowdefy/blocks-echarts` | EChart | the chart as vector graphics, animation disabled |
                 | `@lowdefy/blocks-markdown` | Markdown, MarkdownWithCode, DangerousMarkdown | formatted text, lists, tables, images |
-                | `@lowdefy/blocks-aggrid` | AgGridAlpine, AgGridBalham, AgGridMaterial | a worksheet in the Excel export; a summary line in the PDF |
+                | `@lowdefy/blocks-aggrid` | AgGridAlpine, AgGridBalham, AgGridLowdefy, AgGridMaterial | a worksheet in the Excel export; a summary line in the PDF |
 
                 A block type without a renderer is skipped and named in the server log; a container without a renderer passes its children through. Input blocks are never rendered.
 
