@@ -183,7 +183,6 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 ### `/routes/request/`
 
 | Module                    | Purpose                                                |
-| ------------------------- | ------------------------------------------------------ |
 | `callRequest.js`          | Main entry point for request execution                 |
 | `authorizeRequest.js`     | Check if user can execute this request                 |
 | `getRequestConfig.js`     | Load request definition from build output              |
@@ -194,11 +193,27 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 | `checkConnectionWrite.js` | Verify write permissions on connection                 |
 | `validateSchemas.js`      | Validate properties against connection/request schemas |
 | `callRequestResolver.js`  | Execute the resolver function. Constructs `callApi` (closing over `context` + `endpointDepth`) and threads it into the resolver argument bag. Lowdefy errors pass through unchanged; raw errors wrap into `RequestError` / `ServiceError`. |
+| `createApp.js`            | Opt-in `app` capability for `appAccess` resolvers      |
+
+#### The `app` capability (`createApp.js`)
+
+A request resolver whose `meta` declares `appAccess: true` (only `RenderReport` in `@lowdefy/plugin-reports` today) receives an `app` argument beside `request` and `connection`. It is a set of narrow accessors, never the gates themselves:
+
+| Member                                                       | Purpose                                                                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `getPageConfig({ pageId, urlQuery })`                        | Core `getPageConfig`: applies `authorize`, returns `null` for unknown AND unauthorised pages                  |
+| `callRequest({ pageId, requestId, payload })`                | Re-enters `callRequest` on a fresh child context at `renderDepth + 1`; depth > 1 is refused                   |
+| `readBlockMetas()`, `readGlobal()`, `readReportStylesheet()` | Narrow readers over the build artifacts a headless render needs                                               |
+| `blocksStatic`, `clientOperators`, `clientJsMap`, `icons`    | From `context.reportsRuntime`, the build's gated `plugins/reportsRuntime.js`                                  |
+| `system`                                                     | `true` in scheduled / webhook / detached endpoint contexts (`context.system`)                                 |
+| `publicDirectory`, `origin`                                  | The server's copied `public/` folder; the request origin (Host-derived, never trusted as a security boundary) |
+| `renderDepth`, `requestTimeout`, `user`, `logger`            | Context passthroughs                                                                                          |
+
+The raw `readConfigFile` is deliberately not exposed: it would hand every `pages/*.json` and `connections/*.json` to a resolver without `authorize`.
 
 ### `/routes/endpoints/`
 
 | Module                    | Purpose                                                       |
-| ------------------------- | ------------------------------------------------------------- |
 | `callEndpoint.js`         | HTTP entry point for endpoint execution; blocks `InternalApi` |
 | `runRoutine.js`           | Dispatch steps by ID prefix: `request:`, `endpoint:`, control. Catch sets `error.handled = true` so a single error crossing multiple `runRoutine` boundaries (e.g. a deep `callApi` chain) triggers `context.handleError` exactly once. |
 | `handleRequest.js`        | Execute a database/API request step                           |
