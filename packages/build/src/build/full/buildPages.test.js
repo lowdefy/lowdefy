@@ -82,6 +82,21 @@ test('page id is not a string', () => {
   expect(() => buildPages({ components, context })).toThrow('Page id is not a string at page 0.');
 });
 
+test('page id is a reserved name', () => {
+  const components = {
+    pages: [
+      {
+        id: '__proto__',
+        type: 'Container',
+        auth,
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'Page id "__proto__" is a reserved name and cannot be used as an id.'
+  );
+});
+
 test('Throw on duplicate page ids', () => {
   const components = {
     pages: [

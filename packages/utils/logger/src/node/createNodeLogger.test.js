@@ -78,7 +78,9 @@ test('createNodeLogger does not crash on error with class instance property', ()
   expect(lines).toHaveLength(1);
   expect(lines[0].err.message).toBe('connection failed');
   expect(lines[0].err.code).toBe('ECONNREFUSED');
-  expect(lines[0].err.agent).toBeUndefined();
+  // The instance is never expanded, but the key must not vanish: an absent key is
+  // indistinguishable from "no such field".
+  expect(lines[0].err.agent).toBe('[Object: FakeAgent]');
 });
 
 test('createNodeLogger falls back to raw value when err is not an Error instance', () => {

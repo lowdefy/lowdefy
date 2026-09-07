@@ -42,108 +42,100 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import typeTest from './type.js';
+import type from './type.js';
+import extractErrorProps from './extractErrorProps.js';
 import serializer from './serializer.js';
+import splitPath from './splitPath.js';
+import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 
-function join(segs, joinChar, options) {
-  if (typeof options.join === 'function') {
-    return options.join(segs);
-  }
-  return segs[0] + joinChar + segs[1];
+// "May I step into this value to reach a child?" Plain objects, arrays and errors are traversable;
+// functions, Date, URL, Map, Set, RegExp, Promise, Buffer and typed arrays are not, because
+// serializing their internals is information disclosure. Class instances are NOT excluded:
+// type.isObject cannot distinguish them from plain objects, since kindOf maps every
+// `[object Object]` tag to 'object', so an instance's own properties are reachable. Narrowing the
+// predicate is a cross-cutting decision - mergeObjects sits on the same type.isObject boundary -
+// and is tracked separately. Note the predicate cannot close the disclosure case anyway: when the
+// live object is the endpoint of the path it is returned (and under copy, serialized) without
+// isTraversable ever being consulted. Error is handled by forLookup, which converts it to plain
+// data before a lookup.
+// Kept local rather than shared with set/unset - a module imported by all three trips a Jest ESM
+// module-cache bug in operators-js' mocked re-imports.
+function isTraversable(value) {
+  return type.isObject(value) || Array.isArray(value) || value instanceof Error;
 }
 
-function split(path, splitChar, options) {
-  if (typeof options.split === 'function') {
-    return options.split(path);
+// A lookup on an Error reads the error's plain-data form, so `name` resolves (it is own on the
+// extracted props, inherited on the instance) and an own key holding a class instance arrives as
+// a marker rather than a live object. Applied only where a lookup happens, so an error that is
+// the endpoint of the path is returned as an Error - `_actions: x.error` is unchanged.
+function forLookup(value) {
+  if (value instanceof Error) {
+    return extractErrorProps(value);
   }
-  return path.split(splitChar);
-}
-
-function isValid(key, target, options) {
-  if (typeof options.isValid === 'function') {
-    return options.isValid(key, target);
-  }
-  return true;
-}
-
-function isValidObject(val) {
-  return typeTest.isObject(val) || Array.isArray(val) || typeof val === 'function';
+  return value;
 }
 
 function getter(target, path, options) {
-  if (typeTest.isNone(path) || !isValidObject(target)) {
-    return typeof options.default !== 'undefined' ? options.default : undefined;
+  if (type.isNone(path) || !isTraversable(target)) {
+    return options.default;
   }
 
-  if (typeof path === 'number') {
+  if (type.isNumber(path)) {
     path = String(path);
   }
-
-  const isArray = Array.isArray(path);
-  const isString = typeof path === 'string';
-  const splitChar = options.separator || '.';
-  const joinChar = options.joinChar || (typeof splitChar === 'string' ? splitChar : '.');
-
-  if (isString && path in target) {
-    return isValid(path, target, options) ? target[path] : options.default;
+  if (!type.isString(path)) {
+    return options.default;
   }
 
-  const segs = isArray ? path : split(path, splitChar, options);
+  const segs = splitPath(path);
+
+  // Scanned before the walk so a reserved key is rejected even when it is an own property - the
+  // reserved rule is about illegal input, not about what the target holds. This also means a
+  // literal dotted key whose segments include a reserved name, such as 'a.constructor', throws
+  // rather than resolving; set and unset reject it identically. A rejoined candidate always
+  // contains a dot, so it can never equal a reserved name; scanning the split segments stays
+  // sufficient.
+  const reservedSeg = segs.find(isReserved);
+  if (!type.isNone(reservedSeg)) {
+    throw new ReservedKeyError(reservedSeg);
+  }
+
+  let current = forLookup(target);
+
   const len = segs.length;
   let idx = 0;
 
-  do {
-    let prop = segs[idx];
-    if (typeof prop === 'number') {
-      prop = String(prop);
+  while (idx < len) {
+    let candidate = segs[idx];
+    let next = idx + 1;
+
+    // The strict segment wins if present. On a miss, grow the candidate one segment at a time
+    // looking for a literal dotted key - shortest-first, no backtracking, so segments are
+    // consumed monotonically and the walk stays a single forward pass.
+    while (!Object.hasOwn(current, candidate) && next < len) {
+      candidate = `${candidate}.${segs[next]}`;
+      next += 1;
+    }
+    if (!Object.hasOwn(current, candidate)) {
+      return options.default;
     }
 
-    while (prop && prop.slice(-1) === '\\') {
-      idx += 1;
-      prop = join([prop.slice(0, -1), segs[idx] || ''], joinChar, options);
-    }
+    current = current[candidate];
+    idx = next;
 
-    if (prop in target) {
-      if (!isValid(prop, target, options)) {
+    if (idx < len) {
+      if (!isTraversable(current)) {
         return options.default;
       }
-
-      target = target[prop];
-    } else {
-      let hasProp = false;
-      let n = idx + 1;
-
-      while (n < len) {
-        prop = join([prop, segs[n]], joinChar, options);
-        n += 1;
-        hasProp = prop in target;
-        if (hasProp) {
-          if (!isValid(prop, target, options)) {
-            return options.default;
-          }
-
-          target = target[prop];
-          idx = n - 1;
-          break;
-        }
-      }
-
-      if (!hasProp) {
-        return options.default;
-      }
+      current = forLookup(current);
     }
-    // eslint-disable-next-line no-plusplus
-  } while (++idx < len && isValidObject(target));
-
-  if (idx === len) {
-    return target;
   }
 
-  return options.default;
+  return current;
 }
 
 function get(target, path, options) {
-  if (!typeTest.isObject(options)) {
+  if (!type.isObject(options)) {
     options = { default: options };
   }
 

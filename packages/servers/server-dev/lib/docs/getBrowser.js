@@ -18,7 +18,8 @@ import { chromium } from 'playwright-core';
 import { type } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
-import { HEADLESS_USER_COOKIE, headlessUser } from '../server/auth/headlessUser.js';
+import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
+import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
 // only drives one that is already installed. `channel: 'chrome'` picks up a
@@ -71,8 +72,19 @@ function buildPageUrl({ origin, pageId }) {
 // obtain `browser` via getBrowser() themselves so they can map a launch
 // failure to their own "no browser available" error message, separate from
 // navigation failures.
-async function openPage({ browser, origin, pageId, width = 1280, height = 800, timeout = 15000 }) {
+async function openPage({
+  browser,
+  origin,
+  pageId,
+  user,
+  width = 1280,
+  height = 800,
+  timeout = 15000,
+}) {
   const url = buildPageUrl({ origin, pageId });
+  // Resolved before the context is created so an invalid `user` can't leave an
+  // orphaned context behind.
+  const injectedUser = resolveHeadlessUser({ user });
   const context = await browser.newContext({ viewport: { width, height } });
   // Inject an authenticated user so auth-protected pages don't 404 for the
   // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
@@ -80,7 +92,7 @@ async function openPage({ browser, origin, pageId, width = 1280, height = 800, t
   await context.addCookies([
     {
       name: HEADLESS_USER_COOKIE,
-      value: Buffer.from(JSON.stringify(headlessUser)).toString('base64'),
+      value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
       url: origin,
     },
   ]);

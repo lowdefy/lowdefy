@@ -19,6 +19,7 @@
 import { jest } from '@jest/globals';
 import { ActionError, OperatorError } from '@lowdefy/errors';
 
+import stopChain from '../src/stopChain.js';
 import testContext from './testContext.js';
 
 const timeout = (ms) => {
@@ -47,6 +48,11 @@ const getActions = () => {
     ActionAsyncError: jest.fn(async ({ params }) => {
       await timeout(params.ms ?? 1);
       throw new Error('Test error');
+    }),
+    ActionStopChain: jest.fn(() => stopChain({ ok: true })),
+    ActionStopChainAsync: jest.fn(async ({ params }) => {
+      await timeout(params.ms ?? 1);
+      return stopChain({ ok: true });
     }),
   };
 };
@@ -1318,6 +1324,289 @@ test('call 2 actions, first with async: false', async () => {
     success: true,
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
+  });
+});
+
+test('an action returning stopChain ends the chain and later actions are recorded skipped', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'first', type: 'ActionSync', params: 'first' },
+      { id: 'second', type: 'ActionStopChain' },
+      { id: 'third', type: 'ActionSync', params: 'third' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      first: {
+        type: 'ActionSync',
+        index: 0,
+        response: 'first',
+      },
+      second: {
+        type: 'ActionStopChain',
+        index: 1,
+        response: { ok: true },
+        stoppedChain: true,
+      },
+      third: {
+        type: 'ActionSync',
+        index: 2,
+        skipped: true,
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+  expect(actions.ActionSync.mock.calls.length).toBe(1);
+});
+
+test('an action returning stopChain reports a success and does not call catchActions', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'second', type: 'ActionStopChain' },
+      { id: 'third', type: 'ActionSync', params: 'third' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [{ id: 'catch_test', type: 'ActionSync', params: 'catch' }],
+    event: {},
+    eventName,
+  });
+  expect(res.success).toBe(true);
+  expect(res.error).toBeUndefined();
+  expect(res.errorCatch).toBeUndefined();
+  expect(res.responses.catch_test).toBeUndefined();
+  expect(actions.ActionSync.mock.calls.length).toBe(0);
+  expect(displayMessage.mock.calls).toEqual([]);
+});
+
+test('an action returning stopChain displays its success message', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  await Actions.callActions({
+    actions: [
+      { id: 'second', type: 'ActionStopChain', messages: { success: 'My success' } },
+      { id: 'third', type: 'ActionSync', params: 'third', messages: { success: 'Not shown' } },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(displayMessage.mock.calls).toEqual([
+    [
+      {
+        content: 'My success',
+        duration: undefined,
+        status: 'success',
+      },
+    ],
+  ]);
+});
+
+test('the stopChain wrapper is unwrapped so _actions holds the action response', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'second', type: 'ActionStopChain' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.responses.second.response).toEqual({ ok: true });
+  expect(Object.getOwnPropertySymbols(res.responses.second.response)).toEqual([]);
+  expect(res.responses.second.stoppedChain).toBe(true);
+});
+
+test('a stopChain in an :if :then branch ends the chain after the :if', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'first', type: 'ActionSync', params: 'first' },
+      {
+        ':if': true,
+        ':then': [{ id: 'inner', type: 'ActionStopChain' }],
+        ':else': [{ id: 'else_action', type: 'ActionSync', params: 'else' }],
+      },
+      { id: 'after', type: 'ActionSync', params: 'after' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res).toEqual({
+    blockId: 'blockId',
+    bounced: false,
+    controls: [{ index: 0, type: ':if', taken: 'then' }],
+    event: {},
+    eventName: 'eventName',
+    responses: {
+      first: {
+        type: 'ActionSync',
+        index: 0,
+        response: 'first',
+      },
+      inner: {
+        type: 'ActionStopChain',
+        index: 1,
+        response: { ok: true },
+        stoppedChain: true,
+      },
+      else_action: {
+        type: 'ActionSync',
+        index: 2,
+        skipped: true,
+      },
+      after: {
+        type: 'ActionSync',
+        index: 3,
+        skipped: true,
+      },
+    },
+    success: true,
+    startTimestamp: { date: 0 },
+    endTimestamp: { date: 0 },
+  });
+  expect(actions.ActionSync.mock.calls.length).toBe(1);
+});
+
+test('an async: true action returning stopChain does not end the chain', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'test1', type: 'ActionStopChainAsync', async: true, params: { ms: 100 } },
+      { id: 'test2', type: 'ActionSync', params: 'params2' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.responses.test2).toEqual({
+    type: 'ActionSync',
+    index: 1,
+    response: 'params2',
+  });
+  await timeout(110);
+  expect(res.responses.test1).toEqual({
+    type: 'ActionStopChainAsync',
+    index: 0,
+    response: { ok: true },
+    stoppedChain: true,
+  });
+  expect(res.success).toBe(true);
+});
+
+test('an action response with a "response" key is not mistaken for a stopChain marker', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [
+      { id: 'first', type: 'ActionSync', params: { response: 'plain' } },
+      { id: 'second', type: 'ActionSync', params: 'second' },
+    ],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.responses).toEqual({
+    first: {
+      type: 'ActionSync',
+      index: 0,
+      response: { response: 'plain' },
+    },
+    second: {
+      type: 'ActionSync',
+      index: 1,
+      response: 'second',
+    },
   });
 });
 

@@ -18,14 +18,16 @@ import { serve } from '@hono/node-server';
 import { WebSocketServer } from 'ws';
 
 import createApp from './app.js';
+import createLogger from '../lib/server/log/createLogger.js';
 
 const app = createApp();
+const logger = createLogger();
 const port = Number(process.env.PORT ?? 3000);
 
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (info) => {
-  console.log(`Lowdefy e2e server listening on http://localhost:${info.port}`);
+  logger.info(`Lowdefy e2e server listening on http://localhost:${info.port}`);
 });
 
 function shutdown() {

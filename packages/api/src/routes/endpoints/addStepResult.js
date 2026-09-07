@@ -13,11 +13,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { set } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors';
+import { ReservedKeyError, set } from '@lowdefy/helpers';
 
 function addStepResult(context, routineContext, { result, stepId }) {
   const key = [stepId, ...routineContext.arrayIndices].join('.');
-  set(routineContext.steps, key, result);
+  try {
+    set(routineContext.steps, key, result);
+  } catch (error) {
+    if (error instanceof ReservedKeyError) {
+      throw new ConfigError(`Reserved step id "${error.segment}" cannot be used`, {
+        cause: error,
+      });
+    }
+    throw error;
+  }
 }
 
 export default addStepResult;

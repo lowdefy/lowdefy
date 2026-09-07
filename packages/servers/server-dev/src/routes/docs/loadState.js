@@ -15,6 +15,7 @@
 */
 
 import loadState from '../../../lib/docs/loadState.js';
+import parseUserParam from './parseUserParam.js';
 
 // Loads a state checkpoint back into the running app. mode: 'headless'
 // (default) drives a headless page and injects state directly for an agent
@@ -22,15 +23,25 @@ import loadState from '../../../lib/docs/loadState.js';
 // devMockRegistry and returns a URL for a human to open in a real browser
 // tab (client/Inspector.jsx does the state injection there).
 async function docsLoadStateHandler(c) {
-  const { name, mode } = await c.req.json();
+  const body = await c.req.json();
+  const { name, mode } = body;
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await loadState({ origin, name, mode });
+  const { user, error: userError } = parseUserParam({ value: body.user });
+  if (userError) {
+    return c.json({ error: userError }, 400);
+  }
+
+  const result = await loadState({ origin, name, mode, user });
   if (result.error) {
-    return c.json({ error: result.error }, 502);
+    // A contradictory call (`user` in 'registry-only' mode) is the caller's
+    // mistake, not a failed render — 502 would read as "the renderer broke" and
+    // invite a pointless retry of the same request.
+    const status = result.invalidInput ? 400 : 502;
+    return c.json({ error: result.error }, status);
   }
   return c.json(result);
 }

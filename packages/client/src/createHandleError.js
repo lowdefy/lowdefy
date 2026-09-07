@@ -43,8 +43,11 @@ function createHandleError(lowdefy) {
 
     // Send known error types to server for logging with location resolution
     if (error.isLowdefyError) {
-      // Server-originated errors already have source resolved — just display locally
-      if (error.source) {
+      // The server already logged this one — just display locally. Keyed on
+      // `handled`, not on `source`: a LowdefyInternalError is logged server-side
+      // but never gets a source (location resolution is skipped for it), so
+      // keying on source POSTed it back and had it logged twice.
+      if (error.handled) {
         logError(error);
         return;
       }

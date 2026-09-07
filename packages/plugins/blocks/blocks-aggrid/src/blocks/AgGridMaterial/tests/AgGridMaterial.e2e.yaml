@@ -158,7 +158,10 @@ blocks:
   - id: aggridmaterial_onrowselected
     type: AgGridMaterial
     properties:
-      rowSelection: single
+      rowSelection:
+        mode: singleRow
+        checkboxes: false
+        enableClickSelection: true
       columnDefs:
         - headerName: Name
           field: name

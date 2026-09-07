@@ -189,6 +189,76 @@ blocks:
           else: ''
 
   # ============================================
+  # COLUMNS (GRID LAYOUT)
+  # ============================================
+
+  - id: cs_columns_2
+    type: CheckboxSelector
+    properties:
+      columns: 2
+      options:
+        - A
+        - B
+        - C
+        - D
+
+  - id: cs_columns_3
+    type: CheckboxSelector
+    properties:
+      columns: 3
+      options:
+        - A
+        - B
+        - C
+        - D
+        - E
+        - F
+
+  - id: cs_columns_responsive
+    type: CheckboxSelector
+    properties:
+      columns:
+        xs: 1
+        md: 3
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_columns_gutter
+    type: CheckboxSelector
+    properties:
+      columns: 2
+      gutter:
+        - 24
+        - 12
+      options:
+        - A
+        - B
+        - C
+        - D
+
+  - id: cs_columns_unsupported
+    type: CheckboxSelector
+    properties:
+      columns: 5
+      options:
+        - A
+        - B
+        - C
+
+  - id: cs_columns_color
+    type: CheckboxSelector
+    properties:
+      columns: 2
+      options:
+        - label: Plain
+          value: plain
+        - label: Tinted
+          value: tinted
+          color: '#722ed1'
+
+  # ============================================
   # INTERACTION TESTS
   # ============================================
 

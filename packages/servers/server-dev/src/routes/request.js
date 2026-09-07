@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { callRequest, redactErrorResponse } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
+import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
 import { getMock } from '../../lib/docs/devMockRegistry.js';
 
@@ -47,16 +48,23 @@ async function requestHandler(c) {
     context.logger.info({ event: 'dev_mock_request', pageId, requestId, blockId, actionId });
     if (mock.error) {
       const error = mock.error instanceof Error ? mock.error : new Error(mock.error);
-      const serialized = serializer.serialize(error);
-      if (serialized?.['~e']) {
-        delete serialized['~e'].received;
-        delete serialized['~e'].stack;
-        delete serialized['~e'].configKey;
-      }
-      return c.json(serialized, 500);
+      return c.json(redactErrorResponse(context, error), 500);
     }
     return c.json({ success: true, response: serializer.serialize(mock.response) });
   }
+
+  // Page artifacts (including pages/{pageId}/requests/{requestId}.json) are
+  // built JIT by GET /api/page/* and thrown away on every page invalidation
+  // (lowdefyBuildWatcher / moduleBuildWatcher). A client that already holds
+  // the page config keeps firing requests across that window — and a request
+  // that arrived before the page was rebuilt failed with
+  // `Request "x" does not exist.` Run the same idempotent build the page route
+  // runs (a no-op once the page is compiled) so the request artifact is there.
+  await buildPageIfNeeded({
+    pageId,
+    buildDirectory: context.buildDirectory,
+    configDirectory: context.configDirectory,
+  });
 
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });

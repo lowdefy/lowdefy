@@ -33,9 +33,70 @@ import useTiptapMentionState from './useTiptapMentionState.js';
 
 import './style.css';
 
+// A mention node's `id` attribute holds whatever option the user picked — a
+// plain string, or the option object ({ label, value, tag }) — so the label
+// and the DOM identifier are both derived from it. Content loaded back from
+// saved html arrives with a STRING id (tiptap's parseHTML reads data-id) and
+// the label in `data-label`, which is why both render paths take the node's
+// attributes rather than the id alone.
 function mentionLabel(id) {
   return id?.tag?.title ?? id?.label ?? id;
 }
+
+// The string that goes into the DOM as data-id. Option objects are commonly
+// { label, value } with the identity inside `value` (a string, or an object
+// with _id / id); fall back to the object's own _id / id. Anything without a
+// scalar identity yields undefined and data-id is omitted — never the
+// "[object Object]" tiptap's stock attribute renderer produces when it
+// stringifies the whole option.
+function scalarId(candidate) {
+  if (type.isString(candidate) || type.isNumber(candidate)) return String(candidate);
+  return undefined;
+}
+
+function mentionId(id) {
+  if (type.isNone(id)) return undefined;
+  if (type.isString(id) || type.isNumber(id)) return String(id);
+  if (!type.isObject(id)) return undefined;
+  const value = id.value;
+  if (type.isObject(value)) {
+    return scalarId(value._id) ?? scalarId(value.id) ?? scalarId(value.value);
+  }
+  return scalarId(value) ?? scalarId(id._id) ?? scalarId(id.id);
+}
+
+function nodeLabel(attrs) {
+  const label = type.isString(attrs.label) && attrs.label !== '' ? attrs.label : undefined;
+  const derived = mentionLabel(attrs.id);
+  return label ?? (type.isString(derived) || type.isNumber(derived) ? derived : undefined);
+}
+
+// Mention with its `id` and `label` attributes rendered through the helpers
+// above: data-id is always a scalar identifier (or absent), and data-label
+// always carries the display label so saved html round-trips with a readable
+// mention even though the id comes back as a string.
+const LowdefyMention = Mention.extend({
+  addAttributes() {
+    const parent = this.parent?.() ?? {};
+    return {
+      ...parent,
+      id: {
+        ...parent.id,
+        renderHTML: (attributes) => {
+          const id = mentionId(attributes.id);
+          return type.isNone(id) ? {} : { 'data-id': id };
+        },
+      },
+      label: {
+        ...parent.label,
+        renderHTML: (attributes) => {
+          const label = nodeLabel(attributes);
+          return type.isNone(label) ? {} : { 'data-label': label };
+        },
+      },
+    };
+  },
+});
 
 const TiptapMentionInput = ({
   blockId,
@@ -62,11 +123,11 @@ const TiptapMentionInput = ({
   const allowSpaces = properties.mentions?.allowSpaces !== false;
   const limit = properties.mentions?.limit ?? 5;
 
-  const mentionExtension = Mention.configure({
+  const mentionExtension = LowdefyMention.configure({
     HTMLAttributes: { class: 'tiptap-mention' },
     renderHTML({ options, node }) {
       const id = node.attrs.id;
-      const label = mentionLabel(id);
+      const label = nodeLabel(node.attrs) ?? '';
       const group = id?.tag?.group;
       const modifier = {};
       if (!type.isNone(group)) {
@@ -83,14 +144,14 @@ const TiptapMentionInput = ({
       if (!type.isNone(href)) {
         return [
           'a',
-          mergeAttributes({ href, 'data-id': id?._id }, options.HTMLAttributes, modifier),
+          mergeAttributes({ href }, options.HTMLAttributes, modifier),
           `${char}${label}`,
         ];
       }
       return ['span', mergeAttributes(options.HTMLAttributes, modifier), `${char}${label}`];
     },
     renderText({ node }) {
-      return `${char}${mentionLabel(node.attrs.id)}`;
+      return `${char}${nodeLabel(node.attrs) ?? ''}`;
     },
     suggestion: suggestion({ methods, char, allowSpaces, limit }),
   });

@@ -179,14 +179,53 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 **Server handleError** (`packages/servers/*/lib/server/createHandleError.js`):
 
-Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry. After `handleError` completes, the `apiWrapper` serializes the error (with `source` resolved) using `serializer.serialize()`, strips sensitive fields (`received`, `stack`, `configKey`), and sends it in the 500 response. This allows the client to reconstruct the typed error with location already resolved.
+Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the client-bound redaction policy below.
 
 **Browser handleError** (`packages/client/src/createHandleError.js`):
 
-Deduplicates by `message:configKey`. Two paths:
+Deduplicates by `message:configKey` — which is why the redaction policy keeps `configKey`. Two paths:
 
-1. **Server-originated errors** (have `source` already set from serialized 500 response): Logs to browser console only — server already logged, no round-trip needed.
-2. **Client-originated errors** (no `source`): Serializes error via `serializer.serialize()` (uses `~e` marker), sends to `/api/client-error`, receives resolved `source` back, displays via shared browser logger.
+1. **Already-logged errors** (`handled` is true): Logs to browser console only — the server already logged it, no round-trip needed.
+2. **Client-originated errors** (`handled` falsy): Serializes error via `serializer.serialize()` (uses `~e` marker), sends to `/api/client-error`, receives resolved `source` back, displays via shared browser logger.
+
+The gate is `handled`, not `source`. `source` conflates _has a resolved config location_ with _was already logged_, and the two come apart: a `LowdefyInternalError` is logged server-side but never gets a `source`, because location resolution is deliberately skipped for it. Keying on `source` therefore POSTed every internal error back and had it logged twice.
+
+### Client-bound error redaction
+
+**Every error a server returns to a caller passes through one of three functions exported from `@lowdefy/api` (`packages/api/src/response/`), one per call shape:** `redactErrorResponse(context, error)` for an error alone, `redactResponse(context, response)` for a response value that may contain one, and `buildEndpointResult(context, { error, response, status })` for the endpoint wire object. Not only the 500 response: an endpoint result body carries an error at HTTP 200, and a cron or detached route returns one to a third party. All three own the serialization as well as the policy, so there is no bare `serializer.serialize(error)` left in response position for an author to forget to wrap.
+
+`redactResponse` exists because a response is an error-serialization site whenever it holds an error — `makeReplacer` wraps any `Error` it meets anywhere in a value. That is invisible to a grep for `serialize(error)`, which is why it is a function rather than a rule to remember. It governs the `response` field of `buildEndpointResult` and the request body from `callRequest`.
+
+One exemption, deliberate and dev-only: `logClientError` returns `configError: serializer.serialize(validationError)` plus an absolute `source` at HTTP 200, and `server-dev`'s `clientError.js` is the only route that forwards them to the browser (prod and e2e return `{success: true}`). `validationError` is a `ConfigError` built server-side, so its `stack` is a server stack reaching the dev browser. `jitPage` sends build-error `stack` for the same reason — `BuildErrorPage.jsx` renders it. Both carry more than this policy allows, on the developer's own machine.
+
+| Field               | Wire                                | Why                                                                                                                                                       |
+| ------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `received`          | **stripped**                        | On the request path this is the _evaluated_ request properties, so a `_secret` resolved into a header is in it.                                           |
+| `stack`             | **stripped**                        | Server internals, including absolute `node_modules` paths in frames.                                                                                      |
+| non-Error `cause`   | **stripped**, except on `UserError` | Internal server config — the endpoint routine, a control node, ajv errors. A `UserError` cause is author-written and client-bound by design.              |
+| Error `cause` chain | kept                                | The browser renders name + message per level; that is the config-relevant trace. Fields are taken _from_ causes, causes are never pruned.                 |
+| `configKey`         | kept                                | Names a node the client already holds (`~k` is client-side by design), and the browser's dedupe key needs it to separate same-message errors by location. |
+| `source`, `config`  | kept, `source` normalised           | Page/block ids and a config file path the developer named.                                                                                                |
+| `handled`           | kept                                | A boolean; the already-logged gate above.                                                                                                                 |
+
+The policy is applied at **every error node the walk emits**, not just the outermost: the cause chain, an `Error`-valued own enumerable property, and an `Error` nested inside a plain object or array. It is expressed as an `omit` callback (`packages/api/src/response/omitErrorProps.js`) threaded into `serializer.serialize`'s options as `omitErrorProps` and applied inside `extractErrorProps`, which is the only code that knows where error nodes appear. The predecessor of this policy was four copy-pasted `delete` statements against `serialized['~e']`, which reached depth 0 only and so shipped `cause.stack` to production browsers.
+
+`@lowdefy/helpers` learns only _how_ to omit named fields; which fields, and for which audience, stays in `@lowdefy/api`. The callback is called per error node so a policy can key on the node's class — that is how the `UserError` cause exception works.
+
+**Wire contract, stated for app developers:** a client-bound error discloses the config file path and line of the failing node (`source`) and its breadcrumb through the config tree (`config`). Name config files knowing that an error surfacing in a browser names them. `source` is guaranteed config-relative: `resolveConfigLocation` makes it absolute whenever the context carries a `configDirectory`, and `normalizeErrorSources` strips that prefix back off before the payload leaves. Server-side logging is untouched, so terminal links keep their absolute paths.
+
+The `source` normalisation applies to the `response` field as well as the `error` field, since a routine or a request resolver can return an error inside its response value. It keys on the **error-node shape** (`name` and `message` both strings, which is what `extractErrorProps` emits) rather than on the key name, so a `source` key in data the policy deliberately preserves — a `UserError`'s author-written `cause` or `metaData`, or any value an app returns — is never rewritten.
+
+Server logs keep full fidelity in every environment — `received`, `stack` and absolute paths included — because `handleError` logs the error before the response is built. Nothing is lost to whoever reads the log.
+
+**What app config loses, knowingly.** Redaction is not free on the client side, and the cost falls on two things that worked before:
+
+- `errorToDisplayString` appends `Received: <json>` when `received` is present, so a `CallAPI` or request error used to print its evaluated properties to the browser console. That branch is now dead for every server-originated error, in every environment.
+- `error.received` was readable from app YAML — `_actions` exposes an action's error via `responses[action.id]`, and `_request_details` exposes a request's. Config that renders it now reads `undefined`.
+
+Both are accepted. The payload an app developer loses access to is the one that can hold their own resolved secrets, per the `received` row above; the formatted `message` survives, and the server log keeps the field in full. A `LowdefyInternalError` is the sharpest case of the same trade: location resolution is skipped for it, so with `stack` stripped the browser shows `[LowdefyInternalError] message` and nothing more. That is the one class where `stack` was the useful artifact, and an internal error is a Lowdefy bug diagnosed from the server log rather than an app-config problem.
+
+**Known residual.** `errorHandler`'s `else` branch, for requests that never got a `lowdefyContext`, logs via `logger.error` without setting `handled` or `source`. The client therefore POSTs such an error back and it is logged twice. That is deliberate for now: without a context there is no `keyMap` access, so the round-trip is what resolves the error's config location, and the duplicate log is the price of getting it.
 
 ### handleWarning
 
@@ -408,15 +447,15 @@ The `~ignoreBuildChecks` property allows developers to suppress specific or all 
 
 **Available Check Slugs:**
 
-| Slug              | Description                                 |
-| ----------------- | ------------------------------------------- |
-| `state-refs`      | Undefined `_state` reference warnings       |
-| `payload-refs`    | Undefined `_payload` reference warnings     |
-| `step-refs`       | Undefined `_step` reference warnings        |
-| `link-refs`       | Invalid Link action page reference warnings |
-| `request-refs`    | Invalid Request action reference warnings   |
-| `connection-refs` | Nonexistent connection ID references        |
-| `types`           | All type validation                         |
+| Slug              | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| `state-refs`      | Undefined `_state` reference warnings          |
+| `payload-refs`    | Undefined `_payload` reference warnings        |
+| `step-refs`       | Undefined `_step` reference warnings           |
+| `link-refs`       | Invalid Link action page reference warnings    |
+| `request-refs`    | Invalid Request action reference warnings      |
+| `connection-refs` | Nonexistent connection ID references           |
+| `types`           | All type validation                            |
 | `schema`          | JSON schema validation warnings (non-blocking) |
 
 **Implementation:** `shouldSuppressBuildCheck(error, keyMap)` walks up the `~k_parent` chain looking for `~ignoreBuildChecks` settings.
@@ -447,8 +486,8 @@ function createHandleError(lowdefy) {
     loggedErrors.add(errorKey);
 
     if (error.isLowdefyError) {
-      // Server-originated errors already have source resolved — just display locally
-      if (error.source) {
+      // The server already logged this one — just display locally
+      if (error.handled) {
         logger.error(error);
         return;
       }
@@ -475,8 +514,8 @@ function createHandleError(lowdefy) {
 
 **Key behaviors:**
 
-- **Deduplication:** Same error logged only once per session
-- **Server-originated errors skip round-trip:** If `error.source` is already set (from the serialized 500 response), logs to browser only — no `/api/client-error` call
+- **Deduplication:** Same error logged only once per session, keyed on `message:configKey` — `configKey` crosses the wire so two errors with the same message at different config locations do not collapse
+- **Already-logged errors skip round-trip:** If `error.handled` is set (the server's `handleError` set it before responding), logs to browser only — no `/api/client-error` call
 - **Client-originated errors use client-error API:** Serializes with `serializer.serialize()`, sends to server for logging, schema validation, and location resolution
 - **Schema validation errors:** If the server produces a `ConfigError` from schema validation (returned as `configError`), the client logs that instead of the original error — the `ConfigError` includes the original error in its cause chain
 - **Display:** Browser logger formats Lowdefy errors with `errorToDisplayString`
@@ -488,12 +527,12 @@ function createHandleError(lowdefy) {
 **Error routing by origin:**
 
 ```
-Server-originated errors (have source from serialized 500 response):
+Server-originated errors (arrive with handled: true):
   RequestError   → browser console only (server already logged)
   ServiceError   → browser console only (server already logged)
   ConfigError    → browser console only (server already logged)
 
-Client-originated errors (no source yet):
+Client-originated errors (handled not set):
   OperatorError  → handleError() → POST /api/client-error → server terminal
   ActionError    → handleError() → POST /api/client-error → server terminal
   BlockError     → handleError() → POST /api/client-error → server terminal
@@ -604,19 +643,17 @@ Pino uses `extractErrorProps` directly (no `~e` wrapper) as the `err` serializer
 
 Errors cross the HTTP boundary in both directions using the `~e` serialization format:
 
-**Server → Browser (500 responses):**
+**Server → Browser (and any other caller):**
 
-The `apiWrapper` serializes errors using `serializer.serialize()` before sending the 500 response. Sensitive fields are stripped:
-
-- `received` — may contain query params, connection strings, user data
-- `stack` — server internals
-- `configKey` — internal build artifact (source is already resolved)
+`redactErrorResponse` / `buildEndpointResult` serialize the error and apply the client-bound redaction policy — see [Client-bound error redaction](#client-bound-error-redaction) above for the field table and the reasoning. This covers every status, not only 500: the hono error handlers (500), endpoint result bodies (200), cron, webhook and detached routes.
 
 The client `request.js` checks for `body['~e']` and deserializes with `serializer.deserialize()`, reconstructing the correct Lowdefy error class (e.g., `RequestError`) with `source` already set. This means server-originated errors retain their identity across the HTTP boundary — the engine sees `isLowdefyError = true` and passes through without wrapping in `ActionError`.
 
 **Browser → Server (client-error API):**
 
-Browser `handleError` uses `serializer.serialize()` for the POST body to `/api/client-error`. The server uses `serializer.deserialize()` to restore the error class. Only used for **client-originated** errors (no `source` set yet).
+Browser `handleError` uses `serializer.serialize()` for the POST body to `/api/client-error`. The server uses `serializer.deserialize()` to restore the error class. Only used for **client-originated** errors (`handled` not set).
+
+Note that `received` on this inbound direction is a different thing from `received` on the outbound direction the redaction policy governs: here the browser built the error, so its `received` never left the client, and dev keeps it (`servers/server-dev/src/routes/clientError.js`) so `logClientError` can run plugin-schema validation. Prod deletes it on arrival.
 
 ## Config Traversal
 
@@ -659,10 +696,13 @@ traverseConfig({
 
 ### Server Integration
 
-- `packages/servers/server/lib/server/apiWrapper.js` — Serializes errors for 500 responses
-- `packages/servers/server-dev/lib/server/apiWrapper.js` — Dev server equivalent
-- `packages/servers/server/lib/server/log/createHandleError.js` — Server error handler
-- `packages/servers/server-dev/lib/server/log/createHandleError.js` — Dev server error handler
+- `packages/api/src/response/redactErrorResponse.js` — Applies the client-bound policy and owns the serialization
+- `packages/api/src/response/redactResponse.js` — Same policy for a response value that may contain errors
+- `packages/api/src/response/normalizeErrorSources.js` — Guarantees `source` crosses the wire config-relative
+- `packages/api/src/response/omitErrorProps.js` — The policy itself: which fields may cross the wire
+- `packages/api/src/response/buildEndpointResult.js` — The endpoint result wire object (error + response, one policy)
+- `packages/servers/*/src/middleware/errorHandler.js` — Hono app-level handler; 500 responses for `/api/` paths
+- `packages/servers/*/lib/server/log/createHandleError.js` — Server error handler; resolves location, logs, sets `handled`
 - `packages/api/src/routes/log/logClientError.js` — Client error endpoint (client-originated only)
 
 ### Sentry Integration

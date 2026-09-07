@@ -36,6 +36,7 @@ const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
 function createAgentConfig(overrides = {}) {
   return {
     agentId: 'research_agent',
+    auth: { public: true },
     id: 'agent:research_agent',
     type: 'TestAgent',
     connectionId: 'my_anthropic',

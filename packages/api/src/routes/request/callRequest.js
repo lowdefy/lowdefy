@@ -28,6 +28,7 @@ import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import redactResponse from '../../response/redactResponse.js';
 
 async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
@@ -87,7 +88,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     id: requestConfig.id,
     success: true,
     type: requestConfig.type,
-    response: serializer.serialize(response),
+    response: redactResponse(context, response),
   };
 }
 

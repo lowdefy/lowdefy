@@ -1,0 +1,1242 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Lowdefy - Basic Table
+  fullWidth: true
+  blocks:
+    - id: lowdefy_basic_table
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: age
+            headerName: Age
+          - field: email
+            headerName: Email
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            age: 28
+            email: alice@example.com
+            country: United States
+          - name: Bob Smith
+            age: 35
+            email: bob@example.com
+            country: United Kingdom
+          - name: Charlie Lee
+            age: 42
+            email: charlie@example.com
+            country: Japan
+          - name: Diana Patel
+            age: 31
+            email: diana@example.com
+            country: India
+          - name: Erik Johansson
+            age: 26
+            email: erik@example.com
+            country: Sweden
+          - name: Fatima Al-Rashid
+            age: 39
+            email: fatima@example.com
+            country: UAE
+
+- title: Lowdefy - Row density (size)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_size_small
+      type: AgGridLowdefy
+      properties:
+        size: small
+        height: 220
+        defaultColDef:
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            country: United States
+          - name: Bob Smith
+            role: Designer
+            country: United Kingdom
+          - name: Charlie Lee
+            role: Manager
+            country: Japan
+    - id: lowdefy_size_middle
+      type: AgGridLowdefy
+      properties:
+        size: middle
+        height: 220
+        defaultColDef:
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            country: United States
+          - name: Bob Smith
+            role: Designer
+            country: United Kingdom
+          - name: Charlie Lee
+            role: Manager
+            country: Japan
+    - id: lowdefy_size_large
+      type: AgGridLowdefy
+      properties:
+        size: large
+        height: 220
+        defaultColDef:
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: country
+            headerName: Country
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            country: United States
+          - name: Bob Smith
+            role: Designer
+            country: United Kingdom
+          - name: Charlie Lee
+            role: Manager
+            country: Japan
+
+- title: Lowdefy - Custom Theme Colors (themeParams)
+  fullWidth: true
+  blocks:
+    - id: custom_theme
+      type: AgGridLowdefy
+      properties:
+        themeParams:
+          headerBackgroundColor: '#1a1a2e'
+          headerTextColor: '#e0e0ff'
+          selectedRowBackgroundColor: 'rgba(108, 99, 255, 0.2)'
+          rowHoverColor: 'rgba(108, 99, 255, 0.1)'
+          borderColor: '#2a2a4a'
+        height: 300
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: department
+            headerName: Department
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            department: Engineering
+            status: Active
+          - name: Bob Smith
+            role: Designer
+            department: Design
+            status: Active
+          - name: Charlie Lee
+            role: Manager
+            department: Sales
+            status: On Leave
+          - name: Diana Patel
+            role: Analyst
+            department: Finance
+            status: Active
+          - name: Erik Johansson
+            role: DevOps
+            department: Engineering
+            status: Active
+
+- title: Lowdefy - Column Features
+  fullWidth: true
+  blocks:
+    - id: lowdefy_column_features
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        columnDefs:
+          - field: id
+            headerName: ID
+            width: 80
+            pinned: left
+            sortable: true
+          - field: product
+            headerName: Product Name
+            flex: 2
+            sortable: true
+            filter: true
+          - field: category
+            headerName: Category
+            flex: 1
+            sortable: true
+            filter: true
+          - field: price
+            headerName: Price ($)
+            width: 120
+            sortable: true
+            resizable: true
+          - field: stock
+            headerName: Stock
+            width: 100
+            sortable: true
+          - field: rating
+            headerName: Rating
+            width: 100
+            sortable: true
+        rowData:
+          - id: 1
+            product: Wireless Keyboard
+            category: Electronics
+            price: 49.99
+            stock: 230
+            rating: 4.5
+          - id: 2
+            product: Standing Desk
+            category: Furniture
+            price: 399.00
+            stock: 45
+            rating: 4.8
+          - id: 3
+            product: USB-C Hub
+            category: Electronics
+            price: 29.99
+            stock: 520
+            rating: 4.2
+          - id: 4
+            product: Ergonomic Chair
+            category: Furniture
+            price: 289.00
+            stock: 78
+            rating: 4.6
+          - id: 5
+            product: Webcam HD
+            category: Electronics
+            price: 79.99
+            stock: 310
+            rating: 4.0
+
+- title: Lowdefy - Default Column Definitions
+  fullWidth: true
+  blocks:
+    - id: lowdefy_default_col_def
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          filter: true
+          resizable: true
+          flex: 1
+        columnDefs:
+          - field: employee
+            headerName: Employee
+          - field: department
+            headerName: Department
+          - field: title
+            headerName: Job Title
+          - field: location
+            headerName: Office
+          - field: startDate
+            headerName: Start Date
+        rowData:
+          - employee: Sarah Chen
+            department: Engineering
+            title: Senior Developer
+            location: San Francisco
+            startDate: '2019-03-15'
+          - employee: James Wilson
+            department: Marketing
+            title: Campaign Manager
+            location: New York
+            startDate: '2020-07-01'
+          - employee: Maria Garcia
+            department: Engineering
+            title: Tech Lead
+            location: Austin
+            startDate: '2018-11-20'
+          - employee: David Kim
+            department: Sales
+            title: Account Executive
+            location: Chicago
+            startDate: '2021-01-10'
+          - employee: Emily Brown
+            department: Design
+            title: UX Designer
+            location: San Francisco
+            startDate: '2020-09-05'
+
+- title: Lowdefy - Row Selection
+  fullWidth: true
+  blocks:
+    - id: lowdefy_row_selection
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: task
+            headerName: Task
+            flex: 2
+          - field: assignee
+            headerName: Assignee
+          - field: priority
+            headerName: Priority
+            width: 120
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - task: Design login page
+            assignee: Alice
+            priority: High
+            status: Done
+          - task: Implement API endpoints
+            assignee: Bob
+            priority: High
+            status: In Progress
+          - task: Write unit tests
+            assignee: Charlie
+            priority: Medium
+            status: To Do
+          - task: Update documentation
+            assignee: Diana
+            priority: Low
+            status: To Do
+          - task: Code review PR #42
+            assignee: Erik
+            priority: Medium
+            status: In Progress
+
+- title: Lowdefy - Pagination
+  fullWidth: true
+  blocks:
+    - id: lowdefy_pagination
+      type: AgGridLowdefy
+      properties:
+        height: 350
+        pagination: true
+        paginationPageSize: 5
+        defaultColDef:
+          sortable: true
+          filter: true
+          flex: 1
+        columnDefs:
+          - field: orderId
+            headerName: Order ID
+            width: 120
+          - field: customer
+            headerName: Customer
+          - field: product
+            headerName: Product
+          - field: quantity
+            headerName: Qty
+            width: 80
+          - field: total
+            headerName: Total ($)
+            width: 110
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - orderId: ORD-201
+            customer: Acme Corp
+            product: Widget Pro
+            quantity: 50
+            total: 2499.50
+            status: Shipped
+          - orderId: ORD-202
+            customer: Globex Inc
+            product: Gadget X
+            quantity: 25
+            total: 1249.75
+            status: Processing
+          - orderId: ORD-203
+            customer: Initech
+            product: Widget Pro
+            quantity: 100
+            total: 4999.00
+            status: Delivered
+          - orderId: ORD-204
+            customer: Umbrella Ltd
+            product: Connector A
+            quantity: 200
+            total: 1998.00
+            status: Shipped
+          - orderId: ORD-205
+            customer: Stark Ind
+            product: Gadget X
+            quantity: 10
+            total: 499.90
+            status: Processing
+          - orderId: ORD-206
+            customer: Wayne Ent
+            product: Widget Pro
+            quantity: 75
+            total: 3749.25
+            status: Delivered
+          - orderId: ORD-207
+            customer: Oscorp
+            product: Connector A
+            quantity: 150
+            total: 1498.50
+            status: Shipped
+          - orderId: ORD-208
+            customer: LexCorp
+            product: Gadget X
+            quantity: 30
+            total: 1499.70
+            status: Processing
+
+- title: Events
+  fullWidth: true
+  blocks:
+    - id: lowdefy_events_row_click
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+          - field: department
+            headerName: Department
+          - field: status
+            headerName: Status
+            width: 120
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+            department: Engineering
+            status: Active
+          - name: Bob Smith
+            role: Designer
+            department: Design
+            status: Active
+          - name: Charlie Lee
+            role: Manager
+            department: Sales
+            status: On Leave
+          - name: Diana Patel
+            role: Analyst
+            department: Finance
+            status: Active
+          - name: Erik Johansson
+            role: DevOps
+            department: Engineering
+            status: Active
+      events:
+        onRowClick:
+          - id: row_click_message
+            type: DisplayMessage
+            params:
+              content:
+                _nunjucks:
+                  on:
+                    _event: row
+                  template: 'Clicked: {{ name }} ({{ role }}, {{ department }})'
+              duration: 3
+        onCellClick:
+          - id: cell_click_message
+            type: DisplayMessage
+            params:
+              status: info
+              content:
+                _nunjucks:
+                  on:
+                    name:
+                      _event: cell.column
+                    value:
+                      _event: cell.value
+                  template: 'Cell: {{ name }} = {{ value }}'
+              duration: 3
+    - id: lowdefy_events_row_selected
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: task
+            headerName: Task
+            flex: 2
+          - field: assignee
+            headerName: Assignee
+          - field: priority
+            headerName: Priority
+            width: 120
+        rowData:
+          - task: Design login page
+            assignee: Alice
+            priority: High
+          - task: Implement API
+            assignee: Bob
+            priority: High
+          - task: Write tests
+            assignee: Charlie
+            priority: Medium
+          - task: Update docs
+            assignee: Diana
+            priority: Low
+          - task: Code review
+            assignee: Erik
+            priority: Medium
+      events:
+        onRowSelected:
+          - id: row_selected_message
+            type: DisplayMessage
+            params:
+              status: success
+              content:
+                _nunjucks:
+                  on:
+                    row:
+                      _event: row.task
+                    count:
+                      _event: selected.length
+                  template: 'Selected "{{ row }}" ({{ count }} total selected)'
+              duration: 3
+
+- title: Lowdefy - Column Styling
+  fullWidth: true
+  blocks:
+    - id: lowdefy_styled_columns
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        defaultColDef:
+          sortable: true
+          flex: 1
+        columnDefs:
+          - field: metric
+            headerName: Metric
+            flex: 2
+            cellStyle:
+              fontWeight: bold
+          - field: q1
+            headerName: Q1
+            cellStyle:
+              backgroundColor: var(--ant-blue-1)
+              textAlign: right
+          - field: q2
+            headerName: Q2
+            cellStyle:
+              backgroundColor: var(--ant-green-1)
+              textAlign: right
+          - field: q3
+            headerName: Q3
+            cellStyle:
+              backgroundColor: var(--ant-orange-1)
+              textAlign: right
+          - field: q4
+            headerName: Q4
+            cellStyle:
+              backgroundColor: var(--ant-red-1)
+              textAlign: right
+        rowData:
+          - metric: Revenue ($K)
+            q1: 1250
+            q2: 1380
+            q3: 1520
+            q4: 1690
+          - metric: New Customers
+            q1: 145
+            q2: 162
+            q3: 178
+            q4: 201
+          - metric: Churn Rate (%)
+            q1: 3.2
+            q2: 2.8
+            q3: 2.5
+            q4: 2.1
+          - metric: NPS Score
+            q1: 42
+            q2: 45
+            q3: 48
+            q4: 52
+
+- title: Built-in cell types
+  fullWidth: true
+  blocks:
+    - id: lowdefy_cell_types_demo
+      type: AgGridLowdefy
+      properties:
+        height: 360
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Status
+            field: status
+            width: 130
+            cell:
+              type: tag
+              colorMap:
+                Active: green
+                Blocked: red
+                Pending: blue
+                'On Leave': orange
+          - headerName: Assignee
+            field: name
+            minWidth: 220
+            cell:
+              type: avatar
+              nameField: name
+              srcField: picture
+              idField: id
+          - headerName: Created
+            field: created_at
+            width: 170
+            cell:
+              type: date
+          - headerName: Last seen
+            field: last_seen
+            width: 150
+            cell:
+              type: date
+              relative: true
+          - headerName: Verified
+            field: verified
+            width: 110
+            cell:
+              type: boolean
+          - headerName: Progress
+            field: completion
+            width: 130
+            cell:
+              type: progress
+        rowData:
+          - id: u1
+            name: Alice Johnson
+            picture: https://i.pravatar.cc/80?img=1
+            status: Active
+            created_at: '2025-11-14T09:30:00Z'
+            last_seen: '2026-04-17T11:45:00Z'
+            verified: true
+            completion: 92
+          - id: u2
+            name: Bob Smith
+            status: On Leave
+            created_at: '2025-09-02T14:10:00Z'
+            last_seen: '2026-04-10T08:15:00Z'
+            verified: true
+            completion: 68
+          - id: u3
+            name: Charlie Lee
+            picture: https://i.pravatar.cc/80?img=5
+            status: Blocked
+            created_at: '2026-01-20T18:00:00Z'
+            last_seen: '2026-04-17T07:22:00Z'
+            verified: false
+            completion: 22
+          - id: u4
+            name: Diana Patel
+            status: Pending
+            created_at: null
+            last_seen: null
+            verified: null
+            completion: null
+
+- title: Linked cells (onCellLink)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_linked_cells_demo
+      type: AgGridLowdefy
+      properties:
+        height: 240
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Task ID
+            field: _id
+            width: 140
+            cell:
+              type: link
+              pageId: tasks-view
+              urlQuery:
+                _id: _id
+          - headerName: Assignee
+            field: assignee
+            cell:
+              type: avatar
+              nameField: assignee
+              idField: _id
+              link:
+                pageId: user
+                urlQuery:
+                  userId: _id
+          - headerName: Priority
+            field: priority
+            width: 120
+            cell:
+              type: tag
+              colorMap:
+                High: red
+                Medium: orange
+                Low: default
+        rowData:
+          - _id: TSK-001
+            assignee: Alice Johnson
+            priority: High
+          - _id: TSK-002
+            assignee: Bob Smith
+            priority: Medium
+          - _id: TSK-003
+            assignee: Charlie Lee
+            priority: Low
+      events:
+        onCellLink:
+          - id: navigate
+            type: Link
+            params:
+              _event: link
+
+- title: Ellipsis column helper
+  fullWidth: true
+  blocks:
+    - id: lowdefy_ellipsis_demo
+      type: AgGridLowdefy
+      properties:
+        height: 280
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Code
+            field: code
+            width: 100
+          - headerName: Title
+            field: title
+            minWidth: 220
+          - headerName: Description
+            field: description
+            flex: 1
+            ellipsis: 2
+        rowData:
+          - code: A-01
+            title: Main switchboard
+            description: Drafted the main switchboard layout and circuit schedule across three floors. Awaiting sign-off from the project engineer before ordering long-lead parts.
+          - code: A-02
+            title: East wing HVAC
+            description: Balancing HVAC loads across the east wing. Waiting on updated ductwork drawings from the architect and a revised thermal model from the mechanical team.
+          - code: A-03
+            title: Utility connections
+            description: Blocked on the utility connection survey — main was not where the drawings said it would be, which has cascaded to the trenching schedule.
+
+- title: Number formatting (currency, percent, compact, accounting)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_number_demo
+      type: AgGridLowdefy
+      properties:
+        height: 320
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Account
+            field: account
+            width: 180
+          - headerName: Revenue (USD)
+            field: revenue
+            width: 150
+            cell:
+              type: number
+              format: currency
+              currency: USD
+              decimals: 0
+          - headerName: EUR
+            field: revenue_eur
+            width: 150
+            cell:
+              type: number
+              format: currency
+              currency: EUR
+              locale: de-DE
+              decimals: 2
+          - headerName: Δ vs budget
+            field: delta
+            width: 160
+            cell:
+              type: number
+              format: currency
+              currency: USD
+              decimals: 2
+              negative: parentheses
+              signColor: true
+          - headerName: Margin
+            field: margin
+            width: 110
+            cell:
+              type: number
+              format: percent
+              decimals: 1
+          - headerName: Impressions
+            field: impressions
+            width: 130
+            cell:
+              type: number
+              format: compact
+          - headerName: Ratio
+            field: ratio
+            width: 110
+            cell:
+              type: number
+              decimals: 3
+        rowData:
+          - account: Acme Corp
+            revenue: 1245000
+            revenue_eur: 1125750.5
+            delta: 12500
+            margin: 0.184
+            impressions: 12340
+            ratio: 1.234
+          - account: Globex
+            revenue: 825500
+            revenue_eur: 745600.25
+            delta: -44250.5
+            margin: 0.072
+            impressions: 1050000
+            ratio: 0.876
+          - account: Stark Ind.
+            revenue: 4820000
+            revenue_eur: 4350750
+            delta: -125000
+            margin: -0.033
+            impressions: 85400000
+            ratio: 2.12
+          - account: Wayne Ent.
+            revenue: 3150000
+            revenue_eur: 2845300
+            delta: 87500
+            margin: 0.221
+            impressions: 524000
+            ratio: 0.948
+
+- title: Loading overlay (block loading flag)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_loading_demo_switch
+      type: Switch
+      properties:
+        title: Toggle loading overlay
+    - id: lowdefy_loading_demo_grid
+      type: AgGridLowdefy
+      loading:
+        _state: lowdefy_loading_demo_switch
+      properties:
+        height: 260
+        defaultColDef:
+          flex: 1
+        columnDefs:
+          - field: name
+            headerName: Name
+          - field: role
+            headerName: Role
+        rowData:
+          - name: Alice Johnson
+            role: Developer
+          - name: Bob Smith
+            role: Designer
+          - name: Charlie Lee
+            role: Manager
+
+- title: Tag cells with array values
+  fullWidth: true
+  blocks:
+    - id: lowdefy_tag_array_demo
+      type: AgGridLowdefy
+      properties:
+        height: 240
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: User
+            field: name
+            minWidth: 180
+          - headerName: Roles
+            field: roles
+            minWidth: 260
+            cell:
+              type: tag
+              colorMap:
+                admin: red
+                editor: blue
+                viewer: green
+                billing: orange
+              default: default
+        rowData:
+          - name: Alice Johnson
+            roles:
+              - admin
+              - editor
+          - name: Bob Smith
+            roles:
+              - viewer
+          - name: Charlie Lee
+            roles:
+              - editor
+              - billing
+              - viewer
+          - name: Diana Patel
+            roles: []
+          - name: Chan Maarten
+            roles: null
+
+- title: Auto-coloured tags
+  fullWidth: true
+  blocks:
+    - id: lowdefy_tag_seeded_demo
+      type: AgGridLowdefy
+      properties:
+        height: 300
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Project
+            field: project
+            minWidth: 160
+          - headerName: Tags
+            field: tags
+            minWidth: 320
+            cell:
+              type: tag
+        rowData:
+          - project: Storefront
+            tags:
+              - frontend
+              - react
+              - typescript
+          - project: API gateway
+            tags:
+              - backend
+              - node
+              - typescript
+          - project: ML pipeline
+            tags:
+              - python
+              - airflow
+              - backend
+          - project: Mobile app
+            tags:
+              - frontend
+              - react
+              - mobile
+          - project: Design system
+            tags:
+              - frontend
+              - design
+
+- title: Buttons cell (per-button action chains)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_buttons_cell_demo
+      type: AgGridLowdefy
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+          flex: 1
+        columnDefs:
+          - headerName: Task
+            field: name
+          - headerName: Status
+            field: status
+            width: 120
+            cell:
+              type: tag
+              colorMap:
+                Open: blue
+                Locked: red
+                Archived: default
+          - headerName: Actions
+            field: _id
+            width: 220
+            cell:
+              type: buttons
+              buttons:
+                - eventName: onEditClick
+                  title: Edit
+                  icon: AiOutlineEdit
+                  type: primary
+                - eventName: onDeleteClick
+                  title: Delete
+                  icon: AiOutlineDelete
+                  danger: true
+                  disabledField: locked
+                  hiddenField: archived
+        rowData:
+          - _id: TSK-001
+            name: Wire main switchboard
+            status: Open
+            locked: false
+            archived: false
+          - _id: TSK-002
+            name: HVAC balancing
+            status: Locked
+            locked: true
+            archived: false
+          - _id: TSK-003
+            name: Utility connections
+            status: Archived
+            locked: false
+            archived: true
+      events:
+        onEditClick:
+          - id: edit_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Edit '
+                  - _event: row._id
+        onDeleteClick:
+          - id: delete_msg
+            type: DisplayMessage
+            params:
+              status: warning
+              content:
+                _string.concat:
+                  - 'Delete '
+                  - _event: row.name
+
+# Selector cells fire an event on change (event-only, like buttons) — the cell does not write to
+# the grid's row data. The app persists the change by updating the data bound to `rowData`. Here
+# each row's value is bound to state (with a `default`) and the event writes the new value back
+# into that state, so the selection sticks.
+- title: Selector cells (single + multiple)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_selector_cell_demo
+      type: AgGridLowdefy
+      properties:
+        height: 280
+        defaultColDef:
+          resizable: true
+        columnDefs:
+          - headerName: Task
+            field: name
+            flex: 1
+          - headerName: Priority
+            field: priority
+            width: 200
+            cell:
+              type: selector
+              eventName: onPriorityChange
+              options:
+                - label: Low
+                  value: low
+                  color: green
+                - label: Medium
+                  value: medium
+                  color: orange
+                - label: High
+                  value: high
+                  color: red
+          - headerName: Labels
+            field: labels
+            width: 340
+            cell:
+              type: multipleSelector
+              eventName: onLabelsChange
+              placeholder: Add labels
+              options:
+                - bug
+                - feature
+                - docs
+                - urgent
+        rowData:
+          - id: r1
+            name: Wire main switchboard
+            priority:
+              _state:
+                key: sel_priority.r1
+                default: high
+            labels:
+              _state:
+                key: sel_labels.r1
+                default:
+                  - urgent
+          - id: r2
+            name: HVAC balancing
+            priority:
+              _state:
+                key: sel_priority.r2
+                default: medium
+            labels:
+              _state:
+                key: sel_labels.r2
+                default: []
+          - id: r3
+            name: Utility connections
+            priority:
+              _state:
+                key: sel_priority.r3
+                default: low
+            labels:
+              _state:
+                key: sel_labels.r3
+                default:
+                  - docs
+                  - feature
+      events:
+        onPriorityChange:
+          - id: persist_priority
+            type: SetState
+            params:
+              sel_priority:
+                _object.assign:
+                  - _state: sel_priority
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onLabelsChange:
+          - id: persist_labels
+            type: SetState
+            params:
+              sel_labels:
+                _object.assign:
+                  - _state: sel_labels
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+
+# Input cells (switch / textInput / paragraphInput) work like the selector cells: event-only, the
+# app persists the new value into the data bound to `rowData`. Switch fires on toggle; textInput
+# commits on blur / Enter; paragraphInput commits when the inline edit is confirmed.
+- title: Input cells (switch, text, paragraph)
+  fullWidth: true
+  blocks:
+    - id: lowdefy_input_cell_demo
+      type: AgGridLowdefy
+      properties:
+        height: 260
+        defaultColDef:
+          resizable: true
+        rowData:
+          - id: t1
+            name:
+              _state:
+                key: inp_name.t1
+                default: Wire main switchboard
+            active:
+              _state:
+                key: inp_active.t1
+                default: true
+            notes:
+              _state:
+                key: inp_notes.t1
+                default: Awaiting sign-off from the project engineer.
+          - id: t2
+            name:
+              _state:
+                key: inp_name.t2
+                default: HVAC balancing
+            active:
+              _state:
+                key: inp_active.t2
+                default: false
+            notes:
+              _state:
+                key: inp_notes.t2
+                default: Waiting on updated ductwork drawings.
+        columnDefs:
+          - headerName: Task
+            field: name
+            width: 260
+            cell:
+              type: textInput
+              eventName: onNameChange
+              placeholder: Task name
+          - headerName: Active
+            field: active
+            width: 110
+            cell:
+              type: switch
+              eventName: onActiveChange
+              checkedText: 'on'
+              uncheckedText: 'off'
+          - headerName: Notes
+            field: notes
+            flex: 1
+            cell:
+              type: paragraphInput
+              eventName: onNotesChange
+              ellipsis:
+                rows: 2
+      events:
+        onNameChange:
+          - id: persist_name
+            type: SetState
+            params:
+              inp_name:
+                _object.assign:
+                  - _state: inp_name
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onActiveChange:
+          - id: persist_active
+            type: SetState
+            params:
+              inp_active:
+                _object.assign:
+                  - _state: inp_active
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue
+        onNotesChange:
+          - id: persist_notes
+            type: SetState
+            params:
+              inp_notes:
+                _object.assign:
+                  - _state: inp_notes
+                  - _object.fromEntries:
+                      - - _event: row.id
+                        - _event: newValue

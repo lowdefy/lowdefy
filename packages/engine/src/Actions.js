@@ -17,6 +17,7 @@
 import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
+import { isStopChain } from './stopChain.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 
@@ -78,7 +79,8 @@ class Actions {
     }
   }
 
-  // Returns true when a ':return' control ended the list, so callers can end the event.
+  // Returns true when a ':return' control or an action ended the list, so callers can
+  // end the event.
   async callActionLoop({
     actions,
     arrayIndices,
@@ -111,6 +113,9 @@ class Actions {
       counters.action += 1;
       try {
         if (action.async === true) {
+          // Fire and forget - the response is never awaited here, so an 'async: true'
+          // action cannot end the chain even if it returns a stopChain marker. The
+          // following steps have already run by the time it resolves.
           this.callAsyncAction({
             action,
             arrayIndices,
@@ -131,6 +136,18 @@ class Actions {
             responses,
           });
           responses[action.id] = response;
+          // An action that navigated the browser away ends the chain, reported as a
+          // success. Same halt the ':return' control uses above - remaining steps are
+          // recorded as skipped, and callActions is never entered through its catch,
+          // so 'catch:' actions do not run and no error message displays.
+          if (response.stoppedChain === true) {
+            this.recordSkippedActions({
+              actions: actions.slice(position + 1),
+              counters,
+              responses,
+            });
+            return true;
+          }
         }
       } catch (err) {
         // err is already {error, action, index} from callAction
@@ -457,6 +474,12 @@ class Actions {
       message: messages.success,
       status: 'success',
     });
+    // Unwrap here, after the success message: an action that ends the chain is a
+    // success like any other. Only the inner value reaches '_actions.<id>.response',
+    // so the marker never becomes app-visible state.
+    if (isStopChain(response)) {
+      return { type: action.type, response: response.response, index, stoppedChain: true };
+    }
     return { type: action.type, response, index };
   }
 

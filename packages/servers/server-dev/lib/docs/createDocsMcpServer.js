@@ -53,6 +53,8 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev se
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes).
 
+Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_inspect_state, lowdefy_eval_operator or lowdefy_load_state to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see.
+
 Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
 
 Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
@@ -67,6 +69,17 @@ function textResult(value) {
 function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
+
+// Shared by every tool that renders a page headless, so one call can act as an
+// admin and the next as a plain member — each headless call gets its own browser
+// context, so they never share an identity.
+const userSchema = z
+  .object({})
+  .passthrough()
+  .optional()
+  .describe(
+    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role.'
+  );
 
 function createDocsMcpServer({ origin, honoContext } = {}) {
   const server = new McpServer(
@@ -99,10 +112,11 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           .enum(['tab', 'headless'])
           .optional()
           .describe('Force a source. Default: live tab if connected, else headless.'),
+        user: userSchema,
       },
     },
-    async ({ pageId, source }) => {
-      const result = await inspectState({ origin, pageId, source });
+    async ({ pageId, source, user }) => {
+      const result = await inspectState({ origin, pageId, source, user });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -121,10 +135,11 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           .any()
           .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
         source: z.enum(['tab', 'headless']).optional(),
+        user: userSchema,
       },
     },
-    async ({ pageId, expression, source }) => {
-      const result = await evalOperator({ origin, pageId, expression, source });
+    async ({ pageId, expression, source, user }) => {
+      const result = await evalOperator({ origin, pageId, expression, source, user });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -187,10 +202,11 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       inputSchema: {
         name: z.string().describe('The checkpoint name.'),
         mode: z.enum(['headless', 'registry-only']).optional(),
+        user: userSchema,
       },
     },
-    async ({ name, mode }) => {
-      const result = await loadState({ origin, name, mode });
+    async ({ name, mode, user }) => {
+      const result = await loadState({ origin, name, mode, user });
       if (result.error) {
         return notFoundResult(result.error);
       }
@@ -319,17 +335,26 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
           })
           .optional()
           .describe(
-            'Crop to a viewport-relative region — pass an annotation\'s geometry from feedback.'
+            "Crop to a viewport-relative region — pass an annotation's geometry from feedback."
           ),
         scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
         scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
+        user: userSchema,
       },
     },
-    async ({ pageId, fullPage, clip, scrollX, scrollY }) => {
+    async ({ pageId, fullPage, clip, scrollX, scrollY, user }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
-      const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY });
+      const result = await screenshotPage({
+        origin,
+        pageId,
+        fullPage,
+        clip,
+        scrollX,
+        scrollY,
+        user,
+      });
       if (result.error) {
         return notFoundResult(result.error);
       }

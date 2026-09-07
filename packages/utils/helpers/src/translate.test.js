@@ -24,8 +24,7 @@ const i18n = {
     'en-US': {
       hello: 'Hello',
       greeting: 'Hello, {name}!',
-      'cart.items':
-        '{count, plural, =0 {No items} one {# item} other {# items}}',
+      'cart.items': '{count, plural, =0 {No items} one {# item} other {# items}}',
     },
     'de-DE': {
       hello: 'Hallo',

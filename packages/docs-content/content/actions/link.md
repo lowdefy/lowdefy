@@ -5,6 +5,7 @@
 (params: {
   back?: boolean,
   home?: boolean,
+  href?: string,
   input?: object,
   newTab?:boolean,
   pageId?: string,
@@ -25,6 +26,7 @@ The pageId of a page in the app to link to.
 ###### object
 - `back: boolean`: Go to the previous page if true (has the same effect as using the browser back button).
 - `home: boolean`: Link to the home page. This is either the configured public or authenticated homepage, or the first page in the default menu visible to the user.
+- `href: string`: Link to an address, used exactly as written. Unlike `url`, no protocol is added and `urlQuery` is not appended, so this is the parameter for a target `url` cannot express — a root-relative path, a fragment, or a scheme-less same-origin address.
 - `input: object`: Object to set as the input for the linked page.
 - `newTab: boolean`: Open the link in a new tab.
 - `pageId: string`: The pageId of a page in the app to link to.
@@ -54,6 +56,14 @@ The pageId of a page in the app to link to.
   type: Link
   params:
     home: true
+```
+
+###### Link to an address exactly as written:
+```yaml
+- id: link_href
+  type: Link
+  params:
+    href: /downloads/report.pdf
 ```
 
 ###### Link to an external url:

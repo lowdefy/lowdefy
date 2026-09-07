@@ -61,6 +61,7 @@ const Label = ({
     rowStyle,
     showExtra,
     showFeedback,
+    showFeedbackIcon,
     wrapperCol,
   } = labelLogic({ blockId, blockClassNames, content, properties, required, styles, validation });
   if (!iconMap) {
@@ -71,13 +72,12 @@ const Label = ({
       warning: () => <Icon properties="AiFillExclamationCircle" />,
     };
   }
-  const IconNode = validation.status && iconMap[validation.status];
-  const icon =
-    validation.status && IconNode ? (
-      <span className={iconClassName}>
-        <IconNode />
-      </span>
-    ) : null;
+  const IconNode = showFeedbackIcon && iconMap[validation.status];
+  const icon = IconNode ? (
+    <span className={iconClassName}>
+      <IconNode />
+    </span>
+  ) : null;
 
   // tooltip is either a string (the tooltip text) or an object that also
   // customizes the icon and color. The onClick is exposed as the block's

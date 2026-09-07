@@ -115,6 +115,58 @@ function resolveToolResultMode(toolResultDisplay, toolName) {
   return 'summary';
 }
 
+// Plain link text arrives as a string, but any inline formatting makes it an element tree —
+// so it is flattened rather than reported as absent.
+function linkText(children) {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'number') return String(children);
+  if (Array.isArray(children)) return children.map(linkText).join('');
+  if (React.isValidElement(children)) return linkText(children.props?.children);
+  return '';
+}
+
+// An in-app path renders through the app's Link, so following a citation is a client-side
+// route rather than a reload that drops the conversation. Anything with a scheme opens in a
+// new tab for the same reason. Both still report the click, so an app that handles
+// onLinkClick can show the target in place instead.
+function MarkdownLink({ Link, onLinkClick }) {
+  return function MarkdownAnchor({ href, children, ...props }) {
+    if (!href) return <span {...props}>{children}</span>;
+    const text = linkText(children);
+    const handleClick = (domEvent) => onLinkClick?.({ href, text, domEvent });
+    const external = /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('//');
+    // A fragment cannot be expressed as a pageId link, so it keeps the anchor.
+    const inApp = !external && href.startsWith('/') && !href.includes('#');
+    if (!inApp || !Link) {
+      return (
+        <a
+          {...props}
+          href={href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
+          onClick={handleClick}
+        >
+          {children}
+        </a>
+      );
+    }
+    // `pageId`, not `href`: Link renders a plain anchor for href and url — its new-origin form —
+    // and only routes client-side for a pageId. Passing the path as href therefore went through
+    // Link and still reloaded the page, dropping the conversation this exists to preserve.
+    const [pathname, search = ''] = href.slice(1).split('?');
+    return (
+      <Link
+        {...props}
+        pageId={pathname}
+        urlQuery={Object.fromEntries(new URLSearchParams(search))}
+        onClick={handleClick}
+      >
+        {children}
+      </Link>
+    );
+  };
+}
+
 function normalizeActions(actions) {
   if (Array.isArray(actions)) {
     const obj = {};
@@ -131,6 +183,7 @@ function BubbleActions({
   textContent,
   messageId,
   onFeedback,
+  feedbackValue,
   onRegenerate,
   onDelete,
   translate,
@@ -150,7 +203,10 @@ function BubbleActions({
       key: 'feedback',
       label: translate('agent.message.feedback'),
       actionRender: () => (
-        <Actions.Feedback onChange={(rating) => onFeedback?.({ messageId, rating })} />
+        <Actions.Feedback
+          value={feedbackValue ?? 'default'}
+          onChange={(rating) => onFeedback?.({ messageId, rating })}
+        />
       ),
     });
   }
@@ -203,6 +259,9 @@ function MessageBubble({
   actions,
   messageId,
   onFeedback,
+  feedbackValue,
+  onLinkClick,
+  Link,
   onRegenerate,
   onDelete,
   translate,
@@ -217,9 +276,12 @@ function MessageBubble({
   const markdownConfig = renderLatex ? getLatexConfig() : undefined;
 
   const markdownComponents = useMemo(() => {
-    if (!renderMermaid && !codeHighlighter) return { code: PlainCodeBlock };
-    return { code: RichCodeBlock({ renderMermaid, codeHighlighter }) };
-  }, [renderMermaid, codeHighlighter]);
+    const code =
+      !renderMermaid && !codeHighlighter
+        ? PlainCodeBlock
+        : RichCodeBlock({ renderMermaid, codeHighlighter });
+    return { code, a: MarkdownLink({ Link, onLinkClick }) };
+  }, [renderMermaid, codeHighlighter, Link, onLinkClick]);
 
   const normalizedActions = normalizeActions(actions);
   const showActions = Object.values(normalizedActions).some(Boolean) && !isStreaming;
@@ -246,6 +308,7 @@ function MessageBubble({
             textContent={content}
             messageId={messageId}
             onFeedback={onFeedback}
+            feedbackValue={feedbackValue}
             onRegenerate={onRegenerate}
             onDelete={onDelete}
             translate={translate}
@@ -501,6 +564,7 @@ function MessageBubble({
           textContent={allTextContent}
           messageId={messageId}
           onFeedback={onFeedback}
+          feedbackValue={feedbackValue}
           onRegenerate={onRegenerate}
           onDelete={onDelete}
           translate={translate}

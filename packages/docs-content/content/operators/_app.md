@@ -49,7 +49,7 @@ Several common deploy paths strip `.git` before the build runs — Docker images
 #### Arguments
 
 ###### string
-If the `_app` operator is called with a string argument, the value of the key in the app metadata is returned. If the key is not found, `null` is returned. Dot notation is supported.
+If the `_app` operator is called with a string argument, the value of the key in the app metadata is returned. If the key is not found, `null` is returned. Dot notation is supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
 
 ###### boolean
 If the `_app` operator is called with the boolean argument `true`, the entire app metadata object is returned.

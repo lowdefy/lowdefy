@@ -1,0 +1,24 @@
+# T3: Reserved Locale Code
+# ========================
+# Tests that a locale code which is a reserved name fails the build with a
+# located ConfigError. The code keys the collected plugin message catalog and
+# the merged messages in the i18n.json artifact, both plain objects.
+#
+# Expected error:
+#   [Config Error] Locale code "__proto__" in "config.i18n.locales" is a
+#   reserved name and cannot be used as a locale code.
+#
+# The error points to line 20 where the locale is defined.
+
+lowdefy: local
+
+config:
+  i18n:
+    defaultLocale: en-US
+    locales:
+      - code: en-US
+      - code: __proto__
+
+pages:
+  - id: home
+    type: Box

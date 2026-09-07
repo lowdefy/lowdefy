@@ -45,7 +45,7 @@ export default {
         type: 'string',
         enum: ['start', 'end', 'center', 'baseline'],
         default: 'start',
-        description: 'Align options.',
+        description: "Align options. Ignored when 'columns' is set.",
       },
       color: {
         type: 'string',
@@ -54,17 +54,34 @@ export default {
           displayType: 'color',
         },
       },
+      columns: {
+        type: ['integer', 'object'],
+        description:
+          'Number of columns to lay the options out in, or a responsive breakpoint object. Use a count that divides 24 evenly.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       disabled,
       direction: {
         type: 'string',
         enum: ['horizontal', 'vertical'],
         default: 'horizontal',
-        description: 'List options horizontally or vertical.',
+        description: "List options horizontally or vertical. Ignored when 'columns' is set.",
+      },
+      gutter: {
+        type: ['number', 'array'],
+        description:
+          "Gap between options in the grid. Number or [horizontal, vertical] array. Applies when 'columns' is set.",
+        docs: {
+          displayType: 'yaml',
+        },
       },
       wrap: {
         type: 'boolean',
         default: true,
-        description: "Specifies wrapping of options. Applies when 'direction' is 'horizontal'.",
+        description:
+          "Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set.",
       },
       label,
       options,

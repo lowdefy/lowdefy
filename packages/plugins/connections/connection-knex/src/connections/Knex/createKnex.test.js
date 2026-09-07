@@ -16,7 +16,11 @@
 
 import { jest } from '@jest/globals';
 
-const mockKnex = jest.fn(() => ({}));
+const mockKnex = jest.fn((config) => ({
+  client: {
+    connectionSettings: typeof config.connection === 'object' ? { ...config.connection } : {},
+  },
+}));
 
 jest.unstable_mockModule('knex', () => ({ default: mockKnex }));
 
@@ -67,4 +71,45 @@ test('createKnex passes "mysql2" through unchanged', async () => {
   const createKnex = (await import('./createKnex.js')).default;
   createKnex({ client: 'mysql2', connection: 'mysql://u:p@h/db' });
   expect(mockKnex.mock.calls).toEqual([[{ client: 'mysql2', connection: 'mysql://u:p@h/db' }]]);
+});
+
+test('createKnex converts a connection object port given as a string to a number', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  const knexClient = createKnex({
+    client: 'mssql',
+    connection: { server: 'server', port: '45678', database: 'db' },
+  });
+  expect(knexClient.client.connectionSettings).toEqual({
+    server: 'server',
+    port: 45678,
+    database: 'db',
+  });
+});
+
+test('createKnex converts a port parsed from a connection string to a number', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  mockKnex.mockImplementationOnce(() => ({
+    client: { connectionSettings: { server: 'server', port: '45678', database: 'db' } },
+  }));
+  const knexClient = createKnex({
+    client: 'mssql',
+    connection: 'mssql://user:password@server:45678/db',
+  });
+  expect(knexClient.client.connectionSettings.port).toBe(45678);
+});
+
+test('createKnex throws when the connection port is not a valid port number', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  expect(() =>
+    createKnex({ client: 'mssql', connection: { server: 'server', port: 'port', database: 'db' } })
+  ).toThrow('Knex connection port is not a valid port number. Received "port".');
+});
+
+test('createKnex leaves a numeric connection port unchanged', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  const knexClient = createKnex({
+    client: 'mssql',
+    connection: { server: 'server', port: 45678, database: 'db' },
+  });
+  expect(knexClient.client.connectionSettings.port).toBe(45678);
 });

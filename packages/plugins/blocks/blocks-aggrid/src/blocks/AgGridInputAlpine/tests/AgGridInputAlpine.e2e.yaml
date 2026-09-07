@@ -185,7 +185,10 @@ blocks:
   - id: aggridinputalpine_onrowselected
     type: AgGridInputAlpine
     properties:
-      rowSelection: single
+      rowSelection:
+        mode: singleRow
+        checkboxes: false
+        enableClickSelection: true
       columnDefs:
         - headerName: Name
           field: name

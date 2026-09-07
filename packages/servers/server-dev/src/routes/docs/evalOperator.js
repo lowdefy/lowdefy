@@ -15,6 +15,7 @@
 */
 
 import evalOperator from '../../../lib/docs/evalOperator.js';
+import parseUserParam from './parseUserParam.js';
 
 async function docsEvalOperatorHandler(c) {
   const body = await c.req.json().catch(() => ({}));
@@ -36,9 +37,18 @@ async function docsEvalOperatorHandler(c) {
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await evalOperator({ origin, pageId, expression, source });
+  const { user, error: userError } = parseUserParam({ value: body.user });
+  if (userError) {
+    return c.json({ error: userError }, 400);
+  }
+
+  const result = await evalOperator({ origin, pageId, expression, source, user });
   if (result.error) {
-    return c.json({ error: result.error, source: result.source }, 502);
+    // A contradictory call (`user` with `source: 'tab'`) is the caller's
+    // mistake, not a failed render — 502 would read as "the renderer broke" and
+    // invite a pointless retry of the same request.
+    const status = result.invalidInput ? 400 : 502;
+    return c.json({ error: result.error, source: result.source }, status);
   }
   return c.json(result);
 }

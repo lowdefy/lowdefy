@@ -18,16 +18,11 @@
 
 import type from './type.js';
 
-const expectToStrictEqual = (result, value) => {
-  expect(result).toStrictEqual(value);
-};
-const expectToEqual = (result, value) => {
-  expect(result).toEqual(value);
-};
-
 test('type - isArray', () => {
-  const value = [];
-  expect(type.isArray(value)).toEqual(true);
+  expect(type.isArray([])).toEqual(true);
+  expect(type.isArray([1, 2])).toEqual(true);
+  expect(type.isArray({})).toEqual(false);
+  expect(type.isArray('a')).toEqual(false);
 });
 test('type - isObject', () => {
   const value = {};
@@ -46,9 +41,25 @@ test('type - isDate - should be valid date', () => {
   value = new Date('c');
   expect(type.isDate(value)).toEqual(false);
 });
+test('type - isDate returns false for an invalid Date', () => {
+  expect(type.isDate(new Date('garbage'))).toEqual(false);
+});
+test('type - isDate returns false for date-like objects', () => {
+  const dateLike = {
+    toDateString: () => 'Mon Apr 01 2019',
+    getDate: () => 1,
+    setDate: () => 1,
+    getTime: () => 1554076800000,
+  };
+  expect(type.isDate(dateLike)).toEqual(false);
+});
 test('type - isRegExp', () => {
   const value = /aa/g;
   expect(type.isRegExp(value)).toEqual(true);
+});
+test('type - isRegExp returns false for regexp-like objects', () => {
+  const regexpLike = { flags: 'g', ignoreCase: false, multiline: false, global: true };
+  expect(type.isRegExp(regexpLike)).toEqual(false);
 });
 test('type - isFunction', () => {
   const value = () => false;
@@ -82,6 +93,17 @@ test('type - isError', () => {
   const value = new Error();
   expect(type.isError(value)).toEqual(true);
   expect(type.isError(null)).toEqual(false);
+  expect(type.isError(undefined)).toEqual(false);
+});
+test('type - isError returns true for Error subclasses', () => {
+  expect(type.isError(new TypeError('x'))).toEqual(true);
+  expect(type.isError(new RangeError('x'))).toEqual(true);
+  class CustomError extends Error {}
+  expect(type.isError(new CustomError('x'))).toEqual(true);
+});
+test('type - isError returns false for error-like objects', () => {
+  const errorLike = { message: 'not an error', constructor: { stackTraceLimit: 10 } };
+  expect(type.isError(errorLike)).toEqual(false);
 });
 test('type - isNull', () => {
   const value = null;
@@ -122,6 +144,11 @@ test('type - isPrimitive', () => {
   const b = new Date('a');
   expect(type.isPrimitive(b)).toEqual(true);
 });
+test('type - isPrimitive treats date as primitive by Lowdefy convention', () => {
+  expect(type.isPrimitive(new Date('2019-04-01'))).toEqual(true);
+  expect(type.isPrimitive({})).toEqual(false);
+  expect(type.isPrimitive([])).toEqual(false);
+});
 
 test('type - typeOf', () => {
   let value = [];
@@ -161,132 +188,252 @@ test('type - isEmptyObject', () => {
 describe('es6 features', () => {
   test('should work for resolved promises', () => {
     const promise = Promise.resolve(123);
-    expectToStrictEqual(type.typeOf(promise), 'promise');
+    expect(type.typeOf(promise)).toStrictEqual('promise');
   });
 
   test('should work for rejected promises', () => {
     const promise = Promise.reject(new Error('foo bar'));
     promise.catch(() => {});
-    expectToStrictEqual(type.typeOf(promise), 'promise');
-  });
-
-  test('should work for generator functions', () => {
-    const gen = function* named() {
-      return true;
-    };
-    expectToEqual(type.typeOf(gen), 'generatorfunction');
-  });
-
-  test('should work for generator objects', () => {
-    const gen = function* named() {
-      return true;
-    };
-    expectToEqual(type.typeOf(gen()), 'generator');
+    expect(type.typeOf(promise)).toStrictEqual('promise');
   });
 
   test('should work for template strings', () => {
     /* eslint quotes: 0 */
     const name = 'Foo';
-    expectToEqual(type.typeOf(`Welcome ${name} buddy`), 'string');
+    expect(type.typeOf(`Welcome ${name} buddy`)).toEqual('string');
   });
 
   test('should work for Map', () => {
     const map = new Map();
-    expectToEqual(type.typeOf(map), 'map');
-    expectToEqual(type.typeOf(map.set), 'function');
-    expectToEqual(type.typeOf(map.get), 'function');
-    expectToEqual(type.typeOf(map.add), 'undefined');
+    expect(type.typeOf(map)).toEqual('map');
+    expect(type.typeOf(map.set)).toEqual('function');
+    expect(type.typeOf(map.get)).toEqual('function');
+    expect(type.typeOf(map.add)).toEqual('undefined');
   });
 
   test('should work for WeakMap', () => {
     const weakmap = new WeakMap();
-    expectToEqual(type.typeOf(weakmap), 'weakmap');
-    expectToEqual(type.typeOf(weakmap.set), 'function');
-    expectToEqual(type.typeOf(weakmap.get), 'function');
-    expectToEqual(type.typeOf(weakmap.add), 'undefined');
+    expect(type.typeOf(weakmap)).toEqual('weakmap');
+    expect(type.typeOf(weakmap.set)).toEqual('function');
+    expect(type.typeOf(weakmap.get)).toEqual('function');
+    expect(type.typeOf(weakmap.add)).toEqual('undefined');
   });
 
   test('should work for Set', () => {
     const set = new Set();
-    expectToEqual(type.typeOf(set), 'set');
-    expectToEqual(type.typeOf(set.add), 'function');
-    expectToEqual(type.typeOf(set.set), 'undefined');
-    expectToEqual(type.typeOf(set.get), 'undefined');
+    expect(type.typeOf(set)).toEqual('set');
+    expect(type.typeOf(set.add)).toEqual('function');
+    expect(type.typeOf(set.set)).toEqual('undefined');
+    expect(type.typeOf(set.get)).toEqual('undefined');
   });
 
   test('should work for WeakSet', () => {
     const weakset = new WeakSet();
-    expectToEqual(type.typeOf(weakset), 'weakset');
-    expectToEqual(type.typeOf(weakset.add), 'function');
-    expectToEqual(type.typeOf(weakset.set), 'undefined');
-    expectToEqual(type.typeOf(weakset.get), 'undefined');
-  });
-
-  test('should work for Set Iterator', () => {
-    const SetValuesIterator = new Set().values();
-    expectToEqual(type.typeOf(SetValuesIterator), 'setiterator');
-  });
-  test('should work for Map Iterator', () => {
-    const MapValuesIterator = new Map().values();
-    expectToEqual(type.typeOf(MapValuesIterator), 'mapiterator');
-  });
-  test('should work for Array Iterator', () => {
-    const ArrayEntriesIterator = [].entries();
-    expectToEqual(type.typeOf(ArrayEntriesIterator), 'arrayiterator');
-  });
-  test('should work for String Iterator', () => {
-    const StringCharIterator = ''[Symbol.iterator]();
-    expectToEqual(type.typeOf(StringCharIterator), 'stringiterator');
+    expect(type.typeOf(weakset)).toEqual('weakset');
+    expect(type.typeOf(weakset.add)).toEqual('function');
+    expect(type.typeOf(weakset.set)).toEqual('undefined');
+    expect(type.typeOf(weakset.get)).toEqual('undefined');
   });
 
   test('should work for Symbol', () => {
-    expectToEqual(type.typeOf(Symbol('foo')), 'symbol');
-    expectToEqual(type.typeOf(Symbol.prototype), 'symbol');
+    expect(type.typeOf(Symbol('foo'))).toEqual('symbol');
+    expect(type.typeOf(Symbol.prototype)).toEqual('symbol');
   });
 
   test('should work for Int8Array', () => {
     const int8array = new Int8Array();
-    expectToEqual(type.typeOf(int8array), 'int8array');
+    expect(type.typeOf(int8array)).toEqual('int8array');
   });
 
   test('should work for Uint8Array', () => {
     const uint8array = new Uint8Array();
-    expectToEqual(type.typeOf(uint8array), 'uint8array');
+    expect(type.typeOf(uint8array)).toEqual('uint8array');
   });
 
   test('should work for Uint8ClampedArray', () => {
     const uint8clampedarray = new Uint8ClampedArray();
-    expectToEqual(type.typeOf(uint8clampedarray), 'uint8clampedarray');
+    expect(type.typeOf(uint8clampedarray)).toEqual('uint8clampedarray');
   });
 
   test('should work for Int16Array', () => {
     const int16array = new Int16Array();
-    expectToEqual(type.typeOf(int16array), 'int16array');
+    expect(type.typeOf(int16array)).toEqual('int16array');
   });
 
   test('should work for Uint16Array', () => {
     const uint16array = new Uint16Array();
-    expectToEqual(type.typeOf(uint16array), 'uint16array');
+    expect(type.typeOf(uint16array)).toEqual('uint16array');
   });
 
   test('should work for Int32Array', () => {
     const int32array = new Int32Array();
-    expectToEqual(type.typeOf(int32array), 'int32array');
+    expect(type.typeOf(int32array)).toEqual('int32array');
   });
 
   test('should work for Uint32Array', () => {
     const uint32array = new Uint32Array();
-    expectToEqual(type.typeOf(uint32array), 'uint32array');
+    expect(type.typeOf(uint32array)).toEqual('uint32array');
   });
 
   test('should work for Float32Array', () => {
     const float32array = new Float32Array();
-    expectToEqual(type.typeOf(float32array), 'float32array');
+    expect(type.typeOf(float32array)).toEqual('float32array');
   });
 
   test('should work for Float64Array', () => {
     const float64array = new Float64Array();
-    expectToEqual(type.typeOf(float64array), 'float64array');
+    expect(type.typeOf(float64array)).toEqual('float64array');
+  });
+});
+
+describe('modernized kindOf dispatch', () => {
+  test('typeOf returns "buffer" for a Node Buffer', () => {
+    // Buffer extends Uint8Array, so the constructor-name regex must match "Buffer"
+    // before anything can fall through to a Uint8Array result.
+    expect(type.typeOf(Buffer.from('x'))).toEqual('buffer');
+    expect(type.typeOf(Buffer.alloc(0))).toEqual('buffer');
+  });
+
+  test('typeOf returns "object" for an arguments object', () => {
+    const args = (function collect() {
+      return arguments;
+    })(1, 2);
+    expect(type.typeOf(args)).toEqual('object');
+  });
+
+  test('typeOf returns "object" for an arguments-like object', () => {
+    expect(type.typeOf({ length: 0, callee: () => {} })).toEqual('object');
+  });
+
+  test('typeOf returns "function" for a generator function', () => {
+    const gen = function* named() {
+      return true;
+    };
+    expect(type.typeOf(gen)).toEqual('function');
+    expect(type.isFunction(gen)).toEqual(true);
+  });
+
+  test('typeOf returns "function" for an async generator function', () => {
+    const gen = async function* named() {
+      return true;
+    };
+    expect(type.typeOf(gen)).toEqual('function');
+  });
+
+  test('typeOf returns "object" for a generator object', () => {
+    const gen = function* named() {
+      return true;
+    };
+    expect(type.typeOf(gen())).toEqual('object');
+  });
+
+  test('typeOf no longer returns the iterator tags', () => {
+    // The exact fall-through value is Node-version dependent — 'iterator' where the
+    // `Iterator` global puts a constructor on %IteratorPrototype% (Node 22+), 'object'
+    // otherwise. The contract is that the dropped `[object * Iterator]` branches never
+    // come back.
+    expect(type.typeOf(new Map().entries())).not.toEqual('mapiterator');
+    expect(type.typeOf(new Set().values())).not.toEqual('setiterator');
+    expect(type.typeOf([].entries())).not.toEqual('arrayiterator');
+    expect(type.typeOf(''[Symbol.iterator]())).not.toEqual('stringiterator');
+  });
+
+  test('typeOf returns the lowercased constructor name for non-plain objects', () => {
+    expect(type.typeOf(new URL('http://x'))).toEqual('url');
+    expect(type.typeOf(new URLSearchParams('a=1'))).toEqual('urlsearchparams');
+    expect(type.typeOf(new Headers())).toEqual('headers');
+  });
+
+  test('typeOf returns "object" for a null-prototype object', () => {
+    expect(type.typeOf(Object.create(null))).toEqual('object');
+  });
+
+  test('typeOf returns "object" for a class instance without Symbol.toStringTag', () => {
+    class Bar {}
+    expect(type.typeOf(new Bar())).toEqual('object');
+  });
+
+  test('typeOf returns the lowercased class name when Symbol.toStringTag is set', () => {
+    class Foo {
+      get [Symbol.toStringTag]() {
+        return 'Foo';
+      }
+    }
+    expect(type.typeOf(new Foo())).toEqual('foo');
+  });
+
+  test('typeOf returns "symbol" for a boxed symbol', () => {
+    // Object(Symbol()) reports `[object Symbol]`, so it falls past the plain-object tail
+    // check to the constructor-name branch. Unchanged from the legacy implementation.
+    expect(type.typeOf(Object(Symbol('foo')))).toEqual('symbol');
+  });
+});
+
+describe('isObject keeps its plain-object-only contract', () => {
+  test('isObject returns true for object literals and null-prototype objects', () => {
+    expect(type.isObject({})).toEqual(true);
+    expect(type.isObject({ a: 1 })).toEqual(true);
+    expect(type.isObject(Object.create(null))).toEqual(true);
+  });
+
+  test('isObject returns false for web platform objects', () => {
+    expect(type.isObject(new URL('http://x'))).toEqual(false);
+    expect(type.isObject(new URLSearchParams('a=1'))).toEqual(false);
+    expect(type.isObject(new Headers())).toEqual(false);
+  });
+
+  test('isObject returns false for class instances with Symbol.toStringTag', () => {
+    class Foo {
+      get [Symbol.toStringTag]() {
+        return 'Foo';
+      }
+    }
+    expect(type.isObject(new Foo())).toEqual(false);
+  });
+
+  test('isObject returns false for arrays, errors, maps and buffers', () => {
+    expect(type.isObject([])).toEqual(false);
+    expect(type.isObject(new Error('x'))).toEqual(false);
+    expect(type.isObject(new Map())).toEqual(false);
+    expect(type.isObject(Buffer.from('x'))).toEqual(false);
+  });
+});
+
+describe('removed legacy predicates', () => {
+  test('type does not export the removed duck-typed predicates', () => {
+    expect(type.isBuffer).toBeUndefined();
+    expect(type.isArguments).toBeUndefined();
+    expect(type.isGeneratorFn).toBeUndefined();
+    expect(type.isGeneratorObj).toBeUndefined();
+  });
+
+  test('type exports exactly the documented predicate surface', () => {
+    expect(Object.keys(type).sort()).toEqual(
+      [
+        'enforceType',
+        'isArray',
+        'isBoolean',
+        'isDate',
+        'isDateString',
+        'isEmptyObject',
+        'isError',
+        'isFunction',
+        'isInt',
+        'isName',
+        'isNone',
+        'isNull',
+        'isNumber',
+        'isNumeric',
+        'isObject',
+        'isOpRequest',
+        'isPrimitive',
+        'isRegExp',
+        'isSet',
+        'isString',
+        'isUndefined',
+        'typeOf',
+      ].sort()
+    );
   });
 });
 

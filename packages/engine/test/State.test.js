@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ReservedKeyError } from '@lowdefy/helpers';
+
 import State from '../src/State.js';
 
 test('set', () => {
@@ -117,6 +119,69 @@ test('del keep nested objects', () => {
   context.state = { a: { b: 1, c: 2 } };
   state.del('a.b');
   expect(context.state).toEqual({ a: { c: 2 } });
+});
+
+test('del walks to the correct parent when the last path segment contains an escaped dot', () => {
+  const context = {
+    state: { a: { b: { 'c.d': 1 } } },
+  };
+  const state = new State(context);
+  state.del('a.b.c\\.d');
+  expect(context.state).toEqual({});
+});
+
+test('del removes an escaped dot key without removing a non-empty parent', () => {
+  const context = {
+    state: { a: { b: { 'c.d': 1, e: 2 } } },
+  };
+  const state = new State(context);
+  state.del('a.b.c\\.d');
+  expect(context.state).toEqual({ a: { b: { e: 2 } } });
+});
+
+test('del removes all parents that become empty', () => {
+  const context = {
+    state: { a: { b: { c: 1 } } },
+  };
+  const state = new State(context);
+  state.del('a.b.c');
+  expect(context.state).toEqual({});
+});
+
+test('del does not walk past a parent that is still populated', () => {
+  const context = {
+    state: { a: { b: 1, c: 2 } },
+  };
+  const state = new State(context);
+  state.del('a.b');
+  expect(context.state).toEqual({ a: { c: 2 } });
+});
+
+test('del does not walk for a single segment field', () => {
+  const context = {
+    state: { a: 1, b: 2 },
+  };
+  const state = new State(context);
+  state.del('a');
+  expect(context.state).toEqual({ b: 2 });
+});
+
+test('del deletes a root level field name containing an escaped dot', () => {
+  const context = {
+    state: { 'a.b': 1, c: 2 },
+  };
+  const state = new State(context);
+  state.del('a\\.b');
+  expect(context.state).toEqual({ c: 2 });
+});
+
+test('del propagates ReservedKeyError for a reserved path segment', () => {
+  const context = {
+    state: { a: { b: 1 } },
+  };
+  const state = new State(context);
+  expect(() => state.del('a.__proto__')).toThrow(ReservedKeyError);
+  expect(() => state.del('a.__proto__')).toThrow('Reserved key "__proto__"');
 });
 
 test('swapItems', () => {

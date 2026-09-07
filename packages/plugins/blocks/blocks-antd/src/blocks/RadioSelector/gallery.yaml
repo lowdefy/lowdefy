@@ -757,3 +757,60 @@
           - { id: 3, name: Push }
         html: '{{ item.name }}'
         valueKey: id
+- title: Columns
+  blocks:
+    - id: radio_columns_two
+      type: RadioSelector
+      properties:
+        title: Two columns
+        columns: 2
+        options:
+          - Weekday mornings
+          - Weekday afternoons
+          - Weekday evenings
+          - Weekend mornings
+          - Weekend afternoons
+          - Weekend evenings
+    - id: radio_columns_responsive
+      type: RadioSelector
+      properties:
+        title: One column below md, three from md up
+        columns:
+          xs: 1
+          md: 3
+        options:
+          - Email
+          - SMS
+          - Push notification
+          - Webhook
+          - In-app message
+          - Weekly digest
+    - id: radio_columns_gutter
+      type: RadioSelector
+      properties:
+        title: Wider gutter
+        columns: 2
+        gutter: [24, 12]
+        options:
+          - Read only
+          - Read and write
+          - Administer
+          - No access
+    - id: radio_columns_per_option_color
+      type: RadioSelector
+      properties:
+        title: Coloured options in a grid
+        columns: 2
+        options:
+          - label: Low
+            value: low
+            color: '#16a34a'
+          - label: Medium
+            value: medium
+            color: '#d97706'
+          - label: High
+            value: high
+            color: '#dc2626'
+          - label: Critical
+            value: critical
+            color: '#7e22ce'

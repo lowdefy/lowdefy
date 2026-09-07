@@ -15,14 +15,14 @@ The `_global` operator gets a value from the [`global`](/page-and-app-state) obj
 #### Arguments
 
 ###### string
-If the `_global` operator is called with a string argument, the value of the key in the `global` object is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported.
+If the `_global` operator is called with a string argument, the value of the key in the `global` object is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
 
 ###### boolean
 If the `_global` operator is called with boolean argument `true`, the entire `global` object is returned.
 
 ###### object
   - `all: boolean`: If `all` is set to `true`, the entire `global` object is returned. One of `all` or `key` are required.
-  - `key: string`: The value of the key in the `global` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
+  - `key: string`: The value of the key in the `global` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably. One of `all` or `key` are required.
   - `default: any`: A value to return if the `key` is not found in `global`. By default, `null` is returned if a value is not found.
 
 #### Examples

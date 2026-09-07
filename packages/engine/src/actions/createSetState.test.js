@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ActionError } from '@lowdefy/errors';
+
 import testContext from '../../test/testContext.js';
 
 const lowdefy = {
@@ -144,6 +146,38 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
   await button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 1 });
   expect(textInput.value).toEqual(1);
+});
+
+test('SetState propagates ReservedKeyError from a reserved path segment to the action error layer', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { 'user.__proto__.admin': true } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const button = context._internal.RootSlots.map['button'];
+  const res = await button.triggerEvent({ name: 'onClick' });
+
+  expect(res.success).toBe(false);
+  // createSetState does not catch - the raw ReservedKeyError reaches the action
+  // error-wrapping layer, which wraps it as the cause of an ActionError.
+  const { error } = res.responses.a;
+  expect(error).toBeInstanceOf(ActionError);
+  expect(error.cause.name).toBe('ReservedKeyError');
+  expect(error.cause.segment).toBe('__proto__');
+  expect(context.state).toEqual({});
+  expect({}.admin).toBeUndefined();
 });
 
 test('SetState value on array and create new Blocks for array items', async () => {

@@ -19,6 +19,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Client from '@lowdefy/client';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
 import createLinkComponent from '@lowdefy/client/adapters/Link.js';
+import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 
 import actions from '../build/plugins/actions.js';
@@ -43,8 +44,14 @@ function Page({ auth, config, lowdefy }) {
   }
   const { router, Link } = routerRef.current;
 
+  // Temporary sequence guard for the superseded-navigation race: a slow
+  // response for an abandoned navigation must not paint over a newer one.
+  // Remove when the loader-based lifecycle replaces these fetch paths.
+  const latestNavRef = useRef(0);
+
   useEffect(() => {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
+      const token = ++latestNavRef.current;
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
       try {
         // Forward the current query string so server-side Dynamic block
@@ -53,17 +60,23 @@ function Page({ auth, config, lowdefy }) {
           `${router.basePath}/api/page/${targetPageId}${window.location.search}`
         );
         if (!res.ok) {
+          if (token !== latestNavRef.current) return;
           if (targetPageId !== '404') {
             router.replace({ pathname: '/404' });
           }
           return;
         }
         const { pageConfig: nextPageConfig } = await res.json();
+        if (token !== latestNavRef.current) return;
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
+        if (token !== latestNavRef.current) return;
         window.location.assign(
-          `${router.basePath}/${targetPageId === config.rootConfig.home.pageId ? '' : targetPageId}`
+          createUrl({
+            basePath: router.basePath,
+            pathname: targetPageId === config.rootConfig.home.pageId ? '/' : `/${targetPageId}`,
+          })
         );
       }
     });

@@ -28,6 +28,7 @@ import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
+import getStrategyCaller from './auth/strategies.js';
 import i18nConfig from '../build/i18n.js';
 import logRequest from './log/logRequest.js';
 import notifications, {
@@ -75,8 +76,9 @@ async function createLowdefyContext({ c }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
+  const rid = uuid();
   const context = {
-    rid: uuid(),
+    rid,
     agents,
     appMeta,
     // The build gates this artifact on the reports plugin.
@@ -94,10 +96,7 @@ async function createLowdefyContext({ c }) {
     i18n: i18nConfig,
     interpolateProperties,
     jsMap,
-    handleError: async (err) => {
-      console.error(err);
-    },
-    logger: console,
+    logger: createLogger(),
     notifications,
     operators,
     renderEmail,
@@ -109,10 +108,15 @@ async function createLowdefyContext({ c }) {
     secrets,
     websockets,
   };
-  context.logger = createLogger();
   context.handleError = createHandleError({ context });
   if (!c.req.path.includes('/api/auth')) {
     context.session = await getSession(c);
+    if (!context.session?.user) {
+      const caller = await getStrategyCaller(c, context.logger);
+      if (caller) {
+        context.session = { user: caller };
+      }
+    }
   }
   createApiContext(context);
   logRequest({ context });

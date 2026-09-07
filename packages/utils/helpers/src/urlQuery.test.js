@@ -139,3 +139,50 @@ test('urlQuery parse string with params not serialized JSON', () => {
     b: 1,
   });
 });
+
+test('urlQuery parse returns string values for non-serialized params', () => {
+  expect(urlQuery.parse('a=1&b=2')).toEqual({ a: 1, b: 2 });
+  expect(urlQuery.parse('a=x&b=y')).toEqual({ a: 'x', b: 'y' });
+});
+
+test('urlQuery parse skips a __proto__ key and does not pollute Object.prototype', () => {
+  const parsed = urlQuery.parse('__proto__=polluted');
+  expect(parsed).toEqual({});
+  expect(Object.keys(parsed)).toEqual([]);
+  expect(parsed.polluted).toBeUndefined();
+  expect({}.polluted).toBeUndefined();
+  expect(Object.prototype.polluted).toBeUndefined();
+});
+
+test('urlQuery parse skips a nested __proto__ payload without polluting Object.prototype', () => {
+  const parsed = urlQuery.parse(`__proto__=${encodeURIComponent('{"polluted":true}')}`);
+  expect(parsed).toEqual({});
+  expect({}.polluted).toBeUndefined();
+  expect(Object.prototype.polluted).toBeUndefined();
+});
+
+test('urlQuery parse keeps non-reserved keys when a reserved key is present', () => {
+  expect(urlQuery.parse('a=1&__proto__=polluted&b=2')).toEqual({ a: 1, b: 2 });
+  expect({}.polluted).toBeUndefined();
+});
+
+test('urlQuery parse skips all reserved keys', () => {
+  expect(urlQuery.parse('constructor=x&prototype=y&__defineGetter__=z')).toEqual({});
+  expect(
+    urlQuery.parse('__defineSetter__=a&__lookupGetter__=b&__lookupSetter__=c&__proto__=d')
+  ).toEqual({});
+});
+
+test('urlQuery parse does not block non-reserved Object.prototype method names', () => {
+  expect(urlQuery.parse('hasOwnProperty=x')).toEqual({ hasOwnProperty: 'x' });
+  expect(urlQuery.parse('toString=x&valueOf=y')).toEqual({ toString: 'x', valueOf: 'y' });
+});
+
+test('urlQuery parse returns a plain object supporting Object.prototype methods', () => {
+  const parsed = urlQuery.parse('a=1');
+  expect(Object.getPrototypeOf(parsed)).toBe(Object.prototype);
+  // Calling through the instance is the assertion: D4 keeps the result map a plain object so
+  // callers can still use Object.prototype methods on it, which a null-proto map would break.
+  // eslint-disable-next-line no-prototype-builtins
+  expect(parsed.hasOwnProperty('a')).toBe(true);
+});

@@ -6,7 +6,7 @@
 
 The `:set_state` control sets values in the server-side state object during API endpoint execution.
 It accepts an object where each key-value pair is saved to the state, making data available throughout the routine via the `_state` operator.
-This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type.
+This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` sets the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key of the state first, and a plain key that is present always wins: with `a` already in state, `a.b` writes `b` inside `a`, and it does so even when `a` holds a string or number, replacing that value with an object. A literal dotted key is only written where the plain key is absent, and once a key matches there is no retry with a longer join — the value is written inside the key that matched, with missing intermediate objects created as needed. Reserved key names such as `__proto__` and `constructor` are rejected as a config error.
 Values are evaluated before being set, allowing dynamic state updates based on previous operations.
 
 #### Keys

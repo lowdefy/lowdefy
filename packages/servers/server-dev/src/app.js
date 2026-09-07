@@ -56,10 +56,9 @@ import docsSearchHandler from './routes/docs/search.js';
 import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
-import iconsDynamicHandler from './routes/iconsDynamic.js';
 import jitPageHandler from './routes/jitPage.js';
-import jsEnvHandler from './routes/jsEnv.js';
 import lowdefyConfig from '../lib/build/config.js';
+import mcpHandler from './routes/mcp.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
@@ -78,11 +77,9 @@ function createApp() {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy-dev' });
 
-  // No api context: SSE/health/static-js routes had no apiWrapper before.
+  // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
   app.get('/api/ping', pingHandler);
-  app.get('/api/js/:env', jsEnvHandler);
-  app.get('/api/icons/dynamic', iconsDynamicHandler);
   app.get('/api/dev-tools', devToolsHandler);
   // Annotation helper: the in-page overlay (Cmd/Ctrl+/) POSTs annotation
   // batches here and gets back the enriched agent-readable text, which the
@@ -151,6 +148,7 @@ function createApp() {
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
+  app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.

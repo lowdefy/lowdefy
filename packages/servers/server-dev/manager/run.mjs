@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
+import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 
@@ -107,6 +108,14 @@ try {
     );
     context.options.port = availablePort;
   }
+
+  // The manager holds the public port for the whole session and proxies to the
+  // Vite child on an internal loopback port — restarting the child (js module
+  // or .env change) then never drops the listener, so long-lived clients (MCP
+  // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
+  // on ECONNREFUSED.
+  context.internalPort = await findAvailablePort({ port: context.options.port + 1 });
+  await startProxy(context);
 
   startServer(context);
   await wait(800);

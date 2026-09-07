@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError, LowdefyInternalError, resolveErrorLocation } from '@lowdefy/errors';
 
 import serializeBuildException from './serializeBuildException.js';
 
@@ -23,16 +23,51 @@ function logCollectedErrors(context) {
 
   // handleError mutates each error in place (resolves source/config), so
   // capture the handled instance (not the original) for serialization below.
-  const handledErrors = context.errors.map((err) => {
+  const handledErrors = [];
+  const seenSourceMessages = new Set();
+
+  for (const err of context.errors) {
     const lowdefyErr = err.isLowdefyError
       ? err
       : new LowdefyInternalError(err.message, { cause: err });
+
+    // handleError resolves the location and logs in one step, so the location
+    // has to be resolved here to decide whether the entry is worth logging at
+    // all. Resolution is pure, so handleError repeating it yields the same
+    // location. Resolution reads author-supplied data (keyMap entries, refMap
+    // paths), so a malformed entry can throw; the whole error report is worth
+    // more than one error's source line, so a failure leaves the error
+    // unlocated here and handleError logs it with its own guarded resolution.
+    let location = null;
+    try {
+      location = resolveErrorLocation(lowdefyErr, {
+        keyMap: context.keyMap,
+        refMap: context.refMap,
+        configDirectory: context.directories?.config,
+      });
+    } catch {
+      location = null;
+    }
+
+    // Two build steps can report the same config line: buildAuth reaches page,
+    // endpoint and websocket ids before validateId does, and both gates give
+    // the same message. Two genuinely distinct errors never share both a
+    // resolved source line and a message, so that pair is safe to collapse.
+    // Without a resolved source line there is no such evidence — the message
+    // alone would collapse distinct internal errors, and under-count the
+    // failures — so unlocated errors are always reported.
+    if (location?.source) {
+      const dedupKey = `${location.source}\n${lowdefyErr.message}`;
+      if (seenSourceMessages.has(dedupKey)) continue;
+      seenSourceMessages.add(dedupKey);
+    }
+
     context.handleError(lowdefyErr);
-    return lowdefyErr;
-  });
+    handledErrors.push(lowdefyErr);
+  }
 
   const buildError = new BuildError(
-    `Build failed with ${context.errors.length} error(s). See above for details.`
+    `Build failed with ${handledErrors.length} error(s). See above for details.`
   );
   buildError.errors = handledErrors.map(serializeBuildException);
   buildError.warnings = (context.warnings ?? []).map(serializeBuildException);

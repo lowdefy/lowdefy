@@ -6,7 +6,7 @@
 
 The `_item` operator returns the current item value during iteration in [`:for`](/:for) and [`:parallel_for`](/:parallel_for) loop control structures within API routines.
 The key used with `_item` must match the key defined in the relevant loop control declaration because it also supports nested loops.
-Dot notation is supported for accessing nested properties.
+Dot notation is supported for accessing nested properties. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` reads the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key first, and a plain key that is present always wins: a nested `a.b.c` shadows a literal `a.b` key, and a present `a` blocks the literal key even when it holds a string or number rather than an object. A literal dotted key is only reached where the plain key is absent, so escape it to address one reliably.
 
 #### Arguments
 

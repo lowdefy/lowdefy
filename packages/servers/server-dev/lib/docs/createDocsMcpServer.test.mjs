@@ -77,6 +77,24 @@ test('MCP tools/list returns all lowdefy tools', async () => {
   await client.close();
 });
 
+test('MCP tools that render a page headless advertise an optional user parameter', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+
+  [
+    'lowdefy_screenshot_page',
+    'lowdefy_inspect_state',
+    'lowdefy_eval_operator',
+    'lowdefy_load_state',
+  ].forEach((name) => {
+    const tool = tools.find((candidate) => candidate.name === name);
+    expect(tool.inputSchema.properties.user).toBeDefined();
+    expect(tool.inputSchema.required ?? []).not.toContain('user');
+  });
+
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_get_schema returns a block schema', async () => {
   const client = await connectClient();
   const result = await client.callTool({

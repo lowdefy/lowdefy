@@ -62,6 +62,9 @@ const MessageList = React.forwardRef(function MessageList(
     onWelcomePromptFill,
     addToolApprovalResponse,
     onFeedback,
+    onLinkClick,
+    Link,
+    feedbackValues,
     onRegenerate,
     onDelete,
     onEditMessage,
@@ -231,6 +234,9 @@ const MessageList = React.forwardRef(function MessageList(
                 actions={config?.actions}
                 messageId={info.key}
                 onFeedback={onFeedback}
+                onLinkClick={onLinkClick}
+                Link={Link}
+                feedbackValue={feedbackValues?.[info.key]}
                 onRegenerate={onRegenerate}
                 onDelete={onDelete}
                 translate={translate}

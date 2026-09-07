@@ -16,7 +16,7 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
-import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
+import buildPageIfNeeded, { getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
 
 // JIT page build + config response. The response shapes are a frozen contract
@@ -24,7 +24,7 @@ import getPathSegments from '../lib/getPathSegments.js';
 //   200 { installing: true, packages }  — plugin install in progress, client polls
 //   500 { buildError: true, errors, message, source }  — build failed
 //   404 'Page not found.'
-//   200 pageConfig (+ _warnings)
+//   200 pageConfig (+ _warnings, + _jsEntries module text, + _dynamicIcons data)
 async function jitPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
@@ -74,6 +74,12 @@ async function jitPageHandler(c) {
   if (buildResult?.warnings?.length > 0) {
     pageConfig._warnings = buildResult.warnings;
   }
+  // Fold this page's JIT-discovered _js entries and dynamic icons into the
+  // response the client already awaits, so first paint has everything it needs
+  // without the two secondary fetches that stalled in Vite's transform window.
+  const { jsEntries, dynamicIcons } = getPageJitEnrichment({ pageConfig });
+  if (jsEntries) pageConfig._jsEntries = jsEntries;
+  if (dynamicIcons) pageConfig._dynamicIcons = dynamicIcons;
   return c.json(pageConfig);
 }
 

@@ -179,7 +179,11 @@
       type: AgGridMaterial
       properties:
         height: 300
-        rowSelection: multiple
+        rowSelection:
+          mode: multiRow
+          checkboxes: false
+          headerCheckbox: false
+          enableClickSelection: true
         defaultColDef:
           sortable: true
           flex: 1

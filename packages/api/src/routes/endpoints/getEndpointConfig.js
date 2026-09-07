@@ -14,12 +14,21 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 
-async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
+import isUnauthenticatedHuman from './isUnauthenticatedHuman.js';
+
+// A missing endpoint answers the same as a protected one for an anonymous
+// caller on an auth'd app - the message is byte-identical to the one
+// authorizeApiEndpoint throws, so present and absent are indistinguishable
+// before authenticating. Every other caller keeps the opaque does-not-exist.
+async function getEndpointConfig(context, { endpointId }) {
+  const { logger, readConfigFile } = context;
   const endpoint = await readConfigFile(`api/${endpointId}.json`);
   if (!endpoint) {
-    const err = new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
+    const err = (await isUnauthenticatedHuman(context))
+      ? new AuthenticationError(`Authentication required for API endpoint "${endpointId}".`)
+      : new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }

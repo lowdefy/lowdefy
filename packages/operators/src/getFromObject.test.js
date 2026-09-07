@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import getFromObject from './getFromObject.js';
 // eslint-disable-next-line no-unused-vars
 
@@ -291,6 +293,77 @@ test('replace arrayIndices', () => {
     location,
   });
   expect(res).toEqual([3, 4]);
+});
+
+test('reserved key as the whole key returns null when no default is given', () => {
+  const res = getFromObject({
+    params: { key: '__proto__' },
+    object: defaultObject,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual(null);
+});
+
+test('reserved key as the whole key returns the default', () => {
+  const res = getFromObject({
+    params: { key: '__proto__', default: 'default' },
+    object: defaultObject,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual('default');
+});
+
+test('reserved key in the middle of the path returns the default', () => {
+  const res = getFromObject({
+    params: { key: 'a.__proto__.b', default: 'default' },
+    object: { a: { b: 1 } },
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual('default');
+});
+
+test('reserved key as shorthand params returns null', () => {
+  const res = getFromObject({
+    params: 'constructor',
+    object: defaultObject,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual(null);
+});
+
+test('reserved key does not log a warning or error', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+  getFromObject({
+    params: { key: '__proto__' },
+    object: defaultObject,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(warn).not.toHaveBeenCalled();
+  expect(error).not.toHaveBeenCalled();
+  warn.mockRestore();
+  error.mockRestore();
+});
+
+test('a nested non-reserved path still resolves', () => {
+  const res = getFromObject({
+    params: { key: 'a.b' },
+    object: { a: { b: 1 } },
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual(1);
 });
 
 test('get a field from an object, default value', () => {

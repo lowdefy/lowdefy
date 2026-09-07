@@ -1,0 +1,55 @@
+# 95: API Auth Strategies Application
+lowdefy: local
+name: Auth Strategies App
+
+auth:
+  strategies:
+    - id: partner-access
+      type: apiKey
+      properties:
+        keys:
+          - id: acme
+            value:
+              _secret: PARTNER_KEY_ACME
+      roles:
+        - partner
+    - id: service-jwt
+      type: jwt
+      properties:
+        secret:
+          _secret: JWT_SIGNING_SECRET
+        algorithms:
+          - HS256
+        claimMapping:
+          id: sub
+          roles: realm_access.roles
+      attributes:
+        team: services
+  api:
+    protected: true
+    public:
+      - health
+    roles:
+      partner:
+        - partner-data
+
+api:
+  - id: health
+    type: Api
+    routine:
+      - ':return':
+          ok: true
+  - id: partner-data
+    type: Api
+    routine:
+      - ':return':
+          data: partner-report
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Auth Strategies App

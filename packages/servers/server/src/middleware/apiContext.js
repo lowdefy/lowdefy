@@ -27,6 +27,7 @@ import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getSession from '../../lib/server/auth/session.js';
+import getStrategyCaller from '../../lib/server/auth/strategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
@@ -66,8 +67,9 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
+    const rid = getRequestId(c);
     const context = {
-      rid: getRequestId(c),
+      rid,
       agents,
       appMeta,
       // The build gates this artifact on the reports plugin; it is imported
@@ -88,6 +90,7 @@ function apiContext() {
       i18n: i18nConfig,
       interpolateProperties,
       jsMap,
+      logger: createLogger({ rid }),
       notifications,
       operators,
       renderEmail,
@@ -104,10 +107,15 @@ function apiContext() {
         globalThis[Symbol.for('@vercel/request-context')]?.get?.()?.waitUntil?.(promise),
       websockets,
     };
-    context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
     if (!c.req.path.includes('/api/auth')) {
       context.session = await getSession(c);
+      if (!context.session?.user) {
+        const caller = await getStrategyCaller(c, context.logger);
+        if (caller) {
+          context.session = { user: caller };
+        }
+      }
       // Set Sentry user context for authenticated requests
       setSentryUser({
         user: context.session?.user,

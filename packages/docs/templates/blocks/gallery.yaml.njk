@@ -22,11 +22,14 @@ _ref:
       _var: filePath
     fullWidth: true
     content:
+      # description and note are block author prose. Passed as _var rather than
+      # interpolated, so apostrophes, colons, quotes and newlines in them reach
+      # the block verbatim instead of being nunjucks-escaped or re-parsed as YAML.
       - id: gallery_intro
         type: Markdown
         properties:
-          content: |
-            {{ description }}
+          content:
+            _var: description
       - id: gallery_links
         type: Box
         layout:
@@ -74,7 +77,8 @@ _ref:
         properties:
           type: warning
           showIcon: true
-          message: {{ note }}
+          message:
+            _var: note
 {% endif %}
 {% if guide %}
       - id: gallery_guide

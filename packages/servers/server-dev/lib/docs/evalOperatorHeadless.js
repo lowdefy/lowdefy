@@ -22,7 +22,7 @@ import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 // headless Chromium tab navigated to the page's own route, using the page's
 // own WebParser instance so results match runtime exactly. Mirrors
 // Inspector.jsx's evalExpression (the live-tab equivalent).
-async function evalOperatorHeadless({ origin, pageId, expression, timeout = 15000 }) {
+async function evalOperatorHeadless({ origin, pageId, expression, user, timeout = 15000 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
       error: `evalOperatorHeadless requires an "origin" string. Received ${JSON.stringify(origin)}.`,
@@ -50,7 +50,7 @@ async function evalOperatorHeadless({ origin, pageId, expression, timeout = 1500
 
   let context;
   try {
-    const opened = await openPage({ browser, origin, pageId, timeout });
+    const opened = await openPage({ browser, origin, pageId, user, timeout });
     context = opened.context;
     // Passed through as JSON so the page-side parser always receives a plain
     // value, matching how it arrives at Inspector.jsx's eval-request handler.

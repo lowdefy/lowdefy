@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useChat } from '@ai-sdk/react';
 import {
   lastAssistantMessageIsCompleteWithApprovalResponses,
@@ -24,7 +24,7 @@ import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
-import { type } from '@lowdefy/helpers';
+import { isReserved, setKey, type } from '@lowdefy/helpers';
 import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
 import getUploadPolicy from '@lowdefy/blocks-files/utils/getUploadPolicy.js';
 import uploadFile from '@lowdefy/blocks-files/utils/uploadFile.js';
@@ -37,7 +37,7 @@ import MessageList from './MessageList.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
-function AgentChat({ blockId, components: { Icon }, methods, pageId, properties }) {
+function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageId, properties }) {
   const {
     agentId,
     urlQuery,
@@ -46,6 +46,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     messageDisplay,
     sender,
     conversationId,
+    feedbackValues: storedFeedbackValues,
     messages: externalMessages,
     display,
     drawer: drawerConfig,
@@ -55,6 +56,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
   const finishMetaRef = useRef(null);
   const fileInputRef = useRef(null);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  const [dragOver, setDragOver] = useState(false);
   // Controlled composer value, so a starter prompt (or the setInput method) can
   // fill the box, and a send can leave typed text in place when it is rejected.
   const [inputValue, setInputValue] = useState('');
@@ -140,8 +142,17 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           const writable = {};
           const ignored = [];
           for (const [key, value] of Object.entries(updates)) {
-            if (allowedKeys.has(key)) writable[key] = value;
-            else ignored.push(key);
+            if (!allowedKeys.has(key)) {
+              ignored.push(key);
+              continue;
+            }
+            // Same policy as a non-allowlisted key: drop it and report it back
+            // so the model can self-correct on the next turn.
+            if (isReserved(key)) {
+              ignored.push(key);
+              continue;
+            }
+            setKey(writable, key, value);
           }
           if (Object.keys(writable).length > 0) {
             await methods.triggerEvent({ name: '__updatePageState', event: writable });
@@ -166,6 +177,15 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
       }
     },
     onError: (error) => {
+      // A request that fails after the stream's `start` chunk leaves the
+      // assistant shell the SDK pushed on that chunk — id set, parts: [] — in
+      // the message list. Left there, every later send fails UIMessage
+      // validation ("Message must contain at least one part") and the
+      // conversation is dead until a reload. Drop empty shells so the user can
+      // simply try again; there is nothing in them to show or to send.
+      setMessages((prev) =>
+        prev.filter((m) => m.role !== 'assistant' || (m.parts?.length ?? 0) > 0)
+      );
       methods.triggerEvent({
         name: 'onError',
         event: { message: error.message },
@@ -186,6 +206,20 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     },
   });
 
+  // The control is otherwise write-only: it reports a rating and immediately forgets it,
+  // so the thumb un-highlights on the next render and the message looks unrated. This holds
+  // what was clicked THIS visit; the block still persists nothing itself.
+  const [feedbackValues, setFeedbackValues] = useState({});
+
+  // Ratings the app already knows about, keyed by message id — what a reload or a
+  // conversation switch would otherwise lose, since the block stores nothing. A click this
+  // visit wins over the stored value, so the thumb responds immediately and a rating the
+  // user has just withdrawn is not re-lit by a stale prop.
+  // Not memoised: the property arrives from operators that rebuild it every render, so a
+  // dependency on it would miss every time — the same reason the message sync below
+  // compares by count and id rather than by reference.
+  const effectiveFeedbackValues = { ...(storedFeedbackValues ?? {}), ...feedbackValues };
+
   // Clear messages when conversationId changes so the new conversation starts clean.
   // Developers load saved messages via the messages property if needed.
   const prevConversationIdRef = useRef(effectiveConversationId);
@@ -193,6 +227,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     if (effectiveConversationId !== prevConversationIdRef.current) {
       prevConversationIdRef.current = effectiveConversationId;
       setMessages([]);
+      // Ratings clicked in the thread being left must not carry over: they are keyed by
+      // message id, and the incoming conversation supplies its own through feedbackValues.
+      setFeedbackValues({});
     }
   }, [effectiveConversationId, setMessages]);
 
@@ -340,6 +377,42 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
     return { url: objectUrl, mediaType: fileType, filename: name };
   }
 
+  // One intake for every way a file arrives — the paperclip picker, a
+  // clipboard paste, a drag-and-drop — so the accept list and size cap apply
+  // to all of them, not just the picker's native dialog. Pasted clipboard
+  // images all arrive as "image.png" (every browser), and the attached list
+  // is keyed by name + size, so those get a unique name.
+  function acceptsFile(file) {
+    const accept = attachmentsConfig?.accept;
+    if (!accept) return true;
+    const name = (file.name || '').toLowerCase();
+    const mime = (file.type || '').toLowerCase();
+    return accept
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean)
+      .some((t) => {
+        if (t.startsWith('.')) return name.endsWith(t);
+        if (t.endsWith('/*')) return mime.startsWith(t.slice(0, -1));
+        return mime === t;
+      });
+  }
+  function addFiles(incoming, { pasted = false } = {}) {
+    const files = Array.from(incoming ?? []).filter(
+      (f) => acceptsFile(f) && !(attachmentsConfig?.maxSize && f.size > attachmentsConfig.maxSize)
+    );
+    if (files.length === 0) return;
+    const named = files.map((f) => {
+      if (!pasted || !/^image\.\w+$/i.test(f.name)) return f;
+      const ext = f.name.split('.').pop();
+      return new File([f], `pasted-${Date.now()}.${ext}`, { type: f.type });
+    });
+    setAttachedFiles((prev) => [...prev, ...named]);
+  }
+  function dragHasFiles(e) {
+    return Array.from(e.dataTransfer?.types ?? []).includes('Files');
+  }
+
   async function handleSend(text) {
     if (!text.trim() && attachedFiles.length === 0) return;
 
@@ -445,7 +518,41 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
 
   const activeSuggestions = agentSuggestions ?? suggestions;
 
+  // A link in an answer was a plain anchor: a full browser navigation out of the
+  // conversation, with no way for an app to do anything else with it. Default is only
+  // prevented when the app actually handles onLinkClick — otherwise the link keeps
+  // navigating, so wiring nothing changes nothing.
+  //
+  // Modified and non-primary clicks are never intercepted: open-in-new-tab is a
+  // reasonable thing to do with a citation, and preventing it would be a regression.
+  const interceptLinks = Boolean(events?.onLinkClick);
+
+  // Stable identity: MessageBubble memoises its markdown component map on this, and the map
+  // is rebuilt on every streaming chunk otherwise — remounting every link in the answer as
+  // it streams.
+  const handleLinkClick = useCallback(
+    ({ href, text, domEvent }) => {
+      if (
+        !interceptLinks ||
+        domEvent.defaultPrevented ||
+        domEvent.button !== 0 ||
+        domEvent.metaKey ||
+        domEvent.ctrlKey ||
+        domEvent.shiftKey ||
+        domEvent.altKey
+      ) {
+        return;
+      }
+      // Prevented synchronously: Link checks defaultPrevented immediately after calling
+      // this, and an external anchor's default fires before any async work could run.
+      domEvent.preventDefault();
+      methods.triggerEvent({ name: 'onLinkClick', event: { href, text } });
+    },
+    [interceptLinks, methods]
+  );
+
   function handleFeedback({ messageId, rating }) {
+    setFeedbackValues((prev) => ({ ...prev, [messageId]: rating }));
     const message = messages.find((msg) => msg.id === messageId);
     const messageContent =
       message?.parts
@@ -517,6 +624,9 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             onWelcomePromptFill={handleWelcomePromptFill}
             addToolApprovalResponse={addToolApprovalResponse}
             onFeedback={handleFeedback}
+            onLinkClick={handleLinkClick}
+            Link={Link}
+            feedbackValues={effectiveFeedbackValues}
             onRegenerate={handleRegenerate}
             onDelete={handleDelete}
             onEditMessage={handleEditMessage}
@@ -537,7 +647,38 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           />
         </div>
       )}
-      <div style={{ padding: '8px 16px 24px' }}>
+      <div
+        style={{
+          padding: '8px 16px 24px',
+          borderRadius: 12,
+          outline: dragOver ? '2px dashed currentColor' : 'none',
+          outlineOffset: -6,
+          transition: 'outline-color 120ms',
+        }}
+        // Drag-in lands in the same intake as the picker and paste. Only
+        // react to drags carrying files, so text selections dragged across
+        // the composer are left to the textarea.
+        onDragOver={
+          attachmentsConfig?.enabled
+            ? (e) => {
+                if (!dragHasFiles(e)) return;
+                e.preventDefault();
+                if (!dragOver) setDragOver(true);
+              }
+            : undefined
+        }
+        onDragLeave={attachmentsConfig?.enabled ? () => setDragOver(false) : undefined}
+        onDrop={
+          attachmentsConfig?.enabled
+            ? (e) => {
+                if (!dragHasFiles(e)) return;
+                e.preventDefault();
+                setDragOver(false);
+                addFiles(e.dataTransfer.files);
+              }
+            : undefined
+        }
+      >
         {attachmentsConfig?.enabled && attachedFiles.length > 0 && (
           <FileCard.List
             style={{ marginBottom: 4 }}
@@ -571,11 +712,7 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
             accept={attachmentsConfig.accept}
             multiple
             onChange={(e) => {
-              const files = Array.from(e.target.files);
-              const valid = files.filter(
-                (f) => !(attachmentsConfig.maxSize && f.size > attachmentsConfig.maxSize)
-              );
-              setAttachedFiles((prev) => [...prev, ...valid]);
+              addFiles(e.target.files);
               e.target.value = '';
             }}
           />
@@ -588,6 +725,11 @@ function AgentChat({ blockId, components: { Icon }, methods, pageId, properties 
           submitType={sender?.submitType ?? 'enter'}
           allowSpeech={sender?.allowSpeech ?? false}
           onSubmit={handleSend}
+          // Clipboard paste (a screenshot, a copied file) attaches like the
+          // paperclip does.
+          onPasteFile={
+            attachmentsConfig?.enabled ? (files) => addFiles(files, { pasted: true }) : undefined
+          }
           onCancel={handleStop}
           loading={isBusy}
           prefix={

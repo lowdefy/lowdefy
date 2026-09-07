@@ -18,7 +18,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { type } from '@lowdefy/helpers';
+import { isReserved, type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
@@ -75,6 +75,16 @@ function buildAgents({ components, context }) {
   components.agents.forEach((agent) => {
     const configKey = agent['~k'];
 
+    // agent.id becomes agent.agentId, which keys the detectCycles graph and the
+    // runtime agent registry - both plain objects. Reject a reserved name here,
+    // where the config location is still in hand.
+    if (isReserved(agent.id)) {
+      throw new ConfigError(
+        `Agent id "${agent.id}" is a reserved name and cannot be used as an id.`,
+        { configKey }
+      );
+    }
+
     // Check duplicates
     checkDuplicateAgentId({ id: agent.id, configKey });
 
@@ -127,6 +137,14 @@ function buildAgents({ components, context }) {
       if (!TOOL_NAME_REGEX.test(toolConfig.name)) {
         throw new ConfigError(
           `Agent "${agent.id}" tool name "${toolConfig.name}" is invalid. Tool names must match ^[a-zA-Z0-9_-]{1,64}$ — set "name" on the tool to override the default derived from the endpoint id.`,
+          { configKey }
+        );
+      }
+      // TOOL_NAME_REGEX admits every reserved name - letters and underscores are
+      // in its allowed set - and tool names key the plain-object tools map.
+      if (isReserved(toolConfig.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" tool name "${toolConfig.name}" is a reserved name and cannot be used as a tool name.`,
           { configKey }
         );
       }
@@ -246,6 +264,14 @@ function buildAgents({ components, context }) {
       if (!TOOL_NAME_REGEX.test(ref.name)) {
         throw new ConfigError(
           `Agent "${agent.id}" sub-agent tool name "${ref.name}" is invalid. Tool names must match ^[a-zA-Z0-9_-]{1,64}$ — set "name" on the sub-agent reference to override the default derived from the agent id.`,
+          { configKey }
+        );
+      }
+      // Runs on the derived name, so "a/__proto__" -> "a____proto__" is accepted
+      // while an explicit reserved "name" is not.
+      if (isReserved(ref.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" sub-agent tool name "${ref.name}" is a reserved name and cannot be used as a tool name.`,
           { configKey }
         );
       }

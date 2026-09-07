@@ -1,0 +1,27 @@
+# Q1: Reserved _var Key
+# ======================
+# Tests that a _var key with a reserved name (a prototype-pollution vector like
+# "constructor") fails the build with a located ConfigError instead of a bare
+# ReservedKeyError with no file and no line.
+#
+# Expected error:
+#   [ConfigError] _var key "constructor" is a reserved name.
+#
+# The error resolves to this file with no line number, because it matches the location
+# fields of the sibling _var ConfigError in resolveVar, which passes filePath only, and
+# readVar never sees the node. A line number IS available at this stage (addLineNumbers
+# stamps `~l` during ref parsing) — using it would mean changing that sibling's convention,
+# which is a separate concern. `~k` config keys are genuinely unavailable here: addKeys
+# runs after buildRefs.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: varRef
+        type: Paragraph
+        properties:
+          content:
+            _var: constructor

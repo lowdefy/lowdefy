@@ -185,7 +185,10 @@ blocks:
   - id: aggridinputbalham_onrowselected
     type: AgGridInputBalham
     properties:
-      rowSelection: single
+      rowSelection:
+        mode: singleRow
+        checkboxes: false
+        enableClickSelection: true
       columnDefs:
         - headerName: Name
           field: name

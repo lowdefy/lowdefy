@@ -15,9 +15,10 @@
 */
 
 // Shared meta for the input AgGrid theme blocks (AgGridInputAlpine / AgGridInputMaterial /
-// AgGridInputBalham). They are identical apart from the theme name in the css key description, so
-// each block's meta.js is a one-line call to this factory rather than a duplicated copy.
-function createInputMeta(blockName) {
+// AgGridInputBalham / AgGridLowdefyInput). They are identical apart from the theme name in the css
+// key description and whether they take a size property, so each block's meta.js is a one-line call
+// to this factory rather than a duplicated copy of the whole schema.
+function createInputMeta(blockName, { size = false } = {}) {
   return {
     category: 'input',
     icons: [],
@@ -91,6 +92,22 @@ function createInputMeta(blockName) {
       type: 'object',
       additionalProperties: false,
       properties: {
+        ...(size
+          ? {
+              size: {
+                type: 'string',
+                enum: ['small', 'middle', 'large'],
+                default: 'middle',
+                description:
+                  "Row density, mirroring antd Table sizes. `small` is compact, `middle` (the Lowdefy default) matches antd Table's `middle`, `large` matches antd Table's default density. Changes spacing and row/header height only — colours and font size are identical across sizes.",
+              },
+            }
+          : {}),
+        themeParams: {
+          type: 'object',
+          description:
+            "AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference.",
+        },
         height: {
           type: ['number', 'string'],
           default: 'auto',
@@ -368,7 +385,8 @@ function createInputMeta(blockName) {
                   },
                   zeroColor: {
                     type: 'string',
-                    description: 'Number: CSS colour when value === 0 (requires `signColor: true`).',
+                    description:
+                      'Number: CSS colour when value === 0 (requires `signColor: true`).',
                   },
                   color: {
                     type: 'string',

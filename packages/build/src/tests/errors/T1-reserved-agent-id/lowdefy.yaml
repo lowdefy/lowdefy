@@ -1,0 +1,29 @@
+# T1: Reserved Agent ID
+# =====================
+# Tests that an agent id which is a reserved name (a prototype-pollution
+# vector like "__proto__") fails the build with a located ConfigError,
+# instead of re-parenting the sub-agent graph and the agent registry, both
+# plain objects keyed by the agent id.
+#
+# Expected error:
+#   [Config Error] Agent id "__proto__" is a reserved name and cannot be used as an id.
+#
+# The error points to line 21 where the agent is defined.
+
+lowdefy: local
+
+connections:
+  - id: claude
+    type: Anthropic
+    properties: {}
+
+agents:
+  - id: __proto__
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-sonnet-4-20250514
+
+pages:
+  - id: home
+    type: Box

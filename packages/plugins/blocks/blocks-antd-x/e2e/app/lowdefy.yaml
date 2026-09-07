@@ -1,0 +1,36 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: blocks-antd-x E2E Tests
+
+connections:
+  - id: anthropic
+    type: Anthropic
+    properties:
+      apiKey: not-a-real-key
+
+# The chat is driven entirely from the messages property, so the agent is never called
+# and no request ever leaves the machine.
+agents:
+  - id: test_agent
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-haiku-4-5
+      instructions: Never invoked by these tests.
+
+pages:
+  - _ref: ../../src/blocks/AgentChat/tests/AgentChat.e2e.yaml
+  - _ref: ../../src/blocks/AgentChat/tests/AgentChatTarget.e2e.yaml

@@ -59,7 +59,20 @@ function getEventType(error) {
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
-      const { headers = {}, user = {} } = context;
+      // Set first, not after the log call: this function is the server's error
+      // sink, so reaching it is what makes the error already-logged, and the catch
+      // below guarantees something is written even when the steps here fail. The
+      // client reads `handled` to decide whether to POST the error to
+      // /api/client-error, so a later throw skipping this assignment would have it
+      // logged a second time. Not keyed on `source`, which a LowdefyInternalError
+      // never gets - location resolution is skipped for it below.
+      error.handled = true;
+
+      // `?? {}` rather than a destructuring default: context.user is null (not
+      // undefined) for an anonymous caller and for every system context, so a
+      // default would not fire and reading user.id below would throw.
+      const headers = context.headers ?? {};
+      const user = context.user ?? {};
       const eventType = getEventType(error);
       const isServiceError = error instanceof ServiceError;
       const isLowdefyInternalError = error instanceof LowdefyInternalError;

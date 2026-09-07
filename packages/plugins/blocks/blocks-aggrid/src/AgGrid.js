@@ -15,21 +15,27 @@
 */
 
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { AgGridReact } from '@ag-grid-community/react';
-import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
-import { CsvExportModule } from '@ag-grid-community/csv-export';
+import { AgGridReact } from 'ag-grid-react';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import useColDefs from './useColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
 
-const AgGrid = ({ properties, methods, loading, events, components }) => {
+// Registration is idempotent, so each core registers independently to stay standalone.
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+const AgGrid = ({ components, events, loading, methods, properties, theme }) => {
   const {
     quickFilterValue,
     columnDefs,
     defaultColDef,
+    height,
     rowData: newRowData,
+    rowId,
+    size,
     suppressCellFocus = true,
+    themeParams,
     ...someProperties
   } = properties;
   const [rowData, setRowData] = useState(newRowData ?? []);
@@ -41,11 +47,10 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
 
   const getRowId = useCallback(
     (params) => {
-      if (properties.rowId && params.data[properties.rowId] !== undefined)
-        return params.data[properties.rowId];
+      if (rowId && params.data[rowId] !== undefined) return params.data[rowId];
       return assignRowId(params);
     },
-    [properties.rowId]
+    [rowId]
   );
 
   const onRowClick = useCallback((event) => {
@@ -75,7 +80,9 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
     }
   }, []);
   const onRowSelected = useCallback((event) => {
-    if (!event.node.selected) return; // see https://stackoverflow.com/a/63265775/2453657
+    // AG Grid fires onRowSelected for deselection too, which the Lowdefy event does not represent.
+    // See https://stackoverflow.com/a/63265775/2453657
+    if (!event.node.isSelected()) return;
     if (events.onRowSelected) {
       methods.triggerEvent({
         name: 'onRowSelected',
@@ -159,6 +166,7 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
       <AgGridReact
         columnMenu="legacy"
         {...someProperties}
+        theme={theme}
         suppressCellFocus={suppressCellFocus}
         rowData={rowData}
         defaultColDef={memoDefaultColDef}
@@ -168,7 +176,6 @@ const AgGrid = ({ properties, methods, loading, events, components }) => {
         onRowSelected={onRowSelected}
         onRowClicked={onRowClick}
         onCellClicked={onCellClicked}
-        modules={[ClientSideRowModelModule, CsvExportModule]}
         columnDefs={processedColDefs}
         ref={gridRef}
         getRowId={getRowId}

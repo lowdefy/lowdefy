@@ -47,8 +47,9 @@ function apiContext() {
     if (c.get('lowdefyContext')) {
       return next();
     }
+    const rid = uuid();
     const context = {
-      rid: uuid(),
+      rid,
       agents,
       appMeta,
       reportsRuntime,
@@ -61,10 +62,7 @@ function apiContext() {
       headers: c.req.header(),
       i18n: i18nConfig,
       jsMap,
-      handleError: async (err) => {
-        console.error(err);
-      },
-      logger: console,
+      logger: createLogger({ rid }),
       operators,
       req: {
         url: c.req.path,
@@ -74,7 +72,6 @@ function apiContext() {
       secrets,
       websockets,
     };
-    context.logger = createLogger({ rid: context.rid });
     context.handleError = createHandleError({ context });
     context.session = getSession(c);
     createApiContext(context);

@@ -25,7 +25,7 @@ import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 // inside the page instead. That strips functions/undefined and turns Dates
 // into plain ISO strings — good enough for agent inspection, just not a
 // byte-for-byte match of the app's own `~d`-tagged serialization.
-async function inspectStateHeadless({ origin, pageId, timeout = 15000 }) {
+async function inspectStateHeadless({ origin, pageId, user, timeout = 15000 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
       error: `inspectStateHeadless requires an "origin" string. Received ${JSON.stringify(origin)}.`,
@@ -50,7 +50,7 @@ async function inspectStateHeadless({ origin, pageId, timeout = 15000 }) {
 
   let context;
   try {
-    const opened = await openPage({ browser, origin, pageId, timeout });
+    const opened = await openPage({ browser, origin, pageId, user, timeout });
     context = opened.context;
     const snapshot = await opened.page.evaluate((id) => {
       const lowdefy = window.lowdefy;

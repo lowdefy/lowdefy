@@ -67,6 +67,15 @@ test('Return an empty object if no secrets', () => {
   expect(secrets).toEqual({});
 });
 
+test('getSecretsFromEnv throws when an env var names a reserved secret', () => {
+  process.env = {
+    LOWDEFY_SECRET___proto__: 'supersecret',
+  };
+  expect(() => getSecretsFromEnv()).toThrow(
+    'Environment variable "LOWDEFY_SECRET___proto__" names a reserved secret "__proto__".'
+  );
+});
+
 test('Secrets are immutable', () => {
   process.env = {
     LOWDEFY_SECRET_TEST: 'supersecret',

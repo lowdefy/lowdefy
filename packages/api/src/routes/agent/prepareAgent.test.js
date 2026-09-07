@@ -29,6 +29,7 @@ const logger = {
 
 const agentConfig = {
   agentId: 'my-agent',
+  auth: { public: true },
   id: 'agent:my-agent',
   type: 'ClaudeAgent',
   connectionId: 'my-anthropic',

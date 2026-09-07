@@ -339,6 +339,10 @@ class Block {
       repeat.value = true;
     }
 
+    if (this.isList() && !this.isVisible()) {
+      this.captureHiddenValue();
+    }
+
     if (this.visibleEval.output !== false) {
       this.propertiesEval = this.parse(this.properties);
       this.requiredEval = this.parse(this.required);
@@ -444,8 +448,26 @@ class Block {
     });
   };
 
+  captureHiddenValue = () => {
+    const stateValue = get(this.context.state, this.blockId);
+    if (type.isUndefined(stateValue)) return;
+    this.hiddenValue = serializer.copy(stateValue);
+  };
+
+  restoreHiddenValue = () => {
+    if (type.isUndefined(this.hiddenValue)) return;
+    if (type.isUndefined(get(this.context.state, this.blockId))) {
+      this.context._internal.State.set(this.blockId, this.hiddenValue);
+    }
+    this.hiddenValue = undefined;
+  };
+
   updateState = (toSet) => {
     if (!this.isVisible()) return;
+
+    if (this.isList()) {
+      this.restoreHiddenValue();
+    }
 
     if (this.isContainer() || this.isList()) {
       if (this.subSlots && this.subSlots.length > 0) {

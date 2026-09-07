@@ -62,6 +62,20 @@ test('fetchModules resolves file source with existing module.lowdefy.yaml', asyn
   fs.rmSync(tmpDir, { recursive: true });
 });
 
+test('fetchModules throws a ConfigError when the module entry id is a reserved key', async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
+  fs.writeFileSync(path.join(tmpDir, 'module.lowdefy.yaml'), 'id: test');
+
+  await expect(
+    fetchModules({
+      moduleEntries: [{ id: '__proto__', source: `file:${tmpDir}` }],
+      context: { directories: { config: '/' } },
+    })
+  ).rejects.toThrow('Module entry id "__proto__" is a reserved name.');
+
+  fs.rmSync(tmpDir, { recursive: true });
+});
+
 test('fetchModules throws for file source when module.lowdefy.yaml does not exist', async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-'));
 

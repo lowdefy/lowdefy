@@ -1,25 +1,62 @@
 # Lowdefy Blocks for Ag-Grid
 
-This repository provides blocks for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
+This repository provides blocks for [AG Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
 
-The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core
-](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
+The implementation of these blocks is a minimal wrapper for the [ag-grid-community](https://www.npmjs.com/package/ag-grid-community) package, on AG Grid v33. This means you write normal AG Grid config to create tables.
 
-See the [Ag-Grid docs](https://www.ag-grid.com/documentation/react/getting-started/) for the table settings API.
+See the [AG Grid docs](https://www.ag-grid.com/react-data-grid/) for the table settings API.
 
 ## Blocks
 
-Block types for supported [Ag-Grid themes](https://www.ag-grid.com/documentation/javascript/themes-provided/) are available for for `dispay` and `input` block categories.
+Each grid is available as a `display` block and as an `input` block. The display blocks render data; the input blocks additionally hold the table data as the block's value.
 
 ### Block types
 
-The availible ag-gird block types are:
+Display blocks:
 
-- [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
-- [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
-- [`AgGridBalham`](https://www.ag-grid.com/example?theme=ag-theme-balham)
-- [`AgGridBalhamDark`](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
-- [`AgGridMaterial`](https://www.ag-grid.com/example?theme=ag-theme-material)
+- `AgGridLowdefy` — themed from the app's antd design tokens. Recommended for Lowdefy apps.
+- `AgGridAlpine`
+- `AgGridBalham`
+- `AgGridMaterial`
+
+Input blocks:
+
+- `AgGridLowdefyInput` — themed from the app's antd design tokens. Recommended for Lowdefy apps.
+- `AgGridInputAlpine`
+- `AgGridInputBalham`
+- `AgGridInputMaterial`
+
+## Themes
+
+All eight blocks render through [AG Grid's Theming API](https://www.ag-grid.com/react-data-grid/theming/). No block imports an AG Grid stylesheet and no block uses `theme="legacy"`.
+
+**`AgGridLowdefy` is the recommended grid for Lowdefy apps.** It adopts the app's antd theme tokens — primary colour, surfaces, fonts and radius — and follows light/dark mode automatically, with no configuration. It takes a `size` property (`small | middle | large`, default `middle`) matching antd Table's densities, which sets row and header height to 36 / 44 / 54 pixels.
+
+`AgGridBalham`, `AgGridAlpine` and `AgGridMaterial` remain first-class built-ins for users who want those looks, and are kept indefinitely with the same API. On v33 they render AG Grid's prebuilt Theming API equivalents of those themes (`themeBalham` / `themeAlpine` / `themeMaterial`) with the same antd colour mapping applied as theme parameters, so they look very close to before but are no longer pixel-identical.
+
+### Adopting `AgGridLowdefy`
+
+To adopt, change `type: AgGridBalham` to `type: AgGridLowdefy` (or `type: AgGridInputBalham` to `type: AgGridLowdefyInput`). Every property carries over unchanged, and the grid will deliberately look different afterwards — that is the point. This is a visual opt-in, not a migration.
+
+### `size` and explicit heights
+
+A `rowHeight` or `headerHeight` grid option overrides what `size` sets — use one or the other, not both. `size` sets the theme parameters `rowHeight` and `headerHeight`, and an AG Grid grid option always beats a theme parameter, so `size: large` together with `rowHeight: 30` gives 30 pixel rows under a 54 pixel header.
+
+### `themeParams`
+
+All eight blocks take a `themeParams` object property: [AG Grid theming parameter](https://www.ag-grid.com/react-data-grid/theming-parameters/) names merged onto the block's own theme, for retinting a single grid.
+
+```yaml
+- id: my_table
+  type: AgGridLowdefy
+  properties:
+    themeParams:
+      headerBackgroundColor: '#1a1a2e'
+      headerTextColor: '#e0e0ff'
+      borderColor: var(--ant-color-border)
+```
+
+Values are CSS strings and may reference antd tokens. Neither Lowdefy nor AG Grid validates parameter names, so a misspelled key is a silent no-op — check spelling against AG Grid's theming parameter reference.
 
 ### Events
 
@@ -72,9 +109,7 @@ The availible ag-gird block types are:
 
 - `exportDataAsCsv`: When called, table data will be downloaded in csv format.
 - `sizeColumnsToFit`: When called, size table column widths to fit all columns to table width.
-- `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`.
-      - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns.
-      - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
+- `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`. - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns. - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
 - `setFilterModel`: When called, apply filter model to table. See https://www.ag-grid.com/javascript-data-grid/filter-api/ for model details.
 - `setQuickFilter`: When called, pass a quick filter text into the grid for filtering. See https://www.ag-grid.com/javascript-data-grid/filter-quick/ for details.
 
@@ -299,12 +334,14 @@ pages:
             sortable: true
             resizable: true
             filter: true
-          rowSelection: 'multiple'
+          rowSelection:
+            mode: multiRow
+            enableClickSelection: true
+            checkboxes: true
           columnDefs:
             - headerName: Title
               field: title
               width: 350
-              checkboxSelection: true
             - headerName: Year
               field: year
               width: 100
@@ -379,13 +416,15 @@ pages:
             sortable: true
             resizable: true
             filter: true
-          rowSelection: 'multiple'
+          rowSelection:
+            mode: multiRow
+            enableClickSelection: true
+            checkboxes: true
+            headerCheckbox: true
           columnDefs:
             - headerName: Title
               field: title
               width: 350
-              checkboxSelection: true
-              headerCheckboxSelection: true
             - headerName: Year
               field: year
               width: 100

@@ -14,7 +14,27 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors';
+import { ReservedKeyError } from '@lowdefy/helpers';
+
+import controlSetState from './controlSetState.js';
 import runTest from '../test/runTest.js';
+
+function createDirectCallArgs({ setState }) {
+  const context = {
+    logger: { debug: jest.fn() },
+    evaluateOperators: ({ input }) => input,
+  };
+  const routineContext = {
+    items: {},
+    payload: {},
+    state: {},
+    steps: {},
+  };
+  const control = { ':set_state': setState, '~k': 'control_key' };
+  return { context, routineContext, control };
+}
 
 test('set_state sets simple value', async () => {
   const routine = [
@@ -213,4 +233,61 @@ test('set_state writes do not leak across separate routineContexts', async () =>
   expect(res.response == null).toBe(true);
   expect(siblingRoutineContext.state).toEqual({});
   expect(context.state).toBeUndefined();
+});
+
+test('set_state throws a ConfigError, not a ReservedKeyError, for a reserved key path', () => {
+  const { context, routineContext, control } = createDirectCallArgs({
+    setState: { '__proto__.a': 1 },
+  });
+  expect(() => controlSetState(context, routineContext, { control })).toThrow(ConfigError);
+});
+
+test('set_state ConfigError message names the reserved segment and :set_state', () => {
+  const { context, routineContext, control } = createDirectCallArgs({
+    setState: { '__proto__.a': 1 },
+  });
+  expect(() => controlSetState(context, routineContext, { control })).toThrow(
+    'Reserved key "__proto__" cannot be used in :set_state'
+  );
+});
+
+test('set_state ConfigError carries the control configKey and the ReservedKeyError cause', () => {
+  const { context, routineContext, control } = createDirectCallArgs({
+    setState: { 'user.constructor.evil': true },
+  });
+  expect.assertions(4);
+  try {
+    controlSetState(context, routineContext, { control });
+  } catch (error) {
+    expect(error.name).toEqual('ConfigError');
+    expect(error.configKey).toEqual('control_key');
+    expect(error.cause).toBeInstanceOf(ReservedKeyError);
+    expect(error.cause.segment).toEqual('constructor');
+  }
+});
+
+test('set_state leaves state unmodified when a reserved key throws', () => {
+  const { context, routineContext, control } = createDirectCallArgs({
+    setState: { '__proto__.a': 1 },
+  });
+  expect(() => controlSetState(context, routineContext, { control })).toThrow(ConfigError);
+  expect(routineContext.state).toEqual({});
+  expect({}.a).toBeUndefined();
+});
+
+test('set_state rethrows non ReservedKeyError errors unchanged', () => {
+  const { context, routineContext, control } = createDirectCallArgs({ setState: { key: 'value' } });
+  // A frozen state makes `set` throw a TypeError, which must not be wrapped as a ConfigError.
+  routineContext.state = Object.freeze({});
+  expect(() => controlSetState(context, routineContext, { control })).toThrow(TypeError);
+  expect(() => controlSetState(context, routineContext, { control })).not.toThrow(ConfigError);
+});
+
+test('set_state sets values without a reserved key via a direct call', () => {
+  const { context, routineContext, control } = createDirectCallArgs({
+    setState: { 'user.name': 'John' },
+  });
+  const res = controlSetState(context, routineContext, { control });
+  expect(res).toEqual({ status: 'continue' });
+  expect(routineContext.state).toEqual({ user: { name: 'John' } });
 });

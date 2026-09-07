@@ -16,25 +16,31 @@
 
 import inspectStateFromTab from './inspectStateFromTab.js';
 import inspectStateHeadless from './inspectStateHeadless.js';
-import tabAvailable from './tabAvailable.js';
+import resolveSource from './resolveSource.js';
 
-// Prefers a real, already-open browser tab over a fresh headless one — a
-// live tab reflects whatever a developer is actually looking at (their own
-// interactions, in-flight requests), while headless always starts a clean
-// navigation. Falls back to headless whenever the tab path isn't usable
+// resolveSource picks the tab or headless — including why `user` is
+// headless-only. Falls back to headless whenever the tab path isn't usable
 // (no tab connected, or `source: 'tab'` was requested but it errored) so
 // agents always get an answer.
-async function inspectState({ origin, pageId, source }) {
-  const shouldTryTab = source === 'tab' || (source === undefined && tabAvailable({ pageId }));
+async function inspectState({ origin, pageId, source, user }) {
+  const { tryTab, error, invalidInput } = resolveSource({
+    name: 'inspectState',
+    pageId,
+    source,
+    user,
+  });
+  if (error) {
+    return { error, invalidInput };
+  }
 
-  if (shouldTryTab) {
+  if (tryTab) {
     const result = await inspectStateFromTab({ pageId });
     if (!result?.error) {
       return { ...result, source: 'tab' };
     }
   }
 
-  const result = await inspectStateHeadless({ origin, pageId });
+  const result = await inspectStateHeadless({ origin, pageId, user });
   return { ...result, source: 'headless' };
 }
 

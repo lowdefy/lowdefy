@@ -61,29 +61,32 @@ importers:
   packages/api:
     dependencies:
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/ajv
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../build
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-js
+      '@modelcontextprotocol/sdk':
+        specifier: 1.29.0
+        version: 1.29.0(zod@4.3.6)
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -104,37 +107,37 @@ importers:
   packages/build:
     dependencies:
       '@lowdefy/ai-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/ai-utils
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/ajv
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/block-utils
       '@lowdefy/blocks-basic':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-loaders
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-js
       '@tailwindcss/node':
         specifier: 4.3.1
@@ -168,136 +171,136 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/actions/actions-core
       '@lowdefy/actions-pdf-make':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/actions/actions-pdf-make
       '@lowdefy/blocks-aggrid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-diff':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-diff
       '@lowdefy/blocks-echarts':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-files':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-files
       '@lowdefy/blocks-google-maps':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-markdown':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-qr
       '@lowdefy/blocks-tiptap':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/blocks/blocks-tiptap
       '@lowdefy/connection-ai-gateway':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-ai-gateway
       '@lowdefy/connection-anthropic':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-anthropic
       '@lowdefy/connection-axios-http':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-axios-http
       '@lowdefy/connection-elasticsearch':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-elasticsearch
       '@lowdefy/connection-google':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-google
       '@lowdefy/connection-google-sheets':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-google-sheets
       '@lowdefy/connection-knex':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-knex
       '@lowdefy/connection-mcp':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-mcp
       '@lowdefy/connection-mongodb':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-mongodb
       '@lowdefy/connection-openai':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-openai
       '@lowdefy/connection-redis':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-redis
       '@lowdefy/connection-sendgrid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-sendgrid
       '@lowdefy/connection-smtp':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-smtp
       '@lowdefy/connection-stripe':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-stripe
       '@lowdefy/connection-test':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/connections/connection-test
       '@lowdefy/email-templates':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/email-templates
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/logger
       '@lowdefy/operators-change-case':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-change-case
       '@lowdefy/operators-dayjs':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-diff
       '@lowdefy/operators-jsonata':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-jsonata
       '@lowdefy/operators-mql':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-yaml
       '@lowdefy/plugin-auth0':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-auth0
       '@lowdefy/plugin-aws':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-aws
       '@lowdefy/plugin-azure':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-azure
       '@lowdefy/plugin-csv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-csv
       '@lowdefy/plugin-gcp':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-gcp
       '@lowdefy/plugin-next-auth':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/plugins/plugin-next-auth
       '@lowdefy/websockets-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/websockets/websockets-core
       '@swc/cli':
         specifier: 0.8.1
@@ -318,16 +321,16 @@ importers:
   packages/cli:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/logger
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/node-utils
       '@vercel/nft':
         specifier: 1.10.2
@@ -379,22 +382,22 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/block-utils
       '@lowdefy/engine':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../engine
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       '@lowdefy/layout':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../layout
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/logger
       antd:
         specifier: 6.3.1
@@ -416,7 +419,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/jest-yaml-transform':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
@@ -454,7 +457,7 @@ importers:
   packages/docs:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       minisearch:
         specifier: ^7.0.0
@@ -487,29 +490,29 @@ importers:
   packages/engine:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../operators
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/actions/actions-core
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../build
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../plugins/operators/operators-mql
       '@swc/cli':
         specifier: 0.8.1
@@ -582,10 +585,10 @@ importers:
   packages/layout:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
       react:
         specifier: 18.2.0
@@ -598,10 +601,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
@@ -637,10 +640,10 @@ importers:
   packages/operators:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -665,17 +668,17 @@ importers:
   packages/plugins/actions/actions-core:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -703,7 +706,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -723,33 +726,24 @@ importers:
 
   packages/plugins/blocks/blocks-aggrid:
     dependencies:
-      '@ag-grid-community/client-side-row-model':
-        specifier: 32.3.9
-        version: 32.3.9
-      '@ag-grid-community/core':
-        specifier: 32.3.9
-        version: 32.3.9
-      '@ag-grid-community/csv-export':
-        specifier: 32.3.9
-        version: 32.3.9
-      '@ag-grid-community/react':
-        specifier: 32.3.9
-        version: 32.3.9(@ag-grid-community/core@32.3.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@ag-grid-community/styles':
-        specifier: 32.3.9
-        version: 32.3.9
       '@ant-design/icons':
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../blocks-antd
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
+      ag-grid-community:
+        specifier: 33.3.2
+        version: 33.3.2
+      ag-grid-react:
+        specifier: 33.3.2
+        version: 33.3.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       antd:
         specifier: '>=6'
         version: 6.3.1(date-fns@2.29.3)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -767,10 +761,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -797,13 +791,13 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/nunjucks
       '@rc-component/motion':
         specifier: 1.3.1
@@ -834,13 +828,13 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -876,13 +870,13 @@ importers:
         specifier: 2.7.0
         version: 2.7.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-files':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../blocks-files
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       ai:
         specifier: 6.0.176
@@ -894,6 +888,15 @@ importers:
         specifier: 18.2.0
         version: 18.2.0
     devDependencies:
+      '@lowdefy/block-dev-e2e':
+        specifier: 5.6.0
+        version: link:../../../utils/block-dev-e2e
+      '@lowdefy/e2e-utils':
+        specifier: 5.6.0
+        version: link:../../../utils/e2e-utils
+      '@playwright/test':
+        specifier: 1.59.1
+        version: 1.59.1
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32(@swc/helpers@0.5.23))
@@ -907,10 +910,10 @@ importers:
   packages/plugins/blocks/blocks-basic:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       dompurify:
         specifier: 3.4.2
@@ -926,10 +929,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -956,10 +959,10 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       antd:
         specifier: '>=6'
@@ -987,10 +990,10 @@ importers:
         version: 2.9.0
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1008,10 +1011,10 @@ importers:
   packages/plugins/blocks/blocks-echarts:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       echarts:
         specifier: 6.0.0
@@ -1030,10 +1033,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1057,16 +1060,16 @@ importers:
   packages/plugins/blocks/blocks-files:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../blocks-antd
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       antd:
         specifier: '>=6'
@@ -1079,10 +1082,10 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1100,7 +1103,7 @@ importers:
   packages/plugins/blocks/blocks-google-maps:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@react-google-maps/api':
         specifier: 2.20.8
@@ -1113,10 +1116,10 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1134,10 +1137,10 @@ importers:
   packages/plugins/blocks/blocks-loaders:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       react:
         specifier: '>=18'
@@ -1147,10 +1150,10 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1168,7 +1171,7 @@ importers:
   packages/plugins/blocks/blocks-markdown:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       antd:
         specifier: '>=6'
@@ -1199,10 +1202,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1226,7 +1229,7 @@ importers:
   packages/plugins/blocks/blocks-qr:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       html5-qrcode:
         specifier: 2.3.8
@@ -1239,10 +1242,10 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1260,16 +1263,16 @@ importers:
   packages/plugins/blocks/blocks-tiptap:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../blocks-antd
       '@lowdefy/blocks-files':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../blocks-files
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@tiptap/core':
         specifier: 2.27.2
@@ -1333,10 +1336,10 @@ importers:
         version: 7.2.0
     devDependencies:
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -1357,14 +1360,14 @@ importers:
         specifier: 3.0.111
         version: 3.0.111(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1385,14 +1388,14 @@ importers:
         specifier: 3.0.76
         version: 3.0.76(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1410,14 +1413,14 @@ importers:
   packages/plugins/connections/connection-axios-http:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       axios:
         specifier: 1.15.2
         version: 1.15.2
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1438,14 +1441,14 @@ importers:
         specifier: 7.17.12
         version: 7.17.12
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1466,14 +1469,14 @@ importers:
         specifier: 3.0.70
         version: 3.0.70(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1491,7 +1494,7 @@ importers:
   packages/plugins/connections/connection-google-sheets:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       dayjs:
         specifier: 1.11.20
@@ -1510,7 +1513,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1528,10 +1531,10 @@ importers:
   packages/plugins/connections/connection-knex:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       better-sqlite3:
         specifier: 12.11.1
@@ -1553,7 +1556,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1574,7 +1577,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1595,7 +1598,7 @@ importers:
         specifier: 3.11.2
         version: 3.11.2(mongodb@7.2.0)
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@next-auth/mongodb-adapter':
         specifier: 1.1.3
@@ -1611,7 +1614,7 @@ importers:
         version: 13.0.0
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@shelf/jest-mongodb':
         specifier: 4.3.2
@@ -1644,14 +1647,14 @@ importers:
         specifier: 3.0.63
         version: 3.0.63(zod@4.3.6)
       '@lowdefy/ai-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ai-utils
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1669,7 +1672,7 @@ importers:
   packages/plugins/connections/connection-redis:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       redis:
         specifier: 4.6.11
@@ -1679,7 +1682,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1697,7 +1700,7 @@ importers:
   packages/plugins/connections/connection-sendgrid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@sendgrid/mail':
         specifier: 7.7.0
@@ -1707,7 +1710,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1725,7 +1728,7 @@ importers:
   packages/plugins/connections/connection-smtp:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       nodemailer:
         specifier: 9.0.3
@@ -1735,7 +1738,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1753,7 +1756,7 @@ importers:
   packages/plugins/connections/connection-stripe:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       stripe:
         specifier: 14.5.0
@@ -1763,7 +1766,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -1781,27 +1784,27 @@ importers:
   packages/plugins/connections/connection-test:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
 
   packages/plugins/operators/operators-change-case:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       change-case:
         specifier: 5.4.0
         version: 5.4.0
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1822,17 +1825,17 @@ importers:
   packages/plugins/operators/operators-dayjs:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       dayjs:
         specifier: 1.11.20
         version: 1.11.20
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1853,17 +1856,17 @@ importers:
   packages/plugins/operators/operators-diff:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       deep-diff:
         specifier: 1.0.2
         version: 1.0.2
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1884,13 +1887,13 @@ importers:
   packages/plugins/operators/operators-js:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       intl-messageformat:
         specifier: 11.2.7
@@ -1900,7 +1903,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1921,20 +1924,20 @@ importers:
   packages/plugins/operators/operators-jsonata:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       jsonata:
-        specifier: 1.8.7
-        version: 1.8.7
+        specifier: 1.8.9
+        version: 1.8.9
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1955,17 +1958,17 @@ importers:
   packages/plugins/operators/operators-mql:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       mingo:
         specifier: 7.2.1
         version: 7.2.1
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -1986,17 +1989,17 @@ importers:
   packages/plugins/operators/operators-nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2017,10 +2020,10 @@ importers:
   packages/plugins/operators/operators-uuid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       uuid:
         specifier: 14.0.0
@@ -2030,7 +2033,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2051,10 +2054,10 @@ importers:
   packages/plugins/operators/operators-yaml:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       yaml:
         specifier: 2.9.0
@@ -2064,7 +2067,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2085,7 +2088,7 @@ importers:
   packages/plugins/plugins/plugin-auth0:
     devDependencies:
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2112,19 +2115,19 @@ importers:
         specifier: 3.797.0
         version: 3.797.0
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../blocks/blocks-antd
       '@lowdefy/blocks-files':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../blocks/blocks-files
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       antd:
         specifier: '>=6'
@@ -2137,13 +2140,13 @@ importers:
         version: 18.2.0(react@18.2.0)
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@lowdefy/block-dev':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.8.1
@@ -2182,14 +2185,14 @@ importers:
         specifier: 12.33.0
         version: 12.33.0
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -2210,7 +2213,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2234,14 +2237,14 @@ importers:
         specifier: 7.21.0
         version: 7.21.0(encoding@0.1.13)
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -2257,12 +2260,22 @@ importers:
         version: 28.1.3(@types/node@24.13.2)
 
   packages/plugins/plugins/plugin-next-auth:
+    dependencies:
+      '@lowdefy/helpers':
+        specifier: 5.6.0
+        version: link:../../../utils/helpers
+      jose:
+        specifier: ^6.2.3
+        version: 6.2.3
     devDependencies:
       '@auth/core':
         specifier: 0.41.2
         version: 0.41.2
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.8.1
@@ -2276,6 +2289,9 @@ importers:
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.2)
+      jest-environment-node:
+        specifier: 28.1.3
+        version: 28.1.3
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2286,19 +2302,19 @@ importers:
   packages/plugins/plugins/plugin-reports:
     dependencies:
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../actions/actions-core
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-utils
       '@lowdefy/engine':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../engine
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
       '@takumi-rs/core':
         specifier: 2.5.0
@@ -2329,13 +2345,13 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../build
       '@lowdefy/operators':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../operators
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../operators/operators-js
       '@swc/cli':
         specifier: 0.8.1
@@ -2353,17 +2369,17 @@ importers:
   packages/plugins/websockets/websockets-core:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev-e2e':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/block-dev-e2e
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../../utils/e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -2395,71 +2411,74 @@ importers:
       '@hono/auth-js':
         specifier: 1.1.1
         version: 1.1.1(@auth/core@0.41.2)(hono@4.12.25)(react@18.2.0)
+      '@hono/mcp':
+        specifier: 0.3.0
+        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@4.3.6)
       '@hono/node-server':
         specifier: 2.0.4
         version: 2.0.4(hono@4.12.25)
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-aggrid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-echarts':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-files':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-files
       '@lowdefy/blocks-loaders':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-tiptap':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-tiptap
       '@lowdefy/client':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../client
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/plugin-next-auth':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/plugins/plugin-next-auth
       '@lowdefy/websockets-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/websockets/websockets-core
       '@sentry/browser':
         specifier: 10.57.0
@@ -2514,7 +2533,7 @@ importers:
         version: 8.18.0
     devDependencies:
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 16.1.6
@@ -2553,97 +2572,97 @@ importers:
         specifier: 0.26.0
         version: 0.26.0(hono@4.12.25)
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-aggrid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-echarts':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-tiptap':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-tiptap
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../build
       '@lowdefy/client':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/docs-content':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../docs-content
       '@lowdefy/engine':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../engine
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-change-case':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-change-case
       '@lowdefy/operators-dayjs':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-dayjs
       '@lowdefy/operators-diff':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-diff
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-yaml
       '@lowdefy/plugin-next-auth':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/plugins/plugin-next-auth
       '@lowdefy/websockets-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/websockets/websockets-core
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
@@ -2743,73 +2762,73 @@ importers:
         specifier: 2.0.4
         version: 2.0.4(hono@4.12.25)
       '@lowdefy/actions-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../api
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/block-utils
       '@lowdefy/blocks-aggrid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-antd-x':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-antd-x
       '@lowdefy/blocks-basic':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-echarts':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-tiptap':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/blocks/blocks-tiptap
       '@lowdefy/client':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/connection-mongodb':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../layout
       '@lowdefy/logger':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/logger
       '@lowdefy/node-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../utils/node-utils
       '@lowdefy/operators-js':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/operators/operators-uuid
       '@lowdefy/websockets-core':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../plugins/websockets/websockets-core
       '@tailwindcss/postcss':
         specifier: 4.3.1
@@ -2855,7 +2874,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/build':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 16.1.6
@@ -2879,10 +2898,10 @@ importers:
         specifier: 1.0.41
         version: 1.0.41(zod@4.3.6)
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       ai:
         specifier: 6.0.176
@@ -2895,7 +2914,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -2913,7 +2932,7 @@ importers:
   packages/utils/ajv:
     dependencies:
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../nunjucks
       ajv:
         specifier: 8.20.0
@@ -2944,10 +2963,10 @@ importers:
   packages/utils/block-dev:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../block-utils
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       '@testing-library/dom':
         specifier: 8.19.1
@@ -2990,7 +3009,7 @@ importers:
   packages/utils/block-dev-e2e:
     dependencies:
       '@lowdefy/e2e-utils':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../e2e-utils
       '@playwright/test':
         specifier: 1.59.1
@@ -3006,10 +3025,10 @@ importers:
   packages/utils/block-utils:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       clsx:
         specifier: 2.1.1
@@ -3031,7 +3050,7 @@ importers:
         specifier: 7.29.0
         version: 7.29.0
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -3067,7 +3086,7 @@ importers:
   packages/utils/e2e-utils:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       '@playwright/test':
         specifier: 1.59.1
@@ -3095,10 +3114,10 @@ importers:
   packages/utils/email-templates:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       '@lowdefy/nunjucks':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../nunjucks
       '@react-email/components':
         specifier: 1.0.12
@@ -3114,7 +3133,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../ajv
       '@swc/cli':
         specifier: 0.8.1
@@ -3156,14 +3175,11 @@ importers:
   packages/utils/helpers:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../errors
       intl-messageformat:
         specifier: 11.2.7
         version: 11.2.7
-      lodash.merge:
-        specifier: 4.6.2
-        version: 4.6.2
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -3205,10 +3221,10 @@ importers:
   packages/utils/logger:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       ora:
         specifier: 7.0.1
@@ -3236,10 +3252,10 @@ importers:
   packages/utils/node-utils:
     dependencies:
       '@lowdefy/errors':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../errors
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       fs-extra:
         specifier: 11.3.4
@@ -3264,7 +3280,7 @@ importers:
   packages/utils/nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 5.4.0
+        specifier: 5.6.0
         version: link:../helpers
       dayjs:
         specifier: 1.11.20
@@ -3385,25 +3401,6 @@ packages:
   '@aashutoshrathi/word-wrap@1.2.6':
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
-
-  '@ag-grid-community/client-side-row-model@32.3.9':
-    resolution: {integrity: sha512-/x6gPhxn6c/QQSmDuNf81xrBNc3TKGymmokznvXPPf4tAXeLZn5kF0cW3sGa52XyqZcIsYFQvLkI+pCsX+I4ng==}
-
-  '@ag-grid-community/core@32.3.9':
-    resolution: {integrity: sha512-oZeAEPgaJVMzfKqbAPCyadcN5+iy+tjvhRLqEYJdBxtLgW/s2s0qXcXQvnrz7eUMD3Z7h3BQRVt2h/p0T6Ox/w==}
-
-  '@ag-grid-community/csv-export@32.3.9':
-    resolution: {integrity: sha512-pQuEoOQ8uMy2B9VkLWvBszDz1kLQD98RlmlBnlFneLKMBbt+iN+EHLZTNMFyXLhBLpQ1ZPucVt6SaJ5katRVbw==}
-
-  '@ag-grid-community/react@32.3.9':
-    resolution: {integrity: sha512-W21ELmhbniJQ2LMCytv5lwxz3FHpZp1iMp0Kvm9TXXxhldgDwMqVQa1uePeNBa068KIfXwnst0D2TGD8r0N/iA==}
-    peerDependencies:
-      '@ag-grid-community/core': 32.3.9
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@ag-grid-community/styles@32.3.9':
-    resolution: {integrity: sha512-uPNR5EXeQqAIC0gohmY7CJ97cTIA/JtNSqAUzJ8AdVZcz4dbk9JJIl9DRFUYL+qWhMY+fUSTw2a+Yi6aOGSs8A==}
 
   '@ai-sdk/anthropic@3.0.76':
     resolution: {integrity: sha512-kOuvT9e6PygFvgYpkr4v9gjvmcMPfJp79jaXjeRl9Gpoj2OXdtc3ero7o1ic+tiSBw5IMubxXFO68BCA/axGJA==}
@@ -7555,8 +7552,17 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  ag-charts-types@10.3.9:
-    resolution: {integrity: sha512-drcRiJVencliC8LnRwk4MmeQDNNBg5GzmOoLFihO3/k0CUK0VF/N+2nc7iFozwaNG0btSB9vAhYuJLjqHMtRrQ==}
+  ag-charts-types@11.3.2:
+    resolution: {integrity: sha512-trPGqgGYiTeLgtf9nLuztDYOPOFOLbqHn1g2D99phf7QowcwdX0TPx0wfWG8Hm90LjB8IH+G2s3AZe2vrdAtMQ==}
+
+  ag-grid-community@33.3.2:
+    resolution: {integrity: sha512-9bx0e/+ykOyLvUxHqmdy0cRVANH6JAtv0yZdnBZEXYYqBAwN+G5a4NY+2I1KvoOCYzbk8SnStG7y4hCdVAAWOQ==}
+
+  ag-grid-react@33.3.2:
+    resolution: {integrity: sha512-5bv4JIJvGov23sduIUIyQTqpa/qhoQrRkQm5pFOQb7RMwusfx6xBPrkLwIIlCJiQ8g0OOinxWzZ2kQ2Zml6tLw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -10871,8 +10877,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  jsonata@1.8.7:
-    resolution: {integrity: sha512-tOW2/hZ+nR2bcQZs+0T62LVe5CHaNa3laFFWb/262r39utN6whJGBF7IR2Wq1QXrDbhftolk5gggW8uUJYlBTQ==}
+  jsonata@1.8.9:
+    resolution: {integrity: sha512-Vk6QF2zjeprCS6FXCK/3yTaTbB3wxh6C4Adp4Gt4FJ3e53kGKRLwfTLDWVWfwAHEsVYegsQRgBDUl8TdFSt7Qg==}
     engines: {node: '>= 8'}
 
   jsonc-parser@3.2.0:
@@ -12527,10 +12533,6 @@ packages:
 
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
-    engines: {node: '>=6'}
-
-  punycode@2.1.1:
-    resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
 
   punycode@2.3.0:
@@ -14318,30 +14320,6 @@ snapshots:
 
   '@aashutoshrathi/word-wrap@1.2.6': {}
 
-  '@ag-grid-community/client-side-row-model@32.3.9':
-    dependencies:
-      '@ag-grid-community/core': 32.3.9
-      tslib: 2.8.1
-
-  '@ag-grid-community/core@32.3.9':
-    dependencies:
-      ag-charts-types: 10.3.9
-      tslib: 2.8.1
-
-  '@ag-grid-community/csv-export@32.3.9':
-    dependencies:
-      '@ag-grid-community/core': 32.3.9
-      tslib: 2.8.1
-
-  '@ag-grid-community/react@32.3.9(@ag-grid-community/core@32.3.9)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@ag-grid-community/core': 32.3.9
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  '@ag-grid-community/styles@32.3.9': {}
-
   '@ai-sdk/anthropic@3.0.76(zod@4.3.6)':
     dependencies:
       '@ai-sdk/provider': 3.0.10
@@ -15783,6 +15761,14 @@ snapshots:
       pkce-challenge: 5.0.1
       zod: 3.25.76
 
+  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@4.3.6)':
+    dependencies:
+      '@modelcontextprotocol/sdk': 1.29.0(zod@4.3.6)
+      hono: 4.12.25
+      hono-rate-limiter: 0.5.3(hono@4.12.25)
+      pkce-challenge: 5.0.1
+      zod: 4.3.6
+
   '@hono/node-server@1.19.14(hono@4.12.25)':
     dependencies:
       hono: 4.12.25
@@ -16114,6 +16100,28 @@ snapshots:
       raw-body: 3.0.2
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@modelcontextprotocol/sdk@1.29.0(zod@4.3.6)':
+    dependencies:
+      '@hono/node-server': 1.19.14(hono@4.12.25)
+      ajv: 8.20.0
+      ajv-formats: 3.0.1(ajv@8.20.0)
+      content-type: 1.0.5
+      cors: 2.8.6
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.8
+      express: 5.2.1
+      express-rate-limit: 8.5.2(express@5.2.1)
+      hono: 4.12.25
+      jose: 6.2.3
+      json-schema-typed: 8.0.2
+      pkce-challenge: 5.0.1
+      raw-body: 3.0.2
+      zod: 4.3.6
+      zod-to-json-schema: 3.25.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -19389,7 +19397,18 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  ag-charts-types@10.3.9: {}
+  ag-charts-types@11.3.2: {}
+
+  ag-grid-community@33.3.2:
+    dependencies:
+      ag-charts-types: 11.3.2
+
+  ag-grid-react@33.3.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      ag-grid-community: 33.3.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
 
   agent-base@6.0.2:
     dependencies:
@@ -23506,7 +23525,7 @@ snapshots:
 
   json5@2.2.3: {}
 
-  jsonata@1.8.7: {}
+  jsonata@1.8.9: {}
 
   jsonc-parser@3.2.0: {}
 
@@ -25392,8 +25411,6 @@ snapshots:
 
   punycode.js@2.3.1: {}
 
-  punycode@2.1.1: {}
-
   punycode@2.3.0: {}
 
   punycode@2.3.1: {}
@@ -26743,7 +26760,7 @@ snapshots:
 
   tr46@3.0.0:
     dependencies:
-      punycode: 2.3.0
+      punycode: 2.3.1
 
   tr46@5.1.1:
     dependencies:
@@ -27065,7 +27082,7 @@ snapshots:
 
   uri-js@4.4.1:
     dependencies:
-      punycode: 2.1.1
+      punycode: 2.3.1
 
   url-join@4.0.1: {}
 
@@ -27562,6 +27579,10 @@ snapshots:
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
       zod: 3.25.76
+
+  zod-to-json-schema@3.25.2(zod@4.3.6):
+    dependencies:
+      zod: 4.3.6
 
   zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:
