@@ -184,7 +184,18 @@ test('unknown report property emits an additionalProperties warning', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn).toHaveBeenCalledWith(
-    'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".'
+    'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "exclude", "pageBreakBefore" and "sheetName".'
+  );
+});
+
+test('report rendering is no longer an accepted property', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'p1', type: 'PageHeaderMenu', report: { rendering: 'chromium' } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "exclude", "pageBreakBefore" and "sheetName".'
   );
 });
 

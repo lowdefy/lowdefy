@@ -21,7 +21,7 @@ import objectToThemeVars from './objectToThemeVars.js';
 
 // Compiles build/reports/styles.css — the app's Tailwind + custom CSS, resolved
 // statically so the reports plugin's Html renderer can apply class-based styles.
-// The shipped client bundle is not readable in dev or on Vercel (see design §5),
+// The shipped client bundle is not readable in dev or on Vercel,
 // so the stylesheet must be a build artifact. build/ is the one directory present
 // in dev, Docker, and Vercel alike, and the plugin reads it with
 // readConfigFile('reports/styles.css').
@@ -65,12 +65,12 @@ ${userStylesImport}${themeBlock}@source "../lowdefy-build/tailwind/*.html";
 
   const compiler = await compile(inputCss, { base, onDependency: () => {} });
 
-  const rootSources =
-    compiler.root === 'none'
-      ? []
-      : compiler.root === null
-        ? [{ base, pattern: '**/*', negated: false }]
-        : [{ ...compiler.root, negated: false }];
+  let rootSources = [];
+  if (compiler.root === null) {
+    rootSources = [{ base, pattern: '**/*', negated: false }];
+  } else if (compiler.root !== 'none') {
+    rootSources = [{ ...compiler.root, negated: false }];
+  }
   const scanner = new Scanner({ sources: rootSources.concat(compiler.sources) });
 
   const candidates = compiler.features & Features.Utilities ? scanner.scan() : [];

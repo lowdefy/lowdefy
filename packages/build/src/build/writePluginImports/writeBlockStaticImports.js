@@ -38,22 +38,19 @@ async function collectStaticBlocks({ components, context }) {
   return staticBlocks;
 }
 
-// Emits build/plugins/blocksStatic.js — static imports of the report renderers
+// Emits build/plugins/blocksStatic.js: static imports of the report renderers
 // (`{package}/static`) for every used block whose meta declares `static: true`.
 // A generated file of static imports is what serverless file tracing can follow;
 // a runtime-resolved import() would leave the renderers out of the deployed
 // function.
 //
-// The file is always written (apiContext imports it statically, so it must
-// resolve for every app), but its content is gated on the reports plugin: only
-// an app that installs it imports the renderers. That preserves per-app
-// tree-shaking twice over — a non-reports app never pulls a renderer server-side,
-// and a reports app with no ECharts never imports echarts.
+// Written only when the reports plugin is declared: the file is imported by
+// reportsRuntime.js, which itself only imports it for a reports app, so a
+// non-reports app never pulls a renderer server-side, and a reports app with no
+// ECharts never imports echarts.
 async function writeBlockStaticImports({ components, context }) {
-  const staticBlocks = isReportsPluginDeclared({ context })
-    ? await collectStaticBlocks({ components, context })
-    : [];
-
+  if (!isReportsPluginDeclared({ context })) return;
+  const staticBlocks = await collectStaticBlocks({ components, context });
   await context.writeBuildArtifact(
     'plugins/blocksStatic.js',
     generateImportFile({ imports: staticBlocks, importPath: 'static' })

@@ -22,15 +22,18 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import buildBlock from './buildBlock/buildBlock.js';
 import buildSubscriptions from './buildSubscriptions.js';
 import collectExceptions from '../../utils/collectExceptions.js';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import createPageContext from './createPageContext.js';
+import isReportsPluginDeclared from '../writePluginImports/isReportsPluginDeclared.js';
 import validateId from '../../utils/validateId.js';
-import createCounter from '../../utils/createCounter.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    collectExceptions(context, new ConfigError(`Page id missing at page ${index}.`, { configKey }));
+    collectExceptions(
+      context,
+      new ConfigError(`Page id missing at page ${index}.`, { configKey })
+    );
     return { failed: true };
   }
   if (!type.isString(page.id)) {
@@ -45,32 +48,22 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     checkDuplicatePageId({ id: page.id, configKey });
   }
   page.pageId = page.id;
-  const requests = [];
-  const requestActionRefs = [];
-  const shortcutRefs = [];
-  const sheetNameRefs = [];
   // Extract subscriptions before block building — validateBlock rejects the
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
-  const pageContext = {
+  const pageContext = createPageContext({
     auth: page.auth,
-    blockIdCounter: createCounter(),
     callApiActionRefs: context.callApiActionRefs ?? [],
-    websocketActionRefs: context.websocketActionRefs ?? [],
-    dynamicBlockRefs: context.dynamicBlockRefs ?? [],
-    checkDuplicateRequestId: createCheckDuplicateId({
-      message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
-    }),
     context,
-    pageId: page.pageId,
-    requests,
-    requestActionRefs,
-    shortcutRefs,
-    sheetNameRefs,
+    dynamicBlockRefs: context.dynamicBlockRefs ?? [],
     linkActionRefs: context.linkActionRefs,
+    pageBlock: page,
+    pageId: page.pageId,
     typeCounters: context.typeCounters,
-  };
+    websocketActionRefs: context.websocketActionRefs ?? [],
+  });
+  const { reportRefs, requests, requestActionRefs, sheetNameRefs, shortcutRefs } = pageContext;
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
@@ -115,6 +108,18 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
       seenShortcuts[shortcut] = { blockId, eventId };
     }
   });
+
+  // Report options do nothing without the plugin that reads them, so a page that
+  // carries them in an app that never declared it is almost certainly a mistake.
+  // One warning per page, on the first block that carries the key.
+  if (reportRefs.length > 0 && !isReportsPluginDeclared({ context })) {
+    context.handleWarning(
+      new ConfigWarning(
+        `Page "${page.pageId}" uses "report" config but "@lowdefy/plugin-reports" is not declared in plugins.`,
+        { configKey: reportRefs[0].configKey }
+      )
+    );
+  }
 
   // Warn on duplicate report sheet names within the page — the plugin
   // de-duplicates at render, but a collision usually signals a config mistake.

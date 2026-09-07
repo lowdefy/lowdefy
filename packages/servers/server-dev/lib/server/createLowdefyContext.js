@@ -22,9 +22,6 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
-import blocksStatic from '../../build/plugins/blocksStatic.js';
-import clientJsMap from '../../build/plugins/operators/clientJsMap.js';
-import clientOperators from '../../build/plugins/operators/client.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
@@ -32,13 +29,13 @@ import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
 import i18nConfig from '../build/i18n.js';
-import icons from '../../build/plugins/icons.js';
 import logRequest from './log/logRequest.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import reportsRuntime from '../../build/plugins/reportsRuntime.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -82,12 +79,9 @@ async function createLowdefyContext({ c }) {
     rid: uuid(),
     agents,
     appMeta,
-    // Statically imported so the reports capability can reach the renderers,
-    // client operators, and icons (see design core change 2, point 6).
-    blocksStatic,
-    clientJsMap,
-    clientOperators,
-    icons,
+    // The build gates this artifact on the reports plugin.
+    reportsRuntime,
+    publicDirectory: path.join(process.cwd(), 'public'),
     buildDirectory,
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
     config,

@@ -42,6 +42,9 @@ async function runDetachedEndpoint(context, { endpointId, payload }) {
   // was already authorized at the transport layer), not re-gated on a user session.
   context.session = undefined;
   context.user = undefined;
+  // The explicit marker request resolvers with app access read to tell a system
+  // run from an anonymous visitor (both have no user).
+  context.system = true;
   context.authorize = createAuthorize({ session: undefined, system: true });
 
   const routineContext = {

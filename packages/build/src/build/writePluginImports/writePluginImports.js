@@ -30,6 +30,7 @@ import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
 import writeBlockStaticImports from './writeBlockStaticImports.js';
+import writeReportsRuntime from './writeReportsRuntime.js';
 import writeReportStyles from './writeReportStyles.js';
 import isReportsPluginDeclared from './isReportsPluginDeclared.js';
 
@@ -50,13 +51,12 @@ async function writePluginImports({ components, context }) {
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
 
-  // Always written so apiContext's static import resolves for every app; its
-  // content (the report renderer imports) is gated inside the step.
+  // The servers import reportsRuntime.js statically, so it is always written. The
+  // renderer registry and the report stylesheet it stands in front of are only
+  // produced when the reports plugin is declared, so an app that never installs
+  // it pays for neither.
+  await writeReportsRuntime({ context });
   await writeBlockStaticImports({ components, context });
-
-  // The report stylesheet is read via readConfigFile (null when absent), never
-  // statically imported, so it is compiled only when the plugin is declared —
-  // an app that does not install it pays no Tailwind compile.
   if (isReportsPluginDeclared({ context })) {
     await writeReportStyles({ components, context });
   }

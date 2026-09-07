@@ -124,7 +124,7 @@ test('writes an empty registry when there are no block imports', async () => {
   expect(mockImportPluginModule).not.toHaveBeenCalled();
 });
 
-test('writes an empty registry without loading metas when the reports plugin is not declared', async () => {
+test('writes nothing and loads no metas when the reports plugin is not declared', async () => {
   const context = createContext();
   context.plugins = [];
   await writeBlockStaticImports({
@@ -138,9 +138,6 @@ test('writes an empty registry without loading metas when the reports plugin is 
     context,
   });
 
-  const [filePath, content] = context.writeBuildArtifact.mock.calls[0];
-  expect(filePath).toBe('plugins/blocksStatic.js');
-  expect(content).not.toContain('/static');
-  // Content is gated on the plugin — no renderer is pulled into a non-reports app.
+  expect(context.writeBuildArtifact).not.toHaveBeenCalled();
   expect(mockImportPluginModule).not.toHaveBeenCalled();
 });

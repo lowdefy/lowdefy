@@ -32,6 +32,9 @@ const auth = {
 };
 
 const context = testContext({ logger });
+// The report tests below exercise report config; declaring the plugin keeps the
+// "plugin not declared" warning out of them.
+context.plugins = [{ name: '@lowdefy/plugin-reports', version: '5.4.0' }];
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -1062,19 +1065,92 @@ test('does not warn on distinct report sheet names within a page', () => {
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
-test('throws on the reserved chromium rendering mode', () => {
+test('warns once per page when report config is used without the reports plugin declared', () => {
   const components = {
     pages: [
       {
         id: 'page_1',
         type: 'Container',
         auth,
-        report: { rendering: 'chromium' },
+        report: { title: 'Sales' },
+        blocks: [
+          { id: 'grid_1', type: 'AgGrid', report: { sheetName: 'Sales' } },
+          { id: 'grid_2', type: 'AgGrid', report: { exclude: true } },
+        ],
+      },
+    ],
+  };
+  const undeclaredContext = testContext({ logger });
+  buildPages({ components, context: undeclaredContext });
+  expect(mockLogWarn).toHaveBeenCalledTimes(1);
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Page "page_1" uses "report" config but "@lowdefy/plugin-reports" is not declared in plugins.'
+  );
+});
+
+test('does not warn about the plugin when report config is used and the plugin is declared', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        report: { title: 'Sales' },
+        blocks: [{ id: 'grid_1', type: 'AgGrid', report: { sheetName: 'Sales' } }],
+      },
+    ],
+  };
+  buildPages({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('warns when page-level report options are placed on a nested block', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [{ id: 'card_1', type: 'Card', report: { orientation: 'landscape' } }],
+      },
+    ],
+  };
+  buildPages({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Report option(s) "orientation" on block "card_1" on page "page_1" apply to the page block and are ignored on a block inside the page.'
+  );
+});
+
+test('warns when block-level report options are placed on the page block', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        report: { pageBreakBefore: true },
         blocks: [],
       },
     ],
   };
+  buildPages({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Report option(s) "pageBreakBefore" on block "page_1" on page "page_1" apply to blocks inside the page and are ignored on the page block.'
+  );
+});
+
+test('throws on a report sheetName Excel would reject', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [{ id: 'grid_1', type: 'AgGrid', report: { sheetName: 'History' } }],
+      },
+    ],
+  };
   expect(() => buildPages({ components, context })).toThrow(
-    'Report "rendering" on block "page_1" on page "page_1" is reserved and not yet supported (received "chromium").'
+    'Report "sheetName" on block "grid_1" on page "page_1" may not be "History", which Excel reserves (received "History").'
   );
 });

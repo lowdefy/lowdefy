@@ -15,25 +15,71 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-// The report key's shape is validated by the lowdefy schema. This step covers
-// what the schema cannot: a hard reject of the reserved chromium rendering mode,
-// and collecting sheet names so buildPage can warn on duplicates within a page.
-function validateReport(block, pageContext) {
-  if (type.isNone(block.report)) return;
-  const configKey = block['~k'];
+// Options that describe the document, read from the page block only.
+const PAGE_LEVEL_KEYS = ['title', 'header', 'footer', 'size', 'orientation'];
+// Options that describe one block's place in the document, never the page.
+const BLOCK_LEVEL_KEYS = ['exclude', 'pageBreakBefore', 'sheetName'];
 
-  if (!type.isNone(block.report.rendering)) {
+// Excel refuses this worksheet name outright (case-insensitively); ExcelJS
+// throws when asked to create it.
+const RESERVED_SHEET_NAME = 'history';
+
+function validateSheetName({ sheetName, blockId, pageId, configKey }) {
+  if (sheetName.startsWith("'") || sheetName.endsWith("'")) {
     throw new ConfigError(
-      `Report "rendering" on block "${block.blockId}" on page "${pageContext.pageId}" is reserved and not yet supported (received ${JSON.stringify(
-        block.report.rendering
+      `Report "sheetName" on block "${blockId}" on page "${pageId}" may not begin or end with an apostrophe (received ${JSON.stringify(
+        sheetName
       )}).`,
       { configKey }
     );
   }
+  if (sheetName.toLowerCase() === RESERVED_SHEET_NAME) {
+    throw new ConfigError(
+      `Report "sheetName" on block "${blockId}" on page "${pageId}" may not be "History", which Excel reserves (received ${JSON.stringify(
+        sheetName
+      )}).`,
+      { configKey }
+    );
+  }
+}
 
-  if (!type.isNone(block.report.sheetName)) {
+// The report key's shape is validated by the lowdefy schema. This step covers
+// what the schema cannot see: which block the key sits on, the worksheet name
+// rules Excel enforces beyond its character set, and collecting references for
+// the page-level checks buildPage runs once every block is built.
+function validateReport(block, pageContext) {
+  if (type.isNone(block.report)) return;
+  const { pageId } = pageContext;
+  const configKey = block['~k'];
+  const isPageBlock = block === pageContext.pageBlock;
+
+  pageContext.reportRefs.push({ blockId: block.blockId, configKey });
+
+  const misplacedKeys = (isPageBlock ? BLOCK_LEVEL_KEYS : PAGE_LEVEL_KEYS).filter(
+    (key) => !type.isNone(block.report[key])
+  );
+  if (misplacedKeys.length > 0) {
+    const where = isPageBlock ? 'the page block' : 'a block inside the page';
+    const scope = isPageBlock ? 'apply to blocks inside the page' : 'apply to the page block';
+    pageContext.context.handleWarning(
+      new ConfigWarning(
+        `Report option(s) ${misplacedKeys.map((key) => `"${key}"`).join(', ')} on block "${
+          block.blockId
+        }" on page "${pageId}" ${scope} and are ignored on ${where}.`,
+        { configKey }
+      )
+    );
+  }
+
+  if (!isPageBlock && type.isString(block.report.sheetName)) {
+    validateSheetName({
+      sheetName: block.report.sheetName,
+      blockId: block.blockId,
+      pageId,
+      configKey,
+    });
     pageContext.sheetNameRefs.push({
       sheetName: block.report.sheetName,
       blockId: block.blockId,

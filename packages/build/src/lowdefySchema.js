@@ -1217,12 +1217,6 @@ export default {
                 enum: 'Block "report.orientation" should be one of "portrait" or "landscape".',
               },
             },
-            rendering: {
-              type: 'string',
-              errorMessage: {
-                type: 'Block "report.rendering" should be a string.',
-              },
-            },
             exclude: {
               type: 'boolean',
               errorMessage: {
@@ -1250,7 +1244,7 @@ export default {
           errorMessage: {
             type: 'Block "report" should be an object.',
             additionalProperties:
-              'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "rendering", "exclude", "pageBreakBefore" and "sheetName".',
+              'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "exclude", "pageBreakBefore" and "sheetName".',
           },
         },
       },
@@ -2230,8 +2224,7 @@ export default {
             '~l': {},
             defaultLocale: {
               type: 'string',
-              description:
-                'BCP 47 locale code used when no user preference or browser match is available.',
+              description: 'BCP 47 locale code used when no user preference or browser match is available.',
             },
             locales: {
               type: 'array',
@@ -2254,8 +2247,7 @@ export default {
                   },
                   antd: {
                     type: 'string',
-                    description:
-                      'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
+                    description: 'Ant Design locale module name (e.g. "en_US"). Loaded from antd/locale/{name}.',
                   },
                   dayjs: {
                     type: 'string',
@@ -2266,8 +2258,7 @@ export default {
             },
             messages: {
               type: 'object',
-              description:
-                'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
+              description: 'Translation messages keyed by locale code. Each locale maps to an object of { key: ICU MessageFormat string }.',
               additionalProperties: {
                 type: 'object',
               },
