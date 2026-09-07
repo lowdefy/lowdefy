@@ -15,14 +15,13 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import { isBlank } from '../../static.utils.js';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
 /**
  * Format the value exactly as antd's Statistic does so the PDF matches the
  * page: group the integer part, pad/truncate decimals to `precision`
- * (truncation, not rounding — antd's default formatter slices), then wrap in
- * `prefix`/`suffix`. A non-numeric value passes through unformatted.
+ * (truncation, not rounding, because antd's default formatter slices), then
+ * wrap in `prefix`/`suffix`. A non-numeric value passes through unformatted.
  */
 function formatValue({
   value,
@@ -55,14 +54,14 @@ function formatValue({
   return `${pre}${body}${suf}`;
 }
 
-/** Statistic → `stat`: `title` label and the antd-formatted display value. */
+/** Statistic → `stat`: `title` label (markup flattened) and the antd-formatted display value. */
 export const Statistic = {
   toReport: ({ block }) => {
     const { title } = block.properties;
-    const label = isBlank(title) ? '' : String(title);
+    const label = isBlank(title) ? '' : htmlToText(title);
     const value = formatValue(block.properties);
-    // A stat with neither label nor value is an empty box — skip it, the way the
-    // other renderers return null for empty content.
+    // A stat with neither label nor value is an empty box, so skip it the way
+    // the other renderers return null for empty content.
     if (label === '' && value === '') return null;
     return { kind: 'stat', label, value };
   },

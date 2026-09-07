@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-import { isBlank } from '../../static.utils.js';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
 /**
- * Box → a `stack` of its children. The Box block shows `properties.content`
- * when set instead of its child area, so the report mirrors that: a content
- * string becomes a single `text`, otherwise the walked children pass through as
- * a stack. An empty, content-less box yields no node.
+ * Box → a `stack` of its `content` area. The Box block shows
+ * `properties.content` when set instead of its child area, so the report
+ * mirrors that: a content string becomes a single `text` (markup flattened),
+ * otherwise the walked area passes through as a stack. An empty, content-less
+ * box yields no node.
  */
 export const Box = {
-  toReport: ({ block, children }) => {
+  toReport: ({ block, areas = {} }) => {
     const content = block.properties?.content;
-    if (!isBlank(content)) return { kind: 'text', text: String(content) };
-    const nodes = children ?? [];
+    if (!isBlank(content)) return { kind: 'text', text: htmlToText(content) };
+    const nodes = areas.content ?? [];
     if (nodes.length === 0) return null;
     return { kind: 'stack', children: nodes };
   },

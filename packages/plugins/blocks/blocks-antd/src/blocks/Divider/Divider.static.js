@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-/** Divider → `divider`, a horizontal rule; a title becomes a small heading
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
+
+/**
+ * Divider → `divider`, a horizontal rule; a title becomes a small heading
  * below the rule, labelling the section that follows (antd renders the title
- * on the line itself — the closest document equivalent). */
+ * on the line itself, and this is the closest document equivalent).
+ */
 export const Divider = {
   toReport: ({ block }) => {
     const title = block.properties?.title;
-    if (title == null || title === '') return { kind: 'divider' };
-    return [{ kind: 'divider' }, { kind: 'heading', text: String(title), level: 4 }];
+    if (isBlank(title)) return { kind: 'divider' };
+    return [{ kind: 'divider' }, { kind: 'heading', text: htmlToText(title), level: 4 }];
   },
 };

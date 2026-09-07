@@ -16,9 +16,11 @@
 
 /**
  * Static report renderers for blocks-antd. Each export is keyed by block type
- * and exposes `{ toReport }`, mapping a block's evaluated properties to report
- * IR. This entry must stay free of React and antd so the server can load the
- * registry without a browser runtime; renderers emit plain IR object literals.
+ * and exposes `{ toReport }`, mapping a block's evaluated properties (and, for
+ * containers, its walked `areas`) to report IR. This entry must stay free of
+ * React and antd so the server can load the registry without a browser
+ * runtime; renderers emit plain IR object literals, never pdfmake or ExcelJS
+ * objects. Shared coercions come from `@lowdefy/block-utils/report`.
  */
 
 export { Title } from './blocks/Title/Title.static.js';

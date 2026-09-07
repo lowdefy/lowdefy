@@ -20,11 +20,10 @@ import path from 'path';
 // Importing the entry proves it resolves in Node without a browser runtime; if
 // any renderer pulled in React or echarts-for-react this import would fail.
 import * as staticRenderers from './static.js';
+import * as metas from './metas.js';
 
 const SRC_DIR = path.join(process.cwd(), 'src');
 
-// Every co-located `*.static.js` renderer file (excludes the aggregator, the
-// shared utils, and any test).
 function staticRendererFiles(dir) {
   const found = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -38,10 +37,18 @@ function staticRendererFiles(dir) {
   return found;
 }
 
-test('the static entry exports a toReport renderer for each supported block type', () => {
-  const types = ['EChart'];
-  types.forEach((type) => {
+const staticTypes = Object.keys(metas).filter((name) => metas[name].static === true);
+
+test('every meta declaring static: true has a toReport renderer on the static entry', () => {
+  expect(staticTypes.length).toBeGreaterThan(0);
+  staticTypes.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
+  });
+});
+
+test('every static entry export has a meta declaring static: true', () => {
+  Object.keys(staticRenderers).forEach((type) => {
+    expect(metas[type]?.static).toBe(true);
   });
 });
 
@@ -50,6 +57,7 @@ test('no renderer file imports React, echarts-for-react, or a block component', 
     /from\s+['"]react['"]/,
     /from\s+['"]react-dom['"]/,
     /from\s+['"]echarts-for-react['"]/,
+    /from\s+['"]@lowdefy\/block-utils['"]/,
     /from\s+['"][./]*\/EChart\.js['"]/,
   ];
   staticRendererFiles(SRC_DIR).forEach((file) => {

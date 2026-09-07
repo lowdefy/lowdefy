@@ -16,10 +16,11 @@
 
 /**
  * Static report renderers for blocks-basic. Each export is keyed by block type
- * and exposes `{ toReport }`, mapping a block's evaluated properties to report
- * IR. This entry must stay free of React at load time so the server can load the
- * registry without a browser runtime; renderers emit plain IR object literals.
- * (The Icon renderer imports React lazily, on the first icon it draws.)
+ * and exposes `{ toReport }`, mapping a block's evaluated properties (and, for
+ * containers, its walked `areas`) to report IR. This entry must stay free of
+ * React at load time so the server can load the registry without a browser
+ * runtime; renderers emit plain IR object literals, never pdfmake or ExcelJS
+ * objects. (The Icon renderer imports React lazily, on the first icon it draws.)
  */
 
 export { Img } from './blocks/Img/Img.static.js';

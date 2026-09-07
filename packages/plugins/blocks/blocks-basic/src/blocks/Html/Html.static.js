@@ -15,124 +15,40 @@
 */
 
 /**
- * Html / DangerousHtml → `svg`, rendered by takumi.
+ * Html / DangerousHtml → `svg`.
  *
- * Reports use Html blocks for custom components — KPI tiles, badges, styled
- * headings — so the report renders the markup rather than skipping it.
- * `@takumi-rs/helpers` `fromHtml` parses the string (extracting any embedded
- * `<style>` sheets) and takumi's Rust engine lays it out — block flow,
- * flexbox, CSS classes, CSS variables — and emits a self-contained SVG with
- * text as paths, which flows through the same `svg` IR node as charts.
+ * Reports use Html blocks for custom components (KPI tiles, badges, styled
+ * headings), so the report renders the markup rather than skipping it. The
+ * layout engine belongs to the reports plugin, which hands it in as
+ * `context.renderHtml`: this renderer only decides the box (the column width
+ * and the block's own style height) and reports what the engine cannot draw.
+ * Keeping the engine out of this package means an app that never renders a
+ * report installs no native layout binary for its Html blocks.
  *
  * `DangerousHtml` shares this renderer: sanitization is a client concern, so
- * the report renders the same string the page would (its `DOMPurifyOptions`
- * property has no server-side meaning).
- *
- * NOTE: `toReport` is async here — takumi's whole API is async (`renderSvg`
- * and `registerFont` both return promises; verified against 2.5.0's native
- * bindings and its wasm fallback, neither of which exposes a sync render), so
- * the walker must await renderer results.
+ * the report renders the same string the page would.
  */
 
-import { isBlank, styleValue } from '../../static.utils.js';
+import { type } from '@lowdefy/helpers';
+import { isBlank, styleValue, toPoints } from '@lowdefy/block-utils/report';
 
-// takumi (`@takumi-rs/core`) is a native Rust binding, and its platform binaries
-// are optionalDependencies — an unsupported platform installs blocks-basic fine
-// but has no binding. Import it lazily (as Icon does with React) so loading this
-// module at server boot never touches takumi; only rendering an Html block does,
-// and that failure is caught per block.
-async function loadTakumi() {
-  const [{ Renderer }, { fromHtml }] = await Promise.all([
-    import('@takumi-rs/core'),
-    import('@takumi-rs/helpers/html'),
-  ]);
-  return { Renderer, fromHtml };
-}
-
-// Fallback when the walker gives no column geometry (e.g. a direct unit-test
-// call): A4 portrait content width, matching the reports walker default.
-const DEFAULT_WIDTH = 515.28;
-
-// The report document font family, registered from `context.fonts` so Html
-// text renders in the same face as document text. Named here rather than
-// imported so `blocks-basic` stays free of a `@lowdefy/reports` dependency.
-const FONT_FAMILY = 'Roboto';
-
-// `context.fonts` key → the CSS weight and style the face answers to, so
-// `font-weight: 700` and `font-style: italic` in the markup resolve.
-const FONT_FACES = [
-  ['regular', 400, 'normal'],
-  ['bold', 700, 'normal'],
-  ['italic', 400, 'italic'],
-  ['boldItalic', 700, 'italic'],
-];
-
-// takumi has no table layout algorithm — `<table>` cells run on inline even
-// with `display: table` — so the block renders, mislaid out, with this
-// warning naming the config-side fix.
+// The html engine has no table layout algorithm, so `<table>` cells run on
+// inline. The block renders, mislaid out, with this warning naming the fix.
 const TABLE_PATTERN = /<table[\s/>]/i;
 
-// takumi never fetches an image: its `ImageSource` takes caller-supplied bytes
-// (2.5.0) and this renderer registers none, so an `<img>` draws nothing and takes
-// no space — a logo in a tile just disappears. Warn rather than let it vanish
-// silently, and name the block that does load images.
+// The html engine never fetches an image, so an `<img>` draws nothing and takes
+// no space. Warn rather than let a logo vanish silently.
 const IMG_PATTERN = /<img[\s/>]/i;
 
-const isNumber = (value) => typeof value === 'number' && Number.isFinite(value);
+let missingRendererWarned = false;
 
-// One renderer per process: constructing it initialises the Rust engine, and
-// takumi caches parsed stylesheets and rasters on the instance, so every Html
-// block in every report reuses one parse of the app's compiled CSS.
-let renderer;
-let fromHtmlFn;
-let fontsRegistered;
-
-async function getRenderer() {
-  if (!renderer) {
-    const { Renderer, fromHtml } = await loadTakumi();
-    renderer = new Renderer();
-    fromHtmlFn = fromHtml;
-  }
-  return renderer;
-}
-
-/**
- * Register the report fonts with the shared renderer, once. Without fonts
- * takumi has no faces to shape text with, so this must resolve before the
- * first render; with none supplied it stays unregistered and a later render
- * that does carry fonts registers them.
- */
-async function registerFonts(fonts) {
-  if (fontsRegistered) return fontsRegistered;
-  if (!fonts) return undefined;
-  const engine = await getRenderer();
-  fontsRegistered = Promise.all(
-    FONT_FACES.filter(([key]) => fonts[key]).map(([key, weight, style]) =>
-      engine.registerFont({ name: FONT_FAMILY, data: fonts[key], weight, style })
-    )
-  ).catch((error) => {
-    // Forget the failure. A cached rejected promise would be handed to every
-    // later block in every later report, so one transient failure here would
-    // skip every Html block for the life of the process. Rethrow so this block
-    // still reports it.
-    fontsRegistered = undefined;
-    throw error;
-  });
-  return fontsRegistered;
-}
-
-/** A CSS length as points, or undefined when it names no number. */
-function toPoints(value) {
-  if (isNumber(value)) return value;
-  if (typeof value !== 'string') return undefined;
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
-}
-
-/** The height takumi measured, read off the SVG root it just wrote. */
-function measuredHeight(svg) {
-  const match = /^<svg[^>]*\sheight="([\d.]+)"/.exec(svg);
-  return match ? Number.parseFloat(match[1]) : undefined;
+function warnMissingRenderer({ block, context }) {
+  if (missingRendererWarned) return;
+  missingRendererWarned = true;
+  context?.logger?.warn?.(
+    { blockId: block.blockId },
+    `${block.type} block '${block.blockId}' skipped: the reports plugin supplied no html renderer (context.renderHtml). Html blocks render only through @lowdefy/plugin-reports.`
+  );
 }
 
 const toReport = async ({ block, layout, context }) => {
@@ -140,58 +56,38 @@ const toReport = async ({ block, layout, context }) => {
   if (isBlank(html)) return null;
   const source = String(html);
 
+  if (!type.isFunction(context?.renderHtml)) {
+    warnMissingRenderer({ block, context });
+    return null;
+  }
+
   if (TABLE_PATTERN.test(source)) {
-    context?.logger?.warn?.(
+    context.logger?.warn?.(
       { blockId: block.blockId },
-      `${block.type} block '${block.blockId}' contains <table> markup, which reports cannot lay out — cells run on inline. Use flex markup, or a table block, for tabular report content.`
+      `${block.type} block '${block.blockId}' contains <table> markup, which reports cannot lay out: cells run on inline. Use flex markup, or a table block, for tabular report content.`
     );
   }
 
   if (IMG_PATTERN.test(source)) {
-    context?.logger?.warn?.(
+    context.logger?.warn?.(
       { blockId: block.blockId },
-      `${block.type} block '${block.blockId}' contains <img> markup, which reports cannot load — the image draws nothing and takes no space. Use an Img block for report images.`
+      `${block.type} block '${block.blockId}' contains <img> markup, which reports cannot load: the image draws nothing and takes no space. Use an Img block for report images.`
     );
   }
 
-  const width = isNumber(layout?.width) ? layout.width : DEFAULT_WIDTH;
-  // The block's own style height wins over auto-measurement, and is given to
-  // takumi so the markup lays out in the box the page would give it.
+  const width = layout.width;
+  // The block's own style height wins over auto-measurement, so tiles in a row
+  // line up even when one label wraps.
   const styleHeight = toPoints(styleValue(block.style, 'height'));
 
-  // A block height sizes the canvas, but takumi's root element stays
-  // content-height inside it, so `height: 100%` in the markup has no definite
-  // parent to resolve against and a bordered tile ends up shorter than the box
-  // it was given. Wrapping the markup in a column of that exact height gives it
-  // one, which is what an author setting a height means: tiles in a row line up
-  // even when one of their labels wraps.
-  const markup =
-    styleHeight === undefined
-      ? source
-      : `<div style="display: flex; flex-direction: column; width: ${width}px; height: ${styleHeight}px">${source}</div>`;
-
   try {
-    await registerFonts(context?.fonts);
-    const engine = await getRenderer();
-    const { node, stylesheets } = fromHtmlFn(markup);
-    const svg = await engine.renderSvg(node, {
-      width,
-      ...(styleHeight !== undefined ? { height: styleHeight } : {}),
-      // The block's own `<style>` content first, then the report's compiled
-      // CSS (the app's Tailwind pass plus `public/styles.css`), which is
-      // absent for an app with neither.
-      stylesheets: [...stylesheets, context?.stylesheets].filter(
-        (sheet) => typeof sheet === 'string' && sheet !== ''
-      ),
-      fontFamilies: [FONT_FAMILY],
-    });
-    const height = styleHeight ?? measuredHeight(svg);
+    const { svg, height } = await context.renderHtml({ html: source, width, height: styleHeight });
     // Markup that measures to nothing (an empty div, a comment) has nothing to
     // draw, and a zero-height node would still take its margin in the PDF.
     if (height === 0) return null;
-    return { kind: 'svg', svg, width, ...(height !== undefined ? { height } : {}) };
+    return { kind: 'svg', svg, width, height };
   } catch (error) {
-    context?.logger?.warn?.(
+    context.logger?.warn?.(
       { blockId: block.blockId, err: error },
       `${block.type} block '${block.blockId}' failed to render and was skipped: ${error.message}`
     );

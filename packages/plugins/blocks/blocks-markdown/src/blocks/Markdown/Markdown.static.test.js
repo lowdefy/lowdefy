@@ -17,12 +17,11 @@
 import { Markdown, MarkdownWithCode, DangerousMarkdown } from './Markdown.static.js';
 
 // Call a renderer with a `propertiesEval.output`-shaped block projection.
-function run(renderer, { properties = {}, children, layout = {}, context = {} } = {}) {
+function run(renderer, { properties = {}, layout = { width: 515, fraction: 1 } } = {}) {
   return renderer.toReport({
     block: { id: 'b', blockId: 'b', type: 'X', properties },
-    children,
     layout,
-    context,
+    context: {},
   });
 }
 

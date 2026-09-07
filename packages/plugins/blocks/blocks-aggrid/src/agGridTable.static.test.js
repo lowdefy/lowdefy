@@ -20,6 +20,7 @@ import { agGridTable } from './agGridTable.static.js';
 function run({ properties = {}, context = {} } = {}) {
   return agGridTable.toReport({
     block: { id: 'b', blockId: 'grid_1', type: 'AgGridAlpine', properties },
+    layout: { width: 515, fraction: 1 },
     context,
   });
 }
@@ -170,6 +171,66 @@ describe('agGridTable', () => {
     expect(
       run({ properties: { columnDefs: [{ field: 'a', hide: true }], rowData: [{ a: 1 }] } })
     ).toBeNull();
+  });
+
+  test('defaultColDef is merged under every column like the grid does', () => {
+    const result = run({
+      properties: {
+        defaultColDef: { valueFormatter: ({ value }) => `#${value}`, hide: false },
+        columnDefs: [{ field: 'a' }, { field: 'b', valueFormatter: ({ value }) => `${value}!` }],
+        rowData: [{ a: 1, b: 2 }],
+      },
+    });
+    expect(result.rows).toEqual([
+      [
+        { value: 1, formatted: '#1' },
+        { value: 2, formatted: '2!' },
+      ],
+    ]);
+  });
+
+  test('a defaultColDef hide is overridden by the column', () => {
+    const result = run({
+      properties: {
+        defaultColDef: { hide: true },
+        columnDefs: [{ field: 'a', hide: false }, { field: 'b' }],
+        rowData: [{ a: 1, b: 2 }],
+      },
+    });
+    expect(result.header).toEqual([{ value: 'a' }]);
+  });
+
+  test('column groups are flattened to their visible leaf columns in order', () => {
+    const result = run({
+      properties: {
+        columnDefs: [
+          { field: 'id' },
+          {
+            headerName: 'Address',
+            children: [
+              { field: 'city' },
+              { field: 'zip', hide: true },
+              { headerName: 'Deep', children: [{ field: 'country', headerName: 'Country' }] },
+            ],
+          },
+        ],
+        rowData: [{ id: 1, city: 'London', zip: 'N1', country: 'UK' }],
+      },
+    });
+    expect(result.header).toEqual([{ value: 'id' }, { value: 'city' }, { value: 'Country' }]);
+    expect(result.rows).toEqual([[{ value: 1 }, { value: 'London' }, { value: 'UK' }]]);
+  });
+
+  test('object and array row values are serialised so no object reaches a cell', () => {
+    const result = run({
+      properties: {
+        columnDefs: [{ field: 'meta' }, { field: 'tags' }],
+        rowData: [{ meta: { formula: 'HYPERLINK("x")' }, tags: ['a', 'b'] }],
+      },
+    });
+    expect(result.rows).toEqual([
+      [{ value: '{"formula":"HYPERLINK(\\"x\\")"}' }, { value: '["a","b"]' }],
+    ]);
   });
 
   test('a formatter returning null or undefined yields no formatted string', () => {

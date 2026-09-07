@@ -27,19 +27,21 @@ import {
   Collapse,
 } from './static.js';
 
-// Call a renderer with a `propertiesEval.output`-shaped block projection. The
-// explicit `toEqual` shape assertions below pin the returned IR node shapes.
-function run(renderer, { properties = {}, children, layout = {}, context = {} } = {}) {
+// Call a renderer with a `propertiesEval.output`-shaped block projection and
+// walked `areas`. The explicit `toEqual` shape assertions pin the IR shapes.
+function run(renderer, { properties = {}, areas, layout = { width: 515, fraction: 1 } } = {}) {
   return renderer.toReport({
     block: { id: 'b', blockId: 'b', type: 'X', properties },
-    children,
+    areas,
     layout,
-    context,
+    context: {},
   });
 }
 
+const text = (t) => ({ kind: 'text', text: t });
+
 describe('Title', () => {
-  test('maps content and level to a heading', () => {
+  test('Title maps content and level to a heading', () => {
     expect(run(Title, { properties: { content: 'Overview', level: 2 } })).toEqual({
       kind: 'heading',
       text: 'Overview',
@@ -47,57 +49,60 @@ describe('Title', () => {
     });
   });
 
-  test('defaults level to 4 and clamps antd level 5 to 4', () => {
-    expect(run(Title, { properties: { content: 'A' } }).level).toBe(4);
+  test('Title defaults level to 1 like the antd block and clamps level 5 to 4', () => {
+    expect(run(Title, { properties: { content: 'A' } }).level).toBe(1);
     expect(run(Title, { properties: { content: 'A', level: 5 } }).level).toBe(4);
+    expect(run(Title, { properties: { content: 'A', level: 0 } }).level).toBe(1);
   });
 
-  test('returns null for empty content', () => {
+  test('Title flattens markup in content to text', () => {
+    expect(run(Title, { properties: { content: 'Q1 <b>Sales</b>' } }).text).toBe('Q1 Sales');
+  });
+
+  test('Title returns null for empty content', () => {
     expect(run(Title, { properties: {} })).toBeNull();
     expect(run(Title, { properties: { content: '' } })).toBeNull();
   });
 });
 
 describe('Paragraph', () => {
-  test('maps content to text', () => {
-    expect(run(Paragraph, { properties: { content: 'Body' } })).toEqual({
-      kind: 'text',
-      text: 'Body',
-    });
+  test('Paragraph maps content to text with markup flattened', () => {
+    expect(run(Paragraph, { properties: { content: 'Body' } })).toEqual(text('Body'));
+    expect(run(Paragraph, { properties: { content: 'One<br/>Two' } })).toEqual(text('One\nTwo'));
   });
 
-  test('returns null without content', () => {
+  test('Paragraph returns null without content', () => {
     expect(run(Paragraph, { properties: {} })).toBeNull();
   });
 });
 
 describe('Statistic', () => {
-  test('formats value with precision, group separator, and prefix', () => {
+  test('Statistic formats value with precision, group separator, and prefix', () => {
     expect(
       run(Statistic, { properties: { title: 'Revenue', value: 1234.5, precision: 2, prefix: '$' } })
-    ).toEqual({
-      kind: 'stat',
-      label: 'Revenue',
-      value: '$1,234.50',
-    });
+    ).toEqual({ kind: 'stat', label: 'Revenue', value: '$1,234.50' });
   });
 
-  test('truncates decimals rather than rounding (matches antd)', () => {
+  test('Statistic truncates decimals rather than rounding, matching antd', () => {
     expect(run(Statistic, { properties: { value: 1234.567, precision: 2 } }).value).toBe(
       '1,234.56'
     );
   });
 
-  test('applies suffix and passes non-numeric values through', () => {
+  test('Statistic applies suffix and passes non-numeric values through', () => {
     expect(run(Statistic, { properties: { value: 99, suffix: '%' } }).value).toBe('99%');
     expect(run(Statistic, { properties: { value: 'N/A' } }).value).toBe('N/A');
   });
 
-  test('a stat with neither label nor value is skipped (null)', () => {
+  test('Statistic flattens markup in the title', () => {
+    expect(run(Statistic, { properties: { title: '<i>Net</i>', value: 1 } }).label).toBe('Net');
+  });
+
+  test('Statistic with neither label nor value is skipped', () => {
     expect(run(Statistic, { properties: {} })).toBeNull();
   });
 
-  test('a title with no value still renders a stat', () => {
+  test('Statistic with a title and no value still renders a stat', () => {
     expect(run(Statistic, { properties: { title: 'Revenue' } })).toEqual({
       kind: 'stat',
       label: 'Revenue',
@@ -107,12 +112,14 @@ describe('Statistic', () => {
 });
 
 describe('Divider', () => {
-  test('no title returns a bare divider node', () => {
+  test('Divider without a title returns a bare divider node', () => {
     expect(run(Divider, {})).toEqual({ kind: 'divider' });
     expect(run(Divider, { properties: { title: '' } })).toEqual({ kind: 'divider' });
+    expect(run(Divider, { properties: { title: null } })).toEqual({ kind: 'divider' });
   });
-  test('a title adds a small section heading after the rule', () => {
-    expect(run(Divider, { properties: { title: 'Revenue by Month' } })).toEqual([
+
+  test('Divider with a title adds a small section heading after the rule', () => {
+    expect(run(Divider, { properties: { title: 'Revenue <em>by</em> Month' } })).toEqual([
       { kind: 'divider' },
       { kind: 'heading', text: 'Revenue by Month', level: 4 },
     ]);
@@ -120,7 +127,7 @@ describe('Divider', () => {
 });
 
 describe('Descriptions', () => {
-  test('array items become label/value rows', () => {
+  test('Descriptions array items become label/value rows', () => {
     expect(
       run(Descriptions, {
         properties: {
@@ -140,13 +147,27 @@ describe('Descriptions', () => {
     });
   });
 
-  test('object items become key/value rows', () => {
+  test('Descriptions prefers key over label like the antd block', () => {
+    expect(
+      run(Descriptions, { properties: { items: [{ key: 'name', label: 'Name', value: 'Ada' }] } })
+        .rows
+    ).toEqual([[{ value: 'name' }, { value: 'Ada' }]]);
+  });
+
+  test('Descriptions object items become key/value rows', () => {
     expect(run(Descriptions, { properties: { items: { Region: 'EU' } } }).rows).toEqual([
       [{ value: 'Region' }, { value: 'EU' }],
     ]);
   });
 
-  test('itemOptions transform functions mirror the page display', () => {
+  test('Descriptions primitive items are their own label and value', () => {
+    expect(run(Descriptions, { properties: { items: ['a', 7] } }).rows).toEqual([
+      [{ value: 'a' }, { value: 'a' }],
+      [{ value: '7' }, { value: 7, formatted: '7' }],
+    ]);
+  });
+
+  test('Descriptions itemOptions transform functions mirror the page display', () => {
     const rows = run(Descriptions, {
       properties: {
         items: [{ key: 'r', label: 'Rev', value: 10 }],
@@ -159,67 +180,111 @@ describe('Descriptions', () => {
         ],
       },
     }).rows;
-    expect(rows).toEqual([[{ value: 'Rev!' }, { value: '$10' }]]);
+    expect(rows).toEqual([[{ value: 'r!' }, { value: '$10' }]]);
   });
 
-  test('returns null with no items', () => {
+  test('Descriptions flattens markup and serialises object values so no object reaches a cell', () => {
+    const rows = run(Descriptions, {
+      properties: {
+        items: [
+          { key: '<b>Bold</b>', value: 'a <i>b</i>' },
+          { key: 'obj', value: { formula: 'HYPERLINK("x")' } },
+        ],
+      },
+    }).rows;
+    expect(rows[0]).toEqual([{ value: 'Bold' }, { value: 'a b' }]);
+    expect(rows[1][1].value).toBe('{"formula":"HYPERLINK(\\"x\\")"}');
+  });
+
+  test('Descriptions title becomes a heading before the table', () => {
+    const result = run(Descriptions, {
+      properties: { title: 'Customer', items: { Name: 'Ada' } },
+    });
+    expect(result[0]).toEqual({ kind: 'heading', text: 'Customer', level: 4 });
+    expect(result[1].kind).toBe('table');
+  });
+
+  test('Descriptions returns null with no items', () => {
     expect(run(Descriptions, { properties: {} })).toBeNull();
   });
 });
 
 describe('Card', () => {
-  test('wraps children in a stack, prepending a title heading', () => {
-    const child = { kind: 'text', text: 'inner' };
-    expect(run(Card, { properties: { title: 'Sales' }, children: [child] })).toEqual({
+  test('Card stacks its title heading, then extra, cover, and content areas', () => {
+    const extra = text('extra');
+    const cover = text('cover');
+    const body = text('body');
+    expect(
+      run(Card, {
+        properties: { title: 'Sales <small>2026</small>' },
+        areas: { content: [body], extra: [extra], cover: [cover] },
+      })
+    ).toEqual({
       kind: 'stack',
-      children: [{ kind: 'heading', text: 'Sales', level: 4 }, child],
+      children: [{ kind: 'heading', text: 'Sales 2026', level: 4 }, extra, cover, body],
     });
   });
 
-  test('no title just stacks children', () => {
-    const child = { kind: 'text', text: 'inner' };
-    expect(run(Card, { properties: {}, children: [child] })).toEqual({
+  test('Card title area wins over the title property, as on the page', () => {
+    const titleBlock = text('custom title');
+    expect(
+      run(Card, { properties: { title: 'Sales' }, areas: { title: [titleBlock], content: [] } })
+    ).toEqual({ kind: 'stack', children: [titleBlock] });
+  });
+
+  test('Card without a title just stacks the content area', () => {
+    const child = text('inner');
+    expect(run(Card, { properties: {}, areas: { content: [child] } })).toEqual({
       kind: 'stack',
       children: [child],
     });
   });
 
-  test('empty untitled card returns null', () => {
-    expect(run(Card, { properties: {}, children: [] })).toBeNull();
+  test('Card that is empty and untitled returns null', () => {
+    expect(run(Card, { properties: {}, areas: { content: [] } })).toBeNull();
+    expect(run(Card, { properties: {} })).toBeNull();
   });
 });
 
 describe('Content', () => {
-  test('stacks children', () => {
-    const child = { kind: 'text', text: 'x' };
-    expect(run(Content, { children: [child] })).toEqual({ kind: 'stack', children: [child] });
+  test('Content stacks its content area', () => {
+    const child = text('x');
+    expect(run(Content, { areas: { content: [child] } })).toEqual({
+      kind: 'stack',
+      children: [child],
+    });
   });
 
-  test('empty content returns null', () => {
-    expect(run(Content, { children: [] })).toBeNull();
+  test('Content with an empty area returns null', () => {
+    expect(run(Content, { areas: { content: [] } })).toBeNull();
+    expect(run(Content, {})).toBeNull();
   });
 });
 
 describe('Alert', () => {
-  test('joins message and description with the severity as tint', () => {
+  test('Alert joins message and description with the severity as tint', () => {
     expect(
       run(Alert, { properties: { message: 'Heads up', description: 'Details', type: 'warning' } })
     ).toEqual({ kind: 'text', text: 'Heads up\nDetails', tint: 'warning' });
   });
 
-  test('defaults tint to info', () => {
+  test('Alert flattens markup in message and description', () => {
+    expect(run(Alert, { properties: { message: '<b>Warn</b>' } }).text).toBe('Warn');
+  });
+
+  test('Alert defaults tint to info', () => {
     expect(run(Alert, { properties: { message: 'm' } }).tint).toBe('info');
   });
 
-  test('returns null with neither message nor description', () => {
+  test('Alert returns null with neither message nor description', () => {
     expect(run(Alert, { properties: {} })).toBeNull();
   });
 });
 
 describe('Tabs', () => {
-  test('linearizes tab titles as headings followed by children', () => {
-    const a = { kind: 'text', text: 'a' };
-    const b = { kind: 'text', text: 'b' };
+  test('Tabs interleave each tab title with that tab area, in tab order', () => {
+    const a = text('a');
+    const b = text('b');
     expect(
       run(Tabs, {
         properties: {
@@ -228,37 +293,71 @@ describe('Tabs', () => {
             { key: 'y', title: 'Second' },
           ],
         },
-        children: [a, b],
+        areas: { y: [b], x: [a] },
       })
     ).toEqual({
       kind: 'stack',
       children: [
         { kind: 'heading', text: 'First', level: 4 },
-        { kind: 'heading', text: 'Second', level: 4 },
         a,
+        { kind: 'heading', text: 'Second', level: 4 },
         b,
       ],
     });
   });
 
-  test('without tabs metadata just stacks children', () => {
-    const a = { kind: 'text', text: 'a' };
-    expect(run(Tabs, { properties: {}, children: [a] })).toEqual({ kind: 'stack', children: [a] });
+  test('Tabs derive the tab list from the areas when no tabs are configured, keeping the extra area last', () => {
+    const a = text('a');
+    const extra = text('extra');
+    expect(
+      run(Tabs, { properties: { extraAreaKey: 'extra' }, areas: { extra: [extra], one: [a] } })
+    ).toEqual({
+      kind: 'stack',
+      children: [{ kind: 'heading', text: 'one', level: 4 }, a, extra],
+    });
+  });
+
+  test('Tabs append areas no tab names after the configured tabs', () => {
+    const a = text('a');
+    const stray = text('stray');
+    expect(
+      run(Tabs, { properties: { tabs: [{ key: 'x', title: 'X' }] }, areas: { x: [a], z: [stray] } })
+    ).toEqual({
+      kind: 'stack',
+      children: [{ kind: 'heading', text: 'X', level: 4 }, a, stray],
+    });
+  });
+
+  test('Tabs return null with nothing to show', () => {
+    expect(run(Tabs, { properties: {}, areas: {} })).toBeNull();
+    expect(run(Tabs, { properties: {} })).toBeNull();
   });
 });
 
 describe('Collapse', () => {
-  test('linearizes panel titles as headings followed by children', () => {
-    const a = { kind: 'text', text: 'a' };
+  test('Collapse interleaves each panel title with its area and extra area', () => {
+    const a = text('a');
+    const more = text('more');
     expect(
-      run(Collapse, { properties: { panels: [{ key: 'p', title: 'Panel' }] }, children: [a] })
+      run(Collapse, {
+        properties: { panels: [{ key: 'p', title: 'Panel', extraKey: 'p_extra' }] },
+        areas: { p_extra: [more], p: [a] },
+      })
     ).toEqual({
       kind: 'stack',
-      children: [{ kind: 'heading', text: 'Panel', level: 4 }, a],
+      children: [{ kind: 'heading', text: 'Panel', level: 4 }, a, more],
     });
   });
 
-  test('empty collapse returns null', () => {
-    expect(run(Collapse, { properties: {}, children: [] })).toBeNull();
+  test('Collapse derives panels from the areas when none are configured', () => {
+    const a = text('a');
+    expect(run(Collapse, { properties: {}, areas: { intro: [a] } })).toEqual({
+      kind: 'stack',
+      children: [{ kind: 'heading', text: 'intro', level: 4 }, a],
+    });
+  });
+
+  test('Collapse that is empty returns null', () => {
+    expect(run(Collapse, { properties: {}, areas: {} })).toBeNull();
   });
 });

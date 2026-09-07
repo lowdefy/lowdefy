@@ -14,19 +14,25 @@
   limitations under the License.
 */
 
-import { isBlank } from '../../static.utils.js';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
 /**
- * Card → a `stack` of its children. A `title` prepends a `heading` so the
- * card's header survives into the document. An empty, untitled card yields no
- * node.
+ * Card → a `stack`. The card header comes first: the `title` area's blocks
+ * when the page fills it, else `properties.title` as a level-4 heading (the
+ * same precedence Card.js applies). Then the `extra` area (rendered in the
+ * header on the page), the `cover`, and the `content` body. An empty,
+ * untitled card yields no node.
  */
 export const Card = {
-  toReport: ({ block, children }) => {
+  toReport: ({ block, areas = {} }) => {
     const nodes = [];
     const { title } = block.properties;
-    if (!isBlank(title)) nodes.push({ kind: 'heading', text: String(title), level: 4 });
-    nodes.push(...(children ?? []));
+    if ((areas.title ?? []).length > 0) {
+      nodes.push(...areas.title);
+    } else if (!isBlank(title)) {
+      nodes.push({ kind: 'heading', text: htmlToText(title), level: 4 });
+    }
+    nodes.push(...(areas.extra ?? []), ...(areas.cover ?? []), ...(areas.content ?? []));
     if (nodes.length === 0) return null;
     return { kind: 'stack', children: nodes };
   },

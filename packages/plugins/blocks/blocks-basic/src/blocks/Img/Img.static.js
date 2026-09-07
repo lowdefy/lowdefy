@@ -15,17 +15,15 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import { isBlank } from '../../static.utils.js';
+import { isBlank } from '@lowdefy/block-utils/report';
 
 /**
- * Img → `image`. `properties.src` names the source; `@lowdefy/reports` resolves
+ * Img → `image`. `properties.src` names the source; the reports plugin resolves
  * the bytes centrally (data URI, public asset, or guarded fetch). The block's
  * `width`/`height` properties become the IR node's width/height, carried
- * through as PostScript points — the same unit every other sizeable IR node
- * (svg, chart) uses, so all report sizing shares one scale. With neither set
- * the image keeps its natural size, capped to the content width. An empty src
- * yields no node.
+ * through as PostScript points, the same unit every other sizeable IR node
+ * uses. With neither set the image keeps its natural size, capped to the
+ * content width. An empty src yields no node.
  */
 export const Img = {
   toReport: ({ block }) => {

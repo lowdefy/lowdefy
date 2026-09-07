@@ -20,6 +20,7 @@ import path from 'path';
 // Importing the entry proves it resolves in Node without a browser runtime; if
 // any renderer pulled in ag-grid or React this import would fail.
 import * as staticRenderers from './static.js';
+import * as metas from './metas.js';
 
 const SRC_DIR = path.join(process.cwd(), 'src');
 
@@ -36,17 +37,26 @@ function staticRendererFiles(dir) {
   return found;
 }
 
-test('the static entry exports a toReport renderer for each display AgGrid variant', () => {
-  const types = ['AgGridAlpine', 'AgGridBalham', 'AgGridMaterial'];
-  types.forEach((type) => {
+const staticTypes = Object.keys(metas).filter((name) => metas[name].static === true);
+
+test('every meta declaring static: true has a toReport renderer on the static entry', () => {
+  expect(staticTypes.length).toBeGreaterThan(0);
+  staticTypes.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
   });
 });
 
-test('input variants are not exported — the walker skips input blocks', () => {
-  expect(staticRenderers.AgGridInputAlpine).toBeUndefined();
-  expect(staticRenderers.AgGridInputBalham).toBeUndefined();
-  expect(staticRenderers.AgGridInputMaterial).toBeUndefined();
+test('every static entry export has a meta declaring static: true', () => {
+  Object.keys(staticRenderers).forEach((type) => {
+    expect(metas[type]?.static).toBe(true);
+  });
+});
+
+test('input variants are not exported and their metas do not declare static', () => {
+  ['AgGridInputAlpine', 'AgGridInputBalham', 'AgGridInputMaterial'].forEach((type) => {
+    expect(staticRenderers[type]).toBeUndefined();
+    expect(metas[type].static).not.toBe(true);
+  });
 });
 
 test('every display variant shares the one renderer instance', () => {
@@ -55,7 +65,12 @@ test('every display variant shares the one renderer instance', () => {
 });
 
 test('no renderer file imports ag-grid or React', () => {
-  const forbidden = [/from\s+['"]@ag-grid/, /from\s+['"]react['"]/, /from\s+['"]react-dom['"]/];
+  const forbidden = [
+    /from\s+['"]@ag-grid/,
+    /from\s+['"]react['"]/,
+    /from\s+['"]react-dom['"]/,
+    /from\s+['"]@lowdefy\/block-utils['"]/,
+  ];
   staticRendererFiles(SRC_DIR).forEach((file) => {
     const source = fs.readFileSync(file, 'utf8');
     forbidden.forEach((pattern) => {

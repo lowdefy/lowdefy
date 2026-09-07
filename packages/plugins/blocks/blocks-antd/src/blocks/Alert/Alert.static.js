@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { isBlank } from '../../static.utils.js';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
 // Alert severity doubles as the IR text `tint` hint; the reports translator
 // maps these to colours (error/warning/success/info).
@@ -22,14 +22,15 @@ const TINTS = new Set(['success', 'info', 'warning', 'error']);
 
 /**
  * Alert → `text` carrying the message and description (newline-separated),
- * tinted by the alert `type`. An alert with neither yields no node.
+ * tinted by the alert `type`. Both render through renderHtml on the page, so
+ * markup is flattened to text here. An alert with neither yields no node.
  */
 export const Alert = {
   toReport: ({ block }) => {
     const { message, description, type: severity } = block.properties;
     const parts = [];
-    if (!isBlank(message)) parts.push(String(message));
-    if (!isBlank(description)) parts.push(String(description));
+    if (!isBlank(message)) parts.push(htmlToText(message));
+    if (!isBlank(description)) parts.push(htmlToText(description));
     if (parts.length === 0) return null;
     const tint = TINTS.has(severity) ? severity : 'info';
     return { kind: 'text', text: parts.join('\n'), tint };

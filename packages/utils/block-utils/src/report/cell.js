@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
+import toCellValue from './toCellValue.js';
 
-/** Paragraph → `text`; markup in `content` is flattened. Empty content yields no node. */
-export const Paragraph = {
-  toReport: ({ block }) => {
-    const { content } = block.properties;
-    if (isBlank(content)) return null;
-    return { kind: 'text', text: htmlToText(content) };
-  },
-};
+// Build a report IR table cell. `value` is the raw typed datum, coerced to a
+// primitive or Date; `formatted` is the display string when a formatter ran.
+// The PDF renders `formatted ?? value`; xlsx writes the typed `value`.
+function cell(value, formatted) {
+  const cellValue = toCellValue(value);
+  if (formatted === undefined) {
+    return { value: cellValue };
+  }
+  return { value: cellValue, formatted: String(formatted) };
+}
+
+export default cell;

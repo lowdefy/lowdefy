@@ -18,22 +18,21 @@
  * Icon → `svg`. Production KPI tiles pair a number with a movement arrow, so an
  * unrendered Icon costs the report the direction of every trend it shows.
  *
- * The icon components are react-icons functions, taken from `context.icons` —
+ * The icon components are react-icons functions, taken from `context.icons`:
  * the build's tree-shaken icon artifact, the same map the client resolves names
  * against, so a report can only draw icons the app actually bundles.
  *
  * React renders them: `react` and `react-dom/server` are imported lazily on
  * first use, which keeps the static entry free of React at module load (every
  * report imports this package for Box and Span, but only a page with an Icon
- * pays for React). Serialising the element tree by hand was rejected — react-icons
- * ships React-cased attributes (`fillRule`, `strokeLinecap`, `clipPath`; 457 of
- * them in one icon family alone), so a second serialiser would have to carry its
- * own copy of React's SVG attribute-casing table.
+ * pays for React). Serialising the element tree by hand was rejected because
+ * react-icons ships React-cased attributes (`fillRule`, `strokeLinecap`,
+ * `clipPath`; 457 of them in one icon family alone), so a second serialiser
+ * would have to carry its own copy of React's SVG attribute-casing table.
  */
 
 import { type } from '@lowdefy/helpers';
-
-import { styleValue } from '../../static.utils.js';
+import { styleValue, toPoints } from '@lowdefy/block-utils/report';
 
 // A line of body text is ~14pt, which is the size an icon beside a label wants.
 const DEFAULT_SIZE = 14;
@@ -55,14 +54,6 @@ async function getRenderer() {
     renderer = { createElement, renderToStaticMarkup };
   }
   return renderer;
-}
-
-/** A CSS length as points, or undefined when it names no number. */
-function toPoints(value) {
-  if (typeof value === 'number' && Number.isFinite(value)) return value;
-  if (typeof value !== 'string') return undefined;
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 const toReport = async ({ block, context }) => {
@@ -88,11 +79,11 @@ const toReport = async ({ block, context }) => {
     toPoints(properties.size) ?? toPoints(styleValue(block.style, 'fontSize')) ?? DEFAULT_SIZE;
   const rawColor = properties.color ?? styleValue(block.style, 'color') ?? DEFAULT_COLOR;
   // The colour is spliced into SVG markup below, so reject any value carrying
-  // markup characters (a config-authored `red"/><image .../>`) — fall back to
+  // markup characters (a config-authored `red"/><image .../>`) and fall back to
   // the default rather than let it break out of the attribute.
   const color = /[<>"]/.test(String(rawColor)) ? DEFAULT_COLOR : rawColor;
 
-  if (properties.rotate !== undefined || properties.spin === true) {
+  if (!type.isUndefined(properties.rotate) || properties.spin === true) {
     context?.logger?.debug?.(
       { blockId: block.blockId },
       `Report icons ignore rotate and spin on block '${block.blockId}'.`
@@ -105,7 +96,7 @@ const toReport = async ({ block, context }) => {
       createElement(Component, { size, color, title: properties.title })
     );
     // pdfmake's SVG renderer has no CSS cascade, so it cannot resolve the
-    // keyword react-icons paints with — bake the resolved colour in.
+    // keyword react-icons paints with; bake the resolved colour in.
     const svg = markup.split('currentColor').join(color);
     return { kind: 'svg', svg, width: size, height: size };
   } catch (error) {

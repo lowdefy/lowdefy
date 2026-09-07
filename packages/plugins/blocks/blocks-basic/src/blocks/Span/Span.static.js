@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { isBlank } from '../../static.utils.js';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
 /**
  * Span → `text`. The Span block shows `properties.content` when set, otherwise
- * its child content area; the report mirrors that precedence — `content` wins,
- * else the walked children are wrapped in a `text`-led stack. A Span with
- * neither a content string nor children yields no node.
+ * its `content` area; the report mirrors that precedence. A content string
+ * becomes a `text` (markup flattened); otherwise the walked area is wrapped in
+ * a stack. A Span with neither yields no node.
  */
 export const Span = {
-  toReport: ({ block, children }) => {
+  toReport: ({ block, areas = {} }) => {
     const content = block.properties?.content;
-    if (!isBlank(content)) return { kind: 'text', text: String(content) };
-    const nodes = children ?? [];
+    if (!isBlank(content)) return { kind: 'text', text: htmlToText(content) };
+    const nodes = areas.content ?? [];
     if (nodes.length === 0) return null;
     return { kind: 'stack', children: nodes };
   },

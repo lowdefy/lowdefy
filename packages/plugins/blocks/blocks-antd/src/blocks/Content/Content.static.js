@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-/** Content → a `stack` of its children. An empty content area yields no node. */
+/** Content → a `stack` of its `content` area. An empty area yields no node. */
 export const Content = {
-  toReport: ({ children }) => {
-    const nodes = children ?? [];
+  toReport: ({ areas = {} }) => {
+    const nodes = areas.content ?? [];
     if (nodes.length === 0) return null;
     return { kind: 'stack', children: nodes };
   },

@@ -14,13 +14,19 @@
   limitations under the License.
 */
 
-import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
+import { type } from '@lowdefy/helpers';
 
-/** Paragraph → `text`; markup in `content` is flattened. Empty content yields no node. */
-export const Paragraph = {
-  toReport: ({ block }) => {
-    const { content } = block.properties;
-    if (isBlank(content)) return null;
-    return { kind: 'text', text: htmlToText(content) };
-  },
-};
+// A CSS length as PostScript points, or undefined when it names no number. A
+// number passes through; a string such as '300px' or '12.5' parses its leading
+// number. Units are not converted: report sizing treats px and pt as the same
+// scale.
+function toPoints(value) {
+  if (type.isNumber(value)) {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  if (!type.isString(value)) return undefined;
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+export default toPoints;

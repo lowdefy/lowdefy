@@ -15,23 +15,37 @@
 */
 
 import { get, type } from '@lowdefy/helpers';
+import { cell } from '@lowdefy/block-utils/report';
 
-// Every AgGrid variant (theme and input alike) shares this one `grid` renderer,
-// re-exported per block type name from `static.js` so the walker can look it up
-// by `block.type`. This module stays free of ag-grid and React so the server
-// can load the registry without a browser runtime; it emits plain report-IR
-// object literals, never pdfmake or ExcelJS objects. The IR shape is a stable,
-// versioned contract and the walker validates every returned node.
-
-/** Build a table cell: `value` is the raw datum, `formatted` the display string. */
-function cell(value, formatted) {
-  return { value, ...(formatted !== undefined ? { formatted } : {}) };
-}
+// Every display AgGrid variant shares this one `grid` renderer, re-exported per
+// block type name from `static.js` so the walker can look it up by `block.type`.
+// This module stays free of ag-grid and React so the server can load the
+// registry without a browser runtime; it emits plain report-IR object literals,
+// never pdfmake or ExcelJS objects. The IR shape is a stable, versioned
+// contract and the walker validates every returned node.
 
 // The header label ag-grid shows: `headerName` when set, else the `field`.
 function headerText(col) {
   const label = col.headerName ?? col.field;
   return type.isNone(label) ? '' : String(label);
+}
+
+// The leaf columns ag-grid would show, in display order: `defaultColDef` merged
+// under every column (as the grid does), column groups (`children`) flattened
+// to their leaves, and hidden columns dropped.
+function visibleLeafColumns(columnDefs, defaultColDef) {
+  const leaves = [];
+  (type.isArray(columnDefs) ? columnDefs : []).forEach((col) => {
+    if (!type.isObject(col)) return;
+    if (type.isArray(col.children)) {
+      leaves.push(...visibleLeafColumns(col.children, defaultColDef));
+      return;
+    }
+    const merged = { ...defaultColDef, ...col };
+    if (merged.hide === true) return;
+    leaves.push(merged);
+  });
+  return leaves;
 }
 
 function fieldValue({ col, data }) {
@@ -42,9 +56,10 @@ function fieldValue({ col, data }) {
 // Resolve a cell's raw value. A `valueGetter` (a `_function` operator closure)
 // overrides the `field` lookup; otherwise read `field` from the row, honouring
 // ag-grid's dot-path field notation (`get` splits on '.'). The getter is a
-// `_function` closure evaluated headless: if it throws — commonly by reaching
-// for an ag-grid params member (`getValue`, `node`, `api`) absent server-side —
-// warn and fall back to the plain `field` lookup rather than fail the report.
+// `_function` closure evaluated headless: if it throws (commonly by reaching
+// for an ag-grid params member such as `getValue`, `node`, or `api`, absent
+// server-side) warn and fall back to the plain `field` lookup rather than fail
+// the report.
 function resolveValue({ col, data, blockId, logger }) {
   if (!type.isFunction(col.valueGetter)) return fieldValue({ col, data });
   try {
@@ -60,21 +75,22 @@ function resolveValue({ col, data, blockId, logger }) {
   }
 }
 
-// Build one cell: the raw typed `value`, plus a `formatted` display string when
-// a `valueFormatter` runs. The formatter is a `_function` closure evaluated by
-// the headless engine; ag-grid calls it with `{ value, data, colDef }`. If it
-// throws — commonly by touching a browser API absent on the server — log a
-// warning and fall back to the raw value with no `formatted`.
+// Build one cell: the raw typed `value` (objects serialised by `cell` so no
+// object ever reaches the workbook writer), plus a `formatted` display string
+// when a `valueFormatter` runs. The formatter is a `_function` closure
+// evaluated by the headless engine; ag-grid calls it with
+// `{ value, data, colDef }`. If it throws, commonly by touching a browser API
+// absent on the server, log a warning and fall back to the raw value.
 function buildCell({ col, data, blockId, logger }) {
   const value = resolveValue({ col, data, blockId, logger });
   if (!type.isFunction(col.valueFormatter)) return cell(value);
   try {
     const formatted = col.valueFormatter({ value, data, colDef: col });
     if (type.isNone(formatted)) return cell(value);
-    return cell(value, String(formatted));
+    return cell(value, formatted);
   } catch (error) {
     logger?.warn?.(
-      { blockId, field: col.field, error },
+      { blockId, field: col.field, err: error },
       `AgGrid report renderer: valueFormatter for column '${
         col.field ?? headerText(col)
       }' in block '${blockId}' threw; falling back to the raw value.`
@@ -84,22 +100,23 @@ function buildCell({ col, data, blockId, logger }) {
 }
 
 /**
- * Shared static renderer for every AgGrid block variant: a grid becomes a `grid`
- * node, which the report exports as a worksheet rather than printing into the
- * PDF. Visible `columnDefs` (respecting `hide: true`) map to header cells and
- * each `rowData` row to a row of cells.
+ * Shared static renderer for every display AgGrid block variant: a grid becomes
+ * a `grid` node, which the report exports as a worksheet rather than printing
+ * into the PDF. The visible leaf columns (`defaultColDef` applied, groups
+ * flattened, `hide: true` respected) map to header cells and each `rowData` row
+ * to a row of cells.
  *
- * Imperative grid state is ignored — client-side filtering and sorting do not
+ * Imperative grid state is ignored: client-side filtering and sorting do not
  * apply (the report is a fidelity snapshot of the configured data), so rows
  * emit in `rowData` order.
  */
 export const agGridTable = {
   toReport: ({ block, context }) => {
     const { properties, blockId } = block;
-    const columnDefs = type.isArray(properties?.columnDefs) ? properties.columnDefs : [];
-    const rowData = type.isArray(properties?.rowData) ? properties.rowData : [];
-    const columns = columnDefs.filter((col) => type.isObject(col) && col.hide !== true);
+    const defaultColDef = type.isObject(properties?.defaultColDef) ? properties.defaultColDef : {};
+    const columns = visibleLeafColumns(properties?.columnDefs, defaultColDef);
     if (columns.length === 0) return null;
+    const rowData = type.isArray(properties?.rowData) ? properties.rowData : [];
     const logger = context?.logger;
     const header = columns.map((col) => cell(headerText(col)));
     const rows = rowData.map((data) =>

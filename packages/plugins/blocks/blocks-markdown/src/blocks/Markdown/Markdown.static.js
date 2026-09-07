@@ -17,22 +17,19 @@
 /**
  * The three markdown blocks all render the same thing in a report: their
  * evaluated `content` as a `markdown` IR node. `@lowdefy/plugin-reports` owns
- * the translation (remark-parse + remark-gfm — the parser family react-markdown
+ * the translation (remark-parse + remark-gfm, the parser family react-markdown
  * uses on the client, so parsing agrees), which is why the renderer emits the
  * markdown source and never a parsed tree.
  *
  * The client differences between the three blocks do not survive into a
  * document: `MarkdownWithCode` syntax-highlights fenced code (a report renders
  * code in one code style), and `DangerousMarkdown` renders sanitised raw HTML
- * (the report translator ignores raw HTML and logs a warning — custom HTML
+ * (the report translator ignores raw HTML and logs a warning; custom HTML
  * belongs in the Html block). The markdown structure itself renders identically
  * for all three.
  */
 
-/** True when the content would render nothing. */
-function isBlank(content) {
-  return content === null || content === undefined || content === '';
-}
+import { isBlank } from '@lowdefy/block-utils/report';
 
 function toMarkdownNode({ block }) {
   const { content } = block.properties;

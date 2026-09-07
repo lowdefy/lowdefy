@@ -15,20 +15,22 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
 
-import { isBlank } from '../../static.utils.js';
+// antd's Title renders level 1 when no level is given.
+const DEFAULT_LEVEL = 1;
 
 /**
  * Title → `heading`. `properties.level` selects the heading size (1–4);
- * antd's level 5 clamps to 4, the smallest the IR renders. Empty content
- * yields no node.
+ * antd's level 5 clamps to 4, the smallest the IR renders. Markup in
+ * `content` is flattened. Empty content yields no node.
  */
 export const Title = {
   toReport: ({ block }) => {
     const { content, level } = block.properties;
     if (isBlank(content)) return null;
-    const requested = type.isNumber(level) ? Math.round(level) : 4;
+    const requested = type.isNumber(level) ? Math.round(level) : DEFAULT_LEVEL;
     const clamped = Math.min(Math.max(requested, 1), 4);
-    return { kind: 'heading', text: String(content), level: clamped };
+    return { kind: 'heading', text: htmlToText(content), level: clamped };
   },
 };

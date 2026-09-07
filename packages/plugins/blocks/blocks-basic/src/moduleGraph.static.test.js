@@ -20,11 +20,11 @@ import path from 'path';
 // Importing the entry proves it resolves in Node without a browser runtime; if
 // any renderer pulled in React or a block component this import would fail.
 import * as staticRenderers from './static.js';
+import * as metas from './metas.js';
 
 const SRC_DIR = path.join(process.cwd(), 'src');
 
-// Every co-located `*.static.js` renderer file (excludes the aggregator, the
-// shared utils, and any test).
+// Every co-located `*.static.js` renderer file (excludes the aggregator and any test).
 function staticRendererFiles(dir) {
   const found = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -38,17 +38,27 @@ function staticRendererFiles(dir) {
   return found;
 }
 
-test('the static entry exports a toReport renderer for each supported block type', () => {
-  const types = ['Img', 'Span', 'Box', 'Html', 'DangerousHtml', 'Icon'];
-  types.forEach((type) => {
+const staticTypes = Object.keys(metas).filter((name) => metas[name].static === true);
+
+test('every meta declaring static: true has a toReport renderer on the static entry', () => {
+  expect(staticTypes.length).toBeGreaterThan(0);
+  staticTypes.forEach((type) => {
     expect(typeof staticRenderers[type]?.toReport).toBe('function');
   });
 });
 
-test('no renderer file imports React or a block component at load time', () => {
+test('every static entry export has a meta declaring static: true', () => {
+  Object.keys(staticRenderers).forEach((type) => {
+    expect(metas[type]?.static).toBe(true);
+  });
+});
+
+test('no renderer file imports React, the React block-utils entry, or a block component at load time', () => {
   const forbidden = [
     /from\s+['"]react['"]/,
     /from\s+['"]react-dom['"]/,
+    /from\s+['"]@lowdefy\/block-utils['"]/,
+    /from\s+['"]@takumi-rs/,
     // A renderer importing its sibling block component (`./Html.js`); the
     // co-located `./Html.static.js` renderer is not a match.
     /from\s+['"]\.\/[A-Z]\w*\.js['"]/,
@@ -64,16 +74,16 @@ test('no renderer file imports React or a block component at load time', () => {
 test('the Icon renderer imports React lazily, not at module load', () => {
   // Every report imports this package for Box and Span; only a page that draws
   // an icon should pay for React. The forbidden-import test above covers the
-  // static form — this pins the deliberate dynamic one.
-  const source = fs.readFileSync(
-    path.join(SRC_DIR, 'blocks', 'Icon', 'Icon.static.js'),
-    'utf8'
-  );
+  // static form; this pins the deliberate dynamic one.
+  const source = fs.readFileSync(path.join(SRC_DIR, 'blocks', 'Icon', 'Icon.static.js'), 'utf8');
   expect(source).toMatch(/import\('react'\)/);
   expect(source).toMatch(/import\('react-dom\/server'\)/);
 });
 
-test('package.json declares the ./static export', () => {
+test('package.json declares the ./static export and no html layout engine dependency', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
   expect(pkg.exports['./static']).toBe('./dist/static.js');
+  expect(Object.keys(pkg.dependencies)).not.toEqual(
+    expect.arrayContaining([expect.stringMatching(/^@takumi-rs\//)])
+  );
 });

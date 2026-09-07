@@ -912,12 +912,6 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.4.0
         version: link:../../../utils/helpers
-      '@takumi-rs/core':
-        specifier: 2.5.0
-        version: 2.5.0(csstype@3.2.3)(preact@10.28.3)(react@18.2.0)
-      '@takumi-rs/helpers':
-        specifier: 2.5.0
-        version: 2.5.0(preact@10.28.3)(react@18.2.0)
       dompurify:
         specifier: 3.4.2
         version: 3.4.2
@@ -1016,6 +1010,9 @@ importers:
       '@lowdefy/block-utils':
         specifier: 5.4.0
         version: link:../../../utils/block-utils
+      '@lowdefy/helpers':
+        specifier: 5.4.0
+        version: link:../../../utils/helpers
       echarts:
         specifier: 6.0.0
         version: 6.0.0
@@ -2291,6 +2288,9 @@ importers:
       '@lowdefy/actions-core':
         specifier: 5.4.0
         version: link:../../actions/actions-core
+      '@lowdefy/block-utils':
+        specifier: 5.4.0
+        version: link:../../../utils/block-utils
       '@lowdefy/engine':
         specifier: 5.4.0
         version: link:../../../engine
@@ -2300,6 +2300,12 @@ importers:
       '@lowdefy/helpers':
         specifier: 5.4.0
         version: link:../../../utils/helpers
+      '@takumi-rs/core':
+        specifier: 2.5.0
+        version: 2.5.0(csstype@3.2.3)(preact@10.28.3)(react@18.2.0)
+      '@takumi-rs/helpers':
+        specifier: 2.5.0
+        version: 2.5.0(preact@10.28.3)(react@18.2.0)
       exceljs:
         specifier: 4.4.0
         version: 4.4.0
@@ -2312,6 +2318,9 @@ importers:
       remark-parse:
         specifier: 10.0.2
         version: 10.0.2
+      undici:
+        specifier: 6.27.0
+        version: 6.27.0
       unified:
         specifier: 10.1.2
         version: 10.1.2

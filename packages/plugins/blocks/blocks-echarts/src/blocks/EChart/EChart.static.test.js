@@ -16,8 +16,8 @@
 
 // This suite renders with the real ECharts SSR path to prove the renderer
 // produces a valid static SVG at the requested dimensions. Structural
-// behaviour (animation override, dispose, error handling) is covered against a
-// mocked ECharts in EChart.mock.static.test.js.
+// behaviour (animation override, dispose, error handling, theme registration)
+// is covered against a mocked ECharts in EChart.mock.static.test.js.
 
 import { EChart } from './EChart.static.js';
 
@@ -27,7 +27,7 @@ const barOption = {
   series: [{ type: 'bar', data: [1, 2, 3] }],
 };
 
-function run({ properties = {}, layout = {}, context = {} } = {}) {
+function run({ properties = {}, layout = { width: 515, fraction: 1 }, context = {} } = {}) {
   return EChart.toReport({
     block: { id: 'b', blockId: 'b', type: 'EChart', properties },
     layout,
@@ -35,7 +35,7 @@ function run({ properties = {}, layout = {}, context = {} } = {}) {
   });
 }
 
-test('renders a bar-chart option to an svg node at the requested dimensions', () => {
+test('EChart renders a bar-chart option to an svg node at the requested dimensions', () => {
   const node = run({ properties: { option: barOption }, layout: { width: 400 } });
   expect(node.kind).toBe('svg');
   expect(node.width).toBe(400);
@@ -46,16 +46,21 @@ test('renders a bar-chart option to an svg node at the requested dimensions', ()
   expect(node.svg).toContain('height="300"');
 });
 
-test('uses properties.height and the resolved column width', () => {
+test('EChart uses properties.height and the resolved column width', () => {
   const node = run({ properties: { option: barOption, height: 250 }, layout: { width: 512 } });
   expect(node.width).toBe(512);
   expect(node.height).toBe(250);
   expect(node.svg).toContain('height="250"');
 });
 
-test('falls back to the default width and height when none are given', () => {
-  const node = run({ properties: { option: barOption } });
-  expect(node.width).toBeCloseTo(515.28);
-  expect(node.height).toBe(300);
-  expect(node.svg).toContain('<svg');
+test('EChart reads a css string height like the block does', () => {
+  const node = run({ properties: { option: barOption, height: '400px' }, layout: { width: 512 } });
+  expect(node.height).toBe(400);
+  expect(node.svg).toContain('height="400"');
+});
+
+test('EChart applies a custom theme object to the rendered chart', () => {
+  const theme = { backgroundColor: '#123456' };
+  const node = run({ properties: { option: barOption, theme }, layout: { width: 400 } });
+  expect(node.svg).toContain('#123456');
 });

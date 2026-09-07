@@ -16,25 +16,28 @@
 
 import { Img, Span, Box } from './static.js';
 
-// Call a renderer with a `propertiesEval.output`-shaped block projection.
-function run(renderer, { properties = {}, children, layout = {}, context = {} } = {}) {
+// Call a renderer with a `propertiesEval.output`-shaped block projection and
+// walked `areas`.
+function run(renderer, { properties = {}, areas, layout = { width: 515, fraction: 1 } } = {}) {
   return renderer.toReport({
     block: { id: 'b', blockId: 'b', type: 'X', properties },
-    children,
+    areas,
     layout,
-    context,
+    context: {},
   });
 }
 
+const text = (t) => ({ kind: 'text', text: t });
+
 describe('Img', () => {
-  test('maps src to an image node', () => {
+  test('Img maps src to an image node', () => {
     expect(run(Img, { properties: { src: '/logo.png' } })).toEqual({
       kind: 'image',
       src: '/logo.png',
     });
   });
 
-  test('carries numeric width and height through as points', () => {
+  test('Img carries numeric width and height through as points', () => {
     expect(run(Img, { properties: { src: 'a.png', width: 120, height: 80 } })).toEqual({
       kind: 'image',
       src: 'a.png',
@@ -43,73 +46,57 @@ describe('Img', () => {
     });
   });
 
-  test('omits non-numeric width and height', () => {
+  test('Img omits non-numeric width and height', () => {
     expect(run(Img, { properties: { src: 'a.png', width: '120' } })).toEqual({
       kind: 'image',
       src: 'a.png',
     });
   });
 
-  test('returns null for a blank src', () => {
+  test('Img returns null for a blank src', () => {
     expect(run(Img, { properties: {} })).toBeNull();
     expect(run(Img, { properties: { src: '' } })).toBeNull();
   });
 });
 
 describe('Span', () => {
-  test('maps content string to text', () => {
-    expect(run(Span, { properties: { content: 'Inline' } })).toEqual({
-      kind: 'text',
-      text: 'Inline',
-    });
+  test('Span maps a content string to text with markup flattened', () => {
+    expect(run(Span, { properties: { content: 'In<b>line</b>' } })).toEqual(text('Inline'));
   });
 
-  test('content wins over children', () => {
+  test('Span content wins over the content area, as on the page', () => {
     expect(
-      run(Span, { properties: { content: 'Inline' }, children: [{ kind: 'text', text: 'kid' }] })
-    ).toEqual({
-      kind: 'text',
-      text: 'Inline',
-    });
+      run(Span, { properties: { content: 'Inline' }, areas: { content: [text('kid')] } })
+    ).toEqual(text('Inline'));
   });
 
-  test('falls back to a stack of children when no content', () => {
-    expect(run(Span, { children: [{ kind: 'text', text: 'kid' }] })).toEqual({
+  test('Span falls back to a stack of its content area when no content string', () => {
+    expect(run(Span, { areas: { content: [text('kid')] } })).toEqual({
       kind: 'stack',
-      children: [{ kind: 'text', text: 'kid' }],
+      children: [text('kid')],
     });
   });
 
-  test('returns null with neither content nor children', () => {
+  test('Span returns null with neither content nor area blocks', () => {
     expect(run(Span, {})).toBeNull();
-    expect(run(Span, { children: [] })).toBeNull();
+    expect(run(Span, { areas: { content: [] } })).toBeNull();
   });
 });
 
 describe('Box', () => {
-  test('passes children through as a stack', () => {
-    expect(
-      run(Box, {
-        children: [
-          { kind: 'text', text: 'a' },
-          { kind: 'text', text: 'b' },
-        ],
-      })
-    ).toEqual({
+  test('Box passes its content area through as a stack', () => {
+    expect(run(Box, { areas: { content: [text('a'), text('b')] } })).toEqual({
       kind: 'stack',
-      children: [
-        { kind: 'text', text: 'a' },
-        { kind: 'text', text: 'b' },
-      ],
+      children: [text('a'), text('b')],
     });
   });
 
-  test('maps a content string to text', () => {
-    expect(run(Box, { properties: { content: 'Body' } })).toEqual({ kind: 'text', text: 'Body' });
+  test('Box maps a content string to text with markup flattened', () => {
+    expect(run(Box, { properties: { content: '<p>Body</p>' } })).toEqual(text('Body'));
   });
 
-  test('returns null when empty', () => {
+  test('Box returns null when empty', () => {
     expect(run(Box, {})).toBeNull();
-    expect(run(Box, { children: [] })).toBeNull();
+    expect(run(Box, { areas: { content: [] } })).toBeNull();
   });
 });

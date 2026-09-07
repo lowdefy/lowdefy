@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import { htmlToText, isBlank } from '@lowdefy/block-utils/report';
+import { type } from '@lowdefy/helpers';
 
-/** Paragraph → `text`; markup in `content` is flattened. Empty content yields no node. */
-export const Paragraph = {
-  toReport: ({ block }) => {
-    const { content } = block.properties;
-    if (isBlank(content)) return null;
-    return { kind: 'text', text: htmlToText(content) };
-  },
-};
+// True when a value would render nothing in a report: null, undefined, or an
+// empty string.
+function isBlank(value) {
+  return type.isNone(value) || value === '';
+}
+
+export default isBlank;
