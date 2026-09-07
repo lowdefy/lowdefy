@@ -19,7 +19,7 @@ import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
 import evaluatePage from '../evaluatePage/evaluatePage.js';
 import walkBlocks from './walkBlocks.js';
-import { cell, grid, table, text } from '../ir/nodes.js';
+import { cell, grid, text } from '../ir/nodes.js';
 
 const operators = { ...operatorsClient };
 
@@ -66,6 +66,9 @@ function stubRegistry(layoutLog = []) {
 }
 
 const CONTENT_WIDTH = 480;
+// The gutter pdfmake places between columns; a cell is sized against the row
+// minus its gutters.
+const COLUMN_GAP = 8;
 
 function renderContext(extra = {}) {
   return { contentWidth: CONTENT_WIDTH, ...extra };
@@ -94,10 +97,11 @@ describe('layout row grouping', () => {
     expect(nodes[0].kind).toBe('row');
     expect(nodes[0].widths).toEqual([0.5, 0.5]);
     expect(nodes[0].children).toEqual([text({ text: 'A' }), text({ text: 'B' })]);
-    // Each child renderer is handed its resolved column width in points.
+    // Each child renderer is handed its resolved column width in points: half
+    // the row once the gutter between the two columns is taken out.
     expect(layoutLog).toEqual([
-      { blockId: 'a', width: 240, fraction: 0.5 },
-      { blockId: 'b', width: 240, fraction: 0.5 },
+      { blockId: 'a', width: (CONTENT_WIDTH - COLUMN_GAP) / 2, fraction: 0.5 },
+      { blockId: 'b', width: (CONTENT_WIDTH - COLUMN_GAP) / 2, fraction: 0.5 },
     ]);
   });
 
@@ -118,7 +122,7 @@ describe('layout row grouping', () => {
     expect(nodes[0].widths).toEqual([0.5]);
     expect(nodes[0].children).toEqual([text({ text: 'A' })]);
     expect(nodes[1]).toEqual(text({ text: 'B' }));
-    // The full-width block gets the whole content width.
+    // A lone column has no gutter; the full-width block gets the whole width.
     expect(layoutLog).toEqual([
       { blockId: 'a', width: 240, fraction: 0.5 },
       { blockId: 'b', width: 480, fraction: 1 },
@@ -182,8 +186,10 @@ describe('layout row grouping', () => {
     expect(nodes[0].widths).toEqual([0.25, 0.75]);
     expect(nodes[0].children[0]).toEqual({ kind: 'spacer', width: 0.25 });
     expect(nodes[0].children[1]).toEqual(text({ text: 'A' }));
-    // The offset does not change the block's own resolved column width.
-    expect(layoutLog).toEqual([{ blockId: 'a', width: 360, fraction: 0.75 }]);
+    // The spacer is a column too, so one gutter comes out before the fraction.
+    expect(layoutLog).toEqual([
+      { blockId: 'a', width: (CONTENT_WIDTH - COLUMN_GAP) * 0.75, fraction: 0.75 },
+    ]);
   });
 });
 
@@ -272,8 +278,12 @@ describe('container passthrough', () => {
     expect(nodes).toHaveLength(1);
     expect(nodes[0].kind).toBe('row');
     expect(nodes[0].children).toEqual([text({ text: 'inner' }), text({ text: 'A' })]);
-    // The child of the span-12 container is laid out within the 240pt cell.
-    expect(layoutLog).toContainEqual({ blockId: 'c1', width: 240, fraction: 1 });
+    // The child of the span-12 container is laid out within its cell.
+    expect(layoutLog).toContainEqual({
+      blockId: 'c1',
+      width: (CONTENT_WIDTH - COLUMN_GAP) / 2,
+      fraction: 1,
+    });
   });
 });
 
@@ -348,12 +358,7 @@ describe('IR validation', () => {
 
     // Malformed IR from a renderer degrades to a skipped block rather than
     // failing the whole report — a renderer bug must not lose the document.
-    const { nodes, renderErrors } = await walkBlocks(
-      context,
-      stubRegistry(),
-      {},
-      renderContext()
-    );
+    const { nodes, renderErrors } = await walkBlocks(context, stubRegistry(), {}, renderContext());
 
     expect(nodes).toEqual([]);
     expect(renderErrors).toEqual([
@@ -532,6 +537,232 @@ describe('flex children sit inline', () => {
     expect(nodes.map((node) => node.kind)).toEqual(['row', 'text', 'row']);
     expect(nodes[0].widths).toEqual([0.5]);
     expect(nodes[2].widths).toEqual([0.5]);
+  });
+});
+
+describe('deferred cell rendering', () => {
+  // A chart bakes its width into its SVG, so it has to know how many siblings
+  // share its row before it renders — the review's three-full-width-charts bug.
+  test('three flex: 1 siblings each render at one third of the row', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'a', type: 'Paragraph', layout: { flex: 1 }, properties: { content: 'a' } },
+        { id: 'b', type: 'Paragraph', layout: { flex: 1 }, properties: { content: 'b' } },
+        { id: 'c', type: 'Paragraph', layout: { flex: 1 }, properties: { content: 'c' } },
+      ],
+    });
+    const layoutLog = [];
+    const { nodes } = await walkBlocks(context, stubRegistry(layoutLog), {}, renderContext());
+
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0].widths).toEqual(['fill', 'fill', 'fill']);
+    const third = (CONTENT_WIDTH - 2 * COLUMN_GAP) / 3;
+    expect(layoutLog.map((entry) => entry.width)).toEqual([third, third, third]);
+  });
+
+  test('a row cell whose render yields nothing is dropped with its width', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'a', type: 'Paragraph', layout: { span: 8 }, properties: { content: 'a' } },
+        { id: 'gone', type: 'Widget', layout: { span: 8 } },
+        { id: 'c', type: 'Paragraph', layout: { span: 8 }, properties: { content: 'c' } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+
+    expect(nodes).toHaveLength(1);
+    expect(nodes[0].widths).toEqual([1 / 3, 1 / 3]);
+    expect(nodes[0].children).toEqual([text({ text: 'a' }), text({ text: 'c' })]);
+  });
+
+  test('a row whose every cell renders nothing emits nothing', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        { id: 'w1', type: 'Widget', layout: { span: 12 } },
+        { id: 'w2', type: 'Widget', layout: { span: 12 } },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+    expect(nodes).toEqual([]);
+  });
+});
+
+describe('areas and items', () => {
+  const ITEMS = [{ label: 'one' }, { label: 'two' }];
+  const tabsRegistry = (received) => ({
+    Box: {
+      toReport: ({ block, areas }) => {
+        received.push({ blockId: block.blockId, areas });
+        return Object.values(areas).flat();
+      },
+    },
+    Paragraph: { toReport: ({ block }) => text({ text: block.properties.content }) },
+  });
+
+  test('a container receives its walked children grouped by area name', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'tabs',
+          type: 'Box',
+          areas: {
+            first: { blocks: [{ id: 'f', type: 'Paragraph', properties: { content: 'F' } }] },
+            second: { blocks: [{ id: 's', type: 'Paragraph', properties: { content: 'S' } }] },
+          },
+        },
+      ],
+    });
+    const received = [];
+    await walkBlocks(context, tabsRegistry(received), {}, renderContext());
+
+    const tabs = received.find((entry) => entry.blockId === 'tabs');
+    expect(tabs.areas).toEqual({
+      first: [text({ text: 'F' })],
+      second: [text({ text: 'S' })],
+    });
+  });
+
+  test('a leaf receives neither areas nor items', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [{ id: 'p', type: 'Paragraph', properties: { content: 'p' } }],
+    });
+    const seen = [];
+    const registry = {
+      Paragraph: {
+        toReport: ({ areas, items }) => {
+          seen.push({ areas, items });
+          return null;
+        },
+      },
+    };
+    await walkBlocks(context, registry, {}, renderContext());
+    expect(seen).toEqual([{ areas: undefined, items: undefined }]);
+  });
+
+  test('rows never span two areas of one container', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'card',
+          type: 'Box',
+          areas: {
+            content: {
+              blocks: [
+                { id: 'a', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'a' } },
+              ],
+            },
+            extra: {
+              blocks: [
+                { id: 'b', type: 'Paragraph', layout: { span: 12 }, properties: { content: 'b' } },
+              ],
+            },
+          },
+        },
+      ],
+    });
+    const received = [];
+    const { nodes } = await walkBlocks(context, tabsRegistry(received), {}, renderContext());
+
+    // Two half-width rows, one per area — not one row holding both.
+    expect(nodes.map((node) => node.kind)).toEqual(['row', 'row']);
+    expect(nodes[0].widths).toEqual([0.5]);
+    expect(nodes[1].widths).toEqual([0.5]);
+  });
+
+  test('a list receives one areas object per item, and items never share a row', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      events: { onInit: [{ id: 'set', type: 'SetState', params: { items: ITEMS } }] },
+      blocks: [
+        {
+          id: 'items',
+          type: 'List',
+          blocks: [
+            {
+              id: 'items.$.label',
+              type: 'Paragraph',
+              layout: { span: 12 },
+              properties: { content: { _state: 'items.$.label' } },
+            },
+          ],
+        },
+      ],
+    });
+    const received = [];
+    const registry = {
+      List: {
+        toReport: ({ items }) => {
+          received.push(items);
+          return items.flatMap((areas) => Object.values(areas).flat());
+        },
+      },
+      Paragraph: { toReport: ({ block }) => text({ text: block.properties.content }) },
+    };
+    const { nodes } = await walkBlocks(context, registry, {}, renderContext());
+
+    expect(received[0]).toEqual([
+      { content: [{ kind: 'row', widths: [0.5], children: [text({ text: 'one' })] }] },
+      { content: [{ kind: 'row', widths: [0.5], children: [text({ text: 'two' })] }] },
+    ]);
+    // In the browser each item starts on its own line; the two span-12 blocks
+    // must not pair up into one row here.
+    expect(nodes.map((node) => node.kind)).toEqual(['row', 'row']);
+  });
+
+  test('a list with no renderer passes every item through in order', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      events: { onInit: [{ id: 'set', type: 'SetState', params: { items: ITEMS } }] },
+      blocks: [
+        {
+          id: 'items',
+          type: 'List',
+          blocks: [
+            {
+              id: 'items.$.label',
+              type: 'Paragraph',
+              properties: { content: { _state: 'items.$.label' } },
+            },
+          ],
+        },
+      ],
+    });
+    const { nodes, warnings } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+    expect(nodes).toEqual([text({ text: 'one' }), text({ text: 'two' })]);
+    expect(warnings).toEqual([{ blockType: 'List', blockIds: ['items'] }]);
+  });
+
+  test('a container with no renderer passes its areas through in area order', async () => {
+    const context = await evaluate({
+      id: 'page1',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'card',
+          type: 'Box',
+          areas: {
+            title: { blocks: [{ id: 't', type: 'Paragraph', properties: { content: 'T' } }] },
+            content: { blocks: [{ id: 'c', type: 'Paragraph', properties: { content: 'C' } }] },
+          },
+        },
+      ],
+    });
+    const { nodes } = await walkBlocks(context, stubRegistry(), {}, renderContext());
+    expect(nodes).toEqual([text({ text: 'T' }), text({ text: 'C' })]);
   });
 });
 

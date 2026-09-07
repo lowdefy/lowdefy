@@ -315,12 +315,13 @@ test('a resolved markdown image embeds as a data URL capped to the content width
 
   const node = await resolveMarkdownImages(
     { kind: 'markdown', markdown: 'before\n\n![logo](/logo.png)' },
-    { origin: 'https://app.example.com', logger: undefined }
+    { origin: 'https://app.example.com', publicDirectory: '/srv/app/public', logger: undefined }
   );
 
   expect(resolveImage).toHaveBeenCalledWith({
     src: '/logo.png',
     origin: 'https://app.example.com',
+    publicDirectory: '/srv/app/public',
     logger: undefined,
   });
   expect(node.images).toEqual({ '/logo.png': 'data:image/png;base64,AQID' });

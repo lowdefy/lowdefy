@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
+import robotoModule from 'pdfmake/build/fonts/Roboto.js';
+
 import fonts, { fonts as namedFonts, FONT_FAMILY } from './fonts.js';
+
+const roboto = robotoModule.default ?? robotoModule;
 
 // TrueType files begin with the version tag 0x00010000.
 const TTF_MAGIC = '00010000';
@@ -40,6 +44,14 @@ test.each(['regular', 'bold', 'italic', 'boldItalic'])(
     expect(buffer.subarray(0, 4).toString('hex')).toBe(TTF_MAGIC);
   }
 );
+
+test('the faces are the ones pdfmake ships, in their pdfmake roles', () => {
+  const shipped = (fileName) => Buffer.from(roboto.vfs[fileName].data, 'base64');
+  expect(fonts.regular.equals(shipped('Roboto-Regular.ttf'))).toBe(true);
+  expect(fonts.bold.equals(shipped('Roboto-Medium.ttf'))).toBe(true);
+  expect(fonts.italic.equals(shipped('Roboto-Italic.ttf'))).toBe(true);
+  expect(fonts.boldItalic.equals(shipped('Roboto-MediumItalic.ttf'))).toBe(true);
+});
 
 test('decodes each face once (stable buffer identity across reads)', () => {
   expect(fonts.regular).toBe(namedFonts.regular);

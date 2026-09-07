@@ -14,24 +14,32 @@
   limitations under the License.
 */
 
-/**
- * The single document font set for reports: Roboto in four faces (TrueType).
- * Decoded to Buffers once at module load and registered with both pdfmake and
- * (later) takumi, so document text and Html-block text render in the same face
- * — matching the client-side PdfMake action, which ships the same faces.
- */
+// The single document font set for reports: Roboto in four faces, decoded once
+// to Buffers and registered with pdfmake and the Html renderer so document text
+// and Html-block text share one face. The faces come from pdfmake's own shipped
+// font container rather than a copy of the base64 blobs — pdfmake is already a
+// dependency, so carrying the same 800 KB again would only be a second place for
+// the faces to drift.
+//
+// pdfmake's font container is CommonJS (`module.exports = fontContainer`); under
+// Node's ESM interop the default import is that object, unwrapped defensively.
+import robotoModule from 'pdfmake/build/fonts/Roboto.js';
 
-import { regular, bold, italic, boldItalic } from './robotoBase64.js';
+const roboto = robotoModule.default ?? robotoModule;
 
-/** The document font family name. */
 export const FONT_FAMILY = 'Roboto';
 
-/** Roboto faces as TrueType font Buffers, decoded once at module load. */
+function decodeFace(fileName) {
+  return Buffer.from(roboto.vfs[fileName].data, 'base64');
+}
+
+// pdfmake pairs Roboto's Medium weight with its bold role, so bold and boldItalic
+// map to the Medium faces.
 export const fonts = Object.freeze({
-  regular: Buffer.from(regular, 'base64'),
-  bold: Buffer.from(bold, 'base64'),
-  italic: Buffer.from(italic, 'base64'),
-  boldItalic: Buffer.from(boldItalic, 'base64'),
+  regular: decodeFace(roboto.fonts.Roboto.normal),
+  bold: decodeFace(roboto.fonts.Roboto.bold),
+  italic: decodeFace(roboto.fonts.Roboto.italics),
+  boldItalic: decodeFace(roboto.fonts.Roboto.bolditalics),
 });
 
 export default fonts;

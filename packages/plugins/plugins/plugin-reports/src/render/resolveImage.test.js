@@ -14,7 +14,32 @@
   limitations under the License.
 */
 
-import { resolveImage } from './resolveImage.js';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { jest } from '@jest/globals';
+
+// The resolver fetches through undici (not the global fetch) so it can pin the
+// connection to the addresses it checked. Mock the module: `fetch` records its
+// calls and `Agent` records the connect options it was built with.
+const fetchMock = jest.fn();
+const agents = [];
+class MockAgent {
+  constructor(options) {
+    this.options = options;
+    this.closed = false;
+    agents.push(this);
+  }
+  async close() {
+    this.closed = true;
+  }
+}
+jest.unstable_mockModule('undici', () => ({ fetch: fetchMock, Agent: MockAgent }));
+
+const dnsLookup = jest.fn();
+jest.unstable_mockModule('node:dns/promises', () => ({ default: { lookup: dnsLookup } }));
+
+const { resolveImage } = await import('./resolveImage.js');
 
 // A 1x1 transparent PNG.
 const PNG_BYTES = Buffer.from(
@@ -23,41 +48,49 @@ const PNG_BYTES = Buffer.from(
 );
 const PNG_DATA_URL = `data:image/png;base64,${PNG_BYTES.toString('base64')}`;
 
-// Collect logger warnings so a test can assert a failure was reported.
 function makeLogger() {
   const calls = [];
   return { calls, warn: (...args) => calls.push(args) };
 }
 
-// Install a fetch that records the URL it was asked for and returns a PNG.
-function recordingPngFetch() {
-  const recorder = { reached: null };
-  globalThis.fetch = async (url) => {
-    recorder.reached = String(url);
-    return {
-      ok: true,
-      status: 200,
-      headers: new Map([['content-type', 'image/png']]),
-      body: (async function* () {
-        yield PNG_BYTES;
-      })(),
-    };
+function pngResponse(bytes = PNG_BYTES, headers = {}) {
+  return {
+    ok: true,
+    status: 200,
+    headers: new Map([['content-type', 'image/png'], ...Object.entries(headers)]),
+    body: (async function* () {
+      yield bytes;
+    })(),
   };
-  return recorder;
 }
 
-let realFetch;
+function reachedUrl() {
+  return String(fetchMock.mock.calls[0][0]);
+}
 
-beforeAll(() => {
-  realFetch = globalThis.fetch;
+// A public directory on disk, with a sibling file outside it that a traversal
+// would reach.
+let root;
+let publicDirectory;
+beforeAll(async () => {
+  root = await fs.mkdtemp(path.join(os.tmpdir(), 'plugin-reports-images-'));
+  publicDirectory = path.join(root, 'public');
+  await fs.mkdir(path.join(publicDirectory, 'assets'), { recursive: true });
+  await fs.writeFile(path.join(publicDirectory, 'logo.png'), PNG_BYTES);
+  await fs.writeFile(path.join(publicDirectory, 'assets', 'nested.png'), PNG_BYTES);
+  await fs.writeFile(path.join(publicDirectory, 'index.html'), '<html></html>');
+  await fs.writeFile(path.join(root, 'secret.png'), PNG_BYTES);
 });
 
-afterAll(() => {
-  globalThis.fetch = realFetch;
+afterAll(async () => {
+  await fs.rm(root, { recursive: true, force: true });
 });
 
-afterEach(() => {
-  globalThis.fetch = realFetch;
+beforeEach(() => {
+  agents.length = 0;
+  fetchMock.mockReset();
+  dnsLookup.mockReset();
+  dnsLookup.mockRejectedValue(new Error('no DNS in tests'));
 });
 
 // --- data URIs ---------------------------------------------------------------
@@ -91,38 +124,97 @@ describe('data URIs', () => {
   });
 });
 
-// --- relative paths resolved against origin ----------------------------------
+// --- relative paths: public directory first ----------------------------------
 
 describe('relative paths', () => {
-  test('makes a leading-slash path absolute against origin and fetches it', async () => {
-    const recorder = recordingPngFetch();
-    const result = await resolveImage({ src: '/logo.png', origin: 'https://app.example.com' });
+  test('reads a leading-slash path from the public directory without fetching', async () => {
+    const result = await resolveImage({ src: '/logo.png', publicDirectory });
     expect(result.mime).toBe('image/png');
     expect(result.buffer.equals(PNG_BYTES)).toBe(true);
-    expect(recorder.reached).toBe('https://app.example.com/logo.png');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  test('resolves a bare relative path against the origin root', async () => {
-    const recorder = recordingPngFetch();
+  test('reads a bare nested path from the public directory', async () => {
     const result = await resolveImage({
-      src: 'assets/nested.png',
+      src: 'assets/nested.png?v=2',
+      publicDirectory,
       origin: 'https://app.example.com',
     });
     expect(result.mime).toBe('image/png');
-    expect(recorder.reached).toBe('https://app.example.com/assets/nested.png');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  // The app's own origin is exempt from the private-address refusal: a self-hosted
-  // deployment's origin can legitimately be an internal address, and a relative
-  // path is the app fetching its own public asset, not an author-supplied URL.
-  test('fetches a relative path even when origin is a private/loopback address', async () => {
-    const recorder = recordingPngFetch();
-    const result = await resolveImage({ src: '/logo.png', origin: 'http://127.0.0.1:3000' });
-    expect(result?.mime).toBe('image/png');
-    expect(recorder.reached).toBe('http://127.0.0.1:3000/logo.png');
+  test('refuses a path that escapes the public directory and does not fetch it', async () => {
+    const logger = makeLogger();
+    for (const src of ['/../secret.png', '../secret.png', '/assets/../../secret.png']) {
+      const result = await resolveImage({
+        src,
+        publicDirectory,
+        origin: 'https://app.example.com',
+        logger,
+      });
+      expect(result).toBeNull();
+    }
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(logger.calls.every((call) => /escapes the public directory/i.test(call[1]))).toBe(true);
   });
 
-  test('refuses a relative path when no origin is configured', async () => {
+  test('refuses a percent-encoded traversal', async () => {
+    const logger = makeLogger();
+    const result = await resolveImage({ src: '/%2e%2e/secret.png', publicDirectory, logger });
+    expect(result).toBeNull();
+    expect(logger.calls[0][1]).toMatch(/escapes the public directory/i);
+  });
+
+  test('refuses a public file that is not an image, without fetching', async () => {
+    const logger = makeLogger();
+    const result = await resolveImage({
+      src: '/index.html',
+      publicDirectory,
+      origin: 'https://app.example.com',
+      logger,
+    });
+    expect(result).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(logger.calls[0][1]).toMatch(/does not name an image/i);
+  });
+
+  test('falls back to a guarded fetch from origin when the file is not on disk', async () => {
+    dnsLookup.mockResolvedValue([{ address: '93.184.216.34', family: 4 }]);
+    fetchMock.mockResolvedValue(pngResponse());
+    const result = await resolveImage({
+      src: '/missing.png',
+      publicDirectory,
+      origin: 'https://app.example.com',
+    });
+    expect(result.mime).toBe('image/png');
+    expect(reachedUrl()).toBe('https://app.example.com/missing.png');
+  });
+
+  test('fetches from origin when no public directory is configured', async () => {
+    dnsLookup.mockResolvedValue([{ address: '93.184.216.34', family: 4 }]);
+    fetchMock.mockResolvedValue(pngResponse());
+    const result = await resolveImage({ src: 'logo.png', origin: 'https://app.example.com' });
+    expect(result.mime).toBe('image/png');
+    expect(reachedUrl()).toBe('https://app.example.com/logo.png');
+  });
+
+  // The origin is derived from the request's Host header, which the client
+  // controls, so it gets no exemption from the private-address guard.
+  test('refuses the origin fallback when origin is a private or loopback address', async () => {
+    const logger = makeLogger();
+    const result = await resolveImage({
+      src: '/missing.png',
+      publicDirectory,
+      origin: 'http://127.0.0.1:3000',
+      logger,
+    });
+    expect(result).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(logger.calls[0][1]).toMatch(/private, loopback, or link-local/i);
+  });
+
+  test('refuses a relative path with neither a public directory nor an origin', async () => {
     const logger = makeLogger();
     expect(await resolveImage({ src: 'logo.png', logger })).toBeNull();
     expect(logger.calls[0][1]).toMatch(/no origin/i);
@@ -132,88 +224,135 @@ describe('relative paths', () => {
 // --- remote fetch guardrails -------------------------------------------------
 
 describe('remote fetch', () => {
-  test('refuses a private/loopback IP literal without connecting', async () => {
+  test('refuses private, loopback, link-local, CGNAT, multicast and reserved IPv4 literals without connecting', async () => {
     const logger = makeLogger();
-    let called = false;
-    globalThis.fetch = () => {
-      called = true;
-      throw new Error('should not connect');
-    };
-    for (const host of ['10.0.0.5', '127.0.0.1', '169.254.1.1', '192.168.1.1', '172.16.0.1']) {
-      const result = await resolveImage({ src: `http://${host}/logo.png`, logger });
-      expect(result).toBeNull();
+    const hosts = [
+      '10.0.0.5',
+      '127.0.0.1',
+      '169.254.1.1',
+      '192.168.1.1',
+      '172.16.0.1',
+      '100.64.0.1', // carrier-grade NAT
+      '100.127.255.254',
+      '224.0.0.1', // multicast
+      '240.0.0.1', // reserved
+      '255.255.255.255', // broadcast
+      '0.0.0.0',
+    ];
+    for (const host of hosts) {
+      expect(await resolveImage({ src: `http://${host}/logo.png`, logger })).toBeNull();
     }
-    expect(called).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
     expect(logger.calls.every((c) => /private, loopback, or link-local/i.test(c[1]))).toBe(true);
   });
 
-  test('refuses an IPv6 loopback literal without connecting', async () => {
-    let called = false;
-    globalThis.fetch = () => {
-      called = true;
-      throw new Error('should not connect');
-    };
-    expect(await resolveImage({ src: 'http://[::1]/logo.png' })).toBeNull();
-    expect(called).toBe(false);
+  test('still fetches the public neighbours of the refused IPv4 ranges', async () => {
+    fetchMock.mockResolvedValue(pngResponse());
+    for (const host of ['100.63.255.255', '100.128.0.1', '223.255.255.255', '11.0.0.1']) {
+      fetchMock.mockClear();
+      const result = await resolveImage({ src: `http://${host}/logo.png` });
+      expect(result?.mime).toBe('image/png');
+    }
   });
 
-  // Every spelling of a refused address, because `URL` picks the spelling: it
-  // rewrote `[::ffff:127.0.0.1]` to `[::ffff:7f00:1]`, which the old text guard
-  // could not match, and the fetch reached 127.0.0.1.
+  test('refuses an IPv6 loopback literal without connecting', async () => {
+    expect(await resolveImage({ src: 'http://[::1]/logo.png' })).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  // Every spelling of a refused address, because URL picks the spelling: it
+  // rewrites [::ffff:127.0.0.1] to [::ffff:7f00:1].
   test('refuses every spelling of a private IPv6 address without connecting', async () => {
-    let called = false;
-    globalThis.fetch = () => {
-      called = true;
-      throw new Error('should not connect');
-    };
     const hosts = [
-      '::ffff:127.0.0.1', // IPv4-mapped loopback, dotted
-      '::ffff:7f00:1', // the same address, hex — what URL hands the guard
-      '::ffff:169.254.169.254', // IPv4-mapped cloud metadata
-      '::ffff:a9fe:a9fe', // the same, hex
-      '::0:1', // loopback with a zero hextet written out
-      '0:0:0:0:0:0:0:1', // loopback fully expanded
-      'fe80::1', // link-local
+      '::ffff:127.0.0.1',
+      '::ffff:7f00:1',
+      '::ffff:169.254.169.254',
+      '::ffff:a9fe:a9fe',
+      '::ffff:100.64.0.1', // mapped CGNAT
+      '::0:1',
+      '0:0:0:0:0:0:0:1',
+      'fe80::1',
       'fe80::5054:ff:fe12:3456',
-      'febf::1', // the top of fe80::/10
-      'fd00::1', // unique-local
+      'febf::1',
+      'fd00::1',
       'fc00::1',
-      '64:ff9b::7f00:1', // NAT64-embedded loopback
-      '::', // unspecified
+      '64:ff9b::7f00:1',
+      'ff02::1', // multicast
+      'ff05::2',
+      '::',
     ];
     for (const host of hosts) {
       expect(await resolveImage({ src: `http://[${host}]/logo.png` })).toBeNull();
     }
-    expect(called).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   test('a public IPv6 literal still fetches', async () => {
-    let reached = null;
-    globalThis.fetch = async (url) => {
-      reached = String(url);
-      return {
-        ok: true,
-        status: 200,
-        headers: new Map([['content-type', 'image/png']]),
-        body: (async function* () {
-          yield PNG_BYTES;
-        })(),
-      };
-    };
+    fetchMock.mockResolvedValue(pngResponse());
     const result = await resolveImage({ src: 'http://[2606:4700:4700::1111]/logo.png' });
     expect(result?.mime).toBe('image/png');
-    expect(reached).toBe('http://[2606:4700:4700::1111]/logo.png');
+    expect(reachedUrl()).toBe('http://[2606:4700:4700::1111]/logo.png');
+  });
+
+  test('pins the connection to the checked address and closes the agent afterwards', async () => {
+    fetchMock.mockResolvedValue(pngResponse());
+    await resolveImage({ src: 'http://93.184.216.34/logo.png' });
+    const options = fetchMock.mock.calls[0][1];
+    expect(options.redirect).toBe('error');
+    expect(options.signal).toBeInstanceOf(AbortSignal);
+    expect(agents).toHaveLength(1);
+    expect(options.dispatcher).toBe(agents[0]);
+    expect(agents[0].closed).toBe(true);
+
+    const lookup = agents[0].options.connect.lookup;
+    const single = await new Promise((resolve) =>
+      lookup('93.184.216.34', {}, (error, address, family) => resolve({ error, address, family }))
+    );
+    expect(single).toEqual({ error: null, address: '93.184.216.34', family: 4 });
+    const all = await new Promise((resolve) =>
+      lookup('93.184.216.34', { all: true }, (error, records) => resolve({ error, records }))
+    );
+    expect(all).toEqual({ error: null, records: [{ address: '93.184.216.34', family: 4 }] });
+  });
+
+  test('resolves a hostname once and pins the connection to those addresses', async () => {
+    dnsLookup.mockResolvedValue([
+      { address: '93.184.216.34', family: 4 },
+      { address: '2606:2800:220:1:248:1893:25c8:1946', family: 6 },
+    ]);
+    fetchMock.mockResolvedValue(pngResponse());
+    const result = await resolveImage({ src: 'https://example.com/logo.png' });
+    expect(result?.mime).toBe('image/png');
+    expect(dnsLookup).toHaveBeenCalledTimes(1);
+    expect(dnsLookup).toHaveBeenCalledWith('example.com', { all: true });
+    const lookup = agents[0].options.connect.lookup;
+    const all = await new Promise((resolve) =>
+      lookup('example.com', { all: true }, (error, records) => resolve(records))
+    );
+    expect(all).toEqual([
+      { address: '93.184.216.34', family: 4 },
+      { address: '2606:2800:220:1:248:1893:25c8:1946', family: 6 },
+    ]);
+  });
+
+  test('refuses a hostname when any resolved address is private', async () => {
+    const logger = makeLogger();
+    dnsLookup.mockResolvedValue([
+      { address: '93.184.216.34', family: 4 },
+      { address: '10.0.0.5', family: 4 },
+    ]);
+    expect(await resolveImage({ src: 'https://rebind.example/logo.png', logger })).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(logger.calls[0][1]).toMatch(/private, loopback, or link-local/i);
+  });
+
+  test('refuses a hostname that does not resolve', async () => {
+    expect(await resolveImage({ src: 'https://nowhere.invalid/logo.png' })).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   test('fetches a public image and caps nothing under the limit', async () => {
-    globalThis.fetch = async () => ({
-      ok: true,
-      status: 200,
-      headers: new Map([['content-type', 'image/png']]),
-      body: (async function* () {
-        yield PNG_BYTES;
-      })(),
-    });
+    fetchMock.mockResolvedValue(pngResponse());
     const result = await resolveImage({ src: 'http://93.184.216.34/logo.png' });
     expect(result.mime).toBe('image/png');
     expect(result.buffer.equals(PNG_BYTES)).toBe(true);
@@ -221,23 +360,22 @@ describe('remote fetch', () => {
 
   test('aborts and refuses a body that exceeds the 5 MB cap', async () => {
     const logger = makeLogger();
-    const chunk = Buffer.alloc(1024 * 1024); // 1 MB
-    globalThis.fetch = async () => ({
+    const chunk = Buffer.alloc(1024 * 1024);
+    fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
       headers: new Map([['content-type', 'image/png']]),
       body: (async function* () {
-        for (let i = 0; i < 10; i += 1) yield chunk; // 10 MB total
+        for (let i = 0; i < 10; i += 1) yield chunk;
       })(),
     });
-    const result = await resolveImage({ src: 'http://93.184.216.34/big.png', logger });
-    expect(result).toBeNull();
+    expect(await resolveImage({ src: 'http://93.184.216.34/big.png', logger })).toBeNull();
     expect(logger.calls[0][1]).toMatch(/cap/i);
   });
 
   test('refuses a declared content-length over the cap without reading the body', async () => {
     let bodyRead = false;
-    globalThis.fetch = async () => ({
+    fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
       headers: new Map([
@@ -255,20 +393,19 @@ describe('remote fetch', () => {
 
   test('refuses a non-image content-type and warns', async () => {
     const logger = makeLogger();
-    globalThis.fetch = async () => ({
+    fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
       headers: new Map([['content-type', 'text/html; charset=utf-8']]),
       body: (async function* () {})(),
     });
-    const result = await resolveImage({ src: 'http://93.184.216.34/page.html', logger });
-    expect(result).toBeNull();
+    expect(await resolveImage({ src: 'http://93.184.216.34/page.html', logger })).toBeNull();
     expect(logger.calls[0][1]).toMatch(/not an image/i);
   });
 
   test('refuses a non-OK response', async () => {
     const logger = makeLogger();
-    globalThis.fetch = async () => ({
+    fetchMock.mockResolvedValue({
       ok: false,
       status: 404,
       headers: new Map(),
@@ -278,41 +415,31 @@ describe('remote fetch', () => {
     expect(logger.calls[0][1]).toMatch(/HTTP 404/);
   });
 
-  test('refuses when the fetch throws', async () => {
+  test('refuses when the fetch throws and still closes the agent', async () => {
     const logger = makeLogger();
-    globalThis.fetch = async () => {
-      throw new Error('network down');
-    };
+    fetchMock.mockRejectedValue(new Error('network down'));
     expect(await resolveImage({ src: 'http://93.184.216.34/logo.png', logger })).toBeNull();
     expect(logger.calls[0][1]).toMatch(/fetch failed/i);
+    expect(agents[0].closed).toBe(true);
   });
 
   test('redacts the query string in the logged source', async () => {
     const logger = makeLogger();
-    globalThis.fetch = async () => {
-      throw new Error('network down');
-    };
+    fetchMock.mockRejectedValue(new Error('network down'));
     await resolveImage({ src: 'http://93.184.216.34/logo.png?token=secret', logger });
-    const logged = JSON.stringify(logger.calls[0]);
-    expect(logged).not.toMatch(/token=secret/);
+    expect(JSON.stringify(logger.calls[0])).not.toMatch(/token=secret/);
   });
 
-  // The origin exemption is for relative paths only. An author-supplied absolute
-  // URL is always guarded, even when it happens to point back at the app origin.
-  test('still refuses an absolute URL to a private address even when it equals origin', async () => {
+  test('refuses an absolute URL to a private address even when it equals origin', async () => {
     const logger = makeLogger();
-    let called = false;
-    globalThis.fetch = () => {
-      called = true;
-      throw new Error('should not connect');
-    };
     const result = await resolveImage({
       src: 'http://127.0.0.1:3000/logo.png',
       origin: 'http://127.0.0.1:3000',
+      publicDirectory,
       logger,
     });
     expect(result).toBeNull();
-    expect(called).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
     expect(logger.calls[0][1]).toMatch(/private, loopback, or link-local/i);
   });
 });

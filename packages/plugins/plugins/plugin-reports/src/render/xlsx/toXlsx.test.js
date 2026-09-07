@@ -17,7 +17,7 @@
 import ExcelJS from 'exceljs';
 import { ConfigError } from '@lowdefy/errors';
 
-import { cell, grid, heading, row, stack, table } from '../../ir/nodes.js';
+import { cell, grid, heading, row, stack } from '../../ir/nodes.js';
 import toXlsx from './toXlsx.js';
 
 // Load a produced buffer back into a fresh workbook for round-trip assertions.
@@ -88,6 +88,23 @@ test('an illegal-charset hint is sanitized defensively', async () => {
 
   const workbook = await readBack(buffer);
   expect(workbook.worksheets.map((s) => s.name)).toEqual(['abcdefgh']);
+});
+
+test('edge apostrophes are stripped from a hint, inner ones kept', async () => {
+  const buffer = await toXlsx([
+    grid({ header: [cell('h')], rows: [], sheetName: "'Q1 Owner's Report'" }),
+  ]);
+  const workbook = await new ExcelJS.Workbook().xlsx.load(buffer);
+  expect(workbook.worksheets.map((s) => s.name)).toEqual(["Q1 Owner's Report"]);
+});
+
+test('the reserved name History is renamed through the collision path', async () => {
+  const buffer = await toXlsx([
+    grid({ header: [cell('h')], rows: [], sheetName: 'history' }),
+    grid({ header: [cell('h')], rows: [], sheetName: 'History' }),
+  ]);
+  const workbook = await new ExcelJS.Workbook().xlsx.load(buffer);
+  expect(workbook.worksheets.map((s) => s.name)).toEqual(['history (2)', 'History (3)']);
 });
 
 test('a hint longer than 31 characters is truncated', async () => {

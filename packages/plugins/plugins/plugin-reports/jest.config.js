@@ -19,12 +19,7 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: [
-    '<rootDir>/dist/',
-    '<rootDir>/test/',
-    '<rootDir>/src/index.js',
-    '<rootDir>/src/fonts/robotoBase64.js',
-  ],
+  coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/test/', '<rootDir>/src/index.js'],
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',

@@ -190,18 +190,130 @@ describe('validateNode rejects bad input', () => {
   test('table cell without a value property throws ConfigError naming the kind', () => {
     const node = { kind: 'table', header: [{ formatted: 'x' }], rows: [] };
     expect(() => validateNode(node)).toThrow(ConfigError);
-    expect(() => validateNode(node)).toThrow("Invalid report IR 'table' cell");
+    expect(() => validateNode(node)).toThrow("Invalid report IR 'table': a cell must be an object");
   });
 
   test('table data cell with a non-string formatted throws ConfigError', () => {
-    const node = { kind: 'table', header: [], rows: [[{ value: 1, formatted: 2 }]] };
+    const node = { kind: 'table', header: [cell('h')], rows: [[{ value: 1, formatted: 2 }]] };
     expect(() => validateNode(node)).toThrow("'formatted' must be a string");
+  });
+
+  // ExcelJS types a cell by the shape of its value, so an object with a `formula`
+  // key would become a live formula: only primitives and dates may be cell values.
+  test('a cell whose value is an object is refused (formula injection guard)', () => {
+    const node = grid({
+      header: [cell('h')],
+      rows: [[{ value: { formula: 'HYPERLINK("http://evil")' } }]],
+    });
+    expect(() => validateNode(node)).toThrow(ConfigError);
+    expect(() => validateNode(node)).toThrow(
+      /cell value must be a string, number, boolean, null, or Date/
+    );
+  });
+
+  test('a cell whose value is an array is refused', () => {
+    const node = table({ header: [{ value: [1, 2] }], rows: [] });
+    expect(() => validateNode(node)).toThrow(/cell value must be/);
+  });
+
+  test('a cell value may be a Date', () => {
+    const node = grid({ header: [cell('when')], rows: [[cell(new Date('2026-01-01'))]] });
+    expect(() => validateNode(node)).not.toThrow();
+  });
+
+  test('a table with an empty header is refused', () => {
+    expect(() => validateNode(table({ header: [], rows: [] }))).toThrow(
+      "'header' must be an array of at least one cell"
+    );
+    expect(() => validateNode(grid({ header: undefined, rows: [] }))).toThrow(ConfigError);
+  });
+
+  test('a ragged row is refused, naming the row', () => {
+    const node = table({ header: [cell('a'), cell('b')], rows: [[cell(1), cell(2)], [cell(3)]] });
+    expect(() => validateNode(node)).toThrow('row 1 must be an array of 2 cell(s)');
+  });
+
+  test('rows that are not an array are refused', () => {
+    expect(() => validateNode(grid({ header: [cell('a')], rows: undefined }))).toThrow(
+      "'rows' must be an array"
+    );
+  });
+
+  test('a heading needs a string text and a level from 1 to 4', () => {
+    expect(() => validateNode({ kind: 'heading', text: 1, level: 1 })).toThrow(
+      "'text' must be a string"
+    );
+    expect(() => validateNode({ kind: 'heading', text: 'x', level: 5 })).toThrow(
+      "'level' must be an integer from 1 to 4"
+    );
+    expect(() => validateNode({ kind: 'heading', text: 'x', level: 2.5 })).toThrow(ConfigError);
+  });
+
+  test('a text node needs a string text and, when present, a string tint', () => {
+    expect(() => validateNode({ kind: 'text' })).toThrow("'text' must be a string");
+    expect(() => validateNode({ kind: 'text', text: 'x', tint: 3 })).toThrow(
+      "'tint' must be a string"
+    );
+  });
+
+  test('a markdown node needs a string source', () => {
+    expect(() => validateNode({ kind: 'markdown', markdown: null })).toThrow(
+      "'markdown' must be a string"
+    );
+  });
+
+  test('an svg needs a non-empty string and positive finite dimensions', () => {
+    expect(() => validateNode(svg({ svg: '', width: 10, height: 10 }))).toThrow(
+      "'svg' must not be empty"
+    );
+    expect(() => validateNode(svg({ svg: {}, width: 10, height: 10 }))).toThrow(
+      "'svg' must be a string"
+    );
+    expect(() => validateNode(svg({ svg: '<svg/>', width: 0, height: 10 }))).toThrow(
+      "'width' must be a positive number"
+    );
+    expect(() => validateNode(svg({ svg: '<svg/>', width: 10, height: Infinity }))).toThrow(
+      "'height' must be a positive number"
+    );
+    expect(() => validateNode(svg({ svg: '<svg/>', width: 10 }))).toThrow(ConfigError);
+  });
+
+  test('an image needs a non-empty src and, when given, positive dimensions', () => {
+    expect(() => validateNode(image({ src: '' }))).toThrow("'src' must not be empty");
+    expect(() => validateNode(image({ src: 42 }))).toThrow("'src' must be a string");
+    expect(() => validateNode(image({ src: '/a.png', width: -1 }))).toThrow(
+      "'width' must be a positive number"
+    );
+    expect(() => validateNode(image({ src: '/a.png', height: 20 }))).not.toThrow();
+  });
+
+  test('a stat needs string label and value', () => {
+    expect(() => validateNode(stat({ label: 'x', value: 12 }))).toThrow("'value' must be a string");
+    expect(() => validateNode(stat({ label: null, value: '12' }))).toThrow(
+      "'label' must be a string"
+    );
+  });
+
+  test('a spacer needs a fraction width', () => {
+    expect(() => validateNode(spacer({ width: 0 }))).toThrow(
+      "'width' must be a fraction in (0, 1]"
+    );
+    expect(() => validateNode(spacer({ width: 'auto' }))).toThrow(ConfigError);
+  });
+
+  test('a stack or row needs a children array', () => {
+    expect(() => validateNode({ kind: 'stack' })).toThrow("'children' must be an array");
+    expect(() => validateNode({ kind: 'row', widths: [] })).toThrow(
+      "'children' and 'widths' must be arrays"
+    );
   });
 
   test('row width outside (0, 1] throws ConfigError', () => {
     const node = { kind: 'row', children: [divider()], widths: [1.5] };
     expect(() => validateNode(node)).toThrow(ConfigError);
-    expect(() => validateNode(node)).toThrow("Invalid report IR 'row' width '1.5'");
+    expect(() => validateNode(node)).toThrow(
+      "Invalid report IR 'row': width '1.5' must be a fraction"
+    );
   });
 
   // The row budget, not just each entry: fractions that sum past the row run off

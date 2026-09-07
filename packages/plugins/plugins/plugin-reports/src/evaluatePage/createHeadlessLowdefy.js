@@ -24,7 +24,7 @@ import {
   Wait,
 } from '@lowdefy/actions-core/actions';
 import { ConfigError } from '@lowdefy/errors';
-import { translate, urlQuery } from '@lowdefy/helpers';
+import { translate, type, urlQuery } from '@lowdefy/helpers';
 
 // The engine executes any action whose type resolves to a function on
 // `lowdefy._internal.actions`. Reports run headless, so only these actions have
@@ -60,7 +60,7 @@ function createActionRegistry({ warnings }) {
   const skipStubs = {};
   return new Proxy(SERVER_SAFE_ACTIONS, {
     get(target, actionType) {
-      if (typeof actionType !== 'string') return undefined;
+      if (!type.isString(actionType)) return undefined;
       if (Object.prototype.hasOwnProperty.call(target, actionType)) {
         return target[actionType];
       }
@@ -159,6 +159,36 @@ const silentLogger = {
   warn: () => undefined,
 };
 
+// Every error the engine raises while running actions is recorded so the caller
+// can fail the render. The engine never rethrows an action error: it logs it and
+// resolves, which is right in a browser (the user sees a toast beside a page that
+// keeps working) and wrong for a document (a failed `Request` in `onInit` leaves
+// `_request` null and the report ships with empty tables). Lowdefy errors reach
+// `handleError`; a `UserError` (a `Throw` action, a failed `Validate`) reaches
+// `lowdefy._internal.logger.error` instead, because the engine keeps user-facing
+// errors out of the server terminal. Both are the same signal here, so the
+// engine's logger is wrapped to record `error` calls before forwarding them.
+// The wrapper delegates method by method: a pino logger keeps its methods on
+// its prototype, so spreading it would drop them.
+function createActionErrorCollector({ logger }) {
+  const actionErrors = [];
+  const record = (error) => {
+    actionErrors.push(error);
+    logger.error(error);
+  };
+  return {
+    actionErrors,
+    handleError: record,
+    engineLogger: {
+      debug: (...args) => logger.debug(...args),
+      error: record,
+      info: (...args) => logger.info(...args),
+      log: (...args) => (logger.log ?? logger.info)(...args),
+      warn: (...args) => logger.warn(...args),
+    },
+  };
+}
+
 /**
  * Build a fresh headless `lowdefy` context object for one report generation,
  * mirroring the shape the browser client assembles in
@@ -168,7 +198,9 @@ const silentLogger = {
  * `signal` is the generation's abort signal. The handle turns it into `aborted`,
  * a promise the caller races each phase against.
  *
- * Returns a handle: `{ lowdefy, pageConfig, jsMap, seed, warnings, drainRequests }`.
+ * Returns a handle: `{ lowdefy, pageConfig, jsMap, seed, warnings, actionErrors,
+ * drainRequests, assertUserNotEvaluated, aborted }`. `actionErrors` fills with
+ * every error the engine's actions raised; evaluatePage fails the render on any.
  * The factory owns the synthetic window (including `seed.urlQuery`); seeding
  * `lowdefy.inputs[pageId]` from `seed.input` and the context state from
  * `seed.state` is left to evaluatePage, which runs after `getContext` creates
@@ -224,6 +256,7 @@ function createHeadlessLowdefy({
   };
 
   const { trackedCallRequest, drainRequests } = createTrackingCallRequest(callRequest);
+  const { actionErrors, handleError, engineLogger } = createActionErrorCollector({ logger });
 
   const lowdefy = {
     apiResponses: {},
@@ -247,11 +280,11 @@ function createHeadlessLowdefy({
       callRequest: trackedCallRequest,
       components: {},
       displayMessage: () => () => undefined,
-      globals: { document: undefined, fetch: globalThis.fetch, window },
-      handleError: (error) => logger.error(error),
+      globals: { document: undefined, fetch, window },
+      handleError,
       initialised: true,
       link: () => undefined,
-      logger,
+      logger: engineLogger,
       operators: resolvedOperators,
       translate: (key, values) => translate({ key, values, i18n }),
       updaters: {},
@@ -269,6 +302,7 @@ function createHeadlessLowdefy({
     jsMap,
     seed,
     warnings,
+    actionErrors,
     drainRequests,
     assertUserNotEvaluated,
     aborted: createAbortPromise(signal),

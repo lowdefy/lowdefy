@@ -17,15 +17,18 @@
 /**
  * The closed, versioned document intermediate representation (IR).
  *
- * Block `./static` renderers emit these nodes; only `@lowdefy/reports`
+ * Block `./static` renderers emit these nodes; only `@lowdefy/plugin-reports`
  * translates them to pdfmake or ExcelJS. The node set is closed: there is no
  * extension hook and no custom kinds. A renderer that needs something new must
- * add a kind here (bumping IR_VERSION) — the design's "one correct way"
- * contract. `validateNode` throws a ConfigError naming any unknown kind so
- * plugin authors find out in dev.
+ * add a kind here (bumping IR_VERSION). `validateNode` rejects any node the
+ * translators could not render, so a renderer bug surfaces as a skipped block
+ * with a message naming the rule rather than as a crash inside pdfmake.
  */
 
-import { ConfigError } from '@lowdefy/errors';
+import { cell } from '@lowdefy/block-utils/report';
+
+import validateNode from './validateNode.js';
+import validateNodes from './validateNodes.js';
 
 /**
  * IR node-set version. Bump when the closed node set changes so callers that
@@ -49,8 +52,6 @@ export const NODE_KINDS = Object.freeze([
   'spacer',
 ]);
 
-const KIND_SET = new Set(NODE_KINDS);
-
 // --- Constructors -----------------------------------------------------------
 // Each returns { kind, ...props }. Optional props are omitted when absent so
 // nodes stay minimal and predictable.
@@ -69,8 +70,8 @@ export function text({ text, tint } = {}) {
 }
 
 /**
- * A markdown string, translated centrally by `@lowdefy/reports` (remark).
- * Renderers emit the evaluated markdown source, never a pre-parsed tree.
+ * A markdown string, translated centrally by the plugin (remark). Renderers emit
+ * the evaluated markdown source, never a pre-parsed tree.
  */
 export function markdown({ markdown }) {
   return { kind: 'markdown', markdown };
@@ -92,15 +93,6 @@ export function image({ src, width, height }) {
     ...(width !== undefined ? { width } : {}),
     ...(height !== undefined ? { height } : {}),
   };
-}
-
-/**
- * A single table cell. `value` is the raw typed datum (number, date, string,
- * boolean, or null); `formatted` is the display string when a formatter ran.
- * PDF renders `formatted ?? value`; xlsx writes the typed `value`.
- */
-export function cell(value, formatted) {
-  return { value, ...(formatted !== undefined ? { formatted } : {}) };
 }
 
 /**
@@ -169,93 +161,6 @@ export function spacer({ width }) {
   return { kind: 'spacer', width };
 }
 
-// --- Validation -------------------------------------------------------------
-
-function isObject(value) {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function validateCell(cellNode, kind) {
-  if (!isObject(cellNode) || !Object.prototype.hasOwnProperty.call(cellNode, 'value')) {
-    throw new ConfigError(
-      `Invalid report IR '${kind}' cell: expected an object with a 'value' property.`
-    );
-  }
-  if (cellNode.formatted !== undefined && typeof cellNode.formatted !== 'string') {
-    throw new ConfigError(
-      `Invalid report IR '${kind}' cell: 'formatted' must be a string when present.`
-    );
-  }
-}
-
-/**
- * Validate an IR node (recursively). Throws a ConfigError naming the offending
- * kind on any unknown kind, and validates table cell shape and container
- * children. Returns the node so callers can validate-and-pass in one step.
- */
-export function validateNode(node) {
-  if (!isObject(node) || typeof node.kind !== 'string') {
-    throw new ConfigError('Invalid report IR node: expected an object with a string kind.');
-  }
-  const { kind } = node;
-  if (!KIND_SET.has(kind)) {
-    throw new ConfigError(`Unknown report IR node kind '${kind}'.`);
-  }
-  if (kind === 'grid' || kind === 'table') {
-    for (const headerCell of node.header ?? []) {
-      validateCell(headerCell, kind);
-    }
-    for (const dataRow of node.rows ?? []) {
-      for (const dataCell of dataRow ?? []) {
-        validateCell(dataCell, kind);
-      }
-    }
-  }
-  if (kind === 'row') {
-    const widths = node.widths ?? [];
-    const children = node.children ?? [];
-    if (widths.length !== children.length) {
-      throw new ConfigError(
-        `Invalid report IR 'row': ${widths.length} width(s) for ${children.length} child(ren). ` +
-          'widths must be parallel to children.'
-      );
-    }
-    let fractionSum = 0;
-    for (const width of widths) {
-      const valid =
-        width === 'auto' ||
-        width === 'fill' ||
-        (typeof width === 'number' && width > 0 && width <= 1);
-      if (!valid) {
-        throw new ConfigError(
-          `Invalid report IR 'row' width '${width}': expected a fraction in (0, 1], 'auto', or 'fill'.`
-        );
-      }
-      if (typeof width === 'number') fractionSum += width;
-    }
-    // Check the row's budget, not only each entry: fractions summing past the
-    // whole row run off the page, and because a document renderer resolves them
-    // against the full row width, they starve any content-sized sibling instead
-    // of clipping visibly. The slack absorbs the float error in `span/24` sums
-    // (7/24 + 7/24 + 10/24 lands just over 1).
-    if (fractionSum > 1 + 1e-9) {
-      throw new ConfigError(
-        `Invalid report IR 'row': widths sum to ${fractionSum}, more than the row's width.`
-      );
-    }
-  }
-  if (kind === 'row' || kind === 'stack') {
-    for (const child of node.children ?? []) {
-      validateNode(child);
-    }
-  }
-  return node;
-}
-
-/** Validate a list of IR nodes, returning it unchanged. */
-export function validateNodes(nodes) {
-  for (const node of nodes) {
-    validateNode(node);
-  }
-  return nodes;
-}
+// `cell` is the shared block-utils helper, re-exported so the plugin and the
+// block renderers build cells from one definition.
+export { cell, validateNode, validateNodes };

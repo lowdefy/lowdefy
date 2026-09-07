@@ -18,7 +18,6 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import collectReportOptions from '../../../collectReportOptions.js';
 import generateReport from '../../../generateReport.js';
-import getReportStylesheet from '../../../render/stylesheet.js';
 import resolveRenderer from '../../../registry/resolveRenderer.js';
 import schema from './schema.js';
 import { sanitizeReportFilename } from '../../../downloadName.js';
@@ -27,6 +26,14 @@ import { sanitizeReportFilename } from '../../../downloadName.js';
 // aborts and answers before the HTTP layer times out the whole request.
 const TIMEOUT_MARGIN_MS = 2000;
 const MIN_TIMEOUT_MS = 1000;
+
+// The generation deadline for a request timeout. Zero means the HTTP layer has
+// no deadline, so nothing needs undercutting and the plugin default applies
+// (generateReport owns it); the same when no timeout is configured.
+function generationTimeout(requestTimeout) {
+  if (!type.isNumber(requestTimeout) || requestTimeout <= 0) return undefined;
+  return Math.max(requestTimeout - TIMEOUT_MARGIN_MS, MIN_TIMEOUT_MS);
+}
 
 // Render one page as a downloadable report document. This is the only request
 // type that declares meta.appAccess, so it receives the `app` capability — the
@@ -40,9 +47,7 @@ async function RenderReport({ request, app }) {
   // and ≥ 1 when this resolver is reached from another report's own requests —
   // refuse loudly rather than recurse.
   if ((app.renderDepth ?? 0) > 0) {
-    throw new Error(
-      `Report for page '${pageId}' cannot be rendered from within another report.`
-    );
+    throw new Error(`Report for page '${pageId}' cannot be rendered from within another report.`);
   }
 
   // getPageConfig applies context.authorize and returns null for an unknown
@@ -66,9 +71,9 @@ async function RenderReport({ request, app }) {
   const reportOptions = collectReportOptions(deserializedPageConfig);
 
   const [blockMetas, lowdefyGlobal, stylesheets] = await Promise.all([
-    app.readConfigFile('plugins/blockMetas.json'),
-    app.readConfigFile('global.json'),
-    getReportStylesheet({ readConfigFile: app.readConfigFile }),
+    app.readBlockMetas(),
+    app.readGlobal(),
+    app.readReportStylesheet(),
   ]);
 
   const result = await generateReport({
@@ -78,9 +83,11 @@ async function RenderReport({ request, app }) {
     format,
     reportOptions,
     snapshot: { urlQuery: request.urlQuery, input: request.input, state: request.state },
-    // No user means a scheduled (system) render — the plugin's own _user guard
-    // then fails fast on any page that reads _user.
-    invocation: app.user ? 'user' : 'system',
+    // A system context (a scheduled, webhook, or detached run) has nobody to
+    // resolve _user against, so the plugin's guard fails fast on any page that
+    // reads it. The absence of a user is not that signal: an anonymous visitor
+    // on a public page is still a user render.
+    invocation: app.system ? 'system' : 'user',
     callRequest: app.callRequest,
     operators: app.clientOperators,
     jsMap: app.clientJsMap,
@@ -92,8 +99,9 @@ async function RenderReport({ request, app }) {
     lowdefyGlobal: lowdefyGlobal ?? {},
     serverUrl: app.origin,
     origin: app.origin,
+    publicDirectory: app.publicDirectory,
     logger: app.logger,
-    timeoutMs: Math.max(app.requestTimeout - TIMEOUT_MARGIN_MS, MIN_TIMEOUT_MS),
+    timeoutMs: generationTimeout(app.requestTimeout),
   });
 
   // The platform's file envelope, matching AwsS3GetObject: base64 content so it

@@ -33,7 +33,7 @@ function resolveRenderer({ blocksStatic } = {}) {
   const registry = {};
   Object.keys(blocksStatic).forEach((blockType) => {
     const renderer = blocksStatic[blockType];
-    if (renderer && typeof renderer.toReport === 'function') {
+    if (type.isFunction(renderer?.toReport)) {
       registry[blockType] = renderer;
     }
   });

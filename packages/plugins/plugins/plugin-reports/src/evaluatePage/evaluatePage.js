@@ -18,6 +18,7 @@ import getContext from '@lowdefy/engine';
 import { serializer, type } from '@lowdefy/helpers';
 
 import createHeadlessLowdefy from './createHeadlessLowdefy.js';
+import createAssertNoActionErrors from './createAssertNoActionErrors.js';
 
 const noop = () => undefined;
 
@@ -28,18 +29,22 @@ const noop = () => undefined;
  * requests so every `propertiesEval`/`visibleEval`/`layoutEval` reflects the
  * responses.
  *
- * `options` are the `createHeadlessLowdefy` options (task 2), including the
- * built `pageConfig`, the injected `callRequest`, and the `seed` snapshot
+ * `options` are the `createHeadlessLowdefy` options, including the built
+ * `pageConfig`, the injected `callRequest`, and the `seed` snapshot
  * `{ urlQuery, input, state }`. The factory bakes `seed.urlQuery` into the
  * synthetic window; this function seeds `seed.input` and `seed.state` into the
  * context.
  *
- * KNOWN LIMITATION — onMount: the engine has no mount lifecycle (per-block
- * `onMount`/`onMountAsync` are a client concern, fired in
- * `@lowdefy/client`'s Block.js, not the engine). Only `onInit` runs headless, so
- * a page that loads its data in `onMount` renders empty. Load report data in
- * `onInit`. Running mount events headless would mean replicating the client's
- * per-block mount traversal here — deferred as its own change.
+ * Only `onInit`/`onInitAsync` run headless: the engine has no mount lifecycle
+ * (per-block `onMount` is fired by the client's Block.js). generateReport warns
+ * for every block that declares a mount event (see collectMountEvents) so a page
+ * that loads its data there is not silently rendered empty.
+ *
+ * A failed action fails the render. The engine resolves every event whether or
+ * not its actions succeeded, so without this a rejected `Request` in `onInit`
+ * would leave `_request` null and the document would ship with empty tables — a
+ * plausible report that is wrong. The factory records every action error;
+ * `assertNoActionErrors` runs at the same phase boundaries as the `_user` guard.
  *
  * WYSIWYG contract: state seeds AFTER `getContext` (the context and its
  * `inputs` entry exist by then) but BEFORE `onInit`, so init request payloads
@@ -59,10 +64,13 @@ async function evaluatePage(options) {
     jsMap,
     seed,
     warnings,
+    actionErrors,
     drainRequests,
     assertUserNotEvaluated,
     aborted,
   } = handle;
+  const pageId = pageConfig?.pageId ?? pageConfig?.id;
+  const assertNoActionErrors = createAssertNoActionErrors({ actionErrors, pageId });
 
   // Every phase below waits on requests — an init action awaits the one it fires,
   // the drain awaits them all — and a request that never settles is what wedges a
@@ -100,9 +108,11 @@ async function evaluatePage(options) {
 
   await untilAborted(context._internal.runOnInit(noop));
   assertUserNotEvaluated();
+  assertNoActionErrors('onInit');
 
   await untilAborted(context._internal.runOnInitAsync(noop));
   assertUserNotEvaluated();
+  assertNoActionErrors('onInitAsync');
 
   // The engine keeps no promise handles — the factory's tracking Set is the
   // only drain mechanism. It re-checks after each await, so requests triggered
@@ -113,6 +123,9 @@ async function evaluatePage(options) {
   // even those that settled after the last engine update during the drain.
   context._internal.update();
   assertUserNotEvaluated();
+  // Requests fired during the drain (a request whose response triggers another)
+  // report their failures after the init phases have already been asserted.
+  assertNoActionErrors('onInit');
 
   // Returned so the caller can assert again after it evaluates the report chrome
   // (title/header/footer), which reads operators outside these phases.

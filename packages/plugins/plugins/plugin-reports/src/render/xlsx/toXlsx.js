@@ -33,23 +33,31 @@
  */
 
 import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 // ExcelJS is CommonJS. Under Node's ESM interop a default import binds to
 // `module.exports`, which carries `Workbook` directly.
 import ExcelJS from 'exceljs';
 
-// Excel forbids these characters in a worksheet name, and caps names at 31
-// characters. Sheet-name hints arrive build-validated, but sanitize defensively
-// anyway so a hand-edited artifact can never make ExcelJS throw mid-write.
+// Excel forbids these characters in a worksheet name, refuses a name that starts
+// or ends with an apostrophe, reserves the name `History`, and caps names at 31
+// characters. Sheet-name hints arrive build-validated, but sanitize anyway so a
+// blockId used as a fallback name, or a hand-edited artifact, can never make
+// ExcelJS throw mid-write.
 const ILLEGAL_SHEET_CHARS = /[[\]:*?/\\]/g;
+const EDGE_APOSTROPHES = /^'+|'+$/g;
 const MAX_SHEET_NAME = 31;
 const DEFAULT_SHEET_NAME = 'Sheet';
+// Excel keeps this name for its change-tracking sheet, case-insensitively.
+const RESERVED_SHEET_NAME = 'history';
 
-// Strip the illegal characters, trim, fall back to a default when nothing is
-// left, then cap at Excel's 31-character limit.
+// Strip the illegal characters and edge apostrophes, trim, fall back to a
+// default when nothing is left, then cap at Excel's 31-character limit.
 function sanitizeSheetName(name) {
   const cleaned = String(name ?? '')
     .replace(ILLEGAL_SHEET_CHARS, '')
+    .trim()
+    .replace(EDGE_APOSTROPHES, '')
     .trim();
   const base = cleaned.length > 0 ? cleaned : DEFAULT_SHEET_NAME;
   return base.slice(0, MAX_SHEET_NAME);
@@ -80,7 +88,7 @@ function uniqueSheetName(name, used) {
 // already run in the walker, so every grid reached here belongs in the output.
 function collectGrids(nodes, grids = []) {
   for (const node of nodes ?? []) {
-    if (!node || typeof node !== 'object') continue;
+    if (!type.isObject(node)) continue;
     if (node.kind === 'grid') {
       grids.push(node);
     } else if (node.kind === 'row' || node.kind === 'stack') {
@@ -105,7 +113,7 @@ const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2}(\.\d{1,9})?)?(Z|[
 const DATE_FORMAT = 'yyyy-mm-dd';
 const DATETIME_FORMAT = 'yyyy-mm-dd hh:mm';
 
-const isValidDate = (date) => date instanceof Date && !Number.isNaN(date.getTime());
+const isValidDate = (date) => type.isDate(date) && !Number.isNaN(date.getTime());
 
 /** A date carrying no time of day reads better without a 00:00 on the end. */
 const isUtcMidnight = (date) =>
@@ -123,10 +131,10 @@ const isUtcMidnight = (date) =>
  * context, and the cell should show the clock time the source string states.
  */
 function toExcelDate(value) {
-  if (value instanceof Date) {
+  if (type.isDate(value)) {
     return isValidDate(value) ? { date: value, dateOnly: isUtcMidnight(value) } : undefined;
   }
-  if (typeof value !== 'string') return undefined;
+  if (!type.isString(value)) return undefined;
 
   if (ISO_DATE_ONLY.test(value)) {
     const date = new Date(`${value}T00:00:00Z`);
@@ -200,7 +208,9 @@ async function toXlsx(nodes) {
   }
 
   const workbook = new ExcelJS.Workbook();
-  const usedNames = new Set();
+  // Seeding the reserved name makes a grid called `History` land on
+  // `History (2)` through the same collision path every other duplicate takes.
+  const usedNames = new Set([RESERVED_SHEET_NAME]);
 
   for (const grid of grids) {
     const name = uniqueSheetName(sanitizeSheetName(grid.sheetName), usedNames);

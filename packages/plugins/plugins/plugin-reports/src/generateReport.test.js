@@ -14,21 +14,28 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 import { ConfigError } from '@lowdefy/errors';
 import * as operatorsClient from '@lowdefy/operators-js/operators/client';
 
-import generateReport from './generateReport.js';
-import { ReportBusyError, ReportTimeoutError } from './errors.js';
-import { heading, markdown, text } from './ir/nodes.js';
+// The Html renderer wraps a native layout engine; these tests exercise the
+// orchestration, so it is replaced by a stub the Html block would call.
+jest.unstable_mockModule('./render/html/createHtmlRenderer.js', () => ({
+  default: jest.fn(() => async ({ width }) => ({ svg: '<svg/>', width, height: 10 })),
+}));
+
+const { default: generateReport } = await import('./generateReport.js');
+const { ReportBusyError, ReportTimeoutError } = await import('./errors.js');
+const { heading, markdown, text } = await import('./ir/nodes.js');
 
 const operators = { ...operatorsClient };
 
 // A mock static-renderer registry. The real per-block renderers live in the
-// block packages (blocks-antd, blocks-markdown, …) and land in their own task;
-// the orchestrator only needs a `blockType → { toReport }` map, so these stubs
-// exercise generateReport end to end — including the pdf and markdown
-// translation — without depending on those packages.
+// block packages (blocks-antd, blocks-markdown, …); the orchestrator only needs
+// a `blockType → { toReport }` map, so these stubs exercise generateReport end
+// to end — including the pdf and markdown translation — without depending on
+// those packages.
 const registry = {
   Title: {
     toReport: ({ block }) =>
@@ -159,6 +166,45 @@ describe('generation timeout', () => {
   });
 });
 
+describe('the deadline covers the queue wait', () => {
+  test('a caller that times out while queued rejects and leaves the queue', async () => {
+    // Wedge both slots, then queue callers with a short deadline. They must
+    // reject with the timeout — and, having left the queue, must not keep it
+    // full for later callers or take a slot once one frees up.
+    const { calls, callRequest, openGate } = gatedRequests();
+    const running = [
+      generateReport(baseOptions({ callRequest })),
+      generateReport(baseOptions({ callRequest })),
+    ];
+    await tick();
+    expect(calls).toHaveLength(2);
+
+    const queued = Array.from({ length: 8 }, () =>
+      generateReport(baseOptions({ callRequest, timeoutMs: 30 }))
+    );
+    await Promise.all(queued.map((promise) => expect(promise).rejects.toThrow(ReportTimeoutError)));
+    // Nothing queued ever started evaluating.
+    expect(calls).toHaveLength(2);
+
+    // The queue is empty again: a fresh caller is accepted, not refused as busy.
+    const later = generateReport(baseOptions({ callRequest }));
+    openGate();
+    await Promise.all(running);
+    await expect(later).resolves.toMatchObject({ contentType: 'application/pdf' });
+    expect(calls).toHaveLength(3);
+  });
+});
+
+describe('a failed init action fails the generation', () => {
+  test('a rejected onInit request rejects instead of rendering empty tables', async () => {
+    await expect(
+      generateReport(
+        baseOptions({ callRequest: () => Promise.reject(new Error('database unreachable')) })
+      )
+    ).rejects.toThrow(/Report for page 'page1' failed: 1 action errored during onInit/);
+  });
+});
+
 describe('a full queue fails fast', () => {
   test('callers past the queue bound reject with a ReportBusyError', async () => {
     // MAX_CONCURRENT running + MAX_QUEUED waiting = 10 accepted; the 11th is
@@ -214,6 +260,38 @@ describe('pdf generation', () => {
     expect(result.warnings.skippedActions).toHaveLength(1);
     expect(result.warnings.skippedActions[0].actionType).toBe('ScrollTo');
     expect(result.warnings.skippedBlockTypes).toEqual([{ blockType: 'Widget', blockIds: ['w'] }]);
+    expect(result.warnings.mountEvents).toEqual([]);
+  });
+
+  test('blocks with onMount events are named in the warnings, since they never run', async () => {
+    const pageConfig = buildTestPage({
+      pageConfig: {
+        id: 'page1',
+        type: 'Box',
+        events: { onMount: [{ id: 'load', type: 'SetState', params: { loaded: true } }] },
+        blocks: [
+          {
+            id: 'p',
+            type: 'Paragraph',
+            properties: { content: 'hi' },
+            events: { onMountAsync: [{ id: 'l', type: 'SetState', params: { x: 1 } }] },
+          },
+        ],
+      },
+    });
+    const logged = [];
+    const logger = {
+      debug: () => {},
+      warn: (meta, message) => logged.push(message),
+      error: () => {},
+    };
+
+    const result = await generateReport(baseOptions({ pageConfig, logger }));
+
+    expect(result.warnings.mountEvents).toEqual(['page1', 'p']);
+    expect(logged).toHaveLength(1);
+    expect(logged[0]).toMatch(/2 block\(s\) with onMount events/);
+    expect(logged[0]).toMatch(/page1, p/);
   });
 
   test('a Markdown block renders end to end, operators evaluated in its content', async () => {

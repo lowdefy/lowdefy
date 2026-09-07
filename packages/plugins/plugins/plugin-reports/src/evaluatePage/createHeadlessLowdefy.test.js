@@ -38,7 +38,8 @@ function build(overrides = {}) {
 }
 
 // A minimal context is enough to exercise operator resolution through the real
-// WebParser — the engine's per-context structures are covered by task 3.
+// WebParser — the engine's per-context structures are covered by evaluatePage's
+// tests.
 function makeParser(lowdefy) {
   const context = {
     id: lowdefy.pageId,
@@ -170,6 +171,58 @@ describe('action registry', () => {
     expect(handle.warnings).toHaveLength(1);
     expect(handle.warnings[0].actionType).toBe('ScrollTo');
     expect(handle.warnings[0].blockId).toBe('page1');
+  });
+});
+
+describe('action errors', () => {
+  test('a rejected Request in onInit is recorded and logged, and the chain resolves', async () => {
+    const logged = [];
+    const handle = build({
+      callRequest: () => Promise.reject(new Error('database unreachable')),
+      logger: { debug: () => {}, info: () => {}, warn: () => {}, error: (e) => logged.push(e) },
+      pageConfig: {
+        id: 'page1',
+        pageId: 'page1',
+        type: 'Box',
+        requests: [{ id: 'getData', type: 'Fetch' }],
+        events: { onInit: [{ id: 'req', type: 'Request', params: 'getData' }] },
+      },
+    });
+    await initContext(handle);
+    expect(handle.actionErrors).toHaveLength(1);
+    expect(handle.actionErrors[0].message).toMatch(/database unreachable/);
+    expect(logged).toHaveLength(1);
+  });
+
+  test('a Throw action (a UserError the engine keeps off the terminal) is recorded too', async () => {
+    const handle = build({
+      pageConfig: {
+        id: 'page1',
+        pageId: 'page1',
+        type: 'Box',
+        events: {
+          onInit: [
+            { id: 'stop', type: 'Throw', params: { throw: true, message: 'No data for period' } },
+          ],
+        },
+      },
+    });
+    await initContext(handle);
+    expect(handle.actionErrors).toHaveLength(1);
+    expect(handle.actionErrors[0].message).toBe('No data for period');
+  });
+
+  test('a skipped browser-only action records no error', async () => {
+    const handle = build({
+      pageConfig: {
+        id: 'page1',
+        pageId: 'page1',
+        type: 'Box',
+        events: { onInit: [{ id: 'scroll', type: 'ScrollTo', params: { blockId: 'page1' } }] },
+      },
+    });
+    await initContext(handle);
+    expect(handle.actionErrors).toEqual([]);
   });
 });
 

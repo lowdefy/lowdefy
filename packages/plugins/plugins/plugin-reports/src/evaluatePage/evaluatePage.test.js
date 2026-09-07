@@ -244,6 +244,76 @@ describe('warnings', () => {
   });
 });
 
+describe('a failed action fails the render', () => {
+  // The engine resolves an event whether or not its actions succeeded, so
+  // without these assertions a failed init request would leave `_request` null
+  // and the document would ship with empty tables.
+  test('a Request whose callRequest rejects makes evaluatePage reject with the cause', async () => {
+    const promise = run({
+      callRequest: () => Promise.reject(new Error('database unreachable')),
+      pageConfig: {
+        id: 'page1',
+        type: 'Box',
+        requests: [{ id: 'getData', type: 'Fetch' }],
+        events: { onInit: [{ id: 'req', type: 'Request', params: 'getData' }] },
+        blocks: [
+          { id: 'out', type: 'Paragraph', properties: { content: { _request: 'getData' } } },
+        ],
+      },
+    });
+    await expect(promise).rejects.toThrow(
+      /Report for page 'page1' failed: 1 action errored during onInit: .*database unreachable/
+    );
+    await expect(promise).rejects.toMatchObject({ name: 'ConfigError' });
+  });
+
+  test('a Throw action in onInit rejects', async () => {
+    await expect(
+      run({
+        pageConfig: {
+          id: 'page1',
+          type: 'Box',
+          events: {
+            onInit: [
+              { id: 'stop', type: 'Throw', params: { throw: true, message: 'No data for period' } },
+            ],
+          },
+        },
+      })
+    ).rejects.toThrow(/1 action errored during onInit: No data for period/);
+  });
+
+  test('a failed action in onInitAsync names its phase', async () => {
+    await expect(
+      run({
+        pageConfig: {
+          id: 'page1',
+          type: 'Box',
+          events: {
+            onInitAsync: [{ id: 'stop', type: 'Throw', params: { throw: true, message: 'late' } }],
+          },
+        },
+      })
+    ).rejects.toThrow(/errored during onInitAsync: late/);
+  });
+
+  test('a skipped browser-only action does not fail the render', async () => {
+    const { context } = await run({
+      pageConfig: {
+        id: 'page1',
+        type: 'Box',
+        events: {
+          onInit: [
+            { id: 'scroll', type: 'ScrollTo', params: { blockId: 'page1' } },
+            { id: 'set', type: 'SetState', params: { reached: true } },
+          ],
+        },
+      },
+    });
+    expect(context.state.reached).toBe(true);
+  });
+});
+
 describe('a system render refuses a page that reads _user', () => {
   // The safety property the whole scheduled path rests on: no report is ever
   // rendered as nobody. Proven here through the phases, because the operator's

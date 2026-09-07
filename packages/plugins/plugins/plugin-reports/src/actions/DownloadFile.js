@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // Save a base64 file envelope — `{ name, size, type, content }`, as produced by
 // RenderReport — to the browser as a download. Named for the envelope, not for
 // reports, because the envelope is the platform's shape (it matches
 // AwsS3GetObject): any request returning one can be handed straight here.
 // Follows DownloadCsv: build a Blob, object-URL it, click a synthetic anchor.
 function DownloadFile({ params }) {
-  const { content, name, type } = params ?? {};
-  if (typeof content !== 'string') {
+  const { content, name, type: contentType } = params ?? {};
+  if (!type.isString(content)) {
     throw new Error('DownloadFile requires a base64 "content" string.');
   }
-  if (typeof name !== 'string' || name === '') {
+  if (!type.isString(name) || name === '') {
     throw new Error('DownloadFile requires a "name" string.');
   }
 
@@ -36,7 +38,7 @@ function DownloadFile({ params }) {
     bytes[i] = binary.charCodeAt(i);
   }
 
-  const blob = new Blob([bytes], { type: type ?? 'application/octet-stream' });
+  const blob = new Blob([bytes], { type: contentType ?? 'application/octet-stream' });
   const url = URL.createObjectURL(blob);
   const el = document.createElement('a');
   el.href = url;

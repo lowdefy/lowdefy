@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 /**
  * How a generated report is named on its way to the browser.
  *
@@ -37,7 +39,8 @@ const percentEncode = (char) => `%${char.charCodeAt(0).toString(16).toUpperCase(
 
 /** A requested download name reduced to something safe to put in a header. */
 export function sanitizeReportFilename(name) {
-  return typeof name === 'string' ? name.replace(UNSAFE_FILENAME_CHARS, '').trim() : '';
+  if (!type.isString(name)) return '';
+  return name.replace(UNSAFE_FILENAME_CHARS, '').trim();
 }
 
 /**
