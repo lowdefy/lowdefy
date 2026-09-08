@@ -1,5 +1,80 @@
 # Change Log
 
+## 6.0.0
+
+### Minor Changes
+
+- e7a9270: feat(blocks-aggrid): Add a `menu` cell for row actions.
+
+  `cell.type: menu` renders a row's actions as a dropdown behind one trigger button, instead of spending a wide column on a `buttons` cell. Each `cell.items[]` entry declares its own `eventName`, so items wire to block-level events exactly as buttons do, and the same `*Field` row-data resolution applies (`titleField`, `iconField`, `disabledField`, `hiddenField`).
+
+  ```yaml
+  - headerName: ''
+    colId: menu
+    width: 60
+    cell:
+      type: menu
+      items:
+        - eventName: onMenuRename
+          title: Rename
+          icon: AiOutlineEdit
+          hiddenField: readOnly
+        - eventName: onMenuDelete
+          title: Delete
+          icon: AiOutlineDelete
+          danger: true
+          hiddenField: readOnly
+  ```
+
+  A hidden item is dropped rather than disabled, and a row on which every item is hidden renders no trigger at all rather than a button that opens an empty menu. The trigger's `type` and `shape` are fixed rather than configurable, because both keys are already taken at cell level (`type` names the renderer, `shape` is the avatar's); `icon` and `placement` are configurable.
+
+### Patch Changes
+
+- 28cb944: feat: Dev server docs and MCP endpoint for AI coding agents
+
+  The dev server now always serves documentation for everything installed in your project — every block, operator, action, connection and request type, from core plugins and your own local plugins — plus the full Lowdefy docs as markdown.
+
+  **Docs API and MCP endpoint (`@lowdefy/server-dev`)**
+
+  - Plain GET routes under `/lowdefy-docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
+  - An MCP endpoint (streamable HTTP) at `/lowdefy-docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
+  - The `/lowdefy-docs` page path prefix is now reserved in dev.
+
+  **Discovery build artifacts (`@lowdefy/build`)**
+
+  - Dev builds now write `plugins/availableTypes.json` (every installed type, used or not) and `plugins/connectionSchemas.json` + `plugins/requestSchemas.json` (collected from connection definitions).
+  - Fixed custom/local plugin schemas being silently missing from all schema maps — plugin modules now also resolve from the server directory.
+
+  **Docs content package (`@lowdefy/docs-content`)**
+
+  - New package shipping the Lowdefy docs extracted as markdown with a manifest, generated from the docs app build (`pnpm docs:content`).
+
+  **Block plugins**
+
+  - Block packages now publish their `gallery.yaml`/`examples.yaml`/`tests.yaml` files in `dist/`, so the docs API can serve real examples.
+
+- 1cc1521: fix(blocks-aggrid): Stop cells being destroyed on every render.
+
+  `processColDefs` built a fresh `cellRenderer` function for every column on every render. A cellRenderer is a React element type, so a new function is a different component: ag-grid's `CellCtrl.refreshCellRenderer` bails when `cellRendererClass !== componentClass` and the cell is recreated. Anything a cell was holding died with it — an open popup, the focus and half-typed value of a `selector`, `textInput` or `paragraphInput` cell — whenever anything else re-rendered the block, including a request finishing elsewhere on the page.
+
+  Each column now keeps one renderer adapter for its lifetime and the closure behind it is replaced in place, so ag-grid keeps the cell and the cell still renders the current config. Because cells are no longer recreated when a column definition changes — ag-grid refreshes body cells on data changes and does not listen for `colDefChanged` — the block now calls `refreshCells({ force: true })` when the authored `columnDefs` change, which re-renders the mounted cells in place. Function-valued column properties are compared by identity, since `JSON.stringify` cannot see them.
+
+  Both the display and input grids are fixed.
+
+- Updated dependencies [ef707bd]
+- Updated dependencies [46029df]
+- Updated dependencies [28cb944]
+- Updated dependencies [ae5f618]
+- Updated dependencies [01d7552]
+- Updated dependencies [629837d]
+- Updated dependencies [6446ae6]
+- Updated dependencies [fb80e0a]
+- Updated dependencies [0e71ebd]
+- Updated dependencies [c2e0823]
+  - @lowdefy/blocks-antd@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/block-utils@6.0.0
+
 ## 5.6.0
 
 ### Minor Changes
