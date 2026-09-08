@@ -243,6 +243,7 @@
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
+- _ref: actions/MagicLinkVerify.yaml
 - _ref: actions/PdfMake.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml

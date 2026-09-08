@@ -1562,6 +1562,14 @@
       "typeName": "Logout"
     },
     {
+      "slug": "actions/magiclinkverify",
+      "title": "MagicLinkVerify",
+      "section": "Actions",
+      "path": "content/actions/magiclinkverify.md",
+      "kind": "action",
+      "typeName": "MagicLinkVerify"
+    },
+    {
       "slug": "actions/pdfmake",
       "title": "PdfMake",
       "section": "Actions",

@@ -34,6 +34,7 @@ import createLink from './createLink.js';
 import createListOrganizations from './createListOrganizations.js';
 import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
+import createMagicLinkVerify from './createMagicLinkVerify.js';
 import createDisplayMessage from './createDisplayMessage.js';
 import createOauth2Consent from './createOauth2Consent.js';
 import createOauth2Continue from './createOauth2Continue.js';
@@ -88,6 +89,7 @@ function getActionMethods(props) {
     listOrganizations: createListOrganizations(props),
     login: createLogin(props),
     logout: createLogout(props),
+    magicLinkVerify: createMagicLinkVerify(props),
     oauth2Consent: createOauth2Consent(props),
     oauth2Continue: createOauth2Continue(props),
     passkeyDelete: createPasskeyDelete(props),

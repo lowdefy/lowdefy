@@ -977,6 +977,9 @@
         - id: Logout
           type: MenuLink
           pageId: Logout
+        - id: MagicLinkVerify
+          type: MenuLink
+          pageId: MagicLinkVerify
         - id: PdfMake
           type: MenuLink
           pageId: PdfMake

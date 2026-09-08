@@ -119,6 +119,55 @@ _ref:
                         screen_hint: signup
             ```
 
+            ## Magic link sign-in
+
+            `Login` with `magicLink: true` emails the user a sign-in link. By default that link points straight at Better Auth's verify endpoint, which consumes the single-use token on the first `GET` of the URL.
+
+            That is a problem in corporate inboxes. Mail security products — Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast — fetch every link in a message as it is delivered, so the scanner spends the token minutes before the person clicks, and the person lands on the error page with `INVALID_TOKEN`.
+
+            Set [`auth.authPages.magicLink`](/auth-configuration#auth-pages) to a page in your app to close that gap. The email then links to your page, carrying the token and the callback destinations on its URL query, and a [`MagicLinkVerify`](/MagicLinkVerify) action on a **button click** walks to the verify endpoint. Fetching the landing page does nothing, so a scanner cannot consume the token.
+
+            ```yaml
+            lowdefy: {{ version }}
+            auth:
+              magicLink:
+                enabled: true
+              authPages:
+                magicLink: /magic-link
+            ```
+
+            ```yaml
+            id: magic-link
+            type: PageHeaderMenu
+            blocks:
+              - id: content
+                type: Box
+                blocks:
+                  - id: title
+                    type: Title
+                    properties:
+                      content: Sign in
+                      level: 3
+                  - id: description
+                    type: Paragraph
+                    properties:
+                      content: Click the button below to finish signing in.
+                  - id: verify_button
+                    type: Button
+                    properties:
+                      title: Sign in
+                    events:
+                      onClick:
+                        - id: verify
+                          type: MagicLinkVerify
+            ```
+
+            The landing page must be reachable while signed out, so add it to `auth.pages.public`.
+
+            Do **not** run `MagicLinkVerify` in the page's `onMount`, and do not auto-redirect to the verify endpoint. Some scanning sandboxes render the page and execute its JavaScript, so an automatic verify hands the token back to the scanner and you are no better off than linking at the endpoint directly. The whole protection is that a human has to click.
+
+            The action needs no parameters: the token and the `callbackURL`, `newUserCallbackURL` and `errorCallbackURL` values are read from the landing page's own URL query, which the email put there. Pass parameters only to override them.
+
             ## SMS sign-in
 
             `PhoneNumberVerify` completes a sign-in with an SMS code, and lands the user through the same three sources as `Login`: the `callbackUrl` param, then the `?callbackUrl=` query, then the app's home page. `callbackUrl: false` verifies without navigating.

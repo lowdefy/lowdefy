@@ -30,6 +30,19 @@ test('MagicLinkEmail renders to html and text and includes the url', async () =>
   expect(html).toContain('https://example.com/verify?token=abc');
 });
 
+// The button is the happy path, but a locked-down mail client may strip or
+// rewrite it - the readable URL underneath is what a person falls back to, and
+// the plain-text part is all some clients render at all.
+test('MagicLinkEmail renders the url as readable fallback text under the button', async () => {
+  const { html, text } = await renderEmail({
+    Template: MagicLinkEmail,
+    properties: { url: 'https://example.com/magic-link?token=abc' },
+    theme: {},
+  });
+  expect(html).toContain('If the button does not work, copy this link into your browser:');
+  expect(text).toContain('https://example.com/magic-link?token=abc');
+});
+
 test('MagicLinkEmail subject is the expected string', () => {
   expect(MagicLinkEmail.subject).toEqual('Your sign-in link');
 });

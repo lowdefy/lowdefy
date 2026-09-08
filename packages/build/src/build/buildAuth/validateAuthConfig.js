@@ -205,6 +205,18 @@ function validateAuthConfig({ components }) {
     );
   }
 
+  // The magic-link landing page only has a token to spend when the engine mints
+  // the emailed link at it, and the engine does that only for an enabled
+  // magic-link login. Setting the page without the login method is therefore a
+  // page nothing ever navigates to. The reverse is not required: an app with
+  // magic-link enabled and no landing page keeps the direct verify link.
+  if (!type.isNone(auth.authPages?.magicLink) && !magicLinkEnabled) {
+    throw new ConfigError(
+      'Auth "authPages.magicLink" applies only when "magicLink.enabled" is true - the sign-in email is the only thing that navigates to the landing page.',
+      { configKey: auth.authPages['~k'] ?? configKey }
+    );
+  }
+
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
   if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
     throw new ConfigError(

@@ -424,6 +424,80 @@ test('a protocol-relative ?callbackUrl= query never leaves the challenge page (o
   expect(assign.mock.calls).toEqual([['/home-page']]);
 });
 
+// The magic-link landing page: the engine put the verify query on this page's
+// URL, so the defaults come from there and the action only has to walk to the
+// verify endpoint on a real click.
+test('magicLinkVerify navigates to the verify endpoint with the token from the URL query', () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?token=abc123';
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(assign.mock.calls).toEqual([['/api/auth/magic-link/verify?token=abc123']]);
+});
+
+test('magicLinkVerify carries the callback destinations from the URL query, basePath-prefixed', () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  lowdefy._internal.globals.window.location.search =
+    '?token=abc123&callbackURL=%2Fbase%2Freports&newUserCallbackURL=%2Fbase%2Fwelcome&errorCallbackURL=%2Fbase%2Fauth%2Ferror';
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(assign.mock.calls).toEqual([
+    [
+      '/base/api/auth/magic-link/verify?token=abc123&callbackURL=%2Fbase%2Freports&newUserCallbackURL=%2Fbase%2Fwelcome&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
+    ],
+  ]);
+});
+
+test('magicLinkVerify prefers explicit params over the URL query values', () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?token=fromquery&callbackURL=%2Ffromquery';
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify({
+    token: 'fromparam',
+    callbackUrl: { url: '/reports' },
+    newUserCallbackUrl: { url: '/welcome' },
+    errorCallbackUrl: { url: '/oops' },
+  });
+  expect(assign.mock.calls).toEqual([
+    [
+      '/api/auth/magic-link/verify?token=fromparam&callbackURL=%2Freports&newUserCallbackURL=%2Fwelcome&errorCallbackURL=%2Foops',
+    ],
+  ]);
+});
+
+// The default Login applies when it asks for the link, applied again here so a
+// failed verify lands on the app's error page with ?error= intact.
+test('magicLinkVerify defaults errorCallbackURL to authPages.error when the query has none', () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig = { providers: [], authPages: { error: '/auth/error' } };
+  lowdefy._internal.globals.window.location.search = '?token=abc123';
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  magicLinkVerify();
+  expect(assign.mock.calls).toEqual([
+    ['/api/auth/magic-link/verify?token=abc123&errorCallbackURL=%2Fauth%2Ferror'],
+  ]);
+});
+
+test('magicLinkVerify throws when neither a token param nor a ?token= query is present', () => {
+  const { auth, lowdefy, assign } = setup();
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  expect(() => magicLinkVerify()).toThrow(
+    'MagicLinkVerify requires a "token" param, or a "token" URL query parameter on the landing page the sign-in email links to.'
+  );
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('magicLinkVerify rejects callbackUrl false, which the verify redirect cannot honor', () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?token=abc123';
+  const { magicLinkVerify } = createAuthMethods(lowdefy, auth);
+  expect(() => magicLinkVerify({ callbackUrl: false })).toThrow(
+    'Invalid callbackUrl: "false" is not valid for MagicLinkVerify, which redirects through an external hop. Give a destination.'
+  );
+  expect(assign).not.toHaveBeenCalled();
+});
+
 test('twoFactorDisable calls auth.twoFactorDisable with the password', async () => {
   const { auth, lowdefy } = setup();
   const { twoFactorDisable } = createAuthMethods(lowdefy, auth);
