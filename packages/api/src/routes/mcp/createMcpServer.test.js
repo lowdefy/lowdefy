@@ -313,7 +313,7 @@ test('tools/call appends the config source of a failed routine when configDirect
 });
 
 test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
-  const context = createContext({ session: undefined });
+  const context = createContext({ session: null });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
   context.configDirectory = '/app';
