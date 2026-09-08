@@ -962,6 +962,12 @@
         - id: DownloadCsv
           type: MenuLink
           pageId: DownloadCsv
+        - id: EmailOtpSend
+          type: MenuLink
+          pageId: EmailOtpSend
+        - id: EmailOtpVerify
+          type: MenuLink
+          pageId: EmailOtpVerify
         - id: Fetch
           type: MenuLink
           pageId: Fetch

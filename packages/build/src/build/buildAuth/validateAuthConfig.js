@@ -90,16 +90,21 @@ function validateAuthConfig({ components }) {
   const emailAndPasswordEnabled = auth.emailAndPassword?.enabled === true;
   const magicLinkEnabled = auth.magicLink?.enabled === true;
   const phoneNumberEnabled = auth.phoneNumber?.enabled === true;
+  const emailOTPEnabled = auth.emailOTP?.enabled === true;
   const hasProviders = type.isArray(auth.providers) && auth.providers.length > 0;
   const hasLoginMethod =
-    emailAndPasswordEnabled || magicLinkEnabled || phoneNumberEnabled || hasProviders;
+    emailAndPasswordEnabled ||
+    magicLinkEnabled ||
+    emailOTPEnabled ||
+    phoneNumberEnabled ||
+    hasProviders;
   const hasStrategies = type.isArray(auth.strategies) && auth.strategies.length > 0;
 
   // dev.mockUser is a server-dev-only bypass, never a mechanism: it cannot
   // satisfy this check for a block that also declares runtime auth keys.
   if (!hasLoginMethod && !hasStrategies) {
     throw new ConfigError(
-      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
+      'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true", "emailOTP.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".',
       { configKey }
     );
   }
@@ -205,22 +210,13 @@ function validateAuthConfig({ components }) {
     );
   }
 
-  // The magic-link landing page only has a token to spend when the engine mints
-  // the emailed link at it, and the engine does that only for an enabled
-  // magic-link login. Setting the page without the login method is therefore a
-  // page nothing ever navigates to. The reverse is not required: an app with
-  // magic-link enabled and no landing page keeps the direct verify link.
-  if (!type.isNone(auth.authPages?.magicLink) && !magicLinkEnabled) {
-    throw new ConfigError(
-      'Auth "authPages.magicLink" applies only when "magicLink.enabled" is true - the sign-in email is the only thing that navigates to the landing page.',
-      { configKey: auth.authPages['~k'] ?? configKey }
-    );
-  }
-
   const requireEmailVerification = auth.emailAndPassword?.requireEmailVerification === true;
-  if ((magicLinkEnabled || requireEmailVerification) && type.isNone(auth.email)) {
+  if (
+    (magicLinkEnabled || emailOTPEnabled || requireEmailVerification) &&
+    type.isNone(auth.email)
+  ) {
     throw new ConfigError(
-      'Auth "email" is required when "magicLink" is enabled or "emailAndPassword.requireEmailVerification" is true.',
+      'Auth "email" is required when "magicLink" or "emailOTP" is enabled, or "emailAndPassword.requireEmailVerification" is true.',
       { configKey }
     );
   }

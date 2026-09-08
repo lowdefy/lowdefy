@@ -92,6 +92,13 @@ function setAuthDefaults({ components }) {
     setDefault(auth.magicLink, 'disableSignUp', false);
   }
 
+  if (!type.isNone(auth.emailOTP)) {
+    setDefault(auth.emailOTP, 'otpLength', 6);
+    setDefault(auth.emailOTP, 'expiresIn', 300);
+    setDefault(auth.emailOTP, 'allowedAttempts', 3);
+    setDefault(auth.emailOTP, 'disableSignUp', false);
+  }
+
   setDefault(auth, 'session', {});
   setDefault(auth.session, 'expiresIn', 604800);
   setDefault(auth.session, 'updateAge', 86400);

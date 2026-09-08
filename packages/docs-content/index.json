@@ -1522,6 +1522,22 @@
       "typeName": "DownloadCsv"
     },
     {
+      "slug": "actions/emailotpsend",
+      "title": "EmailOtpSend",
+      "section": "Actions",
+      "path": "content/actions/emailotpsend.md",
+      "kind": "action",
+      "typeName": "EmailOtpSend"
+    },
+    {
+      "slug": "actions/emailotpverify",
+      "title": "EmailOtpVerify",
+      "section": "Actions",
+      "path": "content/actions/emailotpverify.md",
+      "kind": "action",
+      "typeName": "EmailOtpVerify"
+    },
+    {
       "slug": "actions/fetch",
       "title": "Fetch",
       "section": "Actions",

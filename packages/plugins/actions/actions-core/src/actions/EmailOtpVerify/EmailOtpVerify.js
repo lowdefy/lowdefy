@@ -14,26 +14,12 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    type: 'string',
-    enum: [
-      'emailAndPassword.enabled',
-      'magicLink.enabled',
-      'emailOTP.enabled',
-      'twoFactor.enabled',
-      'passkey.enabled',
-      'phoneNumber.enabled',
-      'phoneNumber.signUpOnVerification',
-      'captcha.enabled',
-      'captcha.provider',
-      'captcha.siteKey',
-      'providers',
-      'organizations.policy',
-      'organizations.signup',
-      'roles',
-    ],
-    description: 'Curated auth config projection path to read at build time.',
-  },
-};
+// Signs the user in with the emailed one-time code. On success the session
+// cookie is set (creating the user on first sign-in unless disableSignUp) and
+// the browser lands on the resolved callbackUrl - or on the two-factor
+// challenge page when the user is enrolled.
+function EmailOtpVerify({ methods: { emailOtpVerify }, params }) {
+  return emailOtpVerify(params);
+}
+
+export default EmailOtpVerify;

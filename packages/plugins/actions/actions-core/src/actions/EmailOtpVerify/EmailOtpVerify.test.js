@@ -14,26 +14,14 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    type: 'string',
-    enum: [
-      'emailAndPassword.enabled',
-      'magicLink.enabled',
-      'emailOTP.enabled',
-      'twoFactor.enabled',
-      'passkey.enabled',
-      'phoneNumber.enabled',
-      'phoneNumber.signUpOnVerification',
-      'captcha.enabled',
-      'captcha.provider',
-      'captcha.siteKey',
-      'providers',
-      'organizations.policy',
-      'organizations.signup',
-      'roles',
-    ],
-    description: 'Curated auth config projection path to read at build time.',
-  },
-};
+import { jest } from '@jest/globals';
+
+import EmailOtpVerify from './EmailOtpVerify.js';
+
+const mockEmailOtpVerify = jest.fn();
+const methods = { emailOtpVerify: mockEmailOtpVerify };
+
+test('EmailOtpVerify action invocation', () => {
+  EmailOtpVerify({ methods, params: { email: 'user@example.com', otp: '482913' } });
+  expect(mockEmailOtpVerify.mock.calls).toEqual([[{ email: 'user@example.com', otp: '482913' }]]);
+});

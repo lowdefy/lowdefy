@@ -16,9 +16,11 @@
 
 import React from 'react';
 import { Heading, Link, Text } from '@react-email/components';
+import { type } from '@lowdefy/helpers';
 
 import CtaButton from '../../components/CtaButton.js';
 import EmailLayout from '../../components/EmailLayout.js';
+import OtpCode from '../../components/OtpCode.js';
 
 const headingStyle = {
   color: '#111111',
@@ -56,6 +58,16 @@ function MagicLinkEmail({ properties = {}, data = {}, theme = {}, links = {} }) 
         do not forward this email - anyone with the link can sign in as you.
       </Text>
       <CtaButton label="Sign in" href={properties.url} theme={theme} />
+      {/* The same sign-in carried two ways when auth.emailOTP is also enabled.
+          Mail security that pre-fetches links burns the single-use link token
+          before the person clicks it; the code they type into the tab they
+          started from is untouched by a scanner, and works when the mail is
+          read on another device. OtpCode renders nothing when no code was
+          minted, so the link-only email is unchanged. */}
+      {type.isString(properties.otp) && properties.otp !== '' && (
+        <Text style={textStyle}>Or enter this code where you requested the link:</Text>
+      )}
+      <OtpCode otp={properties.otp} expiresIn={properties.expiresIn} />
       <Text style={fallbackTextStyle}>
         If the button does not work, copy this link into your browser:
         <br />

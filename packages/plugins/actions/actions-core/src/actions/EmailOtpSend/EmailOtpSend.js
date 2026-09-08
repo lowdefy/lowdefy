@@ -14,26 +14,11 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    type: 'string',
-    enum: [
-      'emailAndPassword.enabled',
-      'magicLink.enabled',
-      'emailOTP.enabled',
-      'twoFactor.enabled',
-      'passkey.enabled',
-      'phoneNumber.enabled',
-      'phoneNumber.signUpOnVerification',
-      'captcha.enabled',
-      'captcha.provider',
-      'captcha.siteKey',
-      'providers',
-      'organizations.policy',
-      'organizations.signup',
-      'roles',
-    ],
-    description: 'Curated auth config projection path to read at build time.',
-  },
-};
+// Sends a one-time sign-in code to the email address. The code-only entry
+// point: when magicLink is also enabled, Login with magicLink: true already
+// sends one email carrying both the link and the code.
+function EmailOtpSend({ methods: { emailOtpSend }, params }) {
+  return emailOtpSend(params);
+}
+
+export default EmailOtpSend;

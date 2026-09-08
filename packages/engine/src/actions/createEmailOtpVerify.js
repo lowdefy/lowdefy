@@ -14,26 +14,10 @@
   limitations under the License.
 */
 
-export default {
-  type: 'object',
-  params: {
-    type: 'string',
-    enum: [
-      'emailAndPassword.enabled',
-      'magicLink.enabled',
-      'emailOTP.enabled',
-      'twoFactor.enabled',
-      'passkey.enabled',
-      'phoneNumber.enabled',
-      'phoneNumber.signUpOnVerification',
-      'captcha.enabled',
-      'captcha.provider',
-      'captcha.siteKey',
-      'providers',
-      'organizations.policy',
-      'organizations.signup',
-      'roles',
-    ],
-    description: 'Curated auth config projection path to read at build time.',
-  },
-};
+function createEmailOtpVerify({ context }) {
+  return function emailOtpVerify(params) {
+    return context._internal.lowdefy._internal.auth.emailOtpVerify(params);
+  };
+}
+
+export default createEmailOtpVerify;

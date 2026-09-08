@@ -20,6 +20,7 @@ test('computeAuthConfigProjection returns all defaults when auth is not configur
   expect(computeAuthConfigProjection()).toEqual({
     emailAndPassword: { enabled: false },
     magicLink: { enabled: false },
+    emailOTP: { enabled: false },
     twoFactor: { enabled: false, required: false, trustDevice: true },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
@@ -81,7 +82,9 @@ test('computeAuthConfigProjection projects twoFactor trustDevice true by default
 });
 
 test('computeAuthConfigProjection projects twoFactor trustDevice false when set false', () => {
-  const projection = computeAuthConfigProjection({ twoFactor: { enabled: true, trustDevice: false } });
+  const projection = computeAuthConfigProjection({
+    twoFactor: { enabled: true, trustDevice: false },
+  });
   expect(projection.twoFactor.trustDevice).toBe(false);
 });
 
@@ -204,11 +207,18 @@ test('computeAuthConfigProjection defaults role label to id when label is omitte
   const projection = computeAuthConfigProjection({
     roles: [{ id: 'admin', description: 'Full access' }],
   });
-  expect(projection.roles).toEqual([
-    { id: 'admin', label: 'admin', description: 'Full access' },
-  ]);
+  expect(projection.roles).toEqual([{ id: 'admin', label: 'admin', description: 'Full access' }]);
 });
 
 test('computeAuthConfigProjection returns empty roles when source roles are absent', () => {
   expect(computeAuthConfigProjection({}).roles).toEqual([]);
+});
+
+test('computeAuthConfigProjection projects emailOTP.enabled', () => {
+  expect(computeAuthConfigProjection({ emailOTP: { enabled: true } }).emailOTP).toEqual({
+    enabled: true,
+  });
+  expect(computeAuthConfigProjection({ emailOTP: { enabled: false } }).emailOTP).toEqual({
+    enabled: false,
+  });
 });

@@ -46,6 +46,7 @@ test('resolveAuthConfigProjection sets default projection when no auth block', a
   expect(context.authConfigProjection).toEqual({
     emailAndPassword: { enabled: false },
     magicLink: { enabled: false },
+    emailOTP: { enabled: false },
     twoFactor: { enabled: false, required: false, trustDevice: true },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
@@ -72,6 +73,7 @@ test('resolveAuthConfigProjection computes projection from an inline auth block'
   expect(context.authConfigProjection).toEqual({
     emailAndPassword: { enabled: true },
     magicLink: { enabled: false },
+    emailOTP: { enabled: false },
     twoFactor: { enabled: true, required: false, trustDevice: true },
     passkey: { enabled: false },
     phoneNumber: { enabled: false, signUpOnVerification: false },
@@ -140,9 +142,7 @@ test('resolveAuthConfigProjection collects a self-reference error for _build.aut
   });
   await resolveAuthConfigProjection({ context });
   expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toContain(
-    '_build.authConfig is not available here.'
-  );
+  expect(context.errors[0].message).toContain('_build.authConfig is not available here.');
 });
 
 test('resolveAuthConfigProjection collects a self-reference error for _build.authConfig in refed-in auth content', async () => {
@@ -161,7 +161,5 @@ signup:
   });
   await resolveAuthConfigProjection({ context });
   expect(context.errors).toHaveLength(1);
-  expect(context.errors[0].message).toContain(
-    '_build.authConfig is not available here.'
-  );
+  expect(context.errors[0].message).toContain('_build.authConfig is not available here.');
 });

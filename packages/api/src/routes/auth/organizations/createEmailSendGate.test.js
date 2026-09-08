@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import createMagicLinkSendGate from './createMagicLinkSendGate.js';
+import createEmailSendGate from './createEmailSendGate.js';
 
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
 const pinnedOrg = { id: 'team-portal', slug: 'team-portal', name: 'team-portal' };
@@ -37,27 +37,52 @@ function createMockAuth({ member = null, invitations = [] } = {}) {
 
 const pinned = { policy: 'pinned', org: 'team-portal', signup: 'invite-only' };
 
-test('createMagicLinkSendGate falls through when the body has no email', async () => {
+test('createEmailSendGate falls through when the body has no email', async () => {
   const getAuth = jest.fn();
-  const gate = createMagicLinkSendGate({ getAuth, organizations: pinned });
+  const gate = createEmailSendGate({
+    getAuth,
+    organizations: pinned,
+    successBody: { status: true },
+  });
   const result = await gate({ body: {} });
   expect(result).toBeUndefined();
   expect(getAuth).not.toHaveBeenCalled();
 });
 
-test('createMagicLinkSendGate falls through so the send proceeds for an admitted email', async () => {
+test('createEmailSendGate falls through so the send proceeds for an admitted email', async () => {
   const { auth } = createMockAuth({
     member: null,
     invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
   });
-  const gate = createMagicLinkSendGate({ getAuth: () => auth, organizations: pinned });
+  const gate = createEmailSendGate({
+    getAuth: () => auth,
+    organizations: pinned,
+    successBody: { status: true },
+  });
   const result = await gate({ body: { email: 'invited@example.com' } });
   expect(result).toBeUndefined();
 });
 
-test('createMagicLinkSendGate suppresses the send with a uniform { status: true } for an unadmitted email', async () => {
+test('createEmailSendGate suppresses the magic-link send with its { status: true } body for an unadmitted email', async () => {
   const { auth } = createMockAuth({ member: null, invitations: [] });
-  const gate = createMagicLinkSendGate({ getAuth: () => auth, organizations: pinned });
+  const gate = createEmailSendGate({
+    getAuth: () => auth,
+    organizations: pinned,
+    successBody: { status: true },
+  });
   const result = await gate({ body: { email: 'stranger@example.com' } });
   expect(result).toEqual({ status: true });
+});
+
+// The OTP send route answers { success: true }, not { status: true } - a
+// suppressed send has to be indistinguishable from a real one on the wire.
+test('createEmailSendGate suppresses the OTP send with its { success: true } body for an unadmitted email', async () => {
+  const { auth } = createMockAuth({ member: null, invitations: [] });
+  const gate = createEmailSendGate({
+    getAuth: () => auth,
+    organizations: pinned,
+    successBody: { success: true },
+  });
+  const result = await gate({ body: { email: 'stranger@example.com' } });
+  expect(result).toEqual({ success: true });
 });

@@ -16,7 +16,14 @@
 
 import { randomUUID } from 'node:crypto';
 
-import { customSession, genericOAuth, jwt, magicLink, twoFactor } from 'better-auth/plugins';
+import {
+  customSession,
+  emailOTP,
+  genericOAuth,
+  jwt,
+  magicLink,
+  twoFactor,
+} from 'better-auth/plugins';
 import { cimd } from '@better-auth/cimd';
 import { fetchClientMetadataResource } from '@better-auth/cimd/node';
 import { oauthProvider } from '@better-auth/oauth-provider';
@@ -373,6 +380,8 @@ function getBetterAuthConfig({
     options.socialProviders = socialProviders;
   }
 
+  const emailOTPEnabled = authConfig.emailOTP?.enabled === true;
+
   if (authConfig.magicLink?.enabled === true) {
     options.plugins.push(
       magicLink({
@@ -380,9 +389,55 @@ function getBetterAuthConfig({
         disableSignUp: authConfig.magicLink.disableSignUp,
         sendMagicLink: async ({ email, url }) => {
           const context = createSystemContext({ auth: getAuth() });
+          // One email serves both paths when the code is also configured: mail
+          // security that pre-fetches links burns the single-use magic-link
+          // token before the person clicks, and the code they type into the tab
+          // they started from survives that. createVerificationOTP is the
+          // plugin's server-only mint - it stores the sign-in code and returns
+          // it, sending nothing - so the code rides on the link email instead of
+          // arriving as a second one.
+          const otpVars = emailOTPEnabled
+            ? {
+                otp: await getAuth().api.createVerificationOTP({
+                  body: { email, type: 'sign-in' },
+                }),
+                expiresIn: authConfig.emailOTP.expiresIn,
+              }
+            : {};
           const { subject, html, text } = await renderAuthEmail({
             flow: 'magicLink',
-            vars: { url: buildMagicLinkUrl({ authConfig, config, url }) },
+            vars: { url: buildMagicLinkUrl({ authConfig, config, url }), ...otpVars },
+            authEmailConfig: authConfig.email,
+            baseURL: baseUrlOrigin,
+            context,
+          });
+          await sendEmail({ to: email, subject, html, text, context });
+        },
+      })
+    );
+  }
+
+  // The one-time code sign-in. Only the "sign-in" OTP type is wired: the other
+  // types BetterAuth can ask for (email-verification, forget-password,
+  // change-email) are reached through endpoints the engine does not mount or
+  // document, so a send for one of them is a wiring fault, not a user action.
+  if (emailOTPEnabled) {
+    options.plugins.push(
+      emailOTP({
+        otpLength: authConfig.emailOTP.otpLength,
+        expiresIn: authConfig.emailOTP.expiresIn,
+        allowedAttempts: authConfig.emailOTP.allowedAttempts,
+        disableSignUp: authConfig.emailOTP.disableSignUp,
+        sendVerificationOTP: async ({ email, otp, type: otpType }) => {
+          if (otpType !== 'sign-in') {
+            throw new ConfigError(
+              `Auth "emailOTP" only wires the sign-in code. A "${otpType}" one-time code was requested, and the Lowdefy engine has no email flow for it.`
+            );
+          }
+          const context = createSystemContext({ auth: getAuth() });
+          const { subject, html, text } = await renderAuthEmail({
+            flow: 'emailOTP',
+            vars: { otp, expiresIn: authConfig.emailOTP.expiresIn },
             authEmailConfig: authConfig.email,
             baseURL: baseUrlOrigin,
             context,

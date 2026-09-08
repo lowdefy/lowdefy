@@ -39,6 +39,8 @@ function AuthNotConfigured({ authConfig, children, user = null }) {
     listOrganizations: authNotConfigured,
     oauth2Consent: authNotConfigured,
     oauth2Continue: authNotConfigured,
+    emailOtpSend: authNotConfigured,
+    emailOtpVerify: authNotConfigured,
     phoneNumberRequestPasswordReset: authNotConfigured,
     phoneNumberResetPassword: authNotConfigured,
     phoneNumberSendOtp: authNotConfigured,

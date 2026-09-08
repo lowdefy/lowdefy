@@ -17,23 +17,19 @@
 export default {
   type: 'object',
   params: {
-    type: 'string',
-    enum: [
-      'emailAndPassword.enabled',
-      'magicLink.enabled',
-      'emailOTP.enabled',
-      'twoFactor.enabled',
-      'passkey.enabled',
-      'phoneNumber.enabled',
-      'phoneNumber.signUpOnVerification',
-      'captcha.enabled',
-      'captcha.provider',
-      'captcha.siteKey',
-      'providers',
-      'organizations.policy',
-      'organizations.signup',
-      'roles',
-    ],
-    description: 'Curated auth config projection path to read at build time.',
+    type: 'object',
+    description: 'Parameters passed to the email one-time-code send method.',
+    required: ['email'],
+    properties: {
+      email: {
+        type: 'string',
+        description: 'Email address to send the sign-in code to.',
+      },
+      captchaToken: {
+        type: 'string',
+        description:
+          'Captcha token minted by a Captcha block, sent as the x-captcha-response header when auth.captcha is enabled. Tokens are single-use - reset the Captcha block in onError for retries.',
+      },
+    },
   },
 };

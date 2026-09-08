@@ -738,6 +738,121 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     );
   });
 
+  test('sendVerificationOTP renders the emailOTP flow for a sign-in code and sends it', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        emailOTP: {
+          enabled: true,
+          otpLength: 6,
+          expiresIn: 300,
+          allowedAttempts: 3,
+          disableSignUp: false,
+        },
+      }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
+    await otpPlugin.options.sendVerificationOTP({
+      email: 'user@example.com',
+      otp: '482913',
+      type: 'sign-in',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'emailOTP',
+        vars: { otp: '482913', expiresIn: 300 },
+        context: sentinelContext,
+      })
+    );
+    expect(mockSendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: 'user@example.com', context: sentinelContext })
+    );
+  });
+
+  // Only the sign-in code has an email flow behind it; a request for any other
+  // OTP type is a wiring fault and must fail loudly rather than send nothing.
+  test('sendVerificationOTP throws a ConfigError for an OTP type other than sign-in', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        emailOTP: {
+          enabled: true,
+          otpLength: 6,
+          expiresIn: 300,
+          allowedAttempts: 3,
+          disableSignUp: false,
+        },
+      }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
+    await expect(
+      otpPlugin.options.sendVerificationOTP({
+        email: 'user@example.com',
+        otp: '482913',
+        type: 'forget-password',
+      })
+    ).rejects.toThrow(ConfigError);
+    expect(mockSendEmail).not.toHaveBeenCalled();
+  });
+
+  // One email carries both when magicLink and emailOTP are enabled together -
+  // link-scanning mail security burns the link, and the typed code survives it.
+  test('sendMagicLink mints the code through api.createVerificationOTP and adds otp and expiresIn to the vars when emailOTP is enabled', async () => {
+    const createVerificationOTP = jest.fn(async () => '482913');
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+        emailOTP: {
+          enabled: true,
+          otpLength: 6,
+          expiresIn: 600,
+          allowedAttempts: 3,
+          disableSignUp: false,
+        },
+      }),
+      createSystemContext,
+      getAuth: () => ({ api: { createVerificationOTP } }),
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const magicPlugin = options.plugins.find((p) => p.id === 'magic-link');
+    await magicPlugin.options.sendMagicLink({
+      email: 'user@example.com',
+      url: 'https://app.example.com/magic?token=mmm',
+    });
+    expect(createVerificationOTP).toHaveBeenCalledWith({
+      body: { email: 'user@example.com', type: 'sign-in' },
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'magicLink',
+        vars: {
+          url: 'https://app.example.com/magic?token=mmm',
+          otp: '482913',
+          expiresIn: 600,
+        },
+      })
+    );
+    // One email, not two - the code rides the link email rather than triggering
+    // the OTP send route.
+    expect(mockSendEmail).toHaveBeenCalledTimes(1);
+  });
+
   test('the invitation sender composes the accept URL when origin and acceptInvitation are set', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({
@@ -930,6 +1045,42 @@ test('does not push the magic-link plugin when magicLink is not enabled', () => 
     secrets: baseSecrets,
   });
   expect(options.plugins.some((p) => p.id === 'magic-link')).toBe(false);
+});
+
+test('pushes the email-otp plugin when emailOTP is enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson({
+      email: emailConfig,
+      emailOTP: {
+        enabled: true,
+        otpLength: 8,
+        expiresIn: 600,
+        allowedAttempts: 5,
+        disableSignUp: true,
+      },
+    }),
+    createSystemContext: () => ({}),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  const otpPlugin = options.plugins.find((p) => p.id === 'email-otp');
+  expect(otpPlugin).toBeDefined();
+  expect(typeof otpPlugin.options.sendVerificationOTP).toBe('function');
+});
+
+test('does not push the email-otp plugin when emailOTP is not enabled', () => {
+  const options = getBetterAuthConfig({
+    appMeta,
+    authJson: createAuthJson(),
+    getAuth,
+    logger: createLogger(),
+    plugins: createPlugins(),
+    secrets: baseSecrets,
+  });
+  expect(options.plugins.some((p) => p.id === 'email-otp')).toBe(false);
 });
 
 test('pushes the two-factor plugin when twoFactor is enabled', () => {

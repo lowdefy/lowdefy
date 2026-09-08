@@ -18,6 +18,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createAuthClient } from 'better-auth/react';
 import {
   adminClient,
+  emailOTPClient,
   magicLinkClient,
   organizationClient,
   phoneNumberClient,
@@ -44,6 +45,7 @@ const authClient = createAuthClient({
   baseURL: `${window.location.origin}${lowdefyConfig.basePath ?? ''}/api/auth`,
   plugins: [
     adminClient(),
+    emailOTPClient(),
     magicLinkClient(),
     oauthProviderClient(),
     organizationClient(),
@@ -57,8 +59,8 @@ const authClient = createAuthClient({
 // signal-driven refetch on the calls that would otherwise fire one, so
 // nothing competes with (and aborts) the refetch UpdateSession awaits.
 // Only calls that mutate an existing session are suppressed - calls that
-// can establish one (the sign-ins, and the two-factor, phone-number and
-// passkey verifies) keep their signal: its refetch is what makes the store
+// can establish one (the sign-ins, and the two-factor, phone-number,
+// email-otp and passkey verifies) keep their signal: its refetch is what makes the store
 // notice a login when no navigation follows.
 // disableSignal silences all atomListeners for the call, including the
 // organization plugin's org atoms - none are exposed to app config, so a
@@ -193,6 +195,9 @@ function AuthConfigured({ authConfig, children, serverUser }) {
     // oauth_query contract as oauth2Consent: the signed query rides from
     // window.location.search, so the call must run before any navigation.
     oauth2Continue: (params) => authClient.oauth2.continue(params),
+    // The one-time email code: send, then sign in with it.
+    emailOtpSend: (params) => authClient.emailOtp.sendVerificationOtp(params),
+    emailOtpVerify: (params) => authClient.signIn.emailOtp(params),
     phoneNumberRequestPasswordReset: (params) =>
       authClient.phoneNumber.requestPasswordReset(params),
     phoneNumberResetPassword: (params) => authClient.phoneNumber.resetPassword(params),
