@@ -2456,7 +2456,6 @@ test('a validation failure is logged and written to the stream as an error, not 
   mockCreateAgentUIStream.mockRejectedValueOnce(validationError);
 
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
@@ -2464,18 +2463,17 @@ test('a validation failure is logged and written to the stream as an error, not 
       agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
   const writer = { write: jest.fn(), onError: (error) => `redacted: ${error.message}` };
   await expect(mockCreateUIMessageStream._lastExecute({ writer })).resolves.toBeUndefined();
 
-  expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Agent stream failed'));
+  expect(testLogger.error).toHaveBeenCalledWith({ err: validationError }, 'Agent stream failed.');
   expect(writer.write).toHaveBeenCalledWith({
     type: 'error',
     errorText: 'redacted: Type validation failed: Value: [...]',
   });
-  consoleSpy.mockRestore();
 });
 
 test('stream onError hides the value dump of a TypeValidationError from the client', async () => {
