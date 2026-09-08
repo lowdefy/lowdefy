@@ -22,6 +22,10 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
   getPageConfig: mockGetPageConfig,
 }));
 
+jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({
+  default: { buildId: 'build-abc' },
+}));
+
 jest.unstable_mockModule('../../lib/build/auth.js', () => ({
   default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
 }));
@@ -78,11 +82,11 @@ test('apiPageHandler still returns a 401 sign-in redirect when unauthenticated',
   });
 });
 
-test('apiPageHandler returns the pageConfig when status is ok', async () => {
+test('apiPageHandler returns the pageConfig stamped with the build id when status is ok', async () => {
   mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'invoices' } });
   const res = await createApp().request('/api/page/invoices');
   expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ pageConfig: { id: 'invoices' } });
+  expect(await res.json()).toEqual({ buildId: 'build-abc', pageConfig: { id: 'invoices' } });
 });
 
 test('apiPageHandler returns 404 when the page is not found', async () => {

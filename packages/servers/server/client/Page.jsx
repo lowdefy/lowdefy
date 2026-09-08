@@ -28,6 +28,9 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
+import appMeta from '../build/appMeta.json';
+
+import shouldReloadForBuild from './shouldReloadForBuild.js';
 
 // Replaces lib/client/Page.js. The first page renders from the config
 // embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
@@ -77,8 +80,18 @@ function Page({ auth, config, lowdefy }) {
           }
           return;
         }
-        const { pageConfig: nextPageConfig } = await res.json();
+        const { buildId, pageConfig: nextPageConfig } = await res.json();
         if (token !== latestNavRef.current) return;
+        if (
+          shouldReloadForBuild({ bundleBuildId: appMeta.buildId, serverBuildId: buildId, window })
+        ) {
+          // The app was redeployed after this bundle loaded, so the config may
+          // reference _js functions and plugins this bundle does not carry.
+          // The router has already pushed the target URL, so a reload lands
+          // on the requested page with the current bundle.
+          window.location.reload();
+          return;
+        }
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.

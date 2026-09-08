@@ -107,10 +107,14 @@ async function runBuildForFixture(fixtureDir) {
   // configDir → <CONFIG_DIR> handles the active fixture's paths; fixturesDir →
   // <FIXTURES_DIR> catches cross-fixture references (e.g. cross-module tests
   // that resolve _ref into a sibling fixture directory).
+  // buildId is random per build, so it is replaced wherever it landed (the
+  // appMeta artifact and any config that read it through _build.app).
+  const { buildId } = JSON.parse(artifacts['appMeta.json']);
   const rawJson = JSON.stringify(artifacts);
   const normalizedJson = rawJson
     .replaceAll(configDir, '<CONFIG_DIR>')
-    .replaceAll(fixturesDir, '<FIXTURES_DIR>');
+    .replaceAll(fixturesDir, '<FIXTURES_DIR>')
+    .replaceAll(buildId, '<BUILD_ID>');
   const normalizedArtifacts = JSON.parse(normalizedJson);
 
   const parsedArtifacts = {};
