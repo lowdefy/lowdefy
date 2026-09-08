@@ -1,0 +1,68 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Shared tag row for TagSelector (single) and TagMultipleSelector (multi).
+   Per-option colors are inline (computed in JS from the stable palette);
+   everything structural and theme-token-driven lives here. */
+@layer components {
+  .lf-tag-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .lf-tag-selector-tag {
+    appearance: none;
+    font: inherit;
+    font-size: var(--ant-font-size-sm, 12px);
+    line-height: 1.4;
+    padding: 2px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--ant-color-border);
+    background: transparent;
+    color: var(--ant-color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+
+  .lf-tag-selector-tag:hover:not(:disabled) {
+    color: var(--ant-color-text);
+  }
+
+  .lf-tag-selector-tag:focus-visible {
+    outline: 2px solid var(--ant-color-primary);
+    outline-offset: 1px;
+  }
+
+  .lf-tag-selector-tag:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Filled selected state. In colored mode the inline style (solid hue +
+     contrast text) overrides these; this is the colored:false primary look. */
+  .lf-tag-selector-tag-selected {
+    font-weight: 600;
+    background: var(--ant-color-primary);
+    border-color: var(--ant-color-primary);
+    color: var(--ant-color-text-light-solid, #fff);
+  }
+}

@@ -1,0 +1,174 @@
+# Agent Properties
+
+Agent properties configure the model and its behavior. They are set in the `properties` object of the [agent definition](/agents-introduction). All properties support [operators](/operators), so you can use [`_secret`](/_secret), [`_user`](/_user), and other operators to set values dynamically.
+
+## Model and Instructions
+
+- `model: string`: __Required__ - The model identifier (e.g. `claude-sonnet-4-20250514`, `gpt-4o`, `gemini-2.5-pro`).
+- `instructions: string`: System instructions that guide the agent's behavior. This is the system prompt sent to the model with every request. The string passes through the operator parser at request time, so `_t:` works for locale-aware prompts (see [i18n](/i18n)). Note: tool descriptions stay English — translating them can degrade tool-call accuracy on English-trained models.
+- `pageContext: boolean`: Default: `false` - When `true`, prepend context about the current page, user, conversation, URL query, and shared state to the instructions. URL query and shared state are only included when the [`AgentChat`](/AgentChat) block sends them as `urlQuery` and `sharedState`. Useful when the agent needs to know who it's talking to or what the user has typed into form fields.
+- `generateTitle: boolean`: Default: `false` - When `true`, generate a short title from the first user message on the first turn of a conversation. Emits a `data-chat-title` data part that fires the [`AgentChat`](/AgentChat) block's `onTitleGenerated` event. Runs concurrently with the response and is non-fatal — a failed title generation logs a warning and does not break the turn.
+
+###### Instructions with user context:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  pageContext: true
+  instructions: |
+    You are a support agent for Acme Corp. You have access to the
+    current user's details via the page context. Use their name
+    when greeting them and tailor responses to their account.
+```
+
+## Generation Settings
+
+- `maxOutputTokens: integer`: Maximum tokens the model can generate per step.
+- `temperature: number`: Sampling temperature between `0` and `2`. Lower values are more deterministic, higher values more creative. Default depends on the provider.
+- `topP: number`: Nucleus sampling probability between `0` and `1`. Alternative to temperature — use one or the other.
+- `topK: integer`: Only sample from the top K token options (not supported by all providers).
+- `frequencyPenalty: number`: Penalty between `-1` and `1` for repeating tokens. `0` means no penalty.
+- `presencePenalty: number`: Penalty between `-1` and `1` for using tokens that have appeared. `0` means no penalty.
+- `seed: integer`: Seed for deterministic sampling (provider support varies).
+- `stopSequences: string[]`: Stop sequences. Generation stops when any sequence is produced.
+
+## Tool Loop Control
+
+- `maxSteps: integer`: Default: `10` - Maximum number of tool loop iterations. Each step is one model call plus any tool executions. Set lower to limit cost, higher for complex multi-step tasks.
+- `toolChoice`: Default: `'auto'` - Controls how the model uses tools:
+  - `'auto'` — The model decides whether to use a tool.
+  - `'required'` — The model must use a tool.
+  - `'none'` — The model cannot use tools.
+  - `{ type: 'tool', toolName: 'name' }` — Force a specific tool.
+- `activeTools: string[]`: Restrict which tools are available to the model. Only tools in this list are offered.
+- `stopOnToolCall: string | string[]`: Stop the tool loop when a specific tool is called. The tool result goes to the client, not back to the model. Useful for tools that return structured data to the UI.
+- `repairToolCall: boolean`: Default: `false` - When `true`, invalid tool inputs are sent back to the model for self-correction instead of failing.
+
+###### Return structured data to the UI:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  stopOnToolCall: get-product-recommendations
+  instructions: |
+    When the user asks for recommendations, call the
+    get-product-recommendations tool. The results will
+    be displayed as a product grid in the UI.
+```
+
+## Context Pruning
+
+Long conversations can exceed a model's context window. The `prune` property strips older messages to reduce context size while keeping recent messages intact.
+
+- `prune: object`:
+  - `reasoning: string`: How to handle reasoning/thinking content from the model:
+    - `'all'` — Remove all reasoning content.
+    - `'before-last-message'` — Keep only the last message's reasoning.
+    - `'none'` — Keep all reasoning.
+  - `toolCalls: string | array`: How to handle tool call and result content.
+    - As a string: `'all'`, `'before-last-message'`, `'before-last-N-messages'`, or `'none'`.
+    - As an array of per-tool rules. Each rule: `{ type: string, tools?: string[] }`. Rules without `tools` apply to all unmatched tools.
+  - `emptyMessages: string`: Default: `'keep'` - Whether to `'keep'` or `'remove'` messages that become empty after pruning.
+
+###### Strip all old reasoning and tool results:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  prune:
+    reasoning: before-last-message
+    toolCalls: all
+    emptyMessages: remove
+```
+
+###### Keep search results but prune other tool calls:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  prune:
+    toolCalls:
+      - type: before-last-message
+        tools:
+          - search-products
+      - type: all
+    emptyMessages: remove
+```
+
+## Per-Step Configuration
+
+The `prepareStep` property overrides agent settings for specific steps in the tool loop. Each rule specifies which steps it applies to and what to override. The first matching rule wins.
+
+- `prepareStep: array`: Array of step rules. Each rule:
+  - `steps: integer[]`: Specific step numbers this rule applies to.
+  - `from: integer`: Start of step range (inclusive).
+  - `to: integer`: End of step range (inclusive). Omit for open-ended.
+  - `activeTools: string[]`: Override available tools.
+  - `toolChoice`: Override tool choice.
+  - `maxOutputTokens: integer`: Override max output tokens.
+  - `temperature: number`: Override temperature.
+
+Use either `steps` for specific steps or `from`/`to` for ranges — not both on the same rule.
+
+###### Force an initial search, then let the model decide:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  prepareStep:
+    - steps: [1]
+      toolChoice: required
+      activeTools:
+        - search-knowledge-base
+    - from: 2
+      toolChoice: auto
+```
+
+###### Structured first step, creative follow-up:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  temperature: 0.7
+  prepareStep:
+    - steps: [1]
+      toolChoice: required
+      temperature: 0
+      activeTools:
+        - classify-intent
+    - from: 2
+      toolChoice: auto
+```
+
+## File System Access
+
+The `fileSystem` property gives the agent scoped, read-only file access. This automatically adds four tools: `read-file`, `list-files`, `search-files`, and `stat-file`. The agent cannot read files outside the specified directory.
+
+- `fileSystem: object`:
+  - `basePath: string`: __Required__ - Directory to expose. Relative paths are resolved from the app root.
+
+###### Documentation assistant with file access:
+```yaml
+properties:
+  model: claude-sonnet-4-20250514
+  fileSystem:
+    basePath: ./docs
+  instructions: |
+    You are a documentation assistant. Use the file system tools
+    to search and read documentation files, then answer the
+    user's question based on what you find.
+```
+
+## Timeouts and Retries
+
+- `maxRetries: integer`: Default: `2` - Maximum retries on provider errors. Set to `0` to disable.
+- `timeout: number | object`: Timeout configuration.
+  - As a number: total timeout in milliseconds.
+  - As an object with granular control:
+    - `totalMs: number`: Total timeout across all steps.
+    - `stepMs: number`: Timeout per step.
+    - `chunkMs: number`: Timeout between stream chunks.
+
+## Provider-Specific Properties
+
+- `providerOptions: object`: Pass provider-specific options directly to the AI SDK. Use this for options not covered by the properties above.
+
+Each agent type also has its own properties. See the connection pages for details:
+
+- [Anthropic](/Anthropic) — `ClaudeAgent` with `thinking` and `effort`
+- [OpenAI](/OpenAI-connection) — `OpenAIAgent` with `reasoningEffort` and `reasoningSummary`
+- [Google](/Google) — `GeminiAgent` with `thinkingConfig` and `safetySettings`

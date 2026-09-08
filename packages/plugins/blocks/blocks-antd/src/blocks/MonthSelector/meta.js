@@ -18,6 +18,7 @@ import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
 import icon from '../../schemas/icon.js';
 import disabledDates from '../../schemas/disabledDates.js';
+import { datePresets } from '../../schemas/presets.js';
 import {
   disabled,
   placeholder,
@@ -71,6 +72,11 @@ export default {
           'Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale\'s month format, or "YYYY-MM" when no locale is configured.',
       },
       placeholder: { ...placeholder },
+      presets: datePresets({
+        example: '_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]',
+        selects: 'a month',
+        unit: 'month',
+      }),
       showToday: {
         type: 'boolean',
         default: true,

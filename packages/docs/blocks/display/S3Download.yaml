@@ -24,6 +24,8 @@ _ref:
     schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/meta.js
     gallery: ../plugins/plugins/plugin-aws/src/blocks/S3Download/gallery.yaml
     description: >
+      __Deprecated__ — use the provider-neutral <a href="/Download">Download</a> block with `downloadPolicyRequestId` instead.
+      S3Download remains as an alias so existing apps keep working.
       Download files from AWS S3. Requires an AwsS3Bucket connection and an
       AwsS3PresignedGetObject request. The s3GetPolicyRequestId property must
       reference the request id. If files were uploaded with S3Upload, its fileList

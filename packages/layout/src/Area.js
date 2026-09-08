@@ -38,11 +38,12 @@ const JUSTIFY_MAP = {
 const Area = ({ area = {}, areaKey, children, id, layout, className, style }) => {
   const derivedArea = layoutParamsToArea({ area, areaKey, layout });
   const gapStyle = deriveAreaStyle(derivedArea);
+  const isColumn = (derivedArea.direction ?? '').startsWith('column');
 
   return (
     <div
       id={id}
-      className={['lf-row', className].filter(Boolean).join(' ')}
+      className={['lf-row', isColumn && 'lf-row-column', className].filter(Boolean).join(' ')}
       style={{
         ...gapStyle,
         alignItems: ALIGN_MAP[derivedArea.align],

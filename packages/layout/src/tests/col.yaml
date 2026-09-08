@@ -317,3 +317,20 @@
             span: 4
           style:
             background: '#40AA55'
+- id: 'column direction area'
+  type: Box
+  layout:
+    direction: column
+  blocks:
+    - id: One
+      type: Paragraph
+      style:
+        background: '#40a0FF'
+      properties:
+        content: 'ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+    - id: Two
+      type: Paragraph
+      style:
+        background: '#FF4FaF'
+      properties:
+        content: 'TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit.'

@@ -25,7 +25,7 @@ pnpm test -- --testPathPattern='index.errors.test.js'
 | B1   | Auth config not object            | Error                | `B1-auth-not-object/`                          |
 | B2   | Auth provider missing id          | Error                | `B2-auth-provider-missing-id/`                 |
 | B3   | Public/protected conflict         | Error                | `B3-public-protected-conflict/`                |
-| B4   | Missing NextAuth secret           | Error                | `B4-missing-nextauth-secret/`                  |
+| B4   | Missing auth secret               | Error                | `B4-missing-nextauth-secret/`                  |
 | C1   | Duplicate menu id                 | Error                | `C1-duplicate-menu-id/`                        |
 | C2   | Menu link to missing page         | Warn                 | `C2-menu-missing-page/`                        |
 | D1   | Duplicate page id                 | Error                | `D1-duplicate-page-id/`                        |

@@ -47,6 +47,7 @@ test('buildTestPage', () => {
     auth: {
       public: true,
     },
+    subscriptions: [],
     requests: [
       {
         id: 'request:page:request',

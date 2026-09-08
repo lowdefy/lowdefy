@@ -1,0 +1,93 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tag_multiple_selector
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: tms_basic
+    type: TagMultipleSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - Ethics
+        - Environment
+        - Governance
+
+  # ============================================
+  # EVENT / SELECTION TESTS
+  # ============================================
+
+  - id: tms_change
+    type: TagMultipleSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - label: Option A
+          value: a
+        - label: Option B
+          value: b
+    events:
+      onChange:
+        - id: set_tms_result
+          type: SetState
+          params:
+            tms_result:
+              _event: value
+
+  - id: tms_change_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: tms_result
+              - null
+          then:
+            _json.stringify:
+              - _state: tms_result
+          else: ''
+
+  # ============================================
+  # DISABLED TESTS
+  # ============================================
+
+  - id: tms_disabled
+    type: TagMultipleSelector
+    properties:
+      label:
+        disabled: true
+      disabled: true
+      options:
+        - X
+        - Y
+
+  - id: tms_disabled_option
+    type: TagMultipleSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - label: Enabled
+          value: enabled
+        - label: Locked
+          value: locked
+          disabled: true

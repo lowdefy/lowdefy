@@ -18,7 +18,8 @@ import mingo from 'mingo';
 import { get, type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
-import 'mingo/init/system';
+// mingo v7 autoloads all operators for objects (Aggregator/Query) created from
+// the default module, so the old `import 'mingo/init/system'` is no longer needed.
 
 function aggregate(data, pipeline) {
   if (data === null) {

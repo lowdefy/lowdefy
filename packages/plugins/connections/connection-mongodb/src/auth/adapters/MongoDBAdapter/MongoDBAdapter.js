@@ -15,7 +15,7 @@
 */
 
 import { MongoClient } from 'mongodb';
-import { MongoDBAdapter as NextAuthMongoDBAdapter } from '@next-auth/mongodb-adapter';
+import { MongoDBAdapter as AuthJsMongoDBAdapter } from '@auth/mongodb-adapter';
 
 /*
 Default collections are:
@@ -32,7 +32,7 @@ Default collections are:
 function MongoDBAdapter({ properties }) {
   const { databaseUri, mongoDBClientOptions, options } = properties;
   const clientPromise = new MongoClient(databaseUri, mongoDBClientOptions).connect();
-  return NextAuthMongoDBAdapter(clientPromise, options);
+  return AuthJsMongoDBAdapter(clientPromise, options);
 }
 
 export default MongoDBAdapter;

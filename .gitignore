@@ -22,6 +22,7 @@ docs/superpowers/
 _server/
 
 packages/servers/*/build/**
+packages/servers/*/.vercel/
 packages/servers/*/lowdefy-build/**
 packages/servers/*/public/**
 packages/servers/*/package.original.json
@@ -48,6 +49,9 @@ modules/**
 
 packages/docs/public/sitemap.xml
 packages/docs/public/search-index.json
+packages/docs/public/llms.txt
+packages/docs/public/llms-full.txt
+packages/docs/public/md/**
 packages/website/public/sitemap.xml
 
 lerna-debug.log

@@ -23,6 +23,7 @@ const defaultPackages = [
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-diff',
   '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-files',
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
@@ -42,7 +43,9 @@ const defaultPackages = [
   '@lowdefy/connection-mongodb',
   '@lowdefy/connection-redis',
   '@lowdefy/connection-sendgrid',
+  '@lowdefy/connection-smtp',
   '@lowdefy/connection-stripe',
+  '@lowdefy/email-templates',
   '@lowdefy/operators-change-case',
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
@@ -54,8 +57,11 @@ const defaultPackages = [
   '@lowdefy/operators-yaml',
   '@lowdefy/plugin-auth0',
   '@lowdefy/plugin-aws',
+  '@lowdefy/plugin-azure',
   '@lowdefy/plugin-csv',
+  '@lowdefy/plugin-gcp',
   '@lowdefy/plugin-next-auth',
+  '@lowdefy/websockets-core',
 ];
 
 export default defaultPackages;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import * as Sentry from '@sentry/nextjs';
+import * as Sentry from '@sentry/node';
 
 function setSentryUser({ user, sentryConfig }) {
   // No-op if Sentry not initialized (DSN not set)

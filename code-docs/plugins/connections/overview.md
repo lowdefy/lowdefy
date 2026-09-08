@@ -49,6 +49,7 @@ Connections are:
 | [@lowdefy/connection-google-sheets](./google-sheets.md) | Google Sheets               | Read, Write            |
 | [@lowdefy/connection-redis](./redis.md)                 | Redis                       | Get, Set, List ops     |
 | [@lowdefy/connection-sendgrid](./sendgrid.md)           | SendGrid                    | Send emails            |
+| [@lowdefy/connection-smtp](./connection-smtp.md)        | SMTP (any provider)         | SMTPMailSend           |
 | [@lowdefy/connection-stripe](./stripe.md)               | Stripe                      | Payments, Customers    |
 | [@lowdefy/connection-anthropic](./anthropic.md)         | Anthropic Claude            | ClaudeAgent            |
 | [@lowdefy/connection-openai](./openai.md)               | OpenAI GPT                  | OpenAIAgent            |

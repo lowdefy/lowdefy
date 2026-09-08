@@ -15,95 +15,22 @@
 */
 
 import {
-  ToolLoopAgent,
   convertToModelMessages,
   createAgentUIStream,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  generateId,
   generateText,
   pruneMessages,
-  stepCountIs,
-  hasToolCall,
+  TypeValidationError,
   validateUIMessages,
 } from 'ai';
 
 import { serializer } from '@lowdefy/helpers';
 
-import buildAgentTools from './buildAgentTools.js';
-import buildPrepareStep from './buildPrepareStep.js';
-import buildUpdatePageStateTool from './buildUpdatePageStateTool.js';
-
-function createUsageAccumulator() {
-  const usage = {
-    inputTokens: 0,
-    outputTokens: 0,
-    totalTokens: 0,
-    reasoningTokens: 0,
-    cacheReadTokens: 0,
-    cacheWriteTokens: 0,
-  };
-
-  let finishReason = 'stop';
-
-  function add(stepResult) {
-    const stepUsage = stepResult?.usage ?? stepResult;
-    if (stepResult?.finishReason) {
-      finishReason = stepResult.finishReason;
-    }
-    if (!stepUsage) return;
-    usage.inputTokens += stepUsage.inputTokens ?? 0;
-    usage.outputTokens += stepUsage.outputTokens ?? 0;
-    usage.totalTokens += stepUsage.totalTokens ?? 0;
-    usage.reasoningTokens += stepUsage.outputTokenDetails?.reasoningTokens ?? 0;
-    usage.cacheReadTokens += stepUsage.inputTokenDetails?.cacheReadTokens ?? 0;
-    usage.cacheWriteTokens += stepUsage.inputTokenDetails?.cacheWriteTokens ?? 0;
-  }
-
-  return { usage, add, getFinishReason: () => finishReason };
-}
-
-// Strip non-serializable fields from agent-level hook events before sending as payload.
-// messages excluded here — the stream-level onFinish sends UIMessage[] directly.
-function cleanHookEvent(event) {
-  const clean = {};
-  for (const [key, value] of Object.entries(event)) {
-    if (key === 'abortSignal') continue;
-    if (key === 'messages') continue;
-    if (typeof value === 'function') continue;
-    clean[key] = value;
-  }
-  return clean;
-}
-
-// Maps YAML hook names to AI SDK callback names and creates fire-and-forget callbacks.
-// onFinish is intentionally excluded — it is handled at the stream level inside the
-// createUIMessageStream execute function so that hooks are awaited and can return
-// dataParts to be written to the response stream.
-const hookMapping = {
-  onStart: 'experimental_onStart',
-  onStepStart: 'experimental_onStepStart',
-  onToolCallStart: 'experimental_onToolCallStart',
-  onToolCallFinish: 'experimental_onToolCallFinish',
-  onStepFinish: 'onStepFinish',
-};
-
-function createHookCallbacks({ hooks, callEndpoint, locale }) {
-  if (!hooks) return {};
-
-  const callbacks = {};
-  for (const [yamlKey, sdkKey] of Object.entries(hookMapping)) {
-    const endpointIds = hooks[yamlKey];
-    if (!endpointIds || endpointIds.length === 0) continue;
-
-    callbacks[sdkKey] = (event) => {
-      const payload = { ...cleanHookEvent(event), locale };
-      for (const endpointId of endpointIds) {
-        callEndpoint(endpointId, { payload }).catch(() => {});
-      }
-    };
-  }
-  return callbacks;
-}
+import createToolLoopAgent from './createToolLoopAgent.js';
+import createUsageAccumulator from './createUsageAccumulator.js';
+import handleAgentGenerate from './handleAgentGenerate.js';
 
 // Convert data: URLs in file parts to raw base64 so the AI SDK does not attempt
 // to download them (it only supports http/https).  The mediaType field already
@@ -123,6 +50,29 @@ function convertDataUrlsToBase64(messages) {
   });
 }
 
+// Drop messages that carry no parts. The AI SDK client pushes the assistant
+// message on the stream's `start` chunk, before any content arrives, so a
+// request that fails after that point leaves an assistant shell with
+// `parts: []` in the client's history. Sent back, that shell fails UIMessage
+// validation ("Message must contain at least one part") — and keeps failing on
+// every later turn, so one transient error would otherwise kill the
+// conversation until a reload. There is nothing in an empty message for the
+// model anyway.
+function dropEmptyMessages(messages) {
+  return messages.filter((msg) => Array.isArray(msg.parts) && msg.parts.length > 0);
+}
+
+// What the client is told when a turn fails. TypeValidationError.message
+// embeds JSON.stringify(value) — for a UIMessage validation failure that is
+// the entire conversation, which the chat block then shows in a toast. The
+// full error is logged server-side before this is written to the stream.
+function clientErrorText(error) {
+  if (TypeValidationError.isInstance(error)) {
+    return 'The conversation could not be sent: a message failed validation.';
+  }
+  return error?.message ?? String(error);
+}
+
 // Concatenate the text parts of the first user message — used as the source
 // for generateTitle.
 function getFirstUserText(messages) {
@@ -135,82 +85,19 @@ function getFirstUserText(messages) {
 }
 
 async function handleAgentChat({ connection, properties, context }) {
+  // Headless run-to-completion mode (CallAgent routine step) — dispatched here
+  // so provider agent plugins delegate unchanged in both modes.
+  if (context.mode === 'generate') {
+    return handleAgentGenerate({ connection, properties, context });
+  }
+
   const { agent, messages: rawMessages } = properties;
-  const messages = convertDataUrlsToBase64(rawMessages);
+  const messages = dropEmptyMessages(convertDataUrlsToBase64(rawMessages));
 
-  const { tools, mcpClients } = await buildAgentTools({ agent, context });
-
-  const sharedState = context.agentContext?.sharedState;
-  const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
-  if (updatePageStateTool) {
-    tools['update-page-state'] = updatePageStateTool;
-  }
-
-  const model = connection.provider(agent.properties.model);
-
-  const locale = context.i18n?.active;
-  const hookCallbacks = createHookCallbacks({
-    hooks: agent.hooks,
-    callEndpoint: context.callEndpoint,
-    locale,
-  });
-
-  // Prepend page context to instructions when pageContext is enabled
-  let instructions = agent.properties.instructions;
-  if (agent.properties.pageContext && context.agentContext) {
-    const ctx = context.agentContext;
-    const contextLines = ['<context>'];
-    if (ctx.pageId) contextLines.push(`  pageId: ${ctx.pageId}`);
-    if (ctx.userId) contextLines.push(`  userId: ${ctx.userId}`);
-    if (ctx.conversationId) contextLines.push(`  conversationId: ${ctx.conversationId}`);
-    if (ctx.urlQuery && Object.keys(ctx.urlQuery).length > 0) {
-      contextLines.push(`  urlQuery: ${JSON.stringify(ctx.urlQuery)}`);
-    }
-    if (ctx.sharedState && Object.keys(ctx.sharedState).length > 0) {
-      contextLines.push(`  sharedState: ${JSON.stringify(ctx.sharedState)}`);
-    }
-    contextLines.push('</context>');
-    instructions = `${contextLines.join('\n')}\n\n${instructions ?? ''}`;
-  }
-
-  // Build stop conditions
-  const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
-  const stopOnToolCall = agent.properties.stopOnToolCall;
-  if (stopOnToolCall) {
-    const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
-    for (const name of toolNames) {
-      stopConditions.push(hasToolCall(name));
-    }
-  }
-
-  const agentInstance = new ToolLoopAgent({
-    model,
-    instructions,
-    tools,
-    stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
-    maxOutputTokens: agent.properties.maxOutputTokens,
-    temperature: agent.properties.temperature,
-    toolChoice: agent.properties.toolChoice ?? 'auto',
-    providerOptions: agent.properties.providerOptions,
-    activeTools: agent.properties.activeTools,
-    topP: agent.properties.topP,
-    topK: agent.properties.topK,
-    frequencyPenalty: agent.properties.frequencyPenalty,
-    presencePenalty: agent.properties.presencePenalty,
-    seed: agent.properties.seed,
-    stopSequences: agent.properties.stopSequences,
-    maxRetries: agent.properties.maxRetries,
-    ...(agent.properties.prepareStep
-      ? { prepareStep: buildPrepareStep(agent.properties.prepareStep) }
-      : {}),
-    ...hookCallbacks,
-    ...(agent.properties.repairToolCall
-      ? {
-          experimental_repairToolCall: async ({ toolCall }) => {
-            return { ...toolCall };
-          },
-        }
-      : {}),
+  const { agentInstance, mcpClients, model, timeoutConfig, locale } = await createToolLoopAgent({
+    connection,
+    agent,
+    context,
   });
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
@@ -218,12 +105,11 @@ async function handleAgentChat({ connection, properties, context }) {
   const hasMcpClients = mcpClients.length > 0;
 
   const pruneConfig = agent.properties.prune;
-  const timeoutConfig =
-    agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
 
   const titleEnabled = agent.properties.generateTitle === true;
 
   const stream = createUIMessageStream({
+    onError: clientErrorText,
     execute: async ({ writer }) => {
       const usageAccumulator = createUsageAccumulator();
       const steps = [];
@@ -274,53 +160,75 @@ async function handleAgentChat({ connection, properties, context }) {
         }
       }
 
-      if (pruneConfig) {
-        // Decompose createAgentUIStream so we can insert pruneMessages
-        // between the UIMessage→ModelMessage conversion and agent execution.
-        const validatedMessages = await validateUIMessages({
-          messages,
-          tools: agentInstance.tools,
-        });
-        const modelMessages = await convertToModelMessages(validatedMessages, {
-          tools: agentInstance.tools,
-        });
-        const prunedMessages = pruneMessages({
-          messages: modelMessages,
-          ...pruneConfig,
-        });
-        const result = await agentInstance.stream({
-          prompt: prunedMessages,
-          ...timeoutConfig,
-          onStepFinish: collectStep,
-        });
-        agentStream = result.toUIMessageStream({
-          originalMessages: validatedMessages,
-          onFinish: captureMessages,
-        });
-      } else {
-        // createAgentUIStream validates UIMessages, converts to ModelMessages,
-        // runs the agent, and returns a UIMessageStream — handling the full
-        // UI→model→UI conversion that ToolLoopAgent.stream() does not.
-        agentStream = await createAgentUIStream({
-          agent: agentInstance,
-          uiMessages: messages,
-          ...timeoutConfig,
-          onStepFinish: collectStep,
-          onFinish: captureMessages,
-        });
-      }
-
-      // Read the agent stream to completion before running onFinish hooks.
-      // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
-      // manually read the stream to ensure hooks fire after the agent finishes.
-      const reader = agentStream.getReader();
+      // One try around validation, the agent run and the read: a UIMessage that
+      // fails validation throws from createAgentUIStream / validateUIMessages
+      // before any stream exists, and that fault has to be logged and redacted
+      // the same way as a fault mid-stream.
       try {
+        if (pruneConfig) {
+          // Decompose createAgentUIStream so we can insert pruneMessages
+          // between the UIMessage→ModelMessage conversion and agent execution.
+          const validatedMessages = await validateUIMessages({
+            messages,
+            tools: agentInstance.tools,
+          });
+          const modelMessages = await convertToModelMessages(validatedMessages, {
+            tools: agentInstance.tools,
+          });
+          const prunedMessages = pruneMessages({
+            messages: modelMessages,
+            ...pruneConfig,
+          });
+          const result = await agentInstance.stream({
+            prompt: prunedMessages,
+            ...timeoutConfig,
+            onStepFinish: collectStep,
+          });
+          agentStream = result.toUIMessageStream({
+            originalMessages: validatedMessages,
+            // Without a generator the assistant message reaches onFinish with
+            // id: '' — see the createAgentUIStream call below.
+            generateMessageId: generateId,
+            onFinish: captureMessages,
+          });
+        } else {
+          // createAgentUIStream validates UIMessages, converts to ModelMessages,
+          // runs the agent, and returns a UIMessageStream — handling the full
+          // UI→model→UI conversion that ToolLoopAgent.stream() does not.
+          agentStream = await createAgentUIStream({
+            agent: agentInstance,
+            uiMessages: messages,
+            ...timeoutConfig,
+            // The AI SDK only ids the assistant message it builds when the caller
+            // supplies a generator: toUIMessageStream derives responseMessageId
+            // only if generateMessageId != null, and handleUIMessageStreamFinish
+            // then seeds the streaming state with `messageId ?? ''`, with no
+            // messageId on the start chunk to override it. Without this every
+            // assistant message an onFinish hook persists carries id: '', so a
+            // saved transcript has them all sharing one id — and a UI that keys
+            // its bubbles by message id (AgentChat does) renders the last reply in
+            // every assistant bubble when the conversation is reloaded. The client
+            // generates its own id while streaming, so the damage only shows up
+            // after a reload.
+            generateMessageId: generateId,
+            onStepFinish: collectStep,
+            onFinish: captureMessages,
+          });
+        }
+
+        // Read the agent stream to completion before running onFinish hooks.
+        // writer.merge() is fire-and-forget (returns void in the AI SDK), so we
+        // manually read the stream to ensure hooks fire after the agent finishes.
+        const reader = agentStream.getReader();
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           writer.write(value);
         }
       } catch (error) {
+        // The client only sees the (possibly redacted) error text, so the fault
+        // is logged server-side before it is written to the stream.
+        console.error(`Agent stream failed: ${error.message}`);
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.

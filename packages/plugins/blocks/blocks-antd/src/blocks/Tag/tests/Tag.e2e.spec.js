@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 import { escapeId } from '@lowdefy/e2e-utils';
 
 // Tag uses id={blockId} directly on the tag element
@@ -158,7 +158,7 @@ test.describe('Tag Block', () => {
   // ============================================
 
   test('fires onClick when keyboard shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'tag_shortcut_fired_display');
     await expect(display).not.toHaveText('shortcut:fired');
     await page.keyboard.press(`${mod}+j`);

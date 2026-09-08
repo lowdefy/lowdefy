@@ -35,7 +35,7 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                Lowdefy runs as Next.Js app. It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` of all pages. This can be useful for executing third party code such as Google Analytics, Intercom, etc. However, if the goal is to extend the functionality of your Lowdefy app with custom blocks, operators, actions or requests, use [plugins](/plugins).
+                It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` of all pages. This can be useful for executing third party code such as Google Analytics, Intercom, etc. However, if the goal is to extend the functionality of your Lowdefy app with custom blocks, operators, actions or requests, use [plugins](/plugins).
 
                 The content loaded into the `head` and `body` tag can be any valid HTML. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can also be hosted from the [Lowdefy public folder](/hosting-files).
 

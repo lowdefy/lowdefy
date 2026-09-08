@@ -17,4 +17,5 @@
 export default {
   connections: ['AIGateway'],
   agents: ['AIGatewayAgent'],
+  requests: ['GenerateObject', 'GenerateText'],
 };

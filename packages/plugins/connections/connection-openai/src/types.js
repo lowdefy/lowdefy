@@ -17,4 +17,5 @@
 export default {
   connections: ['OpenAI'],
   agents: ['OpenAIAgent'],
+  requests: ['GenerateObject', 'GenerateText'],
 };

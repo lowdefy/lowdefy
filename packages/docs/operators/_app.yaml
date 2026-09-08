@@ -19,7 +19,7 @@ _ref:
     pageId: _app
     pageTitle: _app
     filePath: operators/_app.yaml
-    env: Client and Server
+    env: Client, Server and Build
     types: |
       ```
       (key: string): any
@@ -31,23 +31,29 @@ _ref:
       }): any
       ```
     description: |
-      The `_app` operator reads structured app metadata declared in `lowdefy.yaml` together with build-environment facts captured by the build. It runs on both the client and the server.
+      The `_app` operator reads structured app metadata declared in `lowdefy.yaml` together with build-environment facts captured by the build. It runs on the client, the server, and at build time.
 
       The metadata object has the following keys:
 
-        - `slug`: From the root `slug` field. Optional, but if set must be kebab-case (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`) — lowercase letters and digits, hyphen-separated, starts with a letter, no leading/trailing/consecutive hyphens, no underscores. The build fails if the format does not match.
+        - `slug`: From the root `slug` field. **Required when referenced in string form** — `_app: slug` (or `_build.app: slug`) fails the build when `slug` is not declared in `lowdefy.yaml`. This guards against a `null` slug silently scoping namespaced data (e.g. MongoDB filters). The object form with an explicit `default` (`_app: { key: slug, default: ... }`) is the deliberate escape hatch: it returns the default instead of throwing, for the rare site that knowingly tolerates an unset slug. When set, the slug must be kebab-case (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`) — lowercase letters and digits, hyphen-separated, starts with a letter, no leading/trailing/consecutive hyphens, no underscores. An app that never references `slug` need not declare it.
         - `name`: From the root `name` field. Free-form string.
         - `version`: From the root `version` field. Free-form string.
         - `description`: From the root `description` field. Free-form string.
         - `license`: From the root `license` field. Free-form string.
         - `lowdefyVersion`: From the root `lowdefy` field — the framework version the app targets.
-        - `gitSha`: The build's git commit SHA. Resolved at build time in three steps: the `LOWDEFY_GIT_SHA` environment variable (when set non-empty) wins; otherwise the build runs `git rev-parse HEAD`; if both fail (no `.git`, no `git` binary, env unset), `gitSha` is `null`. The build does not error in any case.
+        - `gitSha`: The build's git commit SHA. Resolved at build time in three steps: the `LOWDEFY_GIT_SHA` environment variable (when set non-empty) wins; otherwise the build runs `git rev-parse HEAD`; if both fail (no `.git`, no `git` binary, env unset), `gitSha` is `null`. The build does not error in any case. Build-time and runtime reads return the same value.
 
-      Missing root fields yield `null` — every key in the metadata is always present.
+      Missing root fields yield `null` — every key in the metadata is always present. The sole exception is `slug`: referencing it fails the build when it is not set (see above).
 
       Unknown keys return `null`. Dot-paths against the flat shape also return `null` (no exception).
 
-      The `_app` operator is **runtime-only**. For build-time access to similar data, use [`_var`](/_var), [`_ref`](/_ref), or [`_build.env`](/_build).
+      #### Build time and runtime
+
+      `_app` resolves at **build time** and at runtime, and both produce the same value (app metadata is fixed at build). In most positions, write `_app: slug` — the build bakes it into the artifact. Inside a `_build.*` operator (for example as a [`_build.object.fromEntries`](/_build) map key), use the `_build.app` form so it resolves in time to be consumed by the surrounding build operator. See [`_build`](/_build).
+
+      #### Root metadata fields accept literals and `_build.*` only
+
+      The root metadata fields (`slug`, `name`, `description`, `version`, `license`, `lowdefy`) are resolved before the rest of the config, so they accept only literals and [`_build.*`](/_build) operators. `_ref`, `_var`, and static `_` operators are not resolved in these positions and fail the build with a clear error naming the field. Use `_build.env` for a deploy-time slug or name (for example `slug: { _build.env: APP_SLUG }`).
 
       #### Pinning `gitSha` in deploy environments
 

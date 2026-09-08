@@ -212,3 +212,38 @@ test('resolveTarget resolves a leading-slash url without a window (no origin nee
     query: '',
   });
 });
+
+test('resolveTarget folds urlQuery into an external href', () => {
+  expect(
+    resolveTarget({ lowdefy: createLowdefy(), target: { url: 'example.com', urlQuery: { a: 1 } } })
+  ).toEqual({
+    kind: 'external',
+    href: 'https://example.com/?a=1',
+  });
+});
+
+test('resolveTarget combines an external url query with the target urlQuery', () => {
+  expect(
+    resolveTarget({
+      lowdefy: createLowdefy(),
+      target: { url: 'https://example.com/x?theme=dark#frag', urlQuery: { a: 1 } },
+    })
+  ).toEqual({
+    kind: 'external',
+    href: 'https://example.com/x?theme=dark&a=1#frag',
+  });
+});
+
+test('resolveTarget folds urlQuery into an absolute same-origin page url', () => {
+  const lowdefy = createLowdefy({ basePath: '/app' });
+  expect(
+    resolveTarget({
+      lowdefy,
+      target: { url: 'https://app.lowdefy.test/app/reports?theme=dark', urlQuery: { a: 1 } },
+    })
+  ).toEqual({
+    kind: 'page',
+    pathname: '/reports',
+    query: 'theme=dark&a=1',
+  });
+});

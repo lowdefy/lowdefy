@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { expect } from '@playwright/test';
-
 async function waitForReady(page) {
   // Wait for Lowdefy client to initialize (context exists)
   // Context key is "page:{pageId}" not just pageId
@@ -36,13 +34,9 @@ async function goto(page, path) {
   await waitForReady(page);
 }
 
-async function expectNavigation(page, urlPattern) {
-  await expect(page).toHaveURL(urlPattern);
-}
-
 async function waitForPage(page, path) {
   await page.waitForURL(path, { waitUntil: 'domcontentloaded' });
   await waitForReady(page);
 }
 
-export { goto, waitForReady, expectNavigation, waitForPage };
+export { goto, waitForReady, waitForPage };

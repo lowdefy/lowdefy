@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
+import createS3Client from '../createS3Client.js';
+import getPublicUrl from '../getPublicUrl.js';
 import schema from './schema.js';
 
 async function AwsS3PresignedGetObject({ request, connection }) {
-  const { accessKeyId, secretAccessKey, region } = connection;
   const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
+  if (request.public === true) {
+    return getPublicUrl({ connection, key });
+  }
   const params = {
     Bucket: connection.bucket,
     Key: key,
@@ -28,10 +33,7 @@ async function AwsS3PresignedGetObject({ request, connection }) {
     ResponseContentDisposition: responseContentDisposition,
     ResponseContentType: responseContentType,
   };
-  const s3 = new S3Client({
-    credentials: { accessKeyId, secretAccessKey },
-    region,
-  });
+  const s3 = createS3Client({ connection });
   const command = new GetObjectCommand(params);
   return getSignedUrl(s3, command, { expiresIn: expires });
 }

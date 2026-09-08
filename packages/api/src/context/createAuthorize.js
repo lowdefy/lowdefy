@@ -16,7 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-function createAuthorize({ session }) {
+function createAuthorize({ session, system = false }) {
   // Next-auth getSession provides a session object if the user is authenticated
   // else session will be null
 
@@ -29,6 +29,9 @@ function createAuthorize({ session }) {
   }
 
   function authorize(config) {
+    // A system context (scheduled, webhook, detached runs) was authorized at the
+    // transport layer, so nested endpoint calls are never gated on a user session.
+    if (system === true) return true;
     const { auth } = config;
     if (auth.public === true) return true;
     if (auth.public === false) {

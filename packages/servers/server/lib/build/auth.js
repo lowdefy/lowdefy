@@ -13,7 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+// Build artifacts are read from disk because the Hono server runs as
+// unbundled Node.js ESM — JSON imports would need import attributes, and
+// client code imports the build JSON directly through Vite instead.
+import fs from 'node:fs';
+import path from 'node:path';
 import { serializer } from '@lowdefy/helpers';
-import raw from '../../build/auth.json';
+
+const raw = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'build/auth.json'), 'utf8'));
 
 export default serializer.deserialize(raw);

@@ -291,6 +291,66 @@ test('buildAgentTools with no agents property returns only endpoint tools', asyn
   expect(Object.keys(tools)).toEqual([]);
 });
 
+test('buildAgentTools keys endpoint tools by name and executes by endpointId', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'reporting/query-data', name: 'query_data' }],
+    mcp: [],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Query data',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn().mockResolvedValue({ success: true, response: { rows: [] } }),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.keys(tools)).toEqual(['query_data']);
+  await tools['query_data'].execute({ dataset: 'orders' }, {});
+  expect(context.callEndpoint).toHaveBeenCalledWith('reporting/query-data', {
+    payload: { dataset: 'orders' },
+    abortSignal: undefined,
+  });
+});
+
+test('buildAgentTools keys sub-agent tools by name', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const subAgentConfig = {
+    agentId: 'reporting/researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [],
+    properties: {
+      model: 'claude-haiku-4-5-20251001',
+      instructions: 'You research topics.',
+    },
+  };
+  const agent = {
+    tools: [],
+    mcp: [],
+    agents: [{ agentId: 'reporting/researcher', name: 'reporting__researcher' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest
+      .fn()
+      .mockResolvedValue({ provider: jest.fn().mockReturnValue('sub-model') }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  const { tools } = await buildAgentTools({ agent, context });
+
+  expect(Object.keys(tools)).toEqual(['reporting__researcher']);
+});
+
 test('buildAgentTools throws ConfigError when endpoint tool name collides with reserved platform tool', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
@@ -473,6 +533,101 @@ test('endpoint tool unwraps a marker-wrapped array nested under an object key', 
 
   expect(result).toEqual({ items: ['phone', 'tablet', 'laptop'], total: 3 });
   expect(Array.isArray(result.items)).toBe(true);
+});
+
+test('buildAgentTools sets needsApproval on confirm endpoint tools by default', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'create-ticket', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create a ticket',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await buildAgentTools({ agent, context });
+
+  expect(mockTool.mock.calls[0][0].needsApproval).toBe(true);
+});
+
+test('buildAgentTools autoApprove strips needsApproval from confirm endpoint tools', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'create-ticket', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create a ticket',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  await buildAgentTools({ agent, context, autoApprove: true });
+
+  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+});
+
+test('buildAgentTools autoApprove strips needsApproval from confirm MCP tools', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const mcpTool = { description: 'External tool', execute: jest.fn() };
+  mockCreateMCPClient.mockResolvedValue({
+    tools: jest.fn().mockResolvedValue({ 'ext-tool': mcpTool }),
+    close: jest.fn(),
+  });
+
+  const agent = {
+    mcp: [{ url: 'https://mcp.example.com', confirm: true }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn(),
+    callEndpoint: jest.fn(),
+    evaluateOperators: jest.fn((x) => x),
+  };
+
+  const withApproval = await buildAgentTools({ agent, context });
+  expect(withApproval.tools['ext-tool'].needsApproval).toBe(true);
+
+  const autoApproved = await buildAgentTools({ agent, context, autoApprove: true });
+  expect(autoApproved.tools['ext-tool'].needsApproval).toBeUndefined();
+});
+
+test('buildAgentTools propagates autoApprove into recursive sub-agent tool builds', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const subAgentConfig = {
+    agentId: 'worker',
+    connectionId: 'anthropic',
+    tools: [{ endpointId: 'sub-confirm-tool', confirm: true }],
+    mcp: [],
+    properties: { model: 'test-model' },
+  };
+
+  const agent = {
+    tools: [],
+    agents: [{ agentId: 'worker' }],
+  };
+  const context = {
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Sub tool',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+    getAgentConfig: jest.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: jest.fn().mockResolvedValue({ provider: jest.fn() }),
+    resolveMcpSources: jest.fn().mockResolvedValue([]),
+  };
+
+  await buildAgentTools({ agent, context, autoApprove: true });
+
+  // First tool() call is the sub-agent's confirm endpoint tool.
+  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
 });
 
 test('buildAgentTools warns and skips an endpoint tool whose name is a reserved key', async () => {

@@ -251,7 +251,7 @@ test.describe('AgGridBalham Block', () => {
   test('cell.type: avatar renders picture when srcField is present', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_cell_avatar');
     const firstRow = block.locator('.ag-row[row-index="0"]');
-    await expect(firstRow.locator('img')).toHaveAttribute('src', 'https://example.com/a.png');
+    await expect(firstRow.locator('img')).toHaveAttribute('src', /^data:image\/png/);
     await expect(firstRow).toContainText('Alice Johnson');
   });
 
@@ -393,19 +393,25 @@ test.describe('AgGridBalham Block', () => {
   test('ellipsis: N installs a line-clamp renderer', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_ellipsis');
     const longCell = block.locator('.ag-row[row-index="0"] .ag-cell').first();
-    const clampSpan = longCell.locator('span').first();
-    const style = await clampSpan.getAttribute('style');
-    expect(style).toContain('-webkit-line-clamp: 2');
-    expect(style).toContain('-webkit-box');
+    // ag-grid wraps cell content in its own spans (autoHeight/wrapText), so
+    // target the innermost span with the text. Chromium computes the legacy
+    // `display: -webkit-box` as `flow-root` since standardizing line-clamp,
+    // so assert the clamp properties and that the text actually truncates.
+    const clampSpan = longCell.locator('span', { hasText: 'Quite a long piece of text' }).last();
+    await expect(clampSpan).toHaveCSS('-webkit-line-clamp', '2');
+    await expect(clampSpan).toHaveCSS('overflow', 'hidden');
+    expect(await clampSpan.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
   });
 
   // ============================================
   // LOADING FLAG — runtime toggle
   // ============================================
 
-  test('loading flag toggles native overlay at runtime', async ({ page }) => {
+  test('loading flag toggles loading overlay at runtime', async ({ page }) => {
     const block = getBlock(page, 'aggridbalham_loading_grid');
-    const overlay = block.locator('.ag-overlay-loading-center');
+    // The block suppresses ag-grid's native loading overlay (WebKit race, see
+    // LoadingOverlay.js) and renders its own overlay div from the loading prop.
+    const overlay = block.getByText('Loading...');
 
     // Initial: loading is false → no visible loading overlay.
     await expect(overlay).toBeHidden();

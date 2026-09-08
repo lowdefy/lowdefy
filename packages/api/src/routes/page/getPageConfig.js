@@ -16,14 +16,25 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}.json`);
-  if (pageConfig && authorize(pageConfig)) {
+import resolveDynamicContent from './dynamic/resolveDynamicContent.js';
+
+async function getPageConfig(context, { pageId, urlQuery }) {
+  const pageConfig = await context.readConfigFile(`pages/${pageId}.json`);
+  if (pageConfig && context.authorize(pageConfig)) {
     // eslint-disable-next-line no-unused-vars
     const { auth, ...rest } = pageConfig;
-    // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
-    // are made enumerable again for JSON transfer to client
-    return serializer.serialize(rest);
+    if (rest.dynamic !== true) {
+      // Use serializer.serialize to ensure ~k keys (non-enumerable after deserialize)
+      // are made enumerable again for JSON transfer to client
+      return serializer.serialize(rest);
+    }
+    // readConfigFile caches parsed artifacts — deep copy before resolution so
+    // one request's resolved content never reaches another via the cache.
+    const resolved = await resolveDynamicContent(context, {
+      pageConfig: serializer.copy(rest),
+      urlQuery,
+    });
+    return serializer.serialize(resolved);
   }
   return null;
 }

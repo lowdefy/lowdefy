@@ -17,7 +17,9 @@
 import { DefaultChatTransport } from 'ai';
 
 function createLowdefyChatTransport({ pageId, agentId, conversationId, urlQuery, sharedStateRef }) {
-  const base = `/api/agent/${pageId}/${agentId}`;
+  // The server route takes the last path segment as the agentId — module-scoped
+  // agent ids contain '/', so encode the agentId into a single segment.
+  const base = `/api/agent/${pageId}/${encodeURIComponent(agentId)}`;
   const api = conversationId
     ? `${base}?conversationId=${encodeURIComponent(conversationId)}`
     : base;

@@ -50,7 +50,6 @@ _ref:
                 For client-side error capture, you also need to expose the DSN to the browser:
 
                 ```
-                NEXT_PUBLIC_SENTRY_DSN=https://your-dsn@sentry.io/project
                 ```
 
                 ### Configuration Options
@@ -130,14 +129,13 @@ _ref:
             SENTRY_AUTH_TOKEN=your-auth-token
             ```
 
-            This will upload source maps to Sentry during the Next.js build process.
+            This will upload source maps to Sentry during the client build.
 
             ### Environment Variables
 
             | Variable | Description |
             |----------|-------------|
             | `SENTRY_DSN` | Sentry Data Source Name (DSN) for server-side error capture |
-            | `NEXT_PUBLIC_SENTRY_DSN` | The same DSN exposed to the client for browser error capture |
             | `SENTRY_AUTH_TOKEN` | (Optional) Auth token for source map uploads during build |
 
             Example `.env` file:
@@ -145,7 +143,6 @@ _ref:
             ```
             # .env
             SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
-            NEXT_PUBLIC_SENTRY_DSN=https://abc123@o123456.ingest.sentry.io/1234567
             SENTRY_AUTH_TOKEN=your-auth-token
             ```
 

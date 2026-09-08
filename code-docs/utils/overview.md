@@ -14,6 +14,7 @@ Shared utility packages used throughout Lowdefy.
 | `@lowdefy/block-dev`           | Block testing utilities                     | Node.js   |
 | `@lowdefy/e2e-utils`           | Playwright e2e testing for apps             | Node.js   |
 | `@lowdefy/nunjucks`            | Template engine wrapper                     | Universal |
+| `@lowdefy/email-templates`     | React Email rendering + safe interpolation  | Node.js   |
 | `@lowdefy/jest-yaml-transform` | YAML Jest transformer                       | Node.js   |
 
 ## Dependency Graph

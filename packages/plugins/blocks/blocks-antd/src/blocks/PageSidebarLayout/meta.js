@@ -50,6 +50,7 @@ export default {
     mobileMenu: 'The PageSidebarLayout mobile menu.',
     header: 'The PageSidebarLayout header.',
     headerActions: 'The header actions container (notifications, profile, dark mode toggle).',
+    headerContent: 'The PageSidebarLayout header content area (the header slot row).',
     logo: 'The PageSidebarLayout logo.',
     notifications: 'The notification bell button.',
     notificationsBadge: 'The notification badge wrapper.',

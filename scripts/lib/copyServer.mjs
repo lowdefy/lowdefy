@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SKIP_DIRS = new Set(['node_modules', '.next', '.turbo']);
+const SKIP_DIRS = new Set(['node_modules', 'dist', '.turbo']);
 
 function copyServer({ sourceDir, targetDir }) {
   // Only skip the top-level build/ directory (generated artifacts).

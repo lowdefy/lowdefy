@@ -98,3 +98,60 @@ test('getPageConfig, page does not exist', async () => {
   const res = await getPageConfig(context, { pageId: 'doesNotExist' });
   expect(res).toEqual(null);
 });
+
+test('getPageConfig, dynamic page resolves Dynamic blocks and does not mutate the cached config', async () => {
+  const cachedPageConfig = {
+    id: 'page:pageId',
+    pageId: 'pageId',
+    blockId: 'pageId',
+    type: 'Box',
+    dynamic: true,
+    auth: { public: true },
+    requests: [],
+    slots: {
+      content: {
+        blocks: [
+          {
+            id: 'block:pageId:section_1:0',
+            blockId: 'section_1',
+            type: 'Dynamic',
+            properties: { endpointId: 'resolve_section' },
+          },
+        ],
+      },
+    },
+  };
+  mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'pages/pageId.json') return cachedPageConfig;
+    if (path === 'types.json') {
+      return {
+        actions: {},
+        blocks: { Box: {}, Dynamic: {}, Html: {} },
+        operators: { client: {}, server: {} },
+      };
+    }
+    if (path === 'plugins/blockMetas.json') return {};
+    if (path === 'plugins/blockSchemas.json') return {};
+    if (path === 'api/resolve_section.json') {
+      return {
+        endpointId: 'resolve_section',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: {
+          ':return': {
+            blocks: [{ id: 'generated', type: 'Html', properties: { html: 'resolved' } }],
+          },
+        },
+      };
+    }
+    return null;
+  });
+  const res = await getPageConfig(context, { pageId: 'pageId', urlQuery: {} });
+  const dynamicBlock = res.slots.content.blocks[0];
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('resolved');
+  expect(dynamicBlock.properties.endpointId).toBe(undefined);
+  // The fileCache-cached config object is untouched by resolution.
+  const cachedDynamicBlock = cachedPageConfig.slots.content.blocks[0];
+  expect(cachedDynamicBlock.properties.endpointId).toBe('resolve_section');
+  expect(cachedDynamicBlock.slots).toBe(undefined);
+});

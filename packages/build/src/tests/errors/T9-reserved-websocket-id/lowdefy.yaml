@@ -1,0 +1,22 @@
+# T9: Reserved Websocket ID
+# =========================
+# The websocket arm of the same ordering problem as T7 and T8: buildAuth runs
+# before buildWebsockets, so buildEntityAuth keys its auth maps by a websocket
+# id that validateId has not seen yet. A reserved id resolved through
+# Object.prototype there, marking the websocket protected with
+# Object.prototype.constructor as its roles.
+#
+# Expected error:
+#   [Config Error] Websocket id "constructor" is a reserved name and cannot be used as an id.
+#
+# The error points to line 18 where the websocket is defined.
+
+lowdefy: local
+
+websockets:
+  - id: constructor
+    type: Channel
+
+pages:
+  - id: home
+    type: Box

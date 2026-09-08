@@ -1,0 +1,604 @@
+# Layout
+
+Ant Design layout container for structuring page sections.
+
+This is the main content area. The Layout block wraps Header, Content, and Footer to create a standard page structure.
+
+Footer - Copyright 2026
+
+```yaml
+- id: layout_basic
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: layout_basic_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: layout_basic_header_text
+          type: Html
+          properties:
+            html: <span class="text-base font-semibold">Header</span>
+    - id: layout_basic_content
+      type: Content
+      style:
+        padding: 24px
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: layout_basic_content_text
+          type: Paragraph
+          properties:
+            content: This is the main content area. The Layout block wraps Header, Content,
+              and Footer to create a standard page structure.
+    - id: layout_basic_footer
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: layout_basic_footer_text
+          type: Paragraph
+          properties:
+            content: Footer - Copyright 2026
+```
+
+Layout blocks compose together to create complex page structures. Here, an outer Layout wraps a Header, and an inner Layout contains a Sider and Content side by side.
+
+Footer
+
+```yaml
+- id: layout_sider_outer
+  type: Layout
+  style:
+    minHeight: 350px
+  blocks:
+    - id: layout_sider_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: layout_sider_header_text
+          type: Html
+          properties:
+            html: <span class="text-base font-semibold">Header</span>
+    - id: layout_sider_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: layout_sider_side
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            theme: light
+            width: 200
+          blocks:
+            - id: layout_sider_side_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: layout_sider_nav_1
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: layout_sider_nav_2
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+        - id: layout_sider_content
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-container)
+          blocks:
+            - id: layout_sider_content_text
+              type: Paragraph
+              properties:
+                content: Layout blocks compose together to create complex page structures. Here,
+                  an outer Layout wraps a Header, and an inner Layout contains a
+                  Sider and Content side by side.
+    - id: layout_sider_footer
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: layout_sider_footer_text
+          type: Paragraph
+          properties:
+            content: Footer
+```
+
+Main content area with a right-side panel. The Sider is placed after Content to render on the right.
+
+Right side panel for supplementary content, filters, or navigation.
+
+```yaml
+- id: layout_right_sider_outer
+  type: Layout
+  style:
+    minHeight: 300px
+  blocks:
+    - id: layout_right_sider_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: layout_right_sider_content
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-container)
+          blocks:
+            - id: layout_right_sider_content_text
+              type: Paragraph
+              properties:
+                content: Main content area with a right-side panel. The Sider is placed after
+                  Content to render on the right.
+        - id: layout_right_sider_side
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            theme: light
+            width: 250
+            reverseArrow: true
+          style:
+            borderLeft: 1px solid
+          blocks:
+            - id: layout_right_sider_side_text
+              type: Paragraph
+              style:
+                padding: 16px
+              properties:
+                content: Right side panel for supplementary content, filters, or navigation.
+```
+
+Sider with custom background color set via the siderBg token. The trigger bar uses triggerBg and triggerColor tokens.
+
+The Layout theme property accepts antd design tokens like headerBg, footerBg, siderBg, bodyBg, triggerBg, triggerColor, and triggerHeight. These cascade to child Header, Footer, Sider, and Content blocks.
+
+Footer styled with footerBg token
+
+```yaml
+- id: layout_theme_outer
+  type: Layout
+  style:
+    minHeight: 280px
+  properties:
+    theme:
+      headerBg: "#1d39c4"
+      triggerBg: "#597ef7"
+      triggerColor: "#ffffff"
+      triggerHeight: 48
+  blocks:
+    - id: layout_theme_header
+      type: Header
+      style:
+        paddingInline: 24px
+      blocks:
+        - id: layout_theme_header_text
+          type: Html
+          properties:
+            html: <span class="text-base font-semibold">Custom themed header via Layout
+              design tokens</span>
+    - id: layout_theme_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: layout_theme_sider
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            theme: light
+            width: 180
+          blocks:
+            - id: layout_theme_sider_text
+              type: Paragraph
+              style:
+                padding: 16px
+              properties:
+                content: Sider with custom background color set via the siderBg token. The
+                  trigger bar uses triggerBg and triggerColor tokens.
+        - id: layout_theme_content
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+          blocks:
+            - id: layout_theme_content_text
+              type: Paragraph
+              properties:
+                content: The Layout theme property accepts antd design tokens like headerBg,
+                  footerBg, siderBg, bodyBg, triggerBg, triggerColor, and
+                  triggerHeight. These cascade to child Header, Footer, Sider,
+                  and Content blocks.
+    - id: layout_theme_footer
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: layout_theme_footer_text
+          type: Paragraph
+          properties:
+            content: Footer styled with footerBg token
+```
+
+The Layout block has a single cssKey called "element". Use the class property to apply Tailwind utility classes directly to the Layout wrapper. Here the outer Layout uses rounded corners, shadow, and a border. Child blocks like Header, Content, and Footer can each have their own class applied.
+
+Footer with Tailwind background
+
+```yaml
+- id: layout_tailwind_outer
+  type: Layout
+  class: rounded-lg overflow-hidden shadow-lg border border-border
+  style:
+    minHeight: 280px
+  blocks:
+    - id: layout_tailwind_header
+      type: Header
+      properties:
+        color: "#4338ca"
+      style:
+        paddingInline: 24px
+        color: white
+      blocks:
+        - id: layout_tailwind_header_text
+          type: Html
+          properties:
+            html: <span class="text-white text-base font-semibold">Tailwind-styled
+              Layout</span>
+    - id: layout_tailwind_content
+      type: Content
+      class:
+        .element: bg-bg-layout
+      style:
+        padding: 24px
+      blocks:
+        - id: layout_tailwind_content_text
+          type: Paragraph
+          properties:
+            content: The Layout block has a single cssKey called "element". Use the class
+              property to apply Tailwind utility classes directly to the Layout
+              wrapper. Here the outer Layout uses rounded corners, shadow, and a
+              border. Child blocks like Header, Content, and Footer can each
+              have their own class applied.
+    - id: layout_tailwind_footer
+      type: Footer
+      class:
+        .element: bg-bg-layout text-center
+      blocks:
+        - id: layout_tailwind_footer_text
+          type: Paragraph
+          properties:
+            content: Footer with Tailwind background
+```
+
+This is where a data table or chart would display recent order information. The Layout block provides the overall page structure with a dark sidebar, top header, and scrollable content area.
+
+Acme Corp Admin Panel - Version 3.2.1
+
+```yaml
+- id: layout_admin_outer
+  type: Layout
+  style:
+    minHeight: 450px
+  blocks:
+    - id: layout_admin_header
+      type: Header
+      properties:
+        notifications:
+          count: 5
+        profile:
+          avatar:
+            icon: AiOutlineUser
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: layout_admin_header_title
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: <span class="text-base font-bold">Acme Admin</span>
+    - id: layout_admin_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: layout_admin_sider
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            theme: dark
+            width: 220
+            breakpoint: lg
+          blocks:
+            - id: layout_admin_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: dark
+                links:
+                  - id: layout_admin_menu_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: AiOutlineDashboard
+                  - id: layout_admin_menu_users
+                    type: MenuLink
+                    properties:
+                      title: Users
+                      icon: AiOutlineTeam
+                  - id: layout_admin_menu_orders
+                    type: MenuLink
+                    properties:
+                      title: Orders
+                      icon: AiOutlineShoppingCart
+                  - id: layout_admin_menu_reports
+                    type: MenuLink
+                    properties:
+                      title: Reports
+                      icon: AiOutlineBarChart
+                  - id: layout_admin_menu_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: AiOutlineSetting
+        - id: layout_admin_content_area
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 24px
+            background: var(--ant-color-bg-layout)
+          blocks:
+            - id: layout_admin_breadcrumb
+              type: Breadcrumb
+              properties:
+                list:
+                  - Home
+                  - Dashboard
+            - id: layout_admin_stats_row
+              type: Box
+              layout:
+                gap: 16
+              blocks:
+                - id: layout_admin_stat_users
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: layout_admin_stat_users_val
+                      type: Statistic
+                      properties:
+                        title: Total Users
+                        value: 12480
+                - id: layout_admin_stat_orders
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: layout_admin_stat_orders_val
+                      type: Statistic
+                      properties:
+                        title: Orders Today
+                        value: 342
+                - id: layout_admin_stat_revenue
+                  type: Card
+                  layout:
+                    flex: 1 1 0
+                  properties:
+                    size: small
+                  blocks:
+                    - id: layout_admin_stat_revenue_val
+                      type: Statistic
+                      properties:
+                        title: Revenue
+                        value: 58200
+                        prefix: $
+            - id: layout_admin_main_card
+              type: Card
+              properties:
+                title: Recent Orders
+              blocks:
+                - id: layout_admin_table_placeholder
+                  type: Paragraph
+                  properties:
+                    content: This is where a data table or chart would display recent order
+                      information. The Layout block provides the overall page
+                      structure with a dark sidebar, top header, and scrollable
+                      content area.
+    - id: layout_admin_footer
+      type: Footer
+      style:
+        textAlign: center
+      blocks:
+        - id: layout_admin_footer_text
+          type: Paragraph
+          properties:
+            content: Acme Corp Admin Panel - Version 3.2.1
+```
+
+DevDocs
+
+Getting Started
+
+Introduction
+
+Welcome to DevDocs. This guide walks you through setting up your first project. The page uses a Layout with a light-themed Sider for documentation navigation, a white Header with logo and search, and a Content area with comfortable reading width.
+
+> Tip
+
+```yaml
+- id: layout_docs_outer
+  type: Layout
+  style:
+    minHeight: 450px
+  blocks:
+    - id: layout_docs_header
+      type: Header
+      style:
+        paddingInline: 24px
+        borderBottom: 1px solid var(--ant-color-border)
+        background: var(--ant-color-bg-container)
+      blocks:
+        - id: layout_docs_logo
+          type: Title
+          layout:
+            flex: 0 0 auto
+          properties:
+            content: DevDocs
+            level: 4
+            style:
+              margin: 0
+        - id: layout_docs_version_tag
+          type: Tag
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: v4.2
+            color: blue
+        - id: layout_docs_spacer
+          type: Box
+          layout:
+            flex: 1 1 0
+        - id: layout_docs_search_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineSearch
+            title: Search docs...
+            color: default
+            variant: outlined
+        - id: layout_docs_github_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            icon: AiOutlineGithub
+            color: default
+            variant: text
+            hideTitle: true
+    - id: layout_docs_inner
+      type: Layout
+      properties:
+        hasSider: true
+      blocks:
+        - id: layout_docs_sider
+          type: Sider
+          layout:
+            flex: 0 0 auto
+          properties:
+            theme: light
+            width: 260
+            breakpoint: md
+          style:
+            borderRight: 1px solid
+          blocks:
+            - id: layout_docs_nav_title
+              type: Paragraph
+              style:
+                padding: 16px 24px 8px
+                fontWeight: 600
+              properties:
+                content: Getting Started
+            - id: layout_docs_nav_menu
+              type: Menu
+              properties:
+                mode: inline
+                theme: light
+                links:
+                  - id: layout_docs_nav_intro
+                    type: MenuLink
+                    properties:
+                      title: Introduction
+                      icon: AiOutlineRead
+                  - id: layout_docs_nav_install
+                    type: MenuLink
+                    properties:
+                      title: Installation
+                      icon: AiOutlineDownload
+                  - id: layout_docs_nav_config
+                    type: MenuLink
+                    properties:
+                      title: Configuration
+                      icon: AiOutlineTool
+                  - id: layout_docs_nav_deploy
+                    type: MenuLink
+                    properties:
+                      title: Deployment
+                      icon: AiOutlineCloudUpload
+        - id: layout_docs_content_area
+          type: Content
+          layout:
+            flex: 1 1 auto
+          style:
+            padding: 32px 48px
+            background: var(--ant-color-bg-container)
+          blocks:
+            - id: layout_docs_content_breadcrumb
+              type: Breadcrumb
+              properties:
+                list:
+                  - Docs
+                  - Getting Started
+                  - Introduction
+            - id: layout_docs_content_title
+              type: Title
+              properties:
+                content: Introduction
+                level: 2
+            - id: layout_docs_content_paragraph
+              type: Paragraph
+              properties:
+                content: Welcome to DevDocs. This guide walks you through setting up your first
+                  project. The page uses a Layout with a light-themed Sider for
+                  documentation navigation, a white Header with logo and search,
+                  and a Content area with comfortable reading width.
+            - id: layout_docs_content_alert
+              type: Alert
+              properties:
+                type: info
+                message: Tip
+                description: The Layout block is the top-level structural container. Nest
+                  Header, Content, Footer, and Sider blocks inside to build any
+                  page structure.
+                showIcon: true
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Layout element. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Layout child blocks (Header, Sider, Content, Footer). |

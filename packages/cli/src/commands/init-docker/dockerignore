@@ -1,0 +1,8 @@
+.git
+.lowdefy
+.env
+.env.*
+node_modules
+Dockerfile
+.dockerignore
+README.md

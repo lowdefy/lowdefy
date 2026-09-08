@@ -33,6 +33,9 @@ test('buildAuth default', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: false,
@@ -58,6 +61,9 @@ test('buildAuth no pages', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -92,6 +98,9 @@ test('buildAuth all protected, some public', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -134,6 +143,9 @@ test('buildAuth all public, some protected', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -174,6 +186,9 @@ test('buildAuth all public', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -212,6 +227,9 @@ test('buildAuth all protected', async () => {
   expect(res).toEqual({
     auth: {
       api: {
+        roles: {},
+      },
+      websockets: {
         roles: {},
       },
       authPages: {},
@@ -298,6 +316,9 @@ test('buildAuth roles', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -355,6 +376,9 @@ test('buildAuth roles and protected pages array', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -391,6 +415,9 @@ test('buildAuth roles and protected true', async () => {
       api: {
         roles: {},
       },
+      websockets: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       configured: true,
@@ -410,9 +437,9 @@ test('buildAuth roles and protected true', async () => {
 });
 
 test('Auth plugins are counted', () => {
-  // NEXTAUTH_SECRET is required when auth.providers is configured (validateAuthConfig.js)
-  const originalSecret = process.env.NEXTAUTH_SECRET;
-  process.env.NEXTAUTH_SECRET = 'test-secret';
+  // AUTH_SECRET is required when auth.providers is configured (validateAuthConfig.js)
+  const originalSecret = process.env.AUTH_SECRET;
+  process.env.AUTH_SECRET = 'test-secret';
   try {
     const components = {
       auth: {
@@ -456,6 +483,9 @@ test('Auth plugins are counted', () => {
     expect(res).toEqual({
       auth: {
         api: {
+          roles: {},
+        },
+        websockets: {
           roles: {},
         },
         authPages: {},
@@ -506,6 +536,6 @@ test('Auth plugins are counted', () => {
     expect(context.typeCounters.auth.callbacks.getCounts()).toEqual({ Callback: 1 });
     expect(context.typeCounters.auth.events.getCounts()).toEqual({ Event: 1 });
   } finally {
-    process.env.NEXTAUTH_SECRET = originalSecret;
+    process.env.AUTH_SECRET = originalSecret;
   }
 });

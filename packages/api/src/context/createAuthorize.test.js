@@ -125,6 +125,17 @@ test('throws ConfigError when session.user.roles is an object', () => {
   throw new Error('Expected ConfigError to be thrown');
 });
 
+test('system: true authorizes protected config without a session', () => {
+  const authorize = createAuthorize({ session: undefined, system: true });
+  expect(authorize({ auth: { public: false } })).toBe(true);
+  expect(authorize({ auth: { public: true } })).toBe(true);
+});
+
+test('system: true authorizes roles-protected config without a session', () => {
+  const authorize = createAuthorize({ session: undefined, system: true });
+  expect(authorize({ auth: { public: false, roles: ['admin'] } })).toBe(true);
+});
+
 test('throws ConfigError with configKey for location tracing', () => {
   const authorize = createAuthorize({});
   try {

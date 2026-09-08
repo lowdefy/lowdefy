@@ -1,0 +1,972 @@
+# Result
+
+Result page with status icon, title, and extra actions.
+
+```yaml
+- id: status_success
+  type: Result
+  properties:
+    status: success
+    title: Successfully Purchased Cloud Server
+    subTitle: "Order number: 2026-0342-8756-0028. Cloud server configuration takes
+      1-5 minutes, please wait."
+- id: status_error
+  type: Result
+  properties:
+    status: error
+    title: Submission Failed
+    subTitle: Please check and modify the following information before resubmitting.
+- id: status_info
+  type: Result
+  properties:
+    status: info
+    title: Your Operation Has Been Executed
+    subTitle: We will review your request and respond within 24 hours.
+- id: status_warning
+  type: Result
+  properties:
+    status: warning
+    title: There Are Some Problems With Your Operation
+    subTitle: Please review and correct the issues listed below before proceeding.
+```
+
+```yaml
+- id: http_404
+  type: Result
+  properties:
+    status: "404"
+    title: "404"
+    subTitle: Sorry, the page you visited does not exist.
+- id: http_403
+  type: Result
+  properties:
+    status: "403"
+    title: "403"
+    subTitle: Sorry, you are not authorized to access this page.
+- id: http_500
+  type: Result
+  properties:
+    status: "500"
+    title: "500"
+    subTitle: Sorry, something went wrong on our server.
+```
+
+```yaml
+- id: extra_success
+  type: Result
+  properties:
+    status: success
+    title: Payment Successful
+    subTitle: "Order number: 2026-0815-9932. Your receipt has been emailed to you."
+  slots:
+    extra:
+      blocks:
+        - id: extra_success_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: extra_success_home
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Back to Home
+                color: primary
+                variant: solid
+            - id: extra_success_orders
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: View Orders
+                color: default
+                variant: outlined
+- id: extra_error
+  type: Result
+  properties:
+    status: error
+    title: Submission Failed
+    subTitle: Please check and modify the following information before resubmitting.
+  slots:
+    extra:
+      blocks:
+        - id: extra_error_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: extra_error_retry
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Try Again
+                color: primary
+                variant: solid
+                icon: AiOutlineReload
+            - id: extra_error_support
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Contact Support
+                color: default
+                variant: outlined
+                icon: AiOutlineCustomerService
+- id: extra_404
+  type: Result
+  properties:
+    status: "404"
+    title: "404"
+    subTitle: Sorry, the page you visited does not exist.
+  slots:
+    extra:
+      blocks:
+        - id: extra_404_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Back Home
+            color: primary
+            variant: solid
+- id: extra_403
+  type: Result
+  properties:
+    status: "403"
+    title: "403"
+    subTitle: Sorry, you are not authorized to access this page.
+  slots:
+    extra:
+      blocks:
+        - id: extra_403_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Back Home
+            color: primary
+            variant: solid
+- id: extra_500
+  type: Result
+  properties:
+    status: "500"
+    title: "500"
+    subTitle: Sorry, something went wrong on our server.
+  slots:
+    extra:
+      blocks:
+        - id: extra_500_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Back Home
+            color: primary
+            variant: solid
+```
+
+```yaml
+- id: child_error
+  type: Result
+  properties:
+    status: error
+    title: Submission Failed
+    subTitle: Please check and modify the following information before resubmitting.
+  slots:
+    extra:
+      blocks:
+        - id: child_error_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: child_error_retry_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Try Again
+                color: primary
+                variant: solid
+            - id: child_error_modify_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Modify Details
+                color: default
+                variant: outlined
+  blocks:
+    - id: child_error_details
+      type: Descriptions
+      properties:
+        title: Error Details
+        bordered: true
+        size: small
+        column: 1
+        items:
+          - label: Field
+            value: Email Address
+          - label: Issue
+            value: Invalid email format — must include @ symbol
+          - label: Field
+            value: Phone Number
+          - label: Issue
+            value: Phone number must be 10 digits
+- id: child_success
+  type: Result
+  properties:
+    status: success
+    title: Application Submitted
+    subTitle: "Reference: APP-2026-1234. We will review and respond within 3
+      business days."
+  slots:
+    extra:
+      blocks:
+        - id: child_success_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: child_success_dashboard_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Go to Dashboard
+                color: primary
+                variant: solid
+            - id: child_success_track_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Track Application
+                color: default
+                variant: outlined
+  blocks:
+    - id: child_success_summary
+      type: Descriptions
+      properties:
+        title: Submission Summary
+        bordered: true
+        size: small
+        column: 1
+        items:
+          - label: Applicant
+            value: Jane Smith
+          - label: Submitted
+            value: March 10, 2026 at 14:32
+          - label: Type
+            value: Business License Renewal
+          - label: Status
+            value: Under Review
+```
+
+```yaml
+- id: icon_rocket
+  type: Result
+  properties:
+    status: info
+    title: Deployment in Progress
+    subTitle: Your application is being deployed to production. This usually takes
+      2-5 minutes.
+    icon:
+      name: AiOutlineRocket
+      color: "#1677ff"
+      size: 72
+- id: icon_lock
+  type: Result
+  properties:
+    status: warning
+    title: Account Locked
+    subTitle: Your account has been temporarily locked due to multiple failed login
+      attempts. Try again in 30 minutes.
+    icon:
+      name: AiOutlineLock
+      color: "#faad14"
+      size: 72
+- id: icon_mail
+  type: Result
+  properties:
+    status: success
+    title: Email Verified
+    subTitle: Your email address has been successfully verified. You can now access
+      all features.
+    icon:
+      name: AiOutlineMail
+      color: "#52c41a"
+      size: 72
+- id: icon_cloud
+  type: Result
+  properties:
+    status: success
+    title: Upload Complete
+    subTitle: All 24 files have been uploaded successfully to your cloud storage.
+    icon:
+      name: AiOutlineCloudUpload
+      color: "#1677ff"
+      size: 72
+```
+
+```yaml
+- id: scenario_payment_success
+  type: Result
+  properties:
+    status: success
+    title: Payment Successful
+    subTitle: "Transaction ID: TXN-2026-0310-5847. Amount: $299.00 charged to Visa
+      ending 4242."
+  slots:
+    extra:
+      blocks:
+        - id: scenario_payment_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_payment_receipt_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Download Receipt
+                color: primary
+                variant: solid
+                icon: AiOutlineDownload
+            - id: scenario_payment_orders_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: View All Orders
+                color: default
+                variant: outlined
+  blocks:
+    - id: scenario_payment_details
+      type: Descriptions
+      properties:
+        title: Order Summary
+        bordered: true
+        size: small
+        column: 1
+        items:
+          - label: Product
+            value: Annual Pro Plan
+          - label: Amount
+            value: $299.00
+          - label: Payment Method
+            value: Visa ending 4242
+          - label: Billing Email
+            value: jane.smith@example.com
+          - label: Next Renewal
+            value: March 10, 2027
+- id: scenario_payment_failed
+  type: Result
+  properties:
+    status: error
+    title: Payment Failed
+    subTitle: Your card was declined. Please try a different payment method or
+      contact your bank.
+  slots:
+    extra:
+      blocks:
+        - id: scenario_payment_failed_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_payment_failed_retry_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Try Different Card
+                color: primary
+                variant: solid
+                icon: AiOutlineCreditCard
+            - id: scenario_payment_failed_cancel_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Cancel Order
+                color: default
+                variant: outlined
+```
+
+```yaml
+- id: scenario_permission_denied
+  type: Result
+  properties:
+    status: "403"
+    title: Permission Denied
+    subTitle: You need admin privileges to access the User Management panel. Contact
+      your organization administrator.
+  slots:
+    extra:
+      blocks:
+        - id: scenario_perm_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_perm_request_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Request Access
+                color: primary
+                variant: solid
+                icon: AiOutlineKey
+            - id: scenario_perm_back_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Go Back
+                color: default
+                variant: outlined
+- id: scenario_page_not_found
+  type: Result
+  properties:
+    status: "404"
+    title: Page Not Found
+    subTitle: The page /dashboard/reports/q4-2025 does not exist or has been moved.
+  slots:
+    extra:
+      blocks:
+        - id: scenario_notfound_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_notfound_home_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Back to Dashboard
+                color: primary
+                variant: solid
+            - id: scenario_notfound_search_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Search
+                color: default
+                variant: outlined
+                icon: AiOutlineSearch
+- id: scenario_server_error
+  type: Result
+  properties:
+    status: "500"
+    title: Service Unavailable
+    subTitle: "We are experiencing technical difficulties. Error reference:
+      ERR-2026-0310-7721."
+  slots:
+    extra:
+      blocks:
+        - id: scenario_server_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_server_refresh_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Refresh Page
+                color: primary
+                variant: solid
+                icon: AiOutlineReload
+            - id: scenario_server_status_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: System Status
+                color: default
+                variant: outlined
+```
+
+```yaml
+- id: scenario_form_submitted
+  type: Result
+  properties:
+    status: success
+    title: Form Submitted Successfully
+    subTitle: Thank you for your feedback. Our team will review it and get back to
+      you within 48 hours.
+  slots:
+    extra:
+      blocks:
+        - id: scenario_form_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_form_new_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Submit Another
+                color: primary
+                variant: solid
+            - id: scenario_form_home_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Return Home
+                color: default
+                variant: outlined
+- id: scenario_account_created
+  type: Result
+  properties:
+    status: success
+    title: Account Created
+    subTitle: Welcome aboard! A verification email has been sent to your inbox.
+      Please verify within 24 hours.
+    icon:
+      name: AiOutlineUserAdd
+      color: "#52c41a"
+      size: 72
+  slots:
+    extra:
+      blocks:
+        - id: scenario_acct_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_acct_login_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Go to Login
+                color: primary
+                variant: solid
+            - id: scenario_acct_resend_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Resend Verification
+                color: default
+                variant: outlined
+                icon: AiOutlineMail
+- id: scenario_subscription_expired
+  type: Result
+  properties:
+    status: warning
+    title: Subscription Expired
+    subTitle: Your Pro plan expired on March 1, 2026. Renew now to continue
+      accessing premium features.
+  slots:
+    extra:
+      blocks:
+        - id: scenario_sub_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: scenario_sub_renew_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Renew Subscription
+                color: primary
+                variant: solid
+                icon: AiOutlineCreditCard
+            - id: scenario_sub_plans_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: View Plans
+                color: default
+                variant: outlined
+```
+
+```yaml
+- id: title_only
+  type: Result
+  properties:
+    status: success
+    title: Operation Completed
+- id: subtitle_only
+  type: Result
+  properties:
+    status: info
+    subTitle: Your changes have been saved. No further action is required.
+- id: html_title
+  type: Result
+  properties:
+    status: success
+    title: "<b>Order</b> #ORD-2026-4455 <i>Confirmed</i>"
+    subTitle: "Estimated delivery: <b>March 15, 2026</b>. Track your package in the
+      orders section."
+- id: long_content
+  type: Result
+  properties:
+    status: info
+    title: System Maintenance Scheduled
+    subTitle: Our platform will undergo scheduled maintenance on Saturday, March 15,
+      2026 from 02:00 to 06:00 UTC. During this window, the application may be
+      intermittently unavailable. All data will be preserved and no action is
+      required on your part. We apologize for any inconvenience.
+```
+
+```yaml
+- id: compact_success
+  type: Result
+  properties:
+    status: success
+    title: Saved
+  style:
+    .element:
+      padding: 16px 24px
+- id: compact_error
+  type: Result
+  properties:
+    status: error
+    title: Failed
+    subTitle: Please try again.
+  style:
+    .element:
+      padding: 16px 24px
+- id: compact_warning
+  type: Result
+  properties:
+    status: warning
+    title: Attention Required
+  style:
+    .element:
+      padding: 16px 24px
+- id: compact_info
+  type: Result
+  properties:
+    status: info
+    title: Processing
+    subTitle: Please wait a moment.
+  style:
+    .element:
+      padding: 16px 24px
+```
+
+```yaml
+- id: styled_success_card
+  type: Result
+  class: bg-bg-layout rounded-lg border border-border
+  properties:
+    status: success
+    title: Environment Ready
+    subTitle: Your staging environment has been provisioned and is ready for deployment.
+- id: styled_error_card
+  type: Result
+  class: bg-bg-layout rounded-lg border border-border
+  properties:
+    status: error
+    title: Build Failed
+    subTitle: The CI pipeline encountered 3 errors during the build step. Check the
+      logs for details.
+- id: styled_warning_card
+  type: Result
+  class: bg-bg-layout rounded-lg border border-border
+  properties:
+    status: warning
+    title: Rate Limit Approaching
+    subTitle: You have used 85% of your monthly API quota. Consider upgrading your plan.
+- id: styled_info_card
+  type: Result
+  class: bg-bg-layout rounded-lg border border-border
+  properties:
+    status: info
+    title: New Features Available
+    subTitle: Version 4.2 includes real-time collaboration and improved dashboard
+      analytics.
+- id: styled_gradient
+  type: Result
+  class: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border
+    border-border
+  properties:
+    status: success
+    title: Welcome to Your Workspace
+    subTitle: Your team workspace has been created. Invite members to get started.
+    icon:
+      name: AiOutlineTeam
+      color: "#722ed1"
+      size: 72
+- id: styled_dark
+  type: Result
+  class: bg-bg-layout rounded-lg
+  style:
+    .element:
+      color: white
+  properties:
+    status: success
+    title: Deployment Complete
+    subTitle: All services are running on the latest version.
+```
+
+```yaml
+- id: inline_bordered
+  type: Result
+  properties:
+    status: info
+    title: Verification Required
+    subTitle: Please verify your identity to continue. Check your email for the
+      verification code.
+  style:
+    .element:
+      border: 2px solid
+      borderRadius: 12px
+      padding: 32px
+- id: inline_shadow
+  type: Result
+  properties:
+    status: success
+    title: Connected
+    subTitle: Your database connection has been established successfully.
+  style:
+    .element:
+      boxShadow: 0 4px 16px rgba(0, 0, 0, 0.08)
+      borderRadius: 12px
+      padding: 32px
+- id: inline_max_width
+  type: Result
+  properties:
+    status: warning
+    title: Storage Almost Full
+    subTitle: You have used 9.2 GB of your 10 GB storage limit. Delete files or
+      upgrade your plan.
+  style:
+    .element:
+      maxWidth: 480px
+      margin: 0 auto
+      border: 1px solid
+      borderRadius: 8px
+      padding: 24px
+```
+
+```yaml
+- id: theme_large_title
+  type: Result
+  properties:
+    status: success
+    title: All Systems Operational
+    subTitle: All 12 services are running normally.
+    theme:
+      titleFontSize: 32
+      subtitleFontSize: 18
+- id: theme_small_icon
+  type: Result
+  properties:
+    status: info
+    title: Update Available
+    subTitle: A new version is ready to install.
+    theme:
+      iconFontSize: 48
+      titleFontSize: 20
+- id: theme_custom_colors
+  type: Result
+  properties:
+    status: success
+    title: Invitation Accepted
+    subTitle: You have joined the Design Team workspace.
+    theme:
+      colorSuccess: "#389e0d"
+      colorTextHeading: "#135200"
+      colorTextDescription: "#595959"
+- id: theme_branded
+  type: Result
+  properties:
+    status: info
+    title: Welcome to Acme Corp
+    subTitle: Your enterprise account is ready. Start by configuring your first project.
+    theme:
+      colorInfo: "#6366f1"
+      titleFontSize: 28
+      subtitleFontSize: 16
+      iconFontSize: 80
+```
+
+```yaml
+- id: fullpage_404
+  type: Result
+  style:
+    .element:
+      minHeight: 320px
+      display: flex
+      flexDirection: column
+      justifyContent: center
+  properties:
+    status: "404"
+    title: Page Not Found
+    subTitle: The page you are looking for might have been removed, had its name
+      changed, or is temporarily unavailable.
+  slots:
+    extra:
+      blocks:
+        - id: fullpage_404_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: fullpage_404_home_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Take Me Home
+                color: primary
+                variant: solid
+                size: large
+                icon: AiOutlineHome
+            - id: fullpage_404_report_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Report Issue
+                color: default
+                variant: outlined
+                size: large
+- id: fullpage_500
+  type: Result
+  style:
+    .element:
+      minHeight: 320px
+      display: flex
+      flexDirection: column
+      justifyContent: center
+  properties:
+    status: "500"
+    title: Something Went Wrong
+    subTitle: Our engineering team has been automatically notified. Please try again
+      in a few minutes.
+  slots:
+    extra:
+      blocks:
+        - id: fullpage_500_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: fullpage_500_retry_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Retry
+                color: primary
+                variant: solid
+                size: large
+                icon: AiOutlineReload
+            - id: fullpage_500_status_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Check Status Page
+                color: default
+                variant: outlined
+                size: large
+- id: fullpage_403
+  type: Result
+  style:
+    .element:
+      minHeight: 320px
+      display: flex
+      flexDirection: column
+      justifyContent: center
+  properties:
+    status: "403"
+    title: Access Restricted
+    subTitle: This resource requires elevated permissions. If you believe this is an
+      error, contact your system administrator.
+  slots:
+    extra:
+      blocks:
+        - id: fullpage_403_extra_row
+          type: Box
+          layout:
+            gap: 8
+            justify: center
+          blocks:
+            - id: fullpage_403_login_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Sign In as Different User
+                color: primary
+                variant: solid
+                size: large
+                icon: AiOutlineUser
+            - id: fullpage_403_back_btn
+              type: Button
+              layout:
+                flex: 0 0 auto
+              properties:
+                title: Go Back
+                color: default
+                variant: outlined
+                size: large
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to use as result image. |
+| `status` | string | `"info"` | Status of the result. Determines image and color. Enum: `success`, `error`, `info`, `warning`, `404`, `403`, `500`. |
+| `subTitle` | string | - | Result subtitle or secondary text - supports html. |
+| `title` | string | - | Result title or primary text - supports html. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design result tokens](https://ant.design/components/result#design-token). |
+| `theme.titleFontSize` | number | `24` | Font size of the result title. |
+| `theme.subtitleFontSize` | number | `14` | Font size of the result subtitle. |
+| `theme.iconFontSize` | number | `72` | Font size of the result status icon. |
+| `theme.extraMargin` | string | `"24px 0 0 0"` | Margin applied to the extra content area. |
+| `theme.colorSuccess` | string | - | Color used for the success status icon. |
+| `theme.colorError` | string | - | Color used for the error status icon. |
+| `theme.colorInfo` | string | - | Color used for the info status icon. |
+| `theme.colorWarning` | string | - | Color used for the warning status icon. |
+| `theme.colorTextHeading` | string | - | Color of the result title text. |
+| `theme.colorTextDescription` | string | - | Color of the result subtitle text. |
+| `theme.paddingLG` | number | `24` | Large padding value applied to the result container. |
+| `theme.lineHeight` | number | `1.5714285714285714` | Line height used for result text content. |
+
+No events defined.
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Result element. |
+| `/icon` | The icon in the Result. |
+
+| Slot | Description |
+| --- | --- |
+| `content` | Additional content below the Result. |
+| `extra` | Extra content, typically action buttons. |

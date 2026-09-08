@@ -29,7 +29,7 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                The MongoDBAdapter can be used to connect Next-Auth to a MongoDB database. It uses the [Next-Auth adapter-mongodb](https://next-auth.js.org/adapters/mongodb) package. It uses the same `databaseUri` and client options configuration as the `MongoDBCollection` connection. The collection names used by the adapter can be configured using the `options.collections` property. The default values are `users`, `accounts`, `sessions` and `verification_tokens`.
+                The MongoDBAdapter can be used to connect Auth.js to a MongoDB database. It uses the [Auth.js MongoDB adapter](https://authjs.dev/getting-started/adapters/mongodb) package. It uses the same `databaseUri` and client options configuration as the `MongoDBCollection` connection. The collection names used by the adapter can be configured using the `options.collections` property. The default values are `users`, `accounts`, `sessions` and `verification_tokens`.
 
 
                 #### Properties

@@ -25,7 +25,7 @@ test('single reject', async () => {
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
   expect(context.logger.warn.mock.calls).toEqual([
-    [{ event: 'warn_control_reject', error: new UserError('Rejected', { isReject: true }) }],
+    [{ event: 'warn_control_reject', err: new UserError('Rejected', { isReject: true }) }],
   ]);
   expect(res.error).toEqual(new UserError('Rejected', { isReject: true }));
   expect(res.error).toBeInstanceOf(UserError);

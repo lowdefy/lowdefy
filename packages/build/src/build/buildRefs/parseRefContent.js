@@ -22,6 +22,31 @@ import YAML from 'yaml';
 
 import addLineNumbers from './addLineNumbers.js';
 import parseNunjucks from './parseNunjucks.js';
+import { DEFERRED_KEY } from './deferredRegistry.js';
+
+// '~deferred' is the build's deferred-record placeholder key. Unlike the other
+// build markers it is enumerable (that durability is the point), so user config
+// could collide with it — a literal '~deferred' key would be dispatched as a
+// placeholder far from its source. Reject it where file content first enters
+// the walker, with file provenance.
+function assertNoReservedKeys(value, filePath) {
+  if (type.isArray(value)) {
+    for (const item of value) {
+      assertNoReservedKeys(item, filePath);
+    }
+    return;
+  }
+  if (!type.isObject(value)) return;
+  for (const key of Object.keys(value)) {
+    if (key === DEFERRED_KEY) {
+      throw new ConfigError(
+        `The key "${DEFERRED_KEY}" is reserved by the Lowdefy build and cannot be used in config.`,
+        { filePath }
+      );
+    }
+    assertNoReservedKeys(value[key], filePath);
+  }
+}
 
 function parseYamlWithLineNumbers(content) {
   const doc = YAML.parseDocument(content);
@@ -78,6 +103,7 @@ async function parseRefContent({ content, refDef }) {
     }
   }
 
+  assertNoReservedKeys(content, type.isString(path) ? path : null);
   return content;
 }
 

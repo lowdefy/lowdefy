@@ -23,6 +23,7 @@ import getKey from './getKey.js';
 import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
+import getOperatorType from './getOperatorType.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
@@ -51,6 +52,7 @@ export {
   getLocaleDateFormat,
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
+  getOperatorType,
   isReserved,
   joinPath,
   LRUCache,

@@ -1,0 +1,113 @@
+# _js
+
+> This operator is experimental and may change in future versions.
+
+```
+(function: string): any
+(function: { fn: string, args?: object }): any
+```
+
+The `_js` operator enables the use of custom JavaScript logic within Lowdefy configuration where operators are evaluated. The purpose of this operator is to facilitate quick implementation of fast, synchronous functions. Like other operators, these functions are evaluated during page render, thus slow functions can impact app performance.
+For more advanced logic, or when the use of external dependencies is necessary, instead develop a [custom plugin](/plugins-introduction).
+
+#### Using Lowdefy operators in JavaScript
+Certain Lowdefy operators can be used inside of the JavaScript function block. These operators are available as functions and will take their standard arguments.
+
+###### Client JavaScript function prototype:
+_Function parameters passed to the operator method._
+```js
+function ({ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }) {
+  // Your JavaScript code here
+};
+```
+
+The function arguments available to the JavaScript function are:
+  - `actions: function`: Implements the [_actions](/_actions) operator.
+  - `args: object`: Pre-resolved values passed via the object form of `_js` (see below). `undefined` when the string form is used.
+  - `event: function`: Implements the [_event](/_event) operator.
+  - `input: function`: Implements the [_input](/_input) operator.
+  - `location: function`: Implements the [_location](/_location) operator.
+  - `lowdefyApp: function`: Implements the [_app](/_app) operator.
+  - `lowdefyGlobal: function`: Implements the [_global](/_global) operator.
+  - `request: function`: Implements the [_request](/_request) operator.
+  - `state: function`: Implements the [_state](/_state) operator.
+  - `urlQuery: function`: Implements the [_url_query](/_url_query) operator.
+  - `user: function`: Implements the [_user](/_user) operator.
+
+###### Server JavaScript function prototype:
+_Function parameters passed to the operator method._
+```js
+function ({ args, item, lowdefyApp, payload, secret, state, step, user }) {
+  // Your JavaScript code here
+};
+```
+
+The function arguments available to the JavaScript function are
+  - `args: object`: Pre-resolved values passed via the object form of `_js` (see below). `undefined` when the string form is used.
+  - `item: function`: Implements the [_item](/_item) operator.
+  - `lowdefyApp: function`: Implements the [_app](/_app) operator.
+  - `payload: function`: Implements the [_payload](/_payload) operator.
+  - `secret: function`: Implements the [_secret](/_secret) operator.
+  - `state: function`: Implements the [_state](/_state) operator.
+  - `step: function`: Implements the [_step](/_step) operator.
+  - `user: function`: Implements the [_user](/_user) operator.
+
+#### Passing pre-computed values with `args`
+The object form of `_js` accepts an `args` object whose values are resolved by the parser **before** the JavaScript function runs. This lets you compute values using any Lowdefy operator (`_state`, `_request`, `_user`, etc.) and consume them inside the function without calling operator methods from JavaScript.
+
+#### Arguments
+
+###### string
+The JavaScript function body, including the function return statement, excluding the function prototype.
+
+###### object
+An object with the following properties:
+  - `fn: string`: The JavaScript function body (same as the string form).
+  - `args: object`: (optional) Values to inject into the function. Each value is evaluated as a normal Lowdefy expression and made available inside `fn` on the `args` object.
+
+#### Examples
+
+###### Perform a calculation:
+```js
+_js: |
+  let x = state('input_1');
+  let y = state('input_2');
+  return x + y;
+```
+
+###### Create custom logic based on data from a request:
+```js
+_js: |
+  const products = request('get_products').data?.products ?? [];
+  const laptopsWithRatingGreaterThan4 = products.filter(product =>
+      product.category === "laptops" && product.rating > 4
+  );
+  if (laptopsWithRatingGreaterThan4.length > 3) {
+      return true;
+  }
+  return false;
+```
+
+###### Chain array methods on request data:
+```js
+_js: |
+  const products = request('get_products').data?.products ?? [];
+  const totalPriceOfPhones = products
+      .filter(product => product.category === "smartphones")
+      .reduce((acc, product) => acc + product.price, 0);
+  return totalPriceOfPhones;
+```
+
+###### Pass pre-computed values with `args`:
+```yaml
+_js:
+  fn: |
+    const { products, target } = args;
+    return products
+        .filter(p => p.category === target)
+        .reduce((a, p) => a + p.price, 0);
+  args:
+    products:
+      _request: get_products.data.products
+    target: smartphones
+```

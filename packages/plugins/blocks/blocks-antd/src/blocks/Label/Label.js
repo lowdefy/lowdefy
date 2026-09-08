@@ -25,7 +25,7 @@ import classNames from 'classnames';
 import CSSMotion from '@rc-component/motion';
 
 import labelLogic from './labelLogic.js';
-import './style.module.css';
+import './style.css';
 
 const validationKeyMap = {
   error: 'errors',

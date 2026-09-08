@@ -20,14 +20,12 @@ import getContext from '../src/getContext.js';
 import buildTestPage from '@lowdefy/build/buildTestPage';
 
 const getLowdefy = () => {
-  const updateBlock = () => jest.fn();
   const testLowdefy = {
     contexts: {},
     inputs: { test: {} },
     urlQuery: {},
     _internal: {
       displayMessage: () => () => {},
-      updateBlock,
       translate: (key) => key,
       operators: {},
       actions: {},
@@ -130,4 +128,81 @@ test('update memoized context', () => {
   c1._internal.update = mockUpdate;
   getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(mockUpdate.mock.calls.length).toBe(1);
+});
+
+test('dynamic page config memoizes context for the same config object', () => {
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+  };
+  const config = buildTestPage({ pageConfig: page });
+  // Server-resolved pages carry dynamic: true — content changes per request.
+  config.dynamic = true;
+  // getContext runs in the render body — re-renders of the same fetched config
+  // must reuse the context, or context creation would loop.
+  const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).toBe(c2);
+});
+
+test('dynamic page config builds a fresh context for a new config object', () => {
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+  };
+  const config1 = buildTestPage({ pageConfig: page });
+  config1.dynamic = true;
+  // A new fetch delivers a new config object — SPA navigation to the same
+  // dynamic page must render the newly resolved content.
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).not.toBe(c2);
+  expect(c1._internal.RootSlots.id).not.toEqual(c2._internal.RootSlots.id);
+});
+
+test('dynamic rebuild does not lower an already-lowered reset flag', () => {
+  const lowdefy = getLowdefy();
+  const setReset = jest.fn();
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config1.dynamic = true;
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  getContext({ config: config1, lowdefy, resetContext: { reset: false, setReset } });
+  getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset } });
+  // setReset is a React state setter on another component — calling it with
+  // the flag already down would setState mid-render.
+  expect(setReset).not.toHaveBeenCalled();
+  getContext({ config: config2, lowdefy, resetContext: { reset: true, setReset } });
+  expect(setReset).toHaveBeenCalledWith(false);
+});
+
+test('dynamic rebuild does not call mounted updaters during construction', () => {
+  const lowdefy = getLowdefy();
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config1.dynamic = true;
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  config2.dynamic = true;
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  // Simulate a mounted Block component registered on the live context.
+  const updaterSpy = jest.fn();
+  c1._internal.updaters[c1._internal.rootBlock.id] = updaterSpy;
+  // getContext runs in the render body — updating mounted Block components
+  // during the rebuild would setState mid-render. Updaters are scoped per
+  // context, so construction of the new context cannot reach the old ones.
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(updaterSpy).not.toHaveBeenCalled();
+  expect(c2._internal.updaters).toEqual({});
+});
+
+test('static page config memoizes context across different config objects', () => {
+  const lowdefy = getLowdefy();
+  const config1 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  const config2 = buildTestPage({ pageConfig: { id: 'pageId', type: 'Box' } });
+  const c1 = getContext({ config: config1, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config: config2, lowdefy, resetContext: { reset: false, setReset: () => {} } });
+  expect(c1).toBe(c2);
 });

@@ -144,3 +144,61 @@ blocks:
     properties:
       title: Clearable
       allowClear: true
+
+  # ============================================
+  # PRESETS
+  # ============================================
+
+  - id: drs_presets
+    type: DateRangeSelector
+    properties:
+      title: Presets
+      format: YYYY-MM-DD
+      presets:
+        - label: Q1 2024
+          value: ['2024-01-01', '2024-03-31']
+        - label: Q2 2024
+          value:
+            - _date: '2024-04-01'
+            - _date: '2024-06-30'
+        - label: '<b>Html label</b>'
+          value: ['2024-07-01', '2024-09-30']
+
+  - id: drs_no_presets
+    type: DateRangeSelector
+    properties:
+      title: No Presets
+
+  - id: drs_presets_min_now
+    type: DateRangeSelector
+    properties:
+      title: Presets with a minimum date
+      format: YYYY-MM-DD
+      disabledDates:
+        min:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: Last 7 Days
+          value:
+            - _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+        - label: Next 7 Days
+          value:
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { add: [7, days] }, { format: YYYY-MM-DD }]
+        - label: Last Year
+          value: ['2025-01-01', '2025-12-31']
+
+  - id: drs_presets_max_now
+    type: DateRangeSelector
+    properties:
+      title: Presets with a maximum date
+      format: YYYY-MM-DD
+      disabledDates:
+        max:
+          _dayjs: [now, { format: YYYY-MM-DD }]
+      presets:
+        - label: Next 7 Days
+          value:
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { add: [7, days] }, { format: YYYY-MM-DD }]

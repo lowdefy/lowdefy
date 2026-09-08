@@ -24,6 +24,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 
@@ -64,9 +65,16 @@ const DateSelector = ({
               className={classNames.element}
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
-              format={properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'}
+              format={
+                properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder}
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+              })}
               showToday={properties.showToday}
               size={properties.size}
               status={validation.status}

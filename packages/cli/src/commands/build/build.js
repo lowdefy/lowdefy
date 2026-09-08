@@ -20,7 +20,7 @@ import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
-import runNextBuild from '../../utils/runNextBuild.js';
+import runClientBuild from '../../utils/runClientBuild.js';
 
 const serverPackages = {
   e2e: '@lowdefy/server-e2e',
@@ -39,8 +39,8 @@ async function build({ context }) {
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });
-  if (context.options.nextBuild !== false) {
-    await runNextBuild({ context, directory });
+  if (context.options.clientBuild !== false && context.options.nextBuild !== false) {
+    await runClientBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });
   context.logger.info({ spin: 'succeed' }, 'Build successful.');

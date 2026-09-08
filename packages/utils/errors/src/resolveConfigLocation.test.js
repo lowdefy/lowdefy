@@ -35,11 +35,30 @@ const keyMap = {
     key: 'root.something',
     '~l': 10,
   },
+  moduleVar: {
+    key: 'root.blocks[0:page-content:Box].blocks[1:score_tag:Tag]',
+    '~r': 'moduleRef',
+    '~l': 178,
+  },
+  orphanRef: {
+    key: 'root.blocks[0:thing]',
+    '~r': 'cyclicRef',
+    '~l': 3,
+  },
 };
 
 const refMap = {
   ref1: { path: 'pages/home.yaml' },
   ref2: { path: 'connections/mongodb.yaml' },
+  // A module invocation is not a file — content passed in via vars keeps ~l
+  // line numbers pointing into the invoking file (the parent ref).
+  moduleRef: {
+    parent: 'ref1',
+    lineNumber: 15,
+    path: null,
+    original: { module: 'layout', component: 'page' },
+  },
+  cyclicRef: { parent: 'cyclicRef', path: null },
 };
 
 test('resolveConfigLocation returns null for missing configKey', () => {
@@ -109,6 +128,34 @@ test('resolveConfigLocation without line number', () => {
   expect(result).toEqual({
     source: '/app/pages/home.yaml',
     config: 'root.global',
+  });
+});
+
+test('resolveConfigLocation resolves module var content to the invoking file', () => {
+  const result = resolveConfigLocation({
+    configKey: 'moduleVar',
+    keyMap,
+    refMap,
+    configDirectory: '/app',
+  });
+
+  expect(result).toEqual({
+    source: '/app/pages/home.yaml:178',
+    config: 'root.blocks[0:page-content:Box].blocks[1:score_tag:Tag]',
+  });
+});
+
+test('resolveConfigLocation falls back to lowdefy.yaml on a cyclic pathless ref chain', () => {
+  const result = resolveConfigLocation({
+    configKey: 'orphanRef',
+    keyMap,
+    refMap,
+    configDirectory: '/app',
+  });
+
+  expect(result).toEqual({
+    source: '/app/lowdefy.yaml:3',
+    config: 'root.blocks[0:thing]',
   });
 });
 

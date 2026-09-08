@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "The buildEntityAuth gate and validateId in buildWebsockets both report this id at the same source line, and logCollectedErrors collapses the pair, so it is reported once as a located ConfigError.",
+      "errorCount": 1,
+      "errors": ["is a reserved name"],
+      "errorContains": [
+        "Websocket id \"constructor\" is a reserved name and cannot be used as an id.",
+        "lowdefy.yaml:17"
+      ],
+      "noErrors": ["LowdefyInternalError"]
+    }
+  ]
+}

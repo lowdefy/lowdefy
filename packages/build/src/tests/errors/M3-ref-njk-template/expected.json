@@ -12,14 +12,13 @@
     },
     {
       "mode": "prod",
-      "errors": [
+      "warnings": [
         "undefinedBlockId"
       ],
-      "errorContains": [
+      "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
         "page-template.yaml.njk:11"
-      ],
-      "expectThrow": true
+      ]
     }
   ]
 }

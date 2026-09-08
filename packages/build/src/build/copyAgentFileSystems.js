@@ -29,8 +29,8 @@ async function copyAgentFileSystems({ components, context }) {
     basePaths.push(basePath);
   }
 
-  // Manifest is consumed by next.config.js to populate outputFileTracingIncludes,
-  // so the Next.js tracer bundles these directories on Vercel and standalone builds.
+  // Manifest of agent file system base paths copied into the server directory —
+  // available to deployment tooling that needs to include these directories.
   await context.writeBuildArtifact('agentFileSystems.json', JSON.stringify(basePaths));
 
   if (context.directories.config === context.directories.server) return;

@@ -23,6 +23,7 @@ const mockOperators = {
   _sum: jest.fn(({ params }) => params.reduce((a, b) => a + b, 0)),
   _if: jest.fn(({ params }) => (params.test ? params.then : params.else)),
   _env: jest.fn(({ env, params }) => env[params.key] ?? null),
+  _app: jest.fn(({ lowdefyApp, params }) => lowdefyApp?.[params] ?? null),
   _echo: jest.fn(({ params }) => params),
   _error: jest.fn(() => {
     throw new Error('Test error.');
@@ -206,6 +207,135 @@ test('_build.* operators ignore dynamic params — evaluates even with ~dyn in p
   expect(res.output.a).toEqual({ nested: 'value' });
 });
 
+test('lowdefyApp is passed to operators — _app resolves app metadata', () => {
+  const _app = jest.fn(({ lowdefyApp, params }) => lowdefyApp[params]);
+  const ops = { _app };
+  const input = { a: { '_build.app': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '_build.',
+    lowdefyApp: { version: '1.2.3', slug: 'my-app' },
+  });
+  expect(_app).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: '1.2.3' });
+});
+
+test('unknown _build.* operator — pushes a ConfigError instead of ~dyn', () => {
+  const input = { a: { '_build.appp': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    operatorPrefix: '_build.',
+  });
+  expect(res.output.a).toBeNull();
+  expect(res.errors).toHaveLength(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toContain('_build.appp');
+});
+
+test('escaped build prefix — dynamic identifier is evaluated, not deferred', () => {
+  const _function = jest.fn(() => 'evaluated');
+  const ops = { _function };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = { a: { '__build.function': 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+    dynamicIdentifiers,
+  });
+  expect(_function).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: 'evaluated' });
+  expect(res.errors).toEqual([]);
+});
+
+test('escape depth 3 build prefix — dynamic identifier is evaluated, not deferred', () => {
+  const _function = jest.fn(() => 'evaluated');
+  const ops = { _function };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = { a: { '___build.function': 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '___build.',
+    dynamicIdentifiers,
+  });
+  expect(_function).toHaveBeenCalled();
+  expect(res.output).toEqual({ a: 'evaluated' });
+  expect(res.errors).toEqual([]);
+});
+
+test('escaped build prefix — operator with ~dyn params still evaluates and does not bubble up', () => {
+  const _echo = jest.fn(({ params }) => params);
+  const ops = { _echo };
+  const input = { a: { '__build.echo': { nested: 'value' } } };
+  // Manually set ~dyn on the params object (configurable so setDynamicMarker can redefine)
+  Object.defineProperty(input.a['__build.echo'], '~dyn', {
+    value: true,
+    enumerable: false,
+    configurable: true,
+  });
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+  });
+  expect(_echo).toHaveBeenCalled();
+  expect(res.output.a).toEqual({ nested: 'value' });
+});
+
+test('unknown operator under escaped build prefix — pushes a ConfigError instead of ~dyn', () => {
+  const input = { a: { '__build.appp': 'version' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    operatorPrefix: '__build.',
+  });
+  expect(res.output.a).toBeNull();
+  expect(res.errors).toHaveLength(1);
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toContain('__build.appp');
+});
+
+test('escaped runtime prefix — dynamic identifier still defers with ~dyn', () => {
+  const _state = jest.fn(() => 'state');
+  const ops = { ...mockOperators, _state };
+  const dynamicIdentifiers = new Set(['_state']);
+  const input = { a: { __state: 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__',
+    dynamicIdentifiers,
+  });
+  expect(_state).not.toHaveBeenCalled();
+  expect(res.output.a['~dyn']).toBe(true);
+});
+
+test('runtime operator inside an escaped build prefix parse is left untouched', () => {
+  const _state = jest.fn(() => 'state');
+  const ops = { ...mockOperators, _state };
+  const dynamicIdentifiers = new Set(['_state']);
+  const input = { a: { _state: 'value' } };
+  const res = evaluateOperators({
+    input,
+    operators: ops,
+    operatorPrefix: '__build.',
+    dynamicIdentifiers,
+  });
+  expect(_state).not.toHaveBeenCalled();
+  expect(res.output).toEqual({ a: { _state: 'value' } });
+  expect(res.output.a['~dyn']).toBeUndefined();
+});
+
+test('unknown operator under default prefix — still gets ~dyn (not an error)', () => {
+  const input = { a: { _unknown: 'params' } };
+  const res = evaluateOperators({ input, operators: mockOperators });
+  expect(res.output.a['~dyn']).toBe(true);
+  expect(res.errors).toEqual([]);
+});
+
 test('~r on operator objects — still evaluated', () => {
   const input = { a: { _echo: 'hello' } };
   Object.defineProperty(input.a, '~r', {
@@ -237,6 +367,37 @@ test('env is passed to operators', () => {
     input,
     operators: mockOperators,
     env: { MY_VAR: 'hello' },
+  });
+  expect(res.output).toEqual({ result: 'hello' });
+});
+
+test('lowdefyApp is passed to operators', () => {
+  const input = { result: { _app: 'slug' } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    lowdefyApp: { slug: 'my-app' },
+  });
+  expect(res.output).toEqual({ result: 'my-app' });
+});
+
+test('lowdefyApp is forwarded to nested parser.parse calls', () => {
+  const _passthrough = jest.fn(({ params, parser }) =>
+    parser.parse({ input: params }).output
+  );
+  const ops = { ...mockOperators, _passthrough };
+  const input = { result: { _passthrough: { nested: { _app: 'slug' } } } };
+  const res = evaluateOperators({ input, operators: ops, lowdefyApp: { slug: 'my-app' } });
+  expect(res.output).toEqual({ result: { nested: 'my-app' } });
+});
+
+test('_env resolution is unaffected when lowdefyApp is also supplied', () => {
+  const input = { result: { _env: { key: 'MY_VAR' } } };
+  const res = evaluateOperators({
+    input,
+    operators: mockOperators,
+    env: { MY_VAR: 'hello' },
+    lowdefyApp: { slug: 'my-app' },
   });
   expect(res.output).toEqual({ result: 'hello' });
 });

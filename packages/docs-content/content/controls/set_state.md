@@ -1,0 +1,98 @@
+# :set_state
+
+```
+({:set_state: object}): void
+```
+
+The `:set_state` control sets values in the server-side state object during API endpoint execution.
+It accepts an object where each key-value pair is saved to the state, making data available throughout the routine via the `_state` operator.
+This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type. A dot is always a separator unless it is escaped with `\.`, which makes it a literal character in the key — `a\.b` sets the key `a.b`; inside a double-quoted YAML string the escape must be written `\\.`. On an unescaped path each segment is tried as a plain key of the state first, and a plain key that is present always wins: with `a` already in state, `a.b` writes `b` inside `a`, and it does so even when `a` holds a string or number, replacing that value with an object. A literal dotted key is only written where the plain key is absent, and once a key matches there is no retry with a longer join — the value is written inside the key that matched, with missing intermediate objects created as needed. Reserved key names such as `__proto__` and `constructor` are rejected as a config error.
+Values are evaluated before being set, allowing dynamic state updates based on previous operations.
+
+#### Keys
+
+- `:set_state: object`: __Required__ - Object to be saved to server state.
+
+#### Examples
+
+###### Accumulating Values
+```yaml
+- :set_state:
+    total: 0
+    count: 0
+- :for: product
+  :in:
+    _payload: products
+  :do:
+    - :set_state:
+        total:
+          _sum:
+            - _state: total
+            - _item: product.price
+        count:
+          _sum:
+            - _state: processed_count
+            - 1
+- :return:
+    total:
+      _state: total
+    count:
+      _state: count
+```
+
+###### Dot Notation
+```yaml
+- :set_state:
+    user:
+      _step: get_user
+- :set_state:
+    user.profile.name:
+      _string.concat:
+        - _state: user.profile.first_name
+        - ' '
+        - _state: user.profile.last_name
+```
+
+###### Shared Value
+```yaml
+- :set_state:
+    product_id:
+      _uuid: true
+- id: insert_product
+  type: MongoDBInsertOne
+  connectionId: tickets
+  properties:
+    doc:
+      _id:
+        _state: product_id
+      name:
+        _payload: product_name
+      created_at:
+        _date: now
+
+- id: insert_new_product_event
+  type: MongoDBInsertOne
+  connectionId: events
+  properties:
+    doc:
+      _id:
+        _uuid: true
+      type: new-product
+      description:
+        _nunjucks:
+          template: New product {{ product_name }} created by {{ user_name }}.
+          on:
+            product_name:
+              _payload: product_name
+            user_name:
+              _user: name
+      product_id:
+        _state: product_id
+      user:
+        id:
+          _user: id
+        name:
+          _user: name
+      timestamp:
+        _date: now
+```

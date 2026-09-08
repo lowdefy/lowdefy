@@ -21,8 +21,6 @@ function initialBuild(context) {
     await context.lowdefyBuild();
     await context.checkMockUserWarning();
     await context.installPlugins();
-    await context.nextBuild();
-    await context.compileCss();
   };
 }
 

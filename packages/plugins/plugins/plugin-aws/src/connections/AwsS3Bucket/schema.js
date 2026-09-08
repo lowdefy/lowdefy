@@ -48,6 +48,30 @@ export default {
         type: 'AwsS3Bucket connection property "bucket" should be a string.',
       },
     },
+    endpoint: {
+      type: 'string',
+      description:
+        'Custom S3 API endpoint for S3-compatible providers (e.g. Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2, Wasabi).',
+      errorMessage: {
+        type: 'AwsS3Bucket connection property "endpoint" should be a string.',
+      },
+    },
+    forcePathStyle: {
+      type: 'boolean',
+      description:
+        'Force path-style bucket addressing (https://endpoint/bucket/key). Required by MinIO and some self-hosted S3-compatible setups.',
+      errorMessage: {
+        type: 'AwsS3Bucket connection property "forcePathStyle" should be a boolean.',
+      },
+    },
+    publicUrlBase: {
+      type: 'string',
+      description:
+        'Base URL used to construct stable public object URLs (e.g. a CloudFront or CDN domain in front of the bucket). Used by download requests when the request sets "public: true".',
+      errorMessage: {
+        type: 'AwsS3Bucket connection property "publicUrlBase" should be a string.',
+      },
+    },
     read: {
       type: 'boolean',
       default: true,

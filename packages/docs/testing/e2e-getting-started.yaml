@@ -123,7 +123,7 @@ _ref:
             When you run `pnpm e2e`:
 
             1. Playwright reads `playwright.config.js`, which uses `createConfig()` from `@lowdefy/e2e-utils/config`
-            2. The config starts a web server that builds your app with `NEXT_PUBLIC_LOWDEFY_E2E=true` and starts it
+            2. The config starts a web server that builds your app with the e2e server variant and starts it
             3. A manifest is generated from your build artifacts, mapping block IDs to their types and e2e helpers
             4. For each test, a fresh `ldf` object is created with a new browser page, and any static mocks from `mocks.yaml` are applied
             5. Your test code runs against the live app

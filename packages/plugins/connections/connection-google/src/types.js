@@ -17,4 +17,5 @@
 export default {
   connections: ['Google'],
   agents: ['GeminiAgent'],
+  requests: ['GenerateObject', 'GenerateText'],
 };

@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 // Tabs renders with .ant-tabs class
 const getTabs = (page, blockId) => getBlock(page, blockId).locator('.ant-tabs');
@@ -144,7 +144,7 @@ test.describe('Tabs Block', () => {
   // ============================================
 
   test('switches to tab when shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const tabs = getTabs(page, 'tabs_shortcut_fires');
     await expect(tabs).toBeVisible();
     const tabItems = getTabItems(tabs);

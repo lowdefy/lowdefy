@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Empty, Input, Modal, Skeleton } from 'antd';
+import { Empty, Input, Modal, Spin } from 'antd';
 import { ClockCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { cn } from '@lowdefy/block-utils';
 
@@ -116,6 +116,15 @@ function SearchModal({
     }
   }, [open]);
 
+  // When the index (re)builds while the modal is open — documents resolved
+  // after opening, or the bound request refreshed — re-run the current query
+  // so the spinner hands over to real results without a close/reopen.
+  useEffect(() => {
+    if (!open || !query) return;
+    setResults(searchIndex.search(query));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchIndex.version]);
+
   useEffect(() => {
     if (open && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -123,7 +132,10 @@ function SearchModal({
   }, [open]);
 
   const showRecent =
-    !query && properties.recentSearches !== false && recentSearches.recentSearches.length > 0;
+    !query &&
+    !searchIndex.loading &&
+    properties.recentSearches !== false &&
+    recentSearches.recentSearches.length > 0;
 
   return (
     <Modal
@@ -148,8 +160,11 @@ function SearchModal({
         onKeyDown={onKeyDown}
       />
       {searchIndex.loading && (
-        <div style={{ padding: 16 }}>
-          <Skeleton active paragraph={{ rows: 3 }} />
+        <div
+          className={cn('lf-search-loading', classNames.loading)}
+          style={{ display: 'flex', justifyContent: 'center', padding: 32, ...styles.loading }}
+        >
+          <Spin />
         </div>
       )}
       {!searchIndex.loading && query && flatResults.length === 0 && (

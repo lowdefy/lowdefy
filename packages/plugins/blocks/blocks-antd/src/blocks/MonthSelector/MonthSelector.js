@@ -24,6 +24,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
+import getPresets from '../../getPresets.js';
 
 dayjs.extend(utc);
 
@@ -73,6 +74,11 @@ const MonthSelector = ({
               }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder}
+              presets={getPresets({
+                disabledDates: properties.disabledDates,
+                methods,
+                presets: properties.presets,
+              })}
               size={properties.size}
               status={validation.status}
               value={type.isDate(value) ? dayjs.utc(value).startOf('month') : null}

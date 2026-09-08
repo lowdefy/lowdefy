@@ -29,13 +29,15 @@ _ref:
       _module.connectionId: (arguments: { id: string, module: string }): string
       _module.endpointId: (endpointId: string): string
       _module.endpointId: (arguments: { id: string, module: string }): string
+      _module.notificationId: (notificationId: string): string
+      _module.notificationId: (arguments: { id: string, module: string }): string
       _module.id: (true): string
       _module.id: (arguments: { module: string }): string
       ```
     description: |
       The `_module` operator family provides access to module-scoped values during the build. `_module.var` and the string forms of the ID operators only make sense inside module config files — the build throws a clear error if you use them at the app level.
 
-      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
+      The object form of `_module.pageId`, `_module.connectionId`, `_module.endpointId`, `_module.notificationId`, and `_module.id` also works at the app level, resolving by entry ID instead of a dependency name — useful for linking, calling, or labelling a specific module instance from app-level config without hardcoding the scoped ID. See each method below for an app-level example.
 
       All `_module` operators resolve during the walker pass — the same phase as `_var` and `_ref`. Inside module files, they work at any depth.
 
@@ -242,6 +244,55 @@ _ref:
                           module: events
           ```
           At the app level, `module` is the module entry ID. The build resolves this to `events/log-event`.
+
+      - name: notificationId
+        types: |
+          ```
+          (notificationId: string): string
+          (arguments: { id: string, module: string }): string
+          ```
+        description: |
+          Resolves a notification ID to its fully scoped ID. The string form references the current module's notifications and only works inside module content.
+
+          The object form references a target by entry ID. Inside module content, `module` is the abstract dependency name declared in `module.lowdefy.yaml`. At the app level, `module` is the concrete module entry ID from `lowdefy.yaml` — useful when app-level config dispatches a notification whose template a module ships.
+
+        arguments: |
+          ###### string
+          The module-local notification ID (as declared in the module's `notifications:` section).
+
+          ###### object
+            - `id: string`: The notification ID in the target module.
+            - `module: string`: The abstract dependency name (in module content) or the module entry ID (in app-level config).
+
+        examples: |
+          ###### Render the module's own notification:
+          ```yaml
+          - id: render
+            type: RenderNotification
+            properties:
+              notificationId:
+                _module.notificationId: invite-user
+              data:
+                contact:
+                  _payload: contact
+          ```
+          In a module entry with `id: user-admin`, resolves to `user-admin/invite-user`.
+
+          ###### Dispatch with a scoped notification id from an app page:
+          ```yaml
+          # lowdefy.yaml (app level)
+          params:
+            endpointId:
+              _module.endpointId:
+                id: dispatch-notifications
+                module: notifications
+            payload:
+              notification_id:
+                _module.notificationId:
+                  id: invite-user
+                  module: user-admin
+          ```
+          At the app level, `module` is the module entry ID. The build resolves this to `user-admin/invite-user`.
 
       - name: id
         types: |

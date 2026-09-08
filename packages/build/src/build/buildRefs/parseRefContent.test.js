@@ -169,3 +169,32 @@ properties:
     }
   });
 });
+
+describe('reserved ~deferred key', () => {
+  test('throws ConfigError when source content contains a ~deferred key', async () => {
+    const content = `component:
+  "~deferred": anything`;
+    await expect(
+      parseRefContent({ content, refDef: { path: 'page.yaml' } })
+    ).rejects.toThrow('The key "~deferred" is reserved by the Lowdefy build');
+  });
+
+  test('names the file in the reserved-key error', async () => {
+    const content = `items:
+  - "~deferred": d
+`;
+    expect.assertions(1);
+    try {
+      await parseRefContent({ content, refDef: { path: 'nested/list.yaml' } });
+    } catch (error) {
+      expect(error.filePath).toBe('nested/list.yaml');
+    }
+  });
+
+  test('allows other tilde-prefixed keys in source content', async () => {
+    const content = `"~custom": fine
+id: home`;
+    const result = await parseRefContent({ content, refDef: { path: 'page.yaml' } });
+    expect(result['~custom']).toBe('fine');
+  });
+});

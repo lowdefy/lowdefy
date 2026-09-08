@@ -1,0 +1,67 @@
+# Request
+
+```
+(params: { all: boolean, holdValue?: boolean }): void
+(params: { requestId: string, holdValue?: boolean }): void
+(params: { requestIds: string[], holdValue?: boolean }): void
+(params: { requestId: string }): void
+(params: { requestIds: string[] }): void
+```
+
+The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads.
+`Request` can be used to call all requests on a page, a list of requests, or a single request. The `Request` action is synchronous, actions defined after
+it will only run once all the called requests have returned.
+
+To call requests that load data, the `onInitAsync`, `onMount` and `onMountAsync` events can be used. These will execute the actions while the page begins to render. If the `onInit` event is used, the page will only start rendering after the actions have completed.
+
+`Request` can be called without any parameters to call all requests in the page. It can also be called with a list of requestIds or a single requestId to call.
+
+#### Parameters
+
+###### object
+- `all: boolean`: All requests in the page are called if `all` is set to true.
+- `requestId: string`: A single requestId to call. Use this object form when you also want to set `holdValue`.
+- `requestIds: string[]`: An array of requestIds to call. Use this object form when you also want to set `holdValue`.
+- `holdValue: boolean`: Optional. When `true`, the previous response value is retained on `requests[id][0].response` while the new request is loading. UI bound to `_request: <id>` continues to display the previous response instead of going to `null`. The previous response is also retained if the new request errors out — inspect `_request_details: <id>.error` to detect failures. Defaults to `false`.
+
+###### string
+A requestId of the request to call.
+
+###### string[]
+An array of requestIds of the requests to call.
+
+#### Examples
+
+###### Call a single request:
+```yaml
+- id: call_one_request
+  type: Request
+  params: my_request_id
+```
+
+###### Call a list of requests:
+```yaml
+- id: call_many_requests
+  type: Request
+  params:
+    - my_request_id_1
+    - my_request_id_2
+    - my_request_id_3
+```
+###### Call all requests:
+
+```yaml
+- id: call_all
+  type: Request
+  params:
+    all: true
+```
+
+###### Refresh a table without flashing the previous data:
+```yaml
+- id: refresh_table
+  type: Request
+  params:
+    requestId: my_table_request
+    holdValue: true
+```

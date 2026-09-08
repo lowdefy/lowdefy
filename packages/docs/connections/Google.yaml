@@ -104,3 +104,8 @@ _ref:
                       threshold: BLOCK_ONLY_HIGH
                   instructions: You are a creative writing assistant.
             ```
+      - id: markdown_requests
+        type: MarkdownWithCode
+        properties:
+          content:
+            _ref: connections/AIGenerateRequests.md

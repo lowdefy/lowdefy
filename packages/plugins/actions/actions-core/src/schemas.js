@@ -23,6 +23,7 @@ export { default as GeolocationCurrentPosition } from './actions/GeolocationCurr
 export { default as Link } from './actions/Link/schema.js';
 export { default as Login } from './actions/Login/schema.js';
 export { default as Logout } from './actions/Logout/schema.js';
+export { default as Publish } from './actions/Publish/schema.js';
 export { default as Request } from './actions/Request/schema.js';
 export { default as Reset } from './actions/Reset/schema.js';
 export { default as ResetValidation } from './actions/ResetValidation/schema.js';
@@ -32,7 +33,9 @@ export { default as SetFocus } from './actions/SetFocus/schema.js';
 export { default as SetGlobal } from './actions/SetGlobal/schema.js';
 export { default as SetLocale } from './actions/SetLocale/schema.js';
 export { default as SetState } from './actions/SetState/schema.js';
+export { default as Subscribe } from './actions/Subscribe/schema.js';
 export { default as Throw } from './actions/Throw/schema.js';
+export { default as Unsubscribe } from './actions/Unsubscribe/schema.js';
 export { default as UpdateSession } from './actions/UpdateSession/schema.js';
 export { default as Validate } from './actions/Validate/schema.js';
 export { default as Wait } from './actions/Wait/schema.js';

@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@2.3.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "fixed": [["@lowdefy/*", "lowdefy"]],
+  "fixed": [["@lowdefy/*", "lowdefy", "lowdefy-vscode"]],
   "linked": [],
   "access": "restricted",
   "baseBranch": "main",

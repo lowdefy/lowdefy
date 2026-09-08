@@ -20,7 +20,7 @@ import {
   expectValidationError,
   expectValidationWarning,
   expectValidationSuccess,
-} from '../core/validation.js';
+} from '../assertions/validation.js';
 
 // Each block's e2e helper defines a `locator` function that targets the block element on the page.
 // Two locator patterns exist:

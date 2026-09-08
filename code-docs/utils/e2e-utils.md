@@ -35,10 +35,10 @@ Provides e2e testing infrastructure for Lowdefy apps:
 Playwright's `webServer` runs before tests:
 
 ```bash
-NEXT_PUBLIC_LOWDEFY_E2E=true npx lowdefy build && npx lowdefy start
+npx lowdefy build --server e2e && npx lowdefy start
 ```
 
-The `NEXT_PUBLIC_LOWDEFY_E2E=true` flag exposes `window.lowdefy` in browser for state/validation access.
+The e2e server variant (`--server e2e`) exposes `window.lowdefy` in the browser for state/validation access (the client passes `stage="e2e"`).
 
 **Manifest Generation** (lazy, first worker):
 
@@ -471,12 +471,11 @@ await ldf.state('key').expect.toBe(value, { timeout: 10000 });
 
 | Variable                  | Set By                                    | Used By        | Purpose                                                         |
 | ------------------------- | ----------------------------------------- | -------------- | --------------------------------------------------------------- |
-| `NEXT_PUBLIC_LOWDEFY_E2E` | webServer command                         | Client runtime | Exposes `window.lowdefy` for state/validation access            |
 | `LOWDEFY_BUILD_DIR`       | `createConfig()`                          | Fixtures       | Absolute path to build artifacts for manifest/helper resolution |
 | `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`                          | Fixtures       | Absolute path to static mocks YAML file                         |
 | `LOWDEFY_E2E_MONGODB_URI` | User (.env.e2e.local) or `configureMdb()` | mdb fixture    | MongoDB test database connection string                         |
 
-`NEXT_PUBLIC_LOWDEFY_E2E=true` is critical: without it, `window.lowdefy` is not exposed and all state/request/validation assertions fail.
+Building with `--server e2e` is critical: without the e2e server variant, `window.lowdefy` is not exposed and all state/request/validation assertions fail.
 
 ## Files Quick Reference
 

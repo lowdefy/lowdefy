@@ -21,7 +21,7 @@ AI writes code fast, but the maintenance doesn't scale. LLMs generate thousands 
 
 ### Full-stack, production-ready
 
-- **Built on [Next.js](https://nextjs.org/) and [Auth.js](https://authjs.dev/)** — Deploy anywhere you host Next.js.
+- **Built on [Hono](https://hono.dev/) and [Vite](https://vite.dev/) with [Auth.js](https://authjs.dev/)** — Deploy anywhere Node.js runs.
 - **70+ UI components** — Forms, tables, charts, markdown, and more out of the box.
 - **50+ logic operators** — `_if`, `_get`, `_js`, `_state` for dynamic UIs without writing code.
 - **10+ data connectors** — MongoDB, PostgreSQL, MySQL, REST APIs, Google Sheets, S3, Elasticsearch, Stripe.

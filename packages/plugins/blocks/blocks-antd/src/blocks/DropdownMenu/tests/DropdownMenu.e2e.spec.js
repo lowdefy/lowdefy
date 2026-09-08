@@ -15,7 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock, getShortcutModifier, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 test.describe('DropdownMenu Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -133,7 +133,7 @@ test.describe('DropdownMenu Block', () => {
   });
 
   test('fires onClick when menu link shortcut is pressed', async ({ page }) => {
-    const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const mod = await getShortcutModifier(page);
     const display = getBlock(page, 'dm_shortcut_display');
     await expect(display).not.toHaveText('clicked:dm_sc_home');
 

@@ -34,7 +34,6 @@ const testContext = async ({ lowdefy, pageConfig }) => {
     _internal: {
       callRequest: () => {},
       displayMessage: () => () => {},
-      updateBlock: () => {},
       logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
       handleError: () => {},
       translate: (key, values) => translate({ key, values, i18n: lowdefy?.i18n }),

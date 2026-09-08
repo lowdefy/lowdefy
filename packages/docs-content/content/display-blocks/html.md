@@ -1,0 +1,311 @@
+# Html
+
+Render raw HTML content safely.
+
+```yaml
+- id: basic_paragraph
+  type: Html
+  properties:
+    html: <p>This is a paragraph rendered safely with the Html block.</p>
+- id: basic_heading
+  type: Html
+  properties:
+    html: <h3>Safe Heading</h3><p>The Html block sanitizes content to prevent XSS
+      attacks.</p>
+- id: basic_headings_all
+  type: Html
+  properties:
+    html: <h4>Heading 4</h4><h5>Heading 5</h5><h6>Heading 6</h6>
+- id: basic_line_break
+  type: Html
+  properties:
+    html: <p>First line<br />Second line<br />Third line</p>
+- id: basic_hr
+  type: Html
+  properties:
+    html: <p>Content above</p><hr /><p>Content below the horizontal rule</p>
+```
+
+```yaml
+- id: text_bold
+  type: Html
+  properties:
+    html: <p>Text with <strong>bold</strong> and <b>also bold</b> formatting.</p>
+- id: text_italic
+  type: Html
+  properties:
+    html: <p>Text with <em>italic</em> and <i>also italic</i> formatting.</p>
+- id: text_underline
+  type: Html
+  properties:
+    html: <p>Text with <u>underline</u> formatting.</p>
+- id: text_strikethrough
+  type: Html
+  properties:
+    html: <p>Text with <s>strikethrough</s> and <del>deleted</del> formatting.</p>
+- id: text_combined
+  type: Html
+  properties:
+    html: <p>Text with <strong><em>bold italic</em></strong>, <strong><u>bold
+      underline</u></strong>, and <em><u>italic underline</u></em>.</p>
+- id: text_small
+  type: Html
+  properties:
+    html: <p>Normal text and <small>small text</small> together.</p>
+- id: text_sub_sup
+  type: Html
+  properties:
+    html: <p>H<sub>2</sub>O is water. E=mc<sup>2</sup> is relativity.</p>
+- id: text_mark
+  type: Html
+  properties:
+    html: <p>This sentence has <mark>highlighted text</mark> using the mark tag.</p>
+```
+
+```yaml
+- id: list_unordered
+  type: Html
+  properties:
+    html: <ul><li>First item</li><li>Second item</li><li>Third item</li></ul>
+- id: list_ordered
+  type: Html
+  properties:
+    html: <ol><li>Step one</li><li>Step two</li><li>Step three</li></ol>
+- id: list_nested
+  type: Html
+  properties:
+    html: <ul><li>Parent item<ul><li>Child item 1</li><li>Child item
+      2</li></ul></li><li>Another parent item<ul><li>Another
+      child</li></ul></li></ul>
+- id: list_ordered_nested
+  type: Html
+  properties:
+    html: <ol><li>First item<ol><li>Sub-item A</li><li>Sub-item
+      B</li></ol></li><li>Second item</li><li>Third item</li></ol>
+```
+
+```yaml
+- id: styled_colored_text
+  type: Html
+  properties:
+    html: '<p><span style="color: var(--ant-color-primary);">Primary text</span>,
+      <span style="color: var(--ant-color-success);">success text</span>, <span
+      style="color: var(--ant-color-error);">error text</span>, and <span
+      style="color: var(--ant-color-warning);">warning text</span>.</p>'
+- id: styled_background
+  type: Html
+  properties:
+    html: '<p><span style="background: var(--ant-color-primary-bg); padding: 2px
+      6px; border-radius: 3px;">Primary highlight</span> and <span
+      style="background: var(--ant-color-success-bg); padding: 2px 6px;
+      border-radius: 3px;">Success highlight</span>.</p>'
+- id: styled_sizes
+  type: Html
+  properties:
+    html: '<p><span style="font-size: 12px;">Small text</span>, <span
+      style="font-size: 16px;">Normal text</span>, <span style="font-size:
+      20px;">Large text</span>, <span style="font-size: 24px;">Extra
+      large</span>.</p>'
+```
+
+```yaml
+- id: blockquote_simple
+  type: Html
+  properties:
+    html: <blockquote>A simple blockquote with default styling.</blockquote>
+- id: blockquote_styled
+  type: Html
+  properties:
+    html: '<blockquote style="border-left: 4px solid var(--ant-color-primary);
+      padding-left: 16px; margin: 0; color:
+      var(--ant-color-text-secondary);">This is a styled blockquote with a
+      primary color left border accent and subdued text color.</blockquote>'
+- id: blockquote_attribution
+  type: Html
+  properties:
+    html: '<blockquote style="border-left: 4px solid var(--ant-color-border);
+      padding-left: 16px; margin: 0;"><p style="margin: 0 0 4px 0; font-style:
+      italic; color: var(--ant-color-text-secondary);">"The best way to predict
+      the future is to invent it."</p><footer style="color:
+      var(--ant-color-text-tertiary); font-size: 13px;">-- Alan
+      Kay</footer></blockquote>'
+```
+
+```yaml
+- id: code_inline
+  type: Html
+  properties:
+    html: '<p>Use the <code style="background: var(--ant-color-fill-tertiary);
+      padding: 2px 6px; border-radius: 4px; font-family: monospace;">Html</code>
+      block for safe HTML rendering.</p>'
+- id: code_block
+  type: Html
+  properties:
+    html: >
+      <pre style="background: var(--ant-color-bg-elevated); color:
+      var(--ant-color-text); padding: 16px; border-radius: 6px; overflow-x:
+      auto; font-family: monospace; font-size: 14px; border: 1px solid
+      var(--ant-color-border);"><code>function greet(name) {
+        return "Hello, " + name + "!";
+      }</code></pre>
+- id: code_multi_inline
+  type: Html
+  properties:
+    html: '<p>Set <code style="background: var(--ant-color-fill-tertiary); padding:
+      2px 6px; border-radius: 4px; font-family: monospace;">type</code> to <code
+      style="background: var(--ant-color-fill-tertiary); padding: 2px 6px;
+      border-radius: 4px; font-family: monospace;">Html</code> and provide the
+      <code style="background: var(--ant-color-fill-tertiary); padding: 2px 6px;
+      border-radius: 4px; font-family: monospace;">html</code> property.</p>'
+```
+
+```yaml
+- id: link_basic
+  type: Html
+  properties:
+    html: <p>Visit <a href="https://lowdefy.com">Lowdefy</a> for more
+      information.</p>
+- id: link_styled
+  type: Html
+  properties:
+    html: '<p><a href="https://lowdefy.com" style="color: var(--ant-color-primary);
+      text-decoration: none; font-weight: bold;">Primary styled link</a> within
+      a paragraph.</p>'
+- id: link_multiple
+  type: Html
+  properties:
+    html: '<p>Resources: <a href="https://lowdefy.com">Home</a> | <a
+      href="https://docs.lowdefy.com">Docs</a> | <a
+      href="https://github.com/lowdefy/lowdefy">GitHub</a></p>'
+```
+
+```yaml
+- id: nested_section
+  type: Html
+  properties:
+    html: <div><h4>Section Title</h4><p>A paragraph with a <a
+      href="https://lowdefy.com">safe link</a> inside it.</p><hr /><p>Content
+      below the horizontal rule.</p></div>
+- id: nested_formatted_list
+  type: Html
+  properties:
+    html: <div><h4>Features</h4><ul><li><strong>Fast:</strong> Optimized
+      rendering</li><li><strong>Safe:</strong> XSS protection
+      built-in</li><li><strong>Flexible:</strong> Supports many HTML
+      tags</li></ul></div>
+- id: nested_mixed
+  type: Html
+  properties:
+    html: '<div><p>This block mixes <strong>bold</strong>, <em>italic</em>, and
+      <code style="background: var(--ant-color-fill-tertiary); padding: 2px 4px;
+      border-radius: 3px;">code</code> formatting.</p><blockquote
+      style="border-left: 3px solid var(--ant-color-border); padding-left: 12px;
+      margin: 12px 0; color: var(--ant-color-text-secondary);">It also includes
+      a blockquote with <strong>bold text</strong>.</blockquote><ol><li>And a
+      numbered list</li><li>With multiple items</li></ol></div>'
+```
+
+```yaml
+- id: table_simple
+  type: Html
+  properties:
+    html: '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th
+      style="border: 1px solid var(--ant-color-border); padding: 8px;
+      background: var(--ant-color-fill-quaternary); text-align:
+      left;">Feature</th><th style="border: 1px solid var(--ant-color-border);
+      padding: 8px; background: var(--ant-color-fill-quaternary); text-align:
+      left;">Status</th></tr></thead><tbody><tr><td style="border: 1px solid
+      var(--ant-color-border); padding: 8px;">Html block</td><td style="border:
+      1px solid var(--ant-color-border); padding: 8px;">Safe</td></tr><tr><td
+      style="border: 1px solid var(--ant-color-border); padding:
+      8px;">DangerousHtml</td><td style="border: 1px solid
+      var(--ant-color-border); padding:
+      8px;">Powerful</td></tr></tbody></table>'
+```
+
+```yaml
+- id: style_padded
+  type: Html
+  style:
+    .element:
+      padding: 20
+      background: var(--ant-color-primary-bg)
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0;">Content inside a styled Html container with primary
+      background.</p>'
+- id: style_bordered
+  type: Html
+  style:
+    .element:
+      border: 2px solid var(--ant-color-primary)
+      padding: 16
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0;">Content with a primary color border applied via
+      style override.</p>'
+- id: style_shadow
+  type: Html
+  style:
+    .element:
+      padding: 20
+      borderRadius: 12
+      boxShadow: var(--ant-box-shadow)
+      background: var(--ant-color-bg-container)
+  properties:
+    html: '<h4 style="margin: 0 0 8px 0;">Elevated Html Block</h4><p style="margin:
+      0; color: var(--ant-color-text-secondary);">An Html block styled with
+      box-shadow for an elevated card look.</p>'
+- id: style_max_width
+  type: Html
+  style:
+    .element:
+      maxWidth: 350
+      margin: 0 auto
+      textAlign: center
+      padding: 16
+      background: var(--ant-color-success-bg)
+      borderRadius: 8
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-success); font-weight:
+      bold;">Centered and constrained width.</p>'
+- id: style_left_accent
+  type: Html
+  style:
+    .element:
+      borderLeft: 4px solid var(--ant-color-warning)
+      paddingLeft: 16
+      paddingTop: 8
+      paddingBottom: 8
+  properties:
+    html: '<p style="margin: 0; color: var(--ant-color-warning); font-weight:
+      500;">Warning accent border on the left side.</p>'
+- id: style_elevated
+  type: Html
+  style:
+    .element:
+      background: var(--ant-color-bg-elevated)
+      color: var(--ant-color-text)
+      padding: 20
+      borderRadius: 8
+      border: 1px solid var(--ant-color-border)
+  properties:
+    html: '<h4 style="margin: 0 0 8px 0;">Elevated Block</h4><p style="margin:
+      0;">Uses bg-elevated token for a surface that adapts to light and dark
+      mode.</p>'
+```
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `html` | string | - | Content to be rendered as Html. |
+
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onTextSelection` | \- | Trigger action when text is selected and pass selected text to the event object. |
+
+| Key | Target |
+| --- | --- |
+| `/block` | Outer block wrapper (always available). |
+| `/element` | The Html element. |
+
+No slots defined.

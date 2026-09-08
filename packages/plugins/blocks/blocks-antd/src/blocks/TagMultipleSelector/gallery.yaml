@@ -1,0 +1,70 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic String Options
+  blocks:
+    - id: basic_strings
+      type: TagMultipleSelector
+      properties:
+        title: Domains
+        options:
+          - Ethics
+          - Environment
+          - Governance
+          - Social
+          - Data Privacy
+
+- title: Label-Value Options
+  blocks:
+    - id: label_value
+      type: TagMultipleSelector
+      properties:
+        title: Status Filter
+        options:
+          - label: Draft
+            value: draft
+          - label: In Review
+            value: in_review
+          - label: Published
+            value: published
+          - label: Archived
+            value: archived
+            disabled: true
+
+- title: Explicit Colors and Single Accent
+  blocks:
+    - id: explicit_colors
+      type: TagMultipleSelector
+      properties:
+        title: Priorities
+        options:
+          - label: Low
+            value: low
+            color: '#59A14F'
+          - label: Medium
+            value: medium
+            color: '#EDC948'
+          - label: High
+            value: high
+            color: '#E15759'
+    - id: single_accent
+      type: TagMultipleSelector
+      properties:
+        title: Interests
+        colored: false
+        options:
+          - Design
+          - Engineering
+          - Product
+          - Research

@@ -22,6 +22,9 @@ function getOptions({ commandLineOptions, cliConfig }) {
     ...commandLineOptions,
   };
 
+  // commander parses --port as a string; port comparisons expect a number.
+  options.port = Number(options.port);
+
   return options;
 }
 

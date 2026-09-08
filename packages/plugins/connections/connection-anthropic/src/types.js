@@ -17,4 +17,5 @@
 export default {
   connections: ['Anthropic'],
   agents: ['ClaudeAgent'],
+  requests: ['GenerateObject', 'GenerateText'],
 };

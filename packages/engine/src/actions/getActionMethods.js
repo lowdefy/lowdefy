@@ -31,12 +31,15 @@ import createLink from './createLink.js';
 import createLogin from './createLogin.js';
 import createLogout from './createLogout.js';
 import createDisplayMessage from './createDisplayMessage.js';
+import createPublish from './createPublish.js';
 import createRequest from './createRequest.js';
 import createReset from './createReset.js';
 import createResetValidation from './createResetValidation.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createSubscribe from './createSubscribe.js';
 import createTranslate from './createTranslate.js';
+import createUnsubscribe from './createUnsubscribe.js';
 import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
 
@@ -59,12 +62,15 @@ function getActionMethods(props) {
     link: createLink(props),
     login: createLogin(props),
     logout: createLogout(props),
+    publish: createPublish(props),
     request: createRequest(props),
     reset: createReset(props),
     resetValidation: createResetValidation(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    subscribe: createSubscribe(props),
     translate: createTranslate(props),
+    unsubscribe: createUnsubscribe(props),
     updateSession: createUpdateSession(props),
     validate: createValidate(props),
   };

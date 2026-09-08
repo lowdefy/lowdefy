@@ -1,0 +1,34 @@
+{
+  "name": "@lowdefy/docs-content",
+  "version": "5.6.0",
+  "license": "Apache-2.0",
+  "description": "Lowdefy documentation extracted as markdown for AI coding agents.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "docs",
+    "mcp"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git",
+    "directory": "packages/docs-content"
+  },
+  "type": "module",
+  "exports": {
+    "./index.json": "./index.json",
+    "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
+    "./content/*": "./content/*"
+  },
+  "files": [
+    "content/**",
+    "index.json",
+    "scripts/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Lowdefy uses the [Next-Auth](https://next-auth.js.org) package to implement user authentication. Next-Auth has built in support for many sign-in services, and can be extended using Lowdefy [plugins](/plugins). User authentication can be stateless using JSON Web Tokens (JWT) or can use database sessions.
+            Lowdefy uses the [Auth.js](https://authjs.dev) library to implement user authentication. Auth.js has built in support for many sign-in services, and can be extended using Lowdefy [plugins](/plugins). User authentication can be stateless using JSON Web Tokens (JWT) or can use database sessions.
 
             User authorization is done at the page level. Pages can be set as public or private, and role-based-access control can be used to [restrict access](https://docs.lowdefy.com/protected-pages-apis) to pages and APIs based on a user's [roles](https://docs.lowdefy.com/roles). Authorisation checks are done on the Lowdefy server when executing requests, respecting the same authorization rules as the page the request is defined on.
 
@@ -32,7 +32,7 @@ _ref:
 
             ## Providers
 
-            Providers configure the identity provider used to authenticate the user. These are typically OAuth based identity providers like Google or Auth0. All the default providers in the Next-Auth package can be used, and additional providers can be added as plugins. Multiple providers can be configured, but at least one should be configured to have a working authentication system.
+            Providers configure the identity provider used to authenticate the user. These are typically OAuth based identity providers like Google or Auth0. All the default providers in the Auth.js library can be used, and additional providers can be added as plugins. Multiple providers can be configured, but at least one should be configured to have a working authentication system.
 
             ## Adapters
 

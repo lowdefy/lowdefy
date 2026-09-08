@@ -1,0 +1,139 @@
+---
+'$schema': https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: yaml-lowdefy-injection
+scopeName: source.yaml.lowdefy.injection
+injectionSelector: L:source.yaml -comment
+comment: Lowdefy YAML syntax highlighting
+fileTypes:
+  - yaml
+  - yml
+patterns:
+  - include: '#type'
+  - include: '#nunjucks-strings'
+  - include: '#ref'
+  - include: '#js-code'
+  - include: '#operator'
+
+repository:
+  type:
+    patterns:
+      - name: type.key.lowdefy.yaml
+        match: '^[ -]*(type):[ ]+(\w+)\n'
+        captures:
+          '1':
+            name: keyword.key.type.lowdefy
+          '2':
+            name: entity.name.value.type.lowdefy
+  ref:
+    patterns:
+      - name: string.unquoted.ref.operator.lowdefy
+        match: '^[ -]*(_ref):[ ]+(\S+)\n'
+        captures:
+          '1':
+            name: storage.modifier.key.ref.operator.lowdefy
+          '2':
+            name: support.class.value.ref.operator.lowdefy
+      - name: string.unquoted.path.ref.operator.lowdefy
+        begin: '^[ -]*(_ref):[ ]*\n'
+        patterns:
+          - include: source.yaml
+        beginCaptures:
+          '1':
+            name: storage.modifier.key.ref.operator.lowdefy
+        endCaptures:
+          '1':
+            name: storage.modifier.key.path.ref.operator.lowdefy
+          '2':
+            name: support.class.value.ref.operator.lowdefy
+  nunjucks-strings:
+    patterns:
+      - name: string.block.nunjucks.operator.lowdefy
+        begin: '^[ -]*(_nunjucks):[ ]+([\|>])\s*'
+        beginCaptures:
+          '1':
+            name: entity.name.function.key.nunjucks.operator.lowdefy
+          '2':
+            name: keyword.control.property.string.block.yaml
+        end: ^(?=\S)|(?!\G)
+        patterns:
+          - name: string.block.value.nunjucks.operator.lowdefy
+            begin: ^([ ]+)(?! )
+            end: ^(?!\1|\s*$)
+            patterns:
+              - include: source.nunjucks
+              - include: text.html.basic
+      - name: string.block.template.nunjucks.operator.lowdefy
+        begin: '^[ -]*(_nunjucks):[ ]*\n'
+        end: ^(?=\S)|(?!\G)
+        beginCaptures:
+          '1':
+            name: entity.name.function.key.nunjucks.operator.lowdefy
+        patterns:
+          - name: string.block.template.nunjucks.operator.lowdefy
+            begin: '^[ ]*(template):[ ]+([\|>])\s*'
+            beginCaptures:
+              '1':
+                name: entity.name.tag.template.nunjucks.operator.lowdefy
+              '2':
+                name: keyword.control.property.tag.string.block
+            end: ^(?=\S)|(?!\G)
+            patterns:
+              - name: string.block.value.nunjucks.operator.lowdefy
+                begin: ^([ ]+)(?! )
+                end: ^(?!\1|\s*$)
+                patterns:
+                  - include: source.nunjucks
+                  - include: text.html.basic
+          - name: string.template.nunjucks.lowdefy
+            begin: '^[ ]*(template):'
+            end: '\n'
+            beginCaptures:
+              '1':
+                name: entity.name.tag.template.nunjucks.operator.lowdefy
+            patterns:
+              - include: source.nunjucks
+              - include: text.html.basic
+          - include: source.yaml
+
+      - name: string.unquoted.nunjucks.operator.lowdefy
+        begin: '^[ -]*(_nunjucks):[ ].*?'
+        end: \n
+        beginCaptures:
+          '1':
+            name: entity.name.function.key.nunjucks.operator.lowdefy
+        patterns:
+          - include: source.nunjucks
+          - include: text.html.basic
+
+  js-code:
+    patterns:
+      - name: string.block.js.operator.lowdefy
+        begin: '^[ -]*(_js):[ ]+([\|>])\s*'
+        beginCaptures:
+          '1':
+            name: entity.name.function.key.js.operator.lowdefy
+          '2':
+            name: keyword.control.property.string.block
+        end: ^(?=\S)|(?!\G)
+        patterns:
+          - name: string.block.value.js.operator.lowdefy
+            begin: ^([ ]+)(?! )
+            end: ^(?!\1|\s*$)
+            patterns:
+              - include: source.js
+      - name: string.unquoted.js.operator.lowdefy
+        begin: '^[ -]*(_js):[ ].*?'
+        end: \n
+        beginCaptures:
+          '1':
+            name: entity.name.function.key.js.operator.lowdefy
+        patterns:
+          - include: source.js
+
+  operator:
+    patterns:
+      - name: operator.lowdefy.yaml
+        match: '^[ -]*(_[\w\.\_\-]+):'
+        captures:
+          '1':
+            name: entity.name.function.key.operator.lowdefy

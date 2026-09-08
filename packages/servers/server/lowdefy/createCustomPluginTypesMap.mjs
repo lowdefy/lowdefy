@@ -55,6 +55,7 @@ async function createCustomPluginTypesMap({ directories }) {
       server: {},
     },
     requests: {},
+    websockets: {},
   };
 
   const pluginDefinitions = await getPluginDefinitions({ directories });

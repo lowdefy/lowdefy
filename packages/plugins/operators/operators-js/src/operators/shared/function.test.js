@@ -17,6 +17,8 @@ import { evaluateOperators, ServerParser, WebParser } from '@lowdefy/operators';
 import _function from './function.js';
 import _args from './args.js';
 import _array from './array.js';
+import _eq from './eq.js';
+import _if from './if.js';
 import _payload from '../server/payload.js';
 import _state from '../shared/state.js';
 
@@ -165,4 +167,86 @@ test('evaluateOperators, _function callback template not mutated across repeated
     { value: 'beta', title: 'Beta' },
     { value: 'gamma', title: 'Gamma' },
   ]);
+});
+
+// The build passes a dynamicIdentifiers set containing _function. Nested escaped build
+// functions (__build.function, ___build.function, …) must still evaluate at build time —
+// the dynamic-identifier deferral only applies to runtime prefixes.
+test('evaluateOperators, __build.function comparator nested in _build.function evaluates with build dynamicIdentifiers', () => {
+  const buildOperators = { _args, _array, _eq, _function, _if };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = {
+    deduped: {
+      '_build.array.reduce': [
+        [{ value: { id: 'a' } }, { value: { id: 'b' } }, { value: { id: 'a' } }],
+        {
+          '_build.function': {
+            '__build.if': {
+              test: {
+                '__build.eq': [
+                  {
+                    '__build.array.findIndex': [
+                      { '__build.args': '0' },
+                      {
+                        '__build.function': {
+                          '___build.eq': [
+                            { '__build.args': '1.value.id' },
+                            { '___build.args': '0.value.id' },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                  -1,
+                ],
+              },
+              then: {
+                '__build.array.concat': [{ '__build.args': '0' }, [{ '__build.args': '1' }]],
+              },
+              else: { '__build.args': '0' },
+            },
+          },
+        },
+        [],
+      ],
+    },
+  };
+  const res = evaluateOperators({
+    input,
+    operators: buildOperators,
+    operatorPrefix: '_build.',
+    dynamicIdentifiers,
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.deduped).toEqual([{ value: { id: 'a' } }, { value: { id: 'b' } }]);
+});
+
+test('evaluateOperators, __build.array.map nested in _build.function evaluates with build dynamicIdentifiers', () => {
+  const buildOperators = { _args, _array, _function };
+  const dynamicIdentifiers = new Set(['_function']);
+  const input = {
+    fields: {
+      '_build.array.map': {
+        on: [{ ratings: ['x', 'y'] }],
+        callback: {
+          '_build.function': {
+            $avg: {
+              '__build.array.map': [
+                { '__build.args': '0.ratings' },
+                { '__build.function': { '___build.args': '0' } },
+              ],
+            },
+          },
+        },
+      },
+    },
+  };
+  const res = evaluateOperators({
+    input,
+    operators: buildOperators,
+    operatorPrefix: '_build.',
+    dynamicIdentifiers,
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.fields).toEqual([{ $avg: ['x', 'y'] }]);
 });

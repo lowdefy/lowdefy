@@ -26,4 +26,6 @@ _ref:
     description: >
       Rich-text editor built on TipTap. Supports bold, italic, strike-through,
       highlights, headings, lists, tables, links, and drag/drop or paste image
-      uploads via a configurable S3 presigned POST policy request.
+      uploads via a configurable upload-policy request (`uploadPolicyRequestId`) —
+      any storage provider (S3, GCS, Azure). Configure `downloadPolicyRequestId`
+      to resolve inserted image URLs through a download request.

@@ -179,7 +179,7 @@ const PageSiderMenu = ({
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
                             classNames.logo ??
-                            'mr-[30px] shrink w-10 sm:w-[130px] mx-1.5 sm:mx-2.5 md:mx-4'
+                            'mr-[30px] shrink w-10 min-[577px]:w-[130px] mx-1.5 sm:mx-2.5 md:mx-4'
                           }
                           style={styles.logo}
                         />

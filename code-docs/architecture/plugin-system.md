@@ -425,7 +425,7 @@ plugins:
          ↓
 6. writePluginImports() writes import files
          ↓
-7. Next.js bundles imports
+7. Vite bundles the client plugin imports; the Hono server imports server plugin files as plain Node ESM — plugin subpath exports must resolve to files, not directories (a `"./*": "./dist/*"` wildcard mapping `pkg/connections` to a directory throws `ERR_UNSUPPORTED_DIR_IMPORT`)
          ↓
 8. Runtime: types passed to initLowdefyContext()
          ↓

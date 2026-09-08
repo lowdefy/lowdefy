@@ -1,6 +1,6 @@
 # Lowdefy Project Guide for Claude Code
 
-Lowdefy is a config-driven web framework built on Next.js. Apps are defined in YAML with **Blocks** (React components), **Operators** (logic functions like `_if`, `_get`), **Actions** (event handlers), and **Connections/Requests** (database/API integrations).
+Lowdefy is a config-driven web framework built on Hono (server) and Vite (client). Apps are defined in YAML with **Blocks** (React components), **Operators** (logic functions like `_if`, `_get`), **Actions** (event handlers), and **Connections/Requests** (database/API integrations).
 
 ## Documentation Navigation
 
@@ -39,10 +39,12 @@ packages/
 
 | Package               | Purpose     | Entry Point       | Key Feature                             |
 | --------------------- | ----------- | ----------------- | --------------------------------------- |
-| `@lowdefy/server`     | Production  | `next start`      | Minimal, no watching                    |
+| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client |
 | `@lowdefy/server-dev` | Development | `manager/run.mjs` | File watching, hot reload, auto-rebuild |
 
-**server-dev manager** orchestrates: initial build → file watchers → server process → SSE-based hot reload. See `code-docs/architecture/` for details.
+**server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
+
+**Docs/MCP endpoint for AI agents**: the dev server always serves `/lowdefy-docs` (REST) and `/lowdefy-docs/mcp` (MCP streamable HTTP) — schemas, examples, and markdown docs for every installed plugin type, including local plugins, plus the feedback loop: `GET /lowdefy-docs/build-status` (current build errors/warnings + browser runtime errors with file locations), `/page-config/{pageId}`, `/screenshot/{pageId}`, `/find/{id}`. When a Lowdefy dev server is running, prefer these routes over guessing type names or re-running builds (`GET /lowdefy-docs` lists everything). Implementation: `packages/servers/server-dev/lib/docs/` + `src/routes/docs/`; core docs content ships in `@lowdefy/docs-content` (regenerate with `pnpm docs:content`); roadmap in `code-docs/plans/agentic-coding-roadmap.md`. The `/lowdefy-docs` page-path prefix is reserved in dev. `lowdefy agent-setup` (CLI) writes .mcp.json/AGENTS.md/skill into a project.
 
 ## Code Principles
 

@@ -47,6 +47,49 @@ exports[`center content 1`] = `
 </div>
 `;
 
+exports[`column direction area 1`] = `
+<div>
+  <div
+    class="lf-col"
+    id="bl-column direction area23456"
+    style="--lf-span: 24; --lf-span-md: 24;"
+  >
+    <div
+      id="column direction area23456"
+    >
+      <div
+        class="lf-row lf-row-column"
+        id="column direction area-content23456"
+        style="flex-direction: column; flex-wrap: wrap;"
+      >
+        <div
+          class="lf-col"
+          id="bl-One23456"
+          style="--lf-span: 24; --lf-span-md: 24; background: rgb(64, 160, 255);"
+        >
+          <div
+            id="One23456"
+          >
+            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </div>
+        </div>
+        <div
+          class="lf-col"
+          id="bl-Two23456"
+          style="--lf-span: 24; --lf-span-md: 24; background: rgb(255, 79, 175);"
+        >
+          <div
+            id="Two23456"
+          >
+            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`grow 0 0 1`] = `
 <div>
   <div

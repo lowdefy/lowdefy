@@ -20,7 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { getCellRenderer } from './cellRenderers/index.js';
 import createEllipsisCell from './cellRenderers/EllipsisCell.js';
 
-function applyEllipsis(colDef, ellipsis) {
+function applyEllipsis(colDef, ellipsis, makeEllipsisRenderer) {
   if (!type.isInt(ellipsis) || ellipsis < 1) return colDef;
   const clampClass = `lf-ellipsis-${Math.min(ellipsis, 6)}`;
   const existingClass = colDef.cellClass;
@@ -39,7 +39,7 @@ function applyEllipsis(colDef, ellipsis) {
   // ag-grid's internal cell wrappers. Skip if a cellRenderer is already set
   // (user or built-in cell.type takes precedence and can opt in via CSS).
   if (!colDef.cellRenderer) {
-    next.cellRenderer = createEllipsisCell(ellipsis);
+    next.cellRenderer = makeEllipsisRenderer();
   }
   return next;
 }
@@ -65,33 +65,80 @@ function applyAlignment(colDef, cell) {
   return { ...colDef, cellStyle, headerClass };
 }
 
-function buildCellRenderer({ cell, methods, components }) {
-  const Renderer = getCellRenderer(cell?.type);
-  if (!Renderer) return undefined;
-  // ag-grid calls the renderer as a React function component when returned directly.
-  return function CellRendererAdapter(params) {
-    return Renderer({ ...params, cellConfig: cell, methods, components });
-  };
+// A cellRenderer is a React element type, so a new function is a different
+// component: CellCtrl.refreshCellRenderer bails when `cellRendererClass !==
+// componentClass`, and the React cell comp re-keys. Building the renderers fresh on
+// every render therefore unmounted every cell whenever anything re-rendered the
+// block, destroying whatever a cell was holding — an open popup, a focused input, a
+// half-typed value in the selector / textInput / paragraphInput cells.
+//
+// So the adapter installed on the colDef is created once per column and kept, and
+// the closure it calls is replaced in place. ag-grid keeps the cell; the cell
+// renders the current config.
+function stableRenderer(entry, slot, render) {
+  let stable = entry[slot];
+  if (!stable) {
+    const box = { render };
+    // ag-grid calls the renderer as a React function component when returned directly.
+    function CellRendererAdapter(params) {
+      return box.render(params);
+    }
+    stable = { box, Adapter: CellRendererAdapter };
+    entry[slot] = stable;
+  }
+  stable.box.render = render;
+  return stable.Adapter;
 }
 
-function recProcessColDefs(columnDefs, methods, components) {
-  return columnDefs.map((col) => {
+// Keyed by colId or field so an adapter survives a column reorder, falling back to
+// position for columns that declare neither. A key already taken in this pass gets a
+// suffix, so two columns sharing a field do not share an adapter.
+function colKey(col, index, prefix, seen) {
+  const id = type.isString(col.colId)
+    ? col.colId
+    : type.isString(col.field)
+      ? col.field
+      : `${index}`;
+  const base = `${prefix}${id}`;
+  let key = base;
+  let n = 1;
+  while (seen.has(key)) {
+    key = `${base}#${n}`;
+    n += 1;
+  }
+  seen.add(key);
+  return key;
+}
+
+function recProcessColDefs(columnDefs, methods, components, cache, seen, prefix) {
+  return columnDefs.map((col, index) => {
+    const key = colKey(col, index, prefix, seen);
+    const entry = cache.get(key) ?? {};
+    cache.set(key, entry);
     const newColDef = {};
     if (type.isArray(col.children)) {
-      newColDef.children = recProcessColDefs(col.children, methods, components);
+      newColDef.children = recProcessColDefs(
+        col.children,
+        methods,
+        components,
+        cache,
+        seen,
+        `${key}/`
+      );
     }
     if (type.isObject(col.cell) && type.isString(col.cell.type)) {
-      const renderer = buildCellRenderer({ cell: col.cell, methods, components });
-      if (renderer) {
-        newColDef.cellRenderer = renderer;
+      const Renderer = getCellRenderer(col.cell.type);
+      if (Renderer) {
+        const cell = col.cell;
+        newColDef.cellRenderer = stableRenderer(entry, 'cell', (params) =>
+          Renderer({ ...params, cellConfig: cell, methods, components })
+        );
       }
     } else if (type.isFunction(col.cellRenderer)) {
-      newColDef.cellRenderer = (params) => {
-        return renderHtml({
-          html: col.cellRenderer(params),
-          methods,
-        });
-      };
+      const cellRenderer = col.cellRenderer;
+      newColDef.cellRenderer = stableRenderer(entry, 'cell', (params) =>
+        renderHtml({ html: cellRenderer(params), methods })
+      );
     }
     const merged = {
       ...col,
@@ -101,12 +148,22 @@ function recProcessColDefs(columnDefs, methods, components) {
     delete merged.cell;
     delete merged.ellipsis;
     const aligned = applyAlignment(merged, col.cell);
-    return applyEllipsis(aligned, col.ellipsis);
+    return applyEllipsis(aligned, col.ellipsis, () =>
+      stableRenderer(entry, 'ellipsis', createEllipsisCell(col.ellipsis))
+    );
   });
 }
 
-function processColDefs(columnDefs = [], methods, components) {
-  return recProcessColDefs(columnDefs, methods, components);
+function processColDefs(columnDefs = [], methods, components, cache = new Map()) {
+  const seen = new Set();
+  const processed = recProcessColDefs(columnDefs, methods, components, cache, seen, '');
+  // Drop columns that are no longer defined, so a grid whose columns come and go does
+  // not accumulate adapters. A column that returns gets a fresh one, which is correct
+  // — its cells were unmounted with it.
+  for (const key of cache.keys()) {
+    if (!seen.has(key)) cache.delete(key);
+  }
+  return processed;
 }
 
 export default processColDefs;

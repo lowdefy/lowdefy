@@ -247,6 +247,11 @@ test.describe('AutoComplete Block', () => {
     const input = getInput(page, 'ac_interaction');
     await input.click();
 
+    // Opening the dropdown activates the first option for a moment and then clears it, so wait for
+    // no option to be active (activedescendant index -1) before navigating. A key pressed inside
+    // that window starts from the first option and lands on the second one instead.
+    await expect(input).toHaveAttribute('aria-activedescendant', /_-1$/);
+
     // Press down arrow to highlight first option
     await page.keyboard.press('ArrowDown');
 
@@ -270,6 +275,10 @@ test.describe('AutoComplete Block', () => {
   test('backfill shows highlighted option in input', async ({ page }) => {
     const input = getInput(page, 'ac_backfill');
     await input.click();
+
+    // Wait for the opening dropdown to clear its briefly-active first option, so that arrowing down
+    // highlights the first option rather than the second.
+    await expect(input).toHaveAttribute('aria-activedescendant', /_-1$/);
 
     // Press down arrow to highlight first option
     await page.keyboard.press('ArrowDown');

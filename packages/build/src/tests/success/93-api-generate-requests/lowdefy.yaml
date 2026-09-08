@@ -1,0 +1,55 @@
+# 93: API endpoints with one-shot LLM request steps (GenerateText / GenerateObject)
+lowdefy: local
+name: API Generate Requests Test
+
+connections:
+  - id: claude
+    type: Anthropic
+    properties:
+      apiKey:
+        _secret: ANTHROPIC_API_KEY
+
+api:
+  - id: summarize-text
+    type: Api
+    routine:
+      - id: summarize
+        type: GenerateText
+        connectionId: claude
+        properties:
+          model: claude-haiku-4-5
+          system: You are a concise summarizer.
+          prompt:
+            _payload: text
+      - ':return':
+          summary:
+            _step: summarize.text
+
+  - id: classify-ticket
+    type: Api
+    routine:
+      - id: classify
+        type: GenerateObject
+        connectionId: claude
+        properties:
+          model: claude-haiku-4-5
+          prompt:
+            _payload: ticket_text
+          schema:
+            type: object
+            properties:
+              category:
+                type: string
+              urgent:
+                type: boolean
+      - ':return':
+          _step: classify.object
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Generate Requests Test

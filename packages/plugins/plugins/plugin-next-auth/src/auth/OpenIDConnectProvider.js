@@ -15,13 +15,15 @@
 */
 
 function OpenIDConnectProvider(properties) {
+  // Auth.js v5 models OpenID Connect as an explicit 'oidc' provider type —
+  // discovery via issuer/wellKnown and ID token handling are built in,
+  // so the v4 `idToken: true` flag is no longer needed.
   return {
     id: properties.id ?? 'OpenIDConnectProvider',
     name: properties.name ?? 'OpenIDConnectProvider',
-    type: 'oauth',
+    type: 'oidc',
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['pkce', 'state'],
-    idToken: true,
     ...properties,
   };
 }

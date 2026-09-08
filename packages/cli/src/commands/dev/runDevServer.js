@@ -17,7 +17,24 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
+import resolveMockUser from './resolveMockUser.js';
+
 async function runDevServer({ context, directory }) {
+  const env = {
+    ...process.env,
+    LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
+    LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+    LOWDEFY_LOG_LEVEL: context.options.logLevel,
+    LOWDEFY_SERVER_DEV_OPEN_BROWSER: !!context.options.open,
+    LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
+    LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
+    PORT: context.options.port,
+  };
+  // Set only when requested — an undefined value would clobber the LOWDEFY_DEV_USER
+  // inherited from process.env above.
+  if (context.options.mockUser) {
+    env.LOWDEFY_DEV_USER = resolveMockUser(context.options.mockUser);
+  }
   await spawnProcess({
     args: ['run', 'start'],
     command: context.pnpmCmd,
@@ -26,17 +43,7 @@ async function runDevServer({ context, directory }) {
       cwd: directory,
       // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
       shell: process.platform === 'win32',
-      env: {
-        ...process.env,
-        LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        LOWDEFY_LOG_LEVEL: context.options.logLevel,
-        LOWDEFY_SERVER_DEV_OPEN_BROWSER: !!context.options.open,
-        LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
-        LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
-        PORT: context.options.port,
-        NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
-      },
+      env,
     },
     silent: false,
   });

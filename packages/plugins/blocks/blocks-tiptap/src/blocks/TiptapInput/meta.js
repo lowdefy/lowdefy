@@ -35,7 +35,7 @@ export default {
         type: 'array',
         items: { type: 'string' },
         description:
-          'Mime-types accepted by the drag/drop and paste file handler. Defaults to common image types (jpeg, png, gif, webp). Only used when s3PostPolicyRequestId is set.',
+          'Mime-types accepted by the drag/drop and paste file handler. Defaults to common image types (jpeg, png, gif, webp). Only used when uploadPolicyRequestId is set.',
       },
       autoSize: {
         oneOf: [
@@ -165,10 +165,19 @@ export default {
         description:
           'Fix the editor height to exactly this many rows. Takes precedence over autoSize.',
       },
-      s3PostPolicyRequestId: {
+      downloadPolicyRequestId: {
         type: 'string',
         description:
-          'Id of a request that returns an S3 presigned POST policy. When set, images dragged or pasted into the editor are uploaded via that policy and inserted as <img> nodes. Leave unset to disable image uploads.',
+          'Id of a download request (e.g. AwsS3PresignedGetObject) used to resolve the inserted image URL after upload. Inline images persist in saved content, so the request should set public: true (and the upload request the provider public-read acl) to return a stable, non-expiring URL. When unset, a legacy unsigned object URL is constructed from the upload response (S3-shaped, deprecated).',
+      },
+      s3PostPolicyRequestId: {
+        type: 'string',
+        description: 'Deprecated — use uploadPolicyRequestId instead.',
+      },
+      uploadPolicyRequestId: {
+        type: 'string',
+        description:
+          'Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas). When set, images dragged or pasted into the editor are uploaded via that request and inserted as <img> nodes. Leave unset to disable image uploads.',
       },
       size: {
         type: 'string',

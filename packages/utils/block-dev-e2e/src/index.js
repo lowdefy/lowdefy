@@ -18,7 +18,7 @@
 export { default as createPlaywrightConfig } from './createPlaywrightConfig.js';
 
 // Re-export shared helpers from e2e-utils
-export { getBlock } from '@lowdefy/e2e-utils';
+export { getBlock, getShortcutModifier } from '@lowdefy/e2e-utils';
 
 // Keep navigateToTestPage as it's specific to monorepo test structure
 export { default as navigateToTestPage } from './navigateToTestPage.js';

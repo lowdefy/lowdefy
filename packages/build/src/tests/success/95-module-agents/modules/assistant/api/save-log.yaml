@@ -1,0 +1,5 @@
+id: save-log
+type: InternalApi
+routine:
+  - ':return':
+      ok: true

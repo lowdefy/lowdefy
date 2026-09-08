@@ -24,6 +24,9 @@ import { RESERVED_PLATFORM_TOOL_NAMES } from '@lowdefy/ai-utils';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
+// Provider tool-name rule (Anthropic and OpenAI both).
+const TOOL_NAME_REGEX = /^[a-zA-Z0-9_-]{1,64}$/;
+
 function detectCycles(agents) {
   const graph = {};
   for (const agent of agents) {
@@ -123,18 +126,44 @@ function buildAgents({ components, context }) {
       return tool;
     });
 
-    // Validate tools reference existing API endpoints with required tool metadata
+    // Assign LLM-safe tool names. Providers require ^[a-zA-Z0-9_-]{1,64}$ —
+    // module-scoped endpoint ids contain '/', so the default name replaces
+    // '/' with '__'; config may override with an explicit "name".
+    const toolNames = new Set();
     agent.tools.forEach((toolConfig) => {
-      if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.endpointId)) {
+      if (type.isNone(toolConfig.name)) {
+        toolConfig.name = toolConfig.endpointId.replaceAll('/', '__');
+      }
+      if (!TOOL_NAME_REGEX.test(toolConfig.name)) {
         throw new ConfigError(
-          `Agent "${agent.id}" tool "${
-            toolConfig.endpointId
-          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
-            ', '
-          )}.`,
+          `Agent "${agent.id}" tool name "${toolConfig.name}" is invalid. Tool names must match ^[a-zA-Z0-9_-]{1,64}$ — set "name" on the tool to override the default derived from the endpoint id.`,
           { configKey }
         );
       }
+      // TOOL_NAME_REGEX admits every reserved name - letters and underscores are
+      // in its allowed set - and tool names key the plain-object tools map.
+      if (isReserved(toolConfig.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" tool name "${toolConfig.name}" is a reserved name and cannot be used as a tool name.`,
+          { configKey }
+        );
+      }
+      if (RESERVED_PLATFORM_TOOL_NAMES.includes(toolConfig.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" tool "${toolConfig.name}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          { configKey }
+        );
+      }
+      if (toolNames.has(toolConfig.name)) {
+        throw new ConfigError(`Agent "${agent.id}" has duplicate tool name "${toolConfig.name}".`, {
+          configKey,
+        });
+      }
+      toolNames.add(toolConfig.name);
+    });
+
+    // Validate tools reference existing API endpoints with required tool metadata
+    agent.tools.forEach((toolConfig) => {
       const endpoint = (components.api ?? []).find(
         (e) => e.id === toolConfig.endpointId || e.endpointId === toolConfig.endpointId
       );
@@ -227,14 +256,48 @@ function buildAgents({ components, context }) {
       return ref;
     });
 
+    // Sub-agents surface to the model as tools too — same naming rule.
+    agent.agents.forEach((ref) => {
+      if (type.isNone(ref.name)) {
+        ref.name = ref.agentId.replaceAll('/', '__');
+      }
+      if (!TOOL_NAME_REGEX.test(ref.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" sub-agent tool name "${ref.name}" is invalid. Tool names must match ^[a-zA-Z0-9_-]{1,64}$ — set "name" on the sub-agent reference to override the default derived from the agent id.`,
+          { configKey }
+        );
+      }
+      // Runs on the derived name, so "a/__proto__" -> "a____proto__" is accepted
+      // while an explicit reserved "name" is not.
+      if (isReserved(ref.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" sub-agent tool name "${ref.name}" is a reserved name and cannot be used as a tool name.`,
+          { configKey }
+        );
+      }
+      if (RESERVED_PLATFORM_TOOL_NAMES.includes(ref.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" sub-agent "${ref.agentId}" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(', ')}.`,
+          { configKey }
+        );
+      }
+      if (toolNames.has(ref.name)) {
+        throw new ConfigError(
+          `Agent "${agent.id}" sub-agent "${ref.agentId}" conflicts with an endpoint tool of the same name.`,
+          { configKey }
+        );
+      }
+      toolNames.add(ref.name);
+    });
+
     // Validate fileSystem basePath if present
     if (agent.properties?.fileSystem) {
       const basePath = agent.properties.fileSystem.basePath;
       if (!type.isString(basePath)) {
-        throw new ConfigError(`Agent "${agent.id}" fileSystem.basePath is not a string.`, {
-          received: basePath,
-          configKey,
-        });
+        throw new ConfigError(
+          `Agent "${agent.id}" fileSystem.basePath is not a string.`,
+          { received: basePath, configKey }
+        );
       }
       const resolved = path.resolve(context.directories.config, basePath);
       if (!fs.existsSync(resolved)) {
@@ -265,29 +328,6 @@ function buildAgents({ components, context }) {
       if (!context.agentIds.has(subAgentRef.agentId)) {
         throw new ConfigError(
           `Agent "${agent.agentId}" references sub-agent "${subAgentRef.agentId}" which does not exist.`,
-          { configKey }
-        );
-      }
-
-      // Reserved platform tool name guard for sub-agents
-      if (RESERVED_PLATFORM_TOOL_NAMES.includes(subAgentRef.agentId)) {
-        throw new ConfigError(
-          `Agent "${agent.agentId}" sub-agent "${
-            subAgentRef.agentId
-          }" uses a reserved platform tool name. Reserved: ${RESERVED_PLATFORM_TOOL_NAMES.join(
-            ', '
-          )}.`,
-          { configKey }
-        );
-      }
-
-      // Check for name collision with endpoint tools
-      const hasToolCollision = agent.tools.some(
-        (toolConfig) => toolConfig.endpointId === subAgentRef.agentId
-      );
-      if (hasToolCollision) {
-        throw new ConfigError(
-          `Agent "${agent.agentId}" sub-agent "${subAgentRef.agentId}" conflicts with an endpoint tool of the same name.`,
           { configKey }
         );
       }

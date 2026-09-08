@@ -1,0 +1,336 @@
+# Server Hooks
+
+Hooks let you run [API endpoints](/lowdefy-api) at specific points during the agent's execution. Use them for logging, saving conversations, generating titles, or any side effect that should happen server-side.
+
+## Defining Hooks
+
+Hooks are defined in the agent's `hooks` object. Each hook is an array of endpoint `id` strings:
+
+```yaml
+agents:
+  - id: assistant
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+    hooks:
+      onFinish:
+        - save-conversation
+        - generate-title
+```
+
+## Hook Types
+
+- `hooks: object`:
+  - `onStart: string[]`: Before the first model call.
+  - `onStepStart: string[]`: Before each step in the tool loop.
+  - `onToolCallStart: string[]`: Before a tool is executed.
+  - `onToolCallFinish: string[]`: After a tool finishes.
+  - `onStepFinish: string[]`: After each step completes.
+  - `onFinish: string[]`: After the agent completes. __Awaited__ — the stream stays open. Can return data parts.
+
+| Hook | When it fires |
+| --- | --- |
+| `onStart` | Once, before the first model call. |
+| `onStepStart` | Before each step in the tool loop. |
+| `onToolCallStart` | Before each tool is executed. |
+| `onToolCallFinish` | After each tool finishes. |
+| `onStepFinish` | After each step completes. |
+| `onFinish` | Once, after the agent completes its response. |
+
+## The onFinish Hook
+
+`onFinish` is special in two ways:
+
+1. **It is awaited** — the response stream stays open until all `onFinish` endpoints complete. This guarantees the conversation is saved before the client considers the response finished.
+2. **It can return data parts** — endpoints can return `dataParts` that are sent to the [`AgentChat`](/AgentChat) block as `onDataPart` events. This is how you send generated titles and other metadata back to the browser.
+
+### onFinish Payload
+
+The hook endpoint receives the full turn in `_payload`:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `messages` | array | The full conversation as `UIMessage[]`, **including the agent's latest assistant reply** (with any tool parts). Upsert this by `conversationId` to persist the whole thread. |
+| `steps` | array | One entry per agent step. Each step has `stepNumber`, `text`, `toolCalls`, `toolResults`, and `finishReason`. |
+| `toolResults` | array | Flattened tool results across all steps — convenience for hooks that only care about what tools returned. |
+| `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
+| `isAborted` | boolean | `true` if the client cancelled the request. |
+| `usage` | object | Token usage for the turn: `inputTokens`, `outputTokens`, `totalTokens`, `reasoningTokens`, `cacheReadTokens`, `cacheWriteTokens`. |
+| `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `sharedState` | | Context values mirrored from the request, **at the top level** of the payload. |
+
+Read these fields at the **top level** of `_payload` (e.g. `_payload: conversationId`, `_payload: usage`) — they are not nested under an `agentContext` key.
+
+Use `steps` or `toolResults` to drive agent → page sync — for example, returning a `data-...` part that a form block consumes via `onDataPart`.
+
+## Saving Conversations
+
+The most common use of `onFinish` is persisting the conversation to a database. The hook endpoint receives the conversation data in its payload:
+
+```yaml
+agents:
+  - id: assistant
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+    hooks:
+      onFinish:
+        - save-conversation
+
+api:
+  - id: save-conversation
+    type: Api
+    description: Persist the conversation to MongoDB.
+    routine:
+      - id: save
+        type: MongoDBUpdateOne
+        connectionId: app_db
+        properties:
+          collection: conversations
+          filter:
+            _id:
+              _payload: conversationId
+          update:
+            $set:
+              messages:
+                _payload: messages
+              userId:
+                _payload: userId
+              updatedAt:
+                _date: now
+            $setOnInsert:
+              createdAt:
+                _date: now
+          options:
+            upsert: true
+```
+
+## Generating Titles
+
+> **Built-in option:** set the agent's [`generateTitle`](/agent-properties) property to `true` and Lowdefy generates a short title from the first user message automatically, emitting the `data-chat-title` part for you. The manual approach below is only needed when you want custom title logic.
+
+Use a `data-chat-title` data part to send a generated title back to the client. The [`AgentChat`](/AgentChat) block fires an `onTitleGenerated` event when it receives this data part.
+
+```yaml
+agents:
+  - id: assistant
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+    hooks:
+      onFinish:
+        - save-conversation
+        - generate-title
+
+api:
+  - id: generate-title
+    type: Api
+    description: Generate a title and send it to the client.
+    routine:
+      # Your title generation logic here — could be another
+      # model call, a simple extraction, or a database lookup.
+      - :return:
+          dataParts:
+            - type: data-chat-title
+              data:
+                title:
+                  _payload: generatedTitle
+```
+
+On the client side, handle it with the `onTitleGenerated` event:
+
+```yaml
+- id: chat
+  type: AgentChat
+  properties:
+    agentId: assistant
+  events:
+    onTitleGenerated:
+      - id: update_sidebar
+        type: SetState
+        params:
+          conversationTitle:
+            _event: title
+```
+
+## Custom Data Parts
+
+Beyond titles, you can return any custom data from `onFinish` hooks. Each data part has a `type` and `data` field. The [`AgentChat`](/AgentChat) block fires `onDataPart` for every data part received:
+
+###### Return dynamic follow-up suggestions:
+```yaml
+api:
+  - id: generate-suggestions
+    type: Api
+    description: Generate follow-up suggestions based on the conversation.
+    routine:
+      - :return:
+          dataParts:
+            - type: data-suggestions
+              data:
+                suggestions:
+                  - label: Tell me more about this
+                  - label: What are the alternatives?
+                  - label: How much does it cost?
+```
+
+###### Handle custom data parts on the client:
+```yaml
+events:
+  onDataPart:
+    - id: handle_analytics
+      type: Request
+      skip:
+        _ne:
+          - _event: type
+          - data-analytics
+      params:
+        - track_conversation
+```
+
+## Full Example
+
+A complete agent setup with conversation persistence, title generation, and the chat UI:
+
+```yaml
+connections:
+  - id: anthropic
+    type: Anthropic
+    properties:
+      apiKey:
+        _secret: ANTHROPIC_API_KEY
+  - id: app_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: products
+
+agents:
+  - id: support_agent
+    type: ClaudeAgent
+    connectionId: anthropic
+    properties:
+      model: claude-sonnet-4-20250514
+      instructions: |
+        You are a support agent for an online store. Help customers
+        find products, check order status, and answer questions.
+        Always be friendly and concise.
+      maxSteps: 5
+    tools:
+      - search-products
+      - endpointId: create-ticket
+        confirm: true
+    hooks:
+      onFinish:
+        - save-conversation
+
+api:
+  - id: search-products
+    type: Api
+    description: Search for products by name or category.
+    payloadSchema:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Search term for product name or category.
+      required:
+        - query
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: app_db
+        properties:
+          query:
+            name:
+              $regex:
+                _payload: query
+              $options: i
+          options:
+            limit: 5
+      - :return:
+          _step: find
+
+  - id: create-ticket
+    type: Api
+    description: Create a support ticket for issues needing human follow-up.
+    payloadSchema:
+      type: object
+      properties:
+        subject:
+          type: string
+          description: Short summary of the issue.
+        description:
+          type: string
+          description: Detailed description.
+      required:
+        - subject
+        - description
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: app_db
+        properties:
+          doc:
+            subject:
+              _payload: subject
+            description:
+              _payload: description
+            status: open
+            createdAt:
+              _date: now
+      - :return:
+          ticketId:
+            _step: insert.insertedId
+
+  - id: save-conversation
+    type: Api
+    description: Save the conversation after each response.
+    routine:
+      - id: save
+        type: MongoDBUpdateOne
+        connectionId: app_db
+        properties:
+          collection: conversations
+          filter:
+            _id:
+              _payload: conversationId
+          update:
+            $set:
+              messages:
+                _payload: messages
+              updatedAt:
+                _date: now
+            $setOnInsert:
+              createdAt:
+                _date: now
+          options:
+            upsert: true
+
+pages:
+  - id: support
+    type: PageHeaderMenu
+    properties:
+      title: Support
+    blocks:
+      - id: chat
+        type: AgentChat
+        properties:
+          agentId: support_agent
+          welcome:
+            title: How can we help?
+            description: Ask about products, orders, or returns.
+            prompts:
+              - label: Find a product
+                description: Search our catalog
+              - label: I have an issue
+                description: Get help with a problem
+          messageDisplay:
+            toolResultDisplay: summary
+            actions:
+              copy: true
+              feedback: true
+```

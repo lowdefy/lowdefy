@@ -72,6 +72,8 @@ export { default as Steps } from './blocks/Steps/e2e.js';
 export { default as Switch } from './blocks/Switch/e2e.js';
 export { default as Tabs } from './blocks/Tabs/e2e.js';
 export { default as Tag } from './blocks/Tag/e2e.js';
+export { default as TagMultipleSelector } from './blocks/TagMultipleSelector/e2e.js';
+export { default as TagSelector } from './blocks/TagSelector/e2e.js';
 export { default as TextArea } from './blocks/TextArea/e2e.js';
 export { default as TextInput } from './blocks/TextInput/e2e.js';
 export { default as TimelineList } from './blocks/TimelineList/e2e.js';

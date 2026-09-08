@@ -14,195 +14,65 @@
   limitations under the License.
 */
 
-// This syntax does not work because next-auth is not an es module.
-// export { default as Auth0Provider } from 'next-auth/providers/auth0';
-
-import forty_two_school from 'next-auth/providers/42-school';
-import apple from 'next-auth/providers/apple';
-import atlassian from 'next-auth/providers/atlassian';
-import auth0 from 'next-auth/providers/auth0';
-import authentik from 'next-auth/providers/authentik';
-import azure_ad_b2c from 'next-auth/providers/azure-ad-b2c';
-import azure_ad from 'next-auth/providers/azure-ad';
-import battlenet from 'next-auth/providers/battlenet';
-import box from 'next-auth/providers/box';
-import boxyhq_saml from 'next-auth/providers/boxyhq-saml';
-import bungie from 'next-auth/providers/bungie';
-import cognito from 'next-auth/providers/cognito';
-import coinbase from 'next-auth/providers/coinbase';
-import discord from 'next-auth/providers/discord';
-import dropbox from 'next-auth/providers/dropbox';
-import eveonline from 'next-auth/providers/eveonline';
-import facebook from 'next-auth/providers/facebook';
-import faceit from 'next-auth/providers/faceit';
-import foursquare from 'next-auth/providers/foursquare';
-import freshbooks from 'next-auth/providers/freshbooks';
-import fusionauth from 'next-auth/providers/fusionauth';
-import github from 'next-auth/providers/github';
-import gitlab from 'next-auth/providers/gitlab';
-import google from 'next-auth/providers/google';
-import hubspot from 'next-auth/providers/hubspot';
-import instagram from 'next-auth/providers/instagram';
-import kakao from 'next-auth/providers/kakao';
-import keycloak from 'next-auth/providers/keycloak';
-import line from 'next-auth/providers/line';
-import linkedin from 'next-auth/providers/linkedin';
-import mailchimp from 'next-auth/providers/mailchimp';
-import mailru from 'next-auth/providers/mailru';
-import medium from 'next-auth/providers/medium';
-import naver from 'next-auth/providers/naver';
-import netlify from 'next-auth/providers/netlify';
-import okta from 'next-auth/providers/okta';
-import onelogin from 'next-auth/providers/onelogin';
-import osso from 'next-auth/providers/osso';
-import osu from 'next-auth/providers/osu';
-import passage from 'next-auth/providers/passage';
-import patreon from 'next-auth/providers/patreon';
-import pinterest from 'next-auth/providers/pinterest';
-import pipedrive from 'next-auth/providers/pipedrive';
-import reddit from 'next-auth/providers/reddit';
-import salesforce from 'next-auth/providers/salesforce';
-import slack from 'next-auth/providers/slack';
-import spotify from 'next-auth/providers/spotify';
-import strava from 'next-auth/providers/strava';
-import todoist from 'next-auth/providers/todoist';
-import trakt from 'next-auth/providers/trakt';
-import twitch from 'next-auth/providers/twitch';
-import twitter from 'next-auth/providers/twitter';
-import vk from 'next-auth/providers/vk';
-import united_effects from 'next-auth/providers/united-effects';
-import wikimedia from 'next-auth/providers/wikimedia';
-import wordpress from 'next-auth/providers/wordpress';
-import workos from 'next-auth/providers/workos';
-import yandex from 'next-auth/providers/yandex';
-import zitadel from 'next-auth/providers/zitadel';
-import zoho from 'next-auth/providers/zoho';
-import zoom from 'next-auth/providers/zoom';
-import OpenIDConnectProvider from './OpenIDConnectProvider.js';
-
-const FortyTwoProvider = forty_two_school.default;
-const AppleProvider = apple.default;
-const AtlassianProvider = atlassian.default;
-const Auth0Provider = auth0.default;
-const AuthentikProvider = authentik.default;
-const AzureADB2CProvider = azure_ad_b2c.default;
-const AzureADProvider = azure_ad.default;
-const BattleNetProvider = battlenet.default;
-const BoxProvider = box.default;
-const BoxyHQSAMLProvider = boxyhq_saml.default;
-const BungieProvider = bungie.default;
-const CognitoProvider = cognito.default;
-const CoinbaseProvider = coinbase.default;
-const DiscordProvider = discord.default;
-const DropboxProvider = dropbox.default;
-const EVEOnlineProvider = eveonline.default;
-const FacebookProvider = facebook.default;
-const FaceItProvider = faceit.default;
-const FourSquareProvider = foursquare.default;
-const FreshbooksProvider = freshbooks.default;
-const FusionAuthProvider = fusionauth.default;
-const GitHubProvider = github.default;
-const GitlabProvider = gitlab.default;
-const GoogleProvider = google.default;
-const HubspotProvider = hubspot.default;
-const InstagramProvider = instagram.default;
-const KakaoProvider = kakao.default;
-const KeycloakProvider = keycloak.default;
-const LineProvider = line.default;
-const LinkedInProvider = linkedin.default;
-const MailchimpProvider = mailchimp.default;
-const MailRuProvider = mailru.default;
-const MediumProvider = medium.default;
-const NaverProvider = naver.default;
-const NetlifyProvider = netlify.default;
-const OktaProvider = okta.default;
-const OneLoginProvider = onelogin.default;
-const OssoProvider = osso.default;
-const OsuProvider = osu.default;
-const PassageProvider = passage.default;
-const PatreonProvider = patreon.default;
-const PinterestProvider = pinterest.default;
-const PipedriveProvider = pipedrive.default;
-const RedditProvider = reddit.default;
-const SalesforceProvider = salesforce.default;
-const SlackProvider = slack.default;
-const SpotifyProvider = spotify.default;
-const StravaProvider = strava.default;
-const TodoistProvider = todoist.default;
-const TraktProvider = trakt.default;
-const TwitchProvider = twitch.default;
-const TwitterProvider = twitter.default;
-const UnitedEffects = united_effects.default;
-const VkProvider = vk.default;
-const WikimediaProvider = wikimedia.default;
-const WordpressProvider = wordpress.default;
-const WorkOSProvider = workos.default;
-const YandexProvider = yandex.default;
-const ZitadelProvider = zitadel.default;
-const ZohoProvider = zoho.default;
-const ZoomProvider = zoom.default;
-
-export {
-  FortyTwoProvider,
-  AppleProvider,
-  AtlassianProvider,
-  Auth0Provider,
-  AuthentikProvider,
-  AzureADB2CProvider,
-  AzureADProvider,
-  BattleNetProvider,
-  BoxProvider,
-  BoxyHQSAMLProvider,
-  BungieProvider,
-  CognitoProvider,
-  CoinbaseProvider,
-  DiscordProvider,
-  DropboxProvider,
-  EVEOnlineProvider,
-  FacebookProvider,
-  FaceItProvider,
-  FourSquareProvider,
-  FreshbooksProvider,
-  FusionAuthProvider,
-  GitHubProvider,
-  GitlabProvider,
-  GoogleProvider,
-  HubspotProvider,
-  InstagramProvider,
-  KakaoProvider,
-  KeycloakProvider,
-  LineProvider,
-  LinkedInProvider,
-  MailchimpProvider,
-  MailRuProvider,
-  MediumProvider,
-  NaverProvider,
-  NetlifyProvider,
-  OktaProvider,
-  OneLoginProvider,
-  OpenIDConnectProvider,
-  OssoProvider,
-  OsuProvider,
-  PassageProvider,
-  PatreonProvider,
-  PinterestProvider,
-  PipedriveProvider,
-  RedditProvider,
-  SalesforceProvider,
-  SlackProvider,
-  SpotifyProvider,
-  StravaProvider,
-  TodoistProvider,
-  TraktProvider,
-  TwitchProvider,
-  TwitterProvider,
-  UnitedEffects,
-  VkProvider,
-  WikimediaProvider,
-  WordpressProvider,
-  WorkOSProvider,
-  YandexProvider,
-  ZitadelProvider,
-  ZohoProvider,
-  ZoomProvider,
-};
+export { default as FortyTwoProvider } from '@auth/core/providers/42-school';
+export { default as AppleProvider } from '@auth/core/providers/apple';
+export { default as AtlassianProvider } from '@auth/core/providers/atlassian';
+export { default as Auth0Provider } from '@auth/core/providers/auth0';
+export { default as AuthentikProvider } from '@auth/core/providers/authentik';
+export { default as AzureADB2CProvider } from '@auth/core/providers/azure-ad-b2c';
+export { default as AzureADProvider } from '@auth/core/providers/azure-ad';
+export { default as BattleNetProvider } from '@auth/core/providers/battlenet';
+export { default as BoxProvider } from '@auth/core/providers/box';
+export { default as BoxyHQSAMLProvider } from '@auth/core/providers/boxyhq-saml';
+export { default as BungieProvider } from '@auth/core/providers/bungie';
+export { default as CognitoProvider } from '@auth/core/providers/cognito';
+export { default as CoinbaseProvider } from '@auth/core/providers/coinbase';
+export { default as DiscordProvider } from '@auth/core/providers/discord';
+export { default as DropboxProvider } from '@auth/core/providers/dropbox';
+export { default as EVEOnlineProvider } from '@auth/core/providers/eveonline';
+export { default as FacebookProvider } from '@auth/core/providers/facebook';
+export { default as FaceItProvider } from '@auth/core/providers/faceit';
+export { default as FourSquareProvider } from '@auth/core/providers/foursquare';
+export { default as FreshbooksProvider } from '@auth/core/providers/freshbooks';
+export { default as FusionAuthProvider } from '@auth/core/providers/fusionauth';
+export { default as GitHubProvider } from '@auth/core/providers/github';
+export { default as GitlabProvider } from '@auth/core/providers/gitlab';
+export { default as GoogleProvider } from '@auth/core/providers/google';
+export { default as HubspotProvider } from '@auth/core/providers/hubspot';
+export { default as InstagramProvider } from '@auth/core/providers/instagram';
+export { default as KakaoProvider } from '@auth/core/providers/kakao';
+export { default as KeycloakProvider } from '@auth/core/providers/keycloak';
+export { default as LineProvider } from '@auth/core/providers/line';
+export { default as LinkedInProvider } from '@auth/core/providers/linkedin';
+export { default as MailchimpProvider } from '@auth/core/providers/mailchimp';
+export { default as MailRuProvider } from '@auth/core/providers/mailru';
+export { default as MediumProvider } from '@auth/core/providers/medium';
+export { default as NaverProvider } from '@auth/core/providers/naver';
+export { default as NetlifyProvider } from '@auth/core/providers/netlify';
+export { default as OktaProvider } from '@auth/core/providers/okta';
+export { default as OneLoginProvider } from '@auth/core/providers/onelogin';
+export { default as OssoProvider } from '@auth/core/providers/osso';
+export { default as OsuProvider } from '@auth/core/providers/osu';
+export { default as PassageProvider } from '@auth/core/providers/passage';
+export { default as PatreonProvider } from '@auth/core/providers/patreon';
+export { default as PinterestProvider } from '@auth/core/providers/pinterest';
+export { default as PipedriveProvider } from '@auth/core/providers/pipedrive';
+export { default as RedditProvider } from '@auth/core/providers/reddit';
+export { default as SalesforceProvider } from '@auth/core/providers/salesforce';
+export { default as SlackProvider } from '@auth/core/providers/slack';
+export { default as SpotifyProvider } from '@auth/core/providers/spotify';
+export { default as StravaProvider } from '@auth/core/providers/strava';
+export { default as TodoistProvider } from '@auth/core/providers/todoist';
+export { default as TraktProvider } from '@auth/core/providers/trakt';
+export { default as TwitchProvider } from '@auth/core/providers/twitch';
+export { default as TwitterProvider } from '@auth/core/providers/twitter';
+export { default as UnitedEffects } from '@auth/core/providers/united-effects';
+export { default as VkProvider } from '@auth/core/providers/vk';
+export { default as WikimediaProvider } from '@auth/core/providers/wikimedia';
+export { default as WordpressProvider } from '@auth/core/providers/wordpress';
+export { default as WorkOSProvider } from '@auth/core/providers/workos';
+export { default as YandexProvider } from '@auth/core/providers/yandex';
+export { default as ZitadelProvider } from '@auth/core/providers/zitadel';
+export { default as ZohoProvider } from '@auth/core/providers/zoho';
+export { default as ZoomProvider } from '@auth/core/providers/zoom';
+export { default as OpenIDConnectProvider } from './OpenIDConnectProvider.js';

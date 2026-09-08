@@ -108,3 +108,8 @@ _ref:
                   - endpointId: create-ticket
                     confirm: true
             ```
+      - id: markdown_requests
+        type: MarkdownWithCode
+        properties:
+          content:
+            _ref: connections/AIGenerateRequests.md

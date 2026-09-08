@@ -19,9 +19,11 @@ import { jest } from '@jest/globals';
 import testContext from '../test-utils/testContext.js';
 import {
   resolveLocalManifest,
+  recordifyExportables,
   resolveFullManifest,
   validateRequiredVars,
 } from './registerModules.js';
+import { getRecord } from './buildRefs/deferredRegistry.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -231,6 +233,90 @@ pages:
   // Type validation happens after resolveFullManifest
   await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
     'must be type "number" but got "string"'
+  );
+});
+
+test('validateVarTypes throws when a typed var is given a static-foldable runtime operator', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  total:
+    type: number
+pages:
+  - id: test
+    type: Box
+    properties:
+      value:
+        _module.var: total
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  // Pass a static-foldable runtime operator ({ _sum: [1, 2] }) as the typed var value.
+  // Even though _sum with static args could be folded, typed vars must hold concrete values.
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: { total: { _sum: [1, 2] } } },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'var "total" is typed "number" but received a runtime operator "_sum"'
+  );
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    '"_build.sum"'
+  );
+});
+
+test('validateVarTypes throws when a typed var is given a dynamic runtime operator', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+vars:
+  label:
+    type: string
+pages:
+  - id: test
+    type: Box
+    properties:
+      value:
+        _module.var: label
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  // Pass a dynamic runtime operator ({ '_string.concat': [..., { _state: x }] }) as the typed var value.
+  // Dynamic operators cannot be statically folded, but the check applies regardless.
+  await resolveLocalManifest({
+    entry: {
+      id: 'my-mod',
+      source: 'file:../mod',
+      vars: { label: { '_string.concat': ['hello', { _state: 'name' }] } },
+    },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    'var "label" is typed "string" but received a runtime operator "_string.concat"'
+  );
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
+    '"_build.string.concat"'
   );
 });
 
@@ -675,10 +761,14 @@ pages: []
   // Schema structure is walked (type, properties resolved)
   expect(varDefs.components.type).toBe('object');
   expect(varDefs.components.properties.detail).toBeDefined();
-  // Default values are preserved — _ref NOT resolved during Phase 1a
+  // Default values are record-ified raw — the _ref is NOT resolved during
+  // Phase 1a; the record body keeps it for demand-time resolution.
   expect(varDefs.components.properties.detail.default).toEqual({
-    _ref: 'defaults/detail.yaml',
+    '~deferred': 'my-mod:vars.components.properties.detail.default',
   });
+  const record = getRecord(context, 'my-mod:vars.components.properties.detail.default');
+  expect(record.kind).toBe('varDefault');
+  expect(record.body).toEqual({ _ref: 'defaults/detail.yaml' });
 });
 
 test('resolveLocalManifest does not throw for required var with default', async () => {
@@ -788,4 +878,180 @@ pages:
   expect(context.modules['my-mod'].manifest.pages).toEqual([
     expect.objectContaining({ id: 'good-page', type: 'Box' }),
   ]);
+});
+
+test('resolveFullManifest filters null entries from notifications', async () => {
+  const context = createTestContext();
+  const files = [
+    {
+      path: '/modules/my-mod/module.lowdefy.yaml',
+      content: `
+notifications:
+  - id: invite-user
+    type: NotificationEmail
+    properties:
+      subject: Invite
+`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+
+  await resolveLocalManifest({
+    entry: { id: 'my-mod', source: 'file:../mod', vars: {} },
+    resolvedPaths: {
+      packageRoot: '/modules/my-mod',
+      moduleRoot: '/modules/my-mod',
+      isLocal: true,
+    },
+    context,
+  });
+
+  // Manually inject a null to simulate a failed ref resolution
+  context.modules['my-mod'].manifest.notifications.push(null);
+
+  await resolveFullManifest({ entryId: 'my-mod', context });
+
+  expect(context.modules['my-mod'].manifest.notifications).toEqual([
+    expect.objectContaining({ id: 'invite-user', type: 'NotificationEmail' }),
+  ]);
+});
+
+describe('operator-generated components sections', () => {
+  // Components are record-ified by the exportables pass (Phase C.5), which
+  // runs after the header parse — drive both, as buildModuleDefs does.
+  const resolveLocal = async (context, manifestContent) => {
+    const files = [
+      { path: '/modules/team-users/module.lowdefy.yaml', content: manifestContent },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await resolveLocalManifest({
+      entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/team-users',
+        moduleRoot: '/modules/team-users',
+        isLocal: true,
+      },
+      context,
+    });
+    await recordifyExportables({ entryId: 'team-users', context });
+  };
+
+  test('throws when the components value is an operator whose content uses _var', async () => {
+    const context = createTestContext();
+    await expect(
+      resolveLocal(
+        context,
+        `
+components:
+  _build.array.map:
+    on: [a, b]
+    map:
+      id: { _var: item }
+      component: { type: Box }
+`
+      )
+    ).rejects.toThrow(
+      'Module "team-users": _var inside an operator-generated components section ' +
+        'cannot resolve per consumer. Found "_build.array.map" at "components" with a _var'
+    );
+  });
+
+  test('throws when a components array element is an operator whose content uses _var', async () => {
+    const context = createTestContext();
+    await expect(
+      resolveLocal(
+        context,
+        `
+components:
+  - id: static-one
+    component: { type: Box }
+  - _build.if:
+      test: true
+      then:
+        id: dyn
+        component:
+          type: Box
+          properties: { content: { _var: text } }
+`
+      )
+    ).rejects.toThrow(
+      'Module "team-users": _var inside an operator-generated components section ' +
+        'cannot resolve per consumer. Found "_build.if" at "components.1" with a _var'
+    );
+  });
+
+  test('allows var-free operator-composed components sections (fixture 81 contract)', async () => {
+    const context = createTestContext();
+    await resolveLocal(
+      context,
+      `
+components:
+  _build.array.concat:
+    - - id: inline-one
+        component: { type: Box }
+    - - id: inline-two
+        component: { type: Title }
+`
+    );
+    expect(context.errors).toEqual([]);
+    const components = context.modules['team-users'].manifest.components;
+    expect(components.map((c) => c.id)).toEqual(['inline-one', 'inline-two']);
+  });
+
+  test('allows _var inside a preserved body at components.<i>.component', async () => {
+    const context = createTestContext();
+    await resolveLocal(
+      context,
+      `
+components:
+  - id: dynamic-body
+    component:
+      type: Box
+      blocks:
+        - _var: content
+`
+    );
+    // Body record-ified raw — the _var survives un-resolved for per-consumer resolution.
+    expect(context.modules['team-users'].manifest.components[0].component).toEqual({
+      '~deferred': 'team-users:components.0.component',
+    });
+    const record = getRecord(context, 'team-users:components.0.component');
+    expect(record.body.blocks[0]).toEqual({ _var: 'content' });
+  });
+
+  test('allows components section composed via _ref', async () => {
+    const context = createTestContext();
+    const files = [
+      {
+        path: '/modules/team-users/module.lowdefy.yaml',
+        content: `
+components:
+  _ref: components.yaml
+`,
+      },
+      {
+        path: '/modules/team-users/components.yaml',
+        content: `
+- id: from-file
+  component: { type: Box }
+`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    await resolveLocalManifest({
+      entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
+      resolvedPaths: {
+        packageRoot: '/modules/team-users',
+        moduleRoot: '/modules/team-users',
+        isLocal: true,
+      },
+      context,
+    });
+    await recordifyExportables({ entryId: 'team-users', context });
+    expect(context.modules['team-users'].manifest.components[0].id).toBe('from-file');
+    const record = getRecord(context, 'team-users:components.0.component');
+    expect(record.body).toEqual({ type: 'Box' });
+    // The record env names the ref'd file the body came from.
+    expect(record.env.file).toBe('/modules/team-users/components.yaml');
+  });
 });

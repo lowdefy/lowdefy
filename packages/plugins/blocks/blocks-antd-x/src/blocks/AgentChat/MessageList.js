@@ -24,6 +24,7 @@ import { hasVisibleContent } from './messageParts.js';
 import MessageBubble from './MessageBubble.js';
 import ThinkingIndicator from './ThinkingIndicator.js';
 import useThinkingMessage from './useThinkingMessage.js';
+import WelcomeScreen from './WelcomeScreen.js';
 
 function roleAvatar(roleConfig, fallbackIcon) {
   if (roleConfig?.avatar) {
@@ -57,6 +58,8 @@ const MessageList = React.forwardRef(function MessageList(
     messages,
     isStreaming,
     config,
+    welcome,
+    onWelcomePromptFill,
     addToolApprovalResponse,
     onFeedback,
     onLinkClick,
@@ -100,8 +103,7 @@ const MessageList = React.forwardRef(function MessageList(
     // Show loading dots while the agent is working on the last assistant bubble and
     // nothing visible has rendered yet. `hasVisibleContent` mirrors what MessageBubble
     // paints, so tool-only messages with showThoughtChain: false also keep dots.
-    const showLoading =
-      isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
+    const showLoading = isStreaming && isLastAssistant && !hasVisibleContent(msg, config);
 
     items.push({
       key: msg.id,
@@ -136,11 +138,27 @@ const MessageList = React.forwardRef(function MessageList(
     });
   }
 
+  // The welcome renders as a leading item so it scrolls up with the transcript
+  // and stays reachable by scrolling back, rather than being swapped out on the
+  // first send. With no messages yet it is simply the only item in the list.
+  if (welcome?.tracks) {
+    items.unshift({ key: '__welcome__', role: 'welcome' });
+  }
+
   return (
     <Bubble.List
       ref={ref}
       items={items}
       role={{
+        welcome: {
+          placement: 'start',
+          variant: 'borderless',
+          style: { maxWidth: '100%' },
+          styles: { content: { width: '100%' } },
+          contentRender: () => (
+            <WelcomeScreen config={welcome} onFill={onWelcomePromptFill} inFlow />
+          ),
+        },
         user: {
           placement: 'end',
           variant: config?.roles?.user?.variant ?? 'filled',

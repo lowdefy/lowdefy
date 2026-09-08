@@ -821,3 +821,67 @@ _ref:
                       status:
                         _state: status
             ```
+
+            ## Websockets
+
+            Websocket types:
+              - MongoDBChangeStream
+
+            ### MongoDBChangeStream
+
+            The `MongoDBChangeStream` [websocket](/websockets-introduction) opens a MongoDB [change stream](https://www.mongodb.com/docs/manual/changeStreams/) on the collection specified in the connection, and pushes every change event to subscribed pages in real time. The source starts when the first page subscribes and stops when the last one leaves — any number of subscribers share one change stream.
+
+            Properties are evaluated per subscription, so `_user` and `_payload` operators in the `pipeline` produce user-specific streams.
+
+            > Change streams require MongoDB to run as a replica set — they are not available on standalone deployments. MongoDB Atlas clusters support them out of the box.
+
+            #### Properties
+
+            - `pipeline: object[]`: An array of [aggregation pipeline stages](https://www.mongodb.com/docs/manual/changeStreams/#modify-change-stream-output) applied to the change stream, e.g. `$match` on `operationType` or `fullDocument` fields.
+            - `fullDocument: string`: The change stream [fullDocument](https://www.mongodb.com/docs/manual/reference/method/db.collection.watch/) option. Defaults to `updateLookup`, which includes the current document on update events.
+
+            #### Examples
+
+            ###### Refetch a table when the user's orders change:
+            ```yaml
+            websockets:
+              - id: order_updates
+                type: MongoDBChangeStream
+                connectionId: my_mongodb_collection_id
+                properties:
+                  pipeline:
+                    - $match:
+                        operationType:
+                          $in:
+                            - insert
+                            - update
+                        fullDocument.owner_id:
+                          _user: id
+
+            pages:
+              - id: orders
+                type: PageHeaderMenu
+                requests:
+                  - id: get_orders
+                    type: MongoDBFind
+                    connectionId: my_mongodb_collection_id
+                    properties:
+                      query:
+                        owner_id:
+                          _user: id
+                subscriptions:
+                  - websocketId: order_updates
+                    events:
+                      onMessage:
+                        - id: refetch
+                          type: Request
+                          params: get_orders
+                blocks:
+                  - id: orders_table
+                    type: AgGridAlpine
+                    properties:
+                      rowData:
+                        _request: get_orders
+            ```
+
+            The change event payload is available on `_event: messages` in `onMessage` and via the [`_websocket`](/websocket-subscriptions) operator — each message is the MongoDB change event, including `operationType`, `documentKey` and `fullDocument`.

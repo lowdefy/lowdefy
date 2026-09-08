@@ -1,0 +1,35 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: Download
+    pageTitle: Download
+    section: Display Blocks
+    filePath: blocks/display/Download.yaml
+    block_type: Download
+    github_path: packages/plugins/blocks/blocks-files/src/blocks/Download
+    schema: ../plugins/blocks/blocks-files/src/blocks/Download/meta.js
+    gallery: ../plugins/blocks/blocks-files/src/blocks/Download/gallery.yaml
+    description: >
+      Download files from any storage provider — AWS S3 (and S3-compatible services), Google Cloud Storage,
+      or Azure Blob Storage. Requires a download request (AwsS3PresignedGetObject, GcsSignedGetUrl, or
+      AzureBlobDownloadSas) referenced by the downloadPolicyRequestId property. Clicking a file resolves a
+      URL through the request on demand — set `public: true` on the request for stable, non-expiring URLs to
+      publicly readable objects. If files were uploaded with an Upload block, its fileList value can be
+      mapped directly to this block.
+    note: >
+      The Download block requires a storage connection and a download request.
+      The examples below show configuration structure but will not download files without a configured connection.

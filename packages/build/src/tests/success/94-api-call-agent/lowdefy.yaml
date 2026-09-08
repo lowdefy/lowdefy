@@ -1,0 +1,68 @@
+# 94: API endpoint routines running an agent to completion (CallAgent step)
+lowdefy: local
+name: API CallAgent Test
+
+connections:
+  - id: claude
+    type: Anthropic
+    properties:
+      apiKey:
+        _secret: ANTHROPIC_API_KEY
+
+agents:
+  - id: research_agent
+    type: ClaudeAgent
+    connectionId: claude
+    properties:
+      model: claude-haiku-4-5
+      instructions: You research signup data and summarize findings.
+      maxSteps: 5
+    tools:
+      - lookup-signups
+
+api:
+  - id: lookup-signups
+    type: InternalApi
+    description: Look up signup counts for a date range.
+    payloadSchema:
+      type: object
+      properties:
+        days:
+          type: number
+    routine:
+      - ':return':
+          signups: 42
+
+  - id: daily-research
+    type: Api
+    routine:
+      - id: research
+        type: CallAgent
+        properties:
+          agentId: research_agent
+          prompt:
+            _payload: instruction
+      - ':return':
+          summary:
+            _step: research.text
+          usage:
+            _step: research.usage
+
+  - id: dynamic-agent
+    type: Api
+    routine:
+      - id: run_agent
+        type: CallAgent
+        properties:
+          agentId:
+            _payload: agent_id
+          prompt: Run the standard analysis.
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: CallAgent Test

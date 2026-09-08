@@ -80,5 +80,6 @@ export default {
       'ZohoProvider',
       'ZoomProvider',
     ],
+    strategies: ['apiKey', 'jwt'],
   },
 };

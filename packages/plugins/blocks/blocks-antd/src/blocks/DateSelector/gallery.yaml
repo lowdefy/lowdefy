@@ -289,6 +289,77 @@
         label:
           disabled: true
 
+- title: Presets
+  blocks:
+    - id: ds_presets_relative
+      type: DateSelector
+      properties:
+        title: Relative Presets
+        label:
+          extra: Shortcuts are listed to the left of the calendar.
+        presets:
+          - label: Today
+            value:
+              _dayjs:
+                - now
+                - format: YYYY-MM-DD
+          - label: Yesterday
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, day]
+                - format: YYYY-MM-DD
+          - label: A week ago
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, week]
+                - format: YYYY-MM-DD
+          - label: A month ago
+            value:
+              _dayjs:
+                - now
+                - subtract: [1, month]
+                - format: YYYY-MM-DD
+    - id: ds_presets_boundaries
+      type: DateSelector
+      properties:
+        title: Period Boundaries
+        label:
+          disabled: true
+        presets:
+          - label: Start of month
+            value:
+              _dayjs:
+                - now
+                - startOf: month
+                - format: YYYY-MM-DD
+          - label: End of month
+            value:
+              _dayjs:
+                - now
+                - endOf: month
+                - format: YYYY-MM-DD
+          - label: Start of year
+            value:
+              _dayjs:
+                - now
+                - startOf: year
+                - format: YYYY-MM-DD
+    - id: ds_presets_fixed
+      type: DateSelector
+      properties:
+        title: Fixed Presets
+        label:
+          disabled: true
+        presets:
+          - label: New Year's Day
+            value: '2026-01-01'
+          - label: Midsummer
+            value: '2026-06-21'
+          - label: Christmas
+            value: '2026-12-25'
+
 - title: Label Options
   blocks:
     - id: label_default

@@ -29,7 +29,7 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                The `user` object contains data about the currently logged in user, and can be accessed using the [`_user`](/_user) operator. The data on the user object depends on the fields returned by the provider. By default, Next-Auth will add the `name`, `email` and `image` fields.
+                The `user` object contains data about the currently logged in user, and can be accessed using the [`_user`](/_user) operator. The data on the user object depends on the fields returned by the provider. By default, Auth.js will add the `name`, `email` and `image` fields.
 
                 Lowdefy will also map the `roles` and the standard OpenID Connect claim fields from the provider to the user object. The OpenID Connect claims are:
                 - `sub`: The user id (Subject).
@@ -53,7 +53,7 @@ _ref:
                 - `address`
                 - `updated_at`
 
-                To map additional fields to the user object the `auth.userFields` configuration option can be used. This should be an object, where the key is the key in the user object to which the field should be mapped, and the value is the key of the value in the data from the provider. Next-Auth provides three data objects called `account`, `profile` and `user`.
+                To map additional fields to the user object the `auth.userFields` configuration option can be used. This should be an object, where the key is the key in the user object to which the field should be mapped, and the value is the key of the value in the data from the provider. Auth.js provides three data objects called `account`, `profile` and `user`.
 
                 ## Examples
 

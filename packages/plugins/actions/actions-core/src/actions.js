@@ -23,6 +23,7 @@ export { default as GeolocationCurrentPosition } from './actions/GeolocationCurr
 export { default as Link } from './actions/Link/Link.js';
 export { default as Login } from './actions/Login/Login.js';
 export { default as Logout } from './actions/Logout/Logout.js';
+export { default as Publish } from './actions/Publish/Publish.js';
 export { default as Request } from './actions/Request/Request.js';
 export { default as Reset } from './actions/Reset/Reset.js';
 export { default as ResetValidation } from './actions/ResetValidation/ResetValidation.js';
@@ -32,7 +33,9 @@ export { default as SetFocus } from './actions/SetFocus/SetFocus.js';
 export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
 export { default as SetLocale } from './actions/SetLocale/SetLocale.js';
 export { default as SetState } from './actions/SetState/SetState.js';
+export { default as Subscribe } from './actions/Subscribe/Subscribe.js';
 export { default as Throw } from './actions/Throw/Throw.js';
+export { default as Unsubscribe } from './actions/Unsubscribe/Unsubscribe.js';
 export { default as UpdateSession } from './actions/UpdateSession/UpdateSession.js';
 export { default as Validate } from './actions/Validate/Validate.js';
 export { default as Wait } from './actions/Wait/Wait.js';

@@ -16,10 +16,16 @@
 
 import fs from 'fs';
 import path from 'path';
-import { serializer } from '@lowdefy/helpers';
-import { buildPageJit, createContext, makeId } from '@lowdefy/build/dev';
+import { serializer, type } from '@lowdefy/helpers';
+import {
+  buildPageJit,
+  createContext,
+  generateClientJsModule,
+  hydrateDeferredRecords,
+  iconPackages,
+  makeId,
+} from '@lowdefy/build/dev';
 
-import compileCss from './compileCss.js';
 import createLogger from './log/createLogger.js';
 import PageCache from './pageCache.mjs';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
@@ -36,10 +42,10 @@ let cachedRegistry = null;
 let cachedBuildContext = null;
 let lastInvalidationMtime = null;
 
-// Frozen snapshot of icon imports from the initial build (what's actually in the Next.js bundle).
+// Frozen snapshot of icon imports from the initial build (what's actually in the client bundle).
 // Module-level so it persists across context resets (skeleton rebuilds update iconImports.json
-// with newly discovered icons, but those aren't in the bundle until the next nextBuild).
-// Only resets when the server process restarts (which happens after every nextBuild).
+// with newly discovered icons, but those aren't in the bundle until a server restart).
+// Only resets when the server process restarts.
 let bundledIconImports = null;
 
 function readJsonFile(filePath) {
@@ -92,10 +98,10 @@ function getBuildContext(buildDirectory, configDirectory) {
   const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
+  const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
 
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
-  const customMessagesMap =
-    readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
+  const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
 
   cachedBuildContext = createContext({
     customMessagesMap,
@@ -109,13 +115,16 @@ function getBuildContext(buildDirectory, configDirectory) {
     stage: 'dev',
   });
 
-  // Restore refMap, keyMap, jsMap, and connectionIds from skeleton build
+  // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
   Object.assign(cachedBuildContext.keyMap, keyMap);
   cachedBuildContext.jsMap.client = jsMap.client ?? {};
   cachedBuildContext.jsMap.server = jsMap.server ?? {};
   for (const id of connectionIds) {
     cachedBuildContext.connectionIds.add(id);
+  }
+  for (const id of websocketIds) {
+    cachedBuildContext.websocketIds.add(id);
   }
 
   // Load installed packages snapshot from skeleton build for missing-package detection
@@ -129,15 +138,27 @@ function getBuildContext(buildDirectory, configDirectory) {
     Object.assign(cachedBuildContext.modules, modules);
   }
 
+  // Hydrate the deferred-record registry — module component bodies referenced
+  // by '~deferred' placeholders in modules.json live here. readJsonFile runs
+  // the marker-restoring reviver, so record-body ~r/~l markers survive.
+  const deferredRecords = readJsonFile(path.join(buildDirectory, 'deferredRecords.json'));
+  if (deferredRecords) {
+    hydrateDeferredRecords(cachedBuildContext, deferredRecords);
+  }
+
+  // Restore app metadata so JIT page builds resolve _app / _build.app against
+  // the same metadata the skeleton build computed.
+  cachedBuildContext.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no
   // components.api and every CallAPI action is flagged as a non-existent endpoint.
   cachedBuildContext.components = { api: readBuildApiArtifacts(buildDirectory) };
 
   // Use the frozen icon imports from the initial build for JIT detection.
-  // This represents what's actually in the Next.js bundle — not what shallowBuild
+  // This represents what's actually in the client bundle — not what shallowBuild
   // discovers on subsequent rebuilds (those icons aren't bundled yet).
-  // bundledIconImports is module-level and only resets on server restart (after nextBuild).
+  // bundledIconImports is module-level and only resets on server restart.
   if (!bundledIconImports) {
     bundledIconImports = readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? [];
   }
@@ -190,7 +211,18 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
       return result;
     }
     pageCache.markCompiled(pageId);
-    await compileCss(buildDirectory);
+    // Touch the candidates file so Vite's CSS pipeline re-runs Tailwind for
+    // classes the JIT build discovered — globals.css imports it. This import
+    // is the ONLY recompile trigger: the tailwind .html scan inputs are
+    // excluded from Vite's watcher (their .html change events would force
+    // full browser reloads). Only touched when the build actually changed
+    // tailwind content, so unchanged rebuilds cause no CSS recompile.
+    if (result?._tailwindChanged) {
+      fs.writeFileSync(
+        path.join(buildDirectory, 'tailwind-candidates.css'),
+        `/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n/* ${Date.now()} */\n`
+      );
+    }
     jitLogger.info(
       { spin: 'succeed', color: 'white' },
       `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
@@ -199,6 +231,87 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   } finally {
     pageCache.releaseBuildLock(pageId);
   }
+}
+
+// Collect every client _js hash the page references. jsMapParser reduces a _js
+// operator to either { _js: "<hash>" } or { _js: { fn: "<hash>", args } }, and
+// keeps args verbatim — so a _js nested inside another's args survives as its
+// own node and must be descended into, or its hash is dropped and the client
+// throws "_js function not found".
+function collectJsHashes(node, hashes) {
+  if (type.isArray(node)) {
+    for (const item of node) collectJsHashes(item, hashes);
+    return;
+  }
+  if (!type.isObject(node)) return;
+  if (Object.prototype.hasOwnProperty.call(node, '_js')) {
+    const inner = node._js;
+    if (type.isString(inner)) {
+      hashes.add(inner);
+      return;
+    }
+    if (type.isObject(inner) && type.isString(inner.fn)) {
+      hashes.add(inner.fn);
+      collectJsHashes(inner.args, hashes);
+      return;
+    }
+    return;
+  }
+  for (const value of Object.values(node)) collectJsHashes(value, hashes);
+}
+
+// Icons are discovered by detectMissingIcons on the pre-parse page, so a name
+// appearing only inside a _js body is real but is a hash in the served config.
+// Reproduce that surface: scan the served config plus the page's own client _js
+// source strings, and keep only names present in dynamicIconData (which holds
+// only JIT-discovered icons — static ones are already in the client bundle).
+function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
+  if (Object.keys(dynamicIconData).length === 0) return undefined;
+  const scanText = [JSON.stringify(pageConfig), ...Object.values(scopedJsMap)].join('\n');
+  const found = {};
+  for (const regex of Object.values(iconPackages)) {
+    for (const match of scanText.matchAll(regex)) {
+      const name = match[1];
+      if (dynamicIconData[name] && !found[name]) {
+        found[name] = dynamicIconData[name];
+      }
+    }
+  }
+  return Object.keys(found).length > 0 ? found : undefined;
+}
+
+// Scope this page's JIT-discovered enrichment out of the persistent build
+// context so jitPageHandler can fold it into the page-config response the client
+// already awaits — removing the two secondary fetches that stalled first paint.
+// buildContext defaults to the module-private cachedBuildContext (re-read on
+// every call, so it tracks invalidation resets); tests pass a stub.
+export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildContext }) {
+  // No build context (before the first build, or after an invalidation reset)
+  // means nothing JIT-discovered to fold — the page serves what the static
+  // client bundle already carries.
+  if (!buildContext) return {};
+
+  const clientJsMap = buildContext.jsMap.client ?? {};
+  const hashes = new Set();
+  collectJsHashes(pageConfig, hashes);
+
+  const scopedJsMap = {};
+  for (const hash of hashes) {
+    if (Object.prototype.hasOwnProperty.call(clientJsMap, hash)) {
+      scopedJsMap[hash] = clientJsMap[hash];
+    }
+  }
+
+  const jsEntries =
+    Object.keys(scopedJsMap).length > 0 ? generateClientJsModule(scopedJsMap) : undefined;
+
+  const dynamicIcons = scopeDynamicIcons({
+    pageConfig,
+    scopedJsMap,
+    dynamicIconData: buildContext.dynamicIconData ?? {},
+  });
+
+  return { jsEntries, dynamicIcons };
 }
 
 export default buildPageIfNeeded;

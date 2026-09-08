@@ -285,6 +285,7 @@ test('operator returns value with ~k present', () => {
           "user": Object {
             "user": true,
           },
+          "websockets": undefined,
         },
       ],
     ]

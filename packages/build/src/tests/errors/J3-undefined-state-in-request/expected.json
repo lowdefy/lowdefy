@@ -12,14 +12,13 @@
     },
     {
       "mode": "prod",
-      "errors": [
+      "warnings": [
         "contact_company_ids"
       ],
-      "errorContains": [
+      "warningContains": [
         "_state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
         "lowdefy.yaml:33"
-      ],
-      "expectThrow": true
+      ]
     }
   ]
 }

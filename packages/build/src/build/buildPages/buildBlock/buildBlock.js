@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildDynamicBlock from './buildDynamicBlock.js';
 import buildEvents from './buildEvents.js';
 import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
@@ -31,6 +32,7 @@ import validateSlots from './validateSlots.js';
 function buildBlock(block, pageContext, parentConfigKey) {
   validateBlock(block, pageContext, parentConfigKey);
   setBlockId(block, pageContext);
+  buildDynamicBlock(block, pageContext);
   normalizeLayout(block, pageContext);
   moveAreasToSlots(block, pageContext);
   countBlockOperators(block, pageContext);
