@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import stripUrlQuery from './stripUrlQuery.js';
+import redactUrlQuery from './redactUrlQuery.js';
 
 // Emits one access-log line per request, after the response is finalized.
-// `url` is the route path only (c.req.path); the referer is cut to origin +
-// path the same way, because the browser sends the page's full URL there and
-// that URL can carry a sign-in token or a signed OAuth query (see stripUrlQuery).
+// `url` is the route path only (c.req.path). The referer keeps its query but
+// with credential parameters redacted, because the browser sends the page's
+// full URL there and that URL can carry a sign-in token or a signed OAuth
+// query (see redactUrlQuery).
 function logRequest({ context, status, durationMs }) {
   const { headers = {} } = context;
   const user = context.user ?? {};
@@ -41,7 +42,7 @@ function logRequest({ context, status, durationMs }) {
         'sec-ch-ua': headers['sec-ch-ua'],
         'user-agent': headers['user-agent'],
         host: headers.host,
-        referer: stripUrlQuery(headers.referer),
+        referer: redactUrlQuery(headers.referer),
         'x-forwarded-for': headers['x-forwarded-for'],
         // Vercel headers
         'x-vercel-id': headers['x-vercel-id'],
