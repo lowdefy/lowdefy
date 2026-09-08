@@ -23,3 +23,4 @@ export { default as VerifyEmail } from './auth/VerifyEmail/VerifyEmail.js';
 export { default as ResetPasswordEmail } from './auth/ResetPasswordEmail/ResetPasswordEmail.js';
 export { default as MagicLinkEmail } from './auth/MagicLinkEmail/MagicLinkEmail.js';
 export { default as InvitationEmail } from './auth/InvitationEmail/InvitationEmail.js';
+export { default as EmailOTPEmail } from './auth/EmailOTPEmail/EmailOTPEmail.js';
