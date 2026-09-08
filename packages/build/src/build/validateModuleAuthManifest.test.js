@@ -107,7 +107,7 @@ test('validateModuleAuthManifest throws on an unknown authPages role', () => {
   expect(() =>
     validateModuleAuthManifest({ auth: { pages: { logIn: 'login' } }, entryId: 'crm' })
   ).toThrow(
-    'Module "crm" manifest "auth.pages" has unknown role "logIn". Valid roles are: signIn, signUp, error, forgotPassword, resetPassword, verifyEmail, twoFactor, twoFactorEnrol, acceptInvitation.'
+    'Module "crm" manifest "auth.pages" has unknown role "logIn". Valid roles are: signIn, signUp, error, forgotPassword, resetPassword, verifyEmail, twoFactor, twoFactorEnrol, acceptInvitation, magicLink.'
   );
 });
 
@@ -115,6 +115,17 @@ test('validateModuleAuthManifest passes a module manifest declaring auth.pages.t
   expect(() =>
     validateModuleAuthManifest({
       auth: { pages: { twoFactor: 'two-factor-challenge' } },
+      entryId: 'crm',
+    })
+  ).not.toThrow();
+});
+
+// A module ships the magic-link landing page and declares the role for it, the
+// same way it declares twoFactor; the app need not know the page exists.
+test('validateModuleAuthManifest passes a module manifest declaring auth.pages.magicLink', () => {
+  expect(() =>
+    validateModuleAuthManifest({
+      auth: { pages: { magicLink: 'magic-link' } },
       entryId: 'crm',
     })
   ).not.toThrow();
