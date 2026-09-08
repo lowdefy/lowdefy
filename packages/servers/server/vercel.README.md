@@ -30,8 +30,10 @@ Vercel dashboard (so other apps can deploy from the same server package with the
 
 ## Environment variables
 
-Set secrets in the Vercel project, prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and, for
-OAuth, `AUTH_URL`) for auth. `CRON_SECRET` is only needed if the app uses scheduled endpoints.
+The docs app is a public site with no auth, so it needs no `AUTH_SECRET`/`AUTH_URL`. Any secrets a
+future app needs go in the Vercel project prefixed with `LOWDEFY_SECRET_`; `AUTH_SECRET` (and, for
+OAuth, `AUTH_URL`) are only needed by an app that configures auth, and `CRON_SECRET` only by one with
+scheduled endpoints.
 
 ## How the build works
 
