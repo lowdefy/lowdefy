@@ -3,7 +3,7 @@
 '@lowdefy/server-dev': patch
 ---
 
-fix(servers): Answer unserved /.well-known/* paths with 404 instead of the app shell
+fix(servers): Answer unserved /.well-known/\* paths with 404 instead of the app shell
 
 Well-known URIs are machine-facing, but any path outside the deployment's own OAuth
 discovery documents fell through to the page catch-all and answered 200 text/html.
