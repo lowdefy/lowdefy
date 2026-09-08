@@ -896,20 +896,6 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
-test('validateAuthConfig throws when authPages.magicLink is set without magicLink enabled', () => {
-  const components = {
-    auth: {
-      secret: validSecret,
-      database: validDatabase,
-      emailAndPassword: { enabled: true },
-      authPages: { magicLink: '/magic-link' },
-    },
-  };
-  expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "authPages.magicLink" applies only when "magicLink.enabled" is true - the sign-in email is the only thing that navigates to the landing page.'
-  );
-});
-
 test('validateAuthConfig passes when authPages.magicLink is set with magicLink enabled', () => {
   const components = {
     auth: {

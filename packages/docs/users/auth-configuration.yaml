@@ -112,7 +112,7 @@ _ref:
                 | `twoFactor` | — | **required** when `twoFactor.enabled` |
                 | `twoFactorEnrol` | — | **required** when `twoFactor.required` |
                 | `acceptInvitation` | — | consumes an `?invitationId=` link |
-                | `magicLink` | — | landing page for the sign-in email; only valid with `magicLink.enabled` |
+                | `magicLink` | — | landing page for the sign-in email (opt-in; see below) |
 
                 ```yaml
                 lowdefy: {{ version }}
