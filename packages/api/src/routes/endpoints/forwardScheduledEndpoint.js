@@ -58,7 +58,12 @@ async function forwardScheduledEndpoint(context, { environment, endpointId, cron
   const schedules = getEnvironmentSchedules({ endpointConfig, environment });
   findSchedule({ schedules, cron, endpointId, environment });
 
-  const url = `${target.url.replace(/\/+$/, '')}/api/cron/${endpointId}`;
+  // Trim trailing slashes with a loop rather than a regex: CodeQL flags `/\/+$/` on config input.
+  let origin = target.url;
+  while (origin.endsWith('/')) {
+    origin = origin.slice(0, -1);
+  }
+  const url = `${origin}/api/cron/${endpointId}`;
   const timeoutMs = (config?.vercel?.maxDuration ?? 60) * 1000;
   const headers = { authorization: `Bearer ${secret}` };
   if (cron) headers['x-vercel-cron-schedule'] = cron;
