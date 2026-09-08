@@ -168,6 +168,71 @@ _ref:
 
             The action needs no parameters: the token and the `callbackURL`, `newUserCallbackURL` and `errorCallbackURL` values are read from the landing page's own URL query, which the email put there. Pass parameters only to override them.
 
+            ## Email code sign-in
+
+            With `auth.emailOTP` enabled the app can sign a person in with a code emailed to them. Unlike a magic link, the code is typed into the tab they started from — so it survives corporate mail security that pre-fetches links (and consumes the single-use link token), and it works when the email is read on another device.
+
+            Two actions drive it:
+
+            - [`EmailOtpSend`](/EmailOtpSend) sends the code to an email address.
+            - [`EmailOtpVerify`](/EmailOtpVerify) signs the person in with the code they typed.
+
+            `EmailOtpVerify` lands the user through the same three sources as `Login`: the `callbackUrl` param, then the `?callbackUrl=` query, then the app's home page. `callbackUrl: false` verifies without navigating — it is a plain JSON sign-in with no redirect hop, so staying put is valid here.
+
+            ### With magic link, one email carries both
+
+            When `auth.magicLink` is enabled alongside `auth.emailOTP`, the magic-link email also carries the code, so one email serves both paths. Keep using `Login` with `magicLink: true` to send it — no change is needed — and offer `EmailOtpVerify` on the same page for people whose link does not work. `EmailOtpSend` is then only needed for a code-only page, where no link is offered at all.
+
+            ###### A sign-in page offering a code:
+            ```yaml
+            id: email-code-login
+            type: Box
+            blocks:
+              - id: email
+                type: TextInput
+                required: true
+                properties:
+                  title: Email
+              - id: send_code
+                type: Button
+                properties:
+                  title: Send code
+                events:
+                  onClick:
+                    - id: validate
+                      type: Validate
+                      params:
+                        regex: ^email$
+                    - id: send
+                      type: EmailOtpSend
+                      params:
+                        email:
+                          _state: email
+                    - id: sent
+                      type: DisplayMessage
+                      params:
+                        content: Check your email for the sign-in code.
+              - id: otp
+                type: TextInput
+                properties:
+                  title: Sign-in code
+              - id: sign_in
+                type: Button
+                properties:
+                  title: Sign in
+                events:
+                  onClick:
+                    - id: verify
+                      type: EmailOtpVerify
+                      params:
+                        email:
+                          _state: email
+                        otp:
+                          _state: otp
+            ```
+
+            An expired, mistyped or already-used code is the auth server rejecting the attempt, not an app fault: the action throws a `UserError`, so `onClick` `catch` actions run and the message displays, but nothing is reported to the server.
+
             ## SMS sign-in
 
             `PhoneNumberVerify` completes a sign-in with an SMS code, and lands the user through the same three sources as `Login`: the `callbackUrl` param, then the `?callbackUrl=` query, then the app's home page. `callbackUrl: false` verifies without navigating.

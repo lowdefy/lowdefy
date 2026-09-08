@@ -238,6 +238,8 @@
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
+- _ref: actions/EmailOtpSend.yaml
+- _ref: actions/EmailOtpVerify.yaml
 - _ref: actions/Fetch.yaml
 - _ref: actions/GeolocationCurrentPosition.yaml
 - _ref: actions/Link.yaml
