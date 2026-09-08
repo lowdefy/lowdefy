@@ -55,20 +55,51 @@ Blocks are addressed by their `blockId`. Every step has a 5 second timeout by de
 
 | Step                                      | Meaning                                                                                                   |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `click: blockId`                          | Click the block.                                                                                          |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block.                                                             |
-| `select: { blockId, value }`              | Open the selector block and choose the option whose text is `value`.                                      |
+| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                          |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                           |
+| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`.                       |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.             |
 | `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                              |
 | `wait: { request: requestId }`            | Wait until the request has finished loading.                                                              |
 | `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                          |
 | `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them. |
 | `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                            |
-| `expect: { visible: blockId }`            | The block is visible.                                                                                     |
-| `expect: { text: { blockId, contains } }` | The block's rendered text contains the string.                                                            |
+| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                |
+| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                |
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                      |
 
 The full grammar, including the failure shape the route returns, is documented with the [journey tool](/ai-agent-docs). The CLI and the MCP tool share one implementation, so a journey an agent verifies interactively can be committed as-is.
+
+### Targets
+
+A `blockId` reaches a block's own control — its button, input or link. Some controls are not blocks: the Edit and Delete buttons a grid renders in every row, the OK and Cancel of a confirm dialog, the items of a dropdown menu. Wherever a step takes a `blockId`, it also takes a target object that narrows the search:
+
+| Key       | Meaning                                                                                          |
+| --------- | ------------------------------------------------------------------------------------------------ |
+| `blockId` | The block to search inside.                                                                      |
+| `row`     | A grid row, zero-based as displayed (`AgGrid*` blocks). Needs `blockId`.                         |
+| `column`  | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                    |
+| `text`    | The interactive control whose visible text is exactly this (a button label, a tab, a menu item). |
+| `nth`     | When several controls match, the zero-based one to use.                                          |
+
+`text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
+
+```yaml
+- name: member deletes a control from the grid
+  pageId: controls
+  user: { roles: [admin] }
+  steps:
+    - click: { blockId: controls_grid, row: 1, text: Delete } # the row's Delete cell button
+    - expect: { visible: { text: Are you sure? } }
+    - click: { text: Delete } # the confirm dialog's OK, not the grid's
+    - wait: { request: delete_control }
+    - expect: { text: { blockId: controls_grid, row: 1, column: title, contains: Key rotation } }
+    - click: { blockId: controls_grid, row: 0, column: actions } # the cell's first control
+    - click: { blockId: controls_grid, row: 0, column: more, nth: 0 } # an icon-only menu trigger
+    - click: { text: Archive } # the open menu's item
+```
+
+`fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
 
 ## Running
 
