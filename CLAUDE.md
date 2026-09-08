@@ -275,21 +275,21 @@ import {
 } from '@lowdefy/errors';
 ```
 
-| Class                             | Purpose                                                                                                       | Catch Layer                      |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `LowdefyInternalError`            | Internal Lowdefy bugs                                                                                         | Top-level in build/server/client |
-| `BuildError`                      | Summary error after build fails (`Build failed with N...`)                                                    | `logCollectedErrors`             |
-| `PluginError`                     | Base class for plugin failures (not used directly)                                                            | Plugin interface layer           |
-| `OperatorError`                   | Operator failures (`_if`, `_get`, etc.)                                                                       | Operator parsers                 |
-| `ActionError`                     | Action failures (`SetState`, `Request`, etc.)                                                                 | Action runner (engine)           |
-| `RequestError`                    | Request/connection failures (`MongoDBFind`, etc.)                                                             | Request handler (API)            |
-| `BlockError`                      | Block rendering failures                                                                                      | ErrorBoundary (client)           |
-| `ServiceError`                    | External service failures (network, timeout, 5xx)                                                             | Request/connection layer         |
-| `ConfigError`                     | YAML config validation errors                                                                                 | Build validation, runtime        |
-| `ConfigWarning`                   | Config inconsistencies (warning in dev, error in prod)                                                        | Build validation                 |
-| `AuthenticationError`             | Unauthenticated request to a protected endpoint (401)                                                         | Server error handler (warn only) |
-| `AuthorizationError`              | Authenticated caller refused by an authorization gate (wrong roles, 403)                                      | Server error handler (warn only) |
-| `UserError`                       | Expected outcome of user interaction (validation, throws, rejected auth attempt), never a config/system fault | Browser console only             |
+| Class                  | Purpose                                                                                                       | Catch Layer                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `LowdefyInternalError` | Internal Lowdefy bugs                                                                                         | Top-level in build/server/client |
+| `BuildError`           | Summary error after build fails (`Build failed with N...`)                                                    | `logCollectedErrors`             |
+| `PluginError`          | Base class for plugin failures (not used directly)                                                            | Plugin interface layer           |
+| `OperatorError`        | Operator failures (`_if`, `_get`, etc.)                                                                       | Operator parsers                 |
+| `ActionError`          | Action failures (`SetState`, `Request`, etc.)                                                                 | Action runner (engine)           |
+| `RequestError`         | Request/connection failures (`MongoDBFind`, etc.)                                                             | Request handler (API)            |
+| `BlockError`           | Block rendering failures                                                                                      | ErrorBoundary (client)           |
+| `ServiceError`         | External service failures (network, timeout, 5xx)                                                             | Request/connection layer         |
+| `ConfigError`          | YAML config validation errors                                                                                 | Build validation, runtime        |
+| `ConfigWarning`        | Config inconsistencies (warning in dev, error in prod)                                                        | Build validation                 |
+| `AuthenticationError`  | Unauthenticated request to a protected endpoint (401)                                                         | Server error handler (warn only) |
+| `AuthorizationError`   | Authenticated caller refused by an authorization gate (wrong roles, 403)                                      | Server error handler (warn only) |
+| `UserError`            | Expected outcome of user interaction (validation, throws, rejected auth attempt), never a config/system fault | Browser console only             |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 

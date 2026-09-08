@@ -1546,6 +1546,9 @@ importers:
       '@auth/mongodb-adapter':
         specifier: 3.11.2
         version: 3.11.2(mongodb@7.2.0)
+      '@lowdefy/errors':
+        specifier: 5.6.0
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.6.0
         version: link:../../../utils/helpers
@@ -2185,6 +2188,9 @@ importers:
       '@google-cloud/storage':
         specifier: 7.21.0
         version: 7.21.0(encoding@0.1.13)
+      '@lowdefy/errors':
+        specifier: 5.6.0
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.6.0
         version: link:../../../utils/helpers
@@ -2210,6 +2216,9 @@ importers:
 
   packages/plugins/plugins/plugin-next-auth:
     dependencies:
+      '@lowdefy/errors':
+        specifier: 5.6.0
+        version: link:../../../utils/errors
       '@lowdefy/helpers':
         specifier: 5.6.0
         version: link:../../../utils/helpers
