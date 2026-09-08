@@ -19,11 +19,11 @@ import { spawn } from 'child_process';
 import warnAuthUrlPortMismatch from './warnAuthUrlPortMismatch.mjs';
 
 function createStdErrLineHandler({ context }) {
-  const port = context.options.port;
+  const port = context.internalPort;
   return function stdErrLineHandler(line) {
     if (line.includes('EADDRINUSE')) {
       context.logger.error(
-        `Port ${port} is already in use. Stop the other process or use a different port with --port.`
+        `Internal port ${port} is already in use. Stop the other process or use a different port with --port.`
       );
       return;
     }
@@ -35,14 +35,28 @@ function startServer(context) {
   context.shutdownServer();
   warnAuthUrlPortMismatch({ context });
 
-  const devServer = spawn('node', [context.bin.vite, '--port', String(context.options.port), '--strictPort'], {
-    stdio: ['ignore', 'inherit', 'pipe'],
-    env: {
-      ...process.env,
-      LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-      PORT: context.options.port,
-    },
-  });
+  // The child binds context.internalPort on loopback; the manager's proxy owns
+  // the public context.options.port (see startProxy.mjs) so a restart never
+  // drops the listener that browsers, SSE reload streams and MCP agents hold.
+  const devServer = spawn(
+    'node',
+    [
+      context.bin.vite,
+      '--host',
+      '127.0.0.1',
+      '--port',
+      String(context.internalPort),
+      '--strictPort',
+    ],
+    {
+      stdio: ['ignore', 'inherit', 'pipe'],
+      env: {
+        ...process.env,
+        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        PORT: context.internalPort,
+      },
+    }
+  );
 
   const stdErrLineHandler = createStdErrLineHandler({ context });
   devServer.stderr.on('data', (data) => {
