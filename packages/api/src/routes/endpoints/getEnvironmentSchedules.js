@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -18,22 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
-import validateCronConfig from './validateCronConfig.js';
-
-function validateConfig({ components }) {
-  if (type.isNone(components.config)) {
-    components.config = {};
+// With config.cron.environments declared the build resolves `schedules` onto every environment
+// (schedules.<name>, defaults inherited), so an environment run reads its own list; without
+// environments the endpoint carries a plain array.
+function getEnvironmentSchedules({ endpointConfig, environment }) {
+  const schedules = endpointConfig.schedules;
+  if (type.isArray(schedules)) {
+    return schedules;
   }
-  if (!type.isObject(components.config)) {
-    throw new Error('lowdefy.config is not an object.');
+  if (environment === undefined) {
+    return [];
   }
-  if (type.isString(components.config.basePath)) {
-    if (components.config.basePath[0] !== '/') {
-      throw new Error('Base path must start with "/".');
-    }
-  }
-  validateCronConfig({ components });
-  return components;
+  return schedules?.[environment] ?? [];
 }
 
-export default validateConfig;
+export default getEnvironmentSchedules;
