@@ -37,8 +37,9 @@ async function cronHandler(c) {
 
   const endpointId = getPathSegments(c, '/api/cron/').join('/');
   const cron = c.req.header('x-vercel-cron-schedule');
-  context.logger.info({ event: 'call_cron_endpoint', endpointId, cron });
-  const response = await runScheduledEndpoint(context, { endpointId, cron });
+  const environment = c.req.header('x-lowdefy-cron-environment');
+  context.logger.info({ event: 'call_cron_endpoint', endpointId, cron, environment });
+  const response = await runScheduledEndpoint(context, { endpointId, cron, environment });
   return c.json(response);
 }
 

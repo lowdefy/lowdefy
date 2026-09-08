@@ -115,3 +115,102 @@ test('falls back to the single schedule when no cron is provided', async () => {
   const [, routineContext] = runRoutine.mock.calls[0];
   expect(routineContext.payload).toEqual({ mode: 'full' });
 });
+
+const cronConfig = {
+  cron: {
+    environments: {
+      production: {},
+      staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
+    },
+  },
+};
+
+function makeEnvironmentContext(endpoint, { config = cronConfig } = {}) {
+  const readConfigFile = jest.fn((path) =>
+    path === `api/${endpoint.endpointId}.json` ? endpoint : null
+  );
+  return testContext({ logger, readConfigFile, config });
+}
+
+const environmentEndpoint = {
+  endpointId: 'purge',
+  type: 'Api',
+  schedules: {
+    production: [{ cron: '*/5 * * * *', payload: { mode: 'production' } }],
+    staging: [{ cron: '0 * * * *', payload: { mode: 'staging' } }],
+  },
+  routine: [],
+};
+
+test('uses the schedules of the environment named in the request', async () => {
+  const context = makeEnvironmentContext(environmentEndpoint);
+  const result = await runScheduledEndpoint(context, {
+    endpointId: 'purge',
+    cron: '0 * * * *',
+    environment: 'staging',
+  });
+  expect(result.success).toBe(true);
+  const [, routineContext] = runRoutine.mock.calls[0];
+  expect(routineContext.payload).toEqual({ mode: 'staging' });
+});
+
+test('uses the host environment schedules when the request names no environment', async () => {
+  const context = makeEnvironmentContext(environmentEndpoint);
+  const result = await runScheduledEndpoint(context, { endpointId: 'purge', cron: '*/5 * * * *' });
+  expect(result.success).toBe(true);
+  const [, routineContext] = runRoutine.mock.calls[0];
+  expect(routineContext.payload).toEqual({ mode: 'production' });
+});
+
+test('throws when the fired cron is not scheduled for the environment', async () => {
+  const context = makeEnvironmentContext(environmentEndpoint);
+  await expect(
+    runScheduledEndpoint(context, {
+      endpointId: 'purge',
+      cron: '*/5 * * * *',
+      environment: 'staging',
+    })
+  ).rejects.toThrow(
+    'No schedule matching cron "*/5 * * * *" for API Endpoint "purge" for environment "staging".'
+  );
+});
+
+test('throws when the endpoint has no schedules for the environment', async () => {
+  const context = makeEnvironmentContext({
+    ...environmentEndpoint,
+    schedules: { production: [{ cron: '*/5 * * * *' }], staging: [] },
+  });
+  await expect(
+    runScheduledEndpoint(context, {
+      endpointId: 'purge',
+      cron: '0 * * * *',
+      environment: 'staging',
+    })
+  ).rejects.toThrow('API Endpoint "purge" is not scheduled for environment "staging".');
+});
+
+test('throws when the request names an undeclared environment', async () => {
+  const context = makeEnvironmentContext(environmentEndpoint);
+  await expect(
+    runScheduledEndpoint(context, {
+      endpointId: 'purge',
+      cron: '0 * * * *',
+      environment: 'develop',
+    })
+  ).rejects.toThrow(
+    'Cron environment "develop" is not declared in lowdefy.config.cron.environments.'
+  );
+});
+
+test('throws when the request names an environment but config.cron is not defined', async () => {
+  const context = makeEnvironmentContext(environmentEndpoint, { config: {} });
+  await expect(
+    runScheduledEndpoint(context, {
+      endpointId: 'purge',
+      cron: '0 * * * *',
+      environment: 'staging',
+    })
+  ).rejects.toThrow(
+    'Cron environment "staging" is not configured: lowdefy.config.cron.environments is not defined.'
+  );
+});

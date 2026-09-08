@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { runScheduledEndpoint } from '@lowdefy/api';
+import { forwardScheduledEndpoint } from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
-// Triggered by Vercel Cron in production: an HTTP GET to /api/cron/<endpointId>. Available in dev so
-// scheduled endpoints can be triggered locally with curl. Vercel auto-sends the value of the project
-// env var named exactly CRON_SECRET as `Authorization: Bearer <value>`, and the firing cron
-// expression in the `x-vercel-cron-schedule` header. Fails closed if CRON_SECRET is unset. A request
-// forwarded from the production deployment of another environment (see cronForward.js) also names
-// the environment whose schedules apply in `x-lowdefy-cron-environment`.
-async function cronHandler(c) {
+// Triggered by Vercel Cron on the production deployment: an HTTP GET to
+// /api/cron-forward/<environment>/<endpointId>, registered by `lowdefy vercel-output` for the
+// schedules of every environment declared with a url in config.cron.environments. Vercel fires crons
+// only on production, so production pings that environment's own /api/cron/<endpointId> (with the
+// environment's CRON_SECRET) and answers immediately. Same transport auth as cron (CRON_SECRET,
+// fails closed).
+async function cronForwardHandler(c) {
   if (c.req.method !== 'GET') {
     // A wrong-method request is client-caused: answer 405 rather than raising a
     // fault that would be logged at error level and answered with a 500.
@@ -34,16 +34,16 @@ async function cronHandler(c) {
 
   const secret = process.env.CRON_SECRET;
   if (!secret || c.req.header('authorization') !== `Bearer ${secret}`) {
-    context.logger.warn({ event: 'cron_unauthorized' });
+    context.logger.warn({ event: 'cron_forward_unauthorized' });
     return c.json({ error: 'Unauthorized' }, 401);
   }
 
-  const endpointId = getPathSegments(c, '/api/cron/').join('/');
+  const [environment, ...endpointSegments] = getPathSegments(c, '/api/cron-forward/');
+  const endpointId = endpointSegments.join('/');
   const cron = c.req.header('x-vercel-cron-schedule');
-  const environment = c.req.header('x-lowdefy-cron-environment');
-  context.logger.info({ event: 'call_cron_endpoint', endpointId, cron, environment });
-  const response = await runScheduledEndpoint(context, { endpointId, cron, environment });
+  context.logger.info({ event: 'call_cron_forward', environment, endpointId, cron });
+  const response = await forwardScheduledEndpoint(context, { environment, endpointId, cron });
   return c.json(response);
 }
 
-export default cronHandler;
+export default cronForwardHandler;
