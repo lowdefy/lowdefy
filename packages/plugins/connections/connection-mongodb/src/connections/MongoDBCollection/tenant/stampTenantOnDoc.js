@@ -16,11 +16,13 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
+import assertTenantPathNotAuthored from './assertTenantPathNotAuthored.js';
 
 // The server owns the tenant field on every written document: authored values
 // are rejected (loud error over silent overwrite), then the caller's org is
-// stamped.
+// stamped. Only the document's own top-level keys are paths onto the field -
+// a nested key inside a subdocument or an embedded array is the app's data
+// (see assertTenantPathNotAuthored).
 function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
   const { field, value } = tenant;
   if (tenant.authored === true) {
@@ -30,7 +32,7 @@ function stampTenantOnDoc({ doc, tenant, position = 'an insert document' }) {
       '"tenant: authored" applies only to aggregation requests - the tenant wall scopes this request mechanically. Remove "tenant: authored".'
     );
   }
-  assertTenantFieldNotAuthored({ value: doc, field, position });
+  assertTenantPathNotAuthored({ value: doc, field, position });
   return { ...doc, [field]: value };
 }
 

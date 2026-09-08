@@ -37,10 +37,17 @@ test('throws when the tenant field is authored on the document', () => {
   );
 });
 
-test('throws when the tenant field is authored nested in the document', () => {
-  expect(() => stampTenantOnDoc({ doc: { meta: { organization_id: 'org_b' } }, tenant })).toThrow(
-    'Tenant field "organization_id" can not be set in an insert document'
-  );
+test('allows the tenant field name nested inside the document - a subdocument key is data', () => {
+  expect(
+    stampTenantOnDoc({
+      doc: { meta: { organization_id: 'org_b' }, items: [{ organization_id: 'org_b' }] },
+      tenant,
+    })
+  ).toEqual({
+    meta: { organization_id: 'org_b' },
+    items: [{ organization_id: 'org_b' }],
+    organization_id: 'org_a',
+  });
 });
 
 test('throws when a dotted tenant field key is authored', () => {
