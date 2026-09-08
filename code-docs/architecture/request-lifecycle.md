@@ -430,11 +430,11 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   authorizeApiEndpoint(context, { endpointConfig });
 
   const routineContext = {
-    steps: {},                              // Per-invocation step results
+    steps: {}, // Per-invocation step results
     payload: serializer.deserialize(payload), // Per-invocation payload
     arrayIndices: [],
     items: {},
-    endpointDepth: 0,                       // Recursion depth counter
+    endpointDepth: 0, // Recursion depth counter
   };
 
   const { error, response, status } = await runRoutine(context, routineContext, {
@@ -519,8 +519,10 @@ Two surfaces wrap it:
 
 Two additive controls decouple routine execution from the response:
 
-- **`async: true` on an endpoint** — `callEndpoint` (and `runScheduledEndpoint` for cron fires) responds `{ accepted: true }` immediately after authorization and hands the routine promise to `scheduleBackground`. The work runs in the *same* invocation: on serverless it stays bounded by the function's `maxDuration`; the outcome exists only in logs (`background_endpoint_done` / `_failed` events) and whatever the routine writes.
+- **`async: true` on an endpoint** — `callEndpoint` (and `runScheduledEndpoint` for cron fires) responds `{ accepted: true }` immediately after authorization and hands the routine promise to `scheduleBackground`. The work runs in the _same_ invocation: on serverless it stays bounded by the function's `maxDuration`; the outcome exists only in logs (`background_endpoint_done` / `_failed` events) and whatever the routine writes.
 - **`detached: true` on a `CallApi` step** — `handleEndpointCall` short-circuits before `invokeEndpoint`: it fire-and-forgets a `POST` to the deployment's own `/api/detached/<endpointId>` route (via `context.origin`, captured in each server's `apiContext` middleware) and continues with `{ detached: true, endpointId }` as the step result. The route authenticates with `CRON_SECRET` (fail closed) and runs the target through `runDetachedEndpoint` as a system context — session forced to `undefined`, `InternalApi` callable, `endpointDepth` reset to 0, so the 10-level depth cap does not chain across detached hops. At-most-once, no retry.
+
+- **Cron environments** — Vercel fires crons only on the production deployment. With `config.cron.environments` declared (validated by `validateCronConfig`; exactly one environment without a `url` is the host), the build resolves every endpoint's `schedules` onto an object keyed by environment (`resolveEndpointSchedules`: own entry → `default` → `[]`) and `writeApi` emits one `schedules.json` entry per enabled environment with `forward: true` for environments that have a `url`. `lowdefy vercel-output` registers those as `/api/cron-forward/<environment>/<endpointId>` jobs. The route (`routes/cronForward.js`, same `CRON_SECRET` gate) calls `forwardScheduledEndpoint`, which checks the target environment, reads its secret from `context.secrets[<secret name>]` (fail closed), verifies the endpoint declares the firing cron for that environment, then fire-and-forgets `GET <url>/api/cron/<endpointId>` through `scheduleBackground` with `x-vercel-cron-schedule` and `x-lowdefy-cron-environment` headers and answers `{ accepted: true }`. On the receiving side `runScheduledEndpoint` resolves the environment (`resolveCronEnvironment`: the header, else the host environment, else none) and reads `schedules.<environment>` (`getEnvironmentSchedules`).
 
 **`scheduleBackground`** wraps the promise so failures log instead of surfacing as unhandled rejections, and passes it to `context.waitUntil` when present. `waitUntil` is a platform adapter hook: the production server's `apiContext` middleware injects one backed by Vercel's request context (`Symbol.for('@vercel/request-context')`, Fluid compute) so the invocation survives until background work settles; `packages/api` itself stays provider-agnostic. On long-lived hosts (dev server, Docker, node) there is no `waitUntil` and the promise simply runs on the live process.
 
@@ -562,24 +564,24 @@ Two additive controls decouple routine execution from the response:
 
 ## Key Files
 
-| Component           | File                                                    |
-| ------------------- | ------------------------------------------------------- |
-| Event Trigger       | `packages/engine/src/Events.js`                         |
-| Action Runner       | `packages/engine/src/Actions.js`                        |
-| Request Manager     | `packages/engine/src/Requests.js`                       |
-| HTTP Client         | `packages/client/src/createCallRequest.js`              |
-| Server Handler      | `packages/api/src/routes/request/callRequest.js`        |
-| Connection Resolver | `packages/api/src/routes/request/getConnection.js`      |
-| Request Resolver    | `packages/api/src/routes/request/getRequestResolver.js` |
-| Operator Evaluator  | `packages/api/src/routes/request/evaluateOperators.js`  |
-| Authorization       | `packages/api/src/routes/request/authorizeRequest.js`   |
-| Validation          | `packages/api/src/routes/request/validateSchemas.js`    |
-| Endpoint Handler    | `packages/api/src/routes/endpoints/callEndpoint.js`     |
-| Endpoint Call (step)| `packages/api/src/routes/endpoints/handleEndpointCall.js`|
-| Endpoint Invoke     | `packages/api/src/routes/endpoints/invokeEndpoint.js`   |
-| Routine Dispatch    | `packages/api/src/routes/endpoints/runRoutine.js`       |
-| Step Result Storage | `packages/api/src/routes/endpoints/addStepResult.js`    |
-| State Manager       | `packages/engine/src/State.js`                          |
+| Component            | File                                                      |
+| -------------------- | --------------------------------------------------------- |
+| Event Trigger        | `packages/engine/src/Events.js`                           |
+| Action Runner        | `packages/engine/src/Actions.js`                          |
+| Request Manager      | `packages/engine/src/Requests.js`                         |
+| HTTP Client          | `packages/client/src/createCallRequest.js`                |
+| Server Handler       | `packages/api/src/routes/request/callRequest.js`          |
+| Connection Resolver  | `packages/api/src/routes/request/getConnection.js`        |
+| Request Resolver     | `packages/api/src/routes/request/getRequestResolver.js`   |
+| Operator Evaluator   | `packages/api/src/routes/request/evaluateOperators.js`    |
+| Authorization        | `packages/api/src/routes/request/authorizeRequest.js`     |
+| Validation           | `packages/api/src/routes/request/validateSchemas.js`      |
+| Endpoint Handler     | `packages/api/src/routes/endpoints/callEndpoint.js`       |
+| Endpoint Call (step) | `packages/api/src/routes/endpoints/handleEndpointCall.js` |
+| Endpoint Invoke      | `packages/api/src/routes/endpoints/invokeEndpoint.js`     |
+| Routine Dispatch     | `packages/api/src/routes/endpoints/runRoutine.js`         |
+| Step Result Storage  | `packages/api/src/routes/endpoints/addStepResult.js`      |
+| State Manager        | `packages/engine/src/State.js`                            |
 
 ## Architectural Patterns
 

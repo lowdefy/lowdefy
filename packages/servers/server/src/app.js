@@ -29,6 +29,7 @@ import authMiddleware from './routes/auth.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import cronForwardHandler from './routes/cronForward.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import endpointsHandler from './routes/endpoints.js';
@@ -105,6 +106,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   // cap bodies at 10 MiB to match the agent route.
   app.all('/api/endpoints/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), endpointsHandler);
   app.get('/api/cron/*', cronHandler);
+  app.get('/api/cron-forward/*', cronForwardHandler);
   app.post('/api/detached/*', detachedHandler);
   app.all('/api/client-error', clientErrorHandler);
   app.all('/api/usage', usageHandler);
