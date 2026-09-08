@@ -50,6 +50,36 @@ test('object form throws when $set authors the tenant field', () => {
   );
 });
 
+test('object form allows the tenant field name nested inside a $set value - it is data', () => {
+  const messages = [
+    { role: 'assistant', parts: [{ type: 'tool-result', output: { organization_id: 'org_b' } }] },
+  ];
+  const update = { $set: { messages, meta: { organization_id: 'org_b' } } };
+  expect(applyTenantToUpdate({ update, tenant })).toEqual(update);
+});
+
+test('object form allows the tenant field name nested inside $push and $addToSet values', () => {
+  const update = {
+    $push: { events: { organization_id: 'org_b' } },
+    $addToSet: { tags: { $each: [{ organization_id: 'org_b' }] } },
+  };
+  expect(applyTenantToUpdate({ update, tenant })).toEqual(update);
+});
+
+test('object form throws when a null-prototype $set authors the tenant field', () => {
+  const $set = Object.create(null);
+  $set.organization_id = 'org_b';
+  expect(() => applyTenantToUpdate({ update: { $set }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
+  );
+});
+
+test('object form throws when a replacement-shaped update authors the tenant field', () => {
+  expect(() => applyTenantToUpdate({ update: { organization_id: 'org_b', v: 1 }, tenant })).toThrow(
+    'Tenant field "organization_id" can not be set in an update'
+  );
+});
+
 test('object form throws when $inc authors the tenant field', () => {
   expect(() => applyTenantToUpdate({ update: { $inc: { organization_id: 1 } }, tenant })).toThrow(
     'Tenant field "organization_id" can not be set in an update'
@@ -63,9 +93,9 @@ test('object form throws when $set authors a dotted tenant field path', () => {
 });
 
 test('object form throws when $unset drops the tenant field', () => {
-  expect(() => applyTenantToUpdate({ update: { $unset: { organization_id: '' } }, tenant })).toThrow(
-    'Tenant field "organization_id" can not be set in an update'
-  );
+  expect(() =>
+    applyTenantToUpdate({ update: { $unset: { organization_id: '' } }, tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 
 test('object form throws when $setOnInsert authors the tenant field', () => {
@@ -135,6 +165,30 @@ test('pipeline form throws when a $replaceRoot stage authors the tenant field', 
       update: [{ $replaceRoot: { newRoot: { organization_id: 'org_b' } } }],
       tenant,
     })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
+});
+
+test('pipeline form allows the tenant field name nested inside a stage value', () => {
+  const update = [
+    { $set: { messages: [{ organization_id: 'org_b' }], meta: { organization_id: 'org_b' } } },
+    { $addFields: { snapshot: { organization_id: 'org_b' } } },
+    { $replaceRoot: { newRoot: { v: 1, meta: { organization_id: 'org_b' } } } },
+  ];
+  expect(applyTenantToUpdate({ update, tenant })).toEqual([
+    ...update,
+    { $set: { organization_id: 'org_a' } },
+  ]);
+});
+
+test('pipeline form throws when $addFields authors the tenant field', () => {
+  expect(() =>
+    applyTenantToUpdate({ update: [{ $addFields: { organization_id: 'org_b' } }], tenant })
+  ).toThrow('Tenant field "organization_id" can not be set in an update');
+});
+
+test('pipeline form throws when $replaceWith authors the tenant field', () => {
+  expect(() =>
+    applyTenantToUpdate({ update: [{ $replaceWith: { organization_id: 'org_b' } }], tenant })
   ).toThrow('Tenant field "organization_id" can not be set in an update');
 });
 

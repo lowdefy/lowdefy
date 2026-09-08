@@ -16,7 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
+import assertTenantPathNotAuthored from './assertTenantPathNotAuthored.js';
 
 // Guard and stamp an update document on a tenant connection.
 //
@@ -26,16 +26,24 @@ import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
 // reassign an owned row into another tenant. Reads of the field elsewhere are
 // fine; this scan covers only the update document.
 //
+// The scan is over document PATHS, not values. In { $set: { messages: [...] } }
+// the path is `messages`; whatever the array holds is data, and a nested
+// "organization_id" key in it (a stored tool result, a snapshot of another
+// document) is not a write to the tenant field. Only a top-level key of an
+// operator's argument - the field itself or a dotted path rooted in it - can
+// move the row across the wall.
+//
 // Object-form updates ({ $set: ..., $inc: ... }):
-// - authored tenant-field keys rejected anywhere in the operator tree,
-//   including $unset and $rename.
+// - the tenant field rejected as a path in every operator's argument,
+//   including $unset and $setOnInsert; $rename's value side is checked too.
 // - on upsert, the tenant field is added to $setOnInsert as belt-and-braces
 //   alongside the merged filter equality that MongoDB extracts into the
 //   upserted document.
 //
 // Pipeline-form updates ([{ $set: ... }, ...]):
-// - authored tenant-field keys rejected in every stage; $unset's string and
-//   array forms are checked too (an object key scan alone would miss them).
+// - the tenant field rejected as a path in every stage's argument ($set,
+//   $addFields, $project, $replaceRoot's newRoot, $replaceWith); $unset's
+//   string and array forms are checked too (a key scan alone would miss them).
 // - a final { $set: { <field>: <value> } } stage is appended. This restamps
 //   the field unconditionally, which covers the two shapes a key scan cannot:
 //   a $replaceRoot/$replaceWith that omits the field (the row would fall
@@ -68,18 +76,47 @@ function assertRenameDoesNotTargetTenantField({ update, field }) {
   });
 }
 
+// Every top-level key of an object-form update is an operator whose argument
+// maps document paths to values. A non-operator key (a replacement-shaped
+// document MongoDB will reject anyway) is itself a path.
+function assertUpdateDoesNotAuthorTenantField({ update, field }) {
+  if (update === undefined || update === null || typeof update !== 'object') return;
+  const position = 'an update';
+  assertTenantPathNotAuthored({ value: update, field, position });
+  Object.entries(update).forEach(([operator, argument]) => {
+    if (operator.startsWith('$')) {
+      assertTenantPathNotAuthored({ value: argument, field, position });
+    }
+  });
+}
+
+// The stages MongoDB allows in a pipeline update: the argument of $set,
+// $addFields and $project maps paths to values; $replaceRoot / $replaceWith
+// author a whole new root, whose top-level keys are the paths.
+function assertStageDoesNotAuthorTenantField({ stage, field }) {
+  if (stage === undefined || stage === null || typeof stage !== 'object') return;
+  const position = 'an update';
+  Object.entries(stage).forEach(([operator, argument]) => {
+    if (operator === '$replaceRoot') {
+      assertTenantPathNotAuthored({ value: argument?.newRoot, field, position });
+      return;
+    }
+    assertTenantPathNotAuthored({ value: argument, field, position });
+  });
+}
+
 function applyTenantToUpdate({ update, tenant, upsert = false }) {
   const { field, value } = tenant;
 
   if (Array.isArray(update)) {
     update.forEach((stage) => {
-      assertTenantFieldNotAuthored({ value: stage, field, position: 'an update' });
+      assertStageDoesNotAuthorTenantField({ stage, field });
       assertUnsetDoesNotDropTenantField({ stage, field });
     });
     return [...update, { $set: { [field]: value } }];
   }
 
-  assertTenantFieldNotAuthored({ value: update, field, position: 'an update' });
+  assertUpdateDoesNotAuthorTenantField({ update, field });
   assertRenameDoesNotTargetTenantField({ update, field });
   if (upsert) {
     return {
