@@ -422,3 +422,115 @@ test('buildRequestHooks challenges /phone-number/verify with authPages.twoFactor
     jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
   });
 });
+
+const emailOTPAuthConfig = {
+  ...twoFactorAuthConfig,
+  emailOTP: { enabled: true },
+};
+
+function createEmailOtpHooks(authConfig) {
+  return buildRequestHooks({
+    authConfig,
+    basePath: '/app',
+    baseUrlOrigin: 'https://app.example.com',
+    getAuth: jest.fn(),
+  });
+}
+
+function createEmailOtpVerifyCtx(path = '/sign-in/email-otp') {
+  const ctx = createEnrolledCtx();
+  ctx.path = path;
+  return ctx;
+}
+
+test('buildRequestHooks routes /email-otp/send-verification-otp into the send gate when emailOTP is enabled', async () => {
+  const auth = createMockAuth({ invitations: [] });
+  const hooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations },
+    getAuth: () => auth,
+  });
+  // The OTP route's own success body, not the magic-link route's { status: true }.
+  expect(
+    await hooks.before({
+      path: '/email-otp/send-verification-otp',
+      body: { email: 'stranger@example.com' },
+    })
+  ).toEqual({ success: true });
+});
+
+test('buildRequestHooks lets an admitted email through the OTP send gate', async () => {
+  const future = new Date(Date.now() + 3600 * 1000).toISOString();
+  const auth = createMockAuth({
+    invitations: [{ id: 'inv_1', status: 'pending', expiresAt: future }],
+  });
+  const hooks = buildRequestHooks({
+    authConfig: { emailOTP: { enabled: true }, organizations },
+    getAuth: () => auth,
+  });
+  expect(
+    await hooks.before({
+      path: '/email-otp/send-verification-otp',
+      body: { email: 'invited@example.com' },
+    })
+  ).toBeUndefined();
+});
+
+test('buildRequestHooks registers no OTP send gate when emailOTP is disabled', async () => {
+  const getAuth = jest.fn();
+  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth });
+  expect(
+    await hooks.before({
+      path: '/email-otp/send-verification-otp',
+      body: { email: 'stranger@example.com' },
+    })
+  ).toBeUndefined();
+  expect(getAuth).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks challenges an enrolled user on /sign-in/email-otp with a JSON response rather than a redirect', async () => {
+  const hooks = createEmailOtpHooks(emailOTPAuthConfig);
+
+  const { returned, thrown } = await catchAfter(hooks, createEmailOtpVerifyCtx());
+
+  expect(mockBeginTwoFactorChallenge).toHaveBeenCalledTimes(1);
+  expect(thrown).toBeUndefined();
+  expect(returned).toEqual({
+    jsonBody: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+  });
+});
+
+test('buildRequestHooks claims no email-otp path other than /sign-in/email-otp', async () => {
+  const hooks = createEmailOtpHooks(emailOTPAuthConfig);
+
+  expect(
+    await hooks.after(createEmailOtpVerifyCtx('/email-otp/send-verification-otp'))
+  ).toBeUndefined();
+  expect(await hooks.after(createEmailOtpVerifyCtx('/email-otp/verify-email'))).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no email otp challenge when emailOTP is disabled', async () => {
+  const hooks = createEmailOtpHooks({ ...emailOTPAuthConfig, emailOTP: { enabled: false } });
+
+  expect(await hooks.after(createEmailOtpVerifyCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks registers no email otp challenge when twoFactor is disabled', async () => {
+  const hooks = createEmailOtpHooks({ ...emailOTPAuthConfig, twoFactor: { enabled: false } });
+
+  expect(await hooks.after(createEmailOtpVerifyCtx())).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});
+
+test('buildRequestHooks leaves an unenrolled user on /sign-in/email-otp untouched', async () => {
+  const hooks = createEmailOtpHooks(emailOTPAuthConfig);
+  const ctx = createEmailOtpVerifyCtx();
+  ctx.context.newSession = { user: { id: 'user_1', twoFactorEnabled: false } };
+
+  const { returned, thrown } = await catchAfter(hooks, ctx);
+
+  expect(thrown).toBeUndefined();
+  expect(returned).toBeUndefined();
+  expect(mockBeginTwoFactorChallenge).not.toHaveBeenCalled();
+});

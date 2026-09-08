@@ -17,6 +17,7 @@
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import {
+  EmailOTPEmail,
   InvitationEmail,
   MagicLinkEmail,
   ResetPasswordEmail,
@@ -33,9 +34,10 @@ const stockTemplates = {
   resetPassword: ResetPasswordEmail,
   magicLink: MagicLinkEmail,
   invitation: InvitationEmail,
+  emailOTP: EmailOTPEmail,
 };
 
-// Single render path for the four auth email flows. Resolves the flow's template
+// Single render path for the auth email flows. Resolves the flow's template
 // (a stock component by default, or an app-configured override notification when
 // auth.email.templates[flow] names one), applies the app.email brand, and returns
 // { subject, html, text }. Pure render — it never sends.
