@@ -17,7 +17,7 @@
 import { createAuthMiddleware } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
-import createMagicLinkSendGate from '../organizations/createMagicLinkSendGate.js';
+import createEmailSendGate from '../organizations/createEmailSendGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
@@ -52,9 +52,30 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
     before.push({
       id: 'magicLinkSendGate',
       matches: (path) => path === '/sign-in/magic-link',
-      handler: createMagicLinkSendGate({
+      handler: createEmailSendGate({
         getAuth,
         organizations: authConfig.organizations,
+        // The magic-link route's own success body.
+        successBody: { status: true },
+      }),
+    });
+  }
+
+  // The one-time-code send is the same class of unauthenticated send as the
+  // magic-link one, so it carries the same admission gate. The combined path -
+  // a magic-link email that also carries the code - needs no gate of its own:
+  // the code is minted inside sendMagicLink, which only runs after the
+  // magic-link gate has already admitted the address.
+  if (authConfig.emailOTP?.enabled === true) {
+    before.push({
+      id: 'emailOtpSendGate',
+      matches: (path) => path === '/email-otp/send-verification-otp',
+      handler: createEmailSendGate({
+        getAuth,
+        organizations: authConfig.organizations,
+        // The OTP send route's own success body - a different shape from the
+        // magic-link route's, and the suppressed response has to match it.
+        successBody: { success: true },
       }),
     });
   }
@@ -177,6 +198,31 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
         // twoFactor-table read and its otpOptions.sendOTP branch - which the
         // engine never configures - would cost a query to produce a value
         // nothing branches on.
+        exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
+      })
+    );
+  }
+
+  // https://github.com/better-auth/better-auth/issues/10322 - the two-factor
+  // plugin's sign-in matcher does not cover /sign-in/email-otp, which mints a
+  // session (email-otp/routes.mjs createSession then setSessionCookie), so an
+  // enrolled user signing in with an emailed code walks past their second
+  // factor. No toggle, for the same reason the magic-link path has none: a
+  // code emailed to an inbox is possession-of-inbox, the factor most likely to
+  // be compromised in the incident two-factor exists to survive.
+  //
+  // No twoFactorPageUrl in the guard, matching the phone-number path: this exit
+  // hands the destination decision to the client, so the page URL is not read.
+  if (authConfig.twoFactor?.enabled === true && authConfig.emailOTP?.enabled === true) {
+    after.push(
+      createTwoFactorChallengeHook({
+        id: 'emailOtpTwoFactorChallenge',
+        matches: (path) => path === '/sign-in/email-otp',
+        trustDeviceMaxAge,
+        // A live JS caller, so the password path's JSON response shape rather
+        // than a redirect - EmailOtpVerify navigates to authPages.twoFactor on
+        // the flag, exactly as PhoneNumberVerify does. twoFactorMethods is the
+        // literal ['totp'] for the reason given on the phone path.
         exit: (ctx) => ctx.json({ twoFactorRedirect: true, twoFactorMethods: ['totp'] }),
       })
     );
