@@ -27,6 +27,7 @@ export { default as Link } from './actions/Link/Link.js';
 export { default as ListOrganizations } from './actions/ListOrganizations/ListOrganizations.js';
 export { default as Login } from './actions/Login/Login.js';
 export { default as Logout } from './actions/Logout/Logout.js';
+export { default as MagicLinkVerify } from './actions/MagicLinkVerify/MagicLinkVerify.js';
 export { default as OAuthConsent } from './actions/OAuthConsent/OAuthConsent.js';
 export { default as OAuthContinue } from './actions/OAuthContinue/OAuthContinue.js';
 export { default as PasskeyDelete } from './actions/PasskeyDelete/PasskeyDelete.js';

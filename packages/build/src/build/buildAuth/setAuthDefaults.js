@@ -76,6 +76,10 @@ function setAuthDefaults({ components }) {
   // No default for authPages.twoFactor either - the build requires it
   // explicitly when "twoFactor.enabled" is true (validateAuthConfig), and a
   // default here would make that check unsatisfiable-by-failure.
+  // No default for authPages.magicLink - it is opt-in. Its presence is what
+  // switches the emailed link from the verify endpoint to the landing page, so
+  // defaulting it would silently point every existing magic-link app at a page
+  // it has not built.
 
   if (!type.isNone(auth.emailAndPassword)) {
     setDefault(auth.emailAndPassword, 'requireEmailVerification', false);

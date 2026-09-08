@@ -122,6 +122,33 @@ const ADMIN_PATHS_DISABLED = [
 // scopes_supported) - both read this list so they can never drift apart.
 const MCP_OAUTH_SCOPES = ['mcp:read', 'mcp:write', 'offline_access'];
 
+// The verify link BetterAuth mints is single-use and is consumed atomically by
+// the first GET (magicLinkVerify -> consumeVerificationValue; allowedAttempts is
+// ignored upstream). Corporate mail security - Defender Safe Links, Proofpoint
+// URL Defense, Mimecast - pre-fetches every link in a delivered message, so that
+// first GET is a scanner and the person clicking lands on INVALID_TOKEN. When the
+// app declares a landing page, the email points there instead: the page is inert
+// to a fetch and only the MagicLinkVerify action on a real click walks to verify.
+//
+// Every query BetterAuth put on the verify URL - token, callbackURL, and the
+// newUserCallbackURL / errorCallbackURL it adds when the caller supplied them -
+// is copied onto the landing URL, because the action reads its defaults back out
+// of the page query. The origin comes from the verify URL rather than
+// baseUrlOrigin: on the zero-config path (no BETTER_AUTH_URL) baseUrlOrigin is
+// undefined while BetterAuth has already derived the request's origin here.
+function buildMagicLinkUrl({ authConfig, config, url }) {
+  const landingPage = authConfig.authPages?.magicLink;
+  if (!type.isString(landingPage)) {
+    return url;
+  }
+  const verifyUrl = new URL(url);
+  const landingUrl = new URL(`${config.basePath ?? ''}${landingPage}`, verifyUrl.origin);
+  verifyUrl.searchParams.forEach((value, key) => {
+    landingUrl.searchParams.set(key, value);
+  });
+  return landingUrl.href;
+}
+
 function getBetterAuthConfig({
   appMeta,
   authJson,
@@ -355,7 +382,7 @@ function getBetterAuthConfig({
           const context = createSystemContext({ auth: getAuth() });
           const { subject, html, text } = await renderAuthEmail({
             flow: 'magicLink',
-            vars: { url },
+            vars: { url: buildMagicLinkUrl({ authConfig, config, url }) },
             authEmailConfig: authConfig.email,
             baseURL: baseUrlOrigin,
             context,

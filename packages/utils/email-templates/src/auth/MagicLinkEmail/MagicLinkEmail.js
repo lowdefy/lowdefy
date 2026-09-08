@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Heading, Text } from '@react-email/components';
+import { Heading, Link, Text } from '@react-email/components';
 
 import CtaButton from '../../components/CtaButton.js';
 import EmailLayout from '../../components/EmailLayout.js';
@@ -34,6 +34,17 @@ const textStyle = {
   margin: '0 0 16px 0',
 };
 
+// The same destination as the button, in plain sight. Locked-down mail clients
+// strip or rewrite button markup, and some people copy links by hand rather
+// than clicking - the URL has to be readable, and long enough to wrap.
+const fallbackTextStyle = {
+  color: '#666666',
+  fontSize: '12px',
+  lineHeight: '18px',
+  margin: '0',
+  wordBreak: 'break-all',
+};
+
 function MagicLinkEmail({ properties = {}, data = {}, theme = {}, links = {} }) {
   return (
     <EmailLayout theme={theme}>
@@ -41,9 +52,15 @@ function MagicLinkEmail({ properties = {}, data = {}, theme = {}, links = {} }) 
         Sign in to your account
       </Heading>
       <Text style={textStyle}>
-        Click the button below to sign in. This link will expire shortly, so please use it soon.
+        Click the button below to sign in. The link will expire shortly, so please use it soon, and
+        do not forward this email - anyone with the link can sign in as you.
       </Text>
       <CtaButton label="Sign in" href={properties.url} theme={theme} />
+      <Text style={fallbackTextStyle}>
+        If the button does not work, copy this link into your browser:
+        <br />
+        <Link href={properties.url}>{properties.url}</Link>
+      </Text>
     </EmailLayout>
   );
 }

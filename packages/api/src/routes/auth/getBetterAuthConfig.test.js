@@ -647,6 +647,97 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     );
   });
 
+  test('sendMagicLink links at the verify endpoint when authPages.magicLink is unset', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        authPages: { signIn: '/login', error: '/auth/error' },
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      }),
+      config: { basePath: '/base' },
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const magicPlugin = options.plugins.find((p) => p.id === 'magic-link');
+    await magicPlugin.options.sendMagicLink({
+      email: 'user@example.com',
+      url: 'https://app.example.com/base/api/auth/magic-link/verify?token=mmm&callbackURL=%2Fbase%2Freports',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        vars: {
+          url: 'https://app.example.com/base/api/auth/magic-link/verify?token=mmm&callbackURL=%2Fbase%2Freports',
+        },
+      })
+    );
+  });
+
+  // The landing page keeps the single-use token unspent until a real click -
+  // mail-security scanners GET the emailed link at delivery time, and the verify
+  // endpoint consumes the token on that first GET.
+  test('sendMagicLink links at the landing page, carrying the whole verify query', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        authPages: { signIn: '/login', error: '/auth/error', magicLink: '/magic-link' },
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      }),
+      config: { basePath: '/base' },
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const magicPlugin = options.plugins.find((p) => p.id === 'magic-link');
+    await magicPlugin.options.sendMagicLink({
+      email: 'user@example.com',
+      url: 'https://app.example.com/base/api/auth/magic-link/verify?token=mmm&callbackURL=%2Fbase%2Freports&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        flow: 'magicLink',
+        vars: {
+          url: 'https://app.example.com/base/magic-link?token=mmm&callbackURL=%2Fbase%2Freports&errorCallbackURL=%2Fbase%2Fauth%2Ferror',
+        },
+      })
+    );
+  });
+
+  // BETTER_AUTH_URL is unset here, so baseUrlOrigin is undefined while BetterAuth
+  // has already derived the request's origin onto the verify URL - the landing
+  // URL has to take the origin from there or it is not an absolute URL at all.
+  test('sendMagicLink takes the landing origin from the verify url, not the pinned base url', async () => {
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({
+        email: emailConfig,
+        authPages: { signIn: '/login', error: '/auth/error', magicLink: '/magic-link' },
+        magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
+      }),
+      createSystemContext,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    const magicPlugin = options.plugins.find((p) => p.id === 'magic-link');
+    await magicPlugin.options.sendMagicLink({
+      email: 'user@example.com',
+      url: 'https://derived.example.com/api/auth/magic-link/verify?token=mmm',
+    });
+    expect(mockRenderAuthEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        vars: { url: 'https://derived.example.com/magic-link?token=mmm' },
+      })
+    );
+  });
+
   test('the invitation sender composes the accept URL when origin and acceptInvitation are set', async () => {
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const options = getBetterAuthConfig({

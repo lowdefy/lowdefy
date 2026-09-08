@@ -112,6 +112,7 @@ _ref:
                 | `twoFactor` | — | **required** when `twoFactor.enabled` |
                 | `twoFactorEnrol` | — | **required** when `twoFactor.required` |
                 | `acceptInvitation` | — | consumes an `?invitationId=` link |
+                | `magicLink` | — | landing page for the sign-in email; only valid with `magicLink.enabled` |
 
                 ```yaml
                 lowdefy: {{ version }}
@@ -121,6 +122,54 @@ _ref:
                     signUp: /signup
                     error: /auth-error
                 ```
+
+                ### The magic link landing page
+
+                `authPages.magicLink` is opt-in, and it exists for one reason: Better Auth's magic-link verify endpoint consumes the single-use token on the **first** `GET` of the URL. Corporate mail security — Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast — fetches every link in a message at delivery time, so that first `GET` is a scanner and the person clicking arrives to `INVALID_TOKEN`.
+
+                Set the key and the sign-in email links to a page of your own instead, with the token and the callback destinations carried on its URL query. Fetching a Lowdefy page is harmless, so the token stays unspent until a real click runs [`MagicLinkVerify`](/MagicLinkVerify):
+
+                ```yaml
+                lowdefy: {{ version }}
+                auth:
+                  magicLink:
+                    enabled: true
+                  authPages:
+                    magicLink: /magic-link
+                  pages:
+                    public:
+                      - magic-link
+                ```
+
+                ```yaml
+                id: magic-link
+                type: PageHeaderMenu
+                blocks:
+                  - id: content
+                    type: Box
+                    blocks:
+                      - id: title
+                        type: Title
+                        properties:
+                          content: Sign in
+                          level: 3
+                      - id: description
+                        type: Paragraph
+                        properties:
+                          content: Click the button below to finish signing in.
+                      - id: verify_button
+                        type: Button
+                        properties:
+                          title: Sign in
+                        events:
+                          onClick:
+                            - id: verify
+                              type: MagicLinkVerify
+                ```
+
+                The page must **not** call `MagicLinkVerify` in `onMount`, and must not auto-redirect to the verify endpoint. Scanning sandboxes that render the page and execute its JavaScript would consume the token anyway, which puts you back where you started. The protection is the click, not the page.
+
+                Leave the key unset and magic-link sign-in keeps working exactly as before, linking straight at the verify endpoint.
 
                 See [Two-Factor Authentication](/two-factor) for the two-factor pages, and the [MCP Server & OAuth](/mcp-oauth) page for `oauthProvider.consentPage` and `postLoginPage`.
 

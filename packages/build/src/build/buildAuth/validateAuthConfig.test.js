@@ -896,6 +896,47 @@ test('validateAuthConfig throws when phoneNumber contains an unknown property', 
   expect(() => validateAuthConfig({ components, context })).toThrow(/contains an unknown property/);
 });
 
+test('validateAuthConfig throws when authPages.magicLink is set without magicLink enabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailAndPassword: { enabled: true },
+      authPages: { magicLink: '/magic-link' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "authPages.magicLink" applies only when "magicLink.enabled" is true - the sign-in email is the only thing that navigates to the landing page.'
+  );
+});
+
+test('validateAuthConfig passes when authPages.magicLink is set with magicLink enabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: { connectionId: 'email' },
+      authPages: { magicLink: '/magic-link' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+// The landing page stays opt-in: every app already shipping magic-link sign-in
+// keeps building, and keeps linking straight at the verify endpoint.
+test('validateAuthConfig does not require authPages.magicLink when magicLink is enabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      magicLink: { enabled: true },
+      email: { connectionId: 'email' },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
 test('validateAuthConfig throws when twoFactor is enabled without authPages.twoFactor', () => {
   const components = {
     auth: {

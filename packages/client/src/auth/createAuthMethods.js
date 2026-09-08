@@ -706,6 +706,70 @@ function createAuthMethods(lowdefy, auth) {
     return data;
   }
 
+  // The landing-page half of the magic-link flow. BetterAuth's verify endpoint
+  // consumes the token atomically on its first GET, and corporate mail security
+  // (Defender Safe Links, Proofpoint URL Defense, Mimecast) GETs every link in a
+  // delivered message - so when the email points at verify directly, the scanner
+  // spends the token and the person lands on INVALID_TOKEN. With
+  // authPages.magicLink set, the engine points the email at a Lowdefy page
+  // instead, which is inert to a fetch, and this method walks to verify on a real
+  // click.
+  //
+  // No BetterAuth client call: verify answers with a Set-Cookie and its own
+  // redirect, which only a whole-document navigation can follow. That is also why
+  // the chain stops here, like every other navigating method - a step after it
+  // would race the page being replaced.
+  //
+  // The engine copied the verify URL's whole query onto the landing URL, so the
+  // token and the three destinations are already on this page. The params exist
+  // to override them; each falls back to the query value, and errorCallbackURL
+  // falls back once more to the app's authPages.error, mirroring the default
+  // Login applies when it asks for the link.
+  function magicLinkVerify({ callbackUrl, errorCallbackUrl, newUserCallbackUrl, token } = {}) {
+    const window = lowdefy._internal?.globals?.window;
+    const pageQuery = new URLSearchParams(window?.location?.search ?? '');
+    const verifyToken = type.isString(token) ? token : pageQuery.get('token');
+    if (!type.isString(verifyToken) || verifyToken === '') {
+      throw new Error(
+        'MagicLinkVerify requires a "token" param, or a "token" URL query parameter on the landing page the sign-in email links to.'
+      );
+    }
+    // Every destination here is spent by BetterAuth as a later redirect hop, so
+    // "stay put" cannot be honored - the browser has already left.
+    assertCallbackUrlNavigable({ callbackUrl, method: 'MagicLinkVerify' });
+
+    const verifyQuery = new URLSearchParams({ token: verifyToken });
+    const params = {
+      callbackURL: callbackUrl,
+      newUserCallbackURL: newUserCallbackUrl,
+      errorCallbackURL: errorCallbackUrl,
+    };
+    Object.entries(params).forEach(([key, param]) => {
+      const explicit = serializeTarget(resolveTarget({ lowdefy, target: param, name: key }));
+      const resolved = type.isNone(explicit) ? pageQuery.get(key) : explicit;
+      if (!type.isNone(resolved)) {
+        verifyQuery.set(key, resolved);
+      }
+    });
+    if (!verifyQuery.has('errorCallbackURL')) {
+      const errorPage = auth.authConfig?.authPages?.error;
+      const errorTarget = type.isString(errorPage)
+        ? serializeTarget(
+            resolveTarget({ lowdefy, target: { url: errorPage }, name: 'errorCallbackUrl' })
+          )
+        : undefined;
+      if (!type.isNone(errorTarget)) {
+        verifyQuery.set('errorCallbackURL', errorTarget);
+      }
+    }
+
+    // The same address the email used to carry: basePath, then BetterAuth's
+    // mount, which AuthConfigured gives the client as `${basePath}/api/auth`.
+    const url = `${lowdefy.basePath ?? ''}/api/auth/magic-link/verify?${verifyQuery.toString()}`;
+    lowdefy._internal.globals.window.location.assign(url);
+    return stopChain({ url });
+  }
+
   async function twoFactorDisable({ password, ...rest } = {}) {
     if (!type.isString(password)) {
       throw new Error('TwoFactorDisable requires a "password" param.');
@@ -775,6 +839,7 @@ function createAuthMethods(lowdefy, auth) {
     listOrganizations,
     login,
     logout,
+    magicLinkVerify,
     oauth2Consent,
     oauth2Continue,
     passkeyDelete,

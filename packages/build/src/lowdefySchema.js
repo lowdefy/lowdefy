@@ -1407,6 +1407,14 @@ export default {
                 type: 'Auth "authPages.acceptInvitation" should be a string.',
               },
             },
+            magicLink: {
+              type: 'string',
+              description:
+                'Public landing page the sign-in email links to instead of the verify endpoint, carrying the ?token= and callback queries forward. A MagicLinkVerify action on the page spends the token on a real click, so link-scanning mail security cannot consume it at delivery time.',
+              errorMessage: {
+                type: 'Auth "authPages.magicLink" should be a string.',
+              },
+            },
           },
           errorMessage: {
             type: 'Auth "authPages" should be an object.',

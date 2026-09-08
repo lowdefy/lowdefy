@@ -29,6 +29,7 @@ export default {
     'ListOrganizations',
     'Login',
     'Logout',
+    'MagicLinkVerify',
     'OAuthConsent',
     'OAuthContinue',
     'PasskeyDelete',
