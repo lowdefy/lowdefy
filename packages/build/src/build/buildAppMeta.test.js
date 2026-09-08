@@ -66,6 +66,7 @@ test('buildAppMeta resolves literal root metadata into context.appMeta', async (
     license: 'MIT',
     lowdefyVersion: '5.0.0',
     gitSha: 'test-sha',
+    buildId: expect.any(String),
   });
   expect(context.errors).toEqual([]);
 });
@@ -82,8 +83,19 @@ test('buildAppMeta sets unset fields to null', async () => {
     license: null,
     lowdefyVersion: '5.0.0',
     gitSha: 'test-sha',
+    buildId: expect.any(String),
   });
   expect(context.errors).toEqual([]);
+});
+
+test('buildAppMeta stamps a non-empty buildId that differs between builds', async () => {
+  mockGetRefContent.mockResolvedValue({ lowdefy: '5.0.0' });
+  const context1 = makeContext();
+  await buildAppMeta({ context: context1 });
+  const context2 = makeContext();
+  await buildAppMeta({ context: context2 });
+  expect(context1.appMeta.buildId.length).toBeGreaterThan(0);
+  expect(context2.appMeta.buildId).not.toEqual(context1.appMeta.buildId);
 });
 
 test('buildAppMeta does not throw on unset slug', async () => {

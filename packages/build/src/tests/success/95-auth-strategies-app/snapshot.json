@@ -102,6 +102,7 @@
     "license": null,
     "lowdefyVersion": "local",
     "gitSha": "test-git-sha-for-snapshots",
+    "buildId": "<BUILD_ID>",
     "~k": "21"
   },
   "auth.json": {
