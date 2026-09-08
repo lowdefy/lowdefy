@@ -43,6 +43,28 @@ test('MagicLinkEmail renders the url as readable fallback text under the button'
   expect(text).toContain('https://example.com/magic-link?token=abc');
 });
 
+test('MagicLinkEmail carries the one-time code below the button when an otp is given', async () => {
+  const { html, text } = await renderEmail({
+    Template: MagicLinkEmail,
+    properties: { url: 'https://example.com/verify?token=abc', otp: '482913', expiresIn: 300 },
+    theme: {},
+  });
+  expect(html).toContain('482913');
+  expect(html).toContain('https://example.com/verify?token=abc');
+  expect(text).toContain('Or enter this code where you requested the link');
+  expect(text).toContain('expires in 5 minutes');
+});
+
+test('MagicLinkEmail renders no code section when no otp is given', async () => {
+  const { text } = await renderEmail({
+    Template: MagicLinkEmail,
+    properties: { url: 'https://example.com/verify?token=abc' },
+    theme: {},
+  });
+  expect(text).not.toContain('Or enter this code');
+  expect(text).not.toContain('only be used once');
+});
+
 test('MagicLinkEmail subject is the expected string', () => {
   expect(MagicLinkEmail.subject).toEqual('Your sign-in link');
 });
