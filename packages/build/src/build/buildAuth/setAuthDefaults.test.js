@@ -244,6 +244,28 @@ test('setAuthDefaults fills magicLink defaults when present', () => {
   });
 });
 
+test('setAuthDefaults fills emailOTP defaults when present', () => {
+  const components = {
+    auth: {
+      configured: true,
+      emailOTP: { enabled: true },
+    },
+  };
+  const res = setAuthDefaults({ components });
+  expect(res.auth.emailOTP).toEqual({
+    enabled: true,
+    otpLength: 6,
+    expiresIn: 300,
+    allowedAttempts: 3,
+    disableSignUp: false,
+  });
+});
+
+test('setAuthDefaults does not add an emailOTP block when absent', () => {
+  const res = setAuthDefaults({ components: { auth: { configured: true } } });
+  expect(res.auth.emailOTP).toBeUndefined();
+});
+
 test('setAuthDefaults does not add twoFactor or passkey blocks when absent', () => {
   const components = {
     auth: {

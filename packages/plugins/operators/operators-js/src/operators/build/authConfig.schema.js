@@ -21,6 +21,7 @@ export default {
     enum: [
       'emailAndPassword.enabled',
       'magicLink.enabled',
+      'emailOTP.enabled',
       'twoFactor.enabled',
       'passkey.enabled',
       'phoneNumber.enabled',

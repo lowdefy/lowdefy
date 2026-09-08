@@ -22,6 +22,7 @@ import { get, type } from '@lowdefy/helpers';
 const readablePaths = [
   'emailAndPassword.enabled',
   'magicLink.enabled',
+  'emailOTP.enabled',
   'twoFactor.enabled',
   'twoFactor.required',
   'twoFactor.trustDevice',
