@@ -2398,6 +2398,9 @@ importers:
       hono:
         specifier: 4.12.25
         version: 4.12.25
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.2)
       pino:
         specifier: 10.3.1
         version: 10.3.1

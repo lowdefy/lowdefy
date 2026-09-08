@@ -242,7 +242,9 @@ test('tools/call returns a 401-shaped error result for an unauthenticated caller
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
-  expect(logger.warn).toHaveBeenCalledWith('Unauthenticated MCP tool call: get-customer');
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - Authentication required for API endpoint "get-customer".'
+  );
   expect(logger.error).not.toHaveBeenCalled();
 });
 

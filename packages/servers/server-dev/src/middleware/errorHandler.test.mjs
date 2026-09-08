@@ -63,6 +63,32 @@ function createAuthorizationError(message) {
   return error;
 }
 
+function createErrorWithCause() {
+  const cause = new Error('Cause message.');
+  cause.received = `${SECRET}-cause`;
+  const error = new Error('Top message.', { cause });
+  error.received = `${SECRET}-top`;
+  error.configKey = 'page:home.blocks.0';
+  return error;
+}
+
+test('errorHandler returns 401 with only name and message for an AuthenticationError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createAuthenticationError('Unauthenticated.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(401);
+  expect(await res.json()).toEqual({ name: 'AuthenticationError', message: 'Unauthenticated.' });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Unauthenticated request/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
 test('errorHandler does not send an AuthenticationError through the redactor', async () => {
   const res = await createApp({
     error: createAuthenticationError('Unauthenticated.'),
