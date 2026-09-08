@@ -33,7 +33,7 @@ _ref:
 
                 The `_secret` operator is evaluated over the entire `auth` section, so any value can be a secret reference.
 
-                For a login method to work you must configure **at least one mechanism** (`emailAndPassword`, `magicLink`, `phoneNumber`, an OAuth `providers` entry, or an API `strategies` entry), a `secret`, and a `database`. An `auth` block with none of these fails the build.
+                For a login method to work you must configure **at least one mechanism** (`emailAndPassword`, `magicLink`, `emailOTP`, `phoneNumber`, an OAuth `providers` entry, or an API `strategies` entry), a `secret`, and a `database`. An `auth` block with none of these fails the build.
 
                 ## Secret
 
@@ -69,6 +69,7 @@ _ref:
 
                 - **Email & password** — `auth.emailAndPassword` (`enabled`, `requireEmailVerification`, `minPasswordLength` (default 8), `disableSignUp`).
                 - **Magic link** — `auth.magicLink` (`enabled`, `expiresIn` seconds (default 300), `disableSignUp`), which needs `auth.email` (below).
+                - **Email one-time code** — `auth.emailOTP` (`enabled`, `otpLength` (default 6), `expiresIn` seconds (default 300), `allowedAttempts` (default 3), `disableSignUp` (default `false`)), which needs `auth.email` (below). The person is emailed a code and types it into the tab they started from, so the sign-in survives mail security that pre-fetches links, and works when the email is opened on another device.
                 - **OAuth providers** — `auth.providers`; see [Providers](/auth-providers).
                 - **Phone number** — `auth.phoneNumber` (OTP sign-in); needs a `phone.otp.send` hook to deliver the SMS.
                 - **Passkeys** — `auth.passkey` (`enabled`, `rpId`, `rpName`).
@@ -95,7 +96,14 @@ _ref:
                       resetPassword: reset-password-notification
                       magicLink: magic-link-notification
                       invitation: invite-notification
+                      emailOTP: email-otp-notification
                 ```
+
+                ### Link and code in one email
+
+                With both `magicLink` and `emailOTP` enabled, the magic-link email also carries the one-time code, so a single email serves both paths: the person clicks the button, or types the code into the tab they asked for the link from. Nothing extra is sent — the `emailOTP` template is only used for a code-only send.
+
+                The `magicLink` template then has two more variables available: `otp` (the code) and `expiresIn` (the code's lifetime in seconds, from `auth.emailOTP.expiresIn`). The stock template renders them below the sign-in button; a template of your own can place them wherever it likes. With `emailOTP` off both are absent and the link email is unchanged.
 
                 ## Auth pages
 
