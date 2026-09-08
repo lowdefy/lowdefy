@@ -686,20 +686,27 @@ async function prepareRef(node, ctx) {
   if (type.isObject(refDef.path)) {
     refDef.path = await resolve(cloneWithMarkers(refDef.path), ctx);
   }
-  await Promise.all(
-    varKeys.map(async (varKey) => {
-      if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
-        // Under prepare (deferModuleRefs), nested module refs inside this ref's
-        // vars become entryRef records too. Extend the path with a reserved
-        // segment so their coordinates are unique (distinct from this ref's own
-        // record) and recognizably nested (slot: null — their placeholder lives
-        // in the prepared body, not in consumerVars).
-        const varCtx =
-          ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
-        refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
-      }
-    }),
-  );
+  if (type.isObject(refDef.vars) && !type.isUndefined(refDef.vars._ref)) {
+    // A _ref at the root of vars resolves to the whole vars object
+    // (vars: { _ref: config.yaml }).
+    const varCtx = ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars') : ctx;
+    refDef.vars = (await resolve(refDef.vars, varCtx)) ?? {};
+  } else {
+    await Promise.all(
+      varKeys.map(async (varKey) => {
+        if (type.isObject(refDef.vars[varKey]) || type.isArray(refDef.vars[varKey])) {
+          // Under prepare (deferModuleRefs), nested module refs inside this ref's
+          // vars become entryRef records too. Extend the path with a reserved
+          // segment so their coordinates are unique (distinct from this ref's own
+          // record) and recognizably nested (slot: null — their placeholder lives
+          // in the prepared body, not in consumerVars).
+          const varCtx =
+            ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
+          refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
+        }
+      }),
+    );
+  }
   if (type.isObject(refDef.key)) {
     refDef.key = await resolve(cloneWithMarkers(refDef.key), ctx);
   }
