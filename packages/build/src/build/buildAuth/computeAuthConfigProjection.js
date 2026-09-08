@@ -32,6 +32,7 @@ function computeAuthConfigProjection(auth = {}) {
   return {
     emailAndPassword: { enabled: source.emailAndPassword?.enabled === true },
     magicLink: { enabled: source.magicLink?.enabled === true },
+    emailOTP: { enabled: source.emailOTP?.enabled === true },
     twoFactor: {
       enabled: !type.isNone(source.twoFactor) && source.twoFactor.enabled !== false,
       // Strict === true so an absent twoFactor block projects false rather than

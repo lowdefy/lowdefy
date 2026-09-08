@@ -570,6 +570,54 @@ export default {
             },
           },
         },
+        emailOTP: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailOTP.enabled" should be a boolean.',
+              },
+            },
+            otpLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.otpLength" should be an integer.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.expiresIn" should be an integer (seconds).',
+              },
+            },
+            allowedAttempts: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.allowedAttempts" should be an integer.',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailOTP.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "emailOTP" should be an object.',
+            additionalProperties:
+              'Auth "emailOTP" contains an unknown property. The known properties are "enabled", "otpLength", "expiresIn", "allowedAttempts" and "disableSignUp".',
+            required: {
+              enabled: 'Auth "emailOTP" should have required property "enabled".',
+            },
+          },
+        },
         // Auth email references an SMTP connection by id — the connection owns
         // "from", "replyTo", the transport, and the delivery filter. There is
         // no inline transport shape; the runtime reads only connectionId and
@@ -619,9 +667,15 @@ export default {
                     type: 'Auth "email.templates.invitation" should be a string — a notification id from "notifications".',
                   },
                 },
+                emailOTP: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.emailOTP" should be a string — a notification id from "notifications".',
+                  },
+                },
               },
               errorMessage: {
-                type: 'Auth "email.templates" should be an object mapping auth email flows (verifyEmail, resetPassword, magicLink, invitation) to notification ids.',
+                type: 'Auth "email.templates" should be an object mapping auth email flows (verifyEmail, resetPassword, magicLink, invitation, emailOTP) to notification ids.',
               },
             },
           },

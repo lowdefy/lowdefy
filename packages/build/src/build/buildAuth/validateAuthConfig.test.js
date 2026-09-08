@@ -72,7 +72,7 @@ test('validateAuthConfig throws when configured without an authentication mechan
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
+    'Auth is configured without an authentication mechanism. Configure a login method ("emailAndPassword.enabled: true", "magicLink.enabled: true", "emailOTP.enabled: true" or "phoneNumber.enabled: true"), or an OAuth provider in "providers", or an API auth strategy in "strategies".'
   );
 });
 
@@ -212,7 +212,7 @@ test('validateAuthConfig throws when email is missing and magicLink is enabled',
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "email" is required when "magicLink" is enabled or "emailAndPassword.requireEmailVerification" is true.'
+    'Auth "email" is required when "magicLink" or "emailOTP" is enabled, or "emailAndPassword.requireEmailVerification" is true.'
   );
 });
 
@@ -225,7 +225,7 @@ test('validateAuthConfig throws when email is missing and requireEmailVerificati
     },
   };
   expect(() => validateAuthConfig({ components, context })).toThrow(
-    'Auth "email" is required when "magicLink" is enabled or "emailAndPassword.requireEmailVerification" is true.'
+    'Auth "email" is required when "magicLink" or "emailOTP" is enabled, or "emailAndPassword.requireEmailVerification" is true.'
   );
 });
 
@@ -238,6 +238,45 @@ test('validateAuthConfig passes with a minimal valid emailAndPassword mechanism'
     },
   };
   expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig counts emailOTP.enabled as an authentication mechanism', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      email: { connectionId: 'email' },
+      emailOTP: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).not.toThrow();
+});
+
+test('validateAuthConfig throws when email is missing and emailOTP is enabled', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      emailOTP: { enabled: true },
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "email" is required when "magicLink" or "emailOTP" is enabled, or "emailAndPassword.requireEmailVerification" is true.'
+  );
+});
+
+test('validateAuthConfig throws when emailOTP is missing "enabled"', () => {
+  const components = {
+    auth: {
+      secret: validSecret,
+      database: validDatabase,
+      email: { connectionId: 'email' },
+      emailOTP: {},
+    },
+  };
+  expect(() => validateAuthConfig({ components, context })).toThrow(
+    'Auth "emailOTP" should have required property "enabled".'
+  );
 });
 
 test('validateAuthConfig passes with a magicLink mechanism when email is configured', () => {
@@ -267,6 +306,7 @@ test('validateAuthConfig passes with email templates overrides', () => {
           resetPassword: 'reset-password-notification',
           magicLink: 'magic-link-notification',
           invitation: 'invite-notification',
+          emailOTP: 'email-otp-notification',
         },
       },
     },

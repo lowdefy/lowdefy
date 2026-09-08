@@ -100,7 +100,8 @@ test('_authConfig returns organizations.policy', () => {
 test('_authConfig throws for unknown path and names all readable paths', () => {
   expect(() => _authConfig({ authConfig, params: 'authPages.signIn' })).toThrow(
     '_build.authConfig received an unreadable path "authPages.signIn". Readable paths are: ' +
-      '"emailAndPassword.enabled", "magicLink.enabled", "twoFactor.enabled", "twoFactor.required", ' +
+      '"emailAndPassword.enabled", "magicLink.enabled", "emailOTP.enabled", ' +
+      '"twoFactor.enabled", "twoFactor.required", ' +
       '"twoFactor.trustDevice", "passkey.enabled", ' +
       '"phoneNumber.enabled", "phoneNumber.signUpOnVerification", ' +
       '"captcha.enabled", "captcha.provider", "captcha.siteKey", ' +
