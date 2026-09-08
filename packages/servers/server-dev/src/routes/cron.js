@@ -21,7 +21,9 @@ import getPathSegments from '../lib/getPathSegments.js';
 // Triggered by Vercel Cron in production: an HTTP GET to /api/cron/<endpointId>. Available in dev so
 // scheduled endpoints can be triggered locally with curl. Vercel auto-sends the value of the project
 // env var named exactly CRON_SECRET as `Authorization: Bearer <value>`, and the firing cron
-// expression in the `x-vercel-cron-schedule` header. Fails closed if CRON_SECRET is unset.
+// expression in the `x-vercel-cron-schedule` header. Fails closed if CRON_SECRET is unset. A request
+// forwarded from the production deployment of another environment (see cronForward.js) also names
+// the environment whose schedules apply in `x-lowdefy-cron-environment`.
 async function cronHandler(c) {
   if (c.req.method !== 'GET') {
     // A wrong-method request is client-caused: answer 405 rather than raising a
@@ -38,8 +40,9 @@ async function cronHandler(c) {
 
   const endpointId = getPathSegments(c, '/api/cron/').join('/');
   const cron = c.req.header('x-vercel-cron-schedule');
-  context.logger.info({ event: 'call_cron_endpoint', endpointId, cron });
-  const response = await runScheduledEndpoint(context, { endpointId, cron });
+  const environment = c.req.header('x-lowdefy-cron-environment');
+  context.logger.info({ event: 'call_cron_endpoint', endpointId, cron, environment });
+  const response = await runScheduledEndpoint(context, { endpointId, cron, environment });
   return c.json(response);
 }
 
