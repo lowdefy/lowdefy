@@ -255,7 +255,7 @@ Loading orders...
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | string | - | Size of the icon spinner. Enum: `small`, `medium`, `large`. |
+| `size` | string \| number | - | Size of the icon spinner: small, medium, large, or a pixel number. |
 
 No events defined.
 

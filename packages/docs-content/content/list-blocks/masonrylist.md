@@ -1,6 +1,6 @@
 # MasonryList
 
-Masonry-style grid layout for list data. Items flow into columns and stack vertically, filling gaps left by shorter items. Provide an array in state and use _state operators in the template to access each item&#39;s data.
+Masonry-style grid layout for list data. Items flow into columns and stack vertically, filling gaps left by shorter items. Provide an array in state and use _state operators in the template to access each item's data.
 
 ```yaml
 - id: ml_basic

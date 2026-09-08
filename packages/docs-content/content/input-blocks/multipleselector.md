@@ -1280,7 +1280,7 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `loadingPlaceholder` | string | `"Loading"` | Placeholder text to show in options while the block is loading. |
 | `notFoundContent` | string | `"not Found"` | Placeholder text to show when list of options are empty. |
 | `selectedIcon` | string \| object | `"AiOutlineCheck"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize at the drop-down position of the selector. |
 | `title` | string | - | Multiple selector label title - supports html. |

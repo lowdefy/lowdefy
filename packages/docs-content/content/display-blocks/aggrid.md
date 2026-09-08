@@ -6,12 +6,12 @@ AG Grid data table with sorting, filtering, and row selection. Four display bloc
 
 Four display blocks share one implementation and one property schema. They differ only in how they look:
 
-| Block | Look |
-| --- | --- |
-| `AgGridLowdefy` | Themed from the app's antd design tokens. **Recommended for Lowdefy apps.** |
-| `AgGridAlpine` | AG Grid's Alpine theme, recoloured with the app's antd tokens. |
-| `AgGridBalham` | AG Grid's Balham theme, recoloured with the app's antd tokens. Compact. |
-| `AgGridMaterial` | AG Grid's Material theme, recoloured with the app's antd tokens. |
+| Block            | Look                                                                        |
+| ---------------- | --------------------------------------------------------------------------- |
+| `AgGridLowdefy`  | Themed from the app's antd design tokens. **Recommended for Lowdefy apps.** |
+| `AgGridAlpine`   | AG Grid's Alpine theme, recoloured with the app's antd tokens.              |
+| `AgGridBalham`   | AG Grid's Balham theme, recoloured with the app's antd tokens. Compact.     |
+| `AgGridMaterial` | AG Grid's Material theme, recoloured with the app's antd tokens.            |
 
 Each has an input counterpart that holds the table data as the block's value: `AgGridLowdefyInput`, `AgGridInputAlpine`, `AgGridInputBalham` and `AgGridInputMaterial`.
 
@@ -21,11 +21,11 @@ Each has an input counterpart that holds the table data as the block's value: `A
 
 `AgGridLowdefy` and `AgGridLowdefyInput` take a `size` property, mirroring antd Table:
 
-| `size` | Row and header height |
-| --- | --- |
-| `small` | 36px |
-| `middle` (default) | 44px |
-| `large` | 54px |
+| `size`             | Row and header height |
+| ------------------ | --------------------- |
+| `small`            | 36px                  |
+| `middle` (default) | 44px                  |
+| `large`            | 54px                  |
 
 `size` changes spacing and heights only — colours and font size are identical across sizes.
 
@@ -62,13 +62,13 @@ Setting AG Grid's `--ag-*` CSS variables in a block's `style` **still works** �
 
 The one thing that did change: AG Grid v33 renamed or folded away a number of the v32 `--ag-*` variables, and an override naming one of those now does nothing. The variables used in the example above map to parameters like this:
 
-| `style` key (v32 `--ag-*`) | `themeParams` key |
-| --- | --- |
-| `--ag-header-background-color` | `headerBackgroundColor` |
-| `--ag-header-foreground-color` | `headerTextColor` |
+| `style` key (v32 `--ag-*`)           | `themeParams` key            |
+| ------------------------------------ | ---------------------------- |
+| `--ag-header-background-color`       | `headerBackgroundColor`      |
+| `--ag-header-foreground-color`       | `headerTextColor`            |
 | `--ag-selected-row-background-color` | `selectedRowBackgroundColor` |
-| `--ag-row-hover-color` | `rowHoverColor` |
-| `--ag-border-color` | `borderColor` |
+| `--ag-row-hover-color`               | `rowHoverColor`              |
+| `--ag-border-color`                  | `borderColor`                |
 
 Four of those five variable names still work as-is. `--ag-header-foreground-color` is the exception: v33 renamed it to `--ag-header-text-color`, so an app still setting the old name gets no header text colour and no warning. Move it to `themeParams.headerTextColor`.
 
@@ -1320,7 +1320,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.sortable` | boolean | `false` | Set to true to allow sorting on this column. |
 | `columnDefs.$.resizable` | boolean | `false` | Set to true to allow this column should be resized. |
 | `columnDefs.$.width` | number | - | Initial width in pixels for the cell. |
-| `columnDefs.$.cellStyle` | number | - | An object of css values returning an object of css values for a particular cell. |
+| `columnDefs.$.cellStyle` | object | - | An object of css values returning an object of css values for a particular cell. |
 | `columnDefs.$.cellRenderer` | object | - | Provide your own cell Renderer function (using the `_function` operator) for this column's cells. |
 | `columnDefs.$.valueFormatter` | object \| string | - | A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering. |
 | `columnDefs.$.tooltipField` | string | - | The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component. |

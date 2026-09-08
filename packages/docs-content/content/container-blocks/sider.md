@@ -1046,7 +1046,7 @@ Use the sidebar on the left to browse through different sections. On smaller scr
 | `initialCollapsed` | boolean | `true` | Set the initial collapsed state |
 | `reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right |
 | `width` | string \| number | - | width of the sidebar |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | string \| object | - | The Sider color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
