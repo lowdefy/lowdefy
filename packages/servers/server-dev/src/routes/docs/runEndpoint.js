@@ -25,8 +25,9 @@ import runEndpoint from '../../../lib/docs/runEndpoint.js';
 // the error handler.
 async function docsRunEndpointHandler(c) {
   // Parse the body from a clone: runEndpoint builds a Lowdefy context whose
-  // resolveAuthentication reads c.req.raw (headers) to resolve the caller,
-  // so leave the original request body intact and read our own copy here.
+  // getSession(c) reconstructs a Request from c.req.raw, which throws if the
+  // body was already consumed, so leave the original request body intact and
+  // read our own copy here.
   const { endpointId, payload, user } = await c.req.raw.clone().json();
   const { user: parsedUser, error: userError } = parseUserParam({ value: user });
   if (userError) {

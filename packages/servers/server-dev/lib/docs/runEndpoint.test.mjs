@@ -159,7 +159,7 @@ test('runEndpoint defaults the payload to an empty object', async () => {
 });
 
 test('runEndpoint passes the user to createLowdefyContext and logs the run', async () => {
-  const user = { roles: ['admin'], organization_id: 'org_1' };
+  const user = { roles: ['admin'], id: 'user_1' };
 
   await runEndpoint({ endpointId: 'create_order', user, honoContext });
 

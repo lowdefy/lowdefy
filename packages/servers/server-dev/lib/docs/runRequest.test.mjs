@@ -56,7 +56,7 @@ beforeEach(() => {
 });
 
 test('runRequest passes a user object to createLowdefyContext', async () => {
-  const user = { roles: ['admin'], organization_id: 'org_1' };
+  const user = { roles: ['admin'], id: 'user_1' };
 
   const result = await runRequest({
     pageId: 'home',
