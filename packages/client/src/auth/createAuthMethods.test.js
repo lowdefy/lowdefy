@@ -84,6 +84,8 @@ function setup({ signInResult, signUpResult } = {}) {
         error: null,
       })
     ),
+    emailOtpSend: jest.fn(() => Promise.resolve({ data: { success: true }, error: null })),
+    emailOtpVerify: jest.fn(() => Promise.resolve({ data: { token: 't', user: {} }, error: null })),
     phoneNumberRequestPasswordReset: jest.fn(() =>
       Promise.resolve({ data: { status: true }, error: null })
     ),
@@ -2107,4 +2109,113 @@ test('twoFactorVerify navigates on a successful challenge without ending the cha
   });
   expect(assign.mock.calls).toEqual([['/reports']]);
   expect(res.responses.after).toEqual({ type: 'Next', response: 'next', index: 1 });
+});
+
+test('emailOtpSend calls the client send with the email and the sign-in type', async () => {
+  const { auth, lowdefy } = setup();
+  const { emailOtpSend } = createAuthMethods(lowdefy, auth);
+  await emailOtpSend({ email: 'user@example.com' });
+  expect(auth.emailOtpSend.mock.calls).toEqual([[{ email: 'user@example.com', type: 'sign-in' }]]);
+});
+
+test('emailOtpSend passes the captcha token as the x-captcha-response header', async () => {
+  const { auth, lowdefy } = setup();
+  const { emailOtpSend } = createAuthMethods(lowdefy, auth);
+  await emailOtpSend({ email: 'user@example.com', captchaToken: 'captcha-1' });
+  expect(auth.emailOtpSend.mock.calls).toEqual([
+    [
+      {
+        email: 'user@example.com',
+        type: 'sign-in',
+        fetchOptions: { headers: { 'x-captcha-response': 'captcha-1' } },
+      },
+    ],
+  ]);
+});
+
+test('emailOtpSend throws when email is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { emailOtpSend } = createAuthMethods(lowdefy, auth);
+  await expect(emailOtpSend({})).rejects.toThrow('EmailOtpSend requires an "email" param.');
+});
+
+test('emailOtpVerify calls the client verify with the email and code', async () => {
+  const { auth, lowdefy } = setup();
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await emailOtpVerify({ email: 'user@example.com', otp: '482913' });
+  expect(auth.emailOtpVerify.mock.calls).toEqual([[{ email: 'user@example.com', otp: '482913' }]]);
+});
+
+test('emailOtpVerify throws when email or otp is missing', async () => {
+  const { auth, lowdefy } = setup();
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await expect(emailOtpVerify({ email: 'user@example.com' })).rejects.toThrow(
+    'EmailOtpVerify requires "email" and "otp" params.'
+  );
+  await expect(emailOtpVerify({ otp: '482913' })).rejects.toThrow(
+    'EmailOtpVerify requires "email" and "otp" params.'
+  );
+});
+
+test('emailOtpVerify rethrows the BetterAuth error so onError chains fire', async () => {
+  const { auth, lowdefy } = setup();
+  auth.emailOtpVerify = jest.fn(() =>
+    Promise.resolve({ data: null, error: { message: 'Invalid OTP', code: 'INVALID_OTP' } })
+  );
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await expect(emailOtpVerify({ email: 'user@example.com', otp: '000000' })).rejects.toThrow(
+    'Invalid OTP'
+  );
+});
+
+test('emailOtpVerify navigates to an explicit callbackUrl, basePath-prefixed', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy.basePath = '/base';
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await emailOtpVerify({
+    email: 'user@example.com',
+    otp: '482913',
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/base/reports']]);
+});
+
+test('emailOtpVerify navigates to the ?callbackUrl= query when no param is given', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2Freports';
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await emailOtpVerify({ email: 'user@example.com', otp: '482913' });
+  expect(assign.mock.calls).toEqual([['/reports']]);
+});
+
+// A JSON sign-in with no redirect hop, so callbackUrl: false is honoured
+// rather than rejected the way the magic-link and OAuth paths reject it.
+test('emailOtpVerify with callbackUrl false stays put and does not throw', async () => {
+  const { auth, lowdefy, assign } = setup();
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  const data = await emailOtpVerify({
+    email: 'user@example.com',
+    otp: '482913',
+    callbackUrl: false,
+  });
+  expect(assign).not.toHaveBeenCalled();
+  expect(data).toEqual({ token: 't', user: {} });
+});
+
+test('emailOtpVerify navigates an enrolled user to the two factor challenge carrying the callbackUrl', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.authConfig = { providers: [], authPages: { twoFactor: '/two-factor' } };
+  auth.emailOtpVerify = jest.fn(() =>
+    Promise.resolve({
+      data: { twoFactorRedirect: true, twoFactorMethods: ['totp'] },
+      error: null,
+    })
+  );
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  await emailOtpVerify({
+    email: 'user@example.com',
+    otp: '482913',
+    callbackUrl: { url: '/reports' },
+  });
+  expect(assign.mock.calls).toEqual([['/two-factor?callbackUrl=%2Freports']]);
 });

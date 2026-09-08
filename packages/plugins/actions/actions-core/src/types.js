@@ -22,6 +22,8 @@ export default {
     'ChangePassword',
     'CopyToClipboard',
     'DisplayMessage',
+    'EmailOtpSend',
+    'EmailOtpVerify',
     'Fetch',
     'GeolocationCurrentPosition',
     'LeaveOrganization',

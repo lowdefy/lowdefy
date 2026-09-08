@@ -20,6 +20,8 @@ export { default as CallMethod } from './actions/CallMethod/schema.js';
 export { default as ChangePassword } from './actions/ChangePassword/schema.js';
 export { default as CopyToClipboard } from './actions/CopyToClipboard/schema.js';
 export { default as DisplayMessage } from './actions/DisplayMessage/schema.js';
+export { default as EmailOtpSend } from './actions/EmailOtpSend/schema.js';
+export { default as EmailOtpVerify } from './actions/EmailOtpVerify/schema.js';
 export { default as Fetch } from './actions/Fetch/schema.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/schema.js';
 export { default as LeaveOrganization } from './actions/LeaveOrganization/schema.js';
