@@ -18,6 +18,8 @@ import createAcceptInvitation from './createAcceptInvitation.js';
 import createCallMethod from './createCallMethod.js';
 import createCallAPI from './createCallAPI.js';
 import createChangePassword from './createChangePassword.js';
+import createEmailOtpSend from './createEmailOtpSend.js';
+import createEmailOtpVerify from './createEmailOtpVerify.js';
 import createGetActions from './createGetActions.js';
 import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
@@ -72,6 +74,8 @@ function getActionMethods(props) {
     callAPI: createCallAPI(props),
     callMethod: createCallMethod(props),
     changePassword: createChangePassword(props),
+    emailOtpSend: createEmailOtpSend(props),
+    emailOtpVerify: createEmailOtpVerify(props),
     displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),
     getBlockId: createGetBlockId(props),

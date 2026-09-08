@@ -660,6 +660,51 @@ function createAuthMethods(lowdefy, auth) {
     );
   }
 
+  // Sends a one-time sign-in code to the email address. The code-only entry
+  // point; when magicLink is also enabled the Login action with magicLink: true
+  // sends the link email that already carries the code, so an app offering both
+  // needs only the one send.
+  async function emailOtpSend({ captchaToken, email, ...rest } = {}) {
+    if (!type.isString(email)) {
+      throw new Error('EmailOtpSend requires an "email" param.');
+    }
+    // Only the sign-in code is wired server-side - the other OTP types
+    // BetterAuth can mint have no email flow behind them - so the type is not
+    // an app-facing parameter.
+    return unwrap(
+      auth.emailOtpSend({ email, type: 'sign-in', ...rest, ...captchaFetchOptions(captchaToken) })
+    );
+  }
+
+  // The code sign-in: on success BetterAuth sets the session cookie (creating
+  // the user on first sign-in unless disableSignUp), and the browser navigates
+  // on the resolved callbackURL like every other method that mints a session.
+  async function emailOtpVerify({ callbackUrl, email, otp, ...rest } = {}) {
+    if (!type.isString(email) || !type.isString(otp)) {
+      throw new Error('EmailOtpVerify requires "email" and "otp" params.');
+    }
+    // Resolved before the call, as login and phoneNumberVerify do, so a
+    // misconfigured destination throws before the code is consumed rather than
+    // after. No assertCallbackUrlNavigable: this is a JSON sign-in with no
+    // redirect hop, so the resolved value's single consumer is the navigation
+    // below and callbackUrl: false is honourable.
+    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
+    const data = await unwrap(auth.emailOtpVerify({ email, otp, ...rest }));
+    // An enrolled user signing in with a code gets a challenge instead of a
+    // session, in the same JSON shape the password paths return, so the
+    // navigation is the one Login performs. The halt keeps the app's remaining
+    // steps from re-rendering with no session while the challenge page load is
+    // still in flight.
+    if (data?.twoFactorRedirect) {
+      return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
+    }
+    const window = lowdefy._internal?.globals?.window;
+    if (data?.token && callbackTarget && window) {
+      navigateToTarget(callbackTarget);
+    }
+    return data;
+  }
+
   // Sends a sign-in/verification OTP over SMS through the app's
   // "phone.otp.send" hook binding.
   async function phoneNumberSendOtp({ captchaToken, phoneNumber, ...rest } = {}) {
@@ -835,6 +880,8 @@ function createAuthMethods(lowdefy, auth) {
   return {
     acceptInvitation,
     changePassword,
+    emailOtpSend,
+    emailOtpVerify,
     leaveOrganization,
     listOrganizations,
     login,
