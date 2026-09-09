@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: {}
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -31,48 +32,85 @@ jobs:
       - name: Upgrade npm for OIDC trusted publishing
         run: npm install -g npm@latest
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
+      # Versioning only: when changesets exist, this opens/updates the "Publish new
+      # release" PR. Publishing is handled explicitly below so we control its exit
+      # semantics and can recover from a partial publish by re-running.
+      - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
           version: pnpm release:version
-          publish: pnpm release:publish
           createGithubReleases: false
           commit: 'chore: Publish new release'
           title: 'Publish new release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # No pending changesets means the version PR has been merged: this is a publish
+      # commit. Everything below runs only in that case, and each step is idempotent so
+      # a re-run recovers cleanly from a config or network error part-way through.
+      - name: Detect publish mode
+        id: mode
+        run: |
+          count=$(find .changeset -maxdepth 1 -name '*.md' ! -name 'README.md' | wc -l | tr -d ' ')
+          if [ "$count" -eq 0 ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Attempt the publish, but do not trust its exit code: `changeset publish` fails on
+      # versions that already exist, which is a success condition on a re-run. The verify
+      # step below is the real gate.
+      - name: Publish to npm
+        if: steps.mode.outputs.publish == 'true'
+        run: pnpm release:publish || true
+        env:
           NPM_CONFIG_PROVENANCE: 'true'
 
+      # Source of truth: every publishable package must be live on npm at its release
+      # version. Missing anything fails the job (a real failure — re-run after fixing).
+      - name: Verify all packages published
+        if: steps.mode.outputs.publish == 'true'
+        run: node scripts/verify-published.mjs
+
+      - name: Resolve release version
+        if: steps.mode.outputs.publish == 'true'
+        id: version
+        run: echo "version=v$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
+
       - name: Generate release notes
-        if: steps.changesets.outputs.published == 'true'
-        id: release-notes
+        if: steps.mode.outputs.publish == 'true'
         run: |
           npm install -g @anthropic-ai/claude-code
           node scripts/release-notes.mjs --output-file=/tmp/release-notes.md
-
-          # Extract version from script output
-          VERSION=$(node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('packages/cli/package.json', 'utf-8'));
-            console.log('v' + pkg.version);
-          ")
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
+      # Idempotent: query origin so a re-run on a fresh checkout still sees an existing tag.
       - name: Tag release commit
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.mode.outputs.publish == 'true'
         run: |
-          git tag ${{ steps.release-notes.outputs.version }} ${{ github.sha }}
-          git push origin ${{ steps.release-notes.outputs.version }}
+          VERSION="${{ steps.version.outputs.version }}"
+          if git ls-remote --tags origin "refs/tags/$VERSION" | grep -q .; then
+            echo "Tag $VERSION already exists, skipping."
+          else
+            git tag "$VERSION" ${{ github.sha }}
+            git push origin "$VERSION"
+          fi
 
+      # Idempotent: only create the release if one does not already exist for this version.
       - name: Create Github Release
-        uses: softprops/action-gh-release@v2
-        if: steps.changesets.outputs.published == 'true'
-        with:
-          tag_name: ${{ steps.release-notes.outputs.version }}
-          name: ${{ steps.release-notes.outputs.version }}
-          draft: true
-          body_path: /tmp/release-notes.md
-          target_commitish: ${{ github.sha }}
+        if: steps.mode.outputs.publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release $VERSION already exists, skipping."
+          else
+            gh release create "$VERSION" \
+              --draft \
+              --title "$VERSION" \
+              --target ${{ github.sha }} \
+              --notes-file /tmp/release-notes.md
+          fi
