@@ -1,0 +1,53 @@
+# @lowdefy/connection-smtp
+
+## 6.0.0
+
+### Minor Changes
+
+- 742a900: feat: Email notification rendering
+
+  Lowdefy apps can now define notifications in config: branded emails rendered from framework templates, delivered over any SMTP provider. The framework renders; storing and sending are composed in YAML routines — so any database works through its normal request types, and apps or modules own the notification record.
+
+  **`notifications:` config section (`@lowdefy/build`, `@lowdefy/api`)**
+
+  - New root section where the template is the type: `{ id, type, properties }` with per-notification `theme` overrides and `testData`
+  - Template properties are nunjucks data templates — `{{ task.title }}` interpolates against the pipeline's data with no operator syntax; interpolated values are inert (can never inject markup or links)
+  - New `RenderNotification` API routine step: renders one data item per call and returns `{ subject, title, preview, html, text, data }` where `data` is the link-resolved item — inserting the record, deduplicating, sending and updating send results are plain routine steps (`:for`, requests, `_uuid`)
+  - New `app.email` theme settings (logo, companyName, primaryColor, signature, footer)
+  - Link resolution is driven by the step's `serverUrl`, `landingPage` and `recordId` properties: `{ pageId, urlQuery }` links resolve to direct page URLs, or through a landing page (`?_id=<recordId>&option=<dotpath>`) that can mark the record read before redirecting (for example the modules-mongodb notifications module's link page)
+
+  **Email templates (`@lowdefy/email-templates`)**
+
+  - Three React Email templates: `NotificationEmail` (message, metadata table, quoted comment, CTA button, action list), `DigestEmail` (item roundups) and `AlertEmail` (status-toned notices)
+  - Sections render only when configured; markdown in `message` with raw HTML disabled
+  - Custom templates are plain React Email plugin packages under the new `notifications` type category
+
+  **SMTP connection (`@lowdefy/connection-smtp`)**
+
+  - New `SMTP` connection wrapping nodemailer — works with SES, Postmark, Mailgun, Resend and self-hosted servers; `SMTPMailSend` request type
+  - Environment-aware delivery `filter` (`replaceAddress` catch-all, domain `allowlist`, `regex`) applied to every send
+
+  **SendGrid (`@lowdefy/connection-sendgrid`)**
+
+  - Supports the same delivery `filter` and default `replyTo`; interchangeable with SMTP wherever a routine sends notification emails
+  - Array requests now send per message; request-level `templateId` is no longer overridden by an unset connection `templateId`
+
+  **Preview CLI (`lowdefy`)**
+
+  - New `lowdefy emails` command: builds the app, generates a preview per notification from its `testData`, and opens React Email's preview server; warns when a template data key is missing from `testData`
+
+  Builds also now validate that `CallAgent` steps reference existing agents — previously this check existed but never ran, so broken agent references that used to build will now fail with a config error.
+
+- 9214aa3: feat: Mail send requests return per-message send results
+
+  `SendGridMailSend` and `SMTPMailSend` now return a `results` array with one entry per message sent, so routines can record delivery outcomes:
+
+  - Each result includes the post-filter `to` — the address mail was actually delivered to after the connection `filter` (`replaceAddress`, `allowlist`, `regex`) is applied. When a filter redirects mail to a test inbox, routines can now persist both the intended recipient and where the message really went.
+  - Messages dropped entirely by the filter return `{ messageId: null, to: null, filtered: true }`.
+  - `SendGridMailSend` previously discarded send results and returned only a response string; it now returns `results` with the SendGrid `messageId` per message, matching `SMTPMailSend`.
+  - `SMTPMailSend` results keep nodemailer's `accepted` and `rejected` alongside the new `to`.
+
+### Patch Changes
+
+- Updated dependencies [6446ae6]
+  - @lowdefy/helpers@6.0.0

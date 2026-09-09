@@ -1,5 +1,47 @@
 # Change Log
 
+## 6.0.0
+
+### Patch Changes
+
+- 28cb944: feat: Dev server docs and MCP endpoint for AI coding agents
+
+  The dev server now always serves documentation for everything installed in your project — every block, operator, action, connection and request type, from core plugins and your own local plugins — plus the full Lowdefy docs as markdown.
+
+  **Docs API and MCP endpoint (`@lowdefy/server-dev`)**
+
+  - Plain GET routes under `/lowdefy-docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
+  - An MCP endpoint (streamable HTTP) at `/lowdefy-docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
+  - The `/lowdefy-docs` page path prefix is now reserved in dev.
+
+  **Discovery build artifacts (`@lowdefy/build`)**
+
+  - Dev builds now write `plugins/availableTypes.json` (every installed type, used or not) and `plugins/connectionSchemas.json` + `plugins/requestSchemas.json` (collected from connection definitions).
+  - Fixed custom/local plugin schemas being silently missing from all schema maps — plugin modules now also resolve from the server directory.
+
+  **Docs content package (`@lowdefy/docs-content`)**
+
+  - New package shipping the Lowdefy docs extracted as markdown with a manifest, generated from the docs app build (`pnpm docs:content`).
+
+  **Block plugins**
+
+  - Block packages now publish their `gallery.yaml`/`examples.yaml`/`tests.yaml` files in `dist/`, so the docs API can serve real examples.
+
+- 01d7552: fix(blocks-antd): Label, Search and ControlledList styles now apply in production builds.
+
+  The `Label` (form-item layout), `Search` (results dropdown) and `ControlledList` (remove icon)
+  styles are global stylesheets, but they were shipped as CSS Modules (`style.module.css`) imported
+  for side effect (`import './style.module.css'`) with every rule wrapped in `:global(...)`. The Vite
+  dev server injected them, but the production client build dropped them — so on `lowdefy build` +
+  `lowdefy start` (and on Vercel) these blocks rendered with missing styling while `lowdefy dev`
+  looked correct. (Same class of bug fixed in `@lowdefy/blocks-tiptap`.)
+
+  The three files are now plain `.css` (the redundant `:global()` wrappers removed, since the
+  selectors are already global), which the production build includes reliably. No config or markup
+  changes. Also removed an unused CSS-module import in `MarkdownWithCode`.
+
+  - @lowdefy/block-utils@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

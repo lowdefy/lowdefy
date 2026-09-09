@@ -1,5 +1,19 @@
 # @lowdefy/logger
 
+## 6.0.0
+
+### Patch Changes
+
+- da0c62c: chore: Update pino from 8.16.2 to 10.3.1.
+
+  No behavior change — the log output format, levels, and configuration are unchanged. The pino 9 and 10 majors only drop support for Node.js versions below 20, and Lowdefy already requires Node.js 22 or newer.
+
+- Updated dependencies [37c8c14]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

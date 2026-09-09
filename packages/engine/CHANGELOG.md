@@ -1,5 +1,79 @@
 # Change Log
 
+## 6.0.0
+
+### Minor Changes
+
+- 0dccf40: feat: Add `:if`, `:switch` and `:return` controls to client event action lists.
+
+  Event action lists now support routine-style control flow, using the same grammar as API routines:
+
+  - `:if` / `:then` / `:else` gates a group of actions on a single condition, instead of repeating the same `skip` expression on every action.
+  - `:switch` runs the `:then` list of the first truthy `:case`; later cases are never evaluated, and an optional `:default` runs when no case matches.
+  - `:return` ends the whole event successfully — replacing the early-`Throw` workaround — without running the event's `catch` actions.
+
+  Controls can nest and work in both `try` and `catch` lists. Actions not executed for a control-flow reason (untaken branches, unmatched cases, actions after a `:return`) are reported as skipped, so `_actions` lookups and action indices are unchanged for existing configs. The build validates control shape and enforces action id uniqueness across all branches.
+
+  Note: an event action carrying a stray `:if`, `:switch` or `:return` key (previously a schema warning at build and ignored at runtime) is now treated as a control and fails the build with a clear error.
+
+- e0a06a2: feat: Dynamic page content — server-resolved blocks at page load.
+
+  Pages can now include a `Dynamic` block whose content is resolved on the server at page load by an api endpoint routine. The routine returns block config; the server builds and validates it, splices it into the page, and the client renders the result like any other page.
+
+  **`Dynamic` block (`@lowdefy/blocks-basic`)**
+
+  - New container block configured with `properties.endpointId`, static `params`, an optional `fallback` slot rendered when resolution fails, and `required: true` to fail the page load instead.
+  - `properties.types` declares extra block, action and operator types the endpoint may return, so build includes them in the client bundle.
+
+  **Server resolution (`@lowdefy/api`, `@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  - The endpoint is called in-process during page get with a payload of `{ params, pageId, blockId, urlQuery }` — the page request's query string is forwarded on both initial loads and SPA navigations.
+  - Returned blocks are validated before reaching the client: types must be in the client bundle, block properties are checked against plugin schemas (operator values are exempt), and `Request` and `CallAPI` action references are verified.
+  - Nested `Dynamic` blocks resolve recursively up to 5 levels; endpoint auth is enforced per resolution.
+  - Client-evaluated operators in returned config are escaped with one extra underscore (`__state` → `_state`), the same deferral convention as `_function` args — a plain `_state` evaluates against the routine's own state.
+
+  **Build (`@lowdefy/build`)**
+
+  - Validates `Dynamic` block config, flags dynamic pages in the page artifact, and bundles declared types.
+  - New `@lowdefy/build/dynamic` entry builds and validates runtime block config with the same pipeline as static pages.
+
+  **Engine (`@lowdefy/engine`)**
+
+  - Dynamic pages build a fresh context on every navigation, since the server may resolve different content per request.
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- Updated dependencies [60401aa]
+- Updated dependencies [37c8c14]
+- Updated dependencies [efd1967]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [982a3db]
+  - @lowdefy/operators@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Minor Changes
