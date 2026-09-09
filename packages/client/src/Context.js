@@ -17,12 +17,22 @@
 import React, { useEffect } from 'react';
 import getContext from '@lowdefy/engine';
 
+import createPageLifecycleManager from './createPageLifecycleManager.js';
 import createShortcutManager from './createShortcutManager.js';
 import MountEvents from './MountEvents.js';
 
 const ShortcutEffect = ({ context }) => {
   useEffect(() => {
     const manager = createShortcutManager();
+    manager.init(context);
+    return () => manager.destroy();
+  }, [context]);
+  return null;
+};
+
+const PageLifecycleEffect = ({ context }) => {
+  useEffect(() => {
+    const manager = createPageLifecycleManager();
     manager.init(context);
     return () => manager.destroy();
   }, [context]);
@@ -62,6 +72,7 @@ const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
         return (
           <>
             <ShortcutEffect context={context} />
+            <PageLifecycleEffect context={context} />
             <WebSocketsEffect context={context} />
             {children(context)}
           </>
