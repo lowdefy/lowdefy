@@ -225,9 +225,11 @@ events:
           searchOpen: true
 ```
 
-## Page initialization events
+## Page lifecycle events
 
-The first blocks on a page, usually a [`container`](/container) type block, can define `onInit` and `onInitAsync` events. All blocks have `onMount` and `onMountAsync` events, that can be used to initialize the page or blocks.
+The first blocks on a page, usually a [`container`](/container) type block, can define page lifecycle events. The page initialization events `onInit` and `onInitAsync` are triggered when the page is first loaded, and the browser lifecycle events `onVisible`, `onHidden`, `onOnline`, `onOffline` and `onResize` are triggered while the page stays open. All blocks have `onMount` and `onMountAsync` events, that can be used to initialize the page or blocks.
+
+### Page initialization events
 
 The `onInit` event is triggered the first time a page is loaded. This event blocks page render, in other words, the page __will__ remain in a loading state, rendering only the progress bar, until all the actions have completed execution. It can be used to set up [`state`](/page-and-app-state). Actions that take a long time to execute, like `Request`, should be used sparingly here for a better user experience.
 
@@ -236,6 +238,62 @@ The `onInitAsync` event is triggered the first time a page loaded, but does not 
 The `onMount` event is triggered every time a block is rendered on a page. This event can be used on any block, and causes the block and it's children to render in their loading state. It typically executes actions that should be run each time a block is loaded, like checking if an id is present in the [url query parameters](/_url_query), or fetching data for [`Selector`](/Selector) options using a [`Request`](/Request) action.
 
 The `onMountAsync` event is triggered every time a block is mounted, but does not render the block in loading.
+
+### Browser lifecycle events
+
+The first blocks on a page can also define events that react to the browser: `onVisible`, `onHidden`, `onOnline`, `onOffline` and `onResize`. These are useful to refresh data that went stale while the user was away, instead of polling the server on a timer.
+
+These events are only attached while the page is mounted, and are removed again when the user navigates away, so they never trigger for a page the user has left. They never trigger on the initial page load either — only a change after the page has loaded triggers them. Their action chains run like `onMountAsync`: they do not keep the page or block in a loading state.
+
+The `onVisible` event is triggered when the browser tab becomes visible again, or when the window regains focus. Rapid pairs of these signals — a tab switch usually produces both — are coalesced over 300ms, so the event is only triggered once. The [`_event`](/_event) object contains `visible: true` and `reason`, which is `visibility` when the browser reported the tab becoming visible, or `focus` when the window regained focus.
+
+```yaml
+events:
+  onVisible:
+    - id: refresh_tasks
+      type: Request
+      params: get_tasks
+```
+
+The `onHidden` event is triggered when the browser tab is hidden, or when the window loses focus, coalesced in the same way. The `_event` object contains `visible: false` and the same `reason` field.
+
+```yaml
+events:
+  onHidden:
+    - id: stop_refreshing
+      type: SetState
+      params:
+        live: false
+```
+
+The `onOnline` and `onOffline` events are triggered when the browser reports that the network connection was regained or lost. The `_event` object contains `online: true` or `online: false`.
+
+```yaml
+events:
+  onOnline:
+    - id: back_online
+      type: Message
+      params:
+        content: You are back online.
+  onOffline:
+    - id: went_offline
+      type: Message
+      params:
+        status: warning
+        content: You are offline, changes will not be saved.
+```
+
+The `onResize` event is triggered when the window is resized, debounced by 200ms so that the actions only run once the user stops resizing. The `_event` object contains the `width` and `height` of the window.
+
+```yaml
+events:
+  onResize:
+    - id: set_width
+      type: SetState
+      params:
+        window_width:
+          _event: width
+```
 
 ## Action types
 
@@ -269,3 +327,7 @@ See additional action type available under the Actions tab in the menu.
 - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
 - The `onMount` events is triggered the every time a block is mounted and keeps the block in loading until all actions have finished.
 - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
+- The `onVisible` and `onHidden` events are triggered when the browser tab is shown or hidden, or when the window gains or loses focus, coalesced over 300ms.
+- The `onOnline` and `onOffline` events are triggered when the browser reports that the network connection was regained or lost.
+- The `onResize` event is triggered when the window is resized, debounced by 200ms.
+- Browser lifecycle events are never triggered on the initial page load, and are removed when the user navigates away from the page.
