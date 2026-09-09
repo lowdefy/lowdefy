@@ -18,6 +18,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import validateCronConfig from './validateCronConfig.js';
+
 function validateConfig({ components }) {
   if (type.isNone(components.config)) {
     components.config = {};
@@ -30,6 +32,7 @@ function validateConfig({ components }) {
       throw new Error('Base path must start with "/".');
     }
   }
+  validateCronConfig({ components });
   return components;
 }
 

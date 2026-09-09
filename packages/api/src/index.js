@@ -33,6 +33,7 @@ import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
+import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
@@ -57,6 +58,7 @@ export {
   redactErrorResponse,
   redactResponse,
   resolveStrategyCaller,
+  forwardScheduledEndpoint,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
