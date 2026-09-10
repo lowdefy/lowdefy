@@ -16,6 +16,7 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
+import appMeta from '../../lib/build/appMeta.js';
 import getPathSegments from '../lib/getPathSegments.js';
 
 // Page config as JSON for client-side SPA navigation. The first page load is
@@ -31,7 +32,9 @@ async function apiPageHandler(c) {
     return c.json({ pageConfig: null }, 404);
   }
   context.logger.info({ event: 'api_page_view', pageId });
-  return c.json({ pageConfig });
+  // buildId lets a tab that loaded its bundle from an earlier deploy notice
+  // that this config comes from a newer build and reload (client/Page.jsx).
+  return c.json({ buildId: appMeta.buildId, pageConfig });
 }
 
 export default apiPageHandler;
