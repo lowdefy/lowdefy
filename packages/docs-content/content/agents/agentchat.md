@@ -66,8 +66,9 @@ The `AgentChat` block renders a streaming AI chat interface. It connects to a [L
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
-| `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
-| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
+| `conversationId` | string | | Active conversation ID. When this changes, any in-flight reply is stopped and messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
+| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. Re-synced whenever the array's length, last message id or `conversationId` changes. |
+| `loading` | boolean | `false` | The app is still loading this conversation's transcript (for example, reading it from a database after a conversation switch). While `true`, a skeleton replaces the message area, suggestions are hidden and the composer is disabled, so nothing can be sent into a conversation whose messages have not synced yet. Drive it from state alongside `messages`. |
 | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
 | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
 | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |

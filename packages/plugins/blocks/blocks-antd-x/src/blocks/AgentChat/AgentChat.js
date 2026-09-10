@@ -21,7 +21,7 @@ import {
   lastAssistantMessageIsCompleteWithToolCalls,
 } from 'ai';
 import { FileCard, Prompts, Sender } from '@ant-design/x';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import { PaperClipOutlined } from '@ant-design/icons';
 
 import { isReserved, setKey, type } from '@lowdefy/helpers';
@@ -51,6 +51,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     display,
     drawer: drawerConfig,
     suggestions,
+    loading,
   } = properties;
   const senderRef = useRef(null);
   const finishMetaRef = useRef(null);
@@ -226,18 +227,26 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   useEffect(() => {
     if (effectiveConversationId !== prevConversationIdRef.current) {
       prevConversationIdRef.current = effectiveConversationId;
+      // A reply still streaming into the conversation being left would otherwise keep
+      // appending to the list after it is cleared — into the new conversation. stop() on
+      // an idle chat is a no-op.
+      stop();
       setMessages([]);
       // Ratings clicked in the thread being left must not carry over: they are keyed by
       // message id, and the incoming conversation supplies its own through feedbackValues.
       setFeedbackValues({});
     }
-  }, [effectiveConversationId, setMessages]);
+  }, [effectiveConversationId, setMessages, stop]);
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
   // Compare by count + last ID to avoid re-syncing on every Lowdefy re-render
   // (operators like _state create new array references even when data hasn't changed).
-  const prevExternalRef = useRef({ count: 0, lastId: null });
+  // The conversation id is part of the key: two conversations whose transcripts have the
+  // same length and last id (every assistant message an older onFinish hook persisted
+  // carries id '', so any two same-length transcripts collide) would otherwise not
+  // re-sync on a switch, leaving the new conversation's transcript empty.
+  const prevExternalRef = useRef({ count: 0, lastId: null, conversationId: null });
   // Event-dedup ids of externally loaded messages. Restored history must not
   // replay onToolCall / onToolResult / onUserMessage / onTitleGenerated side
   // effects — useAgentEvents suppresses ids in this ref.
@@ -247,12 +256,16 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     const msgs = externalMessages ?? [];
     const count = msgs.length;
     const lastId = count > 0 ? msgs[count - 1]?.id : null;
-    if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
-      prevExternalRef.current = { count, lastId };
+    if (
+      count !== prevExternalRef.current.count ||
+      lastId !== prevExternalRef.current.lastId ||
+      effectiveConversationId !== prevExternalRef.current.conversationId
+    ) {
+      prevExternalRef.current = { count, lastId, conversationId: effectiveConversationId };
       externalIdsRef.current = collectExternalEventIds(msgs);
       setMessages(msgs);
     }
-  }, [externalMessages, setMessages]);
+  }, [externalMessages, effectiveConversationId, setMessages]);
 
   // Register CallMethod methods so YAML actions can control the chat.
   useEffect(() => {
@@ -339,6 +352,10 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
 
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
+  // The app is still fetching this conversation's transcript (the `loading` property): a
+  // skeleton stands in for the message area and the composer is disabled, so nothing can
+  // be sent into a conversation whose history has not synced yet.
+  const isLoading = loading === true;
 
   function fileToContentPart(file) {
     return new Promise((resolve) => {
@@ -612,7 +629,15 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       }}
     >
       <div style={{ flex: 1, minHeight: 0, padding: '16px 0' }}>
-        {isEmpty && !welcome?.tracks ? (
+        {isLoading ? (
+          <div
+            className="agent-chat-loading"
+            style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: '0 16px' }}
+          >
+            <Skeleton active title={false} paragraph={{ rows: 2, width: ['60%', '40%'] }} />
+            <Skeleton active title={false} paragraph={{ rows: 3, width: ['90%', '75%', '50%'] }} />
+          </div>
+        ) : isEmpty && !welcome?.tracks ? (
           <WelcomeScreen config={welcome} onPromptClick={handlePromptClick} />
         ) : (
           <MessageList
@@ -634,7 +659,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           />
         )}
       </div>
-      {!isEmpty && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
+      {!isEmpty && !isLoading && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
         <div style={{ padding: '0 16px 8px' }}>
           <Prompts
             items={activeSuggestions.map((s, i) => ({
@@ -732,6 +757,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           }
           onCancel={handleStop}
           loading={isBusy}
+          disabled={isLoading}
           prefix={
             attachmentsConfig?.enabled ? (
               <Button

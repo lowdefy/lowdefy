@@ -162,3 +162,49 @@ test.describe('AgentChat feedback', () => {
     await expect(feedback.locator('[class*="dislike"]').first()).toBeVisible();
   });
 });
+
+test.describe('AgentChat conversation switch', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+  });
+
+  // Both transcripts have two messages and an assistant id of '', so the count + last-id
+  // memo alone sees no change. The conversation id is what has to force the re-sync.
+  test('re-syncs messages on a switch between same-shaped transcripts', async ({ page }) => {
+    const chat = getBlock(page, 'chat_switch');
+    await expect(chat.getByText('Answer from conversation A.')).toBeVisible();
+
+    await page.locator('#switch_to_b').click();
+    await expect(chat.getByText('Answer from conversation B.')).toBeVisible();
+    await expect(chat.getByText('Answer from conversation A.')).toBeHidden();
+
+    await page.locator('#switch_to_a').click();
+    await expect(chat.getByText('Answer from conversation A.')).toBeVisible();
+    await expect(chat.getByText('Answer from conversation B.')).toBeHidden();
+  });
+});
+
+test.describe('AgentChat loading', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+  });
+
+  test('a skeleton replaces the transcript and the composer is disabled', async ({ page }) => {
+    const chat = getBlock(page, 'chat_loading');
+    await expect(chat.getByText('Loaded answer.')).toBeVisible();
+    await expect(chat.getByText('A suggestion')).toBeVisible();
+    await expect(chat.locator('textarea')).toBeEnabled();
+
+    await page.locator('#toggle_loading').click();
+    await expect(chat.locator('.agent-chat-loading')).toBeVisible();
+    await expect(chat.getByText('Loaded answer.')).toBeHidden();
+    await expect(chat.getByText('A suggestion')).toBeHidden();
+    await expect(chat.locator('textarea')).toBeDisabled();
+
+    // Back: the transcript was never lost, only covered.
+    await page.locator('#toggle_loading').click();
+    await expect(chat.locator('.agent-chat-loading')).toBeHidden();
+    await expect(chat.getByText('Loaded answer.')).toBeVisible();
+    await expect(chat.locator('textarea')).toBeEnabled();
+  });
+});
