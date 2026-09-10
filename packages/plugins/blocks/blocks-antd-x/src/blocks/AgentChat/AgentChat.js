@@ -227,16 +227,21 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   useEffect(() => {
     if (effectiveConversationId !== prevConversationIdRef.current) {
       prevConversationIdRef.current = effectiveConversationId;
-      // A reply still streaming into the conversation being left would otherwise keep
-      // appending to the list after it is cleared — into the new conversation. stop() on
-      // an idle chat is a no-op.
-      stop();
       setMessages([]);
       // Ratings clicked in the thread being left must not carry over: they are keyed by
       // message id, and the incoming conversation supplies its own through feedbackValues.
       setFeedbackValues({});
     }
-  }, [effectiveConversationId, setMessages, stop]);
+  }, [effectiveConversationId, setMessages]);
+
+  // Abort a reply still streaming into the conversation being left. useChat swaps its
+  // Chat instance during the render that changes the id, and the `stop` it returns is
+  // the NEW instance's — calling it in the effect above would stop an idle chat and
+  // leave the old request running, still firing onDataPart / onToolCall / onFinish
+  // into the page (and the server still generating) for a conversation no longer shown.
+  // A cleanup keyed only on the id closes over the previous render's `stop`, which is
+  // the old instance's. stop() on an idle chat is a no-op.
+  useEffect(() => () => stop(), [effectiveConversationId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
@@ -246,7 +251,12 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   // same length and last id (every assistant message an older onFinish hook persisted
   // carries id '', so any two same-length transcripts collide) would otherwise not
   // re-sync on a switch, leaving the new conversation's transcript empty.
-  const prevExternalRef = useRef({ count: 0, lastId: null, conversationId: null });
+  // Seeded with the mount-time id so an undefined `messages` stays "no sync" on mount.
+  const prevExternalRef = useRef({
+    count: 0,
+    lastId: null,
+    conversationId: effectiveConversationId,
+  });
   // Event-dedup ids of externally loaded messages. Restored history must not
   // replay onToolCall / onToolResult / onUserMessage / onTitleGenerated side
   // effects — useAgentEvents suppresses ids in this ref.
@@ -622,7 +632,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
         maxWidth: properties.maxWidth ?? 800,
         margin: '0 auto',
         width: '100%',
