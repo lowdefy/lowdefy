@@ -36,11 +36,14 @@ test('authorizeAgent allows a public agent without a session', () => {
   expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
 });
 
-test('authorizeAgent rejects a protected agent without a session', () => {
+test('authorizeAgent throws AuthenticationError for a protected agent without a session', () => {
   const context = testContext({ logger });
   const agentConfig = { agentId: 'my-agent', auth: { public: false } };
   expect(() => authorizeAgent(context, { agentConfig })).toThrow(
-    'Agent "my-agent" does not exist.'
+    'Authentication required for agent "my-agent".'
+  );
+  expect(() => authorizeAgent(context, { agentConfig })).toThrow(
+    expect.objectContaining({ name: 'AuthenticationError' })
   );
 });
 
@@ -50,7 +53,7 @@ test('authorizeAgent allows a protected agent with a session', () => {
   expect(() => authorizeAgent(context, { agentConfig })).not.toThrow();
 });
 
-test('authorizeAgent rejects a role-protected agent when the user lacks the role', () => {
+test('authorizeAgent throws an opaque AuthorizationError when the user lacks the role', () => {
   const context = testContext({
     logger,
     session: { user: { id: 'user_1', roles: ['user'] } },

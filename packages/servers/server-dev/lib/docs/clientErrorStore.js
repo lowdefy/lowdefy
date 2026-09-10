@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { publish } from './devEventBus.js';
+
 // Module-level ring buffer of recent client-reported errors — feeds the
 // getBuildStatus feedback endpoint so agents can see browser errors without
 // tailing server logs. Deliberately in-memory only: entries are lost on
@@ -27,6 +29,7 @@ function push(entry) {
   if (entries.length > MAX_ENTRIES) {
     entries.shift();
   }
+  publish({ type: 'client_error', ...entry });
 }
 
 function list() {

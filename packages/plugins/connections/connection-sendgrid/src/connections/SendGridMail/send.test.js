@@ -155,14 +155,25 @@ test('send passes connection mailSettings to sendgrid', async () => {
   expect(mockSend.mock.calls[0][0].mailSettings).toEqual({ sandboxMode: { enable: true } });
 });
 
-test('send wraps errors with a response in a SendGrid request failed error', async () => {
+test('send appends the SendGrid response body detail to the propagated error', async () => {
   const send = (await import('./send.js')).default;
   const error = new Error('Test error.');
-  error.response = { body: ['Test error 1.'] };
+  error.response = { body: { errors: [{ message: 'Test error 1.' }] } };
   mockSend.mockRejectedValue(error);
   await expect(
     send({ connection: { apiKey: 'X', from: 'from@x.com' }, mail: { to: 'a@b.com' } })
-  ).rejects.toThrow('SendGrid request failed.');
+  ).rejects.toThrow('Test error. Test error 1.');
+});
+
+test('send propagates the SendGrid error itself so the interface layer can classify it', async () => {
+  const send = (await import('./send.js')).default;
+  const error = new Error('Test error.');
+  error.code = 503;
+  error.response = { body: { errors: [{ message: 'Service unavailable.' }] } };
+  mockSend.mockRejectedValue(error);
+  await expect(
+    send({ connection: { apiKey: 'X', from: 'from@x.com' }, mail: { to: 'a@b.com' } })
+  ).rejects.toMatchObject({ code: 503 });
 });
 
 test('send rethrows errors without a response unchanged', async () => {

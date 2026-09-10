@@ -50,13 +50,14 @@ export default {
         description: 'Toggles rendering of the border around the collapse block.',
       },
       defaultActiveKey: {
-        type: 'string',
-        description: "Initial active panel's key, if activeKey is not set.",
+        type: ['string', 'array'],
+        items: { type: 'string' },
+        description: 'Initial active panel key, or a list of keys, if activeKey is not set.',
       },
       destroyInactivePanel: {
         type: 'boolean',
         default: false,
-        description: 'Destroy inactive panel.',
+        description: "Destroy inactive panel. Maps to antd's `destroyOnHidden`.",
       },
       expandIcon: {
         type: ['string', 'object'],

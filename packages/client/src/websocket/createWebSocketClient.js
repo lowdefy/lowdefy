@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ServiceError } from '@lowdefy/errors';
+
 const ACK_TIMEOUT_MS = 10 * 1000;
 const IDLE_CLOSE_GRACE_MS = 5 * 1000;
 const RECONNECT_BASE_MS = 500;
@@ -123,7 +125,7 @@ function createWebSocketClient(lowdefy) {
         return;
       }
       case 'error': {
-        const error = new Error(message ?? 'WebSocket error.');
+        const error = new ServiceError(message ?? 'WebSocket error.', { service: 'WebSocket' });
         if (requestId && pendingPublishes.has(requestId)) {
           const pending = pendingPublishes.get(requestId);
           clearTimeout(pending.timer);
@@ -201,7 +203,7 @@ function createWebSocketClient(lowdefy) {
         if (socket !== ws) {
           // Never opened — treat as a failed connect and retry.
           openPromise = null;
-          reject(new Error('WebSocket connection failed.'));
+          reject(new ServiceError('Connection failed.', { service: 'WebSocket' }));
         }
         handleClose();
       };
@@ -221,7 +223,9 @@ function createWebSocketClient(lowdefy) {
       const timer = setTimeout(() => {
         pendingSubscribes.delete(websocketId);
         subscriptions.delete(websocketId);
-        reject(new Error(`Subscribe to "${websocketId}" timed out.`));
+        reject(
+          new ServiceError(`Subscribe to "${websocketId}" timed out.`, { service: 'WebSocket' })
+        );
       }, ACK_TIMEOUT_MS);
       pendingSubscribes.set(websocketId, { resolve, reject, timer });
       send({ type: 'subscribe', websocketId, payload });
@@ -245,7 +249,9 @@ function createWebSocketClient(lowdefy) {
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         pendingPublishes.delete(requestId);
-        reject(new Error(`Publish to "${websocketId}" timed out.`));
+        reject(
+          new ServiceError(`Publish to "${websocketId}" timed out.`, { service: 'WebSocket' })
+        );
       }, ACK_TIMEOUT_MS);
       pendingPublishes.set(requestId, { resolve, reject, timer });
       send({ type: 'publish', websocketId, requestId, payload });

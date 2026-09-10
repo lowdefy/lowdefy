@@ -26,6 +26,9 @@ function createDisplayMeta(blockName, { size = false } = {}) {
     cssKeys: {
       element: `The ${blockName} element.`,
     },
+    // Cell buttons and menu items declare their own eventName, so the event
+    // names this block fires are authored in its properties.
+    dynamicEvents: true,
     events: {
       onCellClick: {
         description: 'Trigger event when a cell is clicked.',
@@ -89,7 +92,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
     },
     properties: {
       type: 'object',
-      additionalProperties: false,
+      // Undeclared properties are passed through to AgGrid as grid options.
+      additionalProperties: true,
       properties: {
         ...(size
           ? {
@@ -187,7 +191,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                 description: 'Initial width in pixels for the cell.',
               },
               cellStyle: {
-                type: 'number',
+                type: 'object',
                 description:
                   'An object of css values returning an object of css values for a particular cell.',
               },

@@ -26,7 +26,9 @@ jest.unstable_mockModule('@sendgrid/mail', () => {
       send: (msg) => {
         if (msg.to === 'response_error') {
           const error = new Error('Test error.');
-          error.response = { body: ['Test error 1.', 'Test error 2.'] };
+          error.response = {
+            body: { errors: [{ message: 'Test error 1.' }, { message: 'Test error 2.' }] },
+          };
           throw error;
         }
         if (msg.to === 'generic_error') {
@@ -350,7 +352,7 @@ test('request throws an error with response body', async () => {
     from: { name: 'a@b.om', email: 'a.cc@mm.co' },
   };
   await expect(() => SendGridMailSend({ request, connection })).rejects.toThrow(
-    'SendGrid request failed.'
+    'Test error. Test error 1. Test error 2.'
   );
 });
 

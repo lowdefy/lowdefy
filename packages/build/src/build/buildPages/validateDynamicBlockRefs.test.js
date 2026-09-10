@@ -69,7 +69,8 @@ test('Dynamic block referencing a non-existent endpoint produces prodError warni
   const warning = mockHandleWarning.mock.calls[0][0];
   expect(warning).toBeInstanceOf(ConfigWarning);
   expect(warning.message).toBe(
-    'Dynamic block "section_1" on page "page1" references non-existent endpoint "missing_endpoint".'
+    'Dynamic block "section_1" on page "page1" references non-existent endpoint "missing_endpoint". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "missing_endpoint".'
   );
   expect(warning.prodError).toBe(true);
   expect(warning.checkSlug).toBe('dynamic-endpoint-refs');

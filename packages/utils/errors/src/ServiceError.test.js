@@ -244,3 +244,49 @@ describe('ServiceError.enhanceMessage', () => {
     expect(enhanced).toBe('Unknown error');
   });
 });
+
+test('ServiceError stores a hint', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(error.hint).toBe('Insert with upsert: true.');
+});
+
+test('ServiceError hint is enumerable so it survives serialization to the client', () => {
+  const error = new ServiceError('Duplicate key.', { hint: 'Insert with upsert: true.' });
+  expect(Object.keys(error)).toContain('hint');
+});
+
+test('ServiceError takes the hint from the cause when none is given', () => {
+  const cause = new Error('inner');
+  cause.hint = 'Check the index.';
+  expect(new ServiceError('Failed', { cause }).hint).toBe('Check the index.');
+});
+
+test('ServiceError hint defaults to null', () => {
+  expect(new ServiceError('Failed').hint).toBe(null);
+});
+
+test('ServiceError takes configKey from the cause when none is given', () => {
+  const cause = new Error('boom');
+  cause.configKey = 'key-from-cause';
+  const error = new ServiceError(undefined, { cause });
+  expect(error.configKey).toBe('key-from-cause');
+  const explicit = new ServiceError(undefined, { cause, configKey: 'explicit' });
+  expect(explicit.configKey).toBe('explicit');
+});
+
+test('isServiceError reads the AWS SDK v3 $metadata.httpStatusCode', () => {
+  const error = new Error('Service Unavailable');
+  error.$metadata = { httpStatusCode: 503 };
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  const denied = new Error('Access Denied');
+  denied.$metadata = { httpStatusCode: 403 };
+  expect(ServiceError.isServiceError(denied)).toBe(false);
+});
+
+test('isServiceError treats a numeric 5xx code as an HTTP status', () => {
+  const error = new Error('Backend Error');
+  error.code = 503;
+  expect(ServiceError.isServiceError(error)).toBe(true);
+  error.code = 404;
+  expect(ServiceError.isServiceError(error)).toBe(false);
+});

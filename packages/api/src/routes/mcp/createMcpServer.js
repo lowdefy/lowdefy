@@ -19,6 +19,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { AuthenticationError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
 import isUnauthenticatedHuman from '../endpoints/isUnauthenticatedHuman.js';
 
@@ -99,7 +100,14 @@ async function createMcpServer({ context }) {
         if (!success) {
           const deserialized = serializer.deserialize(error);
           return {
-            content: [{ type: 'text', text: deserialized?.message ?? 'Endpoint failed.' }],
+            content: [
+              {
+                type: 'text',
+                text: type.isNone(deserialized)
+                  ? 'Endpoint failed.'
+                  : formatErrorForAgent(context, deserialized),
+              },
+            ],
             isError: true,
           };
         }
@@ -118,15 +126,19 @@ async function createMcpServer({ context }) {
         isError: true,
       };
     } catch (error) {
-      // Unauthenticated calls to gated tools are expected probing traffic -
-      // a warn line and the 401-shaped message, not a structured error log.
-      if (error.name === 'AuthenticationError') {
-        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
+      // Refused calls to gated tools (unauthenticated or wrong roles) and payloads
+      // that miss the payloadSchema (UserError) are expected traffic - a warn line
+      // and the message the model needs to retry, not a structured error log.
+      // Everything else goes through the server's error sink, which resolves
+      // the config source, logs it and collects it for the dev feedback
+      // channel.
+      if (['AuthenticationError', 'AuthorizationError', 'UserError'].includes(error.name)) {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
-        context.logger.error(error);
+        await context.handleError(error);
       }
       return {
-        content: [{ type: 'text', text: error.message }],
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,
       };
     }

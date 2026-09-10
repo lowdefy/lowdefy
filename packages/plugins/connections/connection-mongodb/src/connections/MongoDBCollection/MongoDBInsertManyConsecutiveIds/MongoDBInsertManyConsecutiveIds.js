@@ -16,6 +16,7 @@
 
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -66,6 +67,8 @@ async function MongoDBInsertManyConsecutiveIds({
         );
       }
     }, transactionOptions);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBInsertManyConsecutiveIds' });
   } finally {
     await session.endSession();
   }

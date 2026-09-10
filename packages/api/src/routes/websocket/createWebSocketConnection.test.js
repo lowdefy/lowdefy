@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { AuthorizationError } from '@lowdefy/errors';
 
 import createWebSocketConnection from './createWebSocketConnection.js';
 
@@ -28,7 +29,7 @@ function setup() {
   const send = jest.fn();
   const context = {
     rid: 'r',
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
     handleError: jest.fn(),
   };
   const connection = createWebSocketConnection(context, { registry, send });
@@ -113,7 +114,12 @@ test('publish frame calls registry.publish and acks with a published frame carry
   const { connection, context, registry, send } = setup();
 
   await connection.handleMessage(
-    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: { text: 'hi' }, requestId: 'req-9' })
+    JSON.stringify({
+      type: 'publish',
+      websocketId: 'chat',
+      payload: { text: 'hi' },
+      requestId: 'req-9',
+    })
   );
 
   expect(registry.publish).toHaveBeenCalledWith(context, {
@@ -141,6 +147,30 @@ test('registry rejection sends an error frame with requestId and websocketId and
       websocketId: 'chat',
       requestId: 'req-2',
       message: 'Websocket "chat" does not allow publishing.',
+    },
+  ]);
+});
+
+test('an authorization refusal warns and answers the client without reporting an error', async () => {
+  const { connection, context, registry, send } = setup();
+  const error = new AuthorizationError('Websocket "chat" does not exist.');
+  registry.subscribe.mockRejectedValue(error);
+
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 'req-3' })
+  );
+
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    { event: 'ws_refused', frameType: 'subscribe' },
+    'Websocket "chat" does not exist.'
+  );
+  expect(sentFrames(send)).toEqual([
+    {
+      type: 'error',
+      websocketId: 'chat',
+      requestId: 'req-3',
+      message: 'Websocket "chat" does not exist.',
     },
   ]);
 });

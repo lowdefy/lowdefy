@@ -16,7 +16,7 @@
 
 export default {
   default: [],
-  oneOf: [
+  anyOf: [
     {
       type: 'array',
       description:
@@ -53,20 +53,7 @@ export default {
             description: 'Value label shown to user - supports html.',
           },
           value: {
-            oneOf: [
-              {
-                type: 'string',
-                description: 'Option value.',
-              },
-              {
-                type: 'number',
-                description: 'Option value.',
-              },
-              {
-                type: 'boolean',
-                description: 'Option value.',
-              },
-            ],
+            description: 'Option value. Can be of any type.',
           },
           disabled: {
             type: 'boolean',

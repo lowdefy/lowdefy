@@ -108,7 +108,10 @@ test('subscribeAll reports subscribe failures through lowdefy handleError', asyn
     setTimeout(resolve, 0);
   });
 
-  expect(context._internal.lowdefy._internal.handleError).toHaveBeenCalledWith(error);
+  // The transport failure is wrapped as a ServiceError before it reaches handleError.
+  expect(context._internal.lowdefy._internal.handleError).toHaveBeenCalledWith(
+    expect.objectContaining({ name: 'ServiceError', service: 'WebSocket', cause: error })
+  );
 });
 
 test('subscribe evaluates the payload with the parser and passes the serialized payload to the client', async () => {
@@ -433,13 +436,12 @@ test('publish defaults an empty payload and throws for non-string websocketId', 
   );
 });
 
-test('subscribe to a websocketId without configured subscription initializes channel state', async () => {
+test('subscribe throws a ConfigError for a websocketId with no subscription on the page', async () => {
   const { client, context } = createTestContext();
   const websockets = new WebSockets(context);
 
-  await websockets.subscribe({ websocketId: 'adhoc' });
-
-  expect(context.websockets.adhoc).toEqual(initialChannelState);
-  expect(client.subscribe.mock.calls[0][0].websocketId).toBe('adhoc');
-  expect(client.subscribe.mock.calls[0][0].payload).toEqual({});
+  await expect(websockets.subscribe({ websocketId: 'adhoc' })).rejects.toThrow(
+    'Subscription "adhoc" is not defined on this page.'
+  );
+  expect(client.subscribe).not.toHaveBeenCalled();
 });

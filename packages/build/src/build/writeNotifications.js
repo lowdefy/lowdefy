@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { type, serializer } from '@lowdefy/helpers';
 
 async function writeNotification({ notification, context }) {
@@ -25,7 +26,7 @@ async function writeNotification({ notification, context }) {
 async function writeNotifications({ components, context }) {
   if (type.isNone(components.notifications)) return;
   if (!type.isArray(components.notifications)) {
-    throw new Error(`Notifications is not an array.`);
+    throw new LowdefyInternalError('Notifications is not an array.');
   }
   const writePromises = components.notifications.map((notification) =>
     writeNotification({ notification, context })

@@ -28,11 +28,15 @@ function validateRequestReferences({ requestActionRefs, requests, pageId, contex
 
     if (!requestIds.has(requestId)) {
       context.handleWarning(
-        new ConfigWarning(`Request "${requestId}" not defined on page "${pageId}".`, {
-          configKey: action['~k'],
-          prodError: true,
-          checkSlug: 'request-refs',
-        })
+        new ConfigWarning(
+          `Request "${requestId}" not defined on page "${pageId}". ` +
+            `Check the requestId for typos, or add a request with id "${requestId}" to the "requests" on page "${pageId}".`,
+          {
+            configKey: action['~k'],
+            prodError: true,
+            checkSlug: 'request-refs',
+          }
+        )
       );
     }
   });

@@ -1,6 +1,6 @@
 # S3UploadButton
 
-__Deprecated__ — use the provider-neutral &lt;a href=&quot;/Upload&quot;&gt;Upload&lt;/a&gt; block with `uploadPolicyRequestId` instead. S3UploadButton remains as an alias so existing apps keep working. Upload files to AWS S3 with a button trigger. Supports file type filtering, upload limits, and custom button styling. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
+__Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block with `uploadPolicyRequestId` instead. S3UploadButton remains as an alias so existing apps keep working. Upload files to AWS S3 with a button trigger. Supports file type filtering, upload limits, and custom button styling. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
 
 > The S3UploadButton requires an AwsS3Bucket connection and AwsS3PresignedPostPolicy request to upload files. The examples on this page demonstrate UI configuration only — uploads will not function without a configured S3 connection.
 

@@ -345,6 +345,25 @@ describe('jwt verify with a JWKS endpoint', () => {
     expect(match).toEqual({ attributes: {}, roles: [], user: { id: 'idp-user' } });
   });
 
+  test('jwt verify throws a ServiceError when the JWKS endpoint is unreachable', async () => {
+    const logger = mockLogger();
+    const verify = jwt({
+      logger,
+      // Nothing is listening on this port, so the fetch fails with ECONNREFUSED.
+      properties: { jwksUri: 'http://127.0.0.1:45999/jwks.json', algorithms: ['RS256'] },
+      strategyId: 'external-idp',
+    });
+    const token = await new SignJWT({ sub: 'idp-user' })
+      .setProtectedHeader({ alg: 'RS256', kid: 'test-key' })
+      .setIssuedAt()
+      .setExpirationTime('5m')
+      .sign(privateKey);
+    await expect(verify({ headers: bearer(token), logger })).rejects.toMatchObject({
+      name: 'ServiceError',
+      service: 'JWKS',
+    });
+  });
+
   test('jwt verify rejects a token signed by a different key', async () => {
     const logger = mockLogger();
     const verify = jwt({

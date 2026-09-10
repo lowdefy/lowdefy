@@ -1,6 +1,6 @@
 # TiptapMentionInput
 
-Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group&#39;s current members. See the guide below.
+Rich-text editor with @-mention support. Same feature set as TiptapInput, plus a mention dropdown populated from a static options list or a request. Mention options can be marked as groups (roles, teams, queues) to render under their own menu section, as distinctly coloured chips, and with a hover popover listing the group's current members. See the guide below.
 
 ## Group mentions
 

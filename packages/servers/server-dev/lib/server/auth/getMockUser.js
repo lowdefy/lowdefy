@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 import authJson from '../../build/auth.js';
@@ -22,6 +23,10 @@ import authJson from '../../build/auth.js';
 // `lowdefy dev --mock-user` flag sets it), then auth.dev.mockUser from the
 // build config. Returns just the user object; getDevSession.js turns it into
 // a session through the same pipeline a real sign-in uses.
+//
+// A dev mock user needs no auth stack behind it: auth.dev is a dev-only
+// concern, so an app whose only auth key is auth.dev runs signed out in
+// production and has this caller in the dev server.
 function getMockUser() {
   const mockUserJson = process.env.LOWDEFY_DEV_USER;
   let mockUser;
@@ -30,7 +35,9 @@ function getMockUser() {
     try {
       mockUser = JSON.parse(mockUserJson);
     } catch (error) {
-      throw new Error('Invalid JSON in LOWDEFY_DEV_USER environment variable.', { cause: error });
+      throw new ConfigError('Invalid JSON in LOWDEFY_DEV_USER environment variable.', {
+        cause: error,
+      });
     }
   } else {
     mockUser = authJson.dev?.mockUser;
@@ -38,13 +45,6 @@ function getMockUser() {
 
   if (!mockUser) {
     return undefined;
-  }
-
-  if (authJson.configured !== true) {
-    throw new Error(
-      'Mock user configured but auth is not configured in lowdefy.yaml. ' +
-        'Add auth configuration to use mock user feature.'
-    );
   }
 
   // Deserialize to restore arrays from ~arr markers and remove other build markers

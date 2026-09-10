@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../utils/collectExceptions.js';
+
 function collectRenderNotificationSteps(routine, steps) {
   if (type.isArray(routine)) {
     routine.forEach((item) => collectRenderNotificationSteps(item, steps));
@@ -45,10 +47,14 @@ function validateRenderNotificationSteps({ components, context }) {
       if (!type.isString(notificationId)) return;
 
       if (!context.notificationIds?.has(notificationId)) {
-        throw new ConfigError(
-          `RenderNotification step "${step.stepId}" at endpoint "${endpoint.endpointId}" references notification "${notificationId}" which does not exist.`,
-          { configKey: step['~k'] }
+        collectExceptions(
+          context,
+          new ConfigError(
+            `RenderNotification step "${step.stepId}" at endpoint "${endpoint.endpointId}" references notification "${notificationId}" which does not exist.`,
+            { configKey: step['~k'] }
+          )
         );
+        return;
       }
     });
   });

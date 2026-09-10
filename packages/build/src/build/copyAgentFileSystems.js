@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import fs from 'fs';
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { copyFileOrDirectory } from '@lowdefy/node-utils';
 
 async function copyAgentFileSystems({ components, context }) {
@@ -36,15 +36,15 @@ async function copyAgentFileSystems({ components, context }) {
   if (context.directories.config === context.directories.server) return;
 
   for (const basePath of basePaths) {
+    // buildAgents validated that every fileSystem basePath exists, so a
+    // missing source here is a broken invariant, not a config fault.
     const source = path.resolve(context.directories.config, basePath);
-    if (!fs.existsSync(source)) continue;
-
     const dest = path.resolve(context.directories.server, basePath);
     try {
       await copyFileOrDirectory(source, dest);
     } catch (err) {
-      throw new Error(
-        `Failed to copy fileSystem basePath "${basePath}" to server directory: ${err.message}`,
+      throw new LowdefyInternalError(
+        `Failed to copy agent file system "${basePath}" to the server directory.`,
         { cause: err }
       );
     }

@@ -60,6 +60,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      showFlags: {
+        type: 'boolean',
+        default: true,
+        description: 'Show country flags in the country selector and input.',
+      },
       allowClear: { ...allowClear, default: false },
       allowedRegions: {
         type: 'array',
@@ -120,7 +125,8 @@ export default {
       showArrow: {
         type: 'boolean',
         default: true,
-        description: 'Show the suffix icon at the drop-down position of the selector.',
+        description:
+          'Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon.',
       },
       size: sizeSmallMiddleLarge,
       suffix: {

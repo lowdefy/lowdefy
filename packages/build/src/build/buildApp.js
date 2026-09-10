@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function buildApp({ components }) {
@@ -23,7 +24,10 @@ function buildApp({ components }) {
     components.app = {};
   }
   if (!type.isObject(components.app)) {
-    throw new Error('lowdefy.app is not an object.');
+    throw new ConfigError('lowdefy.app is not an object.', {
+      received: components.app,
+      configKey: components['~k'],
+    });
   }
   if (type.isNone(components.app.html)) {
     components.app.html = {};

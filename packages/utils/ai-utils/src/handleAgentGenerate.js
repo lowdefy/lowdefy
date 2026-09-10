@@ -69,13 +69,15 @@ async function handleAgentGenerate({ connection, properties, context }) {
   if (onFinishEndpointIds && onFinishEndpointIds.length > 0) {
     const finishPayload = {
       messages: result.response.messages,
-      steps: result.steps.map(({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
-        stepNumber,
-        text,
-        toolCalls: calls,
-        toolResults: results,
-        finishReason,
-      })),
+      steps: result.steps.map(
+        ({ stepNumber, text, toolCalls: calls, toolResults: results, finishReason }) => ({
+          stepNumber,
+          text,
+          toolCalls: calls,
+          toolResults: results,
+          finishReason,
+        })
+      ),
       toolResults,
       finishReason: result.finishReason,
       isAborted: false,
@@ -87,7 +89,7 @@ async function handleAgentGenerate({ connection, properties, context }) {
       try {
         await context.callEndpoint(endpointId, { payload: finishPayload });
       } catch (error) {
-        console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+        context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
       }
     }
   }

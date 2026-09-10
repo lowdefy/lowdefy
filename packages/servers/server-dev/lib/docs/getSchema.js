@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getHazards from './getHazards.js';
 import normalizeTypeKind from './normalizeTypeKind.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
@@ -31,7 +32,9 @@ function getSchema({ kind, type: typeName }) {
   const normalizedKind = normalizeTypeKind({ kind });
   if (type.isNone(SCHEMA_ARTIFACTS[normalizedKind])) {
     throw new Error(
-      `No schemas available for type kind. Received ${JSON.stringify(kind)}. Use one of: blocks, operators, actions, connections, requests.`
+      `No schemas available for type kind. Received ${JSON.stringify(
+        kind
+      )}. Use one of: blocks, operators, actions, connections, requests.`
     );
   }
   const schemas = readBuildArtifact({ name: SCHEMA_ARTIFACTS[normalizedKind] }) ?? {};
@@ -59,6 +62,7 @@ function getSchema({ kind, type: typeName }) {
       result.meta = blockMetas[typeName];
     }
   }
+  result.hazards = getHazards({ kind: normalizedKind, type: typeName });
   return result;
 }
 

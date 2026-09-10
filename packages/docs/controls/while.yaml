@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Add back when while control implemented
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -27,6 +26,12 @@ _ref:
     controlKeys: |
       - `:while: boolean`: __Required__ - The test that will determine whether or not the defined routine should execute again.
       - `:do: routine`: __Required__ - The routine to run while the test condition holds.
+
+      The `:while` condition is evaluated fresh before every iteration, against the routine's current `state` and `steps`. This is how the loop terminates - the routine in `:do` changes the state or step results that the condition reads.
+
+      Unlike `:for`, a `:while` loop does not index the step results of its body. A `:while` has no item to index by, so each iteration overwrites the previous iteration's step results, and `_step: my_step` inside or after the loop reads the value from the latest iteration.
+
+      There is no iteration cap and no timeout. A condition that the routine in `:do` never falsifies loops forever, exactly as it would in JavaScript.
     examples: |
       ###### Simple Example
       ```
@@ -38,7 +43,7 @@ _ref:
             - 5
         :do:
           - :log:
-              _item: count
+              _state: count
           - :set_state:
               count:
                 _sum:
