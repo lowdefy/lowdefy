@@ -18,8 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import buildBlock from '../build/buildPages/buildBlock/buildBlock.js';
-import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
-import createCounter from '../utils/createCounter.js';
+import createPageContext from '../build/buildPages/createPageContext.js';
 
 // At build time, type counters feed types.json and import generation. At
 // runtime the client bundle is fixed, so the same counter calls become
@@ -65,33 +64,19 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
     );
   }
   const warnings = [];
-  const callApiActionRefs = [];
-  const requestActionRefs = [];
   const allowed = getAllowedSets(types);
-  const pageContext = {
-    blockIdCounter: createCounter(),
+  const pageContext = createPageContext({
     // Namespace runtime ids under the resolving Dynamic block's built id —
     // unique by construction, so they can never collide with static block ids.
     blockIdPrefix: idPrefix,
-    callApiActionRefs,
-    checkDuplicateRequestId: createCheckDuplicateId({
-      message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
-    }),
     context: {
       blockMetas,
       handleWarning: (warning) => {
         warnings.push(warning);
       },
     },
-    // Pure sink — buildDynamicBlock pushes nested Dynamic refs here, but at
-    // runtime a bad endpointId surfaces through resolution, not ref checking.
-    dynamicBlockRefs: [],
     forbidRequests: true,
-    linkActionRefs: [],
     pageId,
-    requestActionRefs,
-    requests: [],
-    shortcutRefs: [],
     typeCounters: {
       actions: createMembershipCounter({
         category: 'action',
@@ -116,8 +101,8 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
       },
       requests: noopCounter,
     },
-    websocketActionRefs: [],
-  };
+  });
+  const { callApiActionRefs, requestActionRefs } = pageContext;
   blocks.forEach((block) => buildBlock(block, pageContext));
   return { blocks, callApiActionRefs, requestActionRefs, warnings };
 }

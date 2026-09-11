@@ -34,6 +34,7 @@
 - _ref: concepts/api.yaml
 - _ref: concepts/notifications.yaml
 - _ref: concepts/dynamic-page-content.yaml
+- _ref: concepts/reports.yaml
 - _ref: concepts/ai-agent-docs.yaml
 
 - _ref: agents/introduction.yaml
@@ -222,6 +223,7 @@
 - _ref: connections/MySQL.yaml
 - _ref: connections/PostgreSQL.yaml
 - _ref: connections/Redis.yaml
+- _ref: connections/Reports.yaml
 - _ref: connections/SendGridMail.yaml
 - _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
@@ -232,6 +234,7 @@
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
+- _ref: actions/DownloadFile.yaml
 - _ref: actions/Fetch.yaml
 - _ref: actions/GeolocationCurrentPosition.yaml
 - _ref: actions/Link.yaml

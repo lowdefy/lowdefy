@@ -5984,6 +5984,7 @@
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "export default {\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/reportsRuntime.js": "export default { blocksStatic: {}, clientJsMap: {}, clientOperators: {}, icons: {} };\n",
   "plugins/websockets.js": "export default {\n  };",
   "refMap.json": {
     "1": {

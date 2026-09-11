@@ -9422,6 +9422,7 @@
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "import { _payload as _payload } from '@lowdefy/operators-js/operators/server';\nimport { _date as _date } from '@lowdefy/operators-js/operators/server';\nexport default {\n  _payload,\n  _date,\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/reportsRuntime.js": "export default { blocksStatic: {}, clientJsMap: {}, clientOperators: {}, icons: {} };\n",
   "plugins/websockets.js": "export default {\n  };",
   "refMap.json": {
     "1": {

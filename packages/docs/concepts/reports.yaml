@@ -1,0 +1,158 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: generating-reports
+    pageTitle: Reports
+    section: Concepts
+    filePath: concepts/reports.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content:
+            _nunjucks:
+              on:
+                version:
+                  _ref: version.yaml
+              template: |
+                A report is a page of your app rendered to a PDF or an Excel workbook on the server. The same YAML that describes the page in the browser describes the document: the page is evaluated headlessly, its blocks are laid out in the page's grid, and the result is a file you can download or email.
+
+                Reports are opt-in. Declare the `@lowdefy/plugin-reports` plugin and add a `Reports` connection:
+
+                ```yaml
+                lowdefy: {{ version }}
+                plugins:
+                  - name: '@lowdefy/plugin-reports'
+                    version: {{ version }}
+                connections:
+                  - id: reports
+                    type: Reports
+                ```
+
+                An app that does not declare the plugin ships none of the report code.
+
+                ## Rendering a page
+
+                A [`RenderReport`](/Reports) request renders one page. It runs the page's `onInit` and `onInitAsync` events, waits for every request they fire, and then walks the evaluated block tree into the document. The request returns a file envelope (`{ name, size, type, content }`) which the [`DownloadFile`](/DownloadFile) action saves to the browser:
+
+                ```yaml
+                requests:
+                  - id: render_pdf
+                    type: RenderReport
+                    connectionId: reports
+                    properties:
+                      pageId: sales-dashboard
+                      urlQuery:
+                        _url_query: true
+                      state:
+                        _state: true
+                blocks:
+                  - id: download
+                    type: Button
+                    properties:
+                      title: Download PDF
+                    events:
+                      onClick:
+                        - id: render
+                          type: Request
+                          params: render_pdf
+                        - id: save
+                          type: DownloadFile
+                          params:
+                            _request: render_pdf
+                ```
+
+                Pass the viewer's `urlQuery`, `input`, and `state` so the report shows what the viewer sees: the snapshot is seeded before `onInit`, so requests that read `_state` or `_url_query` receive the same values.
+
+                Because `RenderReport` is an ordinary request, it also runs in [API endpoints](/lowdefy-api). A scheduled endpoint can render a page and pass the envelope to an email connection as an attachment.
+
+                ## Authorization
+
+                A report can only render a page the calling session may open. The page's `auth` settings are applied exactly as in the browser, and the requests the page fires during `onInit` are authorized against the same session. An unknown page and an unauthorized page fail with the same error.
+
+                Scheduled, webhook, and detached API endpoints run as a system context with no user. A page that reads `_user` cannot be rendered there and the render fails fast with an error naming the page; pass the values you need through the endpoint payload instead.
+
+                ## The `report` block key
+
+                Every block accepts a `report` key. On the page block it configures the document:
+
+                - `title: string`: The document title, shown in the PDF metadata. Defaults to the page title, then the page id. __Operators are evaluated__.
+                - `header: string`: Text for the header band on every page. Defaults to the title. __Operators are evaluated__.
+                - `footer: string`: Text for the left of the footer band. The footer always shows the generation time and page numbers. __Operators are evaluated__.
+                - `size: enum`: Default: `'A4'` - The paper size, `'A4'` or `'letter'`.
+                - `orientation: enum`: Default: `'portrait'` - `'portrait'` or `'landscape'`.
+
+                On any other block it controls that block:
+
+                - `exclude: boolean`: Leave the block (and its children) out of the report. Use it for buttons, filters, and other controls that make no sense in a document. Input blocks are always excluded.
+                - `pageBreakBefore: boolean`: Start a new page before the block.
+                - `sheetName: string`: The worksheet name for a data grid in the Excel export. Defaults to the block id. Excel's rules apply: at most 31 characters, none of `[ ] : * ? / \`, no leading or trailing apostrophe, and not `History`.
+
+                ```yaml
+                id: sales-dashboard
+                type: PageHeaderMenu
+                report:
+                  title: Sales dashboard
+                  footer:
+                    _string.concat:
+                      - 'Region: '
+                      - _state: region
+                  orientation: landscape
+                blocks:
+                  - id: filters
+                    type: Card
+                    report:
+                      exclude: true
+                  - id: sales_table
+                    type: AgGridAlpine
+                    report:
+                      sheetName: Sales
+                      pageBreakBefore: true
+                ```
+
+                The build validates the key: page-level keys on a nested block, block-level keys on the page, and a `report` key in an app that has not declared the plugin all produce warnings.
+
+                ## Layout
+
+                Blocks appear in source order. Siblings whose `layout.span` values fit in one 24-column row share a row; a block without a span is full width. Flex children (`layout.flex`, `grow`, `shrink`, `size`) share a row and divide its width evenly. `order`, `push`, `pull`, and responsive overrides are ignored. `visible: false` hides a block from the report as it does on the page.
+
+                ## Supported blocks
+
+                | Package | Blocks | Rendered as |
+                | --- | --- | --- |
+                | `@lowdefy/blocks-antd` | Title, Paragraph, Statistic, Divider, Descriptions, Alert | headings, text, statistics, tables |
+                | `@lowdefy/blocks-antd` | Card, Content, Tabs, Collapse | their children, with panel titles as headings |
+                | `@lowdefy/blocks-basic` | Box, Span, Img, Icon | their children, images, icons |
+                | `@lowdefy/blocks-basic` | Html, DangerousHtml | the markup laid out with the app's compiled Tailwind and custom CSS |
+                | `@lowdefy/blocks-echarts` | EChart | the chart as vector graphics, animation disabled |
+                | `@lowdefy/blocks-markdown` | Markdown, MarkdownWithCode, DangerousMarkdown | formatted text, lists, tables, images |
+                | `@lowdefy/blocks-aggrid` | AgGridAlpine, AgGridBalham, AgGridLowdefy, AgGridMaterial | a worksheet in the Excel export; a summary line in the PDF |
+
+                A block type without a renderer is skipped and named in the server log; a container without a renderer passes its children through. Input blocks are never rendered.
+
+                ## PDF and Excel
+
+                The PDF is the document: text, headings, charts, images, and small tables. Data grids are not printed into the PDF, since a grid of hundreds of rows is not readable on paper; the PDF shows a line naming the sheet and its row count, and the `xlsx` format writes every grid as a worksheet with typed cells (numbers, booleans, and ISO dates become real Excel values). A page with no grid cannot be exported as `xlsx`.
+
+                Images referenced by a relative path (`/logo.png`) are read from the app's `public` folder. Remote images are fetched with a timeout and a size limit, and never from private network addresses.
+
+                ## Limitations
+
+                - Only `onInit` and `onInitAsync` run. A page that loads its data in `onMount` renders empty, and the server log names the blocks with mount events.
+                - Browser-only actions in `onInit` (`Link`, `DisplayMessage`, `ScrollTo`, and so on) are skipped. A `Request` that fails, or a `Throw`, fails the render rather than producing an incomplete document.
+                - Html blocks cannot lay out `<table>` markup or load `<img>` sources; use a table block or an `Img` block.
+                - At most two reports render at once per server process; further requests queue, and a request that cannot be served in time fails with a busy error.

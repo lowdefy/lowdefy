@@ -27,11 +27,13 @@ import normalizeClassAndStyles from './normalizeClassAndStyles.js';
 import normalizeLayout from './normalizeLayout.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
+import validateReport from './validateReport.js';
 import validateSlots from './validateSlots.js';
 
 function buildBlock(block, pageContext, parentConfigKey) {
   validateBlock(block, pageContext, parentConfigKey);
   setBlockId(block, pageContext);
+  validateReport(block, pageContext);
   buildDynamicBlock(block, pageContext);
   normalizeLayout(block, pageContext);
   moveAreasToSlots(block, pageContext);

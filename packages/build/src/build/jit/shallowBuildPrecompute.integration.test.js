@@ -57,6 +57,11 @@ jest.unstable_mockModule('../copyPublicFolder.js', () => ({
 jest.unstable_mockModule('../copyAgentFileSystems.js', () => ({
   default: jest.fn(async () => {}),
 }));
+// The reports stylesheet compiles Tailwind through @tailwindcss/node, whose
+// loader hooks recurse under jest's ESM runtime.
+jest.unstable_mockModule('../writePluginImports/writeReportStyles.js', () => ({
+  default: jest.fn(async () => {}),
+}));
 
 const { default: shallowBuild } = await import('./shallowBuild.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
@@ -106,7 +111,7 @@ pages:
     logger: {
       info: () => {},
       log: () => {},
-      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : (arg?.msg ?? '')),
+      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : arg?.msg ?? ''),
       error: () => {},
       succeed: () => {},
     },
@@ -127,4 +132,58 @@ pages:
   const outer = page.slots.content.blocks[0];
   expect(outer.blockId).toBe('inline_block');
   expect(outer.slots.content.blocks[0].blockId).toBe('nested');
+});
+
+test('skeleton build persists the declared plugins for JIT page builds', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-shallow-plugins-'));
+  const configDir = path.join(root, 'config');
+  const buildDir = path.join(root, '.lowdefy', 'server', 'build');
+  fs.mkdirSync(configDir, { recursive: true });
+  fs.mkdirSync(buildDir, { recursive: true });
+
+  fs.writeFileSync(
+    path.join(configDir, 'lowdefy.yaml'),
+    `lowdefy: local
+name: Shallow Plugins Test
+plugins:
+  - name: '@lowdefy/plugin-reports'
+    version: '5.4.0'
+
+pages:
+  - id: report
+    type: Box
+    report:
+      title: Report
+    blocks:
+      - id: title
+        type: Title
+        report:
+          pageBreakBefore: true
+`
+  );
+
+  const warnings = [];
+  await shallowBuild({
+    customTypesMap: snapshotTypesMap,
+    directories: {
+      config: configDir,
+      build: buildDir,
+      server: path.join(root, '.lowdefy', 'server'),
+    },
+    logger: {
+      info: () => {},
+      log: () => {},
+      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : arg?.msg ?? ''),
+      error: () => {},
+      succeed: () => {},
+    },
+    stage: 'dev',
+  });
+
+  expect(warnings.filter((w) => String(w).includes('is not declared in plugins'))).toEqual([]);
+  // The dev server restores this into the JIT build context, where buildPage's
+  // reports-plugin check reads it.
+  expect(JSON.parse(fs.readFileSync(path.join(buildDir, 'plugins.json'), 'utf8'))).toEqual([
+    { name: '@lowdefy/plugin-reports', version: '5.4.0' },
+  ]);
 });

@@ -29,6 +29,10 @@ import writeOperatorImports from './writeOperatorImports.js';
 import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
+import writeBlockStaticImports from './writeBlockStaticImports.js';
+import writeReportsRuntime from './writeReportsRuntime.js';
+import writeReportStyles from './writeReportStyles.js';
+import isReportsPluginDeclared from './isReportsPluginDeclared.js';
 
 async function writePluginImports({ components, context }) {
   await writeActionImports({ components, context });
@@ -47,11 +51,19 @@ async function writePluginImports({ components, context }) {
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });
 
+  // The servers import reportsRuntime.js statically, so it is always written. The
+  // renderer registry and the report stylesheet it stands in front of are only
+  // produced when the reports plugin is declared, so an app that never installs
+  // it pays for neither.
+  await writeReportsRuntime({ context });
+  await writeBlockStaticImports({ components, context });
+  if (isReportsPluginDeclared({ context })) {
+    await writeReportStyles({ components, context });
+  }
+
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
-  const blockPackages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
-  ];
+  const blockPackages = [...new Set((components.imports.blocks ?? []).map((b) => b.package))];
   await context.writeBuildArtifact('blockPackages.json', JSON.stringify(blockPackages));
 }
 
