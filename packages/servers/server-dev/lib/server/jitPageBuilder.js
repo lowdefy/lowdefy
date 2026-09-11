@@ -132,6 +132,9 @@ function getBuildContext(buildDirectory, configDirectory) {
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
   cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
 
+  // Restore the declared plugins so buildPage's reports-plugin check sees them.
+  cachedBuildContext.plugins = readJsonFile(path.join(buildDirectory, 'plugins.json')) ?? [];
+
   // Restore module entries from skeleton build for JIT module page builds
   const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
   if (modules) {
