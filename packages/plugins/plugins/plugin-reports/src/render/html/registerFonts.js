@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import { FONT_FAMILY } from '../../fonts/fonts.js';
+import { FONT_FAMILY, SYMBOL_FONT_FAMILY } from '../../fonts/fonts.js';
 
 // `fonts` key → the CSS weight and style the face answers to, so
-// `font-weight: 700` and `font-style: italic` in the markup resolve.
+// `font-weight: 700` and `font-style: italic` in the markup resolve, and the
+// family it registers under. The symbol face is its own family, last in the
+// render's fallback chain.
 const FONT_FACES = [
-  ['regular', 400, 'normal'],
-  ['bold', 700, 'normal'],
-  ['italic', 400, 'italic'],
-  ['boldItalic', 700, 'italic'],
+  ['regular', 400, 'normal', FONT_FAMILY],
+  ['bold', 700, 'normal', FONT_FAMILY],
+  ['italic', 400, 'italic', FONT_FAMILY],
+  ['boldItalic', 700, 'italic', FONT_FAMILY],
+  ['symbol', 400, 'normal', SYMBOL_FONT_FAMILY],
 ];
 
 let registered;
@@ -35,8 +38,8 @@ async function registerFonts({ renderer, fonts }) {
   if (registered) return registered;
   if (!fonts) return undefined;
   registered = Promise.all(
-    FONT_FACES.filter(([key]) => fonts[key]).map(([key, weight, style]) =>
-      renderer.registerFont({ name: FONT_FAMILY, data: fonts[key], weight, style })
+    FONT_FACES.filter(([key]) => fonts[key]).map(([key, weight, style, name]) =>
+      renderer.registerFont({ name, data: fonts[key], weight, style })
     )
   ).catch((error) => {
     // Forget the failure. A cached rejected promise would be handed to every

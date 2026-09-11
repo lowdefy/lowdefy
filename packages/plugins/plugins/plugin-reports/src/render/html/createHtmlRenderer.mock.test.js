@@ -49,6 +49,7 @@ const fonts = {
   bold: Buffer.from('bold'),
   italic: Buffer.from('italic'),
   boldItalic: Buffer.from('boldItalic'),
+  symbol: Buffer.from('symbol'),
 };
 
 test('a render without report fonts constructs the renderer and registers nothing', async () => {
@@ -59,15 +60,16 @@ test('a render without report fonts constructs the renderer and registers nothin
   expect(result.svg).toContain('<svg');
 });
 
-test('the first render carrying fonts registers the four report faces', async () => {
+test('the first render carrying fonts registers the four report faces and the symbol face', async () => {
   const renderHtml = createHtmlRenderer({ fonts });
   await renderHtml({ html: '<div>a</div>', width: 200 });
-  expect(registerFont).toHaveBeenCalledTimes(4);
+  expect(registerFont).toHaveBeenCalledTimes(5);
   expect(registerFont.mock.calls.map(([face]) => [face.name, face.weight, face.style])).toEqual([
     ['Roboto', 400, 'normal'],
     ['Roboto', 700, 'normal'],
     ['Roboto', 400, 'italic'],
     ['Roboto', 700, 'italic'],
+    ['DejaVuSans', 400, 'normal'],
   ]);
   expect(registerFont.mock.calls[0][0].data).toBe(fonts.regular);
 });
@@ -81,13 +83,13 @@ test('later renders reuse the engine and register no further fonts', async () =>
   expect(renderSvg).toHaveBeenCalledTimes(2);
 });
 
-test('renders at the given width with the Roboto font stack and no height', async () => {
+test('renders at the given width with the Roboto then DejaVu font stack and no height', async () => {
   const renderHtml = createHtmlRenderer({ fonts });
   await renderHtml({ html: '<div>a</div>', width: 320 });
   const [, options] = renderSvg.mock.calls.at(-1);
   expect(options.width).toBe(320);
   expect(options.height).toBeUndefined();
-  expect(options.fontFamilies).toEqual(['Roboto']);
+  expect(options.fontFamilies).toEqual(['Roboto', 'DejaVuSans']);
 });
 
 test('a given height is passed to the engine', async () => {

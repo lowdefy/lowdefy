@@ -36,9 +36,11 @@ import {
   orientationOf,
   pageSizeOf,
 } from '../geometry.js';
+import applySymbolFont from './applySymbolFont.js';
 import assembleContent from './assembleContent.js';
 import buildFooter from './buildFooter.js';
 import buildHeader from './buildHeader.js';
+import flattenStacks from './flattenStacks.js';
 import renderPdfBuffer from './renderPdfBuffer.js';
 import resolveImages from './resolveImages.js';
 
@@ -58,7 +60,9 @@ function toPdfMake(nodes, report = {}, options = {}) {
   validateNodes(nodes);
 
   const ctx = { contentWidth: contentWidthOf(report), logger: options.logger };
-  const content = assembleContent(nodes, ctx, contentHeightOf(report));
+  const content = applySymbolFont(
+    assembleContent(flattenStacks(nodes), ctx, contentHeightOf(report))
+  );
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);

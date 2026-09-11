@@ -60,7 +60,7 @@ A renderer that throws or emits invalid IR is isolated: the block is skipped and
 
 ### PDF (`render/pdf/`)
 
-`toPdfMake` is a pure IR → pdfmake docDefinition mapping, one `translate*` file per kind, with `assembleContent` keeping headings with the unbreakable content they introduce. `renderPdfBuffer` resolves images first, then prints. Fonts are pdfmake's shipped Roboto faces (`pdfmake/build/fonts/Roboto.js`), not a second copy.
+`toPdfMake` is a pure IR → pdfmake docDefinition mapping, one `translate*` file per kind. Before translation, `flattenStacks` hoists the children of every page-level `stack` (a layout Box, Card or Content wrapper, which has no width of its own) into the top-level sequence, so `assembleContent` keeps headings with the unbreakable content they introduce and `pageBreakBefore` produces a break at any nesting depth; a stack inside a `row` is a column and is left as is. `renderPdfBuffer` resolves images first, then prints. Fonts are pdfmake's shipped Roboto faces (`pdfmake/build/fonts/Roboto.js`), not a second copy, plus one DejaVu Sans face (`fonts/DejaVuSans.ttf`, Bitstream Vera licence) as the symbol fallback: Roboto has no Arrows, Geometric Shapes, Miscellaneous Symbols or Dingbats glyphs, and pdfmake has no per-glyph fallback, so `applySymbolFont` walks the translated content and wraps every run in those Unicode blocks in the `DejaVuSans` font (never inside svg or image content). Takumi gets the same face as the last family in its fallback chain, so Html-block text covers the same symbols.
 
 ### Images (`render/image/`)
 

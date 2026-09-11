@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import { FONT_FAMILY } from '../../fonts/fonts.js';
+import { FONT_FAMILY, SYMBOL_FONT_FAMILY } from '../../fonts/fonts.js';
 import collectBuffer from './collectBuffer.js';
 import { PdfPrinter, URLResolver, virtualFileSystem } from './pdfmakeModules.js';
-import registerFonts, { FONT_FILES } from './registerFonts.js';
+import registerFonts, { FONT_FILES, SYMBOL_FONT_FILES } from './registerFonts.js';
 import resolveImages from './resolveImages.js';
 import toPdfMake from './toPdfMake.js';
 
@@ -38,7 +38,10 @@ async function renderPdfBuffer(nodes, report = {}, options = {}) {
   });
   const docDefinition = toPdfMake(resolved, report, options);
   registerFonts();
-  const fontDescriptors = { [FONT_FAMILY]: { ...FONT_FILES } };
+  const fontDescriptors = {
+    [FONT_FAMILY]: { ...FONT_FILES },
+    [SYMBOL_FONT_FAMILY]: { ...SYMBOL_FONT_FILES },
+  };
   const urlResolver = new URLResolver(virtualFileSystem);
   const printer = new PdfPrinter(fontDescriptors, virtualFileSystem, urlResolver, undefined);
   const pdfKitDoc = await printer.createPdfKitDocument(docDefinition);

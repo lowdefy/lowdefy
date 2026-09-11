@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import { FONT_FAMILY } from '../../fonts/fonts.js';
+import { FONT_FAMILY, SYMBOL_FONT_FAMILY } from '../../fonts/fonts.js';
 import getEngine from './getEngine.js';
 import measuredHeight from './measuredHeight.js';
 import registerFonts from './registerFonts.js';
@@ -55,7 +55,7 @@ function createHtmlRenderer({ fonts, stylesheets }) {
       stylesheets: [...inlineSheets, stylesheets].filter(
         (sheet) => type.isString(sheet) && sheet !== ''
       ),
-      fontFamilies: [FONT_FAMILY],
+      fontFamilies: [FONT_FAMILY, SYMBOL_FONT_FAMILY],
     });
     return { svg, height: height ?? measuredHeight(svg) };
   };

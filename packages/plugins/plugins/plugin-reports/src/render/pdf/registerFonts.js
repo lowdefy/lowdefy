@@ -29,6 +29,15 @@ export const FONT_FILES = {
   bolditalics: 'Roboto-BoldItalic.ttf',
 };
 
+// One symbol face answers every role: a bold ▲ at 10pt is indistinguishable
+// from a regular one, and a missing role would make pdfmake throw.
+export const SYMBOL_FONT_FILES = {
+  normal: 'DejaVuSans.ttf',
+  bold: 'DejaVuSans.ttf',
+  italics: 'DejaVuSans.ttf',
+  bolditalics: 'DejaVuSans.ttf',
+};
+
 let registered = false;
 
 function registerFonts() {
@@ -37,6 +46,7 @@ function registerFonts() {
   virtualFileSystem.writeFileSync(FONT_FILES.bold, fonts.bold);
   virtualFileSystem.writeFileSync(FONT_FILES.italics, fonts.italic);
   virtualFileSystem.writeFileSync(FONT_FILES.bolditalics, fonts.boldItalic);
+  virtualFileSystem.writeFileSync(SYMBOL_FONT_FILES.normal, fonts.symbol);
   registered = true;
 }
 

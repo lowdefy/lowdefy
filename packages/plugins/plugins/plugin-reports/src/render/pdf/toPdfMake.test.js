@@ -290,14 +290,14 @@ test('a spacer inside a row becomes an empty gap column at its width', () => {
 
 // --- stack -------------------------------------------------------------------
 
-test('stack translates children into a pdfmake stack', () => {
+test('a page-level stack is a layout wrapper and its children are hoisted to the page', () => {
   const node = stack({
     children: [heading({ text: 'H', level: 2 }), text({ text: 'p' })],
   });
   const { content } = toPdfMake([node]);
-  expect(content[0].stack).toHaveLength(2);
-  expect(content[0].stack[0]).toMatchObject({ text: 'H', fontSize: 17 });
-  expect(content[0].stack[1]).toMatchObject({ text: 'p' });
+  expect(content).toHaveLength(2);
+  expect(content[0]).toMatchObject({ text: 'H', fontSize: 17 });
+  expect(content[1]).toMatchObject({ text: 'p' });
 });
 
 // --- divider -----------------------------------------------------------------
@@ -545,4 +545,89 @@ test('renderPdfBuffer resolves one image, skips an unresolvable one, and warns',
   // The unresolvable image logged exactly one warning.
   expect(warnings).toHaveLength(1);
   expect(warnings[0][1]).toMatch(/not an image/i);
+});
+
+// --- nested layout stacks ---------------------------------------------------
+
+test('pageBreakBefore inside a nested layout stack produces a page break', () => {
+  const chart = { ...svg({ svg: '<svg/>', width: 100, height: 50 }), pageBreakBefore: true };
+  const { content } = toPdfMake([
+    stack({ children: [stack({ children: [text({ text: 'Intro' }), chart] })] }),
+  ]);
+  expect(content).toHaveLength(2);
+  expect(content[0]).toMatchObject({ text: 'Intro' });
+  expect(content[1]).toMatchObject({ pageBreak: 'before' });
+});
+
+test('a heading nested in a layout stack stays with the chart it introduces', () => {
+  const { content } = toPdfMake([
+    stack({
+      children: [
+        heading({ text: 'Tickets', level: 3 }),
+        svg({ svg: '<svg/>', width: 100, height: 50 }),
+      ],
+    }),
+  ]);
+  expect(content).toHaveLength(1);
+  expect(content[0]).toMatchObject({ unbreakable: true });
+  expect(content[0].stack[0]).toMatchObject({ text: 'Tickets' });
+});
+
+test('a page break on the layout stack itself moves to its first child', () => {
+  const { content } = toPdfMake([
+    { ...stack({ children: [text({ text: 'A' }), text({ text: 'B' })] }), pageBreakBefore: true },
+  ]);
+  expect(content[0]).toMatchObject({ text: 'A', pageBreak: 'before' });
+  expect(content[1].pageBreak).toBeUndefined();
+});
+
+test('a stack inside a row cell keeps its shape', () => {
+  const { content } = toPdfMake([
+    row({
+      children: [stack({ children: [text({ text: 'A' }), text({ text: 'B' })] })],
+      widths: [1],
+    }),
+  ]);
+  expect(content[0].columns[0].stack).toHaveLength(2);
+});
+
+// --- symbol font fallback ---------------------------------------------------
+
+test('triangle and arrow runs are set in the DejaVu Sans fallback font, the rest stays Roboto', () => {
+  const { content } = toPdfMake([
+    text({ text: '▲ 11%' }),
+    stat({ label: 'Δ', value: '▼ 3%' }),
+    heading({ text: 'Trend ↑ up ↓ down', level: 2 }),
+  ]);
+  expect(content[0].text).toEqual([{ text: '▲', font: 'DejaVuSans' }, ' 11%']);
+  // Greek capital delta is in Roboto; only the triangle moves font.
+  expect(content[1].stack[0].text).toBe('Δ');
+  expect(content[1].stack[1].text).toEqual([{ text: '▼', font: 'DejaVuSans' }, ' 3%']);
+  expect(content[2]).toMatchObject({ bold: true, fontSize: 17 });
+  expect(content[2].text).toEqual([
+    'Trend ',
+    { text: '↑', font: 'DejaVuSans' },
+    ' up ',
+    { text: '↓', font: 'DejaVuSans' },
+    ' down',
+  ]);
+});
+
+test('symbol fallback reaches markdown runs and table cells, and leaves svg content alone', () => {
+  const { content } = toPdfMake([
+    markdown({ markdown: 'Up **▲ 5%**' }),
+    table({ header: [cell({ value: 'Δ' })], rows: [[cell({ value: '▼ 2' })]] }),
+    svg({ svg: '<svg><text>▲</text></svg>', width: 10, height: 10 }),
+  ]);
+  const flat = JSON.stringify(content.slice(0, 2));
+  expect(flat).toContain('{"text":"▲","font":"DejaVuSans"}');
+  expect(flat).toContain('{"text":"▼","font":"DejaVuSans"}');
+  expect(content[2].svg).toBe('<svg><text>▲</text></svg>');
+});
+
+test('renders symbol text to a PDF that embeds the DejaVu Sans fallback', async () => {
+  const buffer = await renderPdfBuffer([text({ text: '▲ 11% ↑' })], { title: 'Deltas' });
+  const pdf = buffer.toString('latin1');
+  expect(pdf).toContain('DejaVuSans');
+  expect(pdf).toContain('Roboto');
 });
