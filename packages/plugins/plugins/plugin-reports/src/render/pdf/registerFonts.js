@@ -15,7 +15,7 @@
 */
 
 import { fonts } from '../../fonts/fonts.js';
-import { virtualFileSystem } from './pdfmakeModules.js';
+import { PdfDocument, virtualFileSystem } from './pdfmakeModules.js';
 
 // The bundled Roboto faces, registered once into pdfmake's virtual filesystem.
 // Buffers cannot be passed directly as font descriptor values — the Printer's
@@ -40,8 +40,32 @@ export const SYMBOL_FONT_FILES = {
 
 let registered = false;
 
+// pdfmake reads document-text fonts out of the virtual filesystem itself, but
+// its SVG font callback hands svg-to-pdfkit the raw descriptor value — the VFS
+// file name — which pdfkit then tries to open from disk (ENOENT, and every chart
+// label falls back to Helvetica). Register each VFS font file with pdfkit under
+// that same name the first time the callback asks for it, so `doc.font(name)`
+// resolves to the Buffer and pdfkit caches the face instead of embedding it per
+// label. Only the return value's meaning for svg-to-pdfkit changes; pdfmake's own
+// callers use getFontFile for a null check.
+function patchSvgFontLookup() {
+  const { getFontFile } = PdfDocument.prototype;
+  PdfDocument.prototype.getFontFile = function getVfsFontFile(family, bold, italics) {
+    const file = getFontFile.call(this, family, bold, italics);
+    if (
+      typeof file === 'string' &&
+      this._registeredFonts?.[file] === undefined &&
+      this.virtualfs?.existsSync(file)
+    ) {
+      this.registerFont(file, this.virtualfs.readFileSync(file));
+    }
+    return file;
+  };
+}
+
 function registerFonts() {
   if (registered) return;
+  patchSvgFontLookup();
   virtualFileSystem.writeFileSync(FONT_FILES.normal, fonts.regular);
   virtualFileSystem.writeFileSync(FONT_FILES.bold, fonts.bold);
   virtualFileSystem.writeFileSync(FONT_FILES.italics, fonts.italic);

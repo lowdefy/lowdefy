@@ -15,16 +15,10 @@
 */
 
 import translateTopNode from './translateTopNode.js';
-import unbreakableHeight from './unbreakableHeight.js';
+import unbreakableHeight, { GROUP_HEIGHT_LIMIT, MARKER_HEIGHT } from './unbreakableHeight.js';
 
 // A heading and a divider introduce what follows, so they travel with it.
 const SECTION_MARKERS = new Set(['heading', 'divider']);
-
-// A heading is ~30pt with its margins; used to size a candidate group.
-const MARKER_HEIGHT = 30;
-// A chart-plus-heading group has to leave room for the rest of the page's flow,
-// so only group when the pair takes at most this share of the page.
-const GROUP_HEIGHT_LIMIT = 0.9;
 
 /**
  * Assemble the top-level content, keeping each heading with the content it

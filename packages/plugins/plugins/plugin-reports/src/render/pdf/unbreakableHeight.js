@@ -16,6 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
+// A heading, divider or short text is ~30pt with its margins; used to size a
+// candidate group or a stack cell that carries an unbreakable node.
+export const MARKER_HEIGHT = 30;
+// A heading-plus-chart group, or a row holding one, has to leave room for the
+// rest of the page's flow, so only bind when it takes at most this share of the
+// page. Anything larger would become a block pdfmake cannot place.
+export const GROUP_HEIGHT_LIMIT = 0.9;
+
 // Unbreakable, but measurable only when the node declares a height: pdfmake
 // sizes an image or a dimensionless svg from bytes it has not decoded yet.
 // `Infinity` says "unbreakable and unmeasurable", which keeps the node out of a
@@ -42,6 +50,13 @@ function unbreakableHeight(node) {
       // One unmeasurable child makes the row unmeasurable, because Infinity wins
       // the max.
       return Math.max(40, ...node.children.map((child) => unbreakableHeight(child) ?? 0));
+    case 'stack': {
+      // A row cell is a stack of [heading, chart]; it is unbreakable when any
+      // child is, and as tall as its children together, flowing ones estimated.
+      const heights = node.children.map(unbreakableHeight);
+      if (heights.every((height) => height === undefined)) return undefined;
+      return heights.reduce((sum, height) => sum + (height ?? MARKER_HEIGHT), 0);
+    }
     default:
       return undefined;
   }

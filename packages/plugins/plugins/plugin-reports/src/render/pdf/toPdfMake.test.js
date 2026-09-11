@@ -631,3 +631,81 @@ test('renders symbol text to a PDF that embeds the DejaVu Sans fallback', async 
   expect(pdf).toContain('DejaVuSans');
   expect(pdf).toContain('Roboto');
 });
+
+// --- svg text fonts -----------------------------------------------------------
+
+test('svg <text> resolves Roboto from the virtual filesystem with no pdfkit font warning', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  try {
+    const chart =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60">' +
+      '<text x="10" y="30" font-family="Roboto" font-size="12">Tickets 42</text>' +
+      '<text x="10" y="50" font-family="Roboto" font-weight="bold" font-size="12">Bold</text>' +
+      '</svg>';
+    const buffer = await renderPdfBuffer([svg({ svg: chart, width: 200, height: 60 })]);
+    const fontWarnings = warn.mock.calls.filter(([message]) =>
+      String(message).includes('failed to open font')
+    );
+    expect(fontWarnings).toEqual([]);
+    expect(buffer.toString('latin1')).toContain('Roboto');
+  } finally {
+    warn.mockRestore();
+  }
+});
+
+// --- rows that hold unbreakable cells -------------------------------------------
+
+test('a row of [heading, chart] cells is unbreakable so both columns move together', () => {
+  const cellOf = (title) =>
+    stack({
+      children: [
+        heading({ text: title, level: 3 }),
+        svg({ svg: '<svg/>', width: 240, height: 200 }),
+      ],
+    });
+  const { content } = toPdfMake([
+    row({ children: [cellOf('Open'), cellOf('Closed')], widths: [0.5, 0.5] }),
+  ]);
+  expect(content[0].unbreakable).toBe(true);
+  expect(content[0].columns).toHaveLength(2);
+  expect(content[0].columns[0].stack[0]).toMatchObject({ text: 'Open' });
+});
+
+test('a row taller than the page share cap stays breakable', () => {
+  const tall = stack({
+    children: [
+      heading({ text: 'Tall', level: 3 }),
+      svg({ svg: '<svg/>', width: 240, height: 900 }),
+    ],
+  });
+  const { content } = toPdfMake([
+    row({ children: [tall, text({ text: 'aside' })], widths: [0.5, 0.5] }),
+  ]);
+  expect(content[0].unbreakable).toBeUndefined();
+});
+
+test('a row of flowing text stays breakable', () => {
+  const { content } = toPdfMake([
+    row({ children: [text({ text: 'a' }), text({ text: 'b' })], widths: [0.5, 0.5] }),
+  ]);
+  expect(content[0].unbreakable).toBeUndefined();
+});
+
+// --- svg label strokes ----------------------------------------------------------
+
+test('an ECharts outside label loses its under-stroke so the fill prints', () => {
+  const chart =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="40">' +
+    '<text dominant-baseline="central" text-anchor="start" style="font-size:12px;font-family:sans-serif;" ' +
+    'y="20" transform="translate(50 20)" fill="#333" stroke="#fff" stroke-width="2" paint-order="stroke" ' +
+    'stroke-miterlimit="2">42</text>' +
+    '<text fill="#333" stroke="#f00" stroke-width="1">keep</text>' +
+    '</svg>';
+  const { content } = toPdfMake([svg({ svg: chart, width: 100, height: 40 })]);
+  const [label, other] = content[0].svg.match(/<text\b[^>]*>/g);
+  expect(label).not.toMatch(/stroke|paint-order/);
+  expect(label).toContain('fill="#333"');
+  expect(label).toContain('transform="translate(50 20)"');
+  // Only paint-order="stroke" text is touched.
+  expect(other).toContain('stroke="#f00"');
+});

@@ -18,10 +18,12 @@
 // binds to `module.exports`, which itself carries the real value on `.default`
 // (the double-default gotcha), so unwrap defensively. This is the only file that
 // imports pdfmake internals.
+import PdfDocumentModule from 'pdfmake/js/PDFDocument.js';
 import PrinterModule from 'pdfmake/js/Printer.js';
 import URLResolverModule from 'pdfmake/js/URLResolver.js';
 import virtualFileSystemModule from 'pdfmake/js/virtual-fs.js';
 
+export const PdfDocument = PdfDocumentModule.default ?? PdfDocumentModule;
 export const PdfPrinter = PrinterModule.default ?? PrinterModule;
 export const URLResolver = URLResolverModule.default ?? URLResolverModule;
 export const virtualFileSystem = virtualFileSystemModule.default ?? virtualFileSystemModule;

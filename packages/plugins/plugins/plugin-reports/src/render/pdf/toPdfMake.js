@@ -59,10 +59,9 @@ import resolveImages from './resolveImages.js';
 function toPdfMake(nodes, report = {}, options = {}) {
   validateNodes(nodes);
 
-  const ctx = { contentWidth: contentWidthOf(report), logger: options.logger };
-  const content = applySymbolFont(
-    assembleContent(flattenStacks(nodes), ctx, contentHeightOf(report))
-  );
+  const contentHeight = contentHeightOf(report);
+  const ctx = { contentWidth: contentWidthOf(report), contentHeight, logger: options.logger };
+  const content = applySymbolFont(assembleContent(flattenStacks(nodes), ctx, contentHeight));
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);
