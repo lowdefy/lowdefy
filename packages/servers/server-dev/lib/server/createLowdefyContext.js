@@ -25,6 +25,7 @@ import appMeta from '../build/appMeta.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
+import createJitReadConfigFile from './createJitReadConfigFile.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
@@ -119,6 +120,13 @@ async function createLowdefyContext({ c }) {
     }
   }
   createApiContext(context);
+  // Headless readers (RenderReport, routines) reach page JSON without the page
+  // route having built it; read through the JIT build like the route does.
+  context.readConfigFile = createJitReadConfigFile({
+    readConfigFile: context.readConfigFile,
+    buildDirectory,
+    configDirectory: context.configDirectory,
+  });
   logRequest({ context });
   return context;
 }
