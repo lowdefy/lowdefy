@@ -33,7 +33,8 @@ function collectMountEvents(pageConfig) {
     if (type.isNone(block)) return;
     const events = type.isObject(block.events) ? block.events : {};
     if (MOUNT_EVENTS.some((eventName) => !type.isNone(events[eventName]))) {
-      blockIds.push(block.blockId ?? block.id);
+      // The page root's blockId is the pageId, which reads as a block that does not exist.
+      blockIds.push(block === pageConfig ? 'page onMount' : block.blockId ?? block.id);
     }
     Object.values(block.slots ?? {}).forEach((area) => {
       (area?.blocks ?? []).forEach(visit);

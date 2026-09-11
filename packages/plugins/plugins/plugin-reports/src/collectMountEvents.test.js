@@ -52,7 +52,7 @@ test('collects the blockIds declaring onMount or onMountAsync at any depth', () 
       },
     },
   };
-  expect(collectMountEvents(pageConfig)).toEqual(['page1', 'chart']);
+  expect(collectMountEvents(pageConfig)).toEqual(['page onMount', 'chart']);
 });
 
 test('tolerates a null block and a block without events', () => {

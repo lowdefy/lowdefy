@@ -288,10 +288,10 @@ describe('pdf generation', () => {
 
     const result = await generateReport(baseOptions({ pageConfig, logger }));
 
-    expect(result.warnings.mountEvents).toEqual(['page1', 'p']);
+    expect(result.warnings.mountEvents).toEqual(['page onMount', 'p']);
     expect(logged).toHaveLength(1);
     expect(logged[0]).toMatch(/2 block\(s\) with onMount events/);
-    expect(logged[0]).toMatch(/page1, p/);
+    expect(logged[0]).toMatch(/page onMount, p/);
   });
 
   test('a Markdown block renders end to end, operators evaluated in its content', async () => {
