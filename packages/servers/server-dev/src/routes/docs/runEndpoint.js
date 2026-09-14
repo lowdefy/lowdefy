@@ -28,7 +28,7 @@ async function docsRunEndpointHandler(c) {
   // getSession(c) reconstructs a Request from c.req.raw, which throws if the
   // body was already consumed, so leave the original request body intact and
   // read our own copy here.
-  const { endpointId, payload, user } = await c.req.raw.clone().json();
+  const { endpointId, payload, user, system } = await c.req.raw.clone().json();
   const { user: parsedUser, error: userError } = parseUserParam({ value: user });
   if (userError) {
     return c.json({ error: userError }, 400);
@@ -38,6 +38,7 @@ async function docsRunEndpointHandler(c) {
       endpointId,
       payload,
       user: parsedUser,
+      system,
       honoContext: c,
     });
     return c.json(result);

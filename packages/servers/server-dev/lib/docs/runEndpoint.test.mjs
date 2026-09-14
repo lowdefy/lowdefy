@@ -21,6 +21,7 @@ import { jest } from '@jest/globals';
 // them and leave runEndpoint's own validation, gating and pass-through under
 // test.
 const mockCallEndpoint = jest.fn();
+const mockRunDetachedEndpoint = jest.fn();
 const mockGetEndpointConfig = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockCreateLowdefyContext = jest.fn();
@@ -29,6 +30,7 @@ const mockLoggerInfo = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
   getEndpointConfig: mockGetEndpointConfig,
+  runDetachedEndpoint: mockRunDetachedEndpoint,
 }));
 jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
   default: mockIsWriteRequestsAllowed,
@@ -52,6 +54,12 @@ beforeEach(() => {
   mockCallEndpoint.mockResolvedValue({
     error: null,
     response: { orderId: 'o_1' },
+    status: 'success',
+    success: true,
+  });
+  mockRunDetachedEndpoint.mockResolvedValue({
+    error: null,
+    response: { purged: 3 },
     status: 'success',
     success: true,
   });
@@ -168,7 +176,117 @@ test('runEndpoint passes the user to createLowdefyContext and logs the run', asy
     event: 'agent_run_endpoint',
     endpointId: 'create_order',
     user,
+    system: false,
   });
+});
+
+test('runEndpoint with system: true runs through runDetachedEndpoint instead of callEndpoint', async () => {
+  const result = await runEndpoint({
+    endpointId: 'purge_stale',
+    payload: { mode: 'full' },
+    system: true,
+    honoContext,
+  });
+
+  expect(mockCreateLowdefyContext).toHaveBeenCalledWith({ c: honoContext, user: undefined });
+  expect(mockRunDetachedEndpoint).toHaveBeenCalledWith(context, {
+    endpointId: 'purge_stale',
+    payload: { mode: 'full' },
+  });
+  expect(mockCallEndpoint).not.toHaveBeenCalled();
+  expect(mockLoggerInfo).toHaveBeenCalledWith({
+    event: 'agent_run_endpoint',
+    endpointId: 'purge_stale',
+    user: undefined,
+    system: true,
+  });
+  expect(result).toEqual({
+    refused: false,
+    error: null,
+    response: { purged: 3 },
+    status: 'success',
+    success: true,
+  });
+});
+
+test('runEndpoint with system: true still needs agent write access', async () => {
+  mockIsWriteRequestsAllowed.mockResolvedValue(false);
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result.refused).toBe(true);
+  expect(mockRunDetachedEndpoint).not.toHaveBeenCalled();
+});
+
+test('runEndpoint with system: true returns a :reject as data', async () => {
+  mockRunDetachedEndpoint.mockResolvedValue({
+    error: { name: 'Error', message: 'Nothing to purge.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: { name: 'Error', message: 'Nothing to purge.' },
+    response: null,
+    status: 'reject',
+    success: false,
+  });
+});
+
+test('runEndpoint with system: true returns faults that escape runDetachedEndpoint as an error object', async () => {
+  const fault = new ConfigError('CallApi detached requires CRON_SECRET.', { configKey: 'k2' });
+  mockRunDetachedEndpoint.mockRejectedValue(fault);
+
+  const result = await runEndpoint({ endpointId: 'purge_stale', system: true, honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: {
+      name: 'ConfigError',
+      message: 'CallApi detached requires CRON_SECRET.',
+      source: null,
+      configKey: 'k2',
+    },
+  });
+});
+
+test('runEndpoint throws a ConfigError when system is combined with user', async () => {
+  await expect(
+    runEndpoint({
+      endpointId: 'purge_stale',
+      system: true,
+      user: { roles: ['admin'] },
+      honoContext,
+    })
+  ).rejects.toThrow(ConfigError);
+  await expect(
+    runEndpoint({
+      endpointId: 'purge_stale',
+      system: true,
+      user: { roles: ['admin'] },
+      honoContext,
+    })
+  ).rejects.toThrow('run_endpoint "system" cannot be combined with "user"');
+  expect(mockIsWriteRequestsAllowed).not.toHaveBeenCalled();
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint throws a ConfigError when system is not a boolean', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'purge_stale', system: 'yes', honoContext })
+  ).rejects.toThrow('run_endpoint "system" must be a boolean. Received "yes".');
+  expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runEndpoint with system: false runs through callEndpoint as before', async () => {
+  await runEndpoint({ endpointId: 'create_order', system: false, honoContext });
+
+  expect(mockCallEndpoint).toHaveBeenCalled();
+  expect(mockRunDetachedEndpoint).not.toHaveBeenCalled();
 });
 
 test('runEndpoint returns a :reject as data rather than throwing', async () => {

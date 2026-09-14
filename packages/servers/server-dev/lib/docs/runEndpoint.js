@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callEndpoint, getEndpointConfig } from '@lowdefy/api';
+import { callEndpoint, getEndpointConfig, runDetachedEndpoint } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
@@ -30,7 +30,15 @@ import truncateResponse from './truncateResponse.js';
 // or :throw in the routine, and faults that escape callEndpoint (auth
 // refusals, missing connections, InternalApi endpoints) all come back as data.
 // Only malformed input throws, as a ConfigError.
-async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
+//
+// system: true runs the routine through runDetachedEndpoint instead - the same
+// entry point POST /api/detached uses - so it executes as a system context
+// exactly like a cron or detached run: no session, no user, `_user` undefined,
+// endpoint auth not checked and InternalApi endpoints callable. That is the
+// only local way to exercise a schedules-only InternalApi routine without
+// CRON_SECRET. Nested CallApi steps with detached: true are not faked: they
+// still dispatch over HTTP against the request origin and need CRON_SECRET.
+async function runEndpoint({ endpointId, payload = {}, user, system = false, honoContext }) {
   if (type.isUndefined(endpointId) || !type.isString(endpointId)) {
     throw new ConfigError(
       `run_endpoint requires an "endpointId" string. Received ${JSON.stringify(endpointId)}.`
@@ -42,6 +50,18 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
       `run_endpoint "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
         user
       )}.`
+    );
+  }
+
+  if (!type.isNone(system) && !type.isBoolean(system)) {
+    throw new ConfigError(
+      `run_endpoint "system" must be a boolean. Received ${JSON.stringify(system)}.`
+    );
+  }
+
+  if (system === true && !type.isNone(user)) {
+    throw new ConfigError(
+      'run_endpoint "system" cannot be combined with "user": a system run has no user (_user is undefined).'
     );
   }
 
@@ -76,19 +96,21 @@ async function runEndpoint({ endpointId, payload = {}, user, honoContext }) {
     };
   }
 
-  context.logger.info({ event: 'agent_run_endpoint', endpointId, user });
+  context.logger.info({ event: 'agent_run_endpoint', endpointId, user, system });
 
   try {
     // callEndpoint refuses InternalApi endpoints and enforces the endpoint's
     // auth and payloadSchema exactly as the HTTP route does. A :reject or
     // :throw resolves normally with success: false and the routine's own
     // error, so neither reaches the catch below.
-    const result = await callEndpoint(context, {
-      blockId: undefined,
-      endpointId,
-      pageId: undefined,
-      payload,
-    });
+    const result = system
+      ? await runDetachedEndpoint(context, { endpointId, payload })
+      : await callEndpoint(context, {
+          blockId: undefined,
+          endpointId,
+          pageId: undefined,
+          payload,
+        });
     return { refused: false, ...truncateResponse(result) };
   } catch (error) {
     return {
