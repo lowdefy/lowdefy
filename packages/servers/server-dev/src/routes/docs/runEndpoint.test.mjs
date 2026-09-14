@@ -53,6 +53,7 @@ test('docsRunEndpointHandler passes endpointId, payload and a user object throug
     endpointId: 'create_order',
     payload: { sku: 'A1' },
     user: { roles: ['admin'] },
+    system: undefined,
     honoContext: c,
   });
   expect(result.status).toBe(200);
@@ -87,8 +88,35 @@ test('docsRunEndpointHandler passes an undefined user when the body omits it', a
     endpointId: 'create_order',
     payload: undefined,
     user: undefined,
+    system: undefined,
     honoContext: c,
   });
+});
+
+test('docsRunEndpointHandler passes system through to runEndpoint', async () => {
+  const c = createContext({ endpointId: 'purge_stale', system: true });
+
+  await docsRunEndpointHandler(c);
+
+  expect(mockRunEndpoint).toHaveBeenCalledWith({
+    endpointId: 'purge_stale',
+    payload: undefined,
+    user: undefined,
+    system: true,
+    honoContext: c,
+  });
+});
+
+test('docsRunEndpointHandler returns 400 when system is combined with user', async () => {
+  mockRunEndpoint.mockRejectedValue(
+    new ConfigError('run_endpoint "system" cannot be combined with "user".')
+  );
+  const c = createContext({ endpointId: 'purge_stale', system: true, user: { roles: ['admin'] } });
+
+  const result = await docsRunEndpointHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch(/cannot be combined with "user"/);
 });
 
 test('docsRunEndpointHandler returns 400 when runEndpoint throws a ConfigError', async () => {
