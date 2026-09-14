@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { FONT_FAMILY, SYMBOL_FONT_FAMILY } from '../../fonts/fonts.js';
+import { fontDescriptors } from '../../fonts/fonts.js';
 import collectBuffer from './collectBuffer.js';
 import { PdfPrinter, URLResolver, virtualFileSystem } from './pdfmakeModules.js';
-import registerFonts, { FONT_FILES, SYMBOL_FONT_FILES } from './registerFonts.js';
 import resolveImages from './resolveImages.js';
-import toPdfMake from './toPdfMake.js';
+import { toPdfMake } from './toPdfMake.js';
 
 /**
  * Render IR nodes to a PDF Buffer.
@@ -37,13 +36,16 @@ async function renderPdfBuffer(nodes, report = {}, options = {}) {
     logger: options.logger,
   });
   const docDefinition = toPdfMake(resolved, report, options);
-  registerFonts();
-  const fontDescriptors = {
-    [FONT_FAMILY]: { ...FONT_FILES },
-    [SYMBOL_FONT_FAMILY]: { ...SYMBOL_FONT_FILES },
-  };
   const urlResolver = new URLResolver(virtualFileSystem);
-  const printer = new PdfPrinter(fontDescriptors, virtualFileSystem, urlResolver, undefined);
+  // Absolute font paths: pdfkit opens and caches the same file for document
+  // text and for svg-to-pdfkit's font callback. The Printer rewrites descriptor
+  // values in place while resolving URLs, so hand it a copy.
+  const printer = new PdfPrinter(
+    { Roboto: { ...fontDescriptors.Roboto } },
+    virtualFileSystem,
+    urlResolver,
+    undefined
+  );
   const pdfKitDoc = await printer.createPdfKitDocument(docDefinition);
   return collectBuffer(pdfKitDoc);
 }

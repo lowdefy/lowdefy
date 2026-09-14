@@ -14,40 +14,34 @@
   limitations under the License.
 */
 
-// The single document font set for reports: Roboto in four faces, decoded once
-// to Buffers and registered with pdfmake and the Html renderer so document text
-// and Html-block text share one face. The faces come from pdfmake's own shipped
-// font container rather than a copy of the base64 blobs — pdfmake is already a
-// dependency, so carrying the same 800 KB again would only be a second place for
-// the faces to drift.
-//
-// pdfmake's font container is CommonJS (`module.exports = fontContainer`); under
-// Node's ESM interop the default import is that object, unwrapped defensively.
-import fs from 'fs';
+// The single document font for reports: pdfmake's bundled Roboto, referenced by
+// the absolute paths pdfmake itself ships (`pdfmake/fonts/Roboto.js`). Both of
+// pdfmake's font paths — provideFont for document text and the SVG font
+// callback that hands svg-to-pdfkit the raw descriptor — then open the same real
+// file, and pdfkit caches it. A virtual-filesystem layer was tried and only the
+// document-text path read through it; every SVG <text> logged ENOENT and fell
+// back to the default face. The same files feed takumi, so Html-block text and
+// document text share one face.
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
 
-import robotoModule from 'pdfmake/build/fonts/Roboto.js';
-
-const roboto = robotoModule.default ?? robotoModule;
+const require = createRequire(import.meta.url);
 
 export const FONT_FAMILY = 'Roboto';
-// Roboto has no Geometric Shapes, Arrows or Dingbats glyphs, and dashboards lean
-// on ▲ ▼ ↑ ↓ for deltas. DejaVu Sans (fonts/, Bitstream Vera licence) covers
-// those blocks in one face and is the fallback for them in pdfmake and takumi.
-export const SYMBOL_FONT_FAMILY = 'DejaVuSans';
 
-function decodeFace(fileName) {
-  return Buffer.from(roboto.vfs[fileName].data, 'base64');
-}
+// pdfmake font descriptors: role → absolute path. pdfmake pairs Roboto's Medium
+// weight with its bold role.
+export const fontDescriptors = Object.freeze({
+  [FONT_FAMILY]: require('pdfmake/fonts/Roboto.js').Roboto,
+});
 
-// pdfmake pairs Roboto's Medium weight with its bold role, so bold and boldItalic
-// map to the Medium faces. `symbol` is the single DejaVu Sans face; the file sits
-// outside src/ so it ships unbuilt and resolves from src/ and dist/ alike.
+const files = fontDescriptors[FONT_FAMILY];
+
 export const fonts = Object.freeze({
-  regular: decodeFace(roboto.fonts.Roboto.normal),
-  bold: decodeFace(roboto.fonts.Roboto.bold),
-  italic: decodeFace(roboto.fonts.Roboto.italics),
-  boldItalic: decodeFace(roboto.fonts.Roboto.bolditalics),
-  symbol: fs.readFileSync(new URL('../../fonts/DejaVuSans.ttf', import.meta.url)),
+  regular: fs.readFileSync(files.normal),
+  bold: fs.readFileSync(files.bold),
+  italic: fs.readFileSync(files.italics),
+  boldItalic: fs.readFileSync(files.bolditalics),
 });
 
 export default fonts;

@@ -591,45 +591,39 @@ test('a stack inside a row cell keeps its shape', () => {
   expect(content[0].columns[0].stack).toHaveLength(2);
 });
 
-// --- symbol font fallback ---------------------------------------------------
+// --- delta glyphs -----------------------------------------------------------
 
-test('triangle and arrow runs are set in the DejaVu Sans fallback font, the rest stays Roboto', () => {
+test('arrow and triangle deltas become signed coloured marks Roboto can print', () => {
   const { content } = toPdfMake([
     text({ text: '▲ 11%' }),
     stat({ label: 'Δ', value: '▼ 3%' }),
     heading({ text: 'Trend ↑ up ↓ down', level: 2 }),
   ]);
-  expect(content[0].text).toEqual([{ text: '▲', font: 'DejaVuSans' }, ' 11%']);
-  // Greek capital delta is in Roboto; only the triangle moves font.
+  expect(content[0].text).toEqual([{ text: '+', color: '#389e0d' }, ' 11%']);
+  // Greek capital delta is in Roboto and stays.
   expect(content[1].stack[0].text).toBe('Δ');
-  expect(content[1].stack[1].text).toEqual([{ text: '▼', font: 'DejaVuSans' }, ' 3%']);
+  expect(content[1].stack[1].text).toEqual([{ text: '−', color: '#cf1322' }, ' 3%']);
   expect(content[2]).toMatchObject({ bold: true, fontSize: 17 });
   expect(content[2].text).toEqual([
     'Trend ',
-    { text: '↑', font: 'DejaVuSans' },
+    { text: '+', color: '#389e0d' },
     ' up ',
-    { text: '↓', font: 'DejaVuSans' },
+    { text: '−', color: '#cf1322' },
     ' down',
   ]);
+  expect(JSON.stringify(content)).not.toMatch(/[▲▼↑↓]/);
 });
 
-test('symbol fallback reaches markdown runs and table cells, and leaves svg content alone', () => {
+test('delta replacement reaches markdown runs and table cells, and leaves svg content alone', () => {
   const { content } = toPdfMake([
     markdown({ markdown: 'Up **▲ 5%**' }),
     table({ header: [cell({ value: 'Δ' })], rows: [[cell({ value: '▼ 2' })]] }),
     svg({ svg: '<svg><text>▲</text></svg>', width: 10, height: 10 }),
   ]);
   const flat = JSON.stringify(content.slice(0, 2));
-  expect(flat).toContain('{"text":"▲","font":"DejaVuSans"}');
-  expect(flat).toContain('{"text":"▼","font":"DejaVuSans"}');
+  expect(flat).toContain('{"text":"+","color":"#389e0d"}');
+  expect(flat).toContain('{"text":"−","color":"#cf1322"}');
   expect(content[2].svg).toBe('<svg><text>▲</text></svg>');
-});
-
-test('renders symbol text to a PDF that embeds the DejaVu Sans fallback', async () => {
-  const buffer = await renderPdfBuffer([text({ text: '▲ 11% ↑' })], { title: 'Deltas' });
-  const pdf = buffer.toString('latin1');
-  expect(pdf).toContain('DejaVuSans');
-  expect(pdf).toContain('Roboto');
 });
 
 // --- svg text fonts -----------------------------------------------------------

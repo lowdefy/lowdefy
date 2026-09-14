@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+
 import robotoModule from 'pdfmake/build/fonts/Roboto.js';
 
-import fonts, { fonts as namedFonts, FONT_FAMILY, SYMBOL_FONT_FAMILY } from './fonts.js';
+import fonts, { fonts as namedFonts, fontDescriptors, FONT_FAMILY } from './fonts.js';
 
 const roboto = robotoModule.default ?? robotoModule;
 
@@ -31,14 +33,17 @@ test('default export is the fonts object', () => {
   expect(fonts).toBe(namedFonts);
 });
 
-test('exposes the four document faces and the symbol fallback face', () => {
-  expect(Object.keys(fonts).sort()).toEqual(['bold', 'boldItalic', 'italic', 'regular', 'symbol']);
+test('exposes exactly the four document faces', () => {
+  expect(Object.keys(fonts).sort()).toEqual(['bold', 'boldItalic', 'italic', 'regular']);
 });
 
-test('SYMBOL_FONT_FAMILY is DejaVuSans and its face is a TrueType Buffer', () => {
-  expect(SYMBOL_FONT_FAMILY).toBe('DejaVuSans');
-  expect(fonts.symbol.subarray(0, 4).toString('hex')).toBe(TTF_MAGIC);
-  expect(fonts.symbol.length).toBeGreaterThan(500_000);
+test('fontDescriptors point pdfmake at absolute paths of files that exist', () => {
+  const roles = fontDescriptors.Roboto;
+  expect(Object.keys(roles).sort()).toEqual(['bold', 'bolditalics', 'italics', 'normal']);
+  for (const file of Object.values(roles)) {
+    expect(file.startsWith('/')).toBe(true);
+    expect(fs.existsSync(file)).toBe(true);
+  }
 });
 
 test.each(['regular', 'bold', 'italic', 'boldItalic'])(

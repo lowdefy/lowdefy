@@ -37,8 +37,7 @@
     "./*": "./dist/*"
   },
   "files": [
-    "dist/*",
-    "fonts/*"
+    "dist/*"
   ],
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json",

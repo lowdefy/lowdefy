@@ -16,38 +16,48 @@
 
 import { type } from '@lowdefy/helpers';
 
-import { SYMBOL_FONT_FAMILY } from '../../fonts/fonts.js';
+// Roboto has no Geometric Shapes or Arrows glyphs, so the ▲ ▼ ↑ ↓ dashboards use
+// for deltas would print as boxes. Replace them with a signed, coloured mark the
+// face does have; antd's success and error colours, as translateText's tints.
+const UP = { text: '+', color: '#389e0d' };
+const DOWN = { text: '−', color: '#cf1322' };
+const DELTA_GLYPHS = {
+  '▲': UP,
+  '▴': UP,
+  '△': UP,
+  '↑': UP,
+  '↗': UP,
+  '⇧': UP,
+  '▼': DOWN,
+  '▾': DOWN,
+  '▽': DOWN,
+  '↓': DOWN,
+  '↘': DOWN,
+  '⇩': DOWN,
+};
+const DELTA_RUN = new RegExp(`[${Object.keys(DELTA_GLYPHS).join('')}]`, 'g');
 
-// The Unicode blocks Roboto does not cover and DejaVu Sans does: Arrows,
-// Miscellaneous Technical, Geometric Shapes, Miscellaneous Symbols, Dingbats,
-// the supplemental arrow blocks, and Miscellaneous Symbols and Arrows. Roboto
-// has a handful of glyphs inside these ranges (● ◊); routing them to DejaVu too
-// costs nothing and keeps the rule a range test instead of a per-glyph lookup.
-const SYMBOL_RUN =
-  /[\u2190-\u21FF\u2300-\u23FF\u25A0-\u25FF\u2600-\u26FF\u2700-\u27BF\u27F0-\u27FF\u2900-\u297F\u2B00-\u2BFF]+/g;
-
-// Split one string into pdfmake text runs, symbol runs carrying the fallback
-// font. Returns the string itself when it has no symbols so untouched text stays
-// a plain string.
+// Split one string into pdfmake text runs around its delta glyphs. Returns the
+// string itself when it has none so untouched text stays a plain string.
 function splitRuns(text) {
-  if (!SYMBOL_RUN.test(text)) return text;
-  SYMBOL_RUN.lastIndex = 0;
+  if (!DELTA_RUN.test(text)) return text;
+  DELTA_RUN.lastIndex = 0;
   const runs = [];
   let last = 0;
-  for (const match of text.matchAll(SYMBOL_RUN)) {
+  for (const match of text.matchAll(DELTA_RUN)) {
     if (match.index > last) runs.push(text.slice(last, match.index));
-    runs.push({ text: match[0], font: SYMBOL_FONT_FAMILY });
-    last = match.index + match[0].length;
+    runs.push(DELTA_GLYPHS[match[0]]);
+    last = match.index + 1;
   }
   if (last < text.length) runs.push(text.slice(last));
   return runs;
 }
 
-// pdfmake picks one font per text run and has no glyph fallback, so this walks
-// the translated content and wraps every symbol run in the fallback font. Runs
-// inherit the surrounding style (bold, colour, size) the way pdfmake nests text,
-// so only the face changes. svg and image content are not document text.
-function applySymbolFont(content) {
+// Walk the translated pdfmake content and replace delta glyphs in every text
+// run. Runs inherit the surrounding style (bold, size) the way pdfmake nests
+// text, so only the glyph and its colour change. svg and image content are not
+// document text.
+function replaceDeltaGlyphs(content) {
   const visit = (value, key) => {
     if (type.isString(value)) return key === 'text' ? splitRuns(value) : value;
     if (type.isArray(value)) {
@@ -72,4 +82,4 @@ function applySymbolFont(content) {
   return visit(content, undefined);
 }
 
-export default applySymbolFont;
+export default replaceDeltaGlyphs;

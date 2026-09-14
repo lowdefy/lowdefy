@@ -36,10 +36,10 @@ import {
   orientationOf,
   pageSizeOf,
 } from '../geometry.js';
-import applySymbolFont from './applySymbolFont.js';
 import assembleContent from './assembleContent.js';
 import buildFooter from './buildFooter.js';
 import buildHeader from './buildHeader.js';
+import replaceDeltaGlyphs from './replaceDeltaGlyphs.js';
 import flattenStacks from './flattenStacks.js';
 import renderPdfBuffer from './renderPdfBuffer.js';
 import resolveImages from './resolveImages.js';
@@ -61,7 +61,7 @@ function toPdfMake(nodes, report = {}, options = {}) {
 
   const contentHeight = contentHeightOf(report);
   const ctx = { contentWidth: contentWidthOf(report), contentHeight, logger: options.logger };
-  const content = applySymbolFont(assembleContent(flattenStacks(nodes), ctx, contentHeight));
+  const content = replaceDeltaGlyphs(assembleContent(flattenStacks(nodes), ctx, contentHeight));
 
   const headerText = report.header ?? report.title;
   const header = buildHeader(headerText);
