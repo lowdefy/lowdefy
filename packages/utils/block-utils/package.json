@@ -28,6 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
+    "./report": "./dist/report.js",
     "./*": "./dist/*"
   },
   "files": [

@@ -31,6 +31,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
+import reportsRuntime from '../../build/plugins/reportsRuntime.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getE2eSecrets();
@@ -51,6 +52,8 @@ function apiContext() {
       rid,
       agents,
       appMeta,
+      reportsRuntime,
+      publicDirectory: path.join(process.cwd(), 'public'),
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),

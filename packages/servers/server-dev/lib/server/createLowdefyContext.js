@@ -25,6 +25,7 @@ import appMeta from '../build/appMeta.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
+import createJitReadConfigFile from './createJitReadConfigFile.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getSession from './auth/session.js';
@@ -36,6 +37,7 @@ import notifications, {
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import reportsRuntime from '../../build/plugins/reportsRuntime.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -80,6 +82,9 @@ async function createLowdefyContext({ c }) {
     rid,
     agents,
     appMeta,
+    // The build gates this artifact on the reports plugin.
+    reportsRuntime,
+    publicDirectory: path.join(process.cwd(), 'public'),
     buildDirectory,
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
     config,
@@ -115,6 +120,13 @@ async function createLowdefyContext({ c }) {
     }
   }
   createApiContext(context);
+  // Headless readers (RenderReport, routines) reach page JSON without the page
+  // route having built it; read through the JIT build like the route does.
+  context.readConfigFile = createJitReadConfigFile({
+    readConfigFile: context.readConfigFile,
+    buildDirectory,
+    configDirectory: context.configDirectory,
+  });
   logRequest({ context });
   return context;
 }

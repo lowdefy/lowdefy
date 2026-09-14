@@ -247,6 +247,9 @@ async function shallowBuild(options) {
       'installedPluginPackages.json',
       JSON.stringify([...(context.installedPackages ?? [])])
     );
+    // The declared plugin list, for JIT page builds: buildPage's "plugin not
+    // declared" check reads context.plugins, which only buildModuleDefs sets.
+    await context.writeBuildArtifact('plugins.json', JSON.stringify(context.plugins ?? []));
     await context.writeBuildArtifact(
       'modules.json',
       serializer.serializeToString(context.modules ?? {})

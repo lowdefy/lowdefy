@@ -19,6 +19,7 @@ Unlike single-purpose plugins (blocks, connections, operators, actions), these p
 | [@lowdefy/plugin-aws](./aws.md)             | AWS integration   | S3 connection, Lambda support       |
 | [@lowdefy/plugin-auth0](./auth0.md)         | Auth0 integration | Auth0-specific provider             |
 | [@lowdefy/plugin-csv](./csv.md)             | CSV utilities     | CSV parsing operators               |
+| [@lowdefy/plugin-reports](./plugin-reports.md) | PDF / Excel reports | `Reports` connection, `RenderReport` request, `DownloadFile` action |
 
 ## Authentication in Lowdefy
 
