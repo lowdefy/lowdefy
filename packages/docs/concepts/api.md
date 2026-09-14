@@ -124,6 +124,8 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
+To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool (or `POST /lowdefy-docs/run-endpoint`) with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
+
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ### Schedules per environment
