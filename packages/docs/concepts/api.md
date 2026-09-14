@@ -124,6 +124,8 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
+To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool (or `POST /lowdefy-docs/run-endpoint`) with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
+
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ### Schedules per environment
@@ -326,7 +328,7 @@ Control structures allow you to implement complex logic flows within your API ro
 - [`:log`](/log) - Output messages to the server console.
 - [`:parallel`](/parallel) - Execute multiple routines simultaneously.
 - [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
-- [`:reject`](/reject) - Return a user-facing error response.
+- [`:reject`](/reject) - Return a user-facing error response. Not caught by [`:try`](/try)/`:catch` — it flows past every enclosing `:catch`, though `:finally` still runs.
 - [`:return`](/return) - Return a successful response with data.
 - [`:set_state`](/set_state) - Set values in server-side state.
 - [`:switch`](/switch) - Handle multiple conditions with different outcomes.
@@ -992,3 +994,4 @@ api:
 - The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
 - Server-side execution provides access to secrets, connections, and server operators.
 - Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
+- A [`:reject`](/:reject) is a reply, not an exception, and is never caught by [`:try`](/:try)/`:catch`; [`:throw`](/:throw) is.

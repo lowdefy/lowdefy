@@ -19,11 +19,13 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import collectExceptions from '../utils/collectExceptions.js';
+
 // Validates the mcp block and writes its defaults. Endpoints are matched via
 // the same dual id/endpointId match buildApi uses. Referenced endpoints must
 // carry the metadata an MCP client needs: a description and a payloadSchema
 // (the tool inputSchema).
-function buildMcp({ components }) {
+function buildMcp({ components, context }) {
   if (type.isNone(components.mcp)) {
     components.mcp = {};
   }
@@ -49,36 +51,54 @@ function buildMcp({ components }) {
 
   mcp.endpoints.forEach((endpointId) => {
     if (seen.has(endpointId)) {
-      throw new ConfigError(`Duplicate MCP tool "${endpointId}".`, { configKey });
+      collectExceptions(
+        context,
+        new ConfigError(`Duplicate MCP tool "${endpointId}".`, { configKey })
+      );
+      return;
     }
     seen.add(endpointId);
     const endpoint = (components.api ?? []).find(
       (e) => e.id === endpointId || e.endpointId === endpointId
     );
     if (type.isNone(endpoint)) {
-      throw new ConfigError(
-        `MCP endpoint "${endpointId}" does not reference a defined api endpoint.`,
-        { configKey }
+      collectExceptions(
+        context,
+        new ConfigError(`MCP endpoint "${endpointId}" does not reference a defined api endpoint.`, {
+          configKey,
+        })
       );
+      return;
     }
     // MCP is an external transport - InternalApi endpoints are not addressable
     // from outside the server, matching the HTTP endpoint route.
     if (endpoint.type === 'InternalApi') {
-      throw new ConfigError(
-        `MCP endpoint "${endpointId}" is an InternalApi endpoint. Only "Api" endpoints can be exposed as MCP tools.`,
-        { configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP endpoint "${endpointId}" is an InternalApi endpoint. Only "Api" endpoints can be exposed as MCP tools.`,
+          { configKey }
+        )
       );
+      return;
     }
     if (type.isNone(endpoint.description)) {
-      throw new ConfigError(
-        `Endpoint "${endpointId}" is exposed as an MCP tool but does not have a "description".`,
-        { configKey: endpoint['~k'] ?? configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Endpoint "${endpointId}" is exposed as an MCP tool but does not have a "description".`,
+          { configKey: endpoint['~k'] ?? configKey }
+        )
       );
+      return;
     }
     if (type.isNone(endpoint.payloadSchema)) {
-      throw new ConfigError(
-        `Endpoint "${endpointId}" is exposed as an MCP tool but does not have a "payloadSchema".`,
-        { configKey: endpoint['~k'] ?? configKey }
+      collectExceptions(
+        context,
+        new ConfigError(
+          `Endpoint "${endpointId}" is exposed as an MCP tool but does not have a "payloadSchema".`,
+          { configKey: endpoint['~k'] ?? configKey }
+        )
       );
     }
   });

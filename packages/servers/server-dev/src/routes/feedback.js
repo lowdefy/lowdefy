@@ -17,8 +17,10 @@
 import enrichFeedback from '../../lib/docs/enrichFeedback.js';
 import formatFeedback from '../../lib/docs/formatFeedback.js';
 import createLogger from '../../lib/server/log/createLogger.js';
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-feedback' });
+const guardSameOrigin = createSameOriginGuard();
 
 // Receives annotation batches from the dev browser overlay (a developer
 // draws on a live page and comments), enriches each annotation with its
@@ -26,19 +28,12 @@ const logger = createLogger({ server: 'lowdefy-dev-feedback' });
 // text. The overlay copies that text to the clipboard — the developer
 // pastes it into whichever agent session they choose, which is also what
 // makes delivery unambiguous when several sessions share one dev server.
-// Same-origin check cloned from routes/clientError.js: only a page served
-// by this dev server (not an arbitrary site) should be able to use it.
+// The same-origin guard the browser POST routes share: only a page served by
+// this dev server (not an arbitrary site) should be able to use it.
 async function feedbackHandler(c) {
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
-    return c.json({ error: 'Forbidden' }, 403);
+  const forbidden = guardSameOrigin(c);
+  if (forbidden) {
+    return forbidden;
   }
 
   const batch = await c.req.json();

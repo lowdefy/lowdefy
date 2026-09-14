@@ -61,7 +61,8 @@ test('Subscribe action referencing a non-existent websocket produces warning wit
   const warning = mockHandleWarning.mock.calls[0][0];
   expect(warning).toBeInstanceOf(ConfigWarning);
   expect(warning.message).toBe(
-    'Subscribe action on page "page1" references non-existent websocket "missing_ws".'
+    'Subscribe action on page "page1" references non-existent websocket "missing_ws". ' +
+      'Check the websocketId for typos, or add a websocket with id "missing_ws" to the app config.'
   );
   expect(warning.configKey).toBe('pages.page1.events.onClick.0');
   expect(warning.prodError).toBe(true);
@@ -85,7 +86,8 @@ test('Publish action referencing a non-existent websocket produces warning namin
   expect(mockHandleWarning).toHaveBeenCalledTimes(1);
   const warning = mockHandleWarning.mock.calls[0][0];
   expect(warning.message).toBe(
-    'Publish action on page "page2" references non-existent websocket "missing_ws".'
+    'Publish action on page "page2" references non-existent websocket "missing_ws". ' +
+      'Check the websocketId for typos, or add a websocket with id "missing_ws" to the app config.'
   );
 });
 

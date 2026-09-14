@@ -116,3 +116,20 @@ test('js throws when object-form hash is not in map', async () => {
     '_js function not found. The function may not have been built yet. Received hash: missing'
   );
 });
+
+test('js execution error names the original JavaScript error and not the function source', () => {
+  const fn = () => {
+    return unlinked.value; // eslint-disable-line no-undef
+  };
+  let thrown;
+  try {
+    js({ jsMap: { h1: fn }, operators: {}, location: rootLocation, params: 'h1' });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.message).toEqual(
+    '_js function execution error. ReferenceError: unlinked is not defined'
+  );
+  expect(thrown.message).not.toContain('return unlinked.value');
+  expect(thrown.cause).toBeInstanceOf(ReferenceError);
+});

@@ -15,6 +15,7 @@
 */
 
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function sha256(value) {
@@ -31,7 +32,7 @@ function apiKey({ logger, properties, strategyId }) {
   const keys = properties.keys.map((key, index) => {
     const keyId = type.isNone(key.id) ? String(index) : key.id;
     if (!type.isString(key.value)) {
-      throw new Error(
+      throw new ConfigError(
         `Auth strategy "${strategyId}" key "${keyId}" did not resolve to a string. Check the _secret operator reference and that the secret is set.`
       );
     }

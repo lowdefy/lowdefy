@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createApiContext } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -27,6 +28,7 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
+import getDevSession from './auth/getDevSession.js';
 import getSession from './auth/session.js';
 import getStrategyCaller from './auth/strategies.js';
 import i18nConfig from '../build/i18n.js';
@@ -36,6 +38,7 @@ import notifications, {
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import staticJsMap from '../../build/plugins/operators/serverJsMap.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -70,8 +73,10 @@ function loadDynamicJsMap(buildDirectory) {
 // operators, logger, session, etc.). Factored out of the /api/* middleware
 // (src/middleware/apiContext.js) so run_request (lib/docs/runRequest.js) can
 // build an identical context outside the Hono middleware chain, to call
-// callRequest directly for agent-driven request execution.
-async function createLowdefyContext({ c }) {
+// callRequest directly for agent-driven request execution. A `user` option
+// injects a per-call caller (agent tools that run outside a browser, e.g.
+// run_request), resolved the same way the headless renderer's cookie user is.
+async function createLowdefyContext({ c, user }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
@@ -105,7 +110,14 @@ async function createLowdefyContext({ c }) {
     websockets,
   };
   context.handleError = createHandleError({ context });
-  if (!c.req.path.includes('/api/auth')) {
+  if (!type.isNone(user)) {
+    // An explicit per-call user wins over the ambient dev session (mock user
+    // or headless cookie): the caller named an identity for this call, so
+    // honour it. Merged over the roleless headless default by
+    // resolveHeadlessUser, exactly as the headless page tools' `user` param
+    // is, and turned into a session by the same dev-session pipeline.
+    context.session = await getDevSession(c, { user: resolveHeadlessUser({ user }) });
+  } else if (!c.req.path.includes('/api/auth')) {
     context.session = await getSession(c);
     if (!context.session?.user) {
       const caller = await getStrategyCaller(c, context.logger);

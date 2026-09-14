@@ -1,6 +1,6 @@
 # S3UploadPhoto
 
-__Deprecated__ — use the provider-neutral &lt;a href=&quot;/UploadPhoto&quot;&gt;UploadPhoto&lt;/a&gt; block with `uploadPolicyRequestId` instead. S3UploadPhoto remains as an alias so existing apps keep working. Picture-card style image upload for AWS S3. Displays a camera icon with upload text in a card format. Only accepts image files. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
+__Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</a> block with `uploadPolicyRequestId` instead. S3UploadPhoto remains as an alias so existing apps keep working. Picture-card style image upload for AWS S3. Displays a camera icon with upload text in a card format. Only accepts image files. Requires an `AwsS3PresignedPostPolicy` request to define the S3 upload policy.
 
 > The S3UploadPhoto requires an AwsS3Bucket connection and AwsS3PresignedPostPolicy request to upload files. The examples on this page demonstrate UI configuration only — uploads will not function without a configured S3 connection.
 

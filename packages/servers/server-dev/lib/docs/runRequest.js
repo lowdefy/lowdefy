@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import { callRequest } from '@lowdefy/api';
+import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import readBuildArtifact from './readBuildArtifact.js';
-
-// Cap the serialized response so a large request result can't blow out an
-// agent's context window.
-const MAX_RESPONSE_CHARS = 100_000;
+import truncateResponse from './truncateResponse.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -37,32 +35,29 @@ function getRequestType({ pageId, requestId }) {
   return requestConfig?.type ?? null;
 }
 
-function truncateResponse(result) {
-  const json = JSON.stringify(result.response);
-  if (json.length <= MAX_RESPONSE_CHARS) {
-    return result;
-  }
-  return {
-    ...result,
-    response: json.slice(0, MAX_RESPONSE_CHARS),
-    truncated: true,
-    note: `Response truncated to ${MAX_RESPONSE_CHARS} characters (original serialized size: ${json.length} characters).`,
-  };
-}
-
 // Executes a page request the same way POST /api/request/<pageId>/<requestId>
 // does (src/routes/request.js), but gated for agent use: requests whose type
 // is not declared read-only (checkWrite: false in requestSchemas.json meta)
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
 // returned as data so an agent can reason about them.
-async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
+async function runRequest({ pageId, requestId, payload = {}, user, honoContext }) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
-    throw new Error(`run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`);
+    throw new ConfigError(
+      `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
+    );
   }
   if (type.isUndefined(requestId) || !type.isString(requestId)) {
-    throw new Error(
+    throw new ConfigError(
       `run_request requires a "requestId" string. Received ${JSON.stringify(requestId)}.`
+    );
+  }
+
+  if (!type.isNone(user) && !type.isObject(user)) {
+    throw new ConfigError(
+      `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
+        user
+      )}.`
     );
   }
 
@@ -116,8 +111,8 @@ async function runRequest({ pageId, requestId, payload = {}, honoContext }) {
   // at module load would break every consumer of this module (e.g. the MCP
   // server) in environments without a full build.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
-  const context = await createLowdefyContext({ c: honoContext });
-  context.logger.info({ event: 'agent_run_request', pageId, requestId });
+  const context = await createLowdefyContext({ c: honoContext, user });
+  context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
 
   try {
     const result = await callRequest(context, {

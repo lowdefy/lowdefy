@@ -26,21 +26,23 @@ import getDevSession from '../../lib/server/auth/getDevSession.js';
 function authMiddleware() {
   const handler = authJson.configured === true ? authHandler() : null;
   return async function auth(c, next) {
-    if (authJson.configured !== true) {
-      return c.json({ message: 'Auth not configured' }, 404);
-    }
-    if (c.req.method === 'HEAD') {
+    if (c.req.method === 'HEAD' && authJson.configured === true) {
       return c.body(null, 200);
     }
     // Dev sessions (mock user, headless renderer cookie) exist outside
-    // Auth.js. getDevSession is the same function the server request
-    // context uses (lib/server/auth/session.js), so the session the browser
-    // client sees here is identical to the one requests authenticate with.
+    // Auth.js — an app whose only auth key is auth.dev has no auth stack at
+    // all and still has a dev caller. getDevSession is the same function the
+    // server request context uses (lib/server/auth/session.js), so the
+    // session the browser client sees here is identical to the one requests
+    // authenticate with.
     if (c.req.method === 'GET' && c.req.path.endsWith('/api/auth/session')) {
       const devSession = await getDevSession(c);
       if (devSession) {
         return c.json(devSession);
       }
+    }
+    if (authJson.configured !== true) {
+      return c.json({ message: 'Auth not configured' }, 404);
     }
     return handler(c, next);
   };

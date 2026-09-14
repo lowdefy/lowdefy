@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, ReservedKeyError, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
@@ -118,7 +118,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -197,9 +206,29 @@ function tagRefDeep(node, refId) {
   }
 }
 
+// A _build.env read is inlined here, so a name the environment does not set
+// becomes a literal null in the artifact before any check can see it. Warn at
+// the inline site on every build: unlike a _secret, which is read where the app
+// runs, the value is frozen in the environment the build runs in.
+function warnUnsetEnvReference(node, ctx) {
+  const params = node['_build.env'];
+  const name = type.isString(params) ? params : params?.key;
+  if (!type.isString(name)) return;
+  if (type.isObject(params) && Object.hasOwn(params, 'default')) return;
+  if (!type.isUndefined(process.env[name])) return;
+  ctx.buildContext.handleWarning(
+    new ConfigWarning(
+      `Environment variable "${name}" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default.`,
+      { configKey: node['~k'], checkSlug: 'secrets' }
+    )
+  );
+}
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
+  if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
+    warnUnsetEnvReference(node, ctx);
+  }
   const { output, errors } = evaluateOperators({
     input: node,
     operators: ctx.operators,
@@ -387,9 +416,7 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     // stay raw in varDefs and need no walk.
     const defaultRecordId = getPlaceholderId(varDef.default);
     result =
-      defaultRecordId !== undefined
-        ? await resolveDeferred(ctx, defaultRecordId)
-        : varDef.default;
+      defaultRecordId !== undefined ? await resolveDeferred(ctx, defaultRecordId) : varDef.default;
   } else {
     result = null;
   }
@@ -636,9 +663,7 @@ async function resolveModuleIdOperator(node, ctx) {
           refId: ctx.refId,
           configKey: configKey ?? null,
         },
-        slot: nested
-          ? null
-          : { entryId: ctx.entryId, section, path: ctx.path },
+        slot: nested ? null : { entryId: ctx.entryId, section, path: ctx.path },
       });
       return makePlaceholder(recordId);
     }
@@ -704,7 +729,7 @@ async function prepareRef(node, ctx) {
             ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
           refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
         }
-      }),
+      })
     );
   }
   if (type.isObject(refDef.key)) {
@@ -729,7 +754,10 @@ async function prepareRef(node, ctx) {
         !value.startsWith(ctx.packageRoot + '/') &&
         value !== ctx.packageRoot
       ) {
-        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`);
+        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`, {
+          filePath: ctx.currentFile,
+          lineNumber: ctx.currentFile ? lineNumber : null,
+        });
       }
     }
   }
@@ -966,7 +994,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -1020,7 +1048,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 6. _var — substitution (children already resolved)
@@ -1051,7 +1079,9 @@ async function resolve(node, ctx) {
           { filePath: ctx.currentFile }
         );
       }
-      throw new ConfigError('_module.var cannot be used at the app level.');
+      throw new ConfigError('_module.var cannot be used at the app level.', {
+        filePath: ctx.currentFile,
+      });
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
   }

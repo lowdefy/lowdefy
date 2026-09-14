@@ -985,6 +985,22 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
   const warning = warnings.find((w) => w.checkSlug === 'callapi-refs');
   expect(warning).toBeDefined();
   expect(warning.message).toBe(
-    'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
+    'CallAPI action on page "home" references non-existent endpoint "my_endpoint". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "my_endpoint".'
   );
+});
+
+test('buildPageJit attaches prodError to _warnings entries for prod-gated warnings', async () => {
+  const context = createTestContextWithApi([]);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  const warning = result._warnings.find((w) => w.message.includes('non-existent endpoint'));
+  expect(warning).toMatchObject({ type: 'ConfigWarning', prodError: true });
 });

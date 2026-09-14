@@ -75,7 +75,9 @@ test('find mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(MongoDBFind({ request, connection })).rejects.toThrow('unknown operator: $badOp');
+  await expect(MongoDBFind({ request, connection })).rejects.toThrow(
+    'MongoDB: MongoDB rejected the MongoDBFind command on collection "find" as malformed.'
+  );
 });
 
 test('checkRead should be true', async () => {

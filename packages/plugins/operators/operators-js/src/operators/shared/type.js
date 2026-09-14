@@ -57,6 +57,10 @@ function _type({ location, params, state }) {
       return type.isUndefined(on);
     case 'none':
       return type.isNone(on);
+    // `empty` is what a form author means by "no value" - null, undefined, '' and [];
+    // 0, false and {} are values.
+    case 'empty':
+      return type.isNone(on) || on === '' || (type.isArray(on) && on.length === 0);
     case 'primitive':
       return type.isPrimitive(on);
     default:

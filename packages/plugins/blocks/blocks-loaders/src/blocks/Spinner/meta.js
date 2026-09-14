@@ -26,9 +26,8 @@ export default {
     additionalProperties: false,
     properties: {
       size: {
-        type: 'string',
-        description: 'Size of the icon spinner.',
-        enum: ['small', 'medium', 'large'],
+        type: ['string', 'number'],
+        description: 'Size of the icon spinner: small, medium, large, or a pixel number.',
       },
     },
   },

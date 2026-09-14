@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import authJson from '../../lib/build/auth.js';
+import getDevSession from '../../lib/server/auth/getDevSession.js';
 import safeScriptJson from '../lib/safeScriptJson.js';
 
 // Dev HTML shell — config-free: the client fetches root config and page
@@ -36,9 +38,16 @@ function readBuildJson(name) {
   }
 }
 
-function renderDevPage(c, { basePath = '' }) {
+async function renderDevPage(c, { basePath = '' }) {
   const themeConfig = readBuildJson('theme');
   const appJson = readBuildJson('app');
+
+  // With auth configured the browser client fetches its session from
+  // /api/auth/session. Without it there is no session endpoint to ask, so a
+  // dev session (auth.dev.mockUser, headless renderer) is written into the
+  // page config - it is how _user reads the same identity in the browser as
+  // on the server for an app whose only auth key is auth.dev.
+  const devSession = authJson.configured === true ? undefined : await getDevSession(c);
 
   const VALID_COLOR_MODES = ['system', 'light', 'dark'];
   const configColorMode = VALID_COLOR_MODES.includes(themeConfig.darkMode)
@@ -74,7 +83,10 @@ window.__vite_plugin_react_preamble_installed__ = true;
   </head>
   <body>
     <div id="root"></div>
-    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({ basePath })}</script>
+    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({
+      basePath,
+      devSession,
+    })}</script>
     ${appJson.html?.appendBody ?? ''}
     <script type="module" src="${basePath}/client/main.jsx"></script>
   </body>

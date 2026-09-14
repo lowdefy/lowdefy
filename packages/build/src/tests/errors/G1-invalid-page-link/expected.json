@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning \u00b7 fails in prod] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page. Check the pageId for typos, or add a page with id \"nonExistentPage\". To link outside the app, use \"url\" instead of \"pageId\"."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page."
+        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23\n[ConfigWarning \u00b7 fails in prod] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page. Check the pageId for typos, or add a page with id \"nonExistentPage\". To link outside the app, use \"url\" instead of \"pageId\"."
       ],
       "expectThrow": true
     }

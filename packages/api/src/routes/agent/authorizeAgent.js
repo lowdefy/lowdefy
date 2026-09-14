@@ -14,18 +14,23 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
-import { translate } from '@lowdefy/helpers';
+import { AuthenticationError, AuthorizationError } from '@lowdefy/errors';
+import { translate, type } from '@lowdefy/helpers';
 
-function authorizeAgent({ authorize, i18n, logger }, { agentConfig }) {
+function authorizeAgent({ authorize, i18n, logger, user }, { agentConfig }) {
   if (!authorize(agentConfig)) {
     logger.debug({
       event: 'debug_agent_authorize',
       authorized: false,
       auth_config: agentConfig.auth,
     });
+    // Unauthenticated on a protected agent - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(`Authentication required for agent "${agentConfig.agentId}".`);
+    }
     // Same message as an unknown agentId so responses do not reveal which agents exist.
-    throw new ConfigError(
+    throw new AuthorizationError(
       translate({
         key: 'agent.runtime.agentNotFound',
         values: { agentId: agentConfig.agentId },

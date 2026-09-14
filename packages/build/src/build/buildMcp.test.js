@@ -134,3 +134,22 @@ test('buildMcp throws on duplicate endpoint tool ids', () => {
   };
   expect(() => buildMcp({ components, context })).toThrow('Duplicate MCP tool "get-customer".');
 });
+
+test('buildMcp collects an error per invalid mcp endpoint', () => {
+  const context = testContext();
+  context.errors = [];
+  const components = {
+    api: [endpoint],
+    mcp: {
+      endpoints: ['missing-one', 'missing-two', 'get-customer'],
+    },
+  };
+  buildMcp({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toBe(
+    'MCP endpoint "missing-one" does not reference a defined api endpoint.'
+  );
+  expect(context.errors[1].message).toBe(
+    'MCP endpoint "missing-two" does not reference a defined api endpoint.'
+  );
+});

@@ -23,7 +23,9 @@ async function agentHandler(c) {
   const context = c.get('lowdefyContext');
   const t = (key, values) => translate({ key, values, i18n: context.i18n });
   if (c.req.method !== 'POST') {
-    throw new Error(t('agent.runtime.methodNotAllowed'));
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: t('agent.runtime.methodNotAllowed') }, 405);
   }
   const segments = getPathSegments(c, '/api/agent/');
   if (segments.length < 2) {

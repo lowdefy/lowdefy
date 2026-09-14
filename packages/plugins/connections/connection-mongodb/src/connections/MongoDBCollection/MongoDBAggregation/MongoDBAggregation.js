@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -22,7 +25,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   if (connection.write !== true) {
     pipeline.forEach((stage) => {
       if (stage.$out != null || stage.$merge != null) {
-        throw new Error(
+        throw new ConfigError(
           'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
         );
       }
@@ -35,8 +38,13 @@ async function MongodbAggregation({ request, connection }) {
   const { pipeline, options } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
   const { collection } = await getCollection({ connection });
-  const cursor = await collection.aggregate(pipeline, options);
-  const res = await cursor.toArray();
+  let res;
+  try {
+    const cursor = await collection.aggregate(pipeline, options);
+    res = await cursor.toArray();
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation' });
+  }
   return serialize(res);
 }
 

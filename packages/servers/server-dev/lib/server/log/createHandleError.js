@@ -16,6 +16,18 @@
 
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
+import serverErrorStore from '../../docs/serverErrorStore.js';
+
+// A UserError is an expected outcome of user interaction (a rejected payload,
+// a :reject) and a LowdefyInternalError never carries a config location, so
+// neither belongs in the agent's feedback channel.
+function shouldStore(error) {
+  if (error instanceof LowdefyInternalError) {
+    return false;
+  }
+  return error.name !== 'UserError';
+}
+
 function createHandleError({ context }) {
   return async function handleError(error) {
     try {
@@ -42,6 +54,20 @@ function createHandleError({ context }) {
       if (location) {
         error.source = location.source;
         error.config = location.config;
+      }
+
+      if (shouldStore(error)) {
+        serverErrorStore.push({
+          timestamp: new Date().toISOString(),
+          name: error.name,
+          message: error.message,
+          source: error.source ?? null,
+          config: error.config ?? null,
+          hint: error.hint ?? null,
+          endpointId: context.endpointId ?? null,
+          requestId: context.requestId ?? null,
+          pageId: context.pageId ?? null,
+        });
       }
 
       context.logger.error(error);

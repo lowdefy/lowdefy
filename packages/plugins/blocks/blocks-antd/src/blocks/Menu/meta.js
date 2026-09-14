@@ -100,9 +100,9 @@ export default {
         description: 'Delay time to show submenu when mouse enters (in seconds).',
       },
       theme: {
-        type: 'object',
+        type: ['string', 'object'],
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'The Menu color theme, light or dark, or antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/menu#design-token',

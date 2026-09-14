@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import unsettledPageNote from './unsettledPageNote.js';
 
 // Evaluates an operator expression against the live client state of a
 // headless Chromium tab navigated to the page's own route, using the page's
@@ -25,7 +26,9 @@ import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 async function evalOperatorHeadless({ origin, pageId, expression, user, timeout = 15000 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
-      error: `evalOperatorHeadless requires an "origin" string. Received ${JSON.stringify(origin)}.`,
+      error: `evalOperatorHeadless requires an "origin" string. Received ${JSON.stringify(
+        origin
+      )}.`,
     };
   }
   if (type.isNone(pageId) || !type.isString(pageId)) {
@@ -74,6 +77,9 @@ async function evalOperatorHeadless({ origin, pageId, expression, user, timeout 
       },
       { id: pageId, exprJson: expressionJson }
     );
+    if (!opened.ready) {
+      return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
+    }
     return result;
   } catch (error) {
     return { error: `Failed to evaluate operator at "${url}": ${error.message}` };

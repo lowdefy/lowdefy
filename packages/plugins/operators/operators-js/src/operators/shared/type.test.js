@@ -101,6 +101,35 @@ test('_type none', () => {
   expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
 });
 
+test("_type empty is true for null, undefined, '' and []", () => {
+  expect(_type({ params: { type: 'empty', on: null }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: undefined }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: '' }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'empty', on: [] }, location, state })).toEqual(true);
+});
+test("_type empty is false for 0, false, {}, ' ', [null] and a Date", () => {
+  expect(_type({ params: { type: 'empty', on: 0 }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: false }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: {} }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: ' ' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: [null] }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', on: new Date(0) }, location, state })).toEqual(false);
+});
+test('_type empty reads the state value at the operator location when no key or on is given', () => {
+  expect(_type({ params: { type: 'empty' }, location: 'string', state })).toEqual(false);
+  expect(_type({ params: { type: 'empty' }, location: 'notThere', state })).toEqual(true);
+  expect(
+    _type({ params: { type: 'empty' }, location: 'emptyString', state: { emptyString: '' } })
+  ).toEqual(true);
+  expect(
+    _type({ params: { type: 'empty' }, location: 'emptyArray', state: { emptyArray: [] } })
+  ).toEqual(true);
+});
+test('_type empty with key', () => {
+  expect(_type({ params: { type: 'empty', key: 'arr.0.a' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'empty', key: 'notThere' }, location, state })).toEqual(true);
+});
+
 test('_type with a reserved key returns false and does not throw', () => {
   expect(_type({ params: { type: 'string', key: '__proto__' }, location, state })).toEqual(false);
 });

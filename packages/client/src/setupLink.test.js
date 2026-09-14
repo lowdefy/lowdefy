@@ -145,3 +145,24 @@ test('newTab wins over replace and scroll', () => {
   expect(lowdefy.calls.push).toEqual([]);
   expect(lowdefy.calls.replace).toEqual([]);
 });
+
+test('a blocked popup on a same-origin new tab reports itself instead of throwing', () => {
+  const lowdefy = createFakeLowdefy({ popupBlocked: true });
+
+  expect(() => setupLink(lowdefy)({ pageId: 'reports', newTab: true })).not.toThrow();
+
+  expect(lowdefy.calls.open).toEqual([['http://localhost/reports', '_blank']]);
+  expect(lowdefy._internal.displayMessage).toHaveBeenCalledWith({
+    content: 'client.popupBlocked',
+    status: 'info',
+    duration: 10,
+  });
+  expect(lowdefy.calls.focus).toBe(0);
+});
+
+test('a link that resolves to no target throws a ConfigError', () => {
+  const lowdefy = createFakeLowdefy();
+  lowdefy.home = { pageId: undefined, configured: false };
+
+  expect(() => setupLink(lowdefy)({})).toThrow('Invalid Link: no target resolved.');
+});

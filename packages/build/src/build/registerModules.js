@@ -225,7 +225,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   for (const dep of dependencies) {
     if (!type.isString(dep.id)) {
       throw new ConfigError(
-        `Module "${entry.id}": each item in "dependencies" must have a string "id".`
+        `Module "${entry.id}": each item in "dependencies" must have a string "id".`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -243,7 +244,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     if (!type.isString(plugin.version)) {
       throw new ConfigError(
         `Module "${entry.id}": plugin "${plugin.name}" must declare a "version" ` +
-          `(semver range) in module.lowdefy.yaml.`
+          `(semver range) in module.lowdefy.yaml.`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -262,7 +264,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
           `Add it to your app's plugins array in lowdefy.yaml:\n\n` +
           `  plugins:\n` +
           `    - name: "${plugin.name}"\n` +
-          `      version: "${semver.minVersion(plugin.version)}"`
+          `      version: "${semver.minVersion(plugin.version)}"`,
+        { filePath: moduleYamlPath }
       );
     }
     if (appVersion.startsWith('workspace:')) {
@@ -272,7 +275,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
       throw new ConfigError(
         `Module "${entry.id}" requires plugin "${plugin.name}" version "${plugin.version}" ` +
           `but the app has version "${appVersion}" installed. ` +
-          `Update the plugin to a compatible version.`
+          `Update the plugin to a compatible version.`,
+        { filePath: moduleYamlPath }
       );
     }
   }

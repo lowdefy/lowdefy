@@ -118,8 +118,14 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
     setResolvedContent(block, blocks);
   } catch (error) {
     if (required === true) {
+      // A typed Lowdefy error already carries its own class, message and
+      // location - rewrapping it as a ConfigError would misreport a service
+      // outage or an authorization refusal as the app developer's config.
+      if (error.isLowdefyError) {
+        throw error;
+      }
       throw new ConfigError(
-        `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`,
+        `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve.`,
         { configKey: block['~k'], cause: error }
       );
     }

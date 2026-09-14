@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
@@ -78,7 +79,7 @@ function getContext({
   resetContext = { reset: false, setReset: () => undefined },
 }) {
   if (!config) {
-    throw new Error('A page must be provided to get context.');
+    throw new LowdefyInternalError('A page must be provided to get context.');
   }
   const { id } = config;
   // Dynamic pages are server-resolved per request — a context memoized across

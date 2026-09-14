@@ -100,7 +100,7 @@ test('GcsSignedPostPolicy throws when fields is not an object', async () => {
   const request = { key: 'key', fields: 'fields' };
   const connection = { bucket: 'bucket', write: true };
   await expect(GcsSignedPostPolicy({ request, connection })).rejects.toThrow(
-    'properties.fields must be an object.'
+    'GcsSignedPostPolicy request "fields" must be an object.'
   );
 });
 

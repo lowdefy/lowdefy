@@ -67,7 +67,7 @@ function AddOnSelect({
       style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
       disabled={properties.disabled || loading}
-      dropdownMatchSelectWidth={false}
+      popupMatchSelectWidth={false}
       filterOption={(input, option) =>
         option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
@@ -99,7 +99,7 @@ function AddOnSelect({
       optionFilterProp="filterString"
       optionLabelProp="label"
       placeholder={'Select item'}
-      showArrow={properties.showArrow}
+      suffixIcon={properties.showArrow === false ? null : undefined}
       showSearch={true}
       size={properties.size}
       value={getValueIndex(value?.region, uniqueValueOptions)}

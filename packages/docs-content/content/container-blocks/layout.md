@@ -590,6 +590,7 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `hasSider` | boolean | `false` | Lay the child blocks out in a row when the layout contains a Sider. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 No events defined.

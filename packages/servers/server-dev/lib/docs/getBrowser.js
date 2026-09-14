@@ -15,9 +15,10 @@
 */
 
 import { chromium } from 'playwright-core';
-import { type } from '@lowdefy/helpers';
+import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
+import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 
@@ -62,10 +63,17 @@ async function getBrowser() {
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
 // build/config.json (the same source app.js uses to mount the app) so
-// callers only need to pass the bare origin.
-function buildPageUrl({ origin, pageId }) {
+// callers only need to pass the bare origin. `urlQuery` (an object) is
+// appended as a query string, serialized by the same helper the engine uses
+// for Link urlQuery, so a page reads it back through _url_query unchanged.
+function buildPageUrl({ origin, pageId, urlQuery }) {
   const basePath = lowdefyConfig.basePath ?? '';
-  return `${origin}${basePath}/${pageId}`;
+  const url = `${origin}${basePath}/${pageId}`;
+  const query = urlQueryFn.stringify(urlQuery);
+  if (query === '') {
+    return url;
+  }
+  return `${url}?${query}`;
 }
 
 // Opens a fresh browser context + page at the app's pageId route. Callers
@@ -77,51 +85,55 @@ async function openPage({
   origin,
   pageId,
   user,
+  urlQuery,
   width = 1280,
   height = 800,
   timeout = 15000,
 }) {
-  const url = buildPageUrl({ origin, pageId });
+  const url = buildPageUrl({ origin, pageId, urlQuery });
   // Resolved before the context is created so an invalid `user` can't leave an
   // orphaned context behind.
   const injectedUser = resolveHeadlessUser({ user });
   const context = await browser.newContext({ viewport: { width, height } });
-  // Inject an authenticated user so auth-protected pages don't 404 for the
-  // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
-  // `origin` so it rides along on the same-origin /api/* fetches.
-  await context.addCookies([
-    {
-      name: HEADLESS_USER_COOKIE,
-      value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
-      url: origin,
-    },
-  ]);
-  const page = await context.newPage();
+  // From here a failure must close the context before rethrowing: callers only
+  // learn about the context from the return value, so an error thrown mid-open
+  // (a navigation that times out on both waits, a crashed page) would otherwise
+  // leak a browser context — and its renderer process — on every failed call.
   try {
-    await page.goto(url, { waitUntil: 'networkidle', timeout });
-  } catch {
-    // Pages with long-polling/SSE connections (reload, websockets) never
-    // go network-idle — fall back to 'load' rather than failing outright.
-    await page.goto(url, { waitUntil: 'load', timeout });
-  }
-  // The engine builds the page context (and runs onInit + initial requests)
-  // after the bundle loads — 'load'/'networkidle' fire before that. Every
-  // caller (screenshot, inspect, eval, checkpoint load) needs the app
-  // actually mounted, so wait for the context and for initial requests to
-  // settle. Tolerant: on timeout proceed and let the caller surface what it
-  // finds — a screenshot of a hung page is still useful signal.
-  await page
-    .waitForFunction(
-      (id) => {
-        const pageContext = window.lowdefy?.contexts?.[`page:${id}`];
-        if (!pageContext) return false;
-        return !Object.values(pageContext.requests ?? {}).some((calls) => calls?.[0]?.loading);
+    // Inject an authenticated user so auth-protected pages don't 404 for the
+    // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
+    // `origin` so it rides along on the same-origin /api/* fetches.
+    await context.addCookies([
+      {
+        name: HEADLESS_USER_COOKIE,
+        value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
+        url: origin,
       },
-      pageId,
-      { timeout }
-    )
-    .catch(() => {});
-  return { context, page, url };
+    ]);
+    const page = await context.newPage();
+    try {
+      await page.goto(url, { waitUntil: 'networkidle', timeout });
+    } catch {
+      // Pages with long-polling/SSE connections (reload, websockets) never
+      // go network-idle — fall back to 'load' rather than failing outright.
+      await page.goto(url, { waitUntil: 'load', timeout });
+    }
+    // The engine builds the page context (and runs onInit + initial requests)
+    // after the bundle loads — 'load'/'networkidle' fire before that. Every
+    // caller (screenshot, inspect, eval, checkpoint load) needs the app's async
+    // lifecycle to have settled, not just the bundle to have loaded, so wait on
+    // isPageReady. Tolerant: on timeout proceed with ready: false and let the
+    // caller surface what it finds — a snapshot of a hung page is still useful
+    // signal, and a far better answer than a tool failure.
+    let ready = true;
+    await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {
+      ready = false;
+    });
+    return { context, page, ready, url };
+  } catch (error) {
+    await context.close().catch(() => {});
+    throw error;
+  }
 }
 
 export { getBrowser, openPage, buildPageUrl };

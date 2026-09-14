@@ -19,7 +19,7 @@ import { operatorsServer } from '@lowdefy/operators-js';
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
-import { ConfigError, RequestError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, RequestError } from '@lowdefy/errors';
 
 const { _date, _payload, _secret, _user } = operatorsServer;
 
@@ -220,9 +220,9 @@ test('call request, protected auth without user', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(AuthenticationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Request "requestId" does not exist.'
+    'Authentication required for request "requestId".'
   );
 });
 

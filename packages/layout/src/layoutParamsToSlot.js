@@ -29,16 +29,6 @@ function resolveDeprecated(layout, newName, ...oldNames) {
   return undefined;
 }
 
-function resolveLayoutAlign(layout) {
-  if (!type.isNone(layout.align) && type.isNone(layout.selfAlign)) {
-    console.warn(
-      '[Lowdefy] layout.align for self-alignment is deprecated. Use layout.selfAlign instead.'
-    );
-    return undefined;
-  }
-  return layout.align;
-}
-
 function layoutParamsToSlot({ slotKey, slot = {}, layout = {} }) {
   // Normalize slot.gutter → slot.gap (deprecated)
   if (!type.isNone(slot.gutter) && type.isNone(slot.gap)) {
@@ -50,11 +40,9 @@ function layoutParamsToSlot({ slotKey, slot = {}, layout = {} }) {
     return slot;
   }
 
-  const layoutAlign = resolveLayoutAlign(layout);
-
   if (type.isNone(slot.gap))
     slot.gap = resolveDeprecated(layout, 'gap', 'contentGutter', 'contentGap');
-  if (type.isNone(slot.align)) slot.align = layoutAlign;
+  if (type.isNone(slot.align)) slot.align = resolveDeprecated(layout, 'align', 'contentAlign');
   if (type.isNone(slot.justify))
     slot.justify = resolveDeprecated(layout, 'justify', 'contentJustify');
   if (type.isNone(slot.direction))
