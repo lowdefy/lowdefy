@@ -757,6 +757,8 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           // Not during the onBeforeSend wait: nothing is streaming, so onStop would be false.
           onCancel={isBusy ? handleStop : undefined}
           loading={isBusy || sending}
+          styles={sender?.styles}
+          classNames={sender?.classNames}
           prefix={
             attachmentsConfig?.enabled ? (
               <Button

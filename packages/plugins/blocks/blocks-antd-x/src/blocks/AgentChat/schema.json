@@ -137,6 +137,14 @@
                 "shape": {
                   "type": "string",
                   "enum": ["default", "round", "corner"]
+                },
+                "styles": {
+                  "type": "object",
+                  "description": "Inline styles per bubble part: root, content, body, header, footer, avatar, extra. The way to recolour a bubble: the filled and outlined colours come from the theme's colorPrimary and are not reachable from a stylesheet."
+                },
+                "classNames": {
+                  "type": "object",
+                  "description": "Class names per bubble part, same keys as styles."
                 }
               }
             },
@@ -152,6 +160,14 @@
                 "shape": {
                   "type": "string",
                   "enum": ["default", "round", "corner"]
+                },
+                "styles": {
+                  "type": "object",
+                  "description": "Inline styles per bubble part: root, content, body, header, footer, avatar, extra."
+                },
+                "classNames": {
+                  "type": "object",
+                  "description": "Class names per bubble part, same keys as styles."
                 }
               }
             }
@@ -188,6 +204,14 @@
           "default": "enter"
         },
         "allowSpeech": { "type": "boolean", "default": false },
+        "styles": {
+          "type": "object",
+          "description": "Inline styles per composer part: root, prefix, input, suffix, footer, switch, content. The way to recolour the composer border, which the theme sets with a precedence no page stylesheet beats."
+        },
+        "classNames": {
+          "type": "object",
+          "description": "Class names per composer part, same keys as styles."
+        },
         "attachments": {
           "type": "object",
           "description": "File attachments on the composer. When enabled, files can be picked with the paperclip, pasted from the clipboard (e.g. a screenshot) or dragged onto the composer; accept and maxSize apply to all three.",

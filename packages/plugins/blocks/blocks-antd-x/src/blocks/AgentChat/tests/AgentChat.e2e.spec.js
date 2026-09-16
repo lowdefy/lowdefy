@@ -207,3 +207,25 @@ test.describe('AgentChat send guard', () => {
     await expect(input).toHaveValue('hello');
   });
 });
+
+test.describe('AgentChat styles', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+  });
+
+  test('role styles and classNames reach the bubbles', async ({ page }) => {
+    const chat = getBlock(page, 'chat_styled');
+    await expect(chat.locator('.ant-bubble-content', { hasText: 'Styled answer' })).toHaveCSS(
+      'background-color',
+      'rgb(1, 2, 3)'
+    );
+    await expect(chat.locator('.styled-user-content')).toContainText('Styled question');
+  });
+
+  test('sender styles reach the composer', async ({ page }) => {
+    await expect(getBlock(page, 'chat_styled').locator('.ant-sender')).toHaveCSS(
+      'border-top-color',
+      'rgb(4, 5, 6)'
+    );
+  });
+});

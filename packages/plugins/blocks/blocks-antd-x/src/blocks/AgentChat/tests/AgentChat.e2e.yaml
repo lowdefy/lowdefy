@@ -208,3 +208,34 @@ blocks:
           on:
             n:
               _state: before_send_count
+
+  - id: chat_styled
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: styled
+      messageDisplay:
+        roles:
+          assistant:
+            styles:
+              content:
+                backgroundColor: 'rgb(1, 2, 3)'
+          user:
+            classNames:
+              content: styled-user-content
+      sender:
+        styles:
+          root:
+            borderColor: 'rgb(4, 5, 6)'
+      messages:
+        - id: y1
+          role: user
+          parts:
+            - type: text
+              text: Styled question
+        - id: y2
+          role: assistant
+          parts:
+            - type: text
+              text: Styled answer
