@@ -34,6 +34,7 @@ import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 import DrawerWrapper from './DrawerWrapper.js';
 import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
+import replayableMessages from './replayableMessages.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
@@ -249,8 +250,9 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     const lastId = count > 0 ? msgs[count - 1]?.id : null;
     if (count !== prevExternalRef.current.count || lastId !== prevExternalRef.current.lastId) {
       prevExternalRef.current = { count, lastId };
-      externalIdsRef.current = collectExternalEventIds(msgs);
-      setMessages(msgs);
+      const replayable = replayableMessages(msgs);
+      externalIdsRef.current = collectExternalEventIds(replayable);
+      setMessages(replayable);
     }
   }, [externalMessages, setMessages]);
 
@@ -260,12 +262,13 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
     });
     methods.registerMethod('setMessages', (args) => {
-      const msgs = args?.messages ?? [];
+      const msgs = replayableMessages(args?.messages ?? []);
       externalIdsRef.current = collectExternalEventIds(msgs);
       setMessages(msgs);
     });
     methods.registerMethod('sendMessage', (args) => {
       if (args?.text) {
+        setMessages((prev) => replayableMessages(prev));
         sendMessage({
           text: args.text,
           ...(args.files ? { files: args.files } : {}),
@@ -428,6 +431,10 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       event: { text, files: filesMeta, messages, switches: switchState },
     });
     if (response.success === false) return;
+
+    // A reply cut off this session leaves the same unanswered call the load paths filter.
+    // useChat applies the setter synchronously, so sendMessage reads the filtered list.
+    setMessages((prev) => replayableMessages(prev));
 
     if (attachedFiles.length > 0) {
       const parts = [{ type: 'text', text }];

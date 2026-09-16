@@ -119,3 +119,47 @@ blocks:
           parts:
             - type: text
               text: '[in-app link](/agent-chat-target) and [external link](https://example.com)'
+
+  # A history stored after a reply was cut off mid-stream: c2's tool call never got its result,
+  # c3 is nothing but that, and c4 is a call that completed and must be left alone.
+  - id: chat_cutoff
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: cutoff
+      messages:
+        - id: c1
+          role: user
+          parts:
+            - type: text
+              text: What is in this repo?
+        - id: c2
+          role: assistant
+          parts:
+            - type: step-start
+            - type: text
+              text: Let me look.
+            - type: tool-search
+              toolCallId: tc1
+              state: input-available
+              input: {}
+        - id: c3
+          role: assistant
+          parts:
+            - type: step-start
+            - type: tool-fetch
+              toolCallId: tc2
+              state: input-available
+              input: {}
+        - id: c4
+          role: assistant
+          parts:
+            - type: tool-lookup
+              toolCallId: tc3
+              state: output-available
+              input: {}
+              output:
+                ok: true
+            - type: text
+              text: Done looking.
