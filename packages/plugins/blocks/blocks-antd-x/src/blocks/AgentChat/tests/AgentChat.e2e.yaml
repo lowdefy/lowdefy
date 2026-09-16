@@ -163,3 +163,48 @@ blocks:
                 ok: true
             - type: text
               text: Done looking.
+
+  # onBeforeSend that takes as long as a quota request might, counts how often it ran, then
+  # refuses the send so nothing ever calls the agent.
+  - id: chat_guarded
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: guarded
+      messages:
+        - id: g1
+          role: assistant
+          parts:
+            - type: text
+              text: Ask me something.
+    events:
+      onBeforeSend:
+        - id: count_before_send
+          type: SetState
+          params:
+            before_send_count:
+              _sum:
+                - _if_none:
+                    - _state: before_send_count
+                    - 0
+                - 1
+        - id: slow_check
+          type: Wait
+          params:
+            ms: 1500
+        - id: refuse
+          type: Throw
+          params:
+            throw: true
+            message: Refused by the test.
+
+  - id: guarded_readout
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: '<span id="readout_before_send">{{ n or 0 }}</span>'
+          on:
+            n:
+              _state: before_send_count

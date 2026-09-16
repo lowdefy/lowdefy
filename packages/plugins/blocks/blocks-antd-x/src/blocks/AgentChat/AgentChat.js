@@ -343,6 +343,12 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   const isEmpty = messages.length === 0;
   const isBusy = status === 'streaming' || status === 'submitted';
 
+  // A send awaits onBeforeSend while useChat still reports `ready`, so every submit during a
+  // slow quota check used to send again. The ref refuses re-entry (state is a render behind a
+  // double click); the state is what the Sender shows.
+  const sendingRef = useRef(false);
+  const [sending, setSending] = useState(false);
+
   function fileToContentPart(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -417,8 +423,19 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }
 
   async function handleSend(text) {
+    if (sendingRef.current) return;
     if (!text.trim() && attachedFiles.length === 0) return;
+    sendingRef.current = true;
+    setSending(true);
+    try {
+      await submitMessage(text);
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
+    }
+  }
 
+  async function submitMessage(text) {
     const filesMeta = attachedFiles.map((file) => ({
       name: file.name,
       size: file.size,
@@ -737,8 +754,9 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           onPasteFile={
             attachmentsConfig?.enabled ? (files) => addFiles(files, { pasted: true }) : undefined
           }
-          onCancel={handleStop}
-          loading={isBusy}
+          // Not during the onBeforeSend wait: nothing is streaming, so onStop would be false.
+          onCancel={isBusy ? handleStop : undefined}
+          loading={isBusy || sending}
           prefix={
             attachmentsConfig?.enabled ? (
               <Button

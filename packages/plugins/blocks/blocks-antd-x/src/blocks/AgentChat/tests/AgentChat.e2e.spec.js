@@ -186,3 +186,24 @@ test.describe('AgentChat cut-off history', () => {
     await expect(getBlock(page, 'chat_cutoff').locator('.ant-bubble')).toHaveCount(3);
   });
 });
+
+// A send awaits onBeforeSend before anything reaches useChat, and the composer used to stay
+// live for the whole of that await.
+test.describe('AgentChat send guard', () => {
+  test('a slow onBeforeSend runs once however often send is pressed', async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+    const chat = getBlock(page, 'chat_guarded');
+    const input = chat.locator('textarea');
+    await input.fill('hello');
+    await input.press('Enter');
+    await input.press('Enter');
+    await input.press('Enter');
+
+    await expect(page.locator('#readout_before_send')).toHaveText('1');
+    // Past the 1500 ms the check takes, so a queued re-run would have shown by now.
+    await page.waitForTimeout(2000);
+    await expect(page.locator('#readout_before_send')).toHaveText('1');
+    // The send was refused, so the text is still in the box for the user to try again.
+    await expect(input).toHaveValue('hello');
+  });
+});
