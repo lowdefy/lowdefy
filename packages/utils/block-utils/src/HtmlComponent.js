@@ -51,7 +51,7 @@ class HtmlComponent extends React.Component {
     }
   }
   render() {
-    const { className, div, id, style } = this.props;
+    const { className, div, id, onClick, style } = this.props;
     if (div === true) {
       return (
         <div
@@ -65,6 +65,7 @@ class HtmlComponent extends React.Component {
           className={className}
           style={style}
           onMouseUp={this.onTextSelection}
+          onClick={onClick}
         />
       );
     }
@@ -80,6 +81,7 @@ class HtmlComponent extends React.Component {
         className={className}
         style={style}
         onMouseUp={this.onTextSelection}
+        onClick={onClick}
       />
     );
   }
