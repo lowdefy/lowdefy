@@ -1,0 +1,59 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+id: clickablehtml
+type: Box
+
+blocks:
+  - id: clickable_basic
+    type: ClickableHtml
+    properties:
+      html: '<p>Hello <button data-action="greet" data-user-id="u_1">World</button></p>'
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            clicked:
+              _event: true
+
+  - id: clickable_result
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<span id="clicked_action">'
+          - _state:
+              key: clicked.action
+              default: ''
+          - '</span><span id="clicked_user_id">'
+          - _state:
+              key: clicked.user_id
+              default: ''
+          - '</span>'
+
+  - id: clickable_no_action
+    type: ClickableHtml
+    properties:
+      html: '<p><button>Plain button</button></p>'
+    events:
+      onClick:
+        - id: set_plain
+          type: SetState
+          params:
+            plain_clicked: true
+
+  - id: clickable_sanitized
+    type: ClickableHtml
+    properties:
+      html: <p>Safe content</p><script>alert('xss')</script>

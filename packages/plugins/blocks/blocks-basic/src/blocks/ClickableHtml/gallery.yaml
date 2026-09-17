@@ -1,0 +1,105 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+- title: Buttons in markup
+  blocks:
+    - id: buttons_basic
+      type: ClickableHtml
+      properties:
+        html: '<p>Pick a size: <button data-action="select" data-size="small">Small</button> <button data-action="select" data-size="large">Large</button></p>'
+      events:
+        onClick:
+          - id: set_selected
+            type: SetState
+            params:
+              buttons_basic_selected:
+                _event: size
+    - id: buttons_basic_result
+      type: Html
+      properties:
+        html:
+          _string.concat:
+            - '<p>State: <code>'
+            - _state:
+                key: buttons_basic_selected
+                default: 'nothing yet'
+            - '</code></p>'
+
+- title: Data attributes on any element
+  blocks:
+    - id: list_rows
+      type: ClickableHtml
+      properties:
+        html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-action="open" data-record-id="rec_1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-action="open" data-record-id="rec_2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-action="open" data-record-id="rec_3" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
+      events:
+        onClick:
+          - id: set_clicked
+            type: SetState
+            params:
+              list_rows_clicked:
+                _event: true
+    - id: list_rows_result
+      type: Html
+      properties:
+        html:
+          _string.concat:
+            - '<p>Last event: <code>'
+            - _json.stringify:
+                _state:
+                  key: list_rows_clicked
+                  default: {}
+            - '</code></p>'
+
+- title: Links and plain markup are left to the browser
+  blocks:
+    - id: mixed_content
+      type: ClickableHtml
+      properties:
+        html: '<p>This <a href="https://lowdefy.com" target="_blank">link</a> navigates normally, but <a href="#" data-action="comment" data-thread-id="t_9">this one</a> fires onClick instead.</p>'
+      events:
+        onClick:
+          - id: set_mixed
+            type: SetState
+            params:
+              mixed_content_action:
+                _event: action
+    - id: mixed_content_result
+      type: Html
+      properties:
+        html:
+          _string.concat:
+            - '<p>Action: <code>'
+            - _state:
+                key: mixed_content_action
+                default: 'none'
+            - '</code></p>'
+
+- title: Style Overrides
+  blocks:
+    - id: style_card
+      type: ClickableHtml
+      style:
+        .element:
+          padding: 16
+          borderRadius: 8
+          border: 1px solid var(--ant-color-border)
+          background: var(--ant-color-bg-container)
+      properties:
+        html: '<h4 style="margin: 0 0 8px 0;">Card</h4><p style="margin: 0 0 8px 0; color: var(--ant-color-text-secondary);">Yours to change or remove until tomorrow.</p><button data-action="edit">Edit</button> <button data-action="remove">Remove</button>'
+      events:
+        onClick:
+          - id: set_card
+            type: SetState
+            params:
+              style_card_action:
+                _event: action
