@@ -321,6 +321,11 @@
           pageId: plugins-operators
           properties:
             title: Operators
+        - id: PostHog
+          type: MenuLink
+          pageId: PostHog
+          properties:
+            title: PostHog
 
     - id: users_group
       type: MenuGroup
@@ -514,6 +519,9 @@
         - id: PhoneNumberInput
           type: MenuLink
           pageId: PhoneNumberInput
+        - id: PlacesAutocomplete
+          type: MenuLink
+          pageId: PlacesAutocomplete
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
@@ -631,6 +639,9 @@
         - id: DropdownButton
           type: MenuLink
           pageId: DropdownButton
+        - id: EventLog
+          type: MenuLink
+          pageId: EventLog
         - id: EChart
           type: MenuLink
           pageId: EChart
@@ -664,6 +675,9 @@
         - id: Paragraph
           type: MenuLink
           pageId: Paragraph
+        - id: PollingTimer
+          type: MenuLink
+          pageId: PollingTimer
         - id: Progress
           type: MenuLink
           pageId: Progress
@@ -962,6 +976,9 @@
         - id: DownloadCsv
           type: MenuLink
           pageId: DownloadCsv
+        - id: GetLocalStorage
+          type: MenuLink
+          pageId: GetLocalStorage
         - id: EmailOtpSend
           type: MenuLink
           pageId: EmailOtpSend
@@ -992,6 +1009,9 @@
         - id: Request
           type: MenuLink
           pageId: Request
+        - id: RemoveLocalStorage
+          type: MenuLink
+          pageId: RemoveLocalStorage
         - id: Reset
           type: MenuLink
           pageId: Reset
@@ -1013,6 +1033,9 @@
         - id: SetLocale
           type: MenuLink
           pageId: SetLocale
+        - id: SetLocalStorage
+          type: MenuLink
+          pageId: SetLocalStorage
         - id: SetState
           type: MenuLink
           pageId: SetState
@@ -1061,6 +1084,9 @@
         - id: _change_case
           type: MenuLink
           pageId: _change_case
+        - id: _cron
+          type: MenuLink
+          pageId: _cron
         - id: _date
           type: MenuLink
           pageId: _date

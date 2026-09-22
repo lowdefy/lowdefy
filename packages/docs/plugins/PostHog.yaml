@@ -1,0 +1,348 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: PostHog
+    pageTitle: PostHog
+    section: Plugins
+    filePath: plugins/PostHog.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The `@lowdefy/plugin-posthog` plugin adds [PostHog](https://posthog.com) product analytics to a Lowdefy app. It wraps the `posthog-js` browser SDK in a set of actions: initialise PostHog, capture events, identify people and groups, manage consent and read feature flags.
+
+            The plugin bundles `posthog-js` as a module, so no script tag, snippet or reverse proxy configuration is needed.
+
+            ## Install
+
+            The `@lowdefy/plugin-posthog` package is included by default, so no `plugins` entry is needed in `lowdefy.yaml`. The `posthog-js` SDK is only bundled into the app when one of its actions is used.
+
+            ## Initialise PostHog
+
+            The `PostHogInit` action loads and configures `posthog-js`. It must run before any other action in this package, so the app level `events.onInit` is the right place for it: that event runs once per browser session, before any page renders.
+
+            ```yaml
+            # lowdefy.yaml
+            events:
+              onInit:
+                - id: init_posthog
+                  type: PostHogInit
+                  params:
+                    apiKey:
+                      _build.env: POSTHOG_API_KEY
+                    apiHost: https://us.i.posthog.com
+                    options:
+                      capture_pageview: false
+                      person_profiles: identified_only
+            ```
+
+            ###### Params
+
+            ###### object
+              - `apiKey: string`: __Required__ - The PostHog project API key. This is a public, write only key that is meant to ship in the browser bundle, so read it with [`_build.env`](/_build). Never use a personal API key here. Not required when `enabled` is `false`.
+              - `apiHost: string`: The PostHog ingestion host. Defaults to `https://us.i.posthog.com`. Use `https://eu.i.posthog.com` for the EU cloud, or the host of a self hosted instance.
+              - `options: object`: Passed through to `posthog.init` as its config object. Common options are `person_profiles`, `capture_pageview`, `autocapture`, `session_recording`, `disable_session_recording`, `persistence` and `opt_out_capturing_by_default`. See the [posthog-js config reference](https://posthog.com/docs/libraries/js/config).
+              - `debug: boolean`: Log everything PostHog does to the browser console. Useful while wiring up events.
+              - `enabled: boolean`: Set to `false` to skip loading PostHog entirely. Every other action in this package then becomes a silent no-op.
+
+            `PostHogInit` is idempotent. Calling it again with the same `apiKey` does nothing, so it is safe on an event that can run more than once. Calling it with a different `apiKey` throws, because a second PostHog instance would split the session.
+
+            ###### Turning analytics off in development
+
+            ```yaml
+            events:
+              onInit:
+                - id: init_posthog
+                  type: PostHogInit
+                  params:
+                    apiKey:
+                      _build.env: POSTHOG_API_KEY
+                    enabled:
+                      _not:
+                        _eq:
+                          - _build.env: LOWDEFY_BUILD_ENVIRONMENT
+                          - development
+            ```
+
+            ## Analytics never breaks the app
+
+            Every action in this package, except `PostHogInit`, does nothing and returns `null` when `PostHogInit` has not run or when PostHog is disabled. A missing API key, a blocked script or a disabled environment can never throw from an analytics action and can never stop an event chain.
+
+            `PostHogFeatureFlag` is the one exception to the `null`: it returns its configured `default`, so flag driven config keeps working with PostHog switched off.
+
+            Invalid config is still reported. Once PostHog is running, an action with a missing or malformed param throws, because that is a mistake a developer needs to fix.
+
+            ## Never send personal data
+
+            Never send personally identifiable information to PostHog: no names, no email addresses, no phone numbers, and no free text a user typed into a form. Send stable ids and low cardinality attributes such as a plan name, a role, a locale or an organization id.
+
+            ## Pageviews
+
+            A Lowdefy app routes on the client without a page load, so the `posthog-js` automatic pageview fires once and never again. Set `capture_pageview: false` in `PostHogInit` options and capture pageviews from each page's `events.onEnter` instead.
+
+            ```yaml
+            # pages/reports.yaml
+            id: reports
+            type: PageHeaderMenu
+            events:
+              onEnter:
+                - id: capture_pageview
+                  type: PostHogPageview
+              onLeave:
+                - id: capture_pageleave
+                  type: PostHogCapturePageLeave
+            ```
+
+            `PostHogPageview` and `PostHogCapturePageLeave` both take an optional `properties: object`. PostHog needs both the pageview and the pageleave to compute bounce rate and time on page.
+
+            ## Identify a person
+
+            `PostHogIdentify` ties the current browser session to a person. Run it once the user is known, usually from the app level `events.onInit` or after a successful login.
+
+            ```yaml
+            events:
+              onInit:
+                - id: init_posthog
+                  type: PostHogInit
+                  params:
+                    apiKey:
+                      _build.env: POSTHOG_API_KEY
+                - id: identify_person
+                  type: PostHogIdentify
+                  params:
+                    id:
+                      _user: id
+                    properties:
+                      role:
+                        _user: role
+                      locale:
+                        _location: locale
+            ```
+
+            ###### Params
+
+            ###### object
+              - `id: string`: The person's id. An empty or missing id is a no-op, so a public page leaves the anonymous session alone. That anonymous session is what a later `PostHogIdentify` merges into the person, which is what makes signup funnels work.
+              - `properties: object`: Person properties to set. `null` and `undefined` values are dropped, so an absent value never overwrites one PostHog already has.
+              - `propertiesOnce: object`: Person properties that are only set the first time, for example a signup date.
+
+            Two details make this action safe to run on every app load:
+
+            - __Person swaps__: PostHog refuses to move an already identified `distinct_id` onto a different person. `PostHogIdentify` remembers the id it last identified in `localStorage` under the key `lowdefy_posthog_identified_id`, and calls `reset()` automatically when a different id arrives. A browser that has never identified is not reset, so the anonymous session still merges into the person.
+            - __Property churn__: person properties are only sent again when they change. Every `setPersonProperties` call is a billable event.
+
+            Use `PostHogSetPersonProperties` to update a person's properties on their own:
+
+            ```yaml
+            - id: set_person_properties
+              type: PostHogSetPersonProperties
+              params:
+                set:
+                  plan:
+                    _state: selected_plan
+                setOnce:
+                  first_report_at:
+                    _date: now
+            ```
+
+            `PostHogAlias` points a second id at the person PostHog already knows: `params: { alias: string }`.
+
+            ## Sign out
+
+            `PostHogReset` forgets the current person and starts a fresh anonymous session. Run it on sign out so the next person on a shared browser is not merged into this one.
+
+            ```yaml
+            - id: reset_posthog
+              type: PostHogReset
+            - id: logout
+              type: Logout
+            ```
+
+            ###### Params
+
+            ###### object
+              - `resetDeviceId: boolean`: Also generate a new device id, so the browser is not recognised as the same device. Defaults to `false`.
+
+            ## Capture events
+
+            `PostHogCapture` captures a named product event.
+
+            ```yaml
+            - id: submit_report
+              type: Button
+              properties:
+                title: Submit report
+              events:
+                onClick:
+                  - id: submit
+                    type: Request
+                    params: submit_report
+                  - id: capture_event
+                    type: PostHogCapture
+                    params:
+                      event: report_submitted
+                      properties:
+                        report_type:
+                          _state: report_type
+                        line_item_count:
+                          _array.length:
+                            _state: line_items
+            ```
+
+            ###### Params
+
+            ###### object
+              - `event: string`: __Required__ - The event name. Snake case names that read as a completed action, like `report_submitted`, work best in funnels.
+              - `properties: object`: Event properties.
+              - `groups: object`: Groups to attach to this one event, as `{ groupType: groupKey }`. Sent to PostHog as the `$groups` property.
+
+            Autocapture already records clicks and pageviews, so keep the set of named events small. Every event is billable, and a funnel of thirty near identical events tells you less than one of five.
+
+            ## Groups
+
+            `PostHogGroup` associates the current person with a group, so events can be analysed per organization, team or account. The association sticks until `PostHogReset` is called, so run it after `PostHogIdentify`.
+
+            ```yaml
+            - id: set_group
+              type: PostHogGroup
+              params:
+                type: organization
+                key:
+                  _user: organizationId
+                properties:
+                  plan:
+                    _user: plan
+            ```
+
+            ###### Params
+
+            ###### object
+              - `type: string`: __Required__ - The group type, for example `organization`. Group types have to be enabled on the PostHog project.
+              - `key: string`: __Required__ - The id of the group instance.
+              - `properties: object`: Group properties.
+
+            ## Feature flags
+
+            `PostHogFeatureFlag` reads a feature flag and returns its value, so it can be used further down the action chain with the [`_actions`](/_actions) operator, or written to state.
+
+            ```yaml
+            events:
+              onEnter:
+                - id: read_flag
+                  type: PostHogFeatureFlag
+                  params:
+                    key: new-checkout
+                    default: control
+                - id: store_flag
+                  type: SetState
+                  params:
+                    checkout_variant:
+                      _actions: read_flag.response
+            ```
+
+            ###### Params
+
+            ###### object
+              - `key: string`: __Required__ - The feature flag key.
+              - `default: any`: Returned when the flag has no value for this person, and when PostHog is not initialised or is disabled. Defaults to `null`.
+              - `enabled: boolean`: Return a boolean, using `isFeatureEnabled`, instead of the variant value.
+              - `payload: boolean`: Return the flag payload, using `getFeatureFlagPayload`, instead of the flag value.
+
+            The value is whatever PostHog resolved for this person when flags were last loaded; the action does not wait for a network call. When the person or their groups just changed, reload the flags first with `PostHogReloadFeatureFlags`, which returns a promise the action chain awaits.
+
+            ```yaml
+            events:
+              onInit:
+                - id: init_posthog
+                  type: PostHogInit
+                  params:
+                    apiKey:
+                      _build.env: POSTHOG_API_KEY
+                - id: identify_person
+                  type: PostHogIdentify
+                  params:
+                    id:
+                      _user: id
+                - id: reload_flags
+                  type: PostHogReloadFeatureFlags
+                - id: store_flags
+                  type: SetGlobal
+                  params:
+                    feature_flags:
+                      _actions: reload_flags.response.variants
+            ```
+
+            `PostHogReloadFeatureFlags` resolves with `{ flags, variants }`, where `flags` is the list of enabled flag keys and `variants` maps every flag key to its value. It takes an optional `timeout: integer` in milliseconds, default `5000`, after which it resolves with empty results, so a flaky network can never stall the action chain.
+
+            ## Consent
+
+            When consent is required before any data is sent, initialise PostHog with capturing switched off and turn it on when the user accepts:
+
+            ```yaml
+            # lowdefy.yaml
+            events:
+              onInit:
+                - id: init_posthog
+                  type: PostHogInit
+                  params:
+                    apiKey:
+                      _build.env: POSTHOG_API_KEY
+                    options:
+                      opt_out_capturing_by_default: true
+            ```
+
+            ```yaml
+            # the consent banner
+            - id: accept_analytics
+              type: Button
+              properties:
+                title: Accept
+              events:
+                onClick:
+                  - id: opt_in
+                    type: PostHogOptIn
+
+            - id: reject_analytics
+              type: Button
+              properties:
+                title: Reject
+              events:
+                onClick:
+                  - id: opt_out
+                    type: PostHogOptOut
+            ```
+
+            `PostHogOptIn` and `PostHogOptOut` take no params. The choice is remembered in the persistence store configured on `PostHogInit`.
+
+            ## Action reference
+
+            | Action | Params | Returns |
+            | --- | --- | --- |
+            | `PostHogInit` | `apiKey`, `apiHost`, `options`, `debug`, `enabled` | `null` |
+            | `PostHogCapture` | `event`, `properties`, `groups` | `null` |
+            | `PostHogPageview` | `properties` | `null` |
+            | `PostHogCapturePageLeave` | `properties` | `null` |
+            | `PostHogIdentify` | `id`, `properties`, `propertiesOnce` | `null` |
+            | `PostHogSetPersonProperties` | `set`, `setOnce` | `null` |
+            | `PostHogAlias` | `alias` | `null` |
+            | `PostHogGroup` | `type`, `key`, `properties` | `null` |
+            | `PostHogReset` | `resetDeviceId` | `null` |
+            | `PostHogOptIn` | none | `null` |
+            | `PostHogOptOut` | none | `null` |
+            | `PostHogFeatureFlag` | `key`, `default`, `enabled`, `payload` | the flag value, or `default` |
+            | `PostHogReloadFeatureFlags` | `timeout` | `{ flags, variants }` |

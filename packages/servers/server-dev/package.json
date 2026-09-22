@@ -76,6 +76,7 @@
     "@lowdefy/logger": "5.5.1",
     "@lowdefy/node-utils": "5.5.1",
     "@lowdefy/operators-change-case": "5.5.1",
+    "@lowdefy/operators-cron": "5.5.1",
     "@lowdefy/operators-dayjs": "5.5.1",
     "@lowdefy/operators-diff": "5.5.1",
     "@lowdefy/operators-js": "5.5.1",
