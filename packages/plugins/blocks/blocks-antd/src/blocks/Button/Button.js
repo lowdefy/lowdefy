@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Button, ConfigProvider } from 'antd';
+import { Button, ConfigProvider, Tooltip } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 import { blockRootProps, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
@@ -73,7 +73,18 @@ const ButtonBlock = ({
   const isPresetColor = ANTD_COLOR_PRESETS.has(properties.color);
   const resolvedColor = isPresetColor ? buttonColor : properties.color ? 'primary' : buttonColor;
 
-  const button = (
+  // An icon-only button still has to say what it does: with hideTitle the
+  // title becomes the hover text unless `tooltip` names its own. A button that
+  // shows its title gets a tooltip only when asked.
+  const titleHidden =
+    properties.hideTitle || (properties.shape === 'circle' && type.isNone(properties.title));
+  const tooltip = type.isString(properties.tooltip)
+    ? properties.tooltip
+    : titleHidden && !type.isNone(properties.title)
+      ? properties.title
+      : null;
+
+  const rawButton = (
     <Button
       {...blockRootProps({ blockId, classNames, styles })}
       block={properties.block}
@@ -114,6 +125,13 @@ const ButtonBlock = ({
           </>
         )}
     </Button>
+  );
+  const button = tooltip ? (
+    <Tooltip title={tooltip} mouseEnterDelay={0.3}>
+      {rawButton}
+    </Tooltip>
+  ) : (
+    rawButton
   );
 
   if (properties.color && !isPresetColor) {
