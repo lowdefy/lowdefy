@@ -694,6 +694,61 @@ content:
     });
   });
 
+  test('buildRefs resolves a ref at the root of vars', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+shorthand:
+  _ref:
+    path: template.yaml
+    vars:
+      _ref: config.yaml
+withKey:
+  _ref:
+    path: template.yaml
+    vars:
+      _ref:
+        path: nested_config.yaml
+        key: vars`,
+      },
+      {
+        path: 'template.yaml',
+        content: `
+title:
+  _var: title
+count:
+  _var: count`,
+      },
+      {
+        path: 'config.yaml',
+        content: `
+title: Config title
+count: 1`,
+      },
+      {
+        path: 'nested_config.yaml',
+        content: `
+vars:
+  title: Nested title
+  count: 2`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(context.errors).toEqual([]);
+    expect(res).toEqual({
+      shorthand: {
+        title: 'Config title',
+        count: 1,
+      },
+      withKey: {
+        title: 'Nested title',
+        count: 2,
+      },
+    });
+  });
+
   test('buildRefs use a ref in var, with a var from parent as a var', async () => {
     const files = [
       {

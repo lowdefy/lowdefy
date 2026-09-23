@@ -1,5 +1,246 @@
 # Change Log
 
+## 5.6.0
+
+### Minor Changes
+
+- 3ead269: feat(helpers): Reject prototype-pollution key names in dot paths and key maps.
+
+  `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`,
+  `__lookupGetter__` and `__lookupSetter__` are no longer accepted as path segments or as keys
+  in maps built from user-supplied values.
+
+  Previously these names were silently _filtered_ on write, which was worse than rejecting
+  them: `SetState: { 'a.__proto__.b': 1 }` quietly wrote to `a.b` instead — a different
+  location than the one you asked for. Reads could also walk up the prototype chain.
+
+  What you will see now:
+
+  - `:set_state` and the `SetState` action raise a config error naming the offending key and
+    pointing at the line in your YAML.
+  - Data-reading operators (`_state`, `_get`, `_user`, `_payload`, ...) return their default
+    instead of a value.
+  - A module entry id, an agent or endpoint id, or a `LOWDEFY_SECRET_*` environment variable
+    using one of these names now fails at build or boot with a message naming it, instead of
+    silently vanishing.
+
+  Apps that do not use these names are unaffected. If you have a form field, state key, or API
+  response property named `constructor`, rename it.
+
+  Deep merges of configuration are hardened the same way, but skip reserved keys rather than
+  raising — a reserved name arriving inside a merged _value_ is dropped so a single poisoned
+  field can't abort an otherwise valid merge.
+
+  `@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can
+  test a key against this policy directly instead of catching a `ReservedKeyError`.
+
+- 824f4be: fix(helpers): Dot paths resolve own properties only, and prefer a nested match to a literal dotted key.
+
+  A key that contains dots still resolves without escaping, at every depth. `_url_query:
+my_object.subfield` against `?my_object.subfield=x` reads as before, and a JWT `claimMapping` of
+  `resource_access.com.example.api.roles` against `{ resource_access: { 'com.example.api': { roles:
+['admin'] } } }` still returns `['admin']`. **No path needs a `\.` added unless a plain key or a
+  shorter dotted key overlaps the dotted key it resolves through; where one does, escaping is now the
+  way — see below.**
+  What changed is how ties and misses resolve: `get`, `set` and `unset` now walk the path in a single
+  forward pass, look only at own properties, and no longer try the whole path as one key ahead of the
+  walk. The accepted breaks:
+
+  **A nested match now wins over a literal dotted key.** With both present,
+  `get({ a: { b: 2 }, 'a.b': 1 }, 'a.b')` was `1` and is now `2`, and `unset` deletes the nested `b`
+  rather than the literal `'a.b'` key. A present segment also blocks the join even when it cannot be
+  descended: `get({ a: 1, 'a.b': 2 }, 'a.b')` was `2` and is now the default. Where two dotted keys
+  overlap the shorter one wins: `get({ 'a.b': {}, 'a.b.c': 1 }, 'a.b.c')` was `1` and is now the
+  default. Escaping (`a\.b`) is the way to address a literal dotted key past a nested match.
+
+  **Reads and writes see own properties only, never anything inherited from a prototype.** A data
+  operator whose key was `toString`, `valueOf` or `hasOwnProperty` used to reach the built-in
+  `Object.prototype` function and then fail while copying it, raising `SyntaxError: "undefined" is not
+valid JSON`; `_state: toString` now returns the operator default instead. Writes were worse off:
+  `SetState: { 'toString.x': 1 }` wrote `x` onto `Object.prototype.toString` — making `x` readable on
+  every object in the process — and left state untouched. It now writes `{ toString: { x: 1 } }` into
+  state, as asked. Own-only applies to every prototype, not just `Object.prototype`, so any value
+  reached through an inherited accessor is now unreachable — the realistic case being a class getter.
+  Given a `Thing` class whose `derived` getter returns `'g'`, `get({ t: new Thing() }, 't.derived')` was
+  `'g'` and is now the default. YAML config holds no class instances, so that shape reaches a path only
+  from a custom plugin or connection.
+
+  **A path no longer steps _through_ a function value.** Given an `f` carrying an `f.z` of `3`,
+  `get({ f }, 'f.z')` was `3` and is now the default. Config data holds no functions, so this is
+  reachable only from a custom plugin.
+
+  **`get` no longer accepts `separator`, `split`, `join` or `isValid`, and paths must be strings.**
+  `get({ a: { b: 1 } }, 'a/b', { separator: '/' })` was `1` and is now the default, and `isValid` is
+  ignored rather than consulted. Array paths are gone from all three helpers:
+  `get({ a: { b: 1 } }, ['a', 'b'])` was `1` and is now the default, `set({}, ['a', 'b'], 1)` wrote
+  `{ a: { b: 1 } }` and is now a no-op, and `unset(obj, ['a', 'b'])` threw a `TypeError` and is now a
+  no-op. Nothing in Lowdefy passed any of these, so this too is a custom-plugin concern. (`set`'s
+  `options` parameter is removed outright — see its own entry.)
+
+  **`unset` no longer skips a delete because the value looks empty, and no longer throws on a dotted
+  key at depth.** Hiding a block clears its state field, so both are reachable from config. A hidden
+  _nested_ block whose value was an empty string or `undefined` used to keep its field —
+  `unset({ parent: { child: '' } }, 'parent.child')` left `child` in place and now removes it — so a
+  cleared, hidden input no longer leaves a stale key behind in `_state`. The same applied to an empty
+  `Map` or `Set`, an empty-source `RegExp`, and a blank-message `Error`. And a block id written with an
+  escaped dot used to crash the delete: `unset({ 'a.b': { c: 1 } }, 'a\.b.c')` threw
+  `TypeError: Cannot read properties of undefined` and now deletes `c`.
+
+  **The dot-path escape grammar now covers the backslash itself.** `\.` remains a literal dot and `\\`
+  is now a literal backslash, so `joinPath` can escape a segment that ends in a backslash — before, it
+  only escaped dots, and `joinPath(['a\\', 'b'])` produced a path `splitPath` read back as the single
+  key `a.b`. Any other backslash is still an ordinary character, so a key such as `a\b` needs no
+  escaping. The one observable change is a doubled backslash directly before a dot:
+  `splitPath('a\\\\.b')` used to yield `['a\\.b']` and now yields `['a\\', 'b']`.
+
+- 824f4be: fix(helpers): Serialized errors mark the values they cannot carry instead of dropping them.
+
+  An error is turned into plain data in three places: the `err` field of a server log line, an error
+  sent to a browser or API caller, and — new in this release — a dot-path read of an error value from
+  config. That conversion used to lose fields silently and let a few live values through. Every own
+  field of an error now appears, with anything unserializable replaced by a marker string:
+
+  - A field holding a class instance no longer vanishes. A Node error carrying a `socket`, `agent` or
+    similar field had that key dropped from the log line altogether, which is indistinguishable from
+    the error not having the field; it now logs as `'[Object: Socket]'`. The instance's internals are
+    still never expanded.
+  - A field holding a function, a bigint or a symbol was passed through live. That leaked a closure
+    over server state into serialized output, and a bigint field made `JSON.stringify` of the result
+    throw `TypeError: Do not know how to serialize a BigInt`. These are now `'[Function: handler]'`,
+    `'[BigInt: 10]'` and `'[Symbol: s]'`.
+  - A circular `cause`, or an own field pointing back at the error itself, had its key dropped. Both
+    are now `'[Circular]'`.
+  - A `cause` chain longer than three levels ended with the fourth `cause` key simply absent. It is
+    now `'[Truncated]'`.
+
+  The markers are literal strings, so they show up wherever the serialized error does: a log line's
+  `err.agent` reads `[Object: Socket]`, and `_actions: someAction.error.someField` can now resolve to
+  `'[Object: Socket]'` rather than to the operator default.
+
+  `extractErrorProps` also takes a new `omit` option — `extractErrorProps(error, { omit: (error) =>
+['stack'] })`, called once per error node in the `cause` walk so a policy can key on the node it is
+  looking at. `serializer.serialize` accepts the same function as `omitErrorProps` and passes it down.
+  This is plugin and server API; app config is unaffected by it.
+
+- 3ead269: fix(helpers): Deep merges replace arrays instead of merging them index-by-index.
+
+  Wherever Lowdefy deep-merges configuration — block property defaults, `AxiosHttp` connection
+  and request config, theme tokens, i18n message catalogs — an array value is now treated as a
+  single value. A later array replaces an earlier one; it no longer merges element-by-element
+  at matching indices.
+
+  This is what most overrides already assumed, and it matches a plain object spread. Two
+  places where the old behaviour was visible:
+
+  - `RatingSlider`'s `CheckboxInput.options` — overriding it previously inherited the default
+    element's `label: 'N/A'`. It no longer does; specify the full option object.
+  - The layout blocks (`PageHeaderMenu`, `PageSiderMenu`, `PageSidebarLayout`, `MobileMenu`) —
+    if you set the same array (`selectedKeys`, `defaultOpenKeys`, `links`) on both `menu` and a
+    breakpoint variant such as `menuLg` or `menuMd`, the breakpoint value now replaces the base
+    value outright rather than overlaying it index-by-index.
+
+  Two smaller semantic changes come with this. A later `undefined` now replaces an earlier value
+  instead of being skipped — `mergeObjects([{ a: 1 }, { a: undefined }])` was `{ a: 1 }` and is now
+  `{ a: undefined }`, so a caller that means "no override" must omit the key rather than set it to
+  `undefined`. And a single-object merge no longer passes its input through: `mergeObjects([x]) === x`
+  was `true` and is now `false`, so memoise at the call site if a stable reference is needed across
+  renders. Both are reachable only from code that calls `mergeObjects` — plugin and connection authors
+  — not from YAML, which has no `undefined`; a config `null` merges as it always did.
+
+  Also fixed: merging no longer mutates its inputs. `AxiosHttp` previously wrote merged request
+  config back into the shared connection config, leaking values such as the HTTP agent between
+  requests.
+
+  `lodash.merge`, the last remaining lodash dependency in Lowdefy, has been removed.
+
+- 1a6223f: fix(helpers): Remove `set`'s `options` parameter; restore dotted-key resolution in `set`.
+
+  `set(target, path, value, options)` becomes `set(target, path, value)`. It read three options, none of
+  which had callers in the repo. `merge` merged shallowly, turned arrays into objects, and was silently
+  skipped when either side was not traversable — use `set(o, path, mergeObjects([get(o, path), value]))`
+  instead. `separator` and `split` chose the path separator, so `set({}, 'a/b', 1, { separator: '/' })`
+  wrote `{a: {b: 1}}` and now writes the literal key `{'a/b': 1}`. `.` is the only separator and `\.` the
+  only escape.
+
+  `set` now resolves a literal dotted key already present on the target rather than always creating a
+  nested twin: `set({'a.b': {c: 1}}, 'a.b.c', 2)` writes `{'a.b': {c: 2}}`. The strict segment still
+  wins when present.
+
+  One write that resolved before now resolves differently, and the old behaviour was a prototype
+  pollution bug: a path whose segment named an inherited member wrote _through_ it onto the prototype.
+  `set({}, 'toString.x', 1)` left the target empty and set `x` on `Object.prototype.toString`, visible
+  on every object in the process. It now writes `{toString: {x: 1}}` on the target and touches no
+  prototype.
+
+### Patch Changes
+
+- 79bbd84: fix(api): Redact server internals from every client-bound error, not just the 500 response.
+
+  Errors sent to a browser or an API caller now have `received` and `stack` stripped at
+  **every** level of the error, and a non-`Error` `cause` dropped unless the error is a
+  `UserError`. Two live leaks are closed:
+
+  - The 500 handlers stripped fields from the outermost error only, so `cause.stack` — and
+    the absolute server paths in its frames — reached production browsers.
+  - An endpoint result body (`callEndpoint` and the agent route) and a request response body
+    (`callRequest`) were not redacted at all. They carried `received`, which on the request
+    path holds the **evaluated** request properties, so a `_secret` resolved into a request
+    header crossed the wire at HTTP 200.
+
+  `source` is now guaranteed config-relative (`pages/home.yaml:5`, never `/var/task/...`),
+  and `configKey` is kept again: the browser deduplicates errors on `message:configKey`, so
+  stripping it collapsed two different errors that happened to share a message and silently
+  dropped the second.
+
+  **Breaking for app config that reads `error.received`.** Server-originated errors no longer
+  carry it, so `_actions` and `_request_details` expose `received` as `undefined`, and the
+  browser console no longer prints the `Received: <json>` line for them. This is deliberate —
+  the field can contain your own resolved secrets. The error `message` is unchanged, and
+  server logs still record `received` and `stack` in full in every environment, including dev.
+
+  Also fixes internal errors being logged twice. A `LowdefyInternalError` never gets a
+  `source`, and the browser used `source` to decide whether the server had already logged an
+  error, so it POSTed every internal error back to `/api/client-error` for a second log. The
+  browser now reads the `handled` flag the server sets when it logs.
+
+- 3ead269: fix(operators): Read fields inside an error value by dot path.
+
+  Dot-path reads stopped at an error, so a field on it silently returned the operator default even
+  though the value was there. Mapping a sign-in failure to a friendly message with `_actions:
+login.error.cause.code` always fell through to the default branch; it now reads the code.
+  `_actions: login.error.message` was the default and now returns the message.
+
+  Errors are the only kind of value this opens up. `Date`, `URL`, `Map`, `Set`, `RegExp`, `Promise`,
+  `Buffer` and typed arrays are still not traversable — a path into one returns the default, exactly
+  as before — and a class instance's own fields were already readable, so nothing changed there.
+
+  A lookup on an error reads the error's serializable form, which brings that form's limits with it:
+
+  - An own field holding a class instance or a function arrives as a marker string —
+    `'[Object: Socket]'`, `'[Function: handler]'` — not as a live object.
+  - The `cause` chain resolves three levels. `_actions: x.error.cause.cause.cause.message` reads; a
+    fourth `cause` is the literal string `'[Truncated]'`. Lowdefy's own wrap (`ActionError` →
+    `RequestError` → `ServiceError` → driver error) fits inside that.
+  - A non-enumerable own property is not readable. `AggregateError`'s `errors` array is
+    non-enumerable, so `_actions: x.error.errors` returns the default.
+
+  An error that is the _end_ of the path is unchanged — `_actions: x.error` still hands over the error
+  itself, not its extracted form. This entry only adds readable values; for the reads that this
+  release does change, see the dot-path resolution entry.
+
+  Also in this release, `@lowdefy/helpers`' `type` utility identifies `Date` and `Error` with
+  `instanceof` rather than duck-typing, so a `Date` or `Error` constructed in another JavaScript realm
+  (a `vm` context, iframe, or worker) is no longer detected as one; `type.isRegExp` is unchanged and
+  still detects a foreign `RegExp`. Lowdefy itself never constructs a value in another realm, so this
+  is reachable only from a custom plugin that introduces one. No `type` predicate was removed.
+  `type.typeOf` returns coarser answers for four kinds of value: a generator function is now
+  `'function'` (was `'generatorfunction'`), a generator object and an `arguments` object are now
+  `'object'` (were `'generator'` and `'arguments'`), and the map, set, array and string iterators are
+  all now `'iterator'` (were `'mapiterator'`, `'setiterator'`, `'arrayiterator'` and
+  `'stringiterator'`). `typeOf(Buffer.from('x'))` still returns `'buffer'`.
+
+  - @lowdefy/errors@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

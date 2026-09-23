@@ -74,12 +74,12 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     return false;
   }
 
+  // The verifier runs before the routine, so it evaluates against a frame of its
+  // own: the webhook payload, with no routine state or step results yet.
   const { connectionProperties, requestProperties } = evaluateRequestOperators(context, {
     connectionConfig,
-    payload,
     requestConfig,
-    state: {},
-    steps: {},
+    routineContext: { payload, state: {}, steps: {} },
   });
 
   try {

@@ -1,5 +1,12 @@
 # @lowdefy/block-dev-e2e
 
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [b09ad62]
+  - @lowdefy/e2e-utils@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

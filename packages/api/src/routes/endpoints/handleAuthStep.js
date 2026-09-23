@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
 import authorizeRole from '../auth/organizations/authorizeRole.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 import resolveStepOrganizationId from './resolveStepOrganizationId.js';
 
 // Refusals name what was asked for, because "refused" with no subject is the
@@ -30,7 +31,7 @@ function describePermissions(permissions) {
 }
 
 async function handleAuthStep(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_auth_step',
@@ -40,13 +41,9 @@ async function handleAuthStep(context, routineContext, { step }) {
   // Evaluate operators in step.properties before resolving the step type, so
   // a malformed properties block surfaces the same way it does for every
   // other step type.
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   const stepFn = context.steps?.[step.type];

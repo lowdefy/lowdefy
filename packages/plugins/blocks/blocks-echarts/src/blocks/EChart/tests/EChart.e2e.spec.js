@@ -102,4 +102,24 @@ test.describe('EChart Block', () => {
     const display = getBlock(page, 'echart_click_display');
     await expect(display).toHaveText('Chart clicked');
   });
+
+  // ============================================
+  // THEME TESTS
+  // ============================================
+
+  test('theme changes after mount reach the chart', async ({ page }) => {
+    const block = getBlock(page, 'echart_theme_update');
+    const svg = getSvg(page, 'echart_theme_update');
+    await expect(svg).toBeVisible();
+
+    // Axis labels are painted with the theme's categoryAxis.axisLabel.color.
+    await expect(block.locator('text[fill="#0000ff"]').first()).toBeVisible();
+
+    // Clicking a bar swaps the theme through state.
+    const bar = block.locator('path[fill="#5070dd"]').first();
+    await expect(bar).toBeVisible();
+    await bar.click({ force: true });
+
+    await expect(block.locator('text[fill="#ff0000"]').first()).toBeVisible();
+  });
 });

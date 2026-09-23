@@ -1,5 +1,7 @@
 # @lowdefy/connection-mcp
 
+## 5.6.0
+
 ## 5.5.1
 
 ## 5.5.0

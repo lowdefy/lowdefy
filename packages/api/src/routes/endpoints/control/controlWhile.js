@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 import runRoutine from '../runRoutine.js';
 
 async function controlWhile(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { endpointId, logger } = context;
 
   if (!control[':do']) {
     throw new Error(`Invalid :while in endpoint "${endpointId}" - missing :do.`);
@@ -31,13 +31,9 @@ async function controlWhile(context, routineContext, { control }) {
   while (true) {
     // The condition is evaluated fresh every iteration, so it sees the state and step
     // results the body wrote. Hoisting it out of the loop makes the loop infinite.
-    const evaluated = evaluateOperators({
+    const evaluated = evaluateRoutineOperators(context, routineContext, {
       input: control[':while'],
-      items,
       location: control['~k'] ?? ':while',
-      payload: routineContext.payload,
-      state: routineContext.state,
-      steps: routineContext.steps,
     });
 
     logger.debug({

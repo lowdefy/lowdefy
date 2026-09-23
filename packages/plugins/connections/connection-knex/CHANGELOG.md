@@ -1,5 +1,23 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- 03bbcf1: fix(connection-knex): Pass a numeric port to the database driver.
+
+  A port taken from a connection string or a `_secret` reached the driver as a string, which `mssql` (tedious) rejects with `The "config.options.port" property must be of type number`. The Knex connection now coerces a string port to a number for every client, and fails with a `ConfigError` when the port is not a valid port number.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/errors@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

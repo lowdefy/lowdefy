@@ -38,6 +38,12 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
+    // Operators that evaluate nested config (_function) re-enter the parser. Binding the frame here
+    // means they only pass what they change, so no frame field can be dropped on the way in.
+    const parser = {
+      parse: (callOptions) =>
+        this.parse({ actions, arrayIndices, event, location, ...callOptions }),
+    };
     const {
       apiResponses,
       basePath,
@@ -89,7 +95,7 @@ class WebParser {
           operators: this.operators,
           pageId,
           params,
-          parser: this,
+          parser,
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,

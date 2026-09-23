@@ -18,9 +18,9 @@ jobs:
     environment: publish
     if: github.repository == 'lowdefy/lowdefy'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: pnpm
@@ -44,9 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
 
-      - name: Package VS Code Extention
-        run: pnpm --filter lowdefy-vscode package
-
       - name: Generate release notes
         if: steps.changesets.outputs.published == 'true'
         id: release-notes
@@ -64,6 +61,12 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
+      - name: Tag release commit
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          git tag ${{ steps.release-notes.outputs.version }} ${{ github.sha }}
+          git push origin ${{ steps.release-notes.outputs.version }}
+
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
         if: steps.changesets.outputs.published == 'true'
@@ -72,6 +75,4 @@ jobs:
           name: ${{ steps.release-notes.outputs.version }}
           draft: true
           body_path: /tmp/release-notes.md
-          files: |
-            lowdefy-vscode-*.vsix
           target_commitish: ${{ github.sha }}

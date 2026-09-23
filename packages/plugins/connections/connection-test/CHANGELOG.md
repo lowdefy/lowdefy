@@ -1,5 +1,11 @@
 # @lowdefy/connection-test
 
+## 5.6.0
+
+### Patch Changes
+
+- @lowdefy/errors@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

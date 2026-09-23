@@ -1,5 +1,12 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [6785e0e]
+  - @lowdefy/nunjucks@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

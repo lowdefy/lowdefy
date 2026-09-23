@@ -190,3 +190,51 @@ blocks:
               - true
           then: Chart clicked
           else: ''
+
+  # ============================================
+  # THEME TESTS
+  # ============================================
+
+  # A theme that changes after the chart has mounted must reach ECharts. The SVG
+  # renderer writes resolved colours into the DOM, so the axis label fill can be
+  # read directly; clicking a bar swaps the theme through state.
+  - id: echart_theme_update
+    type: EChart
+    properties:
+      init:
+        renderer: svg
+      theme:
+        _if:
+          test:
+            _eq:
+              - _state: echart_theme_swapped
+              - true
+          then:
+            categoryAxis:
+              axisLabel:
+                color: '#ff0000'
+          else:
+            categoryAxis:
+              axisLabel:
+                color: '#0000ff'
+      option:
+        xAxis:
+          type: category
+          data:
+            - Mon
+            - Tue
+            - Wed
+        yAxis:
+          type: value
+        series:
+          - data:
+              - 120
+              - 200
+              - 150
+            type: bar
+    events:
+      click:
+        - id: swap_theme
+          type: SetState
+          params:
+            echart_theme_swapped: true
