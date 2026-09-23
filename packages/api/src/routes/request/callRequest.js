@@ -56,7 +56,14 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     connectionConfig,
     requestConfig,
     // A page request runs outside any routine, so it evaluates against an empty frame.
-    routineContext: { arrayIndices: [], items: {}, payload: requestPayload, state: {}, steps: {} },
+    routineContext: {
+      arrayIndices: [],
+      error: null,
+      items: {},
+      payload: requestPayload,
+      state: {},
+      steps: {},
+    },
   });
 
   checkConnectionRead(context, {

@@ -1,5 +1,157 @@
 # Change Log
 
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- 60401aa: feat: Add `_app` operator and structured app metadata.
+
+  The `_app` operator reads the app's declared metadata — `slug`, `name`,
+  `version`, `description`, `license`, `lowdefyVersion`, `gitSha`. It
+  resolves both at build time and at runtime (client and server) with
+  identical values, including inside `modules-mongodb` request filters and
+  inside `_js` functions via a bound `lowdefyApp(p)` callable. For
+  build-time positions nested inside another `_build.*` operator (e.g. a
+  `_build.object.fromEntries` map key), use the `_build.app` form so it
+  resolves in time.
+
+  A referenced `slug` is mandatory: `_app: slug` (or `_build.app: slug`)
+  fails the build when `slug` is not declared, guarding against a `null`
+  slug silently scoping namespaced data. The object form with an explicit
+  `default` is the opt-out. Other fields return `null` when unset, and an
+  app that never references `slug` need not declare it.
+
+  The root `lowdefy.yaml` schema gains two new optional fields:
+
+  - `slug` — a kebab-case identifier (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`),
+    validated at build time. Build fails with a clear error if invalid.
+  - `description` — a free-form string.
+
+  Root metadata fields (`slug`, `name`, `description`, `version`,
+  `license`, `lowdefy`) accept literals and `_build.*` operators only;
+  `_ref`, `_var`, and static `_` operators are no longer resolved in these
+  positions and fail the build with a clear error naming the field. Use
+  `_build.env` for a deploy-time slug or name.
+
+  `gitSha` resolves through a fallback chain: `LOWDEFY_GIT_SHA` env var
+  when set non-empty → `git rev-parse HEAD` → `null`. This lets apps
+  deployed without `.git` (Docker, Vercel, Netlify, Render, hermetic
+  PaaS sandboxes) pin the SHA explicitly by mapping their platform's
+  commit env var via shell expansion in the build command.
+
+  Build emits a new `appMeta.json` artifact alongside `app.json`. The
+  existing `app.git_sha` field is removed; consumers (internal telemetry)
+  read `gitSha` from `appMeta` instead.
+
+  See the `_app` operator reference for the full key set and examples.
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- 6446ae6: fix: Fix dynamic page navigation and dev server port detection.
+
+  - **lowdefy (CLI)**: Port availability checks now probe loopback addresses (`127.0.0.1`, `::1`) in addition to the wildcard bind, so `dev`/`start` no longer report a port held by another local process as free.
+  - **@lowdefy/client**: Fixed a blank page that could appear when navigating to a page with server-resolved dynamic content — the page config is now memoized correctly and the page tree remounts when new dynamic content is resolved.
+  - **@lowdefy/helpers**: Added `getOperatorType`, a small shared utility for detecting operator objects in config.
+  - **@lowdefy/node-utils**: Added `findAvailablePort` and `isPortAvailable` utilities (moved from the CLI) for reuse across dev tooling.
+
+- 16fdeb8: fix(client): Make the `Link` action honour `href`.
+
+  `createLink` routes `href` to `newOriginLink`, but the action's `newOriginLink` in
+  `setupLink.js` only ever read `url` — so `{ type: Link, params: { href: '/some/path' } }`
+  navigated to the literal string `"undefined"`. The anchor renderer used for `Link` blocks
+  (`createLinkComponent.js`) already prefers `href` over `url`; this brings the action to the
+  same precedence, and `href` is used verbatim: no protocol added, no `urlQuery` appended.
+
+  That verbatim handling is the point of having the parameter at all. `url` means an external
+  address and gains an `https://` prefix when the value has no scheme, which turns a
+  root-relative `/reports?id=1` into a request for a host named `reports`. `href` is how you
+  link to a same-origin path, a fragment, or any address that must be passed through as
+  written — so the fix removes the need to work around `url`'s prefixing.
+
+  `href` was also missing from the `Link` action docs, which is presumably how the gap went
+  unnoticed. Documented alongside the fix.
+
+- 53a36ed: feat(actions): Link action accepts `replace` and `scroll`.
+
+  A same-page `Link` that only reflects state into the `urlQuery` no longer has to jump the page to
+  the top or push a history entry per click: `scroll: false` keeps the current scroll position and
+  `replace: true` swaps the current history entry instead of pushing one. The router and the `<Link>`
+  block component already supported both; the Link action's same-origin path now forwards them too.
+
+- Updated dependencies [da0c62c]
+- Updated dependencies [37c8c14]
+- Updated dependencies [0dccf40]
+- Updated dependencies [e0a06a2]
+- Updated dependencies [efd1967]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [ae5f618]
+  - @lowdefy/logger@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/engine@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/layout@6.0.0
+  - @lowdefy/block-utils@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

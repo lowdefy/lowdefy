@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { UserError } from '@lowdefy/errors';
 
 import prepareAgent from './prepareAgent.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -50,7 +51,7 @@ const endpointConfig = {
   routine: { ':return': { ok: true } },
 };
 
-function createContext() {
+function createContext({ mode } = {}) {
   const readConfigFile = jest.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
@@ -63,6 +64,7 @@ function createContext() {
     connections: {
       Anthropic: { create: jest.fn().mockReturnValue({ provider: 'mock-provider' }), requests: {} },
     },
+    mode,
     user: { id: 'user_1' },
   });
   context.agents = { ClaudeAgent: { resolver: jest.fn(), schema: {} } };
@@ -121,3 +123,27 @@ test('prepareAgent callEndpoint enforces the endpoint depth cap', async () => {
     'Endpoint call depth exceeded maximum of 10.'
   );
 });
+
+// The agent stream's error text reaches the end user and AgentChat config, which see the
+// same thing in dev and prod.
+test.each(['dev', 'prod'])(
+  'prepareAgent wireErrorMessage returns the generic message for a foreign error in %s',
+  async (mode) => {
+    const context = createContext({ mode });
+    const { resolverContext } = await prepareAgent(context, { agentId: 'my-agent', agentContext });
+    expect(resolverContext.wireErrorMessage(new Error('connect ECONNREFUSED 10.0.0.5:5432'))).toBe(
+      'Something went wrong.'
+    );
+  }
+);
+
+test.each(['dev', 'prod'])(
+  "prepareAgent wireErrorMessage returns the author's message for a UserError in %s",
+  async (mode) => {
+    const context = createContext({ mode });
+    const { resolverContext } = await prepareAgent(context, { agentId: 'my-agent', agentContext });
+    expect(resolverContext.wireErrorMessage(new UserError('Order is already closed.'))).toBe(
+      'Order is already closed.'
+    );
+  }
+);

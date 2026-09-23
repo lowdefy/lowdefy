@@ -1,5 +1,609 @@
 # Change Log
 
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- a647873: feat: Agent feedback loop, scaffolding, screenshots, and llms.txt
+
+  Building on the dev server docs/MCP endpoint, agents now get a full edit-verify loop and one-command project setup.
+
+  **Feedback loop (`@lowdefy/server-dev`, `@lowdefy/build`)**
+
+  - The dev build now persists its result to `build/buildStatus.json`, and `GET /lowdefy-docs/build-status` (or the `lowdefy_build_status` MCP tool) returns the current build errors and warnings — with source file and line — plus recent browser runtime errors. Edit config, ask what broke, fix it.
+  - `GET /lowdefy-docs/page-config/{pageId}` / `lowdefy_get_page_config`: the fully built page config, or its structured build errors.
+  - `GET /lowdefy-docs/find/{id}` / `lowdefy_find_config`: which yaml file (and line) defines a page, block, or request id.
+
+  **Visual verification (`@lowdefy/server-dev`)**
+
+  - `GET /lowdefy-docs/screenshot/{pageId}` / `lowdefy_screenshot_page`: PNG of the rendered page via headless Chromium (playwright-core), so agents can see what they built.
+
+  **Scaffolding (`@lowdefy/server-dev`, `lowdefy` CLI)**
+
+  - `lowdefy_scaffold_page` MCP tool creates a canonical new page file.
+  - New `lowdefy agent-setup` CLI command writes `.mcp.json`, a Claude Code skill, and an `AGENTS.md` section into your project (merge-safe).
+
+  **Docs reach**
+
+  - docs.lowdefy.com now serves every docs page as raw markdown at `/md/{section}/{slug}.md`, plus `llms.txt` and `llms-full.txt` for AI crawlers.
+
+- c188656: feat: Scheduled API endpoints (cron) on Vercel.
+
+  `Api` and `InternalApi` endpoints can now declare `schedules` to run their routine on a timer:
+
+  ```yaml
+  id: purge-stale-conversations
+  type: Api
+  schedules:
+    - cron: '0 6 * * *'
+      payload: { mode: full }
+    - cron: '*/15 * * * *'
+      payload: { mode: incremental }
+  routine:
+    - id: purge
+      type: MongoDBDeleteMany
+      connectionId: conversations
+      properties:
+        filter: { updatedAt: { $lt: { _payload: cutoff } } }
+  ```
+
+  - **build**: `schedules` is validated (Vercel cron syntax, unique crons per endpoint, object
+    payloads) and passed through to the endpoint artifact; a `build/schedules.json` manifest is
+    emitted for scheduled endpoints.
+  - **api/servers**: a new `/api/cron/*` route runs a scheduled endpoint's routine as a system context
+    (no user session — `_user` is `undefined`), resolving the payload from the firing schedule via the
+    `x-vercel-cron-schedule` header, and secured by the `CRON_SECRET` env var (fails closed).
+  - **cli**: the Vercel deployment now uses the Build Output API. `lowdefy init-vercel` scaffolds a
+    `vercel.build.sh` and a new `lowdefy vercel-output` command assembles `.vercel/output/`
+    (static + one `api.func` + `config.json`), generating the `crons` array from the declared schedules
+    on every deploy — nothing is committed by hand.
+
+  This migrates how all Lowdefy Vercel apps deploy; re-run `lowdefy init-vercel` (or update the
+  `deploy/` files by hand) after upgrading. Cron jobs run in UTC and are subject to Vercel plan limits
+  (Hobby: daily only; Pro: per-minute).
+
+- b496a77: feat: AI in API routines — one-shot LLM requests and CallAgent steps
+
+  **One-shot LLM request types (`@lowdefy/connection-anthropic`, `@lowdefy/connection-openai`, `@lowdefy/connection-google`, `@lowdefy/connection-ai-gateway`)**
+
+  All AI provider connections now provide `GenerateText` and `GenerateObject` request types — single model calls usable as API routine steps and page requests. The type names are shared across providers, so switching providers only means changing the `connectionId`.
+
+  - `GenerateText` generates text from a prompt and returns `{ text, reasoningText, finishReason, usage }`.
+  - `GenerateObject` generates structured data matching a JSON Schema and returns `{ object, finishReason, usage }` — ideal for classify, extract, and routing decisions inside routines.
+
+  ```yaml
+  routine:
+    - id: classify
+      type: GenerateObject
+      connectionId: claude
+      properties:
+        model: claude-haiku-4-5
+        prompt:
+          _payload: ticket_text
+        schema:
+          type: object
+          properties:
+            category: { type: string }
+  ```
+
+  **CallAgent routine step (`@lowdefy/api`, `@lowdefy/build`, `@lowdefy/ai-utils`)**
+
+  API endpoint routines can now run an agent to completion with the new `CallAgent` step. The agent runs headlessly — no chat UI, no streaming — looping through its tools until done, and stores `{ text, finishReason, usage, toolCalls, toolResults }` in `_step`.
+
+  ```yaml
+  routine:
+    - id: research
+      type: CallAgent
+      properties:
+        agentId: research_agent
+        prompt: Summarize yesterday's signups and flag anomalies.
+  ```
+
+  - Tools marked `confirm: true` auto-execute in headless runs (the build emits a warning — there is no client to approve them).
+  - Agent server hooks still fire; `onFinish` `dataParts` are ignored since there is no stream.
+  - Agent tool and hook endpoint calls now count toward the endpoint call depth cap of 10, so recursive agent/endpoint configurations terminate with an error.
+  - The build validates that a static `agentId` on a `CallAgent` step references an existing agent.
+
+- 60401aa: feat: Add `_app` operator and structured app metadata.
+
+  The `_app` operator reads the app's declared metadata — `slug`, `name`,
+  `version`, `description`, `license`, `lowdefyVersion`, `gitSha`. It
+  resolves both at build time and at runtime (client and server) with
+  identical values, including inside `modules-mongodb` request filters and
+  inside `_js` functions via a bound `lowdefyApp(p)` callable. For
+  build-time positions nested inside another `_build.*` operator (e.g. a
+  `_build.object.fromEntries` map key), use the `_build.app` form so it
+  resolves in time.
+
+  A referenced `slug` is mandatory: `_app: slug` (or `_build.app: slug`)
+  fails the build when `slug` is not declared, guarding against a `null`
+  slug silently scoping namespaced data. The object form with an explicit
+  `default` is the opt-out. Other fields return `null` when unset, and an
+  app that never references `slug` need not declare it.
+
+  The root `lowdefy.yaml` schema gains two new optional fields:
+
+  - `slug` — a kebab-case identifier (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`),
+    validated at build time. Build fails with a clear error if invalid.
+  - `description` — a free-form string.
+
+  Root metadata fields (`slug`, `name`, `description`, `version`,
+  `license`, `lowdefy`) accept literals and `_build.*` operators only;
+  `_ref`, `_var`, and static `_` operators are no longer resolved in these
+  positions and fail the build with a clear error naming the field. Use
+  `_build.env` for a deploy-time slug or name.
+
+  `gitSha` resolves through a fallback chain: `LOWDEFY_GIT_SHA` env var
+  when set non-empty → `git rev-parse HEAD` → `null`. This lets apps
+  deployed without `.git` (Docker, Vercel, Netlify, Render, hermetic
+  PaaS sandboxes) pin the SHA explicitly by mapping their platform's
+  commit env var via shell expansion in the build command.
+
+  Build emits a new `appMeta.json` artifact alongside `app.json`. The
+  existing `app.git_sha` field is removed; consumers (internal telemetry)
+  read `gitSha` from `appMeta` instead.
+
+  See the `_app` operator reference for the full key set and examples.
+
+- 37c8c14: feat: `auth.strategies` — apiKey and JWT header authentication for API callers.
+
+  - New `auth.strategies` config block: apiKey (default `X-API-Key` header) and jwt strategies, each granting the caller the strategy's `roles`.
+  - MCP and service clients that cannot hold a session cookie authenticate per request; a matched strategy yields a caller (`apiKey:{strategyId}:{keyId}`) that flows through the existing authorization and `_user` machinery.
+  - Unauthenticated calls to role-gated endpoints now return 401 (`AuthenticationError`) instead of a masked error.
+
+- a6daf0b: feat(build): `state-refs` check is now a warning, never a prod-build error.
+
+  The check that flags a `_state` reference whose top-level key has no matching input block on the
+  page (`checkSlug: state-refs`) previously warned in dev but **failed production builds**
+  (`prodError: true`). State can be created at runtime — a custom action calling `setState`, a
+  dynamic `SetState` wrapper — which the build cannot see statically, so the check is a heuristic and
+  a miss can be a false positive. Failing a production build on a false positive is worse than the
+  missed check, so it now **warns in both dev and prod** and never fails the build.
+
+  Suppress the warning for a known-good reference with `~ignoreBuildChecks: [state-refs]` on the
+  reference.
+
+- 0dccf40: feat: Add `:if`, `:switch` and `:return` controls to client event action lists.
+
+  Event action lists now support routine-style control flow, using the same grammar as API routines:
+
+  - `:if` / `:then` / `:else` gates a group of actions on a single condition, instead of repeating the same `skip` expression on every action.
+  - `:switch` runs the `:then` list of the first truthy `:case`; later cases are never evaluated, and an optional `:default` runs when no case matches.
+  - `:return` ends the whole event successfully — replacing the early-`Throw` workaround — without running the event's `catch` actions.
+
+  Controls can nest and work in both `try` and `catch` lists. Actions not executed for a control-flow reason (untaken branches, unmatched cases, actions after a `:return`) are reported as skipped, so `_actions` lookups and action indices are unchanged for existing configs. The build validates control shape and enforces action id uniqueness across all branches.
+
+  Note: an event action carrying a stray `:if`, `:switch` or `:return` key (previously a schema warning at build and ignored at runtime) is now treated as a control and fails the build with a clear error.
+
+- 7ce6e36: feat: Per-environment cron schedules, forwarded from the production deployment.
+
+  Vercel fires cron jobs only on the production deployment, so staging and other environments never
+  ran their schedules. Declare the deployment environments once and Lowdefy registers every
+  environment's schedules on production, forwarding the ones for other environments to that
+  environment's own `/api/cron/<endpointId>` as a fire-and-forget ping:
+
+  ```yaml
+  config:
+    cron:
+      environments:
+        production: {} # no url: the deployment Vercel fires crons on
+        staging:
+          url: https://staging.example.com
+          secret: STAGING_CRON_SECRET # Lowdefy secret holding staging's CRON_SECRET
+  ```
+
+  `schedules` can then be keyed by environment, with a `default` every other environment inherits and
+  `[]` turning crons off — including through module vars, so a module's
+  `schedules: { _module.var: tick_schedule }` needs no change:
+
+  ```yaml
+  schedules:
+    default:
+      - cron: '*/5 * * * *'
+    staging:
+      - cron: '0 * * * *'
+    develop: []
+  ```
+
+  - **build**: validates `config.cron` (exactly one environment without `url`; `url` + `secret` on the
+    others; `enabled: false` registers nothing), resolves keyed schedules onto every declared
+    environment, and emits `schedules.json` entries with `environment` and `forward`.
+  - **api/servers**: a new `/api/cron-forward/<environment>/<endpointId>` route (secured by
+    `CRON_SECRET`) pings the target environment with its own `CRON_SECRET` read from
+    `LOWDEFY_SECRET_<secret name>` on the production deployment (fails closed when unset) and answers
+    immediately; `/api/cron/*` honours the `x-lowdefy-cron-environment` header forwarded requests carry.
+  - **cli**: `lowdefy vercel-output` registers forwarded schedules as `/api/cron-forward/...` cron jobs.
+
+  Existing apps without `config.cron` are unaffected.
+
+- 0407d43: feat(build): Deferred-content records — one registry for all module deferral.
+
+  Module deferral (component bodies, menu links, var defaults, entry
+  vars/connections) moves from fragile in-tree markers onto a build-level record
+  registry with demand-driven, wait-graph-guarded resolution. Entry order no
+  longer matters for mutually-embedding modules, cycle errors name the actual
+  value chain (e.g. `a:consumerVars.x → b:vars.y.default → a:consumerVars.x`),
+  and the entry state machine, `~deferredModuleRef`/`~deferredFrom` markers, and
+  per-context resolve chains are deleted. A new `deferredRecords.json` build
+  artifact carries record bodies for JIT; the dev server hydrates the registry
+  from it.
+
+  User-visible changes:
+
+  - New config errors: `~deferred` is a reserved key; `_module.var` in manifest
+    headers or component/menu ids errors (export names are module-static); `_var`
+    inside an operator-generated `components:` section errors (var-free operator
+    composition keeps working).
+  - Module ref errors now list available component/menu ids and distinguish a
+    missing export from an empty one.
+  - Lazy semantics: a broken var default or a cyclic menu that nothing consumes
+    no longer fails the build — errors surface at consumption.
+
+  Also includes the buildRefs cleanups: single marker-preserving clone
+  (`cloneWithMarkers`), no redundant clones or duplicate `lowdefy.yaml`
+  re-resolution in the app pass, `validateModuleSecrets` walks instead of
+  cloning, and a shared `expectTerminates` test guard.
+
+- 28cb944: feat: Dev server docs and MCP endpoint for AI coding agents
+
+  The dev server now always serves documentation for everything installed in your project — every block, operator, action, connection and request type, from core plugins and your own local plugins — plus the full Lowdefy docs as markdown.
+
+  **Docs API and MCP endpoint (`@lowdefy/server-dev`)**
+
+  - Plain GET routes under `/lowdefy-docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
+  - An MCP endpoint (streamable HTTP) at `/lowdefy-docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
+  - The `/lowdefy-docs` page path prefix is now reserved in dev.
+
+  **Discovery build artifacts (`@lowdefy/build`)**
+
+  - Dev builds now write `plugins/availableTypes.json` (every installed type, used or not) and `plugins/connectionSchemas.json` + `plugins/requestSchemas.json` (collected from connection definitions).
+  - Fixed custom/local plugin schemas being silently missing from all schema maps — plugin modules now also resolve from the server directory.
+
+  **Docs content package (`@lowdefy/docs-content`)**
+
+  - New package shipping the Lowdefy docs extracted as markdown with a manifest, generated from the docs app build (`pnpm docs:content`).
+
+  **Block plugins**
+
+  - Block packages now publish their `gallery.yaml`/`examples.yaml`/`tests.yaml` files in `dist/`, so the docs API can serve real examples.
+
+- e0a06a2: feat: Dynamic page content — server-resolved blocks at page load.
+
+  Pages can now include a `Dynamic` block whose content is resolved on the server at page load by an api endpoint routine. The routine returns block config; the server builds and validates it, splices it into the page, and the client renders the result like any other page.
+
+  **`Dynamic` block (`@lowdefy/blocks-basic`)**
+
+  - New container block configured with `properties.endpointId`, static `params`, an optional `fallback` slot rendered when resolution fails, and `required: true` to fail the page load instead.
+  - `properties.types` declares extra block, action and operator types the endpoint may return, so build includes them in the client bundle.
+
+  **Server resolution (`@lowdefy/api`, `@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  - The endpoint is called in-process during page get with a payload of `{ params, pageId, blockId, urlQuery }` — the page request's query string is forwarded on both initial loads and SPA navigations.
+  - Returned blocks are validated before reaching the client: types must be in the client bundle, block properties are checked against plugin schemas (operator values are exempt), and `Request` and `CallAPI` action references are verified.
+  - Nested `Dynamic` blocks resolve recursively up to 5 levels; endpoint auth is enforced per resolution.
+  - Client-evaluated operators in returned config are escaped with one extra underscore (`__state` → `_state`), the same deferral convention as `_function` args — a plain `_state` evaluates against the routine's own state.
+
+  **Build (`@lowdefy/build`)**
+
+  - Validates `Dynamic` block config, flags dynamic pages in the page artifact, and bundles declared types.
+  - New `@lowdefy/build/dynamic` entry builds and validates runtime block config with the same pipeline as static pages.
+
+  **Engine (`@lowdefy/engine`)**
+
+  - Dynamic pages build a fresh context on every navigation, since the server may resolve different content per request.
+
+- 58ae85e: feat: Email branding defaults from app config, and relative logo paths.
+
+  Notification email branding (`app.email`) now inherits from your existing app config when not set explicitly:
+
+  - `companyName` defaults to the app's root `name:`. Note this means apps with a `name:` now render a company name header in emails by default — set `companyName: ''` to opt out.
+  - `primaryColor` defaults to `theme.antd.token.colorPrimary`, so branded apps get brand-colored email buttons without repeating the color.
+
+  The email `logo` can now be an app-relative path to a `public/` asset (for example `logo: /logo-light-theme.png`). It resolves against the `serverUrl` passed to the `RenderNotification` step, so one config works across environments. When no server URL is available — including the `lowdefy emails` preview — the logo is omitted and the header falls back to the `companyName` text instead of a broken image.
+
+- 742a900: feat: Email notification rendering
+
+  Lowdefy apps can now define notifications in config: branded emails rendered from framework templates, delivered over any SMTP provider. The framework renders; storing and sending are composed in YAML routines — so any database works through its normal request types, and apps or modules own the notification record.
+
+  **`notifications:` config section (`@lowdefy/build`, `@lowdefy/api`)**
+
+  - New root section where the template is the type: `{ id, type, properties }` with per-notification `theme` overrides and `testData`
+  - Template properties are nunjucks data templates — `{{ task.title }}` interpolates against the pipeline's data with no operator syntax; interpolated values are inert (can never inject markup or links)
+  - New `RenderNotification` API routine step: renders one data item per call and returns `{ subject, title, preview, html, text, data }` where `data` is the link-resolved item — inserting the record, deduplicating, sending and updating send results are plain routine steps (`:for`, requests, `_uuid`)
+  - New `app.email` theme settings (logo, companyName, primaryColor, signature, footer)
+  - Link resolution is driven by the step's `serverUrl`, `landingPage` and `recordId` properties: `{ pageId, urlQuery }` links resolve to direct page URLs, or through a landing page (`?_id=<recordId>&option=<dotpath>`) that can mark the record read before redirecting (for example the modules-mongodb notifications module's link page)
+
+  **Email templates (`@lowdefy/email-templates`)**
+
+  - Three React Email templates: `NotificationEmail` (message, metadata table, quoted comment, CTA button, action list), `DigestEmail` (item roundups) and `AlertEmail` (status-toned notices)
+  - Sections render only when configured; markdown in `message` with raw HTML disabled
+  - Custom templates are plain React Email plugin packages under the new `notifications` type category
+
+  **SMTP connection (`@lowdefy/connection-smtp`)**
+
+  - New `SMTP` connection wrapping nodemailer — works with SES, Postmark, Mailgun, Resend and self-hosted servers; `SMTPMailSend` request type
+  - Environment-aware delivery `filter` (`replaceAddress` catch-all, domain `allowlist`, `regex`) applied to every send
+
+  **SendGrid (`@lowdefy/connection-sendgrid`)**
+
+  - Supports the same delivery `filter` and default `replyTo`; interchangeable with SMTP wherever a routine sends notification emails
+  - Array requests now send per message; request-level `templateId` is no longer overridden by an unset connection `templateId`
+
+  **Preview CLI (`lowdefy`)**
+
+  - New `lowdefy emails` command: builds the app, generates a preview per notification from its `testData`, and opens React Email's preview server; warns when a template data key is missing from `testData`
+
+  Builds also now validate that `CallAgent` steps reference existing agents — previously this check existed but never ran, so broken agent references that used to build will now fail with a config error.
+
+- 51c3008: feat: Endpoint execution controls for serverless deployments.
+
+  - `config.vercel { maxDuration, memory }` in `lowdefy.yaml` flows into the generated Vercel function config (default stays 60s).
+  - `async: true` on Api/InternalApi endpoints responds `{ accepted: true }` immediately and runs the routine in the background (kept alive via the platform request context; outcome observable through logs).
+  - `detached: true` on CallApi steps fire-and-forgets the target through the new `POST /api/detached/<endpointId>` route (CRON_SECRET transport auth), running it in its own invocation with a fresh duration budget.
+  - `webhook: true` on endpoints turns them into third-party webhook receivers on the standard `/api/endpoints` route: raw `{ body, query, headers }` payload, verbatim response body, system context — caller auth is the routine's first step. Non-webhook endpoints are unchanged.
+
+- 6730996: feat: Provider-neutral file storage — upload and download files to S3-compatible providers, Google Cloud Storage, and Azure Blob Storage.
+
+  **Generic file blocks (`@lowdefy/blocks-files`, new)**
+
+  - New `Upload`, `UploadPhoto`, `UploadDragger`, and `Download` blocks that work with any storage provider. Upload blocks call an upload-policy request by id (`uploadPolicyRequestId`) and support both POST form uploads (S3, R2, MinIO, GCS) and PUT body uploads (Azure SAS), with upload progress on both.
+  - `emitFileContent: true` reads the file in the browser and emits `{ name, size, type, content }` (base64) as the block value and `onChange` event, for storing files through an API endpoint routine with a server-side write request.
+
+  **S3-compatible providers (`@lowdefy/plugin-aws`)**
+
+  - `AwsS3Bucket` connections accept `endpoint` and `forcePathStyle`, unlocking Cloudflare R2, MinIO, DigitalOcean Spaces, Backblaze B2, and Wasabi with a one-line config change.
+  - `AwsS3PresignedGetObject` returns a stable, non-expiring public URL when the request sets `public: true`; the connection-level `publicUrlBase` overrides the constructed URL for CDN domains.
+  - New `AwsS3PutObject` write and `AwsS3GetObject` read requests store and read base64 object content from endpoint routines or page requests, so routines can process file content in steps.
+  - The `S3UploadButton`, `S3UploadPhoto`, `S3UploadDragger`, and `S3Download` blocks are now deprecated aliases of the generic blocks — existing apps keep working unchanged.
+
+  **Google Cloud Storage (`@lowdefy/plugin-gcp`, new)**
+
+  - `GoogleCloudStorageBucket` connection with `GcsSignedPostPolicy`, `GcsSignedGetUrl`, `GcsGetObject`, and `GcsPutObject` requests.
+
+  **Azure Blob Storage (`@lowdefy/plugin-azure`, new)**
+
+  - `AzureBlobContainer` connection with `AzureBlobUploadSas`, `AzureBlobDownloadSas`, `AzureBlobGet`, and `AzureBlobPut` requests.
+
+  **Editor and chat uploads (`@lowdefy/blocks-tiptap`, `@lowdefy/blocks-antd-x`)**
+
+  - Tiptap editors and AgentChat attachments now upload through the shared provider-neutral flow. New `uploadPolicyRequestId` and `downloadPolicyRequestId` properties replace `s3PostPolicyRequestId` (kept as a deprecated alias). Inline image and attachment URLs resolve through the download request when configured.
+
+  **Servers (`@lowdefy/server`, `@lowdefy/server-dev`)**
+
+  - `/api/endpoints/*` request bodies are capped at 10 MiB (matching the agent route), bounding base64 file payloads sent via `CallAPI`.
+
+  **Codemod (`@lowdefy/codemods`)**
+
+  - Optional `s3-blocks-to-file-blocks` codemod renames the deprecated S3\* blocks and `s3PostPolicyRequestId`/`s3GetPolicyRequestId` properties to the provider-neutral names via `lowdefy upgrade`.
+
+- 596212a: feat: `lowdefy init-vercel` instruments an app for Vercel, plus a configurable request timeout.
+
+  **`init-vercel`** now scaffolds a complete Vercel setup into `<config-directory>/deploy/`, so a v6
+  Lowdefy app (Hono server + Vite client) deploys to Vercel as static assets on the CDN plus one
+  Serverless Function:
+
+  - `vercel.json` — serves the built client (`dist/client`, which includes the app's `public/` files
+    via Vite's `publicDir`) from the CDN, sets the build command (`pnpm run build:client`) and output
+    directory, rewrites all other requests to the function, bundles the runtime-read build artifacts
+    via `includeFiles`, and caps the function with `maxDuration`.
+  - `api/index.js` — a Node Serverless Function that `chdir`s to the deploy directory, builds a Web
+    `Request` from the buffered Node request body, and runs the Hono app. (Vercel's Node runtime does
+    not drain a lazily-read body stream, so a streaming adapter hangs on every request with a body.)
+  - `vercel.install.sh` + `README.md`.
+
+  **Request timeout.** `@lowdefy/server`'s `createApp` now bounds request duration with a `timeout`
+  middleware, configured by a new **`config.requestTimeout`** (milliseconds) in `lowdefy.yaml`
+  (default `30000`, `0` disables). This protects against requests that hang on an upstream call
+  (database, SMTP, external API) running to the host's function limit — important on serverless
+  platforms billed by duration. Agent streaming routes are exempt. `@lowdefy/build` adds
+  `config.requestTimeout` to the schema.
+
+  `createApp` also gains a `{ serveStaticAssets }` option (default `true`); the Vercel function passes
+  `false` so the CDN owns static files and the function only handles dynamic routes. Docs updated
+  (deployment/Vercel and the config reference).
+
+- a858f8f: feat: MCP server exposing API endpoints as tools.
+
+  - New root `mcp` config block (`name`, `version`, `endpoints`) — listed `Api` endpoints are served as MCP tools at `POST /api/mcp` over streamable HTTP.
+  - Endpoint `description` and `payloadSchema` become the tool description and inputSchema; both are required for exposed endpoints, and `InternalApi` endpoints cannot be exposed.
+  - Tool listing and calls are authorized per request with the caller's session; the build always writes an `mcp.json` artifact (`configured: false` when no endpoints are listed).
+
+- c97b1da: feat: MCP server branding — `mcp.title`, `mcp.websiteUrl` and `mcp.icons`
+
+  MCP clients such as claude.ai render a card for each connected server, and with only `name` and `version` in `serverInfo` they fall back to guessing a logo from the host — often a stale or unrelated favicon. The app's `mcp` block now accepts the MCP `Implementation` branding fields, passed through verbatim in the `initialize` result:
+
+  ```yaml
+  mcp:
+    name: encircle
+    version: '1.0.0'
+    title: Encircle
+    websiteUrl: https://encircle.co.za
+    icons:
+      - src: https://app.encircle.co.za/icon-512.png
+        mimeType: image/png
+        sizes: ['512x512']
+    endpoints: [...]
+  ```
+
+  Each icon needs a `src`; `mimeType`, `sizes` and `theme` (`light` | `dark`) are optional. Keys that are not configured are omitted from `serverInfo` rather than sent as `undefined`.
+
+- 206d947: feat: Modules can ship notification email templates.
+
+  `module.lowdefy.yaml` now accepts a `notifications:` section, so a module that drives a notification flow (like user invites) can ship its own email templates instead of every app hand-writing them. Template ids scope to `{entry}/{id}` — installing the same module twice never collides — and template properties resolve `_module.var`, so email copy can be configured through the module's vars.
+
+  The new `_module.notificationId` operator resolves scoped ids in module content (`_module.notificationId: invite-user` in a `RenderNotification` step or dispatch payload) and at the app level with the object form (`{ id: invite-user, module: user-admin }`).
+
+  The `lowdefy emails` preview now finds scoped notification artifacts in subdirectories and writes nested preview shims, grouping templates by module entry in the preview sidebar.
+
+- 660bbfc: feat: Support running multiple dev apps side by side.
+
+  Running several Lowdefy dev servers on `localhost` previously clashed on
+  ports and shared a single auth cookie jar (browsers scope cookies by host,
+  not port), so logging into one app logged you out of another. Three changes
+  make concurrent dev apps work:
+
+  - **Per-app auth cookies.** Cookie names are now resolved through a
+    precedence chain: an explicit `auth.advanced.cookies` is used verbatim;
+    otherwise an explicit `auth.advanced.cookiePrefix` namespaces the cookie
+    names (dev and prod); otherwise the dev server derives a prefix from the
+    app `slug`/`name` so each app gets its own cookie jar. Production with no
+    config is unchanged (Auth.js defaults). Only cookie names are overridden —
+    cookie options continue to come from Auth.js defaults via its config
+    merge. The schema gains an optional `auth.advanced.cookiePrefix` string.
+  - **Automatic port selection.** The CLI now finds the next available port
+    instead of erroring when the requested port is in use, warning which port
+    it landed on.
+  - **Auth URL mismatch warning.** Auth.js derives the app origin from
+    request headers (`trustHost`), so an unset `AUTH_URL` already works on
+    whatever port the dev server lands on. When `AUTH_URL` (or the v4
+    fallback `NEXTAUTH_URL`) is pinned to a different port, the dev server
+    warns that sign-in callbacks and redirects will target the pinned URL.
+
+  Set the same `cookiePrefix` on two apps to intentionally share an auth
+  session in dev.
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- da0c62c: chore: Update pino from 8.16.2 to 10.3.1.
+
+  No behavior change — the log output format, levels, and configuration are unchanged. The pino 9 and 10 majors only drop support for Node.js versions below 20, and Lowdefy already requires Node.js 22 or newer.
+
+- 082acec: feat: Dev DX quick wins — fast warm boots, no mid-session reloads.
+
+  - `lowdefy dev` no longer resets the server `package.json` at boot, so plugin
+    packages discovered by previous sessions stay installed — no more
+    uninstall/reinstall churn, no install pause when navigating to pages whose
+    plugins were already known, and a stable lockfile that preserves Vite's
+    dependency optimizer cache across sessions.
+  - Installs are skipped entirely when `package.json` is unchanged (hash stored
+    inside `node_modules`, so deleting `node_modules` forces a reinstall). Warm
+    boots drop from ~30s to a few seconds.
+  - The dev server pre-discovers all client dependencies at startup
+    (`optimizeDeps.entries`), eliminating mid-session "optimized dependencies
+    changed" full page reloads.
+  - Tailwind scan inputs are excluded from Vite's watcher — first visits to a
+    page no longer force a full browser reload that aborts in-flight requests
+    ("Failed to fetch" error walls). CSS recompilation is driven by the
+    `tailwind-candidates.css` import, now touched only when a build actually
+    changes tailwind content.
+  - Build artifact writes skip byte-identical content, so unchanged JIT page
+    builds no longer invalidate `clientJsMap.js` (Routing HMR churn) or
+    `serverJsMap.js` (SSR graph reloads). New `writeFileIfChanged` and
+    `installIfPackageJsonChanged` utilities in `@lowdefy/node-utils`.
+  - Polish: dev server shutdown log no longer says "next server"; the missing
+    `./messages` plugin export notice logs once per process instead of on every
+    rebuild.
+
+- ae5f618: fix(build): Rebuild dev app-level artifacts when root-referenced files change.
+
+  Files referenced directly from `lowdefy.yaml` that resolve to plain values — like `app.html.appendHead: {_ref: head.html}` — were missing from the dev server's rebuild trigger list, so editing them served stale HTML until a manual restart. They now correctly trigger a skeleton rebuild.
+
+- 7746ce2: fix: Resolve refs at the root of reference vars.
+
+  A `_ref` used directly as the value of `vars` (e.g. `vars: { _ref: config.yaml }`) was not evaluated, so `_var` lookups in the referenced file returned null. Refs at the root of `vars` are now resolved again, restoring pre-v5 behavior.
+
+- 47ba6df: fix(build): Two-stage entry-vars resolution fixes cache poisoning.
+
+  Module entry vars/connections now resolve in two stages (prepare, then
+  demand-driven finalize), so resolution order can no longer bake wrong values
+  into the per-entry var cache. Includes the demand-driven entry-config
+  integration suite.
+
+- 704cf4b: fix(build): Collect Tailwind page content before `_js` extraction.
+
+  Tailwind class candidates were collected from the page tree after `_js` operator source
+  had been replaced by hashed function refs, so utilities used only inside `_js` strings
+  (e.g. an `Html` block building markup with `properties.html._js`) never reached the
+  Tailwind scanner and were missing from the compiled CSS. Both the full build and the
+  JIT dev build now collect page content while `_js` source is still present, so classes
+  embedded in `_js` code generate CSS like any other page content.
+
+- Updated dependencies [11662bc]
+- Updated dependencies [b496a77]
+- Updated dependencies [60401aa]
+- Updated dependencies [37c8c14]
+- Updated dependencies [28cb944]
+- Updated dependencies [082acec]
+- Updated dependencies [e0a06a2]
+- Updated dependencies [742a900]
+- Updated dependencies [efd1967]
+- Updated dependencies [8396857]
+- Updated dependencies [c5f176a]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [982a3db]
+  - @lowdefy/ai-utils@6.0.0
+  - @lowdefy/operators@6.0.0
+  - @lowdefy/operators-js@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/blocks-basic@6.0.0
+  - @lowdefy/blocks-loaders@6.0.0
+  - @lowdefy/node-utils@6.0.0
+  - @lowdefy/nunjucks@6.0.0
+  - @lowdefy/ajv@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/block-utils@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

@@ -1,5 +1,97 @@
 # @lowdefy/e2e-utils
 
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- ea4de26: feat: Live state x-ray, state & data checkpoints, request execution, and app map for AI agents
+
+  The dev server's agent toolbelt grows from discovery and build feedback to full runtime visibility — 23 MCP tools total at `/lowdefy-docs/mcp`.
+
+  **Live state x-ray (`@lowdefy/server-dev`)**
+
+  - `lowdefy_inspect_state`: read the ACTUAL state, request results, and event log of a running page. When you have the page open in your browser it reads your live tab — reproduce a bug by clicking through the app, then let the agent look at exactly what you see. Falls back to a headless run otherwise.
+  - `lowdefy_eval_operator`: evaluate any operator expression (like `{"_state": "customer.name"}`) against live page state — a REPL for config, running in the real browser runtime.
+
+  **State & data checkpoints**
+
+  - `lowdefy_snapshot_state` captures a page's state and every request's recorded response into a committable `checkpoints/<name>/` folder — one file per part, one file per request, easy to review in git.
+  - `lowdefy_load_state` puts the app back into that state: recorded request data is served by the dev server automatically, and `?_checkpoint=<name>` on any page URL restores the state in a normal browser tab — hand a teammate a URL that opens the app mid-scenario.
+  - `lowdefy_checkpoint_to_mocks` converts a checkpoint into `@lowdefy/e2e-utils` `mocks.yaml` fixtures for e2e tests.
+  - `lowdefy_checkpoint` / `lowdefy_revert_checkpoint` snapshot and restore config files around risky edits.
+
+  **Request execution and app understanding**
+
+  - `lowdefy_run_request` executes a request with a test payload to verify data shape. Read-only types always run; write requests need `cli.agentTools.allowWriteRequests: true` in lowdefy.yaml (dev-only opt-in).
+  - `lowdefy_app_map`: every page, menu, connection, endpoint, and agent in one call — onboard to a large app instantly.
+
+  **@lowdefy/e2e-utils**
+
+  - New `@lowdefy/e2e-utils/runtime` export: the runner-agnostic surface (navigation, state/request getters, mocking, page manager) usable outside the Playwright test runner. Assertions moved to `src/assertions/` — the package's public API is unchanged.
+  - Fixed `setState` silently doing nothing — it now uses the engine's real state primitives.
+
+- 519163c: Add `getShortcutModifier` for testing `mod` keyboard shortcuts.
+
+  A `mod` shortcut resolves to Cmd or Ctrl from the platform the browser reports, and Playwright emulates that platform per project — a Desktop Chrome project reports Windows even when the test runner is on macOS. A test that derives the key from `process.platform` therefore presses a key the app is not listening for, and only on some host operating systems.
+
+  `getShortcutModifier(page)` reads the platform from the page instead, so the key a test presses is always the key the app is listening for:
+
+  ```javascript
+  import { getShortcutModifier } from '@lowdefy/e2e-utils';
+
+  const mod = await getShortcutModifier(page);
+  await page.keyboard.press(`${mod}+k`);
+  ```
+
+### Patch Changes
+
+- a783370: fix: Set urlQuery through the app router.
+
+  `ldf.urlQuery('key').do.set(value)` called `history.pushState` directly, which changed the URL without notifying the Lowdefy router. The page config was never re-fetched, so a Dynamic page kept showing content resolved from the previous query and tests asserting on the update failed.
+
+  `do.set` now navigates through the app's router — the same path a `Link` or `SetUrlQuery` action takes. On a Dynamic page it waits for the engine to rebuild the page context from the newly resolved config, so a following assertion or `value()` read cannot see content resolved from the previous query.
+
+- Updated dependencies [6446ae6]
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

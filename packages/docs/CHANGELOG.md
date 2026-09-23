@@ -1,5 +1,70 @@
 # Change Log
 
+## 6.0.0
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- 51c3008: feat: Endpoint execution controls for serverless deployments.
+
+  - `config.vercel { maxDuration, memory }` in `lowdefy.yaml` flows into the generated Vercel function config (default stays 60s).
+  - `async: true` on Api/InternalApi endpoints responds `{ accepted: true }` immediately and runs the routine in the background (kept alive via the platform request context; outcome observable through logs).
+  - `detached: true` on CallApi steps fire-and-forgets the target through the new `POST /api/detached/<endpointId>` route (CRON_SECRET transport auth), running it in its own invocation with a fresh duration budget.
+  - `webhook: true` on endpoints turns them into third-party webhook receivers on the standard `/api/endpoints` route: raw `{ body, query, headers }` payload, verbatim response body, system context — caller auth is the routine's first step. Non-webhook endpoints are unchanged.
+
+- 596212a: feat: `lowdefy init-vercel` instruments an app for Vercel, plus a configurable request timeout.
+
+  **`init-vercel`** now scaffolds a complete Vercel setup into `<config-directory>/deploy/`, so a v6
+  Lowdefy app (Hono server + Vite client) deploys to Vercel as static assets on the CDN plus one
+  Serverless Function:
+
+  - `vercel.json` — serves the built client (`dist/client`, which includes the app's `public/` files
+    via Vite's `publicDir`) from the CDN, sets the build command (`pnpm run build:client`) and output
+    directory, rewrites all other requests to the function, bundles the runtime-read build artifacts
+    via `includeFiles`, and caps the function with `maxDuration`.
+  - `api/index.js` — a Node Serverless Function that `chdir`s to the deploy directory, builds a Web
+    `Request` from the buffered Node request body, and runs the Hono app. (Vercel's Node runtime does
+    not drain a lazily-read body stream, so a streaming adapter hangs on every request with a body.)
+  - `vercel.install.sh` + `README.md`.
+
+  **Request timeout.** `@lowdefy/server`'s `createApp` now bounds request duration with a `timeout`
+  middleware, configured by a new **`config.requestTimeout`** (milliseconds) in `lowdefy.yaml`
+  (default `30000`, `0` disables). This protects against requests that hang on an upstream call
+  (database, SMTP, external API) running to the host's function limit — important on serverless
+  platforms billed by duration. Agent streaming routes are exempt. `@lowdefy/build` adds
+  `config.requestTimeout` to the schema.
+
+  `createApp` also gains a `{ serveStaticAssets }` option (default `true`); the Vercel function passes
+  `false` so the CDN owns static files and the function only handles dynamic routes. Docs updated
+  (deployment/Vercel and the config reference).
+
+- 16fdeb8: fix(client): Make the `Link` action honour `href`.
+
+  `createLink` routes `href` to `newOriginLink`, but the action's `newOriginLink` in
+  `setupLink.js` only ever read `url` — so `{ type: Link, params: { href: '/some/path' } }`
+  navigated to the literal string `"undefined"`. The anchor renderer used for `Link` blocks
+  (`createLinkComponent.js`) already prefers `href` over `url`; this brings the action to the
+  same precedence, and `href` is used verbatim: no protocol added, no `urlQuery` appended.
+
+  That verbatim handling is the point of having the parameter at all. `url` means an external
+  address and gains an `https://` prefix when the value has no scheme, which turns a
+  root-relative `/reports?id=1` into a request for a host named `reports`. `href` is how you
+  link to a same-origin path, a fragment, or any address that must be passed through as
+  written — so the fix removes the need to work around `url`'s prefixing.
+
+  `href` was also missing from the `Link` action docs, which is presumably how the gap went
+  unnoticed. Documented alongside the fix.
+
+- 53a36ed: feat(actions): Link action accepts `replace` and `scroll`.
+
+  A same-page `Link` that only reflects state into the `urlQuery` no longer has to jump the page to
+  the top or push a history entry per click: `scroll: false` keeps the current scroll position and
+  `replace: true` swaps the current history entry instead of pushing one. The router and the `<Link>`
+  block component already supported both; the Link action's same-origin path now forwards them too.
+
+- Updated dependencies [6446ae6]
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

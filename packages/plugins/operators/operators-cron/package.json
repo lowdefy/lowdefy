@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-cron",
-  "version": "5.6.0",
+  "version": "6.0.0",
   "license": "Apache-2.0",
   "description": "Lowdefy cron operators: next and previous occurrences, human readable descriptions and validation of cron expressions.",
   "homepage": "https://lowdefy.com",
@@ -40,13 +40,13 @@
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "5.6.0",
-    "@lowdefy/operators": "5.6.0",
+    "@lowdefy/helpers": "6.0.0",
+    "@lowdefy/operators": "6.0.0",
     "cron-parser": "5.10.0",
     "cronstrue": "3.27.0"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "5.6.0",
+    "@lowdefy/node-utils": "6.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",

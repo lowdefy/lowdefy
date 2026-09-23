@@ -18,6 +18,7 @@ import crypto from 'crypto';
 import { serializer } from '@lowdefy/helpers';
 import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
 
+import createWireProjection from '../../response/createWireProjection.js';
 import prepareChannel from './prepareChannel.js';
 
 const MAX_RETRIES = 5;
@@ -48,6 +49,18 @@ function createChannelRegistry() {
     const message = JSON.stringify(frame);
     channel.subscribers.forEach((subscriber) => {
       subscriber.send(message);
+    });
+  }
+
+  // Config reads a broadcast error only as a message string, so it gets the wire
+  // message alone - no requestId, since no single request raised it, and no
+  // devError, since the dev terminal already logs it in full. The channel's
+  // context belongs to whoever subscribed first, so the message is translated
+  // with each subscriber's own locale.
+  function broadcastError(channel, error) {
+    channel.subscribers.forEach((subscriber) => {
+      const { message } = createWireProjection({ i18n: subscriber.i18n })(error);
+      subscriber.send(JSON.stringify({ type: 'error', websocketId: channel.websocketId, message }));
     });
   }
 
@@ -95,11 +108,7 @@ function createChannelRegistry() {
     const wrapped = wrapResolverError({ channel, error });
     channel.logger.debug({ err: wrapped }, wrapped.message);
     channel.context.handleError(wrapped);
-    broadcast(channel, {
-      type: 'error',
-      websocketId: channel.websocketId,
-      message: wrapped.message,
-    });
+    broadcastError(channel, wrapped);
 
     // A run that stayed healthy resets the backoff window.
     if (Date.now() - startedAt > HEALTHY_RESET_MS) {

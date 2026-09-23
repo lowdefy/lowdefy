@@ -420,9 +420,24 @@ test('extractErrorProps extracts errors nested inside plain object properties', 
   expect(() => JSON.stringify(props)).not.toThrow();
 });
 
-// The omit option, as a mechanism only: extractErrorProps applies whatever keys
+// The project option, as a mechanism only: extractErrorProps emits whatever props
 // the callback hands it, at every error node it builds. Which fields any audience
 // may see is the caller's policy and is tested by the caller, not here.
+
+// Builds a projection from a list of keys to leave off each node, over the same
+// fields the default projection emits.
+function omitting(omit) {
+  return (node) => {
+    const props = { message: node.message, name: node.name, stack: node.stack, cause: node.cause };
+    for (const key of Object.keys(node)) {
+      if (key !== 'cause') props[key] = node[key];
+    }
+    for (const key of omit(node) ?? []) {
+      delete props[key];
+    }
+    return props;
+  };
+}
 
 function buildCauseChain() {
   const withProps = (error, level) => {
@@ -440,7 +455,7 @@ function buildCauseChain() {
 test('extractErrorProps omit removes a built-in field at the root and at every cause depth', () => {
   const { depth0 } = buildCauseChain();
 
-  const props = extractErrorProps(depth0, { omit: () => ['stack'] });
+  const props = extractErrorProps(depth0, { project: omitting(() => ['stack']) });
 
   const levels = [props, props.cause, props.cause.cause, props.cause.cause.cause];
   expect(levels).toHaveLength(4);
@@ -454,7 +469,7 @@ test('extractErrorProps omit removes a built-in field at the root and at every c
 test('extractErrorProps omit removes an own enumerable field at the root and at every cause depth', () => {
   const { depth0 } = buildCauseChain();
 
-  const props = extractErrorProps(depth0, { omit: () => ['configKey'] });
+  const props = extractErrorProps(depth0, { project: omitting(() => ['configKey']) });
 
   const levels = [props, props.cause, props.cause.cause, props.cause.cause.cause];
   levels.forEach((level, index) => {
@@ -468,10 +483,10 @@ test('extractErrorProps omit is called once for each error node in the cause cha
   const nodes = [];
 
   extractErrorProps(depth0, {
-    omit: (node) => {
+    project: omitting((node) => {
       nodes.push(node);
       return [];
-    },
+    }),
   });
 
   expect(nodes).toHaveLength(4);
@@ -486,7 +501,7 @@ test('extractErrorProps omit applies to an Error held in an own enumerable prope
   err.original = new Error('original error');
   err.original.code = 'ORIG';
 
-  const props = extractErrorProps(err, { omit: () => ['stack'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['stack']) });
 
   expect('stack' in props).toBe(false);
   expect(props.original.message).toBe('original error');
@@ -500,7 +515,7 @@ test('extractErrorProps omit applies to an Error nested inside a plain-object ca
   const err = new Error('outer');
   err.cause = { operation: 'save', inner: nested };
 
-  const props = extractErrorProps(err, { omit: () => ['stack'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['stack']) });
 
   expect(props.cause.operation).toBe('save');
   expect(props.cause.inner.message).toBe('nested in object');
@@ -513,7 +528,7 @@ test('extractErrorProps omit applies to an Error nested inside an array', () => 
   const err = new Error('outer');
   err.errors = ['ok', nested];
 
-  const props = extractErrorProps(err, { omit: () => ['stack'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['stack']) });
 
   expect(props.errors[0]).toBe('ok');
   expect(props.errors[1].message).toBe('nested in array');
@@ -525,7 +540,7 @@ test('extractErrorProps omit applies to an Error nested inside an array in a pla
   const err = new Error('outer');
   err.cause = { failures: [nested] };
 
-  const props = extractErrorProps(err, { omit: () => ['stack'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['stack']) });
 
   expect(props.cause.failures[0].message).toBe('nested in array in cause');
   expect('stack' in props.cause.failures[0]).toBe(false);
@@ -534,7 +549,7 @@ test('extractErrorProps omit applies to an Error nested inside an array in a pla
 test('extractErrorProps omit of fields leaves the cause chain walkable with name and message intact', () => {
   const { depth0 } = buildCauseChain();
 
-  const props = extractErrorProps(depth0, { omit: () => ['stack', 'configKey'] });
+  const props = extractErrorProps(depth0, { project: omitting(() => ['stack', 'configKey']) });
 
   expect(props.name).toBe('Error');
   expect(props.message).toBe('depth 0');
@@ -552,7 +567,7 @@ test('extractErrorProps omit of cause drops the Error cause and keeps sibling fi
   err.code = 'OUTER_CODE';
   err.details = { field: 'name' };
 
-  const props = extractErrorProps(err, { omit: () => ['cause'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['cause']) });
 
   expect('cause' in props).toBe(false);
   expect(props.message).toBe('outer');
@@ -567,7 +582,7 @@ test('extractErrorProps omit of cause drops a non-Error cause and keeps sibling 
   err.cause = { status: 500 };
   err.code = 'OUTER_CODE';
 
-  const props = extractErrorProps(err, { omit: () => ['cause'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['cause']) });
 
   expect('cause' in props).toBe(false);
   expect(props.code).toBe('OUTER_CODE');
@@ -579,7 +594,7 @@ test('extractErrorProps omit receives the error node so a per-node decision appl
   const err = new Error('outer', { cause: inner });
 
   const props = extractErrorProps(err, {
-    omit: (node) => (node.name === 'TypeError' ? ['stack'] : []),
+    project: omitting((node) => (node.name === 'TypeError' ? ['stack'] : [])),
   });
 
   expect(props.stack).toBeDefined();
@@ -594,7 +609,7 @@ test('extractErrorProps omit can drop the cause of one node only, leaving deeper
   const depth0 = new Error('depth 0', { cause: depth1 });
 
   const props = extractErrorProps(depth0, {
-    omit: (node) => (node.name === 'TypeError' ? ['cause'] : []),
+    project: omitting((node) => (node.name === 'TypeError' ? ['cause'] : [])),
   });
 
   expect(props.message).toBe('depth 0');
@@ -607,7 +622,9 @@ test('extractErrorProps omit returning undefined omits nothing', () => {
   const err = new Error('outer', { cause: inner });
   err.code = 'CODE';
 
-  expect(extractErrorProps(err, { omit: () => undefined })).toEqual(extractErrorProps(err));
+  expect(extractErrorProps(err, { project: omitting(() => undefined) })).toEqual(
+    extractErrorProps(err)
+  );
 });
 
 test('extractErrorProps omit returning an empty array omits nothing', () => {
@@ -615,7 +632,7 @@ test('extractErrorProps omit returning an empty array omits nothing', () => {
   const err = new Error('outer', { cause: inner });
   err.code = 'CODE';
 
-  expect(extractErrorProps(err, { omit: () => [] })).toEqual(extractErrorProps(err));
+  expect(extractErrorProps(err, { project: omitting(() => []) })).toEqual(extractErrorProps(err));
 });
 
 test('extractErrorProps without an omit option keeps message, name, stack, cause and own fields', () => {
@@ -651,7 +668,7 @@ test('extractErrorProps does not mark an omitted plain-object cause as seen, so 
   // property that points at the same object collapses to the circular marker.
   expect(extractErrorProps(err).detail).toBe('[Circular]');
 
-  const props = extractErrorProps(err, { omit: () => ['cause'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['cause']) });
 
   expect('cause' in props).toBe(false);
   expect(props.detail).toEqual({ id: 'shared' });
@@ -667,11 +684,107 @@ test('extractErrorProps does not mark an omitted Error cause as seen, so a share
   // error is marked as already seen.
   expect(extractErrorProps(err).detail).toBe('[Circular]');
 
-  const props = extractErrorProps(err, { omit: () => ['cause'] });
+  const props = extractErrorProps(err, { project: omitting(() => ['cause']) });
 
   expect('cause' in props).toBe(false);
   expect(props.detail.message).toBe('shared');
   expect(props.detail.code).toBe('SHARED');
+});
+
+// A projection that replaces fields rather than dropping them: renames the
+// message and computes a field the error does not carry.
+function renameAndCompute(node) {
+  return {
+    message: `projected: ${node.message}`,
+    name: node.name,
+    status: node.response?.status ?? 500,
+    cause: node.cause,
+    original: node.original,
+    details: node.details,
+  };
+}
+
+test('extractErrorProps project replaces message and adds a computed field at depth 0', () => {
+  const err = new Error('outer');
+  err.response = { status: 404 };
+
+  const props = extractErrorProps(err, { project: renameAndCompute });
+
+  expect(props).toEqual({ message: 'projected: outer', name: 'Error', status: 404 });
+});
+
+test('extractErrorProps project is applied to an Error cause', () => {
+  const inner = new TypeError('inner');
+  inner.response = { status: 503 };
+  const err = new Error('outer', { cause: inner });
+
+  const props = extractErrorProps(err, { project: renameAndCompute });
+
+  expect(props.cause).toEqual({ message: 'projected: inner', name: 'TypeError', status: 503 });
+});
+
+test('extractErrorProps project is applied to an Error-valued own property', () => {
+  const err = new Error('outer');
+  err.original = new RangeError('original');
+
+  const props = extractErrorProps(err, { project: renameAndCompute });
+
+  expect(props.original).toEqual({
+    message: 'projected: original',
+    name: 'RangeError',
+    status: 500,
+  });
+});
+
+test('extractErrorProps project is applied to an Error inside an array inside a plain object', () => {
+  const nested = new SyntaxError('nested');
+  nested.response = { status: 422 };
+  const err = new Error('outer');
+  err.details = { failures: ['ok', nested] };
+
+  const props = extractErrorProps(err, { project: renameAndCompute });
+
+  expect(props.details.failures[0]).toBe('ok');
+  expect(props.details.failures[1]).toEqual({
+    message: 'projected: nested',
+    name: 'SyntaxError',
+    status: 422,
+  });
+});
+
+test('extractErrorProps project walks a replacement cause Error instead of the original cause', () => {
+  const original = new Error('original cause');
+  const replacement = new Error('replacement cause');
+  replacement.code = 'REPLACED';
+  const err = new Error('outer', { cause: original });
+  const nodes = [];
+
+  const props = extractErrorProps(err, {
+    project: (node) => {
+      nodes.push(node);
+      return {
+        message: node.message,
+        name: node.name,
+        code: node.code,
+        cause: node === err ? replacement : node.cause,
+      };
+    },
+  });
+
+  expect(props.cause).toEqual({ message: 'replacement cause', name: 'Error', code: 'REPLACED' });
+  expect(nodes).toHaveLength(2);
+  expect(nodes[0]).toBe(err);
+  expect(nodes[1]).toBe(replacement);
+});
+
+test('extractErrorProps project entries whose value is undefined are dropped', () => {
+  const err = new Error('outer');
+
+  const props = extractErrorProps(err, {
+    project: (node) => ({ message: node.message, name: undefined, code: node.code }),
+  });
+
+  expect(Object.keys(props)).toEqual(['message']);
 });
 
 test('extractErrorProps marks a bigint-valued own key as [BigInt: <digits>] instead of leaking it live', () => {

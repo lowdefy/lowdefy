@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { UserError } from '@lowdefy/errors';
+import { RequestError, UserError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
 
@@ -650,4 +650,40 @@ test('throw in try block with request in finally block', async () => {
     ],
   ]);
   expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
+});
+
+const failingTry = {
+  id: 'request:test_endpoint:try_fail',
+  type: 'TestRequestError',
+  stepId: 'try_fail',
+  connectionId: 'test',
+  properties: {
+    message: 'Try and fail',
+  },
+};
+
+test('throw given an Error rethrows it unchanged without evaluating :cause', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':throw': { _error: true }, ':cause': { _throw_test: null } },
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error).toBeInstanceOf(RequestError);
+  expect(res.error.message).toEqual('Try and fail at test/try_fail.');
+  expect(res.error.handled).toBe(true);
+  expect(context.logger.warn.mock.calls).toContainEqual([
+    { event: 'warn_control_throw', err: res.error },
+  ]);
+});
+
+test('throw given a caught UserError rethrows it with its message', async () => {
+  const routine = {
+    ':try': { ':throw': 'Name taken.' },
+    ':catch': { ':throw': { _error: true } },
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error).toBeInstanceOf(UserError);
+  expect(res.error.message).toEqual('Name taken.');
 });

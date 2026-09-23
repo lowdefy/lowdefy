@@ -16,18 +16,34 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
+import createWireProjection from './createWireProjection.js';
 import normalizeErrorSources from './normalizeErrorSources.js';
-import omitErrorProps from './omitErrorProps.js';
 
-// Owns the serialization as well as the policy, so the policy cannot be forgotten:
-// no bare serializer.serialize(error) is left in response position to wrap. Every
-// route returning an error to a caller - any status, any transport - goes through
-// here or through buildEndpointResult.
+// The one error payload every route and transport sends for a thrown error, at
+// any status. Owning the serialization as well as the policy leaves no bare
+// serializer.serialize(error) in response position for a caller to forget.
+//
+// `~e` is the wire error - identical in dev and prod, because it is what app
+// config reads. In dev the payload also carries `devError`, the error as the dev
+// terminal logs it, for the dev tools. It sits beside `~e` rather than inside it:
+// the serializer's reviver replaces any object holding `~e` with its error, so a
+// plain deserialize of the payload drops `devError` and config never sees it.
 function redactErrorResponse(context, error) {
   // Endpoint routes serialize the error field on success too, where it is null.
   // Passing that through unchanged keeps them from emitting an empty {'~e'}.
   if (type.isNone(error)) return error;
-  return normalizeErrorSources(context, serializer.serialize(error, { omitErrorProps }));
+  const payload = serializer.serialize(error, {
+    projectError: createWireProjection(context),
+  });
+  // The server error handler has no request context when it fails before the
+  // context middleware runs, so there is no mode to read and no devError.
+  if (context?.mode === 'dev') {
+    const full = serializer.serialize(error);
+    payload.devError = normalizeErrorSources(context, {
+      '~e': { ...full['~e'], requestId: context.rid },
+    });
+  }
+  return payload;
 }
 
 export default redactErrorResponse;

@@ -76,7 +76,41 @@ function memberMcpAuth(grantedScopes) {
   return { orgId: 'org_1', tokenStatus: 'valid', parseableJwt: true, grantedScopes };
 }
 
-function createContext({ authEnforcement = null, configs = {}, mcpAuth, user = null } = {}) {
+// A driver error of the kind the wire policy exists for: its message carries a
+// connection string the end user must never see.
+const foreignError = new Error('connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432');
+
+const mockFailingRequest = jest.fn(() => {
+  throw foreignError;
+});
+mockFailingRequest.schema = {};
+mockFailingRequest.meta = { checkRead: false, checkWrite: false };
+
+const connections = {
+  TestConnection: {
+    schema: {},
+    requests: { FailingRequest: mockFailingRequest },
+  },
+};
+
+const failingRequestHealthConfig = {
+  ...healthConfig,
+  routine: {
+    id: 'request:health:lookup',
+    type: 'FailingRequest',
+    stepId: 'lookup',
+    connectionId: 'test',
+    properties: {},
+  },
+};
+
+function createContext({
+  authEnforcement = null,
+  configs = {},
+  mcpAuth,
+  mode = 'prod',
+  user = null,
+} = {}) {
   const operators = {
     _fail: () => {
       throw new Error('Boom.');
@@ -87,10 +121,23 @@ function createContext({ authEnforcement = null, configs = {}, mcpAuth, user = n
     'api/health.json': healthConfig,
     'api/get-customer.json': getCustomerConfig,
     'api/update-customer.json': updateCustomerConfig,
+    'connections/test.json': {
+      id: 'connection:test',
+      type: 'TestConnection',
+      connectionId: 'test',
+    },
     ...configs,
   };
   const readConfigFile = jest.fn((path) => files[path] ?? null);
-  const context = testContext({ authEnforcement, logger, operators, readConfigFile, user });
+  const context = testContext({
+    authEnforcement,
+    connections,
+    logger,
+    mode,
+    operators,
+    readConfigFile,
+    user,
+  });
   context.mcpAuth = mcpAuth ?? anonymousMcpAuth;
   context.authorizeOutcome = jest.fn(context.authorizeOutcome);
   return context;
@@ -396,22 +443,23 @@ const failingMcpJson = {
   endpoints: [...mcpJson.endpoints, { id: 'failing', scope: 'mcp:read' }],
 };
 
-test('tools/call returns the bare message of a failed routine in production', async () => {
+test('tools/call returns the generic message of a failed routine in prod', async () => {
   const context = createContext({
     configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
   });
+  context.configDirectory = '/app';
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const result = await client.callTool({ name: 'failing', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(result.content[0].text).toContain('Boom.');
-  expect(result.content[0].text).not.toContain('(at ');
+  expect(result.content[0].text).toBe('Something went wrong.');
 });
 
-test('tools/call appends the config source of a failed routine when configDirectory is set', async () => {
+test('tools/call appends the config source of a failed routine in dev', async () => {
   const context = createContext({
     configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+    mode: 'dev',
   });
   context.configDirectory = '/app';
   // Mirrors createHandleError in server-dev, which resolves the location onto the error.
@@ -430,7 +478,7 @@ test('tools/call appends the config source of a failed routine when configDirect
 });
 
 test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
-  const context = createContext();
+  const context = createContext({ mode: 'dev' });
   context.configDirectory = '/app';
   context.handleError = jest.fn(async (error) => {
     error.source = 'api/get-customer.yaml:2';
@@ -448,4 +496,68 @@ test('tools/call routes an unexpected failure through handleError and reports it
   expect(context.handleError.mock.calls[0][0].message).toEqual('Authorization exploded.');
   expect(result.content[0].text).toEqual('Authorization exploded. (at api/get-customer.yaml:2)');
   expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('tools/call returns the generic message in prod when an endpoint step throws a foreign error', async () => {
+  const context = createContext({ configs: { 'api/health.json': failingRequestHealthConfig } });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call returns the generic message in prod for an error thrown outside the endpoint result', async () => {
+  const context = createContext();
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file /srv/app/.lowdefy/server/build/api/health.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+  expect(logger.error).toHaveBeenCalled();
+});
+
+test('tools/call returns the devError message, config location and hint in dev', async () => {
+  const context = createContext({
+    configs: { 'api/health.json': failingRequestHealthConfig },
+    mode: 'dev',
+  });
+  // Mirrors the dev server's error sink, which resolves the config location onto the error
+  // before the endpoint result is built.
+  context.handleError = async (error) => {
+    error.source = 'api/health.yaml:12';
+    error.hint = 'Check the connection properties.';
+    error.handled = true;
+  };
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain(
+    'connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432'
+  );
+  expect(result.content[0].text).toMatch(
+    / \(at api\/health\.yaml:12\) Hint: Check the connection properties\.$/
+  );
+});
+
+test('tools/call keeps the raw message in dev for an error thrown outside the endpoint result', async () => {
+  const context = createContext({ mode: 'dev' });
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file api/health.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('ENOENT: no such file api/health.json');
 });

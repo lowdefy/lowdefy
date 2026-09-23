@@ -25,6 +25,7 @@ import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
 import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
+import createWireProjection from './response/createWireProjection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
@@ -65,6 +66,7 @@ export {
   createMcpServer,
   createSystemContext,
   createWebSocketConnection,
+  createWireProjection,
   ensureMcpOauthResource,
   getAsIssuer,
   getAuthStrategies,
