@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { serializer } from '@lowdefy/helpers';
 
+import acceptDetachedEndpoint from './acceptDetachedEndpoint.js';
 import callEndpoint from './callEndpoint.js';
 import runDetachedEndpoint from './runDetachedEndpoint.js';
 import runScheduledEndpoint from './runScheduledEndpoint.js';
@@ -673,6 +674,61 @@ test('detached run dispatched by a user is re-checked against their roles - a fo
   // be ("...does not exist"), not AuthenticationError.
   expect(result.success).toBe(false);
   expect(serializer.deserialize(result.error).message).toContain('does not exist');
+});
+
+test('acceptDetachedEndpoint accepts at once and runs the routine after, under waitUntil', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/slow_child.json') {
+      return {
+        endpointId: 'slow_child',
+        type: 'InternalApi',
+        auth: { public: false },
+        routine: { ':return': 'child_ran' },
+      };
+    }
+    return null;
+  });
+  const waitUntil = jest.fn();
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  context.waitUntil = waitUntil;
+  const accepted = acceptDetachedEndpoint(context, {
+    endpointId: 'slow_child',
+    payload: {},
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  // The route replies with this before the routine has finished.
+  expect(accepted).toEqual({ accepted: true });
+  expect(logger.info).not.toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_run_done' })
+  );
+  // The run rides the invocation's waitUntil, and its outcome reaches the logs.
+  expect(waitUntil).toHaveBeenCalledTimes(1);
+  await waitUntil.mock.calls[0][0];
+  expect(logger.info).toHaveBeenCalledWith({
+    event: 'detached_run_done',
+    endpointId: 'slow_child',
+    status: 'success',
+  });
+});
+
+test('acceptDetachedEndpoint never rejects: a missing endpoint is logged, not thrown', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn(() => null),
+  });
+  const waitUntil = jest.fn();
+  context.waitUntil = waitUntil;
+  expect(
+    acceptDetachedEndpoint(context, {
+      endpointId: 'missing',
+      payload: {},
+      principal: { user: serializer.serialize(null), system: true },
+    })
+  ).toEqual({ accepted: true });
+  await waitUntil.mock.calls[0][0];
+  const logged = [...logger.info.mock.calls, ...logger.error.mock.calls].map((c) => c[0]?.event);
+  expect(logged.some((e) => e === 'detached_run_done' || e === 'detached_run_failed')).toBe(true);
 });
 
 test('detached rehydrates the carried principal - roles are present on context.user', async () => {
