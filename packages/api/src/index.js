@@ -48,6 +48,7 @@ import resolveAuthentication from './context/resolveAuthentication.js';
 import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
 import resolveTenantPreflight from './routes/connections/resolveTenantPreflight.js';
 import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
+import acceptDetachedEndpoint from './routes/endpoints/acceptDetachedEndpoint.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
@@ -84,6 +85,7 @@ export {
   resolvePinnedOrganization,
   resolveTenantPreflight,
   forwardScheduledEndpoint,
+  acceptDetachedEndpoint,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
