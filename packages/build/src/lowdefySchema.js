@@ -1377,7 +1377,7 @@ export default {
         },
         schedules: {
           description:
-            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.cron.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
+            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
           anyOf: [
             {
               type: 'array',
@@ -2236,7 +2236,7 @@ export default {
           type: 'object',
           additionalProperties: false,
           description:
-            "Deployment environments for scheduled endpoints. Vercel fires cron jobs only on the production deployment, so every environment's schedules are registered there and production forwards the ones for other environments to their own /api/cron route.",
+            'Deprecated: declare the environments under "config.environments" instead. Deployment environments for scheduled endpoints, where the one environment without a "url" is the deployment Vercel fires crons on.',
           required: ['environments'],
           errorMessage: {
             type: 'App "config.cron" should be an object.',
@@ -2292,6 +2292,109 @@ export default {
                 type: 'App "config.cron.environments" should be an object.',
               },
             },
+          },
+        },
+        environment: {
+          type: 'string',
+          description:
+            'The environment this build is for, one of the names in "config.environments". Defaults to the LOWDEFY_ENVIRONMENT environment variable.',
+          errorMessage: {
+            type: 'App "config.environment" should be a string.',
+          },
+        },
+        environments: {
+          type: 'object',
+          description:
+            'The deployment environments of the app, keyed by name. The current environment (LOWDEFY_ENVIRONMENT) supplies the defaults for everything environment-specific: the app url (auth, notification links), cron forwarding, the email delivery filter and the Sentry environment. Endpoint "schedules" can be keyed by these names.',
+          additionalProperties: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              '~k': {},
+              '~r': {},
+              '~l': {},
+              url: {
+                type: 'string',
+                description:
+                  'The environment deployment origin, e.g. https://staging.example.com. Default for the auth base URL and notification links, and where crons are forwarded to.',
+                errorMessage: {
+                  type: 'App "config.environments.<name>.url" should be a string.',
+                },
+              },
+              cron: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  secret: {
+                    type: 'string',
+                    description:
+                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET. An environment with a secret is forwarded to: the environment Vercel fires crons on pings its /api/cron route when one of its schedules fires.",
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.cron.secret" should be a string.',
+                    },
+                  },
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to register no cron jobs for this environment. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.cron.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.cron" should be an object.',
+                },
+              },
+              email: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  filter: {
+                    type: 'object',
+                    description:
+                      'Delivery filter applied to every SMTPMailSend and SendGridMailSend request in this environment, unless the connection sets its own "filter". Auth emails are not filtered.',
+                    additionalProperties: false,
+                    properties: {
+                      '~k': {},
+                      '~r': {},
+                      '~l': {},
+                      replaceAddress: {
+                        type: ['string', 'null'],
+                        description: 'Send every email to this address instead of its recipients.',
+                      },
+                      allowlist: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'Only deliver to recipients on these domains.',
+                      },
+                      regex: {
+                        type: 'string',
+                        description: 'Only deliver to recipients matching this regular expression.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.filter" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.email" should be an object.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'App "config.environments.<name>" should be an object.',
+            },
+          },
+          errorMessage: {
+            type: 'App "config.environments" should be an object.',
           },
         },
         requestTimeout: {

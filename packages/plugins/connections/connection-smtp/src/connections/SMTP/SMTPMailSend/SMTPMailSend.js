@@ -19,12 +19,15 @@ import { type } from '@lowdefy/helpers';
 import send from '../send.js';
 import schema from './schema.js';
 
-async function SMTPMailSend({ request, connection }) {
+async function SMTPMailSend({ request, connection, environment }) {
+  // The current environment's delivery filter (config.environments.<env>.email.filter) applies
+  // unless the connection sets its own.
+  const filter = connection.filter ?? environment?.email?.filter;
   const messages = type.isArray(request) ? request : [request];
   const results = [];
   // Send sequentially so a single SMTP connection or pool is not overwhelmed.
   for (const mail of messages) {
-    results.push(await send({ connection, mail }));
+    results.push(await send({ connection: { ...connection, filter }, mail }));
   }
   return { response: 'Mail sent successfully', results };
 }

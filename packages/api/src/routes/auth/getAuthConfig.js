@@ -22,13 +22,16 @@ import createCallbacks from './callbacks/createCallbacks.js';
 import createEvents from './events/createEvents.js';
 import createLogger from './createLogger.js';
 import createProviders from './createProviders.js';
+import defaultAuthUrl from './defaultAuthUrl.js';
 import resolveCookies from './resolveCookies.js';
 
 const authConfigCache = {};
 let initialized = false;
 
-function getAuthConfig({ appMeta, authJson, dev, logger, plugins, secrets }) {
+function getAuthConfig({ appMeta, authJson, config, dev, logger, plugins, secrets }) {
   if (initialized) return authConfigCache;
+
+  defaultAuthUrl({ config });
 
   const operatorsParser = new ServerParser({
     lowdefyApp: appMeta,

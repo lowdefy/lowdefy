@@ -32,7 +32,7 @@ The schema for a Lowdefy API is:
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
-- `schedules: array | object`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object. With `config.cron.environments` declared, `schedules` can instead be an object keyed by environment name (plus an optional `default`), see [Schedules per environment](#schedules-per-environment).
+- `schedules: array | object`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object. With `config.environments` declared, `schedules` can instead be an object keyed by environment name (plus an optional `default`), see [Schedules per environment](#schedules-per-environment).
 
 ###### API definition example:
 
@@ -128,18 +128,20 @@ See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs,
 
 ### Schedules per environment
 
-Vercel fires cron jobs only on the **production** deployment, so a staging or develop deployment never runs its schedules on its own. Declare your deployment environments once under `config.cron`, and every environment's schedules are registered on production; when a schedule for another environment fires, production pings that environment's own `/api/cron/<endpointId>` (fire-and-forget) so the environment runs its own code.
+Vercel fires cron jobs only on the **production** deployment, so a staging or develop deployment never runs its schedules on its own. Declare your deployment environments once under [`config.environments`](/lowdefy-schema) and set `LOWDEFY_ENVIRONMENT` on each deployment. Every environment with a `cron.secret` has its schedules registered on production too; when one fires, production pings that environment's own `/api/cron/<endpointId>` at its `url` (fire-and-forget) so the environment runs its own code.
 
 ```yaml
 config:
-  cron:
-    environments:
-      production: {} # no url: the deployment that runs the crons
-      staging:
-        url: https://staging.example.com
+  environments:
+    prod:
+      url: https://example.com # Vercel fires crons here
+    staging:
+      url: https://staging.example.com
+      cron:
         secret: STAGING_CRON_SECRET # Lowdefy secret holding staging's CRON_SECRET
-      develop:
-        url: https://develop.example.com
+    develop:
+      url: https://develop.example.com
+      cron:
         secret: DEVELOP_CRON_SECRET
         enabled: false # register no crons for develop
 ```
@@ -159,7 +161,7 @@ api:
     routine: []
 ```
 
-A plain array still works and applies to every environment. Environment names in `schedules` must be declared in `config.cron.environments` (`default` is reserved). This shape also works through module vars: a module endpoint with `schedules: { _module.var: tick_schedule }` needs no change — the app sets `tick_schedule: { default: [...], staging: [...] }` in its module vars (a module var that pins `type: array` for its schedule var must drop the pin to accept the keyed form).
+A plain array still works and applies to every environment. Environment names in `schedules` must be declared in `config.environments` (`default` is reserved). A build with no current environment runs the `default` schedules. This shape also works through module vars: a module endpoint with `schedules: { _module.var: tick_schedule }` needs no change — the app sets `tick_schedule: { default: [...], staging: [...] }` in its module vars (a module var that pins `type: array` for its schedule var must drop the pin to accept the keyed form).
 
 The production deployment needs one secret per forwarded environment: the environment variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) set to that environment's `CRON_SECRET`. Forwarded requests carry the firing cron in `x-vercel-cron-schedule` and the environment name in `x-lowdefy-cron-environment`; the target resolves its own schedules from those. See [Deploy with Vercel](/deployment-vercel) for the routes involved.
 
@@ -611,7 +613,7 @@ A `RenderNotification` step has:
 - `type: RenderNotification`: **Required** - Identifies this as a render step.
 - `properties.notificationId: string`: **Required** - The id of the notification in the `notifications:` section to render. **Operators are evaluated**.
 - `properties.data: object`: **Required** - The data for **one** notification (the recipient and template data). Must be a single object — to render a batch, iterate with a [`:for`](/for) control and render one item per step. **Operators are evaluated**.
-- `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Required when the item carries page links.
+- `properties.serverUrl: string`: The absolute origin used to build link URLs (for example `https://myapp.com`). Defaults to the `url` of the current environment in [`config.environments`](/lowdefy-schema). Required when the item carries page links and no environment url is set.
 - `properties.landingPage: string`: A page path to route email links through (for example `/notifications/link`), so a landing page can mark the notification read before redirecting. When unset, links go directly to their target pages.
 - `properties.recordId: string`: The record id embedded in landing-page link URLs. Required when `landingPage` is set and the item has links — usually a `_uuid` minted earlier in the routine.
 

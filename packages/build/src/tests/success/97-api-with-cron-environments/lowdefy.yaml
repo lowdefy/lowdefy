@@ -1,5 +1,6 @@
 # 97: API endpoints with per-environment cron schedules
-# Verifies config.cron.environments passes through, schedules keyed by environment are resolved onto
+# Verifies the deprecated config.cron.environments is converted to config.environments (its
+# host, production, is the current environment), schedules keyed by environment are resolved onto
 # every declared environment (inherit default, override, or turn off) and build/schedules.json
 # carries an entry per enabled environment with the forward flag.
 lowdefy: local

@@ -99,6 +99,20 @@ _ref:
             - `allowlist: string[]`: A list of domains. Only recipients whose domain is in the list are sent to; others are dropped. When every `to` recipient is filtered out, the message is not sent.
             - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
 
+            When the connection sets no `filter`, the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead, so the per-environment rule lives in one place for every mail connection. A connection's own `filter` always wins. Auth emails are never filtered.
+
+            ```yaml
+            config:
+              environments:
+                prod:
+                  url: https://app.example.com
+                staging:
+                  url: https://staging.example.com
+                  email:
+                    filter:
+                      replaceAddress: team+staging@example.com
+            ```
+
             `allowlist` and `regex` combine — a recipient must satisfy both to receive mail.
 
             ### Examples
