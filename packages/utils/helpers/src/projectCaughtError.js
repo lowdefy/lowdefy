@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
-import { readErrorCodes } from '@lowdefy/errors';
+import { lowdefyErrorTypes, readErrorCodes } from '@lowdefy/errors';
 
-import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import type from './type.js';
 
 function identity(value) {

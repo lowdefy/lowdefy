@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import {
-  ActionError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
+import ActionError from './ActionError.js';
+import BlockError from './BlockError.js';
+import BuildError from './BuildError.js';
+import ConfigError from './ConfigError.js';
+import ConfigWarning from './ConfigWarning.js';
+import LowdefyInternalError from './LowdefyInternalError.js';
+import OperatorError from './OperatorError.js';
+import PluginError from './PluginError.js';
+import RequestError from './RequestError.js';
+import ServiceError from './ServiceError.js';
+import UserError from './UserError.js';
 
 // Name to class, for rebuilding an error whose class identity is gone but whose
 // name survived - a serializer round trip, or a caught error being reshaped.

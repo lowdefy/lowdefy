@@ -63,6 +63,7 @@
  * Error Field Utilities:
  *   readErrorCodes            - {code, statusCode} from one error node's own fields
  *   lowdefyErrorNames         - Set of Lowdefy error class names
+ *   lowdefyErrorTypes         - Lowdefy error class by name, for reviving and reshaping errors
  */
 
 import ActionError from './ActionError.js';
@@ -74,6 +75,7 @@ import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
 import lowdefyErrorNames from './lowdefyErrorNames.js';
+import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import readErrorCodes from './readErrorCodes.js';
@@ -95,6 +97,7 @@ export {
   errorToDisplayString,
   LowdefyInternalError,
   lowdefyErrorNames,
+  lowdefyErrorTypes,
   OperatorError,
   PluginError,
   readErrorCodes,

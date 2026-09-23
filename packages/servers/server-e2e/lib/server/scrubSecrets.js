@@ -18,7 +18,7 @@ import { createSecretScrubber } from '@lowdefy/node-utils';
 
 import getE2eSecrets from './getE2eSecrets.js';
 
-// E2E logs stay unscrubbed, but _error (task 16) reads this off the context like every
+// E2E logs stay unscrubbed, but _error reads this off the context like every
 // other server package, so a thrown message behaves identically in every mode.
 const scrubSecrets = createSecretScrubber({ secrets: getE2eSecrets() });
 

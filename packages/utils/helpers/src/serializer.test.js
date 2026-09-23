@@ -18,13 +18,13 @@ import {
   ConfigError,
   LowdefyInternalError,
   lowdefyErrorNames,
+  lowdefyErrorTypes,
   OperatorError,
   ServiceError,
   UserError,
 } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
-import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import serializer from './serializer.js';
 
 test('serialize convert object js date to ~d', () => {

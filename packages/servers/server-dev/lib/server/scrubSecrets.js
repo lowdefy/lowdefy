@@ -16,7 +16,7 @@
 
 import { createSecretScrubber, getSecretsFromEnv } from '@lowdefy/node-utils';
 
-// Dev logs stay unscrubbed, but _error (task 16) reads this off the context like every
+// Dev logs stay unscrubbed, but _error reads this off the context like every
 // other server package, so a thrown message behaves identically in every mode.
 const scrubSecrets = createSecretScrubber({ secrets: getSecretsFromEnv() });
 

@@ -16,8 +16,9 @@
   limitations under the License.
 */
 
+import { lowdefyErrorTypes } from '@lowdefy/errors';
+
 import extractErrorProps from './extractErrorProps.js';
-import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
 
