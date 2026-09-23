@@ -20,11 +20,13 @@ function _function({
   actions,
   arrayIndices,
   event,
+  items,
   location,
   operatorPrefix,
   params,
   parser,
   payload,
+  state,
   steps,
 }) {
   return (...args) => {
@@ -34,9 +36,11 @@ function _function({
       args,
       event,
       input: serializer.copy(params),
+      items,
       location,
       operatorPrefix: `_${operatorPrefix}`,
       payload,
+      state,
       steps,
     });
     if (errors.length > 0) {
