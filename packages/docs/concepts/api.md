@@ -124,6 +124,8 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
+To test a scheduled routine locally, run it as a system context with the dev server's `lowdefy_run_endpoint` MCP tool (or `POST /lowdefy-docs/run-endpoint`) with `system: true` — see [Docs for AI Agents](/ai-agent-docs#running-endpoints).
+
 See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ### Schedules per environment
@@ -413,6 +415,7 @@ Detached calls differ from normal `CallApi` steps in important ways:
 
 - **System context**: like a scheduled run, the target executes with no user — `_user` is `undefined` — regardless of who called the parent endpoint. `InternalApi` endpoints are callable.
 - **At-most-once, no retry**: if the dispatch or the target fails, nothing retries it. Design targets to be idempotent. The target's outcome exists only in the server logs and whatever its routine writes.
+- **Accepted, then run**: the `/api/detached` route answers `202` as soon as the call is authorized, and runs the target after the response under the platform's `waitUntil` (bounded by the target's own `maxDuration`). The dispatching invocation's request settles at once instead of staying in flight (and holding its instance's memory) while the target runs, so a chain of detached calls is a chain of separate invocations, not nested in-flight requests. The outcome is logged as `detached_run_done` (with the routine's status) or `detached_run_failed`.
 - **Requires `CRON_SECRET`**: the dispatch authenticates against the deployment's own `/api/detached` route with the `CRON_SECRET` environment variable (the same secret that secures cron, fail closed). The step fails with a config error if it is not set.
 - **No depth cap across detached calls**: each detached target starts at call depth 0, so the 10-level nesting limit does not protect against detached recursion. An endpoint that (directly or indirectly) detaches back into itself will loop forever — spawning a new invocation each time.
 

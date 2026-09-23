@@ -16,6 +16,7 @@
 
 export { default as Anchor } from './blocks/Anchor/Anchor.js';
 export { default as Box } from './blocks/Box/Box.js';
+export { default as ClickableHtml } from './blocks/ClickableHtml/ClickableHtml.js';
 export { default as DangerousHtml } from './blocks/DangerousHtml/DangerousHtml.js';
 export { default as Dynamic } from './blocks/Dynamic/Dynamic.js';
 export { default as Html } from './blocks/Html/Html.js';

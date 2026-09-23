@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { runDetachedEndpoint } from '@lowdefy/api';
+import { acceptDetachedEndpoint } from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
@@ -27,6 +27,11 @@ import getPathSegments from '../lib/getPathSegments.js';
 // snapshot that runDetachedEndpoint rehydrates, so nested calls authorize
 // against the dispatcher, not a forced system context. Delivery is at-most-once
 // with no retry: targets must be idempotent.
+//
+// The route answers 202 as soon as the call is authorized and parsed; the
+// endpoint runs after the response under this invocation's waitUntil
+// (acceptDetachedEndpoint). The dispatcher is therefore released at once
+// instead of staying alive - and billed - until the target's routine ends.
 async function detachedHandler(c) {
   if (c.req.method !== 'POST') {
     // A wrong-method request is client-caused: answer 405 rather than raising a
@@ -46,8 +51,7 @@ async function detachedHandler(c) {
   const endpointId = getPathSegments(c, '/api/detached/').join('/');
   const { payload, principal } = await c.req.json();
   context.logger.info({ event: 'call_detached_endpoint', endpointId });
-  const response = await runDetachedEndpoint(context, { endpointId, payload, principal });
-  return c.json(response);
+  return c.json(acceptDetachedEndpoint(context, { endpointId, payload, principal }), 202);
 }
 
 export default detachedHandler;
