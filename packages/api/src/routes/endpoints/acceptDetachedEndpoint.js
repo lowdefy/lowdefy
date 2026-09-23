@@ -23,12 +23,14 @@ import scheduleBackground from './scheduleBackground.js';
 //
 // Before this, the route awaited the whole routine and only then replied - and
 // the dispatcher's scheduleBackground keeps its OWN invocation alive until that
-// reply arrives. So every parent stayed billed for as long as its detached
+// reply arrives. So every parent stayed in flight for as long as its detached
 // children ran (a cron tick that answers in milliseconds held its invocation
-// for its slowest crawl), and a chain of detached hops was a chain of nested
-// in-flight requests - which is what trips the platform's loop detection
-// (508 INFINITE_LOOP_DETECTED) three or four hops down. "Detached" now means
-// the dispatcher's fetch settles as soon as the target has accepted the call.
+// for its slowest child) - on Vercel Fluid that keeps the instance's
+// provisioned memory billing running (CPU billing pauses during I/O) - and a
+// chain of detached hops was a chain of nested in-flight requests, a likely
+// (undocumented) trigger of the platform's 508 INFINITE_LOOP_DETECTED a few
+// hops down. "Detached" now means the dispatcher's fetch settles as soon as the
+// target has accepted the call.
 //
 // The outcome exists only in the logs (`detached_run_done` with the routine's
 // status, or `detached_run_failed`), as it already did for the dispatcher.
