@@ -126,7 +126,7 @@ _ref:
             - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` (`false` turns it off for that connection) — keep non-production environments from emailing real users in one place.
             - **Logs and analytics:** every server log line carries `environment`, `_app: environment` reads the name in config, and Sentry reports under it unless `logger.sentry.environment` is set.
             - A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
-            - **Switching features off:** `cron.enabled`, `email.enabled` and `sentry.enabled` set to `false` turn that feature off in one environment — no crons registered or forwarded, no email sent by mail requests, no Sentry. The features the current environment switches off are listed in the app metadata (`_app: disabled`). Logging cannot be switched off.
+            - **Switching features off:** `cron.enabled`, `email.enabled`, `posthog.enabled` and `sentry.enabled` default to `true`; set one to `false` to turn that feature off in one environment — no crons registered or forwarded, no email sent by mail requests, no PostHog, no Sentry. The features the current environment switches off are listed in the app metadata (`_app: disabled`). Logging cannot be switched off.
 
             ###### Crons for staging and other environments
 

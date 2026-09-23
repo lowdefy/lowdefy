@@ -3207,6 +3207,26 @@ export default {
                   type: 'App "config.environments.<name>.email" should be an object.',
                 },
               },
+              posthog: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to turn PostHog off in this environment: PostHogInit behaves as "enabled: false" and every PostHog action is a no-op. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.posthog.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.posthog" should be an object.',
+                },
+              },
               sentry: {
                 type: 'object',
                 additionalProperties: false,

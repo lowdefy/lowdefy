@@ -51,7 +51,10 @@ async function PostHogInit({ params, lowdefyApp }) {
   }
 
   // A disabled deployment never talks to PostHog, so it does not need a key.
-  if (enabled !== false && (!type.isString(apiKey) || apiKey.trim() === '')) {
+  // The current environment can switch PostHog off (config.environments.<env>.posthog.enabled:
+  // false). That wins over the enabled param, and a switched-off deployment needs no key.
+  const environmentOff = (lowdefyApp?.disabled ?? []).includes('posthog');
+  if (enabled !== false && !environmentOff && (!type.isString(apiKey) || apiKey.trim() === '')) {
     throw new Error(
       `PostHogInit "apiKey" must be a non-empty string. Received ${JSON.stringify(apiKey)}.`
     );
@@ -69,7 +72,12 @@ async function PostHogInit({ params, lowdefyApp }) {
   const superProperties = type.isNone(lowdefyApp?.environment)
     ? {}
     : { environment: lowdefyApp.environment };
-  await initPostHog({ apiKey: apiKey ?? null, config, enabled, superProperties });
+  await initPostHog({
+    apiKey: apiKey ?? null,
+    config,
+    enabled: environmentOff ? false : enabled,
+    superProperties,
+  });
   return null;
 }
 

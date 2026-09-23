@@ -187,3 +187,14 @@ test('PostHogInit registers no super property without an environment', async () 
   await PostHogInit({ params: { apiKey: 'phc_key' }, lowdefyApp: { name: 'app' } });
   expect(mockPostHog.register).not.toHaveBeenCalled();
 });
+
+test('PostHogInit stays disabled, without an apiKey, when the environment switches PostHog off', async () => {
+  await expect(
+    PostHogInit({
+      params: { enabled: true },
+      lowdefyApp: { environment: 'preview', disabled: ['posthog'] },
+    })
+  ).resolves.toBe(null);
+  expect(mockPostHog.init).not.toHaveBeenCalled();
+  expect(postHogState.status).toBe('disabled');
+});
