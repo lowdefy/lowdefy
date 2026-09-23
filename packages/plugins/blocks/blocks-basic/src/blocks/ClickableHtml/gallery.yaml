@@ -11,19 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-- title: Buttons in markup
+- title: A named event per button
   blocks:
     - id: buttons_basic
       type: ClickableHtml
       properties:
-        html: '<p>Pick a size: <button data-action="select" data-size="small">Small</button> <button data-action="select" data-size="large">Large</button></p>'
+        html: '<p>Pick a size: <button data-event="onSmallClick">Small</button> <button data-event="onLargeClick">Large</button></p>'
       events:
-        onClick:
-          - id: set_selected
+        onSmallClick:
+          - id: set_small
             type: SetState
             params:
-              buttons_basic_selected:
-                _event: size
+              buttons_basic_selected: small
+        onLargeClick:
+          - id: set_large
+            type: SetState
+            params:
+              buttons_basic_selected: large
     - id: buttons_basic_result
       type: Html
       properties:
@@ -35,14 +39,14 @@
                 default: 'nothing yet'
             - '</code></p>'
 
-- title: Data attributes on any element
+- title: Data attributes are the event object
   blocks:
     - id: list_rows
       type: ClickableHtml
       properties:
-        html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-action="open" data-record-id="rec_1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-action="open" data-record-id="rec_2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-action="open" data-record-id="rec_3" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
+        html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-event="onRowClick" data-record-id="rec_1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-event="onRowClick" data-record-id="rec_2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-event="onRowClick" data-record-id="rec_3" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
       events:
-        onClick:
+        onRowClick:
           - id: set_clicked
             type: SetState
             params:
@@ -65,22 +69,22 @@
     - id: mixed_content
       type: ClickableHtml
       properties:
-        html: '<p>This <a href="https://lowdefy.com" target="_blank">link</a> navigates normally, but <a href="#" data-action="comment" data-thread-id="t_9">this one</a> fires onClick instead.</p>'
+        html: '<p>This <a href="https://lowdefy.com" target="_blank">link</a> navigates normally, but <a href="#" data-event="onCommentClick" data-thread-id="t_9">this one</a> fires onCommentClick instead.</p>'
       events:
-        onClick:
+        onCommentClick:
           - id: set_mixed
             type: SetState
             params:
-              mixed_content_action:
-                _event: action
+              mixed_content_thread:
+                _event: thread_id
     - id: mixed_content_result
       type: Html
       properties:
         html:
           _string.concat:
-            - '<p>Action: <code>'
+            - '<p>Thread: <code>'
             - _state:
-                key: mixed_content_action
+                key: mixed_content_thread
                 default: 'none'
             - '</code></p>'
 
@@ -95,11 +99,15 @@
           border: 1px solid var(--ant-color-border)
           background: var(--ant-color-bg-container)
       properties:
-        html: '<h4 style="margin: 0 0 8px 0;">Card</h4><p style="margin: 0 0 8px 0; color: var(--ant-color-text-secondary);">Yours to change or remove until tomorrow.</p><button data-action="edit">Edit</button> <button data-action="remove">Remove</button>'
+        html: '<h4 style="margin: 0 0 8px 0;">Card</h4><p style="margin: 0 0 8px 0; color: var(--ant-color-text-secondary);">Yours to change or remove until tomorrow.</p><button data-event="onEditClick">Edit</button> <button data-event="onRemoveClick">Remove</button>'
       events:
-        onClick:
-          - id: set_card
+        onEditClick:
+          - id: set_card_edit
             type: SetState
             params:
-              style_card_action:
-                _event: action
+              style_card_action: edit
+        onRemoveClick:
+          - id: set_card_remove
+            type: SetState
+            params:
+              style_card_action: remove

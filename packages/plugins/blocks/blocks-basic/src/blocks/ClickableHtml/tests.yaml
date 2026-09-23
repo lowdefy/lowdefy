@@ -17,17 +17,17 @@
   type: ClickableHtml
   properties:
     html: |
-      <p>Plain markup <button data-action="go" data-item-id="1">Go</button></p>
-- id: properties.html-no-actions
+      <p>Plain markup <button data-event="onGoClick" data-item-id="1">Go</button></p>
+- id: properties.html-no-events
   type: ClickableHtml
   properties:
     html: |
-      <p>No data-action here, clicks do nothing.</p>
+      <p>No data-event here, clicks do nothing.</p>
 - id: properties.html-bad-code
   type: ClickableHtml
   properties:
     html: |
-      <button data-action="ok" onclick="alert('inline handler stripped')">Ok</button>
+      <button data-event="onOkClick" onclick="alert('inline handler stripped')">Ok</button>
       <script>alert('script tag');</script>
 - id: properties.html is number 0
   type: ClickableHtml
