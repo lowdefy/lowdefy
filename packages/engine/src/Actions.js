@@ -40,22 +40,22 @@ class Actions {
 
   logActionError({ error, action }) {
     const handleError = this.context._internal.lowdefy._internal.handleError;
-    const actionId = action?.id || '';
 
-    // Deduplicate by error message + action id
-    const errorKey = `${error?.message || ''}:${actionId}`;
-    if (this.loggedActionErrors.has(errorKey)) {
-      return;
-    }
-    this.loggedActionErrors.add(errorKey);
-
-    // User-facing errors log to browser console only, never to terminal
+    // User-facing errors log to browser console only, never to terminal. This line
+    // bypasses handleError, so it dedups here.
     if (error instanceof UserError) {
+      const errorKey = `${error.message}:${action?.id || ''}`;
+      if (this.loggedActionErrors.has(errorKey)) {
+        return;
+      }
+      this.loggedActionErrors.add(errorKey);
       this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
 
-    // Lowdefy errors - use handleError (-> terminal)
+    // Not deduped here: every server failure carries the same generic message, so a
+    // message + action key would hide each later failure of the action. handleError
+    // dedups on the message it displays, which in dev is the full server error.
     if (handleError) {
       handleError(error);
     }
