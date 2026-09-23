@@ -22,7 +22,7 @@ import {
   ServiceError,
   UserError,
 } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
+import { projectCaughtError, serializer } from '@lowdefy/helpers';
 
 import createWireProjection from './createWireProjection.js';
 
@@ -274,4 +274,42 @@ test('createWireProjection returns the wire message from project for a single er
 
   expect(project(createForeignError()).message).toBe('Something went wrong.');
   expect(project(new UserError('Check your input.')).message).toBe('Check your input.');
+});
+
+test('createWireProjection gives a projected caught error the generic shape with its class name', () => {
+  const axiosError = new Error('Request failed with status code 404');
+  axiosError.name = 'AxiosError';
+  axiosError.code = 'ERR_BAD_REQUEST';
+  axiosError.response = { status: 404, statusText: 'Not Found' };
+  const error = new RequestError('Http response "404: Not Found".', {
+    cause: axiosError,
+    configKey: 'key-1',
+    received: { headers: { authorization: 'Bearer hunter2' } },
+  });
+  error.handled = true;
+
+  const payload = serialize(projectCaughtError(error));
+
+  expect(payload).toEqual({
+    '~e': {
+      name: 'RequestError',
+      message: 'Something went wrong.',
+      code: 'ERR_BAD_REQUEST',
+      statusCode: 404,
+      requestId: 'rid-1',
+      isLowdefyError: true,
+      handled: true,
+    },
+  });
+  expectNoInternals(payload);
+});
+
+test('createWireProjection marks a projected caught UserError as a Lowdefy error and keeps its message', () => {
+  const error = new UserError('Order rejected.', { metaData: { orderId: 'ord_1' } });
+
+  const payload = serialize(projectCaughtError(error));
+
+  expect(payload['~e'].name).toBe('UserError');
+  expect(payload['~e'].message).toBe('Order rejected.');
+  expect(payload['~e'].isLowdefyError).toBe(true);
 });

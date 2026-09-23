@@ -62,7 +62,10 @@ function createWireProjection(context) {
         pageId: err.pageId,
         isReject: err.isReject,
         configKey,
-        isLowdefyError: err.isLowdefyError,
+        // Not read from the node: a caught error rebuilt for `_error` keeps only
+        // its class, and without the flag the client wraps a rethrown UserError
+        // in an ActionError and reports it back to the server a second time.
+        isLowdefyError: true,
         handled: err.handled,
         requestId,
       };

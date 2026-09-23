@@ -16,37 +16,10 @@
   limitations under the License.
 */
 
-import {
-  ActionError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-} from '@lowdefy/errors';
-
 import extractErrorProps from './extractErrorProps.js';
+import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
-
-const lowdefyErrorTypes = {
-  ActionError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  UserError,
-};
 
 function propsToError(data) {
   const ErrorClass = lowdefyErrorTypes[data.name] || Error;
@@ -300,5 +273,4 @@ const copy = (json, options = {}) => {
 
 const serializer = { copy, serialize, serializeToString, deserialize, deserializeFromString };
 
-export { lowdefyErrorTypes };
 export default serializer;

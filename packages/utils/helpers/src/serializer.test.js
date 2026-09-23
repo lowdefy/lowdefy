@@ -24,7 +24,8 @@ import {
 } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
-import serializer, { lowdefyErrorTypes } from './serializer.js';
+import lowdefyErrorTypes from './lowdefyErrorTypes.js';
+import serializer from './serializer.js';
 
 test('serialize convert object js date to ~d', () => {
   let object = {
