@@ -14,17 +14,11 @@
   limitations under the License.
 */
 
-import operatorScope from './operatorScope.js';
-
-// Every routine step evaluates against the same frame. Taking the frame from routineContext in one
-// place means a step handler cannot drop part of it (state, items, loop indices).
-function evaluateRoutineOperators(context, routineContext, { input, location }) {
-  return context.evaluateOperators({
-    arrayIndices: routineContext.arrayIndices,
-    input,
-    location,
-    ...operatorScope(routineContext),
-  });
+// The routine fields operators can read. A field added to the routine frame goes here, so every
+// routine step and control sees it rather than only the ones that remembered to pass it.
+function operatorScope(routineContext) {
+  const { error, items, payload, state, steps } = routineContext;
+  return { error: error ?? null, items, payload, state, steps };
 }
 
-export default evaluateRoutineOperators;
+export default operatorScope;

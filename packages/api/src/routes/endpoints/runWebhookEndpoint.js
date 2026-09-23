@@ -59,6 +59,7 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
     steps: {},
     payload: { body: body ?? null, query: query ?? {}, headers: headers ?? {} },
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: 0,
