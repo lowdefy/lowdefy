@@ -14,15 +14,22 @@
   limitations under the License.
 */
 
-// The lazy singleton behind every action in this package. PostHogInit fills it
-// in once per browser session; every other action reads it and does nothing
-// while it is empty, so an app that never initialises PostHog still runs.
+// The singleton behind every action in this package. PostHogInit fills it in
+// once per browser session; every other action reads it.
+//
+// status is one of:
+// - uninitialized: PostHogInit has not run. Actions do nothing and warn once,
+//   because a missing PostHogInit is a config mistake.
+// - disabled: PostHogInit ran with enabled: false. Actions do nothing, silently.
+// - loading: PostHogInit is downloading posthog-js. Actions wait for it.
+// - failed: posthog-js could not be downloaded. Actions do nothing, silently.
+// - enabled: client is the initialised posthog-js instance.
 const postHogState = {
   apiKey: null,
   client: null,
-  enabled: true,
-  initialized: false,
-  lastPersonProperties: null,
+  loading: null,
+  status: 'uninitialized',
+  warnedUninitialized: false,
 };
 
 export default postHogState;

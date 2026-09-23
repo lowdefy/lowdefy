@@ -30,5 +30,7 @@ _ref:
     description: >
       Loads the Google Maps JavaScript API and wraps `GoogleMaps`, `GoogleMapsHeatmap` and
       `PlacesAutocomplete` blocks as a parent container. Configure the API key, language, region,
-      libraries, and API version. Blocks that need an optional library must be wrapped in a
-      GoogleMapsScript that loads it — `PlacesAutocomplete` needs `libraries: [places]`.
+      libraries, and API version. Blocks that use an optional library should be wrapped in a
+      GoogleMapsScript that loads it — list `libraries: [places]` for `PlacesAutocomplete` so the
+      library is ready on first render. When it is not listed, `PlacesAutocomplete` imports it on
+      demand through `google.maps.importLibrary`.

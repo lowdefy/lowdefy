@@ -14,14 +14,6 @@
   limitations under the License.
 */
 
-import identifiedIdStorageKey from './identifiedIdStorageKey.js';
-
-function writeIdentifiedId({ id, window }) {
-  try {
-    window.localStorage.setItem(identifiedIdStorageKey, id);
-  } catch (error) {
-    // Blocked storage - identify() still ran, we just cannot remember it.
-  }
-}
-
-export default writeIdentifiedId;
+export default {
+  type: 'object',
+};

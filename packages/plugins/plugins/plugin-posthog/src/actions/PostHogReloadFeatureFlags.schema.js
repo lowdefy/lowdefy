@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import identifiedIdStorageKey from './identifiedIdStorageKey.js';
-import postHogState from './postHogState.js';
-
-function forgetIdentifiedId({ window }) {
-  postHogState.lastPersonProperties = null;
-  try {
-    window.localStorage.removeItem(identifiedIdStorageKey);
-  } catch (error) {
-    // Blocked storage - reset() still ran.
-  }
-}
-
-export default forgetIdentifiedId;
+export default {
+  type: 'object',
+  params: {
+    type: 'object',
+    properties: {
+      timeout: {
+        type: 'integer',
+        minimum: 0,
+        description:
+          'Milliseconds to wait for PostHog to answer before resolving with empty results. Defaults to 5000.',
+      },
+    },
+    additionalProperties: false,
+  },
+};

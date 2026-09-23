@@ -16,20 +16,30 @@
 
 import { type } from '@lowdefy/helpers';
 
+// A scalar or array at the top level has no path of its own, so it is listed under this key.
+const TOP_LEVEL_KEY = 'value';
+
+function formatScalar(value) {
+  if (type.isNone(value)) return 'null';
+  if (type.isDate(value)) return value.toISOString();
+  return String(value);
+}
+
+function isScalar(value) {
+  return !type.isObject(value) && !type.isArray(value);
+}
+
 // A nested context object becomes a flat list of dot-path rows, so the expanded row reads like a
 // console context table. Arrays of scalars stay on one line, arrays of objects get indexed paths.
 function flattenContext(value, path = '', rows = []) {
-  if (type.isNone(value)) {
-    rows.push({ key: path, value: 'null', mono: true });
-    return rows;
-  }
+  const key = path === '' ? TOP_LEVEL_KEY : path;
   if (type.isArray(value)) {
     if (value.length === 0) {
-      rows.push({ key: path, value: '[]', mono: true });
+      rows.push({ key, value: '[]', mono: true });
       return rows;
     }
-    if (value.every((item) => !type.isObject(item) && !type.isArray(item))) {
-      rows.push({ key: path, value: value.join(', '), mono: true });
+    if (value.every(isScalar)) {
+      rows.push({ key, value: value.map(formatScalar).join(', '), mono: true });
       return rows;
     }
     value.forEach((item, index) => flattenContext(item, `${path}[${index}]`, rows));
@@ -38,15 +48,18 @@ function flattenContext(value, path = '', rows = []) {
   if (type.isObject(value)) {
     const keys = Object.keys(value);
     if (keys.length === 0) {
-      rows.push({ key: path, value: '{}', mono: true });
+      rows.push({ key, value: '{}', mono: true });
       return rows;
     }
-    keys.forEach((key) => flattenContext(value[key], path === '' ? key : `${path}.${key}`, rows));
+    keys.forEach((child) =>
+      flattenContext(value[child], path === '' ? child : `${path}.${child}`, rows)
+    );
     return rows;
   }
+  const text = formatScalar(value);
   rows.push({
-    key: path,
-    value: String(value),
+    key,
+    value: text,
     mono: !type.isString(value) || value.length < 80,
   });
   return rows;

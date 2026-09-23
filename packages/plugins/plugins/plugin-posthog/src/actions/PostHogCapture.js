@@ -25,10 +25,7 @@ import getPostHog from '../lib/getPostHog.js';
 // one of five.
 //
 // Never pass personally identifiable information as a property.
-function PostHogCapture({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogCapture({ params }) {
   const { event, groups, properties } = params ?? {};
   if (!type.isString(event) || event.trim() === '') {
     throw new Error(
@@ -46,7 +43,10 @@ function PostHogCapture({ params }) {
     );
   }
 
-  const eventProperties = type.isObject(properties) ? { ...properties } : {};
+  const posthog = await getPostHog({ action: 'PostHogCapture' });
+  if (type.isNone(posthog)) return null;
+
+  const eventProperties = { ...(properties ?? {}) };
   if (type.isObject(groups)) {
     eventProperties.$groups = groups;
   }

@@ -12,6 +12,69 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Poll Until a Job Is Done
+  blocks:
+    - id: job_timer
+      type: PollingTimer
+      properties:
+        interval: 1000
+      events:
+        onTick:
+          # In an app this is a Request that fetches the job status. Here the job
+          # reports done on the fifth tick.
+          - id: job_timer_set_status
+            type: SetState
+            params:
+              job_status:
+                _if:
+                  test:
+                    _gte:
+                      - _event: tick
+                      - 5
+                  then: done
+                  else: running
+          - id: job_timer_stop_when_done
+            type: CallMethod
+            skip:
+              _ne:
+                - _state: job_status
+                - done
+            params:
+              blockId: job_timer
+              method: stop
+    - id: job_timer_controls
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: job_timer_start
+          type: Button
+          properties:
+            title: Start Job
+            icon: AiOutlinePlayCircle
+          events:
+            onClick:
+              - id: job_timer_set_running
+                type: SetState
+                params:
+                  job_status: running
+              - id: job_timer_call_start
+                type: CallMethod
+                params:
+                  blockId: job_timer
+                  method: start
+        - id: job_timer_status
+          type: Span
+          properties:
+            content:
+              _nunjucks:
+                template: 'Job status: {{ status }}'
+                on:
+                  status:
+                    _if_none:
+                      - _state: job_status
+                      - not started
+
 - title: Start and Stop
   blocks:
     - id: manual_timer

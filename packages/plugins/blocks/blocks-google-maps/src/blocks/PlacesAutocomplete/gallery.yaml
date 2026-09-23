@@ -174,8 +174,18 @@
           - id: pa_place_changed_message
             type: DisplayMessage
             params:
-              content: Place selected.
+              content:
+                _string.concat:
+                  - 'Selected: '
+                  - _event: place.formattedAddress
               duration: 2
+        onError:
+          - id: pa_error_message
+            type: DisplayMessage
+            params:
+              status: error
+              content:
+                _event: message
         onSearch:
           - id: pa_search_state
             type: SetState

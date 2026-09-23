@@ -39,3 +39,29 @@ _ref:
       Large logs can be pushed straight into the block with the `setData` method using a CallMethod
       action, so the records never round-trip through the operator pipeline. Every string rendered
       by the block is set on the `text` property, so the log can be translated.
+    guide: |
+      ## Setting records with `setData`
+
+      Call `setData` from the block's `onMount` event, after a Request action has loaded the
+      records. The page `onInit` event runs before the block mounts, so the method does not exist
+      yet. The block falls back to `properties.data` until `setData` is called. See
+      [Selectors](/selectors) for the same pattern on selector blocks.
+
+      ```yaml
+      id: audit_log
+      type: EventLog
+      properties:
+        height: 480
+      events:
+        onMount:
+          - id: load_events
+            type: Request
+            params: get_events
+          - id: fill
+            type: CallMethod
+            params:
+              blockId: audit_log
+              method: setData
+              args:
+                - _request: get_events
+      ```

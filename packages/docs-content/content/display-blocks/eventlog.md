@@ -6,6 +6,32 @@ The block does not assume a record shape: the `fields` property maps dot paths o
 
 Large logs can be pushed straight into the block with the `setData` method using a CallMethod action, so the records never round-trip through the operator pipeline. Every string rendered by the block is set on the `text` property, so the log can be translated.
 
+## Setting records with `setData`
+
+Call `setData` from the block's `onMount` event, after a Request action has loaded the
+records. The page `onInit` event runs before the block mounts, so the method does not exist
+yet. The block falls back to `properties.data` until `setData` is called. See
+[Selectors](/selectors) for the same pattern on selector blocks.
+
+```yaml
+id: audit_log
+type: EventLog
+properties:
+  height: 480
+events:
+  onMount:
+    - id: load_events
+      type: Request
+      params: get_events
+    - id: fill
+      type: CallMethod
+      params:
+        blockId: audit_log
+        method: setData
+        args:
+          - _request: get_events
+```
+
 ```yaml
 - id: basic_event_log
   type: EventLog
@@ -183,7 +209,7 @@ Large logs can be pushed straight into the block with the `setData` method using
       copied: Gekopieer
       systemActor: Stelsel
       searchPlaceholder: Soek gebeure…
-      empty: Geen gebeure nie.
+      noData: Geen gebeure nie.
       noResults: Geen passende gebeure nie.
     fields:
       id: id
@@ -198,6 +224,39 @@ Large logs can be pushed straight into the block with the `setData` method using
         metadata:
           rows: 2043
           error: Kolom "epos" ontbreek
+```
+
+```yaml
+- id: set_data_event_log
+  type: EventLog
+  properties:
+    height: 200
+    fields:
+      id: id
+      time: timestamp
+      message: message
+  events:
+    onMount:
+      - id: set_event_log_data
+        type: CallMethod
+        params:
+          blockId: set_data_event_log
+          method: setData
+          args:
+            - - id: "1"
+                timestamp: 2026-03-04T09:12:04.000Z
+                type: sync_failed
+                level: error
+                message: Contact sync failed after 3 retries.
+                metadata:
+                  retries: 3
+              - id: "2"
+                timestamp: 2026-03-04T09:02:04.000Z
+                type: sync_succeeded
+                level: success
+                message: Contact sync completed.
+                metadata:
+                  contacts: 1240
 ```
 
 ```yaml
@@ -245,7 +304,7 @@ Large logs can be pushed straight into the block with the `setData` method using
 | --- | --- | --- | --- |
 | `data` | array | `[]` | Array of records, in the order they should be listed (usually newest first). Each record is read using the `fields` paths, so any record shape works. |
 | `fields` | object | - | Dot paths used to read each record. Set only the paths that differ from the defaults. |
-| `fields.id` | string | `"_id"` | Path to a unique row key, used for the list key and to track expanded rows. Falls back to the row index when the path is empty. |
+| `fields.id` | string | `"_id"` | Path to a unique row id, used as the list key, to track expanded rows and matched by the search. Ids that are not strings, such as MongoDB ObjectIds, are serialized. Falls back to the row index when the path is empty or the id repeats an earlier row. |
 | `fields.time` | string | `"created.timestamp"` | Path to the row timestamp. Any value the JavaScript Date constructor accepts, such as an ISO string or a date. |
 | `fields.type` | string | `"type"` | Path to the event type, used as the key into `eventTypeConfig`. |
 | `fields.level` | string | `"level"` | Path to the severity of the row. One of "error", "warning", "success" or "info". When the path is empty, the level on the matching `eventTypeConfig` entry is used, otherwise the row is "info". |
@@ -257,13 +316,13 @@ Large logs can be pushed straight into the block with the `setData` method using
 | `fields.context` | string | `"metadata"` | Path to the context object shown as a flattened key-value table when the row is expanded. |
 | `eventTypeConfig` | object | `{}` | Map of event type to display config: `{ color, title, icon, level }`. `title` labels the type column, `icon` names an icon shown before the label, `color` colors the label and icon, and `level` sets the severity for every row of that type. |
 | `reverse` | boolean | `false` | Reverse the order of the records before they are listed. |
-| `search` | object \| boolean | - | Client-side search over the type, title, message, detail and context of every record. Set to false to hide the search input. |
+| `search` | object \| boolean | - | Client-side search over the id, type, title, message, detail and context of every record. The search input is shown by default: omit the property or set it to true for the defaults, set an object to tune it, or set false to hide it. |
 | `search.placeholder` | string | - | Placeholder text in the search input. Defaults to `text.searchPlaceholder`. |
 | `search.debounce` | number | `150` | Milliseconds to wait after the last keystroke before filtering. |
 | `search.minLength` | number | `0` | Skip filtering until the query is at least this many characters. |
 | `levelFilters` | boolean | `true` | Show the severity filter pills in the toolbar. |
 | `levelFilterOptions` | array | - | The filter pills to show, in order. Defaults to "all" plus every level with at least one record. |
-| `defaultExpanded` | boolean | `false` | Expand every row. |
+| `defaultExpanded` | boolean | `false` | Expand every row. Rows added later are expanded when they first appear, and rows the user collapsed stay collapsed. |
 | `height` | number \| string | - | Pixel height (number) or css height string of the scroll container. When omitted, the log grows with its content and scrolls with the page. |
 | `overscan` | number | `400` | Pixels of off-screen rows to render above and below the viewport. Increase for smoother fast-scroll, decrease to reduce DOM cost. |
 | `text` | object | - | All the text rendered by the block, so it can be changed or translated. |
@@ -278,13 +337,14 @@ Large logs can be pushed straight into the block with the `setData` method using
 | `text.copy` | string | `"Copy JSON"` | Label of the button that copies the context object to the clipboard. |
 | `text.copied` | string | `"Copied"` | Label shown on the copy button after the context was copied. |
 | `text.systemActor` | string | `"System"` | Actor name shown when a record has no actor. |
-| `text.empty` | string | `"No events."` | Text shown when there are no records. |
+| `text.noData` | string | `"No events."` | Text shown when there are no records. |
 | `text.noResults` | string | `"No matching events."` | Text shown when the search and filters match no records. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onRowClick` | `{ row }` | Triggered when a row is clicked. |
 | `onExpand` | `{ row, expanded }` | Triggered when a row is expanded or collapsed. |
+| `onSearch` | `{ value, resultCount }` | Triggered when the debounced search query changes, including when the search is cleared. |
 
 | Key | Target |
 | --- | --- |
@@ -297,6 +357,7 @@ Large logs can be pushed straight into the block with the `setData` method using
 | `/row` | Each log row. |
 | `/detail` | The expanded detail area of a row. |
 | `/context` | The context key-value table in an expanded row. |
-| `/empty` | The empty and no-results placeholder. |
+| `/noData` | The placeholder shown when there are no records. |
+| `/noResults` | The placeholder shown when the search and level filter match no records. |
 
 No slots defined.

@@ -27,7 +27,8 @@ export default {
     row: 'Each log row.',
     detail: 'The expanded detail area of a row.',
     context: 'The context key-value table in an expanded row.',
-    empty: 'The empty and no-results placeholder.',
+    noData: 'The placeholder shown when there are no records.',
+    noResults: 'The placeholder shown when the search and level filter match no records.',
   },
   events: {
     onRowClick: {
@@ -43,10 +44,19 @@ export default {
         expanded: 'True when the row was expanded, false when it was collapsed.',
       },
     },
+    onSearch: {
+      description:
+        'Triggered when the debounced search query changes, including when the search is cleared.',
+      event: {
+        value: 'The current debounced search query string.',
+        resultCount:
+          'Number of rows visible after the search and the level filter are applied. Equals the number of records when the query is empty or below `search.minLength` and the level filter is "all".',
+      },
+    },
   },
   methods: {
     setData:
-      'Set the records imperatively, bypassing block properties. Call with a CallMethod action, typically from a request onSuccess, so a large log never round-trips through the operator pipeline.',
+      'Set the records imperatively, bypassing block properties, so a large log never round-trips through the operator pipeline. Call with a CallMethod action from the block onMount event, after a Request action has loaded the records. The page onInit event runs before the block mounts, so the method does not exist yet.',
   },
   properties: {
     type: 'object',
@@ -74,7 +84,7 @@ export default {
             type: 'string',
             default: '_id',
             description:
-              'Path to a unique row key, used for the list key and to track expanded rows. Falls back to the row index when the path is empty.',
+              'Path to a unique row id, used as the list key, to track expanded rows and matched by the search. Ids that are not strings, such as MongoDB ObjectIds, are serialized. Falls back to the row index when the path is empty or the id repeats an earlier row.',
           },
           time: {
             type: 'string',
@@ -138,6 +148,31 @@ export default {
         docs: {
           displayType: 'yaml',
         },
+        additionalProperties: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            title: {
+              type: 'string',
+              description: 'Label shown in the type column. Defaults to the event type.',
+            },
+            color: {
+              type: 'string',
+              description: 'CSS color of the type label and icon.',
+            },
+            icon: {
+              type: ['string', 'object'],
+              description:
+                'Name of an icon, or properties of an Icon block, shown before the type label.',
+            },
+            level: {
+              type: 'string',
+              enum: ['error', 'warning', 'success', 'info'],
+              description:
+                'Severity of every row of this type, used when the row has no level of its own.',
+            },
+          },
+        },
       },
       reverse: {
         type: 'boolean',
@@ -148,7 +183,7 @@ export default {
         type: ['object', 'boolean'],
         additionalProperties: false,
         description:
-          'Client-side search over the type, title, message, detail and context of every record. Set to false to hide the search input.',
+          'Client-side search over the id, type, title, message, detail and context of every record. The search input is shown by default: omit the property or set it to true for the defaults, set an object to tune it, or set false to hide it.',
         properties: {
           placeholder: {
             type: 'string',
@@ -184,7 +219,8 @@ export default {
       defaultExpanded: {
         type: 'boolean',
         default: false,
-        description: 'Expand every row.',
+        description:
+          'Expand every row. Rows added later are expanded when they first appear, and rows the user collapsed stay collapsed.',
       },
       height: {
         type: ['number', 'string'],
@@ -260,7 +296,7 @@ export default {
             default: 'System',
             description: 'Actor name shown when a record has no actor.',
           },
-          empty: {
+          noData: {
             type: 'string',
             default: 'No events.',
             description: 'Text shown when there are no records.',

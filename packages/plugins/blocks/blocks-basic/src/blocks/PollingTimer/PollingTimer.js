@@ -18,22 +18,19 @@ import { useEffect, useRef } from 'react';
 import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
-function validateInterval({ blockId, interval }) {
-  if (!type.isInt(interval) || interval < 1) {
-    throw new Error(
-      `PollingTimer ${blockId} "interval" should be a positive integer of milliseconds. Received ${JSON.stringify(
-        interval
-      )}.`
-    );
-  }
-  return interval;
-}
+import validateInterval from './validateInterval.js';
 
-// Headless timer: renders nothing and fires onTick every "interval" ms while running.
-// Typically used to poll a request until a background job completes.
-const PollingTimer = ({ blockId, methods, properties }) => {
-  const timerRef = useRef(null);
-  const timerIntervalRef = useRef(null);
+// Headless timer: renders nothing and fires onTick while running. Typically used to poll a
+// request until a background job completes. Each tick is scheduled "interval" ms after the
+// previous onTick actions finish, so a slow chain never overlaps the next tick.
+function PollingTimer({ methods, properties }) {
+  // Validated while rendering so an invalid interval reaches the block error boundary, instead
+  // of throwing from a timeout or visibility listener where nothing surfaces it.
+  validateInterval({ interval: properties.interval });
+
+  const timeoutRef = useRef(null);
+  const scheduledIntervalRef = useRef(null);
+  const inFlightRef = useRef(false);
   const runningRef = useRef(false);
   const tickRef = useRef(0);
   // Methods are registered once, so property changes are read through a ref.
@@ -45,40 +42,47 @@ const PollingTimer = ({ blockId, methods, properties }) => {
     return document.visibilityState === 'hidden';
   }
 
-  function clearTimer() {
-    if (timerRef.current === null) return;
-    clearInterval(timerRef.current);
-    timerRef.current = null;
+  function clearScheduledTick() {
+    if (timeoutRef.current === null) return;
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
   }
 
-  function stop() {
-    runningRef.current = false;
-    clearTimer();
+  function scheduleTick() {
+    if (!runningRef.current) return;
+    if (timeoutRef.current !== null) return;
+    // A tick in flight schedules the next one when its onTick actions finish.
+    if (inFlightRef.current) return;
+    if (hiddenAndPaused()) return;
+    const { interval } = propertiesRef.current;
+    scheduledIntervalRef.current = interval;
+    timeoutRef.current = setTimeout(tick, interval);
   }
 
-  function onTick() {
+  async function tick() {
+    timeoutRef.current = null;
     tickRef.current += 1;
-    methods.triggerEvent({ name: 'onTick', event: { tick: tickRef.current } });
     const { maxTicks } = propertiesRef.current;
     if (type.isInt(maxTicks) && tickRef.current >= maxTicks) {
-      stop();
+      runningRef.current = false;
     }
-  }
-
-  function startTimer() {
-    const interval = validateInterval({ blockId, interval: propertiesRef.current.interval });
-    if (timerRef.current !== null) return;
-    if (hiddenAndPaused()) return;
-    timerIntervalRef.current = interval;
-    timerRef.current = setInterval(onTick, interval);
+    inFlightRef.current = true;
+    // The engine resolves triggerEvent once the chain finishes, including when an action fails.
+    await methods.triggerEvent({ name: 'onTick', event: { tick: tickRef.current } });
+    inFlightRef.current = false;
+    scheduleTick();
   }
 
   function start() {
     if (runningRef.current) return;
     tickRef.current = 0;
-    // An invalid interval throws out of startTimer, leaving the timer stopped.
-    startTimer();
     runningRef.current = true;
+    scheduleTick();
+  }
+
+  function stop() {
+    runningRef.current = false;
+    clearScheduledTick();
   }
 
   function toggle() {
@@ -90,12 +94,11 @@ const PollingTimer = ({ blockId, methods, properties }) => {
   }
 
   function onVisibilityChange() {
-    if (!runningRef.current) return;
     if (hiddenAndPaused()) {
-      clearTimer();
+      clearScheduledTick();
       return;
     }
-    startTimer();
+    scheduleTick();
   }
 
   useEffect(() => {
@@ -113,13 +116,13 @@ const PollingTimer = ({ blockId, methods, properties }) => {
   }, []);
 
   useEffect(() => {
-    if (!runningRef.current) return;
-    if (timerIntervalRef.current === properties.interval) return;
-    clearTimer();
-    startTimer();
+    if (timeoutRef.current === null) return;
+    if (scheduledIntervalRef.current === properties.interval) return;
+    clearScheduledTick();
+    scheduleTick();
   }, [properties.interval]);
 
   return null;
-};
+}
 
 export default withBlockDefaults(PollingTimer);

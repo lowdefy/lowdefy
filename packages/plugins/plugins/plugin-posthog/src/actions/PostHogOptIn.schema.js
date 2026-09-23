@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-const identifiedIdStorageKey = 'lowdefy_posthog_identified_id';
-
-export default identifiedIdStorageKey;
+export default {
+  type: 'object',
+};

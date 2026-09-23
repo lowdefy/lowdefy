@@ -14,26 +14,29 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+
+import parseStoredValue from '../../localStorage/parseStoredValue.js';
+import validateStorageKey from '../../localStorage/validateStorageKey.js';
 
 function GetLocalStorage({ globals, params }) {
-  const { window } = globals;
   if (!type.isObject(params)) {
-    throw new Error(
-      `GetLocalStorage params should be an object. Received ${JSON.stringify(params)}.`
-    );
+    throw new Error('GetLocalStorage params should be an object.');
   }
   const { key } = params;
-  if (!type.isString(key) || key === '') {
-    throw new Error(
-      `GetLocalStorage key should be a non-empty string. Received ${JSON.stringify(key)}.`
-    );
+  validateStorageKey({ actionType: 'GetLocalStorage', key });
+  let item;
+  try {
+    item = globals.window.localStorage.getItem(key);
+  } catch {
+    // The browser blocks storage access (e.g. Safari with site data disabled), so read it as
+    // not set - the user's browser settings are not an app config error.
+    return params.default;
   }
-  const item = window.localStorage.getItem(key);
   if (type.isNone(item)) {
     return params.default;
   }
-  return serializer.deserializeFromString(item);
+  return parseStoredValue(item);
 }
 
 export default GetLocalStorage;

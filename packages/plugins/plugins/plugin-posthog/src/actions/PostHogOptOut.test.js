@@ -30,16 +30,21 @@ let PostHogOptOut;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogInit, PostHogOptOut } = await import('../actions.js'));
 });
 
-test('PostHogOptOut opts the person out of capturing', () => {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
-  expect(PostHogOptOut({ params: {} })).toBe(null);
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+test('PostHogOptOut opts the person out of capturing', async () => {
+  await PostHogInit({ params: { apiKey: 'phc_key' } });
+  await expect(PostHogOptOut({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_out_capturing).toHaveBeenCalledTimes(1);
 });
 
-test('PostHogOptOut does nothing before PostHogInit has run', () => {
-  expect(PostHogOptOut({ params: {} })).toBe(null);
+test('PostHogOptOut does nothing before PostHogInit has run', async () => {
+  await expect(PostHogOptOut({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_out_capturing).not.toHaveBeenCalled();
 });

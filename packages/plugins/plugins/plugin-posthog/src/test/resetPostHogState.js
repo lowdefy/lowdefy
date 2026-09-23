@@ -21,9 +21,9 @@ import postHogState from '../lib/postHogState.js';
 function resetPostHogState() {
   postHogState.apiKey = null;
   postHogState.client = null;
-  postHogState.enabled = true;
-  postHogState.initialized = false;
-  postHogState.lastPersonProperties = null;
+  postHogState.loading = null;
+  postHogState.status = 'uninitialized';
+  postHogState.warnedUninitialized = false;
 }
 
 export default resetPostHogState;

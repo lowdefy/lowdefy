@@ -39,6 +39,7 @@ export { default as Divider } from './blocks/Divider/e2e.js';
 export { default as Drawer } from './blocks/Drawer/e2e.js';
 export { default as DropdownButton } from './blocks/DropdownButton/e2e.js';
 export { default as DropdownMenu } from './blocks/DropdownMenu/e2e.js';
+export { default as EventLog } from './blocks/EventLog/e2e.js';
 export { default as Footer } from './blocks/Footer/e2e.js';
 export { default as Header } from './blocks/Header/e2e.js';
 export { default as Label } from './blocks/Label/e2e.js';

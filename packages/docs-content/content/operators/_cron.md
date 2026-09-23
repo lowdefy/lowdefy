@@ -4,6 +4,19 @@ The `_cron` operator works with [cron expressions](https://en.wikipedia.org/wiki
 
 A cron expression has five fields, `minute hour day-of-month month day-of-week`, and an optional leading seconds field. For example, `0 9 * * 1` is "At 09:00 AM, only on Monday".
 
+The supported syntax is:
+- `*` for any value, `?` as an alias of `*`, lists like `1,3,5`, ranges like `1-5` and steps like `*/15` or `0-30/10`.
+- Month names (`JAN` to `DEC`) and day names (`SUN` to `SAT`). Day of week `0` and `7` are both Sunday.
+- `L` for the last day of the month in the day-of-month field, and `5L` for the last Friday of the month in the day-of-week field.
+- `#` for the nth weekday of the month, like `1#2` for the second Monday.
+- The aliases `@yearly`, `@annually`, `@monthly`, `@weekly`, `@daily`, `@hourly`, `@minutely`, `@secondly`, `@weekdays` and `@weekends`.
+
+The Jenkins style `H` hash token is not supported, since it would pick a different random time each time the operator is evaluated. `W` (nearest weekday), a year field and `@reboot` are not supported either. A blank expression (`""` or only whitespace) is treated as a missing expression.
+
+When both day-of-month and day-of-week are restricted, an occurrence matches either of them, as in standard cron.
+
+> `_cron` accepts a wider grammar than the `schedules` of [scheduled endpoints](/api#scheduled-endpoints-cron), which only accept five numeric fields and can not restrict day-of-month and day-of-week together. An expression that `_cron.validate` accepts is not always a valid endpoint schedule.
+
 Every method takes the cron expression as a string, or as the `expression` property of an object when more arguments are needed:
 
 ```yaml
@@ -28,13 +41,15 @@ This operator is provided by the `@lowdefy/operators-cron` plugin package.
   expression: string,
   from?: date | string,
   timezone?: string,
-  count?: number
+  count?: integer
 }): date | date[]
 ```
 
-The `_cron.next` method returns the next occurrence of a cron expression as a date. When `count` is greater than 1, an array of the next `count` occurrences is returned, in chronological order.
+The `_cron.next` method returns the next occurrence of a cron expression after the `from` date. An occurrence exactly at `from` is not included. When `count` is greater than 1, an array of the next `count` occurrences is returned, in chronological order.
 
-An error is thrown if the cron expression can not be parsed.
+On a daylight saving time change in the evaluated `timezone`, a time that is skipped when the clocks go forward runs an hour later, and a time that repeats when the clocks go back runs once, at its first occurrence. Schedules that run every hour or more often run through both repeated hours.
+
+An error is thrown if the cron expression is missing, is invalid, or never occurs (like `0 0 31 2 *`).
 
 #### Arguments
 
@@ -42,13 +57,13 @@ An error is thrown if the cron expression can not be parsed.
 The cron expression, for example `0 9 * * 1`. Required.
 
 ###### from
-The date to calculate the next occurrence from, as a date or an ISO 8601 date string. Defaults to the current date and time.
+The date to calculate the next occurrence from, as a date or an ISO 8601 date string like `2024-01-01` or `2024-01-01T09:00:00Z`. Other date strings are not accepted, since JavaScript engines parse them differently. Defaults to the current date and time.
 
 ###### timezone
 The [IANA timezone name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), for example `Europe/London`, that the cron expression is evaluated in. Defaults to the timezone of the environment that evaluates the operator.
 
 ###### count
-The number of occurrences to return. A `count` of 1 returns a single date, a `count` greater than 1 returns an array of dates. Defaults to 1.
+The number of occurrences to return, an integer from 1 to 1000. A `count` of 1 returns a single date, a `count` greater than 1 returns an array of dates. Defaults to 1.
 
 #### Examples
 
@@ -87,13 +102,13 @@ Returns: `[2024-01-01T09:00:00.000Z, 2024-01-08T09:00:00.000Z, 2024-01-15T09:00:
   expression: string,
   from?: date | string,
   timezone?: string,
-  count?: number
+  count?: integer
 }): date | date[]
 ```
 
-The `_cron.previous` method returns the previous occurrence of a cron expression as a date. When `count` is greater than 1, an array of the previous `count` occurrences is returned, most recent first.
+The `_cron.previous` method returns the previous occurrence of a cron expression before the `from` date. An occurrence exactly at `from` is not included. When `count` is greater than 1, an array of the previous `count` occurrences is returned, most recent first.
 
-An error is thrown if the cron expression can not be parsed.
+An error is thrown if the cron expression is missing, is invalid, or never occurs (like `0 0 31 2 *`).
 
 #### Arguments
 
@@ -101,13 +116,13 @@ An error is thrown if the cron expression can not be parsed.
 The cron expression, for example `0 9 * * 1`. Required.
 
 ###### from
-The date to calculate the previous occurrence from, as a date or an ISO 8601 date string. Defaults to the current date and time.
+The date to calculate the previous occurrence from, as a date or an ISO 8601 date string like `2024-01-01` or `2024-01-01T09:00:00Z`. Other date strings are not accepted, since JavaScript engines parse them differently. Defaults to the current date and time.
 
 ###### timezone
 The [IANA timezone name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), for example `Europe/London`, that the cron expression is evaluated in. Defaults to the timezone of the environment that evaluates the operator.
 
 ###### count
-The number of occurrences to return. A `count` of 1 returns a single date, a `count` greater than 1 returns an array of dates. Defaults to 1.
+The number of occurrences to return, an integer from 1 to 1000. A `count` of 1 returns a single date, a `count` greater than 1 returns an array of dates. Defaults to 1.
 
 #### Examples
 
@@ -146,7 +161,7 @@ Returns: `[2023-12-25T09:00:00.000Z, 2023-12-18T09:00:00.000Z, 2023-12-11T09:00:
 
 The `_cron.describe` method returns a human readable description of a cron expression, like "At 09:00 AM, only on Monday".
 
-An empty string is returned when the expression is `null`, `undefined` or `""`, so the method is safe to use in a label that might not have a schedule yet. An error is thrown if the expression is given but can not be parsed.
+An empty string is returned when the expression is `null`, `undefined`, `""` or only whitespace, so the method is safe to use in a label that might not have a schedule yet. Any other expression that `_cron.validate` would return `false` for throws an error, including expressions with the `H` hash token and expressions that never occur.
 
 #### Arguments
 
@@ -154,7 +169,9 @@ An empty string is returned when the expression is `null`, `undefined` or `""`, 
 The cron expression, for example `0 9 * * 1`. Required.
 
 ###### locale
-The locale to describe the expression in, for example `fr`. Defaults to `en`.
+The locale to describe the expression in, for example `fr`. Defaults to `en`. The supported locale codes are the [cronstrue locales](https://github.com/bradymholt/cRonstrue#supported-locales): `af`, `ar`, `az`, `be`, `bg`, `ca`, `cs`, `da`, `de`, `en`, `es`, `fa`, `fi`, `fr`, `he`, `hr`, `hu`, `id`, `it`, `ja`, `ko`, `my`, `nb`, `nl`, `nn`, `pl`, `pt_BR`, `pt_PT`, `ro`, `ru`, `sk`, `sl`, `sr`, `sv`, `sw`, `tg`, `th`, `tr`, `uk`, `vi`, `zh_CN` and `zh_TW`. Regional codes can be written with a hyphen or an underscore, in any case, so `pt-BR` and `pt_br` are the same as `pt_BR`. An error is thrown for an unsupported locale.
+
+All locales are included in the plugin, so there is nothing to install or configure to use them.
 
 ###### verbose
 Describe the expression in a more verbose sentence. Defaults to `false`.
@@ -197,16 +214,18 @@ Returns: `"Every 5 minutes, every hour, every day"`.
 ## _cron.validate
 
 ```
-(expression: string): boolean
-(arguments: { expression: string }): boolean
+(expression: any): boolean
+(arguments: { expression: any }): boolean
 ```
 
-The `_cron.validate` method returns `true` when the cron expression is valid, and `false` when it is not. A missing expression returns `false`. This method never throws, so it can be used to validate a cron expression captured by an input block.
+The `_cron.validate` method returns `true` when the cron expression is valid, and `false` when it is not. A missing or blank expression, a value that is not a string, an expression with the `H` hash token and an expression that never occurs (like `0 0 31 2 *`) all return `false`. This method never throws, so it can be used to validate a cron expression captured by an input block.
+
+`_cron.validate` checks the `_cron` grammar, which is wider than the `schedules` of [scheduled endpoints](/api#scheduled-endpoints-cron) accept.
 
 #### Arguments
 
 ###### expression
-The cron expression to validate.
+The cron expression to validate. Any type is accepted.
 
 #### Examples
 
@@ -237,7 +256,7 @@ Returns: `true`.
 
 The `_cron.fields` method returns the parsed fields of a cron expression as an object with a `second`, `minute`, `hour`, `dayOfMonth`, `month` and `dayOfWeek` key. Each field has the list of `values` it matches, and a `wildcard` boolean that is `true` when the field was given as `*`.
 
-An error is thrown if the cron expression can not be parsed.
+An error is thrown if the cron expression is missing, is invalid, or never occurs.
 
 #### Arguments
 

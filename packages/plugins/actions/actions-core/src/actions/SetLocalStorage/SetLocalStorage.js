@@ -14,25 +14,31 @@
   limitations under the License.
 */
 
+import { UserError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import validateStorageKey from '../../localStorage/validateStorageKey.js';
+
 function SetLocalStorage({ globals, params }) {
-  const { window } = globals;
   if (!type.isObject(params)) {
-    throw new Error(
-      `SetLocalStorage params should be an object. Received ${JSON.stringify(params)}.`
-    );
+    throw new Error('SetLocalStorage params should be an object.');
   }
   const { key, value } = params;
-  if (!type.isString(key) || key === '') {
-    throw new Error(
-      `SetLocalStorage key should be a non-empty string. Received ${JSON.stringify(key)}.`
+  validateStorageKey({ actionType: 'SetLocalStorage', key });
+  if (type.isUndefined(value)) {
+    throw new Error('SetLocalStorage "value" is required.');
+  }
+  const serialized = serializer.serializeToString(value);
+  try {
+    globals.window.localStorage.setItem(key, serialized);
+  } catch (error) {
+    // Blocked storage (SecurityError) or a full quota (QuotaExceededError) comes from the
+    // user's browser, not the app config.
+    throw new UserError(
+      `SetLocalStorage could not write "${key}" to local storage. Local storage is blocked or full in this browser.`,
+      { cause: error }
     );
   }
-  if (type.isUndefined(value)) {
-    throw new Error(`SetLocalStorage value is required. Received undefined for key "${key}".`);
-  }
-  window.localStorage.setItem(key, serializer.serializeToString(value));
 }
 
 export default SetLocalStorage;

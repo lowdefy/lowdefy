@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import AutoCompleteMeta from '@lowdefy/blocks-antd/blocks/AutoComplete/meta.js';
+
 export default {
   category: 'input',
   icons: [
@@ -27,17 +29,35 @@ export default {
   valueType: 'object',
   cssKeys: {
     element: 'The PlacesAutocomplete input element.',
+    selector: 'The inner value container of the input (antd `content` semantic slot).',
     label: 'The PlacesAutocomplete label.',
     extra: 'The PlacesAutocomplete extra content.',
     feedback: 'The PlacesAutocomplete validation feedback.',
+    options: 'Each suggestion in the dropdown.',
+    popup: 'The suggestions dropdown.',
   },
   events: {
     onBlur: 'Trigger actions when the input loses focus.',
-    onChange: 'Trigger actions when the input value changes, by typing or by selection.',
+    onChange: {
+      description:
+        'Trigger actions after the block value changes, by typing, by selecting a suggestion or by clearing the input.',
+      event: { value: 'The new block value.' },
+    },
     onClear: 'Trigger actions when the input is cleared.',
+    onError: {
+      description:
+        'Trigger actions when fetching suggestions or place fields fails, for example when the Places API is not enabled on the API key. When fetching place fields fails, the typed text stays in the block value and onPlaceChanged is not triggered.',
+      event: { message: 'The error message.' },
+    },
     onFocus: 'Trigger actions when the input gains focus.',
-    onPlaceChanged:
-      'Trigger actions after a suggestion is selected and its place fields have been fetched.',
+    onPlaceChanged: {
+      description:
+        'Trigger actions after a suggestion is selected and its place fields have been fetched and written to the block value.',
+      event: {
+        place: 'The fetched place fields, after `resultMapping` is applied.',
+        value: 'The new block value.',
+      },
+    },
     onSearch: {
       description: 'Trigger actions when the search text changes.',
       event: { value: 'The search input text.' },
@@ -51,7 +71,8 @@ export default {
       allowClear: {
         type: 'boolean',
         default: true,
-        description: 'Allow the user to clear the selected place, sets the value to null.',
+        description:
+          'Allow the user to clear the input. Clearing removes the place keys from the block value, and sets the value to null when no sibling keys remain.',
       },
       autoFocus: {
         type: 'boolean',
@@ -62,6 +83,18 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Backfill the highlighted suggestion into the input when using the keyboard.',
+      },
+      bordered: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Whether or not the input has a border style. Deprecated, use variant instead.',
+      },
+      debounce: {
+        type: 'number',
+        default: 250,
+        description:
+          'Milliseconds to wait after the last keystroke before requesting suggestions from the Places API.',
       },
       defaultOpen: {
         type: 'boolean',
@@ -162,7 +195,7 @@ export default {
         type: 'string',
         default: 'formattedAddress',
         description:
-          'The key in the block value, after `resultMapping` is applied, that is displayed in the input and written when the user types free text.',
+          "The key in the block value, after `resultMapping` is applied, that is displayed in the input and written when the user types free text. Typing removes the keys the previous place wrote (the mapped `input`, `id`, `formattedAddress` and `fetchFields` keys), so typed text never carries another place's fields.",
       },
       loadingPlaceholder: {
         type: 'string',
@@ -254,6 +287,7 @@ export default {
         default: 'middle',
         description: 'Size of the block.',
       },
+      theme: AutoCompleteMeta.properties.properties.theme,
       title: {
         type: 'string',
         description:
@@ -263,7 +297,7 @@ export default {
         type: 'string',
         enum: ['outlined', 'filled', 'borderless', 'underlined'],
         default: 'outlined',
-        description: 'Input visual variant.',
+        description: 'Input visual variant. When set, takes precedence over bordered.',
       },
     },
   },

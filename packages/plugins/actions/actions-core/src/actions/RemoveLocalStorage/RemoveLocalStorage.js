@@ -14,22 +14,26 @@
   limitations under the License.
 */
 
+import { UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import validateStorageKey from '../../localStorage/validateStorageKey.js';
+
 function RemoveLocalStorage({ globals, params }) {
-  const { window } = globals;
   if (!type.isObject(params)) {
-    throw new Error(
-      `RemoveLocalStorage params should be an object. Received ${JSON.stringify(params)}.`
-    );
+    throw new Error('RemoveLocalStorage params should be an object.');
   }
   const { key } = params;
-  if (!type.isString(key) || key === '') {
-    throw new Error(
-      `RemoveLocalStorage key should be a non-empty string. Received ${JSON.stringify(key)}.`
+  validateStorageKey({ actionType: 'RemoveLocalStorage', key });
+  try {
+    globals.window.localStorage.removeItem(key);
+  } catch (error) {
+    // Blocked storage (SecurityError) comes from the user's browser, not the app config.
+    throw new UserError(
+      `RemoveLocalStorage could not remove "${key}" from local storage. Local storage is blocked in this browser.`,
+      { cause: error }
     );
   }
-  window.localStorage.removeItem(key);
 }
 
 export default RemoveLocalStorage;

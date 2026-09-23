@@ -17,21 +17,18 @@
 import { useEffect, useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
-// GoogleMapsScript only renders its children once the Google Maps JavaScript API
-// has loaded, so a descendant that was configured with `libraries: [places]` finds
-// the places library on the first render. When the block is rendered outside a
-// GoogleMapsScript, or the script omitted the places library, there is nothing to
-// read and the block falls back to a plain text input.
-function getLoadedPlacesLibrary() {
-  return window.google?.maps?.places ?? null;
-}
+import getLoadedPlacesLibrary from './getLoadedPlacesLibrary.js';
 
+// Uses the places library the GoogleMapsScript loaded. When the script omitted it,
+// the library is imported on demand through google.maps.importLibrary. Outside a
+// GoogleMapsScript, or when the import fails (for example the Places API is not
+// enabled on the key), there is no library and the block stays a plain text input.
 function usePlacesLibrary() {
   const [placesLibrary, setPlacesLibrary] = useState(getLoadedPlacesLibrary);
 
   useEffect(() => {
-    if (!type.isNone(placesLibrary)) return;
-    if (!type.isFunction(window.google?.maps?.importLibrary)) return;
+    if (!type.isNone(placesLibrary)) return undefined;
+    if (!type.isFunction(window.google?.maps?.importLibrary)) return undefined;
     let cancelled = false;
     window.google.maps
       .importLibrary('places')
@@ -39,8 +36,6 @@ function usePlacesLibrary() {
         if (cancelled) return;
         setPlacesLibrary(library);
       })
-      // The Places API is billed separately and can be disabled on the key, in
-      // which case the block keeps working as a plain text input.
       .catch(() => null);
     return () => {
       cancelled = true;

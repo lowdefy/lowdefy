@@ -14,24 +14,29 @@
   limitations under the License.
 */
 
-import React, { useCallback, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AutoComplete } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { get, mergeObjects, set, type } from '@lowdefy/helpers';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
+import withTheme from '@lowdefy/blocks-antd/blocks/withTheme.js';
 
 import getNotFoundContent from './getNotFoundContent.js';
+import getPlaceKeys from './getPlaceKeys.js';
 import mapPlaceResult from './mapPlaceResult.js';
+import removePlaceKeys from './removePlaceKeys.js';
 import useAutocompleteSuggestions from './useAutocompleteSuggestions.js';
 import usePlacesLibrary from './usePlacesLibrary.js';
 
 import './style.css';
 
 // Address input backed by the Places Autocomplete Data API. The block value is an
-// object: picking a suggestion merges the fetched place fields into it, and typing
+// object: picking a suggestion writes the fetched place fields into it, and typing
 // writes the free text to the label field, so a form holds a usable address whether
-// or not a suggestion is ever picked. Sibling keys written into the same value
-// object by other blocks are preserved.
+// or not a suggestion is ever picked. Typing, picking and clearing each first remove
+// the keys the previous place wrote (see getPlaceKeys), so a typed address never
+// carries another place's coordinates. Sibling keys written into the same value
+// object by other blocks are preserved, and the value is null once none remain.
 const PlacesAutocomplete = ({
   blockId,
   classNames = {},
@@ -47,46 +52,100 @@ const PlacesAutocomplete = ({
 }) => {
   const placesLibrary = usePlacesLibrary();
   const [input, setInput] = useState('');
+  // Handlers that run after an await, or twice in one tick (antd calls onClear and
+  // then onSearch('')), read the value they last wrote rather than a stale prop.
+  const valueRef = useRef(value);
+  valueRef.current = value;
+  // Counts user edits, so a place that resolves after the user typed again or
+  // picked another suggestion is dropped instead of overwriting the newer input.
+  const editRef = useRef(0);
+
   const labelField = properties.labelField ?? 'formattedAddress';
-  const { isLoading, resetSession, suggestions } = useAutocompleteSuggestions({
+  const inputKey = properties.resultMapping?.input ?? 'input';
+  const placeKeys = getPlaceKeys({
+    fetchFields: properties.fetchFields,
+    labelField,
+    resultMapping: properties.resultMapping,
+  });
+
+  function triggerError(error) {
+    methods.triggerEvent({ name: 'onError', event: { message: error.message } });
+  }
+
+  const { isLoading, predictions, resetSession } = useAutocompleteSuggestions({
+    debounce: properties.debounce ?? 250,
     input,
+    onError: triggerError,
     placesLibrary,
     requestOptions: properties.requestOptions,
   });
 
-  const handleSearch = useCallback(
-    (text) => {
-      setInput(text);
-      if (text === '') {
-        methods.setValue(null);
-        return;
-      }
-      const update = { input: text };
-      set(update, labelField, text);
-      methods.setValue(mergeObjects([value, update]));
-    },
-    [labelField, methods, value]
-  );
+  function commitValue(nextValue) {
+    valueRef.current = nextValue;
+    methods.setValue(nextValue);
+    methods.triggerEvent({ name: 'onChange', event: { value: nextValue } });
+  }
 
-  const handleSelect = useCallback(
-    async (optionValue) => {
-      const suggestion = suggestions[Number(optionValue)];
-      if (type.isNone(suggestion?.placePrediction)) return;
-      const place = suggestion.placePrediction.toPlace();
+  function clearPlace() {
+    const { removed, value: remaining } = removePlaceKeys({
+      placeKeys,
+      value: valueRef.current,
+    });
+    if (removed) {
+      commitValue(remaining);
+    }
+  }
+
+  function handleSearch(text) {
+    editRef.current += 1;
+    setInput(text);
+    if (text === '') {
+      clearPlace();
+      return;
+    }
+    const { value: remaining } = removePlaceKeys({ placeKeys, value: valueRef.current });
+    const typed = mapPlaceResult({ mapping: properties.resultMapping, result: { input: text } });
+    set(typed, labelField, text);
+    commitValue(mergeObjects([remaining, typed]));
+  }
+
+  async function handleSelect(optionValue) {
+    const prediction = predictions.find((item) => item.text.text === optionValue);
+    editRef.current += 1;
+    const edit = editRef.current;
+    // The prediction carries the session token into toPlace, and fetchFields ends
+    // that session, so the next search needs a new token.
+    const place = prediction.toPlace();
+    setInput('');
+    resetSession();
+    try {
       await place.fetchFields({ fields: [...(properties.fetchFields ?? []), 'formattedAddress'] });
-      setInput('');
-      resetSession();
-      const result = { input: place.formattedAddress, ...place.toJSON() };
-      const mapped = mapPlaceResult({ mapping: properties.resultMapping, result });
-      methods.setValue(mergeObjects([value, mapped]));
-      methods.triggerEvent({ name: 'onPlaceChanged' });
-    },
-    [methods, properties.fetchFields, properties.resultMapping, resetSession, suggestions, value]
-  );
+    } catch (error) {
+      // The typed text stays in the value, so the form still holds what the user entered.
+      if (edit === editRef.current) {
+        triggerError(error);
+      }
+      return;
+    }
+    if (edit !== editRef.current) return;
+    const mapped = mapPlaceResult({
+      mapping: properties.resultMapping,
+      result: { input: place.formattedAddress, ...place.toJSON() },
+    });
+    const { value: remaining } = removePlaceKeys({ placeKeys, value: valueRef.current });
+    const nextValue = mergeObjects([remaining, mapped]);
+    commitValue(nextValue);
+    methods.triggerEvent({ name: 'onPlaceChanged', event: { place: mapped, value: nextValue } });
+  }
 
   let displayValue;
   if (type.isObject(value)) {
-    displayValue = get(value, labelField, { default: value.input });
+    displayValue = get(value, labelField, { default: get(value, inputKey) });
+  }
+
+  let variant = properties.variant;
+  if (type.isNone(variant) && properties.bordered === false) {
+    variant = 'borderless';
   }
 
   return (
@@ -105,7 +164,9 @@ const PlacesAutocomplete = ({
           <AutoComplete
             id={`${blockId}_input`}
             className={classNames.element}
+            classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
             style={{ width: '100%', ...styles.element }}
+            styles={{ content: styles.selector, popup: { root: styles.popup } }}
             allowClear={properties.allowClear !== false}
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
@@ -122,7 +183,7 @@ const PlacesAutocomplete = ({
             popupRender={(menu) => (
               <>
                 {menu}
-                {suggestions.length > 0 && (
+                {predictions.length > 0 && (
                   <div className="lowdefy-places-autocomplete-attribution">Powered by Google</div>
                 )}
               </>
@@ -130,9 +191,13 @@ const PlacesAutocomplete = ({
             size={properties.size}
             status={validation.status}
             value={displayValue}
-            variant={properties.variant}
-            options={suggestions.map((suggestion, i) => ({
-              value: `${i}`,
+            variant={variant}
+            options={predictions.map((prediction, i) => ({
+              key: prediction.placeId,
+              // The prediction text is the option value, so backfill shows the address.
+              value: prediction.text.text,
+              className: classNames.options,
+              style: styles.options,
               label: (
                 <span id={`${blockId}_${i}`}>
                   <components.Icon
@@ -140,20 +205,21 @@ const PlacesAutocomplete = ({
                     events={events}
                     properties={properties.optionsIcon ?? { name: 'MdLocationOn' }}
                   />{' '}
-                  {suggestion.placePrediction?.text?.text}
+                  {prediction.text.text}
                 </span>
               ),
             }))}
             onBlur={() => {
-              methods.triggerEvent({ name: 'onBlur' });
-            }}
-            onChange={() => {
-              methods.triggerEvent({ name: 'onChange' });
-            }}
-            onClear={() => {
+              // Leaving the input without picking a suggestion abandons the search.
               setInput('');
               resetSession();
-              methods.setValue(null);
+              methods.triggerEvent({ name: 'onBlur' });
+            }}
+            onClear={() => {
+              editRef.current += 1;
+              setInput('');
+              resetSession();
+              clearPlace();
               methods.triggerEvent({ name: 'onClear' });
             }}
             onFocus={() => {
@@ -171,9 +237,4 @@ const PlacesAutocomplete = ({
   );
 };
 
-PlacesAutocomplete.meta = {
-  category: 'input',
-  icons: ['MdLocationOn'],
-};
-
-export default withBlockDefaults(PlacesAutocomplete);
+export default withTheme('Select', withBlockDefaults(PlacesAutocomplete));

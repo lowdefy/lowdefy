@@ -20,10 +20,11 @@ import initPostHog from '../lib/initPostHog.js';
 
 const defaultApiHost = 'https://us.i.posthog.com';
 
-// Initialise posthog-js. Run this once from the app level events.onInit, before
-// any other PostHog action. Calling it again with the same apiKey does nothing,
-// so it is safe on an event that can run more than once.
-function PostHogInit({ params }) {
+// Initialise posthog-js. Every other action in this package does nothing until
+// it has run, so run it from the onInit event of every page, shared with _ref.
+// Calling it again with the same apiKey does nothing, which is what makes that
+// safe.
+async function PostHogInit({ params }) {
   if (!type.isObject(params)) {
     throw new Error(`PostHogInit params must be an object. Received ${JSON.stringify(params)}.`);
   }
@@ -39,8 +40,10 @@ function PostHogInit({ params }) {
       `PostHogInit "options" must be an object. Received ${JSON.stringify(options)}.`
     );
   }
-  if (!type.isNone(apiHost) && !type.isString(apiHost)) {
-    throw new Error(`PostHogInit "apiHost" must be a string. Received ${JSON.stringify(apiHost)}.`);
+  if (!type.isNone(apiHost) && (!type.isString(apiHost) || apiHost.trim() === '')) {
+    throw new Error(
+      `PostHogInit "apiHost" must be a non-empty string. Received ${JSON.stringify(apiHost)}.`
+    );
   }
   if (!type.isNone(debug) && !type.isBoolean(debug)) {
     throw new Error(`PostHogInit "debug" must be a boolean. Received ${JSON.stringify(debug)}.`);
@@ -53,7 +56,7 @@ function PostHogInit({ params }) {
     );
   }
 
-  const initOptions = type.isObject(options) ? options : {};
+  const initOptions = options ?? {};
   const config = {
     ...initOptions,
     api_host: apiHost ?? initOptions.api_host ?? defaultApiHost,
@@ -62,7 +65,7 @@ function PostHogInit({ params }) {
     config.debug = debug;
   }
 
-  initPostHog({ apiKey: apiKey ?? null, config, enabled });
+  await initPostHog({ apiKey: apiKey ?? null, config, enabled });
   return null;
 }
 

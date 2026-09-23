@@ -24,7 +24,7 @@ import getPostHog from '../lib/getPostHog.js';
 // The flag value is whatever PostHog resolved for this person when flags were
 // last loaded; it does not wait for a network call. Use
 // PostHogReloadFeatureFlags first when the person or their groups just changed.
-function PostHogFeatureFlag({ params }) {
+async function PostHogFeatureFlag({ params }) {
   const { key, default: defaultValue, enabled, payload } = params ?? {};
   if (!type.isString(key) || key.trim() === '') {
     throw new Error(
@@ -42,11 +42,11 @@ function PostHogFeatureFlag({ params }) {
     );
   }
 
-  const fallback = type.isNone(defaultValue) ? null : defaultValue;
+  const fallback = defaultValue ?? null;
 
   // Not initialised or disabled - the app still needs an answer, and the
   // configured default is a better one than null.
-  const posthog = getPostHog();
+  const posthog = await getPostHog({ action: 'PostHogFeatureFlag' });
   if (type.isNone(posthog)) return fallback;
 
   let value;
@@ -58,8 +58,7 @@ function PostHogFeatureFlag({ params }) {
     value = posthog.getFeatureFlag(key);
   }
 
-  if (type.isNone(value)) return fallback;
-  return value;
+  return value ?? fallback;
 }
 
 export default PostHogFeatureFlag;

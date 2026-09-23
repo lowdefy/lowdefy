@@ -6,4 +6,7 @@ feat(actions-core): new `SetLocalStorage`, `GetLocalStorage` and `RemoveLocalSto
 
 Read and write the browser's local storage from an event chain. Values are serialized, so
 objects, arrays and dates are read back as the types that were stored. `GetLocalStorage`
-returns the stored value, or the optional `default` when the key is not set.
+returns the stored value, or the optional `default` when the key is not set or the browser
+blocks local storage, and returns plain string values that were not written by
+`SetLocalStorage` as they are. Keys starting with `lowdefy_` or `lf-` are reserved for
+Lowdefy's own settings and are rejected.

@@ -18,52 +18,58 @@ import { type } from '@lowdefy/helpers';
 
 import cleanProperties from '../lib/cleanProperties.js';
 import getPostHog from '../lib/getPostHog.js';
-import postHogState from '../lib/postHogState.js';
-import readIdentifiedId from '../lib/readIdentifiedId.js';
-import writeIdentifiedId from '../lib/writeIdentifiedId.js';
 
 // Tie the current browser session to a person. Run it once the user is known,
-// usually from the app level events.onInit or after a successful login.
+// usually from the page onInit event after PostHogInit, or after a successful
+// login. It is safe to run on every page.
 //
-// Person properties are sent again only when they change, because each
-// setPersonProperties call is a billable event and this action runs on every
-// page load. Never pass personally identifiable information as a property.
-function PostHogIdentify({ globals, params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
-  const { id, properties: personProperties, propertiesOnce: personPropertiesOnce } = params ?? {};
-  // Anonymous visitor on a public page. Leave the anonymous session alone:
-  // it is what a later identify() merges into the person.
-  if (type.isNone(id)) return null;
-  if (!type.isString(id)) {
+// Never pass personally identifiable information as a property.
+async function PostHogIdentify({ params }) {
+  const { id, properties, propertiesOnce } = params ?? {};
+  if (!type.isNone(id) && !type.isString(id)) {
     throw new Error(`PostHogIdentify "id" must be a string. Received ${JSON.stringify(id)}.`);
   }
-  if (id.trim() === '') return null;
+  if (!type.isNone(properties) && !type.isObject(properties)) {
+    throw new Error(
+      `PostHogIdentify "properties" must be an object. Received ${JSON.stringify(properties)}.`
+    );
+  }
+  if (!type.isNone(propertiesOnce) && !type.isObject(propertiesOnce)) {
+    throw new Error(
+      `PostHogIdentify "propertiesOnce" must be an object. Received ${JSON.stringify(
+        propertiesOnce
+      )}.`
+    );
+  }
 
-  const properties = cleanProperties(personProperties);
-  const propertiesOnce = cleanProperties(personPropertiesOnce);
-  const fingerprint = JSON.stringify([properties, propertiesOnce]);
-  const identifiedId = readIdentifiedId({ window: globals.window });
+  const posthog = await getPostHog({ action: 'PostHogIdentify' });
+  if (type.isNone(posthog)) return null;
 
-  if (identifiedId === id) {
-    const unchanged = fingerprint === postHogState.lastPersonProperties;
-    const empty = Object.keys(properties).length === 0 && Object.keys(propertiesOnce).length === 0;
-    if (unchanged || empty) return null;
-    posthog.setPersonProperties(properties, propertiesOnce);
-    postHogState.lastPersonProperties = fingerprint;
+  // Anonymous visitor on a public page. Leave the anonymous session alone:
+  // it is what a later identify() merges into the person.
+  if (type.isNone(id) || id.trim() === '') return null;
+
+  const set = cleanProperties(properties);
+  const setOnce = cleanProperties(propertiesOnce);
+
+  if (posthog.get_distinct_id() === id) {
+    // posthog-js skips a setPersonProperties call identical to the last one,
+    // so running this on every page load does not resend unchanged properties.
+    if (Object.keys(set).length > 0 || Object.keys(setOnce).length > 0) {
+      posthog.setPersonProperties(set, setOnce);
+    }
     return null;
   }
 
-  // A different person on this browser - drop the previous identity and its
-  // session before claiming the new one.
-  if (type.isString(identifiedId) && identifiedId !== '') {
+  // PostHog refuses to move an identified distinct_id onto a different person,
+  // so a person swap on a shared browser needs a fresh session first. An
+  // anonymous session is not reset: identify() merges it into the person,
+  // which is what makes signup funnels work.
+  if (posthog.get_property('$user_state') === 'identified') {
     posthog.reset();
   }
 
-  posthog.identify(id, properties, propertiesOnce);
-  writeIdentifiedId({ id, window: globals.window });
-  postHogState.lastPersonProperties = fingerprint;
+  posthog.identify(id, set, setOnce);
   return null;
 }
 

@@ -32,14 +32,20 @@ _ref:
       libraries:
         - places
     note: >
-      The PlacesAutocomplete block must be wrapped in a GoogleMapsScript block that loads
-      the places library, `libraries: [places]`, with a valid Google Maps API key that has the
-      Places API (New) enabled. Without the places library the block renders as a plain text input
-      that still writes the label field. The examples on this page require a configured API key to
-      return suggestions.
+      The PlacesAutocomplete block must be wrapped in a GoogleMapsScript block, with a valid Google
+      Maps API key that has the Places API (New) enabled. Load the places library on the script,
+      `libraries: [places]`, so it is ready on first render; when it is not listed the block imports
+      it on demand through `google.maps.importLibrary`. Outside a GoogleMapsScript, or when the
+      places library cannot be loaded, the block is a plain text input that still writes the label
+      field. Suggestions are requested `debounce` milliseconds (default 250) after the last
+      keystroke. The examples on this page require a configured API key to return suggestions.
     description: >
       Address input with place suggestions from the Google Places Autocomplete Data API.
-      Must be wrapped in a `GoogleMapsScript` block loading the places library. The block value
-      is an object: selecting a suggestion fetches the configured place fields, renames them
-      through `resultMapping` and merges them into the value, while typing writes the free text
-      to `labelField` so a form always holds a usable address.
+      Must be wrapped in a `GoogleMapsScript` block. The block value is an object: selecting a
+      suggestion fetches the configured place fields, renames them through `resultMapping` and
+      writes them to the value, while typing writes the free text to `labelField` so a form always
+      holds a usable address. Typing, selecting or clearing first removes the keys the previous place
+      wrote, so typed text never keeps another place's coordinates; sibling keys written by other
+      blocks are preserved, and the value becomes null when none remain. `onPlaceChanged` receives
+      the mapped place, `onChange` the new value, and `onError` fires when the Places API request
+      fails.

@@ -20,8 +20,8 @@ import getPostHog from '../lib/getPostHog.js';
 
 // Stop capturing for this person. The choice is remembered in the persistence
 // store configured on PostHogInit.
-function PostHogOptOut() {
-  const posthog = getPostHog();
+async function PostHogOptOut() {
+  const posthog = await getPostHog({ action: 'PostHogOptOut' });
   if (type.isNone(posthog)) return null;
 
   posthog.opt_out_capturing();

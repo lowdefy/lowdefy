@@ -20,6 +20,7 @@ import { get, mergeObjects, type } from '@lowdefy/helpers';
 
 import EventLogList from './EventLogList.js';
 import EventLogRow from './EventLogRow.js';
+import getEntryKey from './getEntryKey.js';
 import getRowLevel from './getRowLevel.js';
 import getSearchConfig from './getSearchConfig.js';
 import levels from './levels.js';
@@ -47,15 +48,20 @@ const defaultText = {
   context: 'Context',
   copied: 'Copied',
   copy: 'Copy JSON',
-  empty: 'No events.',
   error: 'Errors',
   info: 'Info',
+  noData: 'No events.',
   noResults: 'No matching events.',
   searchPlaceholder: 'Search events, context, ids…',
   success: 'Successes',
   systemActor: 'System',
   warning: 'Warnings',
 };
+
+// Module-level empties keep the fallbacks referentially stable, so the entries memo only recomputes
+// when the records or their display config actually change.
+const emptyData = [];
+const emptyEventTypeConfig = {};
 
 const EventLog = ({
   blockId,
@@ -65,13 +71,13 @@ const EventLog = ({
   properties,
   styles = {},
 }) => {
-  const data = useSetData({ properties, methods }) ?? [];
+  const data = useSetData({ properties, methods }) ?? emptyData;
   const fields = useMemo(
     () => mergeObjects([defaultFields, properties.fields]),
     [properties.fields]
   );
   const text = useMemo(() => mergeObjects([defaultText, properties.text]), [properties.text]);
-  const eventTypeConfig = properties.eventTypeConfig ?? {};
+  const eventTypeConfig = properties.eventTypeConfig ?? emptyEventTypeConfig;
   const searchConfig = getSearchConfig(properties.search);
   const showLevelFilters = properties.levelFilters !== false;
   const useWindowScroll = type.isNone(properties.height);
@@ -79,11 +85,14 @@ const EventLog = ({
   const methodsRef = useRef(methods);
   methodsRef.current = methods;
 
-  // Each record is read once into a flat entry: the resolved display config, the severity, and a
-  // lowercased blob the search filter matches against.
+  // Each record is read once into a flat entry: a unique string key, the resolved display config,
+  // the severity, and a lowercased blob the search filter matches against.
   const entries = useMemo(() => {
+    const usedKeys = new Set();
     const list = data.map((record, index) => {
       const row = type.isNone(record) ? {} : record;
+      const id = get(row, fields.id, { default: null });
+      const key = getEntryKey({ id, index, usedKeys });
       const eventType = get(row, fields.type, { default: null });
       const typeConfig = eventTypeConfig[eventType] ?? {};
       const message = get(row, fields.message, { default: null });
@@ -91,19 +100,27 @@ const EventLog = ({
       const context = get(row, fields.context, { default: null });
       const actor = get(row, fields.actor, { default: null });
       const messageText = stripHtml(message);
+      const idText = type.isNone(id) ? null : key;
       return {
         actorName: type.isObject(actor) ? get(actor, fields.actorName, { default: null }) : actor,
         actorPicture: type.isObject(actor)
           ? get(actor, fields.actorPicture, { default: null })
           : null,
-        blob: [eventType, typeConfig.title, messageText, stripHtml(detail), JSON.stringify(context)]
+        blob: [
+          idText,
+          eventType,
+          typeConfig.title,
+          messageText,
+          stripHtml(detail),
+          JSON.stringify(context),
+        ]
           .filter((part) => !type.isNone(part))
           .join(' ')
           .toLowerCase(),
         context,
         detail,
         eventType,
-        id: get(row, fields.id, { default: null }) ?? index,
+        key,
         level: getRowLevel({ fields, row, typeConfig }),
         message,
         messageText,
@@ -112,7 +129,9 @@ const EventLog = ({
         typeConfig,
       };
     });
-    return properties.reverse === true ? list.reverse() : list;
+    if (properties.reverse === true) list.reverse();
+    // The position in the ordered list gives each row a stable, selector-safe DOM id.
+    return list.map((entry, index) => ({ ...entry, index }));
   }, [data, eventTypeConfig, fields, properties.reverse]);
 
   const counts = useMemo(() => {
@@ -155,6 +174,8 @@ const EventLog = ({
     [debounce]
   );
   const clearSearch = useCallback(() => {
+    // A pending debounce would otherwise re-apply the query that was just cleared.
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     setRawQuery('');
     setAppliedQuery('');
   }, []);
@@ -169,24 +190,47 @@ const EventLog = ({
     });
   }, [entries, appliedQuery, minLength, levelFilter]);
 
-  const [openIds, setOpenIds] = useState(() => new Set());
+  const lastSearchedQueryRef = useRef('');
   useEffect(() => {
-    if (properties.defaultExpanded === true) {
-      setOpenIds(new Set(entries.map((entry) => entry.id)));
+    if (lastSearchedQueryRef.current === appliedQuery) return;
+    lastSearchedQueryRef.current = appliedQuery;
+    methodsRef.current.triggerEvent({
+      name: 'onSearch',
+      event: { value: appliedQuery, resultCount: visible.length },
+    });
+  }, [appliedQuery, visible]);
+
+  const [openIds, setOpenIds] = useState(() => new Set());
+  const openIdsRef = useRef(openIds);
+  openIdsRef.current = openIds;
+
+  // Only rows not seen before are expanded, so rows the user collapsed stay collapsed when the
+  // records update.
+  const seenKeysRef = useRef(new Set());
+  useEffect(() => {
+    if (properties.defaultExpanded !== true) {
+      seenKeysRef.current = new Set();
+      return;
     }
+    const newKeys = entries
+      .map((entry) => entry.key)
+      .filter((key) => !seenKeysRef.current.has(key));
+    if (newKeys.length === 0) return;
+    newKeys.forEach((key) => seenKeysRef.current.add(key));
+    setOpenIds((previous) => new Set([...previous, ...newKeys]));
   }, [properties.defaultExpanded, entries]);
 
   const toggle = useCallback((entry) => {
+    const expanded = !openIdsRef.current.has(entry.key);
     setOpenIds((previous) => {
       const next = new Set(previous);
-      const expanded = !next.has(entry.id);
-      if (expanded) next.add(entry.id);
-      else next.delete(entry.id);
-      methodsRef.current.triggerEvent({
-        name: 'onExpand',
-        event: { row: entry.row, expanded },
-      });
+      if (expanded) next.add(entry.key);
+      else next.delete(entry.key);
       return next;
+    });
+    methodsRef.current.triggerEvent({
+      name: 'onExpand',
+      event: { row: entry.row, expanded },
     });
     methodsRef.current.triggerEvent({ name: 'onRowClick', event: { row: entry.row } });
   }, []);
@@ -206,10 +250,10 @@ const EventLog = ({
         blockId={blockId}
         classNames={rowClassNames}
         entry={entry}
-        expanded={openIds.has(entry.id)}
+        expanded={openIds.has(entry.key)}
         Icon={Icon}
         methodsRef={methodsRef}
-        onToggle={() => toggle(entry)}
+        onToggle={toggle}
         styles={rowStyles}
         text={text}
       />

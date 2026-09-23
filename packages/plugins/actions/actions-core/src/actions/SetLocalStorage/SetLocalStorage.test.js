@@ -21,6 +21,10 @@ import SetLocalStorage from './SetLocalStorage.js';
 const mockSetItem = jest.fn();
 const globals = { window: { localStorage: { setItem: mockSetItem } } };
 
+beforeEach(() => {
+  mockSetItem.mockReset();
+});
+
 test('SetLocalStorage writes the serialized value to the key', () => {
   SetLocalStorage({ globals, params: { key: 'settings', value: { theme: 'dark' } } });
   expect(mockSetItem.mock.calls).toEqual([['settings', '{"theme":"dark"}']]);
@@ -47,27 +51,69 @@ test('SetLocalStorage stores dates so they are read back as Date objects', () =>
   expect(result.at.valueOf()).toEqual(1600000000000);
 });
 
+test('SetLocalStorage throws a UserError when the storage quota is exceeded', () => {
+  mockSetItem.mockImplementationOnce(() => {
+    throw new DOMException('The quota has been exceeded.', 'QuotaExceededError');
+  });
+  let error;
+  try {
+    SetLocalStorage({ globals, params: { key: 'settings', value: 'a' } });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.name).toEqual('UserError');
+  expect(error.message).toEqual(
+    'SetLocalStorage could not write "settings" to local storage. Local storage is blocked or full in this browser.'
+  );
+  expect(error.cause.name).toEqual('QuotaExceededError');
+});
+
+test('SetLocalStorage throws a UserError when the browser blocks storage access', () => {
+  const blockedGlobals = {
+    window: {
+      get localStorage() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+      },
+    },
+  };
+  let error;
+  try {
+    SetLocalStorage({ globals: blockedGlobals, params: { key: 'settings', value: 'a' } });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.name).toEqual('UserError');
+  expect(error.cause.name).toEqual('SecurityError');
+});
+
 test('SetLocalStorage throws when params is not an object', () => {
   expect(() => SetLocalStorage({ globals, params: 'settings' })).toThrow(
-    'SetLocalStorage params should be an object. Received "settings".'
+    'SetLocalStorage params should be an object.'
   );
   expect(mockSetItem.mock.calls).toEqual([]);
 });
 
 test('SetLocalStorage throws when key is not a string', () => {
   expect(() => SetLocalStorage({ globals, params: { key: 1, value: 'a' } })).toThrow(
-    'SetLocalStorage key should be a non-empty string. Received 1.'
+    'SetLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('SetLocalStorage throws when key is an empty string', () => {
   expect(() => SetLocalStorage({ globals, params: { key: '', value: 'a' } })).toThrow(
-    'SetLocalStorage key should be a non-empty string. Received "".'
+    'SetLocalStorage "key" should be a non-empty string.'
   );
+});
+
+test('SetLocalStorage throws when key uses a reserved Lowdefy prefix', () => {
+  expect(() => SetLocalStorage({ globals, params: { key: 'lf-sider-open', value: 'a' } })).toThrow(
+    'SetLocalStorage "key" "lf-sider-open" is reserved. Keys starting with "lowdefy_" or "lf-" are used internally by Lowdefy.'
+  );
+  expect(mockSetItem.mock.calls).toEqual([]);
 });
 
 test('SetLocalStorage throws when value is undefined', () => {
   expect(() => SetLocalStorage({ globals, params: { key: 'settings' } })).toThrow(
-    'SetLocalStorage value is required. Received undefined for key "settings".'
+    'SetLocalStorage "value" is required.'
   );
 });

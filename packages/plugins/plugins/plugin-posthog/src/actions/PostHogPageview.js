@@ -18,14 +18,13 @@ import { type } from '@lowdefy/helpers';
 
 import getPostHog from '../lib/getPostHog.js';
 
-// Capture a pageview by hand. Only needed when PostHogInit sets
-// options.capture_pageview to false, which is the usual choice for a Lowdefy
-// app: the client routes without a page load, so the automatic pageview fires
-// once and never again. Run this from each page's events.onEnter.
-function PostHogPageview({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+// Capture a pageview by hand. Lowdefy routes on the client without a page
+// load, so the posthog-js default (capture_pageview: true) only records the
+// first page. Prefer PostHogInit options.capture_pageview: 'history_change',
+// which records every client side navigation. Use this action instead when
+// pageviews need extra properties or tighter control: set capture_pageview to
+// false and run it from each page's onMount event.
+async function PostHogPageview({ params }) {
   const { properties } = params ?? {};
   if (!type.isNone(properties) && !type.isObject(properties)) {
     throw new Error(
@@ -33,7 +32,10 @@ function PostHogPageview({ params }) {
     );
   }
 
-  posthog.capture('$pageview', type.isObject(properties) ? properties : undefined);
+  const posthog = await getPostHog({ action: 'PostHogPageview' });
+  if (type.isNone(posthog)) return null;
+
+  posthog.capture('$pageview', properties ?? undefined);
   return null;
 }
 

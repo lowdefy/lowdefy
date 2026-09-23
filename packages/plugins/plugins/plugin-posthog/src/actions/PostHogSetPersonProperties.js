@@ -19,13 +19,10 @@ import { type } from '@lowdefy/helpers';
 import getPostHog from '../lib/getPostHog.js';
 
 // Update the properties of the person PostHogIdentify identified. Each call is
-// a billable event, so send properties only when they change.
+// a billable event; posthog-js skips a call identical to the previous one.
 //
 // Never send personally identifiable information.
-function PostHogSetPersonProperties({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogSetPersonProperties({ params }) {
   const { set, setOnce } = params ?? {};
   if (!type.isNone(set) && !type.isObject(set)) {
     throw new Error(
@@ -41,10 +38,10 @@ function PostHogSetPersonProperties({ params }) {
     throw new Error('PostHogSetPersonProperties requires a "set" or "setOnce" object.');
   }
 
-  posthog.setPersonProperties(
-    type.isObject(set) ? set : undefined,
-    type.isObject(setOnce) ? setOnce : undefined
-  );
+  const posthog = await getPostHog({ action: 'PostHogSetPersonProperties' });
+  if (type.isNone(posthog)) return null;
+
+  posthog.setPersonProperties(set ?? undefined, setOnce ?? undefined);
   return null;
 }
 

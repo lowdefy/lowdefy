@@ -30,22 +30,27 @@ let PostHogOptIn;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogInit, PostHogOptIn } = await import('../actions.js'));
 });
 
-test('PostHogOptIn opts the person into capturing', () => {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
-  expect(PostHogOptIn({ params: {} })).toBe(null);
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+test('PostHogOptIn opts the person into capturing', async () => {
+  await PostHogInit({ params: { apiKey: 'phc_key' } });
+  await expect(PostHogOptIn({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_in_capturing).toHaveBeenCalledTimes(1);
 });
 
-test('PostHogOptIn does nothing before PostHogInit has run', () => {
-  expect(PostHogOptIn({ params: {} })).toBe(null);
+test('PostHogOptIn does nothing before PostHogInit has run', async () => {
+  await expect(PostHogOptIn({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_in_capturing).not.toHaveBeenCalled();
 });
 
-test('PostHogOptIn does nothing when PostHog is disabled', () => {
-  PostHogInit({ params: { enabled: false } });
-  expect(PostHogOptIn({ params: {} })).toBe(null);
+test('PostHogOptIn does nothing when PostHog is disabled', async () => {
+  await PostHogInit({ params: { enabled: false } });
+  await expect(PostHogOptIn({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_in_capturing).not.toHaveBeenCalled();
 });

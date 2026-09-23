@@ -30,49 +30,54 @@ let PostHogInit;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogGroup, PostHogInit } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogGroup associates the person with a group', () => {
-  init();
-  expect(
+test('PostHogGroup associates the person with a group', async () => {
+  await init();
+  await expect(
     PostHogGroup({ params: { type: 'company', key: 'acme', properties: { plan: 'pro' } } })
-  ).toBe(null);
+  ).resolves.toBe(null);
   expect(mockPostHog.group.mock.calls).toEqual([['company', 'acme', { plan: 'pro' }]]);
 });
 
-test('PostHogGroup associates the person with a group without properties', () => {
-  init();
-  PostHogGroup({ params: { type: 'company', key: 'acme' } });
+test('PostHogGroup associates the person with a group without properties', async () => {
+  await init();
+  await PostHogGroup({ params: { type: 'company', key: 'acme' } });
   expect(mockPostHog.group.mock.calls).toEqual([['company', 'acme', undefined]]);
 });
 
-test('PostHogGroup does nothing before PostHogInit has run', () => {
-  expect(PostHogGroup({ params: { type: 'company', key: 'acme' } })).toBe(null);
+test('PostHogGroup does nothing before PostHogInit has run', async () => {
+  await expect(PostHogGroup({ params: { type: 'company', key: 'acme' } })).resolves.toBe(null);
   expect(mockPostHog.group).not.toHaveBeenCalled();
 });
 
-test('PostHogGroup throws when type is missing', () => {
-  init();
-  expect(() => PostHogGroup({ params: { key: 'acme' } })).toThrow(
+test('PostHogGroup throws when type is missing', async () => {
+  await init();
+  await expect(PostHogGroup({ params: { key: 'acme' } })).rejects.toThrow(
     'PostHogGroup "type" must be a non-empty string. Received undefined.'
   );
 });
 
-test('PostHogGroup throws when key is missing', () => {
-  init();
-  expect(() => PostHogGroup({ params: { type: 'company' } })).toThrow(
+test('PostHogGroup throws when key is missing', async () => {
+  await init({ enabled: false });
+  await expect(PostHogGroup({ params: { type: 'company' } })).rejects.toThrow(
     'PostHogGroup "key" must be a non-empty string. Received undefined.'
   );
 });
 
-test('PostHogGroup throws when properties is not an object', () => {
-  init();
-  expect(() => PostHogGroup({ params: { type: 'company', key: 'acme', properties: 1 } })).toThrow(
-    'PostHogGroup "properties" must be an object. Received 1.'
-  );
+test('PostHogGroup throws when properties is not an object', async () => {
+  await init();
+  await expect(
+    PostHogGroup({ params: { type: 'company', key: 'acme', properties: 1 } })
+  ).rejects.toThrow('PostHogGroup "properties" must be an object. Received 1.');
 });

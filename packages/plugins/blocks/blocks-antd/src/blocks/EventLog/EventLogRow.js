@@ -43,19 +43,39 @@ const EventLogRow = React.memo(function EventLogRow({
     () => (expanded && !type.isNone(context) ? flattenContext(context) : []),
     [expanded, context]
   );
+  const iconProperties = useMemo(() => {
+    if (type.isString(typeConfig.icon)) {
+      return { size: 13, color: typeConfig.color, name: typeConfig.icon };
+    }
+    if (type.isObject(typeConfig.icon)) {
+      return { size: 13, color: typeConfig.color, ...typeConfig.icon };
+    }
+    return null;
+  }, [typeConfig]);
+  const onClick = useCallback(
+    (event) => {
+      // Links in the rendered message navigate without toggling the row.
+      if (event.target instanceof Element && event.target.closest('a')) return;
+      onToggle(entry);
+    },
+    [onToggle, entry]
+  );
   const onKeyDown = useCallback(
     (event) => {
+      // Keys pressed on a focused link inside the message belong to the link.
+      if (event.target !== event.currentTarget) return;
       if (event.key !== 'Enter' && event.key !== ' ') return;
       event.preventDefault();
-      onToggle();
+      onToggle(entry);
     },
-    [onToggle]
+    [onToggle, entry]
   );
 
   const typeLabel = typeConfig.title ?? entry.eventType;
 
   return (
     <div
+      id={`${blockId}_${entry.index}`}
       className={cn(cssStyles.row, expanded && cssStyles.rowOpen, classNames.row)}
       data-level={level}
       style={styles.row}
@@ -65,7 +85,7 @@ const EventLogRow = React.memo(function EventLogRow({
         role="button"
         tabIndex={0}
         aria-expanded={expanded}
-        onClick={onToggle}
+        onClick={onClick}
         onKeyDown={onKeyDown}
       >
         <span className={cssStyles.rail} aria-hidden />
@@ -86,13 +106,10 @@ const EventLogRow = React.memo(function EventLogRow({
           <span className={cssStyles.timeRelative}>{time.relative}</span>
         </time>
         <span className={cssStyles.type} style={{ color: typeConfig.color }}>
-          {type.isNone(typeConfig.icon) ? (
+          {type.isNone(iconProperties) ? (
             <span className={cssStyles.dot} aria-hidden />
           ) : (
-            <Icon
-              blockId={`${blockId}_${entry.id}_icon`}
-              properties={{ name: typeConfig.icon, size: 13, color: typeConfig.color }}
-            />
+            <Icon blockId={`${blockId}_${entry.index}_icon`} properties={iconProperties} />
           )}
           <span className={cssStyles.typeLabel}>{typeLabel}</span>
         </span>

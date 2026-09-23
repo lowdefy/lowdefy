@@ -195,7 +195,7 @@
           copied: Gekopieer
           systemActor: Stelsel
           searchPlaceholder: Soek gebeure…
-          empty: Geen gebeure nie.
+          noData: Geen gebeure nie.
           noResults: Geen passende gebeure nie.
         fields:
           id: id
@@ -210,6 +210,40 @@
             metadata:
               rows: 2043
               error: Kolom "epos" ontbreek
+
+- title: Set Data With CallMethod
+  fullWidth: true
+  blocks:
+    - id: set_data_event_log
+      type: EventLog
+      properties:
+        height: 200
+        fields:
+          id: id
+          time: timestamp
+          message: message
+      events:
+        onMount:
+          - id: set_event_log_data
+            type: CallMethod
+            params:
+              blockId: set_data_event_log
+              method: setData
+              args:
+                - - id: '1'
+                    timestamp: '2026-03-04T09:12:04.000Z'
+                    type: sync_failed
+                    level: error
+                    message: Contact sync failed after 3 retries.
+                    metadata:
+                      retries: 3
+                  - id: '2'
+                    timestamp: '2026-03-04T09:02:04.000Z'
+                    type: sync_succeeded
+                    level: success
+                    message: Contact sync completed.
+                    metadata:
+                      contacts: 1240
 
 - title: Events
   fullWidth: true

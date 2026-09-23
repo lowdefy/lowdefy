@@ -18,13 +18,11 @@ import { type } from '@lowdefy/helpers';
 
 import getPostHog from '../lib/getPostHog.js';
 
-// Capture a pageleave by hand, the counterpart to PostHogPageview. PostHog
-// needs both to compute bounce rate and time on page. Run it from each page's
-// events.onLeave when automatic pageviews are off.
-function PostHogCapturePageLeave({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+// Capture a pageleave by hand, the counterpart to PostHogPageview. posthog-js
+// captures pageleaves itself when the tab closes, as long as automatic
+// pageviews are on (capture_pageleave defaults to 'if_capture_pageview'). This
+// action is for apps that turned those off and capture pageviews by hand.
+async function PostHogCapturePageLeave({ params }) {
   const { properties } = params ?? {};
   if (!type.isNone(properties) && !type.isObject(properties)) {
     throw new Error(
@@ -34,7 +32,10 @@ function PostHogCapturePageLeave({ params }) {
     );
   }
 
-  posthog.capture('$pageleave', type.isObject(properties) ? properties : undefined);
+  const posthog = await getPostHog({ action: 'PostHogCapturePageLeave' });
+  if (type.isNone(posthog)) return null;
+
+  posthog.capture('$pageleave', properties ?? undefined);
   return null;
 }
 

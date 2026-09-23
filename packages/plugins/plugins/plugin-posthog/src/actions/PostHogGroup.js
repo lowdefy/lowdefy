@@ -21,10 +21,7 @@ import getPostHog from '../lib/getPostHog.js';
 // Associate the current person with a group, so events can be analysed per
 // organisation, team or account. The association sticks until reset() is
 // called, so run it after PostHogIdentify.
-function PostHogGroup({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogGroup({ params }) {
   const { type: groupType, key, properties } = params ?? {};
   if (!type.isString(groupType) || groupType.trim() === '') {
     throw new Error(
@@ -42,7 +39,10 @@ function PostHogGroup({ params }) {
     );
   }
 
-  posthog.group(groupType, key, type.isObject(properties) ? properties : undefined);
+  const posthog = await getPostHog({ action: 'PostHogGroup' });
+  if (type.isNone(posthog)) return null;
+
+  posthog.group(groupType, key, properties ?? undefined);
   return null;
 }
 

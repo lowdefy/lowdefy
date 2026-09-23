@@ -30,33 +30,38 @@ let PostHogPageview;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogInit, PostHogPageview } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogPageview captures a pageview event', () => {
-  init();
-  expect(PostHogPageview({ params: {} })).toBe(null);
+test('PostHogPageview captures a pageview event', async () => {
+  await init();
+  await expect(PostHogPageview({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.capture.mock.calls).toEqual([['$pageview', undefined]]);
 });
 
-test('PostHogPageview captures a pageview event with properties', () => {
-  init();
-  PostHogPageview({ params: { properties: { section: 'reports' } } });
+test('PostHogPageview captures a pageview event with properties', async () => {
+  await init();
+  await PostHogPageview({ params: { properties: { section: 'reports' } } });
   expect(mockPostHog.capture.mock.calls).toEqual([['$pageview', { section: 'reports' }]]);
 });
 
-test('PostHogPageview does nothing before PostHogInit has run', () => {
-  expect(PostHogPageview({ params: {} })).toBe(null);
+test('PostHogPageview does nothing before PostHogInit has run', async () => {
+  await expect(PostHogPageview({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.capture).not.toHaveBeenCalled();
 });
 
-test('PostHogPageview throws when properties is not an object', () => {
-  init();
-  expect(() => PostHogPageview({ params: { properties: 'reports' } })).toThrow(
+test('PostHogPageview throws when properties is not an object', async () => {
+  await init({ enabled: false });
+  await expect(PostHogPageview({ params: { properties: 'reports' } })).rejects.toThrow(
     'PostHogPageview "properties" must be an object. Received "reports".'
   );
 });

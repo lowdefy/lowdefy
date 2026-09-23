@@ -19,73 +19,49 @@ import { jest } from '@jest/globals';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockPostHog = {
-  identify: jest.fn(),
   init: jest.fn(),
   reset: jest.fn(),
-  setPersonProperties: jest.fn(),
 };
 
 jest.unstable_mockModule('posthog-js', () => ({ default: mockPostHog }));
 
-let PostHogIdentify;
 let PostHogInit;
 let PostHogReset;
-let globals;
-let storage;
 
 beforeEach(async () => {
   resetPostHogState();
-  storage = new Map();
-  globals = {
-    window: {
-      localStorage: {
-        getItem: (key) => (storage.has(key) ? storage.get(key) : null),
-        removeItem: (key) => storage.delete(key),
-        setItem: (key, value) => storage.set(key, value),
-      },
-    },
-  };
-  ({ PostHogIdentify, PostHogInit, PostHogReset } = await import('../actions.js'));
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  ({ PostHogInit, PostHogReset } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogReset resets posthog and forgets the identified id', () => {
-  init();
-  storage.set('lowdefy_posthog_identified_id', 'user_1');
-  expect(PostHogReset({ globals, params: {} })).toBe(null);
+test('PostHogReset resets the current person', async () => {
+  await init();
+  await expect(PostHogReset({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.reset.mock.calls).toEqual([[false]]);
-  expect(storage.has('lowdefy_posthog_identified_id')).toBe(false);
 });
 
-test('PostHogReset resets the device id when resetDeviceId is true', () => {
-  init();
-  PostHogReset({ globals, params: { resetDeviceId: true } });
+test('PostHogReset also resets the device id when resetDeviceId is true', async () => {
+  await init();
+  await PostHogReset({ params: { resetDeviceId: true } });
   expect(mockPostHog.reset.mock.calls).toEqual([[true]]);
 });
 
-test('PostHogReset lets the next person identify without a person swap reset', () => {
-  init();
-  PostHogIdentify({ globals, params: { id: 'user_1' } });
-  PostHogReset({ globals, params: {} });
-  PostHogIdentify({ globals, params: { id: 'user_2' } });
-  expect(mockPostHog.reset).toHaveBeenCalledTimes(1);
-  expect(mockPostHog.identify.mock.calls).toEqual([
-    ['user_1', {}, {}],
-    ['user_2', {}, {}],
-  ]);
-});
-
-test('PostHogReset does nothing before PostHogInit has run', () => {
-  expect(PostHogReset({ globals, params: {} })).toBe(null);
+test('PostHogReset does nothing before PostHogInit has run', async () => {
+  await expect(PostHogReset({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.reset).not.toHaveBeenCalled();
 });
 
-test('PostHogReset throws when resetDeviceId is not a boolean', () => {
-  init();
-  expect(() => PostHogReset({ globals, params: { resetDeviceId: 'yes' } })).toThrow(
+test('PostHogReset throws when resetDeviceId is not a boolean', async () => {
+  await init({ enabled: false });
+  await expect(PostHogReset({ params: { resetDeviceId: 'yes' } })).rejects.toThrow(
     'PostHogReset "resetDeviceId" must be a boolean. Received "yes".'
   );
 });

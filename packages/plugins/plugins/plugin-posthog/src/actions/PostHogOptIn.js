@@ -21,8 +21,8 @@ import getPostHog from '../lib/getPostHog.js';
 // Start capturing for this person. Pair it with PostHogOptOut and a PostHogInit
 // that sets options.opt_out_capturing_by_default to true when consent is
 // required before any data is sent.
-function PostHogOptIn() {
-  const posthog = getPostHog();
+async function PostHogOptIn() {
+  const posthog = await getPostHog({ action: 'PostHogOptIn' });
   if (type.isNone(posthog)) return null;
 
   posthog.opt_in_capturing();

@@ -19,13 +19,18 @@ export default {
   icons: [],
   valueType: null,
   events: {
-    onTick:
-      'Trigger actions on every interval tick while the timer is running. The event object is `{ tick: number }`, the count of ticks since the timer was started.',
+    onTick: {
+      description:
+        'Trigger actions on every tick while the timer is running. The next tick is scheduled `interval` ms after the `onTick` actions finish, so ticks never overlap.',
+      event: {
+        tick: 'The number of ticks since the timer was started, starting at 1.',
+      },
+    },
   },
   methods: {
     start:
-      'Start firing `onTick` every `interval` ms, and reset the tick count to zero. Does nothing if the timer is already running.',
-    stop: 'Stop firing ticks. Does nothing if the timer is not running.',
+      'Start the timer and reset the tick count to zero. The first tick fires after `interval` ms. Does nothing if the timer is already running.',
+    stop: 'Stop the timer. If `onTick` actions are running, they finish but no further tick is scheduled. Does nothing if the timer is not running.',
     toggle: 'Start the timer if it is stopped, stop it if it is running.',
   },
   properties: {
@@ -36,7 +41,7 @@ export default {
         type: 'integer',
         minimum: 1,
         description:
-          'Required. Milliseconds between ticks. Changing it while the timer is running restarts the interval.',
+          'Milliseconds to wait after the `onTick` actions of one tick finish before the next tick fires. Changing it while the timer is waiting restarts the wait.',
       },
       autoStart: {
         type: 'boolean',
@@ -54,8 +59,9 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Pause ticking while the browser tab is hidden, and resume when it becomes visible again. Ticks missed while hidden are not fired on resume.',
+          'Pause ticking while the browser tab is hidden (`document.visibilityState`), and resume when it becomes visible again. Ticks missed while hidden are not fired on resume; the next tick fires `interval` ms after the tab is visible.',
       },
     },
+    required: ['interval'],
   },
 };

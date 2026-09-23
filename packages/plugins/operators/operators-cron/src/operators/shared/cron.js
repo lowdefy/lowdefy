@@ -15,20 +15,45 @@
 */
 
 import { CronExpressionParser } from 'cron-parser';
-// The i18n build registers every cronstrue locale, so _cron.describe can take a locale.
+// The i18n build registers every cronstrue locale, so _cron.describe can take a locale. The
+// locales add about 35 kB gzipped, and are only bundled into apps that use _cron.
 import cronstrue from 'cronstrue/i18n.js';
 import { type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
-function readParams({ params }) {
-  if (type.isString(params)) {
-    return { expression: params };
-  }
+import cronstrueLocales from '../../cronstrueLocales.js';
+
+const MAX_COUNT = 1000;
+
+// Only ISO 8601 strings parse the same way in every JavaScript engine.
+const ISO_DATE_STRING =
+  /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
+
+// A standalone "H", not the H in a day name like THU. cron-parser picks a random value for "H"
+// on every evaluation, so the client and server would disagree, and cronstrue can not describe it.
+const HASH_TOKEN = /(?:^|[^A-Za-z])H(?![A-Za-z])/;
+
+// cron-parser accepts these aliases but cronstrue can not describe them.
+const DESCRIBE_ALIASES = {
+  '@minutely': '* * * * *',
+  '@secondly': '* * * * * *',
+  '@weekdays': '0 0 * * 1-5',
+  '@weekends': '0 0 * * 0,6',
+};
+
+const LOCALE_CODES = Object.fromEntries(
+  cronstrueLocales.map((locale) => [locale.toLowerCase(), locale])
+);
+
+function readParams([params]) {
   if (type.isObject(params)) {
-    return params;
+    return [params];
   }
-  // Only describe and validate accept null and undefined, both read a missing expression.
-  return {};
+  return [{ expression: params }];
+}
+
+function isBlankString(value) {
+  return type.isString(value) && value.trim() === '';
 }
 
 function getCurrentDate({ method, from }) {
@@ -38,18 +63,22 @@ function getCurrentDate({ method, from }) {
   if (type.isDate(from)) {
     return from;
   }
-  if (type.isString(from)) {
-    const parsed = new Date(from);
-    if (!type.isDate(parsed)) {
-      throw new Error(
-        `_cron.${method} could not resolve "from" as a date. Received ${JSON.stringify(from)}.`
-      );
-    }
-    return parsed;
+  if (!type.isString(from)) {
+    throw new Error(
+      `_cron.${method} "from" must be a date or an ISO 8601 date string. Received ${JSON.stringify(
+        from
+      )}.`
+    );
   }
-  throw new Error(
-    `_cron.${method} "from" must be a date or a date string. Received ${JSON.stringify(from)}.`
-  );
+  const parsed = new Date(from);
+  if (!ISO_DATE_STRING.test(from) || !type.isDate(parsed)) {
+    throw new Error(
+      `_cron.${method} "from" is not a valid ISO 8601 date string, like "2024-01-01" or "2024-01-01T09:00:00Z". Received ${JSON.stringify(
+        from
+      )}.`
+    );
+  }
+  return parsed;
 }
 
 function getTimezone({ method, timezone }) {
@@ -79,9 +108,9 @@ function getCount({ method, count }) {
   if (type.isNone(count)) {
     return 1;
   }
-  if (!type.isInt(count) || count < 1) {
+  if (!type.isInt(count) || count < 1 || count > MAX_COUNT) {
     throw new Error(
-      `_cron.${method} "count" must be an integer greater than zero. Received ${JSON.stringify(
+      `_cron.${method} "count" must be an integer from 1 to ${MAX_COUNT}. Received ${JSON.stringify(
         count
       )}.`
     );
@@ -89,63 +118,105 @@ function getCount({ method, count }) {
   return count;
 }
 
-function parseExpression({ method, expression, from, timezone }) {
-  if (!type.isString(expression)) {
-    throw new Error(
-      `_cron.${method} requires a cron expression string. Received ${JSON.stringify(expression)}.`
-    );
-  }
+function getOptions({ method, from, timezone }) {
   const options = { currentDate: getCurrentDate({ method, from }) };
   const tz = getTimezone({ method, timezone });
   if (!type.isNone(tz)) {
     options.tz = tz;
   }
+  return options;
+}
+
+function getLocale({ locale }) {
+  if (!type.isString(locale)) {
+    throw new Error(
+      `_cron.describe "locale" must be a string. Received ${JSON.stringify(locale)}.`
+    );
+  }
+  // cronstrue names regional locales like "pt_BR", so "pt-BR" and "pt_br" are accepted too.
+  const code = LOCALE_CODES[locale.replace(/-/g, '_').toLowerCase()];
+  if (type.isUndefined(code)) {
+    throw new Error(
+      `_cron.describe does not support the locale ${JSON.stringify(
+        locale
+      )}. Use one of: ${cronstrueLocales.join(', ')}.`
+    );
+  }
+  return code;
+}
+
+function evaluateExpression({ method, expression, options, evaluate }) {
+  if (!type.isString(expression) || isBlankString(expression)) {
+    throw new Error(
+      `_cron.${method} requires a non-empty cron expression string. Received ${JSON.stringify(
+        expression
+      )}.`
+    );
+  }
+  if (HASH_TOKEN.test(expression)) {
+    throw new Error(
+      `_cron.${method} does not support the "H" hash token, use explicit values instead. Received ${JSON.stringify(
+        expression
+      )}.`
+    );
+  }
   try {
-    return CronExpressionParser.parse(expression, options);
+    const interval = CronExpressionParser.parse(expression, options);
+    if (!interval.hasNext()) {
+      throw new Error('The expression does not match any date.');
+    }
+    return evaluate(interval);
   } catch (error) {
     throw new Error(
-      `_cron.${method} could not parse the cron expression ${JSON.stringify(expression)}. ${
+      `_cron.${method} could not evaluate the cron expression ${JSON.stringify(expression)}. ${
         error.message
       }`
     );
   }
 }
 
-function next(params) {
-  const { expression, from, timezone, count } = readParams({ params });
+function next({ expression, from, timezone, count }) {
   const steps = getCount({ method: 'next', count });
-  const interval = parseExpression({ method: 'next', expression, from, timezone });
-  if (steps === 1) {
-    return interval.next().toDate();
-  }
-  return interval.take(steps).map((occurrence) => occurrence.toDate());
+  return evaluateExpression({
+    method: 'next',
+    expression,
+    options: getOptions({ method: 'next', from, timezone }),
+    evaluate: (interval) => {
+      if (steps === 1) {
+        return interval.next().toDate();
+      }
+      return interval.take(steps).map((occurrence) => occurrence.toDate());
+    },
+  });
 }
 
-function previous(params) {
-  const { expression, from, timezone, count } = readParams({ params });
+function previous({ expression, from, timezone, count }) {
   const steps = getCount({ method: 'previous', count });
-  const interval = parseExpression({ method: 'previous', expression, from, timezone });
-  if (steps === 1) {
-    return interval.prev().toDate();
-  }
-  // A negative limit walks backwards, so occurrences are returned most recent first.
-  return interval.take(-steps).map((occurrence) => occurrence.toDate());
+  return evaluateExpression({
+    method: 'previous',
+    expression,
+    options: getOptions({ method: 'previous', from, timezone }),
+    evaluate: (interval) => {
+      if (steps === 1) {
+        return interval.prev().toDate();
+      }
+      // A negative limit walks backwards, so occurrences are returned most recent first.
+      return interval.take(-steps).map((occurrence) => occurrence.toDate());
+    },
+  });
 }
 
-function describe(params) {
-  const { expression, locale, verbose, use24HourTimeFormat } = readParams({ params });
-  if (type.isNone(expression) || expression === '') {
+function describe({ expression, locale, verbose, use24HourTimeFormat }) {
+  // A label can describe a schedule that has not been set yet.
+  if (type.isNone(expression) || isBlankString(expression)) {
     return '';
   }
-  if (!type.isString(expression)) {
-    throw new Error(
-      `_cron.describe requires a cron expression string. Received ${JSON.stringify(expression)}.`
-    );
-  }
+  // Only describe expressions that _cron.validate accepts, cronstrue accepts a wider grammar.
+  evaluateExpression({ method: 'describe', expression, options: {}, evaluate: () => true });
   const options = { throwExceptionOnParseError: true };
   // Locales set their own time format, so only override what the config asks for.
   if (!type.isNone(locale)) {
-    options.locale = locale;
+    options.locale = getLocale({ locale });
   }
   if (!type.isNone(verbose)) {
     options.verbose = verbose;
@@ -154,7 +225,7 @@ function describe(params) {
     options.use24HourTimeFormat = use24HourTimeFormat;
   }
   try {
-    return cronstrue.toString(expression, options);
+    return cronstrue.toString(DESCRIBE_ALIASES[expression] ?? expression, options);
   } catch (error) {
     // cronstrue throws a string that is already prefixed with "Error: ".
     const message = type.isString(error) ? error.replace(/^Error:\s*/, '') : error.message;
@@ -166,32 +237,40 @@ function describe(params) {
   }
 }
 
-function validate(params) {
-  const { expression } = readParams({ params });
-  if (!type.isString(expression)) {
-    return false;
-  }
+function validate({ expression }) {
   try {
-    CronExpressionParser.parse(expression);
-    return true;
+    return evaluateExpression({
+      method: 'validate',
+      expression,
+      options: {},
+      evaluate: () => true,
+    });
   } catch {
     return false;
   }
 }
 
-function fields(params) {
-  const { expression } = readParams({ params });
-  const interval = parseExpression({ method: 'fields', expression });
-  return interval.fields.serialize();
+function fields({ expression }) {
+  return evaluateExpression({
+    method: 'fields',
+    expression,
+    options: {},
+    evaluate: (interval) => interval.fields.serialize(),
+  });
 }
 
 const meta = {
   // next and previous default to the current time, so they may not be resolved at build time.
-  next: { singleArg: true, validTypes: ['string', 'object'], dynamic: true },
-  previous: { singleArg: true, validTypes: ['string', 'object'], dynamic: true },
-  describe: { singleArg: true, validTypes: ['string', 'object', 'null', 'undefined'] },
-  validate: { singleArg: true, validTypes: ['string', 'object', 'null', 'undefined'] },
-  fields: { singleArg: true, validTypes: ['string', 'object'] },
+  next: { singleArg: true, validTypes: ['string', 'object'], dynamic: true, prep: readParams },
+  previous: { singleArg: true, validTypes: ['string', 'object'], dynamic: true, prep: readParams },
+  describe: {
+    singleArg: true,
+    validTypes: ['string', 'object', 'null', 'undefined'],
+    prep: readParams,
+  },
+  // validate returns false for any input that is not a valid cron expression, so it takes any type.
+  validate: { singleArg: true, prep: readParams },
+  fields: { singleArg: true, validTypes: ['string', 'object'], prep: readParams },
 };
 
 const functions = { next, previous, describe, validate, fields };

@@ -46,7 +46,10 @@ function formatTime(value) {
   const time = date.getTime();
   if (Number.isNaN(time)) return emptyTime;
   const elapsed = Date.now() - time;
-  const { unit, ms } = units.find(({ ms: size, limit }) => Math.abs(elapsed) / size < limit);
+  // The unit is picked on the rounded amount, so 59.6 seconds reads "1 min", not "60 sec".
+  const { unit, ms } = units.find(
+    ({ ms: size, limit }) => Math.round(Math.abs(elapsed) / size) < limit
+  );
   return {
     clock: clockFormat.format(date),
     relative: relativeFormat.format(-Math.round(elapsed / ms), unit),

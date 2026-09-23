@@ -21,43 +21,46 @@ import getPostHog from '../lib/getPostHog.js';
 const defaultTimeout = 5000;
 
 // Ask PostHog to evaluate this person's feature flags again, and resolve once
-// the flags are available. Run it after PostHogIdentify or PostHogGroup, then
-// read the flags with PostHogFeatureFlag.
+// the new flags have arrived. Run it after PostHogIdentify or PostHogGroup,
+// then read the flags with PostHogFeatureFlag.
 //
 // Resolves with { flags, variants } - flags is the list of enabled flag keys,
 // variants maps every flag key to its value. Resolves with empty results if
 // PostHog does not answer within "timeout" milliseconds, so a flaky network
 // can never stall the action chain.
-function PostHogReloadFeatureFlags({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogReloadFeatureFlags({ params }) {
   const { timeout } = params ?? {};
-  if (!type.isNone(timeout) && !type.isInt(timeout)) {
+  if (!type.isNone(timeout) && (!type.isInt(timeout) || timeout < 0)) {
     throw new Error(
-      `PostHogReloadFeatureFlags "timeout" must be an integer. Received ${JSON.stringify(timeout)}.`
+      `PostHogReloadFeatureFlags "timeout" must be a non-negative integer. Received ${JSON.stringify(
+        timeout
+      )}.`
     );
   }
 
+  const posthog = await getPostHog({ action: 'PostHogReloadFeatureFlags' });
+  if (type.isNone(posthog)) return { flags: [], variants: {} };
+
   return new Promise((resolve) => {
-    let settled = false;
+    let listening = false;
+    let timer;
     let unsubscribe;
 
     function settle(flags, variants) {
-      if (settled) return;
-      settled = true;
       clearTimeout(timer);
-      if (type.isFunction(unsubscribe)) unsubscribe();
+      unsubscribe();
       resolve({ flags: flags ?? [], variants: variants ?? {} });
     }
 
-    const timer = setTimeout(settle, timeout ?? defaultTimeout);
-
+    // onFeatureFlags calls back straight away with the flags that are already
+    // loaded. Those are the stale flags this action exists to replace, so only
+    // a call that arrives after it returns counts.
+    unsubscribe = posthog.onFeatureFlags((flags, variants) => {
+      if (listening) settle(flags, variants);
+    });
+    listening = true;
+    timer = setTimeout(() => settle(), timeout ?? defaultTimeout);
     posthog.reloadFeatureFlags();
-    unsubscribe = posthog.onFeatureFlags((flags, variants) => settle(flags, variants));
-    // onFeatureFlags fires immediately when flags are already loaded, before
-    // unsubscribe was assigned, so drop the listener here instead.
-    if (settled && type.isFunction(unsubscribe)) unsubscribe();
   });
 }
 

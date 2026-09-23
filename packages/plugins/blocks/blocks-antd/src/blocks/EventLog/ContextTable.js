@@ -16,6 +16,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 import cssStyles from './style.module.css';
 
@@ -31,8 +32,16 @@ function ContextTable({ className, context, rows, style, text }) {
     },
     []
   );
-  const copy = useCallback(() => {
-    navigator.clipboard?.writeText(JSON.stringify(context, null, 2));
+  const copy = useCallback(async () => {
+    // The clipboard API is missing outside secure contexts, and writes reject when permission is
+    // denied or the document is not focused. The button then keeps its label instead of
+    // claiming a copy that did not happen.
+    if (type.isNone(navigator.clipboard)) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(context, null, 2));
+    } catch {
+      return;
+    }
     setCopied(true);
     if (resetRef.current) clearTimeout(resetRef.current);
     resetRef.current = setTimeout(() => setCopied(false), COPIED_RESET_MS);

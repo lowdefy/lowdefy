@@ -22,7 +22,7 @@ const mockUnsubscribe = jest.fn();
 
 const mockPostHog = {
   init: jest.fn(),
-  onFeatureFlags: jest.fn(() => mockUnsubscribe),
+  onFeatureFlags: jest.fn(),
   reloadFeatureFlags: jest.fn(),
 };
 
@@ -30,58 +30,97 @@ jest.unstable_mockModule('posthog-js', () => ({ default: mockPostHog }));
 
 let PostHogInit;
 let PostHogReloadFeatureFlags;
+let flagsCallback;
 
 beforeEach(async () => {
   resetPostHogState();
-  mockPostHog.onFeatureFlags.mockImplementation(() => mockUnsubscribe);
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  flagsCallback = null;
+  mockPostHog.onFeatureFlags.mockImplementation((callback) => {
+    flagsCallback = callback;
+    return mockUnsubscribe;
+  });
   ({ PostHogInit, PostHogReloadFeatureFlags } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogReloadFeatureFlags resolves with the flags once they load', async () => {
-  init();
-  mockPostHog.onFeatureFlags.mockImplementation((callback) => {
-    setTimeout(() => callback(['new-checkout'], { 'new-checkout': 'variant-b' }), 0);
-    return mockUnsubscribe;
-  });
-  const result = await PostHogReloadFeatureFlags({ params: {} });
-  expect(result).toEqual({
+async function flushPromises() {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+test('PostHogReloadFeatureFlags resolves with the flags once they reload', async () => {
+  await init();
+  const result = PostHogReloadFeatureFlags({ params: {} });
+  await flushPromises();
+  expect(mockPostHog.reloadFeatureFlags).toHaveBeenCalledTimes(1);
+  flagsCallback(['new-checkout'], { 'new-checkout': 'variant-b' });
+  await expect(result).resolves.toEqual({
     flags: ['new-checkout'],
     variants: { 'new-checkout': 'variant-b' },
   });
-  expect(mockPostHog.reloadFeatureFlags).toHaveBeenCalledTimes(1);
   expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
 });
 
-test('PostHogReloadFeatureFlags resolves when the flags are already loaded', async () => {
-  init();
+test('PostHogReloadFeatureFlags ignores the already loaded flags onFeatureFlags calls back with straight away', async () => {
+  await init();
   mockPostHog.onFeatureFlags.mockImplementation((callback) => {
-    callback(['new-checkout'], { 'new-checkout': true });
+    callback(['stale-flag'], { 'stale-flag': true });
+    flagsCallback = callback;
     return mockUnsubscribe;
   });
-  const result = await PostHogReloadFeatureFlags({ params: {} });
-  expect(result).toEqual({ flags: ['new-checkout'], variants: { 'new-checkout': true } });
+  const result = PostHogReloadFeatureFlags({ params: {} });
+  await flushPromises();
+  expect(mockUnsubscribe).not.toHaveBeenCalled();
+  flagsCallback(['fresh-flag'], { 'fresh-flag': true });
+  await expect(result).resolves.toEqual({
+    flags: ['fresh-flag'],
+    variants: { 'fresh-flag': true },
+  });
   expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
 });
 
 test('PostHogReloadFeatureFlags resolves with empty results when PostHog does not answer', async () => {
-  init();
-  mockPostHog.onFeatureFlags.mockImplementation(() => mockUnsubscribe);
-  const result = await PostHogReloadFeatureFlags({ params: { timeout: 1 } });
-  expect(result).toEqual({ flags: [], variants: {} });
+  await init();
+  await expect(PostHogReloadFeatureFlags({ params: { timeout: 1 } })).resolves.toEqual({
+    flags: [],
+    variants: {},
+  });
+  expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
 });
 
-test('PostHogReloadFeatureFlags does nothing before PostHogInit has run', () => {
-  expect(PostHogReloadFeatureFlags({ params: {} })).toBe(null);
+test('PostHogReloadFeatureFlags resolves with empty results before PostHogInit has run', async () => {
+  await expect(PostHogReloadFeatureFlags({ params: {} })).resolves.toEqual({
+    flags: [],
+    variants: {},
+  });
   expect(mockPostHog.reloadFeatureFlags).not.toHaveBeenCalled();
 });
 
-test('PostHogReloadFeatureFlags throws when timeout is not an integer', () => {
-  init();
-  expect(() => PostHogReloadFeatureFlags({ params: { timeout: '1000' } })).toThrow(
-    'PostHogReloadFeatureFlags "timeout" must be an integer. Received "1000".'
+test('PostHogReloadFeatureFlags resolves with empty results when PostHog is disabled', async () => {
+  await init({ enabled: false });
+  await expect(PostHogReloadFeatureFlags({ params: {} })).resolves.toEqual({
+    flags: [],
+    variants: {},
+  });
+});
+
+test('PostHogReloadFeatureFlags throws when timeout is not an integer', async () => {
+  await init();
+  await expect(PostHogReloadFeatureFlags({ params: { timeout: '1000' } })).rejects.toThrow(
+    'PostHogReloadFeatureFlags "timeout" must be a non-negative integer. Received "1000".'
+  );
+});
+
+test('PostHogReloadFeatureFlags throws when timeout is negative', async () => {
+  await init({ enabled: false });
+  await expect(PostHogReloadFeatureFlags({ params: { timeout: -1 } })).rejects.toThrow(
+    'PostHogReloadFeatureFlags "timeout" must be a non-negative integer. Received -1.'
   );
 });

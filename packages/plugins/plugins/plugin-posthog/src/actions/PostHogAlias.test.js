@@ -30,27 +30,39 @@ let PostHogInit;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogAlias, PostHogInit } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogAlias aliases the current person', () => {
-  init();
-  expect(PostHogAlias({ params: { alias: 'user_1' } })).toBe(null);
+test('PostHogAlias aliases the current person', async () => {
+  await init();
+  await expect(PostHogAlias({ params: { alias: 'user_1' } })).resolves.toBe(null);
   expect(mockPostHog.alias.mock.calls).toEqual([['user_1']]);
 });
 
-test('PostHogAlias does nothing before PostHogInit has run', () => {
-  expect(PostHogAlias({ params: { alias: 'user_1' } })).toBe(null);
+test('PostHogAlias does nothing before PostHogInit has run', async () => {
+  await expect(PostHogAlias({ params: { alias: 'user_1' } })).resolves.toBe(null);
   expect(mockPostHog.alias).not.toHaveBeenCalled();
 });
 
-test('PostHogAlias throws when alias is missing', () => {
-  init();
-  expect(() => PostHogAlias({ params: {} })).toThrow(
+test('PostHogAlias throws when alias is missing', async () => {
+  await init();
+  await expect(PostHogAlias({ params: {} })).rejects.toThrow(
     'PostHogAlias "alias" must be a non-empty string. Received undefined.'
+  );
+});
+
+test('PostHogAlias throws on an invalid alias even when PostHog is disabled', async () => {
+  await init({ enabled: false });
+  await expect(PostHogAlias({ params: { alias: '' } })).rejects.toThrow(
+    'PostHogAlias "alias" must be a non-empty string. Received "".'
   );
 });

@@ -20,6 +20,10 @@ import GetLocalStorage from './GetLocalStorage.js';
 const mockGetItem = jest.fn();
 const globals = { window: { localStorage: { getItem: mockGetItem } } };
 
+beforeEach(() => {
+  mockGetItem.mockReset();
+});
+
 test('GetLocalStorage returns the deserialized value stored at the key', () => {
   mockGetItem.mockReturnValueOnce('{"theme":"dark"}');
   expect(GetLocalStorage({ globals, params: { key: 'settings' } })).toEqual({ theme: 'dark' });
@@ -31,6 +35,11 @@ test('GetLocalStorage returns a Date object for a stored date', () => {
   const result = GetLocalStorage({ globals, params: { key: 'lastSeen' } });
   expect(result).toBeInstanceOf(Date);
   expect(result.valueOf()).toEqual(1600000000000);
+});
+
+test('GetLocalStorage returns the raw string when the stored value is not serialized JSON', () => {
+  mockGetItem.mockReturnValueOnce('dark');
+  expect(GetLocalStorage({ globals, params: { key: 'theme' } })).toEqual('dark');
 });
 
 test('GetLocalStorage returns the default value when the key is not set', () => {
@@ -50,20 +59,49 @@ test('GetLocalStorage returns the stored value when it is null', () => {
   expect(GetLocalStorage({ globals, params: { key: 'settings', default: 'fallback' } })).toBeNull();
 });
 
+test('GetLocalStorage returns the default value when the browser blocks storage access', () => {
+  const blockedGlobals = {
+    window: {
+      get localStorage() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+      },
+    },
+  };
+  expect(
+    GetLocalStorage({ globals: blockedGlobals, params: { key: 'settings', default: 'fallback' } })
+  ).toEqual('fallback');
+});
+
+test('GetLocalStorage returns the default value when reading the key throws', () => {
+  mockGetItem.mockImplementationOnce(() => {
+    throw new DOMException('The operation is insecure.', 'SecurityError');
+  });
+  expect(GetLocalStorage({ globals, params: { key: 'settings', default: 'fallback' } })).toEqual(
+    'fallback'
+  );
+});
+
 test('GetLocalStorage throws when params is not an object', () => {
   expect(() => GetLocalStorage({ globals, params: 'settings' })).toThrow(
-    'GetLocalStorage params should be an object. Received "settings".'
+    'GetLocalStorage params should be an object.'
   );
 });
 
 test('GetLocalStorage throws when key is not a string', () => {
   expect(() => GetLocalStorage({ globals, params: { key: null } })).toThrow(
-    'GetLocalStorage key should be a non-empty string. Received null.'
+    'GetLocalStorage "key" should be a non-empty string.'
   );
 });
 
 test('GetLocalStorage throws when key is an empty string', () => {
   expect(() => GetLocalStorage({ globals, params: { key: '' } })).toThrow(
-    'GetLocalStorage key should be a non-empty string. Received "".'
+    'GetLocalStorage "key" should be a non-empty string.'
   );
+});
+
+test('GetLocalStorage throws when key uses a reserved Lowdefy prefix', () => {
+  expect(() => GetLocalStorage({ globals, params: { key: 'lowdefy_darkMode' } })).toThrow(
+    'GetLocalStorage "key" "lowdefy_darkMode" is reserved. Keys starting with "lowdefy_" or "lf-" are used internally by Lowdefy.'
+  );
+  expect(mockGetItem.mock.calls).toEqual([]);
 });

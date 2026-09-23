@@ -3391,7 +3391,7 @@
             "interval": {
               "type": "integer",
               "minimum": 1,
-              "description": "Required. Milliseconds between ticks. Changing it while the timer is running restarts the interval."
+              "description": "Milliseconds to wait after the `onTick` actions of one tick finish before the next tick fires. Changing it while the timer is waiting restarts the wait."
             },
             "autoStart": {
               "type": "boolean",
@@ -3406,9 +3406,12 @@
             "pauseWhenHidden": {
               "type": "boolean",
               "default": true,
-              "description": "Pause ticking while the browser tab is hidden, and resume when it becomes visible again. Ticks missed while hidden are not fired on resume."
+              "description": "Pause ticking while the browser tab is hidden (`document.visibilityState`), and resume when it becomes visible again. Ticks missed while hidden are not fired on resume; the next tick fires `interval` ms after the tab is visible."
             }
-          }
+          },
+          "required": [
+            "interval"
+          ]
         },
         "class": {
           "oneOf": [
@@ -3522,7 +3525,12 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger actions on every interval tick while the timer is running. The event object is `{ tick: number }`, the count of ticks since the timer was started."
+                  "description": {
+                    "description": "Trigger actions on every tick while the timer is running. The next tick is scheduled `interval` ms after the `onTick` actions finish, so ticks never overlap.",
+                    "event": {
+                      "tick": "The number of ticks since the timer was started, starting at 1."
+                    }
+                  }
                 }
               }
             }

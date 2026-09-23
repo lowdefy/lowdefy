@@ -1,8 +1,8 @@
 # PlacesAutocomplete
 
-Address input with place suggestions from the Google Places Autocomplete Data API. Must be wrapped in a `GoogleMapsScript` block loading the places library. The block value is an object: selecting a suggestion fetches the configured place fields, renames them through `resultMapping` and merges them into the value, while typing writes the free text to `labelField` so a form always holds a usable address.
+Address input with place suggestions from the Google Places Autocomplete Data API. Must be wrapped in a `GoogleMapsScript` block. The block value is an object: selecting a suggestion fetches the configured place fields, renames them through `resultMapping` and writes them to the value, while typing writes the free text to `labelField` so a form always holds a usable address. Typing, selecting or clearing first removes the keys the previous place wrote, so typed text never keeps another place's coordinates; sibling keys written by other blocks are preserved, and the value becomes null when none remain. `onPlaceChanged` receives the mapped place, `onChange` the new value, and `onError` fires when the Places API request fails.
 
-> The PlacesAutocomplete block must be wrapped in a GoogleMapsScript block that loads the places library, `libraries: [places]`, with a valid Google Maps API key that has the Places API (New) enabled. Without the places library the block renders as a plain text input that still writes the label field. The examples on this page require a configured API key to return suggestions.
+> The PlacesAutocomplete block must be wrapped in a GoogleMapsScript block, with a valid Google Maps API key that has the Places API (New) enabled. Load the places library on the script, `libraries: [places]`, so it is ready on first render; when it is not listed the block imports it on demand through `google.maps.importLibrary`. Outside a GoogleMapsScript, or when the places library cannot be loaded, the block is a plain text input that still writes the label field. Suggestions are requested `debounce` milliseconds (default 250) after the last keystroke. The examples on this page require a configured API key to return suggestions.
 
 ```yaml
 - id: pa_default
@@ -161,8 +161,18 @@ Address input with place suggestions from the Google Places Autocomplete Data AP
       - id: pa_place_changed_message
         type: DisplayMessage
         params:
-          content: Place selected.
+          content:
+            _string.concat:
+              - "Selected: "
+              - _event: place.formattedAddress
           duration: 2
+    onError:
+      - id: pa_error_message
+        type: DisplayMessage
+        params:
+          status: error
+          content:
+            _event: message
     onSearch:
       - id: pa_search_state
         type: SetState
@@ -208,9 +218,11 @@ Delivery details
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `allowClear` | boolean | `true` | Allow the user to clear the selected place, sets the value to null. |
+| `allowClear` | boolean | `true` | Allow the user to clear the input. Clearing removes the place keys from the block value, and sets the value to null when no sibling keys remain. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `backfill` | boolean | `false` | Backfill the highlighted suggestion into the input when using the keyboard. |
+| `bordered` | boolean | `true` | Whether or not the input has a border style. Deprecated, use variant instead. |
+| `debounce` | number | `250` | Milliseconds to wait after the last keystroke before requesting suggestions from the Places API. |
 | `defaultOpen` | boolean | `false` | Initial open state of the suggestions dropdown. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `fetchFields` | array | - | Place fields to fetch when a suggestion is selected, in camelCase, for example `addressComponents`, `location` or `viewport`. `formattedAddress` is always fetched. See [Place fields](https://developers.google.com/maps/documentation/javascript/reference/place#Place). |
@@ -227,7 +239,7 @@ Delivery details
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `labelField` | string | `"formattedAddress"` | The key in the block value, after `resultMapping` is applied, that is displayed in the input and written when the user types free text. |
+| `labelField` | string | `"formattedAddress"` | The key in the block value, after `resultMapping` is applied, that is displayed in the input and written when the user types free text. Typing removes the keys the previous place wrote (the mapped `input`, `id`, `formattedAddress` and `fetchFields` keys), so typed text never carries another place's fields. |
 | `loadingPlaceholder` | string | `"Loading..."` | Text displayed in the dropdown while suggestions are being fetched. |
 | `notFoundContent` | string | `"No results found"` | Text displayed in the dropdown when the search returns no suggestions. |
 | `optionsIcon` | string \| object | `{"name":"MdLocationOn"}` | Icon displayed before each suggestion in the dropdown. |
@@ -244,16 +256,52 @@ Delivery details
 | `requestOptions.region` | string | - | The region code used to format the suggestions. |
 | `resultMapping` | object | - | Rename the fetched place fields before they are written to the block value. Dotted target paths are nested, for example `{ formattedAddress: address.line1, location: geometry.location }`. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design select tokens](https://ant.design/components/select#design-token). |
+| `theme.borderRadius` | number | `6` | Border radius of the input. |
+| `theme.borderRadiusLG` | number | `8` | Border radius for large size. |
+| `theme.borderRadiusSM` | number | `4` | Border radius for small size. |
+| `theme.controlHeight` | number | `32` | Height of the input. |
+| `theme.controlHeightLG` | number | `40` | Height for large size. |
+| `theme.controlHeightSM` | number | `24` | Height for small size. |
+| `theme.fontSize` | number | `14` | Font size of the input text. |
+| `theme.fontSizeLG` | number | `16` | Font size for large size. |
+| `theme.fontSizeSM` | number | `14` | Font size for small size. |
+| `theme.colorPrimary` | string | - | Primary color, used for focus border and active state. |
+| `theme.colorPrimaryHover` | string | - | Primary hover color, used for hover border state. |
+| `theme.colorBgContainer` | string | `"#ffffff"` | Background color of the selector. |
+| `theme.colorBgElevated` | string | `"#ffffff"` | Background color of the dropdown. |
+| `theme.colorText` | string | - | Text color of the input. |
+| `theme.colorTextPlaceholder` | string | - | Placeholder text color. |
+| `theme.colorTextDisabled` | string | - | Text color when disabled. |
+| `theme.colorBorder` | string | - | Border color of the input. |
+| `theme.hoverBorderColor` | string | - | Border color when hovered. |
+| `theme.activeBorderColor` | string | - | Border color when focused/active. |
+| `theme.activeOutlineColor` | string | - | Outline color when focused. |
+| `theme.clearBg` | string | `"#ffffff"` | Background color of the clear button. |
+| `theme.optionSelectedBg` | string | `"#e6f4ff"` | Background color of the selected option. |
+| `theme.optionSelectedColor` | string | `"rgba(0, 0, 0, 0.88)"` | Text color of the selected option. |
+| `theme.optionSelectedFontWeight` | number | `600` | Font weight of the selected option. |
+| `theme.optionActiveBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of the active (hovered) option. |
+| `theme.optionFontSize` | number | `14` | Font size of dropdown option text. |
+| `theme.optionHeight` | number | `32` | Height of each dropdown option. |
+| `theme.optionLineHeight` | number | - | Line height of dropdown option text. |
+| `theme.optionPadding` | string \| number | `"5px 12px"` | Padding of each dropdown option. |
+| `theme.selectorBg` | string | `"#ffffff"` | Background color of the selector input. |
+| `theme.zIndexPopup` | number | `1050` | Z-index of the dropdown popup. |
+| `theme.showArrowPaddingInlineEnd` | number | `18` | Right padding when the arrow icon is shown. |
+| `theme.lineWidth` | number | `1` | Border width of the input. |
+| `theme.paddingInline` | number | `11` | Horizontal padding of the input. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | string | `"outlined"` | Input visual variant. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
+| `variant` | string | `"outlined"` | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onBlur` | \- | Trigger actions when the input loses focus. |
-| `onChange` | \- | Trigger actions when the input value changes, by typing or by selection. |
+| `onChange` | `{ value }` | Trigger actions after the block value changes, by typing, by selecting a suggestion or by clearing the input. |
 | `onClear` | \- | Trigger actions when the input is cleared. |
+| `onError` | `{ message }` | Trigger actions when fetching suggestions or place fields fails, for example when the Places API is not enabled on the API key. When fetching place fields fails, the typed text stays in the block value and onPlaceChanged is not triggered. |
 | `onFocus` | \- | Trigger actions when the input gains focus. |
-| `onPlaceChanged` | \- | Trigger actions after a suggestion is selected and its place fields have been fetched. |
+| `onPlaceChanged` | `{ place, value }` | Trigger actions after a suggestion is selected and its place fields have been fetched and written to the block value. |
 | `onSearch` | `{ value }` | Trigger actions when the search text changes. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
@@ -261,8 +309,11 @@ Delivery details
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The PlacesAutocomplete input element. |
+| `/selector` | The inner value container of the input (antd `content` semantic slot). |
 | `/label` | The PlacesAutocomplete label. |
 | `/extra` | The PlacesAutocomplete extra content. |
 | `/feedback` | The PlacesAutocomplete validation feedback. |
+| `/options` | Each suggestion in the dropdown. |
+| `/popup` | The suggestions dropdown. |
 
 No slots defined.

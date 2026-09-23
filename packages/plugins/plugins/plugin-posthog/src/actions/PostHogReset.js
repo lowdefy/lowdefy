@@ -16,15 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-import forgetIdentifiedId from '../lib/forgetIdentifiedId.js';
 import getPostHog from '../lib/getPostHog.js';
 
 // Forget the current person and start a fresh anonymous session. Run it on
 // sign out so the next person on a shared browser is not merged into this one.
-function PostHogReset({ globals, params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogReset({ params }) {
   const { resetDeviceId } = params ?? {};
   if (!type.isNone(resetDeviceId) && !type.isBoolean(resetDeviceId)) {
     throw new Error(
@@ -32,8 +28,10 @@ function PostHogReset({ globals, params }) {
     );
   }
 
+  const posthog = await getPostHog({ action: 'PostHogReset' });
+  if (type.isNone(posthog)) return null;
+
   posthog.reset(resetDeviceId === true);
-  forgetIdentifiedId({ window: globals.window });
   return null;
 }
 

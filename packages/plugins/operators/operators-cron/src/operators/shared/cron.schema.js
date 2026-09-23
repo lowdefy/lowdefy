@@ -33,14 +33,14 @@ export default {
         required: ['expression'],
         properties: {
           expression: {
-            type: 'string',
+            type: ['string', 'null'],
             description:
-              'The cron expression, like "0 9 * * 1". Used by all _cron methods. _cron.describe returns "" and _cron.validate returns false when this is null.',
+              'The cron expression, like "0 9 * * 1". Used by all _cron methods. When this is null or a blank string, _cron.describe returns "" and _cron.validate returns false.',
           },
           from: {
             type: ['string', 'object'],
             description:
-              'Only for _cron.next and _cron.previous. The date to count occurrences from, as a date or an ISO 8601 date string. Defaults to the current time.',
+              'Only for _cron.next and _cron.previous. The date to count occurrences from, exclusive, as a date or an ISO 8601 date string like "2024-01-01" or "2024-01-01T09:00:00Z". Defaults to the current time.',
           },
           timezone: {
             type: 'string',
@@ -50,13 +50,14 @@ export default {
           count: {
             type: 'integer',
             minimum: 1,
+            maximum: 1000,
             description:
-              'Only for _cron.next and _cron.previous. The number of occurrences to return. A count of 1 returns a single date, a count greater than 1 returns an array of dates. Defaults to 1.',
+              'Only for _cron.next and _cron.previous. The number of occurrences to return, from 1 to 1000. A count of 1 returns a single date, a count greater than 1 returns an array of dates. Defaults to 1.',
           },
           locale: {
             type: 'string',
             description:
-              'Only for _cron.describe. The cronstrue locale to describe the expression in, like "fr". Defaults to "en".',
+              'Only for _cron.describe. The cronstrue locale code to describe the expression in, like "fr" or "pt_BR" ("pt-BR" is also accepted). An error is thrown for an unsupported locale. Defaults to "en".',
           },
           verbose: {
             type: 'boolean',

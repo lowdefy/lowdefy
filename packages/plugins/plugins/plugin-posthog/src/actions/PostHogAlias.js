@@ -20,16 +20,16 @@ import getPostHog from '../lib/getPostHog.js';
 
 // Point a second id at the person PostHog already knows, for example when an
 // app has its own identifier alongside the one used by PostHogIdentify.
-function PostHogAlias({ params }) {
-  const posthog = getPostHog();
-  if (type.isNone(posthog)) return null;
-
+async function PostHogAlias({ params }) {
   const { alias } = params ?? {};
   if (!type.isString(alias) || alias.trim() === '') {
     throw new Error(
       `PostHogAlias "alias" must be a non-empty string. Received ${JSON.stringify(alias)}.`
     );
   }
+
+  const posthog = await getPostHog({ action: 'PostHogAlias' });
+  if (type.isNone(posthog)) return null;
 
   posthog.alias(alias);
   return null;

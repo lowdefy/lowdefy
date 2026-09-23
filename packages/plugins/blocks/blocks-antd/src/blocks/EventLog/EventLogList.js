@@ -20,6 +20,10 @@ import { Virtuoso } from 'react-virtuoso';
 
 import cssStyles from './style.module.css';
 
+function computeItemKey(_index, entry) {
+  return entry.key;
+}
+
 function EventLogList({
   classNames,
   entries,
@@ -33,14 +37,14 @@ function EventLogList({
 }) {
   if (entries.length === 0) {
     return (
-      <div className={cn(cssStyles.empty, classNames.empty)} style={styles.empty}>
-        {text.empty}
+      <div className={cn(cssStyles.empty, classNames.noData)} style={styles.noData}>
+        {text.noData}
       </div>
     );
   }
   if (visible.length === 0) {
     return (
-      <div className={cn(cssStyles.empty, classNames.empty)} style={styles.empty}>
+      <div className={cn(cssStyles.empty, classNames.noResults)} style={styles.noResults}>
         {text.noResults}
       </div>
     );
@@ -55,7 +59,7 @@ function EventLogList({
         useWindowScroll={useWindowScroll}
         overscan={overscan}
         increaseViewportBy={overscan}
-        computeItemKey={(_index, entry) => entry.id}
+        computeItemKey={computeItemKey}
         itemContent={itemContent}
         style={useWindowScroll ? undefined : { height: '100%' }}
       />

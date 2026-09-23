@@ -30,33 +30,38 @@ let PostHogInit;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogCapturePageLeave, PostHogInit } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogCapturePageLeave captures a pageleave event', () => {
-  init();
-  expect(PostHogCapturePageLeave({ params: {} })).toBe(null);
+test('PostHogCapturePageLeave captures a pageleave event', async () => {
+  await init();
+  await expect(PostHogCapturePageLeave({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.capture.mock.calls).toEqual([['$pageleave', undefined]]);
 });
 
-test('PostHogCapturePageLeave captures a pageleave event with properties', () => {
-  init();
-  PostHogCapturePageLeave({ params: { properties: { section: 'reports' } } });
+test('PostHogCapturePageLeave captures a pageleave event with properties', async () => {
+  await init();
+  await PostHogCapturePageLeave({ params: { properties: { section: 'reports' } } });
   expect(mockPostHog.capture.mock.calls).toEqual([['$pageleave', { section: 'reports' }]]);
 });
 
-test('PostHogCapturePageLeave does nothing before PostHogInit has run', () => {
-  expect(PostHogCapturePageLeave({ params: {} })).toBe(null);
+test('PostHogCapturePageLeave does nothing before PostHogInit has run', async () => {
+  await expect(PostHogCapturePageLeave({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.capture).not.toHaveBeenCalled();
 });
 
-test('PostHogCapturePageLeave throws when properties is not an object', () => {
-  init();
-  expect(() => PostHogCapturePageLeave({ params: { properties: 'reports' } })).toThrow(
+test('PostHogCapturePageLeave throws when properties is not an object', async () => {
+  await init({ enabled: false });
+  await expect(PostHogCapturePageLeave({ params: { properties: 'reports' } })).rejects.toThrow(
     'PostHogCapturePageLeave "properties" must be an object. Received "reports".'
   );
 });

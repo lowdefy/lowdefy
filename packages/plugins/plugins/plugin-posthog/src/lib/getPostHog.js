@@ -15,12 +15,23 @@
 */
 
 import postHogState from './postHogState.js';
+import warnUninitialized from './warnUninitialized.js';
 
-// Returns null until PostHogInit has run, and while PostHog is disabled.
-// Actions treat null as "do nothing": analytics must never break an app.
-function getPostHog() {
-  if (postHogState.enabled === false) return null;
-  return postHogState.client;
+// Returns the posthog-js instance, or null when the calling action should do
+// nothing. Analytics must never break an app, so a disabled, failed or missing
+// PostHog is never an error here. Callers validate their params first, so
+// invalid config is still caught in environments where PostHog is off.
+async function getPostHog({ action }) {
+  if (postHogState.status === 'loading') {
+    await postHogState.loading;
+  }
+  if (postHogState.status === 'enabled') {
+    return postHogState.client;
+  }
+  if (postHogState.status === 'uninitialized') {
+    warnUninitialized({ action });
+  }
+  return null;
 }
 
 export default getPostHog;

@@ -30,46 +30,60 @@ let PostHogSetPersonProperties;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogInit, PostHogSetPersonProperties } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogSetPersonProperties sets and set-once properties', () => {
-  init();
-  expect(
+test('PostHogSetPersonProperties sets and sets once person properties', async () => {
+  await init();
+  await expect(
     PostHogSetPersonProperties({
-      params: { set: { plan: 'pro' }, setOnce: { signed_up_at: '2026-01-01' } },
+      params: { set: { plan: 'pro' }, setOnce: { first_seen: '2026-01-01' } },
     })
-  ).toBe(null);
+  ).resolves.toBe(null);
   expect(mockPostHog.setPersonProperties.mock.calls).toEqual([
-    [{ plan: 'pro' }, { signed_up_at: '2026-01-01' }],
+    [{ plan: 'pro' }, { first_seen: '2026-01-01' }],
   ]);
 });
 
-test('PostHogSetPersonProperties sets only the set properties', () => {
-  init();
-  PostHogSetPersonProperties({ params: { set: { plan: 'pro' } } });
+test('PostHogSetPersonProperties sets person properties without setOnce', async () => {
+  await init();
+  await PostHogSetPersonProperties({ params: { set: { plan: 'pro' } } });
   expect(mockPostHog.setPersonProperties.mock.calls).toEqual([[{ plan: 'pro' }, undefined]]);
 });
 
-test('PostHogSetPersonProperties does nothing before PostHogInit has run', () => {
-  expect(PostHogSetPersonProperties({ params: { set: { plan: 'pro' } } })).toBe(null);
+test('PostHogSetPersonProperties does nothing before PostHogInit has run', async () => {
+  await expect(PostHogSetPersonProperties({ params: { set: { plan: 'pro' } } })).resolves.toBe(
+    null
+  );
   expect(mockPostHog.setPersonProperties).not.toHaveBeenCalled();
 });
 
-test('PostHogSetPersonProperties throws when neither set nor setOnce is given', () => {
-  init();
-  expect(() => PostHogSetPersonProperties({ params: {} })).toThrow(
+test('PostHogSetPersonProperties throws when neither set nor setOnce is given', async () => {
+  await init({ enabled: false });
+  await expect(PostHogSetPersonProperties({ params: {} })).rejects.toThrow(
     'PostHogSetPersonProperties requires a "set" or "setOnce" object.'
   );
 });
 
-test('PostHogSetPersonProperties throws when set is not an object', () => {
-  init();
-  expect(() => PostHogSetPersonProperties({ params: { set: 'pro' } })).toThrow(
+test('PostHogSetPersonProperties throws when set is not an object', async () => {
+  await init();
+  await expect(PostHogSetPersonProperties({ params: { set: 'pro' } })).rejects.toThrow(
     'PostHogSetPersonProperties "set" must be an object. Received "pro".'
+  );
+});
+
+test('PostHogSetPersonProperties throws when setOnce is not an object', async () => {
+  await init();
+  await expect(PostHogSetPersonProperties({ params: { setOnce: 1 } })).rejects.toThrow(
+    'PostHogSetPersonProperties "setOnce" must be an object. Received 1.'
   );
 });

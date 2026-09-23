@@ -160,15 +160,9 @@ importers:
       '@lowdefy/operators':
         specifier: 5.5.1
         version: link:../operators
-      '@lowdefy/operators-cron':
-        specifier: 5.5.1
-        version: link:../plugins/operators/operators-cron
       '@lowdefy/operators-js':
         specifier: 5.5.1
         version: link:../plugins/operators/operators-js
-      '@lowdefy/plugin-posthog':
-        specifier: 5.5.1
-        version: link:../plugins/plugins/plugin-posthog
       ajv:
         specifier: 8.20.0
         version: 8.20.0
@@ -287,6 +281,9 @@ importers:
       '@lowdefy/operators-change-case':
         specifier: 5.5.1
         version: link:../plugins/operators/operators-change-case
+      '@lowdefy/operators-cron':
+        specifier: 5.5.1
+        version: link:../plugins/operators/operators-cron
       '@lowdefy/operators-dayjs':
         specifier: 5.5.1
         version: link:../plugins/operators/operators-dayjs
@@ -323,6 +320,9 @@ importers:
       '@lowdefy/plugin-gcp':
         specifier: 5.5.1
         version: link:../plugins/plugins/plugin-gcp
+      '@lowdefy/plugin-posthog':
+        specifier: 5.5.1
+        version: link:../plugins/plugins/plugin-posthog
       '@lowdefy/websockets-core':
         specifier: 5.5.1
         version: link:../plugins/websockets/websockets-core
@@ -1850,9 +1850,6 @@ importers:
         specifier: 3.27.0
         version: 3.27.0
     devDependencies:
-      '@jest/globals':
-        specifier: 28.1.3
-        version: 28.1.3
       '@lowdefy/node-utils':
         specifier: 5.5.1
         version: link:../../../utils/node-utils

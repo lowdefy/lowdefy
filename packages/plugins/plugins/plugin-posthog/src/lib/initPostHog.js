@@ -14,34 +14,41 @@
   limitations under the License.
 */
 
-import posthog from 'posthog-js';
-
+import loadPostHog from './loadPostHog.js';
 import postHogState from './postHogState.js';
 
-// Called once per browser session by the PostHogInit action. A repeat call
-// with the same apiKey is a no-op, so PostHogInit can safely sit on an event
-// that runs more than once.
-function initPostHog({ apiKey, config, enabled }) {
-  if (postHogState.initialized) {
-    if (postHogState.apiKey === apiKey) return;
+// PostHogInit runs from every page's onInit, so a repeat call with the same
+// params must be a no-op. A disabled PostHog was never loaded, so a later call
+// with enabled: true may still load it.
+async function initPostHog({ apiKey, config, enabled }) {
+  const { status } = postHogState;
+
+  if (enabled === false) {
+    if (status === 'uninitialized' || status === 'disabled') {
+      postHogState.status = 'disabled';
+      return;
+    }
     throw new Error(
-      `PostHogInit was already called with a different "apiKey". Received ${JSON.stringify(
+      'PostHogInit was called with "enabled: false" after PostHog was already initialised. Use the same PostHogInit params on every page, and PostHogOptOut to stop capturing for a person.'
+    );
+  }
+
+  if (status === 'uninitialized' || status === 'disabled') {
+    postHogState.apiKey = apiKey;
+    postHogState.status = 'loading';
+    postHogState.loading = loadPostHog({ apiKey, config });
+    await postHogState.loading;
+    return;
+  }
+
+  if (postHogState.apiKey !== apiKey) {
+    throw new Error(
+      `PostHogInit was already called with a different "apiKey". PostHog can only be initialised once per browser session. Received ${JSON.stringify(
         apiKey
       )}.`
     );
   }
-
-  postHogState.apiKey = apiKey;
-  postHogState.initialized = true;
-
-  if (enabled === false) {
-    postHogState.enabled = false;
-    return;
-  }
-
-  postHogState.enabled = true;
-  posthog.init(apiKey, config);
-  postHogState.client = posthog;
+  await postHogState.loading;
 }
 
 export default initPostHog;

@@ -32,85 +32,110 @@ let PostHogInit;
 
 beforeEach(async () => {
   resetPostHogState();
+  jest.spyOn(console, 'warn').mockImplementation(() => undefined);
   ({ PostHogFeatureFlag, PostHogInit } = await import('../actions.js'));
 });
 
-function init() {
-  PostHogInit({ params: { apiKey: 'phc_key' } });
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+async function init(params = { apiKey: 'phc_key' }) {
+  await PostHogInit({ params });
 }
 
-test('PostHogFeatureFlag returns the flag value', () => {
-  init();
+test('PostHogFeatureFlag returns the flag value', async () => {
+  await init();
   mockPostHog.getFeatureFlag.mockReturnValue('variant-b');
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).toBe('variant-b');
+  await expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).resolves.toBe('variant-b');
   expect(mockPostHog.getFeatureFlag.mock.calls).toEqual([['new-checkout']]);
 });
 
-test('PostHogFeatureFlag returns the default when the flag is not set', () => {
-  init();
+test('PostHogFeatureFlag returns the default when the flag is not set', async () => {
+  await init();
   mockPostHog.getFeatureFlag.mockReturnValue(undefined);
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })).toBe(
-    'control'
-  );
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })
+  ).resolves.toBe('control');
 });
 
-test('PostHogFeatureFlag returns null when the flag is not set and no default is given', () => {
-  init();
+test('PostHogFeatureFlag returns null when the flag is not set and no default is given', async () => {
+  await init();
   mockPostHog.getFeatureFlag.mockReturnValue(undefined);
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).toBe(null);
+  await expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).resolves.toBe(null);
 });
 
-test('PostHogFeatureFlag returns false when the flag resolved to false', () => {
-  init();
+test('PostHogFeatureFlag returns false when the flag resolved to false', async () => {
+  await init();
   mockPostHog.getFeatureFlag.mockReturnValue(false);
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', default: true } })).toBe(false);
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', default: true } })
+  ).resolves.toBe(false);
 });
 
-test('PostHogFeatureFlag returns a boolean when enabled is true', () => {
-  init();
+test('PostHogFeatureFlag returns a boolean when enabled is true', async () => {
+  await init();
   mockPostHog.isFeatureEnabled.mockReturnValue(true);
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', enabled: true } })).toBe(true);
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', enabled: true } })
+  ).resolves.toBe(true);
   expect(mockPostHog.isFeatureEnabled.mock.calls).toEqual([['new-checkout']]);
   expect(mockPostHog.getFeatureFlag).not.toHaveBeenCalled();
 });
 
-test('PostHogFeatureFlag returns the flag payload when payload is true', () => {
-  init();
+test('PostHogFeatureFlag returns the flag payload when payload is true', async () => {
+  await init();
   mockPostHog.getFeatureFlagPayload.mockReturnValue({ limit: 10 });
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', payload: true } })).toEqual({
-    limit: 10,
-  });
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', payload: true } })
+  ).resolves.toEqual({ limit: 10 });
   expect(mockPostHog.getFeatureFlagPayload.mock.calls).toEqual([['new-checkout']]);
 });
 
-test('PostHogFeatureFlag returns the default before PostHogInit has run', () => {
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })).toBe(
-    'control'
-  );
+test('PostHogFeatureFlag payload takes precedence over enabled', async () => {
+  await init();
+  mockPostHog.getFeatureFlagPayload.mockReturnValue({ limit: 10 });
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', enabled: true, payload: true } })
+  ).resolves.toEqual({ limit: 10 });
+  expect(mockPostHog.isFeatureEnabled).not.toHaveBeenCalled();
+});
+
+test('PostHogFeatureFlag returns the default before PostHogInit has run', async () => {
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })
+  ).resolves.toBe('control');
   expect(mockPostHog.getFeatureFlag).not.toHaveBeenCalled();
 });
 
-test('PostHogFeatureFlag returns the default when PostHog is disabled', () => {
-  PostHogInit({ params: { enabled: false } });
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })).toBe(
-    'control'
-  );
+test('PostHogFeatureFlag returns the default when PostHog is disabled', async () => {
+  await init({ enabled: false });
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', default: 'control' } })
+  ).resolves.toBe('control');
 });
 
-test('PostHogFeatureFlag returns null before PostHogInit has run and no default is given', () => {
-  expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).toBe(null);
+test('PostHogFeatureFlag returns null before PostHogInit has run and no default is given', async () => {
+  await expect(PostHogFeatureFlag({ params: { key: 'new-checkout' } })).resolves.toBe(null);
 });
 
-test('PostHogFeatureFlag throws when key is missing', () => {
-  init();
-  expect(() => PostHogFeatureFlag({ params: {} })).toThrow(
+test('PostHogFeatureFlag throws when key is missing', async () => {
+  await init();
+  await expect(PostHogFeatureFlag({ params: {} })).rejects.toThrow(
     'PostHogFeatureFlag "key" must be a non-empty string. Received undefined.'
   );
 });
 
-test('PostHogFeatureFlag throws when payload is not a boolean', () => {
-  init();
-  expect(() => PostHogFeatureFlag({ params: { key: 'new-checkout', payload: 'yes' } })).toThrow(
-    'PostHogFeatureFlag "payload" must be a boolean. Received "yes".'
-  );
+test('PostHogFeatureFlag throws when enabled is not a boolean', async () => {
+  await init({ enabled: false });
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', enabled: 'yes' } })
+  ).rejects.toThrow('PostHogFeatureFlag "enabled" must be a boolean. Received "yes".');
+});
+
+test('PostHogFeatureFlag throws when payload is not a boolean', async () => {
+  await init();
+  await expect(
+    PostHogFeatureFlag({ params: { key: 'new-checkout', payload: 'yes' } })
+  ).rejects.toThrow('PostHogFeatureFlag "payload" must be a boolean. Received "yes".');
 });
