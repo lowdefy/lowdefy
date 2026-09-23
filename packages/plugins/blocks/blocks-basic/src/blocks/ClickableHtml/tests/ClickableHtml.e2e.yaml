@@ -18,23 +18,33 @@ blocks:
   - id: clickable_basic
     type: ClickableHtml
     properties:
-      html: '<p>Hello <button data-action="greet" data-user-id="u_1">World</button></p>'
+      html: '<p>Hello <button data-event="onGreetClick" data-user-id="u_1">World</button> <button data-event="onWaveClick" data-user-id="u_2">Wave</button></p>'
     events:
-      onClick:
-        - id: set_clicked
+      onGreetClick:
+        - id: set_greeted
           type: SetState
           params:
             clicked:
-              _event: true
+              event: greet
+              user_id:
+                _event: user_id
+      onWaveClick:
+        - id: set_waved
+          type: SetState
+          params:
+            clicked:
+              event: wave
+              user_id:
+                _event: user_id
 
   - id: clickable_result
     type: Html
     properties:
       html:
         _string.concat:
-          - '<span id="clicked_action">'
+          - '<span id="clicked_event">'
           - _state:
-              key: clicked.action
+              key: clicked.event
               default: ''
           - '</span><span id="clicked_user_id">'
           - _state:
@@ -42,12 +52,12 @@ blocks:
               default: ''
           - '</span>'
 
-  - id: clickable_no_action
+  - id: clickable_no_event
     type: ClickableHtml
     properties:
       html: '<p><button>Plain button</button></p>'
     events:
-      onClick:
+      onPlainClick:
         - id: set_plain
           type: SetState
           params:

@@ -16,22 +16,28 @@
 import React from 'react';
 import { withBlockDefaults, HtmlComponent } from '@lowdefy/block-utils';
 
-// dataset keys are camelCase (data-event-id → eventId); config authors
+// dataset keys are camelCase (data-record-id → recordId); config authors
 // write the attributes in kebab-case, so hand them back as snake_case.
 function toSnakeCase(key) {
   return key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
 }
 
 const ClickableHtml = ({ blockId, classNames, events, properties, methods, styles }) => {
+  // Each clickable element names the event it fires in its data-event
+  // attribute (data-event="onEditClick" → events.onEditClick), so every
+  // target in the markup has its own action chain. Its other data-*
+  // attributes are the event object.
   function onClick(clickEvent) {
-    const target = clickEvent.target.closest('[data-action]');
+    const target = clickEvent.target.closest('[data-event]');
     if (!target || !clickEvent.currentTarget.contains(target)) return;
+    const { event: name, ...data } = target.dataset;
+    if (!name) return;
     clickEvent.preventDefault();
     const event = {};
-    Object.keys(target.dataset).forEach((key) => {
-      event[toSnakeCase(key)] = target.dataset[key];
+    Object.keys(data).forEach((key) => {
+      event[toSnakeCase(key)] = data[key];
     });
-    methods.triggerEvent({ name: 'onClick', event });
+    methods.triggerEvent({ name, event });
   }
 
   return (

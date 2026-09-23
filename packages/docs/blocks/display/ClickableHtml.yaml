@@ -24,4 +24,4 @@ _ref:
     schema: ../plugins/blocks/blocks-basic/src/blocks/ClickableHtml/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/ClickableHtml/gallery.yaml
     description: >
-      Render raw HTML content safely, and fire the onClick event when an element carrying a `data-action` attribute is clicked. The event object holds that element's `data-*` attributes with snake_case keys (`data-event-id` becomes `event_id`), so one block of markup can carry many clickable targets without a block per button.
+      Render raw HTML content safely, and fire a named event when an element carrying a `data-event` attribute is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so every clickable target in one block of markup gets its own action chain without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` becomes `record_id`).

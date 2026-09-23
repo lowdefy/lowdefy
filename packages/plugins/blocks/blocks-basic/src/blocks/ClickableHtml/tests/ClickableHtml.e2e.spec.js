@@ -28,20 +28,25 @@ test.describe('ClickableHtml Block', () => {
     const wrapper = getBlock(page, 'clickable_basic');
     await expect(wrapper).toBeAttached();
     const html = getHtmlElement(page, 'clickable_basic');
-    await expect(html.locator('button')).toHaveText('World');
+    await expect(html.locator('button[data-event="onGreetClick"]')).toHaveText('World');
   });
 
-  test('onClick fires with data-* attributes as snake_case keys', async ({ page }) => {
+  test('fires the event named by data-event, with data-* attributes as snake_case keys', async ({
+    page,
+  }) => {
     const html = getHtmlElement(page, 'clickable_basic');
-    await html.locator('button[data-action="greet"]').click();
-    await expect(page.locator('#clicked_action')).toHaveText('greet');
+    await html.locator('button[data-event="onGreetClick"]').click();
+    await expect(page.locator('#clicked_event')).toHaveText('greet');
     await expect(page.locator('#clicked_user_id')).toHaveText('u_1');
+    await html.locator('button[data-event="onWaveClick"]').click();
+    await expect(page.locator('#clicked_event')).toHaveText('wave');
+    await expect(page.locator('#clicked_user_id')).toHaveText('u_2');
   });
 
-  test('onClick does not fire for elements without data-action', async ({ page }) => {
-    const html = getHtmlElement(page, 'clickable_no_action');
+  test('fires no event for elements without data-event', async ({ page }) => {
+    const html = getHtmlElement(page, 'clickable_no_event');
     await html.locator('button').click();
-    await expect(page.locator('#clicked_action')).toHaveText('');
+    await expect(page.locator('#clicked_event')).toHaveText('');
   });
 
   test('sanitizes dangerous HTML (scripts removed)', async ({ page }) => {
