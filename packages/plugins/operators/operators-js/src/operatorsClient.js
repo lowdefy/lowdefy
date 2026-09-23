@@ -58,7 +58,7 @@ export { default as _api } from './operators/client/api.js';
 export { default as _index } from './operators/client/_index.js';
 export { default as _actions } from './operators/client/actions.js';
 export { default as _base64 } from './operators/client/base64.js';
-export { default as _error } from './operators/client/error.js';
+export { default as _error } from './operators/shared/error.js';
 export { default as _event_log } from './operators/client/event_log.js';
 export { default as _event } from './operators/client/event.js';
 export { default as _global } from './operators/client/global.js';

@@ -17,12 +17,14 @@
 import { type } from '@lowdefy/helpers';
 import { getFromObject } from '@lowdefy/operators';
 
-// Outside a :catch there is no error, and every read resolves to null or its default, the way
-// `_item` does outside a :for.
+// The same operator on server and client: the routine or event runner puts the error a server
+// `:catch` or a client `catch` list caught into scope. Outside a catch there is no error, and
+// every read resolves to null or its default, the way `_item` does outside a :for.
 function _error({ arrayIndices, error, location, params }) {
   // The whole error is returned as is, not through getFromObject: its `all` branch copies the
   // value through the serializer, which revives the Error with an enumerable message, so the
-  // message would then travel in any plugin payload the error is placed in.
+  // message would then travel in any plugin payload the error is placed in. Returning the Error
+  // itself also keeps the wire policy on it wherever it is sent.
   if (params === true || (type.isObject(params) && params.all === true)) {
     return error ?? null;
   }

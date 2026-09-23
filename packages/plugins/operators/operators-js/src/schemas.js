@@ -23,6 +23,7 @@ export { default as _boolean } from './operators/shared/boolean.schema.js';
 export { default as _date } from './operators/shared/date.schema.js';
 export { default as _divide } from './operators/shared/divide.schema.js';
 export { default as _eq } from './operators/shared/eq.schema.js';
+export { default as _error } from './operators/shared/error.schema.js';
 export { default as _function } from './operators/shared/function.schema.js';
 export { default as _get } from './operators/shared/get.schema.js';
 export { default as _gt } from './operators/shared/gt.schema.js';
@@ -59,7 +60,6 @@ export { default as _user } from './operators/shared/user.schema.js';
 export { default as _actions } from './operators/client/actions.schema.js';
 export { default as _api } from './operators/client/api.schema.js';
 export { default as _base64 } from './operators/client/base64.schema.js';
-export { default as _error } from './operators/client/error.schema.js';
 export { default as _event } from './operators/client/event.schema.js';
 export { default as _event_log } from './operators/client/event_log.schema.js';
 export { default as _global } from './operators/client/global.schema.js';
@@ -74,7 +74,6 @@ export { default as _request_details } from './operators/client/request_details.
 export { default as _url_query } from './operators/client/url_query.schema.js';
 
 // Server operators
-export { default as _error } from './operators/server/error.schema.js';
 export { default as _hash } from './operators/server/hash.schema.js';
 export { default as _item } from './operators/server/item.schema.js';
 export { default as _payload } from './operators/server/payload.schema.js';

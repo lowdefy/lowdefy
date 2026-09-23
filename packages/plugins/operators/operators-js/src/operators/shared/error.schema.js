@@ -18,15 +18,27 @@ export default {
   type: 'object',
   params: {
     oneOf: [
-      { type: 'string', description: 'Dot-notation path to value in the caught error.' },
+      {
+        type: 'string',
+        description:
+          'Dot-notation path to a field of the caught error, such as message or statusCode.',
+      },
       { type: 'integer', description: 'Index to access in the caught error.' },
-      { type: 'boolean', enum: [true], description: 'Return the whole caught error.' },
+      {
+        type: 'boolean',
+        enum: [true],
+        description: 'Return the whole caught error, or null outside a catch.',
+      },
       {
         type: 'object',
         properties: {
           key: {
             oneOf: [
-              { type: 'string', description: 'Dot-notation path to value in the caught error.' },
+              {
+                type: 'string',
+                description:
+                  'Dot-notation path to a field of the caught error, such as message or statusCode.',
+              },
               { type: 'integer', description: 'Index to access in the caught error.' },
             ],
           },
@@ -35,7 +47,7 @@ export default {
           },
           all: {
             type: 'boolean',
-            description: 'Return the whole caught error.',
+            description: 'Return the whole caught error, or null outside a catch.',
           },
         },
         additionalProperties: false,
