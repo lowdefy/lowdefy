@@ -1724,6 +1724,14 @@
       "typeName": "_eq"
     },
     {
+      "slug": "operators/_error",
+      "title": "_error",
+      "section": "Operators",
+      "path": "content/operators/_error.md",
+      "kind": "operator",
+      "typeName": "_error"
+    },
+    {
       "slug": "operators/_event",
       "title": "_event",
       "section": "Operators",

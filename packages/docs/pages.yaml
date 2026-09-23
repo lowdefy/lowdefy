@@ -267,6 +267,7 @@
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml
 - _ref: operators/_eq.yaml
+- _ref: operators/_error.yaml
 - _ref: operators/_event.yaml
 - _ref: operators/_function.yaml
 - _ref: operators/_get.yaml
