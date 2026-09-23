@@ -21,6 +21,9 @@ import { fileURLToPath } from 'url';
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
+const secret = 'planted-e2e-secret';
+process.env.LOWDEFY_SECRET_TEST = secret;
+
 jest.unstable_mockModule('@lowdefy/api', () => ({ createApiContext: jest.fn() }));
 jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/build/config.js', () => ({ default: {} }));
@@ -33,7 +36,7 @@ jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({
 }));
 jest.unstable_mockModule('../../lib/server/fileCache.js', () => ({ default: {} }));
 jest.unstable_mockModule('../../lib/server/getE2eSecrets.js', () => ({
-  default: jest.fn(() => ({})),
+  default: jest.fn(() => ({ TEST: process.env.LOWDEFY_SECRET_TEST })),
 }));
 jest.unstable_mockModule('../../lib/server/auth/session.js', () => ({
   default: jest.fn(() => undefined),
@@ -71,12 +74,26 @@ const { default: apiContext } = await import('./apiContext.js');
 function createApp() {
   const app = new Hono();
   app.use('*', apiContext());
-  app.get('/api/ping', (c) => c.json({ mode: c.get('lowdefyContext').mode }));
+  app.get('/api/ping', (c) => {
+    const context = c.get('lowdefyContext');
+    return c.json({
+      mode: context.mode,
+      scrubbed: context.scrubSecrets(`token ${secret} end`),
+    });
+  });
   return app;
 }
 
 test('apiContext sets mode to prod', async () => {
   const res = await createApp().request('/api/ping');
   expect(res.status).toEqual(200);
-  expect(await res.json()).toEqual({ mode: 'prod' });
+  const body = await res.json();
+  expect(body.mode).toEqual('prod');
+});
+
+test('apiContext scrubSecrets redacts a planted secret', async () => {
+  const res = await createApp().request('/api/ping');
+  expect(res.status).toEqual(200);
+  const body = await res.json();
+  expect(body.scrubbed).toEqual('token [REDACTED] end');
 });

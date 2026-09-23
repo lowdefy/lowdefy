@@ -29,6 +29,7 @@ import createHandleError from './log/createHandleError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
+import scrubSecrets from './scrubSecrets.js';
 
 const secrets = getE2eSecrets();
 
@@ -53,6 +54,7 @@ function apiWrapper(handler) {
       operators,
       req,
       res,
+      scrubSecrets,
       secrets,
     };
     try {

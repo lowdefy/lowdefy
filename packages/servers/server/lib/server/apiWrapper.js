@@ -33,6 +33,7 @@ import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 import loggerConfig from '../build/logger.js';
+import scrubSecrets from './scrubSecrets.js';
 import setSentryUser from './sentry/setSentryUser.js';
 
 const secrets = getSecretsFromEnv();
@@ -59,6 +60,7 @@ function apiWrapper(handler) {
       operators,
       req,
       res,
+      scrubSecrets,
       secrets,
     };
     try {

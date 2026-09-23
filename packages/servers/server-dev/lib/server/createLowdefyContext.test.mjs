@@ -20,10 +20,10 @@ import { fileURLToPath } from 'url';
 
 import { jest } from '@jest/globals';
 
+const secret = 'planted-dev-secret';
+process.env.LOWDEFY_SECRET_TEST = secret;
+
 jest.unstable_mockModule('@lowdefy/api', () => ({ createApiContext: jest.fn() }));
-jest.unstable_mockModule('@lowdefy/node-utils', () => ({
-  getSecretsFromEnv: jest.fn(() => ({})),
-}));
 jest.unstable_mockModule('../build/appMeta.js', () => ({ default: {} }));
 jest.unstable_mockModule('../build/config.js', () => ({ default: {} }));
 jest.unstable_mockModule('../build/i18n.js', () => ({ default: {} }));
@@ -85,4 +85,9 @@ function createHonoContext({ path: reqPath = '/api/request/foo' } = {}) {
 test('createLowdefyContext sets mode to dev', async () => {
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.mode).toEqual('dev');
+});
+
+test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {
+  const context = await createLowdefyContext({ c: createHonoContext() });
+  expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
 });
