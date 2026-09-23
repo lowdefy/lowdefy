@@ -288,11 +288,19 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     }
   }, [externalMessages, effectiveConversationId, setMessages]);
 
+  // The CallMethod handlers below are registered once, but useChat builds a new Chat
+  // instance on a conversation switch, and sendMessage / regenerate / stop / clearError
+  // belong to the instance they came from. Captured at mount, they drove the first
+  // conversation's Chat: a send posted under its id and streamed into a Chat no longer on
+  // screen. The handlers read this ref, refreshed every render, instead.
+  const chatActionsRef = useRef(null);
+  chatActionsRef.current = { deliver, regenerateReply, stop, clearError };
+
   // Register CallMethod methods so YAML actions can control the chat.
   useEffect(() => {
     methods.registerMethod('regenerate', (args) => {
       if (sendingRef.current) return;
-      regenerateReply(args?.messageId);
+      chatActionsRef.current.regenerateReply(args?.messageId);
     });
     methods.registerMethod('setMessages', (args) => {
       const msgs = withoutDeadToolCalls(args?.messages ?? []);
@@ -301,7 +309,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     });
     methods.registerMethod('sendMessage', (args) => {
       if (args?.text && !sendingRef.current) {
-        deliver({
+        chatActionsRef.current.deliver({
           text: args.text,
           ...(args.files ? { files: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
@@ -320,10 +328,10 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       }
     });
     methods.registerMethod('stop', () => {
-      stop();
+      chatActionsRef.current.stop();
     });
     methods.registerMethod('clearError', () => {
-      clearError();
+      chatActionsRef.current.clearError();
     });
     methods.registerMethod('scrollToBottom', () => {
       bubbleListRef.current?.scrollTo({ top: 'bottom' });
