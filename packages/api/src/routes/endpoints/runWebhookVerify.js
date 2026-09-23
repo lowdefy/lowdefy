@@ -22,6 +22,7 @@ import evaluateRequestOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import operatorScope from './operatorScope.js';
 import resolveTenant from '../request/resolveTenant.js';
 
 // Runs the endpoint's declared `webhook.verify` request plugin as a gate,
@@ -79,7 +80,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
   const { connectionProperties, requestProperties } = evaluateRequestOperators(context, {
     connectionConfig,
     requestConfig,
-    routineContext: { payload, state: {}, steps: {} },
+    routineContext: operatorScope({ items: {}, payload, state: {}, steps: {} }),
   });
 
   try {

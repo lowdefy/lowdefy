@@ -26,6 +26,8 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
+  // Returns what the server passes, so the test reads the auth-hook system context inputs.
+  createSystemContext: jest.fn((options) => options),
   ensureMcpOauthResource: jest.fn(async () => {}),
   resolveAuthentication: jest.fn(async () => {}),
   resolvePinnedOrganization: jest.fn(async () => {}),
@@ -101,6 +103,9 @@ afterAll(() => {
 });
 
 const { default: apiContext } = await import('./apiContext.js');
+const { default: createSystemContext } = await import(
+  '../../lib/server/auth/createSystemContext.js'
+);
 
 function createApp() {
   const app = new Hono();
@@ -127,4 +132,10 @@ test('apiContext scrubSecrets redacts a planted secret', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.scrubbed).toEqual('token [REDACTED] end');
+});
+
+test('the auth-hook system context is built with mode prod and a scrubSecrets that redacts', () => {
+  const context = createSystemContext({ auth: null });
+  expect(context.mode).toEqual('prod');
+  expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
 });

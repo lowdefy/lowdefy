@@ -112,12 +112,12 @@ test('createSecretScrubber collects a secret with a nested name', () => {
   expect(scrub('value PLANTEDNESTED123')).toEqual('value [REDACTED]');
 });
 
-test('createSecretScrubber collects CRON_SECRET and AUTH_SECRET from env', () => {
+test('createSecretScrubber collects CRON_SECRET and BETTER_AUTH_SECRET from env', () => {
   const scrub = createSecretScrubber({
     secrets: {},
     env: {
       CRON_SECRET: 'PLANTEDCRONSECRET',
-      AUTH_SECRET: 'PLANTEDAUTHSECRET',
+      BETTER_AUTH_SECRET: 'PLANTEDAUTHSECRET',
       OTHER: 'PLANTEDOTHER',
     },
   });

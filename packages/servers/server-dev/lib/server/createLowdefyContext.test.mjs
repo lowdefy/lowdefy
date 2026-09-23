@@ -27,6 +27,8 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
+  // Returns what the server passes, so the test reads the auth-hook system context inputs.
+  createSystemContext: jest.fn((options) => options),
   ensureMcpOauthResource: jest.fn(async () => {}),
   normalizeInjectedCaller: jest.fn((user) => user),
   resolveAuthentication: jest.fn(async () => {}),
@@ -102,6 +104,7 @@ afterAll(() => {
 });
 
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
+const { default: createSystemContext } = await import('./auth/createSystemContext.js');
 
 function createHonoContext({ path: reqPath = '/api/request/foo' } = {}) {
   return {
@@ -135,4 +138,10 @@ test('_error on a dev context reads a caught message with a planted secret scrub
   expect(operatorsServer._error({ error, location: 'test', params: 'message' })).toEqual(
     'Connect failed with [REDACTED].'
   );
+});
+
+test('the auth-hook system context is built with mode dev and a scrubSecrets that redacts', () => {
+  const context = createSystemContext({ auth: null });
+  expect(context.mode).toEqual('dev');
+  expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
 });

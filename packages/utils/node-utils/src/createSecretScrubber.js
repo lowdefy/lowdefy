@@ -81,7 +81,7 @@ function secretForms(value) {
 function createSecretScrubber({ secrets, env = process.env }) {
   const values = collectStringLeaves(secrets, []);
   if (!type.isNone(env.CRON_SECRET)) values.push(env.CRON_SECRET);
-  if (!type.isNone(env.AUTH_SECRET)) values.push(env.AUTH_SECRET);
+  if (!type.isNone(env.BETTER_AUTH_SECRET)) values.push(env.BETTER_AUTH_SECRET);
 
   const expanded = values.flatMap((value) => [value, ...parseJsonLeaves(value)]);
   const secretValues = new Set(expanded.filter((value) => value.length >= MIN_SECRET_LENGTH));

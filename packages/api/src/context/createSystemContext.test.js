@@ -15,8 +15,10 @@
 */
 
 import { jest } from '@jest/globals';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 import createSystemContext from './createSystemContext.js';
+import runRoutine from '../routes/endpoints/runRoutine.js';
 import { registerAuthEnforcement } from '../routes/auth/getAuthEnforcement.js';
 import { registerOrganizationBinding } from '../routes/auth/organizations/getOrganizationBinding.js';
 
@@ -78,6 +80,46 @@ test('createSystemContext carries the singletons and per-fire fields', () => {
   expect(context.buildDirectory).toBe('/build');
   expect(context.headers).toEqual({});
   expect(context.req.url).toBe('system:auth-hook');
+});
+
+test('createSystemContext carries the mode and scrubSecrets it is given', () => {
+  const scrubSecrets = (value) => value.replaceAll('planted-secret', '[REDACTED]');
+  const context = createTestSystemContext({ mode: 'prod', scrubSecrets });
+  expect(context.mode).toBe('prod');
+  expect(context.scrubSecrets).toBe(scrubSecrets);
+  expect(context.scrubSecrets('key planted-secret end')).toBe('key [REDACTED] end');
+});
+
+test('createSystemContext scrubs a hook routine _error with its scrubSecrets', async () => {
+  const scrubSecrets = (value) => value.replaceAll('planted-secret', '[REDACTED]');
+  const context = createTestSystemContext({
+    mode: 'prod',
+    operators: {
+      ...operatorsServer,
+      _connect: () => {
+        throw new Error('Connect failed with planted-secret.');
+      },
+    },
+    scrubSecrets,
+  });
+  const routineContext = {
+    arrayIndices: [],
+    endpointDepth: 0,
+    error: null,
+    items: {},
+    payload: {},
+    state: {},
+    steps: {},
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: {
+      ':try': { ':return': { _connect: true } },
+      ':catch': { ':set_state': { message: { _error: 'message' } } },
+    },
+  });
+  expect(res.status).toBe('continue');
+  expect(routineContext.state.message).toContain('Connect failed with [REDACTED].');
+  expect(routineContext.state.message).not.toContain('planted-secret');
 });
 
 test('createSystemContext carries auth and steps so hook routines can run auth steps', () => {

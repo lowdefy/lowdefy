@@ -221,6 +221,52 @@ test('_error resolves in a request step inside a :for inside a :catch', async ()
   ]);
 });
 
+test('_error resolves in the condition and body of a :while inside a :catch', async () => {
+  const { res, routineContext } = await run({
+    ':try': fail('try_fail', 'Try failed.'),
+    ':catch': {
+      ':while': { _ne: [{ _state: 'message' }, { _error: 'message' }] },
+      ':do': { ':set_state': { message: { _error: 'message' } } },
+    },
+  });
+  expect(res.status).toEqual('continue');
+  expect(routineContext.state).toEqual({ message: 'Try failed. at test/try_fail.' });
+});
+
+test('_error resolves in the properties of an auth step inside a :catch', async () => {
+  const recordFailure = jest.fn(async ({ properties }) => ({ recorded: properties.message }));
+  recordFailure.meta = { authority: { scope: 'system' } };
+  const context = createContext();
+  context.auth = {};
+  context.steps = { RecordFailure: recordFailure };
+  context.system = true;
+  const routineContext = {
+    arrayIndices: [],
+    endpointDepth: 0,
+    error: null,
+    items: {},
+    payload: {},
+    state: {},
+    steps: {},
+  };
+  const res = await runRoutine(context, routineContext, {
+    routine: {
+      ':try': fail('try_fail', 'Try failed.'),
+      ':catch': {
+        id: 'auth:endpointId:record',
+        type: 'RecordFailure',
+        stepId: 'record',
+        properties: { message: { _error: 'message' } },
+      },
+    },
+  });
+  expect(res.status).toEqual('continue');
+  expect(recordFailure.mock.calls[0][0].properties).toEqual({
+    message: 'Try failed. at test/try_fail.',
+  });
+  expect(routineContext.steps.record).toEqual({ recorded: 'Try failed. at test/try_fail.' });
+});
+
 test('_error statusCode is 404 for an AxiosHttp 404 wrapped in a RequestError', async () => {
   const { routineContext } = await run({
     ':try': step({ stepId: 'http', type: 'FailHttp', properties: {} }),
