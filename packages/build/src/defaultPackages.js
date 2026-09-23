@@ -48,6 +48,7 @@ const defaultPackages = [
   '@lowdefy/connection-stripe',
   '@lowdefy/email-templates',
   '@lowdefy/operators-change-case',
+  '@lowdefy/operators-cron',
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
   '@lowdefy/operators-jsonata',
@@ -61,6 +62,7 @@ const defaultPackages = [
   '@lowdefy/plugin-better-auth',
   '@lowdefy/plugin-csv',
   '@lowdefy/plugin-gcp',
+  '@lowdefy/plugin-posthog',
   '@lowdefy/websockets-core',
 ];
 

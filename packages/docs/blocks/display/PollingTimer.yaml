@@ -1,0 +1,101 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: PollingTimer
+    pageTitle: PollingTimer
+    section: Display Blocks
+    filePath: blocks/display/PollingTimer.yaml
+    block_type: PollingTimer
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/PollingTimer
+    schema: ../plugins/blocks/blocks-basic/src/blocks/PollingTimer/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/PollingTimer/gallery.yaml
+    description: >
+      A headless timer that renders nothing and triggers its `onTick` event every
+      `interval` milliseconds while it is running. Use it to poll a request until a
+      background job completes, or to refresh a page on a schedule. Start and stop it
+      with the `start`, `stop` and `toggle` methods, or set `autoStart` to start it on
+      mount. The timer always stops when the block unmounts.
+    guide: |
+      ## Poll a request until a job is done
+
+      Start the timer when a background job is kicked off, fetch the job status on every tick, and stop the timer with the `stop` method once the job reports it is done:
+
+      ```yaml
+      requests:
+        - id: create_job
+          type: MongoDBInsertOne
+          connectionId: jobs
+          properties:
+            doc:
+              status: queued
+        - id: get_job
+          type: MongoDBFindOne
+          connectionId: jobs
+          payload:
+            job_id:
+              _state: job_id
+          properties:
+            query:
+              _id:
+                _payload: job_id
+      blocks:
+        - id: job_poller
+          type: PollingTimer
+          properties:
+            interval: 3000
+          events:
+            onTick:
+              - id: fetch_job
+                type: Request
+                params: get_job
+              - id: stop_when_done
+                type: CallMethod
+                skip:
+                  _ne:
+                    - _request: get_job.status
+                    - done
+                params:
+                  blockId: job_poller
+                  method: stop
+        - id: start_job
+          type: Button
+          properties:
+            title: Start job
+          events:
+            onClick:
+              - id: create_job
+                type: Request
+                params: create_job
+              - id: set_job_id
+                type: SetState
+                params:
+                  job_id:
+                    _request: create_job.insertedId
+              - id: start_polling
+                type: CallMethod
+                params:
+                  blockId: job_poller
+                  method: start
+      ```
+
+      ## Timing
+
+      The next tick is scheduled `interval` ms after the `onTick` actions finish, so a slow request never causes ticks to overlap or pile up. Stopping the timer while `onTick` actions are running lets them finish, but no further tick is scheduled.
+
+      `pauseWhenHidden` pauses the timer while `document.visibilityState` is `hidden`, so a visible browser window that has lost focus keeps ticking. The page `onVisible` and `onHidden` events also fire when the window gains or loses focus, so use them instead when you want to react to focus changes, for example to refresh data once when the user returns.
+
+      The engine keeps a history of every event it runs, so each tick adds an `onTick` entry. For a timer that runs for a long time, prefer a longer `interval` or a `maxTicks` limit.

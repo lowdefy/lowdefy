@@ -1,8 +1,8 @@
 # GoogleMapsScript
 
-Loads the Google Maps JavaScript API and wraps `GoogleMaps` and `GoogleMapsHeatmap` blocks as a parent container. Configure the API key, language, region, libraries, and API version.
+Loads the Google Maps JavaScript API and wraps `GoogleMaps`, `GoogleMapsHeatmap` and `PlacesAutocomplete` blocks as a parent container. Configure the API key, language, region, libraries, and API version. Blocks that use an optional library should be wrapped in a GoogleMapsScript that loads it — list `libraries: [places]` for `PlacesAutocomplete` so the library is ready on first render. When it is not listed, `PlacesAutocomplete` imports it on demand through `google.maps.importLibrary`.
 
-> GoogleMapsScript loads the Google Maps JavaScript API. Only one GoogleMapsScript should be used per page. It must wrap GoogleMaps or GoogleMapsHeatmap blocks as a parent container. The examples below show configuration patterns — maps require a valid API key to render.
+> GoogleMapsScript loads the Google Maps JavaScript API. Only one GoogleMapsScript should be used per page. It must wrap GoogleMaps, GoogleMapsHeatmap or PlacesAutocomplete blocks as a parent container. The examples below show configuration patterns — maps require a valid API key to render.
 
 ```yaml
 - id: gms_full_config

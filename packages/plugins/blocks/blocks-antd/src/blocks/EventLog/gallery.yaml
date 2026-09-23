@@ -1,0 +1,288 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  fullWidth: true
+  blocks:
+    - id: basic_event_log
+      type: EventLog
+      properties:
+        height: 320
+        fields:
+          id: id
+          time: timestamp
+          message: message
+        data:
+          - id: '1'
+            timestamp: '2026-03-04T09:12:04.000Z'
+            type: deploy_failed
+            level: error
+            message: Deploy <b>web-api</b> failed on step build.
+            description: The build step exited with code 1 after 42 seconds.
+            metadata:
+              commit: 9f2c1ab
+              branch: main
+              duration_ms: 42311
+              error: Module not found - ./config/runtime.js
+          - id: '2'
+            timestamp: '2026-03-04T09:10:44.000Z'
+            type: deploy_started
+            level: info
+            message: Deploy <b>web-api</b> started.
+            metadata:
+              commit: 9f2c1ab
+              branch: main
+          - id: '3'
+            timestamp: '2026-03-04T08:58:00.000Z'
+            type: quota_warning
+            level: warning
+            message: Request quota at 82% of the monthly limit.
+            metadata:
+              used: 820000
+              limit: 1000000
+          - id: '4'
+            timestamp: '2026-03-04T08:30:12.000Z'
+            type: deploy_succeeded
+            level: success
+            message: Deploy <b>web-app</b> succeeded.
+            metadata:
+              commit: 3ab77de
+              branch: main
+              duration_ms: 51200
+
+- title: Event Type Config
+  fullWidth: true
+  blocks:
+    - id: typed_event_log
+      type: EventLog
+      properties:
+        height: 280
+        fields:
+          id: id
+          time: timestamp
+          message: message
+        eventTypeConfig:
+          user_invited:
+            title: Invited
+            icon: AiOutlineUserAdd
+            color: '#1677ff'
+            level: info
+          user_removed:
+            title: Removed
+            icon: AiOutlineUserDelete
+            color: '#ff4d4f'
+            level: error
+          role_changed:
+            title: Role changed
+            icon: AiOutlineSafety
+            color: '#faad14'
+            level: warning
+        data:
+          - id: '1'
+            timestamp: '2026-03-04T11:02:00.000Z'
+            type: user_removed
+            message: Removed <b>dana@example.com</b> from the workspace.
+            created:
+              user:
+                name: Ada Lowe
+            metadata:
+              reason: Offboarding
+          - id: '2'
+            timestamp: '2026-03-04T10:45:00.000Z'
+            type: role_changed
+            message: Changed the role of <b>sam@example.com</b> to admin.
+            created:
+              user:
+                name: Ada Lowe
+            metadata:
+              from: member
+              to: admin
+          - id: '3'
+            timestamp: '2026-03-04T10:02:00.000Z'
+            type: user_invited
+            message: Invited <b>sam@example.com</b>.
+            metadata:
+              invited_by: ada@example.com
+
+- title: Custom Record Shape
+  fullWidth: true
+  blocks:
+    - id: mapped_event_log
+      type: EventLog
+      properties:
+        height: 240
+        fields:
+          id: request_id
+          time: at
+          type: kind
+          level: severity
+          message: summary
+          detail: body
+          actor: operator
+          context: payload
+        data:
+          - request_id: req_9001
+            at: '2026-03-04T12:00:00.000Z'
+            kind: payment
+            severity: error
+            summary: Charge declined for invoice INV-2201.
+            body: The card issuer returned <i>insufficient funds</i>.
+            operator: Billing job
+            payload:
+              invoice: INV-2201
+              amount: 149.5
+              currency: USD
+          - request_id: req_9002
+            at: '2026-03-04T11:59:10.000Z'
+            kind: payment
+            severity: success
+            summary: Charge captured for invoice INV-2200.
+            operator: Billing job
+            payload:
+              invoice: INV-2200
+              amount: 89
+              currency: USD
+
+- title: Search and Filters Off
+  fullWidth: true
+  blocks:
+    - id: plain_event_log
+      type: EventLog
+      properties:
+        height: 200
+        search: false
+        levelFilters: false
+        defaultExpanded: true
+        fields:
+          id: id
+          time: timestamp
+          message: message
+        data:
+          - id: '1'
+            timestamp: '2026-03-04T09:12:04.000Z'
+            level: warning
+            type: cache_miss
+            message: Cache miss rate above 30%.
+            metadata:
+              rate: 0.34
+
+- title: Translated Text
+  fullWidth: true
+  blocks:
+    - id: translated_event_log
+      type: EventLog
+      properties:
+        height: 240
+        levelFilterOptions:
+          - all
+          - error
+        text:
+          all: Alles
+          error: Foute
+          context: Konteks
+          copy: Kopieer JSON
+          copied: Gekopieer
+          systemActor: Stelsel
+          searchPlaceholder: Soek gebeure…
+          noData: Geen gebeure nie.
+          noResults: Geen passende gebeure nie.
+        fields:
+          id: id
+          time: timestamp
+          message: message
+        data:
+          - id: '1'
+            timestamp: '2026-03-04T09:12:04.000Z'
+            type: import_failed
+            level: error
+            message: Invoer van <b>kliente.csv</b> het misluk.
+            metadata:
+              rows: 2043
+              error: Kolom "epos" ontbreek
+
+- title: Set Data With CallMethod
+  fullWidth: true
+  blocks:
+    - id: set_data_event_log
+      type: EventLog
+      properties:
+        height: 200
+        fields:
+          id: id
+          time: timestamp
+          message: message
+      events:
+        onMount:
+          - id: set_event_log_data
+            type: CallMethod
+            params:
+              blockId: set_data_event_log
+              method: setData
+              args:
+                - - id: '1'
+                    timestamp: '2026-03-04T09:12:04.000Z'
+                    type: sync_failed
+                    level: error
+                    message: Contact sync failed after 3 retries.
+                    metadata:
+                      retries: 3
+                  - id: '2'
+                    timestamp: '2026-03-04T09:02:04.000Z'
+                    type: sync_succeeded
+                    level: success
+                    message: Contact sync completed.
+                    metadata:
+                      contacts: 1240
+
+- title: Events
+  fullWidth: true
+  blocks:
+    - id: event_log_with_events
+      type: EventLog
+      properties:
+        height: 200
+        fields:
+          id: id
+          time: timestamp
+          message: message
+        data:
+          - id: '1'
+            timestamp: '2026-03-04T09:12:04.000Z'
+            type: job_failed
+            level: error
+            message: Nightly export failed.
+            metadata:
+              job: nightly_export
+          - id: '2'
+            timestamp: '2026-03-04T08:12:04.000Z'
+            type: job_succeeded
+            level: success
+            message: Nightly import succeeded.
+            metadata:
+              job: nightly_import
+      events:
+        onRowClick:
+          - id: set_selected_event
+            type: SetState
+            params:
+              selected_event:
+                _event: row
+    - id: selected_event_display
+      type: Markdown
+      properties:
+        content:
+          _nunjucks:
+            template: '**Selected:** {{ selected_event.message | default("none") }}'
+            on:
+              _state: true

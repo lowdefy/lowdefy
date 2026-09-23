@@ -48,6 +48,7 @@ const testTypesMap = {
     List: { package: '@lowdefy/blocks-basic' },
     Message: { package: '@lowdefy/blocks-antd' },
     Paragraph: { package: '@lowdefy/blocks-basic' },
+    PollingTimer: { package: '@lowdefy/blocks-basic' },
     ProgressBar: { package: '@lowdefy/blocks-loaders' },
     Result: { package: '@lowdefy/blocks-antd' },
     Skeleton: { package: '@lowdefy/blocks-loaders' },

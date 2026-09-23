@@ -266,6 +266,12 @@
       "path": "content/plugins/plugins-operators.md"
     },
     {
+      "slug": "plugins/posthog",
+      "title": "PostHog",
+      "section": "Plugins",
+      "path": "content/plugins/posthog.md"
+    },
+    {
       "slug": "user-authentication/users-introduction",
       "title": "Introduction",
       "section": "User Authentication",
@@ -324,6 +330,12 @@
       "title": "MongoDBAdapter",
       "section": "Other",
       "path": "content/other/mongodbadapter.md"
+    },
+    {
+      "slug": "testing/config-tests",
+      "title": "Config Tests",
+      "section": "Testing",
+      "path": "content/testing/config-tests.md"
     },
     {
       "slug": "testing/e2e-introduction",
@@ -496,6 +508,14 @@
       "path": "content/input-blocks/phonenumberinput.md",
       "kind": "block",
       "typeName": "PhoneNumberInput"
+    },
+    {
+      "slug": "input-blocks/placesautocomplete",
+      "title": "PlacesAutocomplete",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/placesautocomplete.md",
+      "kind": "block",
+      "typeName": "PlacesAutocomplete"
     },
     {
       "slug": "input-blocks/radioselector",
@@ -786,6 +806,14 @@
       "typeName": "DropdownButton"
     },
     {
+      "slug": "display-blocks/eventlog",
+      "title": "EventLog",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/eventlog.md",
+      "kind": "block",
+      "typeName": "EventLog"
+    },
+    {
       "slug": "display-blocks/echart",
       "title": "EChart",
       "section": "Display Blocks",
@@ -872,6 +900,14 @@
       "path": "content/display-blocks/paragraph.md",
       "kind": "block",
       "typeName": "Paragraph"
+    },
+    {
+      "slug": "display-blocks/pollingtimer",
+      "title": "PollingTimer",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/pollingtimer.md",
+      "kind": "block",
+      "typeName": "PollingTimer"
     },
     {
       "slug": "display-blocks/progress",
@@ -1522,6 +1558,14 @@
       "typeName": "DownloadCsv"
     },
     {
+      "slug": "actions/getlocalstorage",
+      "title": "GetLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/getlocalstorage.md",
+      "kind": "action",
+      "typeName": "GetLocalStorage"
+    },
+    {
       "slug": "actions/emailotpsend",
       "title": "EmailOtpSend",
       "section": "Actions",
@@ -1594,12 +1638,124 @@
       "typeName": "PdfMake"
     },
     {
+      "slug": "actions/posthogalias",
+      "title": "PostHogAlias",
+      "section": "Actions",
+      "path": "content/actions/posthogalias.md",
+      "kind": "action",
+      "typeName": "PostHogAlias"
+    },
+    {
+      "slug": "actions/posthogcapture",
+      "title": "PostHogCapture",
+      "section": "Actions",
+      "path": "content/actions/posthogcapture.md",
+      "kind": "action",
+      "typeName": "PostHogCapture"
+    },
+    {
+      "slug": "actions/posthogcapturepageleave",
+      "title": "PostHogCapturePageLeave",
+      "section": "Actions",
+      "path": "content/actions/posthogcapturepageleave.md",
+      "kind": "action",
+      "typeName": "PostHogCapturePageLeave"
+    },
+    {
+      "slug": "actions/posthogfeatureflag",
+      "title": "PostHogFeatureFlag",
+      "section": "Actions",
+      "path": "content/actions/posthogfeatureflag.md",
+      "kind": "action",
+      "typeName": "PostHogFeatureFlag"
+    },
+    {
+      "slug": "actions/posthoggroup",
+      "title": "PostHogGroup",
+      "section": "Actions",
+      "path": "content/actions/posthoggroup.md",
+      "kind": "action",
+      "typeName": "PostHogGroup"
+    },
+    {
+      "slug": "actions/posthogidentify",
+      "title": "PostHogIdentify",
+      "section": "Actions",
+      "path": "content/actions/posthogidentify.md",
+      "kind": "action",
+      "typeName": "PostHogIdentify"
+    },
+    {
+      "slug": "actions/posthoginit",
+      "title": "PostHogInit",
+      "section": "Actions",
+      "path": "content/actions/posthoginit.md",
+      "kind": "action",
+      "typeName": "PostHogInit"
+    },
+    {
+      "slug": "actions/posthogoptin",
+      "title": "PostHogOptIn",
+      "section": "Actions",
+      "path": "content/actions/posthogoptin.md",
+      "kind": "action",
+      "typeName": "PostHogOptIn"
+    },
+    {
+      "slug": "actions/posthogoptout",
+      "title": "PostHogOptOut",
+      "section": "Actions",
+      "path": "content/actions/posthogoptout.md",
+      "kind": "action",
+      "typeName": "PostHogOptOut"
+    },
+    {
+      "slug": "actions/posthogpageview",
+      "title": "PostHogPageview",
+      "section": "Actions",
+      "path": "content/actions/posthogpageview.md",
+      "kind": "action",
+      "typeName": "PostHogPageview"
+    },
+    {
+      "slug": "actions/posthogreloadfeatureflags",
+      "title": "PostHogReloadFeatureFlags",
+      "section": "Actions",
+      "path": "content/actions/posthogreloadfeatureflags.md",
+      "kind": "action",
+      "typeName": "PostHogReloadFeatureFlags"
+    },
+    {
+      "slug": "actions/posthogreset",
+      "title": "PostHogReset",
+      "section": "Actions",
+      "path": "content/actions/posthogreset.md",
+      "kind": "action",
+      "typeName": "PostHogReset"
+    },
+    {
+      "slug": "actions/posthogsetpersonproperties",
+      "title": "PostHogSetPersonProperties",
+      "section": "Actions",
+      "path": "content/actions/posthogsetpersonproperties.md",
+      "kind": "action",
+      "typeName": "PostHogSetPersonProperties"
+    },
+    {
       "slug": "actions/request",
       "title": "Request",
       "section": "Actions",
       "path": "content/actions/request.md",
       "kind": "action",
       "typeName": "Request"
+    },
+    {
+      "slug": "actions/removelocalstorage",
+      "title": "RemoveLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/removelocalstorage.md",
+      "kind": "action",
+      "typeName": "RemoveLocalStorage"
     },
     {
       "slug": "actions/reset",
@@ -1656,6 +1812,14 @@
       "path": "content/actions/setlocale.md",
       "kind": "action",
       "typeName": "SetLocale"
+    },
+    {
+      "slug": "actions/setlocalstorage",
+      "title": "SetLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/setlocalstorage.md",
+      "kind": "action",
+      "typeName": "SetLocalStorage"
     },
     {
       "slug": "actions/setstate",
@@ -1774,6 +1938,14 @@
       "path": "content/operators/_change_case.md",
       "kind": "operator",
       "typeName": "_change_case"
+    },
+    {
+      "slug": "operators/_cron",
+      "title": "_cron",
+      "section": "Operators",
+      "path": "content/operators/_cron.md",
+      "kind": "operator",
+      "typeName": "_cron"
     },
     {
       "slug": "operators/_date",

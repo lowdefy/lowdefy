@@ -55,6 +55,7 @@ const snapshotTypesMap = {
     Img: { package: '@lowdefy/blocks-basic' },
     List: { package: '@lowdefy/blocks-basic' },
     Paragraph: { package: '@lowdefy/blocks-basic' },
+    PollingTimer: { package: '@lowdefy/blocks-basic' },
     Span: { package: '@lowdefy/blocks-basic' },
     Throw: { package: '@lowdefy/blocks-basic' },
     Title: { package: '@lowdefy/blocks-basic' },
