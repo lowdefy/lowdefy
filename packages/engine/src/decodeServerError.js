@@ -23,6 +23,11 @@ import { serializer, type } from '@lowdefy/helpers';
 // itself, where only the dev tools look.
 const devErrors = new WeakMap();
 
+// A catch list's `_error` passes a server error through as decoded, but
+// projects a client-side error. The two can share a name and class, so the
+// engine tells them apart by identity.
+const decoded = new WeakSet();
+
 function decodeServerError(payload) {
   if (type.isNone(payload)) return payload;
   const { devError, ...rest } = payload;
@@ -30,6 +35,7 @@ function decodeServerError(payload) {
   if (!type.isNone(devError)) {
     devErrors.set(error, serializer.deserialize(devError));
   }
+  decoded.add(error);
   return error;
 }
 
@@ -37,6 +43,10 @@ function getDevError(error) {
   return devErrors.get(error);
 }
 
-export { getDevError };
+function isDecodedServerError(error) {
+  return decoded.has(error);
+}
+
+export { getDevError, isDecodedServerError };
 
 export default decodeServerError;

@@ -20,6 +20,7 @@ import { jest } from '@jest/globals';
 import { ActionError, OperatorError, UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
+import decodeServerError from '../src/decodeServerError.js';
 import stopChain from '../src/stopChain.js';
 import testContext from './testContext.js';
 
@@ -1777,4 +1778,222 @@ test('repeated server errors from the same action each call handleError', async 
   expect(handleError.mock.calls[0][0].message).toBe('Something went wrong.');
   expect(handleError.mock.calls[1][0].message).toBe('Something went wrong.');
   expect(handleError.mock.calls[0][0]).not.toBe(handleError.mock.calls[1][0]);
+});
+
+describe('_error in catch lists', () => {
+  const wire = {
+    name: 'RequestError',
+    message: 'Something went wrong.',
+    code: 'ECONNREFUSED',
+    configKey: 'request:1',
+    requestId: 'rid-1',
+    isLowdefyError: true,
+    handled: true,
+  };
+
+  async function setupErrorContext({ callRequest } = {}) {
+    lowdefy._internal.actions = getActions();
+    lowdefy._internal.callRequest = callRequest;
+    const context = await testContext({
+      lowdefy,
+      pageConfig: { id: 'root', type: 'Box', requests: [{ id: 'fetch_req', type: 'Fetch' }] },
+    });
+    delete lowdefy._internal.callRequest;
+    return context._internal.Actions;
+  }
+
+  test('_error in a catch action returns the decoded wire error of a failed request', async () => {
+    let decoded;
+    const Actions = await setupErrorContext({
+      callRequest: () => {
+        decoded = decodeServerError({ '~e': wire });
+        throw decoded;
+      },
+    });
+    const res = await Actions.callActions({
+      actions: [{ id: 'fetch', type: 'Request', params: 'fetch_req', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'read',
+          type: 'ActionSync',
+          params: { caught: { _error: true }, fromActions: { _actions: 'fetch.error' } },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    expect(res.success).toBe(false);
+    const { caught, fromActions } = res.responses.read.response;
+    expect(caught).toBe(decoded);
+    expect(caught).toBe(res.error.error);
+    expect(caught.requestId).toBe('rid-1');
+    expect(caught.message).toBe('Something went wrong.');
+    expect(caught.actionId).toBeUndefined();
+    expect(fromActions).toBeInstanceOf(Error);
+    expect(fromActions.name).toBe(caught.name);
+    expect(fromActions.message).toBe(caught.message);
+    expect(fromActions.requestId).toBe(caught.requestId);
+  });
+
+  test('_error returns a control-raised error projected, with no actionId', async () => {
+    const Actions = await setupErrorContext();
+    const res = await Actions.callActions({
+      actions: [
+        {
+          ':if': { _divide: [1] },
+          ':then': [{ id: 'unreached', type: 'ActionSync', params: 'x' }],
+          '~k': 'if-key',
+        },
+      ],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [{ id: 'read', type: 'ActionSync', params: { caught: { _error: true } } }],
+      event: {},
+      eventName,
+    });
+    const { caught } = res.responses.read.response;
+    expect(res.error.error).toBeInstanceOf(OperatorError);
+    expect(caught).toBeInstanceOf(OperatorError);
+    expect(caught).not.toBe(res.error.error);
+    expect(caught.name).toBe('OperatorError');
+    expect(caught.message).toBe(res.error.error.message);
+    expect(caught.actionId).toBeUndefined();
+    expect(caught.configKey).toBeUndefined();
+    expect(caught.received).toBeUndefined();
+    expect(caught.location).toBeUndefined();
+  });
+
+  test('_error returns a client action error projected, with its actionId', async () => {
+    const Actions = await setupErrorContext();
+    const res = await Actions.callActions({
+      actions: [
+        { id: 'try_error', type: 'ActionError', params: { a: 1 }, messages: { error: false } },
+      ],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'read',
+          type: 'ActionSync',
+          params: {
+            caught: { _error: true },
+            actionId: { _error: 'actionId' },
+            message: { _error: 'message' },
+          },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    const { caught, actionId, message } = res.responses.read.response;
+    expect(res.error.error).toBeInstanceOf(ActionError);
+    expect(res.error.error.received).toEqual({ a: 1 });
+    expect(caught).toBeInstanceOf(ActionError);
+    expect(caught.name).toBe('ActionError');
+    expect(caught.actionId).toBe('try_error');
+    expect(caught.message).toBe(res.error.error.message);
+    expect(caught.received).toBeUndefined();
+    expect(caught.location).toBeUndefined();
+    expect(actionId).toBe('try_error');
+    expect(message).toBe(res.error.error.message);
+  });
+
+  test('_error in the main actions list and in an unrelated event returns null', async () => {
+    const Actions = await setupErrorContext();
+    const failed = await Actions.callActions({
+      actions: [
+        { id: 'main_read', type: 'ActionSync', params: { caught: { _error: true } } },
+        { id: 'try_error', type: 'ActionError', messages: { error: false } },
+      ],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        { id: 'catch_read', type: 'ActionSync', params: { caught: { _error: true } } },
+      ],
+      event: {},
+      eventName,
+    });
+    expect(failed.responses.main_read.response).toEqual({ caught: null });
+    expect(failed.responses.catch_read.response.caught).toBeInstanceOf(Error);
+
+    const unrelated = await Actions.callActions({
+      actions: [
+        {
+          id: 'other_read',
+          type: 'ActionSync',
+          params: { caught: { _error: true }, message: { _error: 'message' } },
+        },
+      ],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [],
+      event: {},
+      eventName,
+    });
+    expect(unrelated.responses.other_read.response).toEqual({ caught: null, message: null });
+  });
+
+  test('_error resolves inside a catch list nested :if and its :then action', async () => {
+    const Actions = await setupErrorContext();
+    const res = await Actions.callActions({
+      actions: [{ id: 'try_error', type: 'ActionError', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          ':if': { _eq: [{ _error: 'actionId' }, 'try_error'] },
+          ':then': [
+            { id: 'nested_read', type: 'ActionSync', params: { actionId: { _error: 'actionId' } } },
+          ],
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    expect(res.controls).toEqual([{ index: 0, type: ':if', taken: 'then' }]);
+    expect(res.responses.nested_read.response).toEqual({ actionId: 'try_error' });
+  });
+
+  test('_error resolves in an async: true catch action', async () => {
+    const Actions = await setupErrorContext();
+    const res = await Actions.callActions({
+      actions: [{ id: 'try_error', type: 'ActionError', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'async_read',
+          type: 'ActionAsync',
+          async: true,
+          params: { ms: 1, actionId: { _error: 'actionId' } },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    await timeout(10);
+    expect(res.responses.async_read.response).toEqual({ ms: 1, actionId: 'try_error' });
+  });
+
+  test('_error in a failed action messages.error reads the caught error in a catch list', async () => {
+    const Actions = await setupErrorContext();
+    await Actions.callActions({
+      actions: [{ id: 'try_error', type: 'ActionError', messages: { error: false } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [
+        {
+          id: 'catch_error',
+          type: 'CatchActionError',
+          messages: { error: { _error: 'actionId' } },
+        },
+      ],
+      event: {},
+      eventName,
+    });
+    const errorMessages = displayMessage.mock.calls.filter(([arg]) => arg.status === 'error');
+    expect(errorMessages.map(([arg]) => arg.content)).toEqual(['try_error']);
+  });
 });

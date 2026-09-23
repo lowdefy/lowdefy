@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import decodeServerError, { getDevError } from '../src/decodeServerError.js';
+import decodeServerError, { getDevError, isDecodedServerError } from '../src/decodeServerError.js';
 
 const wire = {
   name: 'RequestError',
@@ -84,4 +84,17 @@ test('decodeServerError does not mutate the payload', () => {
 
 test('getDevError returns undefined for an error that was not decoded from a payload', () => {
   expect(getDevError(new Error('local'))).toBeUndefined();
+});
+
+test('isDecodedServerError is true for every error decodeServerError returns', () => {
+  expect(isDecodedServerError(decodeServerError(prodPayload))).toBe(true);
+  expect(isDecodedServerError(decodeServerError(devPayload))).toBe(true);
+});
+
+test('isDecodedServerError is false for an error built in the browser', () => {
+  const local = new Error('Something went wrong.');
+  local.name = 'RequestError';
+  expect(isDecodedServerError(local)).toBe(false);
+  expect(isDecodedServerError(null)).toBe(false);
+  expect(isDecodedServerError(undefined)).toBe(false);
 });

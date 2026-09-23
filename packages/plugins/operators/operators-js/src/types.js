@@ -28,6 +28,7 @@ export default {
       '_date',
       '_divide',
       '_eq',
+      '_error',
       '_event',
       '_event_log',
       '_function',

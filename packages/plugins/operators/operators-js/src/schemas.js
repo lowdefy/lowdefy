@@ -59,6 +59,7 @@ export { default as _user } from './operators/shared/user.schema.js';
 export { default as _actions } from './operators/client/actions.schema.js';
 export { default as _api } from './operators/client/api.schema.js';
 export { default as _base64 } from './operators/client/base64.schema.js';
+export { default as _error } from './operators/client/error.schema.js';
 export { default as _event } from './operators/client/event.schema.js';
 export { default as _event_log } from './operators/client/event_log.schema.js';
 export { default as _global } from './operators/client/global.schema.js';
