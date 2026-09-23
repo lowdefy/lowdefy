@@ -1,5 +1,101 @@
 # Change Log
 
+## 6.0.0
+
+### Minor Changes
+
+- 60401aa: feat: Add `_app` operator and structured app metadata.
+
+  The `_app` operator reads the app's declared metadata — `slug`, `name`,
+  `version`, `description`, `license`, `lowdefyVersion`, `gitSha`. It
+  resolves both at build time and at runtime (client and server) with
+  identical values, including inside `modules-mongodb` request filters and
+  inside `_js` functions via a bound `lowdefyApp(p)` callable. For
+  build-time positions nested inside another `_build.*` operator (e.g. a
+  `_build.object.fromEntries` map key), use the `_build.app` form so it
+  resolves in time.
+
+  A referenced `slug` is mandatory: `_app: slug` (or `_build.app: slug`)
+  fails the build when `slug` is not declared, guarding against a `null`
+  slug silently scoping namespaced data. The object form with an explicit
+  `default` is the opt-out. Other fields return `null` when unset, and an
+  app that never references `slug` need not declare it.
+
+  The root `lowdefy.yaml` schema gains two new optional fields:
+
+  - `slug` — a kebab-case identifier (`^[a-z][a-z0-9]*(-[a-z0-9]+)*$`),
+    validated at build time. Build fails with a clear error if invalid.
+  - `description` — a free-form string.
+
+  Root metadata fields (`slug`, `name`, `description`, `version`,
+  `license`, `lowdefy`) accept literals and `_build.*` operators only;
+  `_ref`, `_var`, and static `_` operators are no longer resolved in these
+  positions and fail the build with a clear error naming the field. Use
+  `_build.env` for a deploy-time slug or name.
+
+  `gitSha` resolves through a fallback chain: `LOWDEFY_GIT_SHA` env var
+  when set non-empty → `git rev-parse HEAD` → `null`. This lets apps
+  deployed without `.git` (Docker, Vercel, Netlify, Render, hermetic
+  PaaS sandboxes) pin the SHA explicitly by mapping their platform's
+  commit env var via shell expansion in the build command.
+
+  Build emits a new `appMeta.json` artifact alongside `app.json`. The
+  existing `app.git_sha` field is removed; consumers (internal telemetry)
+  read `gitSha` from `appMeta` instead.
+
+  See the `_app` operator reference for the full key set and examples.
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+- 982a3db: fix(operators): Recognise escaped build prefixes in evaluateOperators guards.
+
+  Nested build operators run under escaped prefixes (`__build.`, `___build.`, …) inside a
+  `_build.function` body, but four guards in `evaluateOperators` compared the operator prefix
+  exactly to `_build.`. A dynamic operator (e.g. `_function`) nested inside a `_build.function`
+  body was deferred unevaluated instead of evaluated at build time, leaking raw operator objects
+  into the built output — either failing the build (`_array.concat must be evaluated on an array
+instance`) or silently corrupting output such as MongoDB aggregation pipelines. Any build-prefix
+  escape depth now evaluates at build time, matching v4 behaviour.
+
+  Note: an unknown operator under an escaped build prefix now raises a build `ConfigError` where
+  it previously deferred silently. Two shapes can turn a currently-succeeding build into a failing
+  one:
+
+  - A typo, e.g. `__build.arrry.map` inside a `_build.function`, surfaces as a new build failure.
+  - A branch that is never taken. `evaluateOperators` visits all children before the operator
+    runs, so both `then` and `else` of a `__build.if` are checked. A non-build operator in the
+    discarded branch (e.g. `{ __build.if: { test: …, then: { __build.string.concat: … }, else: {
+__build.user: id } } }`) previously had its raw object thrown away, and now errors even though
+    that branch is never selected. `_user`, `_state`, `_secret` and `_js` are not build operators,
+    so escaped references to them must be removed or moved out of the build-time branch.
+
+### Patch Changes
+
+- Updated dependencies [37c8c14]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

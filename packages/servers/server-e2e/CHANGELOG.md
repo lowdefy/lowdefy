@@ -1,5 +1,158 @@
 # @lowdefy/server-e2e
 
+## 6.0.0
+
+### Major Changes
+
+- 8a82fb0: feat!: Replace Next.js with Vite + Hono.
+
+  Lowdefy servers no longer run on Next.js. The production server is a
+  [Hono](https://hono.dev) app serving a [Vite](https://vite.dev)-built React
+  client; the dev server runs Vite with the Hono app mounted as middleware,
+  giving instant hot module replacement for plugin changes (~700ms instead of
+  the previous 20–40s rebuild-and-restart cycle). Authentication moves from
+  NextAuth v4 to the Auth.js v5 engine (`@auth/core` via `@hono/auth-js`) with
+  the `auth:` YAML schema unchanged.
+
+  **Your YAML config does not change.** `lowdefy build`, `lowdefy dev` and
+  `lowdefy start` work as before.
+
+  Breaking changes:
+
+  - **Auth sessions invalidate once on upgrade.** The session cookie prefix
+    changes from `next-auth.*` to `authjs.*` — users sign in again after the
+    upgrade. Provider, adapter, callback and event configuration is unchanged.
+  - **`NEXTAUTH_SECRET` is removed — rename it to `AUTH_SECRET`.** The build
+    fails with a config error when auth providers are configured and
+    `AUTH_SECRET` is not set. `NEXTAUTH_URL` still works as an Auth.js
+    fallback, but `AUTH_URL` is the preferred name.
+  - **Custom `next.config.js` files no longer apply.** Customize the client
+    build with a `vite.config.js` in the server directory instead.
+  - **`LOWDEFY_BUILD_OUTPUT_STANDALONE` is removed.** `lowdefy build` writes a
+    complete runnable server to `.lowdefy/server` — copy that folder (or build
+    in Docker) and run `node src/index.js`. See the updated Docker and node
+    server deployment docs.
+  - **`NEXT_PUBLIC_SENTRY_DSN` is removed.** Set `SENTRY_DSN` on the server —
+    it is passed to the browser client at runtime, so rotating it no longer
+    requires a rebuild. Source maps upload via `@sentry/vite-plugin` when
+    `SENTRY_AUTH_TOKEN` is set.
+  - **Page navigation is now client-side (SPA).** The first page load embeds
+    config in the HTML; navigating fetches page config from `/api/page/*`
+    without a full browser reload.
+
+### Minor Changes
+
+- efd1967: feat: Add websockets — a first-class realtime primitive.
+
+  Define channels under a new top-level `websockets:` key and subscribe pages to them with `subscriptions:` — live dashboards, notifications, and chat without polling or an external socket service. The same Lowdefy server that serves your pages pushes messages over a single multiplexed WebSocket connection, locally and on Vercel (native WebSocket support on Fluid compute). Authentication uses your existing session, with per-channel `auth.websockets` roles.
+
+  **Channels (`websockets:`)**
+
+  - Websocket types are plugins: `Channel` (client pub/sub relay) and `Interval` (timed ticks) ship in the new `@lowdefy/websockets-core` package; `MongoDBChangeStream` in `@lowdefy/connection-mongodb` pushes MongoDB change events to subscribed pages.
+  - Channel `properties` are evaluated server-side per subscription — `_payload` and `_user` make channels user-specific. Subscribers with identical evaluated properties share one running source.
+
+  **Page subscriptions (`subscriptions:`)**
+
+  - Pages subscribe on mount and unsubscribe on navigation — no wiring needed.
+  - React to messages with `onMessage`, `onSubscribe` and `onError` events, or read channel state anywhere with the new `_websocket` operator (`connected`, `messages`, `lastMessage`, `messageCount`, `error`).
+  - Renders are throttled (`client.throttleRender`) and message history is bounded (`client.maxMessages`).
+
+  **Actions**
+
+  - New `Publish`, `Subscribe` and `Unsubscribe` actions in `@lowdefy/actions-core` — publish messages to a channel or control subscriptions dynamically.
+
+  The client reconnects with backoff and resubscribes automatically, so serverless connection limits (e.g. Vercel function `maxDuration`) are invisible to users. See the new WebSockets section in the docs for a quick start.
+
+### Patch Changes
+
+- 082acec: chore: Bump `yaml` to 2.9.0, clearing vite's `yaml@^2.4.2` peer warning.
+- 59190b5: Refresh dependencies and require Node.js 22 or newer.
+
+  Updated a range of libraries across the project to current versions (including the MongoDB driver, the
+  MQL/aggregation engine, and various build and CLI tooling) and set the minimum supported Node.js version
+  to 22, matching what is tested in CI. Most changes are internal with no effect on your app. One small
+  behaviour note: in `_mql` expressions, adding to a missing or null field now returns `null` (matching
+  MongoDB) instead of `NaN`.
+
+- da0c62c: chore: Update pino from 8.16.2 to 10.3.1.
+
+  No behavior change — the log output format, levels, and configuration are unchanged. The pino 9 and 10 majors only drop support for Node.js versions below 20, and Lowdefy already requires Node.js 22 or newer.
+
+- 9c53936: fix: Pass urlQuery to getPageConfig in the e2e server.
+
+  Dynamic pages built with `lowdefy build --server e2e` received an empty `urlQuery` object, so endpoints reading `_payload: urlQuery.*` resolved no URL parameters. Pages that work in development and production failed only under e2e tests.
+
+  The e2e server now resolves dynamic content with the request query string on both paths, matching `@lowdefy/server`:
+
+  - The initial HTML render passes `urlQuery` to `getPageConfig`.
+  - Client-side navigation forwards the current query string on its `/api/page/*` fetch, and the route reads it.
+
+- Updated dependencies [11662bc]
+- Updated dependencies [0201358]
+- Updated dependencies [59190b5]
+- Updated dependencies [da0c62c]
+- Updated dependencies [2da4907]
+- Updated dependencies [e7a9270]
+- Updated dependencies [c188656]
+- Updated dependencies [b496a77]
+- Updated dependencies [60401aa]
+- Updated dependencies [37c8c14]
+- Updated dependencies [ef707bd]
+- Updated dependencies [7ce6e36]
+- Updated dependencies [46029df]
+- Updated dependencies [28cb944]
+- Updated dependencies [082acec]
+- Updated dependencies [e0a06a2]
+- Updated dependencies [58ae85e]
+- Updated dependencies [742a900]
+- Updated dependencies [51c3008]
+- Updated dependencies [6730996]
+- Updated dependencies [a858f8f]
+- Updated dependencies [c97b1da]
+- Updated dependencies [660bbfc]
+- Updated dependencies [8a82fb0]
+- Updated dependencies [efd1967]
+- Updated dependencies [1cc1521]
+- Updated dependencies [6d38790]
+- Updated dependencies [0f9487d]
+- Updated dependencies [8398345]
+- Updated dependencies [ae5f618]
+- Updated dependencies [01d7552]
+- Updated dependencies [01d7552]
+- Updated dependencies [629837d]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+- Updated dependencies [ae5f618]
+- Updated dependencies [16fdeb8]
+- Updated dependencies [fb80e0a]
+- Updated dependencies [0e71ebd]
+- Updated dependencies [c2e0823]
+- Updated dependencies [6d7cd8e]
+- Updated dependencies [53a36ed]
+  - @lowdefy/blocks-antd-x@6.0.0
+  - @lowdefy/connection-mongodb@6.0.0
+  - @lowdefy/logger@6.0.0
+  - @lowdefy/blocks-aggrid@6.0.0
+  - @lowdefy/api@6.0.0
+  - @lowdefy/client@6.0.0
+  - @lowdefy/operators-js@6.0.0
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/blocks-antd@6.0.0
+  - @lowdefy/blocks-basic@6.0.0
+  - @lowdefy/blocks-echarts@6.0.0
+  - @lowdefy/blocks-loaders@6.0.0
+  - @lowdefy/blocks-markdown@6.0.0
+  - @lowdefy/blocks-tiptap@6.0.0
+  - @lowdefy/node-utils@6.0.0
+  - @lowdefy/actions-core@6.0.0
+  - @lowdefy/websockets-core@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/layout@6.0.0
+  - @lowdefy/operators-nunjucks@6.0.0
+  - @lowdefy/operators-uuid@6.0.0
+  - @lowdefy/block-utils@6.0.0
+  - @lowdefy/connection-axios-http@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes
