@@ -90,6 +90,8 @@ _ref:
               - `cron.secret: string`: The Lowdefy secret name holding this environment's `CRON_SECRET`. An environment with a `cron.secret` has its schedules forwarded to it from the environment Vercel fires crons on.
               - `cron.enabled: boolean`: Set `false` to register no cron jobs for this environment. Defaults to `true`.
               - `email.filter: object`: The delivery filter (`replaceAddress`, `allowlist`, `regex`) applied to every `SMTPMailSend` and `SendGridMailSend` request in this environment, unless the connection sets its own `filter` (`filter: false` on a connection turns filtering off).
+              - `email.enabled: boolean`: Set `false` to send no email from `SMTPMailSend` and `SendGridMailSend` requests in this environment (auth emails still send). Defaults to `true`.
+              - `sentry.enabled: boolean`: Set `false` to turn Sentry off, server and client, in this environment. Defaults to `true`.
             - `environment: string`: The name of the environment this build is for. Defaults to the `LOWDEFY_ENVIRONMENT` environment variable. When `environments` is declared it must be one of its names. Server log lines carry it as `environment`, `_app: environment` reads it, and Sentry reports under it unless `logger.sentry.environment` is set.
             - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
             - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`.

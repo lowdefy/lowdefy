@@ -2294,6 +2294,14 @@ export default {
                   '~k': {},
                   '~r': {},
                   '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to send no email from SMTPMailSend and SendGridMailSend requests in this environment. Auth emails still send. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.enabled" should be a boolean.',
+                    },
+                  },
                   filter: {
                     type: 'object',
                     description:
@@ -2324,6 +2332,26 @@ export default {
                 },
                 errorMessage: {
                   type: 'App "config.environments.<name>.email" should be an object.',
+                },
+              },
+              sentry: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to turn Sentry off (server and client) in this environment. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.sentry.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.sentry" should be an object.',
                 },
               },
             },

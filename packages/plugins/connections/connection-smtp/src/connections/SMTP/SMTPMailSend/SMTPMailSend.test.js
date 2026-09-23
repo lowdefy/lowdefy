@@ -272,3 +272,23 @@ test('SMTPMailSend sends unfiltered when the connection filter is false', async 
   });
   expect(mockSend.mock.calls[0][0].connection.filter).toBe(null);
 });
+
+test('SMTPMailSend sends nothing when the environment switches email off', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const result = await SMTPMailSend({
+    request: [
+      { to: 'a@example.com', subject: 'A', text: 'B' },
+      { to: 'b@example.com', subject: 'A', text: 'B' },
+    ],
+    connection: { host: 'smtp.example.com', from: 'from@example.com' },
+    environment: { name: 'preview', email: { enabled: false } },
+  });
+  expect(mockSend).not.toHaveBeenCalled();
+  expect(result).toEqual({
+    response: 'Mail is disabled in this environment.',
+    results: [
+      { messageId: null, to: null, disabled: true },
+      { messageId: null, to: null, disabled: true },
+    ],
+  });
+});

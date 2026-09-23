@@ -22,6 +22,9 @@ import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 // Environment names become a path segment (/api/cron-forward/<environment>/<endpointId>).
 const environmentNamePattern = /^[A-Za-z0-9\-_]+$/;
 
+// Features an environment can switch off with `<feature>.enabled: false`. Logging has no switch.
+const switchableFeatures = ['cron', 'email', 'sentry'];
+
 function isAbsoluteHttpUrl(value) {
   try {
     const url = new URL(value);
@@ -80,7 +83,7 @@ function validateEnvironment({ name, environment, configKey }) {
     });
   }
   const key = environment['~k'] ?? configKey;
-  const { url, cron, email } = environment;
+  const { url, cron, email, sentry } = environment;
   if (!type.isUndefined(url) && (!type.isString(url) || !isAbsoluteHttpUrl(url))) {
     throw new ConfigError(
       `App "config.environments.${name}.url" should be an absolute http(s) URL, e.g. "https://staging.example.com".`,
@@ -92,12 +95,6 @@ function validateEnvironment({ name, environment, configKey }) {
       throw new ConfigError(`App "config.environments.${name}.cron" should be an object.`, {
         received: cron,
         configKey: key,
-      });
-    }
-    if (!type.isUndefined(cron.enabled) && !type.isBoolean(cron.enabled)) {
-      throw new ConfigError(`App "config.environments.${name}.cron.enabled" should be a boolean.`, {
-        received: cron.enabled,
-        configKey: cron['~k'] ?? key,
       });
     }
     if (!type.isUndefined(cron.secret)) {
@@ -115,6 +112,21 @@ function validateEnvironment({ name, environment, configKey }) {
       }
     }
   }
+  if (!type.isUndefined(sentry) && !type.isObject(sentry)) {
+    throw new ConfigError(`App "config.environments.${name}.sentry" should be an object.`, {
+      received: sentry,
+      configKey: key,
+    });
+  }
+  switchableFeatures.forEach((feature) => {
+    const enabled = environment[feature]?.enabled;
+    if (!type.isUndefined(enabled) && !type.isBoolean(enabled)) {
+      throw new ConfigError(
+        `App "config.environments.${name}.${feature}.enabled" should be a boolean.`,
+        { received: enabled, configKey: environment[feature]['~k'] ?? key }
+      );
+    }
+  });
   if (!type.isUndefined(email)) {
     if (!type.isObject(email)) {
       throw new ConfigError(`App "config.environments.${name}.email" should be an object.`, {
@@ -201,24 +213,33 @@ function buildEnvironments({ components, context }) {
 
   if (type.isUndefined(current)) {
     delete config.environment;
-  } else {
-    config.environment = current;
-    // App metadata is the deploy identity the server stamps on every log line and the client reads
-    // with _app (analytics super properties), so the environment travels with it.
-    if (type.isObject(components.appMeta)) {
-      components.appMeta.environment = current;
-    }
+    return;
+  }
+  config.environment = current;
+  const settings = config.environments?.[current] ?? {};
+  const disabled = switchableFeatures.filter((feature) => settings[feature]?.enabled === false);
+
+  // App metadata is the deploy identity the server stamps on every log line and the client reads
+  // with _app, so the environment and the features it switches off travel with it — the browser
+  // has no other view of config.environments.
+  if (type.isObject(components.appMeta)) {
+    components.appMeta.environment = current;
+    components.appMeta.disabled = disabled;
   }
 
-  // Sentry reports under the environment name unless the app names one itself. logger.sentry is
-  // created when absent: Sentry is enabled by SENTRY_DSN, not by the config being present.
-  if (!type.isUndefined(current)) {
-    components.logger = components.logger ?? {};
-    const sentry = components.logger.sentry ?? {};
-    if (type.isNone(sentry.environment)) {
-      components.logger.sentry = { ...sentry, environment: current };
-    }
+  // Sentry reports under the environment name unless the app names one itself, and is off on both
+  // sides when the environment switches it off. logger.sentry is created when absent: Sentry is
+  // enabled by SENTRY_DSN, not by the config being present.
+  components.logger = components.logger ?? {};
+  const sentry = { ...(components.logger.sentry ?? {}) };
+  if (type.isNone(sentry.environment)) {
+    sentry.environment = current;
   }
+  if (disabled.includes('sentry')) {
+    sentry.client = false;
+    sentry.server = false;
+  }
+  components.logger.sentry = sentry;
 }
 
 export default buildEnvironments;

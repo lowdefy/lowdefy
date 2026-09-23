@@ -389,3 +389,23 @@ test('SendGridMailSend keeps the connection filter over the environment email fi
   });
   expect(mockSend.mock.calls[0][0].to).toEqual('connection@example.com');
 });
+
+test('SendGridMailSend sends nothing when the environment switches email off', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const result = await SendGridMailSend({
+    request: [
+      { to: 'a@example.com', subject: 'A', text: 'B' },
+      { to: 'b@example.com', subject: 'A', text: 'B' },
+    ],
+    connection: { apiKey: 'X', from: 'from@example.com' },
+    environment: { name: 'preview', email: { enabled: false } },
+  });
+  expect(mockSend).not.toHaveBeenCalled();
+  expect(result).toEqual({
+    response: 'Mail is disabled in this environment.',
+    results: [
+      { messageId: null, to: null, disabled: true },
+      { messageId: null, to: null, disabled: true },
+    ],
+  });
+});

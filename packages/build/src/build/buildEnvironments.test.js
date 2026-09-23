@@ -150,7 +150,7 @@ test('buildEnvironments records the current environment in the app metadata', ()
   const { context } = makeContext();
   const components = { config: { environments }, appMeta: { name: 'app' } };
   buildEnvironments({ components, context });
-  expect(components.appMeta).toEqual({ name: 'app', environment: 'staging' });
+  expect(components.appMeta).toEqual({ name: 'app', environment: 'staging', disabled: [] });
 });
 
 test('buildEnvironments defaults the Sentry environment to the current environment', () => {
@@ -175,4 +175,51 @@ test('buildEnvironments sets the Sentry environment when only SENTRY_DSN enables
   const components = { config: { environments }, logger: {} };
   buildEnvironments({ components, context });
   expect(components.logger.sentry).toEqual({ environment: 'prod' });
+});
+
+test('buildEnvironments lists the features the current environment switches off in the app metadata', () => {
+  process.env.LOWDEFY_ENVIRONMENT = 'preview';
+  const { context } = makeContext();
+  const components = {
+    config: {
+      environments: {
+        ...environments,
+        preview: {
+          url: 'https://preview.example.com',
+          cron: { enabled: false },
+          email: { enabled: false },
+          sentry: { enabled: true },
+        },
+      },
+    },
+    appMeta: {},
+  };
+  buildEnvironments({ components, context });
+  expect(components.appMeta.disabled).toEqual(['cron', 'email']);
+});
+
+test('buildEnvironments turns Sentry off on both sides when the environment switches it off', () => {
+  process.env.LOWDEFY_ENVIRONMENT = 'preview';
+  const { context } = makeContext();
+  const components = {
+    config: { environments: { preview: { sentry: { enabled: false } } } },
+    logger: { sentry: { client: true, tracesSampleRate: 0.5 } },
+    appMeta: {},
+  };
+  buildEnvironments({ components, context });
+  expect(components.logger.sentry).toEqual({
+    client: false,
+    server: false,
+    tracesSampleRate: 0.5,
+    environment: 'preview',
+  });
+  expect(components.appMeta.disabled).toEqual(['sentry']);
+});
+
+test('buildEnvironments throws when a feature switch is not a boolean', () => {
+  const { context } = makeContext();
+  const components = { config: { environments: { prod: { email: { enabled: 'no' } } } } };
+  expect(() => buildEnvironments({ components, context })).toThrow(
+    'App "config.environments.prod.email.enabled" should be a boolean.'
+  );
 });
