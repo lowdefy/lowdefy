@@ -225,3 +225,40 @@ test('SMTPMailSend meta checkWrite should be false', async () => {
   const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
   expect(SMTPMailSend.meta.checkWrite).toBe(false);
 });
+
+test('SMTPMailSend applies the current environment email filter when the connection has none', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const connection = { host: 'smtp.example.com', from: 'from@example.com' };
+  const environment = {
+    name: 'staging',
+    email: { filter: { replaceAddress: 'team@example.com' } },
+  };
+  await SMTPMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection,
+    environment,
+  });
+  expect(mockSend.mock.calls[0][0].connection).toEqual({
+    ...connection,
+    filter: { replaceAddress: 'team@example.com' },
+  });
+});
+
+test('SMTPMailSend keeps the connection filter over the environment email filter', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: { allowlist: ['example.com'] },
+  };
+  const environment = {
+    name: 'staging',
+    email: { filter: { replaceAddress: 'team@example.com' } },
+  };
+  await SMTPMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection,
+    environment,
+  });
+  expect(mockSend.mock.calls[0][0].connection.filter).toEqual({ allowlist: ['example.com'] });
+});

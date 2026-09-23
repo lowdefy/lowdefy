@@ -367,3 +367,27 @@ test('checkWrite should be false', async () => {
   const { checkWrite } = SendGridMailSend.meta;
   expect(checkWrite).toBe(false);
 });
+
+test('SendGridMailSend applies the current environment email filter when the connection has none', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  await SendGridMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection: { apiKey: 'X', from: 'from@example.com' },
+    environment: { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('team@example.com');
+});
+
+test('SendGridMailSend keeps the connection filter over the environment email filter', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  await SendGridMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection: {
+      apiKey: 'X',
+      from: 'from@example.com',
+      filter: { replaceAddress: 'connection@example.com' },
+    },
+    environment: { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('connection@example.com');
+});

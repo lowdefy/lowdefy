@@ -34,7 +34,7 @@ Files in your app's `public/` directory (favicon, icons, images, `manifest.webma
 
 ###### Secrets and environment variables
 
-Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Use `AUTH_SECRET` (and `AUTH_URL` for OAuth) for authentication. Different secrets can be set for production and preview deployments.
+Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](#deployment-environments)) or `BETTER_AUTH_URL`. Different secrets can be set for production and preview deployments.
 
 ###### Function settings
 
@@ -80,24 +80,38 @@ Each schedule becomes a cron job pointing at `/api/cron/<endpointId>`. When it f
 - **Plan limits:** Vercel **Hobby** only allows daily crons (a sub-daily expression fails the deployment); **Pro**/**Enterprise** allow per-minute. Up to 100 cron jobs per project.
 - **Idempotency:** Vercel does not retry failed runs and delivery is best-effort (a run can be missed or delivered more than once). Design scheduled routines to be idempotent.
 
-###### Crons for staging and other environments
+###### Deployment environments
 
-Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Declare your environments under `config.cron` and Lowdefy registers every environment's schedules on production; when one for another environment fires, production forwards it to that environment's own `/api/cron/<endpointId>` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
+Declare the app's deployment environments once under `config.environments`, and set the `LOWDEFY_ENVIRONMENT` Environment Variable on each Vercel environment to its name (for example `prod` on Production and `staging` on the staging branch's environment). The build reads it and the current environment supplies the defaults for everything environment-specific, so none of them needs its own variable:
 
 ```yaml
 config:
-  cron:
-    environments:
-      production: {} # no url: the deployment Vercel fires crons on
-      staging:
-        url: https://staging.example.com
+  environments:
+    prod:
+      url: https://app.example.com
+    staging:
+      url: https://staging.example.com
+      cron:
         secret: STAGING_CRON_SECRET
+      email:
+        filter:
+          replaceAddress: team+staging@example.com
 ```
 
-- **One host environment:** exactly one environment has no `url` — the deployment whose crons Vercel fires. Every other environment needs its `url` (deployment origin) and a `secret`: the Lowdefy secret name holding that environment's own `CRON_SECRET`. Set `enabled: false` on an environment to register no crons for it.
+- **`url`** is the default for the auth canonical URL (`BETTER_AUTH_URL` — auth links, the CSRF origin allowlist and the MCP resource URIs), for the links and logo in notification emails (the `RenderNotification` `serverUrl`), and it is where crons are forwarded to. An explicit `BETTER_AUTH_URL` or `serverUrl` still wins.
+- **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` — keep non-production environments from emailing real users in one place.
+- **Sentry** reports under the environment name unless `logger.sentry.environment` is set.
+- A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
+
+###### Crons for staging and other environments
+
+Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
+
+- **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the Lowdefy secret name holding that environment's own `CRON_SECRET`. Set `cron.enabled: false` on an environment to register no crons for it.
 - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
-- **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the host environment and `/api/cron-forward/<environment>/<endpointId>` for the others; all of them count toward the project's cron limit.
+- **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the current environment and `/api/cron-forward/<environment>/<endpointId>` for the forwarded ones; all of them count toward the project's cron limit.
 - **Plan limits still apply per project:** a per-minute staging schedule needs the same Pro plan as a per-minute production one.
+- **Upgrading from 6.0:** the `config.cron.environments` shape still builds, with a deprecation warning. Move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT`.
 
 ###### Background work: async endpoints and detached calls
 

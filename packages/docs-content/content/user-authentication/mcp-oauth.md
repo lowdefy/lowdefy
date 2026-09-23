@@ -17,7 +17,7 @@ This is the Linear model — one link, the workspace is a property of the author
 | `GET /.well-known/oauth-authorization-server/api/auth` | RFC 8414 authorization-server metadata, re-exposed at the path a client derives from the issuer. |
 | `/api/auth/*` | The authorization server itself — authorize, token, registration, and the OAuth endpoints the consent and picker pages call. |
 
-The `/.well-known` documents derive their URIs from the pinned `BETTER_AUTH_URL`, never from a request `Host` header, so they are the same for every caller. They mount **only when `auth.oauthProvider` is configured** — an app that is not an authorization server has nothing to discover, and its MCP tools are all public (see the rule below).
+The `/.well-known` documents derive their URIs from the pinned canonical URL (`BETTER_AUTH_URL`, else the current environment's `url`), never from a request `Host` header, so they are the same for every caller. They mount **only when `auth.oauthProvider` is configured** — an app that is not an authorization server has nothing to discover, and its MCP tools are all public (see the rule below).
 
 ## Turning the app into an authorization server
 

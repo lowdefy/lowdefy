@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-import getCronEnvironmentNames from '../utils/getCronEnvironmentNames.js';
+import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 
 // Environment names become a path segment (/api/cron-forward/<environment>/<endpointId>).
 const environmentNamePattern = /^[A-Za-z0-9\-_]+$/;
@@ -97,7 +97,7 @@ function validateCronConfig({ components }) {
       configKey,
     });
   }
-  const names = getCronEnvironmentNames(cron.environments);
+  const names = getEnvironmentNames(cron.environments);
   if (names.length === 0) {
     throw new ConfigError('lowdefy.config.cron.environments declares no environments.', {
       configKey,
