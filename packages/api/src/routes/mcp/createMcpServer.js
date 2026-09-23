@@ -20,6 +20,7 @@ import { AuthenticationError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 import callEndpoint from '../endpoints/callEndpoint.js';
+import createWireProjection from '../../response/createWireProjection.js';
 import isUnauthenticatedHuman from '../endpoints/isUnauthenticatedHuman.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
@@ -98,8 +99,22 @@ async function createMcpServer({ context }) {
         });
         if (!success) {
           const deserialized = serializer.deserialize(error);
+          let text = deserialized?.message ?? 'Endpoint failed.';
+          // The dev MCP route serves a coding agent, which is a dev tool: it gets the real
+          // message and the config location so it can go straight to the YAML. A prod MCP
+          // client is an end-user reader and keeps the wire message.
+          if (context.mode === 'dev' && !type.isNone(error?.devError)) {
+            const devError = serializer.deserialize(error.devError);
+            text = devError.message;
+            if (!type.isNone(devError.source)) {
+              text = `${text} (at ${devError.source})`;
+            }
+            if (!type.isNone(devError.hint)) {
+              text = `${text} Hint: ${devError.hint}`;
+            }
+          }
           return {
-            content: [{ type: 'text', text: deserialized?.message ?? 'Endpoint failed.' }],
+            content: [{ type: 'text', text }],
             isError: true,
           };
         }
@@ -125,8 +140,12 @@ async function createMcpServer({ context }) {
       } else {
         context.logger.error(error);
       }
+      // This error never went through an endpoint result, so it has not been projected yet.
+      // The projection keeps an AuthenticationError's message.
+      const text =
+        context.mode === 'dev' ? error.message : createWireProjection(context)(error).message;
       return {
-        content: [{ type: 'text', text: error.message }],
+        content: [{ type: 'text', text }],
         isError: true,
       };
     }
