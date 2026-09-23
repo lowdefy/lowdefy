@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import http from 'http';
+
+import { RequestError } from '@lowdefy/errors';
+
 import AxiosHttp from './AxiosHttp.js';
 
 const { checkRead, checkWrite } = AxiosHttp.meta;
@@ -115,6 +119,43 @@ test('axios error', async () => {
   await expect(AxiosHttp({ request, connection })).rejects.toThrow(
     'Http response "404: Not Found".'
   );
+});
+
+describe('non-2xx response', () => {
+  let server;
+  let url;
+
+  beforeAll(async () => {
+    server = http.createServer((req, res) => {
+      res.statusCode = 404;
+      res.end('Not Found');
+    });
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    url = `http://127.0.0.1:${server.address().port}/missing`;
+  });
+
+  afterAll(async () => {
+    await new Promise((resolve) => server.close(resolve));
+  });
+
+  test('a 404 upstream throws an Error with statusCode 404', async () => {
+    const error = await AxiosHttp({ request: { url }, connection: {} }).catch((e) => e);
+    expect(error.message).toBe('Http response "404: Not Found".');
+    expect(error.statusCode).toBe(404);
+    expect(error.cause.response.status).toBe(404);
+  });
+
+  test('a RequestError wrapping a 404 upstream error reports statusCode 404', async () => {
+    const error = await AxiosHttp({ request: { url }, connection: {} }).catch((e) => e);
+    const requestError = new RequestError(error.message, {
+      cause: error,
+      typeName: 'AxiosHttp',
+      received: { url },
+      location: 'api/request',
+      configKey: 'key',
+    });
+    expect(requestError.statusCode).toBe(404);
+  });
 });
 
 // TODO: postman response has changed. Improve tests.

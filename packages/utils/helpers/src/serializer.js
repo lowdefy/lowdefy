@@ -299,4 +299,6 @@ const copy = (json, options = {}) => {
 };
 
 const serializer = { copy, serialize, serializeToString, deserialize, deserializeFromString };
+
+export { lowdefyErrorTypes };
 export default serializer;

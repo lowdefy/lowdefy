@@ -17,13 +17,14 @@
 import {
   ConfigError,
   LowdefyInternalError,
+  lowdefyErrorNames,
   OperatorError,
   ServiceError,
   UserError,
 } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
-import serializer from './serializer.js';
+import serializer, { lowdefyErrorTypes } from './serializer.js';
 
 test('serialize convert object js date to ~d', () => {
   let object = {
@@ -1417,4 +1418,16 @@ test('projectError is applied to typed Lowdefy errors and the class is preserved
   expect(result.configKey).toBe('key-1');
   expect(result.secret).toBeUndefined();
   expect(result.stack).toBeUndefined();
+});
+
+test('lowdefyErrorTypes revives every Lowdefy error name except the auth refusals', () => {
+  // Auth refusals are answered directly by the server error handlers and never
+  // need their class back after a round trip, so the serializer does not revive them.
+  const notRevived = [
+    'AuthenticationError',
+    'AuthorizationError',
+    'TwoFactorEnrolmentRequiredError',
+  ];
+  const revivedNames = [...lowdefyErrorNames].filter((name) => !notRevived.includes(name));
+  expect(Object.keys(lowdefyErrorTypes).sort()).toEqual(revivedNames.sort());
 });

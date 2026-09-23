@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@lowdefy/ajv": "6.0.0",
+    "@lowdefy/errors": "6.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",
     "@swc/jest": "0.2.39",
