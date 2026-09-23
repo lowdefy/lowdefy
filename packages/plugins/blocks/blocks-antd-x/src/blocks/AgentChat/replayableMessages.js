@@ -19,16 +19,18 @@ import { type } from '@lowdefy/helpers';
 // A reply cut off mid-stream leaves its tool call with no result, and UIMessage validation
 // rejects the whole history for one such part: every later send fails, and a history stored
 // that way fails on every load. Approval states stay; a pending approval is answerable on resume.
+// A client-side tool the block is still running is in the same state, so its call id is in
+// liveToolCallIds and the part is kept: its output is on the way.
 const UNANSWERED = new Set(['input-streaming', 'input-available']);
 
-function isUnansweredToolPart(part) {
+function isDeadToolPart({ part, liveToolCallIds }) {
   const partType = part?.type;
   const isTool =
     partType === 'dynamic-tool' || (type.isString(partType) && partType.startsWith('tool-'));
-  return isTool && UNANSWERED.has(part.state);
+  return isTool && UNANSWERED.has(part.state) && !liveToolCallIds.has(part.toolCallId);
 }
 
-function replayableMessages(messages) {
+function replayableMessages({ messages, liveToolCallIds = new Set() }) {
   const list = messages ?? [];
   let changed = false;
   const result = [];
@@ -37,7 +39,7 @@ function replayableMessages(messages) {
       result.push(message);
       continue;
     }
-    const parts = message.parts.filter((part) => !isUnansweredToolPart(part));
+    const parts = message.parts.filter((part) => !isDeadToolPart({ part, liveToolCallIds }));
     // Only a step marker left is the empty shell onError already drops.
     if (!parts.some((part) => part?.type !== 'step-start')) {
       changed = true;
