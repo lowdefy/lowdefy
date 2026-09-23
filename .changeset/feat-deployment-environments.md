@@ -35,6 +35,8 @@ The current environment supplies the defaults:
 - **`email.filter`** — applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter`; an unset (`null`) connection filter falls back to it, and the new `filter: false` turns filtering off for a connection, the environment's too (for mail such as invites that must reach the real recipient). Connection resolvers now receive the current environment as `environment`. Auth emails are not filtered.
 - **Logs and analytics** — every server log line carries `environment`; `PostHogInit` registers it as the `environment` super property on every PostHog event (actions now receive the read-only app metadata as `lowdefyApp`); the app metadata gains `environment` (`_app: environment`); `logger.sentry.environment` defaults to the environment name.
 
+- **Switches** — `cron.enabled`, `email.enabled` and `sentry.enabled` set to `false` turn that feature off in one environment: no crons registered or forwarded, no email sent by `SMTPMailSend`/`SendGridMailSend` (each message reports `disabled: true`; auth emails still send), no Sentry on server or client. The switched-off features are listed in the app metadata as `disabled` (`_app: disabled`). Logging has no switch.
+
 `config.environment` can name the current environment in config instead of `LOWDEFY_ENVIRONMENT`. With environments declared, the current environment must be one of them.
 
 **Replaces `config.cron.environments` (6.0):** a build with `config.cron` fails with the migration — move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.

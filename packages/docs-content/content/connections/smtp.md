@@ -75,7 +75,7 @@ The connection's `filter` is applied to every message before it is sent — from
 - `allowlist: string[]`: A list of domains. Only recipients whose domain is in the list are sent to; others are dropped. When every `to` recipient is filtered out, the message is not sent.
 - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
 
-When the connection sets no `filter` (or it resolves to `null`), the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead, so the per-environment rule lives in one place for every mail connection. A connection's own `filter` always wins, and `filter: false` turns filtering off entirely — the environment's too — for mail that must reach its real recipient in every environment (an invite, say). Auth emails are never filtered.
+When the connection sets no `filter` (or it resolves to `null`), the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead, so the per-environment rule lives in one place for every mail connection. A connection's own `filter` always wins, and `filter: false` turns filtering off entirely — the environment's too — for mail that must reach its real recipient in every environment (an invite, say). Auth emails are never filtered. With `email.enabled: false` on the current environment, mail requests send nothing and report each message as `{ disabled: true }`.
 
 ```yaml
 config:
