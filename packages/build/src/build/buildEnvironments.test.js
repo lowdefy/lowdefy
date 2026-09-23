@@ -135,57 +135,22 @@ test('buildEnvironments throws when an email filter allowlist is not an array of
   );
 });
 
-test('buildEnvironments throws when both config.cron and config.environments are set', () => {
+test('buildEnvironments fails the build on the replaced config.cron', () => {
   const { context } = makeContext();
   const components = {
-    config: { environments, cron: { environments: { prod: {} } } },
+    config: { cron: { environments: { production: {}, staging: { url: 'https://s.co' } } } },
   };
   expect(() => buildEnvironments({ components, context })).toThrow(
-    'App "config.cron.environments" and "config.environments" cannot both be set.'
+    'App "config.cron" is replaced by "config.environments".'
   );
 });
 
-test('buildEnvironments converts the deprecated config.cron.environments and keeps its host current', () => {
-  const { context, warn } = makeContext();
-  const components = {
-    config: {
-      cron: {
-        environments: {
-          production: {},
-          staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
-          develop: {
-            url: 'https://develop.example.com',
-            secret: 'DEVELOP_CRON_SECRET',
-            enabled: false,
-          },
-        },
-      },
-    },
-  };
+test('buildEnvironments records the current environment in the app metadata', () => {
+  process.env.LOWDEFY_ENVIRONMENT = 'staging';
+  const { context } = makeContext();
+  const components = { config: { environments }, appMeta: { name: 'app' } };
   buildEnvironments({ components, context });
-  expect(components.config).toEqual({
-    environment: 'production',
-    environments: {
-      production: {},
-      staging: { url: 'https://staging.example.com', cron: { secret: 'STAGING_CRON_SECRET' } },
-      develop: {
-        url: 'https://develop.example.com',
-        cron: { secret: 'DEVELOP_CRON_SECRET', enabled: false },
-      },
-    },
-  });
-  expect(warn).toHaveBeenCalledTimes(1);
-  expect(warn.mock.calls[0][0]).toMatch('"config.cron.environments" is deprecated');
-});
-
-test('buildEnvironments still validates the deprecated config.cron.environments', () => {
-  const { context } = makeContext();
-  const components = {
-    config: { cron: { environments: { production: {}, staging: {} } } },
-  };
-  expect(() => buildEnvironments({ components, context })).toThrow(
-    'Exactly one environment in lowdefy.config.cron.environments must have no url'
-  );
+  expect(components.appMeta).toEqual({ name: 'app', environment: 'staging' });
 });
 
 test('buildEnvironments defaults the Sentry environment to the current environment', () => {

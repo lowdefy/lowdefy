@@ -2232,68 +2232,6 @@ export default {
             },
           },
         },
-        cron: {
-          type: 'object',
-          additionalProperties: false,
-          description:
-            'Deprecated: declare the environments under "config.environments" instead. Deployment environments for scheduled endpoints, where the one environment without a "url" is the deployment Vercel fires crons on.',
-          required: ['environments'],
-          errorMessage: {
-            type: 'App "config.cron" should be an object.',
-            required: {
-              environments: 'App "config.cron" should have required property "environments".',
-            },
-          },
-          properties: {
-            '~k': {},
-            '~r': {},
-            '~l': {},
-            environments: {
-              type: 'object',
-              description:
-                'Environments keyed by name. Exactly one environment has no "url": the deployment whose crons Vercel fires. Every other environment needs a "url" (its deployment origin) and a "secret" (the Lowdefy secret name holding that environment\'s CRON_SECRET, set on the production deployment).',
-              additionalProperties: {
-                type: 'object',
-                additionalProperties: false,
-                properties: {
-                  '~k': {},
-                  '~r': {},
-                  '~l': {},
-                  url: {
-                    type: 'string',
-                    description:
-                      'The environment deployment origin, e.g. https://staging.example.com.',
-                    errorMessage: {
-                      type: 'App "config.cron.environments.<name>.url" should be a string.',
-                    },
-                  },
-                  secret: {
-                    type: 'string',
-                    description:
-                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET.",
-                    errorMessage: {
-                      type: 'App "config.cron.environments.<name>.secret" should be a string.',
-                    },
-                  },
-                  enabled: {
-                    type: 'boolean',
-                    description:
-                      'Set false to register no cron jobs for this environment. Defaults to true.',
-                    errorMessage: {
-                      type: 'App "config.cron.environments.<name>.enabled" should be a boolean.',
-                    },
-                  },
-                },
-                errorMessage: {
-                  type: 'App "config.cron.environments.<name>" should be an object.',
-                },
-              },
-              errorMessage: {
-                type: 'App "config.cron.environments" should be an object.',
-              },
-            },
-          },
-        },
         environment: {
           type: 'string',
           description:
