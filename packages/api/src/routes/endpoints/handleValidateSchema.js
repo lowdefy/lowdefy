@@ -15,6 +15,7 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { UserError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
@@ -49,7 +50,9 @@ async function handleValidateSchema(context, routineContext, { step }) {
   });
 
   if (!valid && throwOnInvalid) {
-    const error = new Error(buildErrorMessage(result.errors, step.stepId), {
+    // A UserError, so the caller sees which field failed: the message is built from the schema
+    // path and rule, never the data, and every other server error reaches the client generic.
+    const error = new UserError(buildErrorMessage(result.errors, step.stepId), {
       cause: result.errors,
     });
     // Log under `err` — see controlThrow: only the `err` key runs the pino error
