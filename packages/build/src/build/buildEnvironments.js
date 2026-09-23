@@ -18,7 +18,6 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import getEnvironmentNames from '../utils/getEnvironmentNames.js';
-import validateCronConfig from './validateCronConfig.js';
 
 // Environment names become a path segment (/api/cron-forward/<environment>/<endpointId>).
 const environmentNamePattern = /^[A-Za-z0-9\-_]+$/;
@@ -129,27 +128,6 @@ function validateEnvironment({ name, environment, configKey }) {
   }
 }
 
-// The 6.0 config.cron.environments shape: { url, secret, enabled } per environment, where the one
-// environment without a url is the deployment Vercel fires crons on. Mapped onto the
-// config.environments shape so the rest of the build and the runtime read one shape.
-function fromCronEnvironments(cronEnvironments) {
-  const environments = {};
-  getEnvironmentNames(cronEnvironments).forEach((name) => {
-    const { url, secret, enabled } = cronEnvironments[name];
-    const environment = {};
-    if (!type.isUndefined(cronEnvironments[name]['~k'])) {
-      environment['~k'] = cronEnvironments[name]['~k'];
-    }
-    if (!type.isUndefined(url)) environment.url = url;
-    const cron = {};
-    if (!type.isUndefined(secret)) cron.secret = secret;
-    if (!type.isUndefined(enabled)) cron.enabled = enabled;
-    if (Object.keys(cron).length > 0) environment.cron = cron;
-    environments[name] = environment;
-  });
-  return environments;
-}
-
 function getCurrentEnvironmentName({ config }) {
   if (!type.isNone(config.environment)) {
     if (!type.isString(config.environment) || config.environment === '') {
@@ -165,43 +143,24 @@ function getCurrentEnvironmentName({ config }) {
 }
 
 // Resolves the deployment environments once for the whole build. After this step:
-//   - config.environments holds every declared environment in one shape ({ url, cron, email }),
-//     whether it was authored as config.environments or as the legacy config.cron.environments;
+//   - config.environments holds every declared environment ({ url, cron, email }), validated;
 //   - config.environment names the environment this build is for (config.environment, else the
-//     LOWDEFY_ENVIRONMENT variable), and must be declared when environments are;
-//   - config.cron is gone.
+//     LOWDEFY_ENVIRONMENT variable), and must be declared when environments are.
 // Everything environment-specific (cron registration and forwarding, notification links, the auth
 // base URL, the email delivery filter, the Sentry environment) reads the current environment from
 // there instead of from its own environment variable.
 function buildEnvironments({ components, context }) {
   const config = components.config;
   const configKey = config['~k'];
-  let current = getCurrentEnvironmentName({ config });
+  const current = getCurrentEnvironmentName({ config });
 
-  const legacy = config.cron;
-  if (!type.isUndefined(legacy)) {
-    if (!type.isUndefined(config.environments)) {
-      throw new ConfigError(
-        'App "config.cron.environments" and "config.environments" cannot both be set. Move the environments to "config.environments".',
-        { configKey: legacy?.['~k'] ?? configKey }
-      );
-    }
-    validateCronConfig({ components });
-    config.environments = fromCronEnvironments(legacy.environments);
-    context.handleWarning(
-      new ConfigWarning(
-        'App "config.cron.environments" is deprecated. Declare the environments under "config.environments" instead: move each "secret" to "cron.secret" and "enabled" to "cron.enabled", give every environment its "url", and set LOWDEFY_ENVIRONMENT on each deployment.',
-        { configKey: legacy['~k'] ?? configKey }
-      )
+  // config.cron.environments (6.0) is replaced by config.environments. Fail with the migration
+  // rather than run two shapes side by side.
+  if (!type.isUndefined(config.cron)) {
+    throw new ConfigError(
+      'App "config.cron" is replaced by "config.environments". Declare the deployment environments under "config.environments": give every environment its "url", move each "secret" to "cron.secret" and "enabled" to "cron.enabled", and set LOWDEFY_ENVIRONMENT on each deployment.',
+      { configKey: config.cron?.['~k'] ?? configKey }
     );
-    // The 6.0 shape fixed the environment Vercel fires crons on as the one without a url, whatever
-    // deployment ran the build — keep that when no current environment is set.
-    if (type.isUndefined(current)) {
-      current = getEnvironmentNames(config.environments).find((name) =>
-        type.isUndefined(config.environments[name].url)
-      );
-    }
-    delete config.cron;
   }
 
   const environments = config.environments;
@@ -244,6 +203,11 @@ function buildEnvironments({ components, context }) {
     delete config.environment;
   } else {
     config.environment = current;
+    // App metadata is the deploy identity the server stamps on every log line and the client reads
+    // with _app (analytics super properties), so the environment travels with it.
+    if (type.isObject(components.appMeta)) {
+      components.appMeta.environment = current;
+    }
   }
 
   // Sentry reports under the environment name unless the app names one itself. logger.sentry is

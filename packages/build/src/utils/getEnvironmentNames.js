@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// The declared environment names in config.environments (or the legacy config.cron.environments).
+// The declared environment names in config.environments.
 // Build key markers (~k, ~r, ~l) live on the same object as the environments, so they are skipped
 // rather than treated as names.
 const markerKeys = new Set(['~k', '~r', '~l']);

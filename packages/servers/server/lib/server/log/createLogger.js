@@ -31,6 +31,10 @@ if (!type.isNone(appMeta.version)) {
 if (!type.isNone(appMeta.gitSha)) {
   base.git_sha = appMeta.gitSha;
 }
+// The deployment environment (LOWDEFY_ENVIRONMENT), so one log drain can hold every environment.
+if (!type.isNone(appMeta.environment)) {
+  base.environment = appMeta.environment;
+}
 
 const logger = createNodeLogger({
   name: 'lowdefy_server',

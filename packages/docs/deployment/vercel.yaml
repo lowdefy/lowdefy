@@ -124,7 +124,7 @@ _ref:
 
             - **`url`** is the default for the auth canonical URL (`BETTER_AUTH_URL` — auth links, the CSRF origin allowlist and the MCP resource URIs), for the links and logo in notification emails (the `RenderNotification` `serverUrl`), and it is where crons are forwarded to. An explicit `BETTER_AUTH_URL` or `serverUrl` still wins.
             - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` (`false` turns it off for that connection) — keep non-production environments from emailing real users in one place.
-            - **Sentry** reports under the environment name unless `logger.sentry.environment` is set.
+            - **Logs and analytics:** every server log line carries `environment`, `_app: environment` reads the name in config, and Sentry reports under it unless `logger.sentry.environment` is set.
             - A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
 
             ###### Crons for staging and other environments
@@ -135,7 +135,7 @@ _ref:
             - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
             - **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the current environment and `/api/cron-forward/<environment>/<endpointId>` for the forwarded ones; all of them count toward the project's cron limit.
             - **Plan limits still apply per project:** a per-minute staging schedule needs the same Pro plan as a per-minute production one.
-            - **Upgrading from 6.0:** the `config.cron.environments` shape still builds, with a deprecation warning. Move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT`.
+            - **Upgrading from 6.0:** `config.cron.environments` is replaced by `config.environments`, and a build that still has `config.cron` fails with the migration: move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.
 
             ###### Background work: async endpoints and detached calls
 
