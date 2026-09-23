@@ -16,13 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
+import resolveMailFilter from '../resolveMailFilter.js';
 import send from '../send.js';
 import schema from './schema.js';
 
 async function SendGridMailSend({ request, connection, environment }) {
-  // The current environment's delivery filter (config.environments.<env>.email.filter) applies
-  // unless the connection sets its own.
-  const filter = connection.filter ?? environment?.email?.filter;
+  const filter = resolveMailFilter({ connection, environment });
   const messages = type.isArray(request) ? request : [request];
   // Send per message so the connection mail filter is enforced in one place.
   const results = [];
