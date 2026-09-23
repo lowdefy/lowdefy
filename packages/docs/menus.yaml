@@ -123,6 +123,11 @@
           pageId: dynamic-page-content
           properties:
             title: Dynamic Page Content
+        - id: generating-reports
+          type: MenuLink
+          pageId: generating-reports
+          properties:
+            title: Reports
         - id: ai-agent-docs
           type: MenuLink
           pageId: ai-agent-docs
@@ -900,6 +905,9 @@
         - id: Redis
           type: MenuLink
           pageId: Redis
+        - id: Reports
+          type: MenuLink
+          pageId: Reports
         - id: SendGridMail
           type: MenuLink
           pageId: SendGridMail
@@ -937,6 +945,9 @@
         - id: DownloadCsv
           type: MenuLink
           pageId: DownloadCsv
+        - id: DownloadFile
+          type: MenuLink
+          pageId: DownloadFile
         - id: Fetch
           type: MenuLink
           pageId: Fetch

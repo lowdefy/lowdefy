@@ -37,6 +37,7 @@ import notifications, {
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
+import reportsRuntime from '../../build/plugins/reportsRuntime.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
 import websockets from '../../build/plugins/websockets.js';
 
@@ -71,6 +72,13 @@ function apiContext() {
       rid,
       agents,
       appMeta,
+      // The build gates this artifact on the reports plugin; it is imported
+      // statically so serverless file tracing follows it into the deployed
+      // function, where a runtime-resolved import would leave it out.
+      reportsRuntime,
+      // The build's copy of the app's public/ folder, read for relative report
+      // image paths.
+      publicDirectory: path.join(process.cwd(), 'public'),
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       connections,

@@ -1282,6 +1282,59 @@ export default {
             type: 'Block "areas" should be an object.',
           },
         },
+        report: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            title: {},
+            header: {},
+            footer: {},
+            size: {
+              type: 'string',
+              enum: ['A4', 'letter'],
+              errorMessage: {
+                type: 'Block "report.size" should be a string.',
+                enum: 'Block "report.size" should be one of "A4" or "letter".',
+              },
+            },
+            orientation: {
+              type: 'string',
+              enum: ['portrait', 'landscape'],
+              errorMessage: {
+                type: 'Block "report.orientation" should be a string.',
+                enum: 'Block "report.orientation" should be one of "portrait" or "landscape".',
+              },
+            },
+            exclude: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.exclude" should be a boolean.',
+              },
+            },
+            pageBreakBefore: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Block "report.pageBreakBefore" should be a boolean.',
+              },
+            },
+            sheetName: {
+              type: 'string',
+              pattern: '^[^\\[\\]:*?/\\\\]+$',
+              maxLength: 31,
+              errorMessage: {
+                type: 'Block "report.sheetName" should be a string.',
+                pattern:
+                  'Block "report.sheetName" may not contain any of the characters [ ] : * ? / \\.',
+                maxLength: 'Block "report.sheetName" may not be longer than 31 characters.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Block "report" should be an object.',
+            additionalProperties:
+              'Block "report" has an invalid property. Valid keys are "title", "header", "footer", "size", "orientation", "exclude", "pageBreakBefore" and "sheetName".',
+          },
+        },
       },
       errorMessage: {
         type: 'Block should be an object.',

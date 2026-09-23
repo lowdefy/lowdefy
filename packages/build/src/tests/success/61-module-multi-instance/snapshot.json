@@ -7538,6 +7538,7 @@
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "import { _secret as _secret } from '@lowdefy/operators-js/operators/server';\nexport default {\n  _secret,\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/reportsRuntime.js": "export default { blocksStatic: {}, clientJsMap: {}, clientOperators: {}, icons: {} };\n",
   "plugins/websockets.js": "export default {\n  };",
   "refMap.json": {
     "1": {

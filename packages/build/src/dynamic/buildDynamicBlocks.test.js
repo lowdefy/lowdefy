@@ -214,3 +214,24 @@ test('buildDynamicBlocks throws when a block is missing a type', () => {
     'Block type is not defined at "wrapper" on page "page1".'
   );
 });
+
+test('buildDynamicBlocks builds a block carrying report options without throwing', () => {
+  const blocks = [
+    {
+      id: 'grid',
+      type: 'Html',
+      report: { sheetName: 'Sales', exclude: false },
+    },
+  ];
+  const result = buildDynamicBlocks({ ...defaultArgs, blocks });
+  expect(result.blocks[0].report).toEqual({ sheetName: 'Sales', exclude: false });
+  expect(result.warnings).toEqual([]);
+});
+
+test('buildDynamicBlocks warns when dynamic content carries page-level report options', () => {
+  const blocks = [{ id: 'grid', type: 'Html', report: { title: 'Sales' } }];
+  const result = buildDynamicBlocks({ ...defaultArgs, blocks });
+  expect(result.warnings.map((warning) => warning.message)).toEqual([
+    'Report option(s) "title" on block "grid" on page "page1" apply to the page block and are ignored on a block inside the page.',
+  ]);
+});

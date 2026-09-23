@@ -185,6 +185,10 @@ Processes page definitions:
 
 Each block goes through these build-time transforms in `buildBlock.js`:
 
+#### `validateReport` (the `report` block key)
+
+Every block may carry `report:`. The schema types the keys; `validateReport` covers what the schema cannot: page-level keys (`title`, `header`, `footer`, `size`, `orientation`) on a nested block and block-level keys (`exclude`, `pageBreakBefore`, `sheetName`) on the page root produce warnings, Excel sheet-name rules the pattern misses (no leading/trailing apostrophe, not `History`) are errors, and `sheetNameRefs` / `reportRefs` are collected on the page context so `buildPage` can warn once per page on duplicate sheet names and on a `report` key in an app that has not declared `@lowdefy/plugin-reports`. `createPageContext` is the one factory both `buildPage` and the runtime `buildDynamicBlocks` use, so every ref array exists in both contexts.
+
 #### `moveAreasToSlots` (deprecation transform)
 
 At build time, if a block has `areas`, it is copied to `slots` and the `areas` key is deleted. If both `areas` and `slots` are present, the build throws a `ConfigError`. A `ConfigWarning` is emitted when `areas` is encountered, advising migration to `slots`.
@@ -234,9 +238,16 @@ Build artifacts go to `.lowdefy/build/`:
 ├── plugins/           # Plugin import manifests + schema maps
 │   ├── actionSchemas.json   # Action param schemas (for runtime validation)
 │   ├── blockSchemas.json    # Block property schemas (for runtime validation)
-│   └── operatorSchemas.json # Operator param schemas (for runtime validation)
+│   ├── operatorSchemas.json # Operator param schemas (for runtime validation)
+│   ├── reportsRuntime.js    # Always written; imports the report renderers, icons and client
+│   │                        # operators only when @lowdefy/plugin-reports is declared
+│   └── blocksStatic.js      # Only when the plugin is declared: `{package}/static` renderer imports
+├── reports/
+│   └── styles.css     # Only when the plugin is declared: compiled Tailwind + public/styles.css
 └── js/                # Compiled JavaScript functions
 ```
+
+The three reports artifacts are gated on `isReportsPluginDeclared` so an app without the plugin never imports a renderer, `echarts`, or the client operator map server-side. `reportsRuntime.js` exists for every app so the servers' static import resolves; its content is what the gate controls.
 
 ### Error Tracing Artifacts
 
