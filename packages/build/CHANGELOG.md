@@ -1,5 +1,129 @@
 # Change Log
 
+## 5.6.0
+
+### Patch Changes
+
+- 3ead269: feat(helpers): Reject prototype-pollution key names in dot paths and key maps.
+
+  `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`,
+  `__lookupGetter__` and `__lookupSetter__` are no longer accepted as path segments or as keys
+  in maps built from user-supplied values.
+
+  Previously these names were silently _filtered_ on write, which was worse than rejecting
+  them: `SetState: { 'a.__proto__.b': 1 }` quietly wrote to `a.b` instead — a different
+  location than the one you asked for. Reads could also walk up the prototype chain.
+
+  What you will see now:
+
+  - `:set_state` and the `SetState` action raise a config error naming the offending key and
+    pointing at the line in your YAML.
+  - Data-reading operators (`_state`, `_get`, `_user`, `_payload`, ...) return their default
+    instead of a value.
+  - A module entry id, an agent or endpoint id, or a `LOWDEFY_SECRET_*` environment variable
+    using one of these names now fails at build or boot with a message naming it, instead of
+    silently vanishing.
+
+  Apps that do not use these names are unaffected. If you have a form field, state key, or API
+  response property named `constructor`, rename it.
+
+  Deep merges of configuration are hardened the same way, but skip reserved keys rather than
+  raising — a reserved name arriving inside a merged _value_ is dropped so a single poisoned
+  field can't abort an otherwise valid merge.
+
+  `@lowdefy/helpers` also now exports `isReserved(key)`, so plugin and connection authors can
+  test a key against this policy directly instead of catching a `ReservedKeyError`.
+
+- 9e19a21: fix: Anonymous calls to protected agents are rejected.
+
+  The `/api/agent` route ran agents without checking the session: on an app with `auth.api.protected: true`, a session-less caller could still execute any agent — tool calls failed endpoint auth, but the model call ran on the app's provider account. Agents now follow the `auth.api` config exactly like endpoints: `public`, `protected`, and `roles` patterns match agent ids, and unauthorized calls fail with the same error as an unknown agent id. Sub-agent invocations are authorized against the same session per call, matching how in-run endpoint tool calls are authorized.
+
+  Note for apps using wildcard patterns in `auth.api.public` or `auth.api.roles`: those patterns now also match agent ids.
+
+- 842d71c: fix(build): Reject reserved names as agent ids, locale codes and event shortcuts.
+
+  Each of these author-written identifiers later becomes a key in a plain object — the sub-agent graph
+  and agent registry, the i18n message catalogs and the client's shortcut map. A reserved name such as
+  `__proto__` or `constructor` resolved through `Object.prototype` instead of adding an entry, so the
+  config built clean and misbehaved later: a duplicate id went undetected, or the build crashed with an
+  unlocated internal error. None of these sites had a build-time shape check.
+
+  The build now rejects them where the identifier is first accepted, with a located `ConfigError` naming
+  the offending value. A shortcut like `Ctrl+__proto__` is still valid.
+
+  Apps using a reserved name for one of these identifiers will now fail the build. Rename the identifier.
+
+- 291b4cf: fix(build): Reject reserved names as page, request, connection, endpoint, step and block ids.
+
+  `validIdPattern` allowed letters and underscores, so `__proto__` and `constructor` passed as ids. The
+  engine keys plain-object registries on these ids, so a reserved id re-parented the registry instead of
+  adding an entry — a build-clean config that fails at runtime. `validateId` now rejects the
+  reserved names with a located `ConfigError`.
+
+  Block ids are dot-paths that nest state, so they don't go through `validateId` and are checked
+  separately, per dot-separated segment: `a.constructor.b` is rejected, while `a\.constructor` (an
+  escaped literal dot, a single segment named "a.constructor") still builds.
+
+  Apps using a reserved name as an id, or as a block id path segment, will now fail the build. Rename
+  the id.
+
+  `buildAuth` reaches page, endpoint and agent ids before `validateId` does, and keys plain-object role
+  maps on them, so a reserved id there read through `Object.prototype` — silently marking the entity
+  protected with `Object.prototype` as its roles, which then corrupted every plain object in the build.
+  Those ids are now gated where `buildAuth` first touches them. Collected build errors are deduplicated
+  on resolved source line plus message, so an id rejected by both gates reads as one error.
+
+- 3ead269: fix(helpers): Deep merges replace arrays instead of merging them index-by-index.
+
+  Wherever Lowdefy deep-merges configuration — block property defaults, `AxiosHttp` connection
+  and request config, theme tokens, i18n message catalogs — an array value is now treated as a
+  single value. A later array replaces an earlier one; it no longer merges element-by-element
+  at matching indices.
+
+  This is what most overrides already assumed, and it matches a plain object spread. Two
+  places where the old behaviour was visible:
+
+  - `RatingSlider`'s `CheckboxInput.options` — overriding it previously inherited the default
+    element's `label: 'N/A'`. It no longer does; specify the full option object.
+  - The layout blocks (`PageHeaderMenu`, `PageSiderMenu`, `PageSidebarLayout`, `MobileMenu`) —
+    if you set the same array (`selectedKeys`, `defaultOpenKeys`, `links`) on both `menu` and a
+    breakpoint variant such as `menuLg` or `menuMd`, the breakpoint value now replaces the base
+    value outright rather than overlaying it index-by-index.
+
+  Two smaller semantic changes come with this. A later `undefined` now replaces an earlier value
+  instead of being skipped — `mergeObjects([{ a: 1 }, { a: undefined }])` was `{ a: 1 }` and is now
+  `{ a: undefined }`, so a caller that means "no override" must omit the key rather than set it to
+  `undefined`. And a single-object merge no longer passes its input through: `mergeObjects([x]) === x`
+  was `true` and is now `false`, so memoise at the call site if a stable reference is needed across
+  renders. Both are reachable only from code that calls `mergeObjects` — plugin and connection authors
+  — not from YAML, which has no `undefined`; a config `null` merges as it always did.
+
+  Also fixed: merging no longer mutates its inputs. `AxiosHttp` previously wrote merged request
+  config back into the shared connection config, leaking values such as the HTTP agent between
+  requests.
+
+  `lodash.merge`, the last remaining lodash dependency in Lowdefy, has been removed.
+
+- Updated dependencies [3ead269]
+- Updated dependencies [79bbd84]
+- Updated dependencies [824f4be]
+- Updated dependencies [824f4be]
+- Updated dependencies [3ead269]
+- Updated dependencies [1a6223f]
+- Updated dependencies [6785e0e]
+- Updated dependencies [3ead269]
+  - @lowdefy/helpers@5.6.0
+  - @lowdefy/operators@5.6.0
+  - @lowdefy/ai-utils@5.6.0
+  - @lowdefy/node-utils@5.6.0
+  - @lowdefy/operators-js@5.6.0
+  - @lowdefy/nunjucks@5.6.0
+  - @lowdefy/blocks-basic@5.6.0
+  - @lowdefy/blocks-loaders@5.6.0
+  - @lowdefy/block-utils@5.6.0
+  - @lowdefy/ajv@5.6.0
+  - @lowdefy/errors@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

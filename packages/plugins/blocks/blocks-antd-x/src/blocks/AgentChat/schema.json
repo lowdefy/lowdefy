@@ -243,6 +243,11 @@
         "title": { "type": "string" }
       }
     },
+    "loading": {
+      "type": "boolean",
+      "default": false,
+      "description": "The app is still loading this conversation's transcript. While true, a skeleton replaces the message area, suggestions are hidden and the composer is disabled, so nothing can be sent into a conversation whose messages have not synced yet."
+    },
     "suggestions": {
       "type": "array",
       "items": {

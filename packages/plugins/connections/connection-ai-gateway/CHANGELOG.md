@@ -1,5 +1,12 @@
 # @lowdefy/connection-ai-gateway
 
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [3ead269]
+  - @lowdefy/ai-utils@5.6.0
+
 ## 5.5.1
 
 ### Patch Changes

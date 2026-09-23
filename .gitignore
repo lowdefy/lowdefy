@@ -22,6 +22,7 @@ docs/superpowers/
 _server/
 
 packages/servers/*/build/**
+packages/servers/*/.vercel/
 packages/servers/*/lowdefy-build/**
 packages/servers/*/public/**
 packages/servers/*/package.original.json
