@@ -47,6 +47,7 @@ const snapshotTypesMap = {
     Anchor: { package: '@lowdefy/blocks-basic' },
     Box: { package: '@lowdefy/blocks-basic' },
     Button: { package: '@lowdefy/blocks-basic' },
+    ClickableHtml: { package: '@lowdefy/blocks-basic' },
     DangerousHtml: { package: '@lowdefy/blocks-basic' },
     Dynamic: { package: '@lowdefy/blocks-basic' },
     Html: { package: '@lowdefy/blocks-basic' },
