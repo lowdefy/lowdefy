@@ -34,6 +34,7 @@ import { getFileCardType, getFileCardIcon } from './fileCardUtils.js';
 import DrawerWrapper from './DrawerWrapper.js';
 import createLowdefyChatTransport from './LowdefyChatTransport.js';
 import MessageList from './MessageList.js';
+import replayableMessages from './replayableMessages.js';
 import useAgentEvents, { collectExternalEventIds } from './useAgentEvents.js';
 import WelcomeScreen from './WelcomeScreen.js';
 
@@ -103,6 +104,11 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   );
 
   const bubbleListRef = useRef(null);
+  // Call ids of client-side tools still running: their parts sit unanswered until
+  // addToolOutput, exactly like a cut-off call, and must survive the dead-call filter.
+  const pendingToolCallsRef = useRef(new Set());
+  // Read by the filter from mount-time method closures, which would see a stale `status`.
+  const statusRef = useRef('ready');
 
   const {
     messages,
@@ -133,6 +139,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     async onToolCall({ toolCall }) {
       if (toolCall.dynamic) return;
       if (toolCall.toolName === 'update-page-state') {
+        pendingToolCallsRef.current.add(toolCall.toolCallId);
         try {
           const updates = toolCall.input?.updates ?? {};
           // Allowlist writes against the keys currently exposed via sharedState —
@@ -174,6 +181,8 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
             state: 'output-error',
             errorText: err.message,
           });
+        } finally {
+          pendingToolCallsRef.current.delete(toolCall.toolCallId);
         }
       }
     },
@@ -206,6 +215,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       });
     },
   });
+  statusRef.current = status;
 
   // The control is otherwise write-only: it reports a rating and immediately forgets it,
   // so the thumb un-highlights on the next render and the message looks unrated. This holds
@@ -272,24 +282,26 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
       effectiveConversationId !== prevExternalRef.current.conversationId
     ) {
       prevExternalRef.current = { count, lastId, conversationId: effectiveConversationId };
-      externalIdsRef.current = collectExternalEventIds(msgs);
-      setMessages(msgs);
+      const replayable = withoutDeadToolCalls(msgs);
+      externalIdsRef.current = collectExternalEventIds(replayable);
+      setMessages(replayable);
     }
   }, [externalMessages, effectiveConversationId, setMessages]);
 
   // Register CallMethod methods so YAML actions can control the chat.
   useEffect(() => {
     methods.registerMethod('regenerate', (args) => {
-      regenerate(args?.messageId ? { messageId: args.messageId } : undefined);
+      if (sendingRef.current) return;
+      regenerateReply(args?.messageId);
     });
     methods.registerMethod('setMessages', (args) => {
-      const msgs = args?.messages ?? [];
+      const msgs = withoutDeadToolCalls(args?.messages ?? []);
       externalIdsRef.current = collectExternalEventIds(msgs);
       setMessages(msgs);
     });
     methods.registerMethod('sendMessage', (args) => {
-      if (args?.text) {
-        sendMessage({
+      if (args?.text && !sendingRef.current) {
+        deliver({
           text: args.text,
           ...(args.files ? { files: args.files } : {}),
           ...(args.metadata ? { metadata: args.metadata } : {}),
@@ -367,6 +379,40 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   // be sent into a conversation whose history has not synced yet.
   const isLoading = loading === true;
 
+  // A send awaits onBeforeSend while useChat still reports `ready`, so every submit during a
+  // slow quota check used to send again. The ref refuses re-entry (state is a render behind a
+  // double click); the state is what the Sender shows. Every other way of sending (prompts,
+  // suggestions, edit, regenerate, the sendMessage and regenerate methods) checks the ref too,
+  // or it would go out first and the composer's message straight after it.
+  const sendingRef = useRef(false);
+  const [sending, setSending] = useState(false);
+
+  // An unanswered tool call left by a reply cut off this session fails validation for the
+  // whole history, as one in a loaded history does. A reply still streaming is not cut off,
+  // and a client-side tool still running will add its output.
+  function withoutDeadToolCalls(list) {
+    if (statusRef.current === 'streaming' || statusRef.current === 'submitted') return list;
+    return replayableMessages({ messages: list, liveToolCallIds: pendingToolCallsRef.current });
+  }
+
+  // Every send goes through here. useChat applies the setter synchronously, so sendMessage
+  // reads the filtered list.
+  function deliver(message) {
+    setMessages((prev) => withoutDeadToolCalls(prev));
+    sendMessage(message);
+  }
+
+  function regenerateReply(messageId) {
+    let kept = [];
+    setMessages((prev) => {
+      kept = withoutDeadToolCalls(prev);
+      return kept;
+    });
+    // The reply asked for may have held nothing but a dead call and be gone; regenerate
+    // from the end instead of letting useChat throw on the missing id.
+    regenerate(kept.some((m) => m.id === messageId) ? { messageId } : undefined);
+  }
+
   function fileToContentPart(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -441,8 +487,19 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }
 
   async function handleSend(text) {
+    if (sendingRef.current) return;
     if (!text.trim() && attachedFiles.length === 0) return;
+    sendingRef.current = true;
+    setSending(true);
+    try {
+      await submitMessage(text);
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
+    }
+  }
 
+  async function submitMessage(text) {
     const filesMeta = attachedFiles.map((file) => ({
       name: file.name,
       size: file.size,
@@ -486,10 +543,10 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
         }
       }
 
-      sendMessage({ parts });
+      deliver({ parts });
       setAttachedFiles([]);
     } else {
-      sendMessage({ text });
+      deliver({ text });
     }
     // Empty the composer here, after the sends and downstream of both the
     // onBeforeSend cancellation return and the upload await, so a send that was
@@ -508,7 +565,8 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }
 
   function handlePromptClick(prompt) {
-    sendMessage({ text: prompt.label });
+    if (sendingRef.current) return;
+    deliver({ text: prompt.label });
   }
 
   // A two-track welcome starter fills the composer instead of sending, so a
@@ -519,11 +577,12 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }
 
   function handleSuggestionClick(suggestion) {
+    if (sendingRef.current) return;
     methods.triggerEvent({
       name: 'onSuggestionClick',
       event: { suggestion },
     });
-    sendMessage({ text: suggestion.label });
+    deliver({ text: suggestion.label });
   }
 
   function handleSwitchChange(key, checked) {
@@ -544,6 +603,9 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }, [messages]);
 
   const activeSuggestions = agentSuggestions ?? suggestions;
+  // Hidden while a composer send awaits onBeforeSend as well as while a reply streams.
+  const showSuggestions =
+    !isEmpty && !isLoading && (activeSuggestions?.length ?? 0) > 0 && !isBusy && !sending;
 
   // A link in an answer was a plain anchor: a full browser navigation out of the
   // conversation, with no way for an app to do anything else with it. Default is only
@@ -593,14 +655,16 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
   }
 
   function handleRegenerate({ messageId }) {
+    if (sendingRef.current) return;
     methods.triggerEvent({
       name: 'onRegenerate',
       event: { messageId, messages },
     });
-    regenerate({ messageId });
+    regenerateReply(messageId);
   }
 
   function handleEditMessage({ messageId, originalContent, newContent }) {
+    if (sendingRef.current) return;
     methods.triggerEvent({
       name: 'onEditMessage',
       event: { messageId, originalContent, newContent, messages },
@@ -608,7 +672,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
     const messageIndex = messages.findIndex((m) => m.id === messageId);
     if (messageIndex >= 0) {
       setMessages((prev) => prev.slice(0, messageIndex));
-      sendMessage({ text: newContent });
+      deliver({ text: newContent });
     }
   }
 
@@ -669,7 +733,7 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           />
         )}
       </div>
-      {!isEmpty && !isLoading && activeSuggestions && activeSuggestions.length > 0 && !isBusy && (
+      {showSuggestions && (
         <div style={{ padding: '0 16px 8px' }}>
           <Prompts
             items={activeSuggestions.map((s, i) => ({
@@ -765,9 +829,12 @@ function AgentChat({ blockId, components: { Icon, Link }, events, methods, pageI
           onPasteFile={
             attachmentsConfig?.enabled ? (files) => addFiles(files, { pasted: true }) : undefined
           }
-          onCancel={handleStop}
-          loading={isBusy}
+          // Not during the onBeforeSend wait: nothing is streaming, so onStop would be false.
+          onCancel={isBusy ? handleStop : undefined}
+          loading={isBusy || sending}
           disabled={isLoading}
+          styles={sender?.styles}
+          classNames={sender?.classNames}
           prefix={
             attachmentsConfig?.enabled ? (
               <Button
