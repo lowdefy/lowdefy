@@ -73,6 +73,7 @@ export { default as _request_details } from './operators/client/request_details.
 export { default as _url_query } from './operators/client/url_query.schema.js';
 
 // Server operators
+export { default as _error } from './operators/server/error.schema.js';
 export { default as _hash } from './operators/server/hash.schema.js';
 export { default as _item } from './operators/server/item.schema.js';
 export { default as _payload } from './operators/server/payload.schema.js';

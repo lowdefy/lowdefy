@@ -26,7 +26,7 @@ import testContext from '../../../test/testContext.js';
 
 const operators = {
   ...operatorsServer,
-  _error: () => {
+  _throw_test: () => {
     throw new Error('Test error.');
   },
 };

@@ -77,7 +77,7 @@ const operators = {
   _payload,
   _secret,
   _user,
-  _error: () => {
+  _throw_test: () => {
     throw new Error('Test error.');
   },
 };
@@ -567,7 +567,7 @@ test('request properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _error: null },
+          willError: { _throw_test: null },
         },
       },
     })
@@ -587,7 +587,7 @@ test('connection properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _error: null },
+          willError: { _throw_test: null },
         },
       },
     })

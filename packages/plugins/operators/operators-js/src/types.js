@@ -84,6 +84,7 @@ export default {
       '_date',
       '_divide',
       '_eq',
+      '_error',
       '_function',
       '_get',
       '_gt',

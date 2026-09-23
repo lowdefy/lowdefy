@@ -55,6 +55,7 @@ export { default as _uri } from './operators/shared/uri.js';
 export { default as _user } from './operators/shared/user.js';
 
 export { default as _base64 } from './operators/server/base64.js';
+export { default as _error } from './operators/server/error.js';
 export { default as _hash } from './operators/server/hash.js';
 export { default as _item } from './operators/server/item.js';
 export { default as _js } from './operators/server/js.js';

@@ -19,6 +19,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { jest } from '@jest/globals';
+import { projectCaughtError } from '@lowdefy/helpers';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 const secret = 'planted-dev-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
@@ -90,4 +92,16 @@ test('createLowdefyContext sets mode to dev', async () => {
 test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
+});
+
+// controlTry builds the value `_error` reads from context.scrubSecrets, so a dev context has to
+// scrub a caught message the same way the production server does.
+test('_error on a dev context reads a caught message with a planted secret scrubbed', async () => {
+  const context = await createLowdefyContext({ c: createHonoContext() });
+  const error = projectCaughtError(new Error(`Connect failed with ${secret}.`), {
+    scrub: context.scrubSecrets,
+  });
+  expect(operatorsServer._error({ error, location: 'test', params: 'message' })).toEqual(
+    'Connect failed with [REDACTED].'
+  );
 });
