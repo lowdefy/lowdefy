@@ -5,6 +5,8 @@
 '@lowdefy/server-dev': minor
 '@lowdefy/connection-smtp': minor
 '@lowdefy/connection-sendgrid': minor
+'@lowdefy/engine': minor
+'@lowdefy/plugin-posthog': minor
 'lowdefy': minor
 ---
 
@@ -31,7 +33,7 @@ The current environment supplies the defaults:
 - **`url`** — the `RenderNotification` `serverUrl` (email links and logos; on the dev server, with no environment url, the request origin), the auth canonical URL (`BETTER_AUTH_URL`: auth links, CSRF origin allowlist) and the MCP resource URIs default to it; an explicit value still wins.
 - **`cron`** — the current environment registers its own schedules. The environment Vercel fires crons on (one without a `cron.secret`) also registers the schedules of every environment with a `cron.secret` and forwards them to that environment's `url`. `cron.enabled: false` registers nothing for an environment. Endpoint `schedules` keyed by environment work as before, plus a build with no current environment runs the `default` schedules.
 - **`email.filter`** — applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter`; an unset (`null`) connection filter falls back to it, and the new `filter: false` turns filtering off for a connection, the environment's too (for mail such as invites that must reach the real recipient). Connection resolvers now receive the current environment as `environment`. Auth emails are not filtered.
-- **Logs** — every server log line carries `environment`; the app metadata gains `environment` (`_app: environment`); `logger.sentry.environment` defaults to the environment name.
+- **Logs and analytics** — every server log line carries `environment`; `PostHogInit` registers it as the `environment` super property on every PostHog event (actions now receive the read-only app metadata as `lowdefyApp`); the app metadata gains `environment` (`_app: environment`); `logger.sentry.environment` defaults to the environment name.
 
 `config.environment` can name the current environment in config instead of `LOWDEFY_ENVIRONMENT`. With environments declared, the current environment must be one of them.
 

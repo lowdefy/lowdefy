@@ -18,7 +18,7 @@ import postHogState from './postHogState.js';
 
 // posthog-js is imported here, and only here, so an app that runs with
 // enabled: false never downloads or runs the SDK.
-async function loadPostHog({ apiKey, config }) {
+async function loadPostHog({ apiKey, config, superProperties = {} }) {
   let posthog;
   try {
     ({ default: posthog } = await import('posthog-js'));
@@ -31,6 +31,9 @@ async function loadPostHog({ apiKey, config }) {
     return;
   }
   posthog.init(apiKey, config);
+  if (Object.keys(superProperties).length > 0) {
+    posthog.register(superProperties);
+  }
   postHogState.client = posthog;
   postHogState.status = 'enabled';
 }

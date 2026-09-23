@@ -14,6 +14,8 @@ The `PostHogInit` action downloads and initialises the [PostHog](https://posthog
 
 `PostHogInit` is idempotent: the first call loads PostHog, and later calls with the same `apiKey` do nothing. Calling it with a different `apiKey` throws, because a second PostHog instance would split the session. With `enabled: false`, `posthog-js` is never downloaded and every other PostHog action becomes a silent no-op. A later call with `enabled: true` still loads PostHog; a call with `enabled: false` after PostHog was loaded throws.
 
+Every event carries the deployment environment: when the app declares [`config.environments`](/lowdefy-schema), `PostHogInit` registers the current environment's name (`LOWDEFY_ENVIRONMENT`) as the `environment` super property, so staging and production events can be told apart in one PostHog project.
+
 If `posthog-js` fails to download, for example on a flaky network, a warning is logged to the browser console and the other PostHog actions do nothing.
 
 The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is included by default. See the [PostHog guide](/PostHog) for how the actions fit together.

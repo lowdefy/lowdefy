@@ -23,8 +23,9 @@ const defaultApiHost = 'https://us.i.posthog.com';
 // Initialise posthog-js. Every other action in this package does nothing until
 // it has run, so run it from the onInit event of every page, shared with _ref.
 // Calling it again with the same apiKey does nothing, which is what makes that
-// safe.
-async function PostHogInit({ params }) {
+// safe. The deployment environment (config.environments / LOWDEFY_ENVIRONMENT)
+// is registered as the `environment` super property, so every event carries it.
+async function PostHogInit({ params, lowdefyApp }) {
   if (!type.isObject(params)) {
     throw new Error(`PostHogInit params must be an object. Received ${JSON.stringify(params)}.`);
   }
@@ -65,7 +66,10 @@ async function PostHogInit({ params }) {
     config.debug = debug;
   }
 
-  await initPostHog({ apiKey: apiKey ?? null, config, enabled });
+  const superProperties = type.isNone(lowdefyApp?.environment)
+    ? {}
+    : { environment: lowdefyApp.environment };
+  await initPostHog({ apiKey: apiKey ?? null, config, enabled, superProperties });
   return null;
 }
 

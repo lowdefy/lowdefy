@@ -20,7 +20,7 @@ import postHogState from './postHogState.js';
 // PostHogInit runs from every page's onInit, so a repeat call with the same
 // params must be a no-op. A disabled PostHog was never loaded, so a later call
 // with enabled: true may still load it.
-async function initPostHog({ apiKey, config, enabled }) {
+async function initPostHog({ apiKey, config, enabled, superProperties }) {
   const { status } = postHogState;
 
   if (enabled === false) {
@@ -36,7 +36,7 @@ async function initPostHog({ apiKey, config, enabled }) {
   if (status === 'uninitialized' || status === 'disabled') {
     postHogState.apiKey = apiKey;
     postHogState.status = 'loading';
-    postHogState.loading = loadPostHog({ apiKey, config });
+    postHogState.loading = loadPostHog({ apiKey, config, superProperties });
     await postHogState.loading;
     return;
   }
