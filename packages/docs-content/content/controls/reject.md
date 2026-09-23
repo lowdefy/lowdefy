@@ -1,7 +1,7 @@
 # :reject
 
 ```
-({:reject: string, :cause: any}): void
+({:reject: string | Error, :cause: any}): void
 ```
 
 The `:reject` control is used to return a user-friendly error to the client when validation fails or business rules are violated.
@@ -11,9 +11,11 @@ Importantly, `:reject` does not trigger `:catch` blocks in [`:try`](/:try) state
 This makes `:reject` ideal for handling validation and business logic errors separately from system errors.
 Choose [`:throw`](/:throw) when a step failed and the routine may recover; choose `:reject` when the routine decided the request cannot be fulfilled.
 
+`:reject` also takes an Error as its message, such as the error a `:catch` caught: `:reject: { _error: true }`. The reject message is then "Something went wrong.", unless the error was a `UserError` or an auth refusal (`AuthenticationError`, `AuthorizationError` or `TwoFactorEnrolmentRequiredError`), whose message is kept. To reject with the caught error's real message, name it: `:reject: { _error: message }`. See [`_error`](/_error).
+
 #### Keys
 
-- `:reject: string`: __Required__ - The error message that will be returned in the response object of the API call result.
+- `:reject: string | Error`: __Required__ - The error message that will be returned in the response object of the API call result, or an Error whose message to use.
 - `:cause: any`: Additional metadata that will be returned with the error message.
 
 #### Examples
