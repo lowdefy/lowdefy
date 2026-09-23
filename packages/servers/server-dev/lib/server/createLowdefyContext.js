@@ -93,6 +93,7 @@ async function createLowdefyContext({ c }) {
     interpolateProperties,
     jsMap,
     logger: createLogger(),
+    mode: 'dev',
     notifications,
     operators,
     renderEmail,

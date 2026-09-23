@@ -28,6 +28,7 @@ function testContext({
     info: () => {},
     warn: () => {},
   },
+  mode = 'prod',
   operators = {
     _test: () => 'test',
   },
@@ -51,6 +52,7 @@ function testContext({
     },
     headers,
     logger,
+    mode,
     operators,
     readConfigFile,
     secrets,

@@ -55,6 +55,7 @@ function apiWrapper(handler) {
         console.error(err);
       },
       logger: console,
+      mode: 'prod',
       operators,
       req,
       res,

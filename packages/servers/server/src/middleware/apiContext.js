@@ -83,6 +83,7 @@ function apiContext() {
       interpolateProperties,
       jsMap,
       logger: createLogger({ rid }),
+      mode: 'prod',
       notifications,
       operators,
       renderEmail,

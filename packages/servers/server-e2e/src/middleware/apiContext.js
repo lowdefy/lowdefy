@@ -60,6 +60,7 @@ function apiContext() {
       i18n: i18nConfig,
       jsMap,
       logger: createLogger({ rid }),
+      mode: 'prod',
       operators,
       req: {
         url: c.req.path,
