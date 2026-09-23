@@ -15,10 +15,22 @@
 */
 
 import { jest } from '@jest/globals';
+import { serializer } from '@lowdefy/helpers';
 
-import createWebSocketConnection from './createWebSocketConnection.js';
+const mockPrepareChannel = jest.fn();
+jest.unstable_mockModule('./prepareChannel.js', () => ({
+  default: mockPrepareChannel,
+}));
 
-function setup() {
+let createChannelRegistry;
+let createWebSocketConnection;
+
+beforeAll(async () => {
+  ({ default: createChannelRegistry } = await import('./createChannelRegistry.js'));
+  ({ default: createWebSocketConnection } = await import('./createWebSocketConnection.js'));
+});
+
+function setup({ mode = 'prod' } = {}) {
   const registry = {
     subscribe: jest.fn(async () => {}),
     unsubscribe: jest.fn(),
@@ -28,6 +40,8 @@ function setup() {
   const send = jest.fn();
   const context = {
     rid: 'r',
+    mode,
+    i18n: { active: 'en-US', messages: {} },
     logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
     handleError: jest.fn(),
   };
@@ -125,7 +139,7 @@ test('publish frame calls registry.publish and acks with a published frame carry
   ]);
 });
 
-test('registry rejection sends an error frame with requestId and websocketId and reports the error', async () => {
+test('registry rejection sends an error payload frame with requestId and websocketId and reports the error', async () => {
   const { connection, context, registry, send } = setup();
   const error = new Error('Websocket "chat" does not allow publishing.');
   registry.publish.mockRejectedValue(error);
@@ -140,9 +154,94 @@ test('registry rejection sends an error frame with requestId and websocketId and
       type: 'error',
       websocketId: 'chat',
       requestId: 'req-2',
-      message: 'Websocket "chat" does not allow publishing.',
+      error: {
+        '~e': {
+          name: 'Error',
+          message: 'Something went wrong.',
+          requestId: 'r',
+          isLowdefyError: true,
+        },
+      },
     },
   ]);
+});
+
+function setupPublishFailure({ mode }) {
+  const resolver = jest.fn(() => new Promise(() => {}));
+  resolver.meta = { publish: true };
+  resolver.onPublish = jest.fn(async () => {
+    throw new Error('insert failed: postgres://admin:planted-secret-value@db.internal:5432');
+  });
+  mockPrepareChannel.mockImplementation(async (context, { websocketId }) => ({
+    connectionProperties: null,
+    properties: { publish: true },
+    websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
+    websocketResolver: resolver,
+  }));
+  const send = jest.fn();
+  const context = {
+    rid: 'r',
+    mode,
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    handleError: jest.fn(),
+  };
+  const connection = createWebSocketConnection(context, {
+    registry: createChannelRegistry(),
+    send,
+  });
+  return { connection, send };
+}
+
+async function publishThroughFailingOnPublish({ mode }) {
+  const { connection, send } = setupPublishFailure({ mode });
+  await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'chat' }));
+  await connection.handleMessage(
+    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: {}, requestId: 'req-3' })
+  );
+  return sentFrames(send).find((frame) => frame.type === 'error');
+}
+
+test('onPublish failure sends the generic error payload in prod with no devError', async () => {
+  const frame = await publishThroughFailingOnPublish({ mode: 'prod' });
+
+  expect(frame.websocketId).toBe('chat');
+  expect(frame.requestId).toBe('req-3');
+  expect('message' in frame).toBe(false);
+  expect('devError' in frame.error).toBe(false);
+  expect(JSON.stringify(frame)).not.toContain('planted-secret-value');
+  const error = serializer.deserialize(frame.error);
+  expect(error.name).toBe('Error');
+  expect(error.message).toBe('Something went wrong.');
+  expect(error.requestId).toBe('r');
+});
+
+test('onPublish failure sends the same wire error in dev with the raw message in devError', async () => {
+  const frame = await publishThroughFailingOnPublish({ mode: 'dev' });
+
+  expect(serializer.deserialize(frame.error).message).toBe('Something went wrong.');
+  expect(frame.error['~e'].message).toBe('Something went wrong.');
+  expect(frame.error.devError['~e'].message).toBe(
+    'insert failed: postgres://admin:planted-secret-value@db.internal:5432'
+  );
+});
+
+test('subscribe refused with an auth refusal sends the refusal message in the error payload', async () => {
+  const { connection, registry, send } = setup();
+  const error = new Error('You do not have permission to access this websocket.');
+  error.name = 'AuthorizationError';
+  registry.subscribe.mockRejectedValue(error);
+
+  await connection.handleMessage(JSON.stringify({ type: 'subscribe', websocketId: 'ticker' }));
+
+  const [frame] = sentFrames(send);
+  expect(frame.type).toBe('error');
+  expect(frame.websocketId).toBe('ticker');
+  expect(frame.error['~e']).toEqual({
+    name: 'AuthorizationError',
+    message: 'You do not have permission to access this websocket.',
+    requestId: 'r',
+    isLowdefyError: true,
+  });
 });
 
 test('unknown frame type is ignored without sending a response', async () => {
@@ -168,11 +267,12 @@ test('close unsubscribes the subscriber from all channels', () => {
   expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
 });
 
-test('subscriber is created with the connection rid and an empty subscriptions map', () => {
-  const { connection } = setup();
+test('subscriber is created with the connection rid, the context i18n and an empty subscriptions map', () => {
+  const { connection, context } = setup();
 
   expect(connection.subscriber.id).toBe('r');
   expect(connection.subscriber.subscriptions).toBeInstanceOf(Map);
   expect(connection.subscriber.subscriptions.size).toBe(0);
   expect(typeof connection.subscriber.send).toBe('function');
+  expect(connection.subscriber.i18n).toBe(context.i18n);
 });
