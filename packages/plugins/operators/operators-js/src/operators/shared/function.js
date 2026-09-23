@@ -16,32 +16,14 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-function _function({
-  actions,
-  arrayIndices,
-  event,
-  items,
-  location,
-  operatorPrefix,
-  params,
-  parser,
-  payload,
-  state,
-  steps,
-}) {
+// The parser is bound to the calling frame (state, items, payload, event, array indices), so the
+// body only needs its own args and the next operator prefix.
+function _function({ operatorPrefix, params, parser }) {
   return (...args) => {
     const { output, errors } = parser.parse({
-      actions,
-      arrayIndices,
       args,
-      event,
       input: serializer.copy(params),
-      items,
-      location,
       operatorPrefix: `_${operatorPrefix}`,
-      payload,
-      state,
-      steps,
     });
     if (errors.length > 0) {
       throw errors[0];

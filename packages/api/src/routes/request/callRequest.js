@@ -52,10 +52,9 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
-    payload: requestPayload,
     requestConfig,
-    state: {},
-    steps: {},
+    // A page request runs outside any routine, so it evaluates against an empty frame.
+    routineContext: { arrayIndices: [], items: {}, payload: requestPayload, state: {}, steps: {} },
   });
 
   checkConnectionRead(context, {

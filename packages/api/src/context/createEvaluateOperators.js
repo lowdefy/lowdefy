@@ -27,8 +27,9 @@ function createEvaluateOperators(context) {
     secrets,
     user,
   });
-  function evaluateOperators({ input, items, location, payload, state, steps }) {
+  function evaluateOperators({ arrayIndices, input, items, location, payload, state, steps }) {
     const { output, errors } = operatorsParser.parse({
+      arrayIndices,
       input,
       items,
       location,

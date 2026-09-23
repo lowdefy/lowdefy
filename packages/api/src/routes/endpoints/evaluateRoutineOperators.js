@@ -14,18 +14,11 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
-
-function _payload({ arrayIndices, location, params, payload }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: payload,
-    operator: '_payload',
-    params,
-  });
+// Every routine step evaluates against the same frame. Taking the frame from routineContext in one
+// place means a step handler cannot drop part of it (state, items, loop indices).
+function evaluateRoutineOperators(context, routineContext, { input, location }) {
+  const { arrayIndices, items, payload, state, steps } = routineContext;
+  return context.evaluateOperators({ arrayIndices, input, items, location, payload, state, steps });
 }
 
-_payload.dynamic = true;
-
-export default _payload;
+export default evaluateRoutineOperators;

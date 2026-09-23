@@ -29,7 +29,17 @@ class ServerParser {
     this.user = user;
   }
 
-  parse({ args, input, items, location, operatorPrefix = '_', payload, state, steps }) {
+  parse({
+    args,
+    arrayIndices = [],
+    input,
+    items,
+    location,
+    operatorPrefix = '_',
+    payload,
+    state,
+    steps,
+  }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -40,6 +50,12 @@ class ServerParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
+    // Operators that evaluate nested config (_function) re-enter the parser. Binding the frame here
+    // means they only pass what they change, so no frame field can be dropped on the way in.
+    const parser = {
+      parse: (callOptions) =>
+        this.parse({ arrayIndices, items, location, payload, state, steps, ...callOptions }),
+    };
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
       if (Object.keys(value).length !== 1) return value;
@@ -54,7 +70,7 @@ class ServerParser {
       try {
         const res = this.operators[op]({
           args,
-          arrayIndices: [],
+          arrayIndices,
           env: this.env,
           i18n: this.i18n,
           items,
@@ -65,7 +81,7 @@ class ServerParser {
           operatorPrefix,
           operators: this.operators,
           params,
-          parser: this,
+          parser,
           payload,
           runtime: 'node',
           secrets: this.secrets,
