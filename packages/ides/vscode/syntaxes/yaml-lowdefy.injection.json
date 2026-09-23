@@ -4,10 +4,7 @@
   "scopeName": "source.yaml.lowdefy.injection",
   "injectionSelector": "L:source.yaml -comment",
   "comment": "Lowdefy YAML syntax highlighting",
-  "fileTypes": [
-    "yaml",
-    "yml"
-  ],
+  "fileTypes": ["yaml", "yml"],
   "patterns": [
     {
       "include": "#type"
