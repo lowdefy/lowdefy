@@ -1,0 +1,190 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Poll Until a Job Is Done
+  blocks:
+    - id: job_timer
+      type: PollingTimer
+      properties:
+        interval: 1000
+      events:
+        onTick:
+          # In an app this is a Request that fetches the job status. Here the job
+          # reports done on the fifth tick.
+          - id: job_timer_set_status
+            type: SetState
+            params:
+              job_status:
+                _if:
+                  test:
+                    _gte:
+                      - _event: tick
+                      - 5
+                  then: done
+                  else: running
+          - id: job_timer_stop_when_done
+            type: CallMethod
+            skip:
+              _ne:
+                - _state: job_status
+                - done
+            params:
+              blockId: job_timer
+              method: stop
+    - id: job_timer_controls
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: job_timer_start
+          type: Button
+          properties:
+            title: Start Job
+            icon: AiOutlinePlayCircle
+          events:
+            onClick:
+              - id: job_timer_set_running
+                type: SetState
+                params:
+                  job_status: running
+              - id: job_timer_call_start
+                type: CallMethod
+                params:
+                  blockId: job_timer
+                  method: start
+        - id: job_timer_status
+          type: Span
+          properties:
+            content:
+              _nunjucks:
+                template: 'Job status: {{ status }}'
+                on:
+                  status:
+                    _if_none:
+                      - _state: job_status
+                      - not started
+
+- title: Start and Stop
+  blocks:
+    - id: manual_timer
+      type: PollingTimer
+      properties:
+        interval: 1000
+      events:
+        onTick:
+          - id: manual_timer_set_tick
+            type: SetState
+            params:
+              manual_ticks:
+                _event: tick
+    - id: manual_timer_controls
+      type: Box
+      layout:
+        gap: 8
+      blocks:
+        - id: manual_timer_start
+          type: Button
+          properties:
+            title: Start
+            icon: AiOutlinePlayCircle
+          events:
+            onClick:
+              - id: manual_timer_call_start
+                type: CallMethod
+                params:
+                  blockId: manual_timer
+                  method: start
+        - id: manual_timer_stop
+          type: Button
+          properties:
+            title: Stop
+            icon: AiOutlinePauseCircle
+          events:
+            onClick:
+              - id: manual_timer_call_stop
+                type: CallMethod
+                params:
+                  blockId: manual_timer
+                  method: stop
+        - id: manual_timer_toggle
+          type: Button
+          properties:
+            title: Toggle
+            icon: AiOutlineSwap
+          events:
+            onClick:
+              - id: manual_timer_call_toggle
+                type: CallMethod
+                params:
+                  blockId: manual_timer
+                  method: toggle
+    - id: manual_timer_ticks
+      type: Span
+      properties:
+        content:
+          _nunjucks:
+            template: 'Ticks: {{ ticks }}'
+            on:
+              ticks:
+                _state: manual_ticks
+
+- title: Auto Start with a Tick Limit
+  blocks:
+    - id: limited_timer
+      type: PollingTimer
+      properties:
+        interval: 1000
+        autoStart: true
+        maxTicks: 5
+      events:
+        onTick:
+          - id: limited_timer_set_tick
+            type: SetState
+            params:
+              limited_ticks:
+                _event: tick
+    - id: limited_timer_ticks
+      type: Span
+      properties:
+        content:
+          _nunjucks:
+            template: 'Ticks: {{ ticks }} of 5'
+            on:
+              ticks:
+                _state: limited_ticks
+
+- title: Keep Ticking in a Hidden Tab
+  blocks:
+    - id: background_timer
+      type: PollingTimer
+      properties:
+        interval: 2000
+        autoStart: true
+        pauseWhenHidden: false
+      events:
+        onTick:
+          - id: background_timer_set_tick
+            type: SetState
+            params:
+              background_ticks:
+                _event: tick
+    - id: background_timer_ticks
+      type: Span
+      properties:
+        content:
+          _nunjucks:
+            template: 'Ticks while this tab was open or hidden: {{ ticks }}'
+            on:
+              ticks:
+                _state: background_ticks

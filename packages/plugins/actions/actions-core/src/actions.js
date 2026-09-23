@@ -24,6 +24,7 @@ export { default as EmailOtpSend } from './actions/EmailOtpSend/EmailOtpSend.js'
 export { default as EmailOtpVerify } from './actions/EmailOtpVerify/EmailOtpVerify.js';
 export { default as Fetch } from './actions/Fetch/Fetch.js';
 export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/GeolocationCurrentPosition.js';
+export { default as GetLocalStorage } from './actions/GetLocalStorage/GetLocalStorage.js';
 export { default as LeaveOrganization } from './actions/LeaveOrganization/LeaveOrganization.js';
 export { default as Link } from './actions/Link/Link.js';
 export { default as ListOrganizations } from './actions/ListOrganizations/ListOrganizations.js';
@@ -39,6 +40,7 @@ export { default as PasskeyUpdate } from './actions/PasskeyUpdate/PasskeyUpdate.
 export { default as PhoneNumberSendOtp } from './actions/PhoneNumberSendOtp/PhoneNumberSendOtp.js';
 export { default as PhoneNumberVerify } from './actions/PhoneNumberVerify/PhoneNumberVerify.js';
 export { default as Publish } from './actions/Publish/Publish.js';
+export { default as RemoveLocalStorage } from './actions/RemoveLocalStorage/RemoveLocalStorage.js';
 export { default as Request } from './actions/Request/Request.js';
 export { default as RequestPasswordReset } from './actions/RequestPasswordReset/RequestPasswordReset.js';
 export { default as Reset } from './actions/Reset/Reset.js';
@@ -52,6 +54,7 @@ export { default as SetDarkMode } from './actions/SetDarkMode/SetDarkMode.js';
 export { default as SetFocus } from './actions/SetFocus/SetFocus.js';
 export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
 export { default as SetLocale } from './actions/SetLocale/SetLocale.js';
+export { default as SetLocalStorage } from './actions/SetLocalStorage/SetLocalStorage.js';
 export { default as SetState } from './actions/SetState/SetState.js';
 export { default as SignUp } from './actions/SignUp/SignUp.js';
 export { default as Subscribe } from './actions/Subscribe/Subscribe.js';

@@ -23,5 +23,6 @@ export { default as Html } from './blocks/Html/Html.js';
 export { default as Icon } from './blocks/Icon/Icon.js';
 export { default as Img } from './blocks/Img/Img.js';
 export { default as List } from './blocks/List/List.js';
+export { default as PollingTimer } from './blocks/PollingTimer/PollingTimer.js';
 export { default as Span } from './blocks/Span/Span.js';
 export { default as Throw } from './blocks/Throw/Throw.js';

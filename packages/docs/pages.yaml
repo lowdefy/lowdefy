@@ -57,6 +57,7 @@
 - _ref: plugins/plugins-actions.yaml
 - _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
+- _ref: plugins/PostHog.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/auth-providers.yaml
@@ -102,6 +103,7 @@
 - _ref: blocks/input/ParagraphInput.yaml
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/PhoneNumberInput.yaml
+- _ref: blocks/input/PlacesAutocomplete.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/SegmentedSelector.yaml
@@ -140,6 +142,7 @@
 - _ref: blocks/display/DiffTimeline.yaml
 - _ref: blocks/display/Divider.yaml
 - _ref: blocks/display/DropdownButton.yaml
+- _ref: blocks/display/EventLog.yaml
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/FloatButton.yaml
 - _ref: blocks/display/Html.yaml
@@ -151,6 +154,7 @@
 - _ref: blocks/display/Message.yaml
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
+- _ref: blocks/display/PollingTimer.yaml
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/QRCode.yaml
 - _ref: blocks/display/S3Download.yaml
@@ -239,6 +243,7 @@
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
+- _ref: actions/GetLocalStorage.yaml
 - _ref: actions/EmailOtpSend.yaml
 - _ref: actions/EmailOtpVerify.yaml
 - _ref: actions/Fetch.yaml
@@ -248,7 +253,21 @@
 - _ref: actions/Logout.yaml
 - _ref: actions/MagicLinkVerify.yaml
 - _ref: actions/PdfMake.yaml
+- _ref: actions/PostHogAlias.yaml
+- _ref: actions/PostHogCapture.yaml
+- _ref: actions/PostHogCapturePageLeave.yaml
+- _ref: actions/PostHogFeatureFlag.yaml
+- _ref: actions/PostHogGroup.yaml
+- _ref: actions/PostHogIdentify.yaml
+- _ref: actions/PostHogInit.yaml
+- _ref: actions/PostHogOptIn.yaml
+- _ref: actions/PostHogOptOut.yaml
+- _ref: actions/PostHogPageview.yaml
+- _ref: actions/PostHogReloadFeatureFlags.yaml
+- _ref: actions/PostHogReset.yaml
+- _ref: actions/PostHogSetPersonProperties.yaml
 - _ref: actions/Request.yaml
+- _ref: actions/RemoveLocalStorage.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
@@ -256,6 +275,7 @@
 - _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetLocale.yaml
+- _ref: actions/SetLocalStorage.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml
 - _ref: actions/UpdateSession.yaml
@@ -272,6 +292,7 @@
 - _ref: operators/_boolean.yaml
 - _ref: operators/_build.yaml
 - _ref: operators/_change_case.yaml
+- _ref: operators/_cron.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml

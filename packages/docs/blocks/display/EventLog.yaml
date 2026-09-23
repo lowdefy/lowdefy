@@ -1,0 +1,67 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: EventLog
+    pageTitle: EventLog
+    section: Display Blocks
+    filePath: blocks/display/EventLog.yaml
+    block_type: EventLog
+    github_path: packages/plugins/blocks/blocks-antd/src/blocks/EventLog
+    schema: ../plugins/blocks/blocks-antd/src/blocks/EventLog/meta.js
+    gallery: ../plugins/blocks/blocks-antd/src/blocks/EventLog/gallery.yaml
+    description: >
+      A dense, virtualised log viewer for any array of records - audit trails, job runs, deploys,
+      webhook deliveries or application events. Rows are searchable, filtered by severity and
+      expandable to a detail pane with the actor, a rich detail body and a flattened context
+      key-value table that can be copied as JSON.
+
+
+      The block does not assume a record shape: the `fields` property maps dot paths onto each
+      record, and `eventTypeConfig` maps an event type onto its label, icon, colour and severity.
+      Severity is explicit - it is read from the `level` field of a record, or from the `level` of
+      its type config, and is one of `error`, `warning`, `success` or `info` (default `info`).
+
+
+      Large logs can be pushed straight into the block with the `setData` method using a CallMethod
+      action, so the records never round-trip through the operator pipeline. Every string rendered
+      by the block is set on the `text` property, so the log can be translated.
+    guide: |
+      ## Setting records with `setData`
+
+      Call `setData` from the block's `onMount` event, after a Request action has loaded the
+      records. The page `onInit` event runs before the block mounts, so the method does not exist
+      yet. The block falls back to `properties.data` until `setData` is called. See
+      [Selectors](/selectors) for the same pattern on selector blocks.
+
+      ```yaml
+      id: audit_log
+      type: EventLog
+      properties:
+        height: 480
+      events:
+        onMount:
+          - id: load_events
+            type: Request
+            params: get_events
+          - id: fill
+            type: CallMethod
+            params:
+              blockId: audit_log
+              method: setData
+              args:
+                - _request: get_events
+      ```
