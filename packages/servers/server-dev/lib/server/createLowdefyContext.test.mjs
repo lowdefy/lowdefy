@@ -67,6 +67,16 @@ fixtures.forEach(({ absolutePath, content }) => {
   }
 });
 
+// A checkout that has built an app already holds real artifacts here, which import plugins this
+// package does not depend on, so the stubs are also mocked over whatever is on disk.
+fixtures.forEach(({ absolutePath }) => {
+  jest.unstable_mockModule(absolutePath, () => ({
+    default: {},
+    interpolateProperties: () => {},
+    renderEmail: () => {},
+  }));
+});
+
 afterAll(() => {
   createdFixtures.forEach((absolutePath) => fs.rmSync(absolutePath, { force: true }));
 });
