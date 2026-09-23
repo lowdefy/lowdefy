@@ -18,6 +18,7 @@
 
 import { jest } from '@jest/globals';
 import { ActionError, OperatorError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 
 import stopChain from '../src/stopChain.js';
 import testContext from './testContext.js';
@@ -1654,4 +1655,43 @@ test('call 2 actions, first with async: null', async () => {
     startTimestamp: { date: 0 },
     endTimestamp: { date: 0 },
   });
+});
+
+test('a revived generic server error passes through callAction unwrapped and keeps requestId', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+  };
+  const revived = serializer.deserialize({
+    '~e': {
+      name: 'Error',
+      message: 'Something went wrong.',
+      requestId: 'rid-1',
+      isLowdefyError: true,
+      handled: true,
+    },
+  });
+  lowdefy._internal.actions = {
+    ...getActions(),
+    ActionServerError: jest.fn(() => {
+      throw revived;
+    }),
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const Actions = context._internal.Actions;
+  const res = await Actions.callActions({
+    actions: [{ id: 'test', type: 'ActionServerError' }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.error.error).toBe(revived);
+  expect(res.error.error).not.toBeInstanceOf(ActionError);
+  expect(res.error.error.requestId).toBe('rid-1');
+  expect(res.responses.test.error).toBe(revived);
 });
