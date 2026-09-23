@@ -37,7 +37,7 @@ A caught `UserError` (from a [`:throw`](/:throw) or a plugin) also keeps its `:c
 
 Inside a client `catch` list, `_error` is the error the browser holds:
 
-- An error from the server (a failed `Request` or `CallAPI`) is the error as the browser received it: `name`, `message`, `code`, `statusCode` and `requestId`. The `message` is "Something went wrong." (the [`server.genericError`](/i18n) message) unless the author wrote it with `:throw` or `:reject`, or it is a plugin's `UserError`.
+- An error from the server (a failed `Request` or `CallAPI`) is the error as the browser received it: `name`, `message`, `code`, `statusCode` and `requestId`. The `message` is "Something went wrong." (the [`server.genericError`](/i18n) message) unless the author wrote it with `:throw` or `:reject`, it comes from a failed `ValidateSchema` step, or it is a plugin's `UserError`.
 - An error raised in the browser (an action or operator that failed on the page) keeps its real message, and carries `actionId`, the id of the action that failed.
 
 ##### Sending the error on
