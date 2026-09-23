@@ -15,6 +15,7 @@
 */
 
 import { execSync } from 'child_process';
+import { randomUUID } from 'crypto';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 import { evaluateOperators } from '@lowdefy/operators';
@@ -121,6 +122,13 @@ async function buildAppMeta({ context }) {
     license: resolveField({ context, field: 'license', value: content.license }),
     lowdefyVersion: resolveField({ context, field: 'lowdefy', value: content.lowdefy }),
     gitSha: computeGitSha(),
+    // Identity of this build, unique per run. The client bundle and the server
+    // both read it from appMeta.json, so an open tab can tell after a deploy
+    // that the page config it just fetched came from a newer build than the
+    // bundle it is running, and reload instead of failing on missing _js
+    // functions. gitSha is not enough: it is null on most deploy platforms and
+    // the same commit can be rebuilt with different config.
+    buildId: randomUUID(),
   };
 
   return context.appMeta;

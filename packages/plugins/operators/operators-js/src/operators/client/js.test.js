@@ -143,6 +143,6 @@ test('js throws when object-form hash is not in map', async () => {
       params: { fn: 'missing', args: { a: 1 } },
     })
   ).toThrow(
-    '_js function not found. The function may not have been built yet. Received hash: missing'
+    '_js function not found. The function may not have been built yet, or the page is running a client bundle from an older build - reload the page to update. Received hash: missing'
   );
 });

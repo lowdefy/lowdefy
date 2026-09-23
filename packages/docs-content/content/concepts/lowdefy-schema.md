@@ -41,6 +41,7 @@ Find the more detailed block schema [here](/blocks).
 
 The config object has the following properties:
 
+- `cron: object`: Declare the deployment environments scheduled endpoints run in (`cron.environments`), so that every environment's crons are registered on the Vercel production deployment and forwarded from there. See [Scheduled Endpoints](/api).
 - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
 - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`.
 - `requestTimeout: number`: Maximum time in milliseconds a request may run before the server returns a timeout. This protects against requests that hang on an upstream call (database, SMTP, an external API) running all the way to the host's function limit — important on serverless platforms that bill by execution duration. Defaults to `30000` (30 seconds). Set to `0` to disable. Agent streaming routes are exempt, since they are long-lived by design.

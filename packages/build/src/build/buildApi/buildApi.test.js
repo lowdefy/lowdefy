@@ -284,11 +284,126 @@ test('api endpoint schedules is not an array throws', () => {
         id: 'scheduled_api',
         type: 'Api',
         routine: [],
-        schedules: { cron: '0 6 * * *' },
+        schedules: '0 6 * * *',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint schedules is not an array at "scheduled_api".'
+    'Endpoint schedules is not an array or an object keyed by environment at "scheduled_api".'
+  );
+});
+
+const cronEnvironments = {
+  production: {},
+  staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
+};
+
+test('api endpoint schedules keyed by environment resolve every declared environment', () => {
+  const components = {
+    config: { cron: { environments: cronEnvironments } },
+    api: [
+      {
+        id: 'override_api',
+        type: 'Api',
+        routine: [],
+        schedules: { default: [{ cron: '*/5 * * * *' }], staging: [{ cron: '0 * * * *' }] },
+      },
+      {
+        id: 'array_api',
+        type: 'Api',
+        routine: [],
+        schedules: [{ cron: '0 2 * * *' }],
+      },
+      {
+        id: 'off_api',
+        type: 'Api',
+        routine: [],
+        schedules: { default: [{ cron: '0 2 * * *' }], staging: [] },
+      },
+      {
+        id: 'no_default_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: [{ cron: '0 2 * * *' }] },
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual({
+    production: [{ cron: '*/5 * * * *' }],
+    staging: [{ cron: '0 * * * *' }],
+  });
+  expect(res.api[1].schedules).toEqual({
+    production: [{ cron: '0 2 * * *' }],
+    staging: [{ cron: '0 2 * * *' }],
+  });
+  expect(res.api[2].schedules).toEqual({
+    production: [{ cron: '0 2 * * *' }],
+    staging: [],
+  });
+  expect(res.api[3].schedules).toEqual({
+    production: [],
+    staging: [{ cron: '0 2 * * *' }],
+  });
+});
+
+test('api endpoint without config.cron keeps its schedules array', () => {
+  const components = {
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: [{ cron: '0 2 * * *' }] }],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].schedules).toEqual([{ cron: '0 2 * * *' }]);
+});
+
+test('api endpoint schedules keyed by environment throw when config.cron.environments is not defined', () => {
+  const components = {
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { staging: [] } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint "scheduled_api" keys schedules by environment but lowdefy.config.cron.environments is not defined.'
+  );
+});
+
+test('api endpoint schedules throw for an undeclared environment name', () => {
+  const components = {
+    config: { cron: { environments: cronEnvironments } },
+    api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { stagng: [] } }],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules environment "stagng" at "scheduled_api" is not declared in lowdefy.config.cron.environments. Declared environments: production, staging.'
+  );
+});
+
+test('api endpoint environment schedules are validated like an array of schedules', () => {
+  const components = {
+    config: { cron: { environments: cronEnvironments } },
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: [{ cron: '0 6 * * *' }, { cron: '0 6 * * *' }] },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedule 1 for environment "staging" has duplicate cron "0 6 * * *" at "scheduled_api".'
+  );
+});
+
+test('api endpoint schedules throw when an environment entry is not an array', () => {
+  const components = {
+    config: { cron: { environments: cronEnvironments } },
+    api: [
+      {
+        id: 'scheduled_api',
+        type: 'Api',
+        routine: [],
+        schedules: { staging: { cron: '0 6 * * *' } },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint schedules for environment "staging" is not an array at "scheduled_api".'
   );
 });

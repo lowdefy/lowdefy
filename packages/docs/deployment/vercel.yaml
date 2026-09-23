@@ -104,6 +104,25 @@ _ref:
             - **Plan limits:** Vercel **Hobby** only allows daily crons (a sub-daily expression fails the deployment); **Pro**/**Enterprise** allow per-minute. Up to 100 cron jobs per project.
             - **Idempotency:** Vercel does not retry failed runs and delivery is best-effort (a run can be missed or delivered more than once). Design scheduled routines to be idempotent.
 
+            ###### Crons for staging and other environments
+
+            Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Declare your environments under `config.cron` and Lowdefy registers every environment's schedules on production; when one for another environment fires, production forwards it to that environment's own `/api/cron/<endpointId>` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
+
+            ```yaml
+            config:
+              cron:
+                environments:
+                  production: {} # no url: the deployment Vercel fires crons on
+                  staging:
+                    url: https://staging.example.com
+                    secret: STAGING_CRON_SECRET
+            ```
+
+            - **One host environment:** exactly one environment has no `url` — the deployment whose crons Vercel fires. Every other environment needs its `url` (deployment origin) and a `secret`: the Lowdefy secret name holding that environment's own `CRON_SECRET`. Set `enabled: false` on an environment to register no crons for it.
+            - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
+            - **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the host environment and `/api/cron-forward/<environment>/<endpointId>` for the others; all of them count toward the project's cron limit.
+            - **Plan limits still apply per project:** a per-minute staging schedule needs the same Pro plan as a per-minute production one.
+
             ###### Background work: async endpoints and detached calls
 
             Two [API endpoint](/api) controls exist for work that should not hold up a response — they behave differently on Vercel:

@@ -163,6 +163,8 @@ The template embeds everything the client needs in one response:
 
 First load renders from the embedded config. Navigation is client-side: `client/Page.jsx` subscribes to the custom router (`@lowdefy/client/adapters/createRouter.js` — History API, scroll restoration, `forceReload` escape hatch) and fetches `GET /api/page/:pageId` (`src/routes/apiPage.js`) to swap `pageConfig`. Missing pages replace to `/404`.
 
+**Stale bundle after a deploy.** The response also carries `buildId` from `build/appMeta.json`, and the client bundle imports the same file at Vite build time. When the two differ the server was redeployed after the tab loaded, and the new config may reference `_js` functions or plugins the running bundle never shipped, so `client/shouldReloadForBuild.js` triggers one `window.location.reload()` (the router has already pushed the target URL). It reloads at most once per server build, recorded in `sessionStorage`, so a rolling deploy answering from mixed versions cannot loop.
+
 The framework adapters passed to `@lowdefy/client` (`Components.Head`, `Components.Link`, `router`) come from `@lowdefy/client/adapters/*` — there is no framework router dependency.
 
 ## Agent Streaming

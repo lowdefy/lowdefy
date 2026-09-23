@@ -1,0 +1,45 @@
+# 97: API endpoints with per-environment cron schedules
+# Verifies config.cron.environments passes through, schedules keyed by environment are resolved onto
+# every declared environment (inherit default, override, or turn off) and build/schedules.json
+# carries an entry per enabled environment with the forward flag.
+lowdefy: local
+name: Api Cron Environments Test
+
+config:
+  cron:
+    environments:
+      production: {}
+      staging:
+        url: https://staging.example.com
+        secret: STAGING_CRON_SECRET
+      develop:
+        url: https://develop.example.com
+        secret: DEVELOP_CRON_SECRET
+        enabled: false
+
+api:
+  - id: purge-stale
+    type: Api
+    schedules:
+      default:
+        - cron: '*/5 * * * *'
+          payload:
+            mode: incremental
+      staging:
+        - cron: '0 * * * *'
+          payload:
+            mode: full
+      develop: []
+    routine: []
+  - id: inherits-default
+    type: InternalApi
+    schedules:
+      - cron: '0 2 * * *'
+    routine: []
+  - id: not-scheduled
+    type: Api
+    routine: []
+
+pages:
+  - id: home
+    type: Box

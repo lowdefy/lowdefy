@@ -14,6 +14,35 @@
   limitations under the License.
 */
 
+const apiScheduleSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['cron'],
+  properties: {
+    '~k': {},
+    '~r': {},
+    '~l': {},
+    cron: {
+      type: 'string',
+      errorMessage: {
+        type: 'Api endpoint "schedules[].cron" should be a cron expression string.',
+      },
+    },
+    payload: {
+      type: 'object',
+      errorMessage: {
+        type: 'Api endpoint "schedules[].payload" should be an object.',
+      },
+    },
+  },
+  errorMessage: {
+    type: 'Api endpoint "schedules[]" should be an object.',
+    required: {
+      cron: 'Api endpoint schedule should have required property "cron".',
+    },
+  },
+};
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -1347,35 +1376,35 @@ export default {
           },
         },
         schedules: {
-          type: 'array',
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['cron'],
-            properties: {
-              cron: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Api endpoint "schedules[].cron" should be a cron expression string.',
-                },
-              },
-              payload: {
-                type: 'object',
-                errorMessage: {
-                  type: 'Api endpoint "schedules[].payload" should be an object.',
-                },
+          description:
+            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.cron.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
+          anyOf: [
+            {
+              type: 'array',
+              items: apiScheduleSchema,
+              errorMessage: {
+                type: 'Api endpoint "schedules" should be an array or an object keyed by environment.',
               },
             },
-            errorMessage: {
-              type: 'Api endpoint "schedules[]" should be an object.',
-              required: {
-                cron: 'Api endpoint schedule should have required property "cron".',
+            {
+              type: 'object',
+              properties: {
+                '~k': {},
+                '~r': {},
+                '~l': {},
+              },
+              additionalProperties: {
+                type: 'array',
+                items: apiScheduleSchema,
+                errorMessage: {
+                  type: 'Api endpoint "schedules.<environment>" should be an array.',
+                },
+              },
+              errorMessage: {
+                type: 'Api endpoint "schedules" should be an array or an object keyed by environment.',
               },
             },
-          },
-          errorMessage: {
-            type: 'Api endpoint "schedules" should be an array.',
-          },
+          ],
         },
       },
     },
@@ -2199,6 +2228,68 @@ export default {
               description: 'Function memory in MB. Omit to use the Vercel default.',
               errorMessage: {
                 type: 'App "config.vercel.memory" should be a number.',
+              },
+            },
+          },
+        },
+        cron: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            "Deployment environments for scheduled endpoints. Vercel fires cron jobs only on the production deployment, so every environment's schedules are registered there and production forwards the ones for other environments to their own /api/cron route.",
+          required: ['environments'],
+          errorMessage: {
+            type: 'App "config.cron" should be an object.',
+            required: {
+              environments: 'App "config.cron" should have required property "environments".',
+            },
+          },
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            environments: {
+              type: 'object',
+              description:
+                'Environments keyed by name. Exactly one environment has no "url": the deployment whose crons Vercel fires. Every other environment needs a "url" (its deployment origin) and a "secret" (the Lowdefy secret name holding that environment\'s CRON_SECRET, set on the production deployment).',
+              additionalProperties: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  url: {
+                    type: 'string',
+                    description:
+                      'The environment deployment origin, e.g. https://staging.example.com.',
+                    errorMessage: {
+                      type: 'App "config.cron.environments.<name>.url" should be a string.',
+                    },
+                  },
+                  secret: {
+                    type: 'string',
+                    description:
+                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET.",
+                    errorMessage: {
+                      type: 'App "config.cron.environments.<name>.secret" should be a string.',
+                    },
+                  },
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to register no cron jobs for this environment. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.cron.environments.<name>.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.cron.environments.<name>" should be an object.',
+                },
+              },
+              errorMessage: {
+                type: 'App "config.cron.environments" should be an object.',
               },
             },
           },

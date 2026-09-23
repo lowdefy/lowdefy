@@ -53,3 +53,122 @@ test('validateConfig config error when basePath does not start with "/".', () =>
   };
   expect(() => validateConfig({ components, context })).toThrow('Base path must start with "/".');
 });
+
+test('validateConfig accepts cron environments with one host and forwarded environments', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: {
+          production: {},
+          staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
+          develop: {
+            url: 'https://develop.example.com',
+            secret: 'DEVELOP_CRON_SECRET',
+            enabled: false,
+          },
+        },
+      },
+    },
+  };
+  expect(validateConfig({ components, context })).toEqual(components);
+});
+
+test('validateConfig throws when config.cron.environments is missing', () => {
+  const components = { config: { cron: {} } };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'lowdefy.config.cron.environments is not an object.'
+  );
+});
+
+test('validateConfig throws when no cron environment is the host', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: {
+          staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
+        },
+      },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Exactly one environment in lowdefy.config.cron.environments must have no url (the deployment that runs the crons). Received [].'
+  );
+});
+
+test('validateConfig throws when more than one cron environment is the host', () => {
+  const components = {
+    config: { cron: { environments: { production: {}, staging: {} } } },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Received ["production","staging"].'
+  );
+});
+
+test('validateConfig throws when a forwarded cron environment has no secret', () => {
+  const components = {
+    config: {
+      cron: { environments: { production: {}, staging: { url: 'https://staging.example.com' } } },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Cron environment "staging" has a url but no secret.'
+  );
+});
+
+test('validateConfig throws when a cron environment url is not an absolute http url', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: { production: {}, staging: { url: 'staging.example.com', secret: 'S' } },
+      },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Cron environment "staging" url is not an absolute http(s) URL'
+  );
+});
+
+test('validateConfig throws when the host cron environment has a secret', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: {
+          production: { secret: 'X' },
+          staging: { url: 'https://staging.example.com', secret: 'S' },
+        },
+      },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Cron environment "production" has a secret but no url.'
+  );
+});
+
+test('validateConfig throws for an invalid cron environment name', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: {
+          production: {},
+          'staging/eu': { url: 'https://staging.example.com', secret: 'S' },
+        },
+      },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Cron environment name "staging/eu" is invalid.'
+  );
+});
+
+test('validateConfig throws for a cron environment named default', () => {
+  const components = {
+    config: {
+      cron: {
+        environments: { production: {}, default: { url: 'https://d.example.com', secret: 'S' } },
+      },
+    },
+  };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'Cron environment name "default" is reserved'
+  );
+});

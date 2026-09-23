@@ -20,6 +20,7 @@
     "license": "MIT",
     "lowdefyVersion": "local",
     "gitSha": "test-git-sha-for-snapshots",
+    "buildId": "<BUILD_ID>",
     "~k": "a9"
   },
   "auth.json": {

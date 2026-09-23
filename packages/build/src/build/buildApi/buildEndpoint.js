@@ -17,12 +17,14 @@
 */
 
 import buildRoutine from './buildRoutine/buildRoutine.js';
+import resolveEndpointSchedules from './resolveEndpointSchedules.js';
 import validateEndpoint from './validateEndpoint.js';
 import validateStepReferences from './validateStepReferences.js';
 
-function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
-  validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
+function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, cronEnvironments }) {
+  validateEndpoint({ endpoint, index, checkDuplicateEndpointId, cronEnvironments });
   endpoint.endpointId = endpoint.id;
+  resolveEndpointSchedules({ endpoint, cronEnvironments });
 
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
