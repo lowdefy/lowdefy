@@ -27,7 +27,10 @@ function redactErrorResponse(context, error) {
   // Endpoint routes serialize the error field on success too, where it is null.
   // Passing that through unchanged keeps them from emitting an empty {'~e'}.
   if (type.isNone(error)) return error;
-  return normalizeErrorSources(context, serializer.serialize(error, { omitErrorProps }));
+  return normalizeErrorSources(
+    context,
+    serializer.serialize(error, { projectError: omitErrorProps })
+  );
 }
 
 export default redactErrorResponse;

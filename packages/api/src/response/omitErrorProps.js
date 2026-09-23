@@ -18,7 +18,7 @@ import { UserError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // The client-bound error policy: which fields of an error may cross the wire.
-// Passed to serializer.serialize as `omitErrorProps`, so extractErrorProps applies
+// Passed to serializer.serialize as `projectError`, so extractErrorProps applies
 // it at EVERY error node the walk emits - the cause chain, an Error-valued own
 // property, and an Error nested inside a plain object or array. The policy is
 // stated against the emitter rather than against a response shape, so it cannot
@@ -33,7 +33,7 @@ import { type } from '@lowdefy/helpers';
 const ALWAYS_OMITTED = ['received', 'stack'];
 const OMITTED_WITH_CAUSE = [...ALWAYS_OMITTED, 'cause'];
 
-function omitErrorProps(error) {
+function omittedKeys(error) {
   // An Error cause is the trace the browser renders (name + message per level),
   // so it is always kept - fields are taken from causes, causes are never pruned.
   // A non-Error cause is internal server config: the whole endpoint routine, a
@@ -45,6 +45,23 @@ function omitErrorProps(error) {
   if (type.isError(error.cause)) return ALWAYS_OMITTED;
   if (error instanceof UserError) return ALWAYS_OMITTED;
   return OMITTED_WITH_CAUSE;
+}
+
+function omitErrorProps(error) {
+  const props = {
+    message: error.message,
+    name: error.name,
+    stack: error.stack,
+    cause: error.cause,
+  };
+  for (const key of Object.keys(error)) {
+    if (key === 'cause') continue;
+    props[key] = error[key];
+  }
+  for (const key of omittedKeys(error)) {
+    delete props[key];
+  }
+  return props;
 }
 
 export default omitErrorProps;

@@ -28,7 +28,10 @@ import omitErrorProps from './omitErrorProps.js';
 // Same policy as the error field, because it reaches the same audience: a browser
 // for a request or endpoint body, a third party for cron and detached.
 function redactResponse(context, response) {
-  return normalizeErrorSources(context, serializer.serialize(response, { omitErrorProps }));
+  return normalizeErrorSources(
+    context,
+    serializer.serialize(response, { projectError: omitErrorProps })
+  );
 }
 
 export default redactResponse;
