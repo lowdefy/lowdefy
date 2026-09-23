@@ -163,6 +163,8 @@ const MessageList = React.forwardRef(function MessageList(
           placement: 'end',
           variant: config?.roles?.user?.variant ?? 'filled',
           shape: config?.roles?.user?.shape ?? 'round',
+          styles: config?.roles?.user?.styles,
+          classNames: config?.roles?.user?.classNames,
           avatar: roleAvatar(config?.roles?.user, <UserOutlined />),
           header: roleHeader(config?.roles?.user, 'agent.message.userHeader', translate),
           editable:
@@ -217,6 +219,8 @@ const MessageList = React.forwardRef(function MessageList(
           variant: config?.roles?.assistant?.variant ?? 'outlined',
           shape: config?.roles?.assistant?.shape ?? 'default',
           style: { maxWidth: '100%' },
+          styles: config?.roles?.assistant?.styles,
+          classNames: config?.roles?.assistant?.classNames,
           avatar: roleAvatar(config?.roles?.assistant, <RobotOutlined />),
           header: roleHeader(config?.roles?.assistant, 'agent.message.assistantHeader', translate),
           typing: config?.roles?.assistant?.typing

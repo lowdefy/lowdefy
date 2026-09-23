@@ -219,6 +219,8 @@ _ref:
                 - `avatar: string`: Avatar image URL.
                 - `variant: string`: `'filled'`, `'outlined'`, `'shadow'`, or `'borderless'`.
                 - `shape: string`: `'default'`, `'round'`, or `'corner'`.
+                - `styles: object`: Inline styles per bubble part — `root`, `content`, `body`, `header`, `footer`, `avatar`, `extra`. This is how to recolour a bubble: the `filled` background and the `outlined` border come from the theme's `colorPrimary`, and a page stylesheet cannot override them.
+                - `classNames: object`: Class names per bubble part, same keys as `styles`.
               - `user: object`: Same properties as `assistant`.
 
             ```yaml
@@ -240,6 +242,8 @@ _ref:
               - `placeholder: string`: Default: `'Type a message...'` — Input placeholder. When `config.i18n` is configured, falls back to the localized `agent.sender.placeholder` builtin key. See the [i18n concept page](/i18n) for the full list of localizable agent UI keys (tool approval buttons, message actions, tool-result captions, etc.).
               - `submitType: string`: Default: `'enter'` - Submit key. `'enter'` or `'shiftEnter'`.
               - `allowSpeech: boolean`: Default: `false` - Enable speech input.
+              - `styles: object`: Inline styles per composer part — `root`, `prefix`, `input`, `suffix`, `footer`, `switch`, `content`. This is how to recolour the composer border, which the theme sets and a page stylesheet cannot override.
+              - `classNames: object`: Class names per composer part, same keys as `styles`.
 
             #### File Attachments
 
