@@ -84,84 +84,93 @@ console.error = () => {};
 
 // TODO: Test cases with different operatorPrefix
 
-test('ServerParser, _function that gets from payload', () => {
+// _function takes no frame fields of its own: it re-enters the parser it was handed, which is bound to
+// the frame of the parse call that created it. These tests evaluate _function through parser.parse so
+// they exercise that binding, the same way routines and pages do.
+
+function parseServer(input, frame = {}) {
   const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { __payload: 'string' };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const { output, errors } = parser.parse({ input, location, ...frame });
+  expect(errors).toEqual([]);
+  return output;
+}
+
+function parseWeb(input, frame = {}) {
+  const parser = new WebParser({ context, operators });
+  const { output, errors } = parser.parse({ input, location, ...frame });
+  expect(errors).toEqual([]);
+  return output;
+}
+
+test('ServerParser, _function that gets from payload', () => {
+  const fn = parseServer({ _function: { __payload: 'string' } }, { payload });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
 
 test('ServerParser, nested function call', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { ___payload: 'string' };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '__' });
+  const fn = parseServer(
+    { __function: { ___payload: 'string' } },
+    { operatorPrefix: '__', payload }
+  );
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
 
 test('ServerParser, _function gives args as an array', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { __args: true };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const fn = parseServer({ _function: { __args: true } });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
 test('ServerParser, _function that gets from routine state', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { __state: 'string' };
-  const fn = _function({ location, params, parser, state, operatorPrefix: '_' });
-  expect(fn()).toEqual('Some String');
+  const fn = parseServer({ _function: { __state: 'number' } }, { state });
+  expect(fn()).toEqual(42);
 });
 
 test('ServerParser, _function that gets from items', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { __item: 'row.a' };
-  const items = { row: { a: 'a1' } };
-  const fn = _function({ items, location, params, parser, operatorPrefix: '_' });
+  const fn = parseServer({ _function: { __item: 'row.a' } }, { items: { row: { a: 'a1' } } });
   expect(fn()).toEqual('a1');
 });
 
-test('ServerParser, _function reads routine state when evaluated through parse', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const { output, errors } = parser.parse({
-    input: { _function: { __state: 'number' } },
-    location,
-    state,
-  });
-  expect(errors).toEqual([]);
-  expect(output()).toEqual(42);
+test('ServerParser, __function nested in _function keeps routine state and items', () => {
+  const fn = parseServer(
+    { _function: { __function: [{ ___state: 'string' }, { ___item: 'row.a' }, { ___args: 0 }] } },
+    { items: { row: { a: 'a1' } }, state }
+  );
+  expect(fn()('x')).toEqual(['Some String', 'a1', 'x']);
+});
+
+test('ServerParser, _function applies routine loop array indices to state paths', () => {
+  const fn = parseServer({ _function: { __state: 'arr.$.a' } }, { arrayIndices: [1], state });
+  expect(fn()).toEqual('a2');
 });
 
 test('ServerParser, _function throws on parser errors', () => {
-  const parser = new ServerParser({ operators, secrets: {}, user: {} });
-  const params = { __payload: [] };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const fn = parseServer({ _function: { __payload: [] } }, { payload });
   expect(fn).toThrow('_payload params must be of type string, integer, boolean or object.');
 });
 
 test('WebParser, _function that gets from state', () => {
-  const parser = new WebParser({ context, operators });
-  const params = { __state: 'string' };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const fn = parseWeb({ _function: { __state: 'string' } });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
   expect(fn()).toEqual('Some String');
 });
 
 test('WebParser, _function gives args as an array', () => {
-  const parser = new WebParser({ context, operators });
-  const params = { __args: true };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const fn = parseWeb({ _function: { __args: true } });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
+test('WebParser, _function applies list array indices to state paths', () => {
+  const fn = parseWeb({ _function: { __state: 'arr.$.a' } }, { arrayIndices: [0] });
+  expect(fn()).toEqual('a1');
+});
+
 test('WebParser, _function throws on parser errors', () => {
-  const parser = new WebParser({ context, operators });
-  const params = { __state: [] };
-  const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
+  const fn = parseWeb({ _function: { __state: [] } });
   expect(fn).toThrow('_state params must be of type string, integer, boolean or object.');
 });
 

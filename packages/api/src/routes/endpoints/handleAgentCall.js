@@ -19,9 +19,10 @@ import { type } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
 import prepareAgent from '../agent/prepareAgent.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 async function handleAgentCall(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_agent_call',
@@ -29,13 +30,9 @@ async function handleAgentCall(context, routineContext, { step }) {
   });
 
   // Evaluate operators in step.properties (resolves agentId, prompt)
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   const { agentId, prompt } = evaluatedProperties;

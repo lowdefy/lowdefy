@@ -120,6 +120,126 @@ blocks:
             - type: text
               text: '[in-app link](/agent-chat-target) and [external link](https://example.com)'
 
+  # A history stored after a reply was cut off mid-stream: c2's tool call never got its result,
+  # c3 is nothing but that, and c4 is a call that completed and must be left alone.
+  - id: chat_cutoff
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: cutoff
+      messages:
+        - id: c1
+          role: user
+          parts:
+            - type: text
+              text: What is in this repo?
+        - id: c2
+          role: assistant
+          parts:
+            - type: step-start
+            - type: text
+              text: Let me look.
+            - type: tool-search
+              toolCallId: tc1
+              state: input-available
+              input: {}
+        - id: c3
+          role: assistant
+          parts:
+            - type: step-start
+            - type: tool-fetch
+              toolCallId: tc2
+              state: input-available
+              input: {}
+        - id: c4
+          role: assistant
+          parts:
+            - type: tool-lookup
+              toolCallId: tc3
+              state: output-available
+              input: {}
+              output:
+                ok: true
+            - type: text
+              text: Done looking.
+
+  # onBeforeSend that takes as long as a quota request might, counts how often it ran, then
+  # refuses the send so nothing ever calls the agent.
+  - id: chat_guarded
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: guarded
+      messages:
+        - id: g1
+          role: assistant
+          parts:
+            - type: text
+              text: Ask me something.
+    events:
+      onBeforeSend:
+        - id: count_before_send
+          type: SetState
+          params:
+            before_send_count:
+              _sum:
+                - _if_none:
+                    - _state: before_send_count
+                    - 0
+                - 1
+        - id: slow_check
+          type: Wait
+          params:
+            ms: 1500
+        - id: refuse
+          type: Throw
+          params:
+            throw: true
+            message: Refused by the test.
+
+  - id: guarded_readout
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: '<span id="readout_before_send">{{ n or 0 }}</span>'
+          on:
+            n:
+              _state: before_send_count
+
+  - id: chat_styled
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: styled
+      messageDisplay:
+        roles:
+          assistant:
+            styles:
+              content:
+                backgroundColor: 'rgb(1, 2, 3)'
+          user:
+            classNames:
+              content: styled-user-content
+      sender:
+        styles:
+          root:
+            borderColor: 'rgb(4, 5, 6)'
+      messages:
+        - id: y1
+          role: user
+          parts:
+            - type: text
+              text: Styled question
+        - id: y2
+          role: assistant
+          parts:
+            - type: text
+              text: Styled answer
+
   # Two conversations with the SAME message count and the same last id (''), the shape
   # every persisted transcript had before assistant messages were given ids. Switching
   # between them has to re-sync the transcript from `messages`.

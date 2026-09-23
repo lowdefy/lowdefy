@@ -23,6 +23,7 @@ import derivePreview from '../notifications/derivePreview.js';
 import getNotificationConfig from '../notifications/getNotificationConfig.js';
 import resolveNotificationLinks from '../notifications/resolveNotificationLinks.js';
 import resolveThemeLogo from '../../email/resolveThemeLogo.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 function itemHasPageLinks(item, dataKeys) {
   const links = Object.values(item.links ?? {});
@@ -33,20 +34,16 @@ function itemHasPageLinks(item, dataKeys) {
 }
 
 async function handleRenderNotification(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_render_notification',
     step,
   });
 
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   const { notificationId, data, landingPage, recordId } = evaluatedProperties;

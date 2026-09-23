@@ -16,9 +16,10 @@
 
 import { ConfigError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlFor(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
+  const { endpointId, logger } = context;
   const { items } = routineContext;
 
   const itemName = control[':for'];
@@ -26,13 +27,9 @@ async function controlFor(context, routineContext, { control }) {
     throw new Error(`Invalid :for in endpoint "${endpointId}" - missing variable name in :for.`);
   }
 
-  const array = evaluateOperators({
+  const array = evaluateRoutineOperators(context, routineContext, {
     input: control[':in'],
-    items,
     location: control['~k'] ?? ':for',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   logger.debug({
