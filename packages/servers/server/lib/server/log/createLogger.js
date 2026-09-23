@@ -18,6 +18,8 @@ import { createNodeLogger } from '@lowdefy/logger/node';
 import { type } from '@lowdefy/helpers';
 
 import appMeta from '../../build/appMeta.js';
+import scrubSecrets from '../scrubSecrets.js';
+import { serializeErrorForLog } from './logErrorProjection.js';
 
 // Deploy identity on every log line — pid/hostname are stripped, so these
 // fields are what correlates a line to an app build across replicas.
@@ -36,6 +38,10 @@ const logger = createNodeLogger({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
   base,
+  serializers: { err: serializeErrorForLog },
+  // Scrubbing the finished line rather than the logged object covers every field of every
+  // call - debug payloads and request results as well as `err` - with no walker to miss one.
+  hooks: { streamWrite: scrubSecrets },
 });
 
 function createLogger(metadata = {}) {

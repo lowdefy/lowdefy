@@ -102,3 +102,20 @@ test('createNodeLogger child includes child bindings', () => {
   expect(lines[0].msg).toBe('from child');
   expect(lines[0].requestId).toBe('req-123');
 });
+
+test('createNodeLogger passes each finished line through hooks.streamWrite before the destination', () => {
+  const { lines, destination } = createSink();
+  const received = [];
+  const streamWrite = (line) => {
+    received.push(line);
+    return line.replace('planted-value', 'replaced-value');
+  };
+  const logger = createNodeLogger({ destination, hooks: { streamWrite } });
+  logger.info({ detail: 'planted-value' }, 'first');
+  logger.info('second');
+  expect(received).toHaveLength(2);
+  expect(JSON.parse(received[0]).detail).toBe('planted-value');
+  expect(JSON.parse(received[1]).msg).toBe('second');
+  expect(lines[0].detail).toBe('replaced-value');
+  expect(lines[1].msg).toBe('second');
+});
