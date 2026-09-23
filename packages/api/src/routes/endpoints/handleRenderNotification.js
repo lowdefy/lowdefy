@@ -86,7 +86,11 @@ async function handleRenderNotification(context, routineContext, { step }) {
     }
   } else {
     // The current environment's url is the deployment origin, so links need no per-step wiring.
-    serverUrl = getCurrentEnvironment({ config: context.config })?.url;
+    // On the dev server the request origin is the local app; in production it is never used, since
+    // a spoofed Host header would then steer the links in outgoing mail.
+    serverUrl =
+      getCurrentEnvironment({ config: context.config })?.url ??
+      (context.dev === true ? context.origin : undefined);
   }
   if (!type.isNone(serverUrl)) {
     serverUrl = serverUrl.replace(/\/$/, '');

@@ -84,6 +84,9 @@ async function createLowdefyContext({ c }) {
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
     config,
     connections,
+    // The dev server: environment-specific fallbacks that would be unsafe in
+    // production (a request-derived notification link origin) are allowed.
+    dev: true,
     fileCache,
     headers: c.req.header(),
     // The deployment's own origin — detached endpoint calls loop back
