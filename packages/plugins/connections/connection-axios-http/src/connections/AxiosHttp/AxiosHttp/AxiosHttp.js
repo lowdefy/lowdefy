@@ -41,7 +41,9 @@ async function AxiosHttp({ request, connection }) {
         { cause: error }
       );
       // The wrapper is what the request layer sees, and codes are read from
-      // each error's own fields, so the upstream status has to live here too.
+      // each error's own fields, so the upstream code and status have to live
+      // here too.
+      responseError.code = error.code;
       responseError.statusCode = error.response.status;
       throw responseError;
     }

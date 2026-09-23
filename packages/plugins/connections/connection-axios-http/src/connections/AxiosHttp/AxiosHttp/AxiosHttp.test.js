@@ -138,14 +138,15 @@ describe('non-2xx response', () => {
     await new Promise((resolve) => server.close(resolve));
   });
 
-  test('a 404 upstream throws an Error with statusCode 404', async () => {
+  test('a 404 upstream throws an Error with code ERR_BAD_REQUEST and statusCode 404', async () => {
     const error = await AxiosHttp({ request: { url }, connection: {} }).catch((e) => e);
     expect(error.message).toBe('Http response "404: Not Found".');
+    expect(error.code).toBe('ERR_BAD_REQUEST');
     expect(error.statusCode).toBe(404);
     expect(error.cause.response.status).toBe(404);
   });
 
-  test('a RequestError wrapping a 404 upstream error reports statusCode 404', async () => {
+  test('a RequestError wrapping a 404 upstream error reports code ERR_BAD_REQUEST and statusCode 404', async () => {
     const error = await AxiosHttp({ request: { url }, connection: {} }).catch((e) => e);
     const requestError = new RequestError(error.message, {
       cause: error,
@@ -154,6 +155,7 @@ describe('non-2xx response', () => {
       location: 'api/request',
       configKey: 'key',
     });
+    expect(requestError.code).toBe('ERR_BAD_REQUEST');
     expect(requestError.statusCode).toBe(404);
   });
 });
