@@ -100,7 +100,7 @@ test('operator returns value with ~k present', () => {
   expect(operatorContext.state).toEqual({ state: true });
   expect(operatorContext.steps).toEqual({ steps: true });
   expect(operatorContext.user).toEqual({ user: true });
-  expect(operatorContext.parser).toBeInstanceOf(ServerParser);
+  expect(operatorContext.parser.parse).toBeInstanceOf(Function);
   expect(res.errors).toEqual([]);
 });
 
@@ -235,4 +235,71 @@ test('ConfigError from operator is preserved', () => {
   expect(res.errors[0].name).toBe('ConfigError');
   expect(res.errors[0].message).toBe('Invalid config value.');
   expect(res.errors[0].configKey).toBe('config-key-789');
+});
+
+test('parse forwards arrayIndices to operators', () => {
+  const input = { a: { _test: { params: true } } };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ arrayIndices: [2, 0], input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.arrayIndices).toEqual([2, 0]);
+});
+
+test('parse defaults arrayIndices to an empty array', () => {
+  const input = { a: { _test: { params: true } } };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.arrayIndices).toEqual([]);
+});
+
+test('operator parser re-enters parse with the calling frame', () => {
+  const frameOperators = {
+    _nested: jest.fn(({ parser }) =>
+      parser.parse({ args: ['nestedArg'], input: { __frame: true }, operatorPrefix: '__' })
+    ),
+    _frame: jest.fn(({ args, arrayIndices, items, location, payload, state, steps }) => ({
+      args,
+      arrayIndices,
+      items,
+      location,
+      payload,
+      state,
+      steps,
+    })),
+  };
+  const items = { row: 1 };
+  const parser = new ServerParser({ operators: frameOperators, secrets, user });
+  const res = parser.parse({
+    arrayIndices: [3],
+    input: { _nested: true },
+    items,
+    location,
+    payload,
+    state,
+    steps,
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.errors).toEqual([]);
+  expect(res.output.output).toEqual({
+    args: ['nestedArg'],
+    arrayIndices: [3],
+    items: { row: 1 },
+    location: 'location',
+    payload: { payload: true },
+    state: { state: true },
+    steps: { steps: true },
+  });
+});
+
+test('operator parser call options override the calling frame', () => {
+  const frameOperators = {
+    _nested: jest.fn(({ parser }) =>
+      parser.parse({ input: { __frame: true }, operatorPrefix: '__', state: { override: true } })
+    ),
+    _frame: jest.fn(({ state }) => state),
+  };
+  const parser = new ServerParser({ operators: frameOperators, secrets, user });
+  const res = parser.parse({ input: { _nested: true }, location, state });
+  expect(res.output.output).toEqual({ override: true });
 });

@@ -15,22 +15,18 @@
 */
 
 import runRoutine from '../runRoutine.js';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlSwitch(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { endpointId, logger } = context;
   const cases = control[':switch'];
   logger.debug({
     event: 'debug_control_switch',
   });
   for (const caseObj of cases) {
-    const evaluatedCase = evaluateOperators({
+    const evaluatedCase = evaluateRoutineOperators(context, routineContext, {
       input: caseObj[':case'],
-      items,
       location: caseObj['~k'] ?? control['~k'] ?? ':switch',
-      payload: routineContext.payload,
-      state: routineContext.state,
-      steps: routineContext.steps,
     });
     logger.debug({
       event: 'debug_control_switch_case',

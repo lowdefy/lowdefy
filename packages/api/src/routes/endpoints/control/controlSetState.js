@@ -16,18 +16,14 @@
 
 import { ConfigError } from '@lowdefy/errors';
 import { ReservedKeyError, set } from '@lowdefy/helpers';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 function controlSetState(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { logger } = context;
 
-  const evaluatedSetState = evaluateOperators({
+  const evaluatedSetState = evaluateRoutineOperators(context, routineContext, {
     input: control[':set_state'],
-    items,
     location: control['~k'] ?? ':set_state',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   logger.debug({

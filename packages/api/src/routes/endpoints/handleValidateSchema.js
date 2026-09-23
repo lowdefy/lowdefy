@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 
 import addStepResult from './addStepResult.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 function buildErrorMessage(errors, stepId) {
   const first = errors?.[0];
@@ -26,19 +27,16 @@ function buildErrorMessage(errors, stepId) {
 }
 
 async function handleValidateSchema(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_validate_schema',
     step,
   });
 
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    steps: routineContext.steps,
   });
 
   const { schema, data, throwOnInvalid = true } = evaluatedProperties;

@@ -15,27 +15,18 @@
 */
 
 import { UserError } from '@lowdefy/errors';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlReject(context, routineContext, { control }) {
-  const { evaluateOperators } = context;
-  const { items } = routineContext;
   const location = control['~k'] ?? ':reject';
 
-  const message = evaluateOperators({
+  const message = evaluateRoutineOperators(context, routineContext, {
     input: control[':reject'],
-    items,
     location,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
-  const cause = evaluateOperators({
+  const cause = evaluateRoutineOperators(context, routineContext, {
     input: control[':cause'],
-    items,
     location,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
   const error = new UserError(message, { cause, isReject: true });
 

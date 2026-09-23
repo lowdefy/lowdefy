@@ -16,9 +16,10 @@
 
 import { ConfigError } from '@lowdefy/errors';
 import runRoutine from '../runRoutine.js';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlParallelFor(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
+  const { endpointId, logger } = context;
   const { items } = routineContext;
 
   const itemName = control[':parallel_for'];
@@ -28,13 +29,9 @@ async function controlParallelFor(context, routineContext, { control }) {
     );
   }
 
-  const array = evaluateOperators({
+  const array = evaluateRoutineOperators(context, routineContext, {
     input: control[':in'],
-    items,
     location: control['~k'] ?? ':parallel_for',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   logger.debug({

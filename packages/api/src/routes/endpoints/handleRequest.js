@@ -26,7 +26,6 @@ import validateSchemas from '../request/validateSchemas.js';
 
 async function handleRequest(context, routineContext, { request }) {
   const { logger } = context;
-  const { items } = routineContext;
 
   logger.debug({
     event: 'debug_start_request',
@@ -43,11 +42,8 @@ async function handleRequest(context, routineContext, { request }) {
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
-    items,
-    payload: routineContext.payload,
     requestConfig,
-    state: routineContext.state,
-    steps: routineContext.steps,
+    routineContext,
   });
   checkConnectionRead(context, {
     connectionConfig,
