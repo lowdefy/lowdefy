@@ -119,3 +119,101 @@ blocks:
           parts:
             - type: text
               text: '[in-app link](/agent-chat-target) and [external link](https://example.com)'
+
+  # Two conversations with the SAME message count and the same last id (''), the shape
+  # every persisted transcript had before assistant messages were given ids. Switching
+  # between them has to re-sync the transcript from `messages`.
+  - id: switch_to_a
+    type: Button
+    properties:
+      title: Switch to A
+    events:
+      onClick:
+        - id: set_a
+          type: SetState
+          params:
+            switch_id: conv-a
+  - id: switch_to_b
+    type: Button
+    properties:
+      title: Switch to B
+    events:
+      onClick:
+        - id: set_b
+          type: SetState
+          params:
+            switch_id: conv-b
+  - id: chat_switch
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId:
+        _if_none:
+          - _state: switch_id
+          - conv-a
+      messages:
+        _if:
+          test:
+            _eq:
+              - _if_none:
+                  - _state: switch_id
+                  - conv-a
+              - conv-b
+          then:
+            - id: b-user
+              role: user
+              parts:
+                - type: text
+                  text: Question in B
+            - id: ''
+              role: assistant
+              parts:
+                - type: text
+                  text: Answer from conversation B.
+          else:
+            - id: a-user
+              role: user
+              parts:
+                - type: text
+                  text: Question in A
+            - id: ''
+              role: assistant
+              parts:
+                - type: text
+                  text: Answer from conversation A.
+
+  # The loading property: a skeleton in place of the transcript, composer disabled.
+  - id: toggle_loading
+    type: Button
+    properties:
+      title: Toggle loading
+    events:
+      onClick:
+        - id: flip_loading
+          type: SetState
+          params:
+            chat_loading:
+              _not:
+                _eq:
+                  - _state: chat_loading
+                  - true
+  - id: chat_loading
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 300
+      conversationId: loading
+      loading:
+        _eq:
+          - _state: chat_loading
+          - true
+      suggestions:
+        - key: s
+          label: A suggestion
+      messages:
+        - id: l1
+          role: assistant
+          parts:
+            - type: text
+              text: Loaded answer.
