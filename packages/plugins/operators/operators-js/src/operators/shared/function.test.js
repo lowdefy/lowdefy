@@ -19,12 +19,14 @@ import _args from './args.js';
 import _array from './array.js';
 import _eq from './eq.js';
 import _if from './if.js';
+import _item from '../server/item.js';
 import _payload from '../server/payload.js';
 import _state from '../shared/state.js';
 
 const operators = {
   _args,
   _function,
+  _item,
   _payload,
   _state,
 };
@@ -104,6 +106,32 @@ test('ServerParser, _function gives args as an array', () => {
   const fn = _function({ location, params, parser, payload, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
+});
+
+test('ServerParser, _function that gets from routine state', () => {
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const params = { __state: 'string' };
+  const fn = _function({ location, params, parser, state, operatorPrefix: '_' });
+  expect(fn()).toEqual('Some String');
+});
+
+test('ServerParser, _function that gets from items', () => {
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const params = { __item: 'row.a' };
+  const items = { row: { a: 'a1' } };
+  const fn = _function({ items, location, params, parser, operatorPrefix: '_' });
+  expect(fn()).toEqual('a1');
+});
+
+test('ServerParser, _function reads routine state when evaluated through parse', () => {
+  const parser = new ServerParser({ operators, secrets: {}, user: {} });
+  const { output, errors } = parser.parse({
+    input: { _function: { __state: 'number' } },
+    location,
+    state,
+  });
+  expect(errors).toEqual([]);
+  expect(output()).toEqual(42);
 });
 
 test('ServerParser, _function throws on parser errors', () => {
