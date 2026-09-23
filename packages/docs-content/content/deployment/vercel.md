@@ -99,7 +99,7 @@ config:
 ```
 
 - **`url`** is the default for the auth canonical URL (`BETTER_AUTH_URL` — auth links, the CSRF origin allowlist and the MCP resource URIs), for the links and logo in notification emails (the `RenderNotification` `serverUrl`), and it is where crons are forwarded to. An explicit `BETTER_AUTH_URL` or `serverUrl` still wins.
-- **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` — keep non-production environments from emailing real users in one place.
+- **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` (`false` turns it off for that connection) — keep non-production environments from emailing real users in one place.
 - **Sentry** reports under the environment name unless `logger.sentry.environment` is set.
 - A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
 

@@ -3232,7 +3232,7 @@ export default {
                   filter: {
                     type: 'object',
                     description:
-                      'Delivery filter applied to every SMTPMailSend and SendGridMailSend request in this environment, unless the connection sets its own "filter". Auth emails are not filtered.',
+                      'Delivery filter applied to every SMTPMailSend and SendGridMailSend request in this environment, unless the connection sets its own "filter" (false turns filtering off for that connection). Auth emails are not filtered.',
                     additionalProperties: false,
                     properties: {
                       '~k': {},
