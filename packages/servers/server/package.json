@@ -89,7 +89,7 @@
     "tailwindcss": "4.3.1",
     "uuid": "14.0.0",
     "vite": "8.0.16",
-    "ws": "8.18.0"
+    "ws": "8.21.0"
   },
   "devDependencies": {
     "@lowdefy/build": "6.0.0",
