@@ -64,7 +64,7 @@ build/
         └── serverJsMap.js
 ```
 
-Server-read artifacts (`config.json`, `auth.json`, `plugins/connections.js`, `plugins/operators/server.js`, `plugins/auth/*`) are imported by the Hono app through Node ESM. Client-side artifacts (`plugins/blocks.js`, `plugins/operators/client.js`, `globals.css`, ...) are imported by `client/main.jsx` — bundled by `vite build` in production, served as modules with HMR in dev. The dev server additionally writes JIT build state (`pageRegistry.json`, `refMap.json`, `keyMap.json`, `skeletonSourceFiles.json`, `invalidatePages`).
+Server-read artifacts (`config.json`, `auth.json`, `plugins/connections.js`, `plugins/operators/server.js`, `plugins/auth/*`) are imported by the Hono app through Node ESM. Client-side artifacts are imported by the client — bundled by `vite build` in production, served as modules with HMR in dev. In production the client imports `plugins/pageTypes.js`, a registry of one dynamic-import chunk per distinct page type set (see [server.md](./server.md#per-page-plugin-chunks)); dev imports the app-wide barrels (`plugins/blocks.js`, `plugins/operators/client.js`, ...) directly. The dev server additionally writes JIT build state (`pageRegistry.json`, `refMap.json`, `keyMap.json`, `skeletonSourceFiles.json`, `invalidatePages`).
 
 ## API Routes
 
