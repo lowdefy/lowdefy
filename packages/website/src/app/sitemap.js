@@ -1,5 +1,7 @@
 import articles from '@/content/articles';
 
+export const dynamic = 'force-static';
+
 export default function sitemap() {
   const articlePages = articles.map((article) => ({
     url: `https://lowdefy.com/articles/${article.id}`,
