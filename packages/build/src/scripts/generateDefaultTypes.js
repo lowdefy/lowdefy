@@ -28,12 +28,11 @@ async function generateDefaultTypesMap() {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
       strategies: {},
     },
     blockMetas: {},
+    connectionMetas: {},
     blocks: {},
     connections: {},
     icons: {},
@@ -43,6 +42,7 @@ async function generateDefaultTypesMap() {
       server: {},
     },
     requests: {},
+    steps: {},
     websockets: {},
   };
 

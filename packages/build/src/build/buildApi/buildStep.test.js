@@ -157,6 +157,144 @@ test('connectionId is not a string', () => {
     'Step connectionId is not a string at endpoint "test_no_connectionId".'
   );
 });
+test('request step tenant none is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_none',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('none');
+});
+
+test('request step tenant authored is accepted', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'connection',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
+test('request step tenant true throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_true',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_true" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('request step tenant with another string throws', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_step_tenant_string',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
+            tenant: 'off',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_tenant_string" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('a literal $search step pipeline on a walled connection without tenant authored throws at build', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_search_unauthored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            properties: { pipeline: [{ $search: { text: { query: 'q', path: 'name' } } }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "step_id" at endpoint "test_step_search_unauthored" contains "$search" on tenant connection "walled", which the tenant wall does not scope mechanically.'
+  );
+});
+
+test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
+  const context = testContext({ logger });
+  context.tenantConnectionIds.add('walled');
+  const components = {
+    api: [
+      {
+        id: 'test_step_graphlookup_authored',
+        type: 'Api',
+        routine: [
+          {
+            id: 'step_id',
+            type: 'MongoDBAggregation',
+            connectionId: 'walled',
+            tenant: 'authored',
+            properties: { pipeline: [{ $graphLookup: { from: 'walled' } }] },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res.api[0].routine[0].tenant).toBe('authored');
+});
+
 test('valid routine step config nested array', () => {
   const context = testContext({ logger });
   const components = {
@@ -717,6 +855,135 @@ test('CallAgent step is not counted in typeCounters.requests', () => {
   buildApi({ components, context });
   expect(context.typeCounters.requests.getCounts()).toEqual({
     MongoDBInsertOne: 1,
+  });
+});
+
+test('Auth step builds with auth prefix', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_auth_step',
+        endpointId: 'test_auth_step',
+        type: 'Api',
+        routine: [
+          {
+            id: 'auth:test_auth_step:ban_user',
+            endpointId: 'test_auth_step',
+            stepId: 'ban_user',
+            type: 'BanUser',
+            properties: { userId: 'user_1' },
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('Auth step with connectionId throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_connection',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', connectionId: 'test_connection' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_connection" should not have a connectionId.'
+  );
+});
+
+test('Auth step with non-object properties throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_properties',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', properties: 'not-an-object' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_properties" properties is not an object.'
+  );
+});
+
+test('Auth step with non-boolean system throws', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: 'yes' }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Auth step "ban_user" at endpoint "test_auth_step_system" system must be a boolean.'
+  );
+});
+
+test('Auth step with boolean system does not throw', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_system_valid',
+        type: 'Api',
+        routine: [{ id: 'ban_user', type: 'BanUser', system: true }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test('Auth step is counted in typeCounters.steps and not typeCounters.requests', () => {
+  const context = testContext({ logger });
+  context.typesMap = { steps: { BanUser: { package: '@lowdefy/plugin-better-auth' } } };
+  const components = {
+    api: [
+      {
+        id: 'test_auth_step_count',
+        type: 'Api',
+        routine: [
+          { id: 'db_step', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          { id: 'ban_user', type: 'BanUser', properties: { userId: 'user_1' } },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 1,
+  });
+  expect(context.typeCounters.steps.getCounts()).toEqual({
+    BanUser: 1,
   });
 });
 

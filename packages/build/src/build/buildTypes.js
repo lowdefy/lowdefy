@@ -70,8 +70,6 @@ function buildTypes({ components, context }) {
     agents: {},
     auth: {
       adapters: {},
-      callbacks: {},
-      events: {},
       providers: {},
       strategies: {},
     },
@@ -79,6 +77,7 @@ function buildTypes({ components, context }) {
     connections: {},
     notifications: {},
     requests: {},
+    steps: {},
     websockets: {},
     api: {},
     operators: {
@@ -106,20 +105,6 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.adapters,
     store: components.types.auth.adapters,
     typeClass: 'Auth adapter',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.callbacks,
-    definitions: context.typesMap.auth.callbacks,
-    store: components.types.auth.callbacks,
-    typeClass: 'Auth callback',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.auth.events,
-    definitions: context.typesMap.auth.events,
-    store: components.types.auth.events,
-    typeClass: 'Auth event',
   });
 
   buildTypeClass(context, {
@@ -162,6 +147,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.steps,
+    definitions: context.typesMap.steps,
+    store: components.types.steps,
+    typeClass: 'Step',
   });
 
   buildTypeClass(context, {

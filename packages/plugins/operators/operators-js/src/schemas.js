@@ -23,6 +23,7 @@ export { default as _boolean } from './operators/shared/boolean.schema.js';
 export { default as _date } from './operators/shared/date.schema.js';
 export { default as _divide } from './operators/shared/divide.schema.js';
 export { default as _eq } from './operators/shared/eq.schema.js';
+export { default as _error } from './operators/shared/error.schema.js';
 export { default as _function } from './operators/shared/function.schema.js';
 export { default as _get } from './operators/shared/get.schema.js';
 export { default as _gt } from './operators/shared/gt.schema.js';
@@ -75,9 +76,11 @@ export { default as _url_query } from './operators/client/url_query.schema.js';
 // Server operators
 export { default as _hash } from './operators/server/hash.schema.js';
 export { default as _item } from './operators/server/item.schema.js';
+export { default as _organization } from './operators/server/organization.schema.js';
 export { default as _payload } from './operators/server/payload.schema.js';
 export { default as _secret } from './operators/server/secret.schema.js';
 export { default as _step } from './operators/server/step.schema.js';
 
 // Build operators
+export { default as _authConfig } from './operators/build/authConfig.schema.js';
 export { default as _env } from './operators/build/env.schema.js';

@@ -26,6 +26,14 @@ jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({
   default: { buildId: 'build-abc' },
 }));
 
+jest.unstable_mockModule('../../lib/build/auth.js', () => ({
+  default: { authPages: { signIn: '/auth/login', twoFactorEnrol: '/two-factor-enrol' } },
+}));
+
+jest.unstable_mockModule('../../lib/build/config.js', () => ({
+  default: { basePath: '' },
+}));
+
 const { default: apiPageHandler } = await import('./apiPage.js');
 
 function createApp() {
@@ -44,16 +52,46 @@ afterEach(() => {
   mockGetPageConfig.mockReset();
 });
 
-test('apiPageHandler returns the pageConfig stamped with the build id', async () => {
-  mockGetPageConfig.mockResolvedValue({ id: 'invoices' });
+test('apiPageHandler enrol_required redirect carries the request query on callbackUrl', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'enrol_required' });
+  const res = await createApp().request('/api/page/invoices?id=123&tab=2');
+  expect(res.status).toEqual(403);
+  const body = await res.json();
+  expect(body).toEqual({
+    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/invoices?id=123&tab=2')}`,
+  });
+});
+
+test('apiPageHandler enrol_required redirect is path-only when the request has no query', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'enrol_required' });
+  const res = await createApp().request('/api/page/invoices');
+  expect(res.status).toEqual(403);
+  const body = await res.json();
+  expect(body).toEqual({
+    redirect: `/two-factor-enrol?callbackUrl=${encodeURIComponent('/invoices')}`,
+  });
+});
+
+test('apiPageHandler still returns a 401 sign-in redirect when unauthenticated', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'unauthenticated' });
+  const res = await createApp().request('/api/page/invoices');
+  expect(res.status).toEqual(401);
+  const body = await res.json();
+  expect(body).toEqual({
+    redirect: `/auth/login?callbackUrl=${encodeURIComponent('/invoices')}`,
+  });
+});
+
+test('apiPageHandler returns the pageConfig stamped with the build id when status is ok', async () => {
+  mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'invoices' } });
   const res = await createApp().request('/api/page/invoices');
   expect(res.status).toEqual(200);
   expect(await res.json()).toEqual({ buildId: 'build-abc', pageConfig: { id: 'invoices' } });
 });
 
 test('apiPageHandler returns 404 when the page is not found', async () => {
-  mockGetPageConfig.mockResolvedValue(null);
-  const res = await createApp().request('/api/page/missing');
+  mockGetPageConfig.mockResolvedValue({ status: 'not_found' });
+  const res = await createApp().request('/api/page/invoices');
   expect(res.status).toEqual(404);
   expect(await res.json()).toEqual({ pageConfig: null });
 });

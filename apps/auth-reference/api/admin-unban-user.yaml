@@ -1,0 +1,11 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+id: admin-unban-user
+type: Api
+routine:
+  - id: unban
+    type: UnbanUser
+    properties:
+      userId:
+        _payload: userId
+  - ':return':
+      _step: unban

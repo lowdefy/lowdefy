@@ -1,0 +1,28 @@
+# Declared public in the manifest (auth.public), so this renders logged out
+# at /account-kit/account-help - the manifest's "further public pages beyond
+# the role pages" list. Under an app running public: true the contribution
+# would be a no-op; it never joins a protected list.
+id: account-help
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: account_help_title
+    type: Title
+    properties:
+      content: Account help (public module page)
+      level: 2
+  - id: account_help_text
+    type: Html
+    properties:
+      html: |
+        <p>This page ships with the <code>account-kit</code> module and is
+        public because the module manifest lists it under
+        <code>auth.public</code> - the build contributed the scoped page id
+        to the app's public list; the app wrote none of it.</p>
+        <p>Trouble signing in? Reset your password from the
+        <a href="/forgot-password">forgot-password page</a>, or resend your
+        verification email from the
+        <a href="/check-email">check-email page</a>.</p>

@@ -37,10 +37,12 @@ import buildImports from '../buildImports/buildImports.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
+import { resolveModuleManifests } from '../registerModules.js';
 import buildModules from '../buildModules.js';
 import buildNotifications from '../buildNotifications.js';
 import buildRefs from '../buildRefs/buildRefs.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
+import resolveAuthConfigProjection from '../buildAuth/resolveAuthConfigProjection.js';
 import { serializeRegistry } from '../buildRefs/deferredRegistry.js';
 import buildTypes from '../buildTypes.js';
 import buildWebsockets from '../buildWebsockets.js';
@@ -95,6 +97,16 @@ async function shallowBuild(options) {
 
     // Phase 1: Build module definitions
     await buildModuleDefs({ context });
+
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs
+    // and the dev server's JIT page walks (matches the full build in index.js).
+    await resolveAuthConfigProjection({ context });
+
+    // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
+    // that the projection exists (matches the full build in index.js).
+    await resolveModuleManifests({ context });
+
 
     let components;
     try {
@@ -250,6 +262,12 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact(
       'modules.json',
       serializer.serializeToString(context.modules ?? {})
+    );
+    // Persist the auth config projection so JIT page builds (separate process)
+    // resolve _build.authConfig identically to the skeleton build.
+    await context.writeBuildArtifact(
+      'authConfigProjection.json',
+      JSON.stringify(context.authConfigProjection)
     );
     // Deferred-record bodies referenced by placeholders in modules.json.
     // JIT hydrates the registry from this artifact (hydrateDeferredRecords).

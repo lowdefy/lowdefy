@@ -38,11 +38,13 @@ import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
 import buildMenu from './build/buildMenu.js';
 import buildModuleDefs from './build/buildModuleDefs.js';
+import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
 import buildWebsockets from './build/buildWebsockets.js';
 import collectPageContent from './build/collectPageContent.js';
 import buildTypes from './build/buildTypes.js';
@@ -53,6 +55,7 @@ import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
+import validateDeprecatedStyles from './build/validateDeprecatedStyles.js';
 import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
@@ -96,6 +99,15 @@ async function build(options) {
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
     await buildModuleDefs({ context });
+
+    // Scoped pre-pass: resolve the auth: subtree and compute the
+    // _build.authConfig projection so the operator can resolve during buildRefs.
+    await resolveAuthConfigProjection({ context });
+
+    // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
+    // that the projection exists, so module page/api/connection operators like
+    // _build.authConfig resolve against it.
+    await resolveModuleManifests({ context });
 
     let components;
     try {
@@ -144,6 +156,7 @@ async function build(options) {
     components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(validateDeprecatedStyles, 'validateDeprecatedStyles', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });

@@ -20,20 +20,36 @@ import callEndpoint from './routes/endpoints/callEndpoint.js';
 import getEndpointConfig from './routes/endpoints/getEndpointConfig.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
+import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
+import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
-import createSessionCallback from './routes/auth/callbacks/createSessionCallback.js';
-import getAuthConfig from './routes/auth/getAuthConfig.js';
+import createWireProjection from './response/createWireProjection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
+import getBetterAuth from './routes/auth/getBetterAuth.js';
+import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
+import {
+  getAsIssuer,
+  getMcpResourceMetadataUri,
+  getMcpResourceUri,
+} from './routes/mcp/getMcpUri.js';
+import getMcpResourceBinding, {
+  registerMcpResourceBinding,
+} from './routes/mcp/getMcpResourceBinding.js';
+import { ensureMcpOauthResource } from './routes/mcp/oauthResourceLifecycle.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
-import resolveStrategyCaller from './context/resolveStrategyCaller.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
+import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
+import resolveAuthentication from './context/resolveAuthentication.js';
+import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
+import resolveTenantPreflight from './routes/connections/resolveTenantPreflight.js';
 import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
+import acceptDetachedEndpoint from './routes/endpoints/acceptDetachedEndpoint.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
@@ -45,20 +61,33 @@ export {
   getEndpointConfig,
   callRequest,
   createApiContext,
+  createAsMetadataHandler,
   createChannelRegistry,
   createMcpServer,
-  createSessionCallback,
+  createSystemContext,
   createWebSocketConnection,
-  getAuthConfig,
+  createWireProjection,
+  ensureMcpOauthResource,
+  getAsIssuer,
   getAuthStrategies,
+  getBetterAuth,
+  MCP_OAUTH_SCOPES,
   getHomeAndMenus,
+  getMcpResourceBinding,
+  getMcpResourceMetadataUri,
+  getMcpResourceUri,
+  registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
   logClientError,
+  normalizeInjectedCaller,
   redactErrorResponse,
   redactResponse,
-  resolveStrategyCaller,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+  resolveTenantPreflight,
   forwardScheduledEndpoint,
+  acceptDetachedEndpoint,
   runDetachedEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,

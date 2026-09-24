@@ -28,6 +28,7 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
@@ -74,6 +75,23 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       logger: logger ?? console,
       stage: 'dev',
     });
+
+  // Restore the skeleton-computed auth config projection so _build.authConfig
+  // resolves in JIT page builds identically to a full build. The dev server's
+  // JIT context is rebuilt from build artifacts in a separate process, so the
+  // projection is read from the artifact shallowBuild writes.
+  if (
+    type.isUndefined(buildContext.authConfigProjection) &&
+    type.isString(buildContext.directories?.build)
+  ) {
+    const projectionPath = path.join(buildContext.directories.build, 'authConfigProjection.json');
+    try {
+      const content = await fs.promises.readFile(projectionPath, 'utf8');
+      buildContext.authConfigProjection = JSON.parse(content);
+    } catch (err) {
+      if (err.code !== 'ENOENT') throw err;
+    }
+  }
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -255,6 +273,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     if (!buildContext.dynamicBlockRefs) {
       buildContext.dynamicBlockRefs = [];
     }
+    if (!buildContext.orgClientActionRefs) {
+      buildContext.orgClientActionRefs = [];
+    }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
     // it from skeleton-built websockets when the context doesn't carry it
@@ -309,6 +330,27 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       endpointConfigs,
       context: buildContext,
     });
+    // Fail the build when a per-org client action is wired under the
+    // "pinned" organizations policy. The dev JIT context is rebuilt from disk
+    // and carries no components.auth, so the policy is read from the auth.json
+    // artifact - only when a ref exists, to avoid a disk read on every build.
+    if (buildContext.orgClientActionRefs.length > 0) {
+      let policy = buildContext.components?.auth?.organizations?.policy;
+      if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
+        const authPath = path.join(buildContext.directories.build, 'auth.json');
+        try {
+          const authContent = await fs.promises.readFile(authPath, 'utf8');
+          policy = serializer.deserialize(JSON.parse(authContent))?.organizations?.policy;
+        } catch (err) {
+          if (err.code !== 'ENOENT') throw err;
+        }
+      }
+      validateOrgClientActionRefs({
+        orgClientActionRefs: buildContext.orgClientActionRefs,
+        policy: policy ?? 'pinned',
+        context: buildContext,
+      });
+    }
     validateDynamicBlockRefs({
       dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
@@ -367,6 +409,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         message: w.message,
         source: w.source ?? null,
         stack: w.stack ?? null,
+        prodError: w.prodError === true,
       }));
     }
 

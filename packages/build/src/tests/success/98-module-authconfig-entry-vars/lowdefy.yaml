@@ -1,0 +1,41 @@
+# 98: _build.authConfig deferred through module entry vars
+# Reproduces the ordering collision where a cross-module component consumed
+# through module entry vars resolves during the entry sweep (buildModuleDefs),
+# before the auth config projection exists. The walker defers the
+# _build.authConfig folds on those walks; they resolve where the value is
+# consumed (_module.var re-walks the substituted subtree), after the
+# projection is computed.
+lowdefy: local
+name: Module AuthConfig Entry Vars App
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: entry_vars_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
+modules:
+  - id: provider
+    source: 'file:modules/provider'
+  - id: consumer
+    source: 'file:modules/consumer'
+    vars:
+      slots:
+        - _ref:
+            module: provider
+            component: policy-badge
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Home Page

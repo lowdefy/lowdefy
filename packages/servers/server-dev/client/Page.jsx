@@ -20,6 +20,7 @@ import Client from '@lowdefy/client';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
 import InstallingPluginsPage from '../lib/client/InstallingPluginsPage.jsx';
+import RedirectingPage from '../lib/client/RedirectingPage.jsx';
 import usePageConfig from '../lib/client/utils/usePageConfig.js';
 
 const Page = ({
@@ -46,9 +47,21 @@ const Page = ({
     }
   }, [pageConfig?._warnings, lowdefy]);
 
+  // Full load to the sign-in page so it can return here after sign-in — an
+  // effect, not a fetcher side effect, so the redirect re-fires if the same
+  // cached result renders again.
+  useEffect(() => {
+    if (pageConfig?.authRedirect) {
+      window.location.assign(pageConfig.authRedirect);
+    }
+  }, [pageConfig?.authRedirect]);
+
   if (!pageConfig) {
     router.replace({ pathname: '/404' });
     return '';
+  }
+  if (pageConfig.authRedirect) {
+    return <RedirectingPage redirect={pageConfig.authRedirect} />;
   }
   if (pageConfig.buildError) {
     return (

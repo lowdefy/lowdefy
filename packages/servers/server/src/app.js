@@ -18,7 +18,6 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
 import { timeout } from 'hono/timeout';
-import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -33,13 +32,17 @@ import cronForwardHandler from './routes/cronForward.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import endpointsHandler from './routes/endpoints.js';
-import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
+import getAuth from '../lib/server/auth/getAuth.js';
+import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -93,14 +96,22 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
 
   if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
+    // Construct the BetterAuth instance and strategy verifiers at startup so
+    // config errors fail boot instead of the first request, and so the
+    // process-memoized singletons capture the base logger rather than the
+    // first request's rid-scoped child.
+    getAuth({ logger });
+    getStrategies({ logger });
   }
 
+  mountOauthDiscovery({
+    app,
+    auth: authJson.configured === true ? getAuth({ logger }) : null,
+  });
+  app.all('/.well-known/*', wellKnownFallbackHandler);
+
   app.use('/api/*', apiContext());
-  app.use('/api/auth/*', authMiddleware());
+  app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
   // cap bodies at 10 MiB to match the agent route.
@@ -114,6 +125,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.

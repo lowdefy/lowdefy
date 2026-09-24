@@ -15,13 +15,14 @@
 */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { jest } from '@jest/globals';
 
 import createErrorHandler from './errorHandler.js';
 
-// This is the only test coverage of the hono 500 redaction path: the file here is
-// byte-identical to its `server` and `server-e2e` counterparts, and `server` has no
-// test script at all. Keep the three in sync when changing any of them.
+// The handler here is byte-identical to its `server-e2e` counterpart (and to
+// `server`'s apart from the Sentry capture, which `server` tests separately).
+// Keep the three in sync when changing any of them.
 
 // A string that must never reach a client. It is put on `received` at every
 // level of the cause chain, so a single JSON.stringify search over the body
@@ -51,6 +52,20 @@ function createApp({ basePath = '', context, error, logger }) {
 function createAuthenticationError(message) {
   const error = new Error(message);
   error.name = 'AuthenticationError';
+  error.received = SECRET;
+  return error;
+}
+
+function createAuthorizationError(message) {
+  const error = new Error(message);
+  error.name = 'AuthorizationError';
+  error.received = SECRET;
+  return error;
+}
+
+function createTwoFactorEnrolmentRequiredError(message) {
+  const error = new Error(message);
+  error.name = 'TwoFactorEnrolmentRequiredError';
   error.received = SECRET;
   return error;
 }
@@ -105,6 +120,110 @@ test('errorHandler returns text Unauthorized at 401 for an AuthenticationError o
   expect(logger.warn).toHaveBeenCalledTimes(1);
 });
 
+test('errorHandler returns 403 with only name and message for an AuthorizationError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createAuthorizationError('Forbidden.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({ name: 'AuthorizationError', message: 'Forbidden.' });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Forbidden: GET \/api\/request\/getUsers/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send an AuthorizationError through the redactor', async () => {
+  const res = await createApp({
+    error: createAuthorizationError('Forbidden.'),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+  expect(JSON.stringify(body)).not.toContain(SECRET);
+});
+
+test('errorHandler returns text Forbidden at 403 for an AuthorizationError on a page path', async () => {
+  const logger = createLogger();
+  const res = await createApp({
+    error: createAuthorizationError('Forbidden.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(403);
+  expect(await res.text()).toEqual('Forbidden');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('errorHandler returns 403 with only name and message for a TwoFactorEnrolmentRequiredError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/api/request/getUsers');
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({
+    name: 'TwoFactorEnrolmentRequiredError',
+    message: 'Two-factor enrolment required.',
+  });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Two-factor enrolment required/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send a TwoFactorEnrolmentRequiredError through the redactor', async () => {
+  const res = await createApp({
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+});
+
+test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on a page path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createTwoFactorEnrolmentRequiredError('Two-factor enrolment required.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(403);
+  expect(await res.text()).toEqual('Two-factor enrolment required');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler sends an HTTPException response as-is with one warning and no error log', async () => {
+  const logger = createLogger();
+  const error = new HTTPException(404, {
+    res: Response.json(
+      { jsonrpc: '2.0', error: { code: -32000, message: 'Unsupported protocol version' } },
+      { status: 404 }
+    ),
+  });
+  const res = await createApp({ error, logger }).request('/api/mcp', { method: 'POST' });
+  expect(res.status).toEqual(404);
+  expect(await res.json()).toEqual({
+    jsonrpc: '2.0',
+    error: { code: -32000, message: 'Unsupported protocol version' },
+  });
+  expect(logger.warn).toHaveBeenCalledWith('404 answered by the route: POST /api/mcp');
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
 test('errorHandler returns 500 with the serialized error envelope on an api path', async () => {
   const res = await createApp({
     error: createErrorWithCause(),
@@ -114,8 +233,8 @@ test('errorHandler returns 500 with the serialized error envelope on an api path
   expect(res.status).toEqual(500);
   const body = await res.json();
   expect(body['~e'].name).toEqual('Error');
-  expect(body['~e'].message).toEqual('Top message.');
-  expect(body['~e'].cause.message).toEqual('Cause message.');
+  expect(body['~e'].message).toEqual('Something went wrong.');
+  expect(body['~e'].cause).toBeUndefined();
 });
 
 test('errorHandler omits stack and received from the 500 envelope at the top level', async () => {
@@ -129,19 +248,31 @@ test('errorHandler omits stack and received from the 500 envelope at the top lev
   expect(body['~e'].received).toBeUndefined();
 });
 
-// The regression test for the real bug: the four inline `delete` statements this
-// replaces only ever reached depth 0, so a `received` or `stack` on the cause
-// still crossed the wire. The policy is now applied at every error node.
-test('errorHandler omits stack and received from the 500 envelope on the cause at depth 1', async () => {
+test('errorHandler omits the cause chain from the 500 envelope', async () => {
   const res = await createApp({
     error: createErrorWithCause(),
     logger: createLogger(),
   }).request('/api/request/getUsers');
 
   const body = await res.json();
-  expect(body['~e'].cause.stack).toBeUndefined();
-  expect(body['~e'].cause.received).toBeUndefined();
+  expect(body['~e'].cause).toBeUndefined();
   expect(JSON.stringify(body)).not.toContain(SECRET);
+  expect(JSON.stringify(body)).not.toContain('Cause message.');
+});
+
+test('errorHandler adds devError with the full error to the 500 envelope in dev mode', async () => {
+  const context = { handleError: jest.fn(), mode: 'dev', rid: 'rid-1' };
+  const res = await createApp({
+    context,
+    error: createErrorWithCause(),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e'].message).toEqual('Something went wrong.');
+  expect(body.devError['~e'].message).toEqual('Top message.');
+  expect(body.devError['~e'].requestId).toEqual('rid-1');
+  expect(body.devError['~e'].cause.message).toEqual('Cause message.');
 });
 
 test('errorHandler keeps configKey on the 500 envelope so the fault can be located in config', async () => {
@@ -168,7 +299,7 @@ test('errorHandler awaits context.handleError before serializing the response', 
   const context = {
     handleError: jest.fn(async (error) => {
       await new Promise((resolve) => setTimeout(resolve, 10));
-      error.awaited = true;
+      error.handled = true;
     }),
   };
   const error = createErrorWithCause();
@@ -179,7 +310,7 @@ test('errorHandler awaits context.handleError before serializing the response', 
   expect(context.handleError).toHaveBeenCalledTimes(1);
   expect(context.handleError).toHaveBeenCalledWith(error);
   const body = await res.json();
-  expect(body['~e'].awaited).toBe(true);
+  expect(body['~e'].handled).toBe(true);
 });
 
 // createHandleError sets error.handled once it has logged. The client reads it
@@ -220,7 +351,7 @@ test('errorHandler treats a basePath prefixed api path as an api path', async ()
 
   expect(res.status).toEqual(500);
   const body = await res.json();
-  expect(body['~e'].message).toEqual('Top message.');
+  expect(body['~e'].message).toEqual('Something went wrong.');
 });
 
 test('errorHandler treats a basePath prefixed page path as a page path', async () => {

@@ -36,14 +36,14 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       agents: createCounter(),
       auth: {
         adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
         providers: createCounter(),
         strategies: createCounter(),
       },
       blocks: createCounter(),
       connections: createCounter(),
+      notifications: createCounter(),
       requests: createCounter(),
+      steps: createCounter(),
       websockets: createCounter(),
       controls: createCounter(),
       operators: {
@@ -58,6 +58,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     jsMap: {},
     agentIds: new Set(),
     connectionIds: new Set(),
+    tenantConnectionIds: new Set(),
     websocketIds: new Set(),
   };
 
@@ -71,15 +72,14 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     if (warning.prodError && context.stage === 'prod') {
       throw new Error(warning.message);
     }
+    if (context.warnings) {
+      context.warnings.push(warning);
+    }
     context.logger.warn(warning.message);
   };
 
   // handleError delegates to logger.error
   context.handleError = context.logger.error;
-
-  // No-op stub for demand-driven module entry resolution used by resolveModuleConnectionId.
-  // In tests, module entries are already in their final state so no resolution is needed.
-  context.ensureEntryConfigResolved = () => Promise.resolve();
 
   return context;
 }

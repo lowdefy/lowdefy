@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import redactErrorResponse from '../../response/redactErrorResponse.js';
+
 // Wraps one client websocket connection: parses frames, dispatches
 // subscribe/unsubscribe/publish to the channel registry, and answers every
 // frame with an ack or an error so client actions never hang.
@@ -25,10 +27,24 @@ function createWebSocketConnection(context, { registry, send }) {
     id: context.rid,
     subscriptions: new Map(),
     send,
+    // A shared channel broadcasts to every subscriber, so each one carries its
+    // own locale for the error message it is sent.
+    i18n: context.i18n,
   };
 
   function sendError({ message, requestId, websocketId }) {
     send(JSON.stringify({ type: 'error', websocketId, requestId, message }));
+  }
+
+  function sendErrorPayload({ error, requestId, websocketId }) {
+    send(
+      JSON.stringify({
+        type: 'error',
+        websocketId,
+        requestId,
+        error: redactErrorResponse(context, error),
+      })
+    );
   }
 
   async function handleFrame(frame) {
@@ -72,9 +88,19 @@ function createWebSocketConnection(context, { registry, send }) {
       await handleFrame(frame);
     } catch (error) {
       logger.debug({ err: error }, error.message);
-      context.handleError(error);
-      sendError({
-        message: error.message,
+      // Authentication and authorization refusals are expected traffic - one
+      // warn line, no error log or Sentry report, but the client is still told.
+      if (
+        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
+          error.name
+        )
+      ) {
+        logger.warn({ event: 'ws_refused', frameType: frame.type }, error.message);
+      } else {
+        context.handleError(error);
+      }
+      sendErrorPayload({
+        error,
         requestId: frame.requestId,
         websocketId: frame.websocketId,
       });

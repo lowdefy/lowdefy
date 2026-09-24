@@ -18,12 +18,13 @@ import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, i18n, jsMap, lowdefyApp, operators, secrets, user }) {
+  constructor({ env, i18n, jsMap, lowdefyApp, operators, organization, secrets, user }) {
     this.env = env;
     this.i18n = i18n;
     this.jsMap = jsMap;
     this.lowdefyApp = lowdefyApp;
     this.operators = operators;
+    this.organization = organization;
     this.parse = this.parse.bind(this);
     this.secrets = secrets;
     this.user = user;
@@ -32,6 +33,7 @@ class ServerParser {
   parse({
     args,
     arrayIndices = [],
+    error,
     input,
     items,
     location,
@@ -54,7 +56,16 @@ class ServerParser {
     // means they only pass what they change, so no frame field can be dropped on the way in.
     const parser = {
       parse: (callOptions) =>
-        this.parse({ arrayIndices, items, location, payload, state, steps, ...callOptions }),
+        this.parse({
+          arrayIndices,
+          error,
+          items,
+          location,
+          payload,
+          state,
+          steps,
+          ...callOptions,
+        }),
     };
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
@@ -72,6 +83,7 @@ class ServerParser {
           args,
           arrayIndices,
           env: this.env,
+          error,
           i18n: this.i18n,
           items,
           jsMap: this.jsMap,
@@ -80,6 +92,7 @@ class ServerParser {
           methodName,
           operatorPrefix,
           operators: this.operators,
+          organization: this.organization,
           params,
           parser,
           payload,

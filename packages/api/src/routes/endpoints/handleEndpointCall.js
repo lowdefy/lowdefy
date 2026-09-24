@@ -15,7 +15,7 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
 import invokeEndpoint from './invokeEndpoint.js';
@@ -50,7 +50,9 @@ async function handleEndpointCall(context, routineContext, { step }) {
       );
     }
     if (!context.origin) {
-      throw new ConfigError('Detached endpoint calls require the request origin on context.');
+      throw new LowdefyInternalError(
+        'Detached endpoint calls require the request origin on context.'
+      );
     }
     const targetEndpointId = evaluatedProperties.endpointId;
     scheduleBackground(context, { event: 'detached_dispatch', endpointId: targetEndpointId }, () =>
@@ -60,8 +62,21 @@ async function handleEndpointCall(context, routineContext, { step }) {
           'content-type': 'application/json',
           authorization: `Bearer ${process.env.CRON_SECRET}`,
         },
+        // Carry the already-resolved dispatcher identity across the hop
+        // (Decision 4): a detached call is a fresh invocation, not a fresh
+        // principal. The receiver rehydrates context.user / context.system from
+        // this snapshot and authorizes nested calls against it through the
+        // normal path - so a user-dispatched detached run reaches nothing the
+        // user could not reach synchronously, and a cron/hook/verified-webhook
+        // run blanket-passes like its dispatcher. Built server-side from the
+        // resolved context, never from user input; the CRON_SECRET proves
+        // origin, which is what lets the receiver trust the assertion.
         body: JSON.stringify({
           payload: serializer.serialize(evaluatedProperties.payload ?? {}),
+          principal: {
+            user: serializer.serialize(context.user ?? null),
+            system: context.system === true,
+          },
         }),
       })
     );

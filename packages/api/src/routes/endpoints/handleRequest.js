@@ -22,6 +22,7 @@ import evaluateOperators from '../request/evaluateOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
+import resolveTenant from '../request/resolveTenant.js';
 import validateSchemas from '../request/validateSchemas.js';
 
 async function handleRequest(context, routineContext, { request }) {
@@ -39,6 +40,7 @@ async function handleRequest(context, routineContext, { request }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const tenant = resolveTenant(context, { connection, connectionConfig, requestConfig });
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -70,6 +72,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestConfig,
     requestProperties,
     requestResolver,
+    tenant,
   });
 
   addStepResult(context, routineContext, { result, stepId: request.stepId });

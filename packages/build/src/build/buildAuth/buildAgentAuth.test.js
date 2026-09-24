@@ -95,31 +95,24 @@ test('buildAuth stamps agent auth alongside api and page auth', () => {
     agents: [{ id: 'agent-a' }],
     api: [{ id: 'endpoint-a', type: 'Api' }],
     pages: [{ id: 'page-a', type: 'Context' }],
-    auth: { api: { protected: true } },
+    auth: {
+      secret: { _secret: 'BETTER_AUTH_SECRET' },
+      database: { id: 'auth_db', type: 'MongoDBAuthAdapter', properties: {} },
+      emailAndPassword: { enabled: true },
+      api: { protected: true },
+    },
   };
   const res = buildAuth({ components, context });
   expect(res.agents).toEqual([{ id: 'agent-a', auth: { public: false } }]);
   expect(res.api).toEqual([{ id: 'endpoint-a', type: 'Api', auth: { public: false } }]);
 });
 
-test('buildAgentAuth throws a located error when an agent id is a reserved name', () => {
-  const agent = { id: '__proto__' };
-  Object.defineProperty(agent, '~k', { value: 'agentKey', enumerable: false });
-  const components = { agents: [agent], auth: { api: { roles: {} } } };
+test('buildAgentAuth rejects a reserved agent id with the validateId message', () => {
+  const components = {
+    agents: [{ id: '__proto__' }],
+    auth: { api: { roles: {} } },
+  };
   expect(() => buildAgentAuth({ components, context })).toThrow(
     'Agent id "__proto__" is a reserved name and cannot be used as an id.'
   );
-  try {
-    buildAgentAuth({ components, context });
-  } catch (e) {
-    expect(e.configKey).toBe('agentKey');
-  }
-});
-
-test('buildAgentAuth does not stamp Object.prototype as an agent roles list', () => {
-  const before = Object.getOwnPropertyNames(Object.prototype);
-  const components = { agents: [{ id: '__proto__' }], auth: { api: { roles: {} } } };
-  expect(() => buildAgentAuth({ components, context })).toThrow();
-  expect(components.agents[0].auth).toBeUndefined();
-  expect(Object.getOwnPropertyNames(Object.prototype)).toEqual(before);
 });

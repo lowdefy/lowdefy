@@ -37,10 +37,10 @@ packages/
 
 ## Server Architecture
 
-| Package               | Purpose     | Entry Point       | Key Feature                             |
-| --------------------- | ----------- | ----------------- | --------------------------------------- |
-| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client |
-| `@lowdefy/server-dev` | Development | `manager/run.mjs` | File watching, hot reload, auto-rebuild |
+| Package               | Purpose     | Entry Point         | Key Feature                             |
+| --------------------- | ----------- | ------------------- | --------------------------------------- |
+| `@lowdefy/server`     | Production  | `node src/index.js` | Hono app serving the Vite-built client  |
+| `@lowdefy/server-dev` | Development | `manager/run.mjs`   | File watching, hot reload, auto-rebuild |
 
 **server-dev manager** orchestrates: initial build → file watchers → Vite + Hono child process → Vite HMR for client code, SSE reload for config. See `code-docs/architecture/` for details.
 
@@ -229,7 +229,7 @@ export default _myOperator;
 
 ### Actions
 
-Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected user-facing errors (validation, intentional throws), throw `UserError` instead — it logs to the browser console only and is never sent to the server terminal:
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value. For expected outcomes of user interaction (validation failures, intentional throws, an auth server rejecting a sign-in attempt), throw `UserError` instead — it still displays and still triggers catch actions, but it logs to the browser console only and is never sent to the server terminal. The test is "would a developer need to change config to stop this?" — if not, it is a `UserError`, not an `ActionError`:
 
 ```javascript
 function MyAction({ methods: { setState }, params }) {
@@ -275,19 +275,22 @@ import {
 } from '@lowdefy/errors';
 ```
 
-| Class                  | Purpose                                                     | Catch Layer                      |
-| ---------------------- | ----------------------------------------------------------- | -------------------------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs                                       | Top-level in build/server/client |
-| `BuildError`           | Summary error after build fails (`Build failed with N...`)  | `logCollectedErrors`             |
-| `PluginError`          | Base class for plugin failures (not used directly)          | Plugin interface layer           |
-| `OperatorError`        | Operator failures (`_if`, `_get`, etc.)                     | Operator parsers                 |
-| `ActionError`          | Action failures (`SetState`, `Request`, etc.)               | Action runner (engine)           |
-| `RequestError`         | Request/connection failures (`MongoDBFind`, etc.)           | Request handler (API)            |
-| `BlockError`           | Block rendering failures                                    | ErrorBoundary (client)           |
-| `ServiceError`         | External service failures (network, timeout, 5xx)           | Request/connection layer         |
-| `ConfigError`          | YAML config validation errors                               | Build validation, runtime        |
-| `ConfigWarning`        | Config inconsistencies (warning in dev, error in prod)      | Build validation                 |
-| `UserError`            | Expected user interaction (validation, throws), client-only | Browser console only             |
+| Class                             | Purpose                                                                                                       | Catch Layer                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| `LowdefyInternalError`            | Internal Lowdefy bugs                                                                                         | Top-level in build/server/client |
+| `BuildError`                      | Summary error after build fails (`Build failed with N...`)                                                    | `logCollectedErrors`             |
+| `PluginError`                     | Base class for plugin failures (not used directly)                                                            | Plugin interface layer           |
+| `OperatorError`                   | Operator failures (`_if`, `_get`, etc.)                                                                       | Operator parsers                 |
+| `ActionError`                     | Action failures (`SetState`, `Request`, etc.)                                                                 | Action runner (engine)           |
+| `RequestError`                    | Request/connection failures (`MongoDBFind`, etc.)                                                             | Request handler (API)            |
+| `BlockError`                      | Block rendering failures                                                                                      | ErrorBoundary (client)           |
+| `ServiceError`                    | External service failures (network, timeout, 5xx)                                                             | Request/connection layer         |
+| `ConfigError`                     | YAML config validation errors                                                                                 | Build validation, runtime        |
+| `ConfigWarning`                   | Config inconsistencies (warning in dev, error in prod)                                                        | Build validation                 |
+| `AuthenticationError`             | Unauthenticated request to a protected endpoint (401)                                                         | Server error handler (warn only) |
+| `TwoFactorEnrolmentRequiredError` | Authorized caller with no enrolled second factor (403)                                                        | Server error handler (warn only) |
+| `AuthorizationError`              | Authenticated caller refused by an authorization gate (wrong roles, 403)                                      | Server error handler (warn only) |
+| `UserError`                       | Expected outcome of user interaction (validation, throws, rejected auth attempt), never a config/system fault | Browser console only             |
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches errors and adds `configKey` for location resolution to ALL error types - this helps developers trace any error back to its config source.
 

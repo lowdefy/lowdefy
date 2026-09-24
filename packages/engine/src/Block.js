@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 import Events from './Events.js';
 import Slots from './Slots.js';
@@ -72,13 +73,15 @@ class Block {
 
     this.meta = this.context._internal.lowdefy._internal.blockMetas[this.type];
     if (!this.meta) {
-      throw new Error(
-        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
+      throw new ConfigError(
+        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`,
+        { configKey: blockConfig['~k'] }
       );
     }
     if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {
-      throw new Error(
-        `Block type ${this.type}.meta.category must be either "container", "display", "input", "list", or "input-container".`
+      throw new ConfigError(
+        `Block type ${this.type}.meta.category must be either "container", "display", "input", "list", or "input-container".`,
+        { configKey: blockConfig['~k'] }
       );
     }
 

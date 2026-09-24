@@ -21,6 +21,7 @@ import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getWebsocketConfig from './getWebsocketConfig.js';
 import getWebsocketResolver from './getWebsocketResolver.js';
+import resolveTenant from '../request/resolveTenant.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 
@@ -38,6 +39,7 @@ async function prepareChannel(context, { websocketId, payload }) {
   const websocketResolver = getWebsocketResolver(context, { websocketConfig });
 
   let connectionProperties = null;
+  let tenant = null;
   if (!type.isNone(websocketConfig.connectionId)) {
     const connectionConfig = await getConnectionConfig(context, {
       connectionId: websocketConfig.connectionId,
@@ -45,7 +47,16 @@ async function prepareChannel(context, { websocketId, payload }) {
     });
     // Validates the connection type exists — resolver lookup is on the
     // websocket type itself, not nested on the connection.
-    getConnection(context, { connectionConfig });
+    const connection = getConnection(context, { connectionConfig });
+    // A change stream is a read on a separate execution path — the tenant
+    // verdict is resolved per subscriber exactly like per request, and joins
+    // the channel identity so callers from different orgs never share a
+    // running source (see createChannelRegistry getChannelKey).
+    tenant = resolveTenant(context, {
+      connection,
+      connectionConfig,
+      requestConfig: websocketConfig,
+    });
     connectionProperties = context.evaluateOperators({
       input: connectionConfig.properties ?? {},
       location: connectionConfig.connectionId,
@@ -63,7 +74,7 @@ async function prepareChannel(context, { websocketId, payload }) {
     steps: {},
   });
 
-  return { connectionProperties, properties, websocketConfig, websocketResolver };
+  return { connectionProperties, properties, tenant, websocketConfig, websocketResolver };
 }
 
 export default prepareChannel;

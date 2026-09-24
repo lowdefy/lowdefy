@@ -34,12 +34,15 @@ The `MongoDBCollection` connection sets up a connection to a MongoDB deployment.
 
 >Since the connection URI contains authentication secrets, it should be stored using the [`_secret`](operators/secret.md) operator.
 
-When using MongoDBUpdateOne and MongoDBDeleteOne requests, take note that the responses differ if the connection has a log collection.
+When the connection has a `changeLog` collection, all write requests log a change record to that collection. The record contains the request arguments, the request context (`blockId`, `pageId`, `requestId`, `connectionId`, `payload`), a `timestamp`, the request `type`, the connection's `changeLog.meta` value, and either the driver response or `before`/`after` document snapshots (for `MongoDBUpdateOne`, `MongoDBVersionedUpdateOne` and `MongoDBDeleteOne`). The response shape of every request stays the same whether or not a log collection is configured.
 
 #### Properties
 - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
 - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
 - `collection: string`: __Required__ - The name of the MongoDB collection.
+- `changeLog: object`: Log all changes made by write requests to a log collection.
+  - `collection: string`: __Required__ - The name of the collection change log records are written to.
+  - `meta: object`: Additional data to include in every change log record, for example the user making the change.
 - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
 - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
 - `options: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
@@ -105,10 +108,13 @@ Request types:
   - MongoDBDeleteOne
   - MongoDBFind
   - MongoDBFindOne
+  - MongoDBInsertConsecutiveId
   - MongoDBInsertMany
+  - MongoDBInsertManyConsecutiveIds
   - MongoDBInsertOne
   - MongoDBUpdateMany
   - MongoDBUpdateOne
+  - MongoDBVersionedUpdateOne
 
 
 ### MongoDBAggregation
@@ -291,7 +297,7 @@ requests:
 ### MongoDBDeleteOne
 
 The `MongoDBDeleteOne` request deletes a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to delete. It will delete the first document that matches the filter.
-> MongoDBDeleteOne response differs when the connection has a log collection. When a log collection is set on the connection, a findOneAndDelete operation is performed compared to the standard deleteOne operation.
+> When the connection has a log collection, a findOneAndDelete operation is performed instead of the standard deleteOne operation so the deleted document can be captured in the change log. The response shape is the same in both cases.
 
 #### Properties
 - `filter: object`: __Required__ - The filter used to select the document to update.
@@ -465,6 +471,34 @@ requests:
           _payload: _id
 ```
 
+### MongoDBInsertConsecutiveId
+
+The `MongoDBInsertConsecutiveId` request inserts a single document into the collection specified in the connectionId, assigning a sequential, human-readable `_id` like `INV0001`. The id is built from a prefix and the next consecutive number for that prefix, zero-padded to `length` digits. The id read and the insert run inside a transaction so concurrent requests cannot claim the same id.
+
+> Transactions require MongoDB to run as a replica set. Standalone deployments are not supported by this request.
+
+#### Properties
+- `doc: object`: __Required__ - The document to be inserted. The `_id` is assigned by the request.
+- `prefix: string`: __Required__ - Prefix to add to the id, for example `INV`.
+- `length: number`: The numeric part of the id is zero-padded to this number of digits. If omitted, the number is not padded.
+- `options: object`: Optional settings passed to the insert. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertone) for more information.
+
+#### Examples
+
+###### Insert an invoice with a sequential id (INV0001, INV0002, ...):
+```yaml
+requests:
+  - id: insert_invoice
+    type: MongoDBInsertConsecutiveId
+    connectionId: my_mongodb_collection_id
+    properties:
+      prefix: INV
+      length: 4
+      doc:
+        amount:
+          _state: amount
+```
+
 ### MongoDBInsertMany
 
 The `MongoDBInsertMany` request inserts an array of documents into the collection specified in the connectionId. If a `_id` field is not specified on a document, a MongoDB `ObjectID` will be generated.
@@ -510,6 +544,33 @@ requests:
         - _id: 3
           value: 7
 
+```
+
+### MongoDBInsertManyConsecutiveIds
+
+The `MongoDBInsertManyConsecutiveIds` request inserts an array of documents into the collection specified in the connectionId, assigning each document a sequential, human-readable `_id` like `INV0001`. Ids continue from the highest existing id for the prefix. The id read and the insert run inside a transaction so concurrent requests cannot claim the same ids.
+
+> Transactions require MongoDB to run as a replica set. Standalone deployments are not supported by this request.
+
+#### Properties
+- `docs: object[]`: __Required__ - The documents to be inserted. The `_id` values are assigned by the request.
+- `prefix: string`: __Required__ - Prefix to add to the ids, for example `INV`.
+- `length: number`: The numeric part of each id is zero-padded to this number of digits. If omitted, the numbers are not padded.
+- `options: object`: Optional settings passed to the insert. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertmany) for more information.
+
+#### Examples
+
+###### Insert order lines with sequential ids:
+```yaml
+requests:
+  - id: insert_order_lines
+    type: MongoDBInsertManyConsecutiveIds
+    connectionId: my_mongodb_collection_id
+    properties:
+      prefix: LINE
+      length: 6
+      docs:
+        _state: order_lines
 ```
 
 ### MongoDBInsertOne
@@ -619,11 +680,15 @@ requests:
 ### MongoDBUpdateOne
 
 The `MongoDBUpdateOne` request updates a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to update. It will update the first document that matches the filter. If the `upsert` option is set to true, it will insert a new document if no document is found to update.
-> MongoDBUpdateOne response differs when the connection has a log collection. When a log collection is set on the connection, a findOneAndUpdate operation is performed compared to the standard updateOne operation.
+
+If no document matches the filter, the request throws `No matching record to update.` — a silent no-op update usually indicates a bug. Set `disableNoMatchError: true` on the request to restore the pre-5.5.0 behavior of returning `matchedCount: 0`. Requests with the `upsert` option never throw this error. Running `lowdefy upgrade` adds `disableNoMatchError: true` to existing requests so upgraded apps keep their behavior.
+
+> When the connection has a log collection, a findOneAndUpdate operation is performed instead of the standard updateOne operation so before and after document snapshots can be captured in the change log. The response shape is the same in both cases.
 
 #### Properties
 - `filter: object`: __Required__ - The filter used to select the document to update.
 - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
+- `disableNoMatchError: boolean`: Default: `false` - Do not throw an error when no document matches the filter.
 - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#updateone) for more information. Supported settings are:
   - `arrayFilters: object[]`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
   - `authdb: string`: Specifies the authentication information to be used.
@@ -690,6 +755,47 @@ requests:
         $set:
           last_liked:
             _date: now
+```
+
+### MongoDBVersionedUpdateOne
+
+The `MongoDBVersionedUpdateOne` request updates a single document while preserving the previous version. The matched document is re-inserted under a new `_id`, and the update is applied to the new copy — so the collection keeps a full version history of the document.
+
+If no document matches the filter, the request throws `No matching record to update.`. Set `disableNoMatchError: true` on the request to suppress the error. Requests with the `upsert` update option never throw this error.
+
+> The version insert and the update are separate operations, not a transaction. If the update fails, the inserted version copy remains in the collection.
+
+> When the connection has a log collection, a findOneAndUpdate operation is performed instead of the standard updateOne operation so before and after document snapshots can be captured in the change log. The response shape is the same in both cases.
+
+#### Properties
+- `filter: object`: __Required__ - The filter used to select the document to version and update.
+- `update: object | object[]`: __Required__ - The update operations to be applied to the new copy of the document.
+- `disableNoMatchError: boolean`: Default: `false` - Do not throw an error when no document matches the filter.
+- `options: object`: Optional settings for each underlying operation:
+  - `find: object`: Options for the find one operation. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#findone).
+  - `insert: object`: Options for the insert one operation that creates the version copy. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertone).
+  - `update: object`: Options for the update operation. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#updateone).
+
+#### Examples
+
+###### Update a document, keeping the previous version:
+```yaml
+requests:
+  - id: versioned_update
+    type: MongoDBVersionedUpdateOne
+    connectionId: my_mongodb_collection_id
+    payload:
+      doc_id:
+        _state: doc_id
+    properties:
+      filter:
+        doc_id:
+          _payload: doc_id
+        current: true
+      update:
+        $set:
+          status:
+            _state: status
 ```
 
 ## Websockets

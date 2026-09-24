@@ -1,0 +1,23 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# CreateOrganization declares system scope: there is no organization to hold
+# authority in before it runs, so no caller can satisfy it. system: true
+# below is the app taking that trust on its own gate, and the step then runs
+# caller-less - which is why the creator has to be named explicitly rather
+# than inferred from the caller. Note the new org is NOT this deployment's
+# pinned org, and under the pinned policy there is no way to act inside it
+# from here.
+id: admin-create-organization
+type: Api
+routine:
+  - id: create_organization
+    type: CreateOrganization
+    system: true
+    properties:
+      userId:
+        _user: id
+      name:
+        _payload: name
+      slug:
+        _payload: slug
+  - ':return':
+      _step: create_organization

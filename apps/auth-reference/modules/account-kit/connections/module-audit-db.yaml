@@ -1,0 +1,10 @@
+# The module's own audit collection (module-audit) in the shared auth
+# database - the walkthrough inspects it with mongosh. The secret is
+# declared in module.lowdefy.yaml and resolves from the app's environment.
+id: module-audit-db
+type: MongoDBCollection
+properties:
+  databaseUri:
+    _secret: AUTH_DATABASE_URI
+  collection: module-audit
+  write: true

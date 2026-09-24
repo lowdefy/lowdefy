@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize.js';
+import createAuthorizeOutcome from './createAuthorizeOutcome.js';
 import createReadConfigFile from './createReadConfigFile.js';
+import getAuthEnforcement from '../routes/auth/getAuthEnforcement.js';
+import getOrganizationBinding from '../routes/auth/organizations/getOrganizationBinding.js';
 import resolveLocale from './resolveLocale.js';
 
 function createApiContext(context) {
-  context.user = context?.session?.user;
-
+  // context.user is written by resolveAuthentication (or a pre-resolved
+  // dev/e2e caller) before this runs - never assigned here.
   if (context.i18n?.defaultLocale) {
     const active = resolveLocale({ i18n: context.i18n, headers: context.headers });
     context.i18n = { ...context.i18n, active };
@@ -28,7 +30,17 @@ function createApiContext(context) {
     context.i18n = undefined;
   }
 
-  context.authorize = createAuthorize(context);
+  // The retained organizations state ({ policy, pinned }) - read by the
+  // _organization operator and the org-scoped admin steps; null when auth
+  // (or organizations) is not configured.
+  context.organization = getOrganizationBinding({ auth: context.auth ?? null });
+
+  // The retained build-time authorization facts - the enrolment floor, the exempt
+  // enrolment page, and the unlisted-page-id default. null when auth is not
+  // configured, in which case nothing is protected and nothing is required.
+  context.authEnforcement = getAuthEnforcement({ auth: context.auth ?? null });
+
+  context.authorizeOutcome = createAuthorizeOutcome(context);
   context.readConfigFile = createReadConfigFile(context);
 }
 

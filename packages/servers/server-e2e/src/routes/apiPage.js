@@ -25,13 +25,13 @@ async function apiPageHandler(c) {
   const pageId = getPathSegments(c, '/api/page/').join('/');
   // The client forwards its current query string on the fetch so Dynamic block
   // resolution sees the same urlQuery as an initial HTML load.
-  const pageConfig = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
-  if (!pageConfig) {
+  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
+  if (result.status !== 'ok') {
     context.logger.info({ event: 'api_page_not_found', pageId });
     return c.json({ pageConfig: null }, 404);
   }
   context.logger.info({ event: 'api_page_view', pageId });
-  return c.json({ pageConfig });
+  return c.json({ pageConfig: result.pageConfig });
 }
 
 export default apiPageHandler;

@@ -16,13 +16,19 @@
 
 import { getPageConfig } from '@lowdefy/api';
 
+import authJson from '../../lib/build/auth.js';
 import buildPageIfNeeded, { getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
+import lowdefyConfig from '../../lib/build/config.js';
+
+const basePath = lowdefyConfig.basePath ?? '';
 
 // JIT page build + config response. The response shapes are a frozen contract
 // with the dev client:
 //   200 { installing: true, packages }  — plugin install in progress, client polls
 //   500 { buildError: true, errors, message, source }  — build failed
+//   401 { redirect }  — logged-out navigation to a protected page
+//   403 { redirect }  — authorised but second factor not yet enrolled
 //   404 'Page not found.'
 //   200 pageConfig (+ _warnings, + _jsEntries module text, + _dynamicIcons data)
 async function jitPageHandler(c) {
@@ -67,10 +73,44 @@ async function jitPageHandler(c) {
     });
   }
 
-  const pageConfig = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
-  if (pageConfig === null) {
+  const result = await getPageConfig(context, { pageId, urlQuery: c.req.query() });
+  if (result.status === 'unauthenticated') {
+    // The client follows this redirect with a full page load, so the login
+    // page can return to the requested page after sign-in.
+    const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.debug(
+      `Page config request for "${pageId}" resolved unauthenticated - returning a sign-in redirect.`
+    );
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      401
+    );
+  }
+  if (result.status === 'enrol_required') {
+    // 403, not the 401 the signed-out branch above uses: a 401 is the client's
+    // dead-session signal and would bounce the user to sign-in, which is the loop
+    // the enrolment gate exists to avoid.
+    const callbackUrl = `${basePath}/${pageId}`;
+    context.logger.debug(
+      `Page config request for "${pageId}" resolved enrol_required - returning a two-factor enrolment redirect.`
+    );
+    return c.json(
+      {
+        redirect: `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
+          callbackUrl
+        )}`,
+      },
+      403
+    );
+  }
+  if (result.status !== 'ok') {
     return c.text('Page not found.', 404);
   }
+  const pageConfig = result.pageConfig;
   if (buildResult?.warnings?.length > 0) {
     pageConfig._warnings = buildResult.warnings;
   }

@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.5.1",
   "docs": [
     {
       "slug": "other/introduction",
@@ -236,6 +236,12 @@
       "path": "content/deployment/vercel.md"
     },
     {
+      "slug": "deployment/deployment-environments",
+      "title": "Deployment environments",
+      "section": "Deployment",
+      "path": "content/deployment/deployment-environments.md"
+    },
+    {
       "slug": "plugins/plugins-introduction",
       "title": "Plugins",
       "section": "Plugins",
@@ -266,6 +272,12 @@
       "path": "content/plugins/plugins-operators.md"
     },
     {
+      "slug": "plugins/posthog",
+      "title": "PostHog",
+      "section": "Plugins",
+      "path": "content/plugins/posthog.md"
+    },
+    {
       "slug": "user-authentication/users-introduction",
       "title": "Introduction",
       "section": "User Authentication",
@@ -284,10 +296,52 @@
       "path": "content/user-authentication/login-and-logout.md"
     },
     {
+      "slug": "user-authentication/two-factor",
+      "title": "Two-Factor Authentication",
+      "section": "User Authentication",
+      "path": "content/user-authentication/two-factor.md"
+    },
+    {
+      "slug": "user-authentication/organizations",
+      "title": "Organizations &amp; Multi-Tenancy",
+      "section": "User Authentication",
+      "path": "content/user-authentication/organizations.md"
+    },
+    {
+      "slug": "user-authentication/auth-steps",
+      "title": "Auth Steps",
+      "section": "User Authentication",
+      "path": "content/user-authentication/auth-steps.md"
+    },
+    {
+      "slug": "user-authentication/mcp-oauth",
+      "title": "MCP Server &amp; OAuth",
+      "section": "User Authentication",
+      "path": "content/user-authentication/mcp-oauth.md"
+    },
+    {
+      "slug": "user-authentication/user-object",
+      "title": "User Object",
+      "section": "User Authentication",
+      "path": "content/user-authentication/user-object.md"
+    },
+    {
       "slug": "other/next-auth-providers",
       "title": "next-auth-providers",
       "section": "Other",
       "path": "content/other/next-auth-providers.md"
+    },
+    {
+      "slug": "other/mongodbadapter",
+      "title": "MongoDBAdapter",
+      "section": "Other",
+      "path": "content/other/mongodbadapter.md"
+    },
+    {
+      "slug": "testing/config-tests",
+      "title": "Config Tests",
+      "section": "Testing",
+      "path": "content/testing/config-tests.md"
     },
     {
       "slug": "testing/e2e-introduction",
@@ -348,6 +402,14 @@
       "path": "content/input-blocks/buttonselector.md",
       "kind": "block",
       "typeName": "ButtonSelector"
+    },
+    {
+      "slug": "input-blocks/captcha",
+      "title": "Captcha",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/captcha.md",
+      "kind": "block",
+      "typeName": "Captcha"
     },
     {
       "slug": "input-blocks/checkboxselector",
@@ -454,6 +516,14 @@
       "typeName": "PhoneNumberInput"
     },
     {
+      "slug": "input-blocks/placesautocomplete",
+      "title": "PlacesAutocomplete",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/placesautocomplete.md",
+      "kind": "block",
+      "typeName": "PlacesAutocomplete"
+    },
+    {
       "slug": "input-blocks/radioselector",
       "title": "RadioSelector",
       "section": "Input Blocks",
@@ -540,6 +610,22 @@
       "path": "content/input-blocks/switch.md",
       "kind": "block",
       "typeName": "Switch"
+    },
+    {
+      "slug": "input-blocks/tagmultipleselector",
+      "title": "TagMultipleSelector",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tagmultipleselector.md",
+      "kind": "block",
+      "typeName": "TagMultipleSelector"
+    },
+    {
+      "slug": "input-blocks/tagselector",
+      "title": "TagSelector",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tagselector.md",
+      "kind": "block",
+      "typeName": "TagSelector"
     },
     {
       "slug": "input-blocks/textarea",
@@ -726,6 +812,14 @@
       "typeName": "DropdownButton"
     },
     {
+      "slug": "display-blocks/eventlog",
+      "title": "EventLog",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/eventlog.md",
+      "kind": "block",
+      "typeName": "EventLog"
+    },
+    {
       "slug": "display-blocks/echart",
       "title": "EChart",
       "section": "Display Blocks",
@@ -812,6 +906,14 @@
       "path": "content/display-blocks/paragraph.md",
       "kind": "block",
       "typeName": "Paragraph"
+    },
+    {
+      "slug": "display-blocks/pollingtimer",
+      "title": "PollingTimer",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/pollingtimer.md",
+      "kind": "block",
+      "typeName": "PollingTimer"
     },
     {
       "slug": "display-blocks/progress",
@@ -1462,6 +1564,30 @@
       "typeName": "DownloadCsv"
     },
     {
+      "slug": "actions/getlocalstorage",
+      "title": "GetLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/getlocalstorage.md",
+      "kind": "action",
+      "typeName": "GetLocalStorage"
+    },
+    {
+      "slug": "actions/emailotpsend",
+      "title": "EmailOtpSend",
+      "section": "Actions",
+      "path": "content/actions/emailotpsend.md",
+      "kind": "action",
+      "typeName": "EmailOtpSend"
+    },
+    {
+      "slug": "actions/emailotpverify",
+      "title": "EmailOtpVerify",
+      "section": "Actions",
+      "path": "content/actions/emailotpverify.md",
+      "kind": "action",
+      "typeName": "EmailOtpVerify"
+    },
+    {
       "slug": "actions/fetch",
       "title": "Fetch",
       "section": "Actions",
@@ -1502,6 +1628,14 @@
       "typeName": "Logout"
     },
     {
+      "slug": "actions/magiclinkverify",
+      "title": "MagicLinkVerify",
+      "section": "Actions",
+      "path": "content/actions/magiclinkverify.md",
+      "kind": "action",
+      "typeName": "MagicLinkVerify"
+    },
+    {
       "slug": "actions/pdfmake",
       "title": "PdfMake",
       "section": "Actions",
@@ -1510,12 +1644,124 @@
       "typeName": "PdfMake"
     },
     {
+      "slug": "actions/posthogalias",
+      "title": "PostHogAlias",
+      "section": "Actions",
+      "path": "content/actions/posthogalias.md",
+      "kind": "action",
+      "typeName": "PostHogAlias"
+    },
+    {
+      "slug": "actions/posthogcapture",
+      "title": "PostHogCapture",
+      "section": "Actions",
+      "path": "content/actions/posthogcapture.md",
+      "kind": "action",
+      "typeName": "PostHogCapture"
+    },
+    {
+      "slug": "actions/posthogcapturepageleave",
+      "title": "PostHogCapturePageLeave",
+      "section": "Actions",
+      "path": "content/actions/posthogcapturepageleave.md",
+      "kind": "action",
+      "typeName": "PostHogCapturePageLeave"
+    },
+    {
+      "slug": "actions/posthogfeatureflag",
+      "title": "PostHogFeatureFlag",
+      "section": "Actions",
+      "path": "content/actions/posthogfeatureflag.md",
+      "kind": "action",
+      "typeName": "PostHogFeatureFlag"
+    },
+    {
+      "slug": "actions/posthoggroup",
+      "title": "PostHogGroup",
+      "section": "Actions",
+      "path": "content/actions/posthoggroup.md",
+      "kind": "action",
+      "typeName": "PostHogGroup"
+    },
+    {
+      "slug": "actions/posthogidentify",
+      "title": "PostHogIdentify",
+      "section": "Actions",
+      "path": "content/actions/posthogidentify.md",
+      "kind": "action",
+      "typeName": "PostHogIdentify"
+    },
+    {
+      "slug": "actions/posthoginit",
+      "title": "PostHogInit",
+      "section": "Actions",
+      "path": "content/actions/posthoginit.md",
+      "kind": "action",
+      "typeName": "PostHogInit"
+    },
+    {
+      "slug": "actions/posthogoptin",
+      "title": "PostHogOptIn",
+      "section": "Actions",
+      "path": "content/actions/posthogoptin.md",
+      "kind": "action",
+      "typeName": "PostHogOptIn"
+    },
+    {
+      "slug": "actions/posthogoptout",
+      "title": "PostHogOptOut",
+      "section": "Actions",
+      "path": "content/actions/posthogoptout.md",
+      "kind": "action",
+      "typeName": "PostHogOptOut"
+    },
+    {
+      "slug": "actions/posthogpageview",
+      "title": "PostHogPageview",
+      "section": "Actions",
+      "path": "content/actions/posthogpageview.md",
+      "kind": "action",
+      "typeName": "PostHogPageview"
+    },
+    {
+      "slug": "actions/posthogreloadfeatureflags",
+      "title": "PostHogReloadFeatureFlags",
+      "section": "Actions",
+      "path": "content/actions/posthogreloadfeatureflags.md",
+      "kind": "action",
+      "typeName": "PostHogReloadFeatureFlags"
+    },
+    {
+      "slug": "actions/posthogreset",
+      "title": "PostHogReset",
+      "section": "Actions",
+      "path": "content/actions/posthogreset.md",
+      "kind": "action",
+      "typeName": "PostHogReset"
+    },
+    {
+      "slug": "actions/posthogsetpersonproperties",
+      "title": "PostHogSetPersonProperties",
+      "section": "Actions",
+      "path": "content/actions/posthogsetpersonproperties.md",
+      "kind": "action",
+      "typeName": "PostHogSetPersonProperties"
+    },
+    {
       "slug": "actions/request",
       "title": "Request",
       "section": "Actions",
       "path": "content/actions/request.md",
       "kind": "action",
       "typeName": "Request"
+    },
+    {
+      "slug": "actions/removelocalstorage",
+      "title": "RemoveLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/removelocalstorage.md",
+      "kind": "action",
+      "typeName": "RemoveLocalStorage"
     },
     {
       "slug": "actions/reset",
@@ -1572,6 +1818,14 @@
       "path": "content/actions/setlocale.md",
       "kind": "action",
       "typeName": "SetLocale"
+    },
+    {
+      "slug": "actions/setlocalstorage",
+      "title": "SetLocalStorage",
+      "section": "Actions",
+      "path": "content/actions/setlocalstorage.md",
+      "kind": "action",
+      "typeName": "SetLocalStorage"
     },
     {
       "slug": "actions/setstate",
@@ -1692,6 +1946,14 @@
       "typeName": "_change_case"
     },
     {
+      "slug": "operators/_cron",
+      "title": "_cron",
+      "section": "Operators",
+      "path": "content/operators/_cron.md",
+      "kind": "operator",
+      "typeName": "_cron"
+    },
+    {
       "slug": "operators/_date",
       "title": "_date",
       "section": "Operators",
@@ -1722,6 +1984,14 @@
       "path": "content/operators/_eq.md",
       "kind": "operator",
       "typeName": "_eq"
+    },
+    {
+      "slug": "operators/_error",
+      "title": "_error",
+      "section": "Operators",
+      "path": "content/operators/_error.md",
+      "kind": "operator",
+      "typeName": "_error"
     },
     {
       "slug": "operators/_event",
@@ -2260,10 +2530,24 @@
       "typeName": ":try"
     },
     {
+      "slug": "controls/while",
+      "title": ":while",
+      "section": "Controls",
+      "path": "content/controls/while.md",
+      "kind": "block",
+      "typeName": ":while"
+    },
+    {
       "slug": "migration/upgrade-guide",
       "title": "Upgrade Guide",
       "section": "Migration",
       "path": "content/migration/upgrade-guide.md"
+    },
+    {
+      "slug": "migration/auth-upgrade",
+      "title": "Auth Upgrade (BetterAuth)",
+      "section": "Migration",
+      "path": "content/migration/auth-upgrade.md"
     },
     {
       "slug": "migration/v5-to-v6",

@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable react/jsx-props-no-spreading */
-
 import React from 'react';
 import AuthConfigured from './AuthConfigured.jsx';
 import AuthNotConfigured from './AuthNotConfigured.js';
@@ -25,20 +23,27 @@ import { serializer } from '@lowdefy/helpers';
 // Client code imports the build JSON directly — Vite handles JSON imports;
 // the lib/build/*.js wrappers are server-only (they read from disk).
 // Deserialize to restore arrays from their ~arr build markers (providers
-// must be a real array for single-provider inference in createAuthMethods).
+// must be a real array for provider lookups in createAuthMethods).
 import rawAuthConfig from '../../../build/auth.json';
 
 const authConfig = serializer.deserialize(rawAuthConfig);
 
-function Auth({ children, session }) {
+function Auth({ children, user }) {
   if (authConfig.configured === true) {
     return (
-      <AuthConfigured serverSession={session} authConfig={authConfig}>
+      <AuthConfigured serverUser={user} authConfig={authConfig}>
         {(auth) => children(auth)}
       </AuthConfigured>
     );
   }
-  return <AuthNotConfigured authConfig={authConfig}>{(auth) => children(auth)}</AuthNotConfigured>;
+  // An app whose only auth key is auth.dev has no auth stack, but the dev
+  // server still resolves a caller for auth.dev.mockUser - pass it through so
+  // _user reads the same identity in the browser as on the server.
+  return (
+    <AuthNotConfigured authConfig={authConfig} user={user}>
+      {(auth) => children(auth)}
+    </AuthNotConfigured>
+  );
 }
 
 export default Auth;

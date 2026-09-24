@@ -17,6 +17,7 @@
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import appJson from '../../lib/build/app.js';
+import authJson from '../../lib/build/auth.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import themeConfig from '../../lib/build/theme.js';
 import getAssets from './getAssets.js';
@@ -28,7 +29,7 @@ const basePath = lowdefyConfig.basePath ?? '';
 // getStaticProps. The home redirect logic lives here, not at the route level.
 async function renderPage(c, { pageId, status = 200 }) {
   const context = c.get('lowdefyContext');
-  const { logger, session } = context;
+  const { logger, user } = context;
 
   let resolvedPageId = pageId;
   const rootConfig = await getRootConfig(context);
@@ -42,12 +43,42 @@ async function renderPage(c, { pageId, status = 200 }) {
     resolvedPageId = home.pageId;
   }
 
-  const pageConfig = await getPageConfig(context, {
+  const result = await getPageConfig(context, {
     pageId: resolvedPageId,
     urlQuery: c.req.query(),
   });
 
-  if (!pageConfig) {
+  // A logged-out human gets a login screen with a callbackUrl back to the
+  // requested page; not-found and wrong-roles both stay opaque (/404), so
+  // page navigation never reveals who may access a page.
+  if (result.status === 'unauthenticated') {
+    const url = new URL(c.req.url);
+    const callbackUrl = `${url.pathname}${url.search}`;
+    logger.info({ event: 'redirect_unauthenticated', pageId: resolvedPageId });
+    return c.redirect(
+      `${basePath}${authJson.authPages.signIn}?callbackUrl=${encodeURIComponent(callbackUrl)}`,
+      302
+    );
+  }
+
+  // An authorised caller who has not enrolled a second factor under
+  // auth.twoFactor.required. The callbackUrl brings them back to the page they
+  // asked for once they enrol. Without this branch they would fall through to the
+  // /404 redirect below on every page - fail-closed, and indistinguishable from a
+  // broken app.
+  if (result.status === 'enrol_required') {
+    const url = new URL(c.req.url);
+    const callbackUrl = `${url.pathname}${url.search}`;
+    logger.info({ event: 'redirect_two_factor_enrol', pageId: resolvedPageId });
+    return c.redirect(
+      `${basePath}${authJson.authPages.twoFactorEnrol}?callbackUrl=${encodeURIComponent(
+        callbackUrl
+      )}`,
+      302
+    );
+  }
+
+  if (result.status !== 'ok') {
     if (resolvedPageId === '404') {
       // No 404 page in the build — return a plain 404 rather than redirecting in a loop.
       return c.text('Page not found.', 404);
@@ -55,6 +86,8 @@ async function renderPage(c, { pageId, status = 200 }) {
     logger.info({ event: 'redirect_page_not_found', pageId: resolvedPageId });
     return c.redirect(`${basePath}/404`, 302);
   }
+
+  const { pageConfig } = result;
 
   logger.info({ event: 'page_view', pageId: resolvedPageId });
 
@@ -68,7 +101,7 @@ async function renderPage(c, { pageId, status = 200 }) {
       pageConfig,
       rootConfig,
       sentryDsn: process.env.SENTRY_DSN ?? null,
-      session: session ?? null,
+      user: user ?? null,
     },
     themeConfig,
     title: pageConfig.properties?.title ?? resolvedPageId,

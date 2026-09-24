@@ -1,0 +1,174 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import findHookUser from './findHookUser.js';
+
+// The bindable auth hook points and what each hands the hook routine as
+// _payload - the contract between the hook mechanism and the hook author.
+// Build validation guarantees every configured point is in this catalog.
+//
+// The dispatch layer (createHookDispatch) injects a reserved "point" field
+// onto every payload - the firing point name - so a routine bound to multiple
+// points can branch on _payload.point. buildPayload definitions own the domain
+// data only and must never produce a field named "point".
+// Twin catalog: packages/build/src/build/buildAuth/authHookPoints.js lists
+// the point names build accepts - a point accepted there without a
+// definition here crashes buildHooks at startup; keep the two in sync.
+//
+// Database points receive BetterAuth's databaseHooks record; session and
+// account writes carry only a userId, so the subject user is read through
+// BetterAuth's internal adapter. user.update deviates from the catalog by
+// what BetterAuth provides: the before hook receives only the changed fields
+// (no way to identify the subject), the after hook only the updated record.
+//
+// Synthetic points are backed by BetterAuth config callbacks, not database
+// hooks: "email.verified" by emailVerification.afterEmailVerification, and the
+// "phone.*" points by the phoneNumber plugin's sendOTP /
+// sendPasswordResetOTP / callbackOnVerification.
+const authHookPoints = {
+  'user.create.before': {
+    kind: 'database',
+    model: 'user',
+    operation: 'create',
+    timing: 'before',
+    buildPayload: (data) => ({ user: data }),
+  },
+  'user.create.after': {
+    kind: 'database',
+    model: 'user',
+    operation: 'create',
+    timing: 'after',
+    buildPayload: (data) => ({ user: data }),
+  },
+  'user.update.before': {
+    kind: 'database',
+    model: 'user',
+    operation: 'update',
+    timing: 'before',
+    buildPayload: (data) => ({ user: null, changes: data }),
+  },
+  'user.update.after': {
+    kind: 'database',
+    model: 'user',
+    operation: 'update',
+    timing: 'after',
+    buildPayload: (data) => ({ user: data, changes: null }),
+  },
+  'session.create.before': {
+    kind: 'database',
+    model: 'session',
+    operation: 'create',
+    timing: 'before',
+    buildPayload: async (data, ctx) => ({
+      session: data,
+      user: await findHookUser({ ctx, userId: data.userId }),
+    }),
+  },
+  'session.create.after': {
+    kind: 'database',
+    model: 'session',
+    operation: 'create',
+    timing: 'after',
+    buildPayload: async (data, ctx) => ({
+      session: data,
+      user: await findHookUser({ ctx, userId: data.userId }),
+    }),
+  },
+  'session.update.before': {
+    kind: 'database',
+    model: 'session',
+    operation: 'update',
+    timing: 'before',
+    // Like user.update.before: BetterAuth hands the before hook only the
+    // changed fields, with no way to identify the subject session.
+    buildPayload: (data) => ({ session: null, changes: data }),
+  },
+  'session.delete.after': {
+    kind: 'database',
+    model: 'session',
+    operation: 'delete',
+    timing: 'after',
+    buildPayload: async (data, ctx) => ({
+      session: data,
+      user: await findHookUser({ ctx, userId: data.userId }),
+    }),
+  },
+  'account.create.before': {
+    kind: 'database',
+    model: 'account',
+    operation: 'create',
+    timing: 'before',
+    buildPayload: async (data, ctx) => ({
+      account: data,
+      user: await findHookUser({ ctx, userId: data.userId }),
+    }),
+  },
+  'account.create.after': {
+    kind: 'database',
+    model: 'account',
+    operation: 'create',
+    timing: 'after',
+    buildPayload: async (data, ctx) => ({
+      account: data,
+      user: await findHookUser({ ctx, userId: data.userId }),
+    }),
+  },
+  'verification.create.before': {
+    kind: 'database',
+    model: 'verification',
+    operation: 'create',
+    timing: 'before',
+    buildPayload: (data) => ({ verification: data }),
+  },
+  'verification.create.after': {
+    kind: 'database',
+    model: 'verification',
+    operation: 'create',
+    timing: 'after',
+    buildPayload: (data) => ({ verification: data }),
+  },
+  'email.verified': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (user) => ({ user }),
+  },
+  'phone.otp.send': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      phoneNumber: data.phoneNumber,
+      code: data.code,
+    }),
+  },
+  'phone.passwordReset.send': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      phoneNumber: data.phoneNumber,
+      code: data.code,
+    }),
+  },
+  'phone.verified': {
+    kind: 'synthetic',
+    timing: 'after',
+    buildPayload: (data) => ({
+      user: data.user,
+      phoneNumber: data.phoneNumber,
+    }),
+  },
+};
+
+export default authHookPoints;

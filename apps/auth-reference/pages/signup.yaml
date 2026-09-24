@@ -1,0 +1,99 @@
+id: signup
+type: Box
+properties:
+  style:
+    maxWidth: 400
+    margin: 60px auto
+blocks:
+  - id: signup_title
+    type: Title
+    properties:
+      content: Create an account
+      level: 2
+  - id: name
+    type: TextInput
+    properties:
+      title: Name
+  - id: email
+    type: TextInput
+    properties:
+      title: Email
+  - id: password
+    type: PasswordInput
+    properties:
+      title: Password (min 8 characters)
+  # /sign-up/email is in auth.captcha's protected endpoints - the widget
+  # (always-pass test key) mints the token SignUp threads as the
+  # x-captcha-response header. Configured entirely from the projection.
+  - id: captcha
+    type: Captcha
+    visible:
+      _build.authConfig: captcha.enabled
+    properties:
+      provider:
+        _build.authConfig: captcha.provider
+      siteKey:
+        _build.authConfig: captcha.siteKey
+  - id: signup_button
+    type: Button
+    properties:
+      title: Sign up
+      block: true
+    events:
+      onClick:
+        # With requireEmailVerification the response carries no session -
+        # verification precedes sign-in.
+        try:
+          - id: sign_up
+            type: SignUp
+            params:
+              name:
+                _state: name
+              email:
+                _state: email
+              password:
+                _state: password
+              captchaToken:
+                _state: captcha
+          - id: to_check_email
+            type: Link
+            params:
+              pageId: check-email
+        catch:
+          - id: show_signup_error
+            type: SetState
+            params:
+              signup_error_message:
+                _actions: sign_up.error.message
+          # Captcha tokens are single-use - mint a fresh one for the retry.
+          - id: reset_captcha
+            type: CallMethod
+            params:
+              blockId: captcha
+              method: reset
+  - id: signup_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: signup_error_message
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ message }}</p>
+          on:
+            message:
+              _state: signup_error_message
+  - id: login_link
+    type: Button
+    properties:
+      title: Already have an account? Log in
+      type: link
+      block: true
+    events:
+      onClick:
+        - id: to_login
+          type: Link
+          params:
+            pageId: login

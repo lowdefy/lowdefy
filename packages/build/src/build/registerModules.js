@@ -21,9 +21,11 @@ import { ConfigError } from '@lowdefy/errors';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import { resolve, WalkContext } from './buildRefs/walker.js';
+import { assertNoPlaceholderLeaks } from './buildRefs/deferredRegistry.js';
 import getRefContent from './buildRefs/getRefContent.js';
 import makeRefDefinition from './buildRefs/makeRefDefinition.js';
 import collectDynamicIdentifiers from './collectDynamicIdentifiers.js';
+import validateModuleAuthManifest from './validateModuleAuthManifest.js';
 import validateOperatorsDynamic from './validateOperatorsDynamic.js';
 import { makeShouldStop } from './buildRefs/deferredRegions.js';
 
@@ -225,7 +227,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
   for (const dep of dependencies) {
     if (!type.isString(dep.id)) {
       throw new ConfigError(
-        `Module "${entry.id}": each item in "dependencies" must have a string "id".`
+        `Module "${entry.id}": each item in "dependencies" must have a string "id".`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -243,7 +246,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
     if (!type.isString(plugin.version)) {
       throw new ConfigError(
         `Module "${entry.id}": plugin "${plugin.name}" must declare a "version" ` +
-          `(semver range) in module.lowdefy.yaml.`
+          `(semver range) in module.lowdefy.yaml.`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -262,7 +266,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
           `Add it to your app's plugins array in lowdefy.yaml:\n\n` +
           `  plugins:\n` +
           `    - name: "${plugin.name}"\n` +
-          `      version: "${semver.minVersion(plugin.version)}"`
+          `      version: "${semver.minVersion(plugin.version)}"`,
+        { filePath: moduleYamlPath }
       );
     }
     if (appVersion.startsWith('workspace:')) {
@@ -272,7 +277,8 @@ async function resolveLocalManifest({ entry, resolvedPaths, context }) {
       throw new ConfigError(
         `Module "${entry.id}" requires plugin "${plugin.name}" version "${plugin.version}" ` +
           `but the app has version "${appVersion}" installed. ` +
-          `Update the plugin to a compatible version.`
+          `Update the plugin to a compatible version.`,
+        { filePath: moduleYamlPath }
       );
     }
   }
@@ -382,6 +388,10 @@ async function resolveFullManifest({ entryId, context }) {
 
   moduleEntry.manifest = resolved;
 
+  // The auth section is fully resolved now - validate its shape before
+  // buildModules contributes it to the app's auth config.
+  validateModuleAuthManifest({ auth: resolved.auth, entryId, filePath: moduleYamlPath });
+
   // Validate var types against lazily-resolved values
   const varDefs = moduleEntry.varDefs;
   if (Object.keys(varDefs).length > 0) {
@@ -389,4 +399,24 @@ async function resolveFullManifest({ entryId, context }) {
   }
 }
 
-export { resolveLocalManifest, recordifyExportables, resolveFullManifest, validateRequiredVars };
+// Step 3 (orchestrator step): full-resolve every registered module's manifest —
+// cross-module refs, preserved content. Runs AFTER resolveAuthConfigProjection so
+// module page/api/connection operators (e.g. _build.authConfig) resolve against a
+// computed projection. Ends with the post-sweep placeholder-leak invariant.
+async function resolveModuleManifests({ context }) {
+  for (const entryId of Object.keys(context.modules)) {
+    await resolveFullManifest({ entryId, context });
+  }
+
+  // Post-sweep invariant: no deferred placeholder survives outside the
+  // per-consumer slots (manifest component/menu bodies, varDefs defaults).
+  assertNoPlaceholderLeaks(context);
+}
+
+export {
+  resolveLocalManifest,
+  recordifyExportables,
+  resolveFullManifest,
+  resolveModuleManifests,
+  validateRequiredVars,
+};

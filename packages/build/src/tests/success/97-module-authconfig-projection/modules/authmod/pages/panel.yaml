@@ -1,0 +1,22 @@
+id: panel
+type: Box
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  roles:
+    _build.authConfig: roles
+blocks:
+  - id: load-btn
+    type: Button
+    properties:
+      title: Load Records
+    requests:
+      - id: load-records
+        type: MongoDBAggregate
+        connectionId:
+          _module.connectionId: authmod_db
+        properties:
+          pipeline:
+            - $addFields:
+                availableRoles:
+                  _build.authConfig: roles

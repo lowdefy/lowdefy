@@ -1,6 +1,6 @@
 # S3Download
 
-__Deprecated__ — use the provider-neutral &lt;a href=&quot;/Download&quot;&gt;Download&lt;/a&gt; block with `downloadPolicyRequestId` instead. S3Download remains as an alias so existing apps keep working. Download files from AWS S3. Requires an AwsS3Bucket connection and an AwsS3PresignedGetObject request. The s3GetPolicyRequestId property must reference the request id. If files were uploaded with S3Upload, its fileList value can be mapped directly to this block.
+__Deprecated__ — use the provider-neutral <a href="/Download">Download</a> block with `downloadPolicyRequestId` instead. S3Download remains as an alias so existing apps keep working. Download files from AWS S3. Requires an AwsS3Bucket connection and an AwsS3PresignedGetObject request. The s3GetPolicyRequestId property must reference the request id. If files were uploaded with S3Upload, its fileList value can be mapped directly to this block.
 
 > The S3Download block requires an AwsS3Bucket connection and an AwsS3PresignedGetObject request. The examples below show configuration structure but will not download files without a configured connection.
 

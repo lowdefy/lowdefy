@@ -16,3 +16,5 @@ export const mongodbMemoryServerOptions = {
   },
   autoStart: false,
 };
+
+export default { mongodbMemoryServerOptions };

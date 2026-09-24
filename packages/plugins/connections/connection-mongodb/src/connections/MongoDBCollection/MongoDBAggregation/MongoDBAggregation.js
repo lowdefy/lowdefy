@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
+import injectTenantIntoPipeline from '../tenant/injectTenantIntoPipeline.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -22,7 +26,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   if (connection.write !== true) {
     pipeline.forEach((stage) => {
       if (stage.$out != null || stage.$merge != null) {
-        throw new Error(
+        throw new ConfigError(
           'Connection does not allow writes and aggregation pipeline contains a "$merge" or "$out" stage.'
         );
       }
@@ -30,13 +34,29 @@ function checkOutAndMerge({ pipeline, connection }) {
   }
 }
 
-async function MongodbAggregation({ request, connection }) {
+async function MongodbAggregation({ request, connection, tenant }) {
   const deserializedRequest = deserialize(request);
-  const { pipeline, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { pipeline } = deserializedRequest;
   checkOutAndMerge({ pipeline, connection });
+  if (tenant) {
+    // Recursive $match prepend over the whole pipeline tree - $lookup,
+    // $unionWith, and $facet branches. First-stage-only entry stages and
+    // $graphLookup are refused unless the verdict carries authored: true
+    // (tenant: authored on the request), in which case the developer-authored
+    // tenant clause is audited against the verdict instead. Also rejects
+    // $out/$merge outright on tenant connections (they write whole
+    // collections outside the stamp path, even when write is allowed).
+    pipeline = injectTenantIntoPipeline({ pipeline, tenant });
+  }
   const { collection } = await getCollection({ connection });
-  const cursor = await collection.aggregate(pipeline, options);
-  const res = await cursor.toArray();
+  let res;
+  try {
+    const cursor = await collection.aggregate(pipeline, options);
+    res = await cursor.toArray();
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation' });
+  }
   return serialize(res);
 }
 

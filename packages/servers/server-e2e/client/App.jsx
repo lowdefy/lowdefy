@@ -39,7 +39,7 @@ function ThemeTokenResolver({ lowdefyRef, children }) {
 }
 
 function App({ config }) {
-  const { rootConfig, session } = config;
+  const { rootConfig, user } = config;
 
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
@@ -111,9 +111,9 @@ function App({ config }) {
         <AntdApp>
           <ThemeTokenResolver lowdefyRef={lowdefyRef}>
             <ErrorBoundary fullPage onError={handleError}>
-              <Auth session={session}>
+              <Auth user={user}>
                 {(auth) => {
-                  usageDataRef.current.user = auth.session?.hashed_id;
+                  usageDataRef.current.user = auth.user?.id;
                   return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
                 }}
               </Auth>

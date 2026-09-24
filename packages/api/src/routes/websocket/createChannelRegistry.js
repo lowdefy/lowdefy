@@ -18,6 +18,7 @@ import crypto from 'crypto';
 import { serializer } from '@lowdefy/helpers';
 import { ConfigError, PluginError, ServiceError } from '@lowdefy/errors';
 
+import createWireProjection from '../../response/createWireProjection.js';
 import prepareChannel from './prepareChannel.js';
 
 const MAX_RETRIES = 5;
@@ -32,10 +33,14 @@ const HEALTHY_RESET_MS = 60 * 1000;
 function createChannelRegistry() {
   const channels = new Map();
 
-  function getChannelKey({ connectionProperties, properties, websocketId }) {
+  function getChannelKey({ connectionProperties, properties, tenant, websocketId }) {
+    // The tenant verdict is part of the channel identity: two callers whose
+    // evaluated properties are identical but whose organizations differ must
+    // never share a running source, or one org would receive the other's
+    // change events.
     const hash = crypto
       .createHash('sha1')
-      .update(serializer.serializeToString({ connectionProperties, properties }))
+      .update(serializer.serializeToString({ connectionProperties, properties, tenant }))
       .digest('base64');
     return `${websocketId}:${hash}`;
   }
@@ -44,6 +49,18 @@ function createChannelRegistry() {
     const message = JSON.stringify(frame);
     channel.subscribers.forEach((subscriber) => {
       subscriber.send(message);
+    });
+  }
+
+  // Config reads a broadcast error only as a message string, so it gets the wire
+  // message alone - no requestId, since no single request raised it, and no
+  // devError, since the dev terminal already logs it in full. The channel's
+  // context belongs to whoever subscribed first, so the message is translated
+  // with each subscriber's own locale.
+  function broadcastError(channel, error) {
+    channel.subscribers.forEach((subscriber) => {
+      const { message } = createWireProjection({ i18n: subscriber.i18n })(error);
+      subscriber.send(JSON.stringify({ type: 'error', websocketId: channel.websocketId, message }));
     });
   }
 
@@ -91,11 +108,7 @@ function createChannelRegistry() {
     const wrapped = wrapResolverError({ channel, error });
     channel.logger.debug({ err: wrapped }, wrapped.message);
     channel.context.handleError(wrapped);
-    broadcast(channel, {
-      type: 'error',
-      websocketId: channel.websocketId,
-      message: wrapped.message,
-    });
+    broadcastError(channel, wrapped);
 
     // A run that stayed healthy resets the backoff window.
     if (Date.now() - startedAt > HEALTHY_RESET_MS) {
@@ -152,13 +165,14 @@ function createChannelRegistry() {
           publish,
           signal: abortController.signal,
           logger: channel.logger,
+          tenant: channel.tenant ?? null,
         })
       )
       .catch((error) => handleResolverError({ channel, error, startedAt }));
   }
 
   async function subscribe(context, { websocketId, payload, subscriber }) {
-    const { connectionProperties, properties, websocketConfig, websocketResolver } =
+    const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
       await prepareChannel(context, { websocketId, payload });
 
     // One subscription per websocketId per connection — a re-subscribe (e.g.
@@ -167,7 +181,7 @@ function createChannelRegistry() {
       unsubscribe({ websocketId, subscriber });
     }
 
-    const key = getChannelKey({ connectionProperties, properties, websocketId });
+    const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     let channel = channels.get(key);
     if (!channel) {
       channel = {
@@ -177,6 +191,7 @@ function createChannelRegistry() {
         resolver: websocketResolver,
         connectionProperties,
         properties,
+        tenant,
         subscribers: new Set(),
         abortController: null,
         restartTimer: null,
@@ -222,7 +237,7 @@ function createChannelRegistry() {
   async function publish(context, { websocketId, payload }) {
     // Publish identity is evaluated without a subscription payload — channels
     // that fragment on _payload/_user in properties are not publish targets.
-    const { connectionProperties, properties, websocketConfig, websocketResolver } =
+    const { connectionProperties, properties, tenant, websocketConfig, websocketResolver } =
       await prepareChannel(context, { websocketId, payload: {} });
 
     if (websocketResolver.meta?.publish !== true || properties.publish !== true) {
@@ -231,7 +246,7 @@ function createChannelRegistry() {
       });
     }
 
-    const key = getChannelKey({ connectionProperties, properties, websocketId });
+    const key = getChannelKey({ connectionProperties, properties, tenant, websocketId });
     const channel = channels.get(key);
     // No channel means no subscribers on this instance — the publish is
     // accepted and simply reaches nobody here.

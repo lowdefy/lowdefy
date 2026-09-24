@@ -13,12 +13,11 @@ Unlike single-purpose plugins (blocks, connections, operators, actions), these p
 
 ## Available Plugin Packages
 
-| Package                                     | Purpose           | Provides                            |
-| ------------------------------------------- | ----------------- | ----------------------------------- |
-| [@lowdefy/plugin-next-auth](./next-auth.md) | Authentication    | Auth providers, callbacks, adapters |
-| [@lowdefy/plugin-aws](./aws.md)             | AWS integration   | S3 connection, Lambda support       |
-| [@lowdefy/plugin-auth0](./auth0.md)         | Auth0 integration | Auth0-specific provider             |
-| [@lowdefy/plugin-csv](./csv.md)             | CSV utilities     | CSV parsing operators               |
+| Package                     | Purpose         | Provides                                 |
+| --------------------------- | --------------- | ---------------------------------------- |
+| @lowdefy/plugin-better-auth | Authentication  | Auth providers, strategies, admin steps  |
+| [@lowdefy/plugin-aws](./aws.md) | AWS integration | S3 connection, Lambda support        |
+| [@lowdefy/plugin-csv](./csv.md) | CSV utilities   | CSV parsing operators                |
 
 ## Authentication in Lowdefy
 

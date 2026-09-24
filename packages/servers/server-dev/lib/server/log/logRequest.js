@@ -16,13 +16,11 @@
 
 // TODO: Better name needed here maybe?
 function logRequest({ context }) {
-  const { user = {} } = context;
+  const user = context.user ?? {};
   context.logger.debug({
     user: {
       id: user.id,
       roles: user.roles,
-      sub: user.sub,
-      session_id: user.session_id,
     },
     url: context.req.url,
     method: context.req.method,

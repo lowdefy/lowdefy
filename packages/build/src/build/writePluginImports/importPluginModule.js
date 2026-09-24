@@ -17,6 +17,29 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
+// Every subpath this function imports (`./schemas`, `./connections`, ...) is
+// optional, so any failure to RESOLVE the specifier is the expected miss it
+// degrades on: a package that is not installed, one whose "exports" map has no
+// such subpath, a legacy package where the subpath lands on a directory, a bad
+// exports target. Node reports each under its own code, all raised before any
+// module code runs. A failure while LOADING a resolved module (a syntax error,
+// a throwing top-level import) is a real fault and must surface here instead
+// of resurfacing later as "type X is not defined".
+const RESOLUTION_ERROR_CODES = new Set([
+  'ERR_MODULE_NOT_FOUND',
+  'MODULE_NOT_FOUND',
+  'ERR_PACKAGE_PATH_NOT_EXPORTED',
+  'ERR_PACKAGE_IMPORT_NOT_DEFINED',
+  'ERR_UNSUPPORTED_DIR_IMPORT',
+  'ERR_INVALID_PACKAGE_TARGET',
+  'ERR_INVALID_PACKAGE_CONFIG',
+  'ERR_INVALID_MODULE_SPECIFIER',
+]);
+
+function isResolutionError(error) {
+  return RESOLUTION_ERROR_CODES.has(error?.code);
+}
+
 // Import a plugin module (e.g. `${pkg}/schemas`, `${pkg}/connections`) for
 // schema collection. Default packages resolve from the build package itself;
 // custom plugins only exist in the server's node_modules, so fall back to
@@ -25,8 +48,9 @@ import path from 'node:path';
 async function importPluginModule({ context, specifier }) {
   try {
     return await import(/* webpackIgnore: true */ /* @vite-ignore */ specifier);
-  } catch {
+  } catch (error) {
     // Not resolvable from the build package — try the server's node_modules.
+    if (!isResolutionError(error)) throw error;
   }
   const serverDir = context.directories?.server;
   if (!serverDir) {
@@ -35,7 +59,8 @@ async function importPluginModule({ context, specifier }) {
   try {
     const require = createRequire(path.join(serverDir, 'package.json'));
     return await import(/* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier));
-  } catch {
+  } catch (error) {
+    if (!isResolutionError(error)) throw error;
     return undefined;
   }
 }

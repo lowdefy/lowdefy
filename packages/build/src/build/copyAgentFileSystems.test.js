@@ -15,14 +15,9 @@
 */
 
 import { jest } from '@jest/globals';
+import { LowdefyInternalError } from '@lowdefy/errors';
 
-const mockExistsSync = jest.fn();
 const mockCopyFileOrDirectory = jest.fn();
-
-jest.unstable_mockModule('fs', () => ({
-  default: { existsSync: mockExistsSync },
-  existsSync: mockExistsSync,
-}));
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   copyFileOrDirectory: mockCopyFileOrDirectory,
@@ -35,8 +30,6 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
-  mockExistsSync.mockReset();
-  mockExistsSync.mockReturnValue(true);
   mockCopyFileOrDirectory.mockReset();
 });
 
@@ -58,7 +51,10 @@ test('copyAgentFileSystems writes empty manifest when no agent has fileSystem', 
   const context = createContext();
   await copyAgentFileSystems({
     components: {
-      agents: [{ id: 'agent_1', properties: {} }, { id: 'agent_2', properties: { model: 'foo' } }],
+      agents: [
+        { id: 'agent_1', properties: {} },
+        { id: 'agent_2', properties: { model: 'foo' } },
+      ],
     },
     context,
   });
@@ -133,9 +129,10 @@ test('copyAgentFileSystems copies each basePath from config to server directory'
   );
 });
 
-test('copyAgentFileSystems skips copying when source basePath does not exist', async () => {
-  mockExistsSync.mockReturnValue(false);
-  const context = createContext();
+// buildAgents already rejects a fileSystem basePath that does not exist, so
+// the write phase copies unconditionally instead of silently skipping.
+test('copyAgentFileSystems copies a basePath without re-checking that it exists', async () => {
+  const context = createContext({ config: '/app', server: '/app/.lowdefy/server' });
   await copyAgentFileSystems({
     components: {
       agents: [{ id: 'a1', properties: { fileSystem: { basePath: './missing' } } }],
@@ -146,10 +143,13 @@ test('copyAgentFileSystems skips copying when source basePath does not exist', a
     'agentFileSystems.json',
     JSON.stringify(['./missing'])
   );
-  expect(mockCopyFileOrDirectory).not.toHaveBeenCalled();
+  expect(mockCopyFileOrDirectory).toHaveBeenCalledWith(
+    '/app/missing',
+    '/app/.lowdefy/server/missing'
+  );
 });
 
-test('copyAgentFileSystems wraps copy errors with the failing basePath', async () => {
+test('copyAgentFileSystems wraps copy errors in a LowdefyInternalError naming the basePath', async () => {
   const originalError = new Error('disk full');
   mockCopyFileOrDirectory.mockRejectedValueOnce(originalError);
   const context = createContext();
@@ -164,8 +164,9 @@ test('copyAgentFileSystems wraps copy errors with the failing basePath', async (
   } catch (err) {
     thrown = err;
   }
+  expect(thrown).toBeInstanceOf(LowdefyInternalError);
   expect(thrown.message).toBe(
-    'Failed to copy fileSystem basePath "./content" to server directory: disk full'
+    'Failed to copy agent file system "./content" to the server directory.'
   );
   expect(thrown.cause).toBe(originalError);
 });

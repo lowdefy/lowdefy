@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -32,7 +33,7 @@ function createTestContext() {
   const context = testContext({
     operators: operatorsServer,
     logger,
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';
@@ -102,15 +103,17 @@ test('invalid data throws by default', async () => {
   const res = await runRoutine(context, routineContext, { routine: step });
 
   expect(res.status).toBe('error');
-  expect(res.error).toBeInstanceOf(Error);
+  expect(res.error).toBeInstanceOf(UserError);
   expect(res.error.message).toMatch(/ValidateSchema step "check_input" failed/);
   expect(Array.isArray(res.error.cause)).toBe(true);
   expect(res.error.cause.length).toBeGreaterThan(0);
   expect(routineContext.steps.check_input.valid).toBe(false);
   expect(routineContext.steps.check_input.errors.length).toBeGreaterThan(0);
-  expect(logger.error).toHaveBeenCalledWith(
+  expect(res.error.name).toBe('UserError');
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
     expect.objectContaining({
-      event: 'error_validate_schema',
+      event: 'warn_validate_schema',
       stepId: 'check_input',
     })
   );
@@ -167,7 +170,10 @@ test('ajv-formats email format is registered and enforced', async () => {
   expect(res).toEqual({ status: 'continue' });
   expect(routineContext.steps.check_email.valid).toBe(false);
   expect(routineContext.steps.check_email.errors[0]).toEqual(
-    expect.objectContaining({ keyword: 'format', params: expect.objectContaining({ format: 'email' }) })
+    expect.objectContaining({
+      keyword: 'format',
+      params: expect.objectContaining({ format: 'email' }),
+    })
   );
 });
 

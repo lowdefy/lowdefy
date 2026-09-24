@@ -27,6 +27,7 @@ import writeIconImports from './writeIconImports.js';
 import writeNotificationImports from './writeNotificationImports.js';
 import writeOperatorImports from './writeOperatorImports.js';
 import writeOperatorSchemaMap from './writeOperatorSchemaMap.js';
+import writeStepImports from './writeStepImports.js';
 import writeWebsocketImports from './writeWebsocketImports.js';
 import writeGlobalsCss from './writeGlobalsCss.js';
 
@@ -43,6 +44,7 @@ async function writePluginImports({ components, context }) {
   await writeNotificationImports({ components, context });
   await writeOperatorImports({ components, context });
   await writeOperatorSchemaMap({ components, context });
+  await writeStepImports({ components, context });
   await writeWebsocketImports({ components, context });
   await writeAvailableTypes({ context });
   await writeGlobalsCss({ components, context });

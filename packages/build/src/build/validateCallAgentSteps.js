@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
+import collectExceptions from '../utils/collectExceptions.js';
+
 function collectCallAgentSteps(routine, steps) {
   if (type.isArray(routine)) {
     routine.forEach((item) => collectCallAgentSteps(item, steps));
@@ -46,10 +48,14 @@ function validateCallAgentSteps({ components, context }) {
       if (!type.isString(agentId)) return;
 
       if (!context.agentIds?.has(agentId)) {
-        throw new ConfigError(
-          `CallAgent step "${step.stepId}" at endpoint "${endpoint.endpointId}" references agent "${agentId}" which does not exist.`,
-          { configKey: step['~k'] }
+        collectExceptions(
+          context,
+          new ConfigError(
+            `CallAgent step "${step.stepId}" at endpoint "${endpoint.endpointId}" references agent "${agentId}" which does not exist.`,
+            { configKey: step['~k'] }
+          )
         );
+        return;
       }
 
       const agent = (components.agents ?? []).find((a) => a.agentId === agentId);

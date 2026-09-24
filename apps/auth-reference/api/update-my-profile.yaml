@@ -1,0 +1,38 @@
+# Phase-9 profile self-service. Deliberately NOT in auth.api.roles:
+# UpdateUserProfile self-targeting is exempt from the step floor - userId is
+# fixed to the caller's own id here, so any signed-in member can
+# save their own display data and nobody can pass another user's id through
+# this endpoint. The profile write is a shallow merge per top-level key onto
+# the existing bag; a key set to null is removed. An anonymous caller is
+# refused at the step (no caller, not system: true).
+id: update-my-profile
+type: Api
+routine:
+  - id: update_my_profile
+    type: UpdateUserProfile
+    properties:
+      _object.assign:
+        - userId:
+            _user: id
+        - _if:
+            test:
+              _type:
+                type: object
+                on:
+                  _payload: profile
+            then:
+              profile:
+                _payload: profile
+            else: {}
+        - _if:
+            test:
+              _type:
+                type: string
+                on:
+                  _payload: name
+            then:
+              name:
+                _payload: name
+            else: {}
+  - ':return':
+      _step: update_my_profile

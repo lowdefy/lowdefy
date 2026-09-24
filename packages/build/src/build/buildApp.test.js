@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
+
 import buildApp from './buildApp.js';
 import testContext from '../test-utils/testContext.js';
 
@@ -144,11 +146,21 @@ test('buildApp applies both email defaults alongside user-set email fields', () 
   });
 });
 
-test('buildApp app not an object', () => {
+test('buildApp throws a ConfigError naming the config location when app is not an object', () => {
   const components = {
     app: 'app',
+    '~k': 'root',
   };
-  expect(() => buildApp({ components, context })).toThrow('lowdefy.app is not an object.');
+  let thrown;
+  try {
+    buildApp({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown).toBeInstanceOf(ConfigError);
+  expect(thrown.message).toBe('lowdefy.app is not an object.');
+  expect(thrown.received).toBe('app');
+  expect(thrown.configKey).toBe('root');
 });
 
 test('buildApp does not set appMeta', () => {

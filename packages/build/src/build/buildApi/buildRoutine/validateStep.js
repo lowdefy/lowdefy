@@ -18,8 +18,9 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
+import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
-function validateStep(step, { endpointId }) {
+function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -163,6 +164,28 @@ function validateStep(step, { endpointId }) {
     return;
   }
 
+  if (stepTypes?.[step.type]) {
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.properties) && !type.isObject(step.properties)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" properties is not an object.`,
+        { received: step.properties, configKey }
+      );
+    }
+    if (!type.isNone(step.system) && !type.isBoolean(step.system)) {
+      throw new ConfigError(
+        `Auth step "${step.id}" at endpoint "${endpointId}" system must be a boolean.`,
+        { received: step.system, configKey }
+      );
+    }
+    return;
+  }
+
   if (type.isUndefined(step.connectionId)) {
     throw new ConfigError(`Step connectionId missing at endpoint "${endpointId}".`, {
       configKey,
@@ -174,6 +197,26 @@ function validateStep(step, { endpointId }) {
       configKey,
     });
   }
+  // Step-level tenant values are the exception sentinels — the wall itself is
+  // declared on the connection, never per step. "none" opts the step out of
+  // the wall (system context); "authored" declares the step authors its own
+  // tenant clause in a stage the wall can not scope mechanically, audited at
+  // runtime.
+  if (!type.isUndefined(step.tenant) && step.tenant !== 'none' && step.tenant !== 'authored') {
+    throw new ConfigError(
+      `Step "${step.id}" at endpoint "${endpointId}" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.`,
+      { received: step.tenant, configKey }
+    );
+  }
+
+  // Best-effort (literal pipelines only): a walled pipeline the wall can not
+  // scope mechanically must declare tenant: authored. Runtime re-checks.
+  validateTenantPipelineEntry({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    tenantConnectionIds,
+    configKey,
+  });
 }
 
 export default validateStep;

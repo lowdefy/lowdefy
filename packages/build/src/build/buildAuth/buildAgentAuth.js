@@ -24,12 +24,10 @@ import { isInPatternList } from './matchPattern.js';
 
 // Agents are served from the API surface, so auth.api patterns match agent ids too.
 function buildAgentAuth({ components, context }) {
-  // buildAuth runs before buildAgents, so this is the first step to read an
-  // agent id - and both helpers below key plain objects on it. A reserved id
-  // resolves through Object.prototype: `agentRoles.__proto__` is truthy for
-  // every app, so the agent is stamped with Object.prototype as its roles and
-  // the whole build writes through the global prototype from there. Gate before
-  // either helper runs - buildAgents' own gate never gets the chance.
+  // buildAuth runs before buildAgents validates these ids, so this is where an
+  // agent id is first accepted as an object key (getAgentRoles' map). Reject a
+  // reserved id here with the same message validateId gives, matching
+  // buildEntityAuth, so the developer sees one located error either way.
   (components.agents ?? []).forEach((agent) => {
     if (isReserved(agent.id)) {
       throw new ConfigError(

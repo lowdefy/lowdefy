@@ -338,6 +338,259 @@ test('menus schema warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith('must NOT have additional properties - "pageId"');
 });
 
+test('auth roles catalog of id, label and description objects emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [
+        { id: 'admin', label: 'Administrator', description: 'Full access to admin surfaces' },
+        { id: 'branch-manager', label: 'Branch Manager' },
+        { id: 'auditor' },
+      ],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('auth roles as a non-array value emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: 'admin',
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles" should be an array.');
+});
+
+test('auth role entry missing id emits required warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ label: 'Administrator' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Auth role entries should have required property "id".'
+  );
+});
+
+test('auth role entry with a non-string id emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].id" should be a string.');
+});
+
+test('auth role entry with a non-string label emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', label: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].label" should be a string.');
+});
+
+test('auth role entry with a non-string description emits type warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', description: 42 }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth "roles[].description" should be a string.');
+});
+
+test('auth role entry with an unknown key emits additional properties warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    auth: {
+      roles: [{ id: 'admin', color: 'red' }],
+    },
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Auth role entry has an unknown property. Allowed: "id", "label", "description".'
+  );
+});
+
+test('connection tenant shared emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant true emits warning - the key was removed with the inverted default', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: true,
+      },
+    ],
+  };
+  testSchema({ components, context });
+  // The raw const error surfaces here for the same reason as the invalid
+  // shape below; buildConnections validateTenant carries the teaching error.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+});
+
+test('connection tenant with a field object emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: { field: 'organization_id' },
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('connection tenant with an invalid shape emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'mongo',
+        type: 'MongoDBCollection',
+        tenant: 'organizationId',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  // The oneOf branch error at the same instance path wins testSchema's
+  // same-path dedup, so the raw const error surfaces instead of the custom
+  // oneOf errorMessage. The focused buildConnections validateTenant error
+  // carries the descriptive message.
+  expect(mockLogWarn).toHaveBeenCalledWith('"tenant" must be equal to constant');
+});
+
+test('request tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'none',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('request tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: true,
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).'
+  );
+});
+
+test('request tenant authored emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        requests: [
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'mongo',
+            tenant: 'authored',
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('websocket tenant none emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'none',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('websocket tenant with any other value emits warning', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    websockets: [
+      {
+        id: 'ws1',
+        type: 'MongoDBChangeStream',
+        connectionId: 'mongo',
+        tenant: 'off',
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)'
+  );
+});
+
 test('valid slug emits no warnings', () => {
   const cases = ['my-app', 'a', 'a-b-c-1', 'app1', 'a1-b2-c3'];
   cases.forEach((slug) => {

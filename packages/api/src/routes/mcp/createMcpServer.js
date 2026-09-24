@@ -16,15 +16,30 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { AuthenticationError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
-import isUnauthenticatedHuman from '../endpoints/isUnauthenticatedHuman.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
 function toToolName(id) {
   return id.replaceAll('/', '__');
+}
+
+// Whether the caller's token grant covers an endpoint's scope tag, over the
+// closed vocabulary (mcp:read, mcp:write) with mcp:write implying mcp:read.
+// An undefined grant is a caller with no token: consent never happened, so
+// there is nothing to filter on - the authorization outcome alone limits them
+// to public tools. An empty grant is the opposite: consent happened and
+// granted this client nothing on this surface, so it covers no scope.
+function scopeCovers({ grantedScopes, endpointScope }) {
+  if (type.isUndefined(grantedScopes)) {
+    return true;
+  }
+  if (endpointScope === 'mcp:write') {
+    return grantedScopes.includes('mcp:write');
+  }
+  return grantedScopes.includes('mcp:read') || grantedScopes.includes('mcp:write');
 }
 
 // Twin of cleanBuildArtifact in packages/utils/ai-utils/src/buildAgentTools.js -
@@ -40,14 +55,32 @@ function cleanBuildArtifact(obj) {
 // as tools. Built with the SDK's low-level Server: tool input schemas are
 // config-provided JSON Schema (payloadSchema), which the low-level handlers
 // accept directly - no zod conversion. The server is constructed with the
-// request's context, so the caller is known at construction time: tools/list
-// filters by context.authorize, and tools/call re-authorizes inside
-// callEndpoint (defense in depth). Returns null when no mcp block is
-// configured.
+// request's context, so the caller is known at construction time: a tool is
+// visible only when the authorization outcome is 'allow' AND the caller's
+// token grant covers the endpoint's scope tag. tools/call re-applies both
+// checks before dispatch - callEndpoint re-authorizes roles inside, but the
+// scope filter exists only on this surface. Returns null when no mcp block
+// is configured.
 async function createMcpServer({ context }) {
   const mcpConfig = await context.readConfigFile('mcp.json');
   if (type.isNone(mcpConfig) || mcpConfig.configured !== true) {
     return null;
+  }
+
+  async function readVisibleEndpointConfig({ id, scope }) {
+    const endpointConfig = await context.readConfigFile(`api/${id}.json`);
+    if (type.isNone(endpointConfig)) {
+      return null;
+    }
+    // 'deny' and 'enrol_required' both hide the tool - an unenrolled member
+    // must not see an enrolment redirect leak which tools exist for them.
+    if (context.authorizeOutcome(endpointConfig) !== 'allow') {
+      return null;
+    }
+    if (!scopeCovers({ grantedScopes: context.mcpAuth?.grantedScopes, endpointScope: scope })) {
+      return null;
+    }
+    return endpointConfig;
   }
 
   // serverInfo doubles as the connector card in clients such as claude.ai:
@@ -68,13 +101,13 @@ async function createMcpServer({ context }) {
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];
-    for (const endpointId of mcpConfig.endpoints) {
-      const endpointConfig = await context.readConfigFile(`api/${endpointId}.json`);
-      if (type.isNone(endpointConfig) || !context.authorize(endpointConfig)) {
+    for (const { id, scope } of mcpConfig.endpoints) {
+      const endpointConfig = await readVisibleEndpointConfig({ id, scope });
+      if (type.isNone(endpointConfig)) {
         continue;
       }
       tools.push({
-        name: toToolName(endpointId),
+        name: toToolName(id),
         description: endpointConfig.description,
         inputSchema: cleanBuildArtifact(endpointConfig.payloadSchema),
       });
@@ -86,47 +119,74 @@ async function createMcpServer({ context }) {
     const { name, arguments: args } = request.params;
     context.logger.info({ event: 'mcp_tool_call', tool: name });
 
-    const endpointId = mcpConfig.endpoints.find((id) => toToolName(id) === name);
+    // A role or scope shortfall answers exactly like a name that does not
+    // exist: any distinguishable error would let a caller enumerate which
+    // gated tools this app has. Same reason it is isError content over 200,
+    // not an HTTP status.
+    const unknownTool = {
+      content: [{ type: 'text', text: `Unknown tool "${name}".` }],
+      isError: true,
+    };
+
+    const endpoint = (mcpConfig.endpoints ?? []).find(({ id }) => toToolName(id) === name);
+    if (type.isNone(endpoint)) {
+      return unknownTool;
+    }
 
     try {
-      if (!type.isNone(endpointId)) {
-        const { error, response, success } = await callEndpoint(context, {
-          blockId: '_mcp',
-          endpointId,
-          pageId: '_mcp',
-          payload: args ?? {},
-        });
-        if (!success) {
-          const deserialized = serializer.deserialize(error);
-          return {
-            content: [{ type: 'text', text: deserialized?.message ?? 'Endpoint failed.' }],
-            isError: true,
-          };
-        }
+      const endpointConfig = await readVisibleEndpointConfig({
+        id: endpoint.id,
+        scope: endpoint.scope,
+      });
+      if (type.isNone(endpointConfig)) {
+        return unknownTool;
+      }
+      const { error, response, success } = await callEndpoint(context, {
+        blockId: '_mcp',
+        endpointId: endpoint.id,
+        pageId: '_mcp',
+        payload: args ?? {},
+      });
+      if (!success) {
+        const deserialized = serializer.deserialize(error);
+        // The wire error is generic for every reader. The dev server also attaches the full
+        // error for dev tools, and the dev MCP client is a coding agent that needs it to find
+        // the failing config.
+        const devError = serializer.deserialize(error?.devError);
         return {
-          content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
+          content: [
+            {
+              type: 'text',
+              text: type.isNone(deserialized)
+                ? 'Endpoint failed.'
+                : formatErrorForAgent(context, devError ?? deserialized),
+            },
+          ],
+          isError: true,
         };
       }
-      // An unknown tool answers like a gated one for an anonymous caller on an
-      // auth'd app, so tools/call cannot be used to enumerate tool names that
-      // tools/list already hides from that caller.
-      if (await isUnauthenticatedHuman(context)) {
-        throw new AuthenticationError(`Authentication required for API endpoint "${name}".`);
-      }
       return {
-        content: [{ type: 'text', text: `Unknown tool "${name}".` }],
-        isError: true,
+        content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
       };
     } catch (error) {
-      // Unauthenticated calls to gated tools are expected probing traffic -
-      // a warn line and the 401-shaped message, not a structured error log.
-      if (error.name === 'AuthenticationError') {
-        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
+      // Refused calls to gated tools and payloads that miss the payloadSchema
+      // (UserError) are expected traffic - a warn line and the message the
+      // model needs to retry, not a structured error log. Everything else
+      // goes through the server's error sink, which resolves the config
+      // source, logs it and collects it for the dev feedback channel.
+      if (
+        ['AuthenticationError', 'AuthorizationError', 'TwoFactorEnrolmentRequiredError'].includes(
+          error.name
+        )
+      ) {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
+      } else if (error.name === 'UserError') {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
-        context.logger.error(error);
+        await context.handleError(error);
       }
       return {
-        content: [{ type: 'text', text: error.message }],
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,
       };
     }
@@ -136,3 +196,4 @@ async function createMcpServer({ context }) {
 }
 
 export default createMcpServer;
+export { scopeCovers };

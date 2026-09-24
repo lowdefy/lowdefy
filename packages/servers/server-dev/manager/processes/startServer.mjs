@@ -16,7 +16,6 @@
 
 import { spawn } from 'child_process';
 
-import warnAuthUrlPortMismatch from './warnAuthUrlPortMismatch.mjs';
 
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
@@ -33,7 +32,6 @@ function createStdErrLineHandler({ context }) {
 
 function startServer(context) {
   context.shutdownServer();
-  warnAuthUrlPortMismatch({ context });
 
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never

@@ -16,7 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-import createAuthorize from '../../context/createAuthorize.js';
+import applySystemTrust from '../../context/applySystemTrust.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import findSchedule from './findSchedule.js';
@@ -51,18 +51,19 @@ async function runScheduledEndpoint(context, { endpointId, cron, environment }) 
   const schedules = getEnvironmentSchedules({ endpointConfig, environment: cronEnvironment });
   const schedule = findSchedule({ schedules, cron, endpointId, environment: cronEnvironment });
 
-  // Force a system context regardless of any session cookie sent with the request.
-  // system: true — nested CallApi steps are authorized like function calls (the run
-  // was already authorized at the transport layer), not re-gated on a user session.
-  context.session = undefined;
-  context.user = undefined;
-  context.system = true;
-  context.authorize = createAuthorize({ session: undefined, system: true });
+  // Cron is trusted at the transport (CRON_SECRET), so it holds a system
+  // context from construction, regardless of any session cookie sent with the
+  // request (Decisions 1, 2). The request context is a pre-resolved substitute
+  // writer for resolveAuthentication - the engine's single-writer carve-out -
+  // and applySystemTrust sets the same invariant bundle createSystemContext
+  // produces for the hook path.
+  applySystemTrust(context);
 
   const routineContext = {
     steps: {},
     payload: schedule.payload ?? {},
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: 0,

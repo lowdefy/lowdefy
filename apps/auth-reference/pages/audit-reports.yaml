@@ -1,0 +1,26 @@
+# Role-gated by the auditor app role (see auth.pages.roles) - exercises a
+# second app role alongside user-admin, on the same member.appRoles array.
+id: audit-reports
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: audit_reports_title
+    type: Title
+    properties:
+      content: Audit reports (auditor role)
+      level: 2
+  - id: audit_reports_body
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>Only members whose active member.role includes
+            <code>auditor</code> can see this page.</p>
+            <p><b>roles:</b> {{ user.roles | dump }}</p>
+          on:
+            user:
+              _user: true

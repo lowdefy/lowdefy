@@ -985,6 +985,195 @@ test('buildPageJit warns for a CallAPI action when the endpoint is missing from 
   const warning = warnings.find((w) => w.checkSlug === 'callapi-refs');
   expect(warning).toBeDefined();
   expect(warning.message).toBe(
-    'CallAPI action on page "home" references non-existent endpoint "my_endpoint".'
+    'CallAPI action on page "home" references non-existent endpoint "my_endpoint". ' +
+      'Check the endpointId for typos, or add an Api endpoint with id "my_endpoint".'
   );
+});
+
+test('buildPageJit attaches prodError to _warnings entries for prod-gated warnings', async () => {
+  const context = createTestContextWithApi([]);
+
+  mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  const warning = result._warnings.find((w) => w.message.includes('non-existent endpoint'));
+  expect(warning).toMatchObject({ type: 'ConfigWarning', prodError: true });
+});
+
+const authConfigPageYaml = `
+id: home
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  providers:
+    _build.authConfig: providers
+`;
+
+function authConfigPageRegistry() {
+  return new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+}
+
+test('buildPageJit resolves _build.authConfig from the projection on the context', async () => {
+  const context = createTestContext();
+  context.authConfigProjection = {
+    emailAndPassword: { enabled: true },
+    magicLink: { enabled: false },
+    twoFactor: { enabled: false },
+    passkey: { enabled: false },
+    providers: [{ id: 'google', type: 'Google' }],
+    organizations: { signup: 'invite-only' },
+  };
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.providers).toEqual([{ id: 'google', type: 'Google' }]);
+});
+
+test('buildPageJit restores the projection from the authConfigProjection.json artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-auth-'));
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: false },
+      magicLink: { enabled: true },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.properties.emailLoginEnabled).toBe(false);
+  expect(context.authConfigProjection.magicLink.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('buildPageJit collects the unavailable-projection error when no projection or artifact exists', async () => {
+  const context = createTestContext();
+  mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
+
+  await expect(
+    buildPageJit({
+      pageId: 'home',
+      pageRegistry: authConfigPageRegistry(),
+      context,
+    })
+  ).rejects.toThrow('build failed with');
+  expect(
+    context.errors.some((e) => e.message.includes('_build.authConfig is not available here.'))
+  ).toBe(true);
+});
+
+const moduleAuthConfigPageYaml = `
+id: panel
+type: PageHeaderMenu
+properties:
+  emailLoginEnabled:
+    _build.authConfig: emailAndPassword.enabled
+  roles:
+    _build.authConfig: roles
+`;
+
+test('buildPageJit resolves _build.authConfig in a module page from the restored projection artifact', async () => {
+  const fs = await import('fs');
+  const os = await import('os');
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-jit-module-auth-'));
+  const rolesCatalog = [
+    { id: 'admin', label: 'Administrator', description: 'Full access' },
+    { id: 'editor', label: 'Editor', description: 'Can edit content' },
+    { id: 'viewer', label: 'Viewer', description: 'Read only access' },
+  ];
+  fs.writeFileSync(
+    path.join(buildDirectory, 'authConfigProjection.json'),
+    JSON.stringify({
+      emailAndPassword: { enabled: true },
+      magicLink: { enabled: false },
+      twoFactor: { enabled: false },
+      passkey: { enabled: false },
+      providers: [],
+      organizations: { signup: 'open' },
+      roles: rolesCatalog,
+    })
+  );
+
+  const context = createTestContext();
+  context.directories.build = buildDirectory;
+  context.modules = {
+    authmod: {
+      id: 'authmod',
+      moduleRoot: path.resolve('src/test-utils'),
+      packageRoot: path.resolve('src/test-utils'),
+      moduleDependencies: null,
+    },
+  };
+  mockFiles([
+    { path: path.resolve('src/test-utils/panel.yaml'), content: moduleAuthConfigPageYaml },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'authmod/panel',
+      {
+        pageId: 'authmod/panel',
+        auth: { public: true },
+        refId: 'ref-panel',
+        refPath: 'panel.yaml',
+        unresolvedVars: null,
+        moduleEntryId: 'authmod',
+      },
+    ],
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'authmod/panel',
+    pageRegistry,
+    context,
+  });
+
+  expect(context.errors).toEqual([]);
+  expect(result.id).toBe('page:authmod/panel');
+  expect(result.properties.emailLoginEnabled).toBe(true);
+  expect(result.properties.roles).toEqual(rolesCatalog);
+  // The projection was restored from the artifact into the JIT context.
+  expect(context.authConfigProjection.emailAndPassword.enabled).toBe(true);
+
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
 });

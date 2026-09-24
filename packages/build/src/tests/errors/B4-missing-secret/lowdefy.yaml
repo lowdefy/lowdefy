@@ -1,0 +1,23 @@
+# B4: Missing Auth Secret
+# =======================
+# Tests that "secret" is required once auth is configured with a login
+# mechanism (here, an OAuth provider).
+#
+# Expected error:
+#   [Config Error] Auth "secret" is required when auth is configured.
+#
+# The error points to line 14 where the providers array key is defined.
+
+lowdefy: local
+
+auth:
+  providers:
+    - id: google
+      type: GenericOAuth
+      properties:
+        clientId: test-client-id
+        clientSecret: test-client-secret
+
+pages:
+  - id: home
+    type: Box

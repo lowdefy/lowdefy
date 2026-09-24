@@ -1,0 +1,14 @@
+# Per-step floor demo, the passing half: system contexts bypass the
+# authority floor - hooks and system: true steps run caller-less, so this
+# returns org-b's members with no org-authority check. The floor binds
+# user-initiated calls only (see list-members-step.yaml for the refusal).
+id: list-members-system
+type: Api
+routine:
+  - id: list_members_system
+    type: ListMembers
+    system: true
+    properties:
+      limit: 10
+  - ':return':
+      _step: list_members_system

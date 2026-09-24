@@ -37,6 +37,9 @@ function readBuildJson(name) {
 }
 
 function renderDevPage(c, { basePath = '' }) {
+  // The resolved caller, injected like the production server's template.js —
+  // the client's Auth provider seeds _user from it (roles, organization_id).
+  const user = c.get('lowdefyContext')?.user ?? null;
   const themeConfig = readBuildJson('theme');
   const appJson = readBuildJson('app');
 
@@ -74,7 +77,7 @@ window.__vite_plugin_react_preamble_installed__ = true;
   </head>
   <body>
     <div id="root"></div>
-    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({ basePath })}</script>
+    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({ basePath, user })}</script>
     ${appJson.html?.appendBody ?? ''}
     <script type="module" src="${basePath}/client/main.jsx"></script>
   </body>

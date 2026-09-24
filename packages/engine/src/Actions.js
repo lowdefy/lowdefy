@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { ActionError, ConfigError } from '@lowdefy/errors';
+import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
+import { isDecodedServerError } from './decodeServerError.js';
 import { isStopChain } from './stopChain.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
@@ -40,28 +41,29 @@ class Actions {
 
   logActionError({ error, action }) {
     const handleError = this.context._internal.lowdefy._internal.handleError;
-    const actionId = action?.id || '';
 
-    // Deduplicate by error message + action id
-    const errorKey = `${error?.message || ''}:${actionId}`;
-    if (this.loggedActionErrors.has(errorKey)) {
-      return;
-    }
-    this.loggedActionErrors.add(errorKey);
-
-    // User-facing errors log to browser console only, never to terminal
-    if (error instanceof UserError) {
+    // User-facing errors log to browser console only, never to terminal. This line
+    // bypasses handleError, so it dedups here. Matched by name, not instanceof:
+    // plugins bundle their own @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
+      const errorKey = `${error.message}:${action?.id || ''}`;
+      if (this.loggedActionErrors.has(errorKey)) {
+        return;
+      }
+      this.loggedActionErrors.add(errorKey);
       this.context._internal.lowdefy._internal.logger.error(error);
       return;
     }
 
-    // Lowdefy errors - use handleError (-> terminal)
+    // Not deduped here: every server failure carries the same generic message, so a
+    // message + action key would hide each later failure of the action. handleError
+    // dedups on the message it displays, which in dev is the full server error.
     if (handleError) {
       handleError(error);
     }
   }
 
-  async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
+  async callAsyncAction({ action, arrayIndices, block, event, index, parseScope, responses }) {
     try {
       const response = await this.callAction({
         action,
@@ -69,6 +71,7 @@ class Actions {
         block,
         event,
         index,
+        parseScope,
         responses,
       });
       responses[action.id] = response;
@@ -88,6 +91,7 @@ class Actions {
     controls,
     counters,
     event,
+    parseScope,
     progress,
     responses,
   }) {
@@ -100,6 +104,7 @@ class Actions {
           controls,
           counters,
           event,
+          parseScope,
           progress,
           responses,
         });
@@ -122,6 +127,7 @@ class Actions {
             block,
             event,
             index,
+            parseScope,
             progress,
             responses,
           });
@@ -132,6 +138,7 @@ class Actions {
             block,
             event,
             index,
+            parseScope,
             progress,
             responses,
           });
@@ -165,6 +172,7 @@ class Actions {
     controls,
     counters,
     event,
+    parseScope,
     progress,
     responses,
   }) {
@@ -177,6 +185,7 @@ class Actions {
         event,
         input: control[':return'],
         node: control,
+        parseScope,
         responses,
       });
       controls.push({ index, type: ':return', taken: value });
@@ -189,6 +198,7 @@ class Actions {
         event,
         input: control[':if'],
         node: control,
+        parseScope,
         responses,
       });
       // JS truthiness, matching the routine ':if' - not skip's strict === true.
@@ -201,6 +211,7 @@ class Actions {
           controls,
           counters,
           event,
+          parseScope,
           progress,
           responses,
         });
@@ -216,6 +227,7 @@ class Actions {
         controls,
         counters,
         event,
+        parseScope,
         progress,
         responses,
       });
@@ -232,6 +244,7 @@ class Actions {
           event,
           input: caseObject[':case'],
           node: caseObject,
+          parseScope,
           responses,
         });
         if (condition) {
@@ -244,6 +257,7 @@ class Actions {
             controls,
             counters,
             event,
+            parseScope,
             progress,
             responses,
           });
@@ -264,13 +278,15 @@ class Actions {
       controls,
       counters,
       event,
+      parseScope,
       progress,
       responses,
     });
   }
 
-  evaluateControlValue({ arrayIndices, block, event, input, node, responses }) {
+  evaluateControlValue({ arrayIndices, block, event, input, node, parseScope, responses }) {
     const { output, errors: parserErrors } = this.context._internal.parser.parse({
+      ...parseScope,
       actions: responses,
       event,
       arrayIndices,
@@ -328,11 +344,21 @@ class Actions {
         controls,
         counters,
         event,
+        parseScope: { error: null },
         responses,
         progress,
       });
     } catch (error) {
       this.logActionError(error);
+      // A server error is already the wire shape, generic unless the author wrote
+      // it. A client-side error was built in the browser from data it already
+      // holds, so it keeps its real message - only its fields are narrowed.
+      const thrown = error.error;
+      const caught = isDecodedServerError(thrown)
+        ? thrown
+        : Object.assign(projectCaughtError(thrown), {
+            actionId: error.action?.id,
+          });
       // Catch actions restart action numbering, matching flat-chain history; the control
       // counter continues so every control entry keeps a unique index within the event.
       counters.action = 0;
@@ -344,6 +370,7 @@ class Actions {
           controls,
           counters,
           event,
+          parseScope: { error: caught },
           responses,
           progress,
         });
@@ -389,7 +416,7 @@ class Actions {
     };
   }
 
-  async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
+  async callAction({ action, arrayIndices, block, event, index, parseScope, progress, responses }) {
     if (!this.actions[action.type]) {
       const error = new ConfigError(`Invalid action type "${action.type}" at "${block.blockId}".`, {
         configKey: action['~k'],
@@ -397,6 +424,7 @@ class Actions {
       throw { error, action, index };
     }
     const { output: parsedAction, errors: parserErrors } = this.context._internal.parser.parse({
+      ...parseScope,
       actions: responses,
       event,
       arrayIndices,
@@ -422,6 +450,8 @@ class Actions {
     try {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
+        // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
+        lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
         methods: getActionMethods({
           actionId: action.id,
           actions: responses,
@@ -436,18 +466,27 @@ class Actions {
         progress();
       }
     } catch (err) {
-      const error = err.isLowdefyError
-        ? err
-        : new ActionError(err.message, {
-            cause: err,
-            typeName: action.type,
-            received: parsedAction.params,
-            location: block.blockId,
-            configKey: action['~k'],
-          });
+      let error;
+      if (err.isLowdefyError) {
+        error = err;
+        // Plugins may throw ConfigError or UserError without a location - the interface
+        // layer owns location resolution.
+        if (type.isNone(error.configKey)) {
+          error.configKey = action['~k'];
+        }
+      } else {
+        error = new ActionError(err.message, {
+          cause: err,
+          typeName: action.type,
+          received: parsedAction.params,
+          location: block.blockId,
+          configKey: action['~k'],
+        });
+      }
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({
+        ...parseScope,
         actions: responses,
         event,
         arrayIndices,

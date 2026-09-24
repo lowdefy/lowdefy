@@ -226,3 +226,40 @@ test('buildNotifications does not count operators in notification properties', (
   buildNotifications({ components, context });
   expect(context.typeCounters.operators.server.getCounts()).toEqual({});
 });
+
+test('buildNotifications collects an error per invalid notification and still builds the valid ones', () => {
+  const context = testContext();
+  context.errors = [];
+  const components = {
+    notifications: [
+      { type: 'EmailTemplate', '~k': 'k1' },
+      { id: 'n2', type: 'EmailTemplate', properties: {}, '~k': 'k2' },
+      {
+        id: 'n3',
+        type: 'EmailTemplate',
+        properties: { subject: 'Hello' },
+        '~k': 'k3',
+      },
+    ],
+  };
+  buildNotifications({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].message).toBe('Notification id missing at notification 0.');
+  expect(context.errors[0].configKey).toBe('k1');
+  expect(context.errors[1].message).toBe(
+    'Notification "n2" requires "properties.subject" to be a non-empty string.'
+  );
+  expect(context.notificationIds).toEqual(new Set(['n3']));
+});
+
+test('buildNotifications names the config root when notifications is not an array', () => {
+  const context = testContext();
+  const components = { notifications: 'notifications', '~k': 'root' };
+  let thrown;
+  try {
+    buildNotifications({ components, context });
+  } catch (error) {
+    thrown = error;
+  }
+  expect(thrown.configKey).toBe('root');
+});

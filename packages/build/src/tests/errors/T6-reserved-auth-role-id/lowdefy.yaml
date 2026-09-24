@@ -1,0 +1,29 @@
+# T6: Reserved Auth Role ID
+# =========================
+# Tests that an authored auth role id which is a reserved name fails the build
+# with a located ConfigError. The role id keys the organization plugin's
+# access-control role catalog, a plain object.
+#
+# Expected error:
+#   [Config Error] Auth role id "__proto__" is a reserved name and cannot be
+#   used as a role id.
+#
+# The error points to line 25 where the role is defined.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  roles:
+    - id: __proto__
+
+pages:
+  - id: home
+    type: Box

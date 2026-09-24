@@ -16,15 +16,17 @@
 
 import React, { useCallback, useState } from 'react';
 
+import formatErrorsForCopy from './utils/formatErrorsForCopy.js';
+import getErrorBarColor from './utils/getErrorBarColor.js';
+
 function getBarStyle(errors) {
-  const hasError = errors.some((e) => e.type !== 'ConfigWarning');
   return {
     position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
     height: 28,
-    backgroundColor: hasError ? '#cf1322' : '#d48806',
+    backgroundColor: getErrorBarColor(errors),
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
@@ -36,17 +38,6 @@ function getBarStyle(errors) {
     zIndex: 99999,
     boxShadow: '0 -1px 4px rgba(0,0,0,0.15)',
   };
-}
-
-function formatErrorsForCopy(errors) {
-  return errors
-    .map((e) => {
-      let text = `[${e.type}] ${e.message}`;
-      if (e.source) text += `\n  Source: ${e.source}`;
-      if (e.stack) text += `\n${e.stack}`;
-      return text;
-    })
-    .join('\n\n');
 }
 
 function CopyIcon() {
@@ -112,6 +103,19 @@ const ErrorBar = ({ errors }) => {
         }}
       >
         <span style={{ opacity: 0.8 }}>{latest.type}: </span>
+        {latest.prodError === true && (
+          <span
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.25)',
+              borderRadius: 8,
+              padding: '1px 7px',
+              fontSize: 11,
+              marginRight: 6,
+            }}
+          >
+            fails in prod
+          </span>
+        )}
         <span>{latest.message}</span>
         {latest.source && <span style={{ opacity: 0.7, marginLeft: 8 }}>{latest.source}</span>}
       </div>

@@ -19,10 +19,11 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
+import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import derivePreview from '../notifications/derivePreview.js';
 import getNotificationConfig from '../notifications/getNotificationConfig.js';
 import resolveNotificationLinks from '../notifications/resolveNotificationLinks.js';
-import resolveThemeLogo from '../notifications/resolveThemeLogo.js';
+import resolveThemeLogo from '../../email/resolveThemeLogo.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 function itemHasPageLinks(item, dataKeys) {
@@ -83,6 +84,15 @@ async function handleRenderNotification(context, routineContext, { step }) {
         { configKey: step['~k'] }
       );
     }
+  } else {
+    // The current environment's url is the deployment origin, so links need no per-step wiring.
+    // On the dev server the request origin is the local app; in production it is never used, since
+    // a spoofed Host header would then steer the links in outgoing mail.
+    serverUrl =
+      getCurrentEnvironment({ config: context.config })?.url ??
+      (context.dev === true ? context.origin : undefined);
+  }
+  if (!type.isNone(serverUrl)) {
     serverUrl = serverUrl.replace(/\/$/, '');
   }
   if (!type.isNone(landingPage) && !type.isString(landingPage)) {
@@ -141,7 +151,7 @@ async function handleRenderNotification(context, routineContext, { step }) {
   if (itemHasPageLinks(data, Template.dataKeys ?? [])) {
     if (type.isNone(serverUrl)) {
       throw new ConfigError(
-        `Notification "${notificationId}" has links but no server URL is available. Set the serverUrl step property.`,
+        `Notification "${notificationId}" has links but no server URL is available. Set the serverUrl step property, or the url of the current environment in config.environments.`,
         { configKey: step['~k'] }
       );
     }

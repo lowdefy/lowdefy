@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
-function countStepTypes(step, { typeCounters }) {
+function countStepTypes(step, { typeCounters, stepTypes }) {
   if (
     step.type === 'CallAgent' ||
     step.type === 'CallApi' ||
     step.type === 'RenderNotification' ||
     step.type === 'ValidateSchema'
   ) {
+    return;
+  }
+  if (stepTypes?.[step.type]) {
+    typeCounters.steps.increment(step.type, step['~k']);
     return;
   }
   typeCounters.requests.increment(step.type, step['~k']);

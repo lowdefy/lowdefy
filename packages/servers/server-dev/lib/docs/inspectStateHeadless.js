@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import unsettledPageNote from './unsettledPageNote.js';
 
 // Collects a state snapshot from a headless Chromium tab navigated to the
 // page's own route. Mirrors Inspector.jsx's buildSnapshot (the live-tab
@@ -28,7 +29,9 @@ import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 async function inspectStateHeadless({ origin, pageId, user, timeout = 15000 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
-      error: `inspectStateHeadless requires an "origin" string. Received ${JSON.stringify(origin)}.`,
+      error: `inspectStateHeadless requires an "origin" string. Received ${JSON.stringify(
+        origin
+      )}.`,
     };
   }
   if (type.isNone(pageId) || !type.isString(pageId)) {
@@ -71,6 +74,9 @@ async function inspectStateHeadless({ origin, pageId, user, timeout = 15000 }) {
         })
       );
     }, pageId);
+    if (!opened.ready) {
+      return { ...snapshot, ready: false, note: unsettledPageNote({ timeout }) };
+    }
     return snapshot;
   } catch (error) {
     return { error: `Failed to inspect state at "${url}": ${error.message}` };

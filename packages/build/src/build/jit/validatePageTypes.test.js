@@ -77,6 +77,25 @@ test('validatePageTypes throws when action type is not defined', () => {
   );
 });
 
+test('validatePageTypes throws when the retired ImpersonateUser action type is used', () => {
+  const context = createContext({ actions: { SetState: {} } });
+  context.typeCounters.actions.increment('ImpersonateUser', 'key1');
+  expect(() => validatePageTypes({ context })).toThrow(
+    'Action type "ImpersonateUser" was used but is not defined'
+  );
+});
+
+// InviteMember names a step, and only a step. The action counter is fed from
+// page events alone, so the step of the same name never reaches this check -
+// authored as an action it is an undefined action type like any other.
+test('validatePageTypes throws when the retired InviteMember action type is used', () => {
+  const context = createContext({ actions: { SetState: {} } });
+  context.typeCounters.actions.increment('InviteMember', 'key1');
+  expect(() => validatePageTypes({ context })).toThrow(
+    'Action type "InviteMember" was used but is not defined'
+  );
+});
+
 test('validatePageTypes warns (not throws) for missing client operator types', () => {
   const context = createContext({ clientOps: { _state: {} } });
   context.typeCounters.operators.client.increment('_stat', 'key1');

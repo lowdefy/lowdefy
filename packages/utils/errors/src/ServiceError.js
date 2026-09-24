@@ -63,8 +63,10 @@ class ServiceError extends Error {
    * @param {string} [options.code] - Error code (e.g., 'ECONNREFUSED')
    * @param {number} [options.statusCode] - HTTP status code if applicable
    * @param {string} [options.configKey] - Config key for location resolution
+   * @param {string} [options.hint] - A sentence telling the developer what to do about the
+   *   failure. Enumerable, so it survives serialization to the client.
    */
-  constructor(message, { cause, service, code, statusCode, configKey } = {}) {
+  constructor(message, { cause, service, code, statusCode, configKey, hint } = {}) {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
     const errorStatusCode =
@@ -83,8 +85,11 @@ class ServiceError extends Error {
     this._message = baseMessage;
     this.service = service;
     this.code = errorCode;
+    this.hint = hint ?? cause?.hint ?? null;
     this.statusCode = errorStatusCode;
-    this.configKey = configKey ?? null;
+    // Extract from the wrapped error like PluginError does, so a ServiceError
+    // wrapped around an error that already resolved its config location keeps it.
+    this.configKey = configKey ?? cause?.configKey ?? null;
   }
 
   /**
@@ -100,8 +105,15 @@ class ServiceError extends Error {
       return true;
     }
 
-    // Check HTTP status codes (5xx = server error)
-    const statusCode = error.statusCode ?? error.status ?? error.response?.status;
+    // Check HTTP status codes (5xx = server error). AWS SDK v3 errors carry the
+    // status on $metadata.httpStatusCode; @google-cloud errors carry the numeric
+    // HTTP status as `code`.
+    const statusCode =
+      error.statusCode ??
+      error.status ??
+      error.response?.status ??
+      error.$metadata?.httpStatusCode ??
+      (Number.isInteger(error.code) ? error.code : undefined);
     if (statusCode && statusCode >= 500 && statusCode < 600) {
       return true;
     }

@@ -42,7 +42,7 @@ function allowDependencyBuild({ cwd, appPath, dependency }) {
   const workspacePath = path.join(targetDir, 'pnpm-workspace.yaml');
 
   const config = workspaceRoot
-    ? (yaml.load(fs.readFileSync(workspacePath, 'utf8')) ?? {})
+    ? yaml.load(fs.readFileSync(workspacePath, 'utf8')) ?? {}
     : { packages: ['.'] };
 
   const onlyBuiltDependencies = config.onlyBuiltDependencies ?? [];

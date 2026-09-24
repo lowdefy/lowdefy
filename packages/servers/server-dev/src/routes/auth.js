@@ -14,35 +14,29 @@
   limitations under the License.
 */
 
-import { authHandler } from '@hono/auth-js';
-
 import authJson from '../../lib/build/auth.js';
-import getDevSession from '../../lib/server/auth/getDevSession.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
+import getMockUser from '../../lib/server/auth/getMockUser.js';
 
-// Replaces pages/api/auth/[...nextauth].js. Hono routes HEAD requests through
-// GET handlers, so the corporate-email pre-check branch must live inside the
-// middleware, before delegating to the Auth.js handler. See:
-// https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-function authMiddleware() {
-  const handler = authJson.configured === true ? authHandler() : null;
-  return async function auth(c, next) {
+// Mounts BetterAuth's Web Standard handler on /api/auth/*. Hono routes HEAD
+// requests through GET handlers, so HEAD short-circuits before the handler -
+// corporate email link-checkers pre-fetch magic-link and verification URLs
+// with HEAD, and letting those reach the handler would consume the one-time
+// token before the user clicks.
+function authMiddleware({ logger }) {
+  return async function auth(c) {
     if (authJson.configured !== true) {
       return c.json({ message: 'Auth not configured' }, 404);
+    }
+    if (getMockUser()) {
+      // Mock user active - no auth engine runs; the get-session stub in
+      // app.js is the only auth endpoint.
+      return c.json({ message: 'Auth engine disabled while dev.mockUser is active' }, 404);
     }
     if (c.req.method === 'HEAD') {
       return c.body(null, 200);
     }
-    // Dev sessions (mock user, headless renderer cookie) exist outside
-    // Auth.js. getDevSession is the same function the server request
-    // context uses (lib/server/auth/session.js), so the session the browser
-    // client sees here is identical to the one requests authenticate with.
-    if (c.req.method === 'GET' && c.req.path.endsWith('/api/auth/session')) {
-      const devSession = await getDevSession(c);
-      if (devSession) {
-        return c.json(devSession);
-      }
-    }
-    return handler(c, next);
+    return getAuth({ logger }).handler(c.req.raw);
   };
 }
 

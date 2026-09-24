@@ -18,7 +18,7 @@ import { jest } from '@jest/globals';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { ConfigError } from '@lowdefy/errors';
 
-import createAuthorize from '../../context/createAuthorize.js';
+import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -44,12 +44,12 @@ function createMockReadConfigFile(endpointConfigs = {}) {
   });
 }
 
-function createTestContext({ endpointConfigs = {}, session } = {}) {
+function createTestContext({ endpointConfigs = {}, user } = {}) {
   const context = testContext({
     operators,
     logger,
     readConfigFile: createMockReadConfigFile(endpointConfigs),
-    session: session ?? { user: { id: 'user_1' } },
+    user: user ?? { id: 'user_1' },
   });
   context.evaluateOperators = createEvaluateOperators(context);
   return context;
@@ -141,7 +141,7 @@ test('throws ConfigError on authorization failure', async () => {
         auth: { roles: ['admin'] },
       },
     },
-    session: { user: { id: 'user_1' } },
+    user: { id: 'user_1' },
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
@@ -159,9 +159,8 @@ test('system context authorizes nested call to a protected endpoint', async () =
       },
     },
   });
-  context.session = undefined;
   context.user = undefined;
-  context.authorize = createAuthorize({ session: undefined, system: true });
+  context.authorizeOutcome = createAuthorizeOutcome({ user: null, system: true });
   const result = await invokeEndpoint(context, {
     endpointId: 'target',
     payload: {},
@@ -181,7 +180,7 @@ test('user session with insufficient roles gets masked does-not-exist error on n
         auth: { public: false, roles: ['admin'] },
       },
     },
-    session: { user: { id: 'user_1', roles: ['viewer'] } },
+    user: { id: 'user_1', roles: ['viewer'] },
   });
   await expect(
     invokeEndpoint(context, { endpointId: 'target', payload: {}, endpointDepth: 0 })
@@ -232,10 +231,7 @@ test('child routine sees fresh state — caller state not visible', async () => 
       target: {
         endpointId: 'target',
         type: 'Api',
-        routine: [
-          { ':set_state': { x: 1 } },
-          { ':return': { _state: 'x' } },
-        ],
+        routine: [{ ':set_state': { x: 1 } }, { ':return': { _state: 'x' } }],
       },
     },
   });

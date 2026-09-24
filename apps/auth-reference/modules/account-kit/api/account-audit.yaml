@@ -1,0 +1,30 @@
+# The module's hook body - an InternalApi endpoint (unreachable over HTTP)
+# bound by the manifest to BOTH session.create.after and email.verified. It
+# runs in a system context like every hook: _user is empty, the subject is
+# in _payload, _secret resolves. The two points carry different payloads
+# (session.create.after: { session, user }; email.verified: { user }), so
+# payloadKeys on the audit row tells them apart. Harmless audit-only work,
+# wrapped in :try so an unreachable database never breaks a sign-in.
+id: account-audit
+type: InternalApi
+routine:
+  - ':try':
+      - id: write_module_audit
+        type: MongoDBInsertOne
+        connectionId:
+          _module.connectionId: module-audit-db
+        properties:
+          doc:
+            source: account-kit
+            email:
+              _payload: user.email
+            userId:
+              _payload: user.id
+            payloadKeys:
+              _object.keys:
+                _payload: true
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'account-kit account-audit hook failed to write the audit row'

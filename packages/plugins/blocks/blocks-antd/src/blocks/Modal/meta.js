@@ -31,6 +31,14 @@ export default {
     wrapper: 'The Modal wrapper.',
     content: 'The Modal content.',
   },
+  hazards: [
+    {
+      id: 'modal-keeps-state',
+      message:
+        'Closing a Modal does not clear the state of the blocks inside it, while visible: false on the Modal does prune that state. Reset the values in onClose if a reopened Modal should start empty.',
+      see: 'container-blocks/modal',
+    },
+  ],
   events: {
     onOk: 'Trigger actions when Ok button is clicked.',
     onOpen: 'Trigger actions when modal is opened.',
@@ -74,7 +82,8 @@ export default {
       },
       okText: {
         type: 'string',
-        description: 'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       okButtonProps: {
         type: 'object',
@@ -85,7 +94,8 @@ export default {
       },
       cancelText: {
         type: 'string',
-        description: 'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       cancelButtonProps: {
         type: 'object',

@@ -1,0 +1,13 @@
+id: check-email
+type: Box
+properties:
+  style:
+    maxWidth: 480
+    margin: 60px auto
+blocks:
+  - id: check_email_result
+    type: Result
+    properties:
+      status: info
+      title: Check your email
+      subTitle: We sent you a link - follow it to continue. Magic links sign you in directly; verification links confirm your address so you can log in.

@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import applyTenantToChangeStream from '../tenant/applyTenantToChangeStream.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -23,17 +25,28 @@ import schema from './schema.js';
 // subscriber until the last one leaves (abort signal). Requires MongoDB to
 // run as a replica set (change streams are not available on standalone
 // deployments).
-async function MongoDBChangeStream({ connection, properties, publish, signal }) {
-  const { fullDocument, pipeline } = deserialize(properties ?? {});
+async function MongoDBChangeStream({ connection, properties, publish, signal, tenant }) {
+  let { fullDocument, pipeline } = deserialize(properties ?? {});
+  if (tenant) {
+    // Inject the tenant $match against fullDocument and force updateLookup so
+    // update events carry the document. Events that can not prove they match
+    // (deletes, no fullDocument) are not delivered - fail closed.
+    ({ fullDocument, pipeline } = applyTenantToChangeStream({ pipeline, tenant }));
+  }
   // The client is cached and shared with all other requests on this connection,
   // so only the stream may be closed here, never the client.
-  const collection = await getCollection({ connection });
+  const { collection } = await getCollection({ connection });
   if (signal.aborted) {
     return;
   }
-  const stream = collection.watch(pipeline ?? [], {
-    fullDocument: fullDocument ?? 'updateLookup',
-  });
+  let stream;
+  try {
+    stream = collection.watch(pipeline ?? [], {
+      fullDocument: fullDocument ?? 'updateLookup',
+    });
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
+  }
   signal.addEventListener(
     'abort',
     () => {
@@ -50,7 +63,7 @@ async function MongoDBChangeStream({ connection, properties, publish, signal }) 
   } catch (error) {
     // Closing the stream on abort surfaces as an error on the iterator.
     if (!signal.aborted) {
-      throw error;
+      throw mapMongoError(error, { connection, requestType: 'MongoDBChangeStream' });
     }
   } finally {
     await stream.close().catch(() => {

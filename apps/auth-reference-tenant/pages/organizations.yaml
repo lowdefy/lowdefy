@@ -1,0 +1,94 @@
+# Organization switching: SetActiveOrganization is session-scoped; roles and
+# attributes resolve from the new active member row server-side, so
+# UpdateSession is chained after to re-sync the client - the roles shown
+# below change without a reload.
+id: organizations
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+events:
+  onInit:
+    - id: load_orgs
+      type: Fetch
+      params:
+        url: /api/auth/organization/list
+        responseFunction: json
+    - id: set_orgs
+      type: SetState
+      params:
+        my_organizations:
+          _actions: load_orgs.response
+blocks:
+  - id: organizations_title
+    type: Title
+    properties:
+      content: My organizations
+      level: 2
+  - id: current_user
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p><b>roles:</b> {{ user.roles | dump }}<br/>
+            <b>attributes:</b> {{ user.attributes | dump }}</p>
+          on:
+            user:
+              _user: true
+  - id: organizations_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for org in orgs %}
+              <li><b>{{ org.name }}</b> (slug: {{ org.slug }}, id: {{ org.id }})</li>
+            {% endfor %}
+            </ul>
+          on:
+            orgs:
+              _state: my_organizations
+  - id: org_slug
+    type: TextInput
+    properties:
+      title: Organization slug to activate
+  - id: switch_button
+    type: Button
+    properties:
+      title: Set active organization
+      block: true
+    events:
+      onClick:
+        try:
+          - id: set_active
+            type: SetActiveOrganization
+            params:
+              organizationSlug:
+                _state: org_slug
+          # Re-sync the client caller - roles and merged attributes resolve
+          # from the new active member row on the server.
+          - id: resync
+            type: UpdateSession
+        catch:
+          - id: show_switch_error
+            type: SetState
+            params:
+              switch_error:
+                _actions: set_active.error.message
+  - id: switch_error_html
+    type: Html
+    visible:
+      _ne:
+        - _state: switch_error
+        - null
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p style="color:red">{{ error }}</p>
+          on:
+            error:
+              _state: switch_error

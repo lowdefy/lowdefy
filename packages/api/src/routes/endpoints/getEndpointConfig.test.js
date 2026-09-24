@@ -20,65 +20,98 @@ import { AuthenticationError, ConfigError } from '@lowdefy/errors';
 import getEndpointConfig from './getEndpointConfig.js';
 import testContext from '../../test/testContext.js';
 
-const logger = { debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() };
+const logger = {
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
 
-const endpointConfig = { endpointId: 'ep', type: 'Api', auth: { public: false } };
+const endpointConfig = {
+  endpointId: 'ep_1',
+  type: 'Api',
+  routine: { ':return': 'ok' },
+};
 
-function createReadConfigFile({ authConfigured, endpoint = endpointConfig } = {}) {
-  return jest.fn((path) => {
-    if (path === 'api/ep.json') return endpoint;
-    if (path === 'auth.json') return { configured: authConfigured };
-    return null;
-  });
-}
+const readConfigFile = jest.fn((path) => (path === 'api/ep_1.json' ? endpointConfig : null));
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('getEndpointConfig returns the endpoint config when it exists', async () => {
-  const context = testContext({ logger, readConfigFile: createReadConfigFile() });
-  expect(await getEndpointConfig(context, { endpointId: 'ep' })).toEqual(endpointConfig);
-});
-
-test('getEndpointConfig throws does-not-exist for a miss when auth is not configured', async () => {
+test("getEndpointConfig returns the config for an existing endpoint when unauthenticated on an auth'd app", async () => {
   const context = testContext({
     logger,
-    readConfigFile: createReadConfigFile({ authConfigured: false }),
+    readConfigFile,
+    authEnforcement: { public: false },
+    user: null,
+  });
+  const config = await getEndpointConfig(context, { endpointId: 'ep_1' });
+  expect(config).toBe(endpointConfig);
+});
+
+test('getEndpointConfig returns the config for an existing endpoint when authenticated', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile,
+    authEnforcement: { public: false },
+    user: { id: 'user_1' },
+  });
+  const config = await getEndpointConfig(context, { endpointId: 'ep_1' });
+  expect(config).toBe(endpointConfig);
+});
+
+test("getEndpointConfig throws AuthenticationError on a miss for an anonymous human on an auth'd app", async () => {
+  const context = testContext({
+    logger,
+    readConfigFile,
+    authEnforcement: { public: false },
+    user: null,
   });
   await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(
-    new ConfigError('API Endpoint "missing" does not exist.')
+    AuthenticationError
+  );
+  await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(
+    'Authentication required for API endpoint "missing".'
   );
 });
 
-test('getEndpointConfig answers a miss with the authentication-required error for an anonymous caller on an auth-configured app', async () => {
+test('getEndpointConfig throws ConfigError on a miss when a user is resolved', async () => {
   const context = testContext({
     logger,
-    readConfigFile: createReadConfigFile({ authConfigured: true }),
+    readConfigFile,
+    authEnforcement: { public: false },
+    user: { id: 'user_1' },
   });
+  await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(ConfigError);
   await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(
-    new AuthenticationError('Authentication required for API endpoint "missing".')
+    'API Endpoint "missing" does not exist.'
   );
 });
 
-test('getEndpointConfig throws does-not-exist for a miss when the caller is authenticated', async () => {
+test('getEndpointConfig throws ConfigError on a miss for a no-auth app', async () => {
   const context = testContext({
     logger,
-    readConfigFile: createReadConfigFile({ authConfigured: true }),
-    session: { user: { id: 'user_1' } },
+    readConfigFile,
+    authEnforcement: null,
+    user: null,
   });
+  await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(ConfigError);
   await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(
-    new ConfigError('API Endpoint "missing" does not exist.')
+    'API Endpoint "missing" does not exist.'
   );
 });
 
-test('getEndpointConfig throws does-not-exist for a miss in a system context', async () => {
+test('getEndpointConfig throws ConfigError on a miss for a system context', async () => {
   const context = testContext({
     logger,
-    readConfigFile: createReadConfigFile({ authConfigured: true }),
+    readConfigFile,
+    authEnforcement: { public: false },
     system: true,
+    user: null,
   });
+  await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(ConfigError);
   await expect(getEndpointConfig(context, { endpointId: 'missing' })).rejects.toThrow(
-    new ConfigError('API Endpoint "missing" does not exist.')
+    'API Endpoint "missing" does not exist.'
   );
 });

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 import Events from './Events.js';
@@ -123,14 +124,9 @@ class WebSockets {
     if (this.active.has(websocketId)) {
       return;
     }
-    const config = this.subscriptionConfig[websocketId] ?? {
-      client: {},
-      events: {},
-      payload: {},
-      websocketId,
-    };
-    if (!this.context.websockets[websocketId]) {
-      this.initChannelState(websocketId);
+    const config = this.subscriptionConfig[websocketId];
+    if (type.isNone(config)) {
+      throw new ConfigError(`Subscription "${websocketId}" is not defined on this page.`);
     }
 
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
@@ -184,7 +180,10 @@ class WebSockets {
       this.active.delete(websocketId);
       channel.error = { message: error.message };
       this.context._internal.update();
-      throw error;
+      if (error.isLowdefyError) {
+        throw error;
+      }
+      throw new ServiceError(undefined, { cause: error, service: 'WebSocket' });
     }
   }
 

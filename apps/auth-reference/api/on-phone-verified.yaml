@@ -1,0 +1,28 @@
+# Bound to phone.verified - fires after a phone number is verified, both on
+# OTP sign-in/sign-up and on a signed-in user confirming a phone change.
+# _payload is { user, phoneNumber }. The phone analog of email.verified: a
+# phone-first app runs merge-on-signup here, matching the verified
+# phoneNumber against an app-owned contact (its users' emails are synthetic
+# temp addresses that never match). The user write has already committed,
+# so fallible side effects belong in :try.
+id: on-phone-verified
+type: InternalApi
+routine:
+  - ':try':
+      - id: write_audit
+        type: MongoDBInsertOne
+        connectionId: audit_db
+        properties:
+          doc:
+            event: phone.verified
+            userId:
+              _payload: user.id
+            phoneNumber:
+              _payload: phoneNumber
+            userEmail:
+              _payload: user.email
+            at:
+              _date: now
+    ':catch':
+      - ':log':
+          - 'on-phone-verified hook failed to write the audit row'

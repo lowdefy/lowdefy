@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import handleAgentCall from './handleAgentCall.js';
+import handleAuthStep from './handleAuthStep.js';
 import handleControl from './control/handleControl.js';
 import handleEndpointCall from './handleEndpointCall.js';
 import handleRenderNotification from './handleRenderNotification.js';
@@ -46,6 +48,11 @@ async function runRoutine(context, routineContext, { routine }) {
           step: routine,
         });
       }
+      if (routine.id?.startsWith?.('auth:')) {
+        return await handleAuthStep(context, routineContext, {
+          step: routine,
+        });
+      }
       if (routine.id?.startsWith?.('notification:')) {
         return await handleRenderNotification(context, routineContext, {
           step: routine,
@@ -64,10 +71,15 @@ async function runRoutine(context, routineContext, { routine }) {
       }
       return { status: 'continue' };
     }
-    throw new Error('Invalid routine.', { cause: { routine } });
+    throw new LowdefyInternalError('Invalid routine.', { cause: { routine } });
   } catch (error) {
     if (error.isReject) {
       return { status: 'reject', error };
+    }
+    // A UserError raised by a nested :throw is an expected author outcome that
+    // the calling routine already logged as a warning - it is not a fault.
+    if (error.name === 'UserError') {
+      return { status: 'error', error };
     }
     // handleError sets error.handled once it has logged - it is the single sink
     // that owns the flag, so a nested runRoutine re-throwing this error does not

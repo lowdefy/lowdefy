@@ -125,6 +125,31 @@ test('lowdefyApp absent defaults to undefined in operator context', () => {
   expect(operatorContext.lowdefyApp).toBeUndefined();
 });
 
+test('forwards organization into operator context', () => {
+  const input = { a: { _test: { params: true } } };
+  const organization = {
+    policy: 'pinned',
+    pinned: { id: 'org_1', slug: 'default', name: 'default' },
+  };
+  const parser = new ServerParser({
+    operators,
+    secrets,
+    user,
+    organization,
+  });
+  parser.parse({ args, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.organization).toEqual(organization);
+});
+
+test('organization absent defaults to undefined in operator context', () => {
+  const input = { a: { _test: { params: true } } };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ args, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.organization).toBeUndefined();
+});
+
 test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new ServerParser({ operators, secrets, user });
@@ -251,6 +276,28 @@ test('parse defaults arrayIndices to an empty array', () => {
   parser.parse({ input, location });
   const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
   expect(operatorContext.arrayIndices).toEqual([]);
+});
+
+test('parse forwards error to operators', () => {
+  const input = { a: { _test: { params: true } } };
+  const error = new Error('Caught error.');
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ error, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.error).toBe(error);
+});
+
+test('operator parser re-enters parse with the calling error', () => {
+  const error = new Error('Caught error.');
+  const frameOperators = {
+    _nested: jest.fn(({ parser }) =>
+      parser.parse({ input: { __frame: true }, operatorPrefix: '__' })
+    ),
+    _frame: jest.fn(() => null),
+  };
+  const parser = new ServerParser({ operators: frameOperators, secrets, user });
+  parser.parse({ error, input: { _nested: true }, location });
+  expect(frameOperators._frame.mock.calls[0][0].error).toBe(error);
 });
 
 test('operator parser re-enters parse with the calling frame', () => {

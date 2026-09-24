@@ -16,19 +16,19 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-import normalizeErrorSources from './normalizeErrorSources.js';
-import omitErrorProps from './omitErrorProps.js';
+import createWireProjection from './createWireProjection.js';
 
 // The response-value call shape, beside redactErrorResponse's error-only one.
 // A response is not an error, but makeReplacer wraps any Error it meets anywhere
-// in a value, so a response holding one is an error-serialization site too - the
-// grep that enumerated those sites could not see them, which is why this exists
-// as a function rather than as a rule to remember.
+// in a value, so a response holding one is an error-serialization site too - a
+// grep for serialize(error) cannot see those sites, which is why this exists as
+// a function rather than as a rule to remember.
 //
-// Same policy as the error field, because it reaches the same audience: a browser
-// for a request or endpoint body, a third party for cron and detached.
+// Same wire projection as the error field, because it reaches the same audience.
+// No devError, in any mode: an Error in a response value is data the routine
+// returned, not a failure of this request.
 function redactResponse(context, response) {
-  return normalizeErrorSources(context, serializer.serialize(response, { omitErrorProps }));
+  return serializer.serialize(response, { projectError: createWireProjection(context) });
 }
 
 export default redactResponse;

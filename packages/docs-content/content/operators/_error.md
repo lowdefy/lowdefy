@@ -1,0 +1,173 @@
+# _error
+
+```
+(key: string): any
+(all: boolean): Error | null
+(arguments: {
+  all?: boolean,
+  key?: string,
+  default?: any,
+}): any
+```
+
+The `_error` operator returns the error that is being handled:
+
+- Inside a server [`:catch`](/:try) routine, it returns the error that sent the routine to the `:catch`.
+- Inside a client [`catch`](/events-and-actions) action list, it returns the error that sent the event to the `catch` list.
+- Outside a catch, it returns `null`, the way [`_item`](/_item) does outside a `:for`. Reading a key outside a catch returns `null`, or the `default` when one is given.
+
+On the server, `_error` resolves lexically. It returns the error of the innermost enclosing `:catch`. After an inner `:try` finishes, the outer `:catch` reads its own error again. A `:finally` reads the error of the `:catch` that encloses its `:try`, or `null` if no `:catch` does. Each [`:parallel`](/:parallel) branch reads its own error. [`:reject`](/:reject) does not trigger `:catch`, so `_error` never holds a reject.
+
+Dot notation is supported for reading fields of the error, such as `_error: statusCode` or `_error: cause.message`.
+
+##### The error on the server
+
+Inside a `:catch`, `_error` is an Error rebuilt from the caught error with only these fields:
+
+- `name`: The error class name, such as `RequestError`.
+- `message`: The real error message, with the values of known secrets (`_secret` values, `CRON_SECRET` and `BETTER_AUTH_SECRET`) replaced by `[REDACTED]`.
+- `code`: The error's `code`, if it has one.
+- `statusCode`: The error's HTTP status, if it has one.
+- `handled`: `true` once the server has logged the error.
+- `cause`: The error that caused this one, with the same fields, down the chain.
+
+A caught `UserError` (from a [`:throw`](/:throw) or a plugin) also keeps its `:cause` and `metaData`. The error carries no `received`, `source`, `config`, `configKey`, `location` or `stack`.
+
+##### The error on the client
+
+Inside a client `catch` list, `_error` is the error the browser holds:
+
+- An error from the server (a failed `Request` or `CallAPI`) is the error as the browser received it: `name`, `message`, `code`, `statusCode` and `requestId`. The `message` is "Something went wrong." (the [`server.genericError`](/i18n) message) unless the author wrote it with `:throw` or `:reject`, it comes from a failed `ValidateSchema` step, or it is a plugin's `UserError`.
+- An error raised in the browser (an action or operator that failed on the page) keeps its real message, and carries `actionId`, the id of the action that failed.
+
+##### Sending the error on
+
+Inside the routine, `_error: message` and `_error: statusCode` read the real values. When a routine sends the whole error to the client, the client receives it with the generic message, keeping `name`, `code` and `statusCode`. This applies when the whole `_error` is used as a `:cause`, as a [`:throw`](/:throw) message, or inside a [`:return`](/:return) value. To show the user the real message, send it by name: `:throw: { _error: message }`.
+
+Sent to a plugin as data, such as `body: { error: { _error: true } }` in an `AxiosHttp` request or a document in a MongoDB insert, the error records no message. Name the fields to send them:
+
+```yaml
+error:
+  name:
+    _error: name
+  message:
+    _error: message
+  statusCode:
+    _error: statusCode
+```
+
+##### `code` and `statusCode`
+
+`code` and `statusCode` follow one rule across connection libraries. `code` is the error's own `code`, such as `ERR_BAD_REQUEST` from AxiosHttp or `11000` from MongoDB. `statusCode` is the first number among the error's `statusCode`, `status` and `response.status`. A request error takes both from the error the connection threw, so `_error: statusCode` reads the HTTP status of a failed `AxiosHttp` request without reading the cause.
+
+#### Arguments
+
+###### string
+If the `_error` operator is called with a string argument, the value of that field of the error is returned. If the field is not found, or there is no error, `null` is returned. Dot notation is supported.
+
+###### boolean
+If the `_error` operator is called with boolean argument `true`, the whole error is returned, or `null` outside a catch.
+
+###### object
+  - `all: boolean`: If `all` is set to `true`, the whole error is returned, or `null` outside a catch. One of `all` or `key` are required.
+  - `key: string`: The value of that field of the error is returned. If the field is not found, or there is no error, `null` or the specified default value is returned. Dot notation is supported. One of `all` or `key` are required.
+  - `default: any`: A value to return if the `key` is not found. By default, `null` is returned.
+
+#### Examples
+
+###### Branch on the HTTP status in a server `:catch`:
+```yaml
+- :try:
+    - id: get_customer
+      type: AxiosHttp
+      connectionId: crm
+      properties:
+        url: /customers
+        params:
+          id:
+            _payload: id
+  :catch:
+    - :if:
+        _eq: [{ _error: statusCode }, 404]
+      :then:
+        - :reject: Customer not found
+    - :throw: Customer lookup failed
+```
+A `404` from the CRM rejects with a message for the user. Any other failure throws a new error, which the user sees as "Customer lookup failed".
+
+###### Rethrow with the real message:
+```yaml
+- :try:
+    - id: charge
+      type: AxiosHttp
+      connectionId: payments
+      properties:
+        url: /charges
+        method: post
+        data:
+          amount:
+            _payload: amount
+  :catch:
+    - :throw:
+        _string.concat:
+          - 'Payment failed: '
+          - _error: message
+```
+The user sees the real error message after `Payment failed: `. Without naming `message`, `:throw: { _error: true }` would show "Something went wrong.".
+
+###### Log the error with a default:
+```yaml
+- :try:
+    - id: sync_orders
+      type: MongoDBInsertMany
+      connectionId: orders
+      properties:
+        docs:
+          _payload: orders
+  :catch:
+    - :log:
+        message: Order sync failed
+        code:
+          _error:
+            key: code
+            default: unknown
+        reason:
+          _error: message
+      :level: warn
+    - :return:
+        synced: false
+```
+
+###### Branch on the HTTP status in a client `catch` list:
+```yaml
+- id: save_button
+  type: Button
+  properties:
+    title: Save
+  events:
+    onClick:
+      try:
+        - id: save
+          type: Request
+          params: save_customer
+          messages:
+            error: false
+      catch:
+        - :if:
+            _eq:
+              - _error: statusCode
+              - 409
+          :then:
+            - id: conflict_message
+              type: DisplayMessage
+              params:
+                status: warning
+                content: Someone else changed this customer. Reload the page and try again.
+          :else:
+            - id: error_message
+              type: DisplayMessage
+              params:
+                status: error
+                content: Could not save the customer.
+```
+`messages.error: false` turns off the request's own error message, so the `catch` list decides what the user sees.

@@ -16,5 +16,10 @@
 
 export default {
   connections: ['GoogleCloudStorageBucket'],
+  // Non-scopable: the tenant wall does not cover object storage, so its
+  // connections are never scoped and accept no tenant: declaration.
+  connectionMetas: {
+    GoogleCloudStorageBucket: { tenant: false },
+  },
   requests: ['GcsGetObject', 'GcsPutObject', 'GcsSignedGetUrl', 'GcsSignedPostPolicy'],
 };

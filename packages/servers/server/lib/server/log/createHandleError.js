@@ -27,6 +27,9 @@ import {
 } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
+import redactUrlQuery from './redactUrlQuery.js';
+import scrubSecrets from '../scrubSecrets.js';
+import { serializeErrorForLog } from './logErrorProjection.js';
 
 function getEventType(error) {
   if (error instanceof ServiceError) {
@@ -92,7 +95,7 @@ function createHandleError({ context }) {
         error.config = location.config;
       }
 
-      // Single structured log call — pino serializes error via extractErrorProps,
+      // Single structured log call — pino serializes the error via serializeErrorForLog,
       // message string gives human-readable display via CLI logger
       const errorName = error?.name || 'Error';
       context.logger.error(
@@ -125,7 +128,7 @@ function createHandleError({ context }) {
             'sec-ch-ua': headers['sec-ch-ua'],
             'user-agent': headers['user-agent'],
             host: headers.host,
-            referer: headers.referer,
+            referer: redactUrlQuery(headers.referer),
             // Non localhost headers
             'x-forwarded-for': headers['x-forwarded-for'],
             // Vercel headers
@@ -154,9 +157,11 @@ function createHandleError({ context }) {
         configLocation: location,
       });
     } catch (e) {
-      console.error(error);
+      // console.error writes to stderr past pino and its line scrub, and would print the raw
+      // error - an axios error's config.auth included - so it gets both layers by hand.
+      console.error(scrubSecrets(JSON.stringify(serializeErrorForLog(error))));
       console.error('An error occurred while logging the error.');
-      console.error(e);
+      console.error(scrubSecrets(JSON.stringify(serializeErrorForLog(e))));
     }
   };
 }

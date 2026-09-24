@@ -18,7 +18,7 @@ import { jest } from '@jest/globals';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
-import createMcpServer from './createMcpServer.js';
+import createMcpServer, { scopeCovers } from './createMcpServer.js';
 import testContext from '../../test/testContext.js';
 
 const logger = {
@@ -31,28 +31,116 @@ const logger = {
 const mcpJson = {
   name: 'test-tools',
   version: '1.0.0',
-  endpoints: ['get-customer'],
   configured: true,
+  hasPublicTool: true,
+  endpoints: [
+    { id: 'health', scope: 'mcp:read' },
+    { id: 'get-customer', scope: 'mcp:read' },
+    { id: 'update-customer', scope: 'mcp:write' },
+  ],
 };
 
-const endpointConfig = {
+const healthConfig = {
+  endpointId: 'health',
+  id: 'endpoint:health',
+  type: 'Api',
+  auth: { public: true },
+  description: 'Health check.',
+  payloadSchema: { type: 'object' },
+  routine: { ':return': { ok: true } },
+};
+
+const getCustomerConfig = {
   endpointId: 'get-customer',
   id: 'endpoint:get-customer',
   type: 'Api',
-  auth: { public: true },
+  auth: { public: false, roles: ['support'] },
   description: 'Look up a customer.',
   payloadSchema: { type: 'object', properties: { customerId: { type: 'string' } } },
   routine: { ':return': { name: 'Ada' } },
 };
 
-function createContext({ session = { user: { id: 'user_1' } }, configs = {} } = {}) {
+const updateCustomerConfig = {
+  endpointId: 'update-customer',
+  id: 'endpoint:update-customer',
+  type: 'Api',
+  auth: { public: false, roles: ['support'] },
+  description: 'Update a customer.',
+  payloadSchema: { type: 'object', properties: { customerId: { type: 'string' } } },
+  routine: { ':return': { updated: true } },
+};
+
+const anonymousMcpAuth = { orgId: 'org_1', tokenStatus: 'none', parseableJwt: true };
+
+function memberMcpAuth(grantedScopes) {
+  return { orgId: 'org_1', tokenStatus: 'valid', parseableJwt: true, grantedScopes };
+}
+
+// A driver error of the kind the wire policy exists for: its message carries a
+// connection string the end user must never see.
+const foreignError = new Error('connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432');
+
+const mockFailingRequest = jest.fn(() => {
+  throw foreignError;
+});
+mockFailingRequest.schema = {};
+mockFailingRequest.meta = { checkRead: false, checkWrite: false };
+
+const connections = {
+  TestConnection: {
+    schema: {},
+    requests: { FailingRequest: mockFailingRequest },
+  },
+};
+
+const failingRequestHealthConfig = {
+  ...healthConfig,
+  routine: {
+    id: 'request:health:lookup',
+    type: 'FailingRequest',
+    stepId: 'lookup',
+    connectionId: 'test',
+    properties: {},
+  },
+};
+
+function createContext({
+  authEnforcement = null,
+  configs = {},
+  mcpAuth,
+  mode = 'prod',
+  user = null,
+} = {}) {
+  const operators = {
+    _fail: () => {
+      throw new Error('Boom.');
+    },
+  };
   const files = {
     'mcp.json': mcpJson,
-    'api/get-customer.json': endpointConfig,
+    'api/health.json': healthConfig,
+    'api/get-customer.json': getCustomerConfig,
+    'api/update-customer.json': updateCustomerConfig,
+    'connections/test.json': {
+      id: 'connection:test',
+      type: 'TestConnection',
+      connectionId: 'test',
+    },
     ...configs,
   };
   const readConfigFile = jest.fn((path) => files[path] ?? null);
-  return testContext({ logger, readConfigFile, session });
+  const context = testContext({
+    authEnforcement,
+    connections,
+    logger,
+    mode,
+    operators,
+    readConfigFile,
+    user,
+  });
+  context.mcpAuth = mcpAuth ?? anonymousMcpAuth;
+  context.authorizeOutcome = jest.fn(context.authorizeOutcome);
+  return context;
 }
 
 async function connectClient(server) {
@@ -62,16 +150,15 @@ async function connectClient(server) {
   return client;
 }
 
+async function listToolNames(context) {
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  const { tools } = await client.listTools();
+  return tools.map((tool) => tool.name);
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
-});
-
-test('createMcpServer returns null when mcp is not configured', async () => {
-  const context = createContext({
-    configs: { 'mcp.json': { configured: false, endpoints: [] } },
-  });
-  const server = await createMcpServer({ context });
-  expect(server).toBe(null);
 });
 
 test('createMcpServer advertises configured branding in serverInfo, stripping build markers', async () => {
@@ -83,6 +170,9 @@ test('createMcpServer advertises configured branding in serverInfo, stripping bu
       sizes: ['512x512'],
       '~k': 'm1',
     },
+  ];
+  const icons = [
+    { src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] },
   ];
   const context = createContext({
     configs: {
@@ -101,7 +191,7 @@ test('createMcpServer advertises configured branding in serverInfo, stripping bu
     version: '1.0.0',
     title: 'Test Tools',
     websiteUrl: 'https://example.com',
-    icons: [{ src: 'https://example.com/icon-512.png', mimeType: 'image/png', sizes: ['512x512'] }],
+    icons,
   });
 });
 
@@ -112,19 +202,66 @@ test('createMcpServer omits branding keys that are not configured', async () => 
   expect(client.getServerVersion()).toEqual({ name: 'test-tools', version: '1.0.0' });
 });
 
-test('tools/list returns endpoint tools for an authorized caller', async () => {
-  const context = createContext();
+test('createMcpServer returns null when mcp is not configured', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': { configured: false, endpoints: [] } },
+  });
   const server = await createMcpServer({ context });
-  const client = await connectClient(server);
+  expect(server).toBe(null);
+});
 
-  const { tools } = await client.listTools();
-  expect(tools).toEqual([
-    {
-      name: 'get-customer',
-      description: 'Look up a customer.',
-      inputSchema: { type: 'object', properties: { customerId: { type: 'string' } } },
-    },
-  ]);
+test('tools/list for an anonymous caller returns only public tools', async () => {
+  const context = createContext({ user: null, mcpAuth: anonymousMcpAuth });
+  const names = await listToolNames(context);
+  expect(names).toEqual(['health']);
+  expect(context.authorizeOutcome).toHaveBeenCalled();
+  expect(context.authorize).toBeUndefined();
+});
+
+test('tools/list for a member with an mcp:read grant returns read tools and no write tools', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const names = await listToolNames(context);
+  expect(names).toEqual(['health', 'get-customer']);
+});
+
+test('tools/list for a member with an mcp:write grant returns read and write tools', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:write']),
+  });
+  const names = await listToolNames(context);
+  expect(names).toEqual(['health', 'get-customer', 'update-customer']);
+});
+
+test('tools/list for a member whose grant is empty returns no tools', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth([]),
+  });
+  const names = await listToolNames(context);
+  expect(names).toEqual([]);
+});
+
+test('tools/list for a member with the wrong role hides the role-gated tools', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['viewer'] },
+    mcpAuth: memberMcpAuth(['mcp:write']),
+  });
+  const names = await listToolNames(context);
+  expect(names).toEqual(['health']);
+});
+
+test('tools/list hides gated tools when the outcome is enrol_required', async () => {
+  const context = createContext({
+    authEnforcement: { twoFactorRequired: true, twoFactorEnrolPageId: '2fa-enrol' },
+    user: { id: 'user_1', roles: ['support'], two_factor_enrolled: false },
+    mcpAuth: memberMcpAuth(['mcp:write']),
+  });
+  const names = await listToolNames(context);
+  expect(names).toEqual(['health']);
 });
 
 test('tools/list cleans build-artifact markers from a payloadSchema with arrays', async () => {
@@ -140,23 +277,23 @@ test('tools/list cleans build-artifact markers from a payloadSchema with arrays'
         type: 'string',
         enum: {
           '~arr': ['open', 'closed'],
-          '~k': 'api.get-customer.payloadSchema.properties.status.enum',
+          '~k': 'api.health.payloadSchema.properties.status.enum',
         },
       },
     },
-    required: { '~arr': ['query'], '~k': 'api.get-customer.payloadSchema.required' },
+    required: { '~arr': ['query'], '~k': 'api.health.payloadSchema.required' },
   };
 
   const context = createContext({
     configs: {
-      'api/get-customer.json': { ...endpointConfig, payloadSchema: builtPayloadSchema },
+      'api/health.json': { ...healthConfig, payloadSchema: builtPayloadSchema },
     },
   });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const { tools } = await client.listTools();
-  const tool = tools.find((t) => t.name === 'get-customer');
+  const tool = tools.find((t) => t.name === 'health');
   expect(tool.inputSchema).toEqual({
     type: 'object',
     properties: {
@@ -169,22 +306,11 @@ test('tools/list cleans build-artifact markers from a payloadSchema with arrays'
   expect(JSON.stringify(tool.inputSchema)).not.toContain('~k');
 });
 
-test('tools/list filters tools the caller is not authorized for', async () => {
+test('tools/call runs an allowed endpoint routine and returns its response', async () => {
   const context = createContext({
-    session: null,
-    configs: {
-      'api/get-customer.json': { ...endpointConfig, auth: { public: false } },
-    },
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
   });
-  const server = await createMcpServer({ context });
-  const client = await connectClient(server);
-
-  const { tools } = await client.listTools();
-  expect(tools).toEqual([]);
-});
-
-test('tools/call runs an endpoint routine and returns its response', async () => {
-  const context = createContext();
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
@@ -194,65 +320,244 @@ test('tools/call runs an endpoint routine and returns its response', async () =>
   });
   expect(result.isError).toBeFalsy();
   expect(JSON.parse(result.content[0].text)).toEqual({ name: 'Ada' });
+  expect(context.authorizeOutcome).toHaveBeenCalled();
 });
 
 test('tools/call returns an error result for an unknown tool', async () => {
-  const context = createContext();
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:write']),
+  });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const result = await client.callTool({ name: 'nope', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(result.content[0].text).toBe('Unknown tool "nope".');
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "nope".' }]);
 });
 
-test('tools/call answers an unknown tool like a gated one for an anonymous caller on an auth-configured app', async () => {
-  const context = createContext({
-    session: null,
-    configs: {
-      'auth.json': { configured: true },
-      'api/get-customer.json': { ...endpointConfig, auth: { public: false } },
-    },
-  });
-  const server = await createMcpServer({ context });
-  const client = await connectClient(server);
-
-  const unknown = await client.callTool({ name: 'nope', arguments: {} });
-  const gated = await client.callTool({ name: 'get-customer', arguments: {} });
-  expect(unknown.isError).toBe(true);
-  expect(unknown.content[0].text).toBe('Authentication required for API endpoint "nope".');
-  expect(gated.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
-});
-
-test('tools/call returns a 401-shaped error result for an unauthenticated caller', async () => {
-  const context = createContext({
-    session: null,
-    configs: {
-      'api/get-customer.json': { ...endpointConfig, auth: { public: false } },
-    },
-  });
+test('tools/call answers an anonymous caller on a gated tool exactly like an unknown tool', async () => {
+  const context = createContext({ user: null, mcpAuth: anonymousMcpAuth });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(result.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
-  expect(logger.warn).toHaveBeenCalledWith('Unauthenticated MCP tool call: get-customer');
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "get-customer".' }]);
   expect(logger.error).not.toHaveBeenCalled();
 });
 
-test('tools/call returns a masked error result for an authenticated caller with the wrong role', async () => {
+test('tools/call warns once instead of logging an error when the endpoint gate refuses', async () => {
   const context = createContext({
-    session: { user: { id: 'user_1', roles: ['viewer'] } },
-    configs: {
-      'api/get-customer.json': { ...endpointConfig, auth: { public: false, roles: ['admin'] } },
-    },
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  // Visible to the tool listing, refused by the endpoint's own gate - the
+  // shape that reaches the handler's catch as an AuthorizationError.
+  context.authorizeOutcome = jest.fn().mockReturnValueOnce('allow').mockReturnValue('deny');
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - API Endpoint "get-customer" does not exist.'
+  );
+});
+
+test('tools/call answers a role shortfall exactly like an unknown tool', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['viewer'] },
+    mcpAuth: memberMcpAuth(['mcp:write']),
   });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  // callEndpoint masks protected endpoints as missing for wrong-role callers.
-  expect(result.content[0].text).toBe('API Endpoint "get-customer" does not exist.');
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "get-customer".' }]);
+});
+
+test('tools/call answers a scope shortfall exactly like an unknown tool', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'update-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "update-customer".' }]);
+});
+
+test('tools/call answers an enrol_required outcome exactly like an unknown tool', async () => {
+  const context = createContext({
+    authEnforcement: { twoFactorRequired: true, twoFactorEnrolPageId: '2fa-enrol' },
+    user: { id: 'user_1', roles: ['support'], two_factor_enrolled: false },
+    mcpAuth: memberMcpAuth(['mcp:write']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "get-customer".' }]);
+});
+
+test('scopeCovers applies no filter when the caller carries no token', () => {
+  expect(scopeCovers({ grantedScopes: undefined, endpointScope: 'mcp:read' })).toBe(true);
+  expect(scopeCovers({ grantedScopes: undefined, endpointScope: 'mcp:write' })).toBe(true);
+});
+
+test('scopeCovers grants mcp:read endpoints to read and write grants', () => {
+  expect(scopeCovers({ grantedScopes: ['mcp:read'], endpointScope: 'mcp:read' })).toBe(true);
+  expect(scopeCovers({ grantedScopes: ['mcp:write'], endpointScope: 'mcp:read' })).toBe(true);
+});
+
+test('scopeCovers grants mcp:write endpoints to write grants only', () => {
+  expect(scopeCovers({ grantedScopes: ['mcp:write'], endpointScope: 'mcp:write' })).toBe(true);
+  expect(scopeCovers({ grantedScopes: ['mcp:read'], endpointScope: 'mcp:write' })).toBe(false);
+});
+
+test('scopeCovers covers nothing for an empty grant', () => {
+  expect(scopeCovers({ grantedScopes: [], endpointScope: 'mcp:read' })).toBe(false);
+  expect(scopeCovers({ grantedScopes: [], endpointScope: 'mcp:write' })).toBe(false);
+});
+
+const failingConfig = {
+  endpointId: 'failing',
+  id: 'endpoint:failing',
+  type: 'Api',
+  auth: { public: true },
+  description: 'Always fails.',
+  payloadSchema: { type: 'object' },
+  // An operator failure is a fault, so runRoutine passes the error through
+  // handleError - unlike :throw, which is a UserError.
+  routine: { ':return': { _fail: true } },
+};
+
+const failingMcpJson = {
+  ...mcpJson,
+  endpoints: [...mcpJson.endpoints, { id: 'failing', scope: 'mcp:read' }],
+};
+
+test('tools/call returns the generic message of a failed routine in prod', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+  });
+  context.configDirectory = '/app';
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call appends the config source of a failed routine in dev', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+    mode: 'dev',
+  });
+  context.configDirectory = '/app';
+  // Mirrors createHandleError in server-dev, which resolves the location onto the error.
+  context.handleError = jest.fn(async (error) => {
+    error.source = '/app/api/failing.yaml:4';
+    error.handled = true;
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(result.content[0].text).toContain('Boom.');
+  expect(result.content[0].text).toMatch(/ \(at api\/failing\.yaml:4\)$/);
+});
+
+test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
+  const context = createContext({ mode: 'dev' });
+  context.configDirectory = '/app';
+  context.handleError = jest.fn(async (error) => {
+    error.source = 'api/get-customer.yaml:2';
+    error.handled = true;
+  });
+  context.authorizeOutcome = jest.fn(() => {
+    throw new Error('Authorization exploded.');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(context.handleError.mock.calls[0][0].message).toEqual('Authorization exploded.');
+  expect(result.content[0].text).toEqual('Authorization exploded. (at api/get-customer.yaml:2)');
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('tools/call returns the generic message in prod when an endpoint step throws a foreign error', async () => {
+  const context = createContext({ configs: { 'api/health.json': failingRequestHealthConfig } });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call returns the generic message in prod for an error thrown outside the endpoint result', async () => {
+  const context = createContext();
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file /srv/app/.lowdefy/server/build/api/health.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+  expect(logger.error).toHaveBeenCalled();
+});
+
+test('tools/call returns the devError message, config location and hint in dev', async () => {
+  const context = createContext({
+    configs: { 'api/health.json': failingRequestHealthConfig },
+    mode: 'dev',
+  });
+  // Mirrors the dev server's error sink, which resolves the config location onto the error
+  // before the endpoint result is built.
+  context.handleError = async (error) => {
+    error.source = 'api/health.yaml:12';
+    error.hint = 'Check the connection properties.';
+    error.handled = true;
+  };
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain(
+    'connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432'
+  );
+  expect(result.content[0].text).toMatch(
+    / \(at api\/health\.yaml:12\) Hint: Check the connection properties\.$/
+  );
+});
+
+test('tools/call keeps the raw message in dev for an error thrown outside the endpoint result', async () => {
+  const context = createContext({ mode: 'dev' });
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file api/health.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('ENOENT: no such file api/health.json');
 });

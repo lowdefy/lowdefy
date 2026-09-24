@@ -1,0 +1,37 @@
+# Kept `_user` reads only — prompt 07 must NOT report anything on this page.
+id: home
+type: Box
+blocks:
+  - id: greeting
+    type: Title
+    properties:
+      content:
+        _string.concat:
+          - 'Welcome, '
+          - _user: name
+  - id: identity
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<p>User id: '
+          - _user: id
+          - '</p><p>Email: '
+          - _user: email
+          - '</p>'
+  - id: avatar
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<img src="'
+          - _user: image
+          - '" alt="avatar" />'
+  - id: admin_link
+    type: Html
+    visible:
+      _array.includes:
+        - _user: roles
+        - admin
+    properties:
+      html: '<a href="/admin">Admin</a>'

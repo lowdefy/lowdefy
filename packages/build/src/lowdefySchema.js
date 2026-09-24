@@ -457,6 +457,8 @@ export default {
       additionalProperties: false,
       errorMessage: {
         type: 'App "auth" should be an object.',
+        additionalProperties:
+          'App "auth" contains an unknown property. Auth keys are registered explicitly; check for typos.',
       },
       properties: {
         '~ignoreBuildChecks': {
@@ -482,45 +484,789 @@ export default {
         },
         '~r': {},
         '~l': {},
-        advanced: {
+        database: {
           type: 'object',
-          properties: {
-            cookiePrefix: {
-              type: 'string',
-              errorMessage: {
-                type: 'Auth "advanced.cookiePrefix" should be a string.',
-              },
-            },
-            cookies: {
-              type: 'object',
-            },
-          },
-        },
-        adapter: {
-          type: 'object',
+          additionalProperties: false,
           required: ['id', 'type'],
           properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
             id: {
               type: 'string',
               errorMessage: {
-                type: 'Auth adapter "id" should be a string.',
+                type: 'Auth "database.id" should be a string.',
               },
             },
             type: {
               type: 'string',
               errorMessage: {
-                type: 'Auth adapter "type" should be a string.',
+                type: 'Auth "database.type" should be a string.',
               },
             },
             properties: {
               type: 'object',
+              errorMessage: {
+                type: 'Auth "database.properties" should be an object.',
+              },
             },
           },
           errorMessage: {
-            type: 'Auth adapter should be an object.',
+            type: 'Auth "database" should be an object.',
             required: {
-              id: 'Auth adapter should have required property "id".',
-              type: 'Auth adapter should have required property "type".',
+              id: 'Auth "database" should have required property "id".',
+              type: 'Auth "database" should have required property "type".',
+            },
+          },
+        },
+        secret: {
+          type: 'object',
+          errorMessage: {
+            type: 'Auth "secret" should be a _secret operator reference.',
+          },
+        },
+        emailAndPassword: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.enabled" should be a boolean.',
+              },
+            },
+            requireEmailVerification: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.requireEmailVerification" should be a boolean.',
+              },
+            },
+            minPasswordLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.minPasswordLength" should be an integer.',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailAndPassword.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "emailAndPassword" should be an object.',
+            required: {
+              enabled: 'Auth "emailAndPassword" should have required property "enabled".',
+            },
+          },
+        },
+        magicLink: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "magicLink.enabled" should be a boolean.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "magicLink.expiresIn" should be an integer (seconds).',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "magicLink.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "magicLink" should be an object.',
+            required: {
+              enabled: 'Auth "magicLink" should have required property "enabled".',
+            },
+          },
+        },
+        emailOTP: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailOTP.enabled" should be a boolean.',
+              },
+            },
+            otpLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.otpLength" should be an integer.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.expiresIn" should be an integer (seconds).',
+              },
+            },
+            allowedAttempts: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "emailOTP.allowedAttempts" should be an integer.',
+              },
+            },
+            disableSignUp: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "emailOTP.disableSignUp" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "emailOTP" should be an object.',
+            additionalProperties:
+              'Auth "emailOTP" contains an unknown property. The known properties are "enabled", "otpLength", "expiresIn", "allowedAttempts" and "disableSignUp".',
+            required: {
+              enabled: 'Auth "emailOTP" should have required property "enabled".',
+            },
+          },
+        },
+        // Auth email references an SMTP connection by id — the connection owns
+        // "from", "replyTo", the transport, and the delivery filter. There is
+        // no inline transport shape; the runtime reads only connectionId and
+        // templates (createSendEmail / renderAuthEmail).
+        email: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['connectionId'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            connectionId: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "email.connectionId" should be a string — the id of an SMTP connection in "connections".',
+              },
+            },
+            templates: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                verifyEmail: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.verifyEmail" should be a string — a notification id from "notifications".',
+                  },
+                },
+                resetPassword: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.resetPassword" should be a string — a notification id from "notifications".',
+                  },
+                },
+                magicLink: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.magicLink" should be a string — a notification id from "notifications".',
+                  },
+                },
+                invitation: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.invitation" should be a string — a notification id from "notifications".',
+                  },
+                },
+                emailOTP: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "email.templates.emailOTP" should be a string — a notification id from "notifications".',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "email.templates" should be an object mapping auth email flows (verifyEmail, resetPassword, magicLink, invitation, emailOTP) to notification ids.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "email" should be an object.',
+            required: {
+              connectionId:
+                'Auth "email" should have required property "connectionId" — the id of an SMTP connection in "connections". The old inline "from"/"provider" transport shape moved onto the SMTP connection.',
+            },
+            additionalProperties:
+              'Auth "email" should only have properties "connectionId" and "templates". The old inline "from"/"provider" transport shape moved onto the SMTP connection referenced by "connectionId".',
+          },
+        },
+        providers: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "providers" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'type'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+                errorMessage: {
+                  type: 'Auth provider "properties" should be an object.',
+                },
+              },
+              twoFactorTrusted: {
+                type: 'boolean',
+                description:
+                  'Skip the engine two-factor challenge for sign-ins through this provider, because the IdP is trusted to have enforced MFA itself. Declared, not verified - the engine cannot confirm what the IdP enforced and checks nothing. Unrelated to account.accountLinking.trustedProviders, which is about trusting the provider email claim.',
+                errorMessage: {
+                  type: 'Auth provider "twoFactorTrusted" should be a boolean.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth provider should be an object.',
+              required: {
+                id: 'Auth provider should have required property "id".',
+                type: 'Auth provider should have required property "type".',
+              },
+            },
+          },
+        },
+        roles: {
+          type: 'array',
+          errorMessage: {
+            type: 'Auth "roles" should be an array.',
+          },
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].id" should be a string.',
+                },
+              },
+              label: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].label" should be a string.',
+                },
+              },
+              description: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "roles[].description" should be a string.',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'Auth role entry should be an object.',
+              additionalProperties:
+                'Auth role entry has an unknown property. Allowed: "id", "label", "description".',
+              required: {
+                id: 'Auth role entries should have required property "id".',
+              },
+            },
+          },
+        },
+        session: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "session.expiresIn" should be an integer (seconds).',
+              },
+            },
+            updateAge: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "session.updateAge" should be an integer (seconds).',
+              },
+            },
+            cookieCache: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "session.cookieCache.enabled" should be a boolean.',
+                  },
+                },
+                maxAge: {
+                  type: 'integer',
+                  errorMessage: {
+                    type: 'Auth "session.cookieCache.maxAge" should be an integer (seconds).',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "session.cookieCache" should be an object.',
+              },
+            },
+            crossSubDomainCookies: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "session.crossSubDomainCookies.enabled" should be a boolean.',
+                  },
+                },
+                domain: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "session.crossSubDomainCookies.domain" should be a string.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "session.crossSubDomainCookies" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "session" should be an object.',
+          },
+        },
+        account: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            accountLinking: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                enabled: {
+                  type: 'boolean',
+                  errorMessage: {
+                    type: 'Auth "account.accountLinking.enabled" should be a boolean.',
+                  },
+                },
+                trustedProviders: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    errorMessage: {
+                      type: 'Auth "account.accountLinking.trustedProviders" should be an array of provider ids.',
+                    },
+                  },
+                  errorMessage: {
+                    type: 'Auth "account.accountLinking.trustedProviders" should be an array of provider ids.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "account.accountLinking" should be an object.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "account" should be an object.',
+          },
+        },
+        rateLimit: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "rateLimit.enabled" should be a boolean.',
+              },
+            },
+            window: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "rateLimit.window" should be an integer (seconds).',
+              },
+            },
+            max: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "rateLimit.max" should be an integer.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "rateLimit" should be an object.',
+          },
+        },
+        twoFactor: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.enabled" should be a boolean.',
+              },
+            },
+            required: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.required" should be a boolean.',
+              },
+            },
+            trustDevice: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "twoFactor.trustDevice" should be a boolean.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "twoFactor" should be an object.',
+          },
+        },
+        oauthProvider: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['consentPage'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            consentPage: {
+              type: 'string',
+              description:
+                'Lowdefy page id of the OAuth consent page the authorization flow redirects to.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.consentPage" should be a string.',
+              },
+            },
+            dynamicClientRegistration: {
+              type: 'boolean',
+              description:
+                'Allow unregistered MCP clients to self-register (RFC 7591). Off by default; pre-registered clients are the primary path.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.dynamicClientRegistration" should be a boolean.',
+              },
+            },
+            postLoginPage: {
+              type: 'string',
+              description:
+                'Lowdefy page id of the page where a signed-in user chooses the organization an MCP authorization acts in. Shown after login and before consent; required under the "tenant" organizations policy.',
+              errorMessage: {
+                type: 'Auth "oauthProvider.postLoginPage" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "oauthProvider" should be an object.',
+            required: {
+              consentPage: 'Auth "oauthProvider" should have required property "consentPage".',
+            },
+            additionalProperties:
+              'Auth "oauthProvider" contains an unknown property. The known properties are "consentPage", "postLoginPage" and "dynamicClientRegistration".',
+          },
+        },
+        passkey: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "passkey.enabled" should be a boolean.',
+              },
+            },
+            rpId: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "passkey.rpId" should be a string.',
+              },
+            },
+            rpName: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "passkey.rpName" should be a string.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "passkey" should be an object.',
+          },
+        },
+        phoneNumber: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.enabled" should be a boolean.',
+              },
+            },
+            otpLength: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.otpLength" should be an integer.',
+              },
+            },
+            expiresIn: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.expiresIn" should be an integer (seconds).',
+              },
+            },
+            allowedAttempts: {
+              type: 'integer',
+              errorMessage: {
+                type: 'Auth "phoneNumber.allowedAttempts" should be an integer.',
+              },
+            },
+            requireVerification: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "phoneNumber.requireVerification" should be a boolean.',
+              },
+            },
+            signUpOnVerification: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['tempEmailDomain'],
+              properties: {
+                '~ignoreBuildChecks': {},
+                '~r': {},
+                '~l': {},
+                tempEmailDomain: {
+                  type: 'string',
+                  errorMessage: {
+                    type: 'Auth "phoneNumber.signUpOnVerification.tempEmailDomain" should be a string.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'Auth "phoneNumber.signUpOnVerification" should be an object.',
+                required: {
+                  tempEmailDomain:
+                    'Auth "phoneNumber.signUpOnVerification" should have required property "tempEmailDomain". Temp emails land in "user.email", so name a domain the app controls (or a reserved non-routable one) - there is no default.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "phoneNumber" should be an object.',
+            additionalProperties:
+              'Auth "phoneNumber" contains an unknown property. The known properties are "enabled", "otpLength", "expiresIn", "allowedAttempts", "requireVerification" and "signUpOnVerification".',
+            required: {
+              enabled: 'Auth "phoneNumber" should have required property "enabled".',
+            },
+          },
+        },
+        captcha: {
+          type: 'object',
+          additionalProperties: false,
+          required: ['enabled', 'provider', 'siteKey', 'secretKey'],
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            enabled: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'Auth "captcha.enabled" should be a boolean.',
+              },
+            },
+            provider: {
+              type: 'string',
+              enum: ['cloudflare-turnstile'],
+              errorMessage: {
+                type: 'Auth "captcha.provider" should be a string.',
+                enum: 'Auth "captcha.provider" should be "cloudflare-turnstile".',
+              },
+            },
+            siteKey: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "captcha.siteKey" should be a plain string. The site key is public - every browser reads it from the page - and must not be a _secret operator reference, so the build can project it to Captcha blocks.',
+              },
+            },
+            secretKey: {
+              type: 'object',
+              errorMessage: {
+                type: 'Auth "captcha.secretKey" should be a _secret operator reference.',
+              },
+            },
+            endpoints: {
+              type: 'array',
+              // An empty array would silently fall back to BetterAuth's
+              // static default set inside the plugin - refuse the middle:
+              // name the endpoints or omit the key for the computed set.
+              minItems: 1,
+              errorMessage: {
+                type: 'Auth "captcha.endpoints" should be an array of strings.',
+                minItems:
+                  'Auth "captcha.endpoints" should have at least one endpoint. Omit the key to protect the computed default set, or set "enabled: false" to disable captcha.',
+              },
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth "captcha.endpoints.$" should be a string.',
+                },
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "captcha" should be an object.',
+            additionalProperties:
+              'Auth "captcha" contains an unknown property. The known properties are "enabled", "provider", "siteKey", "secretKey" and "endpoints".',
+            required: {
+              enabled: 'Auth "captcha" should have required property "enabled".',
+              provider: 'Auth "captcha" should have required property "provider".',
+              siteKey: 'Auth "captcha" should have required property "siteKey".',
+              secretKey: 'Auth "captcha" should have required property "secretKey".',
+            },
+          },
+        },
+        pages: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.pages" should be an object.',
+          },
+          properties: {
+            '~ignoreBuildChecks': {
+              oneOf: [
+                { const: true },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    enum: [
+                      'state-refs',
+                      'payload-refs',
+                      'step-refs',
+                      'link-refs',
+                      'request-refs',
+                      'connection-refs',
+                      'types',
+                      'schema',
+                    ],
+                  },
+                },
+              ],
+            },
+            '~r': {},
+            '~l': {},
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.pages.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
+                errorMessage: {
+                  type: 'App "auth.pages.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.pages.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
+                errorMessage: {
+                  type: 'App "auth.pages.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              description:
+                'Role names mapped to the page id patterns (picomatch) they gate. Matched against the app role names on "_user.roles". A module contributes no role gates of its own: the app gates a whole module entry with one pattern per instance, matching the entry id prefix the build scopes its page ids with (user-admin: ["user-admin/**"]).',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.pages.roles" should be an object.',
+              },
             },
           },
         },
@@ -562,7 +1308,7 @@ export default {
               items: {
                 type: 'string',
                 description:
-                  'Page ids for which authentication is required. When specified, all unspecified api endpoints will be public.',
+                  'Api endpoint ids for which authentication is required. When specified, all unspecified api endpoints will be public.',
                 errorMessage: {
                   type: 'App "auth.api.protected.$" should be an array of strings.',
                 },
@@ -576,7 +1322,7 @@ export default {
               items: {
                 type: 'string',
                 description:
-                  'Page ids for which authentication is not required. When specified, all unspecified api endpoints will be protected.',
+                  'Api endpoint ids for which authentication is not required. When specified, all unspecified api endpoints will be protected.',
                 errorMessage: {
                   type: 'App "auth.api.public.$" should be an array of strings.',
                 },
@@ -584,6 +1330,8 @@ export default {
             },
             roles: {
               type: 'object',
+              description:
+                'Role names mapped to the api endpoint id patterns (picomatch) they gate. Matched against the app role names on "_user.roles". A module contributes no role gates of its own: the app gates a whole module entry with one pattern per instance, matching the entry id prefix the build scopes its endpoint ids with (user-admin: ["user-admin/**"]).',
               patternProperties: {
                 '^.*$': {
                   type: 'array',
@@ -682,233 +1430,120 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
+            '~ignoreBuildChecks': {},
             '~r': {},
             '~l': {},
             signIn: {
               type: 'string',
-              default: '/auth/signin',
+              errorMessage: {
+                type: 'Auth "authPages.signIn" should be a string.',
+              },
             },
-            signOut: {
+            signUp: {
               type: 'string',
-              default: '/auth/signout',
+              errorMessage: {
+                type: 'Auth "authPages.signUp" should be a string.',
+              },
             },
             error: {
               type: 'string',
               description: 'Error code passed in query string as ?error=',
-              default: '/auth/error',
+              errorMessage: {
+                type: 'Auth "authPages.error" should be a string.',
+              },
             },
-            verifyRequest: {
+            forgotPassword: {
               type: 'string',
-              description: 'Used for check email message',
-              default: '/auth/verify-request',
+              errorMessage: {
+                type: 'Auth "authPages.forgotPassword" should be a string.',
+              },
             },
-            newUser: {
+            resetPassword: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.resetPassword" should be a string.',
+              },
+            },
+            verifyEmail: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.verifyEmail" should be a string.',
+              },
+            },
+            twoFactor: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.twoFactor" should be a string.',
+              },
+            },
+            twoFactorEnrol: {
               type: 'string',
               description:
-                'New users will be directed here on first sign in (leave the property out if not of interest)',
-              default: '/auth/new-user',
-            },
-          },
-        },
-        callbacks: {
-          type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              id: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth callback "id" should be a string.',
-                },
-              },
-              type: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth callback "type" should be a string.',
-                },
-              },
-              properties: {
-                type: 'object',
+                'Protected page where an unenrolled user registers a second factor. Unlike every other authPages role, this one does NOT imply public - the user arriving here holds a valid session.',
+              errorMessage: {
+                type: 'Auth "authPages.twoFactorEnrol" should be a string.',
               },
             },
-            errorMessage: {
-              type: 'Auth callback should be an object.',
-              required: {
-                id: 'Auth callback should have required property "id".',
-                type: 'Auth callback should have required property "type".',
+            acceptInvitation: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth "authPages.acceptInvitation" should be a string.',
+              },
+            },
+            magicLink: {
+              type: 'string',
+              description:
+                'Public landing page the sign-in email links to instead of the verify endpoint, carrying the ?token= and callback queries forward. A MagicLinkVerify action on the page spends the token on a real click, so link-scanning mail security cannot consume it at delivery time.',
+              errorMessage: {
+                type: 'Auth "authPages.magicLink" should be a string.',
               },
             },
           },
-        },
-        debug: {
-          type: 'boolean',
           errorMessage: {
-            type: 'Auth debug should be a boolean.',
+            type: 'Auth "authPages" should be an object.',
           },
         },
-        events: {
+        hooks: {
           type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              id: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth event "id" should be a string.',
-                },
-              },
-              type: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth event "type" should be a string.',
-                },
-              },
-              properties: {
-                type: 'object',
-              },
-            },
-            errorMessage: {
-              type: 'Auth event should be an object.',
-              required: {
-                id: 'Auth event should have required property "id".',
-                type: 'Auth event should have required property "type".',
-              },
-            },
-          },
-        },
-        pages: {
-          type: 'object',
-          additionalProperties: false,
           errorMessage: {
-            type: 'App "config.auth.pages" should be an object.',
+            type: 'Auth "hooks" should be an array.',
           },
-          properties: {
-            '~ignoreBuildChecks': {
-              oneOf: [
-                { const: true },
-                {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: [
-                      'state-refs',
-                      'payload-refs',
-                      'step-refs',
-                      'link-refs',
-                      'request-refs',
-                      'connection-refs',
-                      'types',
-                      'schema',
-                    ],
-                  },
-                },
-              ],
-            },
-            '~r': {},
-            '~l': {},
-            protected: {
-              type: ['array', 'boolean'],
-              errorMessage: {
-                type: 'App "auth.pages.protected.$" should be an array of strings.',
-              },
-              items: {
-                type: 'string',
-                description:
-                  'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
-                errorMessage: {
-                  type: 'App "auth.pages.protected.$" should be an array of strings.',
-                },
-              },
-            },
-            public: {
-              type: ['array', 'boolean'],
-              errorMessage: {
-                type: 'App "auth.pages.public.$" should be an array of strings.',
-              },
-              items: {
-                type: 'string',
-                description:
-                  'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
-                errorMessage: {
-                  type: 'App "auth.pages.public.$" should be an array of strings.',
-                },
-              },
-            },
-            roles: {
-              type: 'object',
-              patternProperties: {
-                '^.*$': {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                  },
-                  errorMessage: {
-                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
-                  },
-                },
-              },
-              errorMessage: {
-                type: 'App "auth.pages.roles" should be an object.',
-              },
-            },
-          },
-        },
-        providers: {
-          type: 'array',
           items: {
             type: 'object',
-            required: ['id', 'type'],
+            additionalProperties: false,
+            required: ['id', 'point', 'endpointId'],
             properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
               id: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Auth provider "id" should be a string.',
+                  type: 'Auth hook "id" should be a string.',
                 },
               },
-              type: {
+              point: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Auth provider "type" should be a string.',
+                  type: 'Auth hook "point" should be a string.',
                 },
               },
-              properties: {
-                type: 'object',
+              endpointId: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth hook "endpointId" should be a string.',
+                },
               },
             },
             errorMessage: {
-              type: 'Auth provider should be an object.',
+              type: 'Auth hook should be an object.',
               required: {
-                id: 'Auth provider should have required property "id".',
-                type: 'Auth provider should have required property "type".',
+                id: 'Auth hook should have required property "id".',
+                point: 'Auth hook should have required property "point".',
+                endpointId: 'Auth hook should have required property "endpointId".',
               },
             },
           },
-        },
-        session: {
-          type: 'object',
         },
         strategies: {
           type: 'array',
@@ -969,11 +1604,63 @@ export default {
             },
           },
         },
-        theme: {
+        organizations: {
           type: 'object',
-        },
-        userFields: {
-          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildChecks': {},
+            '~r': {},
+            '~l': {},
+            policy: {
+              type: 'string',
+              enum: ['pinned', 'tenant'],
+              errorMessage: {
+                type: 'Auth "organizations.policy" should be a string.',
+                enum: 'Auth "organizations.policy" should be "pinned" or "tenant".',
+              },
+            },
+            org: {
+              type: 'string',
+              description:
+                'Organization slug the deployment pins as the active organization. Under the "pinned" policy the slug is the organization\'s id. Renaming it strands the existing membership: the startup ensure is by slug, so a rename mints a fresh organization rather than renaming one, and every member row still points at the old id.',
+              errorMessage: {
+                type: 'Auth "organizations.org" should be a string.',
+              },
+            },
+            signup: {
+              type: 'string',
+              description:
+                'Whether the deployment admits uninvited sign-ups. Valid under both policies: "invite-only" refuses sign-ups without an invitation; "open" admits everyone.',
+              enum: ['invite-only', 'open'],
+              errorMessage: {
+                type: 'Auth "organizations.signup" should be a string.',
+                enum: 'Auth "organizations.signup" should be "invite-only" or "open".',
+              },
+            },
+            create: {
+              type: 'string',
+              enum: ['auto', 'operator'],
+              errorMessage: {
+                type: 'Auth "organizations.create" should be a string.',
+                enum: 'Auth "organizations.create" should be "auto" or "operator".',
+              },
+            },
+            invitationExpiresIn: {
+              type: 'integer',
+              minimum: 60,
+              description:
+                'How long an organization invitation stays acceptable, in seconds. Defaults to 48 hours (172800). Re-sending an invitation refreshes its expiry.',
+              errorMessage: {
+                type: 'Auth "organizations.invitationExpiresIn" should be an integer number of seconds.',
+                minimum: 'Auth "organizations.invitationExpiresIn" should be at least 60 seconds.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Auth "organizations" should be an object.',
+            additionalProperties:
+              'Auth "organizations" contains an unknown property. The known properties are "policy", "org", "signup", "create" and "invitationExpiresIn".',
+          },
         },
         dev: {
           type: 'object',
@@ -985,10 +1672,146 @@ export default {
             mockUser: {
               type: 'object',
               description:
-                'Mock user object for e2e testing in dev server. Any JSON structure accepted.',
+                'Mock user injected as a pre-resolved caller in the dev server. Roles are authoritative.',
             },
           },
+          errorMessage: {
+            type: 'Auth "dev" should be an object.',
+          },
         },
+      },
+    },
+    mcp: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        '~ignoreBuildChecks': {},
+        '~r': {},
+        '~l': {},
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "version" should be a string.',
+          },
+        },
+        // Server branding advertised in the initialize result's serverInfo
+        // (MCP Implementation: title, websiteUrl, icons). Clients that render
+        // a connector card prefer these over guessing from the host's favicon.
+        title: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "title" should be a string.',
+          },
+        },
+        websiteUrl: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "websiteUrl" should be a string.',
+          },
+        },
+        icons: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['src'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              src: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "src" should be a string.',
+                },
+              },
+              mimeType: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP icon "mimeType" should be a string.',
+                },
+              },
+              sizes: {
+                type: 'array',
+                items: { type: 'string' },
+                errorMessage: {
+                  type: 'MCP icon "sizes" should be an array of strings like "512x512".',
+                },
+              },
+              theme: {
+                type: 'string',
+                enum: ['light', 'dark'],
+                errorMessage: {
+                  type: 'MCP icon "theme" should be a string.',
+                  enum: 'MCP icon "theme" should be "light" or "dark".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "icons" items should be objects with a "src" property.',
+              required: {
+                src: 'MCP icon should have required property "src".',
+              },
+              additionalProperties:
+                'MCP icon contains an unknown property. The known properties are "src", "mimeType", "sizes" and "theme".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "icons" should be an array.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['id', 'scope'],
+            properties: {
+              '~ignoreBuildChecks': {},
+              '~r': {},
+              '~l': {},
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'MCP endpoint "id" should be a string.',
+                },
+              },
+              scope: {
+                type: 'string',
+                // Closed vocabulary - apps cannot mint their own scopes.
+                enum: ['mcp:read', 'mcp:write'],
+                errorMessage: {
+                  type: 'MCP endpoint "scope" should be a string.',
+                  enum: 'MCP endpoint "scope" should be "mcp:read" or "mcp:write".',
+                },
+              },
+            },
+            errorMessage: {
+              type: 'MCP "endpoints" items should be objects with "id" and "scope" properties.',
+              required: {
+                id: 'MCP endpoint should have required property "id".',
+                scope:
+                  'MCP endpoint should have required property "scope". Set "mcp:read" or "mcp:write".',
+              },
+              additionalProperties:
+                'MCP endpoint contains an unknown property. The known properties are "id" and "scope".',
+            },
+          },
+          errorMessage: {
+            type: 'MCP "endpoints" should be an array.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'App "mcp" should be an object.',
+        additionalProperties:
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
       },
     },
     block: {
@@ -1368,16 +2191,29 @@ export default {
           },
         },
         webhook: {
-          type: 'boolean',
+          anyOf: [
+            { type: 'boolean' },
+            {
+              type: 'object',
+              properties: {
+                // The verify request plugin runs as a gate against the raw
+                // request before the routine; on success the run earns trust
+                // (context.system). Its concrete config surface (connectionId,
+                // type, properties) is request-plugin scope, so it is not
+                // constrained further here.
+                verify: { type: 'object' },
+              },
+            },
+          ],
           description:
-            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope), runs as a system context, must authenticate the caller itself (shared-secret query param or signature), and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes.',
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope) and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes. The transport is public, so the run starts untrusted; set webhook to { verify: <request plugin> } to earn trust (a system context) when the verifier passes the provider signature/secret check before the routine runs. A bare `true` runs untrusted throughout, so any nested protected CallApi fails closed.',
           errorMessage: {
-            type: 'Api endpoint "webhook" should be a boolean.',
+            _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
           },
         },
         schedules: {
           description:
-            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.cron.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
+            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
           anyOf: [
             {
               type: 'array',
@@ -1458,6 +2294,13 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Websocket "properties" should be an object.',
+          },
+        },
+        tenant: {
+          const: 'none',
+          errorMessage: {
+            const:
+              'Websocket "tenant" only accepts "none" — the tenant wall is declared on the connection, and "none" is the explicit opt-out at the point of use. ("authored" is aggregation-only; change streams are always scoped mechanically.)',
           },
         },
       },
@@ -1658,6 +2501,27 @@ export default {
           type: 'object',
           errorMessage: {
             type: 'Connection "properties" should be an object.',
+          },
+        },
+        tenant: {
+          oneOf: [
+            { const: 'shared' },
+            {
+              type: 'object',
+              additionalProperties: false,
+              required: ['field'],
+              properties: {
+                field: {
+                  type: 'string',
+                  minLength: 1,
+                  pattern: '^[^.]+$',
+                },
+              },
+            },
+          ],
+          errorMessage: {
+            oneOf:
+              'Connection "tenant" should be "shared" or an object with a "field" top-level field name (non-empty, no dots), eg. { field: "organization_id" } — under auth.organizations.policy: tenant a scoping-capable connection is scoped by default, and declares only its exception.',
           },
         },
       },
@@ -2080,6 +2944,12 @@ export default {
             type: 'Request "properties" should be an object.',
           },
         },
+        tenant: {
+          enum: ['none', 'authored'],
+          errorMessage: {
+            enum: 'Request "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection; "none" is the explicit request-level opt-out and "authored" declares the request authors its own tenant clause (audited at runtime).',
+          },
+        },
       },
       errorMessage: {
         type: 'Request should be an object.',
@@ -2162,6 +3032,9 @@ export default {
     auth: {
       $ref: '#/definitions/authConfig',
     },
+    mcp: {
+      $ref: '#/definitions/mcp',
+    },
     cli: {
       type: 'object',
       errorMessage: {
@@ -2232,47 +3105,46 @@ export default {
             },
           },
         },
-        cron: {
-          type: 'object',
-          additionalProperties: false,
+        environment: {
+          type: 'string',
           description:
-            "Deployment environments for scheduled endpoints. Vercel fires cron jobs only on the production deployment, so every environment's schedules are registered there and production forwards the ones for other environments to their own /api/cron route.",
-          required: ['environments'],
+            'The environment this build is for, one of the names in "config.environments". Defaults to the LOWDEFY_ENVIRONMENT environment variable.',
           errorMessage: {
-            type: 'App "config.cron" should be an object.',
-            required: {
-              environments: 'App "config.cron" should have required property "environments".',
-            },
+            type: 'App "config.environment" should be a string.',
           },
-          properties: {
-            '~k': {},
-            '~r': {},
-            '~l': {},
-            environments: {
-              type: 'object',
-              description:
-                'Environments keyed by name. Exactly one environment has no "url": the deployment whose crons Vercel fires. Every other environment needs a "url" (its deployment origin) and a "secret" (the Lowdefy secret name holding that environment\'s CRON_SECRET, set on the production deployment).',
-              additionalProperties: {
+        },
+        environments: {
+          type: 'object',
+          description:
+            'The deployment environments of the app, keyed by name. The current environment (LOWDEFY_ENVIRONMENT) supplies the defaults for everything environment-specific: the app url (auth, notification links), cron forwarding, the email delivery filter and the Sentry environment. Endpoint "schedules" can be keyed by these names.',
+          additionalProperties: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              '~k': {},
+              '~r': {},
+              '~l': {},
+              url: {
+                type: 'string',
+                description:
+                  'The environment deployment origin, e.g. https://staging.example.com. Default for the auth base URL and notification links, and where crons are forwarded to.',
+                errorMessage: {
+                  type: 'App "config.environments.<name>.url" should be a string.',
+                },
+              },
+              cron: {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
                   '~k': {},
                   '~r': {},
                   '~l': {},
-                  url: {
-                    type: 'string',
-                    description:
-                      'The environment deployment origin, e.g. https://staging.example.com.',
-                    errorMessage: {
-                      type: 'App "config.cron.environments.<name>.url" should be a string.',
-                    },
-                  },
                   secret: {
                     type: 'string',
                     description:
-                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET.",
+                      "The NAME of the Lowdefy secret (a plain string, not a _secret operator; read from the LOWDEFY_SECRET_<name> env var on the deployment that forwards) holding this environment's CRON_SECRET. An environment with a secret is forwarded to: the environment Vercel fires crons on pings its /api/cron route when one of its schedules fires.",
                     errorMessage: {
-                      type: 'App "config.cron.environments.<name>.secret" should be a string.',
+                      type: 'App "config.environments.<name>.cron.secret" should be a string.',
                     },
                   },
                   enabled: {
@@ -2280,18 +3152,150 @@ export default {
                     description:
                       'Set false to register no cron jobs for this environment. Defaults to true.',
                     errorMessage: {
-                      type: 'App "config.cron.environments.<name>.enabled" should be a boolean.',
+                      type: 'App "config.environments.<name>.cron.enabled" should be a boolean.',
                     },
                   },
                 },
                 errorMessage: {
-                  type: 'App "config.cron.environments.<name>" should be an object.',
+                  type: 'App "config.environments.<name>.cron" should be an object.',
                 },
               },
-              errorMessage: {
-                type: 'App "config.cron.environments" should be an object.',
+              email: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to send no email from SMTPMailSend and SendGridMailSend requests in this environment. Auth emails still send. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.enabled" should be a boolean.',
+                    },
+                  },
+                  filter: {
+                    type: 'object',
+                    description:
+                      'Delivery filter applied to every SMTPMailSend and SendGridMailSend request in this environment, unless the connection sets its own "filter" (false turns filtering off for that connection). Auth emails are not filtered.',
+                    additionalProperties: false,
+                    properties: {
+                      '~k': {},
+                      '~r': {},
+                      '~l': {},
+                      replaceAddress: {
+                        type: ['string', 'null'],
+                        description: 'Send every email to this address instead of its recipients.',
+                      },
+                      allowlist: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'Only deliver to recipients on these domains.',
+                      },
+                      regex: {
+                        type: 'string',
+                        description: 'Only deliver to recipients matching this regular expression.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.filter" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.email" should be an object.',
+                },
+              },
+              posthog: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to turn PostHog off in this environment: PostHogInit behaves as "enabled: false" and every PostHog action is a no-op. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.posthog.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.posthog" should be an object.',
+                },
+              },
+              guards: {
+                type: 'object',
+                additionalProperties: false,
+                description:
+                  'Pin secrets and environment variables to a regular expression kept in config: in this environment the build fails unless each value matches (a missing value fails too). Changing a guarded value then takes a config change as well. Values are never printed.',
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  secrets: {
+                    type: 'object',
+                    description:
+                      'Lowdefy secret name (LOWDEFY_SECRET_<name>) to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.secrets.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.secrets" should be an object.',
+                    },
+                  },
+                  env: {
+                    type: 'object',
+                    description:
+                      'Environment variable name to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.env.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.env" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.guards" should be an object.',
+                },
+              },
+              sentry: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to turn Sentry off (server and client) in this environment. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.sentry.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.sentry" should be an object.',
+                },
               },
             },
+            errorMessage: {
+              type: 'App "config.environments.<name>" should be an object.',
+            },
+          },
+          errorMessage: {
+            type: 'App "config.environments" should be an object.',
           },
         },
         requestTimeout: {
@@ -2431,108 +3435,6 @@ export default {
       },
       errorMessage: {
         type: 'App "api" should be an array.',
-      },
-    },
-    mcp: {
-      type: 'object',
-      additionalProperties: false,
-      errorMessage: {
-        type: 'App "mcp" should be an object.',
-        additionalProperties:
-          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
-      },
-      properties: {
-        '~ignoreBuildChecks': {},
-        '~r': {},
-        '~l': {},
-        name: {
-          type: 'string',
-          errorMessage: {
-            type: 'MCP "name" should be a string.',
-          },
-        },
-        version: {
-          type: 'string',
-          errorMessage: {
-            type: 'MCP "version" should be a string.',
-          },
-        },
-        // Server branding advertised in the initialize result's serverInfo
-        // (MCP Implementation: title, websiteUrl, icons). Clients that render
-        // a connector card prefer these over guessing from the host's favicon.
-        title: {
-          type: 'string',
-          errorMessage: {
-            type: 'MCP "title" should be a string.',
-          },
-        },
-        websiteUrl: {
-          type: 'string',
-          errorMessage: {
-            type: 'MCP "websiteUrl" should be a string.',
-          },
-        },
-        icons: {
-          type: 'array',
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['src'],
-            properties: {
-              '~ignoreBuildChecks': {},
-              '~r': {},
-              '~l': {},
-              src: {
-                type: 'string',
-                errorMessage: {
-                  type: 'MCP icon "src" should be a string.',
-                },
-              },
-              mimeType: {
-                type: 'string',
-                errorMessage: {
-                  type: 'MCP icon "mimeType" should be a string.',
-                },
-              },
-              sizes: {
-                type: 'array',
-                items: { type: 'string' },
-                errorMessage: {
-                  type: 'MCP icon "sizes" should be an array of strings like "512x512".',
-                },
-              },
-              theme: {
-                type: 'string',
-                enum: ['light', 'dark'],
-                errorMessage: {
-                  type: 'MCP icon "theme" should be a string.',
-                  enum: 'MCP icon "theme" should be "light" or "dark".',
-                },
-              },
-            },
-            errorMessage: {
-              type: 'MCP "icons" items should be objects with a "src" property.',
-              required: {
-                src: 'MCP icon should have required property "src".',
-              },
-              additionalProperties:
-                'MCP icon contains an unknown property. The known properties are "src", "mimeType", "sizes" and "theme".',
-            },
-          },
-          errorMessage: {
-            type: 'MCP "icons" should be an array.',
-          },
-        },
-        endpoints: {
-          type: 'array',
-          items: {
-            type: 'string',
-            description: 'Api endpoint ids exposed as MCP tools.',
-          },
-          errorMessage: {
-            type: 'MCP "endpoints" should be an array of endpoint id strings.',
-          },
-        },
       },
     },
     websockets: {

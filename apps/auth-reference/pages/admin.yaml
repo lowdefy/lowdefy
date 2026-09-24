@@ -1,0 +1,22 @@
+id: admin
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+blocks:
+  - id: admin_title
+    type: Title
+    properties:
+      content: Admin (role-gated)
+      level: 2
+  - id: admin_text
+    type: Html
+    properties:
+      html: |
+        <p>This page requires the <b>admin</b> role. In phase 1 a real
+        session resolves with <code>roles: []</code> (role resolution from
+        membership lands in phase 3), so reaching this page requires
+        <code>dev.mockUser</code> with <code>roles: [admin]</code> in the
+        dev server. A signed-in user without the role gets an opaque
+        <code>/404</code> redirect.</p>

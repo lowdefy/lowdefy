@@ -15,7 +15,13 @@
 */
 
 import path from 'node:path';
-import { createApiContext } from '@lowdefy/api';
+import {
+  createApiContext,
+  ensureMcpOauthResource,
+  resolveAuthentication,
+  resolvePinnedOrganization,
+  resolveTenantPreflight,
+} from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { v4 as uuid } from 'uuid';
 
@@ -26,18 +32,20 @@ import connections from '../../build/plugins/connections.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
-import getSession from '../../lib/server/auth/session.js';
-import getStrategyCaller from '../../lib/server/auth/strategies.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
+import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
+import scrubSecrets from '../../lib/server/scrubSecrets.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
 } from '../../build/plugins/notifications.js';
 import operators from '../../build/plugins/operators/server.js';
 import setSentryUser from '../../lib/server/sentry/setSentryUser.js';
+import steps from '../../build/plugins/steps.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
@@ -53,6 +61,13 @@ function getRequestId(c) {
     return incoming;
   }
   return uuid();
+}
+
+// The MCP route authenticates by access token alone - the mcp option switches
+// resolveAuthentication onto its bearer branch, so it is set only for the MCP
+// path. Every other path leaves it false and authentication behaves as before.
+function isMcpPath(path) {
+  return path.endsWith('/api/mcp');
 }
 
 // Replaces lib/server/apiWrapper.js. Builds the request context consumed by
@@ -83,6 +98,7 @@ function apiContext() {
       interpolateProperties,
       jsMap,
       logger: createLogger({ rid }),
+      mode: 'prod',
       notifications,
       operators,
       renderEmail,
@@ -91,7 +107,9 @@ function apiContext() {
         method: c.req.method,
         hostname: c.req.header('host'),
       },
+      scrubSecrets,
       secrets,
+      steps,
       // On Vercel (fluid compute) the platform request context keeps the
       // invocation alive until waitUntil promises settle; on long-lived hosts
       // the lookup resolves to nothing and background promises just run.
@@ -100,21 +118,38 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // Hoisted once per request - resolveAuthentication also needs it, and
+    // getBetterAuth memoizes the instance, but this keeps the auth engine
+    // construction to a single call site per request.
+    context.auth = getAuth({ logger: context.logger });
+    // The engine is constructed lazily on the first request, which would
+    // otherwise race the startup pinned-org ensure - await the memoized
+    // resolve so createApiContext reads a retained binding.
+    await resolvePinnedOrganization({ auth: context.auth, logger: context.logger });
+    // The one oauthResource row the MCP token audience validates against -
+    // ensured once per process, memoized like the pinned resolve above; a
+    // failure retries on the next request. No-op when the app is not an
+    // authorization server.
+    await ensureMcpOauthResource({ auth: context.auth, logger: context.logger });
     if (!c.req.path.includes('/api/auth')) {
-      context.session = await getSession(c);
-      if (!context.session?.user) {
-        const caller = await getStrategyCaller(c, context.logger);
-        if (caller) {
-          context.session = { user: caller };
-        }
-      }
+      // resolveAuthentication is the single writer of context.user.
+      await resolveAuthentication(context, {
+        auth: context.auth,
+        headers: c.req.raw.headers,
+        strategies: getStrategies({ logger: context.logger }),
+        mcp: isMcpPath(c.req.path),
+      });
       // Set Sentry user context for authenticated requests
       setSentryUser({
-        user: context.session?.user,
+        user: context.user,
         sentryConfig: loggerConfig.sentry,
       });
     }
     createApiContext(context);
+    // Under policy: tenant, refuse to serve while walled collections hold
+    // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
+    // probe failure retries next request). No-op under pinned.
+    await resolveTenantPreflight(context);
     c.set('lowdefyContext', context);
     // Echo the request id so clients and proxies can quote it when reporting
     // a failure, and it can be matched to the rid on the server log lines.

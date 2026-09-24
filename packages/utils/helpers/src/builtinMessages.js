@@ -28,6 +28,7 @@ const builtinMessages = {
   'errorPage.name': 'Error',
   'errorPage.message': 'An error has occurred.',
   'errorPage.homeLink': 'Return to home page',
+  'server.genericError': 'Something went wrong.',
 
   // Agent runtime — surfaces in browser as HTTP error responses / streamed errors
   'agent.runtime.methodNotAllowed': 'Only POST requests are supported.',

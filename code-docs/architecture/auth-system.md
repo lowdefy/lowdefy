@@ -1,5 +1,12 @@
 # Auth System Architecture
 
+> **STALE — describes the removed Auth.js engine.** The auth system moved to
+> BetterAuth (`@lowdefy/plugin-better-auth`, `packages/api/src/routes/auth/`,
+> `packages/build/src/build/buildAuth/`); providers, strategies, hooks, steps
+> and organizations replaced the callback/event pipeline documented below.
+> Read the code (and `apps/auth-reference/`) as the source of truth until this
+> document is rewritten via `/l-docs-architecture`.
+
 How authentication integrates with Lowdefy.
 
 ## Overview

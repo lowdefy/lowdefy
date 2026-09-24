@@ -21,14 +21,16 @@ import resolveEndpointSchedules from './resolveEndpointSchedules.js';
 import validateEndpoint from './validateEndpoint.js';
 import validateStepReferences from './validateStepReferences.js';
 
-function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, cronEnvironments }) {
-  validateEndpoint({ endpoint, index, checkDuplicateEndpointId, cronEnvironments });
+function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, environments }) {
+  validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environments });
   endpoint.endpointId = endpoint.id;
-  resolveEndpointSchedules({ endpoint, cronEnvironments });
+  resolveEndpointSchedules({ endpoint, environments });
 
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
+    stepTypes: context.typesMap?.steps ?? {},
+    tenantConnectionIds: context.tenantConnectionIds,
   });
 
   // Validate that _step references point to defined step IDs

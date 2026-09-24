@@ -1,0 +1,134 @@
+# Organizations &amp; Multi-Tenancy
+
+Every Lowdefy app has organizations — always, even a single-team internal tool. A signed-in caller is a **member** of an organization, and it is the membership, not the user record, that carries the caller's app roles and per-organization attributes. This is the unit the whole auth system is built on: `_user.roles` is the active membership's roles, and the [tenant wall](#the-tenant-wall) scopes data to the active organization.
+
+The single knob that decides how organizations behave is `auth.organizations.policy`.
+
+## Two policies: `pinned` and `tenant`
+
+```yaml
+auth:
+  organizations:
+    policy: pinned   # or "tenant"
+```
+
+**`pinned`** *(the default)* — one organization for the whole deployment, ensured at startup. This is the shape for an internal app or a single-customer install: there is one workspace, everyone is a member of it, and the active organization is never switched. The organization plugin's per-organization routes (create, switch, self-service org management) are disabled.
+
+**`tenant`** — organizations are created per user, and a caller can belong to several and switch between them. This is the shape for a multi-tenant SaaS: each customer is an organization, members are invited into it, and `SetActiveOrganization` moves the caller between the workspaces they belong to.
+
+An app that sets nothing gets `pinned` with one auto-seeded organization, invite-only. The policy is not something you can leave to a default and change later without thought — it changes what `_user.organization_id` means, whether the tenant wall is active, and whether the MCP flow needs an [organization picker](/mcp-oauth). Choose it up front.
+
+## The `organizations` keys
+
+| Key | Type | Applies to | Default | Meaning |
+| --- | ---- | ---------- | ------- | ------- |
+| `policy` | `pinned` \| `tenant` | both | `pinned` | The organization model, above. |
+| `org` | string | **pinned only** | `default` | The slug the deployment pins as the active organization. Under `pinned` the slug **is** the organization's id. |
+| `signup` | `invite-only` \| `open` | both | `pinned` → `invite-only`, `tenant` → `open` | Whether uninvited sign-ups are admitted. `invite-only` refuses a sign-up with no invitation; `open` admits everyone. |
+| `create` | `auto` \| `operator` | **tenant only** | `tenant` → `auto` | How a tenant organization comes into being: `auto` mints one for a user at first session; `operator` leaves creation to your own config (the `CreateOrganization` step). |
+| `invitationExpiresIn` | integer (seconds, min 60) | both | `172800` (48h) | How long an invitation stays acceptable. Re-sending an invitation refreshes its expiry. |
+
+The build cross-checks these, and the errors are worth knowing before you hit them:
+
+- **`org` is required under `pinned`** and **rejected under `tenant`** — under `tenant` there is no single organization to pin; organizations are created per user.
+- **`create` is rejected under `pinned`** — the active organization is ensured at startup, so there is nothing to create on demand.
+- **Renaming `org` strands the existing membership.** The startup ensure is by slug, so changing `org` mints a *fresh* organization rather than renaming the old one, and every existing `member` row still points at the old id. Treat the pinned slug as permanent.
+
+Defaults line up with intent: `pinned` defaults to a closed, invite-only internal app; `tenant` defaults to self-serve SaaS (`signup: open`, `create: auto`).
+
+## The `owner` / `admin` / `member` tier vs app roles
+
+A membership carries **two** independent role authorities, and keeping them apart is the whole point:
+
+- **`_user.org_roles`** — the organization tier: `owner`, `admin`, or `member`. This is BetterAuth's administrative fact about the membership, and it is what the [auth-step authority floor](/auth-steps) checks. **No page or API gate reads it.**
+- **`_user.roles`** — the app's own role strings, from the membership's `appRoles`. These are what [`auth.pages.roles` and `auth.api.roles`](/roles) match, and the only thing they match.
+
+So an app that wants a page for organization administrators does **not** gate it on the `admin` tier — it gates on one of its own app roles, and lets the write authority answer the administration question separately, at the step. See [Roles](/roles) for page and API gating, and [Auth Steps](/auth-steps) for the administration model.
+
+## Bootstrapping the first administrator
+
+Nothing grants organization authority implicitly — not even to the first user. On a fresh `pinned` + `invite-only` deployment that is a closed loop: nobody can invite (inviting needs authority nobody holds) and nobody can sign up (the gate admits only members and pending invitees). Breaking the loop is a single invitation document inserted by hand into the `user-invitations` collection, seeded with the `owner` tier. The full recipe — the exact document, why the key must be `_id`, why the role must be `owner`, and how to deliver the accept link — is in the [Auth Upgrade guide](/auth-upgrade#bootstrapping-the-first-administrator).
+
+## The tenant wall
+
+Under `policy: tenant`, data must not leak across organizations. The **tenant wall** enforces that mechanically: a scoping-capable connection is filtered to the caller's active organization on every read and stamped with it on every write, without the request author writing a single filter clause. The wall is declared **on the connection**; requests, steps and websockets only declare *exceptions*.
+
+### Declaring scope on a connection
+
+Under `tenant`, a connection whose type implements the scoping contract (MongoDB does) is **scoped by default** — silence means scoped. You only ever declare the two exceptions:
+
+```yaml
+connections:
+  # Scoped by default under tenant policy — nothing to declare.
+  - id: app_data
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: records
+
+  # Data deliberately shared across organizations (reference data,
+  # a global catalogue) — opt out of scoping explicitly.
+  - id: countries
+    type: MongoDBCollection
+    tenant: shared
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: countries
+
+  # Scope on a field other than the default organization_id.
+  - id: legacy_records
+    type: MongoDBCollection
+    tenant:
+      field: tenant_id
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: legacy
+```
+
+`tenant` on a connection is either the string `shared` or `{ field: <name> }` (a non-empty name with no dots). The default scoping field is `organization_id`. There is deliberately **no `tenant: true`** — under `tenant` policy a capable connection is already scoped, so `true` would only restate the default; the build rejects it.
+
+**Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
+
+### Exceptions at the point of use
+
+The wall scopes mechanically, but a few operations need an explicit opt-out or opt-in, declared on the request, step or websocket — never on the connection:
+
+| Surface | Allowed values | Meaning |
+| ------- | -------------- | ------- |
+| Request | `none` | Opt this request out of scoping entirely. |
+| Request | `authored` | The request authors its own tenant clause (audited at runtime). |
+| Websocket | `none` | Opt out. `authored` is not allowed — change streams are always scoped mechanically. |
+
+An aggregation stage the wall cannot scope mechanically — `$search`, `$searchMeta`, `$vectorSearch`, `$geoNear`, `$graphLookup` — must declare `tenant: authored` and author the organization clause *inside the stage*. The runtime audits that clause against the caller's active organization; it does not trust the declaration alone.
+
+```yaml
+# A $search aggregation on a scoped connection: author the org filter
+# inside the stage and declare it.
+id: search_records
+type: MongoDBAggregation
+connectionId: app_data
+tenant: authored
+properties:
+  pipeline:
+    - $search:
+        compound:
+          filter:
+            - equals:
+                path: organization_id
+                value:
+                  _user: organization_id
+          must:
+            - text:
+                query:
+                  _payload: q
+                path: title
+```
+
+### Why the wall lives on the connection
+
+Putting scope on the connection, and only exceptions at the point of use, means the default is safe: a developer who forgets to think about tenancy gets a scoped read and a stamped write, not a leak. The dangerous states — sharing across organizations, opting a request out, authoring a raw clause — are the ones that have to be typed out, reviewed in a diff, and (for `authored`) audited at runtime. This inverts the usual footgun where the safe path is the verbose one.
+
+Under `policy: pinned` the wall is inert — there is one organization, so scoping to it is a no-op — but declaring `tenant` on connections does no harm, which lets one config serve both a pinned install and a tenant deployment.

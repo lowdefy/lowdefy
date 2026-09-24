@@ -36,7 +36,7 @@ async function readFunctionConfig({ buildDirectory }) {
 
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
 // that declare `schedules`). A missing file means no schedules → no crons. Vercel fires crons only
-// on the production deployment, so with config.cron.environments the schedules of every other
+// on the production deployment, so with config.environments the schedules of every other
 // environment are registered here too, as cron-forward jobs the production deployment relays to
 // that environment's own /api/cron route.
 async function readCrons({ buildDirectory }) {
@@ -76,6 +76,11 @@ async function vercelOutput({ context }) {
       throw new Error(`Cannot trace "${entrypoint}" — run "lowdefy build" first.`);
     }
   });
+  if (!fs.existsSync(clientDirectory)) {
+    throw new Error(
+      `Cannot find built client at "${clientDirectory}" — run "lowdefy build" first.`
+    );
+  }
 
   // The function preserves paths relative to the trace base (the pnpm workspace root when the
   // server directory is a workspace member), so the server's relative node_modules symlinks still

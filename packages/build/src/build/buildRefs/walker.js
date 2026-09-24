@@ -17,7 +17,7 @@
 import path from 'path';
 
 import { get, ReservedKeyError, type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
@@ -53,6 +53,7 @@ class WalkContext {
     currentFile,
     refChain,
     deferModuleRefs,
+    deferAuthConfig,
     operators,
     env,
     lowdefyApp,
@@ -83,6 +84,14 @@ class WalkContext {
     this.currentFile = currentFile;
     this.refChain = refChain;
     this.deferModuleRefs = deferModuleRefs ?? false;
+    // Walks that run before the auth-config projection is computed AND whose
+    // output is guaranteed a later post-projection walk (entry-config
+    // prepare/sweep, deferred-record bodies) leave _build.authConfig folds
+    // unevaluated instead of erroring — the operator resolves where the
+    // deferred value is consumed. Walks whose output is final (app metadata,
+    // the auth pre-pass itself) stay strict, so a genuinely-unresolvable read
+    // is still a loud build error.
+    this.deferAuthConfig = deferAuthConfig ?? false;
     // Which entry-config section a prepare walk serves ('consumerVars' or
     // 'connections') — entryRef record coordinates and slots need it.
     this.entrySection = entrySection ?? null;
@@ -107,6 +116,7 @@ class WalkContext {
       currentFile: this.currentFile,
       refChain: this.refChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -118,7 +128,16 @@ class WalkContext {
     });
   }
 
-  forRef({ refId, vars, filePath, moduleRoot, packageRoot, moduleDependencies, moduleEntry, extraRefChainKeys }) {
+  forRef({
+    refId,
+    vars,
+    filePath,
+    moduleRoot,
+    packageRoot,
+    moduleDependencies,
+    moduleEntry,
+    extraRefChainKeys,
+  }) {
     const newChain = new Set(this.refChain);
     if (filePath) {
       newChain.add(filePath);
@@ -141,6 +160,7 @@ class WalkContext {
       currentFile: filePath ?? this.currentFile,
       refChain: newChain,
       deferModuleRefs: this.deferModuleRefs,
+      deferAuthConfig: this.deferAuthConfig,
       entrySection: this.entrySection,
       operators: this.operators,
       env: this.env,
@@ -197,15 +217,36 @@ function tagRefDeep(node, refId) {
   }
 }
 
+// A _build.env read is inlined here, so a name the environment does not set
+// becomes a literal null in the artifact before any check can see it. Warn at
+// the inline site on every build: unlike a _secret, which is read where the app
+// runs, the value is frozen in the environment the build runs in.
+function warnUnsetEnvReference(node, ctx) {
+  const params = node['_build.env'];
+  const name = type.isString(params) ? params : params?.key;
+  if (!type.isString(name)) return;
+  if (type.isObject(params) && Object.hasOwn(params, 'default')) return;
+  if (!type.isUndefined(process.env[name])) return;
+  ctx.buildContext.handleWarning(
+    new ConfigWarning(
+      `Environment variable "${name}" is not set. _build.env read it at build time and inlined null; set it in the build environment or in .env, or give the operator a default.`,
+      { configKey: node['~k'], checkSlug: 'secrets' }
+    )
+  );
+}
 
 // Evaluate a _build.* operator using evaluateOperators
 function evaluateBuildOperator(node, ctx) {
+  if (type.isObject(node) && Object.hasOwn(node, '_build.env')) {
+    warnUnsetEnvReference(node, ctx);
+  }
   const { output, errors } = evaluateOperators({
     input: node,
     operators: ctx.operators,
     operatorPrefix: '_build.',
     env: ctx.env,
     lowdefyApp: ctx.lowdefyApp,
+    authConfig: ctx.buildContext.authConfigProjection,
     dynamicIdentifiers: ctx.dynamicIdentifiers,
   });
   if (errors.length > 0) {
@@ -387,9 +428,7 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     // stay raw in varDefs and need no walk.
     const defaultRecordId = getPlaceholderId(varDef.default);
     result =
-      defaultRecordId !== undefined
-        ? await resolveDeferred(ctx, defaultRecordId)
-        : varDef.default;
+      defaultRecordId !== undefined ? await resolveDeferred(ctx, defaultRecordId) : varDef.default;
   } else {
     result = null;
   }
@@ -636,9 +675,7 @@ async function resolveModuleIdOperator(node, ctx) {
           refId: ctx.refId,
           configKey: configKey ?? null,
         },
-        slot: nested
-          ? null
-          : { entryId: ctx.entryId, section, path: ctx.path },
+        slot: nested ? null : { entryId: ctx.entryId, section, path: ctx.path },
       });
       return makePlaceholder(recordId);
     }
@@ -704,7 +741,7 @@ async function prepareRef(node, ctx) {
             ctx.deferModuleRefs && refDef.module ? ctx.child('$refvars').child(varKey) : ctx;
           refDef.vars[varKey] = await resolve(refDef.vars[varKey], varCtx);
         }
-      }),
+      })
     );
   }
   if (type.isObject(refDef.key)) {
@@ -729,7 +766,10 @@ async function prepareRef(node, ctx) {
         !value.startsWith(ctx.packageRoot + '/') &&
         value !== ctx.packageRoot
       ) {
-        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`);
+        throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`, {
+          filePath: ctx.currentFile,
+          lineNumber: ctx.currentFile ? lineNumber : null,
+        });
       }
     }
   }
@@ -966,7 +1006,7 @@ async function resolve(node, ctx) {
     await Promise.all(
       node.map(async (item, i) => {
         node[i] = await resolve(item, ctx.child(String(i)));
-      }),
+      })
     );
     return node;
   }
@@ -1020,7 +1060,7 @@ async function resolve(node, ctx) {
         }
       }
       node[key] = await resolve(node[key], ctx.child(key));
-    }),
+    })
   );
 
   // 6. _var — substitution (children already resolved)
@@ -1051,7 +1091,9 @@ async function resolve(node, ctx) {
           { filePath: ctx.currentFile }
         );
       }
-      throw new ConfigError('_module.var cannot be used at the app level.');
+      throw new ConfigError('_module.var cannot be used at the app level.', {
+        filePath: ctx.currentFile,
+      });
     }
     return resolve(await resolveModuleVar(node, ctx), ctx);
   }
@@ -1071,6 +1113,19 @@ async function resolve(node, ctx) {
     if (ctx.deferModuleRefs && findPlaceholderInSubtree(node)) {
       return node;
     }
+    // Before the auth-config projection is computed, a fold over
+    // _build.authConfig cannot resolve. On walks whose output is re-walked
+    // post-projection (deferAuthConfig), leave the node unevaluated — its
+    // children (_ref, _var) are already resolved, so the fold happens where
+    // the deferred value is consumed. Bottom-up resolution makes this guard
+    // cover every enclosing _build.* fold of the authConfig read too.
+    if (
+      ctx.deferAuthConfig &&
+      type.isUndefined(ctx.buildContext.authConfigProjection) &&
+      findAuthConfigInSubtree(node)
+    ) {
+      return node;
+    }
     const result = evaluateBuildOperator(node, ctx);
     tagRefDeep(result, ctx.refId);
     return result;
@@ -1087,6 +1142,19 @@ function findPlaceholderInSubtree(node) {
   }
   if (type.isObject(node)) {
     return Object.keys(node).some((key) => findPlaceholderInSubtree(node[key]));
+  }
+  return false;
+}
+
+// Does any node in the subtree read _build.authConfig?
+function findAuthConfigInSubtree(node) {
+  if (type.isArray(node)) {
+    return node.some((item) => findAuthConfigInSubtree(item));
+  }
+  if (type.isObject(node)) {
+    return Object.keys(node).some(
+      (key) => key === '_build.authConfig' || findAuthConfigInSubtree(node[key])
+    );
   }
   return false;
 }

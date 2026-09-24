@@ -15,6 +15,7 @@
 */
 
 import sendgrid from '@sendgrid/mail';
+import { type } from '@lowdefy/helpers';
 
 import applyMailFilter from './applyMailFilter.js';
 
@@ -43,8 +44,17 @@ async function send({ connection, mail }) {
     // when a connection filter (replaceAddress/allowlist/regex) rewrites it.
     return { messageId: response?.headers?.['x-message-id'] ?? null, to: filtered.to };
   } catch (error) {
-    if (error.response) {
-      throw new Error('SendGrid request failed.', { cause: error });
+    // The SDK message is generic ('Bad Request') while the response body carries
+    // the actionable detail, so the detail is appended to the SDK error itself.
+    // The error propagates rather than being rewrapped: the request interface
+    // layer classifies it from its own response.status / code, which a new Error
+    // would hide from ServiceError.isServiceError.
+    const details = error.response?.body?.errors;
+    if (type.isArray(details)) {
+      error.message = `${error.message} ${details
+        .map(({ message }) => message)
+        .filter((message) => type.isString(message))
+        .join(' ')}`;
     }
     throw error;
   }

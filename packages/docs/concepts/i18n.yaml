@@ -152,7 +152,7 @@ _ref:
 
             ## Built-in framework strings
 
-            The framework emits a few user-visible strings (action loading toasts, validation summaries, popup-blocker warnings, the global error page). They live in a built-in catalog and surface as English by default. Override any of them by adding the same key under `config.i18n.messages.{locale}`:
+            The framework emits a few user-visible strings (action loading toasts, validation summaries, popup-blocker warnings, the global error page, the generic server error message). They live in a built-in catalog and surface as English by default. Override any of them by adding the same key under `config.i18n.messages.{locale}`:
 
             ```yaml
             config:
@@ -171,6 +171,7 @@ _ref:
                     errorPage.name: 'Fehler'
                     errorPage.message: 'Ein Fehler ist aufgetreten.'
                     errorPage.homeLink: 'Zurück zur Startseite'
+                    server.genericError: 'Etwas ist schiefgelaufen.'
             ```
 
             **Built-in keys you can override:**
@@ -188,6 +189,9 @@ _ref:
             | `errorPage.name` | `Error` | Full-page error fallback heading |
             | `errorPage.message` | `An error has occurred.` | Full-page error fallback body |
             | `errorPage.homeLink` | `Return to home page` | Full-page error fallback link |
+            | `server.genericError` | `Something went wrong.` | Message of any server error that is not an author error or an auth refusal |
+
+            `server.genericError` is the message users see for any server error that is not an author error (`:throw`, `:reject`, a failed `ValidateSchema` step, a plugin's `UserError`) or an authentication or authorization refusal. The server translates it for the request's locale, the same way in development and production, and it is the message that `_actions`, `_request_details` and [`_error`](/_error) read in page config. To show something else for one action, set `messages.error` on the action to override its error toast. To show the real message, read it with [`_error`](/_error) inside the endpoint's `:catch` and send it on, for example `:throw: { _error: message }`.
 
             ## Localizing block defaults
 
@@ -238,7 +242,7 @@ _ref:
                     agent.antdx.actions.feedbackDislike: 'Gefällt mir nicht'
             ```
 
-            **Agent runtime errors.** HTTP 400/500 errors from the agent endpoint (`Only POST requests are supported.`, `Invalid agent path`, `Agent "X" does not exist.`, etc.) translate via `agent.runtime.*` keys against the request's `Accept-Language`. Server-side validation errors and stack traces stay in English (developer diagnostics).
+            **Agent runtime errors.** HTTP error responses from the agent endpoint (a 405 for a wrong method, a 400 for a malformed request, and so on: `Only POST requests are supported.`, `Invalid agent path`, `Agent "X" does not exist.`, etc.) translate via `agent.runtime.*` keys against the request's `Accept-Language`. Server-side validation errors and stack traces stay in English (developer diagnostics).
 
             **Agent config translation.** `agent.properties.instructions` passes through the operator parser at request time, so `_t:` works:
 

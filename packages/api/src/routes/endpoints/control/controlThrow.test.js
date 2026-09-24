@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { UserError } from '@lowdefy/errors';
+import { RequestError, UserError } from '@lowdefy/errors';
 
 import runTest from '../test/runTest.js';
 
@@ -99,7 +99,7 @@ test('throw at end of routine', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in the middle of routine', async () => {
@@ -151,7 +151,7 @@ test('throw in the middle of routine', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
   expect(res.error).toEqual(error);
 });
 
@@ -205,7 +205,7 @@ test('multiple throws in routine', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
   expect(res.error).toEqual(error);
 });
 
@@ -266,7 +266,7 @@ test('truthy guard statement throw', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in a try block with catch return', async () => {
@@ -363,7 +363,7 @@ test('throw in a try block with missing catch', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in a try block with error in finally', async () => {
@@ -415,10 +415,10 @@ test('throw in a try block with error in finally', async () => {
     [{ event: 'debug_control_catch' }],
     [{ event: 'debug_control_finally' }],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([
-    [{ event: 'error_control_throw', err: new UserError('Error occurred at the end') }],
-    [{ event: 'error_control_throw', err: new UserError('Error in catch') }],
-    [{ event: 'error_control_throw', err: error }],
+  expect(context.logger.warn.mock.calls).toEqual([
+    [{ event: 'warn_control_throw', err: new UserError('Error occurred at the end') }],
+    [{ event: 'warn_control_throw', err: new UserError('Error in catch') }],
+    [{ event: 'warn_control_throw', err: error }],
   ]);
 });
 
@@ -467,7 +467,7 @@ test('throw in try block with cause', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in try block with empty catch', async () => {
@@ -517,7 +517,7 @@ test('throw in try block with empty catch', async () => {
     ],
     [{ event: 'debug_control_catch' }],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in try block with return in finally block', async () => {
@@ -568,7 +568,7 @@ test('throw in try block with return in finally block', async () => {
     [{ event: 'debug_control_finally' }],
     [{ event: 'debug_control_return', response: { message: 'Error ignored' } }],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
 });
 
 test('throw in try block with request in finally block', async () => {
@@ -649,5 +649,41 @@ test('throw in try block with request in finally block', async () => {
       },
     ],
   ]);
-  expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', err: error }]]);
+  expect(context.logger.warn.mock.calls).toEqual([[{ event: 'warn_control_throw', err: error }]]);
+});
+
+const failingTry = {
+  id: 'request:test_endpoint:try_fail',
+  type: 'TestRequestError',
+  stepId: 'try_fail',
+  connectionId: 'test',
+  properties: {
+    message: 'Try and fail',
+  },
+};
+
+test('throw given an Error rethrows it unchanged without evaluating :cause', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':throw': { _error: true }, ':cause': { _throw_test: null } },
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error).toBeInstanceOf(RequestError);
+  expect(res.error.message).toEqual('Try and fail at test/try_fail.');
+  expect(res.error.handled).toBe(true);
+  expect(context.logger.warn.mock.calls).toContainEqual([
+    { event: 'warn_control_throw', err: res.error },
+  ]);
+});
+
+test('throw given a caught UserError rethrows it with its message', async () => {
+  const routine = {
+    ':try': { ':throw': 'Name taken.' },
+    ':catch': { ':throw': { _error: true } },
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error).toBeInstanceOf(UserError);
+  expect(res.error.message).toEqual('Name taken.');
 });

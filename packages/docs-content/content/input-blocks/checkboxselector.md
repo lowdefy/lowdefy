@@ -703,13 +703,89 @@ Checkbox group for selecting multiple options.
     valueKey: id
 ```
 
+```yaml
+- id: columns_two
+  type: CheckboxSelector
+  properties:
+    title: Two columns
+    columns: 2
+    options:
+      - Weekday mornings
+      - Weekday afternoons
+      - Weekday evenings
+      - Weekend mornings
+      - Weekend afternoons
+      - Weekend evenings
+- id: columns_four
+  type: CheckboxSelector
+  properties:
+    title: Four columns
+    columns: 4
+    options:
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+- id: columns_responsive
+  type: CheckboxSelector
+  properties:
+    title: One column below md, three from md up
+    columns:
+      xs: 1
+      md: 3
+    options:
+      - Email
+      - SMS
+      - Push notification
+      - Webhook
+      - In-app message
+      - Weekly digest
+- id: columns_gutter
+  type: CheckboxSelector
+  properties:
+    title: Wider gutter
+    columns: 2
+    gutter:
+      - 24
+      - 12
+    options:
+      - Read
+      - Write
+      - Delete
+      - Administer
+- id: columns_per_option_color
+  type: CheckboxSelector
+  properties:
+    title: Coloured options in a grid
+    columns: 2
+    options:
+      - label: Low
+        value: low
+        color: "#16a34a"
+      - label: Medium
+        value: medium
+        color: "#d97706"
+      - label: High
+        value: high
+        color: "#dc2626"
+      - label: Critical
+        value: critical
+        color: "#7e22ce"
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `align` | string | `"start"` | Align options. Enum: `start`, `end`, `center`, `baseline`. |
+| `align` | string | `"start"` | Align options. Ignored when 'columns' is set. Enum: `start`, `end`, `center`, `baseline`. |
 | `color` | string | - | Selected checkbox color. |
+| `columns` | integer \| object | - | Number of columns to lay the options out in, or a responsive breakpoint object. Use a count that divides 24 evenly. |
 | `disabled` | boolean | `false` | Disable the block if true. |
-| `direction` | string | `"horizontal"` | List options horizontally or vertical. Enum: `horizontal`, `vertical`. |
-| `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. |
+| `direction` | string | `"horizontal"` | List options horizontally or vertical. Ignored when 'columns' is set. Enum: `horizontal`, `vertical`. |
+| `gutter` | number \| array | - | Gap between options in the grid. Number or [horizontal, vertical] array. Applies when 'columns' is set. |
+| `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
 | `options.$.value` | string \| number \| boolean | - | Option value. |
@@ -746,7 +822,7 @@ Checkbox group for selecting multiple options.
 | `theme.lineWidth` | number | `1` | Border width of the checkbox. |
 | `theme.lineType` | string | `"solid"` | Border style of the checkbox. |
 | `theme.fontSize` | number | `14` | Font size for checkbox labels. |
-| `theme.marginXS` | number | `8` | Horizontal gap between checkboxes in a group. |
+| `theme.marginXS` | number | `8` | Column gap on the checkbox group element. Does not space the options apart; set 'gutter' for a grid. |
 | `theme.paddingXS` | number | `8` | Inline padding between the checkbox and its label text. |
 
 | Event | Event Data | Description |

@@ -289,6 +289,11 @@
           pageId: vercel
           properties:
             title: Vercel
+        - id: deployment-environments
+          type: MenuLink
+          pageId: deployment-environments
+          properties:
+            title: Environments
 
     - id: plugins_group
       type: MenuGroup
@@ -321,6 +326,11 @@
           pageId: plugins-operators
           properties:
             title: Operators
+        - id: PostHog
+          type: MenuLink
+          pageId: PostHog
+          properties:
+            title: PostHog
 
     - id: users_group
       type: MenuGroup
@@ -343,6 +353,21 @@
           pageId: roles
           properties:
             title: Roles
+        - id: organizations
+          type: MenuLink
+          pageId: organizations
+          properties:
+            title: Organizations & Multi-Tenancy
+        - id: auth-steps
+          type: MenuLink
+          pageId: auth-steps
+          properties:
+            title: Auth Steps
+        - id: mcp-oauth
+          type: MenuLink
+          pageId: mcp-oauth
+          properties:
+            title: MCP Server & OAuth
         - id: user-object
           type: MenuLink
           pageId: user-object
@@ -358,6 +383,11 @@
           pageId: login-and-logout
           properties:
             title: Login and Logout
+        - id: two-factor
+          type: MenuLink
+          pageId: two-factor
+          properties:
+            title: Two-Factor Authentication
         - id: auth-providers
           type: MenuLink
           pageId: auth-providers
@@ -381,12 +411,9 @@
           properties:
             title: Adapter Reference
           links:
-            - id: MongoDBAdapter
+            - id: MongoDBAuthAdapter
               type: MenuLink
-              pageId: MongoDBAdapter
-            - id: MultiAppMongoDBAdapter
-              type: MenuLink
-              pageId: MultiAppMongoDBAdapter
+              pageId: MongoDBAuthAdapter
         - id: auth_callback_reference
           type: MenuGroup
           properties:
@@ -402,6 +429,11 @@
         title: Testing
         icon: AiOutlineExperiment
       links:
+        - id: config-tests
+          type: MenuLink
+          pageId: config-tests
+          properties:
+            title: Config Tests
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction
@@ -450,6 +482,9 @@
         - id: ButtonSelector
           type: MenuLink
           pageId: ButtonSelector
+        - id: Captcha
+          type: MenuLink
+          pageId: Captcha
         - id: CheckboxSelector
           type: MenuLink
           pageId: CheckboxSelector
@@ -489,6 +524,9 @@
         - id: PhoneNumberInput
           type: MenuLink
           pageId: PhoneNumberInput
+        - id: PlacesAutocomplete
+          type: MenuLink
+          pageId: PlacesAutocomplete
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
@@ -609,6 +647,9 @@
         - id: DropdownButton
           type: MenuLink
           pageId: DropdownButton
+        - id: EventLog
+          type: MenuLink
+          pageId: EventLog
         - id: EChart
           type: MenuLink
           pageId: EChart
@@ -642,6 +683,9 @@
         - id: Paragraph
           type: MenuLink
           pageId: Paragraph
+        - id: PollingTimer
+          type: MenuLink
+          pageId: PollingTimer
         - id: Progress
           type: MenuLink
           pageId: Progress
@@ -940,6 +984,15 @@
         - id: DownloadCsv
           type: MenuLink
           pageId: DownloadCsv
+        - id: GetLocalStorage
+          type: MenuLink
+          pageId: GetLocalStorage
+        - id: EmailOtpSend
+          type: MenuLink
+          pageId: EmailOtpSend
+        - id: EmailOtpVerify
+          type: MenuLink
+          pageId: EmailOtpVerify
         - id: Fetch
           type: MenuLink
           pageId: Fetch
@@ -955,12 +1008,57 @@
         - id: Logout
           type: MenuLink
           pageId: Logout
+        - id: MagicLinkVerify
+          type: MenuLink
+          pageId: MagicLinkVerify
         - id: PdfMake
           type: MenuLink
           pageId: PdfMake
+        - id: PostHogAlias
+          type: MenuLink
+          pageId: PostHogAlias
+        - id: PostHogCapture
+          type: MenuLink
+          pageId: PostHogCapture
+        - id: PostHogCapturePageLeave
+          type: MenuLink
+          pageId: PostHogCapturePageLeave
+        - id: PostHogFeatureFlag
+          type: MenuLink
+          pageId: PostHogFeatureFlag
+        - id: PostHogGroup
+          type: MenuLink
+          pageId: PostHogGroup
+        - id: PostHogIdentify
+          type: MenuLink
+          pageId: PostHogIdentify
+        - id: PostHogInit
+          type: MenuLink
+          pageId: PostHogInit
+        - id: PostHogOptIn
+          type: MenuLink
+          pageId: PostHogOptIn
+        - id: PostHogOptOut
+          type: MenuLink
+          pageId: PostHogOptOut
+        - id: PostHogPageview
+          type: MenuLink
+          pageId: PostHogPageview
+        - id: PostHogReloadFeatureFlags
+          type: MenuLink
+          pageId: PostHogReloadFeatureFlags
+        - id: PostHogReset
+          type: MenuLink
+          pageId: PostHogReset
+        - id: PostHogSetPersonProperties
+          type: MenuLink
+          pageId: PostHogSetPersonProperties
         - id: Request
           type: MenuLink
           pageId: Request
+        - id: RemoveLocalStorage
+          type: MenuLink
+          pageId: RemoveLocalStorage
         - id: Reset
           type: MenuLink
           pageId: Reset
@@ -982,6 +1080,9 @@
         - id: SetLocale
           type: MenuLink
           pageId: SetLocale
+        - id: SetLocalStorage
+          type: MenuLink
+          pageId: SetLocalStorage
         - id: SetState
           type: MenuLink
           pageId: SetState
@@ -1030,6 +1131,9 @@
         - id: _change_case
           type: MenuLink
           pageId: _change_case
+        - id: _cron
+          type: MenuLink
+          pageId: _cron
         - id: _date
           type: MenuLink
           pageId: _date
@@ -1042,6 +1146,9 @@
         - id: _eq
           type: MenuLink
           pageId: _eq
+        - id: _error
+          type: MenuLink
+          pageId: _error
         - id: _event
           type: MenuLink
           pageId: _event
@@ -1249,9 +1356,9 @@
         - id: :try
           type: MenuLink
           pageId: :try
-        # - id: :while # TODO: Add back when while control implemented
-        #   type: MenuLink
-        #   pageId: :while
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: migration
       type: MenuGroup
       properties:
@@ -1263,6 +1370,11 @@
           pageId: upgrade-guide
           properties:
             title: Upgrade Guide
+        - id: auth-upgrade
+          type: MenuLink
+          pageId: auth-upgrade
+          properties:
+            title: Auth Upgrade
         - id: v5-to-v6
           type: MenuLink
           pageId: v5-to-v6

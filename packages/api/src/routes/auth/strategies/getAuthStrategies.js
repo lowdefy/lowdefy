@@ -19,7 +19,7 @@ import createAuthStrategies from './createAuthStrategies.js';
 let strategies;
 
 // The strategy verifiers are constructed once per process at first use -
-// the server middleware tries them in config order on every request that
+// resolveAuthentication tries them in config order on every request that
 // resolves no session.
 function getAuthStrategies({ appMeta, authJson, logger, plugins, secrets }) {
   if (strategies) return strategies;

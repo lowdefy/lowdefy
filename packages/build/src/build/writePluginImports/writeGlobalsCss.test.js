@@ -160,15 +160,6 @@ test('writeGlobalsCss adds new tailwind entries alongside defaults', async () =>
   expect(css).toContain('--color-primary: var(--ant-color-primary);');
 });
 
-test('writeGlobalsCss throws ConfigError for styles.less', async () => {
-  mockExistsSync.mockImplementation((filePath) => filePath.endsWith('styles.less'));
-  const context = createContext();
-
-  await expect(writeGlobalsCss({ components: {}, context })).rejects.toThrow(
-    'styles.less is deprecated'
-  );
-});
-
 test('writeGlobalsCss does not emit warning when styles.less does not exist', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });

@@ -16,11 +16,12 @@
 
 import { RequestError, ServiceError } from '@lowdefy/errors';
 
+import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
   context,
-  { connectionProperties, endpointDepth, requestConfig, requestProperties, requestResolver }
+  { connectionProperties, endpointDepth, requestConfig, requestProperties, requestResolver, tenant }
 ) {
   const { blockId, endpointId, logger, pageId, payload } = context;
   // stepId for endpoint steps (after build), requestId for page requests
@@ -63,10 +64,17 @@ async function callRequestResolver(
       connection: connectionProperties,
       connectionId: requestConfig.connectionId,
       endpointId,
+      // The deployment's current environment ({ name, url, email, ... }) or null, so connection
+      // types can apply environment settings such as the email delivery filter.
+      environment: getCurrentEnvironment({ config: context.config }),
       pageId,
       payload,
       request: requestProperties,
       requestId: stepOrRequestId,
+      // The tenant verdict ({ field, value } or null/undefined) computed by
+      // resolveTenant - connection types implementing the scoping contract
+      // enforce it (stamp writes, merge filters, inject pipeline matches).
+      tenant: tenant ?? null,
     });
     return response;
   } catch (error) {

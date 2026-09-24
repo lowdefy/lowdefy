@@ -1,0 +1,4 @@
+id: main
+type: Box
+blocks:
+  _module.var: slots

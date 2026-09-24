@@ -13,6 +13,8 @@
 
 import useSWR from 'swr';
 
+import { serializer } from '@lowdefy/helpers';
+
 import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 
 // URLs whose config is server-resolved per request — learned from the fetched
@@ -28,6 +30,7 @@ function parseJsModule(text) {
 }
 
 export async function fetchPageConfig(url) {
+  const basePath = url.replace(/\/api\/page\/.*$/, '');
   // A stalled request (server restart mid-request, exhausted sockets) must
   // become a visible error, never an eternal Suspense fallback — the reload
   // recovery path cannot fire while the page tree is suspended.
@@ -48,6 +51,20 @@ export async function fetchPageConfig(url) {
   if (res.status === 404) {
     return null;
   }
+  if (res.status === 401 || res.status === 403) {
+    // 401: logged-out navigation to a protected page. 403: authorised but second
+    // factor not yet enrolled. Page renders a redirect screen and full-loads to
+    // the destination so it can return here afterwards. Returning a settled value
+    // (never a parked promise) keeps the SWR key healthy: if the navigation is
+    // dropped, the tab still recovers on the next reload event or via the manual
+    // link on the redirect screen.
+    const { redirect } = await res.json();
+    const authRedirect = redirect ?? `${basePath}/404`;
+    console.warn(
+      `Lowdefy dev: "${url}" returned ${res.status} - redirecting to "${authRedirect}".`
+    );
+    return { authRedirect };
+  }
   const data = await res.json();
   if (data?.buildError) {
     return data;
@@ -56,6 +73,11 @@ export async function fetchPageConfig(url) {
     return data;
   }
   if (!res.ok) {
+    // A Lowdefy error envelope is revived rather than flattened to its message,
+    // so the class, configKey and source survive to the error handler.
+    if (data?.['~e']) {
+      throw serializer.deserialize(data);
+    }
     throw new Error(data.message || 'Request error');
   }
 

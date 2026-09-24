@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import buildEndpointResult from '../../response/buildEndpointResult.js';
+import createWireProjection from '../../response/createWireProjection.js';
 import getEndpointConfig from '../endpoints/getEndpointConfig.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 import authorizeAgent from './authorizeAgent.js';
@@ -72,7 +73,11 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
   const resolverContext = {
     agentContext,
     i18n: context.i18n,
+    logger: context.logger,
     mode,
+    // The agent stream's error text reaches the end user and AgentChat config, so it takes
+    // the wire policy. Built here because the agent plugins cannot import @lowdefy/api.
+    wireErrorMessage: (error) => createWireProjection(context)(error).message,
     evaluateOperators: (input) =>
       context.evaluateOperators({
         input,

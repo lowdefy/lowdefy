@@ -38,7 +38,9 @@ const websocketHandler = upgradeWebSocket((c) => {
       connection?.close();
     },
     onError(event) {
-      context.logger.debug({ event: 'ws_error' }, String(event?.error ?? 'WebSocket error'));
+      // A transport fault, not routine traffic: visible at the default level with
+      // the error object attached so the cause is not reduced to a string.
+      context.logger.warn({ event: 'ws_error', err: event?.error }, 'WebSocket error.');
     },
   };
 });

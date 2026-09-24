@@ -32,6 +32,7 @@ beforeAll(async () => {
 
 import testContext from '../test-utils/testContext.js';
 import expectTerminates from '../test-utils/expectTerminates.js';
+import { resolveModuleManifests } from './registerModules.js';
 
 const mockReadConfigFile = jest.fn();
 
@@ -1637,6 +1638,7 @@ pages:
     mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
 
     await expectTerminates(buildModuleDefs({ context }), 4000, 'demand-only default hang');
+    await resolveModuleManifests({ context });
 
     expect(context.errors).toHaveLength(0);
     expect(context.modules['a'].manifest.pages[0].properties.value).toBe('supplied-value');
@@ -1648,6 +1650,11 @@ pages:
     mockFetchModules.mockResolvedValue(mockModulePaths(['a']));
 
     await expectTerminates(buildModuleDefs({ context }), 4000, 'demanded broken default hang');
+    await expectTerminates(
+      resolveModuleManifests({ context }),
+      4000,
+      'demanded broken default hang'
+    );
 
     expect(context.errors.length).toBeGreaterThan(0);
     expect(String(context.errors[0].message)).toContain('missing.yaml');
@@ -1715,6 +1722,7 @@ pages:
       mockFetchModules.mockResolvedValue(mockModulePaths2(['a', 'b']));
 
       await expectTerminates(buildModuleDefs({ context }), 4000, 'cross-entry ordering hang');
+      await resolveModuleManifests({ context });
 
       expect(context.errors).toEqual([]);
       expect(context.modules['a'].manifest.pages[0].blocks[0]).toEqual({

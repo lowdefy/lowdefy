@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "Auth strategy \"service-jwt\" claimMapping field \"attributes.__proto__\" uses reserved name \"__proto__\"."
+      ],
+      "errorContains": [
+        "Auth strategy \"service-jwt\" claimMapping field \"attributes.__proto__\" uses reserved name \"__proto__\".",
+        "lowdefy.yaml:33"
+      ]
+    }
+  ]
+}

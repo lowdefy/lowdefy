@@ -16,5 +16,11 @@
 
 export default {
   connections: ['Redis'],
+  // Non-scopable: the tenant wall is MongoDB-only, so Redis data sits
+  // outside the wall by this declaration - organization scoping, where a
+  // deployment needs it, is authored in the commands themselves.
+  connectionMetas: {
+    Redis: { tenant: false },
+  },
   requests: ['Redis'],
 };

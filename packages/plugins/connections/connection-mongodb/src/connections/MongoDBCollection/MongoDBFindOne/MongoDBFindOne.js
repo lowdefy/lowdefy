@@ -14,15 +14,26 @@
   limitations under the License.
 */
 
+import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbFindOne({ request, connection }) {
+async function MongodbFindOne({ request, connection, tenant }) {
   const deserializedRequest = deserialize(request);
-  const { query, options } = deserializedRequest;
+  const { options } = deserializedRequest;
+  let { query } = deserializedRequest;
+  if (tenant) {
+    query = applyTenantToFilter({ filter: query, tenant, position: 'a query' });
+  }
   const { collection } = await getCollection({ connection });
-  const res = await collection.findOne(query, options);
+  let res;
+  try {
+    res = await collection.findOne(query, options);
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBFindOne' });
+  }
   return serialize(res);
 }
 

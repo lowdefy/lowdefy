@@ -22,7 +22,6 @@ import {
   generateId,
   generateText,
   pruneMessages,
-  TypeValidationError,
   validateUIMessages,
 } from 'ai';
 
@@ -62,15 +61,15 @@ function dropEmptyMessages(messages) {
   return messages.filter((msg) => Array.isArray(msg.parts) && msg.parts.length > 0);
 }
 
-// What the client is told when a turn fails. TypeValidationError.message
-// embeds JSON.stringify(value) — for a UIMessage validation failure that is
-// the entire conversation, which the chat block then shows in a toast. The
-// full error is logged server-side before this is written to the stream.
-function clientErrorText(error) {
-  if (TypeValidationError.isInstance(error)) {
-    return 'The conversation could not be sent: a message failed validation.';
-  }
-  return error?.message ?? String(error);
+// What the client is told when a turn fails or a tool throws. The text reaches the end
+// user and AgentChat config (`_event: message`), so it takes the wire policy: the
+// author's message for a UserError or an auth refusal, the generic message otherwise. A
+// library's message can embed anything it saw - a TypeValidationError's embeds the whole
+// conversation. The full error is logged server-side.
+function createClientErrorText(context) {
+  return function clientErrorText(error) {
+    return context.wireErrorMessage(error);
+  };
 }
 
 // Concatenate the text parts of the first user message — used as the source
@@ -108,6 +107,10 @@ async function handleAgentChat({ connection, properties, context }) {
 
   const titleEnabled = agent.properties.generateTitle === true;
 
+  const clientErrorText = createClientErrorText(context);
+
+  // Every stream gets clientErrorText: the AI SDK's default onError writes a tool error or
+  // an in-stream error to the client raw.
   const stream = createUIMessageStream({
     onError: clientErrorText,
     execute: async ({ writer }) => {
@@ -155,7 +158,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             })
             .catch((error) => {
-              console.warn(`generateTitle failed: ${error.message}`);
+              context.logger.warn({ err: error }, 'generateTitle failed.');
             });
         }
       }
@@ -190,6 +193,7 @@ async function handleAgentChat({ connection, properties, context }) {
             // id: '' — see the createAgentUIStream call below.
             generateMessageId: generateId,
             onFinish: captureMessages,
+            onError: clientErrorText,
           });
         } else {
           // createAgentUIStream validates UIMessages, converts to ModelMessages,
@@ -213,6 +217,7 @@ async function handleAgentChat({ connection, properties, context }) {
             generateMessageId: generateId,
             onStepFinish: collectStep,
             onFinish: captureMessages,
+            onError: clientErrorText,
           });
         }
 
@@ -226,9 +231,9 @@ async function handleAgentChat({ connection, properties, context }) {
           writer.write(value);
         }
       } catch (error) {
-        // The client only sees the (possibly redacted) error text, so the fault
-        // is logged server-side before it is written to the stream.
-        console.error(`Agent stream failed: ${error.message}`);
+        // The client only ever sees the redacted error text, so the fault is
+        // logged server-side before it is written to the stream.
+        context.logger.error({ err: error }, 'Agent stream failed.');
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
       // Ensure the title (if any) is written before the stream closes.
@@ -259,7 +264,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            console.warn(`onFinish hook "${endpointId}" failed: ${error.message}`);
+            context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
           }
         }
       }

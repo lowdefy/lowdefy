@@ -24,6 +24,9 @@ function createNodeLogger({
   base = { pid: undefined, hostname: undefined },
   mixin,
   serializers,
+  // An explicit undefined replaces pino's own default rather than merging with it, and pino
+  // reads hooks.streamWrite on every write.
+  hooks = {},
   destination,
 } = {}) {
   return pino(
@@ -36,6 +39,7 @@ function createNodeLogger({
         err: (error) => serializer.serialize(error)?.['~e'] ?? error,
         ...serializers,
       },
+      hooks,
     },
     destination
   );

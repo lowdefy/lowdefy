@@ -10,7 +10,7 @@
 }): any
 ```
 
-The `_user` operator gets a value from the [`user`](/user-object) object. The `user` object contains the data in the user idToken if OpenID Connect authentication is configured and a user is logged in.
+The `_user` operator gets a value from the [`user`](/user-object) object — the caller Lowdefy resolves for the signed-in user in their active organization. It has a [fixed shape](/user-object); see that page for the available fields.
 
 #### Arguments
 
@@ -50,7 +50,7 @@ Returns: The entire `user` object.
 ###### Dot notation:
 Assuming user:
 ```yaml
-sub: abc123
+id: abc123
 name: User Name
 my_object:
   subfield: 'Value'
@@ -76,7 +76,7 @@ Returns: The value of `might_not_exist`, or `"Default value"`.
 ###### Block list indices:
 Assuming `user`:
 ```yaml
-sub: abc123
+id: abc123
 name: User Name
 my_array:
   - value: 0

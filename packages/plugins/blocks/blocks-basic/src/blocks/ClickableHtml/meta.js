@@ -20,8 +20,17 @@ export default {
   cssKeys: {
     element: 'The Html element.',
   },
+  hazards: [
+    {
+      id: 'html-style-stripped',
+      message:
+        'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Clicks are wired through data-event attributes instead of inline handlers.',
+      see: 'display-blocks/clickablehtml',
+    },
+  ],
   // Each clickable element names its event in a data-event attribute, so the
   // event names this block fires are authored in its html.
+  dynamicEvents: true,
   events: {
     onTextSelection:
       'Trigger action when text is selected and pass selected text to the event object.',

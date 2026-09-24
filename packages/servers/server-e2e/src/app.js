@@ -29,6 +29,7 @@ import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
 import sessionMockHandler from './routes/sessionMock.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -54,6 +55,7 @@ function createApp() {
   app.all('/api/usage', usageHandler);
   app.get('/api/websocket', websocketHandler);
   app.get('/api/page/*', apiPageHandler);
+  app.get('/api/user', userHandler);
 
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.

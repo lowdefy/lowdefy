@@ -17,19 +17,30 @@
 import { ServerParser } from '@lowdefy/operators';
 
 function createEvaluateOperators(context) {
-  const { appMeta, i18n, jsMap, operators, secrets, user } = context;
+  const { appMeta, i18n, jsMap, operators, organization, secrets, user } = context;
 
   const operatorsParser = new ServerParser({
     i18n,
     jsMap,
     lowdefyApp: appMeta,
     operators,
+    organization,
     secrets,
     user,
   });
-  function evaluateOperators({ arrayIndices, input, items, location, payload, state, steps }) {
+  function evaluateOperators({
+    arrayIndices,
+    error,
+    input,
+    items,
+    location,
+    payload,
+    state,
+    steps,
+  }) {
     const { output, errors } = operatorsParser.parse({
       arrayIndices,
+      error,
       input,
       items,
       location,

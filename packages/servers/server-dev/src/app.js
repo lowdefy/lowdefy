@@ -16,7 +16,6 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
-import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -39,13 +38,17 @@ import docsCheckpointsListHandler from './routes/docs/checkpointsList.js';
 import docsCheckpointsRevertHandler from './routes/docs/checkpointsRevert.js';
 import docsContentHandler from './routes/docs/content.js';
 import docsEvalOperatorHandler from './routes/docs/evalOperator.js';
+import docsEventsHandler from './routes/docs/events.js';
 import docsExamplesHandler from './routes/docs/examples.js';
 import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
 import docsInspectStateHandler from './routes/docs/inspectState.js';
+import docsJourneyHandler from './routes/docs/journey.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
+import docsRestartHandler from './routes/docs/restart.js';
+import docsRunEndpointHandler from './routes/docs/runEndpoint.js';
 import docsRunRequestHandler from './routes/docs/runRequest.js';
 import docsSnapshotStateHandler from './routes/docs/snapshotState.js';
 import docsStateCheckpointsListHandler from './routes/docs/stateCheckpointsList.js';
@@ -56,16 +59,22 @@ import docsScreenshotHandler from './routes/docs/screenshot.js';
 import docsSearchHandler from './routes/docs/search.js';
 import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
-import getAuthConfig from '../lib/server/auth/getAuthConfig.js';
+import getAuth from '../lib/server/auth/getAuth.js';
+import getStrategies from '../lib/server/auth/getStrategies.js';
+import getMockUser from '../lib/server/auth/getMockUser.js';
 import jitPageHandler from './routes/jitPage.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
 import rootHandler from './routes/root.js';
+import staleFlag from './middleware/staleFlag.js';
 import usageHandler from './routes/usage.js';
+import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -88,34 +97,53 @@ function createApp() {
   // /lowdefy-feedback is a reserved page-path prefix in dev, like /lowdefy-docs.
   app.post('/lowdefy-feedback', feedbackHandler);
 
-  // Auth config must be registered before the /lowdefy-docs routes: Hono
-  // middleware only applies to routes registered after it, and run-request/
-  // eval-operator build a full Lowdefy context whose getSession(c) reads the
-  // authConfig this middleware sets. It does not protect any route — it only
-  // makes the auth config available on the Hono context.
-  if (authJson.configured === true) {
-    app.use(
-      '*',
-      initAuthConfig(() => getAuthConfig({ logger }))
-    );
+  const mockUser = getMockUser();
+  if (authJson.configured === true && !mockUser) {
+    // Construct the BetterAuth instance and strategy verifiers at startup so
+    // config errors fail boot instead of the first request, and so the
+    // process-memoized singletons capture the base logger rather than the
+    // first request's rid-scoped child.
+    getAuth({ logger });
+    getStrategies({ logger });
   }
+
+  mountOauthDiscovery({
+    app,
+    auth: authJson.configured === true && !mockUser ? getAuth({ logger }) : null,
+  });
+  app.all('/.well-known/*', wellKnownFallbackHandler);
 
   // Docs and MCP endpoint for AI coding agents — always on in dev. Serves
   // schemas/examples/docs for every installed plugin (core and local) plus
   // the extracted core docs (@lowdefy/docs-content). Mounted outside /api/*
   // so it can't clash with user API endpoints; /lowdefy-docs is a reserved page
   // prefix in dev. The handlers need no auth protection or api context —
-  // they read build artifacts and node_modules directly — but run-request
-  // and eval-operator read the caller's session, hence initAuthConfig above.
+  // they read build artifacts and node_modules directly — but run-request,
+  // run-endpoint and eval-operator build a full Lowdefy context (createLowdefyContext),
+  // which resolves the caller from the request headers via resolveAuthentication.
+  // The MCP transport is registered before staleFlag on purpose: hono
+  // dispatches in registration order, so the stale middleware never sees a
+  // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
+  // tool result in createDocsMcpServer — merging fields into the envelope
+  // instead would put unknown members on a strictly-validated message.
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
+  // Flags every other docs response while the last build failed. Registered
+  // twice: hono's `/*` pattern does not match the bare path.
+  app.use('/lowdefy-docs', staleFlag());
+  app.use('/lowdefy-docs/*', staleFlag());
   app.get('/lowdefy-docs', docsIndexHandler);
   app.get('/lowdefy-docs/build-status', docsBuildStatusHandler);
+  // Push channel for non-MCP clients. Must sit above the `/lowdefy-docs/:kind`
+  // catch-all, which would otherwise treat "events" as a type kind.
+  app.get('/lowdefy-docs/events', docsEventsHandler);
   app.get('/lowdefy-docs/page-config/:pageId', docsPageConfigHandler);
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
+  app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
+  app.post('/lowdefy-docs/run-endpoint', docsRunEndpointHandler);
   app.get('/lowdefy-docs/app-map', docsAppMapHandler);
   app.get('/lowdefy-docs/checkpoints', docsCheckpointsListHandler);
   app.post('/lowdefy-docs/checkpoints', docsCheckpointsCreateHandler);
@@ -123,6 +151,7 @@ function createApp() {
   app.get('/lowdefy-docs/state-checkpoints', docsStateCheckpointsListHandler);
   app.post('/lowdefy-docs/state-checkpoints/snapshot', docsSnapshotStateHandler);
   app.post('/lowdefy-docs/state-checkpoints/load', docsLoadStateHandler);
+  app.post('/lowdefy-docs/restart', docsRestartHandler);
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs
   // and serves checkpoint parts for the ?_checkpoint bootstrap.
@@ -137,7 +166,18 @@ function createApp() {
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
 
   app.use('/api/*', apiContext());
-  app.use('/api/auth/*', authMiddleware());
+  // Unified dev get-session: createLowdefyContext resolves the mock or headless
+  // caller into context.user on every path, so read it here rather than
+  // re-deriving the precedence. context.user is only absent in the real-engine
+  // case (the developer's own browser), which must fall through to BetterAuth.
+  // Registered before the /api/auth/* mount so this exact path wins while every
+  // other auth route still reaches the engine.
+  app.get('/api/auth/get-session', async (c, next) => {
+    const context = c.get('lowdefyContext');
+    if (context.user) return c.json({ session: { id: 'dev' }, user: context.user });
+    return next();
+  });
+  app.use('/api/auth/*', authMiddleware({ logger }));
   app.get('/api/root', rootHandler);
   app.get('/api/page/*', jitPageHandler);
   app.all('/api/request/*', requestHandler);
@@ -152,6 +192,7 @@ function createApp() {
   app.all('/api/agent/*', bodyLimit({ maxSize: 10 * 1024 * 1024 }), agentHandler);
   app.all('/api/mcp', bodyLimit({ maxSize: 10 * 1024 * 1024 }), mcpHandler);
   app.get('/api/websocket', websocketHandler);
+  app.get('/api/user', userHandler);
 
   // User public assets (icons, images). Vite serves /client modules itself.
   app.use(
@@ -164,6 +205,10 @@ function createApp() {
 
   // Every page path renders the same shell — the client fetches config and
   // handles home/404 routing, exactly like the old dev pages router did.
+  // The context middleware runs here too (mirroring the production server)
+  // so the shell can inject the resolved caller — without it the client's
+  // _user never carries roles/organization_id under `lowdefy dev`.
+  app.use('/*', apiContext());
   app.get('/', (c) => renderDevPage(c, { basePath }));
   app.get('/:rest{.+}', (c) => renderDevPage(c, { basePath }));
 

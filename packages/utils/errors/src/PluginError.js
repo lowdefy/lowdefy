@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import readErrorCodes from './readErrorCodes.js';
+
 /**
  * Base error class for plugin failures (operators, actions, blocks, requests).
  *
@@ -62,6 +64,13 @@ class PluginError extends Error {
     this.received = received !== undefined ? received : cause?.received;
     this.location = location;
     this.configKey = configKey ?? cause?.configKey ?? null;
+
+    // Config branches on `code`/`statusCode` of the top-level error, which is
+    // this wrapper, so lift them from the plugin's error. One level only: each
+    // deeper cause is a node of its own and keeps its own codes.
+    const { code, statusCode } = readErrorCodes(cause);
+    if (code !== undefined) this.code = code;
+    if (statusCode !== undefined) this.statusCode = statusCode;
 
     // Location outputs (set by server-side resolution)
     this.source = null;

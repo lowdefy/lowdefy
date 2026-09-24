@@ -32,8 +32,6 @@ function buildImportsProd({ components, context }) {
     agents: buildImportClassProd(components.types.agents),
     auth: {
       adapters: buildImportClassProd(components.types.auth.adapters),
-      callbacks: buildImportClassProd(components.types.auth.callbacks),
-      events: buildImportClassProd(components.types.auth.events),
       providers: buildImportClassProd(components.types.auth.providers),
       strategies: buildImportClassProd(components.types.auth.strategies),
     },
@@ -42,6 +40,7 @@ function buildImportsProd({ components, context }) {
     icons: buildIconImports({ blocks, components, context, defaults: defaultIconsProd }),
     notifications: buildImportClassProd(components.types.notifications),
     requests: buildImportClassProd(components.types.requests),
+    steps: buildImportClassProd(components.types.steps),
     websockets: buildImportClassProd(components.types.websockets),
     operators: {
       client: buildImportClassProd(components.types.operators.client),

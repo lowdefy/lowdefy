@@ -20,13 +20,15 @@ import getPathSegments from '../lib/getPathSegments.js';
 
 // Triggered by Vercel Cron on the production deployment: an HTTP GET to
 // /api/cron-forward/<environment>/<endpointId>, registered by `lowdefy vercel-output` for the
-// schedules of every environment declared with a url in config.cron.environments. Vercel fires crons
+// schedules of every environment declared with a cron.secret in config.environments. Vercel fires crons
 // only on production, so production pings that environment's own /api/cron/<endpointId> (with the
 // environment's CRON_SECRET) and answers immediately. Same transport auth as cron (CRON_SECRET,
 // fails closed).
 async function cronForwardHandler(c) {
   if (c.req.method !== 'GET') {
-    throw new Error('Only GET requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
 

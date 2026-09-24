@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { ConfigError, RequestError } from '@lowdefy/errors';
+import { RequestError } from '@lowdefy/errors';
 
 import buildEndpointResult from './buildEndpointResult.js';
 
@@ -40,7 +40,7 @@ test('buildEndpointResult keeps the error status and reports failure', () => {
   const result = buildEndpointResult({}, { error, response: null, status: 'error' });
   expect(result.status).toBe('error');
   expect(result.success).toBe(false);
-  expect(result.error['~e'].message).toBe('Request failed.');
+  expect(result.error['~e'].name).toBe('RequestError');
 });
 
 test('buildEndpointResult keeps the reject status and reports failure', () => {
@@ -49,50 +49,69 @@ test('buildEndpointResult keeps the reject status and reports failure', () => {
   expect(result.success).toBe(false);
 });
 
-test('buildEndpointResult redacts the error field', () => {
+test('buildEndpointResult sends the error field as the wire error', () => {
   const error = new RequestError('Request failed.', {
     received: { headers: { authorization: 'Bearer super-secret' } },
   });
-  const result = buildEndpointResult({}, { error, response: null, status: 'error' });
-  expect(result.error['~e'].received).toBeUndefined();
-  expect(result.error['~e'].stack).toBeUndefined();
+  const result = buildEndpointResult(
+    { mode: 'prod', rid: 'rid-1' },
+    { error, response: null, status: 'error' }
+  );
+  expect(result.error).toEqual({
+    '~e': {
+      name: 'RequestError',
+      message: 'Something went wrong.',
+      requestId: 'rid-1',
+      isLowdefyError: true,
+    },
+  });
   expect(JSON.stringify(result)).not.toContain('super-secret');
 });
 
-test('buildEndpointResult redacts an error nested inside the response value', () => {
+test('buildEndpointResult puts devError inside the error field in dev only', () => {
+  const error = new RequestError('Request failed.');
+  const dev = buildEndpointResult(
+    { mode: 'dev', rid: 'rid-1' },
+    { error, response: { partial: true }, status: 'error' }
+  );
+  const prod = buildEndpointResult(
+    { mode: 'prod', rid: 'rid-1' },
+    { error, response: { partial: true }, status: 'error' }
+  );
+
+  expect(dev.error.devError['~e'].message).toBe('Request failed.');
+  expect(dev.error.devError['~e'].requestId).toBe('rid-1');
+  expect(Object.keys(dev)).toEqual(['error', 'response', 'status', 'success']);
+  expect(dev.response).toEqual({ partial: true });
+  expect('devError' in prod.error).toBe(false);
+});
+
+test('buildEndpointResult gives an error nested in the response value the wire shape and no devError', () => {
+  const configDirectory = path.resolve('/app/config');
   const nested = new RequestError('Step failed.', {
+    configKey: 'key-1',
     received: { headers: { authorization: 'Bearer super-secret' } },
   });
+  nested.source = `${path.resolve(configDirectory, 'endpoints/sync.yaml')}:8`;
   // makeReplacer wraps any Error it meets anywhere in a value, so a routine that
-  // returns one inside its response value is covered by the same policy - the
+  // returns one inside its response value is covered by the same projection - the
   // response reaches the same audience as the error field.
   const result = buildEndpointResult(
-    {},
+    { mode: 'dev', rid: 'rid-1', configDirectory },
     { error: null, response: { steps: { attempt: { error: nested } } }, status: 'return' }
   );
 
-  expect(result.response.steps.attempt.error['~e'].message).toBe('Step failed.');
-  expect(result.response.steps.attempt.error['~e'].received).toBeUndefined();
-  expect(result.response.steps.attempt.error['~e'].stack).toBeUndefined();
+  expect(result.response.steps.attempt.error).toEqual({
+    '~e': {
+      name: 'RequestError',
+      message: 'Something went wrong.',
+      configKey: 'key-1',
+      requestId: 'rid-1',
+      isLowdefyError: true,
+    },
+  });
   expect(JSON.stringify(result)).not.toContain('super-secret');
-});
-
-test('buildEndpointResult normalises source on an error nested inside the response value', () => {
-  const configDirectory = path.resolve('/app/config');
-  const nested = new ConfigError('Step failed.');
-  nested.source = `${path.resolve(configDirectory, 'endpoints/sync.yaml')}:8`;
-
-  const result = buildEndpointResult(
-    { configDirectory },
-    { error: null, response: { steps: { attempt: nested } }, status: 'return' }
-  );
-
-  // The response field takes the source normalisation too, so an error riding in a
-  // response cannot carry an absolute server path the error field would have
-  // stripped.
-  expect(result.response.steps.attempt['~e'].source).toBe(
-    `${path.join('endpoints', 'sync.yaml')}:8`
-  );
+  expect(JSON.stringify(result)).not.toContain('devError');
   expect(JSON.stringify(result)).not.toContain(configDirectory);
 });
 
@@ -101,12 +120,10 @@ test('buildEndpointResult leaves a source value in author response data alone', 
   const authorData = { source: path.resolve(configDirectory, 'uploads/report.csv') };
 
   const result = buildEndpointResult(
-    { configDirectory },
+    { mode: 'dev', configDirectory },
     { error: null, response: authorData, status: 'return' }
   );
 
-  // Not an error node, so it is the app's own value and must survive verbatim -
-  // the normalisation keys on the error shape, not on the key name.
   expect(result.response.source).toBe(authorData.source);
 });
 

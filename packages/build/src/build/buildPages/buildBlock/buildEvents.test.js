@@ -1082,6 +1082,179 @@ test('throw on :switch case with an unknown key', () => {
   );
 });
 
+test('SetActiveOrganization action wired under the default pinned policy fails the build', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
+  );
+});
+
+test('SetActiveOrganization action wired under an explicit pinned policy fails the build', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
+  );
+});
+
+test('SetActiveOrganization action wired under the tenant policy builds cleanly', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active',
+                  type: 'SetActiveOrganization',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('non-org-client actions do not trigger the pinned policy build error', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'reset',
+                  type: 'Reset',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
+test('SetActiveOrganization action wired under the default pinned policy fails the build', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active_organization',
+                  type: 'SetActiveOrganization',
+                  params: { organizationId: 'org-1' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    'SetActiveOrganization action on page "page_1" is not allowed under the "pinned" organizations policy - the per-organization client endpoints are disabled for a pinned deployment.'
+  );
+});
+
+test('SetActiveOrganization action wired under the tenant policy builds cleanly', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'set_active_organization',
+                  type: 'SetActiveOrganization',
+                  params: { organizationId: 'org-1' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).not.toThrow();
+});
+
 test('event shortcut that is a reserved name throws a located error', () => {
   const components = {
     pages: [

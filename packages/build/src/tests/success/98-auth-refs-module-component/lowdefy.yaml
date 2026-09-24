@@ -1,0 +1,32 @@
+# 98: Auth block providers via a module exported component
+# The app auth: block's providers is a cross-module component ref. The module
+# exports an oauth providers array. The auth config projection must reflect the
+# module-contributed providers, and an app page reading _build.authConfig:
+# providers must resolve to them.
+lowdefy: local
+name: Auth Refs Module Component App
+
+modules:
+  - id: authproviders
+    source: 'file:modules/authproviders'
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_refs_module_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  emailAndPassword:
+    enabled: true
+  providers:
+    _ref:
+      module: authproviders
+      component: oauth-providers
+
+pages:
+  - id: login
+    type: Box
+    properties:
+      providers:
+        _build.authConfig: providers

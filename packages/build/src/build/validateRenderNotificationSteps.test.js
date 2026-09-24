@@ -117,3 +117,32 @@ test('validateRenderNotificationSteps skips steps with operator notificationIds'
   };
   expect(() => validateRenderNotificationSteps({ components, context })).not.toThrow();
 });
+
+test('validateRenderNotificationSteps collects an error for every unknown notification reference', () => {
+  const context = { notificationIds: new Set(), errors: [], keyMap: {} };
+  const components = {
+    api: [
+      {
+        endpointId: 'e1',
+        routine: [
+          {
+            type: 'RenderNotification',
+            stepId: 's1',
+            properties: { notificationId: 'n1' },
+            '~k': 'k1',
+          },
+          {
+            type: 'RenderNotification',
+            stepId: 's2',
+            properties: { notificationId: 'n2' },
+            '~k': 'k2',
+          },
+        ],
+      },
+    ],
+  };
+  validateRenderNotificationSteps({ components, context });
+  expect(context.errors.length).toBe(2);
+  expect(context.errors[0].configKey).toBe('k1');
+  expect(context.errors[1].configKey).toBe('k2');
+});

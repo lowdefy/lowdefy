@@ -1,0 +1,83 @@
+# The app-owned CRM contact collection (user-contacts) the merge-on-signup
+# hooks match against. Contacts are created with string _ids so the id lands
+# on the user's first-class contactId field (stored as the contact_id
+# column, read as _user.contact_id) without ObjectId conversion.
+id: contacts
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+requests:
+  - id: list_contacts
+    type: MongoDBFind
+    connectionId: contacts_db
+    properties:
+      query: {}
+      options:
+        limit: 50
+  - id: create_contact
+    type: MongoDBInsertOne
+    connectionId: contacts_db
+    payload:
+      name:
+        _state: contact_name
+      email:
+        _state: contact_email
+    properties:
+      doc:
+        _id:
+          _uuid: true
+        name:
+          _payload: name
+        email:
+          _payload: email
+        createdAt:
+          _date: now
+events:
+  onInit:
+    - id: fetch_contacts
+      type: Request
+      params: list_contacts
+blocks:
+  - id: contacts_title
+    type: Title
+    properties:
+      content: Contacts (user-admin)
+      level: 2
+  - id: contacts_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for contact in contacts %}
+              <li><b>{{ contact.email }}</b> - {{ contact.name }} (contact id:
+              <code>{{ contact._id }}</code>)</li>
+            {% endfor %}
+            </ul>
+          on:
+            contacts:
+              _request: list_contacts
+  - id: contact_name
+    type: TextInput
+    properties:
+      title: Name
+  - id: contact_email
+    type: TextInput
+    properties:
+      title: Email
+  - id: create_contact_button
+    type: Button
+    properties:
+      title: Create contact
+      block: true
+    events:
+      onClick:
+        - id: insert_contact
+          type: Request
+          params: create_contact
+        - id: refresh_contacts
+          type: Request
+          params: list_contacts

@@ -1,0 +1,79 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: PostHogInit
+    pageTitle: PostHogInit
+    filePath: actions/PostHogInit.yaml
+    types: |
+      ```
+      (params: {
+        apiKey?: string,
+        apiHost?: string,
+        options?: object,
+        debug?: boolean,
+        enabled?: boolean,
+      }): Promise<null>
+      ```
+    description: |
+      The `PostHogInit` action downloads and initialises the [PostHog](https://posthog.com) `posthog-js` browser SDK. Every other PostHog action does nothing until it has run, so run it from the `onInit` event of every page, sharing the actions between pages with `_ref`.
+
+      `PostHogInit` is idempotent: the first call loads PostHog, and later calls with the same `apiKey` do nothing. Calling it with a different `apiKey` throws, because a second PostHog instance would split the session. With `enabled: false`, `posthog-js` is never downloaded and every other PostHog action becomes a silent no-op. A later call with `enabled: true` still loads PostHog; a call with `enabled: false` after PostHog was loaded throws.
+
+      Every event carries the deployment environment: when the app declares [`config.environments`](/lowdefy-schema), `PostHogInit` registers the current environment's name (`LOWDEFY_ENVIRONMENT`) as the `environment` super property, so staging and production events can be told apart in one PostHog project.
+      
+      An environment with `posthog: { enabled: false }` in `config.environments` switches PostHog off there: `PostHogInit` behaves as `enabled: false` whatever its params say, needs no `apiKey`, and every other PostHog action is a no-op.
+
+      If `posthog-js` fails to download, for example on a flaky network, a warning is logged to the browser console and the other PostHog actions do nothing.
+
+      The action is part of the [`@lowdefy/plugin-posthog`](/PostHog) plugin, which is included by default. See the [PostHog guide](/PostHog) for how the actions fit together.
+    params: |
+      ###### object
+        - `apiKey: string`: __Required__ unless `enabled` is `false` - The PostHog project API key. This is a public, write only key that is meant to ship in the browser bundle, so read it with [`_build.env`](/_build). Never use a personal API key here.
+        - `apiHost: string`: The PostHog ingestion host. Defaults to `https://us.i.posthog.com`. Use `https://eu.i.posthog.com` for the EU cloud, or the host of a self hosted instance.
+        - `options: object`: Passed through to `posthog.init` as its config object. Set `capture_pageview: history_change` to capture a pageview on every client side navigation. Other common options are `person_profiles`, `capture_pageleave`, `autocapture`, `disable_session_recording`, `persistence` and `opt_out_capturing_by_default`. See the [posthog-js config reference](https://posthog.com/docs/libraries/js/config).
+        - `debug: boolean`: Log everything PostHog does to the browser console.
+        - `enabled: boolean`: Set to `false` to skip loading PostHog. Defaults to `true`.
+    response: |
+      `null`, once `posthog-js` has loaded.
+    examples: |
+      ###### Initialise PostHog on every page:
+      ```yaml
+      # shared/posthog_init.yaml
+      - id: init_posthog
+        type: PostHogInit
+        params:
+          apiKey:
+            _build.env: POSTHOG_API_KEY
+          enabled:
+            _build.ne:
+              - _build.env: POSTHOG_API_KEY
+              - null
+          options:
+            capture_pageview: history_change
+            person_profiles: identified_only
+      ```
+
+      ```yaml
+      # pages/reports.yaml
+      id: reports
+      type: PageHeaderMenu
+      events:
+        onInit:
+          _ref: shared/posthog_init.yaml
+      ```
+
+      With `POSTHOG_API_KEY` unset, for example in local development, `enabled` is `false` and PostHog is never loaded.

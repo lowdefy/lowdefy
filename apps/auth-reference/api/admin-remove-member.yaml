@@ -1,0 +1,13 @@
+# Role-gated admin step endpoint (see admin-list-users.yaml for the model).
+# Removes the member row only - the user keeps their account and any other
+# memberships. Removing the last owner fails (last-owner protection).
+id: admin-remove-member
+type: Api
+routine:
+  - id: remove_member
+    type: RemoveMember
+    properties:
+      memberIdOrEmail:
+        _payload: memberIdOrEmail
+  - ':return':
+      _step: remove_member

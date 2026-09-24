@@ -25,20 +25,6 @@ async function writeAuthImports({ components, context }) {
     })
   );
   await context.writeBuildArtifact(
-    'plugins/auth/callbacks.js',
-    generateImportFile({
-      imports: components.imports.auth.callbacks,
-      importPath: 'auth/callbacks',
-    })
-  );
-  await context.writeBuildArtifact(
-    'plugins/auth/events.js',
-    generateImportFile({
-      imports: components.imports.auth.events,
-      importPath: 'auth/events',
-    })
-  );
-  await context.writeBuildArtifact(
     'plugins/auth/providers.js',
     generateImportFile({
       imports: components.imports.auth.providers,

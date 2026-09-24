@@ -29,6 +29,7 @@
   "type": "module",
   "exports": {
     "./connections": "./dist/connections.js",
+    "./send": "./dist/connections/SMTP/send.js",
     "./types": "./dist/types.js",
     "./transportSchema": "./dist/connections/SMTP/transportSchema.js"
   },
@@ -43,7 +44,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "6.0.0",
-    "nodemailer": "9.0.3"
+    "nodemailer": "9.1.1"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

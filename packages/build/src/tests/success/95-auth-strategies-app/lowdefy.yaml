@@ -1,8 +1,17 @@
-# 95: API Auth Strategies Application
+# 95: Strategies-only auth app - API auth strategies with no database and
+# no login method (auth-upgrade phase 4). strategies.length > 0 counts as
+# the authentication mechanism, so this block is validly configured.
+name: auth-strategies-app
 lowdefy: local
-name: Auth Strategies App
 
 auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+
+  roles:
+    - id: partner
+    - id: api-user
+
   strategies:
     - id: partner-access
       type: apiKey
@@ -11,8 +20,13 @@ auth:
           - id: acme
             value:
               _secret: PARTNER_KEY_ACME
+          - value:
+              _secret: PARTNER_KEY_UNNAMED
       roles:
         - partner
+      attributes:
+        branches: [north, east]
+
     - id: service-jwt
       type: jwt
       properties:
@@ -20,11 +34,28 @@ auth:
           _secret: JWT_SIGNING_SECRET
         algorithms:
           - HS256
+        issuer: https://auth.example.test
+        audience: strategies-app-api
+        claimMapping:
+          id: sub
+          email: email
+          roles: roles
+      roles:
+        - api-user
+
+    - id: external-idp
+      type: jwt
+      properties:
+        jwksUri: https://idp.example.test/.well-known/jwks.json
+        algorithms:
+          - RS256
+        issuer: https://idp.example.test
+        audience: strategies-app-api
         claimMapping:
           id: sub
           roles: realm_access.roles
-      attributes:
-        team: services
+          attributes.branches: resource_access.branches
+
   api:
     protected: true
     public:
@@ -32,6 +63,8 @@ auth:
     roles:
       partner:
         - partner-data
+      api-user:
+        - service-data
 
 api:
   - id: health
@@ -39,11 +72,20 @@ api:
     routine:
       - ':return':
           ok: true
+
   - id: partner-data
     type: Api
     routine:
       - ':return':
           data: partner-report
+          caller:
+            _user: id
+
+  - id: service-data
+    type: Api
+    routine:
+      - ':return':
+          data: service-report
 
 pages:
   - id: home
@@ -52,4 +94,4 @@ pages:
       - id: title
         type: Title
         properties:
-          content: Auth Strategies App
+          content: Strategies-only app

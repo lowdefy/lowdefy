@@ -58,8 +58,6 @@ function createContext({
       agents: createCounter(),
       auth: {
         adapters: createCounter(),
-        callbacks: createCounter(),
-        events: createCounter(),
         providers: createCounter(),
         strategies: createCounter(),
       },
@@ -67,6 +65,7 @@ function createContext({
       connections: createCounter(),
       notifications: createCounter(),
       requests: createCounter(),
+      steps: createCounter(),
       websockets: createCounter(),
       controls: createCounter(),
       operators: {

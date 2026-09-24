@@ -28,7 +28,7 @@ const basePath = lowdefyConfig.basePath ?? '';
 // getStaticProps. The home redirect logic lives here, not at the route level.
 async function renderPage(c, { pageId, status = 200 }) {
   const context = c.get('lowdefyContext');
-  const { logger, session } = context;
+  const { logger, user } = context;
 
   let resolvedPageId = pageId;
   const rootConfig = await getRootConfig(context);
@@ -42,12 +42,12 @@ async function renderPage(c, { pageId, status = 200 }) {
     resolvedPageId = home.pageId;
   }
 
-  const pageConfig = await getPageConfig(context, {
+  const result = await getPageConfig(context, {
     pageId: resolvedPageId,
     urlQuery: c.req.query(),
   });
 
-  if (!pageConfig) {
+  if (result.status !== 'ok') {
     if (resolvedPageId === '404') {
       // No 404 page in the build — return a plain 404 rather than redirecting in a loop.
       return c.text('Page not found.', 404);
@@ -55,6 +55,8 @@ async function renderPage(c, { pageId, status = 200 }) {
     logger.info({ event: 'redirect_page_not_found', pageId: resolvedPageId });
     return c.redirect(`${basePath}/404`, 302);
   }
+
+  const { pageConfig } = result;
 
   logger.info({ event: 'page_view', pageId: resolvedPageId });
 
@@ -67,7 +69,7 @@ async function renderPage(c, { pageId, status = 200 }) {
       basePath,
       pageConfig,
       rootConfig,
-      session: session ?? null,
+      user: user ?? null,
     },
     themeConfig,
     title: pageConfig.properties?.title ?? resolvedPageId,

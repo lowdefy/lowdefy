@@ -25,6 +25,7 @@ import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js'
 import validateLinkReferences from '../buildPages/validateLinkReferences.js';
 import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
 import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
+import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
 import validateStateReferences from '../buildPages/validateStateReferences.js';
 import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
 
@@ -39,6 +40,7 @@ function buildPages({ components, context }) {
   context.callApiActionRefs = [];
   context.websocketActionRefs = [];
   context.dynamicBlockRefs = [];
+  context.orgClientActionRefs = [];
 
   // Track which pages failed to build so we skip them in validation
   const failedPageIndices = new Set();
@@ -53,10 +55,7 @@ function buildPages({ components, context }) {
       }
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-      if (
-        error instanceof ConfigError &&
-        shouldSuppressBuildCheck(error, context.keyMap)
-      ) {
+      if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
         return;
       }
       // Collect error object if context.errors exists, otherwise throw (for backward compat with tests)
@@ -83,6 +82,14 @@ function buildPages({ components, context }) {
   validateCallApiRefs({
     callApiActionRefs: context.callApiActionRefs,
     endpointConfigs,
+    context,
+  });
+
+  // Fail the build when a per-org client action is wired under the "pinned"
+  // organizations policy (the endpoints are disabled there).
+  validateOrgClientActionRefs({
+    orgClientActionRefs: context.orgClientActionRefs,
+    policy: components.auth?.organizations?.policy ?? 'pinned',
     context,
   });
 

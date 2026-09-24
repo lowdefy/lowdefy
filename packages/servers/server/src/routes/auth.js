@@ -14,24 +14,23 @@
   limitations under the License.
 */
 
-import { authHandler } from '@hono/auth-js';
-
 import authJson from '../../lib/build/auth.js';
+import getAuth from '../../lib/server/auth/getAuth.js';
 
-// Replaces pages/api/auth/[...nextauth].js. Hono routes HEAD requests through
-// GET handlers, so the corporate-email pre-check branch must live inside the
-// middleware, before delegating to the Auth.js handler. See:
-// https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-function authMiddleware() {
-  const handler = authJson.configured === true ? authHandler() : null;
-  return async function auth(c, next) {
+// Mounts BetterAuth's Web Standard handler on /api/auth/*. Hono routes HEAD
+// requests through GET handlers, so HEAD short-circuits before the handler -
+// corporate email link-checkers pre-fetch magic-link and verification URLs
+// with HEAD, and letting those reach the handler would consume the one-time
+// token before the user clicks.
+function authMiddleware({ logger }) {
+  return async function auth(c) {
     if (authJson.configured !== true) {
       return c.json({ message: 'Auth not configured' }, 404);
     }
     if (c.req.method === 'HEAD') {
       return c.body(null, 200);
     }
-    return handler(c, next);
+    return getAuth({ logger }).handler(c.req.raw);
   };
 }
 

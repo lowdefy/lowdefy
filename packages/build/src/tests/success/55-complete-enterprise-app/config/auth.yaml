@@ -1,22 +1,22 @@
+secret:
+  _secret: BETTER_AUTH_SECRET
+database:
+  id: enterprise_auth_db
+  type: MongoDBAuthAdapter
+  properties: {}
+emailAndPassword:
+  enabled: true
+roles:
+  - id: admin
+  - id: sales
 providers:
   - id: google
-    type: GoogleProvider
+    type: Google
     properties:
       clientId:
         _secret: GOOGLE_CLIENT_ID
       clientSecret:
         _secret: GOOGLE_CLIENT_SECRET
-  - id: credentials
-    type: CredentialsProvider
-    properties:
-      name: Enterprise Login
-      credentials:
-        email:
-          label: Email
-          type: email
-        password:
-          label: Password
-          type: password
 pages:
   protected: true
   public:
@@ -29,19 +29,5 @@ pages:
       - customers
       - customer-detail
       - orders
-callbacks:
-  - id: jwt
-    type: JwtCallback
-  - id: session
-    type: SessionCallback
 session:
-  maxAge: 28800
-theme:
-  colorScheme: light
-  brandColor: '#1890ff'
-  logo: https://enterprise.com/logo.png
-userFields:
-  id: sub
-  email: email
-  name: name
-  roles: roles
+  expiresIn: 28800

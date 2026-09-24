@@ -15,6 +15,9 @@
 */
 
 import * as Sentry from '@sentry/node';
+import { type } from '@lowdefy/helpers';
+
+import { serializeErrorForLog } from '../log/logErrorProjection.js';
 
 function captureSentryError({ error, context, configLocation }) {
   // No-op if Sentry not initialized (DSN not set)
@@ -28,6 +31,10 @@ function captureSentryError({ error, context, configLocation }) {
   // Add Lowdefy-specific context
   if (context?.pageId) {
     tags.pageId = context.pageId;
+  }
+
+  if (!type.isNone(context?.rid)) {
+    tags.requestId = context.rid;
   }
 
   if (error?.blockId) {
@@ -47,6 +54,11 @@ function captureSentryError({ error, context, configLocation }) {
   if (error?.configKey) {
     extra.configKey = error.configKey;
   }
+
+  // Sentry's own serialization of the exception carries only names, messages and stacks, so
+  // the log's projection is what gives Sentry the error's other fields - the same ones the log
+  // keeps, with the library fields it drops left out.
+  extra.error = serializeErrorForLog(error);
 
   Sentry.captureException(error, {
     tags,

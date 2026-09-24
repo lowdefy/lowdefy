@@ -17,23 +17,21 @@
 import { logClientError } from '@lowdefy/api';
 
 import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
+
+const guardSameOrigin = createSameOriginGuard();
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
 
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
-    return c.json({ error: 'Forbidden' }, 403);
+  const forbidden = guardSameOrigin(c);
+  if (forbidden) {
+    return forbidden;
   }
 
   const body = await c.req.json();

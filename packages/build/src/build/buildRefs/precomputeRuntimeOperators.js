@@ -33,6 +33,7 @@ function precomputeRuntimeOperators({ context, input, refDef }) {
     operatorPrefix: '_',
     env: process.env,
     lowdefyApp: context.appMeta,
+    authConfig: context.authConfigProjection,
     dynamicIdentifiers,
     typeNames,
   });

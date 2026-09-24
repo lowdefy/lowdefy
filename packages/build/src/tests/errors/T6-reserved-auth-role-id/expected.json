@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": [
+        "is a reserved name"
+      ],
+      "errorContains": [
+        "Auth role id \"__proto__\" is a reserved name and cannot be used as a role id.",
+        "lowdefy.yaml:25"
+      ]
+    }
+  ]
+}
