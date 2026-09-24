@@ -55,7 +55,7 @@ Set `LOWDEFY_SECRET_BETTER_AUTH_SECRET` to a secure random string (`openssl rand
 
 ### 3. Pin the canonical URL with `BETTER_AUTH_URL`
 
-Set the `BETTER_AUTH_URL` environment variable to your app's canonical origin (e.g. `https://app.example.com`). Auth builds password-reset, magic-link and email-verification links — and its CSRF origin allowlist — from this value. When it is pinned, those links and origins are fixed. When it is unset, the host is derived from each incoming request, so a spoofed `Host` / `X-Forwarded-Host` header can steer a reset email to an attacker-controlled link. Pinning it is strongly recommended for any production deployment. This replaces the old `NEXTAUTH_URL` variable.
+Set the `BETTER_AUTH_URL` environment variable to your app's canonical origin (e.g. `https://app.example.com`), or declare it once as the current environment's `url` in [`config.environments`](/lowdefy-schema). Auth builds password-reset, magic-link and email-verification links — and its CSRF origin allowlist — from this value. When it is pinned, those links and origins are fixed. When it is unset, the host is derived from each incoming request, so a spoofed `Host` / `X-Forwarded-Host` header can steer a reset email to an attacker-controlled link. Pinning it is strongly recommended for any production deployment. This replaces the old `NEXTAUTH_URL` variable.
 
 ### 4. Add `auth.database`
 

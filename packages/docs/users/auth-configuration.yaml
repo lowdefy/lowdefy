@@ -46,7 +46,7 @@ _ref:
                     _secret: BETTER_AUTH_SECRET
                 ```
 
-                Also set the `BETTER_AUTH_URL` environment variable to the app's canonical origin — auth builds password-reset, magic-link and verification links, and its CSRF origin allowlist, from it. See the [migration guide](/auth-upgrade#3-pin-the-canonical-url-with-better-auth-url).
+                Also pin the app's canonical origin — the `url` of the current environment in [`config.environments`](/lowdefy-schema), or the `BETTER_AUTH_URL` environment variable, which wins — auth builds password-reset, magic-link and verification links, and its CSRF origin allowlist, from it. See the [migration guide](/auth-upgrade#3-pin-the-canonical-url-with-better-auth-url).
 
                 ## Database
 

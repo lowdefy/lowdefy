@@ -22,37 +22,44 @@ import getEndpointConfig from './getEndpointConfig.js';
 import getEnvironmentSchedules from './getEnvironmentSchedules.js';
 import scheduleBackground from './scheduleBackground.js';
 
-// Vercel fires cron jobs only on the production deployment, so the schedules of every other
-// environment are registered there as /api/cron-forward/<environment>/<endpointId> jobs. When one
-// fires, this pings the environment's own /api/cron/<endpointId> with that environment's
-// CRON_SECRET (a Lowdefy secret named in config.cron.environments) so the environment runs its own
-// code, and answers Vercel immediately: the ping is fire-and-forget, kept alive by scheduleBackground
-// and bounded by the function duration, and its outcome exists only in the logs.
+// Vercel fires cron jobs only on the production deployment, so the schedules of every environment
+// with a cron.secret are registered there as /api/cron-forward/<environment>/<endpointId> jobs. When
+// one fires, this pings the environment's own /api/cron/<endpointId> at its url with that
+// environment's CRON_SECRET (the Lowdefy secret named by config.environments.<env>.cron.secret) so
+// the environment runs its own code, and answers Vercel immediately: the ping is fire-and-forget,
+// kept alive by scheduleBackground and bounded by the function duration, and its outcome exists only
+// in the logs.
 async function forwardScheduledEndpoint(context, { environment, endpointId, cron }) {
   const { config, logger, secrets } = context;
 
-  const target = config?.cron?.environments?.[environment];
+  const target = config?.environments?.[environment];
   if (!type.isObject(target)) {
     throw new ConfigError(
-      `Cron environment "${environment}" is not declared in lowdefy.config.cron.environments.`
+      `Cron environment "${environment}" is not declared in config.environments.`
     );
   }
-  if (type.isUndefined(target.url)) {
+  if (environment === config.environment) {
     throw new ConfigError(
-      `Cron environment "${environment}" has no url to forward to: it is the environment that runs the crons.`
+      `Cron environment "${environment}" is this deployment's own environment: its crons run here, not forwarded.`
     );
   }
-  if (target.enabled === false) {
+  if (target.cron?.enabled === false) {
     throw new ConfigError(`Cron environment "${environment}" is disabled.`);
   }
-  const secret = secrets?.[target.secret];
+  const secretName = target.cron?.secret;
+  if (type.isUndefined(secretName)) {
+    throw new ConfigError(
+      `Cron environment "${environment}" has no cron.secret: crons are only forwarded to environments with one.`
+    );
+  }
+  const secret = secrets?.[secretName];
   if (!type.isString(secret) || secret === '') {
     throw new ConfigError(
-      `Secret "${target.secret}" holding the CRON_SECRET of cron environment "${environment}" is not set. Set the LOWDEFY_SECRET_${target.secret} environment variable on this deployment.`
+      `Secret "${secretName}" holding the CRON_SECRET of cron environment "${environment}" is not set. Set the LOWDEFY_SECRET_${secretName} environment variable on this deployment.`
     );
   }
 
-  // The same build is deployed to every environment, so the local artifact says whether the target
+  // Every environment builds from the same config, so the local artifact says whether the target
   // declares the firing schedule: fail here with a config error instead of having the target 500.
   const endpointConfig = await getEndpointConfig(context, { endpointId });
   const schedules = getEnvironmentSchedules({ endpointConfig, environment });

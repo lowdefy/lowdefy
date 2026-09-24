@@ -400,6 +400,7 @@ test('deserialize inputs', async () => {
           connectionProperty: 'connectionProperty',
         },
         connectionId: 'testConnection',
+        environment: null,
         pageId: 'pageId',
         requestId: 'requestId',
         blockId: 'contextId',

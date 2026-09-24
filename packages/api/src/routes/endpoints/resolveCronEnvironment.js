@@ -19,14 +19,15 @@ import { ConfigError } from '@lowdefy/errors';
 
 // The environment a cron run resolves its schedules for. A forwarded request names it in the
 // x-lowdefy-cron-environment header; a request without one is the deployment running its own crons,
-// which is the environment declared without a url (the one Vercel fires crons on). Without
-// config.cron there are no environments and the endpoint's plain schedules apply.
+// which is the current environment (config.environment). Without config.environments there are no
+// environments and the endpoint's plain schedules apply; without a current environment the
+// `default` schedules apply.
 function resolveCronEnvironment({ config, environment }) {
-  const environments = config?.cron?.environments;
+  const environments = config?.environments;
   if (type.isNone(environments)) {
     if (!type.isNone(environment)) {
       throw new ConfigError(
-        `Cron environment "${environment}" is not configured: lowdefy.config.cron.environments is not defined.`
+        `Cron environment "${environment}" is not configured: config.environments is not defined.`
       );
     }
     return undefined;
@@ -34,14 +35,12 @@ function resolveCronEnvironment({ config, environment }) {
   if (!type.isNone(environment)) {
     if (!type.isObject(environments[environment])) {
       throw new ConfigError(
-        `Cron environment "${environment}" is not declared in lowdefy.config.cron.environments.`
+        `Cron environment "${environment}" is not declared in config.environments.`
       );
     }
     return environment;
   }
-  return Object.keys(environments).find(
-    (name) => type.isObject(environments[name]) && type.isUndefined(environments[name].url)
-  );
+  return config.environment;
 }
 
 export default resolveCronEnvironment;

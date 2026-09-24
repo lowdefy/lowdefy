@@ -22,6 +22,7 @@ import resetPostHogState from '../test/resetPostHogState.js';
 const mockPostHog = {
   capture: jest.fn(),
   init: jest.fn(),
+  register: jest.fn(),
 };
 
 jest.unstable_mockModule('posthog-js', () => ({ default: mockPostHog }));
@@ -172,4 +173,28 @@ test('PostHogInit throws when debug is not a boolean', async () => {
   await expect(PostHogInit({ params: { apiKey: 'phc_key', debug: 'yes' } })).rejects.toThrow(
     'PostHogInit "debug" must be a boolean. Received "yes".'
   );
+});
+
+test('PostHogInit registers the deployment environment as a super property', async () => {
+  await PostHogInit({
+    params: { apiKey: 'phc_key' },
+    lowdefyApp: { name: 'app', environment: 'staging' },
+  });
+  expect(mockPostHog.register.mock.calls).toEqual([[{ environment: 'staging' }]]);
+});
+
+test('PostHogInit registers no super property without an environment', async () => {
+  await PostHogInit({ params: { apiKey: 'phc_key' }, lowdefyApp: { name: 'app' } });
+  expect(mockPostHog.register).not.toHaveBeenCalled();
+});
+
+test('PostHogInit stays disabled, without an apiKey, when the environment switches PostHog off', async () => {
+  await expect(
+    PostHogInit({
+      params: { enabled: true },
+      lowdefyApp: { environment: 'preview', disabled: ['posthog'] },
+    })
+  ).resolves.toBe(null);
+  expect(mockPostHog.init).not.toHaveBeenCalled();
+  expect(postHogState.status).toBe('disabled');
 });

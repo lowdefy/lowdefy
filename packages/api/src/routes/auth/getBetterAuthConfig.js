@@ -33,6 +33,7 @@ import { _app, _secret } from '@lowdefy/operators-js/operators/server';
 import { type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
+import getCanonicalUrl from '../../context/getCanonicalUrl.js';
 import buildAdminPlugin from './buildAdminPlugin.js';
 import buildCaptchaPlugin from './buildCaptchaPlugin.js';
 import buildHooks from './hooks/buildHooks.js';
@@ -237,20 +238,21 @@ function getBetterAuthConfig({
 
   // BetterAuth builds password-reset, magic-link and email-verification links,
   // and its CSRF Origin allowlist, from the base URL. When the deployment's
-  // canonical origin is pinned via BETTER_AUTH_URL, both are fixed and cannot
-  // be steered by a spoofed Host / X-Forwarded-Host header (CWE-640
-  // password-reset poisoning). Without it, fall back to per-request host
-  // derivation - the zero-config path that supports arbitrary proxies and
-  // multi-host deployments - and warn in production that the host is then
+  // canonical origin is pinned - BETTER_AUTH_URL, else the url of the current
+  // environment in config.environments - both are fixed and cannot be steered
+  // by a spoofed Host / X-Forwarded-Host header (CWE-640 password-reset
+  // poisoning). Without it, fall back to per-request host derivation - the
+  // zero-config path that supports arbitrary proxies and multi-host
+  // deployments - and warn in production that the host is then
   // caller-controlled.
-  const canonicalUrl = process.env.BETTER_AUTH_URL?.trim();
+  const canonicalUrl = getCanonicalUrl({ config });
   let baseURL;
   if (canonicalUrl) {
     baseURL = canonicalUrl;
   } else {
     if (!dev) {
       logger.warn(
-        "Auth base URL is not pinned. Set BETTER_AUTH_URL to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
+        "Auth base URL is not pinned. Set the url of the current environment in config.environments (or BETTER_AUTH_URL) to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
       );
     }
     baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };

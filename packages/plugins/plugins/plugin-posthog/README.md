@@ -44,6 +44,8 @@ With `enabled: false`, `posthog-js` is never downloaded and every other action i
 
 `capture_pageview: history_change` makes `posthog-js` capture a pageview on every client side navigation. Without it, only the first page of a session is captured. `PostHogPageview` and `PostHogCapturePageLeave` are there for apps that capture pageviews by hand.
 
+When the app declares `config.environments`, `PostHogInit` registers the current environment's name as the `environment` super property on every event, so one PostHog project can hold staging and production.
+
 ## Never breaks the app
 
 Analytics must never break an app. Every action other than `PostHogInit` does nothing and returns `null` when PostHog is disabled or `posthog-js` could not be downloaded. `PostHogFeatureFlag` returns its configured `default` instead, and `PostHogReloadFeatureFlags` returns `{ flags: [], variants: {} }`.

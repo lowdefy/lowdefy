@@ -117,11 +117,10 @@ test('falls back to the single schedule when no cron is provided', async () => {
 });
 
 const cronConfig = {
-  cron: {
-    environments: {
-      production: {},
-      staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
-    },
+  environment: 'production',
+  environments: {
+    production: { url: 'https://example.com' },
+    staging: { url: 'https://staging.example.com', cron: { secret: 'STAGING_CRON_SECRET' } },
   },
 };
 
@@ -154,7 +153,7 @@ test('uses the schedules of the environment named in the request', async () => {
   expect(routineContext.payload).toEqual({ mode: 'staging' });
 });
 
-test('uses the host environment schedules when the request names no environment', async () => {
+test('uses the current environment schedules when the request names no environment', async () => {
   const context = makeEnvironmentContext(environmentEndpoint);
   const result = await runScheduledEndpoint(context, { endpointId: 'purge', cron: '*/5 * * * *' });
   expect(result.success).toBe(true);
@@ -197,9 +196,7 @@ test('throws when the request names an undeclared environment', async () => {
       cron: '0 * * * *',
       environment: 'develop',
     })
-  ).rejects.toThrow(
-    'Cron environment "develop" is not declared in lowdefy.config.cron.environments.'
-  );
+  ).rejects.toThrow('Cron environment "develop" is not declared in config.environments.');
 });
 
 test('throws when the request names an environment but config.cron is not defined', async () => {
@@ -211,6 +208,6 @@ test('throws when the request names an environment but config.cron is not define
       environment: 'staging',
     })
   ).rejects.toThrow(
-    'Cron environment "staging" is not configured: lowdefy.config.cron.environments is not defined.'
+    'Cron environment "staging" is not configured: config.environments is not defined.'
   );
 });

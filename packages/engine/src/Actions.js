@@ -423,6 +423,8 @@ class Actions {
     try {
       response = await this.actions[action.type]({
         globals: this.context._internal.lowdefy._internal.globals,
+        // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
+        lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
         methods: getActionMethods({
           actionId: action.id,
           actions: responses,

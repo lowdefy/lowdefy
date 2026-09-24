@@ -23,8 +23,9 @@ const defaultApiHost = 'https://us.i.posthog.com';
 // Initialise posthog-js. Every other action in this package does nothing until
 // it has run, so run it from the onInit event of every page, shared with _ref.
 // Calling it again with the same apiKey does nothing, which is what makes that
-// safe.
-async function PostHogInit({ params }) {
+// safe. The deployment environment (config.environments / LOWDEFY_ENVIRONMENT)
+// is registered as the `environment` super property, so every event carries it.
+async function PostHogInit({ params, lowdefyApp }) {
   if (!type.isObject(params)) {
     throw new Error(`PostHogInit params must be an object. Received ${JSON.stringify(params)}.`);
   }
@@ -50,7 +51,10 @@ async function PostHogInit({ params }) {
   }
 
   // A disabled deployment never talks to PostHog, so it does not need a key.
-  if (enabled !== false && (!type.isString(apiKey) || apiKey.trim() === '')) {
+  // The current environment can switch PostHog off (config.environments.<env>.posthog.enabled:
+  // false). That wins over the enabled param, and a switched-off deployment needs no key.
+  const environmentOff = (lowdefyApp?.disabled ?? []).includes('posthog');
+  if (enabled !== false && !environmentOff && (!type.isString(apiKey) || apiKey.trim() === '')) {
     throw new Error(
       `PostHogInit "apiKey" must be a non-empty string. Received ${JSON.stringify(apiKey)}.`
     );
@@ -65,7 +69,15 @@ async function PostHogInit({ params }) {
     config.debug = debug;
   }
 
-  await initPostHog({ apiKey: apiKey ?? null, config, enabled });
+  const superProperties = type.isNone(lowdefyApp?.environment)
+    ? {}
+    : { environment: lowdefyApp.environment };
+  await initPostHog({
+    apiKey: apiKey ?? null,
+    config,
+    enabled: environmentOff ? false : enabled,
+    superProperties,
+  });
   return null;
 }
 

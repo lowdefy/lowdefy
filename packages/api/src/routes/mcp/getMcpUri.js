@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
+import getCanonicalUrl from '../../context/getCanonicalUrl.js';
+
 // The OAuth URI templates for the MCP protected resource live together here
 // so the resource identifier, the aud check, the RFC 9728 metadata, and the
 // WWW-Authenticate challenge can never drift apart. There is ONE MCP resource
 // per deployment - the organization a token acts in is a claim the
 // authorization server stamps at consent time, not a path segment.
-// The origin always comes from the pinned BETTER_AUTH_URL - never a Host
-// header, which is caller-controlled.
+// The origin always comes from the pinned canonical URL (BETTER_AUTH_URL, else the current
+// environment's url) - never a Host header, which is caller-controlled.
 
-function getCanonicalUrl() {
-  const canonicalUrl = process.env.BETTER_AUTH_URL?.trim();
-  if (!canonicalUrl) {
+function getCanonicalOrigin({ config }) {
+  const canonicalUrl = getCanonicalUrl({ config });
+  if (canonicalUrl === null) {
     return null;
   }
   return canonicalUrl.replace(/\/$/, '');
@@ -33,7 +35,7 @@ function getCanonicalUrl() {
 // The resource identifier (RFC 8707) every MCP access token is minted for,
 // and the audience the /api/mcp route verifies against.
 function getMcpResourceUri({ config }) {
-  const canonicalUrl = getCanonicalUrl();
+  const canonicalUrl = getCanonicalOrigin({ config });
   if (canonicalUrl === null) {
     return null;
   }
@@ -45,7 +47,7 @@ function getMcpResourceUri({ config }) {
 // auth basePath), distinct from the MCP resource URI, and not the bare
 // origin.
 function getAsIssuer({ config }) {
-  const canonicalUrl = getCanonicalUrl();
+  const canonicalUrl = getCanonicalOrigin({ config });
   if (canonicalUrl === null) {
     return null;
   }
@@ -57,7 +59,7 @@ function getAsIssuer({ config }) {
 // Both the WWW-Authenticate challenge and the served document derive from
 // here, so the pointer and its target cannot drift apart.
 function getMcpResourceMetadataUri({ config }) {
-  const canonicalUrl = getCanonicalUrl();
+  const canonicalUrl = getCanonicalOrigin({ config });
   if (canonicalUrl === null) {
     return null;
   }

@@ -16,25 +16,26 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getCronEnvironmentNames from '../../utils/getCronEnvironmentNames.js';
+import getEnvironmentNames from '../../utils/getEnvironmentNames.js';
 
-// With config.cron.environments declared, the artifact carries `schedules` as an object with one
+// With config.environments declared, the artifact carries `schedules` as an object with one
 // explicit list per declared environment: the environment's own entry when the author keyed the
 // schedules by environment, else the `default` entry, else nothing (`[]` turns the crons off). An
-// array applies as-is to every environment. The runtime and the schedules manifest then read
-// `schedules.<environment>` without repeating the inheritance. Without config.cron the endpoint
-// keeps its array.
-function resolveEndpointSchedules({ endpoint, cronEnvironments }) {
-  const names = getCronEnvironmentNames(cronEnvironments);
+// array applies as-is to every environment. `default` is kept too, for a build with no current
+// environment. The runtime and the schedules manifest then read `schedules.<environment>` without
+// repeating the inheritance. Without config.environments the endpoint keeps its array.
+function resolveEndpointSchedules({ endpoint, environments }) {
+  const names = getEnvironmentNames(environments);
   if (names.length === 0 || type.isUndefined(endpoint.schedules)) return;
   const authored = endpoint.schedules;
-  const resolved = {};
+  const inherited = type.isArray(authored) ? authored : authored.default ?? [];
+  const resolved = { default: inherited };
   names.forEach((name) => {
     if (type.isArray(authored)) {
       resolved[name] = authored;
       return;
     }
-    resolved[name] = authored[name] ?? authored.default ?? [];
+    resolved[name] = authored[name] ?? inherited;
   });
   endpoint.schedules = resolved;
 }

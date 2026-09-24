@@ -131,7 +131,7 @@ app:
     logo: /logo-light-theme.png
 ```
 
-A relative logo resolves against the `serverUrl` passed to the `RenderNotification` step, so one config works across environments. Email clients can only load absolute URLs — when no `serverUrl` is available the logo is omitted and the header falls back to the `companyName` text.
+A relative logo resolves against the `serverUrl` passed to the `RenderNotification` step (by default the current environment's `url` in `config.environments`), so one config works across environments. Email clients can only load absolute URLs — when no `serverUrl` is available the logo is omitted and the header falls back to the `companyName` text.
 
 ## Custom templates
 
