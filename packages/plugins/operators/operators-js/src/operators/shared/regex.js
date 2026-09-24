@@ -62,5 +62,19 @@ function _regex({ location, params, state }) {
 }
 
 _regex.dynamic = true;
+// With no `on`, _regex reads state at `key`, or at its own location.
+_regex.tracking = ({ location, params }) => {
+  const pattern = type.isObject(params) ? params.pattern : params;
+  if (!type.isString(pattern)) {
+    return { kind: 'pure' };
+  }
+  if (!type.isUndefined(params.key)) {
+    return { kind: 'read', keys: [type.isString(params.key) ? `state:${params.key}` : 'state:*'] };
+  }
+  if (type.isUndefined(params.on)) {
+    return { kind: 'read', keys: [`state:${location}`] };
+  }
+  return { kind: 'pure' };
+};
 
 export default _regex;

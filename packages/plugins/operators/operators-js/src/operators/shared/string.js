@@ -138,5 +138,6 @@ function _string({ params, location, methodName }) {
 }
 
 _string.dynamic = false;
+_string.tracking = { kind: 'pure' };
 
 export default _string;

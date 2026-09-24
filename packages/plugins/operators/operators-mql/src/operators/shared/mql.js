@@ -87,5 +87,13 @@ function mql({ params, location, methodName }) {
 }
 
 mql.dynamic = false;
+// mingo evaluates $$NOW to the current time, and $rand and $sample are random. Only the pipeline,
+// expression or query is scanned, never the data it runs on.
+mql.tracking = ({ methodName, params }) => {
+  const argName = { aggregate: 'pipeline', expr: 'expr', test: 'test' }[methodName];
+  const arg = type.isArray(params) ? params[1] : params?.[argName];
+  const volatile = /\$\$NOW|\$\$CLUSTER_TIME|\$rand\b|\$sample/.test(JSON.stringify(arg) ?? '');
+  return { kind: volatile ? 'volatile' : 'pure' };
+};
 
 export default mql;

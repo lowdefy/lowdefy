@@ -117,5 +117,15 @@ function _date({ params, location, methodName }) {
 }
 
 _date.dynamic = true;
+// "now", and every instance method given no date (prep substitutes the current date), read the clock.
+_date.tracking = ({ methodName, params }) => {
+  if (type.isUndefined(methodName)) {
+    return { kind: params === 'now' ? 'volatile' : 'pure' };
+  }
+  if (methodName === 'now' || type.isNone(params)) {
+    return { kind: 'volatile' };
+  }
+  return { kind: 'pure' };
+};
 
 export default _date;

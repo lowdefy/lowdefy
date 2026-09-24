@@ -42,5 +42,6 @@ function _uri({ params, location, methodName }) {
 }
 
 _uri.dynamic = false;
+_uri.tracking = { kind: 'pure' };
 
 export default _uri;

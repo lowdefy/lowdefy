@@ -27,5 +27,7 @@ function _event({ arrayIndices, event, location, params }) {
 }
 
 _event.dynamic = true;
+// Reads only the event of its own parse frame, which no update changes.
+_event.tracking = { kind: 'pure' };
 
 export default _event;

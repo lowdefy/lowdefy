@@ -30,5 +30,6 @@ function _if_none({ params }) {
 }
 
 _if_none.dynamic = false;
+_if_none.tracking = { kind: 'pure' };
 
 export default _if_none;

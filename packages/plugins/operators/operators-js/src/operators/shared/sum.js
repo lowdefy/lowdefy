@@ -29,5 +29,6 @@ function _sum({ params }) {
 }
 
 _sum.dynamic = false;
+_sum.tracking = { kind: 'pure' };
 
 export default _sum;

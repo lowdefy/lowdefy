@@ -40,5 +40,7 @@ function _operator(options) {
 }
 
 _operator.dynamic = true;
+// The operator it dispatches to is called through the tracked registry view, so it records itself.
+_operator.tracking = { kind: 'pure' };
 
 export default _operator;

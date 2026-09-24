@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
 function createFormatter({ IntlClass }) {
@@ -56,5 +57,13 @@ function intl({ params, location, methodName }) {
 }
 
 intl.dynamic = true;
+// Intl.DateTimeFormat formats the current time when given no date.
+intl.tracking = ({ methodName, params }) => {
+  if (methodName !== 'dateTimeFormat') {
+    return { kind: 'pure' };
+  }
+  const on = type.isArray(params) ? params[0] : params?.on;
+  return { kind: type.isUndefined(on) ? 'volatile' : 'pure' };
+};
 
 export default intl;

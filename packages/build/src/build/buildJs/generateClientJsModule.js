@@ -15,6 +15,7 @@
 */
 
 import generateJsFile from './generateJsFile.js';
+import isVolatileJsSource from './isVolatileJsSource.js';
 
 // Single definition of the client _js function prototype. Both the full build
 // (writeJs) and the dev server's per-page fold (getPageJitEnrichment) generate
@@ -22,8 +23,10 @@ import generateJsFile from './generateJsFile.js';
 // exactly one source of truth.
 const CLIENT_JS_FUNCTION_PROTOTYPE = `{ actions, args, event, input, location, lowdefyApp, lowdefyGlobal, request, state, urlQuery, user }`;
 
+// The volatile scan runs here, so the full build and the dev fold mark the same functions.
 function generateClientJsModule(map) {
-  return generateJsFile({ map, functionPrototype: CLIENT_JS_FUNCTION_PROTOTYPE });
+  const volatileHashes = new Set(Object.keys(map).filter((hash) => isVolatileJsSource(map[hash])));
+  return generateJsFile({ map, functionPrototype: CLIENT_JS_FUNCTION_PROTOTYPE, volatileHashes });
 }
 
 export default generateClientJsModule;

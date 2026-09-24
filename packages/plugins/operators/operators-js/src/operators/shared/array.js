@@ -113,5 +113,6 @@ function _array({ params, location, methodName }) {
 }
 
 _array.dynamic = false;
+_array.tracking = { kind: 'pure' };
 
 export default _array;

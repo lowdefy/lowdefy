@@ -75,5 +75,7 @@ function _media({ arrayIndices, location, params, globals }) {
 }
 
 _media.dynamic = true;
+// Reads the window size, dark mode and localStorage live, none of which reports a change.
+_media.tracking = { kind: 'volatile' };
 
 export default _media;

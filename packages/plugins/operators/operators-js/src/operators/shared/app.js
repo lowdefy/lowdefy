@@ -36,5 +36,6 @@ function _app({ arrayIndices, location, lowdefyApp, params }) {
 }
 
 _app.dynamic = false;
+_app.tracking = { kind: 'pure' };
 
 export default _app;

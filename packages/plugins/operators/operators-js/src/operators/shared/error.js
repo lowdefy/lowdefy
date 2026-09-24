@@ -38,5 +38,7 @@ function _error({ arrayIndices, error, location, params }) {
 }
 
 _error.dynamic = true;
+// Reads only the caught error of its own parse frame, which no update changes.
+_error.tracking = { kind: 'pure' };
 
 export default _error;

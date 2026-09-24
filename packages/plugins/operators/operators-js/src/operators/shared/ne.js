@@ -27,5 +27,6 @@ function _ne({ params }) {
 }
 
 _ne.dynamic = false;
+_ne.tracking = { kind: 'pure' };
 
 export default _ne;
