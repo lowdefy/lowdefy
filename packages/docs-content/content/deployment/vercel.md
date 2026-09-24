@@ -104,11 +104,31 @@ config:
 - A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
 - **Switching features off:** `cron.enabled`, `email.enabled` and `sentry.enabled` set to `false` turn that feature off in one environment — no crons registered or forwarded, no email sent by mail requests, no Sentry. The features the current environment switches off are listed in the app metadata (`_app: disabled`). Logging cannot be switched off.
 
+###### Guards
+
+Guards pin an environment's secrets and environment variables to a pattern kept in config — a second factor for deploy-time configuration. In the current environment the build fails before anything deploys unless every guarded value matches its regular expression (an unset value fails too). Changing the production database, say, then takes both a new variable value and a reviewed config change:
+
+```yaml
+config:
+  environments:
+    prod:
+      url: https://app.example.com
+      guards:
+        secrets: # Lowdefy secrets, by name (LOWDEFY_SECRET_<name>)
+          MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
+        env: # any environment variable
+          BETTER_AUTH_URL: '^https://app\.example\.com$'
+```
+
+- Patterns are regular expressions matched anywhere in the value, so a distinctive substring is enough; add `^`/`$` to pin the whole value. Keep them short — a pattern is committed with the config, so never put a secret's sensitive part in it.
+- Only the current environment's guards are checked, against the variables of the build (on Vercel, the environment's variables). Every environment's patterns are validated.
+- A failure names the variable and never prints its value. Guards are removed from the build output, so the patterns never reach the client.
+
 ###### Crons for staging and other environments
 
 Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
 
-- **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the Lowdefy secret name holding that environment's own `CRON_SECRET`. Set `cron.enabled: false` on an environment to register no crons for it.
+- **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the **name** of the Lowdefy secret holding that environment's own `CRON_SECRET` — a plain string such as `STAGING_CRON_SECRET`, not `{ _secret: ... }`: environment settings are resolved at build time, and the forward route reads the value at runtime from `LOWDEFY_SECRET_<name>`. Set `cron.enabled: false` on an environment to register no crons for it.
 - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
 - **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the current environment and `/api/cron-forward/<environment>/<endpointId>` for the forwarded ones; all of them count toward the project's cron limit.
 - **Plan limits still apply per project:** a per-minute staging schedule needs the same Pro plan as a per-minute production one.

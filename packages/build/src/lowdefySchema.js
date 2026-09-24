@@ -2269,7 +2269,7 @@ export default {
                   secret: {
                     type: 'string',
                     description:
-                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET. An environment with a secret is forwarded to: the environment Vercel fires crons on pings its /api/cron route when one of its schedules fires.",
+                      "The NAME of the Lowdefy secret (a plain string, not a _secret operator; read from the LOWDEFY_SECRET_<name> env var on the deployment that forwards) holding this environment's CRON_SECRET. An environment with a secret is forwarded to: the environment Vercel fires crons on pings its /api/cron route when one of its schedules fires.",
                     errorMessage: {
                       type: 'App "config.environments.<name>.cron.secret" should be a string.',
                     },
@@ -2332,6 +2332,48 @@ export default {
                 },
                 errorMessage: {
                   type: 'App "config.environments.<name>.email" should be an object.',
+                },
+              },
+              guards: {
+                type: 'object',
+                additionalProperties: false,
+                description:
+                  'Pin secrets and environment variables to a regular expression kept in config: in this environment the build fails unless each value matches (a missing value fails too). Changing a guarded value then takes a config change as well. Values are never printed.',
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  secrets: {
+                    type: 'object',
+                    description:
+                      'Lowdefy secret name (LOWDEFY_SECRET_<name>) to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.secrets.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.secrets" should be an object.',
+                    },
+                  },
+                  env: {
+                    type: 'object',
+                    description:
+                      'Environment variable name to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.env.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.env" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.guards" should be an object.',
                 },
               },
               sentry: {
