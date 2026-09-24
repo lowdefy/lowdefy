@@ -46,6 +46,8 @@ export default {
       'Regenerate the last assistant message. Accepts optional args.messageId to regenerate a specific message.',
     setMessages: 'Replace the message list. Accepts args.messages array.',
     sendMessage: 'Send a message programmatically. Accepts args.text string.',
+    setInput:
+      'Fill the composer without sending. Accepts args.text string; anything else empties it.',
     clearMessages: 'Clear all messages from the chat.',
     deleteMessage: 'Delete a specific message. Accepts args.messageId string.',
     stop: 'Stop the current streaming response.',

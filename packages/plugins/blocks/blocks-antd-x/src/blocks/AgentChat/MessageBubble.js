@@ -14,39 +14,15 @@
   limitations under the License.
 */
 
-import React, { useMemo } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Markdown from '@ant-design/x-markdown';
-import {
-  Actions,
-  CodeHighlighter,
-  FileCard,
-  Mermaid,
-  Sources,
-  ThoughtChain,
-  Think,
-} from '@ant-design/x';
+import { Actions, FileCard, Sources, ThoughtChain, Think } from '@ant-design/x';
 import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
 import { getToolInfo, partCategory } from './messageParts.js';
 import ToolApproval from './ToolApproval.js';
-
-// Module-level singleton for the LaTeX marked extension.
-// Loaded once on first use — the Latex plugin from @ant-design/x-markdown
-// includes KaTeX CSS import and handles $...$ inline and $$...$$ display math.
-let latexConfig = null;
-function getLatexConfig() {
-  if (latexConfig) return latexConfig;
-  try {
-    // eslint-disable-next-line global-require
-    const Latex = require('@ant-design/x-markdown/plugins/Latex').default;
-    latexConfig = { extensions: Latex() };
-  } catch {
-    latexConfig = {};
-  }
-  return latexConfig;
-}
 
 // Renders a code block as plain text without syntax highlighting or mermaid rendering.
 function PlainCodeBlock({ children, block, lang }) {
@@ -60,33 +36,105 @@ function PlainCodeBlock({ children, block, lang }) {
   );
 }
 
+// Mermaid and the Prism highlighter are most of AgentChat's weight, and a plain reply
+// uses neither. Deep paths keep them out of the chunk that imports the @ant-design/x
+// barrel; they load the first time a message renders a fence that needs them. A chunk
+// that fails to load (a deploy replaced it) degrades to plain code, not a broken chat.
+function lazyCodeRenderer(load, name) {
+  return lazy(() =>
+    load().catch((error) => {
+      console.warn(`AgentChat could not load ${name}; showing plain code.`, error);
+      return {
+        default: function PlainCode({ children, lang }) {
+          return (
+            <PlainCodeBlock block lang={lang}>
+              {children}
+            </PlainCodeBlock>
+          );
+        },
+      };
+    })
+  );
+}
+const Mermaid = lazyCodeRenderer(() => import('@ant-design/x/es/mermaid/index.js'), 'Mermaid');
+const CodeHighlighter = lazyCodeRenderer(
+  () => import('@ant-design/x/es/code-highlighter/index.js'),
+  'CodeHighlighter'
+);
+
 // Renders code blocks with syntax highlighting via CodeHighlighter and
 // mermaid diagrams via the Mermaid component from @ant-design/x.
+// Each lazy renderer sits in its own Suspense, so a first load shows the plain code in
+// place rather than suspending the whole chat.
 function RichCodeBlock({ renderMermaid, codeHighlighter }) {
   return function CodeBlock({ children, block, lang }) {
     if (!block) {
       return <code>{children}</code>;
     }
+    const plain = (
+      <PlainCodeBlock block lang={lang}>
+        {children}
+      </PlainCodeBlock>
+    );
     if (renderMermaid && lang === 'mermaid') {
       return (
         <div style={{ width: '100%' }}>
-          <Mermaid>{children}</Mermaid>
+          <Suspense fallback={plain}>
+            <Mermaid>{children}</Mermaid>
+          </Suspense>
         </div>
       );
     }
     if (codeHighlighter) {
       return (
-        <CodeHighlighter lang={lang} prismLightMode={false}>
-          {children}
-        </CodeHighlighter>
+        <Suspense fallback={plain}>
+          <CodeHighlighter lang={lang} prismLightMode={false}>
+            {children}
+          </CodeHighlighter>
+        </Suspense>
       );
     }
-    return (
-      <pre>
-        <code className={lang ? `language-${lang}` : undefined}>{children}</code>
-      </pre>
-    );
+    return plain;
   };
+}
+
+// The LaTeX marked extension (KaTeX and its CSS) loads only for chats that set
+// messageDisplay.renderLatex. Markdown renders without it until it arrives, then re-renders
+// with it. One config object is shared so every bubble passes Markdown the same reference.
+let latexConfig = null;
+let latexConfigPromise = null;
+function loadLatexConfig() {
+  if (!latexConfigPromise) {
+    latexConfigPromise = import('@ant-design/x-markdown/plugins/Latex/index.js').then(
+      ({ default: Latex }) => {
+        latexConfig = { extensions: Latex() };
+        return latexConfig;
+      },
+      (error) => {
+        // Cleared so a later chat mount tries again.
+        latexConfigPromise = null;
+        console.warn('AgentChat could not load LaTeX rendering; showing the source.', error);
+        return null;
+      }
+    );
+  }
+  return latexConfigPromise;
+}
+
+function useLatexConfig(renderLatex) {
+  const [loadedConfig, setLoadedConfig] = useState(latexConfig);
+  useEffect(() => {
+    if (!renderLatex || loadedConfig) return undefined;
+    let mounted = true;
+    loadLatexConfig().then((config) => {
+      if (mounted && config) setLoadedConfig(config);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [renderLatex, loadedConfig]);
+  if (!renderLatex) return undefined;
+  return loadedConfig ?? undefined;
 }
 
 function summarizeToolOutput(output, translate) {
@@ -273,7 +321,7 @@ function MessageBubble({
   const renderMermaid = config?.renderMermaid !== false;
   const codeHighlighter = config?.codeHighlighter !== false;
   const renderLatex = config?.renderLatex ?? false;
-  const markdownConfig = renderLatex ? getLatexConfig() : undefined;
+  const markdownConfig = useLatexConfig(renderLatex);
 
   const markdownComponents = useMemo(() => {
     const code =
