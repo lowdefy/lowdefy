@@ -124,7 +124,7 @@ The server is configured entirely through environment variables at runtime — t
 | `LOWDEFY_SECRET_*`  | App secrets, accessed with the [`_secret`](/_secret) operator.           |
 | `AUTH_SECRET`       | Required when using [Lowdefy Auth](/users-introduction).                 |
 | `LOWDEFY_ENVIRONMENT` | Read at build time: the environment this image is built for, one of `config.environments`. |
-| `BETTER_AUTH_URL`   | The app's canonical origin for auth links and the MCP resource URIs. Defaults to the `url` of the current environment in `config.environments`. |
+| `BETTER_AUTH_URL`   | The app's canonical origin for auth links and the MCP resource URIs. Defaults to the `url` of the current environment in `config.environments`. Set it when a proxy terminates TLS in front of the container: without it, auth trusts only the origin the request reached the server on (`http://…`), and refuses sign-in from the `https://` page. |
 | `CRON_SECRET`       | Bearer token protecting `/api/cron/*` and `/api/detached/*` endpoints.   |
 | `LOWDEFY_LOG_LEVEL` | Server log level: `debug`, `info` (default), `warn`, `error`.            |
 | `SENTRY_DSN`        | Enables Sentry error reporting when set.                                 |
