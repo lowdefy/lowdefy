@@ -48,6 +48,7 @@ function template({
   assets,
   basePath = '',
   config,
+  pageAssets,
   themeConfig = {},
   title,
 }) {
@@ -58,10 +59,12 @@ function template({
   const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
   const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
 
-  const cssLinks = assets.css
+  // The page's plugin chunks are preloaded with the main entry, so the first
+  // render's wait for them overlaps the main bundle's download.
+  const cssLinks = [...assets.css, ...pageAssets.css]
     .map((file) => `<link rel="stylesheet" href="${basePath}/${file}" />`)
     .join('\n    ');
-  const modulePreloads = assets.imports
+  const modulePreloads = [...assets.imports, ...pageAssets.js]
     .map((file) => `<link rel="modulepreload" href="${basePath}/${file}" />`)
     .join('\n    ');
 

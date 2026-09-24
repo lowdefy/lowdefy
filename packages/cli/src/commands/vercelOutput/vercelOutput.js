@@ -146,11 +146,21 @@ async function vercelOutput({ context }) {
   );
 
   // 5. Deployment config: serve static files first, route everything else to the function, and
-  //    register the cron jobs.
+  //    register the cron jobs. Vite content-hashes everything under assets/, so those files are
+  //    cached for good; Vercel's static default (max-age=0, must-revalidate) would revalidate
+  //    each of a page's chunks on every visit.
   const crons = await readCrons({ buildDirectory });
   const config = {
     version: 3,
-    routes: [{ handle: 'filesystem' }, { src: '/(.*)', dest: '/api' }],
+    routes: [
+      {
+        src: '^/assets/(.*)$',
+        headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+        continue: true,
+      },
+      { handle: 'filesystem' },
+      { src: '/(.*)', dest: '/api' },
+    ],
   };
   if (crons.length > 0) {
     config.crons = crons;
