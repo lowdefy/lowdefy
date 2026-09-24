@@ -1,5 +1,145 @@
 # Change Log
 
+## 6.0.0
+
+### Minor Changes
+
+- ef707bd: feat(blocks-antd): Add the `TagSelector` and `TagMultipleSelector` input blocks.
+
+  Two input blocks rendered as a row of toggleable tag pills, wrapped in the standard input label. They share the same pill rendering and stable per-value coloring, and differ only in value semantics.
+
+  - `TagSelector` is single-select: its value is one option value. Clicking a pill selects it; clicking the selected pill clears the value (sets it to `null`).
+  - `TagMultipleSelector` is multi-select: its value is the array of selected option values, and toggling a pill adds or removes it.
+  - Both fire `onChange` on every change, and accept `options` as primitives or `{ label, value, color, disabled }`.
+  - Each option gets a stable color (an explicit `color` wins, otherwise a color is picked from a fixed palette based on the option's value), so a given value keeps the same hue on every render. Selected pills are filled with auto-contrast text; unselected pills are outlined with a hint of their color.
+  - Set `colored: false` for single-accent pills that use the primary color.
+  - Both support `title`, `label`, `size`, and `disabled` like the other selector blocks, plus per-option `disabled`.
+
+- 46029df: feat(blocks-antd): Add `presets` to the date picker blocks.
+
+  `DateRangeSelector`, `DateSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector` accept a
+  `presets` array that renders quick select shortcuts next to the calendar, like antd's
+  [preset ranges](https://ant.design/components/date-picker#date-picker-demo-preset-ranges).
+
+  A preset is a `label` (supports html) and a `value`. `DateRangeSelector` takes a `[from, to]` pair,
+  the other blocks take a single date. Values are dates — a date string, a timestamp, or a `_date`
+  object — so relative shortcuts are built with the existing operators, and are re-evaluated on every
+  render instead of being frozen at page load:
+
+  ```yaml
+  - id: report_period
+    type: DateRangeSelector
+    properties:
+      presets:
+        - label: Last 7 Days
+          value:
+            - _dayjs: [now, { subtract: [7, days] }, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+        - label: Month to date
+          value:
+            - _dayjs: [now, { startOf: month }, { format: YYYY-MM-DD }]
+            - _dayjs: [now, { format: YYYY-MM-DD }]
+        - label: 2026 Q1
+          value: ['2026-01-01', '2026-03-31']
+  ```
+
+  The date pickers read a preset as UTC, the same as the block value, so a fixed date like
+  `2026-01-01` selects the day it names in every timezone. A date relative to now is an instant rather
+  than a calendar date, so end a `_dayjs` chain with a `format` step, as above — a chain that resolves
+  to an instant can select the day, month or week before or after the current one, depending on the
+  browser timezone and the time of day.
+
+  `DateTimeSelector` selects an instant, so `_date: now` and plain `_dayjs` chains are all it needs. It
+  follows its `selectUTC` setting: with it the instant is shown on the UTC clock, without it on the
+  local clock.
+
+  Presets respect `disabledDates`. A preset is offered on the same terms as the calendar cells: a
+  `DateRangeSelector` range that starts or ends on a disabled date is narrowed to the dates it may
+  select, so a `Last 7 days` shortcut next to `disabledDates.min: now` selects today rather than
+  silently doing nothing. A shortcut with nothing it may select is listed as disabled.
+
+### Patch Changes
+
+- 28cb944: feat: Dev server docs and MCP endpoint for AI coding agents
+
+  The dev server now always serves documentation for everything installed in your project — every block, operator, action, connection and request type, from core plugins and your own local plugins — plus the full Lowdefy docs as markdown.
+
+  **Docs API and MCP endpoint (`@lowdefy/server-dev`)**
+
+  - Plain GET routes under `/lowdefy-docs`: list all available types per kind, JSON schemas per type, block usage examples, docs pages as markdown, and search.
+  - An MCP endpoint (streamable HTTP) at `/lowdefy-docs/mcp` exposing the same as tools (`lowdefy_list_types`, `lowdefy_get_schema`, `lowdefy_get_examples`, `lowdefy_get_doc`, ...) so agents like Claude Code can look up exact type contracts instead of guessing.
+  - The `/lowdefy-docs` page path prefix is now reserved in dev.
+
+  **Discovery build artifacts (`@lowdefy/build`)**
+
+  - Dev builds now write `plugins/availableTypes.json` (every installed type, used or not) and `plugins/connectionSchemas.json` + `plugins/requestSchemas.json` (collected from connection definitions).
+  - Fixed custom/local plugin schemas being silently missing from all schema maps — plugin modules now also resolve from the server directory.
+
+  **Docs content package (`@lowdefy/docs-content`)**
+
+  - New package shipping the Lowdefy docs extracted as markdown with a manifest, generated from the docs app build (`pnpm docs:content`).
+
+  **Block plugins**
+
+  - Block packages now publish their `gallery.yaml`/`examples.yaml`/`tests.yaml` files in `dist/`, so the docs API can serve real examples.
+
+- ae5f618: fix(blocks-antd): Default logo width switches at the same breakpoint as the logo image.
+
+  PageHeaderMenu and PageSiderMenu swapped the desktop/mobile logo image at 577px but the default width classes switched at 640px, so between those widths the desktop wordmark rendered squeezed into the mobile slot.
+
+- 01d7552: fix(blocks-antd): Label, Search and ControlledList styles now apply in production builds.
+
+  The `Label` (form-item layout), `Search` (results dropdown) and `ControlledList` (remove icon)
+  styles are global stylesheets, but they were shipped as CSS Modules (`style.module.css`) imported
+  for side effect (`import './style.module.css'`) with every rule wrapped in `:global(...)`. The Vite
+  dev server injected them, but the production client build dropped them — so on `lowdefy build` +
+  `lowdefy start` (and on Vercel) these blocks rendered with missing styling while `lowdefy dev`
+  looked correct. (Same class of bug fixed in `@lowdefy/blocks-tiptap`.)
+
+  The three files are now plain `.css` (the redundant `:global()` wrappers removed, since the
+  selectors are already global), which the production build includes reliably. No config or markup
+  changes. Also removed an unused CSS-module import in `MarkdownWithCode`.
+
+- 629837d: fix(blocks-antd): Read `disabledDates` on the calendar's clock.
+
+  `disabledDates` compared instants while reading its own bounds in local time, so in a timezone ahead
+  of UTC the same calendar date could be disabled or allowed depending on which clock the date arrived
+  on. On `DateSelector`, `DateRangeSelector`, `MonthSelector` and `WeekSelector` that meant a date was
+  disabled in an empty picker but allowed once the block had a value, because the panel then works in
+  the UTC wall clock the block reads its value in.
+
+  Bounds and dates are now compared as the calendar dates they name, so `disabledDates.min:
+'2026-07-15'` disables everything before 15 July on every clock and in every timezone. Apps in a
+  timezone ahead of UTC that relied on the off-by-one boundary will see the bound move to the date it
+  names.
+
+  `disabledDates.ranges` is documented as a list of `{ from, to }` objects, but only an array of the
+  two dates was read and anything else was dropped, so a range written the documented way disabled
+  nothing:
+
+  ```yaml
+  disabledDates:
+    ranges:
+      - from: 2026-03-10
+        to: 2026-03-14
+      - ['2026-03-20', '2026-03-24'] # still works
+  ```
+
+  Both shapes are now read. Config that is neither raises an error instead of being dropped, and the
+  same applies to the rest of `disabledDates`: a `min`, `max` or `dates` entry that is not a date, and
+  a `dates` or `ranges` value that is not an array, were all ignored silently and now report where
+  they are wrong. An app carrying one of these mistakes will surface an error on the block where it
+  previously rendered a picker that quietly disabled nothing.
+
+- fb80e0a: PageSidebarLayout's header slot row now stretches to the full header width, so header blocks can use `layout: grow` spacers to position content (e.g. push an item to the far right). A new `headerContent` cssKey allows overriding the slot row's style, matching PageHeaderMenu and PageSiderMenu.
+- 0e71ebd: The Search block now shows a loading spinner while its search data is still loading, instead of incorrectly reporting "No results found." When documents arrive while the modal is open — for example a request that resolves after the user opens search — the index now rebuilds live and the current query re-runs, so results appear without closing and reopening the modal. A new `loading` cssKey styles the spinner container.
+- c2e0823: The Search block's keyboard shortcut badge now sits at the end of the trigger button when the trigger is styled wider than its content, with the label left-aligned filling the space between.
+- Updated dependencies [742a900]
+- Updated dependencies [6446ae6]
+  - @lowdefy/nunjucks@6.0.0
+  - @lowdefy/helpers@6.0.0
+  - @lowdefy/block-utils@6.0.0
+
 ## 5.6.0
 
 ### Minor Changes

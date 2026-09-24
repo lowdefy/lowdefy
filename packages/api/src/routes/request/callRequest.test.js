@@ -89,7 +89,7 @@ const operators = {
   _payload,
   _secret,
   _user,
-  _error: () => {
+  _throw_test: () => {
     throw new Error('Test error.');
   },
 };
@@ -691,7 +691,7 @@ test('request properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _error: null },
+          willError: { _throw_test: null },
         },
       },
     })
@@ -711,7 +711,7 @@ test('connection properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _error: null },
+          willError: { _throw_test: null },
         },
       },
     })
@@ -988,13 +988,13 @@ test('call request redacts an error returned inside the response value', async (
   const res = await callRequest(context, defaultParams);
 
   const serializedItemError = res.response.failed[0]['~e'];
-  expect(serializedItemError.message).toBe('Item 2 rejected.');
+  expect(serializedItemError.message).toBe('Something went wrong.');
   expect(serializedItemError.received).toBeUndefined();
   expect(serializedItemError.stack).toBeUndefined();
   expect(JSON.stringify(res)).not.toContain('super-secret');
 });
 
-test('call request normalises source on an error returned inside the response value', async () => {
+test('call request sends no source on an error returned inside the response value', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
   mockTestRequest.mockImplementation(() => {
     const itemError = new RequestError('Item 2 rejected.');
@@ -1011,5 +1011,6 @@ test('call request normalises source on an error returned inside the response va
 
   const res = await callRequest(configDirectoryContext, defaultParams);
 
-  expect(res.response.failed[0]['~e'].source).toBe('pages/home.yaml:5');
+  expect(res.response.failed[0]['~e'].source).toBeUndefined();
+  expect(JSON.stringify(res)).not.toContain('pages/home.yaml');
 });

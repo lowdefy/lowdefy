@@ -16,43 +16,11 @@
   limitations under the License.
 */
 
-import {
-  ActionError,
-  AuthenticationError,
-  AuthorizationError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  TwoFactorEnrolmentRequiredError,
-  UserError,
-} from '@lowdefy/errors';
+import { lowdefyErrorTypes } from '@lowdefy/errors';
 
 import extractErrorProps from './extractErrorProps.js';
 import type from './type.js';
 import stableStringify from './stableStringify.js';
-
-const lowdefyErrorTypes = {
-  ActionError,
-  AuthenticationError,
-  AuthorizationError,
-  BlockError,
-  BuildError,
-  ConfigError,
-  ConfigWarning,
-  LowdefyInternalError,
-  OperatorError,
-  PluginError,
-  RequestError,
-  ServiceError,
-  TwoFactorEnrolmentRequiredError,
-  UserError,
-};
 
 function propsToError(data) {
   const ErrorClass = lowdefyErrorTypes[data.name] || Error;
@@ -68,7 +36,7 @@ function propsToError(data) {
 }
 
 const makeReplacer =
-  ({ replacer, isoStringDates, skipMarkers, omitErrorProps } = {}) =>
+  ({ replacer, isoStringDates, skipMarkers, projectError } = {}) =>
   (key, value) => {
     let dateReplacer = (date) => ({ '~d': date.valueOf() });
     if (isoStringDates) {
@@ -79,7 +47,7 @@ const makeReplacer =
       newValue = replacer(key, value);
     }
     if (type.isError(newValue)) {
-      return { '~e': extractErrorProps(newValue, { omit: omitErrorProps }) };
+      return { '~e': extractErrorProps(newValue, { project: projectError }) };
     }
     if (type.isObject(newValue)) {
       Object.keys(newValue).forEach((k) => {
@@ -244,7 +212,7 @@ const serialize = (json, options = {}) => {
       makeReplacer({
         replacer: options.replacer,
         isoStringDates: options.isoStringDates,
-        omitErrorProps: options.omitErrorProps,
+        projectError: options.projectError,
       })
     )
   );
@@ -264,7 +232,7 @@ const serializeToString = (json, options = {}) => {
       replacer: makeReplacer({
         replacer: options.replacer,
         skipMarkers: options.skipMarkers,
-        omitErrorProps: options.omitErrorProps,
+        projectError: options.projectError,
       }),
       space: options.space,
     });
@@ -275,7 +243,7 @@ const serializeToString = (json, options = {}) => {
       replacer: options.replacer,
       isoStringDates: options.isoStringDates,
       skipMarkers: options.skipMarkers,
-      omitErrorProps: options.omitErrorProps,
+      projectError: options.projectError,
     }),
     options.space
   );
@@ -298,11 +266,12 @@ const copy = (json, options = {}) => {
   return JSON.parse(
     JSON.stringify(
       json,
-      makeReplacer({ replacer: options.replacer, omitErrorProps: options.omitErrorProps })
+      makeReplacer({ replacer: options.replacer, projectError: options.projectError })
     ),
     makeReviver(options.reviver)
   );
 };
 
 const serializer = { copy, serialize, serializeToString, deserialize, deserializeFromString };
+
 export default serializer;

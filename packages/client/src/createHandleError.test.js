@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { decodeServerError } from '@lowdefy/engine';
 import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
@@ -28,6 +29,27 @@ function createLowdefy({ basePath } = {}) {
     _runtimeErrorCallback: jest.fn(),
     basePath,
   };
+}
+
+// A server error as the client receives it: the wire error, with the dev server's full
+// error beside it when devMessage is given.
+function decodeWireError({ configKey, requestId, devMessage }) {
+  const payload = {
+    '~e': {
+      name: 'RequestError',
+      message: 'Something went wrong.',
+      configKey,
+      requestId,
+      isLowdefyError: true,
+      handled: true,
+    },
+  };
+  if (devMessage) {
+    payload.devError = {
+      '~e': { name: 'RequestError', message: devMessage, configKey, requestId, handled: true },
+    };
+  }
+  return decodeServerError(payload);
 }
 
 function mockResponse(body = {}) {
@@ -184,4 +206,81 @@ test('handleError prefixes the client-error request with lowdefy.basePath', asyn
 
   expect(fetchMock).toHaveBeenCalledTimes(1);
   expect(fetchMock.mock.calls[0][0]).toBe('/my-app/api/client-error');
+});
+
+test('handleError displays server errors from two different requests on one page', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+  const first = decodeWireError({ configKey: 'request:1', requestId: 'rid-1' });
+  const second = decodeWireError({ configKey: 'request:2', requestId: 'rid-2' });
+
+  await handleError(first);
+  await handleError(second);
+
+  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(2);
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(2);
+  expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(1, first);
+  expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(2, second);
+});
+
+test('handleError displays a request failing on every poll only once', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+
+  await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-1' }));
+  await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-2' }));
+  await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-3' }));
+
+  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(1);
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('handleError in dev displays two different server failures of one action, as dev errors', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+  const first = decodeWireError({
+    configKey: 'action:1',
+    requestId: 'rid-1',
+    devMessage: 'Collection "users" not found.',
+  });
+  const second = decodeWireError({
+    configKey: 'action:1',
+    requestId: 'rid-2',
+    devMessage: 'Duplicate key on field "email".',
+  });
+
+  await handleError(first);
+  await handleError(second);
+
+  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(2);
+  const shown = lowdefy._runtimeErrorCallback.mock.calls.map(([error]) => error);
+  expect(shown[0]).not.toBe(first);
+  expect(shown[0].message).toBe('Collection "users" not found.');
+  expect(shown[1].message).toBe('Duplicate key on field "email".');
+  expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(1, shown[0]);
+  expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(2, shown[1]);
+});
+
+test('handleError in dev displays the same dev failure of one action only once', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+  const devMessage = 'Collection "users" not found.';
+
+  await handleError(decodeWireError({ configKey: 'action:1', requestId: 'rid-1', devMessage }));
+  await handleError(decodeWireError({ configKey: 'action:1', requestId: 'rid-2', devMessage }));
+
+  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(1);
+});
+
+test('handleError does not POST a handled wire error to /api/client-error', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+
+  await handleError(
+    decodeWireError({ configKey: 'request:1', requestId: 'rid-1', devMessage: 'Timed out.' })
+  );
+  await handleError(decodeWireError({ configKey: 'request:2', requestId: 'rid-2' }));
+
+  expect(fetchMock).not.toHaveBeenCalled();
+  expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(2);
 });

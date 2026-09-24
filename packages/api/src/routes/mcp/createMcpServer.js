@@ -149,13 +149,17 @@ async function createMcpServer({ context }) {
       });
       if (!success) {
         const deserialized = serializer.deserialize(error);
+        // The wire error is generic for every reader. The dev server also attaches the full
+        // error for dev tools, and the dev MCP client is a coding agent that needs it to find
+        // the failing config.
+        const devError = serializer.deserialize(error?.devError);
         return {
           content: [
             {
               type: 'text',
               text: type.isNone(deserialized)
                 ? 'Endpoint failed.'
-                : formatErrorForAgent(context, deserialized),
+                : formatErrorForAgent(context, devError ?? deserialized),
             },
           ],
           isError: true,

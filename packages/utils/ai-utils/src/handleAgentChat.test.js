@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { UserError } from '@lowdefy/errors';
 
 const mockTool = jest.fn();
 const mockJsonSchema = jest.fn();
@@ -2123,6 +2124,7 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
     originalMessages: mockValidated,
     generateMessageId: mockGenerateId,
     onFinish: expect.any(Function),
+    onError: expect.any(Function),
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
 });
@@ -2477,24 +2479,116 @@ test('a validation failure is logged and written to the stream as an error, not 
   });
 });
 
-test('stream onError hides the value dump of a TypeValidationError from the client', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+// Stands in for the wire policy prepareAgent builds from @lowdefy/api's
+// createWireProjection: the author's message for a UserError, the generic message for
+// everything else.
+function wireErrorMessage(error) {
+  return error.name === 'UserError' ? error.message : 'Something went wrong.';
+}
 
+const foreignError = new Error('connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432');
+const userError = new UserError('That order is already closed.');
+
+async function runChat({ properties }) {
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
   await handleAgentChat({
     connection: { provider: jest.fn().mockReturnValue({}) },
     properties: {
-      agent: { tools: [], properties: { model: 'gpt-4o' } },
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
+      ...properties,
     },
-    context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
+    context: {
+      logger: testLogger,
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      wireErrorMessage,
+    },
+  });
+  const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
+  // The AI SDK hands execute a writer whose onError is the one given to
+  // createUIMessageStream.
+  const writer = { write: jest.fn(), onError };
+  await mockCreateUIMessageStream._lastExecute({ writer });
+  return writer;
+}
+
+// The inner stream turns a failed tool call into a tool-output-error chunk whose text comes
+// from the onError it was given; the AI SDK's default would write the raw message.
+function toolErrorStream(opts, error) {
+  return createMockReadableStream([
+    { type: 'tool-output-error', toolCallId: 'call-1', errorText: opts.onError(error) },
+  ]);
+}
+
+test.each([
+  ['a foreign error', foreignError, 'Something went wrong.'],
+  ['a UserError', userError, 'That order is already closed.'],
+])('a tool error reaches the stream as the wire message for %s', async (_, error, expected) => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockCreateAgentUIStream.mockImplementationOnce(async (opts) => toolErrorStream(opts, error));
+
+  const writer = await runChat({
+    properties: { agent: { tools: [], properties: { model: 'gpt-4o' } } },
   });
 
-  const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
-  expect(onError(new MockTypeValidationError('Type validation failed: Value: [{"id":"x"}]'))).toBe(
-    'The conversation could not be sent: a message failed validation.'
-  );
-  expect(onError(new Error('Rate limit exceeded'))).toBe('Rate limit exceeded');
+  expect(writer.write).toHaveBeenCalledWith({
+    type: 'tool-output-error',
+    toolCallId: 'call-1',
+    errorText: expected,
+  });
 });
+
+test.each([
+  ['a foreign error', foreignError, 'Something went wrong.'],
+  ['a UserError', userError, 'That order is already closed.'],
+])(
+  'a tool error reaches the stream as the wire message for %s on the prune path',
+  async (_, error, expected) => {
+    mockTool.mockImplementation((def) => def);
+    mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+    mockValidateUIMessages.mockResolvedValue([]);
+    mockConvertToModelMessages.mockResolvedValue([]);
+    mockPruneMessages.mockReturnValue([]);
+    mockToUIMessageStream.mockImplementationOnce((opts) => toolErrorStream(opts, error));
+
+    const writer = await runChat({
+      properties: {
+        agent: { tools: [], properties: { model: 'gpt-4o', prune: { reasoning: 'all' } } },
+      },
+    });
+
+    expect(writer.write).toHaveBeenCalledWith({
+      type: 'tool-output-error',
+      toolCallId: 'call-1',
+      errorText: expected,
+    });
+  }
+);
+
+test.each([
+  ['a foreign error', foreignError, 'Something went wrong.'],
+  ['a UserError', userError, 'That order is already closed.'],
+  [
+    'a TypeValidationError',
+    new MockTypeValidationError('Type validation failed: Value: [{"id":"x"}]'),
+    'Something went wrong.',
+  ],
+])(
+  'an in-stream error reaches the stream as the wire message for %s',
+  async (_, error, expected) => {
+    mockTool.mockImplementation((def) => def);
+    mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+    mockCreateAgentUIStream.mockImplementationOnce(async () => ({
+      getReader: () => ({
+        read: jest.fn().mockRejectedValue(error),
+      }),
+    }));
+
+    const writer = await runChat({
+      properties: { agent: { tools: [], properties: { model: 'gpt-4o' } } },
+    });
+
+    expect(writer.write).toHaveBeenCalledWith({ type: 'error', errorText: expected });
+  }
+);

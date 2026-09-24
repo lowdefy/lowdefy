@@ -16,6 +16,7 @@
 
 import { expect, jest } from '@jest/globals';
 
+import decodeServerError, { getDevError } from '../src/decodeServerError.js';
 import testContext from './testContext.js';
 
 const mockReqResponses = {
@@ -691,3 +692,26 @@ test('callRequests with requestIds array form propagates holdValue', async () =>
   expect(snapshot.req_two[0].holdValue).toBe(true);
 });
 
+test('callRequest stores a decoded server error without its dev error, which getDevError returns', async () => {
+  const pageConfig = getPageConfig();
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const decoded = decodeServerError({
+    '~e': { name: 'RequestError', message: 'Something went wrong.', requestId: 'rid-1' },
+    devError: {
+      '~e': { name: 'RequestError', message: 'connect ECONNREFUSED', requestId: 'rid-1' },
+    },
+  });
+  context._internal.lowdefy._internal.callRequest = jest.fn(() => Promise.reject(decoded));
+
+  await expect(
+    context._internal.Requests.callRequest({ requestId: 'req_error', blockId })
+  ).rejects.toBe(decoded);
+
+  const storedError = context.requests.req_error[0].error;
+  expect(storedError).toBe(decoded);
+  expect(Object.getOwnPropertyNames(storedError)).not.toContain('devError');
+  expect(getDevError(storedError).message).toBe('connect ECONNREFUSED');
+});

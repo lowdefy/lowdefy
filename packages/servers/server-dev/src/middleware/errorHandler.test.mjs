@@ -233,8 +233,8 @@ test('errorHandler returns 500 with the serialized error envelope on an api path
   expect(res.status).toEqual(500);
   const body = await res.json();
   expect(body['~e'].name).toEqual('Error');
-  expect(body['~e'].message).toEqual('Top message.');
-  expect(body['~e'].cause.message).toEqual('Cause message.');
+  expect(body['~e'].message).toEqual('Something went wrong.');
+  expect(body['~e'].cause).toBeUndefined();
 });
 
 test('errorHandler omits stack and received from the 500 envelope at the top level', async () => {
@@ -248,19 +248,31 @@ test('errorHandler omits stack and received from the 500 envelope at the top lev
   expect(body['~e'].received).toBeUndefined();
 });
 
-// The regression test for the real bug: the four inline `delete` statements this
-// replaces only ever reached depth 0, so a `received` or `stack` on the cause
-// still crossed the wire. The policy is now applied at every error node.
-test('errorHandler omits stack and received from the 500 envelope on the cause at depth 1', async () => {
+test('errorHandler omits the cause chain from the 500 envelope', async () => {
   const res = await createApp({
     error: createErrorWithCause(),
     logger: createLogger(),
   }).request('/api/request/getUsers');
 
   const body = await res.json();
-  expect(body['~e'].cause.stack).toBeUndefined();
-  expect(body['~e'].cause.received).toBeUndefined();
+  expect(body['~e'].cause).toBeUndefined();
   expect(JSON.stringify(body)).not.toContain(SECRET);
+  expect(JSON.stringify(body)).not.toContain('Cause message.');
+});
+
+test('errorHandler adds devError with the full error to the 500 envelope in dev mode', async () => {
+  const context = { handleError: jest.fn(), mode: 'dev', rid: 'rid-1' };
+  const res = await createApp({
+    context,
+    error: createErrorWithCause(),
+    logger: createLogger(),
+  }).request('/api/request/getUsers');
+
+  const body = await res.json();
+  expect(body['~e'].message).toEqual('Something went wrong.');
+  expect(body.devError['~e'].message).toEqual('Top message.');
+  expect(body.devError['~e'].requestId).toEqual('rid-1');
+  expect(body.devError['~e'].cause.message).toEqual('Cause message.');
 });
 
 test('errorHandler keeps configKey on the 500 envelope so the fault can be located in config', async () => {
@@ -287,7 +299,7 @@ test('errorHandler awaits context.handleError before serializing the response', 
   const context = {
     handleError: jest.fn(async (error) => {
       await new Promise((resolve) => setTimeout(resolve, 10));
-      error.awaited = true;
+      error.handled = true;
     }),
   };
   const error = createErrorWithCause();
@@ -298,7 +310,7 @@ test('errorHandler awaits context.handleError before serializing the response', 
   expect(context.handleError).toHaveBeenCalledTimes(1);
   expect(context.handleError).toHaveBeenCalledWith(error);
   const body = await res.json();
-  expect(body['~e'].awaited).toBe(true);
+  expect(body['~e'].handled).toBe(true);
 });
 
 // createHandleError sets error.handled once it has logged. The client reads it
@@ -339,7 +351,7 @@ test('errorHandler treats a basePath prefixed api path as an api path', async ()
 
   expect(res.status).toEqual(500);
   const body = await res.json();
-  expect(body['~e'].message).toEqual('Top message.');
+  expect(body['~e'].message).toEqual('Something went wrong.');
 });
 
 test('errorHandler treats a basePath prefixed page path as a page path', async () => {

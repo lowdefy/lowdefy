@@ -17,6 +17,7 @@
 import { expect, jest } from '@jest/globals';
 
 import callAPIHandler from '../src/callAPIHandler.js';
+import { getDevError } from '../src/decodeServerError.js';
 
 function createContext({ callAPI }) {
   return {
@@ -162,4 +163,47 @@ test('callAPIHandler without holdValue clears response on error', async () => {
   const entry = context._internal.lowdefy.apiResponses.ep_one[0];
   expect(entry.response).toBe(null);
   expect(entry.holdValue).toBeUndefined();
+});
+
+test('callAPIHandler stores and throws the same decoded error, with its dev error beside it', async () => {
+  const callAPI = jest.fn().mockResolvedValue({
+    error: {
+      '~e': { name: 'Error', message: 'Something went wrong.', requestId: 'rid-1' },
+      devError: { '~e': { name: 'Error', message: 'Routine step failed.', requestId: 'rid-1' } },
+    },
+    response: null,
+    status: 'error',
+    success: false,
+  });
+  const context = createContext({ callAPI });
+
+  let thrown;
+  try {
+    await callAPIHandler(context, {
+      blockId: 'block_id',
+      params: { endpointId: 'ep_one', payload: {} },
+    });
+  } catch (error) {
+    thrown = error;
+  }
+
+  const entry = context._internal.lowdefy.apiResponses.ep_one[0];
+  expect(entry.error).toBe(thrown);
+  expect(thrown.message).toBe('Something went wrong.');
+  expect(Object.getOwnPropertyNames(thrown)).not.toContain('devError');
+  expect(getDevError(thrown).message).toBe('Routine step failed.');
+});
+
+test('callAPIHandler stores and rethrows an error from callAPI unchanged', async () => {
+  const error = new Error('Something went wrong.');
+  const callAPI = jest.fn().mockRejectedValue(error);
+  const context = createContext({ callAPI });
+
+  await expect(
+    callAPIHandler(context, {
+      blockId: 'block_id',
+      params: { endpointId: 'ep_one', payload: {} },
+    })
+  ).rejects.toBe(error);
+  expect(context._internal.lowdefy.apiResponses.ep_one[0].error).toBe(error);
 });

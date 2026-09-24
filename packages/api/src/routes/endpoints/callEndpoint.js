@@ -56,6 +56,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
     steps: {},
     payload: serializer.deserialize(payload),
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: 0,

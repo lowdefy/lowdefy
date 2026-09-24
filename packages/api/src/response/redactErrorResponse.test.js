@@ -15,203 +15,132 @@
 */
 
 import path from 'path';
-import { ConfigError, LowdefyInternalError, RequestError, UserError } from '@lowdefy/errors';
+import { ConfigError, RequestError, UserError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 
 import redactErrorResponse from './redactErrorResponse.js';
 
 const configDirectory = path.resolve('/app/config');
 
-test('redactErrorResponse strips received and stack from the outermost error', () => {
+function createChain() {
+  const root = new Error('connect ECONNREFUSED 10.0.0.5:5432');
+  root.received = { password: 'root-secret' };
   const error = new RequestError('Request failed.', {
+    cause: root,
+    configKey: 'key-1',
     received: { headers: { authorization: 'Bearer super-secret' } },
   });
-  const serialized = redactErrorResponse({}, error);
-  expect(serialized['~e'].message).toBe('Request failed.');
-  expect(serialized['~e'].received).toBeUndefined();
-  expect(serialized['~e'].stack).toBeUndefined();
-});
+  error.source = `${path.resolve(configDirectory, 'requests/users.yaml')}:4`;
+  error.config = 'root.pages[0:home].requests[0:users]';
+  return error;
+}
 
-test('redactErrorResponse strips received and stack at every cause depth', () => {
-  const depth3 = new Error('depth 3');
-  depth3.received = { secret: 'depth-3-secret' };
-  const depth2 = new Error('depth 2', { cause: depth3 });
-  depth2.received = { secret: 'depth-2-secret' };
-  const depth1 = new Error('depth 1', { cause: depth2 });
-  depth1.received = { secret: 'depth-1-secret' };
-  const error = new RequestError('depth 0', {
-    cause: depth1,
-    received: { secret: 'depth-0-secret' },
+test('redactErrorResponse sends only the wire error in prod', () => {
+  const payload = redactErrorResponse({ mode: 'prod', rid: 'rid-1' }, createChain());
+
+  expect(payload).toEqual({
+    '~e': {
+      name: 'RequestError',
+      message: 'Something went wrong.',
+      configKey: 'key-1',
+      requestId: 'rid-1',
+      isLowdefyError: true,
+    },
   });
-
-  const serialized = redactErrorResponse({}, error);
-  const root = serialized['~e'];
-  const nodes = [root, root.cause, root.cause.cause, root.cause.cause.cause];
-
-  // The whole chain must be reached, not just the outermost node - a policy that
-  // only covers depth 0 is the defect this design exists to close.
-  expect(nodes.map((node) => node.message)).toEqual(['depth 0', 'depth 1', 'depth 2', 'depth 3']);
-  nodes.forEach((node) => {
-    expect(node.received).toBeUndefined();
-    expect(node.stack).toBeUndefined();
-  });
-  expect(JSON.stringify(serialized)).not.toContain('secret');
+  expect(JSON.stringify(payload)).not.toContain('secret');
 });
 
-test('redactErrorResponse strips received and stack on an Error-valued own property', () => {
-  const error = new ConfigError('Outer failed.');
-  const nested = new Error('Nested in a property.');
-  nested.received = { secret: 'property-secret' };
-  error.innerError = nested;
+test('redactErrorResponse sends the same wire error in dev as in prod', () => {
+  const prod = redactErrorResponse({ mode: 'prod', rid: 'rid-1', configDirectory }, createChain());
+  const dev = redactErrorResponse({ mode: 'dev', rid: 'rid-1', configDirectory }, createChain());
 
-  const serialized = redactErrorResponse({}, error);
-
-  expect(serialized['~e'].innerError.message).toBe('Nested in a property.');
-  expect(serialized['~e'].innerError.received).toBeUndefined();
-  expect(serialized['~e'].innerError.stack).toBeUndefined();
+  expect(dev['~e']).toEqual(prod['~e']);
 });
 
-test('redactErrorResponse strips received and stack on an Error nested inside a UserError cause', () => {
-  const nested = new Error('Nested in a plain object.');
-  nested.received = { secret: 'object-secret' };
-  // A UserError keeps its non-Error cause, so this exercises the third emission
-  // position: cleanValue handing an Error inside a plain object back to the
-  // extractor.
-  const error = new UserError('Thrown by config.', { cause: { wrapped: nested } });
+test('redactErrorResponse adds devError with the full error only in dev', () => {
+  const payload = redactErrorResponse({ mode: 'dev', rid: 'rid-1' }, createChain());
+  const full = payload.devError['~e'];
 
-  const serialized = redactErrorResponse({}, error);
+  expect(full.message).toBe('Request failed.');
+  expect(full.requestId).toBe('rid-1');
+  expect(full.received).toEqual({ headers: { authorization: 'Bearer super-secret' } });
+  expect(full.config).toBe('root.pages[0:home].requests[0:users]');
+  expect(typeof full.stack).toBe('string');
+  expect(full.cause.message).toBe('connect ECONNREFUSED 10.0.0.5:5432');
+  expect(full.cause.received).toEqual({ password: 'root-secret' });
+  expect(typeof full.cause.stack).toBe('string');
 
-  expect(serialized['~e'].cause.wrapped.message).toBe('Nested in a plain object.');
-  expect(serialized['~e'].cause.wrapped.received).toBeUndefined();
-  expect(serialized['~e'].cause.wrapped.stack).toBeUndefined();
-});
-
-test('redactErrorResponse keeps the cause chain itself so the browser can render the trace', () => {
-  const root = new Error('Connection refused.');
-  const error = new RequestError('Request failed.', { cause: root });
-
-  const serialized = redactErrorResponse({}, error);
-
-  // createBrowserLogger renders name + message per level - taking fields FROM
-  // causes must never prune the causes themselves.
-  expect(serialized['~e'].cause.name).toBe('Error');
-  expect(serialized['~e'].cause.message).toBe('Connection refused.');
-});
-
-test('redactErrorResponse drops a non-Error cause on an internal error', () => {
-  const error = new Error('Invalid routine.', {
-    cause: { routine: { ':throw': { message: 'server-only config' } } },
-  });
-
-  const serialized = redactErrorResponse({}, error);
-
-  expect(serialized['~e'].cause).toBeUndefined();
-  expect(JSON.stringify(serialized)).not.toContain('server-only config');
-});
-
-test('redactErrorResponse keeps a non-Error cause and metaData on a UserError', () => {
-  const error = new UserError('Order rejected.', {
-    blockId: 'submit_button',
-    cause: { reason: 'out of stock' },
-    metaData: { orderId: 'ord_1' },
-    pageId: 'checkout',
-  });
-
-  const serialized = redactErrorResponse({}, error);
-
-  // The one class whose payload is author-authored and client-bound by design.
-  expect(serialized['~e'].cause).toEqual({ reason: 'out of stock' });
-  expect(serialized['~e'].metaData).toEqual({ orderId: 'ord_1' });
-  expect(serialized['~e'].blockId).toBe('submit_button');
-  expect(serialized['~e'].pageId).toBe('checkout');
-});
-
-test('redactErrorResponse keeps configKey, source and config', () => {
-  const error = new ConfigError('Block type not found.', { configKey: 'abc123' });
-  error.source = 'pages/home.yaml:5';
-  error.config = 'root.pages[0:home].blocks[0:header]';
-
-  const serialized = redactErrorResponse({}, error);
-
-  // configKey names a node the client already holds, and the client's
-  // createHandleError dedupe key needs it to separate same-message errors.
-  expect(serialized['~e'].configKey).toBe('abc123');
-  expect(serialized['~e'].source).toBe('pages/home.yaml:5');
-  expect(serialized['~e'].config).toBe('root.pages[0:home].blocks[0:header]');
-});
-
-test('redactErrorResponse returns source config-relative when context.configDirectory is set', () => {
-  const error = new ConfigError('Block type not found.');
-  error.source = `${path.resolve(configDirectory, 'pages/home.yaml')}:5`;
-
-  const serialized = redactErrorResponse({ configDirectory }, error);
-
-  expect(serialized['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
-});
-
-test('redactErrorResponse leaves source unchanged when no configDirectory is set', () => {
-  const error = new ConfigError('Block type not found.');
-  error.source = 'pages/home.yaml:5';
-
-  const serialized = redactErrorResponse({}, error);
-
-  // Production does not set configDirectory today, so source is already
-  // relative. This pins Decision 4 against the drift of someone setting it.
-  expect(serialized['~e'].source).toBe('pages/home.yaml:5');
-});
-
-test('redactErrorResponse strips the prefix when configDirectory carries a trailing separator', () => {
-  const error = new ConfigError('Block type not found.');
-  error.source = `${path.resolve(configDirectory, 'pages/home.yaml')}:5`;
-
-  const serialized = redactErrorResponse(
-    { configDirectory: `${configDirectory}${path.sep}` },
-    error
+  expect('devError' in redactErrorResponse({ mode: 'prod', rid: 'rid-1' }, createChain())).toBe(
+    false
   );
-
-  expect(serialized['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
+  expect('devError' in redactErrorResponse({ rid: 'rid-1' }, createChain())).toBe(false);
 });
 
-test('redactErrorResponse strips the prefix when configDirectory is a relative path', () => {
-  const error = new ConfigError('Block type not found.');
-  // resolveConfigLocation built source with path.resolve(configDirectory, filePath),
-  // so a relative configDirectory produces the same absolute path.
-  error.source = `${path.resolve('some/app', 'pages/home.yaml')}:5`;
+test('redactErrorResponse payload deserializes to the wire error without devError', () => {
+  const payload = redactErrorResponse({ mode: 'dev', rid: 'rid-1' }, createChain());
 
-  const serialized = redactErrorResponse({ configDirectory: 'some/app' }, error);
+  const error = serializer.deserialize(payload);
 
-  expect(serialized['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
+  // The reviver replaces the object holding `~e` with its error, so the
+  // `devError` beside it never reaches what config reads.
+  expect(error).toBeInstanceOf(RequestError);
+  expect(error.message).toBe('Something went wrong.');
+  expect('devError' in error).toBe(false);
 });
 
-test('redactErrorResponse leaves source unchanged when configDirectory does not match it', () => {
-  const error = new ConfigError('Block type not found.');
-  error.source = `${path.resolve('/elsewhere/pages/home.yaml')}:5`;
-
-  const serialized = redactErrorResponse({ configDirectory }, error);
-
-  expect(serialized['~e'].source).toBe(`${path.resolve('/elsewhere/pages/home.yaml')}:5`);
-});
-
-test('redactErrorResponse normalises a source with no line number', () => {
-  const error = new ConfigError('Block type not found.');
-  // resolveConfigLocation returns the bare path when no line number resolved.
-  error.source = path.resolve(configDirectory, 'lowdefy.yaml');
-
-  const serialized = redactErrorResponse({ configDirectory }, error);
-
-  expect(serialized['~e'].source).toBe('lowdefy.yaml');
-});
-
-test('redactErrorResponse normalises source on a nested error node too', () => {
+test('redactErrorResponse makes devError source config-relative at every node', () => {
   const nested = new ConfigError('Inner failed.');
   nested.source = `${path.resolve(configDirectory, 'endpoints/admin.yaml')}:12`;
   const error = new ConfigError('Outer failed.', { cause: nested });
   error.source = `${path.resolve(configDirectory, 'pages/home.yaml')}:5`;
 
-  const serialized = redactErrorResponse({ configDirectory }, error);
+  const payload = redactErrorResponse({ mode: 'dev', configDirectory }, error);
 
-  expect(serialized['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
-  expect(serialized['~e'].cause.source).toBe(`${path.join('endpoints', 'admin.yaml')}:12`);
-  expect(JSON.stringify(serialized)).not.toContain(configDirectory);
+  expect(payload.devError['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
+  expect(payload.devError['~e'].cause.source).toBe(`${path.join('endpoints', 'admin.yaml')}:12`);
+  expect(JSON.stringify(payload)).not.toContain(configDirectory);
+});
+
+test('redactErrorResponse strips the devError prefix when configDirectory carries a trailing separator', () => {
+  const error = new ConfigError('Block type not found.');
+  error.source = `${path.resolve(configDirectory, 'pages/home.yaml')}:5`;
+
+  const payload = redactErrorResponse(
+    { mode: 'dev', configDirectory: `${configDirectory}${path.sep}` },
+    error
+  );
+
+  expect(payload.devError['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
+});
+
+test('redactErrorResponse strips the devError prefix when configDirectory is a relative path', () => {
+  const error = new ConfigError('Block type not found.');
+  // resolveConfigLocation built source with path.resolve(configDirectory, filePath),
+  // so a relative configDirectory produces the same absolute path.
+  error.source = `${path.resolve('some/app', 'pages/home.yaml')}:5`;
+
+  const payload = redactErrorResponse({ mode: 'dev', configDirectory: 'some/app' }, error);
+
+  expect(payload.devError['~e'].source).toBe(`${path.join('pages', 'home.yaml')}:5`);
+});
+
+test('redactErrorResponse leaves a devError source that is not under configDirectory unchanged', () => {
+  const error = new ConfigError('Block type not found.');
+  error.source = `${path.resolve('/elsewhere/pages/home.yaml')}:5`;
+
+  const payload = redactErrorResponse({ mode: 'dev', configDirectory }, error);
+
+  expect(payload.devError['~e'].source).toBe(`${path.resolve('/elsewhere/pages/home.yaml')}:5`);
+});
+
+test('redactErrorResponse normalises a devError source with no line number', () => {
+  const error = new ConfigError('Block type not found.');
+  // resolveConfigLocation returns the bare path when no line number resolved.
+  error.source = path.resolve(configDirectory, 'lowdefy.yaml');
+
+  const payload = redactErrorResponse({ mode: 'dev', configDirectory }, error);
+
+  expect(payload.devError['~e'].source).toBe('lowdefy.yaml');
 });
 
 test('redactErrorResponse leaves a source value inside author-written UserError data alone', () => {
@@ -222,42 +151,32 @@ test('redactErrorResponse leaves a source value inside author-written UserError 
   });
   error.source = `${path.resolve(configDirectory, 'pages/upload.yaml')}:3`;
 
-  const serialized = redactErrorResponse({ configDirectory }, error);
+  const payload = redactErrorResponse({ mode: 'dev', configDirectory }, error);
 
-  // The policy preserves a UserError's cause and metaData because the author wrote
-  // them, so a `source` key inside them is the app's value, not a config location.
-  // The normalisation keys on the error-node shape, not on the key name.
-  expect(serialized['~e'].cause.source).toBe(authorSource);
-  expect(serialized['~e'].metaData.source).toBe(authorSource);
-  expect(serialized['~e'].source).toBe(`${path.join('pages', 'upload.yaml')}:3`);
+  // The normalisation keys on the error-node shape, not on the key name, so a
+  // `source` the author wrote survives in both the wire error and devError.
+  expect(payload['~e'].cause.source).toBe(authorSource);
+  expect(payload['~e'].metaData.source).toBe(authorSource);
+  expect('source' in payload['~e']).toBe(false);
+  expect(payload.devError['~e'].cause.source).toBe(authorSource);
+  expect(payload.devError['~e'].source).toBe(`${path.join('pages', 'upload.yaml')}:3`);
 });
 
 test('redactErrorResponse passes a null error through unchanged', () => {
   // Endpoint routes serialize the error field on success too, where it is null.
-  expect(redactErrorResponse({}, null)).toBeNull();
+  expect(redactErrorResponse({ mode: 'dev' }, null)).toBeNull();
 });
 
 test('redactErrorResponse passes an undefined error through unchanged', () => {
-  expect(redactErrorResponse({}, undefined)).toBeUndefined();
+  expect(redactErrorResponse({ mode: 'dev' }, undefined)).toBeUndefined();
 });
 
-test('redactErrorResponse does not throw when context is missing', () => {
+test('redactErrorResponse sends the wire error when there is no request context', () => {
+  // The server error handler can run before the context middleware has.
   const error = new ConfigError('Block type not found.');
-  error.source = 'pages/home.yaml:5';
 
-  // errorHandler has an else branch for requests with no lowdefyContext.
-  expect(redactErrorResponse(undefined, error)['~e'].source).toBe('pages/home.yaml:5');
-  expect(redactErrorResponse(null, error)['~e'].message).toBe('Block type not found.');
-});
-
-test('redactErrorResponse keeps handled so the client does not log the error twice', () => {
-  const error = new LowdefyInternalError('Unexpected condition.');
-  error.handled = true;
-
-  const serialized = redactErrorResponse({}, error);
-
-  // A LowdefyInternalError never resolves a source, so handled is the only
-  // signal the client has that the server already logged this one.
-  expect(serialized['~e'].handled).toBe(true);
-  expect(serialized['~e'].stack).toBeUndefined();
+  expect(redactErrorResponse(undefined, error)).toEqual({
+    '~e': { name: 'ConfigError', message: 'Something went wrong.', isLowdefyError: true },
+  });
+  expect(redactErrorResponse(null, error)['~e'].message).toBe('Something went wrong.');
 });
