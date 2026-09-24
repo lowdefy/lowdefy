@@ -46,10 +46,10 @@
     "jose": "^6.2.3"
   },
   "peerDependencies": {
-    "@auth/core": ">=0.41.2"
+    "@auth/core": ">=0.41.3"
   },
   "devDependencies": {
-    "@auth/core": "0.41.2",
+    "@auth/core": "0.41.3",
     "@jest/globals": "28.1.3",
     "@lowdefy/node-utils": "6.0.0",
     "@swc/cli": "0.8.1",
