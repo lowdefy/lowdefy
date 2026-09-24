@@ -237,7 +237,7 @@ describe('base URL resolution', () => {
     expect(options.baseURL).toBe('https://app.example.com');
   });
 
-  test('falls back to per-request host derivation and warns in production when BETTER_AUTH_URL is unset', () => {
+  test('leaves baseURL unset and warns in production when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
     const logger = createLogger();
     const options = getBetterAuthConfig({
@@ -248,11 +248,11 @@ describe('base URL resolution', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'auto' });
+    expect(options.baseURL).toBeUndefined();
     expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
   });
 
-  test('does not warn about an unpinned base URL in dev and uses the http protocol', () => {
+  test('leaves baseURL unset without a warning in dev when BETTER_AUTH_URL is unset', () => {
     delete process.env.BETTER_AUTH_URL;
     const logger = createLogger();
     const options = getBetterAuthConfig({
@@ -264,7 +264,7 @@ describe('base URL resolution', () => {
       plugins: createPlugins(),
       secrets: baseSecrets,
     });
-    expect(options.baseURL).toEqual({ allowedHosts: ['*'], protocol: 'http' });
+    expect(options.baseURL).toBeUndefined();
     expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
   });
 });
