@@ -118,7 +118,7 @@
     "@typescript-eslint/parser": "8.59.1",
     "@vscode/test-electron": "2.2.0",
     "esbuild": "0.28.0",
-    "glob": "10.3.12",
+    "glob": "10.5.0",
     "js-yaml": "4.1.0",
     "mocha": "10.1.0",
     "nodemon": "3.1.0",
