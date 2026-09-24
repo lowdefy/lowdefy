@@ -78,7 +78,7 @@
     "@vitejs/plugin-react": "6.0.2",
     "antd": "6.3.1",
     "dayjs": "1.11.20",
-    "hono": "4.12.25",
+    "hono": "4.13.5",
     "pino": "10.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
