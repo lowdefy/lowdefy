@@ -95,7 +95,7 @@ api:
 
 ## Scheduled Endpoints (Cron)
 
-An endpoint can declare `schedules` to run its routine on a timer instead of (or in addition to) being called from the client. This is currently supported on [Vercel deployments](/deployment-vercel), where each schedule becomes a native Vercel cron job.
+An endpoint can declare `schedules` to run its routine on a timer instead of (or in addition to) being called from the client. This is currently supported on [Vercel deployments](/vercel), where each schedule becomes a native Vercel cron job.
 
 ```yaml
 api:
@@ -124,11 +124,11 @@ Each schedule item has:
 
 When a schedule fires, the routine runs as a **system context**: there is no authenticated user, so `_user` is `undefined`. The routine still has full access to connections, requests, operators and secrets — write scheduled routines so they do not depend on a logged-in user. Because cron delivery is best-effort and not retried, design scheduled routines to be idempotent.
 
-See [Deploy with Vercel](/deployment-vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
+See [Deploy with Vercel](/vercel) for how schedules become cron jobs, how to secure them with `CRON_SECRET`, and the applicable plan limits.
 
 ### Schedules per environment
 
-Vercel fires cron jobs only on the **production** deployment, so a staging or develop deployment never runs its schedules on its own. Declare your deployment environments once under [`config.environments`](/lowdefy-schema) and set `LOWDEFY_ENVIRONMENT` on each deployment. Every environment with a `cron.secret` has its schedules registered on production too; when one fires, production pings that environment's own `/api/cron/<endpointId>` at its `url` (fire-and-forget) so the environment runs its own code.
+Vercel fires cron jobs only on the **production** deployment, so a staging or develop deployment never runs its schedules on its own. Declare your deployment environments once under [`config.environments`](/deployment-environments) and set `LOWDEFY_ENVIRONMENT` on each deployment. Every environment with a `cron.secret` has its schedules registered on production too; when one fires, production pings that environment's own `/api/cron/<endpointId>` at its `url` (fire-and-forget) so the environment runs its own code. `cron.secret` is the **name** of a Lowdefy secret, a plain string — not a `_secret` operator.
 
 ```yaml
 config:
@@ -163,7 +163,7 @@ api:
 
 A plain array still works and applies to every environment. Environment names in `schedules` must be declared in `config.environments` (`default` is reserved). A build with no current environment runs the `default` schedules. This shape also works through module vars: a module endpoint with `schedules: { _module.var: tick_schedule }` needs no change — the app sets `tick_schedule: { default: [...], staging: [...] }` in its module vars (a module var that pins `type: array` for its schedule var must drop the pin to accept the keyed form).
 
-The production deployment needs one secret per forwarded environment: the environment variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) set to that environment's `CRON_SECRET`. Forwarded requests carry the firing cron in `x-vercel-cron-schedule` and the environment name in `x-lowdefy-cron-environment`; the target resolves its own schedules from those. See [Deploy with Vercel](/deployment-vercel) for the routes involved.
+The production deployment needs one secret per forwarded environment: the environment variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) set to that environment's `CRON_SECRET`. Forwarded requests carry the firing cron in `x-vercel-cron-schedule` and the environment name in `x-lowdefy-cron-environment`; the target resolves its own schedules from those. See [Deployment environments](/deployment-environments) for the other environment settings and [Deploy with Vercel](/vercel) for the routes involved.
 
 ## Async Endpoints
 
@@ -181,7 +181,7 @@ api:
 - Authorization is checked **before** the call is accepted — an unauthorized caller gets an error, not `{ accepted: true }`.
 - The routine's result never reaches the caller. Completion or failure is written to the server logs; anything else the caller needs to see must be written by the routine itself (for example a status document in a database).
 - `async: true` also applies to scheduled runs — the cron trigger is acknowledged immediately and the routine runs in the background.
-- On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/deployment-vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
+- On serverless deployments the background work still runs inside the same function invocation, so it remains bounded by the function's `maxDuration` — see [Deploy with Vercel](/vercel). To run work in a separate invocation with a fresh time budget, use a [detached endpoint call](#detached-endpoint-calls).
 
 ## Webhook Endpoints
 

@@ -39,6 +39,10 @@ The current environment supplies the defaults:
 
 `cron.secret` is the **name** of a Lowdefy secret, a plain string — not a `_secret` operator.
 
+- **Browser exposure** — environment settings stay on the server. The client learns only the current environment's name and switched-off features (`_app: environment`, `_app: disabled`); `build/config.json` is no longer bundled into the client (the auth client reads the base path from Vite's `BASE_URL`), and a test allowlists the build artifacts client code may import.
+
+The new [Deployment environments](https://docs.lowdefy.com/deployment-environments) docs page covers every setting.
+
 `config.environment` can name the current environment in config instead of `LOWDEFY_ENVIRONMENT`. With environments declared, the current environment must be one of them.
 
 **Replaces `config.cron.environments` (6.0):** a build with `config.cron` fails with the migration — move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.

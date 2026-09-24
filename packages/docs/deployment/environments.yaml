@@ -1,0 +1,165 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: deployment-environments
+    pageTitle: Deployment environments
+    section: Deployment
+    filePath: deployment/environments.yaml
+    content:
+      - id: content
+        type: Markdown
+        properties:
+          content: |
+            Most apps run as more than one deployment: production, a staging copy, a developer's machine. Everything that differs between them is declared once, under `config.environments`, and each deployment says which environment it is with the `LOWDEFY_ENVIRONMENT` environment variable. Lowdefy then takes every environment-specific default from the **current environment** — the app URL, crons, the email delivery filter, Sentry, and the feature switches — so none of them needs its own variable or operator chain.
+
+            ```yaml
+            # lowdefy.yaml
+            config:
+              environments:
+                local:
+                  email:
+                    filter:
+                      replaceAddress: team+local@example.com
+                staging:
+                  url: https://staging.example.com
+                  cron:
+                    secret: STAGING_CRON_SECRET
+                  email:
+                    filter:
+                      replaceAddress: team+staging@example.com
+                prod:
+                  url: https://app.example.com
+                  guards:
+                    secrets:
+                      MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
+            ```
+
+            Then set `LOWDEFY_ENVIRONMENT=prod` on the production deployment, `LOWDEFY_ENVIRONMENT=staging` on staging, and `LOWDEFY_ENVIRONMENT=local` in your local `.env`.
+
+            ## The current environment
+
+            `LOWDEFY_ENVIRONMENT` is read **at build time**, so set it wherever the app is built (on Vercel, as an Environment Variable of each Vercel environment). `config.environment` can name the current environment in config instead; it wins over the variable.
+
+            - With `config.environments` declared, the current environment must be one of its names — a typo fails the build.
+            - A build with environments declared but no current environment warns in production builds, applies no environment setting, and registers only the `default` schedules.
+            - Environment names may contain `A-Z`, `a-z`, `0-9`, `-` and `_`. `default` is reserved.
+
+            ## Environment settings
+
+            Every setting is optional, and every feature is **on by default**: only an explicit `enabled: false` switches one off.
+
+            | Setting | Default | What it does |
+            | --- | --- | --- |
+            | `url` | none | The deployment origin, e.g. `https://staging.example.com`. |
+            | `cron.secret` | none | The name of the Lowdefy secret holding this environment's `CRON_SECRET`; makes this environment a cron forwarding target. |
+            | `cron.enabled` | `true` | `false`: no cron jobs registered or forwarded for this environment. |
+            | `email.filter` | none | Delivery filter (`replaceAddress`, `allowlist`, `regex`) for mail requests. |
+            | `email.enabled` | `true` | `false`: mail requests send nothing. |
+            | `sentry.enabled` | `true` | `false`: Sentry off, server and client. |
+            | `guards.secrets`, `guards.env` | none | Regular expressions the named secrets and environment variables must match, or the build fails. |
+
+            ## URL
+
+            The current environment's `url` is the default for:
+
+            - the auth base URL (`AUTH_URL`) — sign-in callbacks and auth links;
+            - the `serverUrl` of `RenderNotification` steps — the links and logo in notification emails;
+            - where crons are forwarded to, when another environment forwards to this one.
+
+            An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. On the dev server (`lowdefy dev`), an environment without a `url` uses the request origin for notification links; production never does, since a spoofed `Host` header would then steer the links in outgoing mail.
+
+            ## Crons
+
+            Vercel fires cron jobs only on the **production** deployment, so the schedules of other environments are registered there too and forwarded:
+
+            - The current environment registers its own schedules as `/api/cron/<endpointId>` jobs.
+            - An environment with a `cron.secret` is a **forwarding target**. The environment without one (production) also registers the target's schedules as `/api/cron-forward/<environment>/<endpointId>` jobs; when one fires, it pings the target's own `/api/cron/<endpointId>` at its `url` with the target's `CRON_SECRET` and answers immediately.
+            - `cron.secret` is the **name** of a Lowdefy secret — a plain string such as `STAGING_CRON_SECRET`, not a `_secret` operator (environment settings are resolved at build time, where `_secret` is not evaluated). Production reads the value at runtime from `LOWDEFY_SECRET_STAGING_CRON_SECRET`, so set that variable on the production deployment to staging's `CRON_SECRET`.
+            - `cron.enabled: false` registers nothing for that environment, and production does not forward to it.
+
+            Endpoint `schedules` can be keyed by environment name, with a `default` for the rest and `[]` to turn an endpoint off in one environment — see [Schedules per environment](/lowdefy-api). The Vercel side (securing the routes, plan limits) is covered in [Deploy with Vercel](/vercel).
+
+            ## Email
+
+            - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own (or a filter that resolves to `null`). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
+            - A connection's own `filter` always wins, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
+            - **`email.enabled: false`** sends nothing: each message reports `{ messageId: null, to: null, disabled: true }`.
+            - Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment.
+
+            See the [SMTP](/SMTP) and [SendGridMail](/SendGridMail) connections for the filter fields.
+
+            ## Logs and Sentry
+
+            - Every server log line carries `environment` next to `app_name`, `app_version` and `git_sha`, so one log drain can hold every environment. Logging cannot be switched off.
+            - Sentry reports under the environment name unless `logger.sentry.environment` is set, and `sentry.enabled: false` turns it off on the server and in the browser.
+
+            ## Guards
+
+            Guards pin an environment's secrets and environment variables to a pattern kept in config — a second factor for deploy-time configuration. In the current environment the build fails before anything deploys unless every guarded value matches its regular expression; an unset value fails too. Changing the production database then takes both a new variable value **and** a reviewed config change.
+
+            ```yaml
+            config:
+              environments:
+                prod:
+                  url: https://app.example.com
+                  guards:
+                    secrets: # Lowdefy secrets, by name (LOWDEFY_SECRET_<name>)
+                      MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
+                    env: # any environment variable
+                      AUTH_URL: '^https://app\.example\.com$'
+            ```
+
+            - Patterns match anywhere in the value, so a distinctive substring is enough; add `^` and `$` to pin the whole value. A pattern is committed with your config, so never put the sensitive part of a secret in it — a host name or database name is enough.
+            - Only the current environment's guards are checked, against the variables present when the build runs. Every environment's patterns are validated, so a broken pattern fails the build that introduces it.
+            - A failure names the variable and never prints its value.
+            - Guards need the real values at build time. On Vercel, Environment Variables are available to the build; a container build that only injects secrets when the container starts sees them as unset and fails.
+
+            ## What reaches the browser
+
+            Environment settings stay on the server. The browser only learns the current environment's **name** and the list of features it switches off, through the app metadata:
+
+            - `_app: environment` — the current environment's name.
+            - `_app: disabled` — the switched-off features, e.g. `[email, sentry]`.
+
+            Other environments' settings, URLs, secret names, email filters and guards never reach the client bundle; guards are removed from the build output altogether.
+
+            ## Upgrading from `config.cron`
+
+            Lowdefy 6.0 declared cron environments under `config.cron.environments`. That key is replaced, and a build that still has it fails with the migration:
+
+            ```yaml
+            # Before
+            config:
+              cron:
+                environments:
+                  production: {}
+                  staging:
+                    url: https://staging.example.com
+                    secret: STAGING_CRON_SECRET
+
+            # After
+            config:
+              environments:
+                production:
+                  url: https://app.example.com
+                staging:
+                  url: https://staging.example.com
+                  cron:
+                    secret: STAGING_CRON_SECRET
+            ```
+
+            Move each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.
