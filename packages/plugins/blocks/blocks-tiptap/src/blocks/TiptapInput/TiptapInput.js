@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -52,8 +52,13 @@ const TiptapInput = ({
   const disabled = properties.disabled === true || loading;
   const uploadEnabled = !type.isNone(uploadPolicyRequestId);
 
+  // The Placeholder extension is created once, so it reads the current text from a ref.
+  const placeholderRef = useRef();
+  placeholderRef.current = properties.placeholder ?? '';
+
   const extensions = buildExtensions({
     properties,
+    getPlaceholder: () => placeholderRef.current,
     insertImage,
     uploadEnabled,
   });
@@ -67,6 +72,8 @@ const TiptapInput = ({
     extensions,
     content: value?.html || '',
     editable: () => !disabled,
+    // TipTap v2 re-rendered the block on every editor transaction; v3 only does when asked.
+    shouldRerenderOnTransaction: true,
     onUpdate({ editor }) {
       // User-driven change. Emit the full derived value to Lowdefy.
       emit(editor);
@@ -109,12 +116,13 @@ const TiptapInput = ({
   // Register methods as soon as the editor is available.
   useEffect(() => {
     if (!editor) return;
+    // emitUpdate false: the methods emit the value themselves and must not trigger onChange.
     methods.registerMethod('clear', () => {
-      editor.commands.clearContent();
+      editor.commands.clearContent(false);
       emit(editor);
     });
     methods.registerMethod('setContent', (args) => {
-      editor.commands.setContent(args?.html ?? '');
+      editor.commands.setContent(args?.html ?? '', { emitUpdate: false });
       emit(editor);
     });
     methods.registerMethod('focus', () => {
@@ -123,7 +131,7 @@ const TiptapInput = ({
   }, [editor]);
 
   // External value.html → editor sync. One-way only: we read value.html and
-  // push it into the editor with setContent(..., false) so tiptap's onUpdate
+  // push it into the editor with emitUpdate false so tiptap's onUpdate
   // does not fire. No write-back via emit() — that would race with concurrent
   // SetState calls (child effects fire before parent effects, so a sibling's
   // onMount SetState could be overwritten by our derived emit). Derived
@@ -135,7 +143,7 @@ const TiptapInput = ({
     const next = value?.html ?? '';
     const current = editor.getHTML();
     if (next !== current) {
-      editor.commands.setContent(next, false);
+      editor.commands.setContent(next, { emitUpdate: false });
     }
   }, [value?.html, editor]);
 
@@ -144,15 +152,10 @@ const TiptapInput = ({
     editor.setOptions({ editable: !disabled });
   }, [editor, disabled]);
 
+  // Redraw the placeholder when its text changes.
   useEffect(() => {
     if (!editor) return;
-    const placeholderExt = editor.extensionManager.extensions.find(
-      (extension) => extension.name === 'placeholder'
-    );
-    if (placeholderExt) {
-      placeholderExt.options.placeholder = properties.placeholder ?? '';
-      editor.view.dispatch(editor.state.tr);
-    }
+    editor.view.dispatch(editor.state.tr);
   }, [editor, properties.placeholder]);
 
   const wrapperClass = [
