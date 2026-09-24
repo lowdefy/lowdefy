@@ -67,6 +67,12 @@ function template({
   const modulePreloads = [...assets.imports, ...pageAssets.js]
     .map((file) => `<link rel="modulepreload" href="${basePath}/${file}" />`)
     .join('\n    ');
+  // Lazy block implementations load on mount; prefetch fills the cache at idle
+  // priority. crossorigin matches the CORS mode of the module and stylesheet
+  // requests Vite makes on mount, so they are served from that cache.
+  const prefetches = pageAssets.prefetch
+    .map((file) => `<link rel="prefetch" href="${basePath}/${file}" crossorigin />`)
+    .join('\n    ');
 
   // appendHead and appendBody are intentionally raw HTML from app config
   // (analytics snippets, font links) — they must not be escaped. The config
@@ -84,6 +90,7 @@ function template({
     ${title ? `<title>${escapeHtml(title)}</title>` : ''}
     ${cssLinks}
     ${modulePreloads}
+    ${prefetches}
     ${appendHead}
   </head>
   <body>

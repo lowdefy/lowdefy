@@ -15,7 +15,9 @@
 */
 
 import React from 'react';
+import { jest } from '@jest/globals';
 import { render } from '@testing-library/react';
+import DOMPurify from 'dompurify';
 
 import HtmlComponent from './HtmlComponent.js';
 
@@ -145,4 +147,35 @@ test('Render bad html', async () => {
     />
   );
   expect(container.firstChild).toMatchSnapshot();
+});
+
+test('HtmlComponent does not sanitize or reset innerHTML when re-rendered with the same html', () => {
+  const sanitize = jest.spyOn(DOMPurify, 'sanitize');
+  const { container, rerender } = render(
+    <HtmlComponent id="same" html="<details>Info</details>" />
+  );
+  expect(sanitize).toHaveBeenCalledTimes(1);
+  // Stands in for state the browser keeps in the element, like an open <details>.
+  container.firstChild.firstChild.setAttribute('open', '');
+  rerender(<HtmlComponent id="same" html="<details>Info</details>" style={{ color: 'red' }} />);
+  expect(sanitize).toHaveBeenCalledTimes(1);
+  expect(container.firstChild.firstChild.hasAttribute('open')).toBe(true);
+  sanitize.mockRestore();
+});
+
+test('HtmlComponent sanitizes and replaces innerHTML when the html changes', () => {
+  const sanitize = jest.spyOn(DOMPurify, 'sanitize');
+  const { container, rerender } = render(<HtmlComponent html="<b>One</b>" />);
+  rerender(<HtmlComponent html="<b>Two</b>" />);
+  expect(sanitize).toHaveBeenCalledTimes(2);
+  expect(container.firstChild.innerHTML).toBe('<b>Two</b>');
+  sanitize.mockRestore();
+});
+
+test('HtmlComponent applies the same html again when the element changes from span to div', () => {
+  const { container, rerender } = render(<HtmlComponent html="<b>Same</b>" />);
+  expect(container.firstChild.tagName).toBe('SPAN');
+  rerender(<HtmlComponent html="<b>Same</b>" div={true} />);
+  expect(container.firstChild.tagName).toBe('DIV');
+  expect(container.firstChild.innerHTML).toBe('<b>Same</b>');
 });

@@ -33,6 +33,7 @@
   "files": [
     "dist/*"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json && pnpm copyfiles",
     "clean": "rm -rf dist",
