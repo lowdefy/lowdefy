@@ -65,6 +65,7 @@
     "@lowdefy/nunjucks": "6.0.0",
     "@lowdefy/operators": "6.0.0",
     "@lowdefy/operators-js": "6.0.0",
+    "acorn": "8.16.0",
     "ajv": "8.20.0",
     "json5": "2.2.3",
     "picomatch": "4.0.4",

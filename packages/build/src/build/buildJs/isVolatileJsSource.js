@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
+import { tokenizer } from 'acorn';
+
 // Globals whose value can change with no update the engine sees: the clock, randomness and browser
-// state. A client _js function that references one is re-evaluated on every pass. Over-matching
-// (a property named `location`, a word in a string) only costs an evaluation, so the match is on
-// the bare identifier anywhere in the source.
-const volatileIdentifiers = [
+// state. A client _js function that references one is re-evaluated on every pass.
+// Not `location`: in a _js body it is the accessor parameter, which shadows the global, and its
+// calls are recorded through the _location operator's own declaration. The global is still reached
+// only through window, document, self or globalThis, which are listed.
+const volatileIdentifiers = new Set([
   'Date',
   'performance',
   'window',
@@ -28,9 +31,6 @@ const volatileIdentifiers = [
   'localStorage',
   'sessionStorage',
   'navigator',
-  // Not `location`: in a _js body it is the accessor parameter, which shadows the global, and its
-  // calls are recorded through the _location operator's own declaration. The global is still
-  // reached only through window, document, self or globalThis, which are listed.
   'crypto',
   'history',
   'screen',
@@ -41,11 +41,11 @@ const volatileIdentifiers = [
   // the clock.
   'Intl',
   'Temporal',
-];
+]);
 
 // Math members that are pure functions or constants. Any other use of Math - Math.random,
-// Math[name], or aliasing like `const { random } = Math` - is treated as volatile.
-const pureMathMembers = [
+// Math[name], or aliasing like `const { random } = Math` - is volatile.
+const pureMathMembers = new Set([
   'abs',
   'acos',
   'acosh',
@@ -88,16 +88,40 @@ const pureMathMembers = [
   'PI',
   'SQRT1_2',
   'SQRT2',
-];
+]);
 
-const volatilePattern = new RegExp(
-  `\\b(${volatileIdentifiers.join('|')})\\b|\\bMath\\b(?!\\s*\\.\\s*(${pureMathMembers.join(
-    '|'
-  )})\\b)`
-);
+// Tokenized, not pattern-matched: comments and string contents are not code (a comment saying
+// "the welcome screen" must not make a function volatile), template literal expressions are, and
+// a name after "." is a property (obj.screen), not the global.
+function tokensOf(source) {
+  try {
+    return [...tokenizer(source, { ecmaVersion: 'latest', allowReturnOutsideFunction: true })];
+  } catch (error) {
+    return null;
+  }
+}
 
 function isVolatileJsSource(source) {
-  return volatilePattern.test(source);
+  const tokens = tokensOf(source);
+  // Source the tokenizer cannot read is treated as volatile: always evaluating is the safe side.
+  if (tokens === null) {
+    return true;
+  }
+  return tokens.some((token, index) => {
+    if (token.type.label !== 'name') {
+      return false;
+    }
+    const previous = tokens[index - 1];
+    if (previous && (previous.type.label === '.' || previous.type.label === '?.')) {
+      return false;
+    }
+    if (token.value === 'Math') {
+      const next = tokens[index + 1];
+      const member = tokens[index + 2];
+      return !(next && next.type.label === '.' && member && pureMathMembers.has(member.value));
+    }
+    return volatileIdentifiers.has(token.value);
+  });
 }
 
 export default isVolatileJsSource;

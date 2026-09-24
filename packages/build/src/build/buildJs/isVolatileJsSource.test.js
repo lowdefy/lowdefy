@@ -80,3 +80,24 @@ test.each(["return location('pageId');", "return location('href');"])(
     expect(isVolatileJsSource(source)).toBe(false);
   }
 );
+
+test.each([
+  "// the welcome\n// screen, not the model\nreturn state('a');",
+  "/* Date of expiry */ return state('expires');",
+  "return 'window.location and Date.now() are just words here';",
+  'return item.screen + row.document + obj.Date;',
+])('isVolatileJsSource ignores comments, strings and property names: %s', (source) => {
+  expect(isVolatileJsSource(source)).toBe(false);
+});
+
+test.each([
+  'return `updated ${Date.now()}`;',
+  "const url = 'http://example.com'; return new Date();",
+  'return (x) => x /* not a regex */ / 2 + performance.now();',
+])('isVolatileJsSource still finds code in templates and after tricky tokens: %s', (source) => {
+  expect(isVolatileJsSource(source)).toBe(true);
+});
+
+test('isVolatileJsSource treats source it cannot tokenize as volatile', () => {
+  expect(isVolatileJsSource('return `unterminated')).toBe(true);
+});
