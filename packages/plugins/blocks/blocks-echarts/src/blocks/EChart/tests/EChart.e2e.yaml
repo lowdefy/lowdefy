@@ -158,6 +158,9 @@ blocks:
       init:
         renderer: svg
       option:
+        # Bars grow from zero height; a click during that animation can land on a
+        # zero-size element, so these charts render without it.
+        animation: false
         xAxis:
           type: category
           data:
@@ -218,6 +221,9 @@ blocks:
               axisLabel:
                 color: '#0000ff'
       option:
+        # Bars grow from zero height; a click during that animation can land on a
+        # zero-size element, so these charts render without it.
+        animation: false
         xAxis:
           type: category
           data:
