@@ -28,7 +28,9 @@ const volatileIdentifiers = [
   'localStorage',
   'sessionStorage',
   'navigator',
-  'location',
+  // Not `location`: in a _js body it is the accessor parameter, which shadows the global, and its
+  // calls are recorded through the _location operator's own declaration. The global is still
+  // reached only through window, document, self or globalThis, which are listed.
   'crypto',
   'history',
   'screen',

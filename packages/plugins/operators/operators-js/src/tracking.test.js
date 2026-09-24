@@ -139,6 +139,8 @@ test.each([
   ['_intl.dateTimeFormat of a date', { '_intl.dateTimeFormat': { on: { _date: 0 } } }, []],
   ['_random', { _random: 'string' }, [['volatile', '_random']]],
   ['_location', { _location: 'href' }, [['volatile', '_location']]],
+  ['_location pageId (fixed for the context)', { _location: 'pageId' }, []],
+  ['_location basePath', { _location: 'basePath' }, []],
   ['_media', { _media: 'size' }, [['volatile', '_media']]],
   ['_url_query', { _url_query: 'q' }, [['volatile', '_url_query']]],
   ['_event_log', { _event_log: true }, [['untracked', '_event_log']]],

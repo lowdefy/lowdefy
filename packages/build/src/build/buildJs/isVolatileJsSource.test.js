@@ -30,8 +30,6 @@ test.each([
   "return localStorage.getItem('a');",
   "return sessionStorage.getItem('a');",
   'return navigator.language;',
-  'return location.hash;',
-  "return location('href');",
   'return crypto.randomUUID();',
   'return history.length;',
   'return screen.width;',
@@ -69,6 +67,15 @@ test.each([
 
 test.each(['return Math.max(a, b) + Math.PI;', 'return Math.round(state("total") * 100) / 100;'])(
   'isVolatileJsSource leaves pure Math use %s pure',
+  (source) => {
+    expect(isVolatileJsSource(source)).toBe(false);
+  }
+);
+
+// In a _js body `location` is the accessor parameter, which shadows the global; its calls are
+// recorded through the _location operator's own declaration at runtime.
+test.each(["return location('pageId');", "return location('href');"])(
+  'isVolatileJsSource leaves the location accessor %s to the _location declaration',
   (source) => {
     expect(isVolatileJsSource(source)).toBe(false);
   }

@@ -63,7 +63,12 @@ function _location({ arrayIndices, basePath, home, location, pageId, params, glo
 }
 
 _location.dynamic = true;
-// Reads window.location live, which changes (a hash link, navigation) with no update to report it.
-_location.tracking = { kind: 'volatile' };
+// pageId, basePath and homePageId come from the page's context, which never changes them while
+// it lives (navigation runs a full pass). Everything else reads window.location live, which
+// changes (a hash link, navigation) with no update to report it.
+const contextProperties = ['pageId', 'basePath', 'homePageId'];
+
+_location.tracking = ({ params }) =>
+  contextProperties.includes(params) ? { kind: 'pure' } : { kind: 'volatile' };
 
 export default _location;
