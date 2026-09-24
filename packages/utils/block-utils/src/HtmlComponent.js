@@ -28,13 +28,25 @@ class HtmlComponent extends React.Component {
   }
 
   componentDidMount() {
-    const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString);
+    this.applyHtml();
   }
 
   componentDidUpdate() {
+    this.applyHtml();
+  }
+
+  // Parent re-renders usually pass the same string. Re-sanitizing and resetting
+  // innerHTML then costs time on every render and resets open <details>, playing
+  // media and text selection, so it only happens when the string or element
+  // changed.
+  applyHtml() {
     const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
+    if (this.div === this.appliedDiv && htmlString === this.appliedHtml) {
+      return;
+    }
     this.div.innerHTML = DOMPurify.sanitize(htmlString);
+    this.appliedDiv = this.div;
+    this.appliedHtml = htmlString;
   }
 
   onTextSelection() {

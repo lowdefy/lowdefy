@@ -33,7 +33,8 @@
     "build": "swc src --out-dir dist --config-file ../../.swcrc --cli-config-file ../../.swc-cli.json",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:compiled": "node --experimental-vm-modules node_modules/jest/bin/jest.js --setupFilesAfterEnv ./test/compileFirstParse.js"
   },
   "dependencies": {
     "@lowdefy/errors": "6.0.0",
