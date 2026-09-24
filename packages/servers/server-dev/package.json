@@ -49,7 +49,7 @@
     "@auth/core": "0.41.2",
     "@hono/auth-js": "1.1.1",
     "@hono/mcp": "0.3.0",
-    "@hono/node-server": "2.0.4",
+    "@hono/node-server": "2.0.10",
     "@hono/vite-dev-server": "0.26.0",
     "@lowdefy/actions-core": "6.0.0",
     "@lowdefy/api": "6.0.0",
