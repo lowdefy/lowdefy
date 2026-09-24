@@ -53,6 +53,7 @@ function createContext({
     unresolvedRefVars: {},
     seenSourceLines: new Set(),
     stage,
+    pageTypeCounters: new Map(),
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),

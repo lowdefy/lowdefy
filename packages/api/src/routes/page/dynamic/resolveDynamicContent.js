@@ -20,6 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
 import unescapeOperators from './unescapeOperators.js';
+import flagTypesOutsidePage from './flagTypesOutsidePage.js';
 import validateFragment from './validateFragment.js';
 
 const MAX_DYNAMIC_DEPTH = 5;
@@ -98,6 +99,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
       idPrefix: block.id,
       types: shared.types,
       blockMetas: shared.blockMetas,
+      usedTypes: shared.usedTypes,
     });
     warnings.forEach((warning) => {
       logger.warn(
@@ -148,10 +150,11 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
 async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
   // Loaded lazily so apps without dynamic pages never load the build package.
   const { default: buildDynamicBlocks } = await import('@lowdefy/build/dynamic');
-  const [types, blockMetas, blockSchemas] = await Promise.all([
+  const [types, blockMetas, blockSchemas, pageTypeSets] = await Promise.all([
     context.readConfigFile('types.json'),
     context.readConfigFile('plugins/blockMetas.json'),
     context.readConfigFile('plugins/blockSchemas.json'),
+    context.readConfigFile('pageTypeSets.json'),
   ]);
   context.evaluateOperators = createEvaluateOperators(context);
   const shared = {
@@ -162,9 +165,15 @@ async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
     pageRequests: pageConfig.requests ?? [],
     types: types ?? {},
     urlQuery,
+    usedTypes: { actions: new Set(), blocks: new Set(), operators: new Set() },
   };
   // The page root block itself can be a Dynamic block.
   await resolveBlocks(context, { blocks: [pageConfig], depth: 0, shared });
+  flagTypesOutsidePage(context, {
+    pageConfig,
+    pageTypeSets,
+    usedTypes: shared.usedTypes,
+  });
   return pageConfig;
 }
 

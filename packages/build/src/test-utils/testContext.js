@@ -31,6 +31,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       config: configDirectory || '',
       server: '',
     },
+    pageTypeCounters: new Map(),
     typeCounters: {
       actions: createCounter(),
       agents: createCounter(),
