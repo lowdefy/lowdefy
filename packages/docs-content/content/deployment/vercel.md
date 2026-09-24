@@ -34,7 +34,7 @@ Files in your app's `public/` directory (favicon, icons, images, `manifest.webma
 
 ###### Secrets and environment variables
 
-Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](#deployment-environments)) or `BETTER_AUTH_URL`. Different secrets can be set for production and preview deployments.
+Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`. Different secrets can be set for production and preview deployments.
 
 ###### Function settings
 
@@ -82,47 +82,7 @@ Each schedule becomes a cron job pointing at `/api/cron/<endpointId>`. When it f
 
 ###### Deployment environments
 
-Declare the app's deployment environments once under `config.environments`, and set the `LOWDEFY_ENVIRONMENT` Environment Variable on each Vercel environment to its name (for example `prod` on Production and `staging` on the staging branch's environment). The build reads it and the current environment supplies the defaults for everything environment-specific, so none of them needs its own variable:
-
-```yaml
-config:
-  environments:
-    prod:
-      url: https://app.example.com
-    staging:
-      url: https://staging.example.com
-      cron:
-        secret: STAGING_CRON_SECRET
-      email:
-        filter:
-          replaceAddress: team+staging@example.com
-```
-
-- **`url`** is the default for the auth canonical URL (`BETTER_AUTH_URL` — auth links, the CSRF origin allowlist and the MCP resource URIs), for the links and logo in notification emails (the `RenderNotification` `serverUrl`), and it is where crons are forwarded to. An explicit `BETTER_AUTH_URL` or `serverUrl` still wins.
-- **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request unless the connection sets its own `filter` (`false` turns it off for that connection) — keep non-production environments from emailing real users in one place.
-- **Logs and analytics:** every server log line carries `environment`, `_app: environment` reads the name in config, and Sentry reports under it unless `logger.sentry.environment` is set.
-- A build with `config.environments` declared but no `LOWDEFY_ENVIRONMENT` warns, and applies no environment settings. `LOWDEFY_ENVIRONMENT` must name a declared environment.
-- **Switching features off:** `cron.enabled`, `email.enabled`, `posthog.enabled` and `sentry.enabled` default to `true`; set one to `false` to turn that feature off in one environment — no crons registered or forwarded, no email sent by mail requests, no PostHog, no Sentry. The features the current environment switches off are listed in the app metadata (`_app: disabled`). Logging cannot be switched off.
-
-###### Guards
-
-Guards pin an environment's secrets and environment variables to a pattern kept in config — a second factor for deploy-time configuration. In the current environment the build fails before anything deploys unless every guarded value matches its regular expression (an unset value fails too). Changing the production database, say, then takes both a new variable value and a reviewed config change:
-
-```yaml
-config:
-  environments:
-    prod:
-      url: https://app.example.com
-      guards:
-        secrets: # Lowdefy secrets, by name (LOWDEFY_SECRET_<name>)
-          MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
-        env: # any environment variable
-          BETTER_AUTH_URL: '^https://app\.example\.com$'
-```
-
-- Patterns are regular expressions matched anywhere in the value, so a distinctive substring is enough; add `^`/`$` to pin the whole value. Keep them short — a pattern is committed with the config, so never put a secret's sensitive part in it.
-- Only the current environment's guards are checked, against the variables of the build (on Vercel, the environment's variables). Every environment's patterns are validated.
-- A failure names the variable and never prints its value. Guards are removed from the build output, so the patterns never reach the client.
+Declare the app's environments once under `config.environments` and name the current one with the `LOWDEFY_ENVIRONMENT` Environment Variable — see [Deployment environments](/deployment-environments) for every setting (URL, crons, email, Sentry, PostHog, feature switches, guards). On Vercel, add `LOWDEFY_ENVIRONMENT` to each Vercel environment (for example `prod` on Production and `staging` on the staging branch's Preview environment). Vercel Environment Variables are available at build time, which is when Lowdefy reads it and checks guards.
 
 ###### Crons for staging and other environments
 
@@ -130,18 +90,18 @@ Vercel fires cron jobs only on the **production** deployment — a staging or pr
 
 - **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the **name** of the Lowdefy secret holding that environment's own `CRON_SECRET` — a plain string such as `STAGING_CRON_SECRET`, not `{ _secret: ... }`: environment settings are resolved at build time, and the forward route reads the value at runtime from `LOWDEFY_SECRET_<name>`. Set `cron.enabled: false` on an environment to register no crons for it.
 - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.
-- **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/api). The generated crons are `/api/cron/<endpointId>` for the current environment and `/api/cron-forward/<environment>/<endpointId>` for the forwarded ones; all of them count toward the project's cron limit.
+- **Per-environment schedules:** key an endpoint's `schedules` by environment name with an optional `default` (`staging: []` turns them off) — see [Schedules per environment](/lowdefy-api). The generated crons are `/api/cron/<endpointId>` for the current environment and `/api/cron-forward/<environment>/<endpointId>` for the forwarded ones; all of them count toward the project's cron limit.
 - **Plan limits still apply per project:** a per-minute staging schedule needs the same Pro plan as a per-minute production one.
-- **Upgrading from 6.0:** `config.cron.environments` is replaced by `config.environments`, and a build that still has `config.cron` fails with the migration: move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.
+- **Upgrading from 6.0:** `config.cron.environments` is replaced by `config.environments`; see [Upgrading from `config.cron`](/deployment-environments).
 
 ###### Background work: async endpoints and detached calls
 
-Two [API endpoint](/api) controls exist for work that should not hold up a response — they behave differently on Vercel:
+Two [API endpoint](/lowdefy-api) controls exist for work that should not hold up a response — they behave differently on Vercel:
 
 - **`async: true` endpoints** respond `{ accepted: true }` immediately and run the routine in the background. On Vercel the invocation is kept alive via the platform request context (Fluid compute) until the routine settles — but it is still the *same* invocation, so the background work remains bounded by `maxDuration`. Raise `config.vercel.maxDuration` to cover your longest async routine.
 - **`detached: true` on `CallApi` steps** fire-and-forget the target endpoint through a `POST` to the deployment's own `/api/detached/<endpointId>` route, so the target runs in its **own** invocation with a fresh `maxDuration` budget. The route is secured by `CRON_SECRET` (same secret as cron, fail closed), and detached steps fail with a config error if it is not set. Delivery is at-most-once with no retry; targets run as system context (`_user` is `undefined`) and must be idempotent.
 
-See [Async Endpoints](/api) and [Detached Endpoint Calls](/api) in the API docs for full semantics.
+See [Async Endpoints](/lowdefy-api) and [Detached Endpoint Calls](/lowdefy-api) in the API docs for full semantics.
 
 ###### Cost protection
 
