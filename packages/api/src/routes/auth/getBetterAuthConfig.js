@@ -237,33 +237,33 @@ function getBetterAuthConfig({
     : createSendEmail({ connectionId: authConfig.email.connectionId });
 
   // BetterAuth builds password-reset, magic-link and email-verification links,
-  // and its CSRF Origin allowlist, from the base URL. When the deployment's
+  // and its trusted origins (the CSRF Origin check and the allowed
+  // callbackURL / redirectTo targets), from the base URL. When the deployment's
   // canonical origin is pinned - BETTER_AUTH_URL, else the url of the current
   // environment in config.environments - both are fixed and cannot be steered
   // by a spoofed Host / X-Forwarded-Host header (CWE-640 password-reset
-  // poisoning). Without it, fall back to per-request host derivation - the
-  // zero-config path that supports arbitrary proxies and multi-host
-  // deployments - and warn in production that the host is then
-  // caller-controlled.
+  // poisoning). Without it, baseURL is left unset: BetterAuth then derives the
+  // origin from each request, and trusts that one origin only. The dynamic
+  // `{ allowedHosts: ['*'] }` form would also derive links per request, but it
+  // turns the wildcard into trusted origins, so any site's callbackURL or
+  // redirectTo passes the check. The unpinned path still takes the link host
+  // from the request, so warn in production.
   const canonicalUrl = getCanonicalUrl({ config });
-  let baseURL;
+  let baseUrlOrigin;
   if (canonicalUrl) {
-    baseURL = canonicalUrl;
-  } else {
-    if (!dev) {
-      logger.warn(
-        "Auth base URL is not pinned. Set the url of the current environment in config.environments (or BETTER_AUTH_URL) to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
-      );
-    }
-    baseURL = { allowedHosts: ['*'], protocol: dev ? 'http' : 'auto' };
+    baseUrlOrigin = canonicalUrl;
+  } else if (!dev) {
+    logger.warn(
+      "Auth base URL is not pinned. Set the url of the current environment in config.environments (or BETTER_AUTH_URL) to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
+    );
   }
-  // When BETTER_AUTH_URL is not pinned baseURL is an object and the origin is
-  // unknown - used for logo resolution AND the invitation accept-URL fallback.
-  const baseUrlOrigin = type.isString(baseURL) ? baseURL : undefined;
 
   const options = {
     appName: appMeta?.name ?? 'Lowdefy',
-    baseURL,
+    // Undefined when unpinned - see above. Also used for logo resolution and
+    // the invitation accept-URL fallback, which skip the origin when it is
+    // unknown.
+    baseURL: baseUrlOrigin,
     basePath: `${config.basePath ?? ''}/api/auth`,
     secret: authConfig.secret,
     telemetry: { enabled: false },
