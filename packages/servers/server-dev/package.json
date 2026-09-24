@@ -111,7 +111,7 @@
   },
   "devDependencies": {
     "jest": "28.1.3",
-    "webpack": "5.94.0"
+    "webpack": "5.104.1"
   },
   "engines": {
     "node": ">=22"
