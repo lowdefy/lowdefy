@@ -16,17 +16,24 @@
 
 import { applyArrayIndices, set } from '@lowdefy/helpers';
 
+import reportAppChange from '../tracking/reportAppChange.js';
+
 const createSetGlobal = ({ arrayIndices, context }) => {
   return function setGlobal(params) {
-    Object.keys(params).forEach((key) => {
-      set(
-        context._internal.lowdefy.lowdefyGlobal,
-        applyArrayIndices(arrayIndices, key),
-        params[key]
-      );
+    const changes = Object.keys(params).map((key) => {
+      const path = applyArrayIndices(arrayIndices, key);
+      set(context._internal.lowdefy.lowdefyGlobal, path, params[key]);
+      reportAppChange({ context, key: `global:${path}` });
+      return `global:${path}`;
     });
     context._internal.RootSlots.reset();
-    context._internal.update();
+    // SetGlobal with nothing to set is used to refresh the page (SetLocale does), so it stays a
+    // full pass.
+    if (changes.length === 0) {
+      context._internal.update();
+      return;
+    }
+    context._internal.update({ changes });
   };
 };
 

@@ -3078,6 +3078,14 @@ export default {
             type: 'App "config.basePath" should be a string.',
           },
         },
+        dependencyTracking: {
+          type: 'boolean',
+          description:
+            'Set false to evaluate every block on every page update. By default an update evaluates only the blocks that read what changed. Defaults to true.',
+          errorMessage: {
+            type: 'App "config.dependencyTracking" should be a boolean.',
+          },
+        },
         vercel: {
           type: 'object',
           additionalProperties: false,

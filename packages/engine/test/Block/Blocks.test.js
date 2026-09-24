@@ -15,8 +15,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { jest } from '@jest/globals';
-
 import { serializer } from '@lowdefy/helpers';
 
 import testContext from '../testContext.js';
@@ -849,19 +847,22 @@ test('max recuse limit', async () => {
       },
     ],
   };
+  // Full passes: block a's visible evaluates to an object ('_ne' is not a test operator), which
+  // compares by identity, so every full pass reports a visibility change until the cap. A tracked
+  // pass does not re-evaluate a, so it settles.
   const context = await testContext({
-    lowdefy,
+    lowdefy: { ...lowdefy, _internal: { dependencyTracking: false } },
     pageConfig,
   });
   const { c } = context._internal.RootSlots.map;
 
   let count = 0;
 
-  const updateStateFromRoot = context._internal.RootSlots.updateStateFromRoot;
+  const evalFromRoot = context._internal.RootSlots.evalFromRoot;
 
-  context._internal.RootSlots.updateStateFromRoot = () => {
+  context._internal.RootSlots.evalFromRoot = (options) => {
     count += 1;
-    updateStateFromRoot();
+    return evalFromRoot(options);
   };
 
   c.setValue('show d');

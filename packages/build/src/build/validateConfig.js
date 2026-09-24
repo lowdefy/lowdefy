@@ -18,6 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import buildDependencyTracking from './buildDependencyTracking.js';
 import buildEnvironments from './buildEnvironments.js';
 
 function validateConfig({ components, context }) {
@@ -33,6 +34,7 @@ function validateConfig({ components, context }) {
     }
   }
   buildEnvironments({ components, context });
+  buildDependencyTracking({ components });
   return components;
 }
 
