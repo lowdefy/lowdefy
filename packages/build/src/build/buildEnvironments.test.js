@@ -223,3 +223,91 @@ test('buildEnvironments throws when a feature switch is not a boolean', () => {
     'App "config.environments.prod.email.enabled" should be a boolean.'
   );
 });
+
+describe('guards', () => {
+  const guarded = {
+    prod: {
+      url: 'https://app.example.com',
+      guards: {
+        secrets: { MONGODB_URI: 'acme-prod\\.a1b2c\\.mongodb\\.net' },
+        env: { BETTER_AUTH_URL: '^https://app\\.example\\.com$' },
+      },
+    },
+    staging: { url: 'https://staging.example.com' },
+  };
+  const saved = {};
+  const names = ['LOWDEFY_SECRET_MONGODB_URI', 'BETTER_AUTH_URL'];
+  beforeEach(() => {
+    names.forEach((name) => {
+      saved[name] = process.env[name];
+      delete process.env[name];
+    });
+  });
+  afterEach(() => {
+    names.forEach((name) => {
+      delete process.env[name];
+      if (saved[name] !== undefined) process.env[name] = saved[name];
+    });
+  });
+
+  test('buildEnvironments passes when every guarded value matches, and strips the guards', () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'prod';
+    process.env.LOWDEFY_SECRET_MONGODB_URI = 'mongodb+srv://u:p@acme-prod.a1b2c.mongodb.net/db';
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const { context } = makeContext();
+    const components = { config: { environments: structuredClone(guarded) } };
+    buildEnvironments({ components, context });
+    expect(components.config.environments.prod).toEqual({ url: 'https://app.example.com' });
+  });
+
+  test('buildEnvironments fails when a guarded secret does not match, without printing it', () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'prod';
+    process.env.LOWDEFY_SECRET_MONGODB_URI =
+      'mongodb+srv://u:hunter2@acme-new.zzzzz.mongodb.net/db';
+    process.env.BETTER_AUTH_URL = 'https://app.example.com';
+    const { context } = makeContext();
+    const components = { config: { environments: structuredClone(guarded) } };
+    let error;
+    try {
+      buildEnvironments({ components, context });
+    } catch (e) {
+      error = e;
+    }
+    expect(error.message).toMatch(
+      'Environment "prod" guards failed: secret "MONGODB_URI" does not match its guard.'
+    );
+    expect(error.message).not.toMatch('hunter2');
+    expect(error.message).not.toMatch('acme-new');
+  });
+
+  test('buildEnvironments fails when a guarded variable is not set', () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'prod';
+    process.env.LOWDEFY_SECRET_MONGODB_URI = 'mongodb+srv://acme-prod.a1b2c.mongodb.net/db';
+    const { context } = makeContext();
+    const components = { config: { environments: structuredClone(guarded) } };
+    expect(() => buildEnvironments({ components, context })).toThrow(
+      'environment variable "BETTER_AUTH_URL" is not set (BETTER_AUTH_URL)'
+    );
+  });
+
+  test("buildEnvironments checks only the current environment's guards", () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'staging';
+    const { context } = makeContext();
+    const components = { config: { environments: structuredClone(guarded) } };
+    buildEnvironments({ components, context });
+    expect(components.config.environments.prod.guards).toBeUndefined();
+  });
+
+  test('buildEnvironments fails on an invalid guard pattern in any environment', () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'staging';
+    const { context } = makeContext();
+    const components = {
+      config: {
+        environments: { staging: {}, prod: { guards: { env: { BETTER_AUTH_URL: '(' } } } },
+      },
+    };
+    expect(() => buildEnvironments({ components, context })).toThrow(
+      'App "config.environments.prod.guards" environment variable "BETTER_AUTH_URL" is not a valid regular expression'
+    );
+  });
+});

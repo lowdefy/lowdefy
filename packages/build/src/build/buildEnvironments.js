@@ -17,7 +17,9 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
+import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import getEnvironmentNames from '../utils/getEnvironmentNames.js';
+import validateEnvironmentGuards from './validateEnvironmentGuards.js';
 
 // Environment names become a path segment (/api/cron-forward/<environment>/<endpointId>).
 const environmentNamePattern = /^[A-Za-z0-9\-_]+$/;
@@ -132,6 +134,7 @@ function validateEnvironment({ name, environment, configKey }) {
       );
     }
   });
+  validateEnvironmentGuards({ name, guards: environment.guards, configKey: key });
   if (!type.isUndefined(email)) {
     if (!type.isObject(email)) {
       throw new ConfigError(`App "config.environments.${name}.email" should be an object.`, {
@@ -214,6 +217,22 @@ function buildEnvironments({ components, context }) {
         )
       );
     }
+  }
+
+  // The current environment's guards are checked against this build's variables; then every
+  // environment's guards are dropped — config.json reaches the client bundle, and the runtime has
+  // no use for the patterns.
+  if (!type.isUndefined(environments)) {
+    if (!type.isUndefined(current)) {
+      checkEnvironmentGuards({
+        name: current,
+        guards: environments[current].guards,
+        configKey: environments[current]['~k'] ?? configKey,
+      });
+    }
+    getEnvironmentNames(environments).forEach((name) => {
+      delete environments[name].guards;
+    });
   }
 
   if (type.isUndefined(current)) {

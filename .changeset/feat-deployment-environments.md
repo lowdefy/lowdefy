@@ -37,6 +37,10 @@ The current environment supplies the defaults:
 
 - **Switches** — `cron.enabled`, `email.enabled`, `posthog.enabled` and `sentry.enabled` default to `true`; set one to `false` to turn that feature off in one environment: no crons registered or forwarded, no email sent by `SMTPMailSend`/`SendGridMailSend` (each message reports `disabled: true`; auth emails still send), no PostHog (`PostHogInit` behaves as `enabled: false`), no Sentry on server or client. The switched-off features are listed in the app metadata as `disabled` (`_app: disabled`). Logging has no switch.
 
+- **Guards** — `guards.secrets` (Lowdefy secret names) and `guards.env` (environment variable names) map to a regular expression the value must match in that environment; the build fails before deploy when a guarded value is unset or does not match, so changing it (the prod database URI, say) also takes a config change. Values are never printed, and guards are stripped from the build output.
+
+`cron.secret` is the **name** of a Lowdefy secret, a plain string — not a `_secret` operator.
+
 `config.environment` can name the current environment in config instead of `LOWDEFY_ENVIRONMENT`. With environments declared, the current environment must be one of them.
 
 **Replaces `config.cron.environments` (6.0):** a build with `config.cron` fails with the migration — move the environments to `config.environments`, each `secret` to `cron.secret` and `enabled` to `cron.enabled`, give production its `url`, and set `LOWDEFY_ENVIRONMENT` on each deployment.
