@@ -217,6 +217,10 @@ Slots class:
 
 The engine also evaluates `class` (string, array, or cssKey-keyed object of Tailwind classes) and `styles` (cssKey-keyed inline style objects) alongside properties.
 
+## Dependency-Tracked Evaluation
+
+A block records what it reads while it self-evaluates (`src/tracking/ReadRecorder.js`, pushed in `Block.evaluateSelf`); `WebParser` reports each operator call to the current recorder through the operator's `tracking` declaration (pure / read keys / volatile / untracked — see `@lowdefy/operators` `classifyOperatorCall`), and `_js` accessor reads go through a tracked operator view. Writers report what they changed to the context's `DependencyTracker`: `State.set` (always), `State.republish` (only if the value differs), SetState, SetGlobal, request start/completion, input `setValue`. `update({ changes })` then re-evaluates only blocks whose reads intersect the changes (prefix match both ways), plus volatile/untracked/forced blocks, keeping today's visibility-driven settling loop; a bare `update()` is a full pass, as are unknown callers and any action method outside the reporting allowlist (`trackActionMethods`). Off switches: `config.dependencyTracking: false` (via appMeta), `window.__lowdefyFullEvaluation`, `lowdefy._internal.dependencyTracking === false`, `DependencyTracker.enabled`. Parity is proven differentially (`test/Block/dependencyTracking.parity.test.js`; `test:full` runs the suite with full passes).
+
 ## State Container Structure
 
 Each page has these state containers:
