@@ -188,6 +188,12 @@ const devToolDefinitions = {
     },
   },
 
+  lowdefy_check: {
+    description:
+      'Validate the whole app the way a production build (`lowdefy build`) would, without building it: every page, including ones not yet opened in dev, and the prod-only checks `lowdefy dev` reports only as warnings (they come back here as errors with prodError: true). Returns ok plus located errors and warnings (source file:line). Takes a few seconds. Call before telling the developer a change is done.',
+    inputSchema: {},
+  },
+
   lowdefy_get_page_config: {
     description:
       'Get the fully built config for a page, or its structured build errors if the page fails to build. Use to verify a page after editing it.',

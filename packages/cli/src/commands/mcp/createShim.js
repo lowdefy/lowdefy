@@ -24,6 +24,7 @@ import findApps from './findApps.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
+import runAppTests from './runAppTests.js';
 
 // Dev tool calls can drive a browser through a whole journey.
 const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
@@ -240,6 +241,17 @@ function createShim({ cliVersion, cwd, devTools }) {
     return { app: app.label, ...result };
   }
 
+  async function runTests({ directory, filter }) {
+    const app = resolve({ directory });
+    const instance = await ensureRunning(app);
+    const result = await runAppTests({
+      configDirectory: app.configDirectory,
+      url: instance.url,
+      filter,
+    });
+    return { app: app.label, url: instance.url, ...result };
+  }
+
   async function list() {
     const root = resolveApp({ directory: '.', cwd }).root;
     const apps = findApps({ root }).map((configDirectory) => {
@@ -265,6 +277,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     lowdefy_dev_start: start,
     lowdefy_dev_status: status,
     lowdefy_dev_stop: stop,
+    lowdefy_run_tests: runTests,
   };
 
   server.setRequestHandler(ListToolsRequestSchema, () => ({ tools }));

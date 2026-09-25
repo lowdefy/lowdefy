@@ -38,6 +38,7 @@ import listTypes from './listTypes.js';
 import loadState from './loadState.js';
 import revertConfigCheckpoint from './revertConfigCheckpoint.js';
 import requestRestart from './requestRestart.js';
+import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
 import runRequest from './runRequest.js';
@@ -191,6 +192,8 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     }
     return textResult(revertConfigCheckpoint({ id }));
   });
+
+  registerDevTool('lowdefy_check', async () => textResult(await runCheck()));
 
   registerDevTool('lowdefy_build_status', async ({ wait }) => {
     if (wait === true) {
