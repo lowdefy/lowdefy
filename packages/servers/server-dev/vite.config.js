@@ -98,7 +98,9 @@ export default defineConfig(({ mode }) => ({
       // not need these events: globals.css imports build/tailwind-candidates.css,
       // which the JIT builder touches whenever tailwind content changes (the
       // sole recompile trigger — see writeGlobalsCss in @lowdefy/build).
-      ignored: ['**/lowdefy-build/tailwind/**'],
+      // The config build writes into build-staging and then moves each file
+      // into build, so only build is watched.
+      ignored: ['**/lowdefy-build/tailwind/**', '**/build-staging/**'],
     },
   },
 }));
