@@ -19,19 +19,24 @@ const mockPublish = jest.fn();
 jest.unstable_mockModule('./devEventBus.js', () => ({
   publish: mockPublish,
 }));
+jest.unstable_mockModule('./getBuildId.js', () => ({
+  default: () => '2026-01-01T00:00:00.000Z',
+}));
 
 const { default: serverErrorStore } = await import('./serverErrorStore.js');
 
-test('serverErrorStore push adds an entry, list returns it, and it is published as a server_error event', () => {
+const buildId = '2026-01-01T00:00:00.000Z';
+
+test('serverErrorStore push adds an entry stamped with the current build, list returns it, and it is published as a server_error event', () => {
   serverErrorStore.push({ message: 'first' });
-  expect(serverErrorStore.list()).toEqual([{ message: 'first' }]);
-  expect(mockPublish).toHaveBeenCalledWith({ type: 'server_error', message: 'first' });
+  expect(serverErrorStore.list()).toEqual([{ message: 'first', buildId }]);
+  expect(mockPublish).toHaveBeenCalledWith({ type: 'server_error', message: 'first', buildId });
 });
 
 test('serverErrorStore list returns a copy that does not alias the store', () => {
   const entries = serverErrorStore.list();
   entries.push({ message: 'not stored' });
-  expect(serverErrorStore.list()).toEqual([{ message: 'first' }]);
+  expect(serverErrorStore.list()).toEqual([{ message: 'first', buildId }]);
 });
 
 test('serverErrorStore caps at 50 entries and drops the oldest', () => {

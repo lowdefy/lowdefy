@@ -20,14 +20,18 @@ const mockPublish = jest.fn();
 jest.unstable_mockModule('./devEventBus.js', () => ({
   publish: mockPublish,
 }));
+jest.unstable_mockModule('./getBuildId.js', () => ({
+  default: () => '2026-01-01T00:00:00.000Z',
+}));
 
 const { default: clientErrorStore } = await import('./clientErrorStore.js');
 
-test('clientErrorStore push adds an entry, lists it, and publishes it as a client_error event', () => {
+test('clientErrorStore push adds an entry stamped with the current build, lists it, and publishes it as a client_error event', () => {
   const entry = { timestamp: '2026-01-01T00:00:00.000Z', name: 'OperatorError', message: 'bad' };
+  const stamped = { ...entry, buildId: '2026-01-01T00:00:00.000Z' };
   clientErrorStore.push(entry);
-  expect(clientErrorStore.list()).toEqual([entry]);
-  expect(mockPublish).toHaveBeenCalledWith({ type: 'client_error', ...entry });
+  expect(clientErrorStore.list()).toEqual([stamped]);
+  expect(mockPublish).toHaveBeenCalledWith({ type: 'client_error', ...stamped });
 });
 
 test('clientErrorStore caps at 50 entries and drops the oldest', () => {

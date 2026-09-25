@@ -23,6 +23,7 @@ import createConfigCheckpoint from './createConfigCheckpoint.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
+import buildEditedPages from './buildEditedPages.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
 import getCoreDoc from './getCoreDoc.js';
@@ -57,7 +58,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change, build status builds the pages your edit touched, and this returns the current build errors/warnings (with source file locations), the pages that fail to build (pages.failed), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Errors reported before your latest edit are listed apart under earlierErrors, since they may already be fixed. Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
 
@@ -194,7 +195,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_run_request',
     {
       description:
-        'Execute a request in dev with a test payload to verify the data shape a page receives. Read-only request types always run; write requests are refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml).',
+        'Execute a request in dev with a test payload to verify the data shape a page receives. The page is built first when it changed since its last build, so the request that runs is the one in the config now; a page that fails to build is refused with its build errors. Read-only request types always run; write requests are refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml).',
       inputSchema: {
         pageId: z.string().describe('The page the request is defined on.'),
         requestId: z.string().describe('The request id.'),
@@ -358,10 +359,10 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     'lowdefy_build_status',
     {
       description:
-        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
+        'Call after every config edit. Builds every page your edits touched, then returns the current build status: errors and warnings from the last config build (with source file locations), the page builds (pages: checked lists the pages it built, failed the pages whose last build failed with their errors, changedSinceBuild the pages changed since they were built, unbuilt how many pages nothing has built since the dev server started), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. Errors reported under an earlier build come apart under earlierErrors. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
       inputSchema: {},
     },
-    () => textResult(getBuildStatus())
+    async () => textResult(getBuildStatus({ checked: await buildEditedPages() }))
   );
 
   server.registerTool(

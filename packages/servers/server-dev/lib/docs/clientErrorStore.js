@@ -15,6 +15,7 @@
 */
 
 import { publish } from './devEventBus.js';
+import getBuildId from './getBuildId.js';
 
 // Module-level ring buffer of recent client-reported errors — feeds the
 // getBuildStatus feedback endpoint so agents can see browser errors without
@@ -24,12 +25,14 @@ const MAX_ENTRIES = 50;
 
 const entries = [];
 
+// Each entry is stamped with the build it happened under (see getBuildId).
 function push(entry) {
-  entries.push(entry);
+  const stamped = { ...entry, buildId: getBuildId() };
+  entries.push(stamped);
   if (entries.length > MAX_ENTRIES) {
     entries.shift();
   }
-  publish({ type: 'client_error', ...entry });
+  publish({ type: 'client_error', ...stamped });
 }
 
 function list() {
