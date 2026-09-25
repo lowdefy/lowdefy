@@ -21,6 +21,7 @@ import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap } from '@lowdefy/build';
 import YAML from 'yaml';
+import importFresh from './importFresh.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -63,7 +64,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
   for (const plugin of pluginDefinitions) {
     let types;
     try {
-      types = require(`${plugin.name}/types`);
+      types = await importFresh(require.resolve(`${plugin.name}/types`));
     } catch (e) {
       logger.error(`Failed to import plugin "${plugin.name}".`);
       logger.debug(e);
