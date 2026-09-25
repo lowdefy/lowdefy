@@ -36,17 +36,21 @@ function getValidator({ payloadSchema }) {
 }
 
 // ajv (allErrors) reports every failing keyword, so a `type: [string, 'null']`
-// with an `enum` reports the type miss first. A keyword that says what would be
-// accepted is what the caller needs, so it wins over a `type` error on the same
-// path.
+// with an `enum` reports the type miss first. These keywords say what would be
+// accepted, so one of them wins over a `type` error on the same path; any other
+// keyword keeps ajv's order.
+const SPECIFIC_KEYWORDS = ['enum', 'pattern', 'required', 'additionalProperties'];
+
 function pickError({ errors }) {
   const first = errors[0];
   if (first.keyword !== 'type') {
     return first;
   }
   return (
-    errors.find((error) => error.instancePath === first.instancePath && error.keyword !== 'type') ??
-    first
+    errors.find(
+      (error) =>
+        error.instancePath === first.instancePath && SPECIFIC_KEYWORDS.includes(error.keyword)
+    ) ?? first
   );
 }
 
@@ -78,11 +82,13 @@ function describeError({ error, errors }) {
   return error.message;
 }
 
-// A `type` error on a path that also has a more specific error is the same
-// problem reported twice, and the listed additional properties are one problem.
+// A `type` error on a path that also has a specific error is the same problem
+// reported twice, and the listed additional properties are one problem.
 function countFurtherProblems({ errors, chosen }) {
   const specificPaths = new Set(
-    errors.filter((error) => error.keyword !== 'type').map((error) => error.instancePath)
+    errors
+      .filter((error) => SPECIFIC_KEYWORDS.includes(error.keyword))
+      .map((error) => error.instancePath)
   );
   return errors.filter((error) => {
     if (error === chosen) {

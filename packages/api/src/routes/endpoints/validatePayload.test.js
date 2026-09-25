@@ -274,3 +274,17 @@ test('validatePayload counts only the errors its message does not describe', () 
     'Payload for endpoint "raise_finding" does not match its payloadSchema at (root): must NOT have additional properties (color, size). (and 2 more)'
   );
 });
+
+test('validatePayload keeps ajv order for an anyOf miss rather than preferring the anyOf error', () => {
+  expect(
+    thrownMessage({
+      payloadSchema: {
+        type: 'object',
+        properties: { ref: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+      },
+      payload: { ref: true },
+    })
+  ).toEqual(
+    'Payload for endpoint "raise_finding" does not match its payloadSchema at /ref: must be string. (and 2 more)'
+  );
+});

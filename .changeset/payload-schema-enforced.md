@@ -32,8 +32,8 @@ The message names the endpoint, the failing location and what would be accepted,
 - `... at (root): must NOT have additional properties (colour).`
 - `... at /slug: must match pattern "^[a-z0-9-]+$".`
 
-When a location fails both its `type` and a more specific keyword (`enum`, `pattern`, ...), the
-specific one is reported.
+When a location fails both its `type` and one of `enum`, `pattern`, `required` or
+`additionalProperties`, that keyword is reported.
 
 There is no opt-out: the way to not validate is to not declare a `payloadSchema`. The build now fails
 when an endpoint declares both `webhook` and `payloadSchema`, since a webhook routine receives the

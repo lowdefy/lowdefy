@@ -200,7 +200,7 @@ A payload that does not match is refused before the routine runs, with a message
 Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.
 ```
 
-The reason says what would be accepted where the schema says it: an `enum` miss lists the allowed values, an `additionalProperties: false` miss names the unexpected properties, and a `pattern` miss quotes the pattern. When a location fails both its `type` and a more specific keyword, the specific one is reported. Further failures are counted at the end, e.g. `(and 2 more)`.
+The reason says what would be accepted where the schema says it: an `enum` miss lists the allowed values, an `additionalProperties: false` miss names the unexpected properties, and a `pattern` miss quotes the pattern. When a location fails both its `type` and one of `enum`, `pattern`, `required` or `additionalProperties`, that keyword is reported. Further failures are counted at the end, e.g. `(and 2 more)`.
 
 ```
 Payload for endpoint "create_order" does not match its payloadSchema at /status: must be equal to one of the allowed values (draft, placed).

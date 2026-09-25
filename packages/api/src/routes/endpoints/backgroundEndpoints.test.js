@@ -60,6 +60,47 @@ test('scheduleBackground logs completion and failure, never rejects', async () =
   );
 });
 
+test('scheduleBackground logs a UserError at warn level, not error', async () => {
+  const context = { logger };
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw new UserError('Bad payload.');
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
+    'Bad payload.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at warn level, not error', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: { type: 'object', properties: { count: { type: 'number' } } },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+  const waitUntil = jest.fn();
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  context.waitUntil = waitUntil;
+  acceptDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 'three' }),
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  await waitUntil.mock.calls[0][0];
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_run_failed', endpointId: 'typed_child' }),
+    'Payload for endpoint "typed_child" does not match its payloadSchema at /count: must be number.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
 test('scheduleBackground hands the promise to context.waitUntil when the server injects it', async () => {
   const waitUntil = jest.fn();
   const context = { logger, waitUntil };
