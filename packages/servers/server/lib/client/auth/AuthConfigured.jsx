@@ -26,16 +26,15 @@ import {
   useSession,
 } from '@hono/auth-js/react';
 
-import { serializer } from '@lowdefy/helpers';
-
-import rawLowdefyConfig from '../../../build/config.json';
-
-const lowdefyConfig = serializer.deserialize(rawLowdefyConfig);
+// The app basePath, from Vite's BASE_URL (`${config.basePath}/`, set in
+// vite.config.js). build/config.json is server-only - it carries every
+// deployment environment's settings - so it is never imported into the client.
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // @hono/auth-js/react configures its fetch paths through a module-level
 // manager instead of SessionProvider props.
-if (lowdefyConfig.basePath) {
-  authConfigManager.setConfig({ basePath: `${lowdefyConfig.basePath}/api/auth` });
+if (basePath) {
+  authConfigManager.setConfig({ basePath: `${basePath}/api/auth` });
 }
 
 function Session({ children }) {

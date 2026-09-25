@@ -1377,7 +1377,7 @@ export default {
         },
         schedules: {
           description:
-            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.cron.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
+            'Cron schedules that run the routine on a timer: an array (the same in every environment), or with config.environments declared an object keyed by environment name with an optional "default" key that every other environment inherits ("staging: []" turns crons off for staging).',
           anyOf: [
             {
               type: 'array',
@@ -2232,47 +2232,46 @@ export default {
             },
           },
         },
-        cron: {
-          type: 'object',
-          additionalProperties: false,
+        environment: {
+          type: 'string',
           description:
-            "Deployment environments for scheduled endpoints. Vercel fires cron jobs only on the production deployment, so every environment's schedules are registered there and production forwards the ones for other environments to their own /api/cron route.",
-          required: ['environments'],
+            'The environment this build is for, one of the names in "config.environments". Defaults to the LOWDEFY_ENVIRONMENT environment variable.',
           errorMessage: {
-            type: 'App "config.cron" should be an object.',
-            required: {
-              environments: 'App "config.cron" should have required property "environments".',
-            },
+            type: 'App "config.environment" should be a string.',
           },
-          properties: {
-            '~k': {},
-            '~r': {},
-            '~l': {},
-            environments: {
-              type: 'object',
-              description:
-                'Environments keyed by name. Exactly one environment has no "url": the deployment whose crons Vercel fires. Every other environment needs a "url" (its deployment origin) and a "secret" (the Lowdefy secret name holding that environment\'s CRON_SECRET, set on the production deployment).',
-              additionalProperties: {
+        },
+        environments: {
+          type: 'object',
+          description:
+            'The deployment environments of the app, keyed by name. The current environment (LOWDEFY_ENVIRONMENT) supplies the defaults for everything environment-specific: the app url (auth, notification links), cron forwarding, the email delivery filter and the Sentry environment. Endpoint "schedules" can be keyed by these names.',
+          additionalProperties: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              '~k': {},
+              '~r': {},
+              '~l': {},
+              url: {
+                type: 'string',
+                description:
+                  'The environment deployment origin, e.g. https://staging.example.com. Default for the auth base URL and notification links, and where crons are forwarded to.',
+                errorMessage: {
+                  type: 'App "config.environments.<name>.url" should be a string.',
+                },
+              },
+              cron: {
                 type: 'object',
                 additionalProperties: false,
                 properties: {
                   '~k': {},
                   '~r': {},
                   '~l': {},
-                  url: {
-                    type: 'string',
-                    description:
-                      'The environment deployment origin, e.g. https://staging.example.com.',
-                    errorMessage: {
-                      type: 'App "config.cron.environments.<name>.url" should be a string.',
-                    },
-                  },
                   secret: {
                     type: 'string',
                     description:
-                      "Lowdefy secret name (LOWDEFY_SECRET_<name> env var) holding this environment's CRON_SECRET.",
+                      "The NAME of the Lowdefy secret (a plain string, not a _secret operator; read from the LOWDEFY_SECRET_<name> env var on the deployment that forwards) holding this environment's CRON_SECRET. An environment with a secret is forwarded to: the environment Vercel fires crons on pings its /api/cron route when one of its schedules fires.",
                     errorMessage: {
-                      type: 'App "config.cron.environments.<name>.secret" should be a string.',
+                      type: 'App "config.environments.<name>.cron.secret" should be a string.',
                     },
                   },
                   enabled: {
@@ -2280,18 +2279,130 @@ export default {
                     description:
                       'Set false to register no cron jobs for this environment. Defaults to true.',
                     errorMessage: {
-                      type: 'App "config.cron.environments.<name>.enabled" should be a boolean.',
+                      type: 'App "config.environments.<name>.cron.enabled" should be a boolean.',
                     },
                   },
                 },
                 errorMessage: {
-                  type: 'App "config.cron.environments.<name>" should be an object.',
+                  type: 'App "config.environments.<name>.cron" should be an object.',
                 },
               },
-              errorMessage: {
-                type: 'App "config.cron.environments" should be an object.',
+              email: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to send no email from SMTPMailSend and SendGridMailSend requests in this environment. Auth emails still send. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.enabled" should be a boolean.',
+                    },
+                  },
+                  filter: {
+                    type: 'object',
+                    description:
+                      'Delivery filter applied to every SMTPMailSend and SendGridMailSend request in this environment, unless the connection sets its own "filter" (false turns filtering off for that connection). Auth emails are not filtered.',
+                    additionalProperties: false,
+                    properties: {
+                      '~k': {},
+                      '~r': {},
+                      '~l': {},
+                      replaceAddress: {
+                        type: ['string', 'null'],
+                        description: 'Send every email to this address instead of its recipients.',
+                      },
+                      allowlist: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        description: 'Only deliver to recipients on these domains.',
+                      },
+                      regex: {
+                        type: 'string',
+                        description: 'Only deliver to recipients matching this regular expression.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.email.filter" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.email" should be an object.',
+                },
+              },
+              guards: {
+                type: 'object',
+                additionalProperties: false,
+                description:
+                  'Pin secrets and environment variables to a regular expression kept in config: in this environment the build fails unless each value matches (a missing value fails too). Changing a guarded value then takes a config change as well. Values are never printed.',
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  secrets: {
+                    type: 'object',
+                    description:
+                      'Lowdefy secret name (LOWDEFY_SECRET_<name>) to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.secrets.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.secrets" should be an object.',
+                    },
+                  },
+                  env: {
+                    type: 'object',
+                    description:
+                      'Environment variable name to the regular expression its value must match.',
+                    additionalProperties: {
+                      type: 'string',
+                      errorMessage: {
+                        type: 'App "config.environments.<name>.guards.env.<name>" should be a regular expression string.',
+                      },
+                    },
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.guards.env" should be an object.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.guards" should be an object.',
+                },
+              },
+              sentry: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~k': {},
+                  '~r': {},
+                  '~l': {},
+                  enabled: {
+                    type: 'boolean',
+                    description:
+                      'Set false to turn Sentry off (server and client) in this environment. Defaults to true.',
+                    errorMessage: {
+                      type: 'App "config.environments.<name>.sentry.enabled" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'App "config.environments.<name>.sentry" should be an object.',
+                },
               },
             },
+            errorMessage: {
+              type: 'App "config.environments.<name>" should be an object.',
+            },
+          },
+          errorMessage: {
+            type: 'App "config.environments" should be an object.',
           },
         },
         requestTimeout: {

@@ -41,6 +41,7 @@ Request types:
   - `replaceAddress: string`: Redirect all mail to this single address. When set, it takes precedence — every message goes to this address only, with `cc` and `bcc` dropped.
   - `allowlist: string[]`: A list of domains. Only recipients whose domain is in the list are sent to.
   - `regex: string`: A regular expression. Only recipient addresses matching the pattern are sent to.
+  When the connection sets no `filter` (or it resolves to `null`), the current environment's `email.filter` from [`config.environments`](/lowdefy-schema) applies instead. A connection's own `filter` always wins, and `filter: false` turns filtering off entirely, the environment's too. With `email.enabled: false` on the current environment, mail requests send nothing and report each message as `{ disabled: true }`.
 
 ### SendGridMailSend
 

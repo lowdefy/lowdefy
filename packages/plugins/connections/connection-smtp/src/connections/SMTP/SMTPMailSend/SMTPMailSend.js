@@ -16,15 +16,25 @@
 
 import { type } from '@lowdefy/helpers';
 
+import resolveMailFilter from '../resolveMailFilter.js';
 import send from '../send.js';
 import schema from './schema.js';
 
-async function SMTPMailSend({ request, connection }) {
+async function SMTPMailSend({ request, connection, environment }) {
   const messages = type.isArray(request) ? request : [request];
+  // The current environment can switch email off (config.environments.<env>.email.enabled: false):
+  // nothing is sent, and each message reports it was not.
+  if (environment?.email?.enabled === false) {
+    return {
+      response: 'Mail is disabled in this environment.',
+      results: messages.map(() => ({ messageId: null, to: null, disabled: true })),
+    };
+  }
+  const filter = resolveMailFilter({ connection, environment });
   const results = [];
   // Send sequentially so a single SMTP connection or pool is not overwhelmed.
   for (const mail of messages) {
-    results.push(await send({ connection, mail }));
+    results.push(await send({ connection: { ...connection, filter }, mail }));
   }
   return { response: 'Mail sent successfully', results };
 }

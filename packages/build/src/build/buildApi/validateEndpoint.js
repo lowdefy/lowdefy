@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../utils/validateId.js';
 import validateCronExpression from '../../utils/validateCronExpression.js';
-import getCronEnvironmentNames from '../../utils/getCronEnvironmentNames.js';
+import getEnvironmentNames from '../../utils/getEnvironmentNames.js';
 
 // `where` names the schedules list in messages: "" for the endpoint's own schedules, or
 // ` for environment "staging"` for an override.
@@ -73,24 +73,22 @@ function validateSchedules({ schedules, endpoint, configKey, where = '' }) {
 }
 
 // The object form of `schedules`: lists keyed by environment name plus an optional `default` the
-// other environments inherit. Every key must be declared in config.cron.environments, so a typo
+// other environments inherit. Every key must be declared in config.environments, so a typo
 // cannot silently leave an environment on the defaults.
-function validateEnvironmentSchedules({ endpoint, configKey, cronEnvironments }) {
-  const declared = getCronEnvironmentNames(cronEnvironments);
+function validateEnvironmentSchedules({ endpoint, configKey, environments }) {
+  const declared = getEnvironmentNames(environments);
   if (declared.length === 0) {
     throw new ConfigError(
-      `Endpoint "${endpoint.id}" keys schedules by environment but lowdefy.config.cron.environments is not defined.`,
+      `Endpoint "${endpoint.id}" keys schedules by environment but config.environments is not defined.`,
       { configKey }
     );
   }
-  getCronEnvironmentNames(endpoint.schedules).forEach((name) => {
+  getEnvironmentNames(endpoint.schedules).forEach((name) => {
     if (name !== 'default' && !declared.includes(name)) {
       throw new ConfigError(
         `Endpoint schedules environment "${name}" at "${
           endpoint.id
-        }" is not declared in lowdefy.config.cron.environments. Declared environments: ${declared.join(
-          ', '
-        )}.`,
+        }" is not declared in config.environments. Declared environments: ${declared.join(', ')}.`,
         { configKey }
       );
     }
@@ -106,7 +104,7 @@ function validateEnvironmentSchedules({ endpoint, configKey, cronEnvironments })
   });
 }
 
-function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, cronEnvironments }) {
+function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environments }) {
   const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
     throw new ConfigError(`Endpoint id missing at endpoint ${index}.`, { configKey });
@@ -138,7 +136,7 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, cronEnvir
   }
   checkDuplicateEndpointId({ id: endpoint.id, configKey });
   if (type.isObject(endpoint.schedules)) {
-    validateEnvironmentSchedules({ endpoint, configKey, cronEnvironments });
+    validateEnvironmentSchedules({ endpoint, configKey, environments });
   } else {
     validateSchedules({ schedules: endpoint.schedules, endpoint, configKey });
   }

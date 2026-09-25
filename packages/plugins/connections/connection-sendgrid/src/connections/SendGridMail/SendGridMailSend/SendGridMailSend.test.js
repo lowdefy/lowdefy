@@ -365,3 +365,47 @@ test('checkWrite should be false', async () => {
   const { checkWrite } = SendGridMailSend.meta;
   expect(checkWrite).toBe(false);
 });
+
+test('SendGridMailSend applies the current environment email filter when the connection has none', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  await SendGridMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection: { apiKey: 'X', from: 'from@example.com' },
+    environment: { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('team@example.com');
+});
+
+test('SendGridMailSend keeps the connection filter over the environment email filter', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  await SendGridMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection: {
+      apiKey: 'X',
+      from: 'from@example.com',
+      filter: { replaceAddress: 'connection@example.com' },
+    },
+    environment: { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } },
+  });
+  expect(mockSend.mock.calls[0][0].to).toEqual('connection@example.com');
+});
+
+test('SendGridMailSend sends nothing when the environment switches email off', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const result = await SendGridMailSend({
+    request: [
+      { to: 'a@example.com', subject: 'A', text: 'B' },
+      { to: 'b@example.com', subject: 'A', text: 'B' },
+    ],
+    connection: { apiKey: 'X', from: 'from@example.com' },
+    environment: { name: 'preview', email: { enabled: false } },
+  });
+  expect(mockSend).not.toHaveBeenCalled();
+  expect(result).toEqual({
+    response: 'Mail is disabled in this environment.',
+    results: [
+      { messageId: null, to: null, disabled: true },
+      { messageId: null, to: null, disabled: true },
+    ],
+  });
+});
