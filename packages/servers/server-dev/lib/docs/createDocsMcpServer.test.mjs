@@ -182,6 +182,32 @@ test('MCP tools that render a page headless advertise an optional user parameter
   await client.close();
 });
 
+test('MCP lowdefy_screenshot_page advertises width, height and colorScheme', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const { properties } = tools.find((tool) => tool.name === 'lowdefy_screenshot_page').inputSchema;
+
+  expect(properties.width).toMatchObject({ type: 'integer', exclusiveMinimum: 0 });
+  expect(properties.height).toMatchObject({ type: 'integer', exclusiveMinimum: 0 });
+  expect(properties.colorScheme).toMatchObject({ enum: ['light', 'dark'] });
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey advertises a state option of true, false or state paths', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const { properties, required } = tools.find(
+    (tool) => tool.name === 'lowdefy_run_journey'
+  ).inputSchema;
+
+  expect(properties.state.anyOf).toEqual([
+    { type: 'boolean' },
+    { type: 'array', items: { type: 'string', minLength: 1 } },
+  ]);
+  expect(required).not.toContain('state');
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_get_schema returns a block schema', async () => {
   const client = await connectClient();
   const result = await client.callTool({
@@ -329,6 +355,7 @@ test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one
       steps: [{ screenshot: 'before' }, { click: 'nope' }],
       user: { roles: ['admin'] },
       urlQuery: { id: '1' },
+      state: ['saved'],
     },
   });
 
@@ -338,6 +365,7 @@ test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one
     steps: [{ screenshot: 'before' }, { click: 'nope' }],
     user: { roles: ['admin'] },
     urlQuery: { id: '1' },
+    state: ['saved'],
   });
   expect(result.content).toHaveLength(3);
   const summary = JSON.parse(result.content[0].text);

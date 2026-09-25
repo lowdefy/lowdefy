@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import parseUserParam from './parseUserParam.js';
 import screenshotPage from '../../../lib/docs/screenshotPage.js';
+import validateViewport from '../../../lib/docs/validateViewport.js';
 
 // Parses a query param as a number, or undefined if absent/not a valid
 // number — undefined (not NaN/0) so callers can tell "not provided" apart
@@ -56,12 +57,34 @@ async function docsScreenshotHandler(c) {
   const scrollX = queryNumber(c, 'scrollX') ?? 0;
   const scrollY = queryNumber(c, 'scrollY') ?? 0;
 
+  // `width` and `height` name the clip here, so the viewport size takes the
+  // `viewport` prefix; the MCP tool, which nests the clip, calls them width
+  // and height.
+  const width = queryNumber(c, 'viewportWidth');
+  const height = queryNumber(c, 'viewportHeight');
+  const colorScheme = c.req.query('colorScheme');
+  const viewportError = validateViewport({ width, height, colorScheme });
+  if (viewportError) {
+    return c.json({ error: viewportError }, 400);
+  }
+
   const { user, error: userError } = parseUserParam({ value: c.req.query('user') });
   if (userError) {
     return c.json({ error: userError }, 400);
   }
 
-  const result = await screenshotPage({ origin, pageId, fullPage, clip, scrollX, scrollY, user });
+  const result = await screenshotPage({
+    origin,
+    pageId,
+    fullPage,
+    clip,
+    scrollX,
+    scrollY,
+    user,
+    width,
+    height,
+    colorScheme,
+  });
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }

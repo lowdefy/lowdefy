@@ -57,3 +57,19 @@ test('screenshotPage returns an actionable error when no browser is available', 
   const result = await screenshotPage({ origin: 'http://localhost:3001', pageId: 'home' });
   expect(result.error).toMatch(/No Chromium available. Run: npx playwright install chromium/);
 });
+
+test('screenshotPage returns an error for an invalid viewport before launching a browser', async () => {
+  const { chromium } = await import('playwright-core');
+  chromium.launch.mockClear();
+  const width = await screenshotPage({ origin: 'http://localhost:3001', pageId: 'home', width: 0 });
+  expect(width.error).toEqual(
+    'Viewport width must be a positive integer (CSS pixels). Received 0.'
+  );
+  const scheme = await screenshotPage({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    colorScheme: 'sepia',
+  });
+  expect(scheme.error).toEqual('Color scheme must be "light" or "dark". Received "sepia".');
+  expect(chromium.launch).not.toHaveBeenCalled();
+});

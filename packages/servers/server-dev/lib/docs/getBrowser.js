@@ -88,13 +88,16 @@ async function openPage({
   urlQuery,
   width = 1280,
   height = 800,
+  colorScheme = 'light',
   timeout = 15000,
 }) {
   const url = buildPageUrl({ origin, pageId, urlQuery });
   // Resolved before the context is created so an invalid `user` can't leave an
   // orphaned context behind.
   const injectedUser = resolveHeadlessUser({ user });
-  const context = await browser.newContext({ viewport: { width, height } });
+  // colorScheme is what the page's `prefers-color-scheme` media query reports,
+  // so an app following the system theme renders light or dark accordingly.
+  const context = await browser.newContext({ viewport: { width, height }, colorScheme });
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
   // (a navigation that times out on both waits, a crashed page) would otherwise

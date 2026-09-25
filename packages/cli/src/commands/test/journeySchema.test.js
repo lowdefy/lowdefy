@@ -31,6 +31,7 @@ test('journeySchema exports the step key list shared with the runner', () => {
     'fill',
     'select',
     'press',
+    'back',
     'wait',
     'screenshot',
     'expect',
@@ -82,7 +83,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Unknown journey step key. Steps are: click, fill, select, press, back, wait, screenshot, expect.'
   );
 });
 
