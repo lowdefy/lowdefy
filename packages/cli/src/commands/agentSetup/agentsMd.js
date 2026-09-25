@@ -46,6 +46,16 @@ installed in this project (including local plugins).
 3. See real usage: call \`lowdefy_get_examples\`.
 4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\`.
 
+### Icons and interactive HTML
+
+- Icons: call \`lowdefy_search_icons\` — never guess a name. Use icons, never emoji. Prefer semantic names (\`icon: edit\`,
+  \`delete\`, \`warning\`); add app-specific ones under \`theme.icons.aliases\` in lowdefy.yaml.
+- In any HTML string (Html, ClickableHtml, DangerousHtml, and html properties like Tooltip titles)
+  write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
+  help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
+- For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
+  element's other \`data-*\` attributes as the event object.
+
 ### Visual feedback
 
 While the dev server is running, developers can press \`Cmd/Ctrl+/\` in the browser to point at,

@@ -24,7 +24,7 @@ import { z } from 'zod';
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
-Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
+Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use lowdefy_search_icons and prefer semantic names (icon: edit), never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", and ClickableHtml with data-event for clicks. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
@@ -336,6 +336,15 @@ const devToolDefinitions = {
     description: 'Search the core Lowdefy docs by keyword. Returns matching slugs with snippets.',
     inputSchema: {
       query: z.string().describe('Search keywords.'),
+    },
+  },
+
+  lowdefy_search_icons: {
+    description:
+      'Search icon names before using one — never guess. Returns matching semantic names (edit, delete, warning, … and this app\'s theme.icons.aliases) and react-icons names (Lucide first). Use the result in any icon property (icon: edit) or in HTML as <i data-icon="edit"></i>.',
+    inputSchema: {
+      query: z.string().describe('What the icon shows, e.g. "trash" or "arrow right".'),
+      limit: z.number().int().positive().optional().describe('Max react-icons names. Default 30.'),
     },
   },
 

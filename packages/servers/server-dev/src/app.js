@@ -56,6 +56,7 @@ import docsPluginDocHandler from './routes/docs/pluginDoc.js';
 import docsPluginsHandler from './routes/docs/plugins.js';
 import docsSchemaHandler from './routes/docs/schema.js';
 import docsScreenshotHandler from './routes/docs/screenshot.js';
+import docsIconsHandler from './routes/docs/icons.js';
 import docsSearchHandler from './routes/docs/search.js';
 import docsTypesHandler from './routes/docs/types.js';
 import endpointsHandler from './routes/endpoints.js';
@@ -171,6 +172,7 @@ function createApp() {
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);
   app.get('/lowdefy-docs/search', docsSearchHandler);
+  app.get('/lowdefy-docs/icons', docsIconsHandler);
   app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);

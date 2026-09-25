@@ -33,6 +33,16 @@ Never guess type names or properties. Before writing config:
 3. Call \`lowdefy_get_examples\` to see real usage YAML for blocks.
 4. For concepts (state, operators, events, requests), call \`lowdefy_get_doc\` or \`lowdefy_search_docs\`.
 
+## Icons and interactive HTML
+
+- Icons: call \`lowdefy_search_icons\` — never guess a name. Use icons, never emoji. Prefer semantic names (\`icon: edit\`,
+  \`delete\`, \`warning\`); add app-specific ones under \`theme.icons.aliases\` in lowdefy.yaml.
+- In any HTML string (Html, ClickableHtml, DangerousHtml, and html properties like Tooltip titles)
+  write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
+  help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
+- For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
+  element's other \`data-*\` attributes as the event object.
+
 ## Visual feedback
 
 Developers can press \`Cmd/Ctrl+/\` in the running app to point at, draw on, and comment on
