@@ -14,20 +14,10 @@
   limitations under the License.
 */
 
-import dataEventEnhancer from './dataEventEnhancer.js';
-import iconEnhancer from './iconEnhancer.js';
-import linkEnhancer from './linkEnhancer.js';
-import popoverEnhancer from './popoverEnhancer.js';
-import tooltipEnhancer from './tooltipEnhancer.js';
+// A boolean data attribute is on when present, unless its value is "false", so
+// a template can write data-new-tab="{{ newTab }}".
+function isOn(element, attribute) {
+  return element.hasAttribute(attribute) && element.getAttribute(attribute) !== 'false';
+}
 
-// The HTML attribute vocabulary, in the order the pass runs. popover comes first
-// so it captures popover content before anything else changes it.
-const HTML_ENHANCERS = [
-  popoverEnhancer,
-  tooltipEnhancer,
-  dataEventEnhancer,
-  iconEnhancer,
-  linkEnhancer,
-];
-
-export default HTML_ENHANCERS;
+export default isOn;

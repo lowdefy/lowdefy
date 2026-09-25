@@ -82,6 +82,7 @@ test('the enhancer gate matches whole attribute names only', () => {
   const gate = createHtmlEnhancerGate(HTML_ENHANCERS);
   expect(gate.test('<i data-icon="edit"></i>')).toBe(true);
   expect(gate.test('<div data-popover-content="x"></div>')).toBe(true);
+  expect(gate.test('<a data-page-id="home">h</a>')).toBe(true);
   expect(gate.test('<i DATA-ICON="edit"></i>')).toBe(true);
   expect(gate.test('<span data-testid="cell">x</span>')).toBe(false);
   expect(gate.test('<span data-linked-id="1">x</span>')).toBe(false);
