@@ -28,6 +28,12 @@ export default {
         'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Use DangerousHtml for a trusted <style> block, or style the block through its style and class properties.',
       see: 'display-blocks/html',
     },
+    {
+      id: 'html-no-click-events',
+      message:
+        'Html fires no events from its markup: data-event attributes do nothing here. Use ClickableHtml for clickable elements, including icons.',
+      see: 'display-blocks/clickablehtml',
+    },
   ],
   events: {
     onTextSelection:
@@ -39,7 +45,8 @@ export default {
     properties: {
       html: {
         type: 'string',
-        description: 'Content to be rendered as Html.',
+        description:
+          'Content to be rendered as Html. data-icon="edit" renders an icon (a semantic name like edit, delete, warning, or a React Icons name), data-tooltip="Text" shows a tooltip on hover and focus, and data-popover="id" toggles a popover showing the element with data-popover-content="id" (mark it hidden).',
         docs: {
           displayType: 'text-area',
         },

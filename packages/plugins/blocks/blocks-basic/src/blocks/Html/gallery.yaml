@@ -237,3 +237,10 @@
           border: 1px solid var(--ant-color-border)
       properties:
         html: '<h4 style="margin: 0 0 8px 0;">Elevated Block</h4><p style="margin: 0;">Uses bg-elevated token for a surface that adapts to light and dark mode.</p>'
+
+- title: Icons, tooltips and popovers
+  blocks:
+    - id: html_icons
+      type: Html
+      properties:
+        html: '<p><i data-icon="success" style="color: var(--ant-color-success)"></i> Saved <span data-tooltip="Saved to the cloud 2 minutes ago" style="text-decoration: underline dotted">just now</span></p><p><i data-icon="warning" style="color: var(--ant-color-warning)"></i> 3 fields need attention. <span data-popover="fields" style="color: var(--ant-color-primary); cursor: pointer">Which? <i data-icon="chevron-down"></i></span></p><div data-popover-content="fields" hidden><ul style="margin: 0; padding-left: 16px"><li>Email</li><li>Phone</li><li>Address</li></ul></div>'

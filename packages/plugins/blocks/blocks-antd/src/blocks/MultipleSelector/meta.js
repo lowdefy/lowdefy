@@ -78,7 +78,7 @@ export default {
         ...icon,
         default: 'AiOutlineCloseCircle',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
       },
       disabled,
       label,
@@ -225,7 +225,7 @@ export default {
         ...icon,
         default: 'AiOutlineCheck',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
       },
       showArrow: {
         type: 'boolean',
@@ -238,7 +238,7 @@ export default {
         ...icon,
         default: 'AiOutlineDown',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize at the drop-down position of the selector.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize at the drop-down position of the selector.",
       },
       title: {
         type: 'string',

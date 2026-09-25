@@ -114,7 +114,7 @@ export default {
             icon: {
               type: ['string', 'object'],
               description:
-                "Name of a React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use as the step icon.",
+                "Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use as the step icon.",
               docs: {
                 displayType: 'icon',
               },

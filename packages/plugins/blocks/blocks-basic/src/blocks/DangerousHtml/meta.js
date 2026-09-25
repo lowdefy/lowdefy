@@ -41,7 +41,8 @@ export default {
     properties: {
       html: {
         type: 'string',
-        description: 'Content to be rendered as Html.',
+        description:
+          'Content to be rendered as Html. data-icon, data-tooltip and data-popover work as in the Html block, unless DOMPurifyOptions removes data attributes.',
         docs: {
           displayType: 'text-area',
         },

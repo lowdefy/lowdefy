@@ -83,6 +83,10 @@ Uses DOMPurify for sanitization, removing:
 
 The HTML is sanitized and assigned to `innerHTML` on mount and then only when the string (or the rendered element) changes. `renderHtml` sits behind most antd labels, titles and AgGrid cells, so re-sanitizing on every parent render was measurable, and it reset open `<details>`, media and text selection. DOMPurify has no hooks or config set, so the same string always sanitizes the same way.
 
+**Attribute enhancements.** After sanitising, `HtmlComponent` gives four attributes meaning: `data-icon` (renders the app's Icon component into the element through a React portal), `data-tooltip` and `data-popover` / `data-popover-content` (a themed antd overlay anchored on the element), and — when the caller passes `onDataEvent` — `data-event` (click delegation with the other `data-*` attributes as the payload; `ClickableHtml` uses this). The pass runs only when the string contains one of those attribute names. It needs the Icon component, the icon map and the overlay, which the client hands over once through `registerHtmlEnhancements` in `initLowdefyContext`: a module-level registration rather than React context, because antd mounts Message, Notification and ConfirmModal content outside the page tree. Unregistered (unit tests, standalone use) the HTML renders as plain sanitised markup. The root element's only React children are portals and the overlay, which renders nothing in place, so an `innerHTML` reset never removes a React-owned node. Plugins that render HTML should use `renderHtml` or `HtmlComponent` rather than their own DOMPurify + `innerHTML`, or they miss these attributes.
+
+Props beyond `html`: `div` (render a `div` instead of a `span`), `onDataEvent({ name, event })`, `sanitizeOptions` (DOMPurify config, used by `DangerousHtml`), and the older `onClick`.
+
 ### createLazyBlock({ load, meta, Fallback })
 
 Wraps a block so its implementation module loads when the block first mounts, not with the page's block chunk. Use it for blocks that add a lot of code and are usually off-screen at first paint (a chat in a closed drawer, an editor in a modal).

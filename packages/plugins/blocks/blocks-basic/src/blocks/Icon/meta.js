@@ -22,7 +22,8 @@ export default {
     element: 'The Icon element.',
   },
   events: {
-    onClick: 'Trigger actions when icon is clicked.',
+    onClick:
+      'Trigger actions when icon is clicked. The icon then takes keyboard focus, and Enter or Space trigger it too.',
   },
   properties: {
     type: 'object',
@@ -38,7 +39,8 @@ export default {
       name: {
         type: 'string',
         default: 'AiOutlineCloseCircle',
-        description: 'Name of icon to be displayed.',
+        description:
+          'Name of the icon: a semantic name like edit, delete or warning (add your own with theme.icons.aliases), or a React Icons name like LuPencil.',
       },
       rotate: {
         type: 'number',

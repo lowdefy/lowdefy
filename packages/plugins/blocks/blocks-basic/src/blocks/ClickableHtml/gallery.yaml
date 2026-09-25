@@ -111,3 +111,36 @@
             type: SetState
             params:
               style_card_action: remove
+
+- title: Clickable icons and a popover menu
+  blocks:
+    - id: row_actions
+      type: ClickableHtml
+      properties:
+        html: '<p>Invoice INV-042 <i data-icon="edit" data-event="onEdit" data-id="42" data-tooltip="Edit" style="cursor: pointer"></i> <span data-popover="more" style="cursor: pointer"><i data-icon="more-vertical"></i></span></p><div data-popover-content="more" hidden><p data-event="onDuplicate" data-id="42" style="cursor: pointer; margin: 0 0 8px"><i data-icon="copy"></i> Duplicate</p><p data-event="onDelete" data-id="42" style="cursor: pointer; margin: 0; color: var(--ant-color-error)"><i data-icon="delete"></i> Delete</p></div>'
+      events:
+        onEdit:
+          - id: set_edit
+            type: SetState
+            params:
+              row_actions_last: { _string.concat: ['edit ', { _event: id }] }
+        onDuplicate:
+          - id: set_duplicate
+            type: SetState
+            params:
+              row_actions_last: { _string.concat: ['duplicate ', { _event: id }] }
+        onDelete:
+          - id: set_delete
+            type: SetState
+            params:
+              row_actions_last: { _string.concat: ['delete ', { _event: id }] }
+    - id: row_actions_result
+      type: Html
+      properties:
+        html:
+          _string.concat:
+            - '<p>Last action: <code>'
+            - _state:
+                key: row_actions_last
+                default: 'none yet'
+            - '</code></p>'

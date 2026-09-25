@@ -45,7 +45,8 @@ export default {
       },
       icon: {
         type: ['string', 'object'],
-        description: 'Name of a React-Icon or properties of an Icon block to use icon in button.',
+        description:
+          'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use icon in button.',
         docs: {
           displayType: 'icon',
         },

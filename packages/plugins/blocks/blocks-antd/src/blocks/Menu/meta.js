@@ -382,7 +382,7 @@ export default {
                 icon: {
                   type: ['string', 'object'],
                   description:
-                    "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
+                    "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on menu item.",
                   docs: {
                     displayType: 'icon',
                   },

@@ -65,13 +65,13 @@ export default {
         ...icon,
         default: 'AiOutlineFrown',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
       },
       maxIcon: {
         ...icon,
         default: 'AiOutlineSmile',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
       },
       label,
       min: {
