@@ -15,7 +15,6 @@
 */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { z } from 'zod';
 import { type } from '@lowdefy/helpers';
 
 import checkpointToMocks from './checkpointToMocks.js';
@@ -45,34 +44,12 @@ import runRequest from './runRequest.js';
 import snapshotState from './snapshotState.js';
 import { listStateCheckpoints } from './checkpointStore.js';
 import createLogger from '../server/log/createLogger.js';
+import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
-
-const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
-
-Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
-
-Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
-
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
-
-Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
-
-Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text or url. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
-
-Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
-
-Safety: lowdefy_checkpoint snapshots the config files before risky multi-file changes; lowdefy_revert_checkpoint restores them.
-
-Visual feedback: developers can press Cmd/Ctrl+/ in the running app to point at elements, draw, and copy annotated feedback to their clipboard, then paste it to you. Pasted annotation blocks start with "Feedback:" and carry the blockId, the resolved config file:line, drawn shapes, and usually an "Annotated screenshot:" file path — READ that image to see exactly what the developer drew. Treat them as precise UI feedback and use lowdefy_inspect_state for the page's live state.
-
-State checkpoints (testing): lowdefy_snapshot_state captures a page's live state AND its request/api responses into .lowdefy/state-checkpoints/<name>/ (one file per part; gitignored — checkpoints contain user/session data). lowdefy_load_state puts the app back into that state: headless for your own verification, or registry-only which returns a ?_checkpoint URL the developer can open to manually test the app in that exact state (recorded request data is served automatically). lowdefy_checkpoint_to_mocks converts a checkpoint into e2e mocks.yaml fixtures — use it when asked to write e2e tests.`;
-
-const HAZARDS_NOTE =
-  ' Results include `hazards`: behaviours of this type that its schema does not show. Read them before writing config.';
 
 // get_doc returns markdown rather than JSON, so hazards resolved for the
 // requested type are appended as a section instead of a sibling key.
@@ -96,29 +73,28 @@ function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
-// Shared by every tool that renders a page headless, so one call can act as an
-// admin and the next as a plain member — each headless call gets its own browser
-// context, so they never share an identity.
-const userSchema = z
-  .object({})
-  .passthrough()
-  .optional()
-  .describe(
-    'Act as this caller instead of the default roleless headless user, e.g. {"roles":["user-admin"]} to render a role-gated page. Merged over the default, so include email/profile/attributes fields too if the page reads them — no auth engine runs for an injected caller, so nothing derives them. Headless only: it is never applied to a page the developer opens in their own browser, so combining it with source "tab" or load_state mode "registry-only" is an error rather than a silently dropped role, and on lowdefy_run_request / lowdefy_run_endpoint it sets the caller the request or routine runs as.'
-  );
-
 function createDocsMcpServer({ origin, honoContext } = {}) {
   const server = new McpServer(
     { name: 'lowdefy-docs', version: '1.0.0' },
     { capabilities: { logging: {} }, instructions: INSTRUCTIONS }
   );
 
-  // Debug-log every tool call (name + args, never the response) so agent
-  // activity is visible in the dev terminal with --log-level=debug. Wrapping
-  // registerTool here covers all tools without touching each registration.
-  const registerTool = server.registerTool.bind(server);
-  server.registerTool = (name, definition, handler) =>
-    registerTool(name, definition, async (args, extra) => {
+  // Every tool's contract comes from devToolDefinitions, which the stdio shim
+  // also lists, so a tool registered here without a definition - or a
+  // definition left without a handler - would make the two disagree.
+  // registerDevTool looks the definition up, and the check after the last
+  // registration fails the server if any definition was missed.
+  //
+  // It also debug-logs every tool call (name + args, never the response) so
+  // agent activity is visible in the dev terminal with --log-level=debug.
+  const registered = new Set();
+  function registerDevTool(name, handler) {
+    const definition = devToolDefinitions[name];
+    if (definition === undefined) {
+      throw new Error(`Dev tool "${name}" has no entry in devToolDefinitions.`);
+    }
+    registered.add(name);
+    server.registerTool(name, definition, async (args, extra) => {
       try {
         logger.debug({ event: 'mcp_tool_call', tool: name, args }, `MCP tool call: ${name}`);
       } catch {
@@ -143,290 +119,96 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       }
       return result;
     });
+  }
 
-  server.registerTool(
-    'lowdefy_inspect_state',
-    {
-      description:
-        "Read the LIVE state of a running page: state, request results, event log (recent actions fired), global, user, input, and urlQuery. If the developer has the page open in a browser it reads their actual tab (ask them to interact first, then inspect); otherwise it runs the page headless. Use this to see what the app's data model really looks like.",
-      inputSchema: {
-        pageId: z.string().describe('The page id to inspect.'),
-        source: z
-          .enum(['tab', 'headless'])
-          .optional()
-          .describe('Force a source. Default: live tab if connected, else headless.'),
-        user: userSchema,
-      },
-    },
-    async ({ pageId, source, user }) => {
-      const result = await inspectState({ origin, pageId, source, user });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_inspect_state', async ({ pageId, source, user }) => {
+    const result = await inspectState({ origin, pageId, source, user });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
-  );
+    return textResult(result);
+  });
 
-  server.registerTool(
-    'lowdefy_eval_operator',
-    {
-      description:
-        'Evaluate a Lowdefy operator expression against the live state of a running page — a REPL for config. Pass the operator object in the "expression" argument — any JSON value, e.g. {"_state": "customer.name"} or {"_if": {...}}. Evaluates in the real browser runtime (live tab if connected, else headless).',
-      inputSchema: {
-        pageId: z.string().describe('The page id whose context to evaluate against.'),
-        expression: z
-          .any()
-          .describe('The operator expression — any JSON value, e.g. {"_state": "key"}.'),
-        source: z.enum(['tab', 'headless']).optional(),
-        user: userSchema,
-      },
-    },
-    async ({ pageId, expression, source, user }) => {
-      const result = await evalOperator({ origin, pageId, expression, source, user });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_eval_operator', async ({ pageId, expression, source, user }) => {
+    const result = await evalOperator({ origin, pageId, expression, source, user });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
+    return textResult(result);
+  });
+
+  registerDevTool('lowdefy_run_request', async ({ pageId, requestId, payload, user }) =>
+    textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
   );
 
-  server.registerTool(
-    'lowdefy_run_request',
-    {
-      description:
-        'Execute a request in dev with a test payload to verify the data shape a page receives. Read-only request types always run; write requests are refused unless the app opts in (cli.agentTools.allowWriteRequests in lowdefy.yaml).',
-      inputSchema: {
-        pageId: z.string().describe('The page the request is defined on.'),
-        requestId: z.string().describe('The request id.'),
-        payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
-        user: userSchema,
-      },
-    },
-    async ({ pageId, requestId, payload, user }) =>
-      textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
+  registerDevTool('lowdefy_run_endpoint', async ({ endpointId, payload, user, system }) =>
+    textResult(await runEndpoint({ endpointId, payload, user, system, honoContext }))
   );
 
-  server.registerTool(
-    'lowdefy_run_endpoint',
-    {
-      description:
-        'Execute an Api endpoint routine in dev with a test payload and caller, to verify what it returns, rejects or throws. Requires agent write access (cli.agentTools.allowWriteRequests) because routines are not classified read-only. A :reject or :throw comes back as data (success: false, status "reject"/"error" with the routine\'s own error), not as a tool failure. Pass system: true to run it as a system context the way a cron or detached run does — no user (_user undefined), endpoint auth not checked, InternalApi endpoints allowed — which is the local test path for scheduled (schedules) and detached-only routines. Nested CallApi steps with detached: true still dispatch over HTTP and need CRON_SECRET set on the dev server; they are not faked.',
-      inputSchema: {
-        endpointId: z.string().describe('The Api endpoint id.'),
-        payload: z.record(z.any()).optional().describe('Test payload for _payload operators.'),
-        user: userSchema,
-        system: z
-          .boolean()
-          .optional()
-          .describe(
-            'Run as a system context (like /api/cron and /api/detached): no user, auth not checked, InternalApi allowed. Cannot be combined with user.'
-          ),
-      },
-    },
-    async ({ endpointId, payload, user, system }) =>
-      textResult(await runEndpoint({ endpointId, payload, user, system, honoContext }))
+  registerDevTool('lowdefy_restart', ({ reason }) =>
+    textResult({
+      ...requestRestart({ reason }),
+      note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+    })
   );
 
-  server.registerTool(
-    'lowdefy_restart',
-    {
-      description:
-        "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing.",
-      inputSchema: {
-        reason: z
-          .string()
-          .optional()
-          .describe('Why the restart is needed (logged by the manager).'),
-      },
-    },
-    ({ reason }) =>
-      textResult({
-        ...requestRestart({ reason }),
-        note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
-      })
-  );
+  registerDevTool('lowdefy_app_map', () => textResult(getAppMap()));
 
-  server.registerTool(
-    'lowdefy_app_map',
-    {
-      description:
-        'The whole-app graph in one call: every page (with its source file and, when built, block/request summaries), menus, connections, api endpoints, agents, and websockets. Call this first when working in an existing app.',
-      inputSchema: {},
-    },
-    () => textResult(getAppMap())
-  );
-
-  server.registerTool(
-    'lowdefy_snapshot_state',
-    {
-      description:
-        "Capture the live state AND recorded request/api responses of a running page into a checkpoint folder (.lowdefy/state-checkpoints/<name>/, one file per part; gitignored — checkpoints contain user/session data). Snapshot the developer's open tab after they reproduce a scenario, or a headless run. Use for building test fixtures and reproducible app states.",
-      inputSchema: {
-        pageId: z.string().describe('The page to snapshot.'),
-        name: z.string().describe('Checkpoint name (letters, numbers, - and _).'),
-        notes: z.string().optional().describe('What this checkpoint captures.'),
-        source: z.enum(['tab', 'headless']).optional(),
-        overwrite: z.boolean().optional(),
-      },
-    },
-    async ({ pageId, name, notes, source, overwrite }) => {
-      const result = await snapshotState({ origin, pageId, name, notes, source, overwrite });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_snapshot_state', async ({ pageId, name, notes, source, overwrite }) => {
+    const result = await snapshotState({ origin, pageId, name, notes, source, overwrite });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
-  );
+    return textResult(result);
+  });
 
-  server.registerTool(
-    'lowdefy_load_state',
-    {
-      description:
-        "Put the app back into a saved state checkpoint. mode 'headless' (default) verifies the restored state itself; mode 'registry-only' loads the recorded request data into the dev server and returns a ?_checkpoint URL the developer can open to manually test the app in that exact state.",
-      inputSchema: {
-        name: z.string().describe('The checkpoint name.'),
-        mode: z.enum(['headless', 'registry-only']).optional(),
-        user: userSchema,
-      },
-    },
-    async ({ name, mode, user }) => {
-      const result = await loadState({ origin, name, mode, user });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_load_state', async ({ name, mode, user }) => {
+    const result = await loadState({ origin, name, mode, user });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
-  );
+    return textResult(result);
+  });
 
-  server.registerTool(
-    'lowdefy_list_state_checkpoints',
-    {
-      description: 'List saved state checkpoints (name, page, captured time, notes).',
-      inputSchema: {},
-    },
-    () => textResult(listStateCheckpoints())
-  );
+  registerDevTool('lowdefy_list_state_checkpoints', () => textResult(listStateCheckpoints()));
 
-  server.registerTool(
-    'lowdefy_checkpoint_to_mocks',
-    {
-      description:
-        'Convert a state checkpoint into @lowdefy/e2e-utils mocks.yaml fixtures (requests/api entries plus rendered yaml). Use when writing e2e tests from a captured scenario.',
-      inputSchema: {
-        name: z.string().describe('The checkpoint name.'),
-      },
-    },
-    ({ name }) => {
-      const result = checkpointToMocks({ name });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_checkpoint_to_mocks', ({ name }) => {
+    const result = checkpointToMocks({ name });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
+    return textResult(result);
+  });
+
+  registerDevTool('lowdefy_checkpoint', ({ label }) =>
+    textResult(createConfigCheckpoint({ label }))
   );
 
-  server.registerTool(
-    'lowdefy_checkpoint',
-    {
-      description:
-        'Snapshot all config files before risky changes. Returns a checkpoint id for lowdefy_revert_checkpoint. Use before multi-file edits so you can restore instantly.',
-      inputSchema: {
-        label: z.string().describe('Short label for the checkpoint, e.g. "before-refactor".'),
-      },
-    },
-    ({ label }) => textResult(createConfigCheckpoint({ label }))
-  );
-
-  server.registerTool(
-    'lowdefy_revert_checkpoint',
-    {
-      description:
-        'Restore config files from a checkpoint made with lowdefy_checkpoint (restores changed files and removes files added since). Omit id to list available checkpoints.',
-      inputSchema: {
-        id: z.string().optional().describe('Checkpoint id. Omit to list checkpoints.'),
-      },
-    },
-    ({ id }) => {
-      if (!id) {
-        return textResult(listConfigCheckpoints());
-      }
-      return textResult(revertConfigCheckpoint({ id }));
+  registerDevTool('lowdefy_revert_checkpoint', ({ id }) => {
+    if (!id) {
+      return textResult(listConfigCheckpoints());
     }
-  );
+    return textResult(revertConfigCheckpoint({ id }));
+  });
 
-  server.registerTool(
-    'lowdefy_build_status',
-    {
-      description:
-        'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
-      inputSchema: {},
-    },
-    () => textResult(getBuildStatus())
-  );
+  registerDevTool('lowdefy_build_status', () => textResult(getBuildStatus()));
 
-  server.registerTool(
-    'lowdefy_get_page_config',
-    {
-      description:
-        'Get the fully built config for a page, or its structured build errors if the page fails to build. Use to verify a page after editing it.',
-      inputSchema: {
-        pageId: z.string().describe('The page id.'),
-      },
-    },
-    async ({ pageId }) => {
-      const result = await getPageConfig({ pageId });
-      if (result === null) {
-        return notFoundResult(
-          `Page "${pageId}" not found. Use lowdefy_overview or check pageRegistry for valid page ids.`
-        );
-      }
-      return textResult(result);
+  registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {
+    const result = await getPageConfig({ pageId });
+    if (result === null) {
+      return notFoundResult(
+        `Page "${pageId}" not found. Use lowdefy_overview or check pageRegistry for valid page ids.`
+      );
     }
+    return textResult(result);
+  });
+
+  registerDevTool('lowdefy_find_config', async ({ id, pageId }) =>
+    textResult(await findConfig({ id, pageId }))
   );
 
-  server.registerTool(
-    'lowdefy_find_config',
-    {
-      description:
-        'Find where a config entity is defined: pass a page, block, or request id and get the source yaml file (and line where available). For block/request ids also pass the owning pageId so the page is built first.' +
-        HAZARDS_NOTE,
-      inputSchema: {
-        id: z.string().describe('The id to find, e.g. a pageId, blockId, or requestId.'),
-        pageId: z
-          .string()
-          .optional()
-          .describe(
-            'The page the id belongs to — required for block/request ids on pages not yet built.'
-          ),
-      },
-    },
-    async ({ id, pageId }) => textResult(await findConfig({ id, pageId }))
-  );
-
-  server.registerTool(
+  registerDevTool(
     'lowdefy_screenshot_page',
-    {
-      description:
-        'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image.',
-      inputSchema: {
-        pageId: z.string().describe('The page id to screenshot.'),
-        fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
-        clip: z
-          .object({
-            x: z.number(),
-            y: z.number(),
-            width: z.number(),
-            height: z.number(),
-          })
-          .optional()
-          .describe(
-            "Crop to a viewport-relative region — pass an annotation's geometry from feedback."
-          ),
-        scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
-        scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
-        user: userSchema,
-      },
-    },
     async ({ pageId, fullPage, clip, scrollX, scrollY, user }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
@@ -447,211 +229,88 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     }
   );
 
-  server.registerTool(
-    'lowdefy_run_journey',
-    {
-      description:
-        'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Always returns the final page state and any screenshots taken (as images after the JSON text).',
-      inputSchema: {
-        pageId: z.string().describe('The page id to open.'),
-        steps: z
-          .array(z.record(z.any()))
-          .describe(
-            'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"select": {...target, "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}}}. A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons and dropdown menu items are reached. fill, select and expect.text need a blockId. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
-          ),
-        user: userSchema,
-        urlQuery: z
-          .record(z.any())
-          .optional()
-          .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
-      },
-    },
-    async ({ pageId, steps, user, urlQuery }) => {
-      if (!origin) {
-        return notFoundResult('Journey unavailable: server origin unknown for this transport.');
-      }
-      const result = await runJourney({ origin, pageId, steps, user, urlQuery });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
-      // returns) so an MCP client renders them; the JSON keeps only their names.
-      const { screenshots, ...rest } = result;
-      const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
-      return {
-        content: [
-          { type: 'text', text: JSON.stringify(summary, null, 2) },
-          ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
-        ],
-      };
+  registerDevTool('lowdefy_run_journey', async ({ pageId, steps, user, urlQuery }) => {
+    if (!origin) {
+      return notFoundResult('Journey unavailable: server origin unknown for this transport.');
     }
-  );
-
-  server.registerTool(
-    'lowdefy_scaffold_page',
-    {
-      description:
-        'Create a new page yaml file with a canonical minimal structure. Refuses if the page already exists. Returns the created file path and the lowdefy.yaml registration step you must do next.',
-      inputSchema: {
-        pageId: z.string().describe('The new page id (letters, numbers, - and _).'),
-        title: z.string().optional().describe('Page title. Defaults to the pageId.'),
-      },
-    },
-    ({ pageId, title }) => {
-      const result = scaffoldPage({ pageId, title });
-      if (result.error) {
-        return notFoundResult(result.error);
-      }
-      return textResult(result);
+    const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
-  );
+    // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
+    // returns) so an MCP client renders them; the JSON keeps only their names.
+    const { screenshots, ...rest } = result;
+    const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
+    return {
+      content: [
+        { type: 'text', text: JSON.stringify(summary, null, 2) },
+        ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+      ],
+    };
+  });
 
-  server.registerTool(
-    'lowdefy_overview',
-    {
-      description:
-        'Start here. Overview of everything this Lowdefy project has available: counts of blocks/operators/actions/connections/requests, installed plugins, doc sections, and which tool to use next.',
-      inputSchema: {},
-    },
-    () => textResult(getOverview())
-  );
-
-  server.registerTool(
-    'lowdefy_list_types',
-    {
-      description:
-        'List ALL available types of a kind — every block, operator, action, connection, or request type installed in this project (core and local plugins), whether used yet or not. Call this before writing any config to get exact type names.',
-      inputSchema: {
-        kind: z
-          .enum([
-            'blocks',
-            'operators',
-            'actions',
-            'connections',
-            'requests',
-            'agents',
-            'notifications',
-            'websockets',
-          ])
-          .describe('The kind of types to list.'),
-      },
-    },
-    ({ kind }) => textResult(listTypes({ kind }))
-  );
-
-  server.registerTool(
-    'lowdefy_list_plugins',
-    {
-      description:
-        "List installed plugin packages (including this project's local custom plugins) and the type names each provides.",
-      inputSchema: {},
-    },
-    () => textResult(listPlugins())
-  );
-
-  server.registerTool(
-    'lowdefy_get_schema',
-    {
-      description:
-        'Get the JSON Schema for a specific type: all properties, events, and their descriptions. Use the exact type name from lowdefy_list_types.' +
-        HAZARDS_NOTE,
-      inputSchema: {
-        kind: z
-          .enum(['blocks', 'operators', 'actions', 'connections', 'requests'])
-          .describe('The kind of the type.'),
-        type: z.string().describe('The exact type name, e.g. "Button", "_get", "MongoDBFind".'),
-      },
-    },
-    ({ kind, type }) => {
-      const schema = getSchema({ kind, type });
-      if (schema === null) {
-        return notFoundResult(
-          `No schema found for ${kind} type "${type}". Use lowdefy_list_types to see available types.`
-        );
-      }
-      return textResult(schema);
+  registerDevTool('lowdefy_scaffold_page', ({ pageId, title }) => {
+    const result = scaffoldPage({ pageId, title });
+    if (result.error) {
+      return notFoundResult(result.error);
     }
-  );
+    return textResult(result);
+  });
 
-  server.registerTool(
-    'lowdefy_get_examples',
-    {
-      description:
-        'Get real YAML usage examples for a block type (gallery and example configs shipped with the plugin).',
-      inputSchema: {
-        type: z.string().describe('The exact block type name, e.g. "Button".'),
-      },
-    },
-    ({ type }) => {
-      const examples = getExamples({ type });
-      if (examples === null) {
-        return notFoundResult(
-          `No examples shipped for block type "${type}". Use lowdefy_get_schema for its contract, or lowdefy_get_doc for its documentation page.`
-        );
-      }
-      return textResult(examples);
+  registerDevTool('lowdefy_overview', () => textResult(getOverview()));
+
+  registerDevTool('lowdefy_list_types', ({ kind }) => textResult(listTypes({ kind })));
+
+  registerDevTool('lowdefy_list_plugins', () => textResult(listPlugins()));
+
+  registerDevTool('lowdefy_get_schema', ({ kind, type }) => {
+    const schema = getSchema({ kind, type });
+    if (schema === null) {
+      return notFoundResult(
+        `No schema found for ${kind} type "${type}". Use lowdefy_list_types to see available types.`
+      );
     }
-  );
+    return textResult(schema);
+  });
 
-  server.registerTool(
-    'lowdefy_get_doc',
-    {
-      description:
-        'Get a core Lowdefy documentation page as markdown. Look up by slug (e.g. "concepts/lowdefy-schema", "operators/_get") or by kind + type name. Key concept slugs: concepts/lowdefy-schema, concepts/blocks, concepts/events-and-actions, concepts/connections-and-requests, concepts/operators, concepts/page-and-app-state.' +
-        HAZARDS_NOTE,
-      inputSchema: {
-        slug: z.string().optional().describe('Doc slug, e.g. "operators/_get".'),
-        kind: z
-          .enum(['block', 'operator', 'action', 'connection'])
-          .optional()
-          .describe('Kind of the type to find the doc for.'),
-        type: z.string().optional().describe('Type name to find the doc for, e.g. "_get".'),
-      },
-    },
-    ({ slug, kind, type }) => {
-      const doc = getCoreDoc({ slug, kind, type });
-      if (doc === null) {
-        return notFoundResult(
-          `No doc found${slug ? ` for slug "${slug}"` : ''}${
-            type ? ` for type "${type}"` : ''
-          }. Use lowdefy_search_docs to find the right slug.`
-        );
-      }
-      return textResult(appendHazards(doc));
+  registerDevTool('lowdefy_get_examples', ({ type }) => {
+    const examples = getExamples({ type });
+    if (examples === null) {
+      return notFoundResult(
+        `No examples shipped for block type "${type}". Use lowdefy_get_schema for its contract, or lowdefy_get_doc for its documentation page.`
+      );
     }
-  );
+    return textResult(examples);
+  });
 
-  server.registerTool(
-    'lowdefy_search_docs',
-    {
-      description: 'Search the core Lowdefy docs by keyword. Returns matching slugs with snippets.',
-      inputSchema: {
-        query: z.string().describe('Search keywords.'),
-      },
-    },
-    ({ query }) => textResult(searchDocs({ query }))
-  );
-
-  server.registerTool(
-    'lowdefy_get_plugin_doc',
-    {
-      description:
-        "Get markdown documentation shipped inside an installed plugin package (README, guides). Useful for this project's local custom plugins.",
-      inputSchema: {
-        package: z.string().describe('The package name, e.g. "@lowdefy/blocks-antd".'),
-      },
-    },
-    ({ package: packageName }) => {
-      const doc = getPluginDoc({ packageName });
-      if (doc === null) {
-        return notFoundResult(
-          `Package "${packageName}" ships no markdown docs. Use lowdefy_list_types and lowdefy_get_schema for its types.`
-        );
-      }
-      return textResult(doc.markdown);
+  registerDevTool('lowdefy_get_doc', ({ slug, kind, type }) => {
+    const doc = getCoreDoc({ slug, kind, type });
+    if (doc === null) {
+      return notFoundResult(
+        `No doc found${slug ? ` for slug "${slug}"` : ''}${
+          type ? ` for type "${type}"` : ''
+        }. Use lowdefy_search_docs to find the right slug.`
+      );
     }
-  );
+    return textResult(appendHazards(doc));
+  });
 
+  registerDevTool('lowdefy_search_docs', ({ query }) => textResult(searchDocs({ query })));
+
+  registerDevTool('lowdefy_get_plugin_doc', ({ package: packageName }) => {
+    const doc = getPluginDoc({ packageName });
+    if (doc === null) {
+      return notFoundResult(
+        `Package "${packageName}" ships no markdown docs. Use lowdefy_list_types and lowdefy_get_schema for its types.`
+      );
+    }
+    return textResult(doc.markdown);
+  });
+
+  const unregistered = Object.keys(devToolDefinitions).filter((name) => !registered.has(name));
+  if (unregistered.length > 0) {
+    throw new Error(`Dev tools defined without a handler: ${unregistered.join(', ')}.`);
+  }
   return server;
 }
 

@@ -152,6 +152,14 @@ test('MCP tools/list returns all lowdefy tools', async () => {
   await client.close();
 });
 
+test('MCP tools/list serves exactly the tools in devToolDefinitions, which the stdio shim lists', async () => {
+  const { default: devToolDefinitions } = await import('./devToolDefinitions.js');
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  expect(tools.map((tool) => tool.name).sort()).toEqual(Object.keys(devToolDefinitions).sort());
+  await client.close();
+});
+
 test('MCP tools that render a page headless advertise an optional user parameter', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();

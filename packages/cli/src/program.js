@@ -22,14 +22,21 @@ import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
+import hubLogs from './commands/hub/hubLogs.js';
+import hubServe from './commands/hub/hubServe.js';
+import hubStart from './commands/hub/hubStart.js';
+import hubStatus from './commands/hub/hubStatus.js';
+import hubStop from './commands/hub/hubStop.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
 import upgrade from './commands/upgrade/upgrade.js';
 import vercelOutput from './commands/vercelOutput/vercelOutput.js';
 import runCommand from './utils/runCommand.js';
+import runHubCommand from './utils/runHubCommand.js';
 
 const require = createRequire(import.meta.url);
 
@@ -98,7 +105,6 @@ program
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
-  .addOption(options.port)
   .addOption(options.projectDirectory)
   .action(runCommand({ cliVersion, handler: agentSetup }));
 
@@ -164,6 +170,45 @@ program
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: dockerOutput }));
 
+const hub = program
+  .command('hub')
+  .description(
+    'Manage the Lowdefy hub, the per-user process that runs dev servers for coding agents.'
+  );
+
+hub
+  .command('status')
+  .description('List the dev servers the hub runs.')
+  .action(runHubCommand({ cliVersion, handler: hubStatus }));
+
+hub
+  .command('start')
+  .description('Start (or return) the dev server for an app, run by the hub.')
+  .argument('[directory]', 'The app directory. Default is the current working directory.')
+  .option('--restart', 'Restart the dev server if it is running.')
+  .option('--clean', 'Delete the build directory before starting.')
+  .action(runHubCommand({ cliVersion, handler: hubStart }));
+
+hub
+  .command('stop')
+  .description('Stop a dev server the hub runs. Servers started in a terminal are never stopped.')
+  .argument('[directory]', 'The app directory. Default is the current working directory.')
+  .option('--all', 'Stop every dev server the hub runs.')
+  .action(runHubCommand({ cliVersion, handler: hubStop }));
+
+hub
+  .command('logs')
+  .description('Print the recent output of a dev server the hub runs.')
+  .argument('[directory]', 'The app directory. Default is the current working directory.')
+  .option('--lines <lines>', 'How many lines.', '100')
+  .option('--grep <text>', 'Only lines containing this text.')
+  .action(runHubCommand({ cliVersion, handler: hubLogs }));
+
+hub
+  .command('serve', { hidden: true })
+  .description('Run the hub in the foreground. Started automatically when needed.')
+  .action(runHubCommand({ cliVersion, handler: hubServe }));
+
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
@@ -189,6 +234,13 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: initVercel }));
+
+program
+  .command('mcp')
+  .description(
+    'Run the Lowdefy MCP server for coding agents over stdio. Agent clients start it from .mcp.json (see `lowdefy agent-setup`).'
+  )
+  .action(runHubCommand({ cliVersion, handler: mcp }));
 
 program
   .command('vercel-output')

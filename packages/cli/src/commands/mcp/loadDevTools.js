@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import fs from 'fs';
 
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// Written by scripts/generateDevTools.mjs at build time from server-dev's
+// devToolDefinitions - the dev server's own tool contract.
+function loadDevTools() {
+  return JSON.parse(fs.readFileSync(new URL('./devTools.json', import.meta.url), 'utf8'));
 }
 
-export default buildMcpServerEntry;
+export default loadDevTools;

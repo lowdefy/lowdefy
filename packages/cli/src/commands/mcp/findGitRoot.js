@@ -14,11 +14,21 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import fs from 'fs';
+import path from 'path';
 
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// The checkout root - a .git directory in a main checkout, a .git file in a
+// linked worktree. Falls back to the start directory outside git.
+function findGitRoot({ directory }) {
+  let current = directory;
+  while (!fs.existsSync(path.join(current, '.git'))) {
+    const parent = path.dirname(current);
+    if (parent === current) {
+      return directory;
+    }
+    current = parent;
+  }
+  return current;
 }
 
-export default buildMcpServerEntry;
+export default findGitRoot;

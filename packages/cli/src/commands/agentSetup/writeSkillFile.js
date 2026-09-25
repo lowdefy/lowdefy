@@ -22,14 +22,24 @@ import skillMd from './skillMd.js';
 
 const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
 
-async function writeSkillFile({ context, projectDirectory, appPath, port }) {
+// The skill agent-setup wrote before `lowdefy mcp`, which pointed agents at a
+// fixed dev server port. It is replaced; a skill a person edited is not.
+const PORT_PINNED_SKILL_MARKER =
+  'The dev server serves docs for everything installed in this project at';
+
+async function writeSkillFile({ context, projectDirectory, appPath }) {
   const skillPath = path.join(projectDirectory, skillRelativePath);
   if (fs.existsSync(skillPath)) {
-    context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
+    if (!fs.readFileSync(skillPath, 'utf8').includes(PORT_PINNED_SKILL_MARKER)) {
+      context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
+      return;
+    }
+    await writeFile(skillPath, skillMd({ appPath }));
+    context.logger.info(`Updated '${skillRelativePath}' for 'lowdefy mcp'.`);
     return;
   }
 
-  await writeFile(skillPath, skillMd({ port, appPath }));
+  await writeFile(skillPath, skillMd({ appPath }));
   context.logger.info(`Created '${skillRelativePath}'.`);
 }
 

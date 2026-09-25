@@ -14,11 +14,24 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import path from 'path';
 
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+import connectHub from './connectHub.js';
+
+function write(value) {
+  process.stdout.write(`${typeof value === 'string' ? value : JSON.stringify(value, null, 2)}\n`);
 }
 
-export default buildMcpServerEntry;
+async function hubStart({ directory = '.', restart = false, clean = false }) {
+  const hub = await connectHub();
+  const result = await hub.request('start', {
+    configDirectory: path.resolve(directory),
+    env: process.env,
+    restart,
+    clean,
+  });
+  hub.close();
+  write(result);
+}
+
+export default hubStart;

@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import path from 'path';
 
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// "apps/main @ app-wt-invoices" - which app, in which checkout. Every result
+// from a dev server starts with it, so an agent can never mistake another
+// worktree's answer for its own.
+function formatInstanceLabel({ configDirectory, root }) {
+  const checkout = path.basename(root);
+  const app = path.relative(root, configDirectory).split(path.sep).join('/');
+  return app === '' ? checkout : `${app} @ ${checkout}`;
 }
 
-export default buildMcpServerEntry;
+export default formatInstanceLabel;

@@ -14,11 +14,21 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
-
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// The hub speaks newline-delimited JSON in both directions.
+function createLineReader({ onMessage }) {
+  let buffer = '';
+  return function onData(chunk) {
+    buffer += chunk;
+    let index = buffer.indexOf('\n');
+    while (index >= 0) {
+      const line = buffer.slice(0, index);
+      buffer = buffer.slice(index + 1);
+      if (line.trim() !== '') {
+        onMessage(JSON.parse(line));
+      }
+      index = buffer.indexOf('\n');
+    }
+  };
 }
 
-export default buildMcpServerEntry;
+export default createLineReader;

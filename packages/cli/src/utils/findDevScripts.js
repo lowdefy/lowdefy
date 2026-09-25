@@ -14,11 +14,18 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import fs from 'fs';
+import path from 'path';
 
-function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// The app's package.json scripts that run `lowdefy dev`.
+function findDevScripts({ configDirectory }) {
+  const packageJsonPath = path.join(configDirectory, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    return { scripts: {}, matching: [] };
+  }
+  const scripts = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).scripts ?? {};
+  const matching = Object.keys(scripts).filter((name) => scripts[name].includes('lowdefy dev'));
+  return { scripts, matching };
 }
 
-export default buildMcpServerEntry;
+export default findDevScripts;
