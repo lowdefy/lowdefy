@@ -37,6 +37,14 @@ jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
+const mockBuildPageIfNeeded = jest.fn();
+jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+  default: mockBuildPageIfNeeded,
+}));
+const mockReviewPageBuilds = jest.fn();
+jest.unstable_mockModule('./reviewPageBuilds.js', () => ({
+  default: mockReviewPageBuilds,
+}));
 
 const { ConfigError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
@@ -54,6 +62,8 @@ beforeEach(() => {
   mockIsWriteRequestsAllowed.mockResolvedValue(false);
   mockCreateLowdefyContext.mockResolvedValue({ logger: { info: mockLoggerInfo } });
   mockCallRequest.mockResolvedValue({ id: 'requests', response: [{ _id: 1 }] });
+  mockBuildPageIfNeeded.mockResolvedValue(true);
+  mockReviewPageBuilds.mockReturnValue({ edited: [], unbuilt: [], failed: [] });
 });
 
 test('runRequest passes a user object to createLowdefyContext', async () => {
@@ -124,4 +134,29 @@ test('runRequest refuses a write request for an impersonated caller too', async 
 
   expect(result.refused).toBe(true);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runRequest notes stale config when the page changed but the dev server has not rebuilt it', async () => {
+  mockReviewPageBuilds.mockReturnValue({ edited: ['home'], unbuilt: [], failed: [] });
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.response).toEqual([{ _id: 1 }]);
+  expect(result.staleConfig).toContain('has not rebuilt it yet');
+});
+
+test('runRequest does not note stale config for a page that is current', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.staleConfig).toBeUndefined();
+});
+
+test('runRequest notes stale config on a request that fails', async () => {
+  mockReviewPageBuilds.mockReturnValue({ edited: ['home'], unbuilt: [], failed: [] });
+  mockCallRequest.mockRejectedValue(new Error('connect ECONNREFUSED'));
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.error.message).toBe('connect ECONNREFUSED');
+  expect(result.staleConfig).toContain('ran the previous config');
 });

@@ -24,6 +24,7 @@ import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
+import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
 import getOverview from './getOverview.js';
@@ -50,7 +51,6 @@ import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
-import waitForBuild from './waitForBuild.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
@@ -198,7 +198,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool('lowdefy_build_status', async ({ wait }) => {
     if (wait === true) {
-      return textResult({ ...(await waitForBuild()), ...getBuildStatus() });
+      return textResult(await getBuildStatusAfterEdits());
     }
     return textResult(getBuildStatus());
   });
