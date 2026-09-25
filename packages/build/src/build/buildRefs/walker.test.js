@@ -1686,3 +1686,20 @@ describe('deferModuleRefs record deferral', () => {
     expect(cloned.wrapper).toEqual({ '~deferred': 'consumer-entry:consumerVars.slot' });
   });
 });
+
+describe('unexpected errors while resolving a _ref', () => {
+  test('carry the innermost file being resolved as filePath', async () => {
+    mockReadConfigFile.mockImplementation((filePath) => {
+      if (filePath === 'pages/home.yaml') {
+        return 'id: home\nrequests:\n  - _ref: requests/get_rows.yaml\n';
+      }
+      throw new TypeError('Cannot read properties of undefined');
+    });
+    const ctx = createWalkContext();
+
+    await expect(resolve({ _ref: 'pages/home.yaml' }, ctx)).rejects.toMatchObject({
+      name: 'TypeError',
+      filePath: 'requests/get_rows.yaml',
+    });
+  });
+});
