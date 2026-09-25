@@ -17,6 +17,7 @@
 import evaluateOperators, { hasDynamicMarker, hasDynChild } from './evaluateOperators.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
+import getObjectReadKeys from './getObjectReadKeys.js';
 import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
@@ -28,6 +29,7 @@ export {
   hasDynChild,
   getFromArray,
   getFromObject,
+  getObjectReadKeys,
   ServerParser,
   runClass,
   runInstance,

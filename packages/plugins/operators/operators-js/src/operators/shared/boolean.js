@@ -19,5 +19,6 @@ function _boolean({ params }) {
 }
 
 _boolean.dynamic = false;
+_boolean.tracking = { kind: 'pure' };
 
 export default _boolean;

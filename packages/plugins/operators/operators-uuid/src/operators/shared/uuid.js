@@ -43,5 +43,10 @@ function _uuid({ params, location, methodName }) {
 }
 
 _uuid.dynamic = true;
+// v3 and v5 hash their name and namespace. Every other form generates a new id on each call.
+_uuid.tracking = ({ methodName, params }) => {
+  const method = methodName ?? (type.isNone(params) || params === true ? 'v4' : params);
+  return { kind: method === 'v3' || method === 'v5' ? 'pure' : 'volatile' };
+};
 
 export default _uuid;

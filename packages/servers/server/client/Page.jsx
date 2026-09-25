@@ -22,15 +22,13 @@ import createLinkComponent from '@lowdefy/client/adapters/Link.js';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
 import Head from '@lowdefy/client/adapters/Head.js';
 
-import actions from '../build/plugins/actions.js';
 import blockMetas from '../build/plugins/blockMetas.json';
-import blocks from '../build/plugins/blocks.js';
-import icons from '../build/plugins/icons.js';
-import operators from '../build/plugins/operators/client.js';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import appMeta from '../build/appMeta.json';
 
+import loadPageTypes from './loadPageTypes.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
+import types from './types.js';
 
 // Replaces lib/client/Page.js. The first page renders from the config
 // embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
@@ -92,6 +90,9 @@ function Page({ auth, config, lowdefy }) {
           window.location.reload();
           return;
         }
+        // A failed chunk load falls to the catch below: a full page load.
+        await loadPageTypes({ pageConfig: nextPageConfig });
+        if (token !== latestNavRef.current) return;
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.
@@ -119,11 +120,8 @@ function Page({ auth, config, lowdefy }) {
       lowdefy={lowdefy}
       router={router}
       types={{
-        actions,
+        ...types,
         blockMetas,
-        blocks,
-        icons,
-        operators,
       }}
       window={window}
     />

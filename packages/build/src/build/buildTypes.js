@@ -16,9 +16,8 @@
 
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
-import basicTypes from '@lowdefy/blocks-basic/types';
-import loaderTypes from '@lowdefy/blocks-loaders/types';
 import findSimilarString from '../utils/findSimilarString.js';
+import mandatoryClientTypes from './mandatoryClientTypes.js';
 
 function buildTypeClass(
   context,
@@ -53,17 +52,11 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
-  // Add Mandatory Types
-  // Add operators used by form validation
-  typeCounters.operators.client.increment('_not');
-  typeCounters.operators.client.increment('_type');
-  // Add loaders and basic
-  basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  // Used for DisplayMessage in @lowdefy/client
-  typeCounters.blocks.increment('Message');
-  // Used by blocks-antd Header/PageHeaderMenu/PageSiderMenu darkModeToggle
-  typeCounters.actions.increment('SetDarkMode');
+  mandatoryClientTypes.actions.forEach((action) => typeCounters.actions.increment(action));
+  mandatoryClientTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  mandatoryClientTypes.operators.forEach((operator) =>
+    typeCounters.operators.client.increment(operator)
+  );
 
   components.types = {
     actions: {},

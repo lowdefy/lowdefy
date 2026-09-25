@@ -48,6 +48,7 @@ function template({
   assets,
   basePath = '',
   config,
+  pageAssets,
   themeConfig = {},
   title,
 }) {
@@ -58,11 +59,19 @@ function template({
   const darkBg = themeConfig?.antd?.darkToken?.colorBgLayout ?? '#000';
   const lightBg = themeConfig?.antd?.lightToken?.colorBgLayout ?? '';
 
-  const cssLinks = assets.css
+  // The page's plugin chunks are preloaded with the main entry, so the first
+  // render's wait for them overlaps the main bundle's download.
+  const cssLinks = [...assets.css, ...pageAssets.css]
     .map((file) => `<link rel="stylesheet" href="${basePath}/${file}" />`)
     .join('\n    ');
-  const modulePreloads = assets.imports
+  const modulePreloads = [...assets.imports, ...pageAssets.js]
     .map((file) => `<link rel="modulepreload" href="${basePath}/${file}" />`)
+    .join('\n    ');
+  // Lazy block implementations load on mount; prefetch fills the cache at idle
+  // priority. crossorigin matches the CORS mode of the module and stylesheet
+  // requests Vite makes on mount, so they are served from that cache.
+  const prefetches = pageAssets.prefetch
+    .map((file) => `<link rel="prefetch" href="${basePath}/${file}" crossorigin />`)
     .join('\n    ');
 
   // appendHead and appendBody are intentionally raw HTML from app config
@@ -81,6 +90,7 @@ function template({
     ${title ? `<title>${escapeHtml(title)}</title>` : ''}
     ${cssLinks}
     ${modulePreloads}
+    ${prefetches}
     ${appendHead}
   </head>
   <body>

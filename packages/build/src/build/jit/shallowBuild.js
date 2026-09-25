@@ -107,7 +107,6 @@ async function shallowBuild(options) {
     // that the projection exists (matches the full build in index.js).
     await resolveModuleManifests({ context });
 
-
     let components;
     try {
       // Phase 2: Ref resolution (with shallow options)
@@ -241,6 +240,9 @@ async function shallowBuild(options) {
     // so types.json here describes that full bundle — dynamic page content
     // resolution validates fragment types against it at page get.
     await writeTypes({ components, context });
+    // null: the dev client is not split per page, so dynamic content can never
+    // reach outside a page's client types (see flagTypesOutsidePage).
+    await context.writeBuildArtifact('pageTypeSets.json', 'null');
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
@@ -276,10 +278,7 @@ async function shallowBuild(options) {
     // Persist icon imports snapshot for JIT icon detection.
     // When buildPageJit resolves a page, it compares discovered icons against
     // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact(
-      'iconImports.json',
-      JSON.stringify(components.imports.icons)
-    );
+    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });

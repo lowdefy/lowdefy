@@ -32,5 +32,6 @@ function _switch({ params }) {
 }
 
 _switch.dynamic = false;
+_switch.tracking = { kind: 'pure' };
 
 export default _switch;

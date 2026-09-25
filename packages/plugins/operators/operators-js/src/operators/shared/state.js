@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
+import { getFromObject, getObjectReadKeys } from '@lowdefy/operators';
 
 function _state({ arrayIndices, location, params, state }) {
   return getFromObject({
@@ -27,5 +27,10 @@ function _state({ arrayIndices, location, params, state }) {
 }
 
 _state.dynamic = true;
+_state.tracking = {
+  kind: 'read',
+  keys: ({ arrayIndices, params }) =>
+    getObjectReadKeys({ arrayIndices, namespace: 'state', params }),
+};
 
 export default _state;

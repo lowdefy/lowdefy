@@ -19,6 +19,9 @@ import path from 'node:path';
 
 import { LowdefyInternalError } from '@lowdefy/errors';
 
+import collectChunkClosure from './collectChunkClosure.js';
+import collectPageTypesAssets from './collectPageTypesAssets.js';
+
 // The Vite manifest is read once at startup — deploys start a new server
 // process after `vite build` completes, so assets never change at runtime.
 // In-place deploys must build before restarting (documented).
@@ -36,10 +39,17 @@ function getAssets() {
       'Vite manifest has no "client/main.jsx" entry. Run the client build before starting the server.'
     );
   }
+  const entryJs = new Set();
+  const entryCss = new Set();
+  collectChunkClosure({ manifest, key: 'client/main.jsx', js: entryJs, css: entryCss });
   assets = {
     js: entry.file,
     css: entry.css ?? [],
     imports: (entry.imports ?? []).map((key) => manifest[key]?.file).filter(Boolean),
+    pageTypes: collectPageTypesAssets({
+      manifest,
+      entryFiles: new Set([...entryJs, ...entryCss]),
+    }),
   };
   return assets;
 }

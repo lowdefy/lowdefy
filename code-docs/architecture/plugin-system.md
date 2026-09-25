@@ -297,6 +297,8 @@ export { default as SetState } from './actions/SetState/SetState.js';
 | `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas |
 | `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas   |
 | `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas |
+| `plugins/pageTypes/<hash>.js`  | `full/writePageTypes.js`    | One page type set (prod client) |
+| `plugins/pageTypes.js`         | `full/writePageTypes.js`    | Type-set chunk registry (prod client) |
 
 ### Import Template
 

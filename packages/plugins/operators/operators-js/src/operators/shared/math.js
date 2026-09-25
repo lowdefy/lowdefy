@@ -78,6 +78,10 @@ function _math({ params, location, methodName }) {
 }
 
 _math.dynamic = false;
+_math.tracking = ({ methodName, params }) => {
+  const method = methodName ?? params;
+  return { kind: method === 'random' ? 'volatile' : 'pure' };
+};
 _math.meta = meta;
 
 export default _math;

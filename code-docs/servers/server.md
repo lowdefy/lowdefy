@@ -156,8 +156,18 @@ The template embeds everything the client needs in one response:
 - Pre-hydration **layer-order MutationObserver** script (locks `@layer theme, base, antd, components, utilities;` as the first `<head>` child against antd's prependQueue) and the **dark-mode flash prevention** script — both interpolated via `safeScriptJson`.
 - `appendHead` / `appendBody` from app config injected as raw HTML.
 - `<script id="__LOWDEFY_CONFIG__" type="application/json">` containing `{ pageConfig, rootConfig, session, basePath, sentryDsn }` (escaped by `safeScriptJson`).
-- `<link>`/`<script type="module">` asset URLs resolved from `dist/client/.vite/manifest.json`, **read once at startup** (`src/html/getAssets.js`) — deploys must build before restarting.
+- `<link>`/`<script type="module">` asset URLs resolved from `dist/client/.vite/manifest.json`, **read once at startup** (`src/html/getAssets.js`) — deploys must build before restarting. The page's plugin chunks (its types chunk, the icons chunk and their import closure, `collectPageTypesAssets.js`) are preloaded alongside the main entry.
 - A server-side `<title>` from `pageConfig.properties.title`.
+
+## Per-Page Plugin Chunks
+
+The production client does not import the app-wide plugin barrels. The full build counts each page's client types while it builds the page (`createPageTypeCounters` tees every block, action and client-operator increment into a per-page counter), adds the mandatory set (`build/mandatoryClientTypes.js`), and writes one module per distinct type set to `build/plugins/pageTypes/<hash>.js` plus the registry `build/plugins/pageTypes.js` (`build/full/buildPageTypes.js`, `writePageTypes.js`). Each page carries its `typesKey`. Keys are content hashes, never page ids, so the public registry does not reveal protected pages.
+
+`client/loadPageTypes.js` loads a page's chunk plus the app-wide icons chunk and merges them in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before `setPageConfig`.
+
+Dynamic content may use any type the app bundles. `resolveDynamicContent` records fragment types and, when one falls outside the page's set (`build/pageTypeSets.json`, server-only), sets `pageConfig.loadAllTypes` so the client also loads the app-wide barrels, and logs a warning naming the type to declare.
+
+Plugin packages declare `"sideEffects": ["**/*.css"]` so a page importing one block from a package barrel does not keep the whole package. Hashed assets under `/assets/` are served `Cache-Control: public, max-age=31536000, immutable` (`app.js`, and a route in `lowdefy vercel-output`).
 
 ## SPA Navigation
 

@@ -10,6 +10,9 @@ Provides browser-side utilities for:
 - Error boundaries
 - Block schema defaults
 - Tailwind CSS class merging (`cn`)
+- Lazy-loading heavy block implementations (`createLazyBlock`)
+
+The package declares `"sideEffects": false`: no module runs code at import time and none imports CSS, so a bundler can drop every module a chunk does not use (a lazy block's wrapper chunk does not keep `HtmlComponent`'s DOMPurify).
 
 ## Installation
 
@@ -77,6 +80,50 @@ Uses DOMPurify for sanitization, removing:
 - Event handlers (`onclick`, etc.)
 - `javascript:` URLs
 - Other XSS vectors
+
+The HTML is sanitized and assigned to `innerHTML` on mount and then only when the string (or the rendered element) changes. `renderHtml` sits behind most antd labels, titles and AgGrid cells, so re-sanitizing on every parent render was measurable, and it reset open `<details>`, media and text selection. DOMPurify has no hooks or config set, so the same string always sanitizes the same way.
+
+### createLazyBlock({ load, meta, Fallback })
+
+Wraps a block so its implementation module loads when the block first mounts, not with the page's block chunk. Use it for blocks that add a lot of code and are usually off-screen at first paint (a chat in a closed drawer, an editor in a modal).
+
+```javascript
+// src/blocks/AgentChat/AgentChat.js — the eager wrapper the blocks barrel exports
+import { createLazyBlock } from '@lowdefy/block-utils';
+
+import AgentChatFallback from './AgentChatFallback.js';
+import meta from './meta.js';
+
+export default createLazyBlock({
+  load: () => import('./AgentChat.lazy.js'),
+  meta,
+  Fallback: AgentChatFallback, // optional
+});
+```
+
+| Argument   | Description                                                                                                                                   |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `load`     | Returns `import()` of the implementation. The module's default export is the block component. The file must be named `*.lazy.js` (see below). |
+| `meta`     | The block's meta. It is copied to `.meta`, and `Object.keys(meta.methods ?? {})` are the methods the wrapper proxies.                         |
+| `Fallback` | Optional component rendered while the module loads. It receives the block's props. Without it the block renders nothing until it has loaded.  |
+
+The returned component has `.meta`, `.displayName` (`'LazyBlock'`) and `.preload()`, which starts the load and returns its promise (memoized; call it on hover or click from a `Fallback`).
+
+**Methods.** The engine's `CallMethod` reads `block.methods[name]` when it runs, so the wrapper registers a proxy for every `meta.methods` key at mount, with the same effect timing an eager block uses:
+
+- The implementation gets `Object.create(methods)` with its own `registerMethod`, memoized on the engine's `methods` object. Framework methods reassigned on each render (`setValue`, `translate`, List's `pushItem`) still resolve through the prototype, and the object's identity changes only when `methods` does. Do not spread it: a spread copies only `registerMethod`.
+- After the implementation registers a method, its proxy calls it synchronously and returns its result.
+- Before that, calls go into one FIFO per mounted block and return promises. `LazyBlockFlush`, a sentinel rendered after the implementation inside the same `Suspense`, runs the queue in call order from its effect, which React runs after all of the implementation's effects.
+- A queued call rejects when its method was never registered (with `CallMethod`'s own missing-method text), when the load fails, or when the block unmounts first. Nothing waits forever.
+- A method the implementation registers but `meta.methods` does not declare is registered directly (it cannot be called before load) and logs a warning once in development.
+
+**Loading.** `createLazyLoader` memoizes a successful load only: on failure the promise and the `React.lazy` component are dropped, so the next mount retries. The load error is thrown to the block's `ErrorBoundary`. Once the module has loaded, new mounts render it directly rather than through `React.lazy`, which would suspend once more in React 18.
+
+**Readiness.** Each mounted block that is still waiting counts towards `getLazyBlockLoadsInFlight()`, mirrored on `window.__lowdefyLazyLoads` (set only once a lazy block has mounted). The dev server's `isPageReady` (screenshots and journeys) waits for it to reach zero. A `preload()` with nothing mounted is not counted.
+
+**Prefetch.** The production server prefetches a page's `*.lazy.js` chunks and their imports (`collectPageTypesAssets` → `<link rel="prefetch">`). Only that suffix is matched, so other `import()`s that exist to avoid a download, such as `posthog-js`, are never prefetched. A lazy implementation must not be imported statically anywhere, or the split silently disappears.
+
+**When to make a block lazy.** When it adds more than about 100 kB gzip to the page, **and** it is commonly off-screen at first paint or the page paints useful content without it. Keep a block eager when the framework or other blocks call its methods synchronously for a return value, and give it a size-stable `Fallback` when it is visible at first paint. A lazy sub-component inside the implementation (a diagram renderer, a code highlighter) needs its own `Suspense`, or it would suspend the whole block back to its fallback.
 
 ## Build Utilities
 
@@ -185,13 +232,17 @@ const RichText = ({ properties }) => {
 
 ## Key Files
 
-| File                       | Purpose                                 |
-| -------------------------- | --------------------------------------- |
-| `src/extractBlockTypes.js` | Derive types from metas barrel          |
-| `src/buildBlockSchema.js`  | Generate JSON Schema from meta          |
-| `src/cn.js`                | Tailwind class merging (clsx + twMerge) |
-| `src/renderHtml.js`        | HTML sanitization                       |
-| `src/ErrorBoundary.js`     | Error boundary component                |
-| `src/HtmlComponent.js`     | Safe HTML component                     |
-| `src/blockSchema.js`       | Default block schema                    |
-| `src/withBlockDefaults.js` | Block default props wrapper             |
+| File                               | Purpose                                  |
+| ---------------------------------- | ---------------------------------------- |
+| `src/extractBlockTypes.js`         | Derive types from metas barrel           |
+| `src/buildBlockSchema.js`          | Generate JSON Schema from meta           |
+| `src/cn.js`                        | Tailwind class merging (clsx + twMerge)  |
+| `src/renderHtml.js`                | HTML sanitization                        |
+| `src/ErrorBoundary.js`             | Error boundary component                 |
+| `src/HtmlComponent.js`             | Safe HTML component                      |
+| `src/blockSchema.js`               | Default block schema                     |
+| `src/withBlockDefaults.js`         | Block default props wrapper              |
+| `src/createLazyBlock.js`           | Lazy block wrapper with method proxies   |
+| `src/createLazyLoader.js`          | Memoized, retrying `import()` loader     |
+| `src/createLazyMethodQueue.js`     | Per-block FIFO of calls made before load |
+| `src/getLazyBlockLoadsInFlight.js` | Lazy blocks still loading (readiness)    |

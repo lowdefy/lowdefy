@@ -43,3 +43,34 @@ test('generateClientJsModule returns an empty default export for an empty map', 
 export default {
   };`);
 });
+
+// As the dev server compiles folded module text (usePageConfig parseJsModule).
+function compileModule(text) {
+  const fn = new Function('exports', text.replace('export default', 'exports.default ='));
+  const mod = {};
+  fn(mod);
+  return mod.default;
+}
+
+test('generateClientJsModule marks functions that reference volatile globals', () => {
+  const jsMap = compileModule(
+    generateClientJsModule({
+      clock: 'return Date.now();',
+      random: 'return Math.random();',
+      pure: "return state('a') + 1;",
+    })
+  );
+  expect(jsMap.clock.volatile).toBe(true);
+  expect(jsMap.random.volatile).toBe(true);
+  expect(jsMap.pure.volatile).toBeUndefined();
+  expect(jsMap.pure({ state: () => 1 })).toBe(2);
+  expect(typeof jsMap.clock({})).toBe('number');
+});
+
+test('generateClientJsModule keeps export default as the first statement', () => {
+  const output = generateClientJsModule({ clock: 'return Date.now();' });
+  expect(output.trim().startsWith('export default {')).toBe(true);
+  expect(output).toContain(
+    `'clock': Object.assign((${CLIENT_PROTOTYPE}) => { return Date.now(); }, { volatile: true }),`
+  );
+});

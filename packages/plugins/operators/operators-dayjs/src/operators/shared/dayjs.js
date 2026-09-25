@@ -145,6 +145,41 @@ function _dayjs({ params, location, methodName }) {
 }
 
 _dayjs.dynamic = false;
+
+// Chain steps whose output depends on the global dayjs locale (month and relative-time names, the
+// first day of the week), which the client changes with no update, or on the current time.
+const volatileChainMethods = new Set(['format', 'from', 'fromNow', 'to', 'toNow', 'week']);
+// Chain steps that compare with the current time, or return the global locale, given no argument.
+const volatileWithoutArgumentMethods = new Set(['diff', 'isAfter', 'isBefore', 'isSame', 'locale']);
+const weekUnits = new Set(['w', 'week']);
+
+function isVolatileChainStep(step) {
+  let method = step;
+  let firstArg;
+  if (type.isObject(step)) {
+    method = Object.keys(step)[0];
+    firstArg = type.isArray(step[method]) ? step[method][0] : step[method];
+  }
+  if (volatileChainMethods.has(method)) return true;
+  if (volatileWithoutArgumentMethods.has(method)) return type.isNone(firstArg);
+  if (method === 'startOf' || method === 'endOf') return weekUnits.has(firstArg);
+  return false;
+}
+
+// format and humanizeDuration take an explicit locale, defaulting to "en", so only chain mode reads
+// the global locale. dayjs() with no date is the current time.
+_dayjs.tracking = ({ methodName, params }) => {
+  if (!methodName && type.isArray(params) && params.length >= 1) {
+    const [input, ...steps] = params;
+    const volatile = type.isNone(input) || input === 'now' || steps.some(isVolatileChainStep);
+    return { kind: volatile ? 'volatile' : 'pure' };
+  }
+  if (methodName === 'format') {
+    const on = type.isArray(params) ? params[0] : params?.on;
+    return { kind: type.isUndefined(on) ? 'volatile' : 'pure' };
+  }
+  return { kind: 'pure' };
+};
 _dayjs.meta = meta;
 
 export default _dayjs;

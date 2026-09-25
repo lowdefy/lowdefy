@@ -84,5 +84,6 @@ function _object({ params, location, methodName }) {
 }
 
 _object.dynamic = false;
+_object.tracking = { kind: 'pure' };
 
 export default _object;

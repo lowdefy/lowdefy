@@ -18,6 +18,10 @@ import { ConfigError } from '@lowdefy/errors';
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 import Events from './Events.js';
 import Slots from './Slots.js';
+import inputContainsOperator from './tracking/inputContainsOperator.js';
+import readsIntersectChanges from './tracking/readsIntersectChanges.js';
+
+const noReads = new Set();
 
 class Block {
   constructor({ context, arrayIndices }, blockConfig) {
@@ -46,6 +50,8 @@ class Block {
     this.blockIdPattern = blockId;
     this.id = applyArrayIndices(this.arrayIndices, this.idPattern);
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
+    // Kept with blockId so every evaluation records the same string, not a new one to hash.
+    this.ownStateReadKey = `state:${this.blockId}`;
 
     this.events = type.isNone(events) ? {} : events;
     this.layout = type.isNone(layout) ? {} : layout;
@@ -70,6 +76,15 @@ class Block {
     this.styleEval = {};
     this.validationEval = {};
     this.visibleEval = {};
+
+    // Dependency tracking. reads holds the keys the last self-evaluation read. alwaysEvaluate names
+    // why the block must evaluate on every pass (volatile or untracked operators, no recording), or
+    // is null when its reads say when it is dirty. forceEvaluate marks engine-side changes no key
+    // describes: a row index move or a validation display change.
+    this.reads = noReads;
+    this.alwaysEvaluate = 'not evaluated';
+    this.forceEvaluate = false;
+    this.requiredValidation = null;
 
     this.meta = this.context._internal.lowdefy._internal.blockMetas[this.type];
     if (!this.meta) {
@@ -120,7 +135,7 @@ class Block {
       this.value = type.enforceType(this.meta.valueType, value);
       this.context._internal.State.set(this.blockId, this.value);
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
   };
 
@@ -153,7 +168,7 @@ class Block {
         this.context._internal.State.set(`${this.blockId}.0`, initialValue);
       }
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
 
     this.pushItem = (initialValue) => {
@@ -168,7 +183,7 @@ class Block {
         this.context._internal.State.set(`${this.blockId}.${index}`, initialValue);
       }
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
 
     this.removeItem = (index) => {
@@ -185,7 +200,7 @@ class Block {
       this.subSlots.splice(index, 1);
 
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
 
     this.moveItemUp = (index) => {
@@ -201,7 +216,7 @@ class Block {
       );
       swap(this.subSlots, index - 1, index);
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
 
     this.moveItemDown = (index) => {
@@ -217,7 +232,7 @@ class Block {
       );
       swap(this.subSlots, index, index + 1);
       this.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`state:${this.blockId}`] });
     };
   };
 
@@ -255,9 +270,17 @@ class Block {
     return slotsClass;
   };
 
+  // A validation display change alters the block's validation output without any reported change.
+  setShowValidation = (showValidation) => {
+    if (this.showValidation !== showValidation) {
+      this.forceEvaluate = true;
+    }
+    this.showValidation = showValidation;
+  };
+
   reset = (parentSubSlots, initWithState) => {
     this.update = true;
-    this.showValidation = false;
+    this.setShowValidation(false);
     if (this.isInput() || this.isList()) {
       let blockValue = get(initWithState, this.blockId);
       if (type.isUndefined(blockValue)) {
@@ -285,7 +308,7 @@ class Block {
             ? type.enforceType(this.meta.valueType, null)
             : this.meta.initValue;
 
-          this.context._internal.State.set(this.blockId, blockValue);
+          this.context._internal.State.republish(this.blockId, blockValue);
         }
       }
       if (this.isList()) {
@@ -327,22 +350,93 @@ class Block {
     }
   };
 
+  // A full evaluation: the block, then its whole subtree.
   evaluate = (visibleParent, repeat) => {
-    if (this.isInput()) {
-      const stateValue = get(this.context.state, this.blockId);
-      this.value = type.isUndefined(stateValue) ? this.value : stateValue;
+    this.syncValue();
+    this.evaluateSelf(visibleParent, repeat);
+    if (this.isContainer() || this.isList()) {
+      this.loopSubSlots((slotsClass) => {
+        repeat.value = slotsClass.recEval(this.visibleEval.output) || repeat.value;
+      });
     }
+  };
+
+  // A dependency-tracked evaluation: the block evaluates itself only when it is dirty, then its
+  // subtree does the same. A block whose visibility changed evaluates its whole subtree, since every
+  // descendant reads its parent's visibility.
+  evaluateTracked = ({ visibleParent, subtreeDirty, changes, repeat }) => {
+    this.syncValue();
+    let childrenDirty = subtreeDirty;
+    if (subtreeDirty || this.isDirty(changes)) {
+      const visibilityChanged = this.evaluateSelf(visibleParent, repeat);
+      childrenDirty = subtreeDirty || visibilityChanged;
+    }
+    if (this.isContainer() || this.isList()) {
+      this.loopSubSlots((slotsClass) => {
+        repeat.value =
+          slotsClass.recEvalTracked({
+            visibleParent: this.visibleEval.output,
+            subtreeDirty: childrenDirty,
+            changes,
+          }) || repeat.value;
+      });
+    }
+  };
+
+  isDirty = (changes) => {
+    return (
+      this.forceEvaluate ||
+      this.alwaysEvaluate !== null ||
+      readsIntersectChanges({ reads: this.reads, changes })
+    );
+  };
+
+  // Every pass points an input's value at its state value, dirty or not, so the value keeps the
+  // identity state holds (reset leaves a copy behind).
+  syncValue = () => {
+    if (!this.isInput()) return;
+    const stateValue = get(this.context.state, this.blockId);
+    this.value = type.isUndefined(stateValue) ? this.value : stateValue;
+  };
+
+  // Evaluates the block's own roots and validation, recording what they read. Returns whether the
+  // block's visibility changed.
+  evaluateSelf = (visibleParent, repeat) => {
+    const tracker = this.context._internal.DependencyTracker;
     const beforeVisible = this.visibleEval ? this.visibleEval.output : true;
+    const recorder = tracker.startRecording();
+    try {
+      this.evaluateRoots(visibleParent);
+    } finally {
+      tracker.stopRecording(recorder);
+    }
+    this.storeReads(recorder);
+    this.forceEvaluate = false;
+
+    const visibilityChanged = beforeVisible !== this.visibleEval.output;
+    if (visibilityChanged) {
+      repeat.value = true;
+    }
+    const after = this.evalToString();
+    if (this.before !== after) {
+      this.update = true;
+      this.before = after;
+    }
+    return visibilityChanged;
+  };
+
+  evaluateRoots = (visibleParent) => {
+    if (this.isInput()) {
+      this.recordEngineRead(this.ownStateReadKey);
+    }
     if (visibleParent === false) {
       this.visibleEval.output = false;
     } else {
       this.visibleEval = this.parse(this.visible);
     }
-    if (beforeVisible !== this.visibleEval.output) {
-      repeat.value = true;
-    }
 
     if (this.isList() && !this.isVisible()) {
+      this.recordEngineRead(this.ownStateReadKey);
       this.captureHiddenValue();
     }
 
@@ -359,20 +453,38 @@ class Block {
       this.skeletonEval = this.parse(this.skeleton);
       this.slotsLayoutEval = this.parse(this.slotsLayout);
     }
+  };
 
-    if (this.isContainer() || this.isList()) {
-      this.loopSubSlots((slotsClass) => {
-        repeat.value = slotsClass.recEval(this.visibleEval.output) || repeat.value;
-      });
+  recordEngineRead = (key) => {
+    this.context._internal.readRecorder?.engineRead(key);
+  };
+
+  // A recording parser signals every operator call it makes, a pure one included. A block that
+  // parsed operators while the parser signalled nothing at all cannot be told apart from a parser
+  // that does not record, so it is treated as untracked.
+  storeReads = (recorder) => {
+    if (recorder === null) {
+      this.reads = noReads;
+      this.alwaysEvaluate = 'not recorded';
+      return;
     }
-    const after = this.evalToString();
-    if (this.before !== after) {
-      this.update = true;
-      this.before = after;
+    this.reads = recorder.reads;
+    if (recorder.untrackedReasons.length > 0) {
+      this.alwaysEvaluate = `untracked: ${recorder.untrackedReasons[0]}`;
+    } else if (recorder.volatileReasons.length > 0) {
+      this.alwaysEvaluate = `volatile: ${recorder.volatileReasons[0]}`;
+    } else if (recorder.parsedOperators && recorder.parserCalls === 0) {
+      this.alwaysEvaluate = 'operators reported no reads';
+    } else {
+      this.alwaysEvaluate = null;
     }
   };
 
   parse = (input) => {
+    const recorder = this.context._internal.readRecorder;
+    if (recorder !== null && !recorder.parsedOperators && inputContainsOperator(input)) {
+      recorder.parsedOperators = true;
+    }
     return this.context._internal.parser.parse({
       input,
       location: this.blockId,
@@ -380,16 +492,33 @@ class Block {
     });
   };
 
+  // Kept per block while its message is unchanged, so the parser's compiled-tree cache (keyed on
+  // the input object) can hit.
+  getRequiredValidation = () => {
+    let message;
+    if (type.isString(this.requiredEval.output)) {
+      message = this.requiredEval.output;
+    } else {
+      this.recordEngineRead('i18n');
+      message = this.context._internal.lowdefy._internal.translate(
+        'engine.validation.fieldRequired'
+      );
+    }
+    if (this.requiredValidation?.message !== message) {
+      this.requiredValidation = {
+        pass: { _not: { _type: 'none' } },
+        status: 'error',
+        message,
+      };
+    }
+    return this.requiredValidation;
+  };
+
   validateEval = () => {
-    const requiredValidation = {
-      pass: { _not: { _type: 'none' } },
-      status: 'error',
-      message: type.isString(this.requiredEval.output)
-        ? this.requiredEval.output
-        : this.context._internal.lowdefy._internal.translate('engine.validation.fieldRequired'),
-    };
     const validation =
-      this.requiredEval.output === false ? this.validate : [...this.validate, requiredValidation];
+      this.requiredEval.output === false
+        ? this.validate
+        : [...this.validate, this.getRequiredValidation()];
 
     this.validationEval = {
       output: {
@@ -460,7 +589,7 @@ class Block {
   restoreHiddenValue = () => {
     if (type.isUndefined(this.hiddenValue)) return;
     if (type.isUndefined(get(this.context.state, this.blockId))) {
-      this.context._internal.State.set(this.blockId, this.hiddenValue);
+      this.context._internal.State.republish(this.blockId, this.hiddenValue);
     }
     this.hiddenValue = undefined;
   };
@@ -477,11 +606,14 @@ class Block {
         this.loopSubSlots((subSlotsClass) => subSlotsClass.updateState());
         return; // Don't add to set
       } else {
-        this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
+        this.context._internal.State.republish(
+          this.blockId,
+          type.enforceType(this.meta.valueType, null)
+        );
       }
     }
     if (this.isInput()) {
-      this.context._internal.State.set(this.blockId, this.value);
+      this.context._internal.State.republish(this.blockId, this.value);
     }
     toSet.add(this.blockId);
   };
@@ -490,15 +622,19 @@ class Block {
     return this.visibleEval.output !== false;
   };
 
+  // A row move changes the paths this block's operators resolve ('$' paths, the location _type and
+  // _regex default to), so its recorded reads name the wrong row until it evaluates again.
   updateArrayIndices = () => {
+    this.forceEvaluate = true;
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
+    this.ownStateReadKey = `state:${this.blockId}`;
     this.context._internal.RootSlots.map[this.blockId] = this;
   };
 
   getValidate = (match) => {
     if (!match(this.blockId)) return null;
 
-    this.showValidation = true;
+    this.setShowValidation(true);
     this.update = true;
     if (
       this.visibleEval.output !== false &&
@@ -522,7 +658,7 @@ class Block {
   resetValidation = (match) => {
     if (!match(this.blockId)) return;
 
-    this.showValidation = false;
+    this.setShowValidation(false);
     this.update = true;
   };
 

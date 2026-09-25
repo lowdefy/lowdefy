@@ -15,19 +15,16 @@
 */
 
 import React, { useState } from 'react';
-import { Drawer, FloatButton } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
+import { Drawer } from 'antd';
 
-function DrawerWrapper({ config, children }) {
-  const [open, setOpen] = useState(false);
+import DrawerLauncher from './DrawerLauncher.js';
+
+function DrawerWrapper({ config, defaultOpen, children }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <>
-      <FloatButton
-        icon={<MessageOutlined />}
-        onClick={() => setOpen(true)}
-        tooltip={config?.title ?? 'Chat'}
-      />
+      <DrawerLauncher config={config} onClick={() => setOpen(true)} />
       <Drawer
         title={config?.title ?? 'Chat'}
         placement={config?.placement ?? 'right'}

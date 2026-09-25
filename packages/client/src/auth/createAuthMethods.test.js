@@ -1856,6 +1856,8 @@ function callActionChain({ actions, auth, lowdefy }) {
         },
       },
       parser: { parse: ({ input }) => ({ output: input, errors: [] }) },
+      // Auth methods make the next page update a full pass.
+      DependencyTracker: { requireFullUpdate: () => undefined },
     },
   };
   return new Actions(context).callActions({

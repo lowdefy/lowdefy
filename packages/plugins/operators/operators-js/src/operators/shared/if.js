@@ -25,5 +25,6 @@ function _if({ params }) {
 }
 
 _if.dynamic = false;
+_if.tracking = { kind: 'pure' };
 
 export default _if;

@@ -197,3 +197,33 @@ test('count request payload operators as client operators', () => {
     _r_op_2: 1,
   });
 });
+
+test('count operators in slot config, which the engine evaluates as slotsLayout', () => {
+  const context = testContext({ logger });
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        slots: {
+          content: {
+            style: { _if: { test: { _state: 'wide' }, then: { width: 800 }, else: {} } },
+            blocks: [{ id: 'block_1', type: 'Display', properties: { title: { _global: 'x' } } }],
+          },
+        },
+      },
+    ],
+  };
+  buildPages({ components, context });
+  expect(context.typeCounters.operators.client.getCounts()).toEqual({
+    _global: 1,
+    _if: 1,
+    _state: 1,
+  });
+  expect(context.pageTypeCounters.get('page_1').operators.getCounts()).toEqual({
+    _global: 1,
+    _if: 1,
+    _state: 1,
+  });
+});

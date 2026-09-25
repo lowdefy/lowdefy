@@ -27,5 +27,6 @@ function _lte({ params }) {
 }
 
 _lte.dynamic = false;
+_lte.tracking = { kind: 'pure' };
 
 export default _lte;

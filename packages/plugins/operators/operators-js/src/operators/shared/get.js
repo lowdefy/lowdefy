@@ -37,5 +37,6 @@ function _get({ arrayIndices, location, params }) {
 }
 
 _get.dynamic = false;
+_get.tracking = { kind: 'pure' };
 
 export default _get;

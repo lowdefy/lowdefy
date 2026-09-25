@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
+import { getFromObject, getObjectReadKeys } from '@lowdefy/operators';
 
 function _global({ arrayIndices, location, lowdefyGlobal, params }) {
   return getFromObject({
@@ -27,5 +27,10 @@ function _global({ arrayIndices, location, lowdefyGlobal, params }) {
 }
 
 _global.dynamic = true;
+_global.tracking = {
+  kind: 'read',
+  keys: ({ arrayIndices, params }) =>
+    getObjectReadKeys({ arrayIndices, namespace: 'global', params }),
+};
 
 export default _global;

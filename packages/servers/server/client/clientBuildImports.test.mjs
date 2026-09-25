@@ -30,12 +30,10 @@ const allowed = new Set([
   'i18n/antdLocales.js',
   'i18n/antdXLocales.js',
   'i18n/dayjsLocales.js',
-  'plugins/actions.js',
   'plugins/blockMetas.json',
-  'plugins/blocks.js',
-  'plugins/icons.js',
-  'plugins/operators/client.js',
   'plugins/operators/clientJsMap.js',
+  // Type-set hashes and chunk loaders only - never page ids or config.
+  'plugins/pageTypes.js',
 ]);
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -51,9 +49,10 @@ function listSourceFiles(dir) {
 test('client code imports only client-safe build artifacts', () => {
   const imported = ['client', 'lib/client'].flatMap((dir) =>
     listSourceFiles(path.join(root, dir)).flatMap((file) =>
-      [...fs.readFileSync(file, 'utf8').matchAll(/from '[^']*\/build\/([^']+)'/g)].map(
-        (match) => ({ file: path.relative(root, file), artifact: match[1] })
-      )
+      [...fs.readFileSync(file, 'utf8').matchAll(/from '[^']*\/build\/([^']+)'/g)].map((match) => ({
+        file: path.relative(root, file),
+        artifact: match[1],
+      }))
     )
   );
   expect(imported.length).toBeGreaterThan(0);

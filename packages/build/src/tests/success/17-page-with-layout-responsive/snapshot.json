@@ -932,6 +932,73 @@
     ],
     "~k": "1q"
   },
+  "pageTypeSets.json": {
+    "404": {
+      "actions": [
+        "Link",
+        "SetDarkMode"
+      ],
+      "blocks": [
+        "Anchor",
+        "Box",
+        "Button",
+        "ClickableHtml",
+        "DangerousHtml",
+        "Dynamic",
+        "Html",
+        "Icon",
+        "Img",
+        "List",
+        "Message",
+        "PollingTimer",
+        "ProgressBar",
+        "Result",
+        "Skeleton",
+        "SkeletonAvatar",
+        "SkeletonButton",
+        "SkeletonInput",
+        "SkeletonParagraph",
+        "Span",
+        "Spinner",
+        "Throw"
+      ],
+      "operators": [
+        "_not",
+        "_type"
+      ]
+    },
+    "home": {
+      "actions": [
+        "SetDarkMode"
+      ],
+      "blocks": [
+        "Anchor",
+        "Box",
+        "ClickableHtml",
+        "DangerousHtml",
+        "Dynamic",
+        "Html",
+        "Icon",
+        "Img",
+        "List",
+        "Message",
+        "PollingTimer",
+        "ProgressBar",
+        "Skeleton",
+        "SkeletonAvatar",
+        "SkeletonButton",
+        "SkeletonInput",
+        "SkeletonParagraph",
+        "Span",
+        "Spinner",
+        "Throw"
+      ],
+      "operators": [
+        "_not",
+        "_type"
+      ]
+    }
+  },
   "pages/404.json": {
     "id": "page:404",
     "type": "Result",
@@ -1014,6 +1081,7 @@
       "~arr": [],
       "~k": "1e"
     },
+    "typesKey": "0e388e693c89",
     "~k": "17"
   },
   "pages/home.json": {
@@ -1070,6 +1138,7 @@
       "~arr": [],
       "~k": "16"
     },
+    "typesKey": "1cd73cd16630",
     "~k": "11"
   },
   "plugins/actionSchemas.json": {
@@ -6384,6 +6453,9 @@
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "export default {\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/pageTypes.js": "export const icons = () => import('./icons.js');\n\nexport const allTypes = () =>\n  Promise.all([import('./actions.js'), import('./blocks.js'), import('./operators/client.js')]).then(\n    ([actions, blocks, operators]) => ({\n      actions: actions.default,\n      blocks: blocks.default,\n      operators: operators.default,\n    })\n  );\n\nexport default {\n  \"0e388e693c89\": () => import(\"./pageTypes/0e388e693c89.js\"),\n  \"1cd73cd16630\": () => import(\"./pageTypes/1cd73cd16630.js\"),\n};\n",
+  "plugins/pageTypes/0e388e693c89.js": "import { Link as a0 } from \"@lowdefy/actions-core/actions\";\nimport { SetDarkMode as a1 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Button as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b9 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b10 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b11 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Result as b13 } from \"@lowdefy/blocks-antd/blocks\";\nimport { Skeleton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b17 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b20 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b21 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nexport default {\n  actions: {\n    \"Link\": a0,\n    \"SetDarkMode\": a1,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"Button\": b2,\n    \"ClickableHtml\": b3,\n    \"DangerousHtml\": b4,\n    \"Dynamic\": b5,\n    \"Html\": b6,\n    \"Icon\": b7,\n    \"Img\": b8,\n    \"List\": b9,\n    \"Message\": b10,\n    \"PollingTimer\": b11,\n    \"ProgressBar\": b12,\n    \"Result\": b13,\n    \"Skeleton\": b14,\n    \"SkeletonAvatar\": b15,\n    \"SkeletonButton\": b16,\n    \"SkeletonInput\": b17,\n    \"SkeletonParagraph\": b18,\n    \"Span\": b19,\n    \"Spinner\": b20,\n    \"Throw\": b21,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n};\n",
+  "plugins/pageTypes/1cd73cd16630.js": "import { SetDarkMode as a0 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b9 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b10 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b11 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Skeleton as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b13 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b17 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nexport default {\n  actions: {\n    \"SetDarkMode\": a0,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"ClickableHtml\": b2,\n    \"DangerousHtml\": b3,\n    \"Dynamic\": b4,\n    \"Html\": b5,\n    \"Icon\": b6,\n    \"Img\": b7,\n    \"List\": b8,\n    \"Message\": b9,\n    \"PollingTimer\": b10,\n    \"ProgressBar\": b11,\n    \"Skeleton\": b12,\n    \"SkeletonAvatar\": b13,\n    \"SkeletonButton\": b14,\n    \"SkeletonInput\": b15,\n    \"SkeletonParagraph\": b16,\n    \"Span\": b17,\n    \"Spinner\": b18,\n    \"Throw\": b19,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n};\n",
   "plugins/steps.js": "export default {\n  };",
   "plugins/websockets.js": "export default {\n  };",
   "refMap.json": {

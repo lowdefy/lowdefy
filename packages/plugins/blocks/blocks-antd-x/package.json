@@ -29,6 +29,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./blocks": "./dist/blocks.js",
     "./types": "./dist/types.js"

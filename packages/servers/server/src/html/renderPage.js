@@ -91,10 +91,12 @@ async function renderPage(c, { pageId, status = 200 }) {
 
   logger.info({ event: 'page_view', pageId: resolvedPageId });
 
+  const assets = getAssets();
   const html = template({
     appendBody: appJson.html?.appendBody ?? '',
     appendHead: appJson.html?.appendHead ?? '',
-    assets: getAssets(),
+    assets,
+    pageAssets: assets.pageTypes[pageConfig.typesKey],
     basePath,
     config: {
       basePath,

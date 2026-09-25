@@ -42,6 +42,7 @@ import { resolveModuleManifests } from './build/registerModules.js';
 import buildModules from './build/buildModules.js';
 import buildNotifications from './build/buildNotifications.js';
 import precomputeRuntimeOperators from './build/buildRefs/precomputeRuntimeOperators.js';
+import buildPageTypes from './build/full/buildPageTypes.js';
 import buildPages from './build/full/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import resolveAuthConfigProjection from './build/buildAuth/resolveAuthConfigProjection.js';
@@ -76,6 +77,7 @@ import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
 import writeNotifications from './build/writeNotifications.js';
 import writePages from './build/full/writePages.js';
+import writePageTypes from './build/full/writePageTypes.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeRequests from './build/full/writeRequests.js';
 import writeTypes from './build/full/writeTypes.js';
@@ -195,6 +197,10 @@ async function build(options) {
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
 
+    // Per-page type sets are build output, not config: computed once every page
+    // built cleanly, after the final addKeys pass.
+    buildPageTypes({ components, context });
+
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
     await writeApp({ components, context });
@@ -218,6 +224,7 @@ async function build(options) {
     await writeMenus({ components, context });
     await writeTypes({ components, context });
     await writePluginImports({ components, context });
+    await writePageTypes({ components, context });
     await writeJs({ components, context });
     await updateServerPackageJson({ components, context });
     await copyPublicFolder({ components, context });

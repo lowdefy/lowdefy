@@ -43,6 +43,7 @@ const defaultArgs = {
   idPrefix: 'block:page1:section_1:0',
   types,
   blockMetas: {},
+  usedTypes: { actions: new Set(), blocks: new Set(), operators: new Set() },
 };
 
 test('buildDynamicBlocks builds blocks with namespaced ids and moved slots', () => {
@@ -213,4 +214,26 @@ test('buildDynamicBlocks throws when a block is missing a type', () => {
   expect(() => buildDynamicBlocks({ ...defaultArgs, blocks })).toThrow(
     'Block type is not defined at "wrapper" on page "page1".'
   );
+});
+
+test('buildDynamicBlocks records every client type the fragment uses', () => {
+  const usedTypes = { actions: new Set(), blocks: new Set(), operators: new Set() };
+  const blocks = [
+    {
+      id: 'wrapper',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'name',
+          type: 'TextInput',
+          visible: { _not: { _state: 'hidden' } },
+          events: { onChange: [{ id: 'set', type: 'SetState', params: { changed: true } }] },
+        },
+      ],
+    },
+  ];
+  buildDynamicBlocks({ ...defaultArgs, blocks, usedTypes });
+  expect([...usedTypes.blocks].sort()).toEqual(['Box', 'TextInput']);
+  expect([...usedTypes.actions]).toEqual(['SetState']);
+  expect([...usedTypes.operators].sort()).toEqual(['_not', '_state']);
 });

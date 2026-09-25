@@ -130,6 +130,16 @@ function createApp({ serveStaticAssets = true } = {}) {
   // Vite build output (includes public/ via Vite's publicDir copy). Falls
   // through to the page routes when no file matches.
   if (serveStaticAssets) {
+    // Vite content-hashes everything under assets/, so a file never changes at
+    // its URL. Pages load many small chunks; without this each is re-fetched
+    // whenever the browser's heuristic freshness runs out (serveStatic sets
+    // Last-Modified but never answers 304).
+    app.use('/assets/*', async (c, next) => {
+      await next();
+      if (c.res.status === 200) {
+        c.header('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    });
     app.use(
       '/*',
       serveStatic({

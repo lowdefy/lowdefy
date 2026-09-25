@@ -47,6 +47,11 @@ function isPageReady(pageId) {
   const channels = Object.values(context.websockets ?? {});
   if (channels.some((channel) => channel?.connected !== true && !channel?.error)) return false;
 
+  // Lazy blocks on screen still showing their fallback (createLazyBlock in
+  // @lowdefy/block-utils). The global is absent until a lazy block first
+  // mounts, and absent means none are loading.
+  if ((window.__lowdefyLazyLoads ?? 0) > 0) return false;
+
   return true;
 }
 

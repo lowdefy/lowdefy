@@ -127,3 +127,24 @@ test('isPageReady returns true for a page with no blocks, requests or websockets
 
   expect(isPageReady('home')).toBe(true);
 });
+
+test('isPageReady returns false while a lazy block on the page is still loading', () => {
+  setWindow(settledContext());
+  global.window.__lowdefyLazyLoads = 1;
+
+  expect(isPageReady('home')).toBe(false);
+});
+
+test('isPageReady returns true once every lazy block has loaded', () => {
+  setWindow(settledContext());
+  global.window.__lowdefyLazyLoads = 0;
+
+  expect(isPageReady('home')).toBe(true);
+});
+
+test('isPageReady returns true when no lazy block has mounted and the counter is absent', () => {
+  setWindow(settledContext());
+
+  expect(global.window.__lowdefyLazyLoads).toBeUndefined();
+  expect(isPageReady('home')).toBe(true);
+});

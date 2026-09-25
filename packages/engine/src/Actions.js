@@ -19,6 +19,7 @@ import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isDecodedServerError } from './decodeServerError.js';
 import { isStopChain } from './stopChain.js';
+import trackActionMethods from './tracking/trackActionMethods.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
 
@@ -452,13 +453,16 @@ class Actions {
         globals: this.context._internal.lowdefy._internal.globals,
         // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
         lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
-        methods: getActionMethods({
-          actionId: action.id,
-          actions: responses,
-          arrayIndices,
-          blockId: block.blockId,
+        methods: trackActionMethods({
           context: this.context,
-          event,
+          methods: getActionMethods({
+            actionId: action.id,
+            actions: responses,
+            arrayIndices,
+            blockId: block.blockId,
+            context: this.context,
+            event,
+          }),
         }),
         params: parsedAction.params,
       });

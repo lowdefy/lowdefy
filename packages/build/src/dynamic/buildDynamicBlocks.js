@@ -24,9 +24,12 @@ import createCounter from '../utils/createCounter.js';
 // At build time, type counters feed types.json and import generation. At
 // runtime the client bundle is fixed, so the same counter calls become
 // membership checks against the bundled types instead.
-function createMembershipCounter({ category, allowed, dynamicBlockId, pageId }) {
+// Each type is also recorded in `used`, so the caller can tell whether the
+// fragment stays within its page's own client types.
+function createMembershipCounter({ category, allowed, dynamicBlockId, pageId, used }) {
   return {
     increment: (typeName) => {
+      used.add(typeName);
       if (!allowed.has(typeName)) {
         throw new ConfigError(
           `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which is not included in the app's client bundle. Declare it in the Dynamic block's properties.types.`
@@ -57,7 +60,15 @@ function getAllowedSets(types) {
 // so request types and server operators never occur in a valid fragment).
 const noopCounter = { increment: () => {} };
 
-function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, blockMetas }) {
+function buildDynamicBlocks({
+  blocks,
+  pageId,
+  dynamicBlockId,
+  idPrefix,
+  types,
+  blockMetas,
+  usedTypes,
+}) {
   if (!type.isArray(blocks)) {
     throw new ConfigError(
       `Dynamic block "${dynamicBlockId}" on page "${pageId}" endpoint must return an object with a "blocks" array.`,
@@ -98,12 +109,14 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
         allowed: allowed.actions,
         dynamicBlockId,
         pageId,
+        used: usedTypes.actions,
       }),
       blocks: createMembershipCounter({
         category: 'block',
         allowed: allowed.blocks,
         dynamicBlockId,
         pageId,
+        used: usedTypes.blocks,
       }),
       operators: {
         client: createMembershipCounter({
@@ -111,6 +124,7 @@ function buildDynamicBlocks({ blocks, pageId, dynamicBlockId, idPrefix, types, b
           allowed: allowed.operators,
           dynamicBlockId,
           pageId,
+          used: usedTypes.operators,
         }),
         server: noopCounter,
       },

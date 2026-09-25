@@ -25,15 +25,13 @@ import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
+import createPageTypeCounters from './createPageTypeCounters.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    collectExceptions(
-      context,
-      new ConfigError(`Page id missing at page ${index}.`, { configKey })
-    );
+    collectExceptions(context, new ConfigError(`Page id missing at page ${index}.`, { configKey }));
     return { failed: true };
   }
   if (!type.isString(page.id)) {
@@ -55,6 +53,10 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   // subscriptions key on nested blocks, so the page root must not carry it.
   const subscriptions = page.subscriptions;
   delete page.subscriptions;
+  const { pageCounters, typeCounters } = createPageTypeCounters({
+    typeCounters: context.typeCounters,
+  });
+  context.pageTypeCounters.set(page.pageId, pageCounters);
   const pageContext = {
     auth: page.auth,
     blockIdCounter: createCounter(),
@@ -71,7 +73,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     orgClientActionRefs: context.orgClientActionRefs ?? [],
     shortcutRefs,
     linkActionRefs: context.linkActionRefs,
-    typeCounters: context.typeCounters,
+    typeCounters,
   };
   buildBlock(page, pageContext);
   // set page.id since buildBlock sets id as well.
@@ -92,7 +94,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     requestActionRefs,
     orgClientActionRefs: context.orgClientActionRefs ?? [],
     shortcutRefs,
-    typeCounters: context.typeCounters,
+    typeCounters,
     websocketActionRefs: context.websocketActionRefs ?? [],
   });
 

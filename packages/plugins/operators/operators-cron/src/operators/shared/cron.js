@@ -287,6 +287,15 @@ function _cron({ params, location, methodName }) {
 }
 
 _cron.dynamic = false;
+// next and previous count from the current time unless given a "from" date.
+_cron.tracking = ({ methodName, params }) => {
+  const method = methodName ?? params;
+  if (method !== 'next' && method !== 'previous') {
+    return { kind: 'pure' };
+  }
+  const from = type.isObject(params) ? params.from : undefined;
+  return { kind: type.isNone(from) ? 'volatile' : 'pure' };
+};
 _cron.meta = meta;
 
 export default _cron;

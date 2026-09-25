@@ -143,6 +143,8 @@ const result = parser.parse({
 });
 ```
 
+**Evaluation.** `parse` returns what `serializer.copy(input, { reviver })` returns: a fresh tree, evaluated post-order, with an operator's `undefined` result deleted from objects and left as a hole in arrays. The walker does exactly that (a JSON round trip). An input object parsed a second time (`WebParser.compileThreshold`) is compiled once by `compileParseTree` into closures that build the same tree without the round trip, and cached in a `WeakMap` per `operatorPrefix`. Block roots are parsed on every evaluation pass, so they run compiled from the second pass; one-off inputs (`_function`'s fresh copy per call) never compile. The operator test and call (`reviveKey`) are shared by both paths, and the registry is read at call time. A tree holding anything the round trip would change (functions, `undefined`, `NaN`, `toJSON`, `~d`/`~e`/`~arr` keys, sparse arrays) is never compiled and always walks. `webParser.parity.test.js` checks both paths against each other (holes, markers and errors included, plus 2,000 seeded random trees), and `pnpm --filter @lowdefy/engine test:compiled` runs the engine suite with compilation forced on the first parse.
+
 **Client operators:**
 
 - `_state` - Page state values

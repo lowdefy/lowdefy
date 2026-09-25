@@ -58,14 +58,19 @@ class Requests {
     const requests = requestIds.map((requestId) =>
       this.callRequest({ actionId, actions, requestId, blockId, event, arrayIndices, holdValue })
     );
-    this.context._internal.update(); // update to render request reset
+    // update to render request reset
+    this.context._internal.update({
+      changes: requestIds.map((requestId) => `request:${requestId}`),
+    });
     return Promise.all(requests);
   }
 
   async callRequest({ actionId, actions, arrayIndices, blockId, event, holdValue, requestId }) {
     const requestConfig = this.requestConfig[requestId];
+    const { reportChange } = this.context._internal.DependencyTracker;
     if (!this.context.requests[requestId]) {
       this.context.requests[requestId] = [];
+      reportChange(`request:${requestId}`);
     }
     if (!requestConfig) {
       const error = new Error(`Configuration Error: Request ${requestId} not defined on page.`);
@@ -76,6 +81,7 @@ class Requests {
         requestId,
         response: null,
       });
+      reportChange(`request:${requestId}`);
       throw error;
     }
     // evaluate operators
@@ -102,6 +108,7 @@ class Requests {
       request.holdValue = true;
     }
     this.context.requests[requestId].unshift(request);
+    reportChange(`request:${requestId}`);
     return this.fetch(request);
   }
 
@@ -126,14 +133,14 @@ class Requests {
       request.loading = false;
       const endTime = Date.now();
       request.responseTime = endTime - startTime;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`request:${request.requestId}`] });
       return deserializedResponse;
     } catch (error) {
       request.error = error;
       request.loading = false;
       const endTime = Date.now();
       request.responseTime = endTime - startTime;
-      this.context._internal.update();
+      this.context._internal.update({ changes: [`request:${request.requestId}`] });
       throw error;
     }
   }
