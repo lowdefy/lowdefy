@@ -19,16 +19,24 @@ import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 import { type } from '@lowdefy/helpers';
 
+import createHtmlEnhancerGate from './createHtmlEnhancerGate.js';
 import getDataEvent from './getDataEvent.js';
-import prepareHtmlEnhancements, { NATIVE_INTERACTIVE } from './prepareHtmlEnhancements.js';
+import HTML_ENHANCERS from './htmlEnhancers/htmlEnhancers.js';
+import NATIVE_INTERACTIVE from './htmlEnhancers/nativeInteractive.js';
 import { getHtmlEnhancements } from './registerHtmlEnhancements.js';
+import runHtmlEnhancers from './runHtmlEnhancers.js';
 
-const NO_ICONS = [];
+const NO_PORTALS = [];
 
-// Only HTML that uses one of these attributes takes the enhancement pass, so
-// markup with test hooks like data-testid (thousands of grid cells) stays on
-// the plain path.
-const ENHANCED_ATTRIBUTES = /data-(icon|tooltip|popover|event)/i;
+// Only HTML that names one of the enhancers' attributes takes the enhancement
+// pass, so markup with test hooks like data-testid (thousands of grid cells)
+// stays on the plain path.
+const ENHANCER_GATE = createHtmlEnhancerGate(HTML_ENHANCERS);
+
+// Enter and Space click these when they are not native controls.
+const ACTIVATES = HTML_ENHANCERS.filter((enhancer) => enhancer.activates)
+  .map((enhancer) => enhancer.activates)
+  .join(', ');
 
 class HtmlComponent extends React.Component {
   constructor(props) {
@@ -36,16 +44,19 @@ class HtmlComponent extends React.Component {
     this.div = {
       innerHTML: '',
     };
-    this.popoverContents = {};
-    this.state = { enhanced: false, icons: NO_ICONS, overlay: null };
+    this.cleanups = [];
+    this.prepared = {};
+    this.state = { enhanced: false, overlay: null, portals: NO_PORTALS };
     this.closeOverlay = this.closeOverlay.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onClick = this.onClick.bind(this);
+    this.onFocus = this.onFocus.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
     this.onPopoverDataEvent = this.onPopoverDataEvent.bind(this);
     this.onTextSelection = this.onTextSelection.bind(this);
-    this.openTooltip = this.openTooltip.bind(this);
+    this.host = this.createHost();
   }
 
   componentDidMount() {
@@ -54,6 +65,37 @@ class HtmlComponent extends React.Component {
 
   componentDidUpdate() {
     this.applyHtml();
+  }
+
+  componentWillUnmount() {
+    this.runCleanups();
+  }
+
+  // What enhancers' event handlers can see and do.
+  createHost() {
+    const component = this;
+    return {
+      closestInRoot: (event, selector) => this.closestInRoot(event, selector),
+      closeOverlay: this.closeOverlay,
+      openOverlay: (overlay) => this.setState({ overlay }),
+      get overlay() {
+        return component.state.overlay;
+      },
+      get prepared() {
+        return component.prepared;
+      },
+      get props() {
+        return component.props;
+      },
+      get registration() {
+        return getHtmlEnhancements();
+      },
+    };
+  }
+
+  runCleanups() {
+    this.cleanups.forEach((cleanup) => cleanup());
+    this.cleanups = [];
   }
 
   // Parent re-renders usually pass the same string. Re-sanitizing and resetting
@@ -65,25 +107,29 @@ class HtmlComponent extends React.Component {
     if (this.div === this.appliedDiv && htmlString === this.appliedHtml) {
       return;
     }
+    this.runCleanups();
     this.div.innerHTML = DOMPurify.sanitize(htmlString, this.props.sanitizeOptions);
     this.appliedDiv = this.div;
     this.appliedHtml = htmlString;
 
-    const enhancements = getHtmlEnhancements();
-    const enhanced = enhancements !== null && ENHANCED_ATTRIBUTES.test(htmlString);
+    const registration = getHtmlEnhancements();
+    const enhanced = registration !== null && ENHANCER_GATE.test(htmlString);
     if (!enhanced) {
+      this.prepared = {};
       if (this.state.enhanced || this.state.overlay !== null) {
-        this.setState({ enhanced: false, icons: NO_ICONS, overlay: null });
+        this.setState({ enhanced: false, overlay: null, portals: NO_PORTALS });
       }
       return;
     }
-    const { icons, popoverContents } = prepareHtmlEnhancements({
+    const { cleanups, portals, prepared } = runHtmlEnhancers({
       dataEvents: !type.isNone(this.props.onDataEvent),
-      iconMap: enhancements.icons,
+      enhancers: HTML_ENHANCERS,
+      registration,
       root: this.div,
     });
-    this.popoverContents = popoverContents;
-    this.setState({ enhanced: true, icons, overlay: null });
+    this.cleanups = cleanups;
+    this.prepared = prepared;
+    this.setState({ enhanced: true, overlay: null, portals });
   }
 
   // Only targets inside this element's own DOM count: events from portals
@@ -92,6 +138,15 @@ class HtmlComponent extends React.Component {
     const target = event.target.closest?.(selector);
     if (!target || !this.div.contains(target)) return null;
     return target;
+  }
+
+  // Calls every enhancer that handles this event, in registry order.
+  dispatch(handler, event) {
+    HTML_ENHANCERS.forEach((enhancer) => {
+      if (enhancer[handler]) {
+        enhancer[handler]({ event, host: this.host });
+      }
+    });
   }
 
   onTextSelection() {
@@ -120,7 +175,7 @@ class HtmlComponent extends React.Component {
       }
     }
     if (this.state.enhanced) {
-      this.togglePopover(event);
+      this.dispatch('onClick', event);
     }
     if (this.props.onClick) {
       this.props.onClick(event);
@@ -131,57 +186,33 @@ class HtmlComponent extends React.Component {
   // not native controls, the way a <button> would.
   onKeyDown(event) {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    const target = this.closestInRoot(event, '[data-popover], [data-event]');
+    const target = this.closestInRoot(event, ACTIVATES);
     if (!target || target !== event.target || target.matches(NATIVE_INTERACTIVE)) return;
     event.preventDefault();
     target.click();
   }
 
-  openTooltip(event) {
-    const { overlay } = this.state;
-    if (overlay?.kind === 'popover') return;
-    const target = this.closestInRoot(event, '[data-tooltip]');
-    if (!target || overlay?.target === target) return;
-    this.setState({
-      overlay: { kind: 'tooltip', target, content: target.getAttribute('data-tooltip') },
-    });
-  }
-
-  closeTooltip(relatedTarget) {
-    const { overlay } = this.state;
-    if (overlay?.kind !== 'tooltip' || overlay.target.contains(relatedTarget)) return;
-    this.setState({ overlay: null });
+  onMouseOver(event) {
+    this.dispatch('onMouseOver', event);
   }
 
   onMouseOut(event) {
-    this.closeTooltip(event.relatedTarget);
+    this.dispatch('onMouseOut', event);
+  }
+
+  onFocus(event) {
+    this.dispatch('onFocus', event);
   }
 
   onBlur(event) {
-    this.closeTooltip(event.relatedTarget);
-  }
-
-  togglePopover(event) {
-    const target = this.closestInRoot(event, '[data-popover]');
-    if (!target) return;
-    const { overlay } = this.state;
-    const wasOpen = overlay?.kind === 'popover' && overlay.target === target;
-    this.closeOverlay();
-    if (wasOpen) return;
-    const id = target.getAttribute('data-popover');
-    if (!Object.hasOwn(this.popoverContents, id)) {
-      console.warn(`data-popover="${id}" has no element with data-popover-content="${id}".`);
-      return;
-    }
-    target.setAttribute('aria-expanded', 'true');
-    this.setState({ overlay: { kind: 'popover', target, html: this.popoverContents[id] } });
+    this.dispatch('onBlur', event);
   }
 
   closeOverlay() {
     const { overlay } = this.state;
     if (overlay === null) return;
-    if (overlay.kind === 'popover') {
-      overlay.target.setAttribute('aria-expanded', 'false');
+    if (overlay.onClose) {
+      overlay.onClose();
     }
     this.setState({ overlay: null });
   }
@@ -225,13 +256,13 @@ class HtmlComponent extends React.Component {
 
   render() {
     const { className, div, id, onClick, onDataEvent, style } = this.props;
-    const { enhanced, icons, overlay } = this.state;
+    const { enhanced, overlay, portals } = this.state;
     const Element = div === true ? 'div' : 'span';
-    const Icon = enhanced ? getHtmlEnhancements().Icon : null;
     return (
       <Element
         id={id}
         data-testid={id}
+        data-lf-html={enhanced ? '' : undefined}
         ref={(el) => {
           if (el) {
             this.div = el;
@@ -242,14 +273,12 @@ class HtmlComponent extends React.Component {
         onMouseUp={this.onTextSelection}
         onClick={enhanced || onClick || onDataEvent ? this.onClick : undefined}
         onKeyDown={enhanced ? this.onKeyDown : undefined}
-        onMouseOver={enhanced ? this.openTooltip : undefined}
+        onMouseOver={enhanced ? this.onMouseOver : undefined}
         onMouseOut={enhanced ? this.onMouseOut : undefined}
-        onFocus={enhanced ? this.openTooltip : undefined}
+        onFocus={enhanced ? this.onFocus : undefined}
         onBlur={enhanced ? this.onBlur : undefined}
       >
-        {icons.map(({ element, name }, index) =>
-          createPortal(<Icon properties={{ name, title: '' }} />, element, `${index}:${name}`)
-        )}
+        {portals.map(({ element, key, node }) => createPortal(node, element, key))}
         {overlay && this.renderOverlay()}
       </Element>
     );
