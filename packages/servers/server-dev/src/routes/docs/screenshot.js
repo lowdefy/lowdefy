@@ -60,6 +60,19 @@ async function docsScreenshotHandler(c) {
   // `width` and `height` name the clip here, so the viewport size takes the
   // `viewport` prefix; the MCP tool, which nests the clip, calls them width
   // and height.
+  for (const key of ['viewportWidth', 'viewportHeight']) {
+    const raw = c.req.query(key);
+    if (!type.isNone(raw) && type.isUndefined(queryNumber(c, key))) {
+      return c.json(
+        {
+          error: `"${key}" must be a positive integer (CSS pixels). Received ${JSON.stringify(
+            raw
+          )}.`,
+        },
+        400
+      );
+    }
+  }
   const width = queryNumber(c, 'viewportWidth');
   const height = queryNumber(c, 'viewportHeight');
   const colorScheme = c.req.query('colorScheme');

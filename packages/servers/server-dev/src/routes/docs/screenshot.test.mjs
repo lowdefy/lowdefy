@@ -100,3 +100,18 @@ test('docsScreenshotHandler returns 400 for a viewport width that is not a posit
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch(/Viewport width must be a positive integer/);
 });
+
+test.each(['viewportWidth', 'viewportHeight'])(
+  'docsScreenshotHandler returns 400 naming a non-numeric %s',
+  async (key) => {
+    const c = createContext(`http://localhost:3227/lowdefy-docs/screenshot/home?${key}=wide`);
+
+    const result = await docsScreenshotHandler(c);
+
+    expect(result.status).toBe(400);
+    expect(result.data.error).toEqual(
+      `"${key}" must be a positive integer (CSS pixels). Received "wide".`
+    );
+    expect(mockScreenshotPage).not.toHaveBeenCalled();
+  }
+);
