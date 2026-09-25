@@ -1,5 +1,5 @@
 {
-  "version": "5.5.1",
+  "version": "6.0.0",
   "docs": [
     {
       "slug": "other/introduction",
@@ -30,6 +30,12 @@
       "title": "4. Interactive pages with actions and operators",
       "section": "Tutorial",
       "path": "content/tutorial/tutorial-actions-operators.md"
+    },
+    {
+      "slug": "tutorial/tutorial-requests-api",
+      "title": "5. API / HTTP requests",
+      "section": "Tutorial",
+      "path": "content/tutorial/tutorial-requests-api.md"
     },
     {
       "slug": "tutorial/tutorial-requests-sql",
@@ -86,10 +92,22 @@
       "path": "content/concepts/module-authoring.md"
     },
     {
+      "slug": "concepts/page-and-app-state",
+      "title": "Page and App State",
+      "section": "Concepts",
+      "path": "content/concepts/page-and-app-state.md"
+    },
+    {
       "slug": "concepts/selectors",
       "title": "Driving Selectors",
       "section": "Concepts",
       "path": "content/concepts/selectors.md"
+    },
+    {
+      "slug": "concepts/blocks",
+      "title": "Blocks",
+      "section": "Concepts",
+      "path": "content/concepts/blocks.md"
     },
     {
       "slug": "concepts/layout-overview",
@@ -164,16 +182,46 @@
       "path": "content/concepts/custom-styling.md"
     },
     {
+      "slug": "concepts/theming",
+      "title": "Theming",
+      "section": "Concepts",
+      "path": "content/concepts/theming.md"
+    },
+    {
       "slug": "concepts/cli",
       "title": "The CLI",
       "section": "Concepts",
       "path": "content/concepts/cli.md"
     },
     {
+      "slug": "concepts/lowdefy-api",
+      "title": "Lowdefy APIs",
+      "section": "Concepts",
+      "path": "content/concepts/lowdefy-api.md"
+    },
+    {
+      "slug": "concepts/notifications",
+      "title": "Notifications",
+      "section": "Concepts",
+      "path": "content/concepts/notifications.md"
+    },
+    {
+      "slug": "concepts/dynamic-page-content",
+      "title": "Dynamic Page Content",
+      "section": "Concepts",
+      "path": "content/concepts/dynamic-page-content.md"
+    },
+    {
       "slug": "concepts/ai-agent-docs",
       "title": "Docs for AI Agents",
       "section": "Concepts",
       "path": "content/concepts/ai-agent-docs.md"
+    },
+    {
+      "slug": "agents/agents-introduction",
+      "title": "Agents",
+      "section": "Agents",
+      "path": "content/agents/agents-introduction.md"
     },
     {
       "slug": "agents/agent-properties",
@@ -216,6 +264,24 @@
       "title": "AgentConversations",
       "section": "Agents",
       "path": "content/agents/agentconversations.md"
+    },
+    {
+      "slug": "websockets/websockets-introduction",
+      "title": "WebSockets",
+      "section": "WebSockets",
+      "path": "content/websockets/websockets-introduction.md"
+    },
+    {
+      "slug": "websockets/websocket-subscriptions",
+      "title": "Page Subscriptions",
+      "section": "WebSockets",
+      "path": "content/websockets/websocket-subscriptions.md"
+    },
+    {
+      "slug": "websockets/websocket-publish",
+      "title": "Publish and Actions",
+      "section": "WebSockets",
+      "path": "content/websockets/websocket-publish.md"
     },
     {
       "slug": "deployment/docker",
@@ -302,6 +368,18 @@
       "path": "content/user-authentication/two-factor.md"
     },
     {
+      "slug": "user-authentication/protected-pages-apis",
+      "title": "Protected Pages and APIs",
+      "section": "User Authentication",
+      "path": "content/user-authentication/protected-pages-apis.md"
+    },
+    {
+      "slug": "user-authentication/roles",
+      "title": "Roles",
+      "section": "User Authentication",
+      "path": "content/user-authentication/roles.md"
+    },
+    {
       "slug": "user-authentication/organizations",
       "title": "Organizations &amp; Multi-Tenancy",
       "section": "User Authentication",
@@ -326,16 +404,46 @@
       "path": "content/user-authentication/user-object.md"
     },
     {
+      "slug": "user-authentication/auth-configuration",
+      "title": "Auth Configuration",
+      "section": "User Authentication",
+      "path": "content/user-authentication/auth-configuration.md"
+    },
+    {
+      "slug": "provider-reference/auth-js-providers",
+      "title": "Auth.js Providers",
+      "section": "Provider Reference",
+      "path": "content/provider-reference/auth-js-providers.md"
+    },
+    {
       "slug": "other/next-auth-providers",
       "title": "next-auth-providers",
       "section": "Other",
       "path": "content/other/next-auth-providers.md"
     },
     {
+      "slug": "provider-reference/openidconnectprovider",
+      "title": "OpenIDConnectProvider",
+      "section": "Provider Reference",
+      "path": "content/provider-reference/openidconnectprovider.md"
+    },
+    {
+      "slug": "adapter-reference/mongodbauthadapter",
+      "title": "MongoDBAuthAdapter",
+      "section": "Adapter Reference",
+      "path": "content/adapter-reference/mongodbauthadapter.md"
+    },
+    {
       "slug": "other/mongodbadapter",
       "title": "MongoDBAdapter",
       "section": "Other",
       "path": "content/other/mongodbadapter.md"
+    },
+    {
+      "slug": "callback-reference/auth0logoutcallback",
+      "title": "Auth0LogoutCallback",
+      "section": "Callback Reference",
+      "path": "content/callback-reference/auth0logoutcallback.md"
     },
     {
       "slug": "testing/config-tests",
@@ -746,6 +854,14 @@
       "path": "content/display-blocks/calendar.md",
       "kind": "block",
       "typeName": "Calendar"
+    },
+    {
+      "slug": "display-blocks/clickablehtml",
+      "title": "ClickableHtml",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/clickablehtml.md",
+      "kind": "block",
+      "typeName": "ClickableHtml"
     },
     {
       "slug": "display-blocks/dangeroushtml",
@@ -1418,6 +1534,14 @@
       "path": "content/connections/googlecloudstorage.md",
       "kind": "connection",
       "typeName": "Google Cloud Storage"
+    },
+    {
+      "slug": "connections/axioshttp",
+      "title": "AxiosHttp",
+      "section": "Connections",
+      "path": "content/connections/axioshttp.md",
+      "kind": "connection",
+      "typeName": "AxiosHttp"
     },
     {
       "slug": "connections/elasticsearch",
@@ -2548,6 +2672,12 @@
       "title": "Auth Upgrade (BetterAuth)",
       "section": "Migration",
       "path": "content/migration/auth-upgrade.md"
+    },
+    {
+      "slug": "migration/v3-to-v4",
+      "title": "Version 3 to Version 4",
+      "section": "Migration",
+      "path": "content/migration/v3-to-v4.md"
     },
     {
       "slug": "migration/v5-to-v6",

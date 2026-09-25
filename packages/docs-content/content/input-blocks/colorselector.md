@@ -834,6 +834,20 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 | `format` | string | - | Color format. Enum: `rgb`, `hex`, `hsb`. |
 | `showText` | boolean | - | Show color text. |
 | `size` | string | - | Size of the color picker. Enum: `small`, `middle`, `large`. |
+| `label` | object | - | Label properties. |
+| `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
+| `label.colon` | boolean | `true` | Append label with colon. |
+| `label.extra` | string | - | Extra text to display beneath the content - supports html. |
+| `label.title` | string | - | Label title - supports html. |
+| `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
+| `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
+| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.color` | string | - | Color of the tooltip icon. |
+| `label.span` | number | - | Label inline span. |
+| `label.disabled` | boolean | `false` | Hide input label. |
+| `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
+| `label.inline` | boolean | `false` | Render input and label inline. |
+| `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `disabled` | boolean | `false` | Disable the color picker. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `arrow` | boolean | `true` | Show arrow on the color picker popup. |

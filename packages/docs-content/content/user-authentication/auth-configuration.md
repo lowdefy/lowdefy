@@ -1,0 +1,262 @@
+# Auth Configuration
+
+The `auth` section configures user authentication. Lowdefy's auth is built on [BetterAuth](https://www.better-auth.com/): sessions are database-backed, the app owns its auth UI, and roles live on organization memberships. If you are moving from the previous NextAuth-shaped config, start with the [Auth Upgrade guide](/auth-upgrade) — several keys were renamed or removed.
+
+The `_secret` operator is evaluated over the entire `auth` section, so any value can be a secret reference.
+
+For a login method to work you must configure **at least one mechanism** (`emailAndPassword`, `magicLink`, `emailOTP`, `phoneNumber`, an OAuth `providers` entry, or an API `strategies` entry), a `secret`, and a `database`. An `auth` block with none of these fails the build.
+
+## Secret
+
+A required signing secret, given as a `_secret` reference:
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+```
+
+Also pin the app's canonical origin — the `url` of the current environment in [`config.environments`](/lowdefy-schema), or the `BETTER_AUTH_URL` environment variable, which wins — auth builds password-reset, magic-link and verification links, and its CSRF origin allowlist, from it. See the [migration guide](/auth-upgrade#3-pin-the-canonical-url-with-better-auth-url).
+
+## Database
+
+Sessions, users, accounts and organizations are stored through an adapter:
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: AUTH_DATABASE_URI
+```
+
+See the [MongoDBAuthAdapter](/MongoDBAuthAdapter) reference. Collection names follow the `user-*` convention and are fixed by the adapter.
+
+## Login mechanisms
+
+- **Email & password** — `auth.emailAndPassword` (`enabled`, `requireEmailVerification`, `minPasswordLength` (default 8), `disableSignUp`).
+- **Magic link** — `auth.magicLink` (`enabled`, `expiresIn` seconds (default 300), `disableSignUp`), which needs `auth.email` (below).
+- **Email one-time code** — `auth.emailOTP` (`enabled`, `otpLength` (default 6), `expiresIn` seconds (default 300), `allowedAttempts` (default 3), `disableSignUp` (default `false`)), which needs `auth.email` (below). The person is emailed a code and types it into the tab they started from, so the sign-in survives mail security that pre-fetches links, and works when the email is opened on another device.
+- **OAuth providers** — `auth.providers`; see [Providers](/auth-providers).
+- **Phone number** — `auth.phoneNumber` (OTP sign-in); needs a `phone.otp.send` hook to deliver the SMS.
+- **Passkeys** — `auth.passkey` (`enabled`, `rpId`, `rpName`).
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  emailAndPassword:
+    enabled: true
+    requireEmailVerification: true
+```
+
+## Auth email
+
+`auth.email` references an **SMTP connection** by id — the connection owns `from`, `replyTo`, the transport and the delivery filter, and is shared by every auth email flow. There is no inline transport shape. Optionally map individual flows to your own notification templates:
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  email:
+    connectionId: email   # an SMTP connection in connections[]
+    templates:            # all optional; unset → branded stock template
+      verifyEmail: verify-email-notification
+      resetPassword: reset-password-notification
+      magicLink: magic-link-notification
+      invitation: invite-notification
+      emailOTP: email-otp-notification
+```
+
+### Link and code in one email
+
+With both `magicLink` and `emailOTP` enabled, the magic-link email also carries the one-time code, so a single email serves both paths: the person clicks the button, or types the code into the tab they asked for the link from. Nothing extra is sent — the `emailOTP` template is only used for a code-only send.
+
+The `magicLink` template then has two more variables available: `otp` (the code) and `expiresIn` (the code's lifetime in seconds, from `auth.emailOTP.expiresIn`). The stock template renders them below the sign-in button; a template of your own can place them wherever it likes. With `emailOTP` off both are absent and the link email is unchanged.
+
+## Auth pages
+
+BetterAuth ships no UI — your app owns its auth pages, and `auth.authPages` points at them. All are Lowdefy page paths:
+
+| Key | Default | When required |
+| --- | ------- | ------------- |
+| `signIn` | `/login` | |
+| `signUp` | `/signup` | |
+| `error` | `/auth/error` | receives `?error=` code |
+| `forgotPassword` | `/forgot-password` | |
+| `resetPassword` | `/reset-password` | |
+| `verifyEmail` | `/verify-email` | |
+| `twoFactor` | — | **required** when `twoFactor.enabled` |
+| `twoFactorEnrol` | — | **required** when `twoFactor.required` |
+| `acceptInvitation` | — | consumes an `?invitationId=` link |
+| `magicLink` | — | landing page for the sign-in email (opt-in; see below) |
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  authPages:
+    signIn: /login
+    signUp: /signup
+    error: /auth-error
+```
+
+### The magic link landing page
+
+`authPages.magicLink` is opt-in, and it exists for one reason: Better Auth's magic-link verify endpoint consumes the single-use token on the **first** `GET` of the URL. Corporate mail security — Microsoft Defender Safe Links, Proofpoint URL Defense, Mimecast — fetches every link in a message at delivery time, so that first `GET` is a scanner and the person clicking arrives to `INVALID_TOKEN`.
+
+Set the key and the sign-in email links to a page of your own instead, with the token and the callback destinations carried on its URL query. Fetching a Lowdefy page is harmless, so the token stays unspent until a real click runs [`MagicLinkVerify`](/MagicLinkVerify):
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  magicLink:
+    enabled: true
+  authPages:
+    magicLink: /magic-link
+  pages:
+    public:
+      - magic-link
+```
+
+```yaml
+id: magic-link
+type: PageHeaderMenu
+blocks:
+  - id: content
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Sign in
+          level: 3
+      - id: description
+        type: Paragraph
+        properties:
+          content: Click the button below to finish signing in.
+      - id: verify_button
+        type: Button
+        properties:
+          title: Sign in
+        events:
+          onClick:
+            - id: verify
+              type: MagicLinkVerify
+```
+
+The page must **not** call `MagicLinkVerify` in `onMount`, and must not auto-redirect to the verify endpoint. Scanning sandboxes that render the page and execute its JavaScript would consume the token anyway, which puts you back where you started. The protection is the click, not the page.
+
+Leave the key unset and magic-link sign-in keeps working exactly as before, linking straight at the verify endpoint.
+
+See [Two-Factor Authentication](/two-factor) for the two-factor pages, and the [MCP Server & OAuth](/mcp-oauth) page for `oauthProvider.consentPage` and `postLoginPage`.
+
+## Session
+
+Database sessions. Length is `expiresIn` (seconds, default 604800 = 7 days); `updateAge` (default 86400) is how often an active session's expiry is refreshed:
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  session:
+    expiresIn: 43200 # 12 hours in seconds
+    updateAge: 3600
+```
+
+`session.cookieCache` (off by default) trades a short window of stale session reads for fewer database lookups — leave it off unless you understand the [revocation-latency trade](/two-factor#recovering-a-user-who-has-lost-their-factor).
+
+## Roles, organizations, and API strategies
+
+- **Roles** — declare app role names in `auth.roles` and gate pages/endpoints with `auth.pages.roles` / `auth.api.roles`. See [Roles](/roles).
+- **Organizations** — `auth.organizations.policy` (`pinned` or `tenant`) decides the whole multi-tenancy model. See [Organizations & Multi-Tenancy](/organizations).
+- **API strategies** — `auth.strategies` authenticates non-session callers (server-to-server) with an `apiKey` or a `jwt`:
+
+```yaml
+lowdefy: 6.0.0
+auth:
+  strategies:
+    - id: service-key
+      type: apiKey
+      roles:
+        - integrations
+      properties:
+        keys:
+          - value:
+              _secret: SERVICE_API_KEY
+```
+
+A strategy caller carries the configured `roles` and `attributes` and its `auth_method` is the strategy type. A `jwt` strategy needs exactly one of `properties.secret` or `properties.jwksUri`, and a non-empty `algorithms` allowlist (which blocks `alg: none` downgrades).
+
+## Captcha
+
+`auth.captcha` protects auth endpoints with Cloudflare Turnstile. The `siteKey` is public (a plain string, never a `_secret`); the `secretKey` is a `_secret` reference. See the [Captcha block](/Captcha) for the client side.
+
+## Rate limiting and account linking
+
+- `auth.rateLimit` — brute-force protection, on by default (`enabled`, `window` seconds, `max`).
+- `auth.account.accountLinking` — link a new OAuth sign-in to an existing account by verified email. `trustedProviders` lists providers whose email claim you trust for linking. **This is unrelated to `provider.twoFactorTrusted`** — see [Two-Factor Authentication](/two-factor#trusting-an-oauth-provider).
+
+## Mock User for Testing (Dev Server Only)
+
+When developing and testing Lowdefy apps, you can bypass the login flow by configuring a mock user. This is useful for testing authenticated flows without going through OAuth login.
+
+The mock user can be configured in three ways:
+
+### CLI Flag
+
+Pass `--mock-user` to `lowdefy dev` to start the server as a mock user for that run. Supply a JSON user object to set the identity and roles, or use the bare flag for a default user with no roles:
+
+```bash
+lowdefy dev --mock-user '{"id":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+The flag sets `LOWDEFY_DEV_USER` for the dev server process, so it takes precedence over `auth.dev.mockUser` in the config file.
+
+### Environment Variable
+
+Set the `LOWDEFY_DEV_USER` environment variable to a JSON string containing the mock user object:
+
+```bash
+LOWDEFY_DEV_USER='{"id":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+### Config File
+
+Add the `auth.dev.mockUser` section to your `lowdefy.yaml`:
+
+###### Configure a mock user for development
+```yaml
+lowdefy: 6.0.0
+
+auth:
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  dev:
+    mockUser:
+      id: test-user
+      email: test@example.com
+      name: Test User
+      roles:
+        - admin
+```
+
+When a mock user is configured:
+- The environment variable takes precedence over the config file if both are set
+- A warning is logged at dev server startup: "Mock user active - login bypassed"
+- The mock user is injected as a pre-resolved caller — its `roles` are authoritative
+- The `_user` operator returns values from the mock user, on the server and in the browser client — the dev server serves the mock session to both
+- Protected pages are accessible based on the mock user's roles
+- The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as the mock user, so it can capture pages with roles the default user lacks
+
+> **Note:** Mock users only work with the development server (`lowdefy dev`). The production server ignores mock user configuration for security.
+
+> **Note:** `dev.mockUser` bypasses the auth engine rather than exercising it, so [auth steps](/auth-steps) (which need the running auth engine) are unavailable under a mock user.
+
+`auth.dev` needs no auth stack behind it. An `auth` block whose only key is `dev` is not an auth configuration: it demands no login method, no `secret` and no `database`, the app builds and runs signed out in production, and in the dev server the browser is the `dev.mockUser` caller. Adding any other `auth` key declares a real auth stack, and the build then requires a mechanism, a secret and (for a login method) a database as usual.
