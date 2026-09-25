@@ -47,5 +47,15 @@ function js(operatorContext) {
 }
 
 js.dynamic = true;
+// The accessors call operators through the tracked registry view, so the function's reads record
+// themselves. The build marks a function volatile when its source references a browser or clock
+// global. A returned closure, even nested in an object, reads context only when it is called.
+js.tracking = ({ jsMap, params }) => {
+  const hash = type.isString(params) ? params : params?.fn;
+  return {
+    kind: jsMap?.[hash]?.volatile === true ? 'volatile' : 'pure',
+    resultMayContainFunctions: true,
+  };
+};
 
 export default js;

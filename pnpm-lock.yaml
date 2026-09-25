@@ -163,6 +163,9 @@ importers:
       '@lowdefy/operators-js':
         specifier: 6.0.0
         version: link:../plugins/operators/operators-js
+      acorn:
+        specifier: 8.16.0
+        version: 8.16.0
       ajv:
         specifier: 8.20.0
         version: 8.20.0
@@ -7877,11 +7880,6 @@ packages:
 
   acorn@7.4.1:
     resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
-  acorn@8.10.0:
-    resolution: {integrity: sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -20164,8 +20162,6 @@ snapshots:
 
   acorn@7.4.1: {}
 
-  acorn@8.10.0: {}
-
   acorn@8.16.0: {}
 
   ag-charts-types@11.3.2: {}
@@ -24205,7 +24201,7 @@ snapshots:
   jsdom@19.0.0:
     dependencies:
       abab: 2.0.6
-      acorn: 8.10.0
+      acorn: 8.16.0
       acorn-globals: 6.0.0
       cssom: 0.5.0
       cssstyle: 2.3.0

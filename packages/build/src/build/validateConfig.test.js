@@ -53,3 +53,28 @@ test('validateConfig config error when basePath does not start with "/".', () =>
   };
   expect(() => validateConfig({ components, context })).toThrow('Base path must start with "/".');
 });
+
+test('validateConfig leaves appMeta unchanged when config.dependencyTracking is not set', () => {
+  const components = { appMeta: { slug: 'app' }, config: {} };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app' });
+});
+
+test('validateConfig carries config.dependencyTracking false to appMeta', () => {
+  const components = { appMeta: { slug: 'app' }, config: { dependencyTracking: false } };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app', dependencyTracking: false });
+});
+
+test('validateConfig leaves appMeta unchanged when config.dependencyTracking is true', () => {
+  const components = { appMeta: { slug: 'app' }, config: { dependencyTracking: true } };
+  validateConfig({ components, context });
+  expect(components.appMeta).toEqual({ slug: 'app' });
+});
+
+test('validateConfig throws when config.dependencyTracking is not a boolean', () => {
+  const components = { appMeta: {}, config: { dependencyTracking: 'no' } };
+  expect(() => validateConfig({ components, context })).toThrow(
+    'App "config.dependencyTracking" should be a boolean.'
+  );
+});

@@ -21,5 +21,7 @@ function _log({ params }) {
 }
 
 _log.dynamic = true;
+// Pure for its output. Its console output only happens on the passes that evaluate its block.
+_log.tracking = { kind: 'pure' };
 
 export default _log;

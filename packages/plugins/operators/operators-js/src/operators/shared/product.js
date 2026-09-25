@@ -29,5 +29,6 @@ function _product({ params }) {
 }
 
 _product.dynamic = false;
+_product.tracking = { kind: 'pure' };
 
 export default _product;

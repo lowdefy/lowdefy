@@ -34,7 +34,8 @@
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:compiled": "node --experimental-vm-modules node_modules/jest/bin/jest.js --setupFilesAfterEnv ./test/compileFirstParse.js"
+    "test:compiled": "node --experimental-vm-modules node_modules/jest/bin/jest.js --setupFilesAfterEnv ./test/compileFirstParse.js",
+    "test:full": "node --experimental-vm-modules node_modules/jest/bin/jest.js --setupFilesAfterEnv ./test/fullEvaluation.js"
   },
   "dependencies": {
     "@lowdefy/errors": "6.0.0",

@@ -27,5 +27,6 @@ function _gt({ params }) {
 }
 
 _gt.dynamic = false;
+_gt.tracking = { kind: 'pure' };
 
 export default _gt;

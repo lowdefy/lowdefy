@@ -53,5 +53,6 @@ function _yaml({ params, location, methodName }) {
 }
 
 _yaml.dynamic = false;
+_yaml.tracking = { kind: 'pure' };
 
 export default _yaml;

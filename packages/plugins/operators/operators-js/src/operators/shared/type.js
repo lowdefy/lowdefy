@@ -69,5 +69,15 @@ function _type({ location, params, state }) {
 }
 
 _type.dynamic = true;
+// With no `on`, _type reads state at `key`, or at its own location: the engine's required check
+// is a _type on the input's own value.
+_type.tracking = ({ location, params }) => {
+  const typeName = type.isObject(params) ? params.type : params;
+  if (!type.isString(typeName) || Object.prototype.hasOwnProperty.call(params, 'on')) {
+    return { kind: 'pure' };
+  }
+  const key = get(params, 'key', { default: location });
+  return { kind: 'read', keys: [type.isString(key) ? `state:${key}` : 'state:*'] };
+};
 
 export default _type;

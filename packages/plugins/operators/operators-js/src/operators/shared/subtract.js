@@ -30,5 +30,6 @@ function _subtract({ params }) {
 }
 
 _subtract.dynamic = false;
+_subtract.tracking = { kind: 'pure' };
 
 export default _subtract;

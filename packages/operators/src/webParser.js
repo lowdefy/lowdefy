@@ -18,6 +18,7 @@ import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 import compileParseTree from './compileParseTree.js';
+import createTrackedOperators from './createTrackedOperators.js';
 
 // The serializer's reviver converts these after the custom reviver has run, so
 // an operator result carrying them is converted too.
@@ -44,6 +45,12 @@ class WebParser {
   constructor({ context, operators }) {
     this.context = context;
     this.operators = operators;
+    // The engine sets context._internal.readRecorder while a block evaluates itself. Operators
+    // called then are recorded, including those called through the registry by other operators.
+    this.trackedOperators = createTrackedOperators({
+      getRecorder: () => this.context._internal.readRecorder,
+      operators,
+    });
     this.parse = this.parse.bind(this);
     // operatorPrefix -> WeakMap(input -> { count, tree })
     this.compiled = new Map();
@@ -114,8 +121,12 @@ class WebParser {
       const configKey = value['~k'];
       const params = value[key];
       const operatorLocation = applyArrayIndices(arrayIndices, location);
+      // Tested natively: type.isNone walks kindOf's instanceof chain for a recorder, on every call.
+      const recorder = this.context._internal.readRecorder;
+      const operators =
+        recorder === null || recorder === undefined ? this.operators : this.trackedOperators;
       try {
-        const res = this.operators[op]({
+        const res = operators[op]({
           actions,
           args,
           arrayIndices,
@@ -135,7 +146,7 @@ class WebParser {
           menus,
           methodName,
           operatorPrefix,
-          operators: this.operators,
+          operators,
           pageId,
           params,
           parser,

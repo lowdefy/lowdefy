@@ -27,5 +27,7 @@ function _args({ args, arrayIndices, location, params }) {
 }
 
 _args.dynamic = false;
+// Reads only the args of its own parse frame, which no update changes.
+_args.tracking = { kind: 'pure' };
 
 export default _args;

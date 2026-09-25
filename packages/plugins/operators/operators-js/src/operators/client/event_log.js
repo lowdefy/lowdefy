@@ -27,5 +27,7 @@ function _event_log({ arrayIndices, eventLog, location, params }) {
 }
 
 _event_log.dynamic = true;
+// The event log is written with no change reported.
+_event_log.tracking = { kind: 'untracked' };
 
 export default _event_log;

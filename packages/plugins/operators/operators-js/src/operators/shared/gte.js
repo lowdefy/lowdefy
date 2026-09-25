@@ -27,5 +27,6 @@ function _gte({ params }) {
 }
 
 _gte.dynamic = false;
+_gte.tracking = { kind: 'pure' };
 
 export default _gte;

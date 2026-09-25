@@ -24,5 +24,6 @@ function _and({ params }) {
 }
 
 _and.dynamic = false;
+_and.tracking = { kind: 'pure' };
 
 export default _and;

@@ -50,5 +50,6 @@ function _json({ params, location, methodName }) {
 }
 
 _json.dynamic = false;
+_json.tracking = { kind: 'pure' };
 
 export default _json;

@@ -60,4 +60,7 @@ function custom_yaml_stringify({ params }) {
   return YAML.stringify(stripMarkers(input), options);
 }
 
+// Output depends only on params, so dependency tracking can skip its blocks until they change.
+custom_yaml_stringify.tracking = { kind: 'pure' };
+
 export default custom_yaml_stringify;

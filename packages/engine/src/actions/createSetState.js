@@ -18,11 +18,18 @@ import { applyArrayIndices } from '@lowdefy/helpers';
 
 function createSetState({ arrayIndices, context }) {
   return function setState(params) {
-    Object.keys(params).forEach((key) => {
-      context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
+    const changes = Object.keys(params).map((key) => {
+      const path = applyArrayIndices(arrayIndices, key);
+      context._internal.State.set(path, params[key]);
+      return `state:${path}`;
     });
     context._internal.RootSlots.reset();
-    context._internal.update();
+    // SetState with nothing to set is used to refresh the page, so it stays a full pass.
+    if (changes.length === 0) {
+      context._internal.update();
+      return;
+    }
+    context._internal.update({ changes });
   };
 }
 

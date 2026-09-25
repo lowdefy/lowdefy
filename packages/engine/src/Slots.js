@@ -82,6 +82,14 @@ class Slots {
     return repeat.value;
   };
 
+  recEvalTracked = ({ visibleParent, subtreeDirty, changes }) => {
+    const repeat = { value: false };
+    this.loopBlocks((block) =>
+      block.evaluateTracked({ visibleParent, subtreeDirty, changes, repeat })
+    );
+    return repeat.value;
+  };
+
   updateState = () => {
     const toDelete = new Set();
     const toSet = new Set(); // If block with duplicate blockId is visible, we preserve the state for it.
@@ -110,12 +118,25 @@ class Slots {
     });
   };
 
-  updateStateFromRoot = () => {
-    const repeat = this.recEval(true);
+  evalFromRoot = ({ full, changes }) => {
+    if (full) {
+      return this.recEval(true);
+    }
+    return this.recEvalTracked({ visibleParent: true, subtreeDirty: false, changes });
+  };
+
+  // A pass repeats exactly when a block's visibility changed, up to 20 times. Each repeat takes the
+  // changes the previous pass's updateState wrote, and the last pass's writes carry into the next
+  // update, the same as a full pass: blocks evaluated before updateState see those writes next time.
+  updateStateFromRoot = (options) => {
+    const { DependencyTracker } = this.context._internal;
+    const { full, changes } = DependencyTracker.beginUpdate(options);
+    let repeat = this.evalFromRoot({ full, changes });
     this.updateState();
-    if (repeat && this.recCount < 20) {
+    while (repeat && this.recCount < 20) {
       this.recCount += 1;
-      this.updateStateFromRoot();
+      repeat = this.evalFromRoot({ full, changes: DependencyTracker.takeChanges() });
+      this.updateState();
     }
     this.recCount = 0;
   };
@@ -170,8 +191,10 @@ class Slots {
     this.renderBlocks();
   };
 
-  update = () => {
-    this.updateStateFromRoot(); // update all the blocks
+  // update({ changes }) evaluates the blocks that read the changes; a bare update() evaluates every
+  // block.
+  update = (options) => {
+    this.updateStateFromRoot(options);
     this.renderBlocks(); // finally update cache
   };
 

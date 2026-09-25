@@ -18,6 +18,7 @@ import { LowdefyInternalError } from '@lowdefy/errors';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
+import DependencyTracker from './tracking/DependencyTracker.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
@@ -90,7 +91,9 @@ function getContext({
   const sameDynamicConfig =
     config.dynamic !== true || lowdefy.contexts[id]?._internal.pageConfig === config;
   if (lowdefy.contexts[id] && !resetContext.reset && sameDynamicConfig) {
-    // memoize context if already created, eg between page transitions, unless the reset flag is raised
+    // memoize context if already created, eg between page transitions, unless the reset flag is
+    // raised. A full pass: this render-time update is how changes with no reporting hook reach the
+    // page - user, i18n, theme, menus, inputs and the URL.
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
@@ -116,6 +119,8 @@ function getContext({
       // Config object reference for dynamic page memoization — identity marks
       // which fetch this context was built from.
       pageConfig: config,
+      // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
+      readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure
       update: () => {}, // Initialize update since Requests might call it during context creation
       // React updaters register here per block id when the context's Block
@@ -126,6 +131,7 @@ function getContext({
     },
   };
   const _internal = ctx._internal;
+  _internal.DependencyTracker = new DependencyTracker(ctx);
   _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
@@ -136,8 +142,9 @@ function getContext({
     context: ctx,
   });
   _internal.RootSlots.init();
-  _internal.update = () => {
-    _internal.RootSlots.update();
+  // update({ changes }) is a dependency-tracked pass; a bare update() is a full pass.
+  _internal.update = (options) => {
+    _internal.RootSlots.update(options);
   };
   _internal.runOnInit = async (progress) => {
     progress();

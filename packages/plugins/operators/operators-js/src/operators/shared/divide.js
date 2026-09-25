@@ -33,5 +33,6 @@ function _divide({ params }) {
 }
 
 _divide.dynamic = false;
+_divide.tracking = { kind: 'pure' };
 
 export default _divide;

@@ -73,7 +73,8 @@ class Events {
     }
     eventDescription.loading = true;
     this.block.update = true;
-    this.context._internal.update();
+    // Only render flags changed, which no operator reads.
+    this.context._internal.update({ changes: [] });
 
     const actionHandle = async () => {
       const res = await this.context._internal.Actions.callActions({
@@ -89,7 +90,7 @@ class Events {
       this.context.eventLog.unshift(res);
       eventDescription.loading = false;
       this.block.update = true;
-      this.context._internal.update();
+      this.context._internal.update({ changes: ['eventLog'] });
       return res;
     };
 
@@ -105,6 +106,7 @@ class Events {
       result.bounced = true;
       eventDescription.history.unshift(result);
       this.context.eventLog.unshift(result);
+      this.context._internal.DependencyTracker.reportChange('eventLog');
       return result;
     }
     // leading edge: trigger
@@ -131,6 +133,7 @@ class Events {
         result.bounced = true;
         eventDescription.history.unshift(result);
         this.context.eventLog.unshift(result);
+        this.context._internal.DependencyTracker.reportChange('eventLog');
         resolve(result);
       };
     });
