@@ -86,6 +86,27 @@ test('getPageJitEnrichment scopes icons referenced directly in the page config',
   expect(dynamicIcons).toEqual({ FiStar: { tag: 'svg' } });
 });
 
+test('getPageJitEnrichment scopes icons named in data-icon attributes inside HTML', () => {
+  const { dynamicIcons } = getPageJitEnrichment({
+    pageConfig: { id: 'p', blocks: [{ properties: { html: '<i data-icon="LuTrash2"></i>' } }] },
+    buildContext: buildContext({
+      dynamicIconData: { LuTrash2: { tag: 'svg' }, LuOther: { tag: 'svg' } },
+    }),
+  });
+  expect(dynamicIcons).toEqual({ LuTrash2: { tag: 'svg' } });
+});
+
+test('getPageJitEnrichment scopes semantic icon names used on the page', () => {
+  const { dynamicIcons } = getPageJitEnrichment({
+    pageConfig: { id: 'p', blocks: [{ properties: { icon: 'edit' } }] },
+    buildContext: {
+      ...buildContext({ dynamicIconData: { edit: { tag: 'svg' }, delete: { tag: 'svg' } } }),
+      iconAliases: { delete: 'LuTrash2', edit: 'LuPencil' },
+    },
+  });
+  expect(dynamicIcons).toEqual({ edit: { tag: 'svg' } });
+});
+
 test('getPageJitEnrichment returns {} when there is no build context', () => {
   expect(getPageJitEnrichment({ pageConfig: { id: 'p' }, buildContext: null })).toEqual({});
 });

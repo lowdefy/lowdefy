@@ -163,7 +163,10 @@ test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to a
     (call) => call[0] === 'plugins/blockMetas.json'
   );
   const blockMetas = JSON.parse(metasCall[1]);
-  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual(['html-style-stripped']);
+  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual([
+    'html-style-stripped',
+    'html-no-click-events',
+  ]);
   expect(blockMetas.Html.hazards[0]).toEqual({
     id: expect.any(String),
     message: expect.any(String),
@@ -216,5 +219,8 @@ test('writeBlockSchemaMap reads hazards from the package meta when typesMap bloc
   );
   const blockMetas = JSON.parse(metasCall[1]);
   expect(blockMetas.Html.category).toEqual('display');
-  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual(['html-style-stripped']);
+  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual([
+    'html-style-stripped',
+    'html-no-click-events',
+  ]);
 });

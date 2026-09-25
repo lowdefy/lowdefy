@@ -156,3 +156,24 @@ test('updateIconImportsJit does not duplicate icons on concurrent calls', async 
   const io5Icons = iconImports[0].icons.filter((i) => i === 'IoAddCircle');
   expect(io5Icons).toHaveLength(1);
 });
+
+test('updateIconImportsJit delivers a semantic name keyed by name without adding it to the imports', async () => {
+  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
+  mockExtractIconData.mockReturnValue({ LuPencil: { tag: 'svg' } });
+  const iconImports = [{ icons: [], package: 'react-icons/lu' }];
+  const context = {
+    writeBuildArtifact: mockWriteBuildArtifact,
+    directories: { server: '/test/server' },
+    dynamicIconData: {},
+  };
+  await updateIconImportsJit({
+    newIcons: [{ alias: 'edit', icon: 'LuPencil', package: 'react-icons/lu' }],
+    iconImports,
+    context,
+  });
+  expect(iconImports[0].icons).toEqual([]);
+  expect(mockWriteIconsDynamic).toHaveBeenCalledWith({
+    newIconData: { edit: { tag: 'svg' } },
+    context,
+  });
+});

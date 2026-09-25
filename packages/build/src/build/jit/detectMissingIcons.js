@@ -14,27 +14,38 @@
   limitations under the License.
 */
 
-import iconPackages from '../buildImports/iconPackages.js';
+import collectIconNames, { getIconNamePackages } from '../buildImports/collectIconNames.js';
 
-function detectMissingIcons({ page, iconImports }) {
-  const pageJson = JSON.stringify(page);
-  const newIcons = [];
+// Returns the icons a JIT-built page needs that the dev client bundle does not
+// have yet. react-icons names are compared with the bundled imports. Semantic
+// names resolve through the full alias map and are delivered keyed by name, so
+// dev bundles the same names prod does; each is extracted once per session.
+function detectMissingIcons({ page, iconImports, iconAliases = {}, dynamicIconData = {} }) {
+  const { aliasNames, packageIcons, unknownDataIcons } = collectIconNames({
+    json: JSON.stringify(page),
+    aliases: iconAliases,
+  });
+  const missingIcons = [];
 
-  for (const [iconPackage, regex] of Object.entries(iconPackages)) {
+  Object.entries(packageIcons).forEach(([iconPackage, icons]) => {
     const existing = iconImports.find((entry) => entry.package === iconPackage);
     const existingSet = new Set(existing?.icons ?? []);
-    const seen = new Set();
-
-    for (const match of pageJson.matchAll(regex)) {
-      const iconName = match[1];
-      if (!existingSet.has(iconName) && !seen.has(iconName)) {
-        seen.add(iconName);
-        newIcons.push({ icon: iconName, package: iconPackage });
+    icons.forEach((icon) => {
+      if (!existingSet.has(icon)) {
+        missingIcons.push({ icon, package: iconPackage });
       }
-    }
-  }
+    });
+  });
 
-  return newIcons;
+  aliasNames.forEach((alias) => {
+    if (Object.hasOwn(dynamicIconData, alias)) return;
+    const icon = iconAliases[alias];
+    getIconNamePackages(icon).forEach((iconPackage) => {
+      missingIcons.push({ alias, icon, package: iconPackage });
+    });
+  });
+
+  return { missingIcons, unknownDataIcons };
 }
 
 export default detectMissingIcons;

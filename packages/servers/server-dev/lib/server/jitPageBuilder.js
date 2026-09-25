@@ -19,10 +19,10 @@ import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
 import {
   buildPageJit,
+  collectIconNames,
   createContext,
   generateClientJsModule,
   hydrateDeferredRecords,
-  iconPackages,
   makeId,
 } from '@lowdefy/build/dev';
 
@@ -163,6 +163,10 @@ function getBuildContext(buildDirectory, configDirectory) {
     bundledIconImports = readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? [];
   }
   cachedBuildContext.iconImports = bundledIconImports;
+  // The full semantic name map (built-in and theme.icons.aliases). Read on every
+  // context rebuild, since a lowdefy.yaml edit can change it.
+  cachedBuildContext.iconAliases =
+    readJsonFile(path.join(buildDirectory, 'iconAliases.json')) ?? {};
 
   // Accumulator for dynamically extracted icon SVG data written to plugins/iconsDynamic.js.
   // Reset on skeleton rebuild (cachedBuildContext = null) — JIT re-discovers as needed.
@@ -265,16 +269,17 @@ function collectJsHashes(node, hashes) {
 // Reproduce that surface: scan the served config plus the page's own client _js
 // source strings, and keep only names present in dynamicIconData (which holds
 // only JIT-discovered icons — static ones are already in the client bundle).
-function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
+function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData, iconAliases }) {
   if (Object.keys(dynamicIconData).length === 0) return undefined;
   const scanText = [JSON.stringify(pageConfig), ...Object.values(scopedJsMap)].join('\n');
+  const { aliasNames, packageIcons } = collectIconNames({ json: scanText, aliases: iconAliases });
   const found = {};
-  for (const regex of Object.values(iconPackages)) {
-    for (const match of scanText.matchAll(regex)) {
-      const name = match[1];
-      if (dynamicIconData[name] && !found[name]) {
-        found[name] = dynamicIconData[name];
-      }
+  for (const name of [
+    ...Object.values(packageIcons).flatMap((icons) => [...icons]),
+    ...aliasNames,
+  ]) {
+    if (dynamicIconData[name]) {
+      found[name] = dynamicIconData[name];
     }
   }
   return Object.keys(found).length > 0 ? found : undefined;
@@ -309,6 +314,7 @@ export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildCon
     pageConfig,
     scopedJsMap,
     dynamicIconData: buildContext.dynamicIconData ?? {},
+    iconAliases: buildContext.iconAliases ?? {},
   });
 
   return { jsEntries, dynamicIcons };

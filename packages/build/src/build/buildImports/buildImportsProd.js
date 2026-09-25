@@ -27,6 +27,12 @@ function buildImportClassProd(types) {
 
 function buildImportsProd({ components, context }) {
   const blocks = buildImportClassProd(components.types.blocks);
+  const { iconAliases, iconImports } = buildIconImports({
+    blocks,
+    components,
+    context,
+    defaults: defaultIconsProd,
+  });
   return {
     actions: buildImportClassProd(components.types.actions),
     agents: buildImportClassProd(components.types.agents),
@@ -37,7 +43,8 @@ function buildImportsProd({ components, context }) {
     },
     blocks,
     connections: buildImportClassProd(components.types.connections),
-    icons: buildIconImports({ blocks, components, context, defaults: defaultIconsProd }),
+    icons: iconImports,
+    iconAliases,
     notifications: buildImportClassProd(components.types.notifications),
     requests: buildImportClassProd(components.types.requests),
     steps: buildImportClassProd(components.types.steps),
