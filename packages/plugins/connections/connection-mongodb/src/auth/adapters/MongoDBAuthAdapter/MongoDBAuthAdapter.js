@@ -34,12 +34,28 @@ function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
     throw new ConfigError('MongoDBAuthAdapter requires "uri" property.');
   }
-  // Process-lifetime singleton by design: getBetterAuth memoizes the engine
-  // (and this adapter with it), the driver connects lazily and pools, and
-  // the client is intentionally never closed.
-  const client = new MongoClient(properties.uri, properties.mongoDBClientOptions);
-  const db = client.db(properties.database);
-  return mongodbAdapter({ db });
+  // Process-lifetime client by design: getBetterAuth memoizes the engine (and
+  // this adapter with it), the driver connects lazily and pools, and the
+  // client is never closed by us. The driver does close it on a failed first
+  // connect (a serverless instance frozen mid-handshake, a network blip) and
+  // then keeps handing out the closed topology - every later operation throws
+  // MongoTopologyClosedError for the life of the process. So the client is
+  // replaced as soon as its topology closes: the request that hit the failed
+  // connect errors, the next one connects afresh.
+  let client;
+  let db;
+  function connect() {
+    const current = new MongoClient(properties.uri, properties.mongoDBClientOptions);
+    current.once('topologyClosed', () => {
+      if (client === current) connect();
+    });
+    client = current;
+    db = current.db(properties.database);
+  }
+  connect();
+  // The vendored adapter only calls db.collection(model) per operation, so a
+  // facade that resolves the current client's database is enough.
+  return mongodbAdapter({ db: { collection: (name) => db.collection(name) } });
 }
 
 export default MongoDBAuthAdapter;
