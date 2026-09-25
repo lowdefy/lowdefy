@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -22,14 +23,31 @@ import path from 'node:path';
 // inside the output budget of common MCP clients.
 const MAX_INLINE_RESPONSE_CHARS = 40_000;
 
+// Saved responses kept per app; the oldest beyond this are deleted on write.
+const MAX_SAVED_RESPONSES = 20;
+
+function pruneResponseFiles({ directory }) {
+  const files = fs
+    .readdirSync(directory)
+    .filter((fileName) => fileName.endsWith('.json'))
+    .map((fileName) => {
+      const filePath = path.join(directory, fileName);
+      return { filePath, mtime: fs.statSync(filePath).mtimeMs };
+    })
+    .sort((a, b) => b.mtime - a.mtime);
+  files.slice(MAX_SAVED_RESPONSES).forEach(({ filePath }) => fs.rmSync(filePath, { force: true }));
+}
+
 function writeResponseFile({ name, response }) {
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   const directory = path.join(configDirectory, '.lowdefy', 'responses');
   const safeName = name.replace(/[^a-zA-Z0-9_.-]/g, '_');
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filePath = path.join(directory, `${safeName}-${stamp}.json`);
+  const suffix = crypto.randomBytes(3).toString('hex');
+  const filePath = path.join(directory, `${safeName}-${stamp}-${suffix}.json`);
   fs.mkdirSync(directory, { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(response, null, 2));
+  pruneResponseFiles({ directory });
   return filePath;
 }
 
@@ -59,5 +77,5 @@ function fitResponse({ result, name, saveResponse = false }) {
   return fitted;
 }
 
-export { MAX_INLINE_RESPONSE_CHARS };
+export { MAX_INLINE_RESPONSE_CHARS, MAX_SAVED_RESPONSES };
 export default fitResponse;

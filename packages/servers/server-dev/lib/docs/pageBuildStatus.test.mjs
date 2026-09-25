@@ -25,7 +25,7 @@ jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
 }));
 
-const { default: buildEditedPages } = await import('./buildEditedPages.js');
+const { default: buildEditedPages, CONCURRENT_BUILDS } = await import('./buildEditedPages.js');
 const { default: getPageBuildStatus } = await import('./getPageBuildStatus.js');
 
 beforeEach(() => {
@@ -41,6 +41,33 @@ test('buildEditedPages builds every edited page and returns their ids', async ()
 
   expect(checked).toEqual(['a', 'b']);
   expect(mockBuildPageIfNeeded.mock.calls.map(([args]) => args.pageId)).toEqual(['a', 'b']);
+});
+
+test('buildEditedPages builds at most a few pages at once', async () => {
+  const pageIds = Array.from({ length: 10 }, (_, index) => `page-${index}`);
+  mockReviewPageBuilds.mockReturnValue({ edited: pageIds, unbuilt: [], failed: [] });
+  let running = 0;
+  let mostRunning = 0;
+  mockBuildPageIfNeeded.mockImplementation(async () => {
+    running += 1;
+    mostRunning = Math.max(mostRunning, running);
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    running -= 1;
+    return true;
+  });
+
+  const checked = await buildEditedPages();
+
+  expect(checked).toEqual(pageIds);
+  expect(mockBuildPageIfNeeded).toHaveBeenCalledTimes(10);
+  expect(mostRunning).toBe(CONCURRENT_BUILDS);
+});
+
+test('buildEditedPages builds nothing when no page was edited', async () => {
+  mockReviewPageBuilds.mockReturnValue({ edited: [], unbuilt: ['a'], failed: [] });
+
+  expect(await buildEditedPages()).toEqual([]);
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
 });
 
 test('getPageBuildStatus reports failed and unbuilt pages', () => {

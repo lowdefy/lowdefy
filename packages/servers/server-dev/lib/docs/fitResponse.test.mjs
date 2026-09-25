@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import fitResponse, { MAX_INLINE_RESPONSE_CHARS } from './fitResponse.js';
+import fitResponse, { MAX_INLINE_RESPONSE_CHARS, MAX_SAVED_RESPONSES } from './fitResponse.js';
 
 let configDirectory;
 
@@ -83,4 +83,33 @@ test('fitResponse writes a missing response as null when saveResponse is set', (
 
   expect(fitted.responseChars).toBe(4);
   expect(JSON.parse(fs.readFileSync(fitted.responseFile, 'utf8'))).toBeNull();
+});
+
+test('fitResponse gives every saved response its own file', () => {
+  const files = Array.from({ length: 5 }, (_, index) =>
+    fitResponse({ result: { response: { index } }, name: 'same', saveResponse: true })
+  ).map(({ responseFile }) => responseFile);
+
+  expect(new Set(files).size).toBe(5);
+  files.forEach((file, index) => {
+    expect(JSON.parse(fs.readFileSync(file, 'utf8'))).toEqual({ index });
+  });
+});
+
+test('fitResponse keeps only the most recent saved responses', () => {
+  const directory = path.join(configDirectory, '.lowdefy', 'responses');
+  fs.mkdirSync(directory, { recursive: true });
+  const old = path.join(directory, 'old-response.json');
+  fs.writeFileSync(old, '{}');
+  const longAgo = new Date('2000-01-01T00:00:00.000Z');
+  fs.utimesSync(old, longAgo, longAgo);
+
+  const files = Array.from({ length: MAX_SAVED_RESPONSES }, (_, index) =>
+    fitResponse({ result: { response: { index } }, name: 'report', saveResponse: true })
+  ).map(({ responseFile }) => responseFile);
+
+  const kept = fs.readdirSync(directory).map((fileName) => path.join(directory, fileName));
+  expect(kept).toHaveLength(MAX_SAVED_RESPONSES);
+  expect(kept).not.toContain(old);
+  expect(kept.sort()).toEqual([...files].sort());
 });

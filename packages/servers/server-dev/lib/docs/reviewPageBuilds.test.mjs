@@ -15,6 +15,7 @@
 */
 
 import fs from 'node:fs';
+import { jest } from '@jest/globals';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -133,4 +134,20 @@ test('a page never built is edited when its page file changed after the server s
   writeRegistry(['new', 'old', 'missing']);
 
   expect(reviewPageBuilds()).toEqual({ edited: ['new'], unbuilt: ['old', 'missing'], failed: [] });
+});
+
+test("each distinct file is stat'ed once per review", async () => {
+  writeConfigFile('pages/one.yaml', { modified: longAgo });
+  writeConfigFile('pages/two.yaml', { modified: longAgo });
+  writeConfigFile('requests/common.yaml', { modified: longAgo });
+  writeRegistry(['one', 'two']);
+  await buildPage({ pageId: 'one', files: ['pages/one.yaml', 'requests/common.yaml'] });
+  await buildPage({ pageId: 'two', files: ['pages/two.yaml', 'requests/common.yaml'] });
+  const statSync = jest.spyOn(fs, 'statSync');
+
+  reviewPageBuilds();
+
+  const common = path.join(configDirectory, 'requests/common.yaml');
+  expect(statSync.mock.calls.filter(([filePath]) => filePath === common)).toHaveLength(1);
+  statSync.mockRestore();
 });

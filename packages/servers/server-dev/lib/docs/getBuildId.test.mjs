@@ -57,3 +57,28 @@ test('getBuildId moves on with a page invalidation after the config build', () =
 
   expect(getBuildId()).toBe('2026-03-01T10:05:00.000Z');
 });
+
+test('getBuildId does not move when a config build fails', () => {
+  fs.writeFileSync(
+    statusPath,
+    JSON.stringify({ status: 'ok', timestamp: '2026-03-01T10:00:00.000Z' })
+  );
+  expect(getBuildId()).toBe('2026-03-01T10:00:00.000Z');
+
+  fs.writeFileSync(
+    statusPath,
+    JSON.stringify({ status: 'error', timestamp: '2026-03-01T11:00:00.000Z', errors: [{}] })
+  );
+  expect(getBuildId()).toBe('2026-03-01T10:00:00.000Z');
+
+  fs.writeFileSync(
+    statusPath,
+    JSON.stringify({ status: 'ok', timestamp: '2026-03-01T12:00:00.000Z' })
+  );
+  expect(getBuildId()).toBe('2026-03-01T12:00:00.000Z');
+});
+
+test('getBuildId keeps the last successful build when the status file is half written', () => {
+  fs.writeFileSync(statusPath, '{"status":"ok","timest');
+  expect(getBuildId()).toBe('2026-03-01T12:00:00.000Z');
+});

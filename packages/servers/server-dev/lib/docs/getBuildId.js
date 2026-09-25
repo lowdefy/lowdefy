@@ -19,23 +19,42 @@ import path from 'node:path';
 
 import readBuildArtifact from './readBuildArtifact.js';
 
-// Identifies the build the dev server is serving: the time of the latest
-// config build (build/buildStatus.json) or page invalidation (the timestamp the
-// manager writes to build/invalidatePages), whichever is later. Browser and
-// server errors are stamped with it, so build status can tell errors from
-// before the latest edit apart from live ones. Null before the first build.
-function getBuildId() {
-  const build = readBuildArtifact({ name: 'buildStatus.json' });
-  const builtAt = build?.timestamp ? Date.parse(build.timestamp) : 0;
-  let invalidatedAt = 0;
+// The time of the latest successful config build. The manager rewrites
+// build/buildStatus.json after every attempt, and a failed attempt keeps
+// serving the previous build, so only an "ok" status moves this. The Hono
+// process remembers the last one it read, since a failure overwrites it.
+let publishedAt = 0;
+
+function readPublishedAt() {
   try {
-    invalidatedAt = Number(
-      fs.readFileSync(path.join(process.cwd(), 'build', 'invalidatePages'), 'utf8')
+    const build = readBuildArtifact({ name: 'buildStatus.json' });
+    if (build?.status === 'ok' && build.timestamp) {
+      publishedAt = Math.max(publishedAt, Date.parse(build.timestamp));
+    }
+  } catch {
+    // A half-written status file; the completed write is read next time.
+  }
+  return publishedAt;
+}
+
+function readInvalidatedAt() {
+  try {
+    return (
+      Number(fs.readFileSync(path.join(process.cwd(), 'build', 'invalidatePages'), 'utf8')) || 0
     );
   } catch {
     // No page edit since the last config build.
+    return 0;
   }
-  const latest = Math.max(builtAt, invalidatedAt || 0);
+}
+
+// Identifies the build the dev server is serving: the time of the latest
+// successful config build or page invalidation (the timestamp the manager
+// writes to build/invalidatePages), whichever is later. Browser and server
+// errors are stamped with it, so build status can tell errors from before the
+// latest edit apart from live ones. Null before a successful build is seen.
+function getBuildId() {
+  const latest = Math.max(readPublishedAt(), readInvalidatedAt());
   return latest > 0 ? new Date(latest).toISOString() : null;
 }
 

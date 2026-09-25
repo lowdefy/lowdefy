@@ -14,52 +14,29 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
-
 import pageBuildRecords from '../server/pageBuildRecords.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import reviewPage, { createModifiedAt } from './reviewPage.js';
 
-function modifiedAt(filePath) {
-  try {
-    return fs.statSync(filePath).mtimeMs;
-  } catch {
-    return null;
-  }
-}
-
-// Sorts the registered pages by what the dev server knows about them. A page
-// is edited when a file its last JIT build read has changed or gone since that
-// build. A page not built since the server started is edited when its own page
-// file changed after the start, and is otherwise unbuilt: nothing has checked
-// it yet. failed lists the pages whose last build failed, with its errors.
+// Sorts the registered pages by what the dev server knows about them (see
+// reviewPage): edited, unbuilt, and failed, the pages whose last build failed,
+// with its errors. Each distinct file is stat'ed once per call.
 function reviewPageBuilds() {
   const registry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  const modifiedAt = createModifiedAt();
   const edited = [];
   const unbuilt = [];
   const failed = [];
   for (const [pageId, entry] of Object.entries(registry)) {
-    const record = pageBuildRecords.get(pageId);
-    if (record) {
-      if (record.errors) {
-        failed.push({ pageId, errors: record.errors });
-      }
-      const changed = [...record.files].some((filePath) => {
-        const mtime = modifiedAt(filePath);
-        return mtime === null || mtime > record.builtAt;
-      });
-      if (changed) {
-        edited.push(pageId);
-      }
-      continue;
+    const errors = pageBuildRecords.get(pageId)?.errors;
+    if (errors) {
+      failed.push({ pageId, errors });
     }
-    const pageFileModifiedAt = entry.refPath
-      ? modifiedAt(path.resolve(configDirectory, entry.refPath))
-      : null;
-    if (pageFileModifiedAt !== null && pageFileModifiedAt > performance.timeOrigin) {
+    const review = reviewPage({ pageId, entry, modifiedAt, configDirectory });
+    if (review === 'edited') {
       edited.push(pageId);
-    } else {
+    } else if (review === 'unbuilt') {
       unbuilt.push(pageId);
     }
   }
