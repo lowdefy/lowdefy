@@ -778,9 +778,6 @@ importers:
 
   packages/plugins/blocks/blocks-aggrid:
     dependencies:
-      '@ant-design/icons':
-        specifier: 6.1.0
-        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
         specifier: 6.0.0
         version: link:../../../utils/block-utils
@@ -830,9 +827,6 @@ importers:
 
   packages/plugins/blocks/blocks-antd:
     dependencies:
-      '@ant-design/icons':
-        specifier: 6.1.0
-        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
         specifier: 6.0.0
         version: link:../../../utils/block-utils
@@ -894,9 +888,6 @@ importers:
       '@ai-sdk/react':
         specifier: 3.0.178
         version: 3.0.178(react@18.2.0)(zod@4.3.6)
-      '@ant-design/icons':
-        specifier: 6.1.0
-        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@ant-design/x':
         specifier: 2.7.0
         version: 2.7.0(antd@6.3.1(date-fns@2.29.3)(luxon@3.7.2)(moment@2.29.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1002,9 +993,6 @@ importers:
 
   packages/plugins/blocks/blocks-diff:
     dependencies:
-      '@ant-design/icons':
-        specifier: 6.1.0
-        version: 6.1.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@lowdefy/block-utils':
         specifier: 6.0.0
         version: link:../../../utils/block-utils
@@ -1360,9 +1348,6 @@ importers:
       react-dom:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
-      react-icons:
-        specifier: 5.6.0
-        version: 5.6.0(react@18.2.0)
       tippy.js:
         specifier: 6.3.7
         version: 6.3.7
@@ -2561,9 +2546,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-icons:
-        specifier: 5.6.0
-        version: 5.6.0(react@18.2.0)
       tailwindcss:
         specifier: 4.3.1
         version: 4.3.1
@@ -2775,9 +2757,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-icons:
-        specifier: 5.6.0
-        version: 5.6.0(react@18.2.0)
       swr:
         specifier: 2.2.4
         version: 2.2.4(react@18.2.0)
@@ -2920,9 +2899,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-icons:
-        specifier: 5.6.0
-        version: 5.6.0(react@18.2.0)
       tailwindcss:
         specifier: 4.3.1
         version: 4.3.1

@@ -20,7 +20,7 @@
       "url": "https://github.com/Gervwyk"
     },
     {
-      "name": "Johann Möller",
+      "name": "Johann M\u00f6ller",
       "url": "https://github.com/JohannMoller"
     },
     {
@@ -62,7 +62,6 @@
     "ag-grid-react": "33.3.2"
   },
   "peerDependencies": {
-    "@ant-design/icons": "6.1.0",
     "antd": ">=6",
     "dayjs": "1.11.20",
     "react": ">=18",

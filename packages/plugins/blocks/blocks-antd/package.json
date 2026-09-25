@@ -55,7 +55,6 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.0",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/nunjucks": "6.0.0",
