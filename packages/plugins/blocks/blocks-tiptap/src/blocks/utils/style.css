@@ -264,3 +264,11 @@
 .tiptap-icon + .tiptap-icon {
   margin-left: 4px;
 }
+
+/* TipTap v2 injected this rule into every page with an editor; v3 does not.
+   The mention suggestion and group-members popovers are tippy.js popups, which
+   fade in with it and only unmount a hidden popup once that fade-out ends, so
+   without it a popup hidden by an outside click would stay on screen. */
+.tippy-box[data-animation='fade'][data-state='hidden'] {
+  opacity: 0;
+}

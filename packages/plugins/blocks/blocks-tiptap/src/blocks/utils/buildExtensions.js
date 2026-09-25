@@ -17,16 +17,62 @@
 import FileHandler from '@tiptap/extension-file-handler';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
-import Placeholder from '@tiptap/extension-placeholder';
-import StarterKit from '@tiptap/starter-kit';
+import { Placeholder } from '@tiptap/extensions';
 import LinkExtension from '@tiptap/extension-link';
-import Table from '@tiptap/extension-table';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
-import TableRow from '@tiptap/extension-table-row';
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
 import { type } from '@lowdefy/helpers';
 
+import buildStarterKit from './buildStarterKit.js';
+import isAllowedLinkUri from './isAllowedLinkUri.js';
+import withV2PasteRules from './withV2PasteRules.js';
+
 const DEFAULT_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+// TipTap v3 extensions read attributes from html that v2 dropped (e.g. width and height on
+// pasted images). Removing them keeps the saved html the same as v2 for the same input.
+function withoutAttributes(extension, names) {
+  return extension.extend({
+    addAttributes() {
+      const attributes = { ...this.parent?.() };
+      names.forEach((name) => {
+        delete attributes[name];
+      });
+      return attributes;
+    },
+  });
+}
+
+const ImageV2 = withoutAttributes(Image, ['width', 'height']);
+const LinkV2 = withV2PasteRules(withoutAttributes(LinkExtension, ['title']));
+const TableCellV2 = withoutAttributes(TableCell, ['align']);
+const TableHeaderV2 = withoutAttributes(TableHeader, ['align']);
+
+// v3 renders a table without resizable columns through a node view that wraps it in a
+// div.tableWrapper; v2 rendered it as a plain table.
+const TableV2 = Table.extend({
+  addNodeView() {
+    return null;
+  },
+});
+
+// For a highlight without data-color, v2 read the colour from the element's style as the
+// browser normalises it (rgb()); v3 keeps the colour as written.
+const HighlightV2 = withV2PasteRules(
+  Highlight.extend({
+    addAttributes() {
+      const attributes = this.parent?.() ?? {};
+      if (!attributes.color) return attributes;
+      return {
+        ...attributes,
+        color: {
+          ...attributes.color,
+          parseHTML: (element) =>
+            element.getAttribute('data-color') || element.style.backgroundColor,
+        },
+      };
+    },
+  })
+);
 
 const DEFAULTS = {
   image: { disabled: false, maxWidth: '80%', zoom: 0.5 },
@@ -46,33 +92,38 @@ function merge(defaults, overrides) {
   return { ...defaults, ...overrides };
 }
 
-function buildExtensions({ properties, insertImage, mentionExtension, uploadEnabled }) {
+function buildExtensions({
+  properties,
+  getPlaceholder,
+  insertImage,
+  mentionExtension,
+  uploadEnabled,
+}) {
   const image = merge(DEFAULTS.image, properties.image);
   const table = merge(DEFAULTS.table, properties.table);
   const link = merge(DEFAULTS.link, properties.link);
   const highlight = merge(DEFAULTS.highlight, properties.highlight);
-  const starterKitOptions = type.isObject(properties.starterKit) ? properties.starterKit : {};
   const allowedMimeTypes = type.isArray(properties.allowedMimeTypes)
     ? properties.allowedMimeTypes
     : DEFAULT_IMAGE_MIME_TYPES;
 
-  const extensions = [StarterKit.configure(starterKitOptions)];
+  const extensions = [buildStarterKit(properties.starterKit)];
 
   if (!table.disabled) {
     extensions.push(
-      Table.configure({
+      TableV2.configure({
         HTMLAttributes: { class: 'tiptap-table' },
         resizable: table.resizable,
       }),
       TableRow,
-      TableHeader,
-      TableCell
+      TableHeaderV2,
+      TableCellV2
     );
   }
 
   if (!image.disabled) {
     extensions.push(
-      Image.configure({
+      ImageV2.configure({
         HTMLAttributes: {
           style: `max-width: ${image.maxWidth}; display: block; zoom: ${image.zoom};`,
         },
@@ -82,15 +133,14 @@ function buildExtensions({ properties, insertImage, mentionExtension, uploadEnab
 
   extensions.push(
     Placeholder.configure({
-      placeholder: () => properties.placeholder ?? '',
+      placeholder: getPlaceholder,
       showOnlyWhenEditable: false,
-      considerAnyAsEmpty: true,
     })
   );
 
   if (!highlight.disabled) {
     extensions.push(
-      Highlight.configure({
+      HighlightV2.configure({
         multicolor: highlight.multicolor,
         HTMLAttributes: { style: 'padding: 0;' },
       })
@@ -99,11 +149,15 @@ function buildExtensions({ properties, insertImage, mentionExtension, uploadEnab
 
   if (!link.disabled) {
     extensions.push(
-      LinkExtension.configure({
+      LinkV2.configure({
         autolink: link.autolink,
         linkOnPaste: link.linkOnPaste,
         openOnClick: link.openOnClick,
         defaultProtocol: link.defaultProtocol,
+        isAllowedUri: isAllowedLinkUri,
+        // v2 default. v3's default also skips bare IP addresses and hosts without a TLD
+        // (e.g. localhost:3000), and applies to pasted URLs too.
+        shouldAutoLink: (url) => !!url,
       })
     );
   }
