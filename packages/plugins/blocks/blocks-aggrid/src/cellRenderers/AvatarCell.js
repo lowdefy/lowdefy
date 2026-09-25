@@ -16,38 +16,12 @@
 
 import React from 'react';
 import { Avatar } from 'antd';
+import avatarColor from '@lowdefy/block-utils/format/avatarColor.js';
+import initials from '@lowdefy/block-utils/format/initials.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
 import { resolveLink, resolvePath } from './resolveFieldRefs.js';
 import { buildHref } from './LinkCell.js';
-
-function initials(name) {
-  if (!type.isString(name) || name.length === 0) return '';
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? '')
-    .join('');
-}
-
-function colorSeed(id) {
-  if (type.isNone(id)) return 0;
-  const s = String(id);
-  let hash = 0;
-  for (let i = 0; i < s.length; i += 1) hash = (hash * 31 + s.charCodeAt(i)) >>> 0;
-  return hash;
-}
-
-const SEED_COLORS = [
-  'var(--ant-color-info)',
-  'var(--ant-color-success)',
-  'var(--ant-color-warning)',
-  'var(--ant-color-error)',
-  'var(--ant-color-purple, var(--ant-color-info))',
-  'var(--ant-color-cyan, var(--ant-color-info))',
-  'var(--ant-color-magenta, var(--ant-color-error))',
-];
 
 const rowStyle = {
   display: 'inline-flex',
@@ -81,7 +55,7 @@ function AvatarCell(params) {
   const shape = cellConfig?.shape === 'square' ? 'square' : 'circle';
   const size = 'var(--lf-avatar-size, var(--ant-control-height-sm, 24px))';
   const fontSize = 'var(--lf-avatar-font-size, var(--ant-font-size-sm, 12px))';
-  const bg = SEED_COLORS[colorSeed(id ?? name) % SEED_COLORS.length];
+  const bg = avatarColor(id ?? name);
 
   const avatar = (
     <Avatar

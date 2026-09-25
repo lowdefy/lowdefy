@@ -3065,6 +3065,9 @@ importers:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
+      dayjs:
+        specifier: 1.11.20
+        version: 1.11.20
       dompurify:
         specifier: 3.4.13
         version: 3.4.13

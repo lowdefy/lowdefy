@@ -14,27 +14,15 @@
   limitations under the License.
 */
 
-import React from 'react';
-import formatDate from '@lowdefy/block-utils/format/formatDate.js';
 import { type } from '@lowdefy/helpers';
-import NullCell from './NullCell.js';
 
-const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
+import TAG_COLORS from './tagColors.js';
 
-function DateCell(params) {
-  const { value, cellConfig } = params;
-  if (type.isNone(value) || value === '') {
-    return <NullCell />;
-  }
-  const text = formatDate({
-    value,
-    format: cellConfig?.format ?? DEFAULT_FORMAT,
-    relative: cellConfig?.relative,
-  });
-  if (text === null) {
-    return <NullCell placeholder="—" />;
-  }
-  return <span>{text}</span>;
+// A preset tag colour name becomes its theme token; any other value is used as
+// a CSS colour.
+function resolveTagColor(value) {
+  if (type.isNone(value)) return TAG_COLORS.default;
+  return TAG_COLORS[value] ?? value;
 }
 
-export default DateCell;
+export default resolveTagColor;

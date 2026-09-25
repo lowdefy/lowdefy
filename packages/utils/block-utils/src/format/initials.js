@@ -14,27 +14,17 @@
   limitations under the License.
 */
 
-import React from 'react';
-import formatDate from '@lowdefy/block-utils/format/formatDate.js';
 import { type } from '@lowdefy/helpers';
-import NullCell from './NullCell.js';
 
-const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
-
-function DateCell(params) {
-  const { value, cellConfig } = params;
-  if (type.isNone(value) || value === '') {
-    return <NullCell />;
-  }
-  const text = formatDate({
-    value,
-    format: cellConfig?.format ?? DEFAULT_FORMAT,
-    relative: cellConfig?.relative,
-  });
-  if (text === null) {
-    return <NullCell placeholder="—" />;
-  }
-  return <span>{text}</span>;
+// Up to two initials from the first two words of a name.
+function initials(name) {
+  if (!type.isString(name) || name.length === 0) return '';
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
 }
 
-export default DateCell;
+export default initials;

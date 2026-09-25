@@ -14,27 +14,15 @@
   limitations under the License.
 */
 
-import React from 'react';
-import formatDate from '@lowdefy/block-utils/format/formatDate.js';
 import { type } from '@lowdefy/helpers';
-import NullCell from './NullCell.js';
 
-const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm';
-
-function DateCell(params) {
-  const { value, cellConfig } = params;
-  if (type.isNone(value) || value === '') {
-    return <NullCell />;
-  }
-  const text = formatDate({
-    value,
-    format: cellConfig?.format ?? DEFAULT_FORMAT,
-    relative: cellConfig?.relative,
-  });
-  if (text === null) {
-    return <NullCell placeholder="—" />;
-  }
-  return <span>{text}</span>;
+// A stable 32-bit hash, so the same text always picks the same seeded colour.
+function hashSeed(value) {
+  if (type.isNone(value)) return 0;
+  const str = String(value);
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  return hash;
 }
 
-export default DateCell;
+export default hashSeed;

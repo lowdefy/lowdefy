@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import tagStyle from '@lowdefy/block-utils/format/tagStyle.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
 
@@ -50,18 +51,7 @@ function ProgressCell(params) {
   const color = pickColor(num, thresholds, colors);
   const suffix = cellConfig?.suffix ?? '%';
 
-  const style = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: 'var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px)',
-    borderRadius: 'var(--ant-border-radius-sm, 4px)',
-    fontSize: 'var(--ant-font-size-sm, 12px)',
-    fontWeight: 600,
-    lineHeight: 1,
-    color,
-    background: `color-mix(in srgb, ${color} 12%, transparent)`,
-    border: `1px solid color-mix(in srgb, ${color} 30%, transparent)`,
-  };
+  const style = tagStyle(color);
 
   return (
     <span style={style}>
