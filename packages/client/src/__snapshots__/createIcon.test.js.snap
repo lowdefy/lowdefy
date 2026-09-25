@@ -1,66 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Icon default 1`] = `
-<svg
-  class=""
-  data-testid="AiOutlineExclamationCircle"
-  id="undefined_id"
-  title=""
-/>
+exports[`Icon renders icon data as a lucide svg inside the antd anticon span 1`] = `
+<span
+  class="anticon"
+  role="img"
+>
+  <svg
+    class="lucide"
+    fill="none"
+    height="24"
+    id="test-id"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title>
+      Pencil
+    </title>
+    <path
+      d="M21 6.8a1 1 0 0 0-3.9-3.9L3.8 16.2"
+    />
+    <path
+      d="m15 5 4 4"
+    />
+  </svg>
+</span>
 `;
 
-exports[`Icon default and id 1`] = `
-<svg
-  class=""
-  data-testid="AiOutlineExclamationCircle"
-  id="test-id"
-  title=""
-/>
-`;
-
-exports[`Icon properties string 1`] = `
-<svg
-  class=""
-  data-testid="AiIcon"
-  id="test-id"
-  title="Icon"
-/>
-`;
-
-exports[`Icon properties.name 1`] = `
-<svg
-  class=""
-  data-testid="AiIcon"
-  id="test-id"
-  title="Icon"
-/>
-`;
-
-exports[`Icon properties.name error 1`] = `
-<svg
-  class=""
-  color="#F00"
-  data-testid="AiOutlineExclamationCircle"
-  id="test-id"
-  title="Icon"
-/>
-`;
-
-exports[`Icon properties.spin 1`] = `
-<svg
-  class="undefined"
-  data-testid="AiOutlineLoading3Quarters"
-  id="test-id"
-  title="Icon"
-/>
-`;
-
-exports[`Icon styles.element 1`] = `
-<svg
-  class=""
-  data-testid="AiIcon"
-  id="test-id"
-  style="background: yellow;"
-  title="Icon"
-/>
+exports[`Icon without a name renders icon-missing in red 1`] = `
+<span
+  class="anticon"
+  role="img"
+>
+  <svg
+    aria-hidden="true"
+    class="lucide"
+    fill="none"
+    height="24"
+    id="undefined_id"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="2"
+    style="color: rgb(255, 0, 0);"
+    viewBox="0 0 24 24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="10"
+    />
+    <line
+      x1="12"
+      x2="12"
+      y1="8"
+      y2="12"
+    />
+  </svg>
+</span>
 `;

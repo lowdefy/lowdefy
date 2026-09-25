@@ -14,10 +14,20 @@
   limitations under the License.
 */
 
-import Client from './Client.js';
+import { type } from '@lowdefy/helpers';
 
-export default Client;
-export { default as getOrCreateAntdCssContainer } from './getOrCreateAntdCssContainer.js';
-export { default as IconProvider } from './IconProvider.js';
-export { default as useDarkMode } from './useDarkMode.js';
-export { default as useLocale } from './useLocale.js';
+// Pencil -> "Pencil", ArrowLeftRight -> "Arrow left right", more-vertical ->
+// "More vertical", lucide:Pencil -> "Pencil".
+function formatIconTitle(name) {
+  if (!type.isString(name)) {
+    return '';
+  }
+  const iconName = name.slice(name.indexOf(':') + 1);
+  const words = iconName
+    .replace(/-/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+export default formatIconTitle;

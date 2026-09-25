@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
-import Client from './Client.js';
+// Engine and DisplayMessage messages render through antd's App holders, above
+// the page's ConfigProvider, so each message carries its status icon itself.
+const messageIcons = {
+  error: { name: 'error', title: '' },
+  info: { name: 'info', title: '' },
+  loading: { name: 'loading', spin: true, title: '' },
+  success: { name: 'success', title: '' },
+  warning: { name: 'warning', title: '' },
+};
 
-export default Client;
-export { default as getOrCreateAntdCssContainer } from './getOrCreateAntdCssContainer.js';
-export { default as IconProvider } from './IconProvider.js';
-export { default as useDarkMode } from './useDarkMode.js';
-export { default as useLocale } from './useLocale.js';
+function getMessageIcon({ status }) {
+  return messageIcons[status];
+}
+
+export default getMessageIcon;
