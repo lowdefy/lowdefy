@@ -132,7 +132,8 @@ try {
   const { port, internalPort } = await resolvePorts(context);
   context.options.port = port;
   context.internalPort = internalPort;
-  instance.update({ port, internalPort, url: `http://localhost:${port}` });
+  instance.update({ port, internalPort });
+  context.instance = instance;
 
   // The manager holds the public port for the whole session and proxies to the
   // Vite child on an internal loopback port — restarting the child (js module
@@ -142,12 +143,12 @@ try {
   await startProxy(context);
 
   startServer(context);
-  if (await waitForServer({ port: context.internalPort })) {
+  if (await waitForServer({ port: context.internalPort, basePath: context.basePath })) {
     instance.update({ state: 'ready' });
   } else {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
-  const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
+  const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },
     formatNoticeBox({
@@ -168,7 +169,7 @@ try {
   // A hub-owned server was started for an agent, not for a person at a browser.
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true' && context.options.owner !== 'hub') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
-    opener(`http://localhost:${context.options.port}`);
+    opener(context.url);
   }
   await new Promise(() => {});
 } catch (error) {

@@ -15,6 +15,7 @@
 */
 
 import getDocsManifest from './getDocsManifest.js';
+import lowdefyConfig from '../build/config.js';
 import listPlugins from './listPlugins.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
@@ -31,6 +32,17 @@ function countKinds({ availableTypes }) {
   };
 }
 
+// The dev server mounts every route under config.basePath, the docs tools
+// included, so an app with a basePath must tell agents the prefix.
+function basePathLines() {
+  const basePath = lowdefyConfig.basePath ?? '';
+  if (basePath === '') return [];
+  return [
+    `This app sets \`config.basePath: ${basePath}\`, so every route below is served under it: \`GET ${basePath}/lowdefy-docs\`, \`${basePath}/lowdefy-docs/mcp\`, \`${basePath}/api/...\`.`,
+    '',
+  ];
+}
+
 function getOverview() {
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
   const counts = countKinds({ availableTypes });
@@ -45,6 +57,7 @@ function getOverview() {
     '',
     'This server describes everything installed in THIS project — never guess type names or properties, look them up here first.',
     '',
+    ...basePathLines(),
     '## What is available',
     '',
     `- ${counts.blocks} block types, ${counts.operators} operators, ${counts.actions} actions, ${counts.connections} connections, ${counts.requests} request types (from ${plugins.length} plugin packages, including this project's local plugins).`,

@@ -144,8 +144,9 @@ server-dev/
 
 The manager spawns **one child process running Vite** (`node <vite-bin> --port N --strictPort`). Inside that process:
 
-- **Vite owns HTTP.** It serves `/client/*`, `/lib/*`, `/build/*`, `/@*` (Vite internals), and `/node_modules/*` as ES modules with HMR — see the `exclude` list in `vite.config.js`.
+- **Vite owns HTTP.** It serves `/client/*`, `/lib/*`, `/build/*`, `/@*` (Vite internals), and `/node_modules/*` as ES modules with HMR — see `lib/vite/createDevServerExclude.js`.
 - **Everything else routes to the Hono app** (`src/app.js`), mounted via the `@hono/vite-dev-server` plugin with `entry: './src/app.js'`.
+- **`config.basePath` prefixes everything.** `vite.config.js` sets Vite's `base` to `<basePath>/`, and the Hono app is `new Hono().basePath(basePath)`, so the page shell, `/api/*`, `/lowdefy-docs/*` and the Vite modules all live under the base path. `@hono/vite-dev-server` tests its `exclude` patterns against the raw request URL, before Vite strips `base`, so the patterns carry the prefix too — without it `<basePath>/@vite/client` falls through to the Hono page route and comes back as HTML. The manager records `http://localhost:<port><basePath>` as `url` in `.lowdefy/instance.json` and waits on `<basePath>/api/ping`, so `lowdefy mcp`, the hub and `lowdefy test` reach the docs tools under the base path.
 
 ```
 Manager Process                     Vite Child Process
