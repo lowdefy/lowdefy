@@ -108,13 +108,13 @@ blocks:
     type: TextInput
     properties:
       title: With Prefix Icon
-      prefixIcon: AiOutlineUser
+      prefixIcon: user
 
   - id: textinput_suffixicon
     type: TextInput
     properties:
       title: With Suffix Icon
-      suffixIcon: AiOutlineSearch
+      suffixIcon: search
 
   - id: textinput_label_inline
     type: TextInput

@@ -934,7 +934,7 @@
           type: Button
           properties:
             title: Save Document
-            icon: AiOutlineSave
+            icon: save
             type: primary
             size: large
             block: true
@@ -993,7 +993,7 @@
           type: Button
           properties:
             title: Publish Post
-            icon: AiOutlineSend
+            icon: send
             type: primary
             size: large
             block: true

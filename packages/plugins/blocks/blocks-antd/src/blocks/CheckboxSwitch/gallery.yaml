@@ -380,7 +380,7 @@
           properties:
             title: Create Account
             type: primary
-            icon: AiOutlineUserAdd
+            icon: UserPlus
             block: true
           events:
             onClick:
@@ -447,7 +447,7 @@
           properties:
             title: Save Preferences
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: save_notif

@@ -18,7 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
-  icons: ['AiOutlineUpload'],
+  icons: ['upload'],
   valueType: 'object',
   cssKeys: {
     element: 'The outer block wrapper around the upload button and list.',
@@ -67,7 +67,7 @@ export default {
         description:
           'Button block properties. See <a href="/Button">Button</a> for all properties.',
         default: {
-          icon: 'UploadOutlined',
+          icon: 'upload',
           title: 'Upload',
           type: 'default',
         },

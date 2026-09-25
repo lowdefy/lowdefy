@@ -630,7 +630,7 @@
             title: Click to toggle
             color: primary
             variant: solid
-            icon: AiOutlineBell
+            icon: bell
 
     - id: popover_event_state
       type: Popover
@@ -707,7 +707,7 @@
             title: View Profile
             color: primary
             variant: solid
-            icon: AiOutlineUser
+            icon: user
 
     - id: popover_rich_actions
       type: Popover
@@ -729,7 +729,7 @@
                   type: Button
                   properties:
                     title: Edit
-                    icon: AiOutlineEdit
+                    icon: edit
                     color: primary
                     variant: text
                     block: true
@@ -737,7 +737,7 @@
                   type: Button
                   properties:
                     title: Duplicate
-                    icon: AiOutlineCopy
+                    icon: copy
                     color: default
                     variant: text
                     block: true
@@ -745,7 +745,7 @@
                   type: Button
                   properties:
                     title: Delete
-                    icon: AiOutlineDelete
+                    icon: delete
                     color: danger
                     variant: text
                     block: true
@@ -756,7 +756,7 @@
             flex: 0 0 auto
           properties:
             title: More
-            icon: AiOutlineEllipsis
+            icon: more
             color: default
             variant: outlined
 
@@ -1043,7 +1043,7 @@
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineUser
+                    icon: user
                     size: 48
                     color: '#fff'
                     backgroundColor: '#1677ff'
@@ -1087,7 +1087,7 @@
                     flex: 1 1 0
                   properties:
                     title: Message
-                    icon: AiOutlineMail
+                    icon: mail
                     color: primary
                     variant: solid
                     size: small
@@ -1104,7 +1104,7 @@
                     flex: 1 1 0
                   properties:
                     title: View Profile
-                    icon: AiOutlineUser
+                    icon: user
                     color: default
                     variant: outlined
                     size: small
@@ -1168,7 +1168,7 @@
                   type: Button
                   properties:
                     title: New Document
-                    icon: AiOutlineFileAdd
+                    icon: FilePlus
                     color: primary
                     variant: text
                     block: true
@@ -1183,7 +1183,7 @@
                   type: Button
                   properties:
                     title: Upload File
-                    icon: AiOutlineUpload
+                    icon: upload
                     color: default
                     variant: text
                     block: true
@@ -1202,7 +1202,7 @@
                   type: Button
                   properties:
                     title: Import from URL
-                    icon: AiOutlineLink
+                    icon: link
                     color: default
                     variant: text
                     block: true
@@ -1217,7 +1217,7 @@
                   type: Button
                   properties:
                     title: Use Template
-                    icon: AiOutlineAppstore
+                    icon: grid
                     color: default
                     variant: text
                     block: true
@@ -1228,7 +1228,7 @@
             flex: 0 0 auto
           properties:
             title: Create New
-            icon: AiOutlinePlus
+            icon: add
             color: primary
             variant: solid
 
@@ -1288,7 +1288,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineQuestionCircle
+                name: help
                 color: '#8c8c8c'
                 size: 18
         - id: popover_help_input

@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['refresh', 'delete', 'bot', 'message', 'user', 'attach', 'close'],
   valueType: null,
   events: {
     onMessageComplete: 'Trigger when a message finishes streaming.',

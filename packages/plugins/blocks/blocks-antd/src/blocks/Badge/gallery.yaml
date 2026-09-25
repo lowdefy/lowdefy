@@ -103,7 +103,7 @@
         - id: dot_on_icon_avatar_child
           type: Avatar
           properties:
-            icon: AiOutlineBell
+            icon: bell
             shape: square
     - id: dot_on_button
       type: Badge
@@ -442,7 +442,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineBell
+        icon: bell
       blocks:
         - id: icon_bell_child
           type: Avatar
@@ -455,7 +455,7 @@
         flex: 0 0 auto
       properties:
         icon:
-          name: AiOutlineClockCircle
+          name: clock
           color: '#1677ff'
       blocks:
         - id: icon_clock_child
@@ -469,7 +469,7 @@
         flex: 0 0 auto
       properties:
         icon:
-          name: AiOutlineExclamation
+          name: CircleAlert
           color: '#faad14'
       blocks:
         - id: icon_exclamation_child
@@ -550,7 +550,7 @@
           type: Avatar
           properties:
             shape: square
-            icon: AiOutlineUser
+            icon: user
 
 - title: Badge Wrapping Different Blocks
   blocks:
@@ -589,7 +589,7 @@
         - id: wrap_icon_bell_child
           type: Icon
           properties:
-            name: AiOutlineBell
+            name: bell
             size: 24
     - id: wrap_icon_mail
       type: Badge
@@ -601,7 +601,7 @@
         - id: wrap_icon_mail_child
           type: Icon
           properties:
-            name: AiOutlineMail
+            name: mail
             size: 24
 
 - title: Style and CSS Examples
@@ -813,7 +813,7 @@
             flex: 1 1 0
           properties:
             placeholder: Search...
-            prefixIcon: AiOutlineSearch
+            prefixIcon: search
         - id: rw_notif_badge_mail
           type: Badge
           layout:
@@ -825,7 +825,7 @@
             - id: rw_notif_mail_btn
               type: Button
               properties:
-                icon: AiOutlineMail
+                icon: mail
                 color: default
                 variant: text
                 hideTitle: true
@@ -846,7 +846,7 @@
             - id: rw_notif_bell_btn
               type: Button
               properties:
-                icon: AiOutlineBell
+                icon: bell
                 color: default
                 variant: text
                 hideTitle: true
@@ -1011,7 +1011,7 @@
           class: justify-start w-full
           properties:
             title: Inbox
-            icon: AiOutlineInbox
+            icon: Inbox
             color: primary
             variant: text
           events:
@@ -1035,7 +1035,7 @@
           class: justify-start w-full
           properties:
             title: Alerts
-            icon: AiOutlineAlert
+            icon: Siren
             color: default
             variant: text
           events:
@@ -1058,7 +1058,7 @@
           class: justify-start w-full
           properties:
             title: Tasks
-            icon: AiOutlineCheckSquare
+            icon: SquareCheck
             color: default
             variant: text
           events:
@@ -1079,7 +1079,7 @@
           class: justify-start w-full
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
             color: default
             variant: text
           events:

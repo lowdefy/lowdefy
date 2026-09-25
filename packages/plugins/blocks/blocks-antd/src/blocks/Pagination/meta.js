@@ -16,7 +16,7 @@
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['chevron-left', 'chevron-right', 'chevrons-left', 'chevrons-right', 'chevron-down'],
   valueType: 'object',
   initValue: {
     current: 1,

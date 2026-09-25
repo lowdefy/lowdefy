@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['check', 'close'],
   valueType: null,
   cssKeys: {
     element: 'The Steps element.',
@@ -112,12 +114,9 @@ export default {
               description: 'Description of the step - supports html.',
             },
             icon: {
-              type: ['string', 'object'],
+              ...icon,
               description:
-                "Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use as the step icon.",
-              docs: {
-                displayType: 'icon',
-              },
+                'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use as the step icon.',
             },
             status: {
               type: 'string',

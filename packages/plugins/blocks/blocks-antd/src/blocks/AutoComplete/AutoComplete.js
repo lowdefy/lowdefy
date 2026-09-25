@@ -62,7 +62,16 @@ const AutoCompleteInput = ({
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
             placeholder={properties.placeholder ?? 'Type or select item'}
-            allowClear={properties.allowClear !== false}
+            allowClear={
+              properties.allowClear !== false && {
+                clearIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_clearIcon`}
+                    properties={{ name: 'clear', title: '' }}
+                  />
+                ),
+              }
+            }
             size={properties.size}
             status={validation.status}
             filterOption={(input, option) =>

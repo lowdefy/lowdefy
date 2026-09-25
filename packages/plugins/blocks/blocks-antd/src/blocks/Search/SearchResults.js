@@ -15,7 +15,6 @@
 */
 
 import React, { useEffect, useRef } from 'react';
-import { FileOutlined } from '@ant-design/icons';
 import { cn } from '@lowdefy/block-utils';
 
 import SearchHighlight from './SearchHighlight.js';
@@ -60,6 +59,8 @@ function groupResults(results, groups, resultMapping) {
 }
 
 function SearchResults({
+  blockId,
+  components: { Icon },
   grouped,
   resultMapping,
   selectedIndex,
@@ -117,7 +118,10 @@ function SearchResults({
                   className={classNames.itemIcon}
                   style={{ color: 'var(--ant-color-text-secondary)', ...styles.itemIcon }}
                 >
-                  <FileOutlined />
+                  <Icon
+                    blockId={`${blockId}_item_icon`}
+                    properties={{ name: 'document', title: '' }}
+                  />
                 </span>
                 <div className="lf-search-item-content">
                   <div

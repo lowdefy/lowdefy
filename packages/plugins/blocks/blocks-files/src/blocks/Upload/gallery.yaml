@@ -23,7 +23,7 @@
       properties:
         uploadPolicyRequestId: upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Choose File
           type: default
     - id: basic_custom_icon
@@ -31,7 +31,7 @@
       properties:
         uploadPolicyRequestId: upload_policy_request
         button:
-          icon: AiOutlineCloudUpload
+          icon: CloudUpload
           title: Upload to Cloud
           type: default
 
@@ -43,7 +43,7 @@
         uploadPolicyRequestId: upload_policy_request
         accept: 'image/*'
         button:
-          icon: AiOutlinePicture
+          icon: image
           title: Upload Image
           type: default
     - id: accept_pdf
@@ -52,7 +52,7 @@
         uploadPolicyRequestId: upload_policy_request
         accept: '.pdf'
         button:
-          icon: AiOutlineFilePdf
+          icon: FileText
           title: Upload PDF
           type: default
 
@@ -64,7 +64,7 @@
         uploadPolicyRequestId: upload_policy_request
         singleFile: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload Single File
           type: default
     - id: limit_max_three
@@ -73,7 +73,7 @@
         uploadPolicyRequestId: upload_policy_request
         maxCount: 3
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload (Max 3)
           type: default
 
@@ -85,7 +85,7 @@
         emitFileContent: true
         singleFile: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Attach File
           type: default
 

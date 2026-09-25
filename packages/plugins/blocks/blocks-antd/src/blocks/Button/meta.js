@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['loading'],
   valueType: null,
   cssKeys: {
     element: 'The Button element.',
@@ -74,12 +76,9 @@ export default {
           'The URL to redirect to when the button is clicked. Useful when used with a type link button.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to use icon in button.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button.',
       },
       shape: {
         type: 'string',

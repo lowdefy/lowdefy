@@ -74,14 +74,14 @@ blocks:
     properties:
       title: Likes
       value: 1128
-      prefixIcon: AiOutlineLike
+      prefixIcon: ThumbsUp
 
   - id: statistic_suffix_icon
     type: Statistic
     properties:
       title: Rating
       value: 4.5
-      suffixIcon: AiOutlineStar
+      suffixIcon: star
 
   # ============================================
   # SEPARATOR TESTS

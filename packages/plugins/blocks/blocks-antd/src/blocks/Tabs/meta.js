@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['more'],
   valueType: null,
   slots: false,
   cssKeys: {
@@ -97,12 +99,9 @@ export default {
               description: 'Disable the tab if true.',
             },
             icon: {
-              type: ['string', 'object'],
+              ...icon,
               description:
-                "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to show in tab title.",
-              docs: {
-                displayType: 'icon',
-              },
+                'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to show in tab title.',
             },
             shortcut: {
               type: 'string',

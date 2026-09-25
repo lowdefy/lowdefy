@@ -237,13 +237,13 @@
         options:
           - label: List
             value: list
-            icon: AiOutlineUnorderedList
+            icon: list
           - label: Grid
             value: grid
-            icon: AiOutlineAppstore
+            icon: grid
           - label: Calendar
             value: calendar
-            icon: AiOutlineCalendar
+            icon: calendar
     - id: icon_small
       type: SegmentedSelector
       properties:
@@ -252,13 +252,13 @@
         options:
           - label: Map
             value: map
-            icon: AiOutlineEnvironment
+            icon: location
           - label: Satellite
             value: satellite
-            icon: AiOutlineGlobal
+            icon: globe
           - label: Terrain
             value: terrain
-            icon: AiOutlineBlock
+            icon: Blocks
     - id: icon_block
       type: SegmentedSelector
       properties:
@@ -267,16 +267,16 @@
         options:
           - label: Home
             value: home
-            icon: AiOutlineHome
+            icon: home
           - label: Search
             value: search
-            icon: AiOutlineSearch
+            icon: search
           - label: Favorites
             value: favorites
-            icon: AiOutlineHeart
+            icon: heart
           - label: Profile
             value: profile
-            icon: AiOutlineUser
+            icon: user
     - id: icon_round
       type: SegmentedSelector
       properties:
@@ -285,13 +285,13 @@
         options:
           - label: Code
             value: code
-            icon: AiOutlineCode
+            icon: CodeXml
           - label: Preview
             value: preview
-            icon: AiOutlineEye
+            icon: view
           - label: Split
             value: split
-            icon: AiOutlineColumnWidth
+            icon: MoveHorizontal
 
 - title: Vertical Layout
   blocks:
@@ -315,16 +315,16 @@
         options:
           - label: Dashboard
             value: dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
           - label: Analytics
             value: analytics
-            icon: AiOutlineBarChart
+            icon: chart
           - label: Reports
             value: reports
-            icon: AiOutlineFileText
+            icon: document
           - label: Settings
             value: settings
-            icon: AiOutlineSetting
+            icon: settings
     - id: vertical_large
       type: SegmentedSelector
       properties:
@@ -370,13 +370,13 @@
         options:
           - label: Edit
             value: edit
-            icon: AiOutlineEdit
+            icon: edit
           - label: View
             value: view
-            icon: AiOutlineEye
+            icon: view
           - label: Delete
             value: delete
-            icon: AiOutlineDelete
+            icon: delete
 
 - title: Label Options
   blocks:
@@ -595,13 +595,13 @@
             options:
               - label: Overview
                 value: overview
-                icon: AiOutlineDashboard
+                icon: Gauge
               - label: Charts
                 value: charts
-                icon: AiOutlineBarChart
+                icon: chart
               - label: Table
                 value: table
-                icon: AiOutlineTable
+                icon: Table
           events:
             onChange:
               - id: view_changed_action
@@ -623,7 +623,7 @@
           type: Button
           properties:
             title: Refresh Data
-            icon: AiOutlineReload
+            icon: refresh
             type: primary
           events:
             onClick:
@@ -648,13 +648,13 @@
             options:
               - label: Light
                 value: light
-                icon: AiOutlineBulb
+                icon: Lightbulb
               - label: Dark
                 value: dark
-                icon: AiOutlineEyeInvisible
+                icon: hide
               - label: System
                 value: system
-                icon: AiOutlineLaptop
+                icon: Laptop
           events:
             onChange:
               - id: theme_changed_action
@@ -702,7 +702,7 @@
           type: Button
           properties:
             title: Save Settings
-            icon: AiOutlineSave
+            icon: save
             type: primary
           events:
             onClick:

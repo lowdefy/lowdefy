@@ -69,7 +69,6 @@ const TreeSelector = ({
               className={classNames.element}
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
-              allowClear={properties.allowClear !== false}
               placeholder={
                 properties.placeholder ?? methods.translate('blocks.treeSelector.placeholder')
               }
@@ -87,26 +86,26 @@ const TreeSelector = ({
                 properties.notFoundContent ?? methods.translate('blocks.treeSelector.notFound')
               }
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    classNames={{ element: classNames.suffixIcon }}
-                    events={events}
-                    properties={properties.suffixIcon}
-                    styles={{ element: styles.suffixIcon }}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  classNames={{ element: classNames.suffixIcon }}
+                  events={events}
+                  properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+                  styles={{ element: styles.suffixIcon }}
+                />
               }
-              clearIcon={
-                properties.clearIcon && (
-                  <Icon
-                    blockId={`${blockId}_clearIcon`}
-                    classNames={{ element: classNames.clearIcon }}
-                    events={events}
-                    properties={properties.clearIcon}
-                    styles={{ element: styles.clearIcon }}
-                  />
-                )
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      classNames={{ element: classNames.clearIcon }}
+                      events={events}
+                      properties={properties.clearIcon ?? { name: 'clear', title: '' }}
+                      styles={{ element: styles.clearIcon }}
+                    />
+                  ),
+                }
               }
               value={getSelectedIndex(value, entries, { properties: matchProps })}
               onChange={(idx) => {

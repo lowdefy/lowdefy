@@ -28,17 +28,17 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psl_basic_users
               type: MenuLink
               properties:
                 title: Users
-                icon: AiOutlineUser
+                icon: user
             - id: psl_basic_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       blocks:
         - id: psl_basic_content
           type: Paragraph
@@ -60,12 +60,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psl_collapsed_users
               type: MenuLink
               properties:
                 title: Users
-                icon: AiOutlineUser
+                icon: user
       blocks:
         - id: psl_collapsed_content
           type: Paragraph
@@ -90,12 +90,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psl_header_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       slots:
         header:
           blocks:
@@ -105,7 +105,7 @@
                 flex: 0 0 auto
               properties:
                 title: Search
-                icon: AiOutlineSearch
+                icon: search
                 color: default
                 variant: outlined
                 size: small
@@ -134,7 +134,7 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
       blocks:
         - id: psl_logo_content
           type: Paragraph
@@ -160,19 +160,19 @@
               type: MenuLink
               properties:
                 title: My Profile
-                icon: AiOutlineUser
+                icon: user
             - id: psl_admin_prof_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
             - id: psl_admin_prof_divider
               type: MenuDivider
             - id: psl_admin_prof_logout
               type: MenuLink
               properties:
                 title: Sign Out
-                icon: AiOutlineLogout
+                icon: logout
                 danger: true
         sider:
           width: 240
@@ -188,12 +188,12 @@
               type: MenuLink
               properties:
                 title: Dashboard
-                icon: AiOutlineDashboard
+                icon: Gauge
             - id: psl_admin_users_group
               type: MenuGroup
               properties:
                 title: User Management
-                icon: AiOutlineTeam
+                icon: users
               links:
                 - id: psl_admin_all_users
                   type: MenuLink
@@ -207,12 +207,12 @@
               type: MenuLink
               properties:
                 title: Analytics
-                icon: AiOutlineBarChart
+                icon: chart
             - id: psl_admin_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
       slots:
         siderOpen:
           blocks:
@@ -226,7 +226,7 @@
                   properties:
                     title: Production
                     color: green
-                    icon: AiOutlineCloudServer
+                    icon: Server
         siderClosed:
           blocks:
             - id: psl_admin_sider_closed
@@ -274,7 +274,7 @@
                   properties:
                     title: Total Users
                     value: 2847
-                    prefixIcon: AiOutlineUser
+                    prefixIcon: user
             - id: psl_admin_stat_revenue
               type: Card
               layout:

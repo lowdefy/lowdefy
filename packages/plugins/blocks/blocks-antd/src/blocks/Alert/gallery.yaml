@@ -189,46 +189,46 @@
       properties:
         message: All tests passed
         type: success
-        icon: AiOutlineCheckCircle
+        icon: check-circle
     - id: custom_icon_bell
       type: Alert
       properties:
         message: You have 3 new notifications
         type: info
-        icon: AiOutlineBell
+        icon: bell
     - id: custom_icon_lock
       type: Alert
       properties:
         message: Your session has been locked for security
         type: warning
-        icon: AiOutlineLock
+        icon: lock
     - id: custom_icon_bug
       type: Alert
       properties:
         message: Bug detected in module
         type: error
-        icon: AiOutlineBug
+        icon: Bug
     - id: custom_icon_rocket
       type: Alert
       properties:
         message: Deployment in progress
         description: Your application is being deployed to the production environment. This usually takes 2-3 minutes.
         type: info
-        icon: AiOutlineRocket
+        icon: Rocket
     - id: custom_icon_star
       type: Alert
       properties:
         message: You earned a new achievement
         description: Congratulations on completing your first project!
         type: success
-        icon: AiOutlineStar
+        icon: star
     - id: custom_icon_object
       type: Alert
       properties:
         message: Custom styled icon
         type: info
         icon:
-          name: AiOutlineThunderbolt
+          name: Zap
           color: '#faad14'
     - id: custom_icon_colored_obj
       type: Alert
@@ -237,7 +237,7 @@
         description: No vulnerabilities were detected in your dependencies.
         type: success
         icon:
-          name: AiOutlineSafety
+          name: Shield
           color: '#52c41a'
 
 - title: Banner Style
@@ -421,7 +421,7 @@
                 flex: 0 0 auto
               properties:
                 title: Download
-                icon: AiOutlineDownload
+                icon: download
                 color: green
                 variant: solid
                 size: small
@@ -436,7 +436,7 @@
         type: success
         closable: true
         closeText: OK
-        icon: AiOutlineCloudUpload
+        icon: CloudUpload
     - id: combo_full_warning
       type: Alert
       properties:
@@ -444,7 +444,7 @@
         description: You have used 85% of your daily API quota (8,500 / 10,000 requests). Consider implementing request caching.
         type: warning
         closable: true
-        icon: AiOutlineApi
+        icon: Plug
     - id: combo_full_error
       type: Alert
       properties:
@@ -452,7 +452,7 @@
         description: '<b>Unauthorized access attempt detected</b> from IP <code>192.168.1.45</code> at 14:32 UTC. The account has been temporarily locked.'
         type: error
         closable: true
-        icon: AiOutlineWarning
+        icon: warning
     - id: combo_banner_closable_icon
       type: Alert
       properties:
@@ -460,7 +460,7 @@
         type: info
         banner: true
         closable: true
-        icon: AiOutlineExperiment
+        icon: FlaskConical
     - id: combo_noicon_closable_desc
       type: Alert
       properties:
@@ -590,7 +590,7 @@
         message: Please fix the following errors
         description: '<ul><li>Email address is required</li><li>Password must be at least 8 characters</li><li>Please agree to the terms of service</li></ul>'
         type: error
-        icon: AiOutlineExclamationCircle
+        icon: CircleAlert
     - id: real_onboarding
       type: Alert
       properties:
@@ -598,7 +598,7 @@
         description: Get started by creating your first project. You can invite team members from the Settings page.
         type: info
         closable: true
-        icon: AiOutlineSmile
+        icon: FaceSlightlySmiling
       slots:
         action:
           blocks:
@@ -611,7 +611,7 @@
                 color: primary
                 variant: solid
                 size: small
-                icon: AiOutlinePlus
+                icon: add
     - id: real_deprecation
       type: Alert
       properties:
@@ -620,7 +620,7 @@
         type: warning
         closable: true
         closeText: Acknowledged
-        icon: AiOutlineClockCircle
+        icon: clock
     - id: real_maintenance
       type: Alert
       properties:
@@ -635,7 +635,7 @@
         message: Deployment Successful
         description: 'Application <b>my-app</b> has been deployed to <code>production</code> environment. Build #1847 completed in 2m 34s.'
         type: success
-        icon: AiOutlineCheckCircle
+        icon: check-circle
       slots:
         action:
           blocks:
@@ -662,14 +662,14 @@
                     color: green
                     variant: solid
                     size: small
-                    icon: AiOutlineLink
+                    icon: link
     - id: real_quota_warning
       type: Alert
       properties:
         message: Resource Quota Warning
         description: 'Your project has used <b>92%</b> of allocated compute resources. Current usage: 18.4 / 20 vCPUs. Consider scaling your plan or optimizing workloads.'
         type: warning
-        icon: AiOutlineDashboard
+        icon: Gauge
       slots:
         action:
           blocks:
@@ -688,7 +688,7 @@
         message: Access Denied
         description: You do not have permission to view this resource. Contact your administrator to request access to the Analytics dashboard.
         type: error
-        icon: AiOutlineStop
+        icon: Ban
         closable: true
     - id: real_feature_flag
       type: Alert
@@ -698,4 +698,4 @@
         type: info
         closable: true
         closeText: Understood
-        icon: AiOutlineExperiment
+        icon: FlaskConical

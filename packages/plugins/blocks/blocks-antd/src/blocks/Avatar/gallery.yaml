@@ -40,7 +40,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             shape: circle
             color: '#52c41a'
         - id: shape_square_src
@@ -156,21 +156,21 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             color: '#1677ff'
         - id: icon_team
           type: Avatar
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineTeam
+            icon: users
             color: '#722ed1'
         - id: icon_star
           type: Avatar
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineStar
+            icon: star
             color: '#faad14'
         - id: icon_custom_color
           type: Avatar
@@ -178,7 +178,7 @@
             flex: 0 0 auto
           properties:
             icon:
-              name: AiOutlineThunderbolt
+              name: Zap
               color: '#fff700'
             color: '#000000'
         - id: icon_custom_large
@@ -187,7 +187,7 @@
             flex: 0 0 auto
           properties:
             icon:
-              name: AiOutlineCrown
+              name: Crown
               color: '#fff'
             color: '#722ed1'
             size: large
@@ -314,7 +314,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             color: '#1677ff'
             size: large
           events:
@@ -417,7 +417,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineStar
+            icon: star
             size: large
           style:
             .element:
@@ -427,7 +427,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlinePlus
+            icon: add
             size: large
           style:
             .element:
@@ -447,7 +447,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: large
             color: '#1677ff'
             theme:
@@ -480,7 +480,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineStar
+            icon: star
             color: '#722ed1'
             theme:
               containerSize: 44
@@ -504,7 +504,7 @@
                 - src: https://api.dicebear.com/7.x/miniavs/svg?seed=1
                 - content: BK
                   color: '#1677ff'
-                - icon: AiOutlineUser
+                - icon: user
                   color: '#87d068'
                 - content: ZW
                   color: '#722ed1'
@@ -519,7 +519,7 @@
                 - src: https://api.dicebear.com/7.x/miniavs/svg?seed=2
                 - content: AL
                   color: '#f56a00'
-                - icon: AiOutlineUser
+                - icon: user
                   color: '#1677ff'
                 - content: KJ
                   color: '#722ed1'
@@ -550,7 +550,7 @@
                 - src: https://api.dicebear.com/7.x/miniavs/svg?seed=3
                 - content: LG
                   color: '#eb2f96'
-                - icon: AiOutlineStar
+                - icon: star
                   color: '#faad14'
 
 - title: Group Max Style
@@ -591,7 +591,7 @@
                 - src: https://api.dicebear.com/7.x/miniavs/svg?seed=5
                 - content: AB
                   color: '#52c41a'
-                - icon: AiOutlineUser
+                - icon: user
                   color: '#722ed1'
                 - content: CD
                   color: '#f5222d'
@@ -686,7 +686,7 @@
                 title: Edit Profile
                 color: primary
                 variant: outlined
-                icon: AiOutlineEdit
+                icon: edit
               events:
                 onClick:
                   - id: profile_edit_msg
@@ -702,7 +702,7 @@
                 title: Send Message
                 color: primary
                 variant: solid
-                icon: AiOutlineMail
+                icon: mail
               events:
                 onClick:
                   - id: profile_msg_msg
@@ -742,7 +742,7 @@
                       alt: Elena Torres
                     - content: JD
                       color: '#52c41a'
-                    - icon: AiOutlineUser
+                    - icon: user
                       color: '#722ed1'
                     - content: KP
                       color: '#fa8c16'
@@ -823,7 +823,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineLike
+                        icon: ThumbsUp
                         title: Like
                       style:
                         .element:
@@ -834,7 +834,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineMessage
+                        icon: message
                         title: Reply
                       style:
                         .element:
@@ -896,7 +896,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineLike
+                        icon: ThumbsUp
                         title: Like
                       style:
                         .element:
@@ -907,7 +907,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineMessage
+                        icon: message
                         title: Reply
                       style:
                         .element:
@@ -968,7 +968,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineLike
+                        icon: ThumbsUp
                         title: Like
                       style:
                         .element:
@@ -979,7 +979,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        icon: AiOutlineMessage
+                        icon: message
                         title: Reply
                       style:
                         .element:
@@ -1005,7 +1005,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 color: '#52c41a'
             - id: reply_body
               type: Box
@@ -1027,7 +1027,7 @@
                     title: Reply
                     color: primary
                     variant: solid
-                    icon: AiOutlineSend
+                    icon: send
                   events:
                     onClick:
                       - id: reply_msg

@@ -72,7 +72,7 @@ blocks:
     type: Tag
     properties:
       title: With Icon
-      icon: AiOutlineUser
+      icon: user
 
   - id: tag_html_title
     type: Tag

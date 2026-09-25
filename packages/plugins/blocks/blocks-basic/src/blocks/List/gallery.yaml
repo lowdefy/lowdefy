@@ -37,7 +37,7 @@
             flex: 0 0 auto
           properties:
             title: Add Note
-            icon: AiOutlinePlus
+            icon: add
             color: primary
             variant: solid
             size: small
@@ -66,7 +66,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineClose
+            icon: close
             color: default
             variant: text
             shape: circle
@@ -135,7 +135,7 @@
             flex: 0 0 auto
           properties:
             title: Add Task
-            icon: AiOutlinePlus
+            icon: add
             color: primary
             variant: solid
             size: small
@@ -209,7 +209,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineArrowUp
+            icon: arrow-up
             color: default
             variant: text
             size: small
@@ -228,7 +228,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineArrowDown
+            icon: arrow-down
             color: default
             variant: text
             size: small
@@ -247,7 +247,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineDelete
+            icon: delete
             color: danger
             variant: text
             size: small
@@ -272,7 +272,7 @@
             flex: 0 0 auto
           properties:
             title: Save Tasks
-            icon: AiOutlineSave
+            icon: save
             color: primary
             variant: solid
           events:
@@ -315,7 +315,7 @@
                 flex: 0 0 auto
               properties:
                 title: Load Users
-                icon: AiOutlineCloudDownload
+                icon: CloudDownload
                 color: primary
                 variant: solid
                 size: small
@@ -408,7 +408,7 @@
             flex: 0 0 auto
           properties:
             title: Add Line
-            icon: AiOutlinePlus
+            icon: add
             color: primary
             variant: dashed
             size: small
@@ -467,7 +467,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineMinusCircle
+            icon: remove
             color: danger
             variant: text
             size: small
@@ -507,7 +507,7 @@
             flex: 0 0 auto
           properties:
             title: Submit Invoice
-            icon: AiOutlineSend
+            icon: send
             color: primary
             variant: solid
           events:

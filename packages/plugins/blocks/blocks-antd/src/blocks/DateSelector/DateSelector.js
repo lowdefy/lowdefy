@@ -59,7 +59,16 @@ const DateSelector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
-              allowClear={properties.allowClear !== false}
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
@@ -83,7 +92,7 @@ const DateSelector = ({
                   blockId={`${blockId}_suffixIcon`}
                   classNames={{ element: classNames.suffixIcon }}
                   events={events}
-                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? { name: 'calendar', title: '' }}
                   styles={{ element: styles.suffixIcon }}
                 />
               }

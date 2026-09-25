@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'list',
   icons: [],
@@ -37,11 +39,8 @@ export default {
         },
       },
       pendingDotIcon: {
-        type: ['object', 'string'],
+        ...icon,
         description: 'Set the dot of the last ghost node when pending is true.',
-        docs: {
-          displayType: 'icon',
-        },
       },
       pending: {
         type: ['boolean', 'string'],

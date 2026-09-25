@@ -78,84 +78,84 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHome
+        name: home
         size: 24
     - id: icon_search
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineSearch
+        name: search
         size: 24
     - id: icon_user
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineUser
+        name: user
         size: 24
     - id: icon_setting
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineSetting
+        name: settings
         size: 24
     - id: icon_bell
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineBell
+        name: bell
         size: 24
     - id: icon_heart
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 24
     - id: icon_star
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineStar
+        name: star
         size: 24
     - id: icon_check
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineCheck
+        name: check
         size: 24
     - id: icon_close
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineClose
+        name: close
         size: 24
     - id: icon_info
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineInfoCircle
+        name: info
         size: 24
     - id: icon_warning
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineWarning
+        name: warning
         size: 24
     - id: icon_mail
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineMail
+        name: mail
         size: 24
 
 - title: Sizes
@@ -165,35 +165,35 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineRocket
+        name: Rocket
         size: 16
     - id: size_24
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineRocket
+        name: Rocket
         size: 24
     - id: size_32
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineRocket
+        name: Rocket
         size: 32
     - id: size_48
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineRocket
+        name: Rocket
         size: 48
     - id: size_64
       type: Icon
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineRocket
+        name: Rocket
         size: 64
 
 - title: Named Colors
@@ -203,7 +203,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: red
     - id: color_blue
@@ -211,7 +211,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: blue
     - id: color_green
@@ -219,7 +219,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: green
     - id: color_orange
@@ -227,7 +227,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: orange
     - id: color_purple
@@ -235,7 +235,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: purple
     - id: color_tomato
@@ -243,7 +243,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: tomato
     - id: color_teal
@@ -251,7 +251,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: teal
     - id: color_coral
@@ -259,7 +259,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 32
         color: coral
 
@@ -270,7 +270,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#1677ff'
     - id: hex_green
@@ -278,7 +278,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#52c41a'
     - id: hex_red
@@ -286,7 +286,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#f5222d'
     - id: hex_orange
@@ -294,7 +294,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#fa8c16'
     - id: hex_purple
@@ -302,7 +302,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#722ed1'
     - id: hex_cyan
@@ -310,7 +310,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#13c2c2'
     - id: hex_coral
@@ -318,7 +318,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#ff6b6b'
     - id: hex_indigo
@@ -326,7 +326,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#4c6ef5'
     - id: hex_pink
@@ -334,7 +334,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#e64980'
     - id: hex_amber
@@ -342,7 +342,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 40
         color: '#fab005'
 
@@ -353,7 +353,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineLoading
+        name: loading
         size: 32
         spin: true
         color: '#1677ff'
@@ -362,7 +362,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineLoading3Quarters
+        name: loading
         size: 32
         spin: true
         color: '#52c41a'
@@ -371,7 +371,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineSync
+        name: RefreshCw
         size: 32
         spin: true
         color: '#fa8c16'
@@ -380,7 +380,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineSetting
+        name: settings
         size: 32
         spin: true
         color: '#722ed1'
@@ -389,7 +389,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineReload
+        name: refresh
         size: 32
         spin: true
         color: '#f5222d'
@@ -401,7 +401,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 0
         color: '#1677ff'
@@ -410,7 +410,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 45
         color: '#1677ff'
@@ -419,7 +419,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 90
         color: '#1677ff'
@@ -428,7 +428,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 135
         color: '#1677ff'
@@ -437,7 +437,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 180
         color: '#1677ff'
@@ -446,10 +446,45 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineArrowUp
+        name: arrow-up
         size: 32
         rotate: 270
         color: '#1677ff'
+
+- title: Stroke Width
+  blocks:
+    - id: stroke_width_1
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: heart
+        size: 32
+        strokeWidth: 1
+    - id: stroke_width_2
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: heart
+        size: 32
+        strokeWidth: 2
+    - id: stroke_width_3
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: heart
+        size: 32
+        strokeWidth: 3
+    - id: non_scaling_stroke
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: heart
+        size: 64
+        nonScalingStroke: true
 
 - title: Title (Hover Tooltip)
   blocks:
@@ -458,7 +493,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineInfoCircle
+        name: info
         size: 32
         color: '#1677ff'
         title: More information
@@ -467,7 +502,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineWarning
+        name: warning
         size: 32
         color: '#faad14'
         title: Warning - proceed with caution
@@ -476,7 +511,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineQuestionCircle
+        name: help
         size: 32
         color: '#722ed1'
         title: Click for help
@@ -501,7 +536,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCloud
+            name: Cloud
             size: 40
             color: '#69b1ff'
     - id: dark_bg_green
@@ -522,7 +557,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 40
             color: '#95de64'
     - id: dark_bg_red
@@ -543,7 +578,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCloseCircle
+            name: close-circle
             size: 40
             color: '#ff7875'
     - id: dark_bg_purple
@@ -564,7 +599,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineStar
+            name: star
             size: 40
             color: '#b37feb'
 
@@ -589,7 +624,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 36
             color: '#52c41a'
     - id: colored_bg_warning
@@ -611,7 +646,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineExclamationCircle
+            name: CircleAlert
             size: 36
             color: '#faad14'
     - id: colored_bg_error
@@ -633,7 +668,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCloseCircle
+            name: close-circle
             size: 36
             color: '#ff4d4f'
     - id: colored_bg_info
@@ -655,7 +690,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineInfoCircle
+            name: info
             size: 36
             color: '#1677ff'
 
@@ -671,7 +706,7 @@
           padding: 12
           borderRadius: 50%
       properties:
-        name: AiOutlineUser
+        name: user
         size: 32
         color: '#1677ff'
     - id: style_bordered
@@ -684,7 +719,7 @@
           padding: 10
           borderRadius: 8
       properties:
-        name: AiOutlineSetting
+        name: settings
         size: 28
         color: '#595959'
     - id: style_shadow
@@ -698,7 +733,7 @@
           borderRadius: 12
           boxShadow: 0 2px 8px rgba(0, 0, 0, 0.15)
       properties:
-        name: AiOutlineBell
+        name: bell
         size: 30
         color: '#fa8c16'
     - id: style_gradient_bg
@@ -711,7 +746,7 @@
           padding: 14
           borderRadius: 12
       properties:
-        name: AiOutlineThunderbolt
+        name: Zap
         size: 30
         color: '#ffffff'
     - id: style_circle_bg
@@ -727,7 +762,7 @@
           alignItems: center
           justifyContent: center
       properties:
-        name: AiOutlineHeart
+        name: heart
         size: 24
         color: '#ffffff'
 
@@ -742,7 +777,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineEdit
+        name: edit
         size: 32
         color: '#1677ff'
         disableLoadingIcon: false
@@ -755,7 +790,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineEdit
+        name: edit
         size: 32
         color: '#1677ff'
         disableLoadingIcon: true

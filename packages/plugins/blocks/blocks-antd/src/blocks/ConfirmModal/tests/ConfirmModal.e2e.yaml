@@ -213,7 +213,7 @@ blocks:
     properties:
       title: Modal with Icon
       content: This modal has a custom icon.
-      icon: AiOutlineQuestionCircle
+      icon: help
 
   - id: open_with_icon
     type: Button

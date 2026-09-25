@@ -29,7 +29,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'clear'],
   valueType: 'string',
   cssKeys: {
     element: 'The TextInput element.',
@@ -80,7 +80,7 @@ export default {
       prefixIcon: {
         ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to prefix the text input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input.',
       },
       label,
       replaceInput: {
@@ -118,7 +118,7 @@ export default {
       suffixIcon: {
         ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to suffix the text input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input.',
       },
       title: inputTitle,
       variant,

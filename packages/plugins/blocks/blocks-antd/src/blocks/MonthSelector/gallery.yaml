@@ -168,14 +168,14 @@
       type: MonthSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: month_icon_schedule
       type: MonthSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: month_icon_custom_color
@@ -183,7 +183,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -192,7 +192,7 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
@@ -523,7 +523,7 @@
         placeholder: Select billing month
         format: MMMM YYYY
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         allowClear: true
         label:
@@ -548,7 +548,7 @@
         placeholder: Select fiscal month
         format: MMM YYYY
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -564,7 +564,7 @@
         format: MMMM YYYY
         placeholder: Choose a special month...
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -588,7 +588,7 @@
             placeholder: Select month
             format: MMMM YYYY
             size: large
-            suffixIcon: AiOutlineCalendar
+            suffixIcon: calendar
             label:
               extra: Choose the month for this budget entry.
         - id: applied2_budget_category
@@ -614,14 +614,14 @@
           properties:
             title: Amount
             placeholder: Enter amount
-            prefixIcon: AiOutlineDollar
+            prefixIcon: DollarSign
             label:
               extra: Enter the budgeted amount for this category.
         - id: applied2_budget_save_btn
           type: Button
           properties:
             title: Save Budget Entry
-            icon: AiOutlineSave
+            icon: save
             type: primary
             size: large
             block: true
@@ -647,7 +647,7 @@
             placeholder: Select start month
             format: MMMM YYYY
             size: large
-            suffixIcon: AiOutlineCalendar
+            suffixIcon: calendar
             label:
               extra: Choose when the subscription billing begins.
             disabledDates:
@@ -674,7 +674,7 @@
           type: Button
           properties:
             title: Confirm Subscription
-            icon: AiOutlineCreditCard
+            icon: CreditCard
             type: primary
             size: large
             block: true

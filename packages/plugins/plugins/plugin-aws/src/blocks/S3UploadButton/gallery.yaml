@@ -23,7 +23,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Choose File
           type: default
     - id: basic_custom_icon
@@ -31,7 +31,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: AiOutlineCloudUpload
+          icon: CloudUpload
           title: Upload to Cloud
           type: default
 
@@ -43,7 +43,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         accept: 'image/*'
         button:
-          icon: AiOutlinePicture
+          icon: image
           title: Upload Image
           type: default
     - id: accept_pdf
@@ -52,7 +52,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         accept: '.pdf'
         button:
-          icon: AiOutlineFilePdf
+          icon: FileText
           title: Upload PDF
           type: default
     - id: accept_specific
@@ -61,7 +61,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         accept: '.jpg,.png,.gif'
         button:
-          icon: AiOutlinePicture
+          icon: image
           title: Upload JPG, PNG, or GIF
           type: default
 
@@ -73,7 +73,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         singleFile: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload Single File
           type: default
     - id: limit_max_three
@@ -82,7 +82,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         maxCount: 3
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload (Max 3)
           type: default
     - id: limit_single_images
@@ -92,7 +92,7 @@
         singleFile: true
         accept: 'image/*'
         button:
-          icon: AiOutlinePicture
+          icon: image
           title: Upload One Image
           type: default
 
@@ -103,7 +103,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload
           type: primary
     - id: button_large
@@ -111,7 +111,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload Files
           type: default
           size: large
@@ -120,7 +120,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: AiOutlinePaperClip
+          icon: attach
           title: Attach Files
           type: default
 
@@ -137,7 +137,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         disabled: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload
           type: primary
     - id: disabled_hidden_list
@@ -155,7 +155,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         showUploadList: true
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload (List Visible)
           type: default
     - id: list_hidden
@@ -164,7 +164,7 @@
         s3PostPolicyRequestId: s3_upload_policy_request
         showUploadList: false
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload (No List)
           type: default
     - id: list_single_hidden
@@ -174,7 +174,7 @@
         singleFile: true
         showUploadList: false
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload Single (No List)
           type: default
 
@@ -214,7 +214,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload
           type: default
     - id: style_label
@@ -232,7 +232,7 @@
       properties:
         s3PostPolicyRequestId: s3_upload_policy_request
         button:
-          icon: UploadOutlined
+          icon: upload
           title: Upload
           type: default
 
@@ -274,7 +274,7 @@
             s3PostPolicyRequestId: s3_upload_policy_request
             accept: '.pdf,.docx,.xlsx'
             button:
-              icon: AiOutlineFilePdf
+              icon: FileText
               title: Choose Document
               type: default
             label:
@@ -288,7 +288,7 @@
             title: Save Document
             color: primary
             variant: solid
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: save_validate
@@ -314,7 +314,7 @@
             singleFile: true
             accept: 'image/*'
             button:
-              icon: AiOutlineCamera
+              icon: camera
               title: Choose Photo
               type: default
             label:
@@ -325,7 +325,7 @@
           required: true
           properties:
             title: Display Name
-            prefixIcon: AiOutlineUser
+            prefixIcon: user
             placeholder: Enter your display name
             label:
               colon: false
@@ -337,7 +337,7 @@
             title: Update Profile
             color: primary
             variant: solid
-            icon: AiOutlineCheck
+            icon: check
           events:
             onClick:
               - id: update_validate

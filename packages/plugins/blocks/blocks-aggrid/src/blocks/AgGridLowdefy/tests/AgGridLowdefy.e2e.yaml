@@ -585,7 +585,7 @@ blocks:
             buttons:
               - eventName: onEditClick
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
       rowData:
         - _id: TSK-001
     events:

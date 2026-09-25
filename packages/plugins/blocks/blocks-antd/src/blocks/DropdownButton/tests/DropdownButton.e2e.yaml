@@ -24,18 +24,18 @@ blocks:
     type: DropdownButton
     properties:
       title: Actions
-      icon: AiOutlineDown
+      icon: chevron-down
       items:
         - title: Edit
           eventName: onEdit
-          icon: AiOutlineEdit
+          icon: edit
         - title: Duplicate
           eventName: onDuplicate
-          icon: AiOutlineCopy
+          icon: copy
         - type: divider
         - title: Delete
           eventName: onDelete
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
     events:
       onEdit:
@@ -185,7 +185,7 @@ blocks:
     type: DropdownButton
     properties:
       title: Export
-      icon: AiOutlineDownload
+      icon: download
       items:
         - title: CSV
           eventName: onCSV

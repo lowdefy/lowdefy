@@ -26,7 +26,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'chevron-up', 'chevron-down'],
   valueType: 'number',
   cssKeys: {
     element: 'The NumberInput element.',

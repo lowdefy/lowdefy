@@ -42,7 +42,7 @@
 - id: properties.icon
   type: FloatButton
   properties:
-    icon: AiOutlineQuestion
+    icon: help
 - id: properties.href
   type: FloatButton
   properties:

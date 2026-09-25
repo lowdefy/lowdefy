@@ -477,7 +477,7 @@
                 flex: 0 0 auto
               properties:
                 title: Refresh Data
-                icon: AiOutlineReload
+                icon: refresh
                 color: primary
                 variant: outlined
                 size: small

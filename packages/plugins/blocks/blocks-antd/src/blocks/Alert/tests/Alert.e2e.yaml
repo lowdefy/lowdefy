@@ -79,7 +79,7 @@ blocks:
     type: Alert
     properties:
       message: Alert with Custom Icon
-      icon: AiOutlineBell
+      icon: bell
 
   # ============================================
   # CLOSABLE TESTS

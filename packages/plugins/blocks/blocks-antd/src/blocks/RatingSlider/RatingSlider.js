@@ -184,7 +184,8 @@ const RatingSlider = ({
                 events={events}
                 properties={mergeObjects([
                   {
-                    name: 'AiOutlineFrown',
+                    name: 'rating-low',
+                    title: '',
                     color: properties.color,
                   },
                   propertiesIconMin,
@@ -213,7 +214,8 @@ const RatingSlider = ({
                 events={events}
                 properties={mergeObjects([
                   {
-                    name: 'AiOutlineSmile',
+                    name: 'rating-high',
+                    title: '',
                     color: properties.color,
                   },
                   propertiesIconMax,

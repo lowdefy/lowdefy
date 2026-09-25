@@ -29,7 +29,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'clear'],
   valueType: 'string',
   cssKeys: {
     element: 'The TextArea element.',

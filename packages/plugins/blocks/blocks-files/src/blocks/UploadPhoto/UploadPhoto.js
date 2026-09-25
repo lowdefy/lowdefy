@@ -20,6 +20,7 @@ import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Upload as AntdUpload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
+import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import withTheme from '../../withTheme.js';
@@ -87,7 +88,9 @@ const UploadPhoto = ({
         maxCount={properties.maxCount}
         multiple={!properties.singleFile}
         onRemove={removeFile}
-        showUploadList={properties.showUploadList}
+        showUploadList={
+          properties.showUploadList !== false && getUploadListIcons({ blockId, Icon })
+        }
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.
@@ -102,7 +105,9 @@ const UploadPhoto = ({
             classNames={{ element: cn('lf-upload-photo-icon', classNames.icon) }}
             events={events}
             properties={{
-              name: loading ? 'AiOutlineLoading' : 'AiOutlineCamera',
+              name: loading ? 'loading' : 'camera',
+              spin: loading,
+              title: '',
               size: 24,
             }}
             styles={{ element: styles.icon }}

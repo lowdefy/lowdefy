@@ -19,6 +19,7 @@ import { Avatar, Badge, Dropdown } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { buildMenuItems, flattenLinks } from './buildMenuItems.js';
+import getDropdownMenuIcons from './getDropdownMenuIcons.js';
 
 function getDarkMode() {
   return window.__lowdefy_isDark ?? false;
@@ -30,9 +31,9 @@ function getDarkModePreference() {
 
 function getDarkModeIcon() {
   const pref = getDarkModePreference();
-  if (pref === 'dark') return 'AiOutlineMoon';
-  if (pref === 'light') return 'AiOutlineSun';
-  return 'AiOutlineLaptop';
+  if (pref === 'dark') return 'theme-dark';
+  if (pref === 'light') return 'theme-light';
+  return 'theme-system';
 }
 
 function getDarkModeLabel() {
@@ -146,7 +147,7 @@ function renderNotifications({
       <Icon
         blockId={`${blockId}_notifications_icon`}
         events={events}
-        properties={notif.icon ?? { name: 'AiOutlineBell' }}
+        properties={notif.icon ?? { name: 'bell' }}
         styles={{ element: { fontSize: 16, color: iconsColor, ...styles.notificationsIcon } }}
       />
     </Badge>
@@ -232,7 +233,7 @@ function renderProfile({
           <Icon
             blockId={`${blockId}_profile_avatar_icon`}
             events={events}
-            properties={avatarProps.icon ?? { name: 'AiOutlineUser' }}
+            properties={avatarProps.icon ?? { name: 'user' }}
           />
         )
       }
@@ -273,6 +274,7 @@ function renderProfile({
     <Dropdown
       style={{ cursor: 'pointer' }}
       menu={{
+        ...getDropdownMenuIcons({ blockId: `${blockId}_profile_menu`, Icon }),
         items,
         onClick: ({ key, keyPath }) => {
           const link = linkMap[key];
@@ -366,7 +368,7 @@ function renderLocaleSelector({
     <Icon
       blockId={`${blockId}_locale_selector_icon`}
       events={events}
-      properties={{ name: 'AiOutlineGlobal' }}
+      properties={{ name: 'globe' }}
       styles={{ element: { fontSize: 16, color: iconsColor } }}
     />
   );
@@ -391,6 +393,7 @@ function renderLocaleSelector({
   return (
     <Dropdown
       menu={{
+        ...getDropdownMenuIcons({ blockId: `${blockId}_locale_menu`, Icon }),
         items,
         selectedKeys: active ? [active] : [],
         onClick: ({ key }) => {
@@ -423,8 +426,7 @@ function renderHeaderActions({
   const hasNotifications = !type.isNone(properties.notifications);
   const hasProfile = !type.isNone(properties.profile);
   const hasDarkMode = properties.darkModeToggle;
-  const hasLocaleSelector =
-    properties.localeSelector && getSupportedLocales().length > 0;
+  const hasLocaleSelector = properties.localeSelector && getSupportedLocales().length > 0;
 
   if (!hasNotifications && !hasProfile && !hasDarkMode && !hasLocaleSelector) return null;
 
@@ -479,9 +481,4 @@ function registerLocaleMethod(methods) {
   });
 }
 
-export {
-  getDarkMode,
-  renderHeaderActions,
-  registerDarkModeMethod,
-  registerLocaleMethod,
-};
+export { getDarkMode, renderHeaderActions, registerDarkModeMethod, registerLocaleMethod };

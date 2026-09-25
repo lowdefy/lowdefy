@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import MobileMenuMeta from '../MobileMenu/meta.js';
 import icon from '../../schemas/icon.js';
 import menuLinks from '../../schemas/menuLinks.js';
 import breadcrumbList from '../../schemas/breadcrumbList.js';
@@ -22,12 +21,18 @@ import breadcrumbList from '../../schemas/breadcrumbList.js';
 export default {
   category: 'container',
   icons: [
-    'AiOutlineBell',
-    'AiOutlineLaptop',
-    'AiOutlineMoon',
-    'AiOutlineSun',
-    'AiOutlineUser',
-    ...MobileMenuMeta.icons,
+    'bell',
+    'user',
+    'theme-light',
+    'theme-dark',
+    'theme-system',
+    'globe',
+    'menu',
+    'close',
+    'loading',
+    'chevron-down',
+    'chevron-right',
+    'more',
   ],
   valueType: null,
   slots: {
@@ -216,7 +221,7 @@ export default {
           },
           icon: {
             ...icon,
-            description: 'Icon for the notification button. Defaults to AiOutlineBell.',
+            description: 'Icon for the notification button. Defaults to `bell`.',
           },
           size: {
             type: 'string',
@@ -249,7 +254,7 @@ export default {
               icon: {
                 ...icon,
                 description:
-                  'Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser.',
+                  'Icon to display in avatar when no src or content is set. Defaults to `user`.',
               },
               color: {
                 type: 'string',

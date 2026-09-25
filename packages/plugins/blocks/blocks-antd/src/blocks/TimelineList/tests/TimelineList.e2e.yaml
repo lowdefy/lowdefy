@@ -158,9 +158,9 @@ blocks:
     type: TimelineList
     properties:
       data:
-        - icon: AiOutlineCheck
+        - icon: check
           color: green
-        - icon: AiOutlineClose
+        - icon: close
           color: red
     blocks:
       - id: timeline_icons_item

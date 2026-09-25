@@ -33,10 +33,10 @@
       blocks:
         - id: test
           type: Test
-- id: 'properties. icon: AiFillApi'
+- id: 'properties. icon: Plug'
   type: Result
   properties:
-    icon: AiFillApi
+    icon: Plug
 - id: 'properties. status: success  default is info'
   type: Result
   properties:

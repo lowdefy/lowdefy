@@ -44,6 +44,7 @@ const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
 const PaginationBlock = ({
   blockId,
   classNames = {},
+  components: { Icon },
   loading,
   methods,
   properties,
@@ -79,6 +80,32 @@ const PaginationBlock = ({
         }
         return `${range[0]}-${range[1]} of ${total} items`;
       };
+  // antd builds these wrappers around its own arrows; the same markup keeps its styles.
+  function jumpIcon(name) {
+    return (
+      <a className="ant-pagination-item-link">
+        <div className="ant-pagination-item-container">
+          <Icon
+            blockId={`${blockId}_${name}_icon`}
+            className="ant-pagination-item-link-icon"
+            properties={{ name, title: '' }}
+          />
+          <span className="ant-pagination-item-ellipsis">{'\u2022\u2022\u2022'}</span>
+        </div>
+      </a>
+    );
+  }
+  function stepIcon(name) {
+    return (
+      <button className="ant-pagination-item-link" type="button" tabIndex={-1}>
+        <Icon blockId={`${blockId}_${name}_icon`} properties={{ name, title: '' }} />
+      </button>
+    );
+  }
+  const total = properties.total !== undefined ? properties.total : 100;
+  // antd shows the size changer by itself above 50 items when showSizeChanger
+  // is unset; resolving that here gives the automatic changer the app's arrow too.
+  const showSizeChanger = properties.showSizeChanger ?? total > 50;
   return (
     <Pagination
       id={blockId}
@@ -90,12 +117,27 @@ const PaginationBlock = ({
       pageSize={state.pageSize}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       showQuickJumper={properties.showQuickJumper}
-      showSizeChanger={properties.showSizeChanger}
+      showSizeChanger={
+        showSizeChanger === true
+          ? {
+              suffixIcon: (
+                <Icon
+                  blockId={`${blockId}_sizeChanger_icon`}
+                  properties={{ name: 'chevron-down', title: '' }}
+                />
+              ),
+            }
+          : showSizeChanger
+      }
+      prevIcon={stepIcon('chevron-left')}
+      nextIcon={stepIcon('chevron-right')}
+      jumpPrevIcon={jumpIcon('chevrons-left')}
+      jumpNextIcon={jumpIcon('chevrons-right')}
       showTotal={showTotal}
       simple={!!properties.simple}
       size={properties.size}
       style={styles.element}
-      total={properties.total !== undefined ? properties.total : 100}
+      total={total}
       current={state.current}
     />
   );

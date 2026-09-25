@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['search', 'history', 'document', 'clear'],
   valueType: null,
   cssKeys: {
     element: 'The search trigger button and modal root.',
@@ -121,11 +123,10 @@ export default {
         default: 'Search',
       },
       icon: {
-        type: ['string', 'object'],
-        description: 'Trigger button icon name or Icon block properties.',
-        docs: {
-          displayType: 'icon',
-        },
+        ...icon,
+        default: 'search',
+        description:
+          'Trigger button icon: a semantic name like `search`, a Lucide icon name like `Search`, or a set-qualified name like `tabler:Search`, or properties of an Icon block.',
       },
       showShortcut: {
         type: 'boolean',

@@ -457,7 +457,7 @@
                     title: Delete
                     color: danger
                     variant: text
-                    icon: AiOutlineDelete
+                    icon: delete
                 - id: modal_footer_actions
                   type: Box
                   layout:
@@ -489,7 +489,7 @@
                         title: Save
                         color: primary
                         variant: solid
-                        icon: AiOutlineSave
+                        icon: save
                       events:
                         onClick:
                           - id: modal_footer_save_close
@@ -576,7 +576,7 @@
         title: Toggle Modal
         color: primary
         variant: solid
-        icon: AiOutlineSwap
+        icon: ArrowRightLeft
       events:
         onClick:
           - id: modal_toggle_call
@@ -828,7 +828,7 @@
         title: Edit Profile
         color: primary
         variant: solid
-        icon: AiOutlineEdit
+        icon: edit
       events:
         onClick:
           - id: modal_profile_open
@@ -868,7 +868,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 72
                 color: '#fff'
                 backgroundColor: '#1677ff'
@@ -917,7 +917,7 @@
         title: Delete Project
         color: danger
         variant: solid
-        icon: AiOutlineDelete
+        icon: delete
       events:
         onClick:
           - id: modal_confirm_open
@@ -982,7 +982,7 @@
         title: Preview Image
         color: primary
         variant: outlined
-        icon: AiOutlinePicture
+        icon: image
       events:
         onClick:
           - id: modal_image_open

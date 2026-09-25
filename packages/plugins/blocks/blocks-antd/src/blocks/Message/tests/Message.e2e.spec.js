@@ -50,7 +50,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('Operation successful!');
     // Check for success icon class
-    const icon = message.locator('.anticon-check-circle');
+    const icon = message.locator('.ant-message-success > .anticon svg');
     await expect(icon).toBeAttached();
   });
 
@@ -62,7 +62,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('An error occurred!');
     // Check for error icon class
-    const icon = message.locator('.anticon-close-circle');
+    const icon = message.locator('.ant-message-error > .anticon svg');
     await expect(icon).toBeAttached();
   });
 
@@ -74,7 +74,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('Warning message!');
     // Check for warning icon class
-    const icon = message.locator('.anticon-exclamation-circle');
+    const icon = message.locator('.ant-message-warning > .anticon svg');
     await expect(icon).toBeAttached();
   });
 
@@ -86,7 +86,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('Loading...');
     // Check for loading icon class
-    const icon = message.locator('.anticon-loading');
+    const icon = message.locator('.ant-message-loading > .anticon svg');
     await expect(icon).toBeAttached();
   });
 
@@ -117,7 +117,7 @@ test.describe('Message Block', () => {
     const message = getMessage(page);
     await expect(message).toBeVisible();
     await expect(message).toContainText('Runtime success message');
-    const icon = message.locator('.anticon-check-circle');
+    const icon = message.locator('.ant-message-success > .anticon svg');
     await expect(icon).toBeAttached();
   });
 
@@ -128,7 +128,7 @@ test.describe('Message Block', () => {
     const message = getMessage(page);
     await expect(message).toBeVisible();
     await expect(message).toContainText('Runtime error message');
-    const icon = message.locator('.anticon-close-circle');
+    const icon = message.locator('.ant-message-error > .anticon svg');
     await expect(icon).toBeAttached();
   });
 

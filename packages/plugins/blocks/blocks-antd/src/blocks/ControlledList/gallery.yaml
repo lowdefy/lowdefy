@@ -64,11 +64,11 @@
         size: small
         addItemButton:
           title: Bookmark
-          icon: AiOutlinePlus
+          icon: add
           color: primary
           variant: dashed
         removeItemIcon:
-          name: AiOutlineDelete
+          name: delete
       blocks:
         - id: bookmarks.$.url
           type: TextInput
@@ -78,7 +78,7 @@
             label:
               disabled: true
             placeholder: 'https://...'
-            prefixIcon: AiOutlineLink
+            prefixIcon: link
         - id: bookmarks.$.label
           type: TextInput
           layout:
@@ -101,7 +101,7 @@
         title: Attendees
         addItemButton:
           title: Add Attendee
-          icon: AiOutlineUserAdd
+          icon: UserPlus
           color: primary
           variant: outlined
       blocks:
@@ -225,7 +225,7 @@
             flex: 0 0 auto
           properties:
             title: Register All
-            icon: AiOutlineSend
+            icon: send
             color: primary
             variant: solid
           events:
@@ -249,7 +249,7 @@
         title: Expenses
         addItemButton:
           title: Add Expense
-          icon: AiOutlinePlus
+          icon: add
           color: primary
           variant: dashed
         theme:
@@ -325,7 +325,7 @@
             flex: 0 0 auto
           properties:
             title: Submit Report
-            icon: AiOutlineSend
+            icon: send
             color: primary
             variant: solid
           events:
@@ -349,7 +349,7 @@
         title: Projects
         addItemButton:
           title: Add Project
-          icon: AiOutlinePlus
+          icon: add
           color: primary
           variant: outlined
       blocks:
@@ -382,7 +382,7 @@
             size: small
             addItemButton:
               title: Add Task
-              icon: AiOutlinePlus
+              icon: add
               size: small
               variant: dashed
           blocks:
@@ -414,7 +414,7 @@
             flex: 0 0 auto
           properties:
             title: Save All
-            icon: AiOutlineSave
+            icon: save
             color: primary
             variant: solid
           events:
@@ -442,7 +442,7 @@
         size: small
         addItemButton:
           title: Add Tag
-          icon: AiOutlinePlus
+          icon: add
           size: small
           variant: dashed
       events:

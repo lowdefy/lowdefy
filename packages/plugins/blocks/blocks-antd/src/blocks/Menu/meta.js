@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['chevron-down', 'more'],
   valueType: null,
   cssKeys: {
     element: 'The Menu element.',
@@ -44,11 +46,8 @@ export default {
     additionalProperties: false,
     properties: {
       expandIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description: 'Menu expand icon.',
-        docs: {
-          displayType: 'icon',
-        },
       },
       menuId: {
         type: 'string',
@@ -380,12 +379,9 @@ export default {
                   description: 'Menu item title.',
                 },
                 icon: {
-                  type: ['string', 'object'],
+                  ...icon,
                   description:
-                    "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on menu item.",
-                  docs: {
-                    displayType: 'icon',
-                  },
+                    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item.',
                 },
                 danger: {
                   type: 'boolean',
@@ -462,9 +458,8 @@ export default {
                         description: 'Menu item title.',
                       },
                       icon: {
-                        type: ['string', 'object'],
+                        ...icon,
                         description: 'Icon name or Icon block properties.',
-                        docs: { displayType: 'icon' },
                       },
                       danger: {
                         type: 'boolean',
@@ -536,9 +531,8 @@ export default {
                               description: 'Menu item title.',
                             },
                             icon: {
-                              type: ['string', 'object'],
+                              ...icon,
                               description: 'Icon name or Icon block properties.',
-                              docs: { displayType: 'icon' },
                             },
                             danger: {
                               type: 'boolean',

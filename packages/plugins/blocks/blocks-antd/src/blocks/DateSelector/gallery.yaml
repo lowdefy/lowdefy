@@ -160,14 +160,14 @@
       type: DateSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: icon_schedule
       type: DateSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: icon_custom_color
@@ -175,7 +175,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -184,7 +184,7 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
@@ -537,7 +537,7 @@
         placeholder: Select appointment date
         format: DD MMMM YYYY
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         allowClear: true
         label:
@@ -562,7 +562,7 @@
         placeholder: Select event date
         format: DD MMM YYYY
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -578,7 +578,7 @@
         format: DD MMMM YYYY
         placeholder: Choose a special date...
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -602,7 +602,7 @@
             placeholder: Select event date
             format: DD MMMM YYYY
             size: large
-            suffixIcon: AiOutlineCalendar
+            suffixIcon: calendar
             label:
               extra: Choose the date you would like to attend.
             disabledDates:
@@ -613,20 +613,20 @@
           properties:
             title: Full Name
             placeholder: Enter your full name
-            prefixIcon: AiOutlineUser
+            prefixIcon: user
         - id: applied2_event_email
           type: TextInput
           properties:
             title: Email Address
             placeholder: you@example.com
-            prefixIcon: AiOutlineMail
+            prefixIcon: mail
             label:
               extra: We will send your confirmation to this address.
         - id: applied2_event_register_btn
           type: Button
           properties:
             title: Register
-            icon: AiOutlineCheck
+            icon: check
             type: primary
             size: large
             block: true
@@ -650,14 +650,14 @@
           properties:
             title: Display Name
             placeholder: Enter your display name
-            prefixIcon: AiOutlineUser
+            prefixIcon: user
         - id: applied3_date_of_birth
           type: DateSelector
           properties:
             title: Date of Birth
             placeholder: Select your date of birth
             format: DD MMMM YYYY
-            suffixIcon: AiOutlineCalendar
+            suffixIcon: calendar
             label:
               extra: Used to verify your age.
             disabledDates:
@@ -673,12 +673,12 @@
           properties:
             title: Email Address
             placeholder: you@example.com
-            prefixIcon: AiOutlineMail
+            prefixIcon: mail
         - id: applied3_save_btn
           type: Button
           properties:
             title: Save Profile
-            icon: AiOutlineSave
+            icon: save
             type: primary
             size: large
             block: true

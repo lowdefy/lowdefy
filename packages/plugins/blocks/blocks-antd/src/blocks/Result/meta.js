@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['success', 'info', 'warning', 'error'],
   valueType: null,
   slots: {
     content: 'Additional content below the Result.',
@@ -31,12 +33,9 @@ export default {
     additionalProperties: false,
     properties: {
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to use as result image.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to use as result image.',
       },
       status: {
         type: 'string',

@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['close'],
   valueType: null,
   cssKeys: {
     element: 'The Tag element.',
@@ -48,12 +50,9 @@ export default {
         description: 'Content title of tag - supports html.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          'Name of an Ant Design Icon or properties of an Icon block to customize alert icon.',
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon.',
       },
       theme: {
         type: 'object',

@@ -18,7 +18,16 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'container',
-  icons: ['AiOutlineBell', 'AiOutlineLaptop', 'AiOutlineMoon', 'AiOutlineSun', 'AiOutlineUser'],
+  icons: [
+    'bell',
+    'user',
+    'theme-light',
+    'theme-dark',
+    'theme-system',
+    'globe',
+    'chevron-right',
+    'more',
+  ],
   valueType: null,
   slots: {
     content: 'Child blocks in the header.',
@@ -123,7 +132,7 @@ export default {
           },
           icon: {
             ...icon,
-            description: 'Icon for the notification button. Defaults to AiOutlineBell.',
+            description: 'Icon for the notification button. Defaults to `bell`.',
           },
           size: {
             type: 'string',
@@ -156,7 +165,7 @@ export default {
               icon: {
                 ...icon,
                 description:
-                  'Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser.',
+                  'Icon to display in avatar when no src or content is set. Defaults to `user`.',
               },
               color: {
                 type: 'string',

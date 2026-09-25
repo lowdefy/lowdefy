@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
+  icons: ['menu', 'close', 'loading', 'chevron-down', 'more'],
   valueType: null,
   slots: {
     drawerContent: 'Additional content below the menu in the drawer.',
@@ -140,12 +142,9 @@ export default {
                   description: 'Menu item title.',
                 },
                 icon: {
-                  type: ['string', 'object'],
+                  ...icon,
                   description:
-                    "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on menu item.",
-                  docs: {
-                    displayType: 'icon',
-                  },
+                    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item.',
                 },
                 danger: {
                   type: 'boolean',

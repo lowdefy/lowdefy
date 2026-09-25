@@ -168,7 +168,7 @@ blocks:
   - id: badge_with_icon
     type: Badge
     properties:
-      icon: AiOutlineClockCircle
+      icon: clock
     slots:
       content:
         blocks:

@@ -1125,11 +1125,11 @@
               buttons:
                 - eventName: onEditClick
                   title: Edit
-                  icon: AiOutlineEdit
+                  icon: edit
                   type: primary
                 - eventName: onDeleteClick
                   title: Delete
-                  icon: AiOutlineDelete
+                  icon: delete
                   danger: true
                   disabledField: locked
                   hiddenField: archived
@@ -1204,14 +1204,14 @@
               items:
                 - eventName: onMenuRename
                   title: Rename
-                  icon: AiOutlineEdit
+                  icon: edit
                   hiddenField: readOnly
                 - eventName: onMenuDuplicate
                   title: Duplicate
-                  icon: AiOutlineCopy
+                  icon: copy
                 - eventName: onMenuDelete
                   title: Delete
-                  icon: AiOutlineDelete
+                  icon: delete
                   danger: true
                   hiddenField: readOnly
         rowData:

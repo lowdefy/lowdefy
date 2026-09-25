@@ -16,13 +16,18 @@
 
 import React from 'react';
 import { FloatButton } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
 
 // Shared by the loading fallback and the drawer, so the button painted before the
 // implementation loads is the same one that replaces it.
-function DrawerLauncher({ config, onClick }) {
+function DrawerLauncher({ blockId, config, Icon, onClick }) {
   return (
-    <FloatButton icon={<MessageOutlined />} onClick={onClick} tooltip={config?.title ?? 'Chat'} />
+    <FloatButton
+      icon={
+        <Icon blockId={`${blockId}_launcher_icon`} properties={{ name: 'message', title: '' }} />
+      }
+      onClick={onClick}
+      tooltip={config?.title ?? 'Chat'}
+    />
   );
 }
 

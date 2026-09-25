@@ -703,7 +703,7 @@
           properties:
             title: Save Theme
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: theme_save_action
@@ -792,7 +792,7 @@
           properties:
             title: Add to Cart
             type: primary
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: add_to_cart_action

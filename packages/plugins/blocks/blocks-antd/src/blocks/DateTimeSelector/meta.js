@@ -30,7 +30,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCalendar'],
+  icons: [...LabelMeta.icons, 'calendar', 'clear'],
   valueType: 'date',
   cssKeys: {
     element: 'The DateTimeSelector element.',
@@ -111,9 +111,9 @@ export default {
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
-        default: 'AiOutlineCalendar',
+        default: 'calendar',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker.',
       },
       timeFormat: {
         type: 'string',

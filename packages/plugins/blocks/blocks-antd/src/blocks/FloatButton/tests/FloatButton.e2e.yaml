@@ -23,7 +23,7 @@ blocks:
   - id: fb_basic
     type: FloatButton
     properties:
-      icon: AiOutlineQuestion
+      icon: help
 
   # ============================================
   # PRIMARY TYPE
@@ -33,7 +33,7 @@ blocks:
     type: FloatButton
     properties:
       type: primary
-      icon: AiOutlineQuestion
+      icon: help
 
   # ============================================
   # EVENT TESTS
@@ -42,7 +42,7 @@ blocks:
   - id: fb_click
     type: FloatButton
     properties:
-      icon: AiOutlinePlus
+      icon: add
     events:
       onClick:
         - id: set_fb_clicked
@@ -70,4 +70,4 @@ blocks:
     type: FloatButton
     properties:
       tooltip: Help
-      icon: AiOutlineQuestion
+      icon: help

@@ -21,13 +21,7 @@ export default {
   events: {
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
-  icons: [
-    'AiFillCloseCircle',
-    'AiFillCheckCircle',
-    'AiOutlineLoading',
-    'AiFillExclamationCircle',
-    'AiOutlineQuestionCircle',
-  ],
+  icons: ['error', 'success', 'loading', 'warning', 'help'],
   valueType: null,
   slots: {
     content: 'The labeled input or content blocks.',

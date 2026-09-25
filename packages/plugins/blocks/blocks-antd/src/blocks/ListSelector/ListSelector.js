@@ -121,6 +121,7 @@ function useSearchBlobs(data, fields, caseSensitive) {
 const ListSelector = ({
   blockId,
   classNames = {},
+  components: { Icon },
   events,
   loading,
   methods,
@@ -349,7 +350,16 @@ const ListSelector = ({
         <Input.Search
           id={`${blockId}_search`}
           placeholder={searchPlaceholder}
-          allowClear={searchAllowClear}
+          allowClear={
+            searchAllowClear && {
+              clearIcon: (
+                <Icon
+                  blockId={`${blockId}_search_clearIcon`}
+                  properties={{ name: 'clear', title: '' }}
+                />
+              ),
+            }
+          }
           value={rawQuery}
           onChange={onSearchChange}
         />

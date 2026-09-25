@@ -18,6 +18,8 @@ import React from 'react';
 import { Empty, Space, Typography } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
 
+import IconContext from './IconContext.js';
+
 const { Title } = Typography;
 
 function DiffShell({
@@ -27,6 +29,7 @@ function DiffShell({
   title,
   emptyText,
   empty,
+  Icon,
   methods,
   children,
 }) {
@@ -41,16 +44,18 @@ function DiffShell({
   );
 
   return (
-    <div id={blockId} className={classNames.element} style={styles.element}>
-      <Space direction="vertical" size="middle" style={{ display: 'flex', width: '100%' }}>
-        {title && (
-          <Title level={5} className={classNames.title} style={{ margin: 0, ...styles.title }}>
-            {renderHtml({ html: title, methods })}
-          </Title>
-        )}
-        {body}
-      </Space>
-    </div>
+    <IconContext.Provider value={Icon}>
+      <div id={blockId} className={classNames.element} style={styles.element}>
+        <Space direction="vertical" size="middle" style={{ display: 'flex', width: '100%' }}>
+          {title && (
+            <Title level={5} className={classNames.title} style={{ margin: 0, ...styles.title }}>
+              {renderHtml({ html: title, methods })}
+            </Title>
+          )}
+          {body}
+        </Space>
+      </div>
+    </IconContext.Provider>
   );
 }
 

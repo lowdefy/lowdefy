@@ -38,15 +38,15 @@
   type: TextInput
   properties:
     prefix: Prefix to the text
-- id: 'properties.prefixIcon: AiFillAccountBook'
+- id: 'properties.prefixIcon: BookText'
   type: TextInput
   properties:
-    prefixIcon: AiFillAccountBook
+    prefixIcon: BookText
 - id: 'properties.prefixIcon.size: 24'
   type: TextInput
   properties:
     prefixIcon:
-      name: AiFillAccountBook
+      name: BookText
       size: 24
 - id: 'properties.size: large'
   type: TextInput
@@ -60,15 +60,15 @@
   type: TextInput
   properties:
     suffix: Suffix to the text
-- id: 'properties.suffixIcon: AlertFilled'
+- id: 'properties.suffixIcon: Siren'
   type: TextInput
   properties:
-    suffixIcon: AlertFilled
+    suffixIcon: Siren
 - id: 'properties.suffixIcon.size 24'
   type: TextInput
   properties:
     suffixIcon:
-      name: AlertFilled
+      name: Siren
       size: 24
 - id: 'properties.label span: 12'
   type: TextInput

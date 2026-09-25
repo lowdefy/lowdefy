@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: ['AiOutlineCloseCircle'],
+  icons: ['loading'],
   valueType: null,
   cssKeys: {
     element: 'The Icon element.',
@@ -38,9 +38,13 @@ export default {
       },
       name: {
         type: 'string',
-        default: 'AiOutlineCloseCircle',
         description:
-          'Name of the icon: a semantic name like edit, delete or warning (add your own with theme.icons.aliases), or a React Icons name like LuPencil.',
+          'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. Add your own semantic names with `theme.icons.aliases`.',
+      },
+      nonScalingStroke: {
+        type: 'boolean',
+        description:
+          'Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`.',
       },
       rotate: {
         type: 'number',
@@ -52,6 +56,11 @@ export default {
         docs: {
           displayType: 'number',
         },
+      },
+      strokeWidth: {
+        type: 'number',
+        description:
+          'Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2).',
       },
       spin: {
         type: 'boolean',

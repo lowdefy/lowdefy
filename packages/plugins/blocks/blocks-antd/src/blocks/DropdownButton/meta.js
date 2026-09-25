@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['chevron-down', 'chevron-right', 'more', 'loading'],
   valueType: null,
   cssKeys: {
     element: 'The outer container.',
@@ -44,12 +46,9 @@ export default {
         description: 'Button label text.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use icon in button.',
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button.',
       },
       type: {
         type: 'string',
@@ -141,11 +140,8 @@ export default {
               description: 'Event name to trigger when clicked.',
             },
             icon: {
-              type: ['string', 'object'],
+              ...icon,
               description: 'Icon name or config.',
-              docs: {
-                displayType: 'icon',
-              },
             },
             danger: {
               type: 'boolean',

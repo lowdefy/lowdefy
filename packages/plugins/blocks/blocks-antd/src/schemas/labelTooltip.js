@@ -31,8 +31,9 @@ export default {
         },
         icon: {
           type: 'string',
-          default: 'AiOutlineQuestionCircle',
-          description: 'Name of the icon to show beside the label.',
+          default: 'help',
+          description:
+            'Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`.',
         },
         color: {
           type: 'string',

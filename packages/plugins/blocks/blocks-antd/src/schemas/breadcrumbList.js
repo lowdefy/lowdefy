@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from './icon.js';
+
 export default {
   oneOf: [
     {
@@ -50,12 +52,9 @@ export default {
             },
           },
           icon: {
-            type: ['string', 'object'],
+            ...icon,
             description:
-              "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link.",
-            docs: {
-              displayType: 'icon',
-            },
+              'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link.',
           },
         },
       },

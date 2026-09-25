@@ -31,17 +31,17 @@
   properties:
     list:
       - label: label 1
-        icon: AiOutlineSave
+        icon: save
       - label: label 2
-        icon: AiOutlineDelete
+        icon: delete
 - id: properties.list.icon with onClick
   type: Breadcrumb
   properties:
     list:
       - label: label 1
-        icon: AiOutlineSave
+        icon: save
       - label: label 2
-        icon: AiOutlineDelete
+        icon: delete
   events:
     onClick: []
 - id: properties.list.url

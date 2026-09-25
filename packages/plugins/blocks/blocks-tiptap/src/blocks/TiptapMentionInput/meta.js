@@ -16,7 +16,7 @@
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['bold', 'italic', 'strikethrough', 'highlight'],
   valueType: 'object',
   initValue: {
     html: null,

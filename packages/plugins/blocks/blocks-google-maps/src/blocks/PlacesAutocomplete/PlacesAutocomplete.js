@@ -167,7 +167,16 @@ const PlacesAutocomplete = ({
             classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
             style={{ width: '100%', ...styles.element }}
             styles={{ content: styles.selector, popup: { root: styles.popup } }}
-            allowClear={properties.allowClear !== false}
+            allowClear={
+              properties.allowClear !== false && {
+                clearIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_clearIcon`}
+                    properties={{ name: 'clear', title: '' }}
+                  />
+                ),
+              }
+            }
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
             defaultOpen={properties.defaultOpen}
@@ -203,7 +212,7 @@ const PlacesAutocomplete = ({
                   <components.Icon
                     blockId={`${blockId}_${i}_optionsIcon`}
                     events={events}
-                    properties={properties.optionsIcon ?? { name: 'MdLocationOn' }}
+                    properties={properties.optionsIcon ?? { name: 'location', title: '' }}
                   />{' '}
                   {prediction.text.text}
                 </span>

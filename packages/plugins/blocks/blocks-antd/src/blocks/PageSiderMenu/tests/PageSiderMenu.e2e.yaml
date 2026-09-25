@@ -27,17 +27,17 @@ properties:
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: psm_link2
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: psm_group
         type: MenuGroup
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
         links:
           - id: psm_sub1
             type: MenuLink

@@ -47,14 +47,14 @@
   type: Switch
   properties:
     uncheckedText: Unchecked
-- id: 'properties.checkedIcon: AiOutlineCheckCircle'
+- id: 'properties.checkedIcon: check-circle'
   type: Switch
   properties:
-    checkedIcon: AiOutlineCheckCircle
-- id: 'properties.uncheckedIcon: UnlockFilled'
+    checkedIcon: check-circle
+- id: 'properties.uncheckedIcon: unlock'
   type: Switch
   properties:
-    uncheckedIcon: UnlockFilled
+    uncheckedIcon: unlock
 - id: 'properties.label span: 4'
   type: Switch
   properties:

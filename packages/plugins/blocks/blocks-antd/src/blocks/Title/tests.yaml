@@ -104,15 +104,15 @@
   type: Title
   properties:
     copyable:
-      icon: AiOutlineWarning
+      icon: warning
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: icon: []'
   type: Title
   properties:
     copyable:
       icon:
-        - AiOutlineWarning
-        - AiOutlineRocket
+        - warning
+        - Rocket
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: tooltips: []'
   type: Title

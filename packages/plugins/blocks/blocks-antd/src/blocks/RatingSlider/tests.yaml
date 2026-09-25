@@ -43,14 +43,14 @@
   type: RatingSlider
   properties:
     disableNotApplicable: true
-- id: 'property.minIcon: MehTwoTone'
+- id: 'property.minIcon: FaceNeutral'
   type: RatingSlider
   properties:
-    minIcon: AiOutlineForm
-- id: 'property.maxIcon: SmileTwoTone'
+    minIcon: SquarePen
+- id: 'property.maxIcon: FaceSlightlySmiling'
   type: RatingSlider
   properties:
-    maxIcon: SmileTwoTone
+    maxIcon: FaceSlightlySmiling
 - id: 'property.min: 3'
   type: RatingSlider
   properties:

@@ -48,7 +48,7 @@
         title: Success
         color: primary
         variant: outlined
-        icon: AiOutlineCheckCircle
+        icon: check-circle
       events:
         onClick:
           - id: call_status_success
@@ -64,7 +64,7 @@
         title: Error
         color: danger
         variant: outlined
-        icon: AiOutlineCloseCircle
+        icon: close-circle
       events:
         onClick:
           - id: call_status_error
@@ -80,7 +80,7 @@
         title: Warning
         color: default
         variant: outlined
-        icon: AiOutlineWarning
+        icon: warning
       events:
         onClick:
           - id: call_status_warning
@@ -96,7 +96,7 @@
         title: Info
         color: primary
         variant: text
-        icon: AiOutlineInfoCircle
+        icon: info
       events:
         onClick:
           - id: call_status_info
@@ -112,7 +112,7 @@
         title: Loading
         color: default
         variant: outlined
-        icon: AiOutlineLoading
+        icon: loading
       events:
         onClick:
           - id: call_status_loading
@@ -214,20 +214,20 @@
       properties:
         status: success
         content: File saved
-        icon: AiOutlineSave
+        icon: save
     - id: icon_bell_msg
       type: Message
       properties:
         status: info
         content: Notification sent
-        icon: AiOutlineBell
+        icon: bell
     - id: icon_star_msg
       type: Message
       properties:
         status: info
         content: Custom colored star icon
         icon:
-          name: AiOutlineStar
+          name: star
           color: '#faad14'
     - id: btn_icon_save
       type: Button
@@ -237,7 +237,7 @@
         title: Save Icon
         color: primary
         variant: outlined
-        icon: AiOutlineSave
+        icon: save
       events:
         onClick:
           - id: call_icon_save
@@ -253,7 +253,7 @@
         title: Bell Icon
         color: primary
         variant: outlined
-        icon: AiOutlineBell
+        icon: bell
       events:
         onClick:
           - id: call_icon_bell
@@ -269,7 +269,7 @@
         title: Star Icon (colored)
         color: default
         variant: outlined
-        icon: AiOutlineStar
+        icon: star
       events:
         onClick:
           - id: call_icon_star
@@ -430,7 +430,7 @@
         title: Open as Success
         color: primary
         variant: solid
-        icon: AiOutlineCheckCircle
+        icon: check-circle
       events:
         onClick:
           - id: call_override_success
@@ -450,7 +450,7 @@
         title: Open as Error
         color: danger
         variant: solid
-        icon: AiOutlineCloseCircle
+        icon: close-circle
       events:
         onClick:
           - id: call_override_error
@@ -470,7 +470,7 @@
         title: Open with Custom Icon
         color: default
         variant: solid
-        icon: AiOutlineRocket
+        icon: Rocket
       events:
         onClick:
           - id: call_override_icon
@@ -481,7 +481,7 @@
               args:
                 - status: info
                   content: Launched with a rocket icon!
-                  icon: AiOutlineRocket
+                  icon: Rocket
                   duration: 3
 
 - title: onClose Event
@@ -511,7 +511,7 @@
         title: Open Message with onClose
         color: primary
         variant: outlined
-        icon: AiOutlineNotification
+        icon: Megaphone
       events:
         onClick:
           - id: call_onclose
@@ -757,7 +757,7 @@
                 title: Submit Feedback
                 color: primary
                 variant: solid
-                icon: AiOutlineSend
+                icon: send
               events:
                 onClick:
                   - id: form_validate
@@ -796,7 +796,7 @@
           properties:
             status: success
             content: File uploaded successfully!
-            icon: AiOutlineCloudUpload
+            icon: CloudUpload
             duration: 3
         - id: upload_fail_msg
           type: Message
@@ -818,7 +818,7 @@
                 title: Start Upload
                 color: primary
                 variant: solid
-                icon: AiOutlineUpload
+                icon: upload
               events:
                 onClick:
                   - id: upload_show_progress
@@ -834,7 +834,7 @@
                 title: Simulate Success
                 color: green
                 variant: outlined
-                icon: AiOutlineCheckCircle
+                icon: check-circle
               events:
                 onClick:
                   - id: upload_show_success
@@ -850,7 +850,7 @@
                 title: Simulate Failure
                 color: danger
                 variant: outlined
-                icon: AiOutlineCloseCircle
+                icon: close-circle
               events:
                 onClick:
                   - id: upload_show_fail

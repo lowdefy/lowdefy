@@ -52,6 +52,7 @@ function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions })
 function AddOnSelect({
   blockId,
   classNames = {},
+  components: { Icon },
   defaultValue,
   loading,
   methods,
@@ -99,7 +100,14 @@ function AddOnSelect({
       optionFilterProp="filterString"
       optionLabelProp="label"
       placeholder={'Select item'}
-      suffixIcon={properties.showArrow === false ? null : undefined}
+      suffixIcon={
+        properties.showArrow === false ? null : (
+          <Icon
+            blockId={`${blockId}_select_suffixIcon`}
+            properties={{ name: 'chevron-down', title: '' }}
+          />
+        )
+      }
       showSearch={true}
       size={properties.size}
       value={getValueIndex(value?.region, uniqueValueOptions)}
@@ -188,6 +196,7 @@ const PhoneNumberInput = ({
                 <AddOnSelect
                   blockId={blockId}
                   classNames={classNames}
+                  components={{ Icon }}
                   defaultValue={defaultValue}
                   loading={loading}
                   methods={methods}
@@ -197,7 +206,16 @@ const PhoneNumberInput = ({
                   value={value}
                 />
               }
-              allowClear={properties.allowClear}
+              allowClear={
+                properties.allowClear && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={`ldf-phone-number-input${

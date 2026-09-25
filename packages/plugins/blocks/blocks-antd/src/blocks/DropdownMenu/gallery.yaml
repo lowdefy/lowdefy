@@ -26,20 +26,20 @@
             pageId: home
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: dm_basic_profile
             type: MenuLink
             pageId: home
             properties:
               title: Profile
-              icon: AiOutlineUser
+              icon: user
           - id: dm_basic_div
             type: MenuDivider
           - id: dm_basic_logout
             type: MenuLink
             properties:
               title: Log Out
-              icon: AiOutlineLogout
+              icon: logout
               danger: true
       blocks:
         - id: dropdown_menu_basic_btn
@@ -92,19 +92,19 @@
             type: MenuLink
             properties:
               title: Copy
-              icon: AiOutlineCopy
+              icon: copy
           - id: dm_ctx_paste
             type: MenuLink
             properties:
               title: Paste
-              icon: AiOutlineSnippets
+              icon: Files
           - id: dm_ctx_div
             type: MenuDivider
           - id: dm_ctx_delete
             type: MenuLink
             properties:
               title: Delete
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
       blocks:
         - id: dropdown_menu_context_area
@@ -213,12 +213,12 @@
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
           - id: dm_arrow_2
             type: MenuLink
             properties:
               title: Help
-              icon: AiOutlineQuestionCircle
+              icon: help
       blocks:
         - id: dropdown_menu_arrow_btn
           type: Button
@@ -241,12 +241,12 @@
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
           - id: dm_arrowc_2
             type: MenuLink
             properties:
               title: Help
-              icon: AiOutlineQuestionCircle
+              icon: help
       blocks:
         - id: dropdown_menu_arrow_center_btn
           type: Button
@@ -270,7 +270,7 @@
             type: MenuGroup
             properties:
               title: Navigation
-              icon: AiOutlineAppstore
+              icon: grid
             links:
               - id: dm_grp_nav_home
                 type: MenuLink
@@ -288,7 +288,7 @@
             type: MenuGroup
             properties:
               title: Account
-              icon: AiOutlineUser
+              icon: user
             links:
               - id: dm_grp_acc_profile
                 type: MenuLink
@@ -323,7 +323,7 @@
             type: MenuLink
             properties:
               title: Available Action
-              icon: AiOutlineCheck
+              icon: check
           - id: dm_dis_disabled
             type: MenuLink
             properties:
@@ -359,13 +359,13 @@
             type: MenuLink
             properties:
               title: New File
-              icon: AiOutlineFileAdd
+              icon: FilePlus
               shortcut: mod+shift+N
           - id: dm_sc_save
             type: MenuLink
             properties:
               title: Save
-              icon: AiOutlineSave
+              icon: save
               shortcut: mod+shift+S
           - id: dm_sc_div
             type: MenuDivider
@@ -373,7 +373,7 @@
             type: MenuLink
             properties:
               title: Close
-              icon: AiOutlineClose
+              icon: close
               shortcut: mod+shift+W
       events:
         onClick:
@@ -428,7 +428,7 @@
             title: Click to Toggle
             color: primary
             variant: solid
-            icon: AiOutlineBell
+            icon: bell
 
 - title: onClick Event
   blocks:
@@ -443,17 +443,17 @@
             type: MenuLink
             properties:
               title: Edit
-              icon: AiOutlineEdit
+              icon: edit
           - id: dm_oc_copy
             type: MenuLink
             properties:
               title: Copy
-              icon: AiOutlineCopy
+              icon: copy
           - id: dm_oc_delete
             type: MenuLink
             properties:
               title: Delete
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
       events:
         onClick:
@@ -524,20 +524,20 @@
             pageId: home
             properties:
               title: My Profile
-              icon: AiOutlineUser
+              icon: user
           - id: dm_user_settings
             type: MenuLink
             pageId: home
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
           - id: dm_user_div
             type: MenuDivider
           - id: dm_user_logout
             type: MenuLink
             properties:
               title: Log Out
-              icon: AiOutlineLogout
+              icon: logout
               danger: true
       blocks:
         - id: dropdown_menu_user_trigger
@@ -575,4 +575,4 @@
           type: Button
           properties:
             title: Open Menu
-            icon: AiOutlineMenu
+            icon: menu

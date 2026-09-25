@@ -96,7 +96,6 @@ const MultipleSelector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
-              allowClear={properties.allowClear !== false}
               autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
               variant={antdVariant}
@@ -129,41 +128,46 @@ const MultipleSelector = ({
               }
               size={properties.size}
               status={validation.status}
-              value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
-              suffixIcon={
-                get(properties, 'showArrow', { default: true }) === false
-                  ? null
-                  : properties.suffixIcon && (
-                      <Icon
-                        blockId={`${blockId}_suffixIcon`}
-                        classNames={{ element: classNames.suffixIcon }}
-                        events={events}
-                        properties={properties.suffixIcon}
-                        styles={{ element: styles.suffixIcon }}
-                      />
-                    )
+              value={
+                loading
+                  ? []
+                  : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
               }
-              clearIcon={
-                properties.clearIcon && (
+              suffixIcon={
+                get(properties, 'showArrow', { default: true }) === false ? null : (
                   <Icon
-                    blockId={`${blockId}_clearIcon`}
-                    classNames={{ element: classNames.clearIcon }}
+                    blockId={`${blockId}_suffixIcon`}
+                    classNames={{ element: classNames.suffixIcon }}
                     events={events}
-                    properties={properties.clearIcon}
-                    styles={{ element: styles.clearIcon }}
+                    properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+                    styles={{ element: styles.suffixIcon }}
                   />
                 )
+              }
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      classNames={{ element: classNames.clearIcon }}
+                      events={events}
+                      properties={properties.clearIcon ?? { name: 'clear', title: '' }}
+                      styles={{ element: styles.clearIcon }}
+                    />
+                  ),
+                }
               }
               menuItemSelectedIcon={
-                properties.selectedIcon && (
-                  <Icon
-                    blockId={`${blockId}_selectedIcon`}
-                    classNames={{ element: classNames.selectedIcon }}
-                    events={events}
-                    properties={properties.selectedIcon}
-                    styles={{ element: styles.selectedIcon }}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_selectedIcon`}
+                  classNames={{ element: classNames.selectedIcon }}
+                  events={events}
+                  properties={properties.selectedIcon ?? { name: 'check', title: '' }}
+                  styles={{ element: styles.selectedIcon }}
+                />
+              }
+              removeIcon={
+                <Icon blockId={`${blockId}_removeIcon`} properties={{ name: 'close', title: '' }} />
               }
               filterOption={(input, option) =>
                 (option.filterstring || option.children.props.html || '')

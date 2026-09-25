@@ -29,7 +29,7 @@ blocks:
           type: MenuLink
           properties:
             title: Item One
-            icon: AiOutlineHome
+            icon: home
         - id: dm_click_item2
           type: MenuLink
           properties:
@@ -204,7 +204,7 @@ blocks:
           type: MenuLink
           properties:
             title: With Icon
-            icon: AiOutlineStar
+            icon: star
         - id: dm_icon_item2
           type: MenuLink
           properties:

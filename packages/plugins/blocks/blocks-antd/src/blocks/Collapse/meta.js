@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['chevron-right'],
   valueType: null,
   slots: false,
   cssKeys: {
@@ -60,12 +62,9 @@ export default {
         description: "Destroy inactive panel. Maps to antd's `destroyOnHidden`.",
       },
       expandIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block for expand icon on the right of selector.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for expand icon on the right of selector.',
       },
       expandIconPlacement: {
         type: 'string',

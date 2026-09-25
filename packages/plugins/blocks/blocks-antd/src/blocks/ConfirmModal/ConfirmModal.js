@@ -18,6 +18,8 @@ import React, { useEffect } from 'react';
 import { App } from 'antd';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import statusIcons from '../statusIcons.js';
+
 const ConfirmModal = ({
   blockId,
   classNames = {},
@@ -31,22 +33,9 @@ const ConfirmModal = ({
   const { modal } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
-      const additionalProps = {};
-      if (properties.icon) {
-        additionalProps.icon = (
-          <ErrorBoundary onError={handleError}>
-            <Icon
-              blockId={`${blockId}_icon`}
-              classNames={{ element: classNames.icon }}
-              events={events}
-              properties={properties.icon}
-              styles={{ element: styles.icon }}
-            />
-          </ErrorBoundary>
-        );
-      }
+      const status = args.status || properties.status || 'confirm';
       methods.triggerEvent({ name: 'onOpen' });
-      modal[args.status || properties.status || 'confirm']({
+      modal[status]({
         id: `${blockId}_confirm_modal`,
         title: renderHtml({ html: properties.title, methods }),
         content:
@@ -103,7 +92,21 @@ const ConfirmModal = ({
           const response = await methods.triggerEvent({ name: 'onCancel' });
           if (response.success === false && response.bounced !== true) throw response;
         },
-        ...additionalProps,
+        icon: (
+          <ErrorBoundary onError={handleError}>
+            <Icon
+              blockId={`${blockId}_icon`}
+              classNames={{ element: classNames.icon }}
+              events={events}
+              properties={properties.icon ?? statusIcons[status]}
+              styles={{ element: styles.icon }}
+            />
+          </ErrorBoundary>
+        ),
+        // antd treats any closeIcon as closable, so it is only passed when closable is on.
+        closeIcon: properties.closable ? (
+          <Icon blockId={`${blockId}_closeIcon`} properties={{ name: 'close', title: '' }} />
+        ) : undefined,
       });
     });
   });

@@ -16,7 +16,7 @@
 
 export default {
   category: 'container',
-  icons: [],
+  icons: ['close', 'loading'],
   valueType: null,
   slots: {
     content: 'Main Modal body.',

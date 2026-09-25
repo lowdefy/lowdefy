@@ -20,6 +20,7 @@ import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
+import statusIcons from '../statusIcons.js';
 
 const NotificationBlock = ({
   blockId,
@@ -33,7 +34,9 @@ const NotificationBlock = ({
   const { notification } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
-      notification[args.status || properties.status || 'success']({
+      const status = args.status || properties.status || 'success';
+      const icon = properties.icon ?? statusIcons[status];
+      notification[status]({
         id: `${blockId}_notification`,
         bottom: properties.bottom,
         className: classNames.element,
@@ -48,13 +51,17 @@ const NotificationBlock = ({
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         placement: properties.placement,
         top: properties.top,
-        icon: properties.icon && (
+        icon: icon && (
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_icon`}
+              // antd colours its own status icons through this class; a replaced icon needs it too.
+              className={
+                type.isNone(properties.icon) ? `ant-notification-notice-icon-${status}` : undefined
+              }
               classNames={{ element: classNames.icon }}
               events={events}
-              properties={properties.icon}
+              properties={icon}
               styles={{ element: styles.icon }}
             />
           </ErrorBoundary>
@@ -70,13 +77,13 @@ const NotificationBlock = ({
             />
           </ErrorBoundary>
         ),
-        closeIcon: properties.closeIcon && (
+        closeIcon: (
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_closeIcon`}
               classNames={{ element: classNames.closeIcon }}
               events={events}
-              properties={properties.closeIcon}
+              properties={properties.closeIcon ?? { name: 'close', title: '' }}
               styles={{ element: styles.closeIcon }}
             />
           </ErrorBoundary>

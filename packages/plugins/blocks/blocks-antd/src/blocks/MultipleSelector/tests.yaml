@@ -79,20 +79,20 @@
     options:
       - Option 1
       - Option 2
-- id: 'properties.clearIcon: ChromeFilled'
+- id: 'properties.clearIcon: Globe'
   type: MultipleSelector
   properties:
     allowClear: true
-    clearIcon: ChromeFilled
+    clearIcon: Globe
     options:
       - Option 1
       - Option 2
-- id: 'properties.clearIcon-object: ChromeFilled'
+- id: 'properties.clearIcon-object: Globe'
   type: MultipleSelector
   properties:
     allowClear: true
     clearIcon:
-      name: ChromeFilled
+      name: Globe
       color: red
     options:
       - Option 1
@@ -121,10 +121,10 @@
   type: MultipleSelector
   properties:
     size: default
-- id: 'properties.suffixIcon: AiOutlineDoubleLeft'
+- id: 'properties.suffixIcon: chevrons-left'
   type: MultipleSelector
   properties:
-    suffixIcon: AiOutlineDoubleLeft
+    suffixIcon: chevrons-left
 - id: 'properties.label span: 12'
   type: MultipleSelector
   properties:

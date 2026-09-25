@@ -21,6 +21,11 @@ import { Steps } from 'antd';
 
 import withTheme from '../withTheme.js';
 
+const statusIcons = {
+  finish: 'check',
+  error: 'close',
+};
+
 function StepsBlock({
   blockId,
   classNames = {},
@@ -43,6 +48,30 @@ function StepsBlock({
     });
   });
 
+  // Mirrors antd's merged step type: progressDot only turns a default Steps into dots.
+  let stepsType = properties.type;
+  if ((type.isNone(stepsType) || stepsType === 'default') && properties.progressDot) {
+    stepsType = 'dot';
+  }
+  const isDot = stepsType === 'dot' || stepsType === 'inline';
+
+  // antd draws the finish tick and error cross itself; swap them for the app's icons.
+  function iconRender(originalNode, { index, item, components: { Icon: StepIcon } }) {
+    const statusIcon = statusIcons[item.status];
+    if (isDot || item.icon || type.isNone(statusIcon)) {
+      return originalNode;
+    }
+    return (
+      <StepIcon>
+        <Icon
+          blockId={`${blockId}_${index}_${item.status}_icon`}
+          className={`ant-steps-item-icon-${item.status}`}
+          properties={{ name: statusIcon, title: '' }}
+        />
+      </StepIcon>
+    );
+  }
+
   return (
     <Steps
       id={blockId}
@@ -57,6 +86,7 @@ function StepsBlock({
       titlePlacement={properties.titlePlacement}
       percent={properties.percent}
       progressDot={properties.progressDot}
+      iconRender={iconRender}
       responsive={properties.responsive}
       variant={properties.variant}
       onChange={

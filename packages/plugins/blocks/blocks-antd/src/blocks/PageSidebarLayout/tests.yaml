@@ -23,13 +23,13 @@
           type: MenuLink
           pageId: introduction
           properties:
-            icon: AiOutlineRocket
+            icon: Rocket
             title: Introduction
         - id: alert
           type: MenuLink
           pageId: Alert
           properties:
-            icon: AiOutlineExclamationCircle
+            icon: CircleAlert
             title: Alert
 - id: 'properties.logo.src'
   type: PageSidebarLayout
@@ -42,7 +42,7 @@
           type: MenuLink
           pageId: introduction
           properties:
-            icon: AiOutlineRocket
+            icon: Rocket
             title: Introduction
 - id: 'properties.logo.alt'
   type: PageSidebarLayout
@@ -130,7 +130,7 @@
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
 - id: 'properties.theme (object)'
   type: PageSidebarLayout
   properties:

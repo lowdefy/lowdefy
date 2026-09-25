@@ -48,4 +48,4 @@
 - id: icon
   type: Tag
   properties:
-    icon: AiOutlineSave
+    icon: save

@@ -141,7 +141,7 @@
       properties:
         title: Address
         optionsIcon:
-          name: MdOutlineHome
+          name: home
           color: '#1890ff'
         loadingPlaceholder: Searching addresses...
         notFoundContent: No matching address
@@ -225,4 +225,4 @@
       type: Button
       properties:
         title: Save address
-        icon: AiOutlineSave
+        icon: save

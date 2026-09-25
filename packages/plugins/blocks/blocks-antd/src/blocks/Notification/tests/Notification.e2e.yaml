@@ -217,7 +217,7 @@ blocks:
     properties:
       title: Custom Icon
       description: Notification with custom icon.
-      icon: AiOutlineSmile
+      icon: FaceSlightlySmiling
 
   - id: open_custom_icon
     type: Button

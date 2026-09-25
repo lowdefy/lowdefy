@@ -20,6 +20,9 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../../withTheme.js';
 
+import createUploadIconRender from '../utils/createUploadIconRender.js';
+import getUploadListIcons from '../utils/getUploadListIcons.js';
+
 const downloadFile = async ({ file, methods }) => {
   const downloadPolicy = await methods.triggerEvent({
     name: '__getDownloadPolicy',
@@ -28,7 +31,14 @@ const downloadFile = async ({ file, methods }) => {
   window.open(downloadPolicy?.responses?.__getDownloadPolicy?.response?.[0]);
 };
 
-const Download = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
+const Download = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+}) => {
   useEffect(() => {
     methods.registerEvent({
       name: '__getDownloadPolicy',
@@ -56,7 +66,12 @@ const Download = ({ blockId, classNames = {}, methods, properties, styles = {} }
         // Return false so antd doesn't fire onChange with a removed-file list.
         return false;
       }}
-      showUploadList={{ showDownloadIcon: true, showRemoveIcon }}
+      iconRender={createUploadIconRender({ blockId, Icon })}
+      showUploadList={{
+        ...getUploadListIcons({ blockId, Icon }),
+        showDownloadIcon: true,
+        showRemoveIcon,
+      }}
     />
   );
 };

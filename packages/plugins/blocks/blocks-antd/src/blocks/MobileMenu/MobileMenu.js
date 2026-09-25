@@ -58,7 +58,7 @@ const MobileMenu = ({
           hideTitle: true,
           type: 'primary',
           icon: {
-            name: openState ? 'AiOutlineMenuUnfold' : 'AiOutlineMenuFold',
+            name: openState ? 'close' : 'menu',
           },
           ...(properties.toggleMenuButton || {}),
         }}

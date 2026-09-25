@@ -21,6 +21,7 @@ import { get } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 import useItemShortcuts from '../useItemShortcuts.js';
+import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 import { buildMenuItems, flattenLinks } from '../buildMenuItems.js';
 
 function collectLinkShortcuts(links) {
@@ -80,6 +81,7 @@ function DropdownMenuBlock({
       className={classNames.element}
       style={styles.element}
       menu={{
+        ...getDropdownMenuIcons({ blockId, Icon }),
         items,
         onClick: ({ key, keyPath }) => {
           const link = linkMap[key];

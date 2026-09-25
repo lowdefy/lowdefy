@@ -85,25 +85,25 @@
       type: Switch
       properties:
         title: Custom Checked Icon
-        checkedIcon: AiOutlineLike
-        uncheckedIcon: AiOutlineDislike
+        checkedIcon: ThumbsUp
+        uncheckedIcon: ThumbsDown
         label:
           disabled: true
     - id: icon_lock
       type: Switch
       properties:
         title: Lock / Unlock
-        checkedIcon: AiOutlineLock
-        uncheckedIcon: AiOutlineUnlock
+        checkedIcon: lock
+        uncheckedIcon: unlock
         label:
           disabled: true
     - id: icon_sound
       type: Switch
       properties:
         title: Sound On / Off
-        checkedIcon: AiOutlineSound
+        checkedIcon: Volume2
         uncheckedIcon:
-          name: AiOutlineStop
+          name: Ban
           color: '#999'
         label:
           disabled: true
@@ -111,16 +111,16 @@
       type: Switch
       properties:
         title: Visibility Toggle
-        checkedIcon: AiOutlineEye
-        uncheckedIcon: AiOutlineEyeInvisible
+        checkedIcon: view
+        uncheckedIcon: hide
         label:
           disabled: true
     - id: icon_power
       type: Switch
       properties:
         title: Power Toggle
-        checkedIcon: AiOutlineThunderbolt
-        uncheckedIcon: AiOutlinePoweroff
+        checkedIcon: Zap
+        uncheckedIcon: Power
         label:
           disabled: true
 
@@ -231,8 +231,8 @@
       properties:
         title: Disabled with Icons
         disabled: true
-        checkedIcon: AiOutlineLike
-        uncheckedIcon: AiOutlineDislike
+        checkedIcon: ThumbsUp
+        uncheckedIcon: ThumbsDown
         label:
           disabled: true
 
@@ -490,7 +490,7 @@
           type: Button
           properties:
             title: Save Privacy Settings
-            icon: AiOutlineSave
+            icon: save
             type: primary
             block: true
           events:

@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Collapse, Space, Typography } from 'antd';
-import { ArrowRightOutlined } from '@ant-design/icons';
 import { type } from '@lowdefy/helpers';
 
 import { CHANGE_TYPES } from './constants.js';
+import IconContext from './IconContext.js';
 import formatValue from './formatValue.js';
 
 const { Text } = Typography;
@@ -98,6 +98,7 @@ function renderCollapsibleObject(value, formatter) {
 }
 
 function ValueCell({ change, collapseNested = true }) {
+  const Icon = useContext(IconContext);
   const { type: changeType, oldValue, newValue, formatter } = change;
 
   if (changeType === CHANGE_TYPES.CREATE) {
@@ -121,8 +122,11 @@ function ValueCell({ change, collapseNested = true }) {
   return (
     <Space size={8} wrap>
       {renderOld(oldValue, formatter)}
-      <ArrowRightOutlined
-        style={{ color: 'var(--ant-color-text-quaternary, rgba(0,0,0,0.25))', fontSize: 12 }}
+      <Icon
+        properties={{ name: 'arrow-right', title: '' }}
+        styles={{
+          element: { color: 'var(--ant-color-text-quaternary, rgba(0,0,0,0.25))', fontSize: 12 },
+        }}
       />
       {renderNew(newValue, formatter)}
     </Space>

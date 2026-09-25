@@ -21,18 +21,18 @@
 - id: properties.icon string
   type: Anchor
   properties:
-    icon: AiFillFire
+    icon: Flame
 - id: properties.icon object
   type: Anchor
   properties:
     title: Click here
     icon:
       color: red
-      name: AiFillRocket
+      name: Rocket
 - id: properties.icon and properties.title
   type: Anchor
   properties:
-    icon: AiOutlineLink
+    icon: link
     title: This is the anchor title
 - id: properties.disabled
   type: Anchor
@@ -42,7 +42,7 @@
 - id: properties.icon, properties.title and properties.disabled
   type: Anchor
   properties:
-    icon: AiOutlineLink
+    icon: link
     title: This is the anchor title
     disabled: true
 - id: properties.url
@@ -92,7 +92,7 @@
   type: Anchor
   properties:
     title: Click here
-    icon: AiOutlineLink
+    icon: link
     style:
       color: green !important
       fontSize: 8
@@ -103,7 +103,7 @@
       loading: true
   properties:
     title: Click here
-    icon: AiOutlineLink
+    icon: link
     style:
       color: green !important
       fontSize: 8

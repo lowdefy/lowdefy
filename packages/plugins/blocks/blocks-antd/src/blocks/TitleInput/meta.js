@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'input',
   icons: [],
@@ -138,11 +140,8 @@ export default {
             additionalProperties: false,
             properties: {
               icon: {
-                type: ['string', 'object'],
+                ...icon,
                 description: 'Edit icon.',
-                docs: {
-                  displayType: 'icon',
-                },
               },
               tooltip: {
                 type: 'string',

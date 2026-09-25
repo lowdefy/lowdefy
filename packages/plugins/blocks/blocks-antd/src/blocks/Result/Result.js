@@ -18,6 +18,7 @@ import React from 'react';
 import { Result } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import statusIcons from '../statusIcons.js';
 import withTheme from '../withTheme.js';
 
 const ResultBlock = ({
@@ -29,29 +30,33 @@ const ResultBlock = ({
   methods,
   properties,
   styles = {},
-}) => (
-  <Result
-    id={blockId}
-    className={classNames.element}
-    title={renderHtml({ html: properties.title, methods })}
-    subTitle={renderHtml({ html: properties.subTitle, methods })}
-    status={properties.status}
-    style={styles.element}
-    icon={
-      properties.icon && (
-        <Icon
-          blockId={`${blockId}_icon`}
-          classNames={{ element: classNames.icon }}
-          events={events}
-          properties={properties.icon}
-          styles={{ element: styles.icon }}
-        />
-      )
-    }
-    extra={content.extra && content.extra({ justifyContent: 'center' })}
-  >
-    {content.content && content.content({ justifyContent: 'center' })}
-  </Result>
-);
+}) => {
+  // Statuses without a status icon (403, 404, 500) keep antd's illustrations.
+  const icon = properties.icon ?? statusIcons[properties.status ?? 'info'];
+  return (
+    <Result
+      id={blockId}
+      className={classNames.element}
+      title={renderHtml({ html: properties.title, methods })}
+      subTitle={renderHtml({ html: properties.subTitle, methods })}
+      status={properties.status}
+      style={styles.element}
+      icon={
+        icon && (
+          <Icon
+            blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={icon}
+            styles={{ element: styles.icon }}
+          />
+        )
+      }
+      extra={content.extra && content.extra({ justifyContent: 'center' })}
+    >
+      {content.content && content.content({ justifyContent: 'center' })}
+    </Result>
+  );
+};
 
 export default withTheme('Result', withBlockDefaults(ResultBlock));

@@ -104,16 +104,16 @@
       properties:
         data:
           - title: Order placed
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
             color: blue
           - title: Payment confirmed
-            icon: AiOutlineDollarCircle
+            icon: CircleDollarSign
             color: green
           - title: Shipped
-            icon: AiOutlineCar
+            icon: Car
             color: orange
           - title: Delivered
-            icon: AiOutlineCheckCircle
+            icon: check-circle
             color: green
       blocks:
         - id: tl_icons_content
@@ -129,15 +129,15 @@
         data:
           - description: Server deployed
             status_color: green
-            status_icon: AiOutlineCloudServer
+            status_icon: Server
             timestamp: '10:30 AM'
           - description: Database migrated
             status_color: blue
-            status_icon: AiOutlineDatabase
+            status_icon: Database
             timestamp: '11:15 AM'
           - description: Cache cleared
             status_color: orange
-            status_icon: AiOutlineSync
+            status_icon: RefreshCw
             timestamp: '11:45 AM'
       blocks:
         - id: tl_colors_custom_fields_content
@@ -166,7 +166,7 @@
       properties:
         pending: true
         pendingDotIcon:
-          name: AiOutlineClockCircle
+          name: clock
           color: '#1677ff'
         data:
           - title: Task A completed
@@ -314,19 +314,19 @@
             mode: left
             data:
               - title: Project kickoff
-                icon: AiOutlineFlag
+                icon: Flag
                 color: blue
                 label: 'Jan 15'
               - title: Design phase complete
-                icon: AiOutlineCheckCircle
+                icon: check-circle
                 color: green
                 label: 'Feb 28'
               - title: Development sprint 1
-                icon: AiOutlineCheckCircle
+                icon: check-circle
                 color: green
                 label: 'Mar 30'
               - title: QA testing
-                icon: AiOutlineLoading
+                icon: loading
                 color: orange
                 label: 'Apr 15'
           blocks:
@@ -346,7 +346,7 @@
                 flex: 0 0 auto
               properties:
                 title: Export Timeline
-                icon: AiOutlineDownload
+                icon: download
                 color: primary
                 variant: outlined
               events:
@@ -372,19 +372,19 @@
             reverse: true
             data:
               - title: Ticket created by user
-                icon: AiOutlinePlus
+                icon: add
                 color: blue
               - title: Assigned to support team
-                icon: AiOutlineTeam
+                icon: users
                 color: blue
               - title: Investigating root cause
-                icon: AiOutlineSearch
+                icon: search
                 color: orange
               - title: Fix deployed to production
-                icon: AiOutlineCheckCircle
+                icon: check-circle
                 color: green
               - title: Ticket resolved
-                icon: AiOutlineLike
+                icon: ThumbsUp
                 color: green
           blocks:
             - id: tl_support_timeline_content
@@ -403,7 +403,7 @@
                 flex: 0 0 auto
               properties:
                 title: Reopen Ticket
-                icon: AiOutlineRollback
+                icon: Undo2
                 color: default
                 variant: outlined
               events:
@@ -419,7 +419,7 @@
                 flex: 0 0 auto
               properties:
                 title: Close Ticket
-                icon: AiOutlineCheck
+                icon: check
                 color: primary
                 variant: solid
               events:

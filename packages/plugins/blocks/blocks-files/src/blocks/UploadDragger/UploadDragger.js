@@ -20,6 +20,8 @@ import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import useFileList from '../utils/useFileList.js';
+import createUploadIconRender from '../utils/createUploadIconRender.js';
+import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import getOnPaste from '../utils/getOnPaste.js';
@@ -29,7 +31,15 @@ import './style.module.css';
 
 const { Dragger } = AntdUpload;
 
-const UploadDragger = ({ blockId, classNames = {}, methods, properties, styles = {}, value }) => {
+const UploadDragger = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  methods,
+  properties,
+  styles = {},
+  value,
+}) => {
   const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
     properties,
     methods,
@@ -96,7 +106,10 @@ const UploadDragger = ({ blockId, classNames = {}, methods, properties, styles =
         maxCount={properties.maxCount}
         multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
         onRemove={removeFile}
-        showUploadList={properties.showUploadList}
+        iconRender={createUploadIconRender({ blockId, Icon })}
+        showUploadList={
+          properties.showUploadList !== false && getUploadListIcons({ blockId, Icon })
+        }
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.

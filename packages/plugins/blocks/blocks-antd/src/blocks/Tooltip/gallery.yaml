@@ -695,7 +695,7 @@
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineDelete
+            icon: delete
             hideTitle: true
             color: danger
             variant: text
@@ -1085,7 +1085,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        name: AiOutlineQuestionCircle
+                        name: help
                         size: 14
                         color: '#8c8c8c'
             placeholder: Enter your username
@@ -1108,7 +1108,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        name: AiOutlineQuestionCircle
+                        name: help
                         size: 14
                         color: '#8c8c8c'
             placeholder: Enter your email
@@ -1153,7 +1153,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        name: AiOutlineInfoCircle
+                        name: info
                         size: 14
                         color: '#8c8c8c'
             - id: tooltip_dashboard_users_stat
@@ -1199,7 +1199,7 @@
                       layout:
                         flex: 0 0 auto
                       properties:
-                        name: AiOutlineInfoCircle
+                        name: info
                         size: 14
                         color: '#8c8c8c'
             - id: tooltip_dashboard_revenue_stat
