@@ -1,6 +1,6 @@
 ---
-'@lowdefy/build': minor
-'@lowdefy/connection-mongodb': minor
+'@lowdefy/build': patch
+'@lowdefy/connection-mongodb': patch
 ---
 
 fix(build,connection-mongodb): Refuse a `tenant: shared` connection whose change log writes into a walled collection
