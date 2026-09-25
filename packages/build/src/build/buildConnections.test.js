@@ -626,3 +626,172 @@ test('buildConnections still validates the tenant contract under the pinned poli
     'Connection type "TestType" does not implement the tenant scoping contract, so "tenant" can not be declared at connection "connection1".'
   );
 });
+
+const mongoTenantTarget = {
+  database: ['databaseUri', 'databaseName'],
+  collection: 'collection',
+  changeLogCollection: 'changeLog.collection',
+};
+
+function sharedChangeLogContext() {
+  return tenantContext({
+    connectionMetas: { MongoDBCollection: { tenant: true, tenantTarget: mongoTenantTarget } },
+  });
+}
+
+test('buildConnections throws when a shared connection change-logs into a collection a scoped connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).toThrow(
+    'Connection "contacts-system" is tenant: shared but change-logs into collection "log-changes", which scoped connection "log-changes" reads. A shared connection\'s change-log records belong to no organization and carry no tenant field, so in a walled collection they are invisible to every walled read and make the tenant preflight refuse to serve the app. Point this connection\'s change log at a collection no scoped connection reads.'
+  );
+});
+
+test('buildConnections passes a shared connection that change-logs into a collection no scoped connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'contacts',
+        type: 'MongoDBCollection',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes-shared' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections passes a shared change log into a same-named collection in another database', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          databaseName: 'system',
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections passes a shared change log into a collection only a shared connection reads', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes-shared',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections does not check shared change logs under the pinned policy', () => {
+  const components = {
+    auth: { organizations: { policy: 'pinned' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: 'log-changes' },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
+
+test('buildConnections skips a shared change log whose collection resolves at runtime', () => {
+  const components = {
+    auth: { organizations: { policy: 'tenant' } },
+    connections: [
+      {
+        id: 'log-changes',
+        type: 'MongoDBCollection',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'log-changes' },
+      },
+      {
+        id: 'contacts-system',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: {
+          databaseUri: { _secret: 'MONGODB_URI' },
+          collection: 'contacts',
+          changeLog: { collection: { _secret: 'LOG_COLLECTION' } },
+        },
+      },
+    ],
+  };
+  expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
+});
