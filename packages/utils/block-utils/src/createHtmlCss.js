@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import lineClampStyle from './format/lineClampStyle.js';
 import tagStyle from './format/tagStyle.js';
+import TEXT_TONE_COLORS from './format/textToneColors.js';
 import TONE_COLORS from './format/toneColors.js';
 
 function toDeclarations(style) {
@@ -31,6 +33,28 @@ function toDeclarations(style) {
 // Tailwind utilities and inline styles all win.
 function scoped(selector) {
   return `:where([data-lf-html] ${selector})`;
+}
+
+function textToneRules() {
+  return Object.entries(TEXT_TONE_COLORS)
+    .map(([tone, color]) => `  ${scoped(`[data-tone="${tone}" i]`)} {\n    color: ${color};\n  }`)
+    .join('\n');
+}
+
+// Bare or 1 is one line; 2–6 clamp to that many lines, like the grid's
+// ellipsis cells.
+function truncateRules() {
+  const counts = ['2', '3', '4', '5', '6'];
+  const selectors = ['""', '"1"', ...counts.map((count) => `"${count}"`)]
+    .map((value) => scoped(`[data-truncate=${value}]`))
+    .join(',\n  ');
+  const lineRules = counts
+    .map(
+      (count) =>
+        `  ${scoped(`[data-truncate="${count}"]`)} {\n    -webkit-line-clamp: ${count};\n  }`
+    )
+    .join('\n');
+  return `  ${selectors} {\n${toDeclarations(lineClampStyle(1))}\n  }\n${lineRules}`;
 }
 
 function toneRules() {
@@ -69,6 +93,8 @@ ${toDeclarations(tagStyle('var(--lf-tone)'))}
     background: var(--lf-tone);
   }
 ${toneRules()}
+${textToneRules()}
+${truncateRules()}
   ${scoped('[data-popover-content]')} {
     display: none;
   }

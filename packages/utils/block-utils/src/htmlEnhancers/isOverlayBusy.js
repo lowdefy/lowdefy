@@ -14,20 +14,9 @@
   limitations under the License.
 */
 
-import React from 'react';
-import lineClampStyle from '@lowdefy/block-utils/format/lineClampStyle.js';
-import { type } from '@lowdefy/helpers';
-
-function createEllipsisCell(lines) {
-  const clamp = Math.max(1, Math.min(6, Math.floor(lines)));
-  const style = { ...lineClampStyle(clamp), width: '100%' };
-
-  function EllipsisCell(params) {
-    const { value } = params;
-    if (type.isNone(value)) return null;
-    return <span style={style}>{String(value)}</span>;
-  }
-  return EllipsisCell;
+// A popover or confirm is open: hover and focus tooltips must not replace it.
+function isOverlayBusy(overlay) {
+  return overlay !== null && overlay.kind !== 'tooltip';
 }
 
-export default createEllipsisCell;
+export default isOverlayBusy;

@@ -14,20 +14,16 @@
   limitations under the License.
 */
 
-import React from 'react';
-import lineClampStyle from '@lowdefy/block-utils/format/lineClampStyle.js';
-import { type } from '@lowdefy/helpers';
-
-function createEllipsisCell(lines) {
-  const clamp = Math.max(1, Math.min(6, Math.floor(lines)));
-  const style = { ...lineClampStyle(clamp), width: '100%' };
-
-  function EllipsisCell(params) {
-    const { value } = params;
-    if (type.isNone(value)) return null;
-    return <span style={style}>{String(value)}</span>;
+// An element's text as shown, whitespace collapsed, without avatar initials.
+function visibleText(element) {
+  const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  const parts = [];
+  while (walker.nextNode()) {
+    if (walker.currentNode.parentElement.closest('[data-avatar]') === null) {
+      parts.push(walker.currentNode.data);
+    }
   }
-  return EllipsisCell;
+  return parts.join('').replace(/\s+/g, ' ').trim();
 }
 
-export default createEllipsisCell;
+export default visibleText;

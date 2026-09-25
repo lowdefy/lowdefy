@@ -29,6 +29,7 @@ const builtinMessages = {
   'client.copyValue': 'Copy: {value}',
   'client.copied': 'Copied',
   'client.copyFailed': 'Copy failed',
+  'client.confirm': 'Are you sure?',
   'errorPage.name': 'Error',
   'errorPage.message': 'An error has occurred.',
   'errorPage.homeLink': 'Return to home page',

@@ -102,6 +102,56 @@ exports[`createHtmlCss output 1`] = `
   :where([data-lf-html] [data-status=\\"error\\"]) {
     --lf-tone: var(--ant-color-error);
   }
+  :where([data-lf-html] [data-tone=\\"secondary\\" i]) {
+    color: var(--ant-color-text-secondary);
+  }
+  :where([data-lf-html] [data-tone=\\"tertiary\\" i]) {
+    color: var(--ant-color-text-tertiary);
+  }
+  :where([data-lf-html] [data-tone=\\"quaternary\\" i]) {
+    color: var(--ant-color-text-quaternary);
+  }
+  :where([data-lf-html] [data-tone=\\"success\\" i]) {
+    color: var(--ant-color-success-text, var(--ant-color-success));
+  }
+  :where([data-lf-html] [data-tone=\\"warning\\" i]) {
+    color: var(--ant-color-warning-text, var(--ant-color-warning));
+  }
+  :where([data-lf-html] [data-tone=\\"error\\" i]) {
+    color: var(--ant-color-error-text, var(--ant-color-error));
+  }
+  :where([data-lf-html] [data-tone=\\"info\\" i]) {
+    color: var(--ant-color-info-text, var(--ant-color-info));
+  }
+  :where([data-lf-html] [data-truncate=\\"\\"]),
+  :where([data-lf-html] [data-truncate=\\"1\\"]),
+  :where([data-lf-html] [data-truncate=\\"2\\"]),
+  :where([data-lf-html] [data-truncate=\\"3\\"]),
+  :where([data-lf-html] [data-truncate=\\"4\\"]),
+  :where([data-lf-html] [data-truncate=\\"5\\"]),
+  :where([data-lf-html] [data-truncate=\\"6\\"]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-word;
+  }
+  :where([data-lf-html] [data-truncate=\\"2\\"]) {
+    -webkit-line-clamp: 2;
+  }
+  :where([data-lf-html] [data-truncate=\\"3\\"]) {
+    -webkit-line-clamp: 3;
+  }
+  :where([data-lf-html] [data-truncate=\\"4\\"]) {
+    -webkit-line-clamp: 4;
+  }
+  :where([data-lf-html] [data-truncate=\\"5\\"]) {
+    -webkit-line-clamp: 5;
+  }
+  :where([data-lf-html] [data-truncate=\\"6\\"]) {
+    -webkit-line-clamp: 6;
+  }
   :where([data-lf-html] [data-popover-content]) {
     display: none;
   }

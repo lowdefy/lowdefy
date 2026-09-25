@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-import React from 'react';
-import lineClampStyle from '@lowdefy/block-utils/format/lineClampStyle.js';
-import { type } from '@lowdefy/helpers';
-
-function createEllipsisCell(lines) {
-  const clamp = Math.max(1, Math.min(6, Math.floor(lines)));
-  const style = { ...lineClampStyle(clamp), width: '100%' };
-
-  function EllipsisCell(params) {
-    const { value } = params;
-    if (type.isNone(value)) return null;
-    return <span style={style}>{String(value)}</span>;
-  }
-  return EllipsisCell;
+// Clamps text to a number of lines with an ellipsis. Used by the grid's
+// ellipsis cells and by data-truncate in HTML. word-break keeps a long unbroken
+// word from overflowing sideways.
+function lineClampStyle(lines) {
+  return {
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: lines,
+    overflow: 'hidden',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
+  };
 }
 
-export default createEllipsisCell;
+export default lineClampStyle;

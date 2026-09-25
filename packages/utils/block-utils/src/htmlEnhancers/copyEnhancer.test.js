@@ -114,6 +114,13 @@ test('the button goes after a link or button instead of inside it', () => {
   expect(anchor.nextElementSibling.matches('[data-lf-copy]')).toBe(true);
 });
 
+test('the button goes after truncated text so it is never clipped', () => {
+  const { container } = render(<HtmlComponent html="<div data-truncate data-copy>abc</div>" />);
+  const element = container.querySelector('[data-truncate]');
+  expect(element.querySelector('button')).toBeNull();
+  expect(element.nextElementSibling.matches('[data-lf-copy]')).toBe(true);
+});
+
 test('copy runs after the text writers and skips avatar initials', async () => {
   const { container } = render(
     <HtmlComponent html='<span data-copy><span data-avatar="Jane Doe"></span> <span data-format="currency" data-currency="USD">12</span></span>' />
@@ -133,4 +140,12 @@ test('the hover tooltip of the button uses the overlay like any data-tooltip', (
   const { container } = render(<HtmlComponent html="<code data-copy>abc</code>" />);
   fireEvent.mouseOver(container.querySelector('[data-lf-copy] button'));
   expect(screen.getByTestId('overlay').textContent).toBe('Copy');
+});
+
+test('the copy button tooltip says Copied after a copy', async () => {
+  const { container } = render(<HtmlComponent html="<code data-copy>abc</code>" />);
+  const button = container.querySelector('[data-lf-copy] button');
+  await clickCopy(button);
+  expect(button.getAttribute('data-tooltip')).toBe('Copied');
+  expect(button.getAttribute('aria-label')).toBe('Copy');
 });

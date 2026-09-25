@@ -58,7 +58,12 @@ function CopyButton({ Icon, label, text, translate }) {
   if (status === 'failed') message = translate('client.copyFailed');
   return (
     <>
-      <button ref={buttonRef} type="button" aria-label={label} data-tooltip={label}>
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-label={label}
+        data-tooltip={status === 'copied' ? translate('client.copied') : label}
+      >
         <span aria-hidden="true">
           <Icon properties={{ name: status === 'copied' ? 'check' : 'copy', title: '' }} />
         </span>

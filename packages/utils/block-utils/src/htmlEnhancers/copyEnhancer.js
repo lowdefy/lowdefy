@@ -18,20 +18,9 @@ import React from 'react';
 
 import CopyButton from './CopyButton.js';
 import NATIVE_INTERACTIVE from './nativeInteractive.js';
+import visibleText from './visibleText.js';
 
 const MAX_LABEL_VALUE = 40;
-
-// The element's text as shown, without avatar initials.
-function visibleText(element) {
-  const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-  const parts = [];
-  while (walker.nextNode()) {
-    if (walker.currentNode.parentElement.closest('[data-avatar]') === null) {
-      parts.push(walker.currentNode.data);
-    }
-  }
-  return parts.join('').replace(/\s+/g, ' ').trim();
-}
 
 // A value that differs from the text is shown in the button's label, so HTML
 // cannot show one text and silently copy another.
@@ -57,8 +46,9 @@ const copyEnhancer = {
       const text = value === '' ? shown : value;
       const container = element.ownerDocument.createElement('span');
       container.setAttribute('data-lf-copy', '');
-      // Controls never nest: next to a link or button, not inside it.
-      if (element.matches(NATIVE_INTERACTIVE)) {
+      // Controls never nest, and a clamped box would clip the button: next to
+      // a link, a button or truncated text, not inside it.
+      if (element.matches(`${NATIVE_INTERACTIVE}, [data-truncate]`)) {
         element.after(container);
       } else {
         element.append(container);
