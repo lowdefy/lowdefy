@@ -152,3 +152,19 @@ test('the page registry arrives after every other new file and after stale files
   expect(early).toBe(0);
   expect(read('pageRegistry.json')).toBe('new');
 });
+
+test('publishBuildDirectory keeps the control files the manager and dev tools write', async () => {
+  write(buildDirectory, '.restart', '{"reason":"Added a block type"}');
+  write(buildDirectory, 'buildStatus.json', '{"status":"ok"}');
+  write(buildDirectory, 'invalidatePages', '1');
+  write(buildDirectory, 'reload', '1');
+  write(stagingDirectory, 'app.json', 'new');
+  write(stagingDirectory, 'pageRegistry.json', '{}');
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  expect(read('.restart')).toBe('{"reason":"Added a block type"}');
+  expect(read('buildStatus.json')).toBe('{"status":"ok"}');
+  expect(read('invalidatePages')).toBe('1');
+  expect(read('reload')).toBe('1');
+});

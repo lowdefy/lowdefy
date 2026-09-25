@@ -16,6 +16,7 @@
 
 import { STATUS_CODES } from 'node:http';
 import { createChannelRegistry, createWebSocketConnection } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import createLogger from '../../lib/server/log/createLogger.js';
 
@@ -55,7 +56,18 @@ async function handleWebSocketUpgrade({ app, request, socket, head, wss }) {
     return;
   }
 
+  // A 200 without a context means the request reached another handler than
+  // the websocket route (a route or middleware answered first).
   const { context } = websocketUpgrade;
+  if (type.isNone(context)) {
+    logger.warn(
+      { event: 'ws_upgrade_refused', status: response.status },
+      `WebSocket upgrade refused: ${request.url} answered ${response.status} without a request context; the websocket route did not run.`
+    );
+    socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n');
+    return;
+  }
+
   wss.handleUpgrade(request, socket, head, (ws) => {
     const connection = createWebSocketConnection(context, {
       registry,
