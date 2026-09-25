@@ -22,6 +22,7 @@ import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
+import serializeBuildException from './utils/serializeBuildException.js';
 import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
@@ -196,6 +197,11 @@ async function build(options) {
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
+
+    // A check (validateOnly) stops here: every validation has run and nothing is written.
+    if (context.validateOnly) {
+      return { errors: [], warnings: (context.warnings ?? []).map(serializeBuildException) };
+    }
 
     // Per-page type sets are build output, not config: computed once every page
     // built cleanly, after the final addKeys pass.
