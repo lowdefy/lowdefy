@@ -28,6 +28,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
 
   buildRoutine(endpoint.routine, {
     endpointId: endpoint.endpointId,
+    dynamicPolicies: context.dynamicPolicies,
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},
     tenantConnectionIds: context.tenantConnectionIds,

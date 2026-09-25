@@ -237,3 +237,46 @@ test('buildDynamicBlocks records every client type the fragment uses', () => {
   expect([...usedTypes.actions]).toEqual(['SetState']);
   expect([...usedTypes.operators].sort()).toEqual(['_not', '_state']);
 });
+
+const formPolicy = {
+  id: 'form',
+  blocks: ['TextInput'],
+  actions: ['SetState'],
+  operators: ['_state'],
+};
+
+test('buildDynamicBlocks limits membership to the policy lists', () => {
+  expect(() =>
+    buildDynamicBlocks({
+      ...defaultArgs,
+      policy: formPolicy,
+      blocks: [{ id: 'box', type: 'Box' }],
+    })
+  ).toThrow(
+    'Dynamic block "section_1" on page "page1" resolved content uses block type "Box" which dynamic policy "form" does not allow.'
+  );
+});
+
+test('buildDynamicBlocks builds content within the policy', () => {
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    policy: formPolicy,
+    blocks: [{ id: 'form.name', type: 'TextInput', visible: { _state: 'form.show' } }],
+  });
+  expect(result.blocks[0].blockId).toBe('form.name');
+});
+
+test('buildDynamicBlocks accepts per-organization client actions in content', () => {
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    types: { ...types, actions: { ...types.actions, LeaveOrganization: {} } },
+    blocks: [
+      {
+        id: 'box',
+        type: 'Box',
+        events: { onClick: [{ id: 'leave', type: 'LeaveOrganization' }] },
+      },
+    ],
+  });
+  expect(result.blocks[0].blockId).toBe('box');
+});

@@ -42,6 +42,11 @@ export default {
         description:
           'Static values passed to the endpoint payload as params. Operators are not allowed — read runtime values in the endpoint routine with _payload, _user or _secret.',
       },
+      policy: {
+        type: 'string',
+        description:
+          'Id of a dynamicPolicies entry in lowdefy.yaml. The resolved content must pass the policy on every page get. The endpoint returns stored content as config by reading the blocks of a ValidateDynamic step with the same policy. Replaces types: the policy lists are bundled.',
+      },
       required: {
         type: 'boolean',
         default: false,

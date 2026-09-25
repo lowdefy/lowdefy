@@ -20,10 +20,7 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 
-async function invokeEndpoint(
-  context,
-  { endpointId, payload, endpointDepth, literalData = false }
-) {
+async function invokeEndpoint(context, { endpointId, payload, endpointDepth, literalData = null }) {
   if (endpointDepth >= 10) {
     throw new ConfigError(
       'Endpoint call depth exceeded maximum of 10. Check for recursive endpoint calls.'
@@ -44,8 +41,11 @@ async function invokeEndpoint(
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi
     // endpoints get a fresh context without it; their result arrives through
-    // _step, which the outer :return checks.
-    literalData,
+    // _step, which the outer :return checks. validatedStepIds collects the
+    // ValidateDynamic steps whose blocks the :return may read as config; the
+    // control spreads share the one object.
+    literalData:
+      literalData === null ? null : { policyId: literalData.policyId, validatedStepIds: new Set() },
   };
 
   return runRoutine(context, childRoutineContext, {

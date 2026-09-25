@@ -181,11 +181,114 @@ The client bundle is fixed at build time — resolved content can only use block
 
 The build bundles declared types into the client. If a routine returns a type that is not in the bundle, resolution fails with a clear error instead of a silently broken page.
 
+## Dynamic Policies
+
+A dynamic policy lets a Dynamic block render block config that is stored as data — a form built by a form builder, or config a model generated — within limits the app declares. The policy lists what the content may use. Anything unlisted fails, and the policy is checked twice with the same function: by a `ValidateDynamic` step before the content is stored, and on every page get before the content renders.
+
+```yaml
+dynamicPolicies:
+  - id: generated_form
+    blocks:
+      - Title
+      - Paragraph
+      - TextInput
+      - Selector
+    actions:
+      - SetState
+      - CallAPI
+    operators:
+      - _state
+      - _eq
+      - _if
+    endpoints:
+      - submit_form_response
+    links:
+      pages:
+        - form_submitted
+      origins:
+        - https://example.com
+    state: form
+```
+
+| Key             | Default   | Meaning                                                                                                     |
+| --------------- | --------- | ----------------------------------------------------------------------------------------------------------- |
+| `id`            | required  | Policy id, referenced by Dynamic blocks and steps.                                                          |
+| `blocks`        | required  | Block types the content may use. `Dynamic` cannot be listed.                                                |
+| `actions`       | `[]`      | Action types the content may use.                                                                           |
+| `operators`     | `[]`      | Client operator names. `_string` allows every `_string` method. `_operator` cannot be listed.               |
+| `endpoints`     | `[]`      | Endpoints a `CallAPI` action in the content may call.                                                       |
+| `requests`      | `[]`      | Page requests a `Request` action may call. The build checks every page that hosts the policy defines them.  |
+| `links.pages`   | `[]`      | Pages the content may navigate to, by `pageId` or by an app path such as `/form_submitted`.                 |
+| `links.origins` | `[]`      | Exact origins (`https://example.com`) the content may link to or load from.                                 |
+| `state`         | none      | When set, every input block id and every `SetState` key must sit under this state path.                     |
+| `html`          | `false`   | When `false`, no string in the content may contain HTML tag syntax.                                         |
+| `limits`        | see below | `depth` (10), `blocks` (500), `bytes` (262144) and `actionsPerEvent` (20). They can be raised, not removed. |
+
+Besides the lists, a policy requires literal values wherever the content names a target: `properties`, `style`, events and action lists; the params of `Link`, `CallAPI`, `Request` and `SetState`; and every `pageId` and URL. URLs must be app paths or use a listed origin — including image sources, markdown links and CSS `url()`.
+
+> With `html: false`, an operator that builds strings (`_string`, `_uri`, `_base64`, `_json`) can still assemble HTML at render time from content that passed the check. The build warns when a policy lists one. Leave them out of policies for generated content.
+
+### Rendering stored content under a policy
+
+Put the policy on the Dynamic block, and return the content through a `ValidateDynamic` step with the same policy. Data stays literal in a Dynamic endpoint (see [Data in the returned config is literal](#data-in-the-returned-config-is-literal)); the blocks of a `ValidateDynamic` step that passed with the block's policy are the one exception.
+
+```yaml
+pages:
+  - id: form
+    type: PageHeaderMenu
+    blocks:
+      - id: generated
+        type: Dynamic
+        properties:
+          endpointId: get_form_blocks
+          policy: generated_form
+      - id: submit
+        type: Button
+        properties:
+          title: Submit
+        events:
+          onClick:
+            - id: save
+              type: CallAPI
+              params:
+                endpointId: submit_form_response
+                payload:
+                  answers:
+                    _state: form
+
+api:
+  - id: get_form_blocks
+    type: InternalApi
+    routine:
+      - id: get_form
+        type: MongoDBFindOne
+        connectionId: forms
+        properties:
+          query:
+            _id:
+              _payload: urlQuery.formId
+      - id: check
+        type: ValidateDynamic
+        properties:
+          policy: generated_form
+          blocks:
+            _step: get_form.blocks
+      - :return:
+          blocks:
+            _step: check.blocks
+```
+
+The policy's types are bundled into the page, so a Dynamic block with `policy` does not declare `properties.types`. Content that breaks the policy at page get renders the fallback, and the log lists each violation.
+
+### Checking generated content
+
+A generator calls `ValidateDynamic` with `throwOnInvalid: false` and feeds the errors back to the model. Each error has a `path` into the submitted content, a `rule` and a `message`. `DescribeDynamicPolicy` returns what the policy allows, with the properties schema of each block and the params schema of each action and operator, to build the prompt from. See [Validating Dynamic Content As A Routine Step](/lowdefy-api#validating-dynamic-content-as-a-routine-step).
+
 ## Rules and Limitations
 
 - **No `requests` in resolved content.** Request artifacts are written at build time. Resolved blocks reference requests defined statically on the page via `Request` actions, or call endpoints with `CallAPI`.
 - **Nesting is allowed** — resolved content may contain further `Dynamic` blocks, up to 5 levels deep.
 - **Page state resets per visit.** Dynamic pages build a fresh context on every navigation, since the server may resolve different content each time. Keep cross-navigation state in `_global` or `_url_query`.
 - **Endpoint auth always applies.** A public page pointing at a role-protected endpoint renders the fallback for users without the role — useful for role-gated sections.
-- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal).
+- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution, except the blocks of a `ValidateDynamic` step under the block's policy. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal) and [Dynamic Policies](#dynamic-policies).
 - **`blockId` namespace is shared.** Resolved blocks share the page's state namespace, so `_state` binds across static and dynamic blocks. Keep blockIds unique, as on any page.

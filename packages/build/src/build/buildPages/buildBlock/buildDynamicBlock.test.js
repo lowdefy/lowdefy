@@ -203,3 +203,74 @@ test('buildDynamicBlock throws when declared operator name does not start with u
     'Dynamic block "section_1" on page "page1" properties.types.operators contains "number" which is not an operator name.'
   );
 });
+
+function makePolicyPageContext() {
+  return {
+    ...makePageContext(),
+    callApiActionRefs: [],
+    linkActionRefs: [],
+    requestActionRefs: [],
+    context: {
+      dynamicPolicies: {
+        form: {
+          id: 'form',
+          blocks: ['TextInput'],
+          actions: ['SetState'],
+          operators: ['_state'],
+          endpoints: ['submit'],
+          requests: ['load'],
+          links: { pages: ['thanks'], origins: [] },
+        },
+      },
+    },
+  };
+}
+
+test('buildDynamicBlock counts a policy and refs its pages and endpoints', () => {
+  const pageContext = makePolicyPageContext();
+  const block = {
+    blockId: 'generated',
+    type: 'Dynamic',
+    properties: { endpointId: 'get_form', policy: 'form' },
+  };
+  buildDynamicBlock(block, pageContext);
+  expect(pageContext.typeCounters.blocks.getCounts()).toEqual({ TextInput: 1 });
+  expect(pageContext.typeCounters.actions.getCounts()).toEqual({ SetState: 1 });
+  expect(pageContext.typeCounters.operators.client.getCounts()).toEqual({ _state: 1 });
+  expect(pageContext.linkActionRefs.map((ref) => ref.pageId)).toEqual(['thanks']);
+  expect(pageContext.callApiActionRefs.map((ref) => ref.endpointId)).toEqual(['submit']);
+  expect(pageContext.requestActionRefs.map((ref) => ref.requestId)).toEqual(['load']);
+});
+
+test('buildDynamicBlock throws when the policy does not exist', () => {
+  const block = {
+    blockId: 'generated',
+    type: 'Dynamic',
+    properties: { endpointId: 'get_form', policy: 'nope' },
+  };
+  expect(() => buildDynamicBlock(block, makePolicyPageContext())).toThrow(
+    'Dynamic block "generated" on page "page1" references dynamic policy "nope" which does not exist.'
+  );
+});
+
+test('buildDynamicBlock throws when policy and types are both declared', () => {
+  const block = {
+    blockId: 'generated',
+    type: 'Dynamic',
+    properties: { endpointId: 'get_form', policy: 'form', types: { blocks: ['Box'] } },
+  };
+  expect(() => buildDynamicBlock(block, makePolicyPageContext())).toThrow(
+    'declares both properties.policy and properties.types'
+  );
+});
+
+test('buildDynamicBlock throws when policy is not a string', () => {
+  const block = {
+    blockId: 'generated',
+    type: 'Dynamic',
+    properties: { endpointId: 'get_form', policy: { _state: 'policy' } },
+  };
+  expect(() => buildDynamicBlock(block, makePolicyPageContext())).toThrow(
+    'properties.policy should be a policy id string.'
+  );
+});

@@ -40,6 +40,8 @@ function createContext({
     notificationIds: new Set(),
     websocketIds: new Set(),
     directories,
+    // Null prototype: policy ids come from app config.
+    dynamicPolicies: Object.create(null),
     errors: [],
     jsMap: {},
     warnings: [],

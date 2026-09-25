@@ -26,15 +26,21 @@ import createCounter from '../utils/createCounter.js';
 // membership checks against the bundled types instead.
 // Each type is also recorded in `used`, so the caller can tell whether the
 // fragment stays within its page's own client types.
-function createMembershipCounter({ category, allowed, dynamicBlockId, pageId, used }) {
+function createMembershipCounter({ category, allowed, dynamicBlockId, pageId, policy, used }) {
   return {
     increment: (typeName) => {
       used.add(typeName);
-      if (!allowed.has(typeName)) {
+      if (allowed.has(typeName)) {
+        return;
+      }
+      if (policy) {
         throw new ConfigError(
-          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which is not included in the app's client bundle. Declare it in the Dynamic block's properties.types.`
+          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which dynamic policy "${policy.id}" does not allow.`
         );
       }
+      throw new ConfigError(
+        `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which is not included in the app's client bundle. Declare it in the Dynamic block's properties.types.`
+      );
     },
   };
 }
@@ -56,6 +62,21 @@ function getAllowedSets(types) {
   return sets;
 }
 
+// A policy narrows membership to its own lists. Build counted those lists into
+// the bundle, so they are always a subset of it.
+function getPolicySets(policy) {
+  let sets = allowedSetsCache.get(policy);
+  if (!sets) {
+    sets = {
+      actions: new Set(policy.actions),
+      blocks: new Set(policy.blocks),
+      operators: new Set(policy.operators),
+    };
+    allowedSetsCache.set(policy, sets);
+  }
+  return sets;
+}
+
 // Counter for categories dynamic content cannot reach (requests are forbidden,
 // so request types and server operators never occur in a valid fragment).
 const noopCounter = { increment: () => {} };
@@ -67,6 +88,8 @@ function buildDynamicBlocks({
   idPrefix,
   types,
   blockMetas,
+  dynamicPolicies,
+  policy = null,
   usedTypes,
 }) {
   if (!type.isArray(blocks)) {
@@ -78,7 +101,7 @@ function buildDynamicBlocks({
   const warnings = [];
   const callApiActionRefs = [];
   const requestActionRefs = [];
-  const allowed = getAllowedSets(types);
+  const allowed = policy ? getPolicySets(policy) : getAllowedSets(types);
   const pageContext = {
     blockIdCounter: createCounter(),
     // Namespace runtime ids under the resolving Dynamic block's built id —
@@ -90,6 +113,8 @@ function buildDynamicBlocks({
     }),
     context: {
       blockMetas,
+      // A nested Dynamic block in the content may name a policy.
+      dynamicPolicies,
       handleWarning: (warning) => {
         warnings.push(warning);
       },
@@ -99,6 +124,9 @@ function buildDynamicBlocks({
     dynamicBlockRefs: [],
     forbidRequests: true,
     linkActionRefs: [],
+    // Sink: org actions in content are gated by their own endpoints when they
+    // run, as on a static page.
+    orgClientActionRefs: [],
     pageId,
     requestActionRefs,
     requests: [],
@@ -109,6 +137,7 @@ function buildDynamicBlocks({
         allowed: allowed.actions,
         dynamicBlockId,
         pageId,
+        policy,
         used: usedTypes.actions,
       }),
       blocks: createMembershipCounter({
@@ -116,6 +145,7 @@ function buildDynamicBlocks({
         allowed: allowed.blocks,
         dynamicBlockId,
         pageId,
+        policy,
         used: usedTypes.blocks,
       }),
       operators: {
@@ -124,6 +154,7 @@ function buildDynamicBlocks({
           allowed: allowed.operators,
           dynamicBlockId,
           pageId,
+          policy,
           used: usedTypes.operators,
         }),
         server: noopCounter,

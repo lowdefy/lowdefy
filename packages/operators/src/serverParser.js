@@ -18,6 +18,7 @@ import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
 import findOperatorInData from './findOperatorInData.js';
+import isCheckedContentRead from './isCheckedContentRead.js';
 import isLiteralPassThrough from './isLiteralPassThrough.js';
 
 class ServerParser {
@@ -39,7 +40,7 @@ class ServerParser {
     error,
     input,
     items,
-    literalData = false,
+    literalData = null,
     location,
     operatorPrefix = '_',
     payload,
@@ -110,7 +111,11 @@ class ServerParser {
         // Under literalData the output is sent to a client that evaluates every
         // operator-shaped object, so no operator result may carry one unless
         // the operator only passes through params the reviver already checked.
-        if (literalData && !isLiteralPassThrough({ op, methodName })) {
+        if (
+          literalData !== null &&
+          !isLiteralPassThrough({ op, methodName }) &&
+          !isCheckedContentRead({ literalData, op, params })
+        ) {
           const found = findOperatorInData(res);
           if (found) {
             const operatorName = methodName ? `${op}.${methodName}` : op;

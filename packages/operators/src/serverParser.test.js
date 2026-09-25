@@ -363,7 +363,11 @@ test('parse with literalData rejects an operator result that carries an operator
   const parser = new ServerParser({
     operators: createDataOperators([{ properties: { html: { _request: 'secret' } } }]),
   });
-  const res = parser.parse({ input: { a: { _data: true } }, location, literalData: true });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: { validatedStepIds: new Set() },
+  });
   expect(res.output).toEqual({ a: null });
   expect(res.errors[0]).toBeInstanceOf(ConfigError);
   expect(res.errors[0].message).toBe(
@@ -374,7 +378,11 @@ test('parse with literalData rejects an operator result that carries an operator
 test('parse with literalData allows an operator result without operators', () => {
   const data = [{ properties: { title: 'Plain', meta: { _id: 1 }, both: { _a: 1, b: 2 } } }];
   const parser = new ServerParser({ operators: createDataOperators(data) });
-  const res = parser.parse({ input: { a: { _data: true } }, location, literalData: true });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: { validatedStepIds: new Set() },
+  });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: data });
 });
@@ -384,7 +392,7 @@ test('parse with literalData leaves results of pass-through operators unchecked'
   const res = parser.parse({
     input: { a: { _get: true }, b: { '_object.assign': [] } },
     location,
-    literalData: true,
+    literalData: { validatedStepIds: new Set() },
   });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: { __state: 'x' }, b: { __state: 'x' } });
@@ -395,7 +403,7 @@ test('parse with literalData checks _object methods that build keys from data', 
   const res = parser.parse({
     input: { a: { '_object.fromEntries': [] } },
     location,
-    literalData: true,
+    literalData: { validatedStepIds: new Set() },
   });
   expect(res.errors[0].message).toContain('Data returned by "_object.fromEntries"');
 });
@@ -405,4 +413,20 @@ test('parse without literalData does not check operator results', () => {
   const res = parser.parse({ input: { a: { _data: true } }, location });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: { _request: 'x' } });
+});
+
+test("parse with literalData lets a validated step's blocks through as config", () => {
+  const steps = {
+    check: { blocks: [{ html: { _state: 'x' } }] },
+    raw: { blocks: [{ _state: 'y' }] },
+  };
+  const operators = { _step: ({ params }) => steps[params.split('.')[0]][params.split('.')[1]] };
+  const parser = new ServerParser({ operators });
+  const res = parser.parse({
+    input: { a: { _step: 'check.blocks' }, b: { _step: 'raw.blocks' } },
+    location,
+    literalData: { validatedStepIds: new Set(['check']) },
+  });
+  expect(res.output.a).toEqual([{ html: { _state: 'x' } }]);
+  expect(res.errors[0].message).toContain('Data returned by "_step"');
 });

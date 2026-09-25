@@ -2457,6 +2457,190 @@ export default {
         },
       },
     },
+    dynamicPolicy: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'blocks'],
+      properties: {
+        '~k': {},
+        '~r': {},
+        '~l': {},
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Dynamic policy "id" should be a string.',
+          },
+        },
+        blocks: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'Dynamic policy "blocks" should only contain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "blocks" should be an array.',
+          },
+        },
+        actions: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'Dynamic policy "actions" should only contain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "actions" should be an array.',
+          },
+        },
+        operators: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'Dynamic policy "operators" should only contain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "operators" should be an array.',
+          },
+        },
+        endpoints: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'Dynamic policy "endpoints" should only contain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "endpoints" should be an array.',
+          },
+        },
+        requests: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'Dynamic policy "requests" should only contain strings.',
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "requests" should be an array.',
+          },
+        },
+        links: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            pages: {
+              type: 'array',
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Dynamic policy "links.pages" should only contain strings.',
+                },
+              },
+              errorMessage: {
+                type: 'Dynamic policy "links.pages" should be an array.',
+              },
+            },
+            origins: {
+              type: 'array',
+              items: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Dynamic policy "links.origins" should only contain strings.',
+                },
+              },
+              errorMessage: {
+                type: 'Dynamic policy "links.origins" should be an array.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "links" should be an object.',
+            additionalProperties: 'Dynamic policy "links" should only have "pages" and "origins".',
+          },
+        },
+        state: {
+          type: 'string',
+          description: 'State path every content blockId and SetState key must sit under.',
+          errorMessage: {
+            type: 'Dynamic policy "state" should be a string.',
+          },
+        },
+        html: {
+          type: 'boolean',
+          description: 'Allow HTML tag syntax in content strings. Defaults to false.',
+          errorMessage: {
+            type: 'Dynamic policy "html" should be a boolean.',
+          },
+        },
+        limits: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~k': {},
+            '~r': {},
+            '~l': {},
+            depth: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Maximum block nesting depth. Defaults to 10.',
+              errorMessage: {
+                type: 'Dynamic policy "limits.depth" should be an integer.',
+                minimum: 'Dynamic policy "limits.depth" should be at least 1.',
+              },
+            },
+            blocks: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Maximum total block count. Defaults to 500.',
+              errorMessage: {
+                type: 'Dynamic policy "limits.blocks" should be an integer.',
+                minimum: 'Dynamic policy "limits.blocks" should be at least 1.',
+              },
+            },
+            bytes: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Maximum JSON size of the content in bytes. Defaults to 262144.',
+              errorMessage: {
+                type: 'Dynamic policy "limits.bytes" should be an integer.',
+                minimum: 'Dynamic policy "limits.bytes" should be at least 1.',
+              },
+            },
+            actionsPerEvent: {
+              type: 'integer',
+              minimum: 1,
+              description: 'Maximum actions in one event. Defaults to 20.',
+              errorMessage: {
+                type: 'Dynamic policy "limits.actionsPerEvent" should be an integer.',
+                minimum: 'Dynamic policy "limits.actionsPerEvent" should be at least 1.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'Dynamic policy "limits" should be an object.',
+            additionalProperties:
+              'Dynamic policy "limits" should only have "depth", "blocks", "bytes" and "actionsPerEvent".',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Dynamic policy should be an object.',
+        required: {
+          id: 'Dynamic policy should have required property "id".',
+          blocks: 'Dynamic policy should have required property "blocks".',
+        },
+      },
+    },
     connection: {
       type: 'object',
       additionalProperties: false,
@@ -3425,6 +3609,15 @@ export default {
       },
       errorMessage: {
         type: 'App "agents" should be an array.',
+      },
+    },
+    dynamicPolicies: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/dynamicPolicy',
+      },
+      errorMessage: {
+        type: 'App "dynamicPolicies" should be an array.',
       },
     },
     connections: {
