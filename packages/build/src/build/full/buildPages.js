@@ -20,14 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 import buildPage from '../buildPages/buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import validateCallApiRefs from '../buildPages/validateCallApiRefs.js';
-import validateDynamicBlockRefs from '../buildPages/validateDynamicBlockRefs.js';
-import validateLinkReferences from '../buildPages/validateLinkReferences.js';
-import validatePayloadReferences from '../buildPages/validatePayloadReferences.js';
-import validateServerStateReferences from '../buildPages/validateServerStateReferences.js';
-import validateOrgClientActionRefs from '../buildPages/validateOrgClientActionRefs.js';
-import validateStateReferences from '../buildPages/validateStateReferences.js';
-import validateWebsocketRefs from '../buildPages/validateWebsocketRefs.js';
+import validatePageReferences from '../buildPages/validatePageReferences.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
@@ -68,53 +61,12 @@ function buildPages({ components, context }) {
     }
   });
 
-  // Validate that all Link actions reference existing pages
-  // Include all pages — a link to a broken page is valid; the page error is already reported
-  const pageIds = pages.map((page) => page.pageId);
-  validateLinkReferences({
-    linkActionRefs: context.linkActionRefs,
-    pageIds,
+  // Pages that failed to build are skipped by the per-page validations.
+  validatePageReferences({
+    components,
+    pages: pages.filter((_, index) => !failedPageIndices.has(index)),
+    pageIds: pages.map((page) => page.pageId),
     context,
-  });
-
-  // Validate that CallAPI actions don't target InternalApi endpoints
-  const endpointConfigs = type.isArray(components.api) ? components.api : [];
-  validateCallApiRefs({
-    callApiActionRefs: context.callApiActionRefs,
-    endpointConfigs,
-    context,
-  });
-
-  // Fail the build when a per-org client action is wired under the "pinned"
-  // organizations policy (the endpoints are disabled there).
-  validateOrgClientActionRefs({
-    orgClientActionRefs: context.orgClientActionRefs,
-    policy: components.auth?.organizations?.policy ?? 'pinned',
-    context,
-  });
-
-  // Validate that Dynamic blocks reference existing endpoints
-  validateDynamicBlockRefs({
-    dynamicBlockRefs: context.dynamicBlockRefs,
-    endpointConfigs,
-    context,
-  });
-
-  // Validate that Subscribe/Unsubscribe/Publish actions reference defined websockets
-  validateWebsocketRefs({
-    websocketActionRefs: context.websocketActionRefs,
-    websocketIds: context.websocketIds ?? new Set(),
-    context,
-  });
-
-  // Validate that _state references use defined block IDs
-  // and _payload references use defined payload keys
-  // Skip pages that failed to build
-  pages.forEach((page, index) => {
-    if (failedPageIndices.has(index)) return;
-    validateStateReferences({ page, context });
-    validatePayloadReferences({ page, context });
-    validateServerStateReferences({ page, context });
   });
 
   return components;
