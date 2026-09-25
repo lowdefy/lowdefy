@@ -350,3 +350,59 @@ test('operator parser call options override the calling frame', () => {
   const res = parser.parse({ input: { _nested: true }, location, state });
   expect(res.output.output).toEqual({ override: true });
 });
+
+function createDataOperators(data) {
+  return {
+    _data: jest.fn(() => data),
+    _get: jest.fn(() => data),
+    _object: jest.fn(() => data),
+  };
+}
+
+test('parse with literalData rejects an operator result that carries an operator', () => {
+  const parser = new ServerParser({
+    operators: createDataOperators([{ properties: { html: { _request: 'secret' } } }]),
+  });
+  const res = parser.parse({ input: { a: { _data: true } }, location, literalData: true });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toBe(
+    'Data returned by "_data" contains the operator "_request" at "0.properties.html". Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint\'s :return config instead.'
+  );
+});
+
+test('parse with literalData allows an operator result without operators', () => {
+  const data = [{ properties: { title: 'Plain', meta: { _id: 1 }, both: { _a: 1, b: 2 } } }];
+  const parser = new ServerParser({ operators: createDataOperators(data) });
+  const res = parser.parse({ input: { a: { _data: true } }, location, literalData: true });
+  expect(res.errors).toEqual([]);
+  expect(res.output).toEqual({ a: data });
+});
+
+test('parse with literalData leaves results of pass-through operators unchecked', () => {
+  const parser = new ServerParser({ operators: createDataOperators({ __state: 'x' }) });
+  const res = parser.parse({
+    input: { a: { _get: true }, b: { '_object.assign': [] } },
+    location,
+    literalData: true,
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output).toEqual({ a: { __state: 'x' }, b: { __state: 'x' } });
+});
+
+test('parse with literalData checks _object methods that build keys from data', () => {
+  const parser = new ServerParser({ operators: createDataOperators({ _request: 'x' }) });
+  const res = parser.parse({
+    input: { a: { '_object.fromEntries': [] } },
+    location,
+    literalData: true,
+  });
+  expect(res.errors[0].message).toContain('Data returned by "_object.fromEntries"');
+});
+
+test('parse without literalData does not check operator results', () => {
+  const parser = new ServerParser({ operators: createDataOperators({ _request: 'x' }) });
+  const res = parser.parse({ input: { a: { _data: true } }, location });
+  expect(res.errors).toEqual([]);
+  expect(res.output).toEqual({ a: { _request: 'x' } });
+});

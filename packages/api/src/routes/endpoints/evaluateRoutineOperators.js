@@ -18,10 +18,11 @@ import operatorScope from './operatorScope.js';
 
 // Every routine step evaluates against the same frame. Taking the frame from routineContext in one
 // place means a step handler cannot drop part of it (state, items, loop indices).
-function evaluateRoutineOperators(context, routineContext, { input, location }) {
+function evaluateRoutineOperators(context, routineContext, { input, literalData, location }) {
   return context.evaluateOperators({
     arrayIndices: routineContext.arrayIndices,
     input,
+    literalData,
     location,
     ...operatorScope(routineContext),
   });

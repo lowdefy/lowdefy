@@ -469,3 +469,183 @@ test('resolveDynamicContent resolves the page root when it is a Dynamic block', 
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(pageConfig.slots.content.blocks[0].properties.html).toBe('whole page');
 });
+
+function dynamicBlockError() {
+  const call = logger.error.mock.calls.find(([entry]) => entry?.event === 'dynamic_block_error');
+  return call?.[1];
+}
+
+function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {} } = {}) {
+  const dynamicBlock = makeDynamicBlock({
+    fallbackBlocks: [{ id: 'fb', blockId: 'fb', type: 'Html', properties: { html: 'fallback' } }],
+  });
+  const pageConfig = makePageConfig(dynamicBlock);
+  const context = createTestContext({
+    files: baseFiles({ resolve_section: { routine }, ...extraEndpoints }),
+  });
+  return resolveDynamicContent(context, { pageConfig, urlQuery }).then(() => dynamicBlock);
+}
+
+test('resolveDynamicContent falls back when routine state data carries an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    {
+      ':set_state': {
+        stored: [{ id: 'field', type: 'Html', properties: { html: { _request: 'secret' } } }],
+      },
+    },
+    { ':return': { blocks: { _state: 'stored' } } },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_state" contains the operator "_request" at "0.properties.html".'
+  );
+});
+
+test('resolveDynamicContent falls back when payload data carries an escaped operator', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    {
+      ':return': {
+        blocks: [
+          { id: 'field', type: 'Html', properties: { html: { _payload: 'urlQuery.html' } } },
+        ],
+      },
+    },
+    { urlQuery: { html: { __request: 'secret' } } }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_payload" contains the operator "_request".'
+  );
+});
+
+test('resolveDynamicContent falls back when a nested endpoint returns data carrying an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    [
+      {
+        id: 'endpoint:resolve_section:inner',
+        stepId: 'inner',
+        type: 'CallApi',
+        properties: { endpointId: 'inner_api' },
+      },
+      { ':return': { blocks: { _step: 'inner.blocks' } } },
+    ],
+    {
+      extraEndpoints: {
+        inner_api: {
+          routine: {
+            ':return': {
+              blocks: [{ id: 'field', type: 'Html', properties: { html: { _request: 'x' } } }],
+            },
+          },
+        },
+      },
+    }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_step" contains the operator "_request" at "0.properties.html".'
+  );
+});
+
+test('resolveDynamicContent maps data rows into blocks the documented way', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { rows: [{ section_id: 'a', title: 'Alpha' }] } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'rows' },
+            callback: {
+              _function: {
+                '__object.assign': [
+                  {
+                    id: { __args: '0.section_id' },
+                    type: 'Html',
+                    properties: { title: { __args: '0.title' } },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  const generated = dynamicBlock.slots.content.blocks[0];
+  expect(generated.blockId).toBe('a');
+  expect(generated.properties).toEqual({ title: 'Alpha' });
+  expect(dynamicBlockError()).toBe(undefined);
+});
+
+test('resolveDynamicContent falls back when a mapped data row carries an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { rows: [{ section_id: 'a', title: { _global: 'token' } }] } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'rows' },
+            callback: {
+              _function: {
+                '__object.assign': [
+                  {
+                    id: { __args: '0.section_id' },
+                    type: 'Html',
+                    properties: { html: { __args: '0.title' } },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_state" contains the operator "_global" at "0.title".'
+  );
+});
+
+test('resolveDynamicContent leaves double-underscore keys in data objects unchanged', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { record: { __typename: 'Product', name: 'Chair' } } },
+    {
+      ':return': {
+        blocks: [{ id: 'field', type: 'Html', properties: { record: { _state: 'record' } } }],
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].properties.record).toEqual({
+    __typename: 'Product',
+    name: 'Chair',
+  });
+});
+
+test('resolveDynamicContent falls back when parsed data text carries an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    {
+      ':set_state': {
+        stored: '[{"id":"field","type":"Html","properties":{"html":{"_request":"x"}}}]',
+      },
+    },
+    { ':return': { blocks: { '_json.parse': { _state: 'stored' } } } },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_json.parse" contains the operator "_request" at "0.properties.html".'
+  );
+});
+
+test('resolveDynamicContent rejects blocks built up in routine state', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    {
+      ':set_state': {
+        built: [{ id: 'field', type: 'Html', properties: { html: { ___state: 'answer' } } }],
+      },
+    },
+    { ':return': { blocks: { _state: 'built' } } },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain('Data returned by "_state"');
+});
