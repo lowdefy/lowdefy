@@ -15,16 +15,11 @@
 */
 
 import React from 'react';
-import DOMPurify from 'dompurify';
-import { withBlockDefaults } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { HtmlComponent, withBlockDefaults } from '@lowdefy/block-utils';
 
 class DangerousHtml extends React.Component {
   constructor(props) {
     super(props);
-    this.div = {
-      innerHTML: '',
-    };
     // The sanitizer options are fixed at mount on purpose: a later, operator-driven
     // value could loosen the sanitizer from state. A change is refused loudly
     // rather than ignored silently.
@@ -32,8 +27,8 @@ class DangerousHtml extends React.Component {
     this.warnedOptionsChange = false;
   }
 
-  sanitize() {
-    const { html, DOMPurifyOptions } = this.props.properties;
+  warnOnOptionsChange() {
+    const { DOMPurifyOptions } = this.props.properties;
     if (
       !this.warnedOptionsChange &&
       JSON.stringify(DOMPurifyOptions) !== JSON.stringify(this.DOMPurifyOptions)
@@ -43,30 +38,25 @@ class DangerousHtml extends React.Component {
         `DangerousHtml block "${this.props.blockId}": DOMPurifyOptions changed after mount and the change is ignored. The sanitizer options are fixed at the first render; write them as a literal, not from state.`
       );
     }
-    const htmlString = type.isNone(html) ? '' : html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString, this.DOMPurifyOptions);
   }
 
   componentDidMount() {
-    this.sanitize();
+    this.warnOnOptionsChange();
   }
 
   componentDidUpdate() {
-    this.sanitize();
+    this.warnOnOptionsChange();
   }
 
   render() {
-    const { blockId, classNames, styles } = this.props;
+    const { blockId, classNames, properties, styles } = this.props;
     return (
-      <div
+      <HtmlComponent
+        div={true}
+        html={properties.html}
         id={blockId}
-        data-testid={blockId}
-        ref={(el) => {
-          if (el) {
-            this.div = el;
-          }
-        }}
         className={classNames?.element}
+        sanitizeOptions={this.DOMPurifyOptions}
         style={styles?.element}
       />
     );

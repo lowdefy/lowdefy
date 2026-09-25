@@ -46,6 +46,11 @@ const createIcon = (Icons) => {
     if (!title || !type.isString(title)) {
       return '';
     }
+    // Semantic names (edit, more-vertical) read as words: "Edit", "More vertical".
+    if (/^[a-z]/.test(title)) {
+      const words = title.replace(/-/g, ' ');
+      return words.charAt(0).toUpperCase() + words.slice(1);
+    }
     let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
     return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
   };
@@ -81,24 +86,20 @@ const createIcon = (Icons) => {
     if (!IconComp) {
       IconComp = AiOutlineExclamationCircle;
     }
+    const triggerClick = events.onClick && (() => methods.triggerEvent({ name: 'onClick' }));
     return (
       <>
         {spin ? (
           <AiOutlineLoading3Quarters {...iconProps} />
         ) : (
           <ErrorBoundary
+            // Keyed so an icon that failed recovers when its name changes.
+            key={propertiesObj.name}
             fallback={() => <AiOutlineExclamationCircle {...{ ...iconProps, color: '#F00' }} />}
           >
             <IconComp
               id={blockId}
-              onClick={
-                onClick ||
-                (events.onClick &&
-                  (() =>
-                    methods.triggerEvent({
-                      name: 'onClick',
-                    })))
-              }
+              onClick={onClick || triggerClick}
               size={propertiesObj.size}
               title={propertiesObj.title}
               {...iconProps} // spread props for to populate props from parent
@@ -108,7 +109,11 @@ const createIcon = (Icons) => {
       </>
     );
   };
-  const AntIcon = (all) => <Icon component={() => <IconBlock {...all} />} />;
+  // antd's Icon renders `component` with React.createElement, so the component
+  // must keep its identity across renders or React remounts the <svg> every
+  // time. The per-render props travel through a render-function child instead.
+  const IconHost = ({ children }) => children();
+  const AntIcon = (all) => <Icon component={IconHost}>{() => <IconBlock {...all} />}</Icon>;
   return withBlockDefaults(AntIcon);
 };
 

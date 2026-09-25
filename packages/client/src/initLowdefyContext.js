@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import React from 'react';
+import { registerHtmlEnhancements } from '@lowdefy/block-utils';
 import { translate } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
@@ -70,9 +72,16 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
+    // HtmlComponent (block-utils) renders data-icon, data-tooltip and
+    // data-popover in every sanitised HTML string. The overlay pulls in antd
+    // Tooltip and Popover, so it loads the first time HTML needs one.
+    registerHtmlEnhancements({
+      HtmlOverlay: React.lazy(() => import('./HtmlOverlay.js')),
+      Icon: lowdefy._internal.components.Icon,
+      icons: types.icons,
+    });
     lowdefy._internal.link = setupLink(lowdefy);
-    lowdefy._internal.translate = (key, values) =>
-      translate({ key, values, i18n: lowdefy.i18n });
+    lowdefy._internal.translate = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;

@@ -13,45 +13,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import React from 'react';
 import { withBlockDefaults, HtmlComponent } from '@lowdefy/block-utils';
 
-// dataset keys are camelCase (data-record-id → recordId); config authors
-// write the attributes in kebab-case, so hand them back as snake_case.
-function toSnakeCase(key) {
-  return key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
-}
-
-const ClickableHtml = ({ blockId, classNames, events, properties, methods, styles }) => {
-  // Each clickable element names the event it fires in its data-event
-  // attribute (data-event="onEditClick" → events.onEditClick), so every
-  // target in the markup has its own action chain. Its other data-*
-  // attributes are the event object.
-  function onClick(clickEvent) {
-    const target = clickEvent.target.closest('[data-event]');
-    if (!target || !clickEvent.currentTarget.contains(target)) return;
-    const { event: name, ...data } = target.dataset;
-    if (!name) return;
-    clickEvent.preventDefault();
-    const event = {};
-    Object.keys(data).forEach((key) => {
-      event[toSnakeCase(key)] = data[key];
-    });
-    methods.triggerEvent({ name, event });
-  }
-
-  return (
-    <HtmlComponent
-      div={true}
-      events={events}
-      html={properties.html}
-      id={blockId}
-      methods={methods}
-      className={classNames?.element}
-      style={styles?.element}
-      onClick={onClick}
-    />
-  );
-};
+// Each clickable element names the event it fires in its data-event attribute
+// (data-event="onEditClick" → events.onEditClick), so every target in the
+// markup has its own action chain. Its other data-* attributes are the event
+// object. HtmlComponent finds the target, including inside data-popover
+// content, and prevents the element's default action.
+const ClickableHtml = ({ blockId, classNames, events, properties, methods, styles }) => (
+  <HtmlComponent
+    div={true}
+    events={events}
+    html={properties.html}
+    id={blockId}
+    methods={methods}
+    className={classNames?.element}
+    style={styles?.element}
+    onDataEvent={methods.triggerEvent}
+  />
+);
 
 export default withBlockDefaults(ClickableHtml);

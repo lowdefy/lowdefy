@@ -17,6 +17,21 @@
 import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
+// An Icon block with an onClick event is a control, so it takes keyboard focus
+// and Enter/Space fire the event like a click. The icon component other blocks
+// render (inside a Button, an Alert) stays untouched: their block is the control.
+const IconBlock = ({ components: { Icon }, events, methods, ...props }) => {
+  const keyboardProps = events.onClick
+    ? {
+        tabIndex: 0,
+        onKeyDown: (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          methods.triggerEvent({ name: 'onClick' });
+        },
+      }
+    : {};
+  return <Icon events={events} methods={methods} {...keyboardProps} {...props} />;
+};
 
 export default withBlockDefaults(IconBlock);

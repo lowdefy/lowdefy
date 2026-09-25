@@ -24,6 +24,7 @@ import ErrorPage from './ErrorPage.js';
 import extractBlockTypes from './extractBlockTypes.js';
 import getLazyBlockLoadsInFlight from './getLazyBlockLoadsInFlight.js';
 import HtmlComponent from './HtmlComponent.js';
+import registerHtmlEnhancements from './registerHtmlEnhancements.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
 
@@ -38,6 +39,7 @@ export {
   extractBlockTypes,
   getLazyBlockLoadsInFlight,
   HtmlComponent,
+  registerHtmlEnhancements,
   renderHtml,
   withBlockDefaults,
 };
