@@ -1,6 +1,18 @@
 {
   "versions": [
     {
+      "version": "7.0.0",
+      "from": ">=6.0.0 <7.0.0",
+      "description": "Lucide icons replace react-icons",
+      "codemods": [
+        {
+          "id": "react-icons-to-lucide",
+          "description": "Rewrite react-icons and stale Ant Design icon names to semantic or Lucide names using the v7-0-0/react-icons-to-lucide.json table, and report glyph judgement calls, unmapped names and runtime-only icon sources (the @lowdefy/icons-react-icons compatibility set covers stored names and brand icons).",
+          "path": "v7-0-0/01-react-icons-to-lucide.md"
+        }
+      ]
+    },
+    {
       "version": "6.0.0",
       "from": ">=5.0.0 <6.0.0",
       "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports, provider-neutral file blocks)",
