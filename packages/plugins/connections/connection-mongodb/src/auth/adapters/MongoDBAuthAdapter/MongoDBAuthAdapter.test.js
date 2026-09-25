@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
 
-const mockDb = { collection: jest.fn() };
-const mockMongoClient = jest.fn(() => ({ db: jest.fn(() => mockDb) }));
+const mockMongoClient = jest.fn(() => {
+  const client = new EventEmitter();
+  client.db = jest.fn((name) => ({ collection: jest.fn((model) => ({ client, name, model })) }));
+  return client;
+});
 const mockMongodbAdapter = jest.fn(() => 'betterAuthAdapter');
 
 jest.unstable_mockModule('mongodb', () => ({
@@ -46,8 +50,26 @@ test('MongoDBAuthAdapter returns the vendored adapter over the selected database
     properties: { uri: 'mongodb://localhost:27017', database: 'auth' },
   });
   expect(mockMongodbAdapter).toHaveBeenCalledTimes(1);
-  expect(mockMongodbAdapter).toHaveBeenCalledWith({ db: mockDb });
   expect(adapter).toBe('betterAuthAdapter');
+  const { db } = mockMongodbAdapter.mock.calls[0][0];
+  const clientInstance = mockMongoClient.mock.results[0].value;
+  expect(db.collection('user')).toEqual({ client: clientInstance, name: 'auth', model: 'user' });
+});
+
+test('MongoDBAuthAdapter replaces the client once its topology closes', async () => {
+  const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
+  MongoDBAuthAdapter({ properties: { uri: 'mongodb://localhost:27017', database: 'auth' } });
+  const { db } = mockMongodbAdapter.mock.calls[0][0];
+  const first = mockMongoClient.mock.results[0].value;
+  first.emit('topologyClosed');
+  expect(mockMongoClient).toHaveBeenCalledTimes(2);
+  const second = mockMongoClient.mock.results[1].value;
+  expect(db.collection('session').client).toBe(second);
+  // A late close event from the replaced client does not churn the new one.
+  first.emit('topologyClosed');
+  expect(mockMongoClient).toHaveBeenCalledTimes(2);
+  second.emit('topologyClosed');
+  expect(mockMongoClient).toHaveBeenCalledTimes(3);
 });
 
 test('MongoDBAuthAdapter passes client options and database selection through', async () => {
