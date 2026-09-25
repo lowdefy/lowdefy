@@ -17,9 +17,10 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import { BuildError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
+import createInternalBuildError from '../../utils/createInternalBuildError.js';
 import logCollectedErrors from '../../utils/logCollectedErrors.js';
 import makeId from '../../utils/makeId.js';
 import tryBuildStep from '../../utils/tryBuildStep.js';
@@ -116,11 +117,11 @@ async function shallowBuild(options) {
         shallowOptions: true,
       });
     } catch (err) {
-      if (err.isLowdefyError) {
-        context.handleError(err);
-        throw new BuildError('Build failed with 1 error(s). See above for details.');
+      // Root lowdefy.yaml failure still throws from buildRefs — collect it
+      if (!err.isLowdefyError) {
+        throw err;
       }
-      throw err;
+      context.errors.push(err);
     }
 
     // Stop early if buildRefs collected errors (e.g., YAML parse errors).
@@ -290,17 +291,7 @@ async function shallowBuild(options) {
     if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
-    const lowdefyErr = err.isLowdefyError
-      ? err
-      : new LowdefyInternalError(err.message, { cause: err });
-    if (context) {
-      context.handleError(lowdefyErr);
-    } else {
-      const logger = options.logger ?? console;
-      logger.error(lowdefyErr);
-    }
-    throw new BuildError('Build failed due to internal error. See above for details.');
+    throw createInternalBuildError({ error: err, context, logger: options.logger ?? console });
   }
 }
 

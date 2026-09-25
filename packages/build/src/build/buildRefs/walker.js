@@ -932,6 +932,8 @@ async function loadAndWalkRef(refDef, ctx, { configKey, referencedFrom } = {}) {
       ctx.collectError(error);
       return null;
     }
+    // The innermost ref being resolved is the file an unexpected error came from.
+    error.filePath ??= refDef.path;
     throw error;
   }
 }
