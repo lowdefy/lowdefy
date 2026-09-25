@@ -479,17 +479,22 @@ test('runRequest returns a structured error instead of throwing when callRequest
   expect(result.error).toEqual({ name: 'Error', message: 'boom' });
 });
 
-test('runRequest truncates responses larger than the size cap', async () => {
+test('runRequest writes a response larger than the inline limit to a file', async () => {
+  const rows = Array.from({ length: 500 }, (_, index) => ({ _id: index, title: 'x'.repeat(100) }));
   mockCallRequest.mockResolvedValueOnce({
     id: 'req-read',
     success: true,
     type: 'ReadOnlyRequest',
-    response: 'x'.repeat(200_000),
+    response: rows,
   });
   const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
-  expect(result.truncated).toBe(true);
-  expect(result.note).toContain('truncated');
-  expect(result.response.length).toEqual(100_000);
+  expect(result.response).toBeUndefined();
+  expect(result.responseItems).toEqual(500);
+  expect(path.dirname(result.responseFile)).toEqual(
+    path.join(fs.realpathSync(fixtureDir), '.lowdefy', 'responses')
+  );
+  expect(path.basename(result.responseFile).startsWith('home.req-read-')).toBe(true);
+  expect(JSON.parse(fs.readFileSync(result.responseFile, 'utf8'))).toEqual(rows);
 });
 
 test('runRequest builds the page before it reads the request', async () => {

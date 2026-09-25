@@ -140,12 +140,18 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     return textResult(result);
   });
 
-  registerDevTool('lowdefy_run_request', async ({ pageId, requestId, payload, user }) =>
-    textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
+  registerDevTool(
+    'lowdefy_run_request',
+    async ({ pageId, requestId, payload, user, saveResponse }) =>
+      textResult(await runRequest({ pageId, requestId, payload, user, saveResponse, honoContext }))
   );
 
-  registerDevTool('lowdefy_run_endpoint', async ({ endpointId, payload, user, system }) =>
-    textResult(await runEndpoint({ endpointId, payload, user, system, honoContext }))
+  registerDevTool(
+    'lowdefy_run_endpoint',
+    async ({ endpointId, payload, user, system, saveResponse }) =>
+      textResult(
+        await runEndpoint({ endpointId, payload, user, system, saveResponse, honoContext })
+      )
   );
 
   registerDevTool('lowdefy_restart', ({ reason }) =>

@@ -151,6 +151,13 @@ test('runRequest does not note stale config for a page that is current', async (
   expect(result.staleConfig).toBeUndefined();
 });
 
+test('runRequest throws a ConfigError when saveResponse is not a boolean', async () => {
+  await expect(
+    runRequest({ pageId: 'home', requestId: 'get_rows', saveResponse: 1, honoContext })
+  ).rejects.toThrow(ConfigError);
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
+});
+
 test('runRequest notes stale config on a request that fails', async () => {
   mockReviewPageBuilds.mockReturnValue({ edited: ['home'], unbuilt: [], failed: [] });
   mockCallRequest.mockRejectedValue(new Error('connect ECONNREFUSED'));

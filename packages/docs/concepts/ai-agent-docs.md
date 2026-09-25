@@ -196,6 +196,8 @@ Loading it back (`lowdefy_load_state`) serves the recorded request data from the
 
 `lowdefy_run_request` executes a request with a test payload so the agent can verify the data shape a page will receive. Read-only request types (like `MongoDBFind`) always run. The page is built first when it changed since its last build, so the request that runs is the one in the config now; a page that fails to build answers `refused: true` with its `buildErrors`.
 
+A response over 40,000 serialized characters is not returned inline: it is written in full to a JSON file under `.lowdefy/responses/` in the app directory, and the result carries `responseFile` (its path), `responseChars` and, for an array, `responseItems`. Pass `saveResponse: true` to always write the response there. `lowdefy_run_endpoint` does the same.
+
 Pass `user` to run the request as a specific caller — `{ "pageId": "users", "requestId": "get_users", "user": { "roles": ["admin"] } }`. Without `user` the request runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rows rather than an error. Impersonation never unlocks writes: the write gate below applies to every caller. Write requests are refused unless you opt in:
 
 ```yaml
