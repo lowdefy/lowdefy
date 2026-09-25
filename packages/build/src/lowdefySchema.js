@@ -43,6 +43,28 @@ const apiScheduleSchema = {
   },
 };
 
+// Runtime operators in class are evaluated by the client before the value
+// reaches the block, so an operator is accepted wherever a string is. Inlined
+// rather than $ref'd so the class errorMessages replace the branch errors.
+const operator = {
+  type: 'object',
+  minProperties: 1,
+  maxProperties: 1,
+  patternProperties: { '^_': {} },
+  additionalProperties: false,
+};
+
+const classValue = {
+  anyOf: [
+    { type: 'string' },
+    operator,
+    {
+      type: 'array',
+      items: { anyOf: [{ type: 'string' }, operator] },
+    },
+  ],
+};
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -1882,19 +1904,18 @@ export default {
           },
         },
         class: {
-          oneOf: [
-            { type: 'string' },
-            { type: 'array', items: { type: 'string' } },
+          anyOf: [
+            classValue,
             {
               type: 'object',
               additionalProperties: {
-                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+                ...classValue,
+                errorMessage:
+                  'Block "class" slot values should be a string, array of strings, or operator.',
               },
             },
           ],
-          errorMessage: {
-            type: 'Block "class" should be a string, array of strings, or object.',
-          },
+          errorMessage: 'Block "class" should be a string, array of strings, object, or operator.',
         },
         visible: {},
         loading: {},
