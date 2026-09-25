@@ -133,6 +133,54 @@ Most types are written as standard Javascript functions, and blocks are written 
 
 Lowdefy uses object [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
 
+### Lazy loading heavy blocks
+
+A page loads the code of every block type it uses before it renders. A block that pulls in a large library, such as a chat, a chart engine or a rich text editor, can make that code much bigger, even when the block sits in a closed drawer, an unopened tab or a modal. `createLazyBlock` from `@lowdefy/block-utils` loads such a block's implementation only when the block first mounts.
+
+Make a block lazy when it adds more than about 100 kB gzip to the page, **and** it is commonly off-screen at first paint or the page shows useful content without it. Otherwise keep it eager: a lazy block that is visible at first paint appears a moment later.
+
+Move the block's component into a file named `*.lazy.js`, and export a wrapper in its place:
+
+```js
+// src/blocks/MyChart/MyChart.js - exported from blocks.js as before
+import { createLazyBlock } from '@lowdefy/block-utils';
+import meta from './meta.js';
+import MyChartFallback from './MyChartFallback.js';
+
+export default createLazyBlock({
+  load: () => import('./MyChart.lazy.js'),
+  meta,
+  Fallback: MyChartFallback, // optional
+});
+```
+
+- `load` returns `import()` of the implementation, whose default export is the block component. Do not import the `*.lazy.js` file statically anywhere else, or it is bundled with the page again.
+- `meta` is the block's `meta.js` object. The wrapper copies it to `.meta`.
+- `Fallback` is optional. It renders while the implementation loads and receives the same props as the block. Use it to keep the block's size, or to show the part users see first, such as a launcher button. Without it the block renders nothing until it has loaded.
+
+The wrapper also has a `preload()` function, which starts the load and returns its promise. A `Fallback` can call it on hover.
+
+The `.lazy.js` name matters. In production, the Lowdefy server prefetches the `*.lazy.js` chunks of the blocks on a page, so the code is often in the browser cache by the time the block mounts. Other dynamic imports are never prefetched.
+
+###### Block methods
+
+Declare every method the block registers with `methods.registerMethod` in `meta.methods`:
+
+```js
+// src/blocks/MyChart/meta.js
+export default {
+  category: 'display',
+  methods: {
+    reset: 'Reset the zoom.',
+    download: 'Download the chart as an image.',
+  },
+};
+```
+
+The wrapper registers these methods as soon as the block mounts, so `CallMethod` works before the implementation has loaded. Calls made before then wait in order and run once the implementation has registered its methods. After that, calls go straight to the block, as for any other block. A waiting call fails if the block never registers that method, if the load fails, or if the block is removed first. A method that is not declared in `meta.methods` cannot be called before the block loads, and the dev server logs a warning when the block registers it.
+
+Do not spread the `methods` prop (`{ ...methods }`) in a lazy block's implementation; pass it on as it is.
+
 ### Localizing plugin strings
 
 Plugins can ship locale-keyed default messages so consumers see translated strings out-of-the-box, and translate strings at runtime via `methods.translate(key, values)` in block / action code. See [i18n](/i18n) for the full plugin-author contract — `./messages` export shape, `package.json` `exports` registration, namespacing convention, and merge precedence.

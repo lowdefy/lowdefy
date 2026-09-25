@@ -17,15 +17,12 @@
 import { jest } from '@jest/globals';
 import { EventEmitter } from 'events';
 
-const mockGet = jest.fn();
-jest.unstable_mockModule('axios', () => ({
-  default: { get: mockGet },
-}));
-
 const mockFindAvailablePort = jest.fn();
+const mockReadDevInstance = jest.fn();
 const mockSpawnProcess = jest.fn();
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   findAvailablePort: mockFindAvailablePort,
+  readDevInstance: mockReadDevInstance,
   spawnProcess: mockSpawnProcess,
 }));
 
@@ -82,9 +79,12 @@ afterEach(() => {
   process.kill = realProcessKill;
 });
 
-test('startDevServer prepares .lowdefy/dev, spawns the server headless and resolves once ping answers', async () => {
+test('startDevServer prepares .lowdefy/dev, spawns the server headless and resolves once its instance record is ready', async () => {
   const { default: startDevServer } = await import('./startDevServer.js');
-  mockGet.mockRejectedValueOnce(new Error('ECONNREFUSED')).mockResolvedValue({ data: {} });
+  mockReadDevInstance
+    .mockReturnValueOnce(null)
+    .mockReturnValueOnce({ state: 'starting', port: 3228 })
+    .mockReturnValue({ state: 'ready', port: 3228, url: 'http://localhost:3228' });
 
   const server = await startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 });
 
@@ -108,7 +108,8 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(spawnArgs.processOptions.env.PORT).toEqual(3228);
   expect(spawnArgs.processOptions.env.LOWDEFY_DIRECTORY_CONFIG).toEqual('/app');
 
-  expect(mockGet).toHaveBeenCalledWith('http://localhost:3228/api/ping', { timeout: 1000 });
+  expect(mockReadDevInstance).toHaveBeenCalledWith({ configDirectory: '/app' });
+  expect(mockReadDevInstance).toHaveBeenCalledTimes(3);
   expect(server.url).toEqual('http://localhost:3228');
   expect(server.port).toEqual(3228);
 
@@ -116,9 +117,23 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(killedGroups).toEqual([{ pid: -CHILD_PID, signal: 'SIGTERM' }]);
 });
 
-test('startDevServer throws with the last captured output lines when ping never answers', async () => {
+test('startDevServer resolves with the basePath url the dev server records', async () => {
   const { default: startDevServer } = await import('./startDevServer.js');
-  mockGet.mockRejectedValue(new Error('ECONNREFUSED'));
+  mockReadDevInstance.mockReturnValue({
+    state: 'ready',
+    port: 3228,
+    url: 'http://localhost:3228/app',
+  });
+
+  const server = await startDevServer({ context, pollIntervalMs: 1, bootTimeoutMs: 1000 });
+
+  expect(server.url).toEqual('http://localhost:3228/app');
+  await server.stop();
+});
+
+test('startDevServer throws with the last captured output lines when the server never becomes ready', async () => {
+  const { default: startDevServer } = await import('./startDevServer.js');
+  mockReadDevInstance.mockReturnValue({ state: 'starting', port: 3228 });
   mockSpawnProcess.mockImplementation(({ stdOutLineHandler }) => {
     for (let i = 0; i < 45; i += 1) {
       stdOutLineHandler(`line ${i}`);
@@ -132,7 +147,7 @@ test('startDevServer throws with the last captured output lines when ping never 
   } catch (e) {
     error = e;
   }
-  expect(error.message).toEqual('Development server did not answer GET /api/ping within 20ms.');
+  expect(error.message).toEqual('Development server was not ready within 20ms.');
   expect(error.serverOutput).toHaveLength(40);
   expect(error.serverOutput[0]).toEqual('line 5');
   expect(error.serverOutput[39]).toEqual('line 44');
@@ -141,7 +156,7 @@ test('startDevServer throws with the last captured output lines when ping never 
 
 test('startDevServer throws when the server process exits before it is ready', async () => {
   const { default: startDevServer } = await import('./startDevServer.js');
-  mockGet.mockRejectedValue(new Error('ECONNREFUSED'));
+  mockReadDevInstance.mockReturnValue(null);
   mockSpawnProcess.mockImplementation(({ stdOutLineHandler }) => {
     stdOutLineHandler('Build failed with 1 error.');
     child.exitCode = 1;

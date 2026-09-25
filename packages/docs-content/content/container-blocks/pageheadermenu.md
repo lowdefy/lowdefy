@@ -519,14 +519,14 @@ Profile from _menu
 | `breadcrumb.list.$.pageId` | string | - | Page id to link to when clicked. |
 | `breadcrumb.list.$.url` | string | - | External url link. |
 | `breadcrumb.list.$.style` | object | - | Css style to apply to link. |
-| `breadcrumb.list.$.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
 | `menu.links.$.pageId` | string | - | Page to link to. |
 | `menu.links.$.properties` | object | - | properties from menu item. |
 | `menu.links.$.properties.title` | string | - | Menu item title. |
-| `menu.links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
 | `menuLg` | object | - | Menu large screen properties. Overwrites menu properties on desktop screen sizes. |
 | `menuMd` | object | - | Mobile menu properties. Overwrites menu properties on mobile screen sizes. |
 | `notifications` | object | - | Notification bell icon with badge in the header. Renders when configured. Use the link property to navigate when clicked. |

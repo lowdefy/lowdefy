@@ -1202,7 +1202,7 @@ Browse our latest collection across all categories.
 | `links.$.style` | object | - | Css style to applied to link. |
 | `links.$.properties` | object | - | properties from menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `links.$.properties.dashed` | boolean | `false` | Whether the divider line is dashed. |
 | `links.$.links` | array | - |  |

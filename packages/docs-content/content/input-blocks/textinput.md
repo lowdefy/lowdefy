@@ -559,7 +559,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | `maxLength` | integer | - | The max number of input characters. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
 | `prefix` | string | - | Prefix text for the block, priority over $prefix_con. |
-| `prefixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to prefix the text input. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to prefix the text input. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -580,7 +580,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `showCount` | boolean | `false` | Show text character count |
 | `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
-| `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to suffix the text input. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |

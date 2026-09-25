@@ -623,8 +623,8 @@ Rating slider with customizable range, icons, and N/A option.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `disableIcons` | boolean | `false` | Hides minimum and maximum icons. |
 | `disableNotApplicable` | boolean | `false` | Disables the N/A option left of slider. |
-| `minIcon` | string \| object | `"AiOutlineFrown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the left of the minimum side of the slider. |
-| `maxIcon` | string \| object | `"AiOutlineSmile"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize the icon to the right of the maximum side of the slider. |
+| `minIcon` | string \| object | `"AiOutlineFrown"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize the icon to the left of the minimum side of the slider. |
+| `maxIcon` | string \| object | `"AiOutlineSmile"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize the icon to the right of the maximum side of the slider. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

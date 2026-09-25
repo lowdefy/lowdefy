@@ -1673,7 +1673,7 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | `tabs.$.key` | string | - | Area key of the tab. |
 | `tabs.$.eventName` | string | - | Block-level event name to trigger when this tab becomes active, in addition to onChange. Declare an event with this name under `events:`. The event receives `{ key }` of the now-active tab. |
 | `tabs.$.disabled` | boolean | `false` | Disable the tab if true. |
-| `tabs.$.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to show in tab title. |
+| `tabs.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to show in tab title. |
 | `tabs.$.shortcut` | string | - | Keyboard shortcut to switch to this tab. Use "mod" for Cmd/Ctrl. |
 | `extraAreaKey` | string | - | Area key for the extra area blocks. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tabs tokens](https://ant.design/components/tabs#design-token). |

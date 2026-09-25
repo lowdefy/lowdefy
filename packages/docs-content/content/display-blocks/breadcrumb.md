@@ -494,7 +494,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 | `list.$.pageId` | string | - | Page id to link to when clicked. |
 | `list.$.url` | string | - | External url link. |
 | `list.$.style` | object | - | Css style to apply to link. |
-| `list.$.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in breadcrumb link. |
+| `list.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design breadcrumb tokens](https://ant.design/components/breadcrumb#design-token). |
 | `theme.itemColor` | string | `"rgba(0, 0, 0, 0.45)"` | Text color of breadcrumb item. |
 | `theme.iconFontSize` | number | `14` | Icon size of breadcrumb item. |

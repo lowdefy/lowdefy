@@ -459,9 +459,9 @@ _Last updated 2 minutes ago_
 | `loading` | boolean | `false` | Control the loading status of Statistic. |
 | `precision` | number | - | Number of decimals to display. |
 | `prefix` | string | - | Prefix text, priority over prefixIcon. |
-| `prefixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon which prefix the statistic. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon which prefix the statistic. |
 | `suffix` | string | - | Suffix text, priority over suffixIcon. |
-| `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon which suffix the statistic. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon which suffix the statistic. |
 | `title` | string | - | Title to describe the component - supports html. |
 | `value` | number \| string | - | Value to display. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design statistic tokens](https://ant.design/components/statistic#design-token). |

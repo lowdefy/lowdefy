@@ -1,6 +1,6 @@
 When you run `lowdefy dev`, the development server also serves a documentation API and an [MCP](https://modelcontextprotocol.io) endpoint built for AI coding agents. It describes everything installed in _your_ project — every block, operator, action, connection and request type from core Lowdefy plugins _and_ your own local plugins — plus the full Lowdefy documentation as markdown. This means an agent like Claude Code never has to guess type names or property shapes: it can look up the exact schema, real examples, and the relevant docs page while it writes your config.
 
-Everything is served under the `/lowdefy-docs` path of your dev server. It is always on in dev, and never part of your production server.
+Everything is served under the `/lowdefy-docs` path of your dev server. It is always on in dev, and never part of your production server. When your app sets `config.basePath`, the dev server serves these routes under the base path too, like the rest of the app: with `basePath: /app` they live at `/app/lowdefy-docs`. `lowdefy mcp` finds the right address by itself.
 
 > The `/lowdefy-docs` route prefix is reserved by the dev server. A page with `id: lowdefy-docs` will not be reachable in dev.
 

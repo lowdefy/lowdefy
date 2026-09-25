@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import axios from 'axios';
-import { findAvailablePort, spawnProcess } from '@lowdefy/node-utils';
+import { findAvailablePort, readDevInstance, spawnProcess } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
@@ -28,15 +27,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function isServerReady({ url }) {
-  try {
-    await axios.get(`${url}/api/ping`, { timeout: 1000 });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function waitForExit(child) {
   if (child.exitCode !== null || child.signalCode !== null) {
     return Promise.resolve();
@@ -45,7 +35,9 @@ function waitForExit(child) {
 }
 
 // Boots @lowdefy/server-dev headless in .lowdefy/dev, exactly as `lowdefy dev` does but
-// without opening a browser, and resolves once GET /api/ping answers.
+// without opening a browser, and resolves once the server's .lowdefy/instance.json record
+// is ready. The manager flips the record to ready once <basePath>/api/ping answers, and
+// its url carries the app's basePath, which the CLI cannot know without building.
 async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 120000 }) {
   const directory = context.directories.dev;
   const port = await findAvailablePort({ port: context.options.port ?? 3000 });
@@ -88,7 +80,6 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
     },
   });
 
-  const url = `http://localhost:${port}`;
   async function stop() {
     if (child.exitCode !== null || child.signalCode !== null) {
       return;
@@ -110,15 +101,14 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
       error.serverOutput = capturedLines;
       throw error;
     }
-    if (await isServerReady({ url })) {
-      return { url, port, stop };
+    const record = readDevInstance({ configDirectory: context.directories.config });
+    if (record !== null && record.state === 'ready') {
+      return { url: record.url, port, stop };
     }
     await sleep(pollIntervalMs);
   }
   await stop();
-  const error = new Error(
-    `Development server did not answer GET /api/ping within ${bootTimeoutMs}ms.`
-  );
+  const error = new Error(`Development server was not ready within ${bootTimeoutMs}ms.`);
   error.serverOutput = capturedLines;
   throw error;
 }

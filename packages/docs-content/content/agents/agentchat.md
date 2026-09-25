@@ -66,9 +66,8 @@ The `AgentChat` block renders a streaming AI chat interface. It connects to a [L
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `agentId` | string | | __Required__ - The `id` of the agent to connect to. |
-| `conversationId` | string | | Active conversation ID. When this changes, any in-flight reply is aborted (so it stops emitting `onDataPart` and tool events into the page) and messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
-| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. Re-synced whenever the array's length, last message id or `conversationId` changes. |
-| `loading` | boolean | `false` | The app is still loading this conversation's transcript (for example, reading it from a database after a conversation switch). While `true`, a skeleton replaces the message area, suggestions are hidden and the composer is disabled, so nothing can be sent into a conversation whose messages have not synced yet. Drive it from state alongside `messages`, for the window before the transcript has synced — not while a reply is streaming, since a disabled composer also hides the stop control. |
+| `conversationId` | string | | Active conversation ID. When this changes, messages are cleared. If left empty, the block auto-mints a stable id for the session and surfaces it via `onConversationStart`, so every turn posts a consistent id. App-supplied ids are always authoritative. |
+| `messages` | array | | Load messages externally. `undefined` = no sync, `null` = clear, array = load. |
 | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
 | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
 | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
@@ -196,6 +195,8 @@ Customize message appearance by role:
     - `avatar: string`: Avatar image URL.
     - `variant: string`: `'filled'`, `'outlined'`, `'shadow'`, or `'borderless'`.
     - `shape: string`: `'default'`, `'round'`, or `'corner'`.
+    - `styles: object`: Inline styles per bubble part — `root`, `content`, `body`, `header`, `footer`, `avatar`, `extra`. This is how to recolour a bubble: the `filled` background and the `outlined` border come from the theme's `colorPrimary`, and a page stylesheet cannot override them.
+    - `classNames: object`: Class names per bubble part, same keys as `styles`.
   - `user: object`: Same properties as `assistant`.
 
 ```yaml
@@ -217,6 +218,8 @@ messageDisplay:
   - `placeholder: string`: Default: `'Type a message...'` — Input placeholder. When `config.i18n` is configured, falls back to the localized `agent.sender.placeholder` builtin key. See the [i18n concept page](/i18n) for the full list of localizable agent UI keys (tool approval buttons, message actions, tool-result captions, etc.).
   - `submitType: string`: Default: `'enter'` - Submit key. `'enter'` or `'shiftEnter'`.
   - `allowSpeech: boolean`: Default: `false` - Enable speech input.
+  - `styles: object`: Inline styles per composer part — `root`, `prefix`, `input`, `suffix`, `footer`, `switch`, `content`. This is how to recolour the composer border, which the theme sets and a page stylesheet cannot override.
+  - `classNames: object`: Class names per composer part, same keys as `styles`.
 
 #### File Attachments
 

@@ -16,14 +16,14 @@
 
 import { wait } from '@lowdefy/helpers';
 
-// The child answers /api/ping once Vite and the Hono app are both up, so this
+// The child answers <basePath>/api/ping once Vite and the Hono app are both up, so this
 // is the moment the server is really usable - the instance record flips to
 // "ready" here, which is what the hub and the MCP shim wait on.
-async function waitForServer({ port, timeoutMs = 120000, intervalMs = 250 }) {
+async function waitForServer({ port, basePath, timeoutMs = 120000, intervalMs = 250 }) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     try {
-      const response = await fetch(`http://127.0.0.1:${port}/api/ping`);
+      const response = await fetch(`http://127.0.0.1:${port}${basePath}/api/ping`);
       if (response.ok) {
         return true;
       }

@@ -584,7 +584,7 @@ Jane Doe
 | `links.$.class` | string \| array \| object | - | CSS classes for the menu item. Flat applies to the item wrapper; use dot-prefixed slot keys to target parts. |
 | `links.$.properties` | object | - | Properties for the menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Name of a React-Icon or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `links.$.properties.tooltip` | string | - | Tooltip text shown when the menu is collapsed. |

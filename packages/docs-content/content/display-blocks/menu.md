@@ -1006,7 +1006,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
+| `theme` | string \| object | - | The Menu color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
 | `theme.dropdownWidth` | number | `160` | Width of dropdown submenus. |
 | `theme.zIndexPopup` | number | `1050` | Z-index for popup submenus. |
 | `theme.itemBorderRadius` | number | `8` | Border radius for menu items. |
@@ -1067,7 +1067,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `links.$.class` | string \| array \| object | - | CSS classes for the menu item (including Tailwind utilities). Flat string/array applies to the item wrapper. Use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`, `.popup` — popup only on MenuGroup) to target specific parts. |
 | `links.$.properties` | object | - | properties from menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style (MenuLink only). Switches the item onto the `dangerItem*` token set — theme via `properties.theme.dangerItemColor` etc. |
 | `links.$.properties.disabled` | boolean | `false` | Disable the menu item (blocks clicks and applies a greyed style). |
 | `links.$.properties.tooltip` | string | - | Tooltip text shown on hover when the menu is collapsed. Maps to antd item `title`. |

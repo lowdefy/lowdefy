@@ -196,11 +196,11 @@ test('test stops the dev server when a journey run throws', async () => {
 test('test logs the captured server output and rethrows when the dev server fails to boot', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
-  const bootError = new Error('Development server did not answer GET /api/ping within 120000ms.');
+  const bootError = new Error('Development server was not ready within 120000ms.');
   bootError.serverOutput = ['line one', 'line two'];
   mockStartDevServer.mockRejectedValue(bootError);
   await expect(test({ context })).rejects.toThrow(
-    'Development server did not answer GET /api/ping within 120000ms.'
+    'Development server was not ready within 120000ms.'
   );
   expect(logs.error).toEqual(['line one', 'line two']);
   expect(mockPost).not.toHaveBeenCalled();

@@ -1187,7 +1187,7 @@ James Wilson
 | `count` | number \| string | - | Text to show in badge. |
 | `dot` | boolean | `false` | Whether to display a red dot instead of count. |
 | `size` | string | `"default"` | Sets the size of badge if count is set. Enum: `default`, `small`. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in badge. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in badge. |
 | `offset` | array | - | Set offset of the badge dot, array of numbers for x and y offset ([x,y]). |
 | `overflowCount` | number | `99` | Max count to show |
 | `showZero` | boolean | `false` | Whether to show badge when count is zero. |

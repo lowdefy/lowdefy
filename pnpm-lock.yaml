@@ -524,7 +524,11 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
 
-  packages/docs-content: {}
+  packages/docs-content:
+    dependencies:
+      '@lowdefy/nunjucks':
+        specifier: 6.0.0
+        version: link:../utils/nunjucks
 
   packages/engine:
     dependencies:

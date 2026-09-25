@@ -232,6 +232,7 @@ Button-shaped skeleton loading placeholder.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `shape` | string | `"default"` | Shape of the skeleton; round gives fully rounded ends. Enum: `default`, `round`. |
 | `size` | string | `"medium"` | Size of the skeleton. Enum: `small`, `medium`, `large`. |
 | `width` | number \| string | - | Width of the skeleton. |
 

@@ -16,6 +16,7 @@
 
 import { spawn } from 'child_process';
 
+import readBasePath from '../utils/readBasePath.mjs';
 
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
@@ -32,6 +33,15 @@ function createStdErrLineHandler({ context }) {
 
 function startServer(context) {
   context.shutdownServer();
+
+  // The app, its API and the /lowdefy-docs tools all live under basePath, and
+  // a config change that edits basePath restarts the child - so the URL is
+  // recorded on every start. Everything that finds this server through
+  // .lowdefy/instance.json (lowdefy mcp, the hub, lowdefy test) appends its
+  // paths to this URL.
+  context.basePath = readBasePath(context);
+  context.url = `http://localhost:${context.options.port}${context.basePath}`;
+  context.instance.update({ url: context.url });
 
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never
