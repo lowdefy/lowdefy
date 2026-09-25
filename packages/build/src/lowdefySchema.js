@@ -2162,6 +2162,8 @@ export default {
         },
         payloadSchema: {
           type: 'object',
+          description:
+            'JSON Schema the request payload must satisfy. A payload that does not match is rejected before the routine runs, on every caller. Cannot be combined with "webhook", which receives the raw { body, query, headers } envelope instead.',
           errorMessage: {
             type: 'Api endpoint "payloadSchema" should be an object.',
           },
