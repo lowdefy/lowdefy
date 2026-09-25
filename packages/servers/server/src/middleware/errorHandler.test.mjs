@@ -72,6 +72,13 @@ function createTwoFactorEnrolmentRequiredError(message) {
   return error;
 }
 
+function createUserError(message) {
+  const error = new Error(message);
+  error.name = 'UserError';
+  error.received = SECRET;
+  return error;
+}
+
 // Two Error levels, each with a stack (every Error has one) and a recognisable
 // `received`, plus a configKey the policy keeps.
 function createErrorWithCause() {
@@ -206,6 +213,51 @@ test('errorHandler returns text at 403 for a TwoFactorEnrolmentRequiredError on 
   expect(await res.text()).toEqual('Two-factor enrolment required');
   expect(logger.warn).toHaveBeenCalledTimes(1);
   expect(context.handleError).not.toHaveBeenCalled();
+});
+
+test('errorHandler returns 400 with only name and message for a UserError on an api path', async () => {
+  const logger = createLogger();
+  const context = { handleError: jest.fn() };
+  const res = await createApp({
+    context,
+    error: createUserError('Payload for endpoint "x" does not match its payloadSchema.'),
+    logger,
+  }).request('/api/endpoints/x', { method: 'POST' });
+
+  expect(res.status).toEqual(400);
+  expect(await res.json()).toEqual({
+    name: 'UserError',
+    message: 'Payload for endpoint "x" does not match its payloadSchema.',
+  });
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toMatch(/Bad request: POST \/api\/endpoints\/x/);
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(captureException).not.toHaveBeenCalled();
+});
+
+test('errorHandler does not send a UserError through the redactor', async () => {
+  const res = await createApp({
+    error: createUserError('Bad payload.'),
+    logger: createLogger(),
+  }).request('/api/endpoints/x');
+
+  const body = await res.json();
+  expect(body['~e']).toBeUndefined();
+  expect(JSON.stringify(body)).not.toContain(SECRET);
+});
+
+test('errorHandler returns text Bad Request at 400 for a UserError on a page path', async () => {
+  const logger = createLogger();
+  const res = await createApp({
+    error: createUserError('Bad payload.'),
+    logger,
+  }).request('/home');
+
+  expect(res.status).toEqual(400);
+  expect(await res.text()).toEqual('Bad Request');
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('errorHandler sends an HTTPException response as-is with one warning and no error log', async () => {

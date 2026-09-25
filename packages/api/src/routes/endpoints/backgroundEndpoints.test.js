@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { serializer } from '@lowdefy/helpers';
 
@@ -755,4 +755,39 @@ test('detached rehydrates the carried principal - roles are present on context.u
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ roles: ['admin'] });
   expect(context.user).toEqual({ id: 'user_1', roles: ['admin'], organizationId: 'org_1' });
+});
+
+test('detached run refuses a payload that violates the target payloadSchema before its routine runs', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          required: ['count'],
+        },
+        routine: { ':return': { _payload: 'count' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const principal = { user: serializer.serialize(null), system: true };
+  await expect(
+    runDetachedEndpoint(context, {
+      endpointId: 'typed_child',
+      payload: serializer.serialize({ count: 'three' }),
+      principal,
+    })
+  ).rejects.toThrow(UserError);
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 3 }),
+    principal,
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe(3);
 });

@@ -561,3 +561,25 @@ test('tools/call keeps the raw message in dev for an error thrown outside the en
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toBe('ENOENT: no such file api/health.json');
 });
+
+test('tools/call answers a payload that violates the payloadSchema with isError and one warning', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({
+    name: 'get-customer',
+    arguments: { customerId: 42 },
+  });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toEqual(
+    'Payload for endpoint "get-customer" does not match its payloadSchema at /customerId: must be string.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - Payload for endpoint "get-customer" does not match its payloadSchema at /customerId: must be string.'
+  );
+});

@@ -51,11 +51,24 @@ const endpointConfig = {
   routine: { ':return': { ok: true } },
 };
 
+const typedEndpointConfig = {
+  endpointId: 'typed-endpoint',
+  id: 'endpoint:typed-endpoint',
+  type: 'Api',
+  auth: { public: true },
+  payloadSchema: {
+    type: 'object',
+    properties: { status: { enum: ['open', 'closed'] } },
+  },
+  routine: { ':return': { ok: true } },
+};
+
 function createContext({ mode } = {}) {
   const readConfigFile = jest.fn((path) => {
     if (path === 'agents/my-agent.json') return agentConfig;
     if (path === 'connections/my-anthropic.json') return connectionConfig;
     if (path === 'api/my-endpoint.json') return endpointConfig;
+    if (path === 'api/typed-endpoint.json') return typedEndpointConfig;
     return null;
   });
   const context = testContext({
@@ -122,6 +135,27 @@ test('prepareAgent callEndpoint enforces the endpoint depth cap', async () => {
   await expect(resolverContext.callEndpoint('my-endpoint', { payload: {} })).rejects.toThrow(
     'Endpoint call depth exceeded maximum of 10.'
   );
+});
+
+test('prepareAgent callEndpoint refuses a tool payload that violates the payloadSchema', async () => {
+  const context = createContext();
+  const { resolverContext } = await prepareAgent(context, {
+    agentId: 'my-agent',
+    agentContext,
+    endpointDepth: 0,
+  });
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', { payload: { status: 'pending' } })
+  ).rejects.toThrow(UserError);
+  await expect(
+    resolverContext.callEndpoint('typed-endpoint', { payload: { status: 'pending' } })
+  ).rejects.toThrow(
+    'Payload for endpoint "typed-endpoint" does not match its payloadSchema at /status: must be equal to one of the allowed values (open, closed).'
+  );
+  const result = await resolverContext.callEndpoint('typed-endpoint', {
+    payload: { status: 'open' },
+  });
+  expect(result.success).toBe(true);
 });
 
 // The agent stream's error text reaches the end user and AgentChat config, which see the

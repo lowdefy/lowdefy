@@ -22,6 +22,7 @@ import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
+import validatePayload from './validatePayload.js';
 
 // Runs an endpoint invoked through the detached route (a CallApi step with
 // `detached: true` fire-and-forgets an HTTP call back to the deployment, so the
@@ -64,9 +65,12 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
   logger.debug({ event: 'debug_detached_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
+  const deserializedPayload = serializer.deserialize(payload ?? {});
+  validatePayload({ endpointConfig, payload: deserializedPayload });
+
   const routineContext = {
     steps: {},
-    payload: serializer.deserialize(payload ?? {}),
+    payload: deserializedPayload,
     arrayIndices: [],
     error: null,
     items: {},
