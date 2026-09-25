@@ -306,7 +306,7 @@ The icon rotates 90 degrees when the panel is expanded, providing a visual cue f
 - id: custom_icon_collapse
   type: Collapse
   properties:
-    expandIcon: AiOutlinePlusCircle
+    expandIcon: add-circle
     panels:
       - key: ci_features
         title: Key Features
@@ -340,7 +340,7 @@ The icon rotates 90 degrees when the panel is expanded, providing a visual cue f
   type: Collapse
   properties:
     expandIcon:
-      name: AiOutlineArrowRight
+      name: arrow-right
       color: "#1677ff"
     panels:
       - key: cio_one
@@ -882,7 +882,7 @@ Local development environment running via Docker Compose. Hot-reload enabled for
                 flex: 0 0 auto
               properties:
                 title: View Logs
-                icon: AiOutlineFileText
+                icon: document
                 color: primary
                 variant: outlined
                 size: small
@@ -892,7 +892,7 @@ Local development environment running via Docker Compose. Hot-reload enabled for
                 flex: 0 0 auto
               properties:
                 title: Metrics
-                icon: AiOutlineBarChart
+                icon: chart
                 color: primary
                 variant: outlined
                 size: small
@@ -1298,7 +1298,16 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `bordered` | boolean | `true` | Toggles rendering of the border around the collapse block. |
 | `defaultActiveKey` | string \| array | - | Initial active panel key, or a list of keys, if activeKey is not set. |
 | `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. Maps to antd's `destroyOnHidden`. |
-| `expandIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block for expand icon on the right of selector. |
+| `expandIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for expand icon on the right of selector. |
+| `expandIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `expandIcon.color` | string | - | Icon color. |
+| `expandIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `expandIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `expandIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `expandIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `expandIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `expandIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `expandIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
 | `forceRender` | boolean | `"false"` | Force render for all panels. |
 | `panels` | array | - |  |

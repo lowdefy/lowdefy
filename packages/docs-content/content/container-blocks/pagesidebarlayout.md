@@ -18,17 +18,17 @@ PageSidebarLayout provides a full-page layout with a full-height sidebar. The si
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psl_basic_users
           type: MenuLink
           properties:
             title: Users
-            icon: AiOutlineUser
+            icon: user
         - id: psl_basic_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   blocks:
     - id: psl_basic_content
       type: Paragraph
@@ -54,12 +54,12 @@ Sider starts collapsed. Click the toggle button to expand. The collapsed state i
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psl_collapsed_users
           type: MenuLink
           properties:
             title: Users
-            icon: AiOutlineUser
+            icon: user
   blocks:
     - id: psl_collapsed_content
       type: Paragraph
@@ -86,12 +86,12 @@ Optional desktop header with custom content. The header sits inside the content 
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psl_header_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   slots:
     header:
       blocks:
@@ -101,7 +101,7 @@ Optional desktop header with custom content. The header sits inside the content 
             flex: 0 0 auto
           properties:
             title: Search
-            icon: AiOutlineSearch
+            icon: search
             color: default
             variant: outlined
             size: small
@@ -132,7 +132,7 @@ Custom logo with style overrides. The full logo (src) shows when the sider is ex
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
   blocks:
     - id: psl_logo_content
       type: Paragraph
@@ -161,19 +161,19 @@ Dashboard Overview
           type: MenuLink
           properties:
             title: My Profile
-            icon: AiOutlineUser
+            icon: user
         - id: psl_admin_prof_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
         - id: psl_admin_prof_divider
           type: MenuDivider
         - id: psl_admin_prof_logout
           type: MenuLink
           properties:
             title: Sign Out
-            icon: AiOutlineLogout
+            icon: logout
             danger: true
     sider:
       width: 240
@@ -189,12 +189,12 @@ Dashboard Overview
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psl_admin_users_group
           type: MenuGroup
           properties:
             title: User Management
-            icon: AiOutlineTeam
+            icon: users
           links:
             - id: psl_admin_all_users
               type: MenuLink
@@ -208,12 +208,12 @@ Dashboard Overview
           type: MenuLink
           properties:
             title: Analytics
-            icon: AiOutlineBarChart
+            icon: chart
         - id: psl_admin_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   slots:
     siderOpen:
       blocks:
@@ -227,7 +227,7 @@ Dashboard Overview
               properties:
                 title: Production
                 color: green
-                icon: AiOutlineCloudServer
+                icon: Server
     siderClosed:
       blocks:
         - id: psl_admin_sider_closed
@@ -275,7 +275,7 @@ Dashboard Overview
               properties:
                 title: Total Users
                 value: 2847
-                prefixIcon: AiOutlineUser
+                prefixIcon: user
         - id: psl_admin_stat_revenue
           type: Card
           layout:
@@ -333,14 +333,32 @@ Dashboard Overview
 | `breadcrumb.list.$.pageId` | string | - | Page id to link to when clicked. |
 | `breadcrumb.list.$.url` | string | - | External url link. |
 | `breadcrumb.list.$.style` | object | - | Css style to apply to link. |
-| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `breadcrumb.list.$.icon.color` | string | - | Icon color. |
+| `breadcrumb.list.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `breadcrumb.list.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `breadcrumb.list.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `breadcrumb.list.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
 | `menu.links.$.pageId` | string | - | Page to link to. |
 | `menu.links.$.properties` | object | - | properties from menu item. |
 | `menu.links.$.properties.title` | string | - | Menu item title. |
-| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `menu.links.$.properties.icon.color` | string | - | Icon color. |
+| `menu.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `menu.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `menu.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `menu.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `menu.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `menu.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `menu.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menuLg` | object | - | Menu large screen properties. Overwrites menu properties on desktop screen sizes. |
 | `menuMd` | object | - | Mobile menu properties. Overwrites menu properties on mobile screen sizes. |
 | `notifications` | object | - | Notification bell icon with badge. Shown in the sider on desktop and the mobile header on small screens. Renders when configured. Use the link property to navigate when clicked. |
@@ -354,14 +372,32 @@ Dashboard Overview
 | `notifications.showZero` | boolean | `false` | Show badge when count is zero. |
 | `notifications.overflowCount` | number | `99` | Max count to show. Values above this display as "N+". |
 | `notifications.color` | string | - | Badge color. |
-| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to AiOutlineBell. |
+| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to `bell`. |
+| `notifications.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `notifications.icon.color` | string | - | Icon color. |
+| `notifications.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `notifications.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `notifications.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `notifications.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `notifications.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `notifications.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `notifications.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `notifications.size` | string | `"small"` | Size of the notification button. Enum: `small`, `default`, `large`. |
 | `profile` | object | - | Profile avatar with optional dropdown menu. Shown in the sider on desktop and the mobile header on small screens. Renders when configured. Use with the _user operator to populate from the authenticated user. |
 | `profile.title` | string | `"Profile"` | Label shown next to the avatar when the sider is expanded. Hidden on mobile header and collapsed sider. |
 | `profile.avatar` | object | - | Avatar display properties. |
 | `profile.avatar.src` | string | - | Image URL for the avatar. Typically bound to _user: image. |
 | `profile.avatar.content` | string | - | Text content inside the avatar (e.g. user initials). Shown when no src is provided. |
-| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser. |
+| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to `user`. |
+| `profile.avatar.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.avatar.icon.color` | string | - | Icon color. |
+| `profile.avatar.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.avatar.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.avatar.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.avatar.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.avatar.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
 | `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
@@ -375,6 +411,15 @@ Dashboard Overview
 | `profile.links.$.properties` | object | - | Properties for the menu item. |
 | `profile.links.$.properties.title` | string | - | Menu item title. |
 | `profile.links.$.properties.icon` | string \| object | - | Icon for the menu item. |
+| `profile.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.links.$.properties.icon.color` | string | - | Icon color. |
+| `profile.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `profile.links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `profile.links.$.properties.dashed` | boolean | `false` | Whether the divider line is dashed. |

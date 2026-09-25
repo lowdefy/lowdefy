@@ -210,7 +210,7 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
             title: Submit
             color: primary
             variant: solid
-            icon: AiOutlineUpload
+            icon: upload
           events:
             onClick:
               - id: submit_validate
@@ -256,7 +256,7 @@ __Deprecated__ — use the provider-neutral <a href="/UploadDragger">UploadDragg
             title: Upload Photos
             color: primary
             variant: solid
-            icon: AiOutlineCloudUpload
+            icon: CloudUpload
           events:
             onClick:
               - id: gallery_msg

@@ -261,7 +261,7 @@ Item B
             title: Delete Account
             color: danger
             variant: outlined
-            icon: AiOutlineDelete
+            icon: delete
           events:
             onClick:
               - id: settings_delete_msg
@@ -374,7 +374,7 @@ Instead of writing repetitive UI code, developers describe what they want in YAM
             title: Share Article
             color: primary
             variant: outlined
-            icon: AiOutlineShareAlt
+            icon: share
           events:
             onClick:
               - id: article_share_msg

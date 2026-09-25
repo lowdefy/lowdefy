@@ -148,13 +148,13 @@ When used alongside a Sider block, Content fills the remaining horizontal space.
                 options:
                   - id: dashboard
                     title: Dashboard
-                    icon: AiOutlineDashboard
+                    icon: Gauge
                   - id: users
                     title: Users
-                    icon: AiOutlineUser
+                    icon: user
                   - id: settings
                     title: Settings
-                    icon: AiOutlineSetting
+                    icon: settings
         - id: content_sider_main
           type: Content
           layout:
@@ -385,7 +385,7 @@ New team member Sarah joined — 1 hour ago
             flex: 0 0 auto
           properties:
             title: Export Report
-            icon: AiOutlineDownload
+            icon: download
             color: default
             variant: outlined
             size: small
@@ -411,16 +411,16 @@ New team member Sarah joined — 1 hour ago
                 options:
                   - id: overview
                     title: Overview
-                    icon: AiOutlineHome
+                    icon: home
                   - id: analytics
                     title: Analytics
-                    icon: AiOutlineBarChart
+                    icon: chart
                   - id: reports
                     title: Reports
-                    icon: AiOutlineFileText
+                    icon: document
                   - id: team
                     title: Team
-                    icon: AiOutlineTeam
+                    icon: users
         - id: content_dashboard_main
           type: Content
           layout:
@@ -571,7 +571,7 @@ Update your personal details and preferences below.
                 title: Save Changes
                 color: primary
                 variant: solid
-                icon: AiOutlineSave
+                icon: save
               events:
                 onClick:
                   - id: content_settings_save_msg

@@ -1060,7 +1060,7 @@ Ring utility applied to the element CSS key.
       layout:
         flex: 0 0 auto
       properties:
-        name: AiOutlineCheckCircle
+        name: check-circle
         color: "#52c41a"
         size: 24
     - id: flex_tw_ring_text
@@ -1113,7 +1113,7 @@ Dashboard
             flex: 0 0 auto
           properties:
             title: Filter
-            icon: AiOutlineFilter
+            icon: filter
             color: default
             variant: outlined
             size: small
@@ -1130,7 +1130,7 @@ Dashboard
             flex: 0 0 auto
           properties:
             title: Export
-            icon: AiOutlineDownload
+            icon: download
             color: primary
             variant: solid
             size: small
@@ -1228,7 +1228,7 @@ Senior Product Designer at Acme Corp
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineUser
+        icon: user
         size: 72
         color: "#fff"
         backgroundColor: "#1677ff"
@@ -1289,7 +1289,7 @@ Senior Product Designer at Acme Corp
             flex: 0 0 auto
           properties:
             title: Message
-            icon: AiOutlineMail
+            icon: mail
             color: primary
             variant: outlined
           events:
@@ -1305,7 +1305,7 @@ Senior Product Designer at Acme Corp
             flex: 0 0 auto
           properties:
             title: Follow
-            icon: AiOutlineUserAdd
+            icon: UserPlus
             color: primary
             variant: solid
           events:
@@ -1359,7 +1359,7 @@ Custom plugins for blocks, connections, operators, and actions let you extend fu
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineThunderbolt
+                name: Zap
                 color: "#1677ff"
                 size: 28
             - id: flex_feature1_title
@@ -1406,7 +1406,7 @@ Custom plugins for blocks, connections, operators, and actions let you extend fu
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineSafety
+                name: Shield
                 color: "#52c41a"
                 size: 28
             - id: flex_feature2_title
@@ -1453,7 +1453,7 @@ Custom plugins for blocks, connections, operators, and actions let you extend fu
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineExpandAlt
+                name: Maximize2
                 color: "#722ed1"
                 size: 28
             - id: flex_feature3_title

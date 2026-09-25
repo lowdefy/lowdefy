@@ -160,20 +160,20 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
       properties:
         title: Full Name
         placeholder: Enter your name
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
     - id: profile_email
       type: TextInput
       properties:
         title: Email
         placeholder: you@example.com
-        prefixIcon: AiOutlineMail
+        prefixIcon: mail
     - id: profile_save
       type: Button
       properties:
         title: Save Profile
         color: primary
         variant: solid
-        icon: AiOutlineSave
+        icon: save
       events:
         onClick:
           - id: validate_profile
@@ -237,7 +237,7 @@ __Deprecated__ — use the provider-neutral <a href="/UploadPhoto">UploadPhoto</
         title: List Product
         color: primary
         variant: solid
-        icon: AiOutlineCheck
+        icon: check
         block: true
       events:
         onClick:

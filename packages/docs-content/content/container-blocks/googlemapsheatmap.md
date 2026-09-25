@@ -470,7 +470,7 @@ Real-time air quality index readings from distributed sensor stations. Warmer ar
             flex: 0 0 auto
           properties:
             title: Refresh Data
-            icon: AiOutlineReload
+            icon: refresh
             color: primary
             variant: outlined
             size: small

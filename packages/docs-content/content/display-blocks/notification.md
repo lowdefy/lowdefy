@@ -43,7 +43,7 @@ Notification message displayed in the corner of the page.
     title: Success
     color: primary
     variant: outlined
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: open_status_success
@@ -59,7 +59,7 @@ Notification message displayed in the corner of the page.
     title: Error
     color: danger
     variant: outlined
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: open_status_error
@@ -75,7 +75,7 @@ Notification message displayed in the corner of the page.
     title: Warning
     color: default
     variant: outlined
-    icon: AiOutlineWarning
+    icon: warning
   events:
     onClick:
       - id: open_status_warning
@@ -91,7 +91,7 @@ Notification message displayed in the corner of the page.
     title: Info
     color: primary
     variant: text
-    icon: AiOutlineInfoCircle
+    icon: info
   events:
     onClick:
       - id: open_status_info
@@ -307,7 +307,7 @@ Notification message displayed in the corner of the page.
     status: success
     title: Download Complete
     description: Your file has been downloaded successfully.
-    icon: AiOutlineDownload
+    icon: download
 - id: notif_icon_colored
   type: Notification
   layout:
@@ -317,7 +317,7 @@ Notification message displayed in the corner of the page.
     title: Starred Item
     description: Item has been added to your favorites.
     icon:
-      name: AiOutlineStar
+      name: star
       color: "#faad14"
 - id: notif_icon_sized
   type: Notification
@@ -328,7 +328,7 @@ Notification message displayed in the corner of the page.
     title: Session Expiring
     description: Your session will expire in 5 minutes.
     icon:
-      name: AiOutlineLock
+      name: lock
       color: "#fa8c16"
       size: 28
 - id: btn_icon_string
@@ -339,7 +339,7 @@ Notification message displayed in the corner of the page.
     title: String Icon
     color: primary
     variant: outlined
-    icon: AiOutlineDownload
+    icon: download
   events:
     onClick:
       - id: open_icon_string
@@ -355,7 +355,7 @@ Notification message displayed in the corner of the page.
     title: Colored Icon
     color: default
     variant: outlined
-    icon: AiOutlineStar
+    icon: star
   events:
     onClick:
       - id: open_icon_colored
@@ -371,7 +371,7 @@ Notification message displayed in the corner of the page.
     title: Sized Icon
     color: default
     variant: outlined
-    icon: AiOutlineLock
+    icon: lock
   events:
     onClick:
       - id: open_icon_sized
@@ -390,7 +390,7 @@ Notification message displayed in the corner of the page.
     status: info
     title: Custom Close
     description: This notification has a custom close icon.
-    closeIcon: AiOutlineCloseSquare
+    closeIcon: SquareX
     duration: 0
 - id: notif_close_icon_styled
   type: Notification
@@ -401,7 +401,7 @@ Notification message displayed in the corner of the page.
     title: Styled Close
     description: Close icon with custom color and size.
     closeIcon:
-      name: AiOutlineCloseCircle
+      name: close-circle
       color: "#ff4d4f"
       size: 18
     duration: 0
@@ -413,7 +413,7 @@ Notification message displayed in the corner of the page.
     status: success
     title: Arrow Close
     description: Uses an arrow icon instead of the default close.
-    closeIcon: AiOutlineArrowRight
+    closeIcon: arrow-right
     duration: 0
 - id: btn_close_icon_string
   type: Button
@@ -474,7 +474,7 @@ Notification message displayed in the corner of the page.
     duration: 0
     button:
       title: Confirm
-      icon: AiOutlineCheck
+      icon: check
       color: primary
       variant: solid
       size: small
@@ -489,7 +489,7 @@ Notification message displayed in the corner of the page.
     duration: 0
     button:
       title: Retry
-      icon: AiOutlineReload
+      icon: refresh
       color: danger
       variant: solid
       size: small
@@ -805,7 +805,7 @@ Notification message displayed in the corner of the page.
     title: Override as Success
     color: primary
     variant: solid
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onClick:
       - id: open_override_success
@@ -825,7 +825,7 @@ Notification message displayed in the corner of the page.
     title: Override as Error
     color: danger
     variant: solid
-    icon: AiOutlineCloseCircle
+    icon: close-circle
   events:
     onClick:
       - id: open_override_error
@@ -845,7 +845,7 @@ Notification message displayed in the corner of the page.
     title: Override Duration
     color: default
     variant: outlined
-    icon: AiOutlineClockCircle
+    icon: clock
   events:
     onClick:
       - id: open_override_duration
@@ -1177,7 +1177,7 @@ Notification message displayed in the corner of the page.
         title: Order Shipped
         description: "Order #12847 has been shipped. Tracking number:
           <b>1Z999AA10123456784</b>"
-        icon: AiOutlineRocket
+        icon: Rocket
         duration: 0
         button:
           title: View Tracking
@@ -1199,7 +1199,7 @@ Notification message displayed in the corner of the page.
         status: error
         title: Order Cancelled
         description: "Order #12847 has been cancelled. Refund of $247.50 initiated."
-        icon: AiOutlineStop
+        icon: Ban
         duration: 0
     - id: order_actions
       type: Box
@@ -1215,7 +1215,7 @@ Notification message displayed in the corner of the page.
             title: Cancel Order
             color: danger
             variant: outlined
-            icon: AiOutlineStop
+            icon: Ban
           events:
             onClick:
               - id: order_cancel_notif
@@ -1231,7 +1231,7 @@ Notification message displayed in the corner of the page.
             title: Mark as Shipped
             color: primary
             variant: solid
-            icon: AiOutlineRocket
+            icon: Rocket
           events:
             onClick:
               - id: order_ship_notif
@@ -1266,7 +1266,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         description: CPU usage has exceeded <b>90%</b> on server <b>web-prod-03</b>.
           Consider scaling up or optimizing workloads.
         icon:
-          name: AiOutlineDashboard
+          name: Gauge
           color: "#fa8c16"
         duration: 0
         placement: topRight
@@ -1290,7 +1290,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         status: success
         title: Deployment Successful
         description: Version <b>2.4.1</b> deployed to production. All health checks passing.
-        icon: AiOutlineCheckCircle
+        icon: check-circle
         duration: 8
       events:
         onClose:
@@ -1309,7 +1309,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
         description: Multiple failed login attempts detected from IP
           <b>192.168.1.42</b>. Account temporarily locked.
         icon:
-          name: AiOutlineLock
+          name: lock
           color: "#ff4d4f"
         duration: 0
         button:
@@ -1336,7 +1336,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: CPU Warning
             color: default
             variant: outlined
-            icon: AiOutlineDashboard
+            icon: Gauge
           events:
             onClick:
               - id: trigger_alert_cpu
@@ -1352,7 +1352,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: Deploy Success
             color: primary
             variant: outlined
-            icon: AiOutlineCheckCircle
+            icon: check-circle
           events:
             onClick:
               - id: trigger_alert_deploy
@@ -1368,7 +1368,7 @@ Monitor system health and receive real-time alerts. Click a button below to simu
             title: Security Alert
             color: danger
             variant: outlined
-            icon: AiOutlineLock
+            icon: lock
           events:
             onClick:
               - id: trigger_alert_security
@@ -1384,8 +1384,26 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 | `button` | object | - | Button object to customized the close button. Triggers onClose event when clicked. |
 | `description` | string | - | The content of notification box - supports html. |
 | `duration` | number | `4.5` | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize notification icon. |
-| `closeIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize close icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize notification icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `closeIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize close icon. |
+| `closeIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `closeIcon.color` | string | - | Icon color. |
+| `closeIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `closeIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `closeIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `closeIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `closeIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `closeIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `closeIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | The title of notification box - supports html. |
 | `placement` | string | `"topRight"` | Position of Notification. Enum: `topLeft`, `topRight`, `bottomLeft`, `bottomRight`. |
 | `top` | number | `24` | Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels). |

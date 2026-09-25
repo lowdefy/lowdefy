@@ -226,8 +226,8 @@ npm install lowdefy
     content: Two-state copy icons that change after clicking
     copyable:
       icon:
-        - AiOutlineCopy
-        - AiOutlineCheck
+        - copy
+        - check
 - id: copyable_code
   type: Paragraph
   properties:

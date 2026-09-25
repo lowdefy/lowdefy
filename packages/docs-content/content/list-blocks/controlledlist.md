@@ -49,11 +49,11 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
     size: small
     addItemButton:
       title: Bookmark
-      icon: AiOutlinePlus
+      icon: add
       color: primary
       variant: dashed
     removeItemIcon:
-      name: AiOutlineDelete
+      name: delete
   blocks:
     - id: bookmarks.$.url
       type: TextInput
@@ -63,7 +63,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         label:
           disabled: true
         placeholder: https://...
-        prefixIcon: AiOutlineLink
+        prefixIcon: link
     - id: bookmarks.$.label
       type: TextInput
       layout:
@@ -81,7 +81,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
     title: Attendees
     addItemButton:
       title: Add Attendee
-      icon: AiOutlineUserAdd
+      icon: UserPlus
       color: primary
       variant: outlined
   blocks:
@@ -205,7 +205,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         flex: 0 0 auto
       properties:
         title: Register All
-        icon: AiOutlineSend
+        icon: send
         color: primary
         variant: solid
       events:
@@ -228,7 +228,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
     title: Expenses
     addItemButton:
       title: Add Expense
-      icon: AiOutlinePlus
+      icon: add
       color: primary
       variant: dashed
     theme:
@@ -304,7 +304,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         flex: 0 0 auto
       properties:
         title: Submit Report
-        icon: AiOutlineSend
+        icon: send
         color: primary
         variant: solid
       events:
@@ -327,7 +327,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
     title: Projects
     addItemButton:
       title: Add Project
-      icon: AiOutlinePlus
+      icon: add
       color: primary
       variant: outlined
   blocks:
@@ -360,7 +360,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         size: small
         addItemButton:
           title: Add Task
-          icon: AiOutlinePlus
+          icon: add
           size: small
           variant: dashed
       blocks:
@@ -392,7 +392,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
         flex: 0 0 auto
       properties:
         title: Save All
-        icon: AiOutlineSave
+        icon: save
         color: primary
         variant: solid
       events:
@@ -416,7 +416,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
     size: small
     addItemButton:
       title: Add Tag
-      icon: AiOutlinePlus
+      icon: add
       size: small
       variant: dashed
   events:
@@ -462,7 +462,16 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
 | `hideAddButton` | boolean | `false` | When true, hide the add new item button. |
 | `size` | string | `"default"` | Size of the list. Enum: `small`, `default`, `large`. |
 | `addItemButton` | object | - | Custom add item button properties. |
-| `removeItemIcon` | string \| object | - | Custom remove item icon properties. Defaults to `AiOutlineMinusCircle` at a standard size with the antd error color inherited from the icon wrapper — override via `class.removeIcon` / `style.removeIcon` for visual tweaks, or via this property to change the icon name itself. |
+| `removeItemIcon` | string \| object | - | Custom remove item icon properties. Defaults to `remove` at a standard size with the antd error color inherited from the icon wrapper — override via `class.removeIcon` / `style.removeIcon` for visual tweaks, or via this property to change the icon name itself. |
+| `removeItemIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `removeItemIcon.color` | string | - | Icon color. |
+| `removeItemIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `removeItemIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `removeItemIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `removeItemIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `removeItemIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `removeItemIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `removeItemIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `hideRemoveButton` | boolean | `false` | When true, hide the remove item button on each list item. |
 | `noDataTitle` | string | - | Title to show when list is empty. |
 | `minItems` | number | `0` | Minimum number of items in the controlled list. |

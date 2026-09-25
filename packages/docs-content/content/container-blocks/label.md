@@ -705,7 +705,7 @@ Form label wrapper with title, description, and validation feedback.
 | `title` | string | - | Label title - supports html. |
 | `tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `tooltip.color` | string | - | Color of the tooltip icon. |
 | `span` | number | - | Label inline span. |
 | `inline` | boolean | `false` | Render input and label inline. |

@@ -148,7 +148,7 @@ Tag with preset and custom colors, icons, and closable option.
     flex: 0 0 auto
   properties:
     title: Approved
-    icon: AiOutlineCheck
+    icon: check
     color: success
 - id: icon_warning
   type: Tag
@@ -156,7 +156,7 @@ Tag with preset and custom colors, icons, and closable option.
     flex: 0 0 auto
   properties:
     title: Warning
-    icon: AiOutlineWarning
+    icon: warning
     color: warning
 - id: icon_star
   type: Tag
@@ -164,7 +164,7 @@ Tag with preset and custom colors, icons, and closable option.
     flex: 0 0 auto
   properties:
     title: Featured
-    icon: AiOutlineStar
+    icon: star
     color: gold
 - id: icon_object_color
   type: Tag
@@ -173,7 +173,7 @@ Tag with preset and custom colors, icons, and closable option.
   properties:
     title: Custom Icon
     icon:
-      name: AiOutlineCrown
+      name: Crown
       color: "#faad14"
     color: gold
 - id: icon_object_style
@@ -183,7 +183,7 @@ Tag with preset and custom colors, icons, and closable option.
   properties:
     title: Large Icon
     icon:
-      name: AiOutlineRocket
+      name: Rocket
       style:
         fontSize: 16
     color: purple
@@ -212,7 +212,7 @@ Tag with preset and custom colors, icons, and closable option.
   properties:
     title: Starred
     closable: true
-    icon: AiOutlineStar
+    icon: star
     color: gold
 - id: closable_with_event
   type: Tag
@@ -252,7 +252,7 @@ Tag with preset and custom colors, icons, and closable option.
     flex: 0 0 auto
   properties:
     title: View Details
-    icon: AiOutlineEye
+    icon: view
     color: geekblue
   events:
     onClick:
@@ -283,7 +283,7 @@ Tag with preset and custom colors, icons, and closable option.
     flex: 0 0 auto
   properties:
     title: Toggle Filter
-    icon: AiOutlineFilter
+    icon: filter
     color: blue
   events:
     onClick:
@@ -407,7 +407,7 @@ When a user enters an email without a domain, the login page throws an unhandled
             flex: 0 0 auto
           properties:
             title: In Progress
-            icon: AiOutlineSync
+            icon: RefreshCw
             color: processing
         - id: issue_priority
           type: Tag
@@ -415,7 +415,7 @@ When a user enters an email without a domain, the login page throws an unhandled
             flex: 0 0 auto
           properties:
             title: High Priority
-            icon: AiOutlineArrowUp
+            icon: arrow-up
             color: error
           style:
             .element:
@@ -462,7 +462,7 @@ When a user enters an email without a domain, the login page throws an unhandled
             flex: 0 0 auto
           properties:
             title: Assign
-            icon: AiOutlineUser
+            icon: user
             color: default
             variant: outlined
             size: small
@@ -479,7 +479,7 @@ When a user enters an email without a domain, the login page throws an unhandled
             flex: 0 0 auto
           properties:
             title: Resolve
-            icon: AiOutlineCheck
+            icon: check
             color: primary
             variant: solid
             size: small
@@ -525,7 +525,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             flex: 0 0 auto
           properties:
             title: Electronics
-            icon: AiOutlineThunderbolt
+            icon: Zap
             color: blue
           events:
             onClick:
@@ -539,7 +539,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             flex: 0 0 auto
           properties:
             title: In Stock
-            icon: AiOutlineCheck
+            icon: check
             color: success
         - id: catalog_rating
           type: Tag
@@ -547,7 +547,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             flex: 0 0 auto
           properties:
             title: 4.8 Stars
-            icon: AiOutlineStar
+            icon: star
             color: gold
     - id: catalog_description
       type: Markdown
@@ -582,7 +582,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             flex: 0 0 auto
           properties:
             title: Add to Cart
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
             color: primary
             variant: solid
             size: small
@@ -600,7 +600,16 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 | `closable` | boolean | `false` | Allow tag to be closed. |
 | `color` | string | - | Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color. |
 | `title` | string | - | Content title of tag - supports html. |
-| `icon` | string \| object | - | Name of an Ant Design Icon or properties of an Icon block to customize alert icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tag tokens](https://ant.design/components/tag#design-token). |
 | `theme.defaultBg` | string | `"#fafafa"` | Default background color of the tag. |
 | `theme.defaultColor` | string | `"rgba(0, 0, 0, 0.88)"` | Default text color of the tag. |

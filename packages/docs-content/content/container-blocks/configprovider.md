@@ -399,7 +399,7 @@ Setting direction to rtl enables right-to-left layout for all child components. 
             title: Right-to-Left
             color: primary
             variant: solid
-            icon: AiOutlineArrowLeft
+            icon: arrow-left
     - id: cp_rtl_input
       type: TextInput
       properties:
@@ -751,7 +751,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineShop
+                icon: Store
                 size: 48
                 color: "#fff"
                 backgroundColor: "#e11d48"
@@ -782,7 +782,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
                 placeholder: Search products...
                 label:
                   disabled: true
-                suffixIcon: AiOutlineSearch
+                suffixIcon: search
             - id: cp_brand_search_btn
               type: Button
               layout:
@@ -797,7 +797,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
                 flex: 0 0 auto
               properties:
                 title: Cart
-                icon: AiOutlineShoppingCart
+                icon: ShoppingCart
                 color: default
                 variant: outlined
         - id: cp_brand_stats_row
@@ -939,7 +939,7 @@ System Metrics
             flex: 0 0 auto
           properties:
             title: Refresh
-            icon: AiOutlineReload
+            icon: refresh
             color: primary
             variant: solid
 ```
@@ -1036,7 +1036,7 @@ A dark-themed admin panel using ConfigProvider to apply the dark algorithm with 
                 flex: 0 0 auto
               properties:
                 title: Save User
-                icon: AiOutlineSave
+                icon: save
                 color: primary
                 variant: solid
             - id: cp_admin_cancel_btn

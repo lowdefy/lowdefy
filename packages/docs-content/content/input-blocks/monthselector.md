@@ -157,14 +157,14 @@ Month picker for selecting year and month.
   type: MonthSelector
   properties:
     title: Clock Icon
-    suffixIcon: AiOutlineClockCircle
+    suffixIcon: clock
     label:
       disabled: true
 - id: month_icon_schedule
   type: MonthSelector
   properties:
     title: Schedule Icon
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     label:
       disabled: true
 - id: month_icon_custom_color
@@ -172,7 +172,7 @@ Month picker for selecting year and month.
   properties:
     title: Custom Color Icon
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     label:
       disabled: true
@@ -181,7 +181,7 @@ Month picker for selecting year and month.
   properties:
     title: Heart Icon
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#ff4d4f"
     label:
       disabled: true
@@ -520,7 +520,7 @@ Month picker for selecting year and month.
     placeholder: Select billing month
     format: MMMM YYYY
     size: large
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     showToday: true
     allowClear: true
     label:
@@ -545,7 +545,7 @@ Month picker for selecting year and month.
     placeholder: Select fiscal month
     format: MMM YYYY
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     disabledDates:
       min: 2026-01-01
@@ -561,7 +561,7 @@ Month picker for selecting year and month.
     format: MMMM YYYY
     placeholder: Choose a special month...
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#eb2f96"
     label:
       disabled: true
@@ -585,7 +585,7 @@ Month picker for selecting year and month.
         placeholder: Select month
         format: MMMM YYYY
         size: large
-        suffixIcon: AiOutlineCalendar
+        suffixIcon: calendar
         label:
           extra: Choose the month for this budget entry.
     - id: applied2_budget_category
@@ -611,14 +611,14 @@ Month picker for selecting year and month.
       properties:
         title: Amount
         placeholder: Enter amount
-        prefixIcon: AiOutlineDollar
+        prefixIcon: DollarSign
         label:
           extra: Enter the budgeted amount for this category.
     - id: applied2_budget_save_btn
       type: Button
       properties:
         title: Save Budget Entry
-        icon: AiOutlineSave
+        icon: save
         type: primary
         size: large
         block: true
@@ -644,7 +644,7 @@ Month picker for selecting year and month.
         placeholder: Select start month
         format: MMMM YYYY
         size: large
-        suffixIcon: AiOutlineCalendar
+        suffixIcon: calendar
         label:
           extra: Choose when the subscription billing begins.
         disabledDates:
@@ -671,7 +671,7 @@ Month picker for selecting year and month.
       type: Button
       properties:
         title: Confirm Subscription
-        icon: AiOutlineCreditCard
+        icon: CreditCard
         type: primary
         size: large
         block: true
@@ -705,7 +705,16 @@ Month picker for selecting year and month.
 | `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -713,7 +722,7 @@ Month picker for selecting year and month.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |

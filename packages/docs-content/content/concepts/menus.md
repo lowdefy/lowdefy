@@ -24,7 +24,7 @@ The schema for a `MenuLink` is:
 - `style: object`: CSS styles for the item. Flat applies to the wrapper; use dot-prefixed slot keys (`.element`, `.icon`, `.label`) to target specific parts.
 -  `properties: object`: The properties of the menu link. These are:
     - `title: string`: The title to display for the link.
-    - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the link.
+    - `icon: string | object`: An icon name, such as the semantic name `home` or the [Lucide](https://lucide.dev/icons) name `House`, or properties of an [Icon](/Icon) block to use as the icon for the link.
     - `danger: boolean`: Apply danger style (switches the item onto antd's `dangerItem*` token set).
     - `disabled: boolean`: Disable the item — blocks clicks and applies a greyed style.
     - `tooltip: string`: Tooltip text shown when the menu is collapsed.
@@ -38,7 +38,7 @@ The schema for a `MenuGroup` is:
 - `style: object`: CSS styles for the group's title row. Use dot-prefixed slot keys to target specific parts.
 -  `properties: object`: The properties of the menu group. These are:
     - `title: string`: The title to display for the group.
-    - `icon: string | object`: The name of a [React Icon](https://react-icons.github.io/react-icons/search) or properties of an Icon block to use as the icon for the group.
+    - `icon: string | object`: An icon name, such as the semantic name `home` or the [Lucide](https://lucide.dev/icons) name `House`, or properties of an [Icon](/Icon) block to use as the icon for the group.
     - `disabled: boolean`: Disable the group — blocks expansion and applies a greyed style.
     - `tooltip: string`: Tooltip text shown when the menu is collapsed.
 - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that should be grouped together in the group.
@@ -62,11 +62,11 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: top-group
         properties:
           title: Group
-          icon: AiOutlineGroup
+          icon: Group
         links:
           - id: page2
             type: MenuLink
@@ -93,13 +93,13 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: page3
         type: MenuLink
         pageId: page3
         properties:
           title: Page 3
-          icon: AiOutlineControl
+          icon: SlidersHorizontal
 ```
 
 We can make use of [protected pages and APIs](/protected-pages-apis) and [roles](/roles) to filter the menu items according to the pages that the user has access to.
@@ -130,7 +130,7 @@ menus:
         pageId: page1
         properties:
           title: Page 1
-          icon: AiOutlineFile
+          icon: file
       - id: page2
         type: MenuLink
         pageId: page2 # pageId will be used as link title

@@ -275,14 +275,14 @@ Are you absolutely sure you want to delete this project and all its data?
   properties:
     title: Delete Item?
     content: This item will be permanently removed from the system.
-    icon: AiOutlineDelete
+    icon: delete
 - id: confirm_icon_colored
   type: ConfirmModal
   properties:
     title: Danger Zone
     content: Are you absolutely sure you want to delete this project and all its data?
     icon:
-      name: AiOutlineWarning
+      name: warning
       color: "#ff4d4f"
       size: 22
 ```
@@ -513,10 +513,10 @@ Your data will be exported to a CSV file and downloaded.
     status: confirm
     okText: Export
     okButton:
-      icon: AiOutlineDownload
+      icon: download
     cancelText: Cancel
     cancelButton:
-      icon: AiOutlineClose
+      icon: close
 ```
 
 This modal uses style to apply custom CSS directly to the modal element.
@@ -839,7 +839,7 @@ James Park - Engineering Lead
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 32
             color: "#fff"
             backgroundColor: "#1677ff"
@@ -855,7 +855,7 @@ James Park - Engineering Lead
             flex: 0 0 auto
           properties:
             title: Remove
-            icon: AiOutlineDelete
+            icon: delete
             color: danger
             variant: text
             size: small
@@ -883,7 +883,7 @@ James Park - Engineering Lead
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 32
             color: "#fff"
             backgroundColor: "#52c41a"
@@ -899,7 +899,7 @@ James Park - Engineering Lead
             flex: 0 0 auto
           properties:
             title: Remove
-            icon: AiOutlineDelete
+            icon: delete
             color: danger
             variant: text
             size: small
@@ -920,7 +920,7 @@ James Park - Engineering Lead
     title: Remove Team Member
     status: error
     icon:
-      name: AiOutlineUserDelete
+      name: UserMinus
       color: "#ff4d4f"
     okText: Remove
     okButton:
@@ -981,7 +981,7 @@ Please verify your ticket details before submitting. You will receive a confirma
         flex: 0 0 auto
       properties:
         title: Submit Ticket
-        icon: AiOutlineSend
+        icon: send
         color: primary
         variant: solid
       events:
@@ -1002,7 +1002,7 @@ Please verify your ticket details before submitting. You will receive a confirma
     cancelText: Review Again
     centered: true
     width: 480
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   events:
     onOk:
       - id: form_submit_ok_msg
@@ -1086,7 +1086,7 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
     content: You have unsaved changes that will be lost if you leave this page. Do
       you want to save your changes before leaving?
     status: warning
-    icon: AiOutlineWarning
+    icon: warning
     okText: Save & Leave
     cancelText: Discard Changes
     closable: true
@@ -1114,7 +1114,16 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
 | `centered` | boolean | `false` | Centered Modal. |
 | `closable` | boolean | `false` | Whether a close (x) button is visible on top right of the confirm dialog or not. |
 | `content` | string | - | Modal content. Overridden by the "content" content area - supports html. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize modal icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize modal icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `mask` | boolean | `true` | Whether show mask or not. |
 | `maskClosable` | boolean | `false` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |

@@ -168,27 +168,27 @@ Phone number input with international country code selector.
   type: PhoneNumberInput
   properties:
     title: Prefix Phone Icon
-    prefixIcon: AiOutlinePhone
+    prefixIcon: phone
     placeholder: Enter phone number
 - id: icon_suffix_check
   type: PhoneNumberInput
   properties:
     title: Suffix Check Icon
-    suffixIcon: AiOutlineCheckCircle
+    suffixIcon: check-circle
     placeholder: Verified number
 - id: icon_both
   type: PhoneNumberInput
   properties:
     title: Both Icons
-    prefixIcon: AiOutlinePhone
-    suffixIcon: AiOutlineInfoCircle
+    prefixIcon: phone
+    suffixIcon: info
     placeholder: Enter number
 - id: icon_custom_color
   type: PhoneNumberInput
   properties:
     title: Custom Icon Color
     prefixIcon:
-      name: AiOutlinePhone
+      name: phone
       color: "#1677ff"
     placeholder: Blue phone icon
 ```
@@ -387,7 +387,7 @@ Phone number input with international country code selector.
     placeholder: (555) 123-4567
     allowClear: true
     size: large
-    prefixIcon: AiOutlinePhone
+    prefixIcon: phone
     replaceInput:
       pattern: "[^0-9()\\-\\s]"
       flags: g
@@ -403,7 +403,7 @@ Phone number input with international country code selector.
     placeholder: Enter international number
     allowClear: true
     maxLength: 15
-    suffixIcon: AiOutlineGlobal
+    suffixIcon: globe
     label:
       inline: true
       span: 8
@@ -427,7 +427,7 @@ Phone number input with international country code selector.
     allowClear: true
     maxLength: 10
     placeholder: Enter mobile number
-    prefixIcon: AiOutlineMobile
+    prefixIcon: Smartphone
     replaceInput:
       pattern: "[^0-9]"
       flags: g
@@ -449,7 +449,7 @@ Phone number input with international country code selector.
     allowClear: true
     size: large
     prefixIcon:
-      name: AiOutlinePhone
+      name: phone
       color: "#52c41a"
     theme:
       colorPrimary: "#52c41a"
@@ -472,7 +472,7 @@ Phone number input with international country code selector.
       required: true
       properties:
         title: Full Name
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
         placeholder: John Doe
         label:
           colon: false
@@ -482,7 +482,7 @@ Phone number input with international country code selector.
       properties:
         title: Email Address
         type: email
-        prefixIcon: AiOutlineMail
+        prefixIcon: mail
         placeholder: john@example.com
         label:
           colon: false
@@ -493,7 +493,7 @@ Phone number input with international country code selector.
         title: Phone Number
         defaultRegion: US
         allowClear: true
-        prefixIcon: AiOutlinePhone
+        prefixIcon: phone
         placeholder: (555) 123-4567
         label:
           colon: false
@@ -519,7 +519,7 @@ Phone number input with international country code selector.
             title: Send Message
             color: primary
             variant: solid
-            icon: AiOutlineSend
+            icon: send
           events:
             onClick:
               - id: contact_validate
@@ -548,7 +548,7 @@ Phone number input with international country code selector.
         title: Mobile Number
         defaultRegion: US
         allowClear: true
-        prefixIcon: AiOutlineMobile
+        prefixIcon: Smartphone
         placeholder: Enter mobile number
         label:
           colon: false
@@ -565,7 +565,7 @@ Phone number input with international country code selector.
       required: true
       properties:
         title: Password
-        prefixIcon: AiOutlineLock
+        prefixIcon: lock
         placeholder: At least 8 characters
         label:
           colon: false
@@ -590,7 +590,7 @@ Phone number input with international country code selector.
             title: Create Account
             color: primary
             variant: solid
-            icon: AiOutlineArrowRight
+            icon: arrow-right
           events:
             onClick:
               - id: register_validate
@@ -618,7 +618,16 @@ Phone number input with international country code selector.
 | `maxLength` | integer | - | The max number of input characters. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
 | `prefix` | string | - | Prefix text for the block, priority over $prefix_con. |
-| `prefixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to prefix the text input. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -626,7 +635,7 @@ Phone number input with international country code selector.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -639,7 +648,16 @@ Phone number input with international country code selector.
 | `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
-| `suffixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to suffix the text input. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |

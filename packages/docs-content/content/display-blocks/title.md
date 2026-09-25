@@ -279,7 +279,7 @@ Two-state copy icons
     content: Custom copy icon
     level: 4
     copyable:
-      icon: AiOutlineSnippets
+      icon: Files
 - id: copyable_two_icons
   type: Title
   properties:
@@ -287,8 +287,8 @@ Two-state copy icons
     level: 4
     copyable:
       icon:
-        - AiOutlineCopy
-        - AiOutlineCheck
+        - copy
+        - check
       tooltips:
         - Copy text
         - Done!
@@ -471,7 +471,7 @@ Learn how Lowdefy simplifies complex application development by replacing boiler
             flex: 0 0 auto
           properties:
             title: By Jane Smith
-            icon: AiOutlineUser
+            icon: user
             color: default
             variant: text
             size: small
@@ -481,7 +481,7 @@ Learn how Lowdefy simplifies complex application development by replacing boiler
             flex: 0 0 auto
           properties:
             title: March 12, 2026
-            icon: AiOutlineCalendar
+            icon: calendar
             color: default
             variant: text
             size: small

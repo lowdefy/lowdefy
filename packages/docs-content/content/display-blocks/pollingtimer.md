@@ -108,7 +108,7 @@ The engine keeps a history of every event it runs, so each tick adds an `onTick`
       type: Button
       properties:
         title: Start Job
-        icon: AiOutlinePlayCircle
+        icon: CirclePlay
       events:
         onClick:
           - id: job_timer_set_running
@@ -154,7 +154,7 @@ The engine keeps a history of every event it runs, so each tick adds an `onTick`
       type: Button
       properties:
         title: Start
-        icon: AiOutlinePlayCircle
+        icon: CirclePlay
       events:
         onClick:
           - id: manual_timer_call_start
@@ -166,7 +166,7 @@ The engine keeps a history of every event it runs, so each tick adds an `onTick`
       type: Button
       properties:
         title: Stop
-        icon: AiOutlinePauseCircle
+        icon: CirclePause
       events:
         onClick:
           - id: manual_timer_call_stop
@@ -178,7 +178,7 @@ The engine keeps a history of every event it runs, so each tick adds an `onTick`
       type: Button
       properties:
         title: Toggle
-        icon: AiOutlineSwap
+        icon: ArrowRightLeft
       events:
         onClick:
           - id: manual_timer_call_toggle

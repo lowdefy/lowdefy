@@ -318,7 +318,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Upload
         color: primary
         variant: solid
-        icon: AiOutlineUpload
+        icon: upload
     - id: target_save_btn
       type: Button
       layout:
@@ -327,7 +327,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Save Draft
         color: green
         variant: outlined
-        icon: AiOutlineSave
+        icon: save
     - id: target_share_btn
       type: Button
       layout:
@@ -336,7 +336,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Share
         color: purple
         variant: solid
-        icon: AiOutlineShareAlt
+        icon: share
 - id: target_tour
   type: Tour
   properties:
@@ -1027,7 +1027,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Dashboard
         color: primary
         variant: solid
-        icon: AiOutlineDashboard
+        icon: Gauge
     - id: cover_target_btn_2
       type: Button
       layout:
@@ -1036,7 +1036,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Settings
         color: default
         variant: outlined
-        icon: AiOutlineSetting
+        icon: settings
 - id: cover_target_tour
   type: Tour
   properties:
@@ -1322,7 +1322,7 @@ Guided tour with steps, masks, and keyboard navigation.
         title: Cannot Click During Tour
         color: primary
         variant: solid
-        icon: AiOutlineLock
+        icon: lock
 - id: disabled_interaction_tour
   type: Tour
   properties:
@@ -2086,7 +2086,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             title: Create New
             color: primary
             variant: solid
-            icon: AiOutlinePlus
+            icon: add
         - id: onboard_profile_btn
           type: Button
           layout:
@@ -2095,7 +2095,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             title: Profile
             color: default
             variant: text
-            icon: AiOutlineUser
+            icon: user
         - id: onboard_settings_btn
           type: Button
           layout:
@@ -2104,7 +2104,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             title: Settings
             color: default
             variant: text
-            icon: AiOutlineSetting
+            icon: settings
     - id: onboard_content
       type: Markdown
       properties:
@@ -2125,7 +2125,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             title: Take the Tour
             color: primary
             variant: solid
-            icon: AiOutlineQuestionCircle
+            icon: help
           events:
             onClick:
               - id: onboard_start_tour
@@ -2218,7 +2218,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             color: primary
             variant: solid
             size: small
-            icon: AiOutlineSave
+            icon: save
         - id: feature_export_btn
           type: Button
           layout:
@@ -2228,7 +2228,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             color: default
             variant: outlined
             size: small
-            icon: AiOutlineExport
+            icon: SquareArrowOutUpRight
     - id: feature_editor
       type: TextArea
       properties:
@@ -2250,7 +2250,7 @@ Welcome to the application. Click the button below to take a guided tour of the 
             title: Learn Editor Features
             color: primary
             variant: outlined
-            icon: AiOutlineBulb
+            icon: Lightbulb
           events:
             onClick:
               - id: feature_start_tour

@@ -193,7 +193,7 @@ The extra slot renders content in the top-right corner of the card header, next 
                 flex: 0 0 auto
               properties:
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
                 color: primary
                 variant: outlined
                 size: small
@@ -202,7 +202,7 @@ The extra slot renders content in the top-right corner of the card header, next 
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineEllipsis
+                icon: more
                 color: default
                 variant: text
                 size: small
@@ -241,7 +241,7 @@ Notifications
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 color: "#1677ff"
             - id: title_slot_text
               type: Title
@@ -450,7 +450,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineDashboard
+            name: Gauge
             color: "#1677ff"
             size: 20
   blocks:
@@ -479,7 +479,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineDollarCircle
+            name: CircleDollarSign
             color: "#52c41a"
             size: 20
   blocks:
@@ -509,7 +509,7 @@ Hover over any card in this section to see the elevation shadow effect. Commonly
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             color: "#faad14"
             size: 20
   blocks:
@@ -561,7 +561,7 @@ Advanced analytics
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 64
             color: "#fff"
             backgroundColor: "#1677ff"
@@ -732,7 +732,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineBarChart
+            name: chart
             color: "#1677ff"
   blocks:
     - id: grid_card_1_p
@@ -771,7 +771,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineLock
+            name: lock
             color: "#52c41a"
   blocks:
     - id: grid_card_2_p
@@ -810,7 +810,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineApi
+            name: Plug
             color: "#722ed1"
   blocks:
     - id: grid_card_3_p
@@ -849,7 +849,7 @@ Shared workspaces, comments, mentions, and real-time co-editing for seamless tea
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineTeam
+            name: users
             color: "#fa8c16"
   blocks:
     - id: grid_card_4_p

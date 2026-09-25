@@ -253,25 +253,25 @@ Alert banner with type, description, icon, and closable options.
   properties:
     message: All tests passed
     type: success
-    icon: AiOutlineCheckCircle
+    icon: check-circle
 - id: custom_icon_bell
   type: Alert
   properties:
     message: You have 3 new notifications
     type: info
-    icon: AiOutlineBell
+    icon: bell
 - id: custom_icon_lock
   type: Alert
   properties:
     message: Your session has been locked for security
     type: warning
-    icon: AiOutlineLock
+    icon: lock
 - id: custom_icon_bug
   type: Alert
   properties:
     message: Bug detected in module
     type: error
-    icon: AiOutlineBug
+    icon: Bug
 - id: custom_icon_rocket
   type: Alert
   properties:
@@ -279,21 +279,21 @@ Alert banner with type, description, icon, and closable options.
     description: Your application is being deployed to the production environment.
       This usually takes 2-3 minutes.
     type: info
-    icon: AiOutlineRocket
+    icon: Rocket
 - id: custom_icon_star
   type: Alert
   properties:
     message: You earned a new achievement
     description: Congratulations on completing your first project!
     type: success
-    icon: AiOutlineStar
+    icon: star
 - id: custom_icon_object
   type: Alert
   properties:
     message: Custom styled icon
     type: info
     icon:
-      name: AiOutlineThunderbolt
+      name: Zap
       color: "#faad14"
 - id: custom_icon_colored_obj
   type: Alert
@@ -302,7 +302,7 @@ Alert banner with type, description, icon, and closable options.
     description: No vulnerabilities were detected in your dependencies.
     type: success
     icon:
-      name: AiOutlineSafety
+      name: Shield
       color: "#52c41a"
 ```
 
@@ -532,7 +532,7 @@ Alert banner with type, description, icon, and closable options.
             flex: 0 0 auto
           properties:
             title: Download
-            icon: AiOutlineDownload
+            icon: download
             color: green
             variant: solid
             size: small
@@ -557,7 +557,7 @@ Alert banner with type, description, icon, and closable options.
     type: success
     closable: true
     closeText: OK
-    icon: AiOutlineCloudUpload
+    icon: CloudUpload
 - id: combo_full_warning
   type: Alert
   properties:
@@ -566,7 +566,7 @@ Alert banner with type, description, icon, and closable options.
       requests). Consider implementing request caching.
     type: warning
     closable: true
-    icon: AiOutlineApi
+    icon: Plug
 - id: combo_full_error
   type: Alert
   properties:
@@ -576,7 +576,7 @@ Alert banner with type, description, icon, and closable options.
       locked.
     type: error
     closable: true
-    icon: AiOutlineWarning
+    icon: warning
 - id: combo_banner_closable_icon
   type: Alert
   properties:
@@ -584,7 +584,7 @@ Alert banner with type, description, icon, and closable options.
     type: info
     banner: true
     closable: true
-    icon: AiOutlineExperiment
+    icon: FlaskConical
 - id: combo_noicon_closable_desc
   type: Alert
   properties:
@@ -765,7 +765,7 @@ Alert banner with type, description, icon, and closable options.
     description: <ul><li>Email address is required</li><li>Password must be at least
       8 characters</li><li>Please agree to the terms of service</li></ul>
     type: error
-    icon: AiOutlineExclamationCircle
+    icon: CircleAlert
 - id: real_onboarding
   type: Alert
   properties:
@@ -774,7 +774,7 @@ Alert banner with type, description, icon, and closable options.
       members from the Settings page.
     type: info
     closable: true
-    icon: AiOutlineSmile
+    icon: FaceSlightlySmiling
   slots:
     action:
       blocks:
@@ -787,7 +787,7 @@ Alert banner with type, description, icon, and closable options.
             color: primary
             variant: solid
             size: small
-            icon: AiOutlinePlus
+            icon: add
 - id: real_deprecation
   type: Alert
   properties:
@@ -798,7 +798,7 @@ Alert banner with type, description, icon, and closable options.
     type: warning
     closable: true
     closeText: Acknowledged
-    icon: AiOutlineClockCircle
+    icon: clock
 - id: real_maintenance
   type: Alert
   properties:
@@ -815,7 +815,7 @@ Alert banner with type, description, icon, and closable options.
     description: "Application <b>my-app</b> has been deployed to
       <code>production</code> environment. Build #1847 completed in 2m 34s."
     type: success
-    icon: AiOutlineCheckCircle
+    icon: check-circle
   slots:
     action:
       blocks:
@@ -842,7 +842,7 @@ Alert banner with type, description, icon, and closable options.
                 color: green
                 variant: solid
                 size: small
-                icon: AiOutlineLink
+                icon: link
 - id: real_quota_warning
   type: Alert
   properties:
@@ -851,7 +851,7 @@ Alert banner with type, description, icon, and closable options.
       Current usage: 18.4 / 20 vCPUs. Consider scaling your plan or optimizing
       workloads."
     type: warning
-    icon: AiOutlineDashboard
+    icon: Gauge
   slots:
     action:
       blocks:
@@ -871,7 +871,7 @@ Alert banner with type, description, icon, and closable options.
     description: You do not have permission to view this resource. Contact your
       administrator to request access to the Analytics dashboard.
     type: error
-    icon: AiOutlineStop
+    icon: Ban
     closable: true
 - id: real_feature_flag
   type: Alert
@@ -882,7 +882,7 @@ Alert banner with type, description, icon, and closable options.
     type: info
     closable: true
     closeText: Understood
-    icon: AiOutlineExperiment
+    icon: FlaskConical
 ```
 
 | Property | Type | Default | Description |
@@ -891,7 +891,16 @@ Alert banner with type, description, icon, and closable options.
 | `closable` | boolean | `false` | Allow alert to be closed. |
 | `closeText` | string | - | Close text to show. |
 | `description` | string | - | Content description of alert - supports html. |
-| `icon` | string \| object | - | Name of an Ant Design Icon or properties of an Icon block to customize alert icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `message` | string | - | Content message of alert - supports html. |
 | `showIcon` | boolean | `true` | Show type default icon. |
 | `type` | string | `"info"` | Alert style type. Enum: `success`, `info`, `warning`, `error`. |

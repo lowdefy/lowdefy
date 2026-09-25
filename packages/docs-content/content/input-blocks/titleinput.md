@@ -954,7 +954,7 @@ Editable title heading with levels, copyable, and text styles.
       type: Button
       properties:
         title: Save Document
-        icon: AiOutlineSave
+        icon: save
         type: primary
         size: large
         block: true
@@ -1013,7 +1013,7 @@ Editable title heading with levels, copyable, and text styles.
       type: Button
       properties:
         title: Publish Post
-        icon: AiOutlineSend
+        icon: send
         type: primary
         size: large
         block: true
@@ -1042,6 +1042,15 @@ Editable title heading with levels, copyable, and text styles.
 | `ellipsis.suffix` | string | - | Suffix of ellipses content. |
 | `editable` | boolean \| object | `true` | Allow paragraph editing when true, editable settings can be provided with editable object. |
 | `editable.icon` | string \| object | - | Edit icon. |
+| `editable.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `editable.icon.color` | string | - | Icon color. |
+| `editable.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `editable.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `editable.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `editable.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `editable.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `editable.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `editable.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `editable.tooltip` | string | - | Edit tooltip text. |
 | `editable.editing` | boolean | `false` | Control editing state. |
 | `editable.maxLength` | number | - | Max length of text area input. |

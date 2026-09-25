@@ -664,7 +664,7 @@ Product Manager
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 48
                 color: "#fff"
                 backgroundColor: "#1677ff"
@@ -730,7 +730,7 @@ Product Manager
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 48
                 color: "#fff"
                 backgroundColor: "#52c41a"
@@ -794,7 +794,7 @@ Product Manager
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 48
                 color: "#fff"
                 backgroundColor: "#722ed1"
@@ -917,7 +917,7 @@ Desk Lamp
             variant: solid
             block: true
             size: small
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: mas_prod_c1_add
@@ -957,7 +957,7 @@ Desk Lamp
             variant: solid
             block: true
             size: small
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: mas_prod_c2_add
@@ -1017,7 +1017,7 @@ Desk Lamp
             variant: solid
             block: true
             size: small
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: mas_prod_c3_add
@@ -1057,7 +1057,7 @@ Desk Lamp
             variant: solid
             block: true
             size: small
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: mas_prod_c4_add

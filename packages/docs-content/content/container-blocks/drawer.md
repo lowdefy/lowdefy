@@ -682,7 +682,7 @@ This drawer uses the toggleOpen method. Each click of the button alternates betw
     title: Toggle Drawer
     color: primary
     variant: solid
-    icon: AiOutlineMenu
+    icon: menu
   events:
     onClick:
       - id: drawer_toggle_call
@@ -1014,7 +1014,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
     title: Edit Record
     color: primary
     variant: solid
-    icon: AiOutlineEdit
+    icon: edit
   events:
     onClick:
       - id: drawer_edit_form_open
@@ -1124,7 +1124,7 @@ Overrides footerPaddingBlock, footerPaddingInline, and zIndexPopup design tokens
     title: Filters
     color: default
     variant: outlined
-    icon: AiOutlineFilter
+    icon: filter
   events:
     onClick:
       - id: drawer_filter_panel_open
@@ -1241,7 +1241,7 @@ Jane Cooper
     title: View Profile
     color: primary
     variant: solid
-    icon: AiOutlineUser
+    icon: user
   events:
     onClick:
       - id: drawer_profile_open
@@ -1268,7 +1268,7 @@ Jane Cooper
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 64
             color: "#fff"
             backgroundColor: "#1677ff"
@@ -1322,7 +1322,7 @@ Jane Cooper
             title: Edit Profile
             color: primary
             variant: outlined
-            icon: AiOutlineEdit
+            icon: edit
         - id: drawer_profile_message_btn
           type: Button
           layout:
@@ -1331,7 +1331,7 @@ Jane Cooper
             title: Send Message
             color: primary
             variant: solid
-            icon: AiOutlineMail
+            icon: mail
 ```
 
 | Property | Type | Default | Description |

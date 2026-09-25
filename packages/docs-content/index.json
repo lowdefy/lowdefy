@@ -344,6 +344,12 @@
       "path": "content/plugins/plugins-operators.md"
     },
     {
+      "slug": "plugins/plugins-icon-sets",
+      "title": "Icon Sets",
+      "section": "Plugins",
+      "path": "content/plugins/plugins-icon-sets.md"
+    },
+    {
       "slug": "plugins/posthog",
       "title": "PostHog",
       "section": "Plugins",
@@ -2678,6 +2684,12 @@
       "title": "Auth Upgrade (BetterAuth)",
       "section": "Migration",
       "path": "content/migration/auth-upgrade.md"
+    },
+    {
+      "slug": "migration/v6-to-v7",
+      "title": "Version 6 to Version 7",
+      "section": "Migration",
+      "path": "content/migration/v6-to-v7.md"
     },
     {
       "slug": "migration/v3-to-v4",

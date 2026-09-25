@@ -14,7 +14,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Choose File
       type: default
 - id: basic_custom_icon
@@ -22,7 +22,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: AiOutlineCloudUpload
+      icon: CloudUpload
       title: Upload to Cloud
       type: default
 ```
@@ -34,7 +34,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     accept: image/*
     button:
-      icon: AiOutlinePicture
+      icon: image
       title: Upload Image
       type: default
 - id: accept_pdf
@@ -43,7 +43,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     accept: .pdf
     button:
-      icon: AiOutlineFilePdf
+      icon: FileText
       title: Upload PDF
       type: default
 - id: accept_specific
@@ -52,7 +52,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     accept: .jpg,.png,.gif
     button:
-      icon: AiOutlinePicture
+      icon: image
       title: Upload JPG, PNG, or GIF
       type: default
 ```
@@ -64,7 +64,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     singleFile: true
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload Single File
       type: default
 - id: limit_max_three
@@ -73,7 +73,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     maxCount: 3
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload (Max 3)
       type: default
 - id: limit_single_images
@@ -83,7 +83,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     singleFile: true
     accept: image/*
     button:
-      icon: AiOutlinePicture
+      icon: image
       title: Upload One Image
       type: default
 ```
@@ -94,7 +94,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload
       type: primary
 - id: button_large
@@ -102,7 +102,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload Files
       type: default
       size: large
@@ -111,7 +111,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: AiOutlinePaperClip
+      icon: attach
       title: Attach Files
       type: default
 ```
@@ -128,7 +128,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     disabled: true
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload
       type: primary
 - id: disabled_hidden_list
@@ -146,7 +146,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     showUploadList: true
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload (List Visible)
       type: default
 - id: list_hidden
@@ -155,7 +155,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     s3PostPolicyRequestId: s3_upload_policy_request
     showUploadList: false
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload (No List)
       type: default
 - id: list_single_hidden
@@ -165,7 +165,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
     singleFile: true
     showUploadList: false
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload Single (No List)
       type: default
 ```
@@ -205,7 +205,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload
       type: default
 - id: style_label
@@ -223,7 +223,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
   properties:
     s3PostPolicyRequestId: s3_upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload
       type: default
 ```
@@ -265,7 +265,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
         s3PostPolicyRequestId: s3_upload_policy_request
         accept: .pdf,.docx,.xlsx
         button:
-          icon: AiOutlineFilePdf
+          icon: FileText
           title: Choose Document
           type: default
         label:
@@ -279,7 +279,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
         title: Save Document
         color: primary
         variant: solid
-        icon: AiOutlineSave
+        icon: save
       events:
         onClick:
           - id: save_validate
@@ -305,7 +305,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
         singleFile: true
         accept: image/*
         button:
-          icon: AiOutlineCamera
+          icon: camera
           title: Choose Photo
           type: default
         label:
@@ -316,7 +316,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
       required: true
       properties:
         title: Display Name
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
         placeholder: Enter your display name
         label:
           colon: false
@@ -328,7 +328,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
         title: Update Profile
         color: primary
         variant: solid
-        icon: AiOutlineCheck
+        icon: check
       events:
         onClick:
           - id: update_validate
@@ -343,7 +343,7 @@ __Deprecated__ — use the provider-neutral <a href="/Upload">Upload</a> block w
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `accept` | string | - | File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept. |
-| `button` | object | `{"icon":"UploadOutlined","title":"Upload","type":"default"}` | Button block properties. See [Button](/Button) for all properties. |
+| `button` | object | `{"icon":"upload","title":"Upload","type":"default"}` | Button block properties. See [Button](/Button) for all properties. |
 | `button.title` | string | - | Button title text. |
 | `button.icon` | string \| object | - | Button icon name or Icon block properties. |
 | `button.type` | string | `"default"` | Button type. Enum: `default`, `primary`, `dashed`, `text`, `link`. |

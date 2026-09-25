@@ -15,20 +15,20 @@ Floating dropdown menu triggered by any child block. Menu items follow the Menu 
         pageId: home
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: dm_basic_profile
         type: MenuLink
         pageId: home
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
       - id: dm_basic_div
         type: MenuDivider
       - id: dm_basic_logout
         type: MenuLink
         properties:
           title: Log Out
-          icon: AiOutlineLogout
+          icon: logout
           danger: true
   blocks:
     - id: dropdown_menu_basic_btn
@@ -83,19 +83,19 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Copy
-          icon: AiOutlineCopy
+          icon: copy
       - id: dm_ctx_paste
         type: MenuLink
         properties:
           title: Paste
-          icon: AiOutlineSnippets
+          icon: Files
       - id: dm_ctx_div
         type: MenuDivider
       - id: dm_ctx_delete
         type: MenuLink
         properties:
           title: Delete
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
   blocks:
     - id: dropdown_menu_context_area
@@ -204,12 +204,12 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
       - id: dm_arrow_2
         type: MenuLink
         properties:
           title: Help
-          icon: AiOutlineQuestionCircle
+          icon: help
   blocks:
     - id: dropdown_menu_arrow_btn
       type: Button
@@ -232,12 +232,12 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
       - id: dm_arrowc_2
         type: MenuLink
         properties:
           title: Help
-          icon: AiOutlineQuestionCircle
+          icon: help
   blocks:
     - id: dropdown_menu_arrow_center_btn
       type: Button
@@ -261,7 +261,7 @@ Right-click anywhere in this card to open the context menu.
         type: MenuGroup
         properties:
           title: Navigation
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: dm_grp_nav_home
             type: MenuLink
@@ -279,7 +279,7 @@ Right-click anywhere in this card to open the context menu.
         type: MenuGroup
         properties:
           title: Account
-          icon: AiOutlineUser
+          icon: user
         links:
           - id: dm_grp_acc_profile
             type: MenuLink
@@ -314,7 +314,7 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Available Action
-          icon: AiOutlineCheck
+          icon: check
       - id: dm_dis_disabled
         type: MenuLink
         properties:
@@ -350,13 +350,13 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: New File
-          icon: AiOutlineFileAdd
+          icon: FilePlus
           shortcut: mod+shift+N
       - id: dm_sc_save
         type: MenuLink
         properties:
           title: Save
-          icon: AiOutlineSave
+          icon: save
           shortcut: mod+shift+S
       - id: dm_sc_div
         type: MenuDivider
@@ -364,7 +364,7 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Close
-          icon: AiOutlineClose
+          icon: close
           shortcut: mod+shift+W
   events:
     onClick:
@@ -419,7 +419,7 @@ Right-click anywhere in this card to open the context menu.
         title: Click to Toggle
         color: primary
         variant: solid
-        icon: AiOutlineBell
+        icon: bell
 ```
 
 ```yaml
@@ -434,17 +434,17 @@ Right-click anywhere in this card to open the context menu.
         type: MenuLink
         properties:
           title: Edit
-          icon: AiOutlineEdit
+          icon: edit
       - id: dm_oc_copy
         type: MenuLink
         properties:
           title: Copy
-          icon: AiOutlineCopy
+          icon: copy
       - id: dm_oc_delete
         type: MenuLink
         properties:
           title: Delete
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
   events:
     onClick:
@@ -519,20 +519,20 @@ Jane Doe
         pageId: home
         properties:
           title: My Profile
-          icon: AiOutlineUser
+          icon: user
       - id: dm_user_settings
         type: MenuLink
         pageId: home
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
       - id: dm_user_div
         type: MenuDivider
       - id: dm_user_logout
         type: MenuLink
         properties:
           title: Log Out
-          icon: AiOutlineLogout
+          icon: logout
           danger: true
   blocks:
     - id: dropdown_menu_user_trigger
@@ -569,7 +569,7 @@ Jane Doe
       type: Button
       properties:
         title: Open Menu
-        icon: AiOutlineMenu
+        icon: menu
 ```
 
 | Property | Type | Default | Description |
@@ -584,7 +584,16 @@ Jane Doe
 | `links.$.class` | string \| array \| object | - | CSS classes for the menu item. Flat applies to the item wrapper; use dot-prefixed slot keys to target parts. |
 | `links.$.properties` | object | - | Properties for the menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `links.$.properties.tooltip` | string | - | Tooltip text shown when the menu is collapsed. |
@@ -602,6 +611,15 @@ Jane Doe
 | `links.$.links.$.properties` | object | - | Properties for the menu item. |
 | `links.$.links.$.properties.title` | string | - | Menu item title. |
 | `links.$.links.$.properties.icon` | string \| object | - | Icon name or config. |
+| `links.$.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.links.$.properties.danger` | boolean | `false` | Danger style. |
 | `links.$.links.$.properties.disabled` | boolean | `false` | Disable the item. |
 | `links.$.links.$.properties.tooltip` | string | - | Tooltip text shown when the menu is collapsed. |

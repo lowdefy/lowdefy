@@ -33,7 +33,7 @@ B
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineUser
+        icon: user
         shape: circle
         color: "#52c41a"
     - id: shape_square_src
@@ -169,21 +169,21 @@ Tom
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineUser
+        icon: user
         color: "#1677ff"
     - id: icon_team
       type: Avatar
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineTeam
+        icon: users
         color: "#722ed1"
     - id: icon_star
       type: Avatar
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineStar
+        icon: star
         color: "#faad14"
     - id: icon_custom_color
       type: Avatar
@@ -191,7 +191,7 @@ Tom
         flex: 0 0 auto
       properties:
         icon:
-          name: AiOutlineThunderbolt
+          name: Zap
           color: "#fff700"
         color: "#000000"
     - id: icon_custom_large
@@ -200,7 +200,7 @@ Tom
         flex: 0 0 auto
       properties:
         icon:
-          name: AiOutlineCrown
+          name: Crown
           color: "#fff"
         color: "#722ed1"
         size: large
@@ -345,7 +345,7 @@ JD
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineUser
+        icon: user
         color: "#1677ff"
         size: large
       events:
@@ -456,7 +456,7 @@ SH
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineStar
+        icon: star
         size: large
       style:
         .element:
@@ -466,7 +466,7 @@ SH
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlinePlus
+        icon: add
         size: large
       style:
         .element:
@@ -490,7 +490,7 @@ SM
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineUser
+        icon: user
         size: large
         color: "#1677ff"
         theme:
@@ -523,7 +523,7 @@ SM
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineStar
+        icon: star
         color: "#722ed1"
         theme:
           containerSize: 44
@@ -547,7 +547,7 @@ SM
             - src: https://api.dicebear.com/7.x/miniavs/svg?seed=1
             - content: BK
               color: "#1677ff"
-            - icon: AiOutlineUser
+            - icon: user
               color: "#87d068"
             - content: ZW
               color: "#722ed1"
@@ -562,7 +562,7 @@ SM
             - src: https://api.dicebear.com/7.x/miniavs/svg?seed=2
             - content: AL
               color: "#f56a00"
-            - icon: AiOutlineUser
+            - icon: user
               color: "#1677ff"
             - content: KJ
               color: "#722ed1"
@@ -593,7 +593,7 @@ SM
             - src: https://api.dicebear.com/7.x/miniavs/svg?seed=3
             - content: LG
               color: "#eb2f96"
-            - icon: AiOutlineStar
+            - icon: star
               color: "#faad14"
 ```
 
@@ -634,7 +634,7 @@ SM
             - src: https://api.dicebear.com/7.x/miniavs/svg?seed=5
             - content: AB
               color: "#52c41a"
-            - icon: AiOutlineUser
+            - icon: user
               color: "#722ed1"
             - content: CD
               color: "#f5222d"
@@ -733,7 +733,7 @@ Senior Engineer at Acme Corp
             title: Edit Profile
             color: primary
             variant: outlined
-            icon: AiOutlineEdit
+            icon: edit
           events:
             onClick:
               - id: profile_edit_msg
@@ -749,7 +749,7 @@ Senior Engineer at Acme Corp
             title: Send Message
             color: primary
             variant: solid
-            icon: AiOutlineMail
+            icon: mail
           events:
             onClick:
               - id: profile_msg_msg
@@ -793,7 +793,7 @@ Dashboard redesign project
                   alt: Elena Torres
                 - content: JD
                   color: "#52c41a"
-                - icon: AiOutlineUser
+                - icon: user
                   color: "#722ed1"
                 - content: KP
                   color: "#fa8c16"
@@ -884,7 +884,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineLike
+                    icon: ThumbsUp
                     title: Like
                   style:
                     .element:
@@ -895,7 +895,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineMessage
+                    icon: message
                     title: Reply
                   style:
                     .element:
@@ -958,7 +958,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineLike
+                    icon: ThumbsUp
                     title: Like
                   style:
                     .element:
@@ -969,7 +969,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineMessage
+                    icon: message
                     title: Reply
                   style:
                     .element:
@@ -1032,7 +1032,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineLike
+                    icon: ThumbsUp
                     title: Like
                   style:
                     .element:
@@ -1043,7 +1043,7 @@ I've started on the date picker component. Quick question — should it default 
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineMessage
+                    icon: message
                     title: Reply
                   style:
                     .element:
@@ -1069,7 +1069,7 @@ I've started on the date picker component. Quick question — should it default 
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             color: "#52c41a"
         - id: reply_body
           type: Box
@@ -1091,7 +1091,7 @@ I've started on the date picker component. Quick question — should it default 
                 title: Reply
                 color: primary
                 variant: solid
-                icon: AiOutlineSend
+                icon: send
               events:
                 onClick:
                   - id: reply_msg
@@ -1107,7 +1107,16 @@ I've started on the date picker component. Quick question — should it default 
 | `color` | string | - | The background color of the avatar if not using a src url. Should be a hex color string. Color is a random color if not specified. |
 | `content` | string | - | Text to display inside avatar. |
 | `gap` | number | - | Letter type unit distance between left and right sides. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in avatar. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in avatar. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `size` | string \| number \| object | `"default"` | Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes. |
 | `src` | string | - | The address of the image for an image avatar. |
@@ -1123,6 +1132,15 @@ I've started on the date picker component. Quick question — should it default 
 | `group.avatars.$.content` | string | - | Text content inside the avatar. |
 | `group.avatars.$.gap` | number | - | Letter type unit distance between left and right sides. |
 | `group.avatars.$.icon` | string \| object | - | Icon name or properties. |
+| `group.avatars.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `group.avatars.$.icon.color` | string | - | Icon color. |
+| `group.avatars.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `group.avatars.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `group.avatars.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `group.avatars.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `group.avatars.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `group.avatars.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `group.avatars.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `group.avatars.$.shape` | string | - | Override shape for this avatar. Enum: `circle`, `square`. |
 | `group.avatars.$.size` | string \| number | - | Override size for this avatar. Enum: `default`, `small`, `large`. |
 | `group.avatars.$.src` | string | - | Image URL. |
