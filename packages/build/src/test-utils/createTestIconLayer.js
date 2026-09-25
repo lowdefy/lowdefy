@@ -14,11 +14,18 @@
   limitations under the License.
 */
 
-import defaultIconAliases from './defaultIconAliases.js';
-
-// Built-in semantic names with the app's theme.icons.aliases on top.
-function getIconAliases({ components }) {
-  return { ...defaultIconAliases, ...(components.theme?.icons?.aliases ?? {}) };
+// An icon set layer as loadIconSets returns it, drawing the given icons.
+function createTestIconLayer({ packageName = 'test-icons', icons = {}, attrs, semantic }) {
+  return {
+    attrs,
+    loadIcons: async ({ names }) =>
+      Object.fromEntries(
+        names.filter((name) => Object.hasOwn(icons, name)).map((name) => [name, icons[name]])
+      ),
+    names: new Set(Object.keys(icons)),
+    package: packageName,
+    semantic,
+  };
 }
 
-export default getIconAliases;
+export default createTestIconLayer;

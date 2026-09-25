@@ -15,4 +15,4 @@ pages:
           size: large
           block: true
           disabled: false
-          icon: AiOutlineCheck
+          icon: check

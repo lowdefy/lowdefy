@@ -16,232 +16,176 @@
 
 import { jest } from '@jest/globals';
 
-import defaultIconAliases from './defaultIconAliases.js';
-
-// data-copy's icons are always bundled.
-const HTML_ALIASES = { check: 'LuCheck', copy: 'LuCopy' };
-
-const mockRequire = jest.fn();
-
-jest.unstable_mockModule('module', () => ({
-  createRequire: () => mockRequire,
+jest.unstable_mockModule('../icons/readIconMigrationTable.js', () => ({
+  default: () => ({ icons: { AiOutlineDelete: 'delete' }, review: {} }),
 }));
 
-function iconModule(names) {
-  return Object.fromEntries(names.map((name) => [name, () => null]));
-}
+const { default: buildIconImports } = await import('./buildIconImports.js');
+const { default: createIconContext } = await import('../icons/createIconContext.js');
 
-const modules = {
-  'react-icons/ai': iconModule([
-    'AiOutlineExclamationCircle',
-    'AiOutlineLoading3Quarters',
-    'AiFillHome',
-  ]),
-  'react-icons/lu': iconModule([...Object.values(defaultIconAliases), 'LuReceipt', 'LuFlag']),
-  'react-icons/tb': iconModule(['TbPencil']),
-};
+const ALWAYS = [
+  'check',
+  'close',
+  'copy',
+  'error',
+  'icon-missing',
+  'info',
+  'loading',
+  'success',
+  'warning',
+];
 
-beforeEach(() => {
-  mockRequire.mockReset();
-  mockRequire.mockImplementation((iconPackage) => modules[iconPackage] ?? {});
-});
-
-function createContext() {
+async function createContext({ iconsConfig, jsMap = {}, typesMapIcons = {} } = {}) {
   return {
-    directories: { server: '/test/server' },
+    errors: [],
     handleWarning: jest.fn(),
-    jsMap: {},
-    typesMap: { icons: {} },
+    icons: await createIconContext({ context: { typesMap: { iconSets: {} } }, iconsConfig }),
+    jsMap,
+    keyMap: {},
+    typesMap: { icons: typesMapIcons },
   };
 }
 
-function getIcons(iconImports, iconPackage) {
-  return iconImports.find((entry) => entry.package === iconPackage).icons;
+function withoutAlways(names) {
+  return names.filter((name) => !ALWAYS.includes(name));
 }
 
-test('buildIconImports emits only the aliases the config uses', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
+test('buildIconImports always bundles the icons the client renders itself', async () => {
+  const context = await createContext();
+  expect(buildIconImports({ blocks: [], components: {}, context })).toEqual([...ALWAYS].sort());
+});
+
+test('buildIconImports bundles every name form the config uses, as written', async () => {
+  const context = await createContext();
   const components = {
-    pages: [{ id: 'page1', blocks: [{ id: 'b', properties: { icon: 'edit' } }] }],
-  };
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components,
-    context: createContext(),
-  });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, edit: 'LuPencil' });
-  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual(['LuCheck', 'LuCopy', 'LuPencil']);
-});
-
-test('buildIconImports bundles icons named in client _js sources', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const context = createContext();
-  context.jsMap = {
-    client: { abc123: 'return `<i data-icon="delete"></i> <i data-icon="AiFillHome"></i>`;' },
-  };
-  const { iconAliases, iconImports } = buildIconImports({ blocks: [], components: {}, context });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, delete: 'LuTrash2' });
-  expect(getIcons(iconImports, 'react-icons/ai')).toEqual(['AiFillHome']);
-});
-
-test('buildIconImports lets theme aliases override and extend built-in names', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const components = {
-    theme: { icons: { aliases: { edit: 'TbPencil', invoice: 'LuReceipt' } } },
-    pages: [{ id: 'page1', blocks: [{ properties: { a: 'edit', b: 'invoice' } }] }],
-  };
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components,
-    context: createContext(),
-  });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, edit: 'TbPencil', invoice: 'LuReceipt' });
-  expect(getIcons(iconImports, 'react-icons/tb')).toEqual(['TbPencil']);
-  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual([
-    'LuCheck',
-    'LuCopy',
-    'LuReceipt',
-  ]);
-});
-
-test('buildIconImports bundles icons listed in theme.icons.include', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const components = { theme: { icons: { include: ['LuFlag', 'star'] } } };
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components,
-    context: createContext(),
-  });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, star: 'LuStar' });
-  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual([
-    'LuCheck',
-    'LuCopy',
-    'LuFlag',
-    'LuStar',
-  ]);
-});
-
-test('buildIconImports warns on an include entry that names no icon', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const context = createContext();
-  buildIconImports({
-    blocks: [],
-    components: { theme: { icons: { include: ['nothing'] } } },
-    context,
-  });
-  expect(context.handleWarning).toHaveBeenCalledTimes(1);
-  expect(context.handleWarning.mock.calls[0][0].message).toBe(
-    'theme.icons.include lists "nothing", which is neither an icon alias nor a react-icons name.'
-  );
-});
-
-test('buildIconImports bundles icons named in data-icon attributes', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const components = {
-    pages: [{ properties: { html: '<i data-icon="delete"></i><i data-icon="AiFillHome"></i>' } }],
-  };
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components,
-    context: createContext(),
-  });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, delete: 'LuTrash2' });
-  expect(getIcons(iconImports, 'react-icons/ai')).toEqual(['AiFillHome']);
-});
-
-test('buildIconImports warns with a suggestion on an unknown data-icon name', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const context = createContext();
-  buildIconImports({
-    blocks: [],
-    components: { pages: [{ properties: { html: '<i data-icon="delet"></i>' } }] },
-    context,
-  });
-  expect(context.handleWarning.mock.calls[0][0].message).toBe(
-    'data-icon="delet" is not an icon alias or a react-icons name. Did you mean "delete"?'
-  );
-});
-
-test('buildIconImports bundles aliases named in block type default icons', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const context = createContext();
-  context.typesMap.icons = { MyBlock: ['close'] };
-  const { iconAliases } = buildIconImports({
-    blocks: [{ typeName: 'MyBlock' }],
-    components: {},
-    context,
-  });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, close: 'LuX' });
-});
-
-test('buildIconImports throws when a theme alias targets an unknown icon', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  expect(() =>
-    buildIconImports({
-      blocks: [],
-      components: { theme: { icons: { aliases: { invoice: 'LuReciept' } } } },
-      context: createContext(),
-    })
-  ).toThrow(
-    'Icon alias "invoice" targets "LuReciept", which is not a react-icons icon. Did you mean "LuReceipt"?'
-  );
-});
-
-test('buildIconImports throws when a theme alias target is not a react-icons name', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  expect(() =>
-    buildIconImports({
-      blocks: [],
-      components: { theme: { icons: { aliases: { invoice: 'receipt' } } } },
-      context: createContext(),
-    })
-  ).toThrow('Icon alias "invoice" targets "receipt", which is not a react-icons name.');
-});
-
-test('buildIconImports throws when a theme alias name is not lowercase kebab-case', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  expect(() =>
-    buildIconImports({
-      blocks: [],
-      components: { theme: { icons: { aliases: { Invoice: 'LuReceipt' } } } },
-      context: createContext(),
-    })
-  ).toThrow('Icon alias "Invoice" should be lowercase kebab-case, like "edit" or "external-link".');
-});
-
-test('buildIconImports always bundles the icons data-copy buttons render', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components: {},
-    context: createContext(),
-  });
-  expect(iconAliases).toEqual(HTML_ALIASES);
-  expect(getIcons(iconImports, 'react-icons/lu')).toEqual(['LuCheck', 'LuCopy']);
-});
-
-test('buildIconImports keeps existing react-icons names working unchanged', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks: [],
-    components: { pages: [{ properties: { icon: 'AiFillHome' } }] },
-    context: createContext(),
-    defaults: { 'react-icons/ai': ['AiOutlineExclamationCircle'] },
-  });
-  expect(iconAliases).toEqual(HTML_ALIASES);
-  expect(getIcons(iconImports, 'react-icons/ai')).toEqual([
-    'AiOutlineExclamationCircle',
-    'AiFillHome',
-  ]);
-});
-
-test('buildIconImports bundles icons named in HTML built by API endpoints', async () => {
-  const { default: buildIconImports } = await import('./buildIconImports.js');
-  const components = {
-    api: [
-      { id: 'notify', routine: [{ ':return': { html: '<i data-icon="bell"></i> New comment' } }] },
+    pages: [
+      {
+        id: 'page1',
+        blocks: [
+          { id: 'a', type: 'Button', properties: { icon: 'edit' } },
+          { id: 'b', type: 'Button', properties: { icon: { name: 'Receipt' } } },
+          { id: 'c', type: 'Button', properties: { icon: 'lucide:House' } },
+          { id: 'd', type: 'Button', properties: { icon: 'Home' } },
+        ],
+      },
     ],
   };
-  const { iconAliases } = buildIconImports({ blocks: [], components, context: createContext() });
-  expect(iconAliases).toEqual({ ...HTML_ALIASES, bell: 'LuBell' });
+  expect(withoutAlways(buildIconImports({ blocks: [], components, context }))).toEqual([
+    'Home',
+    'Receipt',
+    'edit',
+    'lucide:House',
+  ]);
+  expect(context.errors).toEqual([]);
+});
+
+test('buildIconImports does not bundle icons for type values', async () => {
+  const context = await createContext();
+  const components = {
+    pages: [{ id: 'page1', type: 'Box', blocks: [{ id: 'm', type: 'Menu' }] }],
+    menus: [{ id: 'default', links: [{ id: 'l', type: 'MenuLink' }] }],
+  };
+  expect(withoutAlways(buildIconImports({ blocks: [], components, context }))).toEqual([]);
+});
+
+test('buildIconImports bundles names in operator branches and global maps', async () => {
+  const context = await createContext();
+  const components = {
+    global: { statuses: { done: { icon: 'CircleCheckBig' } } },
+    pages: [
+      {
+        id: 'page1',
+        blocks: [
+          {
+            id: 'a',
+            type: 'Button',
+            properties: { icon: { _if: { test: true, then: 'Flag', else: 'star' } } },
+          },
+        ],
+      },
+    ],
+  };
+  expect(withoutAlways(buildIconImports({ blocks: [], components, context }))).toEqual([
+    'CircleCheckBig',
+    'Flag',
+    'star',
+  ]);
+});
+
+test('buildIconImports bundles names in client and server _js sources, including single-quoted', async () => {
+  const context = await createContext({
+    jsMap: {
+      client: { hash1: "return value > 0 ? 'arrow-up' : 'arrow-down';" },
+      server: { hash2: 'return `<i data-icon="Bell"></i>`;' },
+    },
+  });
+  expect(withoutAlways(buildIconImports({ blocks: [], components: {}, context }))).toEqual([
+    'Bell',
+    'arrow-down',
+    'arrow-up',
+  ]);
+});
+
+test('buildIconImports bundles names in data-icon attributes and API endpoint HTML', async () => {
+  const context = await createContext();
+  const components = {
+    pages: [
+      {
+        id: 'page1',
+        blocks: [{ id: 'h', type: 'Html', properties: { html: '<i data-icon="edit"></i>' } }],
+      },
+    ],
+    api: [{ id: 'e', routine: [{ ':return': { html: "<i data-icon='Bell'></i>" } }] }],
+  };
+  expect(withoutAlways(buildIconImports({ blocks: [], components, context }))).toEqual([
+    'Bell',
+    'edit',
+  ]);
+});
+
+test('buildIconImports bundles theme.icons.include and app aliases', async () => {
+  const context = await createContext({
+    iconsConfig: { aliases: { invoice: 'Receipt' }, include: ['Flag', 'invoice'] },
+  });
+  const components = { theme: { icons: { include: ['Flag', 'invoice'] } } };
+  expect(withoutAlways(buildIconImports({ blocks: [], components, context }))).toEqual([
+    'Flag',
+    'invoice',
+  ]);
+});
+
+test('buildIconImports bundles block type meta icons and warns on ones that do not resolve', async () => {
+  const context = await createContext({
+    typesMapIcons: { Selector: ['chevron-down', 'clear', 'AiOutlineDown'] },
+  });
+  const names = buildIconImports({
+    blocks: [{ typeName: 'Selector', package: '@lowdefy/blocks-antd' }],
+    components: {},
+    context,
+  });
+  expect(withoutAlways(names)).toEqual(['chevron-down', 'clear']);
+  expect(context.handleWarning).toHaveBeenCalledTimes(1);
+  expect(context.handleWarning.mock.calls[0][0].message).toBe(
+    'Block type "Selector" (@lowdefy/blocks-antd) lists icon "AiOutlineDown" in its meta.icons, which is not an icon name. The block may render the fallback icon.'
+  );
+});
+
+test('buildIconImports collects an error for an unresolvable name at an icon position', async () => {
+  const context = await createContext();
+  const components = {
+    menus: [
+      {
+        id: 'default',
+        links: [{ id: 'l', type: 'MenuLink', properties: { icon: 'AiOutlineDelete' } }],
+      },
+    ],
+    pages: [{ id: 'page1', blocks: [{ id: 'a', type: 'Button', properties: { title: 'Pencl' } }] }],
+  };
+  const names = buildIconImports({ blocks: [], components, context });
+  expect(context.errors.map((error) => error.message)).toEqual([
+    expect.stringMatching(
+      /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy 7 uses Lucide icons\. Use "delete" \(or "Trash"\)\./
+    ),
+  ]);
+  expect(names).not.toContain('AiOutlineDelete');
 });

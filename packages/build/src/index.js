@@ -35,6 +35,7 @@ import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
 import validateApiHtmlLinks from './build/buildApi/validateApiHtmlLinks.js';
 import buildImports from './build/buildImports/buildImports.js';
+import buildIconContext from './build/icons/buildIconContext.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
 import buildMcp from './build/buildMcp.js';
@@ -193,6 +194,10 @@ async function build(options) {
     }
     tryBuildStep(buildJs, 'buildJs', { components, context });
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    // Icon sets load asynchronously; a bad theme.icons stops the build here,
+    // since buildImports resolves every icon name against context.icons.
+    await buildIconContext({ components, context });
+    logCollectedErrors(context);
     tryBuildStep(buildImports, 'buildImports', { components, context });
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });

@@ -94,7 +94,7 @@ test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', a
   mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig: { id: 'dashboard' } });
   mockGetPageJitEnrichment.mockReturnValueOnce({
     jsEntries: 'export default {};',
-    dynamicIcons: { FiZap: { tag: 'svg' } },
+    dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
   });
   const res = await createApp().request('/api/page/dashboard');
   expect(res.status).toEqual(200);
@@ -102,6 +102,6 @@ test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', a
   expect(body).toEqual({
     id: 'dashboard',
     _jsEntries: 'export default {};',
-    _dynamicIcons: { FiZap: { tag: 'svg' } },
+    _dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
   });
 });

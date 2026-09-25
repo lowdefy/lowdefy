@@ -14,166 +14,47 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { icons as lucideIcons } from 'lucide';
 
-const mockWriteBuildArtifact = jest.fn();
-const mockExtractIconData = jest.fn();
-const mockWriteIconsDynamic = jest.fn();
+import createIconContext from '../icons/createIconContext.js';
+import updateIconImportsJit from './updateIconImportsJit.js';
 
-jest.unstable_mockModule('./extractIconData.js', () => ({
-  default: mockExtractIconData,
-}));
-
-jest.unstable_mockModule('./writeIconsDynamic.js', () => ({
-  default: mockWriteIconsDynamic,
-}));
-
-beforeEach(() => {
-  mockWriteBuildArtifact.mockReset();
-  mockWriteBuildArtifact.mockResolvedValue(undefined);
-  mockExtractIconData.mockReset();
-  mockExtractIconData.mockReturnValue({});
-  mockWriteIconsDynamic.mockReset();
-  mockWriteIconsDynamic.mockResolvedValue(undefined);
-});
-
-test('updateIconImportsJit adds new icon to existing package entry and writes artifacts', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-
-  const iconImports = [
-    { icons: ['AiFillHome'], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
-  };
-  const newIcons = [{ icon: 'IoAddCircle', package: 'react-icons/io5' }];
-
-  await updateIconImportsJit({ newIcons, iconImports, context });
-
-  // iconImports mutated in place
-  expect(iconImports[1].icons).toContain('IoAddCircle');
-
-  // iconImports.json written
-  const jsonCall = mockWriteBuildArtifact.mock.calls.find((c) => c[0] === 'iconImports.json');
-  expect(jsonCall).toBeDefined();
-  const written = JSON.parse(jsonCall[1]);
-  expect(written[1].icons).toContain('IoAddCircle');
-
-  // extractIconData called with the new icons
-  expect(mockExtractIconData).toHaveBeenCalledWith({
-    icons: newIcons,
-    directories: context.directories,
-  });
-
-  // writeIconsDynamic called
-  expect(mockWriteIconsDynamic).toHaveBeenCalledWith({
-    newIconData: {},
-    context,
+test('updateIconImportsJit adds IconData keyed by the names as used', async () => {
+  const icons = await createIconContext({ context: { typesMap: { iconSets: {} } } });
+  const context = { dynamicIconData: { check: { node: lucideIcons.Check } } };
+  await updateIconImportsJit({ names: ['edit', 'lucide:House'], icons, context });
+  expect(context.dynamicIconData).toEqual({
+    check: { node: lucideIcons.Check },
+    edit: { node: lucideIcons.Pencil },
+    'lucide:House': { node: lucideIcons.House },
   });
 });
 
-test('updateIconImportsJit adds icons for package not yet in imports', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-
-  const iconImports = [{ icons: [], package: 'react-icons/ai' }];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
+test('updateIconImportsJit delivers qualified and semantic names from an icon set plugin', async () => {
+  const { default: createIconSemanticMap } = await import('../icons/createIconSemanticMap.js');
+  const { default: createLucideIconLayer } = await import('../icons/createLucideIconLayer.js');
+  const { default: createTestIconLayer } = await import('../../test-utils/createTestIconLayer.js');
+  const node = [['path', { d: 'M0 0' }]];
+  const sets = {
+    lucide: [createLucideIconLayer()],
+    tabler: [
+      createTestIconLayer({
+        icons: { TablerPencil: { node } },
+        attrs: { fill: 'none' },
+        semantic: { edit: 'TablerPencil' },
+      }),
+    ],
   };
-  const newIcons = [{ icon: 'MdDelete', package: 'react-icons/md' }];
-
-  await updateIconImportsJit({ newIcons, iconImports, context });
-
-  const mdEntry = iconImports.find((e) => e.package === 'react-icons/md');
-  expect(mdEntry).toBeDefined();
-  expect(mdEntry.icons).toContain('MdDelete');
-});
-
-test('updateIconImportsJit merges multiple new icons', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-
-  const iconImports = [
-    { icons: ['AiFillHome'], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
+  const icons = {
+    sets,
+    defaultSet: 'tabler',
+    semantic: createIconSemanticMap({ sets, defaultSet: 'tabler' }),
   };
-  const newIcons = [
-    { icon: 'IoAddCircle', package: 'react-icons/io5' },
-    { icon: 'AiFillStar', package: 'react-icons/ai' },
-  ];
-
-  await updateIconImportsJit({ newIcons, iconImports, context });
-
-  expect(iconImports[0].icons).toContain('AiFillHome');
-  expect(iconImports[0].icons).toContain('AiFillStar');
-  expect(iconImports[1].icons).toContain('IoAddCircle');
-});
-
-test('updateIconImportsJit passes extracted icon data to writeIconsDynamic', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-
-  const iconData = { IoAddCircle: { tag: 'svg', attr: {}, child: [] } };
-  mockExtractIconData.mockReturnValue(iconData);
-
-  const iconImports = [{ icons: [], package: 'react-icons/io5' }];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
-  };
-  const newIcons = [{ icon: 'IoAddCircle', package: 'react-icons/io5' }];
-
-  await updateIconImportsJit({ newIcons, iconImports, context });
-
-  expect(mockWriteIconsDynamic).toHaveBeenCalledWith({
-    newIconData: iconData,
-    context,
-  });
-});
-
-test('updateIconImportsJit does not duplicate icons on concurrent calls', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-
-  const iconImports = [{ icons: ['IoAddCircle'], package: 'react-icons/io5' }];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
-  };
-  // Simulates a concurrent JIT build trying to add the same icon
-  const newIcons = [{ icon: 'IoAddCircle', package: 'react-icons/io5' }];
-
-  await updateIconImportsJit({ newIcons, iconImports, context });
-
-  const io5Icons = iconImports[0].icons.filter((i) => i === 'IoAddCircle');
-  expect(io5Icons).toHaveLength(1);
-});
-
-test('updateIconImportsJit delivers a semantic name keyed by name without adding it to the imports', async () => {
-  const { default: updateIconImportsJit } = await import('./updateIconImportsJit.js');
-  mockExtractIconData.mockReturnValue({ LuPencil: { tag: 'svg' } });
-  const iconImports = [{ icons: [], package: 'react-icons/lu' }];
-  const context = {
-    writeBuildArtifact: mockWriteBuildArtifact,
-    directories: { server: '/test/server' },
-    dynamicIconData: {},
-  };
-  await updateIconImportsJit({
-    newIcons: [{ alias: 'edit', icon: 'LuPencil', package: 'react-icons/lu' }],
-    iconImports,
-    context,
-  });
-  expect(iconImports[0].icons).toEqual([]);
-  expect(mockWriteIconsDynamic).toHaveBeenCalledWith({
-    newIconData: { edit: { tag: 'svg' } },
-    context,
+  const context = { dynamicIconData: {} };
+  await updateIconImportsJit({ names: ['edit', 'tabler:TablerPencil', 'Bell'], icons, context });
+  expect(context.dynamicIconData).toEqual({
+    edit: { node, attrs: { fill: 'none' } },
+    'tabler:TablerPencil': { node, attrs: { fill: 'none' } },
+    Bell: { node: lucideIcons.Bell },
   });
 });

@@ -307,8 +307,8 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool('lowdefy_search_docs', ({ query }) => textResult(searchDocs({ query })));
 
-  registerDevTool('lowdefy_search_icons', ({ query, limit }) =>
-    textResult(searchIcons({ query, limit }))
+  registerDevTool('lowdefy_search_icons', async ({ query, limit }) =>
+    textResult(await searchIcons({ query, limit }))
   );
 
   registerDevTool('lowdefy_get_plugin_doc', ({ package: packageName }) => {

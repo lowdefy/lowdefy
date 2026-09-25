@@ -1,8 +1,8 @@
 login:
-  icon: AiOutlineLogin
+  icon: login
   color: blue
   title: Login
 entity_created:
-  icon: AiOutlinePlus
+  icon: add
   color: green
   title: Created

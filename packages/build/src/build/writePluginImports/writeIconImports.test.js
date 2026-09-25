@@ -15,62 +15,85 @@
 */
 
 import { jest } from '@jest/globals';
+import { icons as lucideIcons } from 'lucide';
 
-import defaultIconAliases from '../buildImports/defaultIconAliases.js';
+import createIconContext from '../icons/createIconContext.js';
+import createLucideIconLayer from '../icons/createLucideIconLayer.js';
+import createIconSemanticMap from '../icons/createIconSemanticMap.js';
+import createTestIconLayer from '../../test-utils/createTestIconLayer.js';
 import writeIconImports from './writeIconImports.js';
 
-test('writeIconImports writes alias keys after the imported icons', async () => {
-  const context = { writeBuildArtifact: jest.fn() };
-  const components = {
-    imports: {
-      icons: [
-        { icons: ['AiFillHome'], package: 'react-icons/ai' },
-        { icons: ['LuPencil', 'LuTrash2'], package: 'react-icons/lu' },
-        { icons: [], package: 'react-icons/tb' },
-      ],
-      iconAliases: { delete: 'LuTrash2', edit: 'LuPencil' },
-    },
+async function write({ names, icons }) {
+  const context = {
+    icons: icons ?? (await createIconContext({ context: { typesMap: { iconSets: {} } } })),
+    writeBuildArtifact: jest.fn(),
   };
-  await writeIconImports({ components, context });
-  expect(context.writeBuildArtifact.mock.calls[0]).toEqual([
+  await writeIconImports({ components: { imports: { icons: names } }, context });
+  return context.writeBuildArtifact;
+}
+
+test('writeIconImports writes icon data with each node array once, in code point order', async () => {
+  const writeBuildArtifact = await write({ names: ['edit', 'Home', 'House', 'Pencil'] });
+  expect(writeBuildArtifact.mock.calls[0]).toEqual([
     'plugins/icons.js',
-    `import { AiFillHome } from 'react-icons/ai';
-import { LuPencil, LuTrash2 } from 'react-icons/lu';
+    `const n0 = ${JSON.stringify(lucideIcons.House)};
+const n1 = ${JSON.stringify(lucideIcons.Pencil)};
 export default {
-  AiFillHome,
-  LuPencil,
-  LuTrash2,
-  'delete': LuTrash2,
-  'edit': LuPencil,
-};`,
+  "Home": { node: n0 },
+  "House": { node: n0 },
+  "Pencil": { node: n1 },
+  "edit": { node: n1 },
+};
+`,
   ]);
 });
 
-test('writeIconImports writes the full alias map to iconAliases.json', async () => {
-  const context = { writeBuildArtifact: jest.fn() };
-  const components = {
-    theme: { icons: { aliases: { invoice: 'LuReceipt' } } },
-    imports: { icons: [], iconAliases: {} },
+test('writeIconImports writes size, width, height and attrs when the data has them', async () => {
+  const node = [['path', { d: 'M0 0' }]];
+  const sets = {
+    lucide: [createLucideIconLayer()],
+    acme: [
+      createTestIconLayer({
+        icons: {
+          Square: { node, size: 1024 },
+          Wide: { node, width: 16, height: 20 },
+        },
+        attrs: { fill: 'currentColor', stroke: 'none' },
+      }),
+    ],
   };
-  await writeIconImports({ components, context });
-  expect(context.writeBuildArtifact.mock.calls[1]).toEqual([
-    'iconAliases.json',
-    JSON.stringify({ ...defaultIconAliases, invoice: 'LuReceipt' }),
-  ]);
+  const icons = {
+    sets,
+    defaultSet: 'lucide',
+    semantic: createIconSemanticMap({ sets, defaultSet: 'lucide' }),
+  };
+  const writeBuildArtifact = await write({ names: ['acme:Square', 'acme:Wide'], icons });
+  expect(writeBuildArtifact.mock.calls[0][1]).toBe(`const n0 = [["path",{"d":"M0 0"}]];
+export default {
+  "acme:Square": { node: n0, size: 1024, attrs: {"fill":"currentColor","stroke":"none"} },
+  "acme:Wide": { node: n0, width: 16, height: 20, attrs: {"fill":"currentColor","stroke":"none"} },
+};
+`);
 });
 
-test('writeIconImports writes the same icon map as before when no aliases are used', async () => {
-  const context = { writeBuildArtifact: jest.fn() };
-  const components = {
-    imports: {
-      icons: [{ icons: ['AiFillHome'], package: 'react-icons/ai' }],
-      iconAliases: {},
-    },
-  };
-  await writeIconImports({ components, context });
-  expect(context.writeBuildArtifact.mock.calls[0][1])
-    .toBe(`import { AiFillHome } from 'react-icons/ai';
-export default {
-  AiFillHome,
-};`);
+test('writeIconImports output is a module that evaluates to IconData', async () => {
+  const writeBuildArtifact = await write({ names: ['check', 'close'] });
+  const source = writeBuildArtifact.mock.calls[0][1];
+  const url = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
+  const { default: iconMap } = await import(url);
+  expect(iconMap).toEqual({
+    check: { node: lucideIcons.Check },
+    close: { node: lucideIcons.X },
+  });
+});
+
+test('writeIconImports writes the full semantic map for icon search', async () => {
+  const icons = await createIconContext({
+    context: { typesMap: { iconSets: {} } },
+    iconsConfig: { aliases: { invoice: 'Receipt' } },
+  });
+  const writeBuildArtifact = await write({ names: ['check'], icons });
+  const [name, content] = writeBuildArtifact.mock.calls[1];
+  expect(name).toBe('iconAliases.json');
+  expect(JSON.parse(content)).toMatchObject({ edit: 'Pencil', invoice: 'Receipt' });
 });

@@ -14,41 +14,15 @@
   limitations under the License.
 */
 
-import extractIconData from './extractIconData.js';
-import writeIconsDynamic from './writeIconsDynamic.js';
+import loadIconData from '../icons/loadIconData.js';
 
-async function updateIconImportsJit({ newIcons, iconImports, context }) {
-  for (const { alias, icon, package: pkg } of newIcons) {
-    // A semantic name is delivered as its own key; its target is not added to
-    // the bundled imports snapshot.
-    if (alias) continue;
-    let entry = iconImports.find((e) => e.package === pkg);
-    if (!entry) {
-      entry = { icons: [], package: pkg };
-      iconImports.push(entry);
-    }
-    // Guard against concurrent JIT builds adding the same icon
-    if (!entry.icons.includes(icon)) {
-      entry.icons.push(icon);
-    }
-  }
-
-  await context.writeBuildArtifact('iconImports.json', JSON.stringify(iconImports));
-
-  // Extract SVG tree data from react-icons and write a self-contained JS module
-  // that the client can fetch at runtime without a Next.js rebuild.
-  const iconData = extractIconData({
-    icons: newIcons.map(({ icon, package: pkg }) => ({ icon, package: pkg })),
-    directories: context.directories,
-    logger: context.logger,
-  });
-  const newIconData = {};
-  newIcons.forEach(({ alias, icon }) => {
-    if (iconData[icon]) {
-      newIconData[alias ?? icon] = iconData[icon];
-    }
-  });
-  await writeIconsDynamic({ newIconData, context });
+// Dev delivers icon data, not code: the page response carries
+// _dynamicIcons as { name: IconData } and the dev client merges it into
+// types.icons. dynamicIconData accumulates across pages until the next
+// skeleton rebuild resets the build context.
+async function updateIconImportsJit({ names, icons, context }) {
+  const iconData = await loadIconData({ names, icons });
+  Object.assign(context.dynamicIconData, iconData);
 }
 
 export default updateIconImportsJit;

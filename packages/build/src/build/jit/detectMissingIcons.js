@@ -14,38 +14,23 @@
   limitations under the License.
 */
 
-import collectIconNames, { getIconNamePackages } from '../buildImports/collectIconNames.js';
+import collectIconNames from '../buildImports/collectIconNames.js';
+import resolveIconName from '../icons/resolveIconName.js';
 
-// Returns the icons a JIT-built page needs that the dev client bundle does not
-// have yet. react-icons names are compared with the bundled imports. Semantic
-// names resolve through the full alias map and are delivered keyed by name, so
-// dev bundles the same names prod does; each is extracted once per session.
-function detectMissingIcons({ page, iconImports, iconAliases = {}, dynamicIconData = {} }) {
-  const { aliasNames, packageIcons, unknownDataIcons } = collectIconNames({
-    json: JSON.stringify(page),
-    aliases: iconAliases,
+// Returns the icon names a JIT-built page uses that the dev client bundle
+// lacks and no earlier page delivered. The page is scanned before _js
+// extraction, so names in _js code are found as they are in the full build.
+function detectMissingIcons({ page, bundledIcons, dynamicIconData, icons }) {
+  const missing = [];
+  collectIconNames({ text: JSON.stringify(page) }).forEach((name) => {
+    if (bundledIcons.has(name) || Object.hasOwn(dynamicIconData, name)) {
+      return;
+    }
+    if (resolveIconName({ name, ...icons }) !== null) {
+      missing.push(name);
+    }
   });
-  const missingIcons = [];
-
-  Object.entries(packageIcons).forEach(([iconPackage, icons]) => {
-    const existing = iconImports.find((entry) => entry.package === iconPackage);
-    const existingSet = new Set(existing?.icons ?? []);
-    icons.forEach((icon) => {
-      if (!existingSet.has(icon)) {
-        missingIcons.push({ icon, package: iconPackage });
-      }
-    });
-  });
-
-  aliasNames.forEach((alias) => {
-    if (Object.hasOwn(dynamicIconData, alias)) return;
-    const icon = iconAliases[alias];
-    getIconNamePackages(icon).forEach((iconPackage) => {
-      missingIcons.push({ alias, icon, package: iconPackage });
-    });
-  });
-
-  return { missingIcons, unknownDataIcons };
+  return missing.sort();
 }
 
 export default detectMissingIcons;

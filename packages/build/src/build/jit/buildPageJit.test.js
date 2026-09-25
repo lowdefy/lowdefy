@@ -30,6 +30,8 @@ const { default: testContext } = await import('../../test-utils/testContext.js')
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 const { default: makeId } = await import('../../utils/makeId.js');
 const { default: buildPageJit } = await import('./buildPageJit.js');
+const { default: createIconContext } = await import('../icons/createIconContext.js');
+const { icons } = await import('lucide');
 
 const mockReadConfigFile = jest.fn();
 const mockWriteBuildArtifact = jest.fn();
@@ -796,37 +798,25 @@ areas:
   expect(pageEntry.unresolvedVars.header).toEqual({ _ref: 'header.yaml' });
 });
 
-// Icon detection tests
-// Note: existing tests above implicitly cover the !iconImports guard path
-// since they do not set context.iconImports.
+// Icon delivery tests
+// Note: existing tests above implicitly cover the !bundledIcons guard path
+// since they do not set context.bundledIcons.
 
-test('buildPageJit detects missing icons and writes dynamic icon data', async () => {
+// Page ids and titles are plain words here: discovery bundles any whole string
+// value that is an icon name ("home", "Edit"), which these tests do not probe.
+async function createIconTestContext({ bundledIcons }) {
   const context = createTestContext();
-  // Set up iconImports with no IoAddCircle — simulating shallow build that missed it
-  context.iconImports = [
-    { icons: [], package: 'react-icons/ai' },
-    { icons: [], package: 'react-icons/io5' },
-  ];
+  context.bundledIcons = new Set(bundledIcons);
   context.dynamicIconData = {};
-  context.directories.server = '/test/server';
+  context.icons = await createIconContext({
+    context: { typesMap: { iconSets: {} } },
+    iconsConfig: {},
+  });
+  return context;
+}
 
-  mockFiles([
-    {
-      path: 'home.yaml',
-      content: `
-id: home
-type: PageHeaderMenu
-blocks:
-  - id: action_button
-    type: Button
-    properties:
-      title: Do Something
-      icon: IoAddCircle
-`,
-    },
-  ]);
-
-  const pageRegistry = new Map([
+function iconPageRegistry() {
+  return new Map([
     [
       'home',
       {
@@ -838,31 +828,51 @@ blocks:
       },
     ],
   ]);
+}
 
-  const result = await buildPageJit({
-    pageId: 'home',
-    pageRegistry,
-    context,
-  });
+test('buildPageJit delivers icon data for names the dev bundle lacks', async () => {
+  const context = await createIconTestContext({ bundledIcons: ['check', 'home'] });
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: add_button
+    type: Button
+    properties:
+      title: Add item
+      icon: CirclePlus
+  - id: edit_button
+    type: Button
+    properties:
+      title: Change item
+      icon:
+        name: edit
+  - id: done_button
+    type: Button
+    properties:
+      title: Mark done
+      icon: check
+`,
+    },
+  ]);
+
+  const result = await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
 
   expect(result.id).toBe('page:home');
-
-  // Icon imports should have been updated
-  const io5Entry = context.iconImports.find((e) => e.package === 'react-icons/io5');
-  expect(io5Entry.icons).toContain('IoAddCircle');
-
-  // plugins/iconsDynamic.js should have been written
-  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
-    (c) => c[0] === 'plugins/iconsDynamic.js'
+  expect(Object.keys(context.dynamicIconData).sort()).toEqual(['CirclePlus', 'edit']);
+  expect(context.dynamicIconData.edit.node).toEqual(icons.Pencil);
+  expect(context.dynamicIconData.CirclePlus).toEqual({ node: icons.CirclePlus });
+  // Data only: nothing is written for icons.
+  expect(mockWriteBuildArtifact.mock.calls.map(([name]) => name)).not.toContain(
+    'plugins/iconsDynamic.js'
   );
-  expect(iconDynamicCall).toBeDefined();
 });
 
-test('buildPageJit does not write dynamic icons when all icons already present', async () => {
-  const context = createTestContext();
-  context.iconImports = [{ icons: ['AiFillHome'], package: 'react-icons/ai' }];
-  context.dynamicIconData = {};
-
+test('buildPageJit delivers nothing when the dev bundle has every icon', async () => {
+  const context = await createIconTestContext({ bundledIcons: ['home'] });
   mockFiles([
     {
       path: 'home.yaml',
@@ -873,36 +883,45 @@ blocks:
   - id: btn
     type: Button
     properties:
-      title: Home
-      icon: AiFillHome
+      title: Go to start
+      icon: home
 `,
     },
   ]);
 
-  const pageRegistry = new Map([
-    [
-      'home',
-      {
-        pageId: 'home',
-        auth: { public: true },
-        refId: 'ref-home',
-        refPath: 'home.yaml',
-        unresolvedVars: null,
-      },
-    ],
+  await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
+
+  expect(context.dynamicIconData).toEqual({});
+});
+
+test('buildPageJit fails the page for a react-icons name at an icon position', async () => {
+  const context = await createIconTestContext({ bundledIcons: [] });
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: btn
+    type: Button
+    properties:
+      title: Delete
+      icon: AiOutlineDelete
+`,
+    },
   ]);
 
-  await buildPageJit({
-    pageId: 'home',
-    pageRegistry,
-    context,
-  });
-
-  // plugins/iconsDynamic.js should NOT have been written
-  const iconDynamicCall = mockWriteBuildArtifact.mock.calls.find(
-    (c) => c[0] === 'plugins/iconsDynamic.js'
+  let error;
+  try {
+    await buildPageJit({ pageId: 'home', pageRegistry: iconPageRegistry(), context });
+  } catch (err) {
+    error = err;
+  }
+  expect(error.message).toBe('Page "home" build failed with 1 error(s).');
+  expect(error.buildErrors[0].message).toMatch(
+    /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy 7 uses Lucide icons\. Use "delete" \(or "Trash"\)\./
   );
-  expect(iconDynamicCall).toBeUndefined();
 });
 
 // CallAPI endpoint reference validation (validateCallApiRefs) in the JIT path.

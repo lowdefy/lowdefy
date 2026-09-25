@@ -16,81 +16,70 @@
 
 import collectIconNames from './collectIconNames.js';
 
-const aliases = { edit: 'LuPencil', 'external-link': 'LuExternalLink', user: 'LuUser' };
-
-function collect(value) {
-  return collectIconNames({ json: JSON.stringify(value), aliases });
+function collectJson(value) {
+  return [...collectIconNames({ text: JSON.stringify(value) })].sort();
 }
 
-test('collectIconNames finds react-icons names used as string values', () => {
-  const result = collect({ properties: { icon: 'AiOutlineUser', suffixIcon: 'LuPencil' } });
-  expect(result.packageIcons['react-icons/ai']).toEqual(new Set(['AiOutlineUser']));
-  expect(result.packageIcons['react-icons/lu']).toEqual(new Set(['LuPencil']));
+function collectJs(source) {
+  return [...collectIconNames({ text: source })].sort();
+}
+
+test('collectIconNames finds semantic, set and qualified names as whole string values', () => {
+  expect(
+    collectJson({ properties: { icon: 'edit', suffixIcon: 'Pencil', prefixIcon: 'lucide:House' } })
+  ).toEqual(['Pencil', 'edit', 'lucide:House']);
 });
 
-test('collectIconNames finds semantic names used as string values', () => {
-  const result = collect({ properties: { icon: 'edit', title: 'external-link' } });
-  expect(result.aliasNames).toEqual(new Set(['edit', 'external-link']));
+test('collectIconNames skips object keys', () => {
+  expect(collectJson({ user: 1, Pencil: 2 })).toEqual([]);
 });
 
-test('collectIconNames ignores semantic names used as object keys', () => {
-  const result = collect({ user: { name: 'Jane' } });
-  expect(result.aliasNames).toEqual(new Set());
+test('collectIconNames skips values of type keys', () => {
+  expect(
+    collectJson({
+      blocks: [
+        { type: 'Box', properties: { title: 'x y' } },
+        { type: 'Menu' },
+        { type: 'warning' },
+      ],
+    })
+  ).toEqual([]);
 });
 
-test('collectIconNames ignores semantic names inside longer strings', () => {
-  const result = collect({ title: 'edit the user' });
-  expect(result.aliasNames).toEqual(new Set());
+test('collectIconNames still finds names under keys that end in type', () => {
+  expect(collectJson({ blockType: 'Box', subtype: 'Menu' })).toEqual(['Box', 'Menu']);
 });
 
-test('collectIconNames finds double-quoted data-icon values in HTML strings', () => {
-  const result = collect({
-    html: '<i data-icon="LuTrash2"></i> <i data-icon="edit"></i>',
-  });
-  expect(result.packageIcons['react-icons/lu']).toEqual(new Set(['LuTrash2']));
-  expect(result.aliasNames).toEqual(new Set(['edit']));
+test('collectIconNames skips strings that are not a name form', () => {
+  expect(
+    collectJson({ a: 'has space', b: '/favicon.ico', c: 'snake_case', d: 'Pencil2x' })
+  ).toEqual(['Pencil2x']);
 });
 
-test('collectIconNames finds single-quoted data-icon values in HTML strings', () => {
-  const result = collect({ html: "<i data-icon='AiFillHome'></i>" });
-  expect(result.packageIcons['react-icons/ai']).toEqual(new Set(['AiFillHome']));
+test('collectIconNames finds names in operator branches', () => {
+  expect(collectJson({ icon: { _if: { test: true, then: 'Pencil', else: 'delete' } } })).toEqual([
+    'Pencil',
+    'delete',
+  ]);
 });
 
-test('collectIconNames reports data-icon values that are neither aliases nor react-icons names', () => {
-  const result = collect({ html: '<i data-icon="pencil"></i>' });
-  expect(result.unknownDataIcons).toEqual(new Set(['pencil']));
+test('collectIconNames finds single- and double-quoted literals in JS source', () => {
+  const source = "return state.done ? 'check' : \"lucide:Clock\";\nconst block = { type: 'Box' };";
+  expect(collectJs(source)).toEqual(['check', 'lucide:Clock']);
+});
+
+test('collectIconNames finds JS literals inside a JSON string (_js code in page config)', () => {
+  expect(collectJson({ _js: 'return \'edit\' + "Pencil";' })).toEqual(['Pencil', 'edit']);
+});
+
+test('collectIconNames finds data-icon values in HTML strings', () => {
+  expect(
+    collectJson({
+      html: '<i data-icon="edit"></i> <i data-icon=\'Pencil\'></i> <i DATA-ICON = lucide:House></i>',
+    })
+  ).toEqual(['Pencil', 'edit', 'lucide:House']);
 });
 
 test('collectIconNames skips templated data-icon values', () => {
-  const result = collect({ html: '<i data-icon="{{ icon }}"></i>' });
-  expect(result.unknownDataIcons).toEqual(new Set());
-  expect(result.aliasNames).toEqual(new Set());
-});
-
-test('collectIconNames adds IoIos names to both io packages like the string value match', () => {
-  const result = collect({ html: '<i data-icon="IoIosAdd"></i>' });
-  expect(result.packageIcons['react-icons/io']).toEqual(new Set(['IoIosAdd']));
-  expect(result.packageIcons['react-icons/io5']).toEqual(new Set(['IoIosAdd']));
-});
-
-test('collectIconNames finds data-icon written with spaces, capitals or no quotes', () => {
-  const result = collect({
-    html: '<i data-icon = "edit"></i><i DATA-ICON="LuTrash2"></i><i data-icon=user></i>',
-  });
-  expect(result.aliasNames).toEqual(new Set(['edit', 'user']));
-  expect(result.packageIcons['react-icons/lu']).toEqual(new Set(['LuTrash2']));
-});
-
-test('collectIconNames skips a data-icon value with a template suffix', () => {
-  const result = collect({ html: '<i data-icon="edit-{{ n }}"></i>' });
-  expect(result.aliasNames).toEqual(new Set());
-  expect(result.unknownDataIcons).toEqual(new Set());
-});
-
-test('collectIconNames finds data-icon in unescaped JS source text', () => {
-  const result = collectIconNames({
-    json: 'return `<i data-icon="edit"></i>`;',
-    aliases,
-  });
-  expect(result.aliasNames).toEqual(new Set(['edit']));
+  expect(collectJson({ html: '<i data-icon="edit-{{ n }}"></i>' })).toEqual([]);
 });

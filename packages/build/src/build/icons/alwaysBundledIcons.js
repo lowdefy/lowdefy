@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
-import { ConfigWarning } from '@lowdefy/errors';
+// The client renders these itself (spinner, unknown-name fallback, antd
+// message and alert chrome, data-copy buttons), often for content that only
+// arrives at runtime where no scan sees it.
+const alwaysBundledIcons = [
+  'loading',
+  'icon-missing',
+  'success',
+  'info',
+  'warning',
+  'error',
+  'close',
+  'check',
+  'copy',
+];
 
-import findSimilarString from '../../utils/findSimilarString.js';
-
-function createUnknownDataIconWarning({ aliases, name }) {
-  let message = `data-icon="${name}" is not an icon alias or a react-icons name.`;
-  const suggestion = findSimilarString({ input: name, candidates: Object.keys(aliases) });
-  if (suggestion) {
-    message += ` Did you mean "${suggestion}"?`;
-  }
-  return new ConfigWarning(message, { checkSlug: 'icons' });
-}
-
-export default createUnknownDataIconWarning;
+export default alwaysBundledIcons;

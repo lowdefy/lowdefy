@@ -24,7 +24,7 @@ import { z } from 'zod';
 
 const INSTRUCTIONS = `Lowdefy documentation and feedback server for this project. Lowdefy apps are YAML config composing blocks (UI), operators (logic), actions (event handlers), and connections/requests (data).
 
-Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use lowdefy_search_icons and prefer semantic names (icon: edit), never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks, <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, data-confirm="…" on destructive data-event elements; lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
+Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a kind to discover ALL installed blocks/operators/actions/connections/requests — never guess type names. Then lowdefy_get_schema and lowdefy_get_examples for the exact contract of a type, and lowdefy_get_doc / lowdefy_search_docs for concept documentation. Icons: use a semantic name (icon: edit); otherwise use a Lucide name in PascalCase (icon: Receipt) found with lowdefy_search_icons; never invent an icon name, never emoji; in any HTML string use <i data-icon="edit"></i>, data-tooltip="…" and data-popover="…", ClickableHtml with data-event for clicks, <a data-page-id="page" data-url-query="k=v"> for in-app links (never a hard-coded href; data-new-tab, not target), and data-tag="success" / data-status="success" for statuses (never inline-styled pills), <time datetime="…" data-time="relative">, data-format="currency" data-currency="USD" on raw numbers, data-avatar="Name" (never an avatar image service), data-copy, data-truncate="2", data-tone="secondary" (never inline grey colours) and, in ClickableHtml, data-confirm="…" on destructive data-event elements; lowdefy_get_doc concepts/html-attributes lists them all. lowdefy_list_plugins and lowdefy_get_plugin_doc cover this project's local plugin packages.
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
@@ -341,10 +341,15 @@ const devToolDefinitions = {
 
   lowdefy_search_icons: {
     description:
-      'Search icon names before using one — never guess. Returns matching semantic names (edit, delete, warning, … and this app\'s theme.icons.aliases) and react-icons names (Lucide first). Use the result in any icon property (icon: edit) or in HTML as <i data-icon="edit"></i>.',
+      'Search icon names before using one — never invent a name. Returns matching semantic names (edit, delete, warning, … and this app\'s theme.icons.aliases) with their targets, then Lucide names in PascalCase, then qualified names (set:Name) from installed icon set plugins. Use a semantic name when one fits, otherwise a Lucide name, in any icon property (icon: edit, icon: Receipt) or in HTML as <i data-icon="edit"></i>.',
     inputSchema: {
       query: z.string().describe('What the icon shows, e.g. "trash" or "arrow right".'),
-      limit: z.number().int().positive().optional().describe('Max react-icons names. Default 30.'),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe('Max icon names (after semantic names). Default 30.'),
     },
   },
 

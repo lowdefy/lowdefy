@@ -10,12 +10,12 @@ menus:
         pageId: home
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: products
         type: MenuGroup
         properties:
           title: Products
-          icon: AiOutlineShop
+          icon: Store
         links:
           - id: all-products
             type: MenuLink
@@ -46,7 +46,7 @@ menus:
         type: MenuGroup
         properties:
           title: Services
-          icon: AiOutlineTool
+          icon: Wrench
         links:
           - id: consulting
             type: MenuLink
@@ -63,13 +63,13 @@ menus:
         pageId: about
         properties:
           title: About
-          icon: AiOutlineInfo
+          icon: info
       - id: contact
         type: MenuLink
         pageId: contact
         properties:
           title: Contact
-          icon: AiOutlineMail
+          icon: mail
   - id: footer
     links:
       - id: privacy

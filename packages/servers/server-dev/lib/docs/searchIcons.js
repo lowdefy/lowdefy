@@ -14,48 +14,42 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import { createRequire } from 'node:module';
-import path from 'node:path';
 import { type } from '@lowdefy/helpers';
-import { defaultIconAliases, iconPackages } from '@lowdefy/build/dev';
+import { defaultIconAliases, getLucideIconNames, loadIconSets } from '@lowdefy/build/dev';
 
 import readBuildArtifact from './readBuildArtifact.js';
 
-const require = createRequire(import.meta.url);
-
 const DEFAULT_LIMIT = 30;
 
-// Lucide is the pack the built-in semantic names use, so its names rank first
-// among react-icons results and an app stays in one visual style.
-const PREFERRED_PACKAGE = 'react-icons/lu';
+let setNamesCache = { key: null, names: [] };
 
-const declarationRegex = /export declare const (\w+)/g;
-
-let iconNamesCache = null;
-
-// Names come from each pack's type declarations: requiring the packs would load
-// tens of megabytes of icon code into the dev server. Only the packs Lowdefy
-// can bundle (iconPackages) are listed; io and io5 share IoIos names.
-function getIconNames() {
-  if (iconNamesCache !== null) {
-    return iconNamesCache;
+// Installed icon sets are read through the loader the build uses, so search
+// and the build agree. Icons a plugin adds to "lucide" are listed unqualified,
+// like Lucide's own; every other set's names are listed qualified, which
+// always resolve. Cached until the plugin list in the build changes.
+async function getSetNames() {
+  const iconSets = readBuildArtifact({ name: 'customTypesMap.json' })?.iconSets ?? {};
+  const key = JSON.stringify(iconSets);
+  if (setNamesCache.key === key) {
+    return setNamesCache.names;
   }
-  const packages = [
-    PREFERRED_PACKAGE,
-    ...Object.keys(iconPackages).filter((iconPackage) => iconPackage !== PREFERRED_PACKAGE),
-  ];
-  const names = new Set();
-  packages.forEach((iconPackage) => {
-    const packageDir = path.dirname(require.resolve(iconPackage));
-    const declarations = fs.readFileSync(path.join(packageDir, 'index.d.ts'), 'utf8');
-    [...declarations.matchAll(declarationRegex)]
-      .map((match) => match[1])
-      .sort()
-      .forEach((name) => names.add(name));
+  const sets = await loadIconSets({
+    context: { directories: { server: process.cwd() }, typesMap: { iconSets } },
   });
-  iconNamesCache = [...names];
-  return iconNamesCache;
+  const lucideNames = new Set(Object.values(getLucideIconNames()).flat());
+  const names = [];
+  Object.entries(sets).forEach(([setId, layers]) => {
+    const setNames = new Set(layers.flatMap((layer) => [...layer.names]));
+    [...setNames].sort().forEach((name) => {
+      if (setId !== 'lucide') {
+        names.push(`${setId}:${name}`);
+      } else if (!lucideNames.has(name)) {
+        names.push(name);
+      }
+    });
+  });
+  setNamesCache = { key, names };
+  return names;
 }
 
 function matchesWords(text, words) {
@@ -63,7 +57,7 @@ function matchesWords(text, words) {
   return words.every((word) => lowerText.includes(word));
 }
 
-function searchIcons({ query, limit = DEFAULT_LIMIT }) {
+async function searchIcons({ query, limit = DEFAULT_LIMIT }) {
   if (!type.isString(query) || query.trim() === '') {
     throw new Error('searchIcons requires a "query" string.');
   }
@@ -71,22 +65,25 @@ function searchIcons({ query, limit = DEFAULT_LIMIT }) {
     .trim()
     .toLowerCase()
     .split(/[\s-]+/);
-  // The dev build writes every alias (built-in and theme.icons.aliases) here.
-  // Before the first build only the built-in names are known.
-  const aliases = readBuildArtifact({ name: 'iconAliases.json' }) ?? defaultIconAliases;
+  // The dev build writes the full semantic map (built-in, the default icon
+  // set's and theme.icons.aliases). Before the first build only the built-in
+  // names are known.
+  const semantic = readBuildArtifact({ name: 'iconAliases.json' }) ?? defaultIconAliases;
 
-  const aliasResults = Object.entries(aliases)
+  const semanticResults = Object.entries(semantic)
     .filter(([name, icon]) => matchesWords(`${name} ${icon}`, words))
     .map(([name, icon]) => ({ name, icon }));
-  const iconResults = getIconNames()
+  // Canonical Lucide names rank before alias names (Home is an alias of House).
+  const { canonical, aliases } = getLucideIconNames();
+  const iconResults = [...canonical, ...aliases, ...(await getSetNames())]
     .filter((name) => matchesWords(name, words))
     .slice(0, limit);
 
   return {
-    aliases: aliasResults,
+    semantic: semanticResults,
     icons: iconResults,
     usage:
-      'Prefer a semantic name from "aliases" (icon: edit, or <i data-icon="edit"></i> in HTML). Use a react-icons name from "icons" only when no semantic name fits, and prefer Lu (Lucide) names so the app keeps one style. Add app-specific semantic names under theme.icons.aliases in lowdefy.yaml.',
+      'Use a semantic name from "semantic" (icon: edit, or <i data-icon="edit"></i> in HTML). Otherwise use a Lucide name from "icons" in PascalCase (icon: Receipt). Never invent a name. Qualified names (set:Name) come from installed icon set plugins. Add app-specific semantic names under theme.icons.aliases in lowdefy.yaml.',
   };
 }
 

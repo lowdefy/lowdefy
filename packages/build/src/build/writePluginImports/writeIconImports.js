@@ -14,38 +14,45 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
+import { type } from '@lowdefy/helpers';
 
-import getIconAliases from '../buildImports/getIconAliases.js';
+import loadIconData from '../icons/loadIconData.js';
 
-const template = `{%- for package in packages -%}
-{% if package.icons.length %}import { {% for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
-{% endif -%}{% endfor %}{% endif %}{% endfor -%}
-export default {
-  {%- for package in packages -%}
-  {%- for icon in package.icons %}
-  {{ icon }},{% endfor %}
-{%- endfor %}
-  {%- for alias in aliases %}
-  '{{ alias.name }}': {{ alias.icon }},{% endfor %}
-};`;
+const optionalFields = ['size', 'width', 'height', 'attrs'];
+
+// plugins/icons.js is data: { name: IconData }. A semantic name and the set
+// name it points at (and Lucide alias names) share one node array, which is
+// written once as a constant.
+function generateIconsModule({ iconData }) {
+  const nodeConstants = new Map();
+  const entries = Object.keys(iconData)
+    .sort()
+    .map((name) => {
+      const data = iconData[name];
+      const nodeJson = JSON.stringify(data.node);
+      if (!nodeConstants.has(nodeJson)) {
+        nodeConstants.set(nodeJson, `n${nodeConstants.size}`);
+      }
+      const fields = [`node: ${nodeConstants.get(nodeJson)}`];
+      optionalFields.forEach((field) => {
+        if (!type.isUndefined(data[field])) {
+          fields.push(`${field}: ${JSON.stringify(data[field])}`);
+        }
+      });
+      return `  ${JSON.stringify(name)}: { ${fields.join(', ')} },`;
+    });
+  const constants = [...nodeConstants.entries()].map(
+    ([nodeJson, constant]) => `const ${constant} = ${nodeJson};`
+  );
+  return [...constants, 'export default {', ...entries, '};', ''].join('\n');
+}
 
 async function writeIconImports({ components, context }) {
-  const templateFn = nunjucksFunction(template);
-  const aliases = Object.entries(components.imports.iconAliases).map(([name, icon]) => ({
-    icon,
-    name,
-  }));
-  await context.writeBuildArtifact(
-    'plugins/icons.js',
-    templateFn({ aliases, packages: components.imports.icons })
-  );
-  // The full alias map, used or not: dev JIT resolves semantic names on pages
-  // from it, and the dev docs server's icon search lists it.
-  await context.writeBuildArtifact(
-    'iconAliases.json',
-    JSON.stringify(getIconAliases({ components }))
-  );
+  const iconData = await loadIconData({ names: components.imports.icons, icons: context.icons });
+  await context.writeBuildArtifact('plugins/icons.js', generateIconsModule({ iconData }));
+  // The full semantic map (built-in, the default set's, and theme.icons.aliases),
+  // used or not: the dev docs server's icon search lists it.
+  await context.writeBuildArtifact('iconAliases.json', JSON.stringify(context.icons.semantic));
 }
 
 export default writeIconImports;

@@ -14,10 +14,13 @@
   limitations under the License.
 */
 
-async function writeIconsDynamic({ newIconData, context }) {
-  Object.assign(context.dynamicIconData, newIconData);
-  const content = `export default ${JSON.stringify(context.dynamicIconData)};\n`;
-  await context.writeBuildArtifact('plugins/iconsDynamic.js', content);
-}
+// Size is font-relative, not Lucide's 24: icons sit inside text, buttons and
+// menus, and antd's .anticon spacing assumes that.
+const iconThemeDefaults = {
+  set: 'lucide',
+  size: '1em',
+  strokeWidth: 2,
+  nonScalingStroke: false,
+};
 
-export default writeIconsDynamic;
+export default iconThemeDefaults;

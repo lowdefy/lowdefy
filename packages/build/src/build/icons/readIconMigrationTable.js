@@ -14,9 +14,20 @@
   limitations under the License.
 */
 
-// The icons data-copy buttons render. They are always bundled, because HTML
-// with data-copy can arrive at runtime (from state or a request) where no scan
-// sees it, and a copy button without its icon would be empty.
-const HTML_ICON_ALIASES = ['check', 'copy'];
+import { createRequire } from 'node:module';
 
-export default HTML_ICON_ALIASES;
+const require = createRequire(import.meta.url);
+
+let tableCache = null;
+
+// The react-icons to Lucide table `lowdefy upgrade` applies. The build reads
+// the same file for its migration suggestions, so there is one source. Read
+// only when an old name fails to resolve.
+function readIconMigrationTable() {
+  if (tableCache === null) {
+    tableCache = require('@lowdefy/codemods/v7-0-0/react-icons-to-lucide.json');
+  }
+  return tableCache;
+}
+
+export default readIconMigrationTable;
