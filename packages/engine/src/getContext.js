@@ -15,6 +15,7 @@
 */
 
 import { LowdefyInternalError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
@@ -141,7 +142,7 @@ function getContext({
     slots: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  _internal.RootSlots.init();
+  _internal.RootSlots.init(serializer.copy(ctx.state));
   // update({ changes }) is a dependency-tracked pass; a bare update() is a full pass.
   _internal.update = (options) => {
     _internal.RootSlots.update(options);
