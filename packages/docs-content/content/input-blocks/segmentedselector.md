@@ -732,7 +732,7 @@ Segmented control for switching between options.
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
 | `options.$.icon` | string | - | Name of a React-Icon (See [all icons](https://react-icons.github.io/react-icons/)) to display in the segment option. |
 | `shape` | string | `"default"` | Shape of the segmented control. Enum: `default`, `round`. |
-| `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
+| `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `vertical` | boolean | `false` | Display the segmented control vertically. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |

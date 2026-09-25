@@ -28,7 +28,7 @@ Discovery, for every reader: <app>/.lowdefy/instance.json
 
 ### `.lowdefy/instance.json`
 
-The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `/api/ping`), `port`, `internalPort`, `url`, `version` and `startedAt`. It is written with mode `0600` and removed on exit.
+The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `<basePath>/api/ping`), `port`, `internalPort`, `url`, `version` and `startedAt`. `url` is the app's base URL, `http://localhost:<port><basePath>`: the dev server mounts every route under `config.basePath` (the app, `/api/*`, `/lowdefy-docs/*`), so readers append paths to `url` and never rebuild it from `port`. `startServer` rewrites it on every child start, because a config change can edit `basePath`. It is written with mode `0600` and removed on exit.
 
 `readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
 

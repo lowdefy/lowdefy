@@ -20,6 +20,7 @@ import buildPage from '../buildPages/buildPage.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createPageRegistry from './createPageRegistry.js';
+import validatePageReferences from '../buildPages/validatePageReferences.js';
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 function buildShallowPages({ components, context }) {
@@ -40,9 +41,16 @@ function buildShallowPages({ components, context }) {
     checkDuplicatePageId({ id: page.id, configKey: page['~k'] });
   }
 
-  // Build sourceless pages (e.g., default 404) — no YAML to JIT-resolve from.
+  // Build sourceless pages: pages written inline in lowdefy.yaml and default
+  // pages such as the 404. They have no source file to JIT-resolve from, so
+  // this is their only build - and so the only place their link, CallAPI,
+  // websocket and state references can be checked.
   context.linkActionRefs = [];
-  const sourcelessPageArtifacts = [];
+  context.callApiActionRefs = [];
+  context.websocketActionRefs = [];
+  context.dynamicBlockRefs = [];
+  context.orgClientActionRefs = [];
+  const sourcelessPages = [];
 
   (components.pages ?? []).forEach((page, index) => {
     const entry = pageRegistry.get(page.id);
@@ -50,7 +58,17 @@ function buildShallowPages({ components, context }) {
     if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
 
     buildPage({ page, index, context });
+    sourcelessPages.push(page);
+  });
 
+  validatePageReferences({
+    components,
+    pages: sourcelessPages,
+    pageIds: [...pageRegistry.keys()],
+    context,
+  });
+
+  const sourcelessPageArtifacts = sourcelessPages.map((page) => {
     const pageRequests = [...(page.requests ?? [])];
     delete page.requests;
     const cleanPage = jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
@@ -61,19 +79,19 @@ function buildShallowPages({ components, context }) {
     });
     const builtPage = { ...cleanPage, requests: cleanRequests };
 
-    sourcelessPageArtifacts.push({
+    // Strip content for subsequent skeleton steps
+    for (const key of PAGE_CONTENT_KEYS) {
+      delete page[key];
+    }
+
+    return {
       pageId: builtPage.pageId,
       pageJson: serializer.serializeToString(builtPage),
       requests: (builtPage.requests ?? []).map((req) => ({
         requestId: req.requestId,
         requestJson: serializer.serializeToString(req),
       })),
-    });
-
-    // Strip content for subsequent skeleton steps
-    for (const key of PAGE_CONTENT_KEYS) {
-      delete page[key];
-    }
+    };
   });
 
   return { pageRegistry, sourcelessPageArtifacts };

@@ -716,6 +716,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `disabled` | boolean | `false` | Disable the button if true. |
 | `ghost` | boolean | `false` | Make the button's background transparent when true. |
 | `hideTitle` | boolean | `false` | Hide the button's title. |
+| `tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `href` | string | - | The URL to redirect to when the button is clicked. Useful when used with a type link button. |
 | `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use icon in button. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |

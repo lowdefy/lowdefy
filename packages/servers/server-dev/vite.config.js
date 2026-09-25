@@ -20,6 +20,8 @@ import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
 import { WebSocketServer } from 'ws';
 
+import createDevServerExclude from './lib/vite/createDevServerExclude.js';
+
 // basePath from the Lowdefy build — assets and routes are served under it.
 let basePath = '';
 try {
@@ -65,16 +67,7 @@ export default defineConfig(({ mode }) => ({
     lowdefyWebSocket(),
     devServer({
       entry: './src/app.js',
-      // Vite serves these itself; everything else routes to the Hono app.
-      exclude: [
-        /^\/client\/.+/,
-        /^\/lib\/.+/,
-        /^\/build\/.+/,
-        /^\/@.+$/,
-        /^\/node_modules\/.*/,
-        /\?t=\d+$/,
-        /^\/favicon\.ico$/,
-      ],
+      exclude: createDevServerExclude({ basePath }),
     }),
   ],
   define: {

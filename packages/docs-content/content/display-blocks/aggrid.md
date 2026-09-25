@@ -1320,7 +1320,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.sortable` | boolean | `false` | Set to true to allow sorting on this column. |
 | `columnDefs.$.resizable` | boolean | `false` | Set to true to allow this column should be resized. |
 | `columnDefs.$.width` | number | - | Initial width in pixels for the cell. |
-| `columnDefs.$.cellStyle` | number | - | An object of css values returning an object of css values for a particular cell. |
+| `columnDefs.$.cellStyle` | object | - | An object of css values returning an object of css values for a particular cell. |
 | `columnDefs.$.cellRenderer` | object | - | Provide your own cell Renderer function (using the `_function` operator) for this column's cells. |
 | `columnDefs.$.valueFormatter` | object \| string | - | A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering. |
 | `columnDefs.$.tooltipField` | string | - | The field of the row object to read the tooltip value from. When set, hovering a cell shows a tooltip with that value using the grid's default tooltip component. |
@@ -1384,6 +1384,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.danger` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.ghost` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.hideTitle` | boolean | `false` | Hide the button's title (icon-only). |
+| `columnDefs.$.cell.buttons.$.tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `columnDefs.$.cell.buttons.$.disabled` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.buttons.$.hidden` | boolean | `false` | Hide the button entirely. |
