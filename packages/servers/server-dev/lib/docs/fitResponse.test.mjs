@@ -75,3 +75,12 @@ test('fitResponse writes a small response to a file when saveResponse is set', (
   expect(fitted.note).toBe('The full response was written to responseFile.');
   expect(JSON.parse(fs.readFileSync(fitted.responseFile, 'utf8'))).toEqual({ total: 3 });
 });
+
+test('fitResponse writes a missing response as null when saveResponse is set', () => {
+  const result = { status: 'success' };
+
+  const fitted = fitResponse({ result, name: 'home.update_row', saveResponse: true });
+
+  expect(fitted.responseChars).toBe(4);
+  expect(JSON.parse(fs.readFileSync(fitted.responseFile, 'utf8'))).toBeNull();
+});
