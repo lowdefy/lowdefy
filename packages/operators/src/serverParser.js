@@ -17,6 +17,9 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import findOperatorInData from './findOperatorInData.js';
+import isLiteralPassThrough from './isLiteralPassThrough.js';
+
 class ServerParser {
   constructor({ env, i18n, jsMap, lowdefyApp, operators, secrets, user }) {
     this.env = env;
@@ -34,6 +37,7 @@ class ServerParser {
     arrayIndices = [],
     input,
     items,
+    literalData = false,
     location,
     operatorPrefix = '_',
     payload,
@@ -54,7 +58,16 @@ class ServerParser {
     // means they only pass what they change, so no frame field can be dropped on the way in.
     const parser = {
       parse: (callOptions) =>
-        this.parse({ arrayIndices, items, location, payload, state, steps, ...callOptions }),
+        this.parse({
+          arrayIndices,
+          items,
+          literalData,
+          location,
+          payload,
+          state,
+          steps,
+          ...callOptions,
+        }),
     };
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
@@ -89,6 +102,20 @@ class ServerParser {
           steps,
           user: this.user,
         });
+        // Under literalData the output is sent to a client that evaluates every
+        // operator-shaped object, so no operator result may carry one unless
+        // the operator only passes through params the reviver already checked.
+        if (literalData && !isLiteralPassThrough({ op, methodName })) {
+          const found = findOperatorInData(res);
+          if (found) {
+            const operatorName = methodName ? `${op}.${methodName}` : op;
+            throw new ConfigError(
+              `Data returned by "${operatorName}" contains the operator "${found.operator}"${
+                found.path ? ` at "${found.path}"` : ''
+              }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
+            );
+          }
+        }
         return res;
       } catch (e) {
         if (e instanceof ConfigError) {
