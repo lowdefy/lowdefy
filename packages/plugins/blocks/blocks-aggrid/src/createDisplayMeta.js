@@ -439,7 +439,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                         },
                         icon: {
                           type: ['string', 'object'],
-                          description: 'Name of a React-Icon or Icon block config.',
+                          description:
+                            'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config.',
                           docs: { displayType: 'icon' },
                         },
                         iconField: {
@@ -525,7 +526,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                         },
                         icon: {
                           type: ['string', 'object'],
-                          description: 'Name of a React-Icon or Icon block config.',
+                          description:
+                            'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config.',
                           docs: { displayType: 'icon' },
                         },
                         iconField: {
@@ -558,7 +560,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                     type: ['string', 'object'],
                     default: 'AiOutlineMore',
                     description:
-                      'Menu cell: the trigger icon. Name of a React-Icon or Icon block config. The trigger is icon-only.',
+                      'Menu cell: the trigger icon. Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config. The trigger is icon-only.',
                     docs: { displayType: 'icon' },
                   },
                   placement: {
@@ -653,13 +655,13 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   checkedIcon: {
                     type: ['string', 'object'],
                     description:
-                      'Switch: icon shown when on (React-Icon name or Icon block config).',
+                      'Switch: icon shown when on (icon name like edit or LuPencil, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   uncheckedIcon: {
                     type: ['string', 'object'],
                     description:
-                      'Switch: icon shown when off (React-Icon name or Icon block config).',
+                      'Switch: icon shown when off (icon name like edit or LuPencil, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   inputType: {

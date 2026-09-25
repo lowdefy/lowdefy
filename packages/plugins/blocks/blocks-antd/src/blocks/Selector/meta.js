@@ -75,7 +75,7 @@ export default {
         ...icon,
         default: 'AiOutlineCloseCircle',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
       },
       label,
       disabled,
@@ -205,7 +205,7 @@ export default {
         ...icon,
         default: 'AiOutlineDown',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at the drop-down position of the selector.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at the drop-down position of the selector.",
       },
       title: inputTitle,
       variant: {

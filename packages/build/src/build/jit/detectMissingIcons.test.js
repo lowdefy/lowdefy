@@ -33,7 +33,7 @@ test('detectMissingIcons returns empty array when all icons are already imported
     { icons: [], package: 'react-icons/io5' },
   ];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   expect(result).toEqual([]);
 });
 
@@ -54,7 +54,7 @@ test('detectMissingIcons detects icon not in current imports', () => {
     { icons: [], package: 'react-icons/io5' },
   ];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
 });
 
@@ -81,7 +81,7 @@ test('detectMissingIcons detects multiple icons across packages', () => {
     { icons: [], package: 'react-icons/md' },
   ];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
   expect(result).toContainEqual({ icon: 'MdDelete', package: 'react-icons/md' });
   expect(result).toContainEqual({ icon: 'AiFillWarning', package: 'react-icons/ai' });
@@ -101,7 +101,7 @@ test('detectMissingIcons returns empty array when page has no icon references', 
   };
   const iconImports = [{ icons: [], package: 'react-icons/ai' }];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   expect(result).toEqual([]);
 });
 
@@ -129,7 +129,7 @@ test('detectMissingIcons detects icon in nested block property', () => {
   };
   const iconImports = [{ icons: [], package: 'react-icons/fa' }];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   expect(result).toEqual([{ icon: 'FaRocket', package: 'react-icons/fa' }]);
 });
 
@@ -146,7 +146,7 @@ test('detectMissingIcons detects icons when iconImports is empty', () => {
     ],
   };
 
-  const result = detectMissingIcons({ page, iconImports: [] });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports: [] });
   expect(result).toContainEqual({ icon: 'IoAddCircle', package: 'react-icons/io5' });
 });
 
@@ -169,7 +169,54 @@ test('detectMissingIcons does not return duplicate icons when same icon appears 
   };
   const iconImports = [{ icons: [], package: 'react-icons/io5' }];
 
-  const result = detectMissingIcons({ page, iconImports });
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports });
   const io5Icons = result.filter((r) => r.icon === 'IoAddCircle');
   expect(io5Icons).toHaveLength(1);
+});
+
+test('detectMissingIcons detects react-icons names in data-icon attributes', () => {
+  const page = {
+    id: 'home',
+    type: 'Box',
+    blocks: [{ id: 'html', type: 'Html', properties: { html: '<i data-icon="LuTrash2"></i>' } }],
+  };
+  const { missingIcons: result } = detectMissingIcons({ page, iconImports: [] });
+  expect(result).toEqual([{ icon: 'LuTrash2', package: 'react-icons/lu' }]);
+});
+
+test('detectMissingIcons resolves semantic names through the alias map', () => {
+  const page = {
+    id: 'home',
+    type: 'Box',
+    blocks: [
+      { id: 'html', type: 'Html', properties: { html: '<i data-icon="edit"></i>', icon: 'edit' } },
+    ],
+  };
+  const { missingIcons: result } = detectMissingIcons({
+    page,
+    iconImports: [],
+    iconAliases: { edit: 'LuPencil' },
+  });
+  expect(result).toEqual([{ alias: 'edit', icon: 'LuPencil', package: 'react-icons/lu' }]);
+});
+
+test('detectMissingIcons skips semantic names already extracted this session', () => {
+  const page = { id: 'home', type: 'Box', blocks: [{ properties: { icon: 'edit' } }] };
+  const { missingIcons: result } = detectMissingIcons({
+    page,
+    iconImports: [],
+    iconAliases: { edit: 'LuPencil' },
+    dynamicIconData: { edit: { tag: 'svg' } },
+  });
+  expect(result).toEqual([]);
+});
+
+test('detectMissingIcons reports unknown data-icon names', () => {
+  const page = {
+    id: 'home',
+    type: 'Box',
+    blocks: [{ properties: { html: '<i data-icon="pencil"></i>' } }],
+  };
+  const { unknownDataIcons } = detectMissingIcons({ page, iconImports: [], iconAliases: {} });
+  expect(unknownDataIcons).toEqual(new Set(['pencil']));
 });

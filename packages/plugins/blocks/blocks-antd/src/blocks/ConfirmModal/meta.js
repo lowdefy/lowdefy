@@ -60,7 +60,7 @@ export default {
       icon: {
         type: ['string', 'object'],
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize modal icon.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize modal icon.",
         docs: {
           displayType: 'icon',
         },
@@ -78,11 +78,13 @@ export default {
       },
       okText: {
         type: 'string',
-        description: 'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       cancelText: {
         type: 'string',
-        description: 'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       okButton: {
         type: 'object',

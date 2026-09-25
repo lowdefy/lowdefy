@@ -705,7 +705,7 @@ Month picker for selecting year and month.
 | `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

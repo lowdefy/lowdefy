@@ -1114,7 +1114,7 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
 | `centered` | boolean | `false` | Centered Modal. |
 | `closable` | boolean | `false` | Whether a close (x) button is visible on top right of the confirm dialog or not. |
 | `content` | string | - | Modal content. Overridden by the "content" content area - supports html. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize modal icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize modal icon. |
 | `mask` | boolean | `true` | Whether show mask or not. |
 | `maskClosable` | boolean | `false` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |

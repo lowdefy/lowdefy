@@ -940,7 +940,7 @@ Result page with status icon, title, and extra actions.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to use as result image. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to use as result image. |
 | `status` | string | `"info"` | Status of the result. Determines image and color. Enum: `success`, `error`, `info`, `warning`, `404`, `403`, `500`. |
 | `subTitle` | string | - | Result subtitle or secondary text - supports html. |
 | `title` | string | - | Result title or primary text - supports html. |

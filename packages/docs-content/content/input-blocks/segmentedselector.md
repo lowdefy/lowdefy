@@ -730,7 +730,7 @@ Segmented control for switching between options.
 | `options.$.label` | string | - | Value label shown to user - supports html. |
 | `options.$.value` | string \| number \| boolean \| object \| array | - | Value selected. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
-| `options.$.icon` | string | - | Name of a React-Icon (See [all icons](https://react-icons.github.io/react-icons/)) to display in the segment option. |
+| `options.$.icon` | string | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See [all icons](https://react-icons.github.io/react-icons/)) to display in the segment option. |
 | `shape` | string | `"default"` | Shape of the segmented control. Enum: `default`, `round`. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `vertical` | boolean | `false` | Display the segmented control vertically. |

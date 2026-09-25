@@ -1298,7 +1298,7 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `bordered` | boolean | `true` | Toggles rendering of the border around the collapse block. |
 | `defaultActiveKey` | string \| array | - | Initial active panel key, or a list of keys, if activeKey is not set. |
 | `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. Maps to antd's `destroyOnHidden`. |
-| `expandIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block for expand icon on the right of selector. |
+| `expandIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block for expand icon on the right of selector. |
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
 | `forceRender` | boolean | `"false"` | Force render for all panels. |
 | `panels` | array | - |  |

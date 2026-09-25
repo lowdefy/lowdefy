@@ -49,6 +49,7 @@ import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
+import searchIcons from './searchIcons.js';
 import waitForBuild from './waitForBuild.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
@@ -305,6 +306,10 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
   });
 
   registerDevTool('lowdefy_search_docs', ({ query }) => textResult(searchDocs({ query })));
+
+  registerDevTool('lowdefy_search_icons', ({ query, limit }) =>
+    textResult(searchIcons({ query, limit }))
+  );
 
   registerDevTool('lowdefy_get_plugin_doc', ({ package: packageName }) => {
     const doc = getPluginDoc({ packageName });

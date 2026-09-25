@@ -313,7 +313,7 @@ Hyperlink anchor for navigation.
 | `input` | object | - | When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. |
 | `urlQuery` | object | - | When the link is clicked, pass data as a url query to the next page. |
 | `disabled` | boolean | `false` | Disable the anchor if true. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block for anchor icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block for anchor icon. |
 | `pageId` | string | - | When the link is clicked, route to the provided Lowdefy page. |
 | `href` | string | - | The href to link to when the anchor link is clicked. |
 | `url` | string | - | External url to link to when the anchor link is clicked. |

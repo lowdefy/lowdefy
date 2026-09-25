@@ -120,7 +120,7 @@ export default {
                 icon: {
                   type: 'string',
                   description:
-                    'Name of a React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) to display in the segment option.',
+                    'Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) to display in the segment option.',
                   docs: {
                     displayType: 'icon',
                   },

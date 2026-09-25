@@ -618,7 +618,7 @@ Week picker for selecting a week of the year.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at the right-hand side of the date picker. |
+| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at the right-hand side of the date picker. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |
 | `theme.cellHeight` | number | `24` | Height of a calendar cell. |

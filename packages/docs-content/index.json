@@ -188,6 +188,12 @@
       "path": "content/concepts/theming.md"
     },
     {
+      "slug": "concepts/html-attributes",
+      "title": "HTML attributes",
+      "section": "Concepts",
+      "path": "content/concepts/html-attributes.md"
+    },
+    {
       "slug": "concepts/cli",
       "title": "The CLI",
       "section": "Concepts",

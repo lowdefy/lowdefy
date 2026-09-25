@@ -1067,7 +1067,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `links.$.class` | string \| array \| object | - | CSS classes for the menu item (including Tailwind utilities). Flat string/array applies to the item wrapper. Use an object with dot-prefixed slot keys (`.element`, `.icon`, `.label`, `.popup` — popup only on MenuGroup) to target specific parts. |
 | `links.$.properties` | object | - | properties from menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style (MenuLink only). Switches the item onto the `dangerItem*` token set — theme via `properties.theme.dangerItemColor` etc. |
 | `links.$.properties.disabled` | boolean | `false` | Disable the menu item (blocks clicks and applies a greyed style). |
 | `links.$.properties.tooltip` | string | - | Tooltip text shown on hover when the menu is collapsed. Maps to antd item `title`. |

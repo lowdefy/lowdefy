@@ -921,7 +921,7 @@ Upload failed. Please try again.
 | --- | --- | --- | --- |
 | `content` | string | - | The content of the message - supports html. |
 | `duration` | number | `4.5` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize message icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize message icon. |
 | `status` | string | `"info"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design message tokens](https://ant.design/components/message#design-token). |
 | `theme.zIndexPopup` | number | `1080` | Z-index of the message popup. |

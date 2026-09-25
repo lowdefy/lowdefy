@@ -237,3 +237,31 @@
           border: 1px solid var(--ant-color-border)
       properties:
         html: '<h4 style="margin: 0 0 8px 0;">Elevated Block</h4><p style="margin: 0;">Uses bg-elevated token for a surface that adapts to light and dark mode.</p>'
+
+- title: Icons, tooltips and popovers
+  blocks:
+    - id: html_icons
+      type: Html
+      properties:
+        html: '<p><i data-icon="success" style="color: var(--ant-color-success)"></i> Saved <span data-tooltip="Saved to the cloud 2 minutes ago" style="text-decoration: underline dotted">just now</span></p><p><i data-icon="warning" style="color: var(--ant-color-warning)"></i> 3 fields need attention. <span data-popover="fields" style="color: var(--ant-color-primary); cursor: pointer">Which? <i data-icon="chevron-down"></i></span></p><div data-popover-content="fields" hidden><ul style="margin: 0; padding-left: 16px"><li>Email</li><li>Phone</li><li>Address</li></ul></div>'
+
+- title: Links and status tags
+  blocks:
+    - id: html_links_tags
+      type: Html
+      properties:
+        html: '<p><a data-page-id="Button">Button</a> moved to <span data-tag="success">Released</span> · <a data-page-id="theming" data-url-query="section=icons">Theming</a> is <span data-tag="warning">In review</span> · <a href="https://ant.design" data-new-tab>Ant Design</a> <i data-icon="external-link"></i></p><p><span data-status="success">Online</span> &nbsp; <span data-status="processing">Syncing</span> &nbsp; <span data-status="error">Offline</span></p><p><span data-tag>Design</span> <span data-tag>Engineering</span> <span data-tag>Support</span> <span data-tag="purple">Beta</span> <span data-tag="#0f766e">Custom colour</span></p>'
+
+- title: Dates, numbers, avatars and copy
+  blocks:
+    - id: html_time_format
+      type: Html
+      properties:
+        html: '<p><span data-avatar="Jane Doe"></span> Jane Doe updated the invoice <time datetime="2026-01-05T09:30:00Z" data-time="relative"></time> (<time datetime="2026-01-05T09:30:00Z" data-time="D MMM YYYY"></time>) · <span data-format="currency" data-currency="USD">1234.5</span> · <span data-format="percent" data-decimals="1">0.123</span> of target · <span data-format="bytes">1536000</span> attached</p><p>Invoice number <code data-copy>INV-2026-0042</code> · owner <img data-avatar="Sam Smith" src="" style="--lf-avatar-size: 32px"></p>'
+
+- title: Truncation and text tone
+  blocks:
+    - id: html_truncate_tone
+      type: Html
+      properties:
+        html: '<div style="max-width: 320px"><div data-truncate><b>Quarterly report for the northern region, including every branch and its targets</b></div><div data-truncate="2" data-tone="secondary">The report covers revenue, costs and headcount for each branch, compares them with the same quarter last year, and lists the actions each branch manager agreed for the next quarter.</div><div><span data-tone="tertiary">Updated 3 days ago</span> · <span data-tone="success">On track</span> · <span data-tone="quaternary">—</span></div></div>'

@@ -3398,6 +3398,43 @@ export default {
           description:
             'Dark mode behavior. "system" follows OS preference (default), "light" forces light mode, "dark" forces dark mode.',
         },
+        icons: {
+          type: 'object',
+          additionalProperties: false,
+          description:
+            'Icon names for the app. Built-in semantic names like "edit" and "delete" map to Lucide icons; aliases override or extend them.',
+          properties: {
+            aliases: {
+              type: 'object',
+              description:
+                'Semantic icon names (lowercase kebab-case) mapped to react-icons names, e.g. invoice: LuReceipt. Overrides a built-in name of the same key.',
+              additionalProperties: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "theme.icons.aliases" should be an object.',
+                additionalProperties:
+                  'App "theme.icons.aliases" values should be react-icons names, like "LuPencil".',
+              },
+            },
+            include: {
+              type: 'array',
+              description:
+                'Icon names (semantic or react-icons) to bundle even though no config string names them, e.g. names that come from state or requests.',
+              items: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "theme.icons.include" should be an array of icon names.',
+              },
+            },
+          },
+          errorMessage: {
+            type: 'App "theme.icons" should be an object.',
+            additionalProperties:
+              'App "theme.icons" contains an unknown property. The known properties are "aliases" and "include".',
+          },
+        },
       },
       errorMessage: {
         type: 'App "theme" should be an object.',

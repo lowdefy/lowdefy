@@ -33,6 +33,7 @@ import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildApi from './build/buildApi/buildApi.js';
+import validateApiHtmlLinks from './build/buildApi/validateApiHtmlLinks.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/full/buildJs.js';
 import buildLogger from './build/buildLogger.js';
@@ -178,6 +179,7 @@ async function build(options) {
       context,
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
+    tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
     // buildJs — jsMapParser replaces _js source with hashes, and class

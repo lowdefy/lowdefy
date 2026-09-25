@@ -3,6 +3,65 @@
 Display icons from the React Icons library.
 
 ```yaml
+- id: semantic_add
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: add
+    size: 24
+- id: semantic_edit
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: edit
+    size: 24
+- id: semantic_delete
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: delete
+    size: 24
+- id: semantic_search
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: search
+    size: 24
+- id: semantic_settings
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: settings
+    size: 24
+- id: semantic_warning
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: warning
+    size: 24
+- id: semantic_info
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: info
+    size: 24
+- id: semantic_success
+  type: Icon
+  layout:
+    flex: 0 0 auto
+  properties:
+    name: success
+    size: 24
+```
+
+```yaml
 - id: icon_home
   type: Icon
   layout:
@@ -698,7 +757,7 @@ Display icons from the React Icons library.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `color` | string | - | Primary icon color. |
-| `name` | string | `"AiOutlineCloseCircle"` | Name of icon to be displayed. |
+| `name` | string | `"AiOutlineCloseCircle"` | Name of the icon: a semantic name like edit, delete or warning (add your own with theme.icons.aliases), or a React Icons name like LuPencil. |
 | `rotate` | number | - | Number of degrees to rotate the icon. |
 | `size` | string \| number | - | Size of the icon. |
 | `spin` | boolean | `false` | Continuously spin icon with animation. |
@@ -707,7 +766,7 @@ Display icons from the React Icons library.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | \- | Trigger actions when icon is clicked. |
+| `onClick` | \- | Trigger actions when icon is clicked. The icon then takes keyboard focus, and Enter or Space trigger it too. |
 
 | Key | Target |
 | --- | --- |

@@ -44,6 +44,7 @@ import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
+import createUnknownDataIconWarning from '../buildImports/createUnknownDataIconWarning.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
@@ -56,7 +57,15 @@ const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
 async function updateDynamicIcons({ page, context }) {
   if (!context.iconImports) return;
-  const missingIcons = detectMissingIcons({ page, iconImports: context.iconImports });
+  const { missingIcons, unknownDataIcons } = detectMissingIcons({
+    page,
+    iconImports: context.iconImports,
+    iconAliases: context.iconAliases,
+    dynamicIconData: context.dynamicIconData,
+  });
+  unknownDataIcons.forEach((name) => {
+    context.handleWarning(createUnknownDataIconWarning({ aliases: context.iconAliases, name }));
+  });
   if (missingIcons.length > 0) {
     await updateIconImportsJit({
       newIcons: missingIcons,

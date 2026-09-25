@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import React from 'react';
+import { registerHtmlEnhancements } from '@lowdefy/block-utils';
 import { translate } from '@lowdefy/helpers';
 
 import createCallAPI from './createCallAPI.js';
@@ -24,8 +26,10 @@ import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
+import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setupLink from './setupLink.js';
+import { createUrl } from './adapters/url.js';
 
 function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
   if (!lowdefy._internal?.initialised) {
@@ -71,11 +75,24 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.websocketClient = createWebSocketClient(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
     lowdefy._internal.link = setupLink(lowdefy);
-    lowdefy._internal.translate = (key, values) =>
-      translate({ key, values, i18n: lowdefy.i18n });
+    lowdefy._internal.translate = (key, values) => translate({ key, values, i18n: lowdefy.i18n });
     lowdefy._internal.logger = createBrowserLogger();
     lowdefy._internal.handleError = createHandleError(lowdefy);
     lowdefy._internal.components.handleError = lowdefy._internal.handleError;
+    // HtmlComponent (block-utils) gives data-* attributes meaning in every
+    // sanitised HTML string. The overlay pulls in antd Tooltip and Popover, so
+    // it loads the first time HTML needs one. Links build hrefs with createUrl,
+    // the one place basePath is applied, and navigate like the Link action.
+    registerHtmlEnhancements({
+      createHref: ({ pathname, query }) =>
+        createUrl({ basePath: lowdefy.basePath, pathname, query }),
+      getLocale: () => getActiveLocale(window),
+      HtmlOverlay: React.lazy(() => import('./HtmlOverlay.js')),
+      Icon: lowdefy._internal.components.Icon,
+      icons: types.icons,
+      link: lowdefy._internal.link,
+      translate: lowdefy._internal.translate,
+    });
 
     if (stage === 'dev' || stage === 'e2e') {
       window.lowdefy = lowdefy;

@@ -598,7 +598,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | string | - | Button label text. |
-| `icon` | string \| object | - | Name of a React-Icon or properties of an Icon block to use icon in button. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use icon in button. |
 | `type` | string | `"default"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `text`, `link`. |
 | `color` | string | - | Button color. Preset values: default, primary, danger, blue, purple, cyan, green, magenta, pink, red, orange, yellow, volcano, geekblue, lime, gold. Also accepts custom hex color strings. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |

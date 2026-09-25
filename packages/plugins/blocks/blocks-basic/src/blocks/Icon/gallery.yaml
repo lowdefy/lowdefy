@@ -12,6 +12,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- title: Semantic icon names
+  blocks:
+    - id: semantic_add
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: add
+        size: 24
+    - id: semantic_edit
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: edit
+        size: 24
+    - id: semantic_delete
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: delete
+        size: 24
+    - id: semantic_search
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: search
+        size: 24
+    - id: semantic_settings
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: settings
+        size: 24
+    - id: semantic_warning
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: warning
+        size: 24
+    - id: semantic_info
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: info
+        size: 24
+    - id: semantic_success
+      type: Icon
+      layout:
+        flex: 0 0 auto
+      properties:
+        name: success
+        size: 24
+
 - title: Common Icons
   blocks:
     - id: icon_home

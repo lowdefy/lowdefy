@@ -718,7 +718,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `hideTitle` | boolean | `false` | Hide the button's title. |
 | `tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `href` | string | - | The URL to redirect to when the button is clicked. Useful when used with a type link button. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use icon in button. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use icon in button. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |
 | `size` | string | `"default"` | Size of the button. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title text on the button - supports html. |

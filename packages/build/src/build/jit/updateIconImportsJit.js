@@ -18,7 +18,10 @@ import extractIconData from './extractIconData.js';
 import writeIconsDynamic from './writeIconsDynamic.js';
 
 async function updateIconImportsJit({ newIcons, iconImports, context }) {
-  for (const { icon, package: pkg } of newIcons) {
+  for (const { alias, icon, package: pkg } of newIcons) {
+    // A semantic name is delivered as its own key; its target is not added to
+    // the bundled imports snapshot.
+    if (alias) continue;
     let entry = iconImports.find((e) => e.package === pkg);
     if (!entry) {
       entry = { icons: [], package: pkg };
@@ -34,7 +37,17 @@ async function updateIconImportsJit({ newIcons, iconImports, context }) {
 
   // Extract SVG tree data from react-icons and write a self-contained JS module
   // that the client can fetch at runtime without a Next.js rebuild.
-  const newIconData = extractIconData({ icons: newIcons, directories: context.directories, logger: context.logger });
+  const iconData = extractIconData({
+    icons: newIcons.map(({ icon, package: pkg }) => ({ icon, package: pkg })),
+    directories: context.directories,
+    logger: context.logger,
+  });
+  const newIconData = {};
+  newIcons.forEach(({ alias, icon }) => {
+    if (iconData[icon]) {
+      newIconData[alias ?? icon] = iconData[icon];
+    }
+  });
   await writeIconsDynamic({ newIconData, context });
 }
 

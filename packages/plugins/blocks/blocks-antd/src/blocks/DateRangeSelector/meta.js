@@ -74,7 +74,8 @@ export default {
       label,
       placeholder: {
         type: 'array',
-        description: 'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
+        description:
+          'Placeholder text inside the block before user types input. When unset, antd uses the localized default from ConfigProvider locale.',
         docs: {
           displayType: 'manual',
           block: {
@@ -131,7 +132,7 @@ export default {
         ...icon,
         default: 'AiOutlineCalendar',
         description:
-          "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker.",
       },
       title: inputTitle,
       theme: {

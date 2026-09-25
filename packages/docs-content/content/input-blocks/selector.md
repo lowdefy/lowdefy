@@ -1065,7 +1065,7 @@ Dropdown selector with search, clear, and custom icons.
 | `allowClear` | boolean | `true` | Allow the user to clear the selected value, sets the value to null. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
-| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -1097,7 +1097,7 @@ Dropdown selector with search, clear, and custom icons.
 | `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `showSearch` | boolean | `true` | Make the selector options searchable. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at the drop-down position of the selector. |
+| `suffixIcon` | string \| object | `"AiOutlineDown"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at the drop-down position of the selector. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `variant` | string | - | Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless` are the antd input styles. Enum: `solid`, `outlined`, `filled`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design select tokens](https://ant.design/components/select#design-token). |

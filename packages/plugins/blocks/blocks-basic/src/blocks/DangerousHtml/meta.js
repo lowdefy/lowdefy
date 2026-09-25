@@ -41,7 +41,8 @@ export default {
     properties: {
       html: {
         type: 'string',
-        description: 'Content to be rendered as Html.',
+        description:
+          'Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate, data-tone) work here too, unless DOMPurifyOptions removes data attributes.',
         docs: {
           displayType: 'text-area',
         },

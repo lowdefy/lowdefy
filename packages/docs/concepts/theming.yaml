@@ -459,6 +459,46 @@ _ref:
                       primary: '#ff4d4f'  # Now a static color, no longer follows antd token
                 ```
 
+                ## Icons (`theme.icons`)
+
+                Lowdefy has built-in semantic icon names such as `edit`, `delete`, `warning` and `external-link`. Use them anywhere an icon name is accepted, and in HTML with `data-icon`:
+
+                ```yaml
+                - id: edit_button
+                  type: Button
+                  properties:
+                    title: Edit
+                    icon: edit
+                - id: note
+                  type: Html
+                  properties:
+                    html: '<i data-icon="info"></i> Saved <span data-tooltip="Saved 2 minutes ago">just now</span>'
+                ```
+
+                The built-in names map to [Lucide](https://lucide.dev) icons, so an app that uses them looks consistent. Any [React Icons](https://react-icons.github.io/react-icons/) name, like `AiOutlineUser` or `LuPencil`, still works everywhere.
+
+                Built-in names: `add`, `arrow-down`, `arrow-left`, `arrow-right`, `arrow-up`, `attach`, `bell`, `calendar`, `chart`, `check`, `chevron-down`, `chevron-left`, `chevron-right`, `chevron-up`, `clock`, `close`, `copy`, `delete`, `document`, `download`, `drag`, `edit`, `error`, `external-link`, `file`, `filter`, `folder`, `globe`, `grid`, `heart`, `help`, `hide`, `history`, `home`, `image`, `info`, `link`, `list`, `loading`, `location`, `lock`, `login`, `logout`, `mail`, `menu`, `message`, `minus`, `more`, `more-vertical`, `phone`, `print`, `refresh`, `save`, `search`, `send`, `settings`, `share`, `sort`, `star`, `success`, `tag`, `unlock`, `upload`, `user`, `users`, `view`, `warning`.
+
+                Ant Design icon names also work and map to the same icons: `plus`, `setting`, `reload`, `ellipsis`, `printer`, `info-circle`, `check-circle`, `close-circle`, `clock-circle`, `file-text`, `environment`, `left`, `right`, `up` and `down`.
+
+                Add your own names, or point a built-in name at a different icon, with `theme.icons.aliases`. Names are lowercase kebab-case; targets are React Icons names:
+
+                ```yaml
+                theme:
+                  icons:
+                    aliases:
+                      invoice: LuReceipt
+                      edit: TbPencil
+                    include:
+                      - LuFlag
+                ```
+
+                The build bundles only the icons your config names. An icon name that only exists at runtime — read from state or a request — is not in the config, so list it under `theme.icons.include` to bundle it. A name kept in config data, such as `icon: warning` on a status enum that a template turns into `data-icon="{% raw %}{{ status.icon }}{% endraw %}"`, is already in the config and gets bundled.
+
+                ### Icons in HTML
+
+                In any HTML string, `<i data-icon="edit"></i>` renders an icon. [HTML attributes](/html-attributes) describes it with the other attributes HTML understands: tooltips, popovers, links and status tags.
+
                 ## TLDR
                   - Configure app theme via `theme.antd` in `lowdefy.yaml`.
                   - Seed tokens (`colorPrimary`, `fontSize`, etc.) drive all derived tokens automatically.
@@ -468,6 +508,7 @@ _ref:
                   - Override tokens per block via `properties.theme`.
                   - Use [ConfigProvider](/ConfigProvider) block for scoped theming of block groups.
                   - Access tokens in expressions with the `_theme` operator.
+                  - Use built-in semantic icon names (`icon: edit`), and `data-icon` in HTML; add names with `theme.icons.aliases`. See [HTML attributes](/html-attributes) for everything HTML understands.
                   - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
                   - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.
                   - Add custom Tailwind tokens via `theme.tailwind` in `lowdefy.yaml`.

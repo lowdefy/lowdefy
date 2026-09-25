@@ -1384,8 +1384,8 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 | `button` | object | - | Button object to customized the close button. Triggers onClose event when clicked. |
 | `description` | string | - | The content of notification box - supports html. |
 | `duration` | number | `4.5` | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize notification icon. |
-| `closeIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize close icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize notification icon. |
+| `closeIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize close icon. |
 | `title` | string | - | The title of notification box - supports html. |
 | `placement` | string | `"topRight"` | Position of Notification. Enum: `topLeft`, `topRight`, `bottomLeft`, `bottomRight`. |
 | `top` | number | `24` | Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels). |

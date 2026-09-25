@@ -494,7 +494,7 @@ Toggle switch with optional text and icon labels.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
-| `checkedIcon` | string \| object | `"AiOutlineCheck"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to shown when switch is checked (true). |
+| `checkedIcon` | string \| object | `"AiOutlineCheck"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to shown when switch is checked (true). |
 | `checkedText` | string | - | Text to shown when switch is checked (true). |
 | `color` | string | - | Switch checked color. |
 | `disabled` | boolean | `false` | Disable the block if true. |
@@ -513,7 +513,7 @@ Toggle switch with optional text and icon labels.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `uncheckedIcon` | string \| object | `"AiOutlineClose"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to shown when switch is unchecked (false). |
+| `uncheckedIcon` | string \| object | `"AiOutlineClose"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to shown when switch is unchecked (false). |
 | `uncheckedText` | string | - | Text to shown when switch is not checked (false). |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design switch tokens](https://ant.design/components/switch#design-token). |
 | `theme.trackHeight` | number | `22` | Height of the switch track. |

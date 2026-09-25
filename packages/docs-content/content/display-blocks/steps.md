@@ -553,7 +553,7 @@ Navigation steps bar, guiding users through the steps of a task.
 | `items.$.title` | string | - | Title of the step - supports html. |
 | `items.$.subTitle` | string | - | Subtitle of the step - supports html. |
 | `items.$.description` | string | - | Description of the step - supports html. |
-| `items.$.icon` | string \| object | - | Name of a React-Icon (See all icons) or properties of an Icon block to use as the step icon. |
+| `items.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See all icons) or properties of an Icon block to use as the step icon. |
 | `items.$.status` | string | - | Status of this step, overrides the current step status. Enum: `wait`, `process`, `finish`, `error`. |
 | `items.$.disabled` | boolean | `false` | Disable click on this step. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design steps tokens](https://ant.design/components/steps#design-token). |

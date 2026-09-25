@@ -17,14 +17,13 @@
 import { jest } from '@jest/globals';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 // Mock @ant-design/icons to avoid ESM/CJS interop issues in Jest.
 // The real Icon component wraps children in <span role="img" class="anticon">.
 jest.unstable_mockModule('@ant-design/icons', () => ({
   __esModule: true,
-  default: React.forwardRef(({ component: Component, ...rest }, ref) =>
-    Component ? <Component /> : null
+  default: React.forwardRef(({ component: Component, children, ...rest }, ref) =>
+    Component ? <Component>{children}</Component> : null
   ),
 }));
 
@@ -134,3 +133,38 @@ test('Icon properties.name error', () => {
 //   );
 //   expect(container.firstChild).toMatchSnapshot();
 // });
+
+test('Icon keeps the same svg element across re-renders', () => {
+  const IconComponent = createIcon(Icons);
+  const { rerender } = render(
+    <IconComponent blockId="keep" methods={methods} properties={{ name: 'AiIcon', color: 'red' }} />
+  );
+  const svg = screen.getByTestId('AiIcon');
+  rerender(
+    <IconComponent
+      blockId="keep"
+      methods={methods}
+      properties={{ name: 'AiIcon', color: 'blue' }}
+    />
+  );
+  expect(screen.getByTestId('AiIcon')).toBe(svg);
+  expect(svg.getAttribute('color')).toBe('blue');
+});
+
+test('Icon recovers from a failed icon when its name changes', () => {
+  const IconComponent = createIcon(Icons);
+  const { rerender } = render(
+    <IconComponent blockId="recover" methods={methods} properties={{ name: 'ErrorIcon' }} />
+  );
+  rerender(<IconComponent blockId="recover" methods={methods} properties={{ name: 'AiIcon' }} />);
+  expect(screen.getByTestId('AiIcon')).toBeDefined();
+});
+
+test('Icon renders a semantic name from the icon map', () => {
+  const IconComponent = createIcon({ ...Icons, 'more-vertical': Icons.AiIcon });
+  render(
+    <IconComponent blockId="alias" methods={methods} properties={{ name: 'more-vertical' }} />
+  );
+  const svg = screen.getByTestId('AiIcon');
+  expect(svg.getAttribute('title')).toBe('More vertical');
+});

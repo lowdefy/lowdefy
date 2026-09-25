@@ -1107,7 +1107,7 @@ I've started on the date picker component. Quick question — should it default 
 | `color` | string | - | The background color of the avatar if not using a src url. Should be a hex color string. Color is a random color if not specified. |
 | `content` | string | - | Text to display inside avatar. |
 | `gap` | number | - | Letter type unit distance between left and right sides. |
-| `icon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to use an icon in avatar. |
+| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in avatar. |
 | `shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `size` | string \| number \| object | `"default"` | Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes. |
 | `src` | string | - | The address of the image for an image avatar. |

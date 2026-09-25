@@ -1,0 +1,244 @@
+# HTML attributes
+
+Every block that renders HTML understands a small set of `data-*` attributes: `Html`, `ClickableHtml`, `DangerousHtml`, HTML properties such as Tooltip titles, Card titles and Alert messages, ag-grid cell HTML, and the `EventLog` block. They give HTML the icons, tooltips, links, status tags, dates, numbers, avatars, copy buttons, truncation, text tones and confirmations that apps otherwise build by hand with inline styles and templates, and they look and behave the same in every app.
+
+The attributes work on HTML from anywhere: page config, `_nunjucks` templates, request results and messages that API endpoints build on the server.
+
+| Attribute | On | Effect |
+|---|---|---|
+| `data-icon="edit"` | any element | Renders the icon inside the element. |
+| `data-tooltip="Text"` | any element | Shows a tooltip on hover and keyboard focus. |
+| `data-popover="id"` | any element | Click, Enter or Space toggles a popover showing the element with `data-popover-content="id"`. |
+| `data-event="onName"` | any element | `ClickableHtml` only: fires the block event `onName`. |
+| `data-page-id="page"` | `<a>` | A link to a page of the app, opened without reloading the app. |
+| `data-url-query="key=value"` | `<a data-page-id>` | The link's query string. |
+| `data-link` | `<a href="/path">` | Opens an app path without reloading the app. |
+| `data-new-tab` | `<a href>` | Opens the link in a new tab. |
+| `data-tag="success"` | any element | A tinted status tag. |
+| `data-status="success"` | any element | A status dot before the text. |
+| `data-time="relative"` | `<time datetime>` | A date as relative, date, datetime, time or a dayjs format. |
+| `data-format="currency"` | any element | The element's number as number, currency, percent, compact or bytes. |
+| `data-avatar="Jane Doe"` | any element, `<img>` | Initials in a theme colour; a fallback for a broken image. |
+| `data-copy` | any element | A copy button for the element's text or the attribute's value. |
+| `data-truncate="2"` | block element | Clamps text to 1–6 lines, with the full text in a tooltip when it is cut off. |
+| `data-tone="secondary"` | any element | Text in a theme tone: secondary, tertiary, quaternary, success, warning, error or info. |
+| `data-confirm="Delete?"` | `data-event` element | `ClickableHtml` only: asks before the event fires. |
+
+Attribute values are plain text, names, numbers or colours. They are never read as HTML, templates or code, and HTML is sanitised before the attributes are applied.
+
+## Icons
+
+`data-icon` renders an icon inside the element. Use a built-in semantic name such as `edit`, `delete`, `warning` or `external-link`, a name from `theme.icons.aliases`, or any React Icons name. The icon takes the element's font size and text colour. See [Theming](/theming) for the icon names and aliases.
+
+```html
+<i data-icon="success" style="color: var(--ant-color-success)"></i> Saved
+```
+
+An icon on its own is decorative to screen readers unless the element has a `data-tooltip` or an `aria-label`. An unknown name renders nothing and logs a console warning.
+
+## Tooltips and popovers
+
+`data-tooltip` shows a themed tooltip on hover and keyboard focus. A `title` on the same element is removed so only one tooltip shows.
+
+`data-popover="id"` toggles a popover on click, Enter or Space. Its content is the element with `data-popover-content="id"` in the same HTML; give that element the `hidden` attribute. Icons, tooltips, links and `data-event` all work inside popover content.
+
+```yaml
+- id: row_actions
+  type: ClickableHtml
+  properties:
+    html: >
+      <i data-icon="edit" data-event="onEdit" data-id="42" data-tooltip="Edit"></i>
+      <span data-popover="more">More <i data-icon="chevron-down"></i></span>
+      <div data-popover-content="more" hidden>
+        <p data-event="onArchive" data-id="42"><i data-icon="folder"></i> Archive</p>
+      </div>
+  events:
+    onEdit:
+      - id: edit
+        type: SetState
+        params:
+          editing: { _event: id }
+    onArchive:
+      - id: archive
+        type: SetState
+        params:
+          archiving: { _event: id }
+```
+
+Popovers close on a click outside, on Escape, on a second click on the trigger, and after a `data-event` inside them fires.
+
+## Events
+
+In `ClickableHtml`, an element with `data-event="onName"` fires the block event `onName` when clicked, and its default browser action is prevented. The event object holds the element's other `data-*` attributes with snake_case keys, so `data-event="onEdit" data-record-id="42"` gives `{ record_id: "42" }`. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. `Html` fires no events.
+
+## Links
+
+Use `data-page-id` for links to pages of your app, instead of writing the href:
+
+```html
+<a data-page-id="contact-details" data-url-query="_id={{ _id }}">{{ name }}</a>
+```
+
+Lowdefy sets the `href` (including the app's `basePath`), and a plain click opens the page without reloading the app, the same as a [`Link`](/Link) action with `pageId` and `urlQuery`. Middle-click, Ctrl or Cmd-click, "copy link" and hover preview work as for any link. `data-url-query` is a query string (`a=1&b=2`); its values reach the page's `_url_query` the same way the `Link` action's `urlQuery` does.
+
+The build checks every `data-page-id` it can read in your config, including HTML built by API endpoints, and warns when a page does not exist, with a suggestion for a likely typo. Values built from templates, such as `data-page-id="{{ page }}"`, are not checked. Inside a module, build the page id with `_module.pageId` (for example in a `_string.concat`); the build checks the resolved id.
+
+Use `data-page-id` to write a link. When you already have a whole URL, for example a notification's stored `link` field, `data-link` opens it without reloading the app. The path is relative to the app, like the `Link` action's `url`, so Lowdefy adds the `basePath`. The build does not check `data-link` paths.
+
+```html
+<a href="/tickets-view?_id=42" data-link>Ticket 42</a>
+```
+
+Only hrefs that start with a single `/` and have no `#` are handled; everything else stays a normal link. Plain `<a href="/…">` links without `data-link` keep reloading the page, because paths like `/api/…` or files in `public/` are not app pages.
+
+`data-new-tab` opens any link in a new tab. HTML is sanitised, which removes `target` attributes, so write `data-new-tab` instead of `target="_blank"`:
+
+```html
+<a data-page-id="report" data-new-tab>Open report</a>
+<a href="https://example.com/help" data-new-tab>Help</a>
+```
+
+`data-link="false"` and `data-new-tab="false"` turn the attribute off, so a template can write `data-new-tab="{{ new_tab }}"`.
+
+In `ClickableHtml`, a link that also has `data-event` fires the event and does not navigate. In an ag-grid cell, the grid's `onRowClick` still fires when a link in the row is clicked, as it does for `link` cells.
+
+## Status tags and dots
+
+`data-tag` renders the element as a tinted tag, and `data-status` puts a coloured dot before its text. Both look the same as the ag-grid block's `tag` cells and follow the app theme and dark mode.
+
+```html
+<span data-tag="success">Approved</span>
+<span data-tag="orange">On hold</span>
+<span data-status="processing">Syncing</span>
+<span data-tag>{{ category }}</span>
+```
+
+The value is one of:
+
+- **A tone:** `success`, `processing`, `info`, `warning`, `error`, `default`, or an Ant Design preset colour: `red`, `volcano`, `orange`, `gold`, `yellow`, `lime`, `green`, `cyan`, `blue`, `geekblue`, `purple`, `magenta`. Tones use theme colours.
+- **A CSS colour:** `#1677ff`, `rgb(22 119 255)`, or a theme variable such as `var(--ant-color-primary)`.
+- **Anything else, or nothing:** the colour is picked from the value, or from the element's text when the attribute has no value, so the same text always gets the same colour. `data-tag="{{ category_id }}"` keeps a colour stable when the category is renamed.
+
+The text is the label, so colour is never the only signal. Override the look with your own styles: the built-in styles have no specificity, so any class, Tailwind utility or inline style wins.
+
+## Dates and times
+
+`data-time` formats the date in the element's `datetime` attribute, or in its text when it has none, in the app's locale and the browser's time zone:
+
+```html
+<time datetime="{{ updated }}" data-time="relative"></time>
+<time datetime="{{ created }}" data-time="date"></time>
+<time datetime="{{ created }}" data-time="D MMM YYYY"></time>
+```
+
+| Value | Renders |
+|---|---|
+| `relative` | `3 hours ago`, kept current while the page is open. Hovering shows the exact date and time. |
+| `date` | `Sep 25, 2026` |
+| `datetime`, or no value | `Sep 25, 2026, 3:30 PM` |
+| `time` | `3:30 PM` |
+| anything else | a [dayjs format](https://day.js.org/docs/en/display/format), such as `D MMM YYYY` |
+
+The date can be an ISO string, anything dayjs parses, or epoch milliseconds (12 or more digits). A value that is not a date leaves the text as it is and logs a console warning, so put a readable fallback inside the element. Dates from the server are best sent as ISO strings, so they show in the reader's time zone instead of the server's.
+
+## Numbers
+
+`data-format` formats the element's number, with the same formatting as the ag-grid block's `number` cells:
+
+```html
+<span data-format="currency" data-currency="ZAR">{{ total }}</span>
+<span data-format="percent" data-decimals="1">{{ ratio }}</span>
+<span data-format="compact">{{ views }}</span>
+<span data-format="bytes">{{ size }}</span>
+```
+
+| Value | Example |
+|---|---|
+| `number`, or no value | `1234.5` → `1,234.5` |
+| `currency` | `1234.5` with `data-currency="EUR"` → `€1,234.50` in English. `data-currency` (a three-letter currency code) is required. |
+| `percent` | `0.123` → `12.3%` (the value is a fraction) |
+| `compact` | `1500` → `1.5K` |
+| `bytes` | `1536` → `1.5 kB` (base 1000) |
+
+`data-decimals="2"` fixes the number of decimals. The text must be a plain decimal number such as `-1234.5`; anything else, like `1,234` or `N/A`, is left as it is. Formatted numbers use tabular figures, so columns line up.
+
+## Avatars
+
+`data-avatar` renders a person's initials in a theme colour picked from their name, the same initials and colour as the ag-grid block's `avatar` cells. No image service is called.
+
+```html
+<span data-avatar="{{ name }}"></span> {{ name }}
+<img data-avatar="{{ name }}" src="{{ picture }}">
+<span data-avatar="{{ name }}" data-avatar-shape="square"></span>
+```
+
+On an `<img>`, the initials replace the image when it has no `src` or fails to load. The avatar is 24px by default; set `style="--lf-avatar-size: 40px; --lf-avatar-font-size: 16px"` to resize it. Next to the visible name the avatar is hidden from screen readers; on its own it is announced by the name.
+
+## Copy to clipboard
+
+`data-copy` adds a copy button to the element. It copies the attribute's value, or the element's text when the attribute has no value:
+
+```html
+<code data-copy>{{ api_key }}</code>
+<span data-copy="{{ ticket_id }}">Ticket #{{ ticket_id }}</span>
+```
+
+After a copy the icon shows a check, its tooltip says "Copied" and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it ("Copy: 42"). A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
+
+## Truncation
+
+`data-truncate` clamps text to a number of lines and ends it with an ellipsis. The full text shows in a tooltip, but only when the text is actually cut off:
+
+```html
+<div data-truncate>{{ title }}</div>
+<div data-truncate="3">{{ description }}</div>
+```
+
+No value or `1` is one line; `2` to `6` clamp to that many lines. Truncation makes the element a block, so put it on block content such as a `div` or `p`, not on a word in a sentence. On a table cell or list item it breaks the table or list layout, so truncate a `<div>` inside the cell instead. A `data-copy` button on a truncated element is placed after it, so it is never cut off. Screen readers still read the full text. A `title` or `data-tooltip` on the element replaces the automatic tooltip.
+
+## Text tone
+
+`data-tone` colours text with a theme tone, so it follows the theme and dark mode:
+
+```html
+<span data-tone="secondary">Added {{ created }}</span>
+<span data-tone="error">Failing</span>
+```
+
+| Tone | Colour |
+|---|---|
+| `secondary` | Secondary text |
+| `tertiary` | Tertiary text, for supplementary details such as timestamps |
+| `quaternary` | Quaternary text, for placeholders such as an empty-value dash |
+| `success`, `warning`, `error`, `info` | Ant Design's status text colours |
+
+On the default light theme `tertiary`, `quaternary` and the status tones fall below WCAG AA contrast for body text. Use them for supplementary text and short labels whose words carry the meaning ("Failing"), never as the only way information is shown. On an element that also has `data-tag`, `data-tone` sets the text colour. In page config you can also use the Tailwind theme classes (`text-text-secondary`); in HTML built by templates, requests or API endpoints use `data-tone`, because Tailwind never sees those strings.
+
+## Confirm before an event
+
+In `ClickableHtml`, `data-confirm` on a `data-event` element asks before the event fires:
+
+```yaml
+- id: rows
+  type: ClickableHtml
+  properties:
+    html: >
+      <i data-icon="delete" data-event="onDelete" data-id="42"
+         data-tooltip="Delete" data-confirm="Delete this row?"></i>
+  events:
+    onDelete:
+      - id: delete
+        type: CallAPI
+        params:
+          endpointId: delete-row
+          payload:
+            id: { _event: id }
+```
+
+A click, Enter or Space opens a confirmation with the message, OK and Cancel. Only OK fires the event, once. Cancel, Escape and a click outside close it without firing. Focus moves to Cancel when it opens, so a stray key press never confirms; Tab to OK and press Enter to confirm. Focus returns to the element afterwards; after OK inside a popover, it returns to the popover's trigger. Clicking the element again while its confirmation is open keeps it open.
+
+With no value the message is "Are you sure?" (the `client.confirm` [translation key](/i18n)); OK and Cancel follow the app's locale. The event object includes `confirm` along with the element's other `data-*` attributes. A confirm inside a popover keeps the popover open until OK fires the event. `data-confirm` has no effect in `Html`, or on an element without `data-event`.
+
+## Plugin blocks
+
+A block plugin that renders HTML gets these attributes by rendering through `renderHtml` or `HtmlComponent` from `@lowdefy/block-utils`. A block that runs its own sanitiser and sets `innerHTML` directly does not.

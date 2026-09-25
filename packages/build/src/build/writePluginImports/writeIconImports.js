@@ -16,6 +16,8 @@
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
+import getIconAliases from '../buildImports/getIconAliases.js';
+
 const template = `{%- for package in packages -%}
 {% if package.icons.length %}import { {% for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
 {% endif -%}{% endfor %}{% endif %}{% endfor -%}
@@ -24,13 +26,25 @@ export default {
   {%- for icon in package.icons %}
   {{ icon }},{% endfor %}
 {%- endfor %}
+  {%- for alias in aliases %}
+  '{{ alias.name }}': {{ alias.icon }},{% endfor %}
 };`;
 
 async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
+  const aliases = Object.entries(components.imports.iconAliases).map(([name, icon]) => ({
+    icon,
+    name,
+  }));
   await context.writeBuildArtifact(
     'plugins/icons.js',
-    templateFn({ packages: components.imports.icons })
+    templateFn({ aliases, packages: components.imports.icons })
+  );
+  // The full alias map, used or not: dev JIT resolves semantic names on pages
+  // from it, and the dev docs server's icon search lists it.
+  await context.writeBuildArtifact(
+    'iconAliases.json',
+    JSON.stringify(getIconAliases({ components }))
   );
 }
 

@@ -16,10 +16,33 @@
 
 import { ConfigWarning } from '@lowdefy/errors';
 
+import findSimilarString from '../../utils/findSimilarString.js';
+
+// A data-page-id found by scanning HTML text. The scan cannot tell real markup
+// from an HTML example shown in docs or a code sample, so it warns in every
+// stage rather than failing a production build.
+function warnHtmlLink({ context, pageIdSet, ref }) {
+  let message = `data-page-id="${ref.pageId}" in ${ref.location} links to a page that does not exist.`;
+  const suggestion = findSimilarString({ input: ref.pageId, candidates: [...pageIdSet] });
+  if (suggestion) {
+    message += ` Did you mean "${suggestion}"?`;
+  }
+  context.handleWarning(
+    new ConfigWarning(message, { configKey: ref.configKey, checkSlug: 'link-refs' })
+  );
+}
+
 function validateLinkReferences({ linkActionRefs, pageIds, context }) {
   const pageIdSet = new Set(pageIds);
 
-  linkActionRefs.forEach(({ pageId, action, sourcePageId }) => {
+  linkActionRefs.forEach((ref) => {
+    if (ref.html === true) {
+      if (!pageIdSet.has(ref.pageId)) {
+        warnHtmlLink({ context, pageIdSet, ref });
+      }
+      return;
+    }
+    const { pageId, action, sourcePageId } = ref;
     // Only skip validation if skip is explicitly true
     // Pages must exist in app even if Link is conditional
     if (action.skip === true) {

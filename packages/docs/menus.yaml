@@ -183,6 +183,11 @@
           pageId: theming
           properties:
             title: Theming
+        - id: html-attributes
+          type: MenuLink
+          pageId: html-attributes
+          properties:
+            title: HTML Attributes
         - id: i18n
           type: MenuLink
           pageId: i18n

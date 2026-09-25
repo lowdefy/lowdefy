@@ -116,9 +116,96 @@ Render raw HTML content safely, and fire a named event when an element carrying 
           style_card_action: remove
 ```
 
+```yaml
+- id: row_actions
+  type: ClickableHtml
+  properties:
+    html: '<p>Invoice INV-042 <i data-icon="edit" data-event="onEdit" data-id="42"
+      data-tooltip="Edit" style="cursor: pointer"></i> <span data-popover="more"
+      style="cursor: pointer"><i data-icon="more-vertical"></i></span></p><div
+      data-popover-content="more" hidden><p data-event="onDuplicate"
+      data-id="42" style="cursor: pointer; margin: 0 0 8px"><i
+      data-icon="copy"></i> Duplicate</p><p data-event="onDelete" data-id="42"
+      style="cursor: pointer; margin: 0; color: var(--ant-color-error)"><i
+      data-icon="delete"></i> Delete</p></div>'
+  events:
+    onEdit:
+      - id: set_edit
+        type: SetState
+        params:
+          row_actions_last:
+            _string.concat:
+              - "edit "
+              - _event: id
+    onDuplicate:
+      - id: set_duplicate
+        type: SetState
+        params:
+          row_actions_last:
+            _string.concat:
+              - "duplicate "
+              - _event: id
+    onDelete:
+      - id: set_delete
+        type: SetState
+        params:
+          row_actions_last:
+            _string.concat:
+              - "delete "
+              - _event: id
+- id: row_actions_result
+  type: Html
+  properties:
+    html:
+      _string.concat:
+        - "<p>Last action: <code>"
+        - _state:
+            key: row_actions_last
+            default: none yet
+        - </code></p>
+```
+
+```yaml
+- id: confirm_actions
+  type: ClickableHtml
+  properties:
+    html: '<p>INV-2026-0042 <i data-icon="delete" data-event="onDelete" data-id="42"
+      data-tooltip="Delete" data-confirm="Delete invoice INV-2026-0042?"
+      style="cursor: pointer; color: var(--ant-color-error)"></i> <span
+      data-event="onArchive" data-id="42" data-confirm style="cursor: pointer;
+      color: var(--ant-color-primary)">Archive</span></p>'
+  events:
+    onDelete:
+      - id: deleted
+        type: SetState
+        params:
+          confirm_last:
+            _string.concat:
+              - "deleted "
+              - _event: id
+    onArchive:
+      - id: archived
+        type: SetState
+        params:
+          confirm_last:
+            _string.concat:
+              - "archived "
+              - _event: id
+- id: confirm_result
+  type: Html
+  properties:
+    html:
+      _string.concat:
+        - "<p>Last action: <code>"
+        - _state:
+            key: confirm_last
+            default: none yet
+        - </code></p>
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. |
+| `html` | string | - | Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm="Delete this row?" on a data-event element asks first: only OK fires the event (bare data-confirm asks "Are you sure?"). All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

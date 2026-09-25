@@ -1245,7 +1245,7 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `autoClearSearchValue` | boolean | `true` | Whether the current search will be cleared on selecting an item. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
-| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
@@ -1279,10 +1279,10 @@ Multi-select dropdown with tags, search, and custom rendering.
 | `placeholder` | string | `"Select item"` | Placeholder text inside the block before user selects input. |
 | `loadingPlaceholder` | string | `"Loading"` | Placeholder text to show in options while the block is loading. |
 | `notFoundContent` | string | `"not Found"` | Placeholder text to show when list of options are empty. |
-| `selectedIcon` | string \| object | `"AiOutlineCheck"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
+| `selectedIcon` | string \| object | `"AiOutlineCheck"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list. |
 | `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineDown"` | Name of an React-Icon (See all icons) or properties of an Icon block to customize at the drop-down position of the selector. |
+| `suffixIcon` | string \| object | `"AiOutlineDown"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize at the drop-down position of the selector. |
 | `title` | string | - | Multiple selector label title - supports html. |
 | `variant` | string | - | Tag/input variant. `solid` renders filled colored tags; `outlined` renders outlined colored tags. `filled`/`borderless` are the antd input styles. Enum: `solid`, `outlined`, `filled`, `borderless`. |
 | `renderTags` | boolean | - | When true, the selected option labels are rendered as tags in the selector input. This field must be true to render option tag values. |
