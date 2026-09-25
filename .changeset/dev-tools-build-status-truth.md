@@ -3,6 +3,7 @@
 '@lowdefy/build': patch
 'lowdefy': patch
 '@lowdefy/docs': patch
+'@lowdefy/docs-content': patch
 ---
 
 feat: Dev tools build status and request runner report the config you just edited
