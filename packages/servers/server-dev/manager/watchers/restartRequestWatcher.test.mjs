@@ -43,6 +43,7 @@ beforeEach(() => {
   context = {
     directories: { build: path.join(fixtureDir, 'build') },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    lowdefyBuild: jest.fn(async () => {}),
     restartServer: jest.fn(),
   };
 });
@@ -73,4 +74,28 @@ test('writing build/.restart restarts the server once and removes the sentinel',
     { spin: 'start' },
     'Restart requested by the dev tools: Edited a request plugin.'
   );
+});
+
+test('a restart request rebuilds the config before restarting the server', async () => {
+  watcher = await restartRequestWatcher(context);
+  const sentinelPath = path.join(fixtureDir, 'build', '.restart');
+
+  fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
+  await waitFor(() => context.restartServer.mock.calls.length > 0);
+
+  expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  expect(context.lowdefyBuild.mock.invocationCallOrder[0]).toBeLessThan(
+    context.restartServer.mock.invocationCallOrder[0]
+  );
+});
+
+test('a restart request restarts the server when the config build fails', async () => {
+  context.lowdefyBuild.mockRejectedValue(new Error('Build failed with 1 error(s).'));
+  watcher = await restartRequestWatcher(context);
+  const sentinelPath = path.join(fixtureDir, 'build', '.restart');
+
+  fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
+  await waitFor(() => context.restartServer.mock.calls.length > 0);
+
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
 });

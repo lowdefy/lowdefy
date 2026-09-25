@@ -20,6 +20,7 @@ import path from 'path';
 import { get } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
+import importFresh from './importFresh.mjs';
 
 const require = createRequire(import.meta.url);
 
@@ -44,9 +45,9 @@ async function createCustomPluginMessagesMap({ directories, logger }) {
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
   for (const plugin of pluginDefinitions) {
-    let messagesModule;
+    let messagesPath;
     try {
-      messagesModule = require(`${plugin.name}/messages`);
+      messagesPath = require.resolve(`${plugin.name}/messages`);
     } catch (e) {
       // Plugin does not ship a `./messages` export — silently skip.
       if (!warnedMissingMessages.has(plugin.name)) {
@@ -55,6 +56,7 @@ async function createCustomPluginMessagesMap({ directories, logger }) {
       }
       continue;
     }
+    const messagesModule = await importFresh(messagesPath);
     const messages = messagesModule.default ?? messagesModule;
     if (!messages || typeof messages !== 'object') continue;
     customMessagesMap[plugin.name] = messages;
