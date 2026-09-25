@@ -77,11 +77,13 @@ _ref:
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
             - `--no-open`: Do not open a new tab in the default browser.
-            - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+            - `--port <port>`: Change the port the server is hosted at. The default is `3000`. A port you set (with this option, the `PORT` environment variable, or `cli.port`) is used or the command fails; only the default moves to the next free port when it is taken.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
             - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
             - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
             - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+
+            One app runs one dev server. The running server records itself in `.lowdefy/instance.json` (its pid, port, URL, state and whether a person or the [Lowdefy hub](#hub) started it), and a second `lowdefy dev` for the same app exits before touching anything, naming the server already running. A record copied from another checkout (for example into a git worktree) is ignored.
 
             ## emails
 
@@ -98,12 +100,27 @@ _ref:
 
             ## agent-setup
 
-            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the dev server's [`lowdefy-docs` MCP endpoint](/ai-agent-docs), a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten.
+            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy-docs` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio from the app's installed CLI — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration).
 
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
-            - `--port <port>`: The port your dev server runs on, used in the generated URLs. The default is `3000`.
+            - `--project-directory <project-directory>`: Change the directory where agent files are written. The default is the nearest ancestor directory containing `.git`.
+
+            ## mcp
+
+            The `mcp` command runs the Lowdefy MCP server for coding agents over stdio. Agent clients start it themselves from `.mcp.json` (see `agent-setup`), one per session — you do not run it by hand. It routes every tool call to the dev server of the app and git checkout the agent is working in, and starts that server through the [hub](#hub) when it is not running. See [AI agent docs](/ai-agent-docs).
+
+            ## hub
+
+            The Lowdefy hub is a small per-user background process that runs dev servers for coding agents. `lowdefy mcp` starts it when an agent first needs a dev server, and it exits on its own after ten idle minutes. It gives each app its own port (from 4100 up, kept across restarts), runs the app's own dev script, and stops a server when no agent session has used it for 30 minutes and no browser tab has it open, or when its directory is removed. It only ever stops servers it started: a `lowdefy dev` you run in a terminal is used by agents but never stopped by them.
+
+            - `lowdefy hub status`: List the dev servers the hub runs.
+            - `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
+            - `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
+            - `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
+
+            The hub keeps its state in `~/.lowdefy/hub` (set `LOWDEFY_HOME` to move it). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
 
             ## init
 
@@ -224,6 +241,7 @@ _ref:
 
             Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
             - `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
+            - `devScript: string`: The `package.json` script the [hub](#hub) runs to start this app's dev server for coding agents. Required when several scripts run `lowdefy dev`.
             - `disableTelemetry: boolean`: Disable telemetry.
             - `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `noOpen`: Do not open a new tab in the default browser.
