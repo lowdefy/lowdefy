@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { Features } from 'lightningcss';
 
 // basePath from the Lowdefy build — assets are served under it.
 let basePath = '';
@@ -34,6 +35,17 @@ export default defineConfig(({ mode }) => ({
     // Vite does not replace process.env.NODE_ENV inside dependencies —
     // plugin and client code branch on it.
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
+  },
+  css: {
+    // Vite minifies client CSS with Lightning CSS, which by default lowers
+    // light-dark() into --lightningcss-light/--lightningcss-dark variables that
+    // only a CSS color-scheme declaration defines. The client sets color-scheme
+    // from JavaScript (useDarkMode), so the lowered values never resolve and
+    // every light-dark() colour is dropped. Tailwind leaves light-dark()
+    // unlowered in its own Lightning CSS pass for the same reason.
+    lightningcss: {
+      exclude: Features.LightDark,
+    },
   },
   build: {
     outDir: 'dist/client',
