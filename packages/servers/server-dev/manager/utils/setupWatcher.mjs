@@ -24,12 +24,13 @@ function setupWatcher({
   ignorePaths = [],
   watchPaths,
   delay = 500,
+  onBusy,
 }) {
   return new Promise((resolve) => {
     // const { watch = [], watchIgnore = [] } = context.options;
     // const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
-    const batchChanges = new BatchChanges({ context, fn: callback, delay });
+    const batchChanges = new BatchChanges({ context, fn: callback, delay, onBusy });
     const defaultIgnorePaths = watchDotfiles
       ? []
       : [

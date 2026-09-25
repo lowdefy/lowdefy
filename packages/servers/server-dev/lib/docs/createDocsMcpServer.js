@@ -48,6 +48,7 @@ import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
 import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
+import waitForBuild from './waitForBuild.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
@@ -191,7 +192,12 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     return textResult(revertConfigCheckpoint({ id }));
   });
 
-  registerDevTool('lowdefy_build_status', () => textResult(getBuildStatus()));
+  registerDevTool('lowdefy_build_status', async ({ wait }) => {
+    if (wait === true) {
+      return textResult({ ...(await waitForBuild()), ...getBuildStatus() });
+    }
+    return textResult(getBuildStatus());
+  });
 
   registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {
     const result = await getPageConfig({ pageId });

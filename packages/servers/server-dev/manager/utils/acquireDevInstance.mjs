@@ -56,6 +56,7 @@ function acquireDevInstance({ configDirectory, owner, version }) {
     configDirectory: fs.realpathSync(configDirectory),
     owner,
     state: 'starting',
+    building: false,
     version,
     startedAt: new Date().toISOString(),
   };

@@ -28,7 +28,7 @@ Discovery workflow: start with lowdefy_overview. Use lowdefy_list_types with a k
 
 Push events: build results, server restarts and browser/server errors arrive as notifications/message from logger "lowdefy" (data.type is one of build, restart, client_error, server_error; a build event carries status, errors, warnings and stale). Act on them without polling — lowdefy_build_status remains the full picture.
 
-Feedback loop: after EVERY config edit, call lowdefy_build_status — the dev server rebuilds on file change and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
+Feedback loop: after EVERY config edit, call lowdefy_build_status with wait: true — the dev server rebuilds on file change, wait: true answers once your edit has been processed, and this returns the current build errors/warnings (with source file locations), recent browser runtime errors, and recent server errors (request, endpoint, MCP and agent failures with their config source). Fix what it reports, then confirm the page builds with lowdefy_get_page_config, and visually verify with lowdefy_screenshot_page. Use lowdefy_find_config to locate where any id (page, block, request) is defined. lowdefy_scaffold_page creates a canonical new page file. Use lowdefy_app_map first to understand an existing app. If a tool result begins with "STALE:", the last build FAILED and the answer comes from the previous successful build, not from your latest edits — call lowdefy_build_status and fix the reported errors before trusting anything else.
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
 
@@ -177,8 +177,15 @@ const devToolDefinitions = {
 
   lowdefy_build_status: {
     description:
-      'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. The dev server rebuilds automatically on file change — edit, then call this to see what broke.',
-    inputSchema: {},
+      'Call after every config edit. Returns the current build status: errors and warnings from the last build (with source file locations), recent browser runtime errors, and recent server errors — request, endpoint, MCP and agent tool failures with their config source. The dev server rebuilds automatically on file change — edit, then call this with wait: true to see what broke.',
+    inputSchema: {
+      wait: z
+        .boolean()
+        .optional()
+        .describe(
+          'Wait until the dev server has processed your latest edits (the rebuild or page invalidation they trigger) before answering, instead of returning the status of the build before them. Use it right after an edit. Waits up to a minute; `settled: false` in the result means it gave up.'
+        ),
+    },
   },
 
   lowdefy_get_page_config: {
