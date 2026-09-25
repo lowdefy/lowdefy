@@ -166,6 +166,8 @@ test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to a
   expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual([
     'html-style-stripped',
     'html-no-click-events',
+    'html-hardcoded-links',
+    'html-inline-status-pills',
   ]);
   expect(blockMetas.Html.hazards[0]).toEqual({
     id: expect.any(String),
@@ -222,5 +224,7 @@ test('writeBlockSchemaMap reads hazards from the package meta when typesMap bloc
   expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual([
     'html-style-stripped',
     'html-no-click-events',
+    'html-hardcoded-links',
+    'html-inline-status-pills',
   ]);
 });

@@ -32,6 +32,7 @@ import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
 import buildAgents from '../buildAgents.js';
 import buildApi from '../buildApi/buildApi.js';
+import validateApiHtmlLinks from '../buildApi/validateApiHtmlLinks.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
 import buildMcp from '../buildMcp.js';
@@ -186,6 +187,7 @@ async function shallowBuild(options) {
     });
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
 

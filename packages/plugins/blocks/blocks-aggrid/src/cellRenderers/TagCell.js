@@ -15,72 +15,12 @@
 */
 
 import React from 'react';
+import resolveTagColor from '@lowdefy/block-utils/format/resolveTagColor.js';
+import seededTagColor from '@lowdefy/block-utils/format/seededTagColor.js';
+import tagStyle from '@lowdefy/block-utils/format/tagStyle.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
 import { resolvePath } from './resolveFieldRefs.js';
-
-const ANTD_TAG_COLOR_TOKENS = {
-  red: 'var(--ant-color-error)',
-  volcano: 'var(--ant-color-volcano, var(--ant-color-error))',
-  orange: 'var(--ant-color-warning)',
-  gold: 'var(--ant-color-gold, var(--ant-color-warning))',
-  yellow: 'var(--ant-color-warning)',
-  lime: 'var(--ant-color-lime, var(--ant-color-success))',
-  green: 'var(--ant-color-success)',
-  cyan: 'var(--ant-color-cyan, var(--ant-color-info))',
-  blue: 'var(--ant-color-info)',
-  geekblue: 'var(--ant-color-geekblue, var(--ant-color-info))',
-  purple: 'var(--ant-color-purple, var(--ant-color-info))',
-  magenta: 'var(--ant-color-magenta, var(--ant-color-error))',
-  default: 'var(--ant-color-text-secondary)',
-};
-
-const SEED_PALETTE = [
-  'red',
-  'volcano',
-  'orange',
-  'gold',
-  'yellow',
-  'lime',
-  'green',
-  'cyan',
-  'blue',
-  'geekblue',
-  'purple',
-  'magenta',
-];
-
-function colorSeed(s) {
-  if (type.isNone(s)) return 0;
-  const str = String(s);
-  let hash = 0;
-  for (let i = 0; i < str.length; i += 1) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-  return hash;
-}
-
-function seededColor(item) {
-  return SEED_PALETTE[colorSeed(item) % SEED_PALETTE.length];
-}
-
-function resolveColor(value) {
-  if (type.isNone(value)) return ANTD_TAG_COLOR_TOKENS.default;
-  return ANTD_TAG_COLOR_TOKENS[value] ?? value;
-}
-
-function tagStyle(resolved) {
-  return {
-    display: 'inline-flex',
-    alignItems: 'center',
-    padding: 'var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px)',
-    borderRadius: 'var(--ant-border-radius-sm, 4px)',
-    fontSize: 'var(--ant-font-size-sm, 12px)',
-    fontWeight: 600,
-    lineHeight: 1,
-    color: resolved,
-    background: `color-mix(in srgb, ${resolved} 12%, transparent)`,
-    border: `1px solid color-mix(in srgb, ${resolved} 30%, transparent)`,
-  };
-}
 
 function TagCell(params) {
   const { value, data, cellConfig } = params;
@@ -101,7 +41,7 @@ function TagCell(params) {
   }
 
   function pickColor(item) {
-    return colorFor(item) ?? defaultColor ?? (seedingActive ? seededColor(item) : undefined);
+    return colorFor(item) ?? defaultColor ?? (seedingActive ? seededTagColor(item) : undefined);
   }
 
   if (type.isArray(value)) {
@@ -113,7 +53,7 @@ function TagCell(params) {
     return (
       <span style={containerStyle}>
         {items.map((item, index) => {
-          const resolved = resolveColor(pickColor(item));
+          const resolved = resolveTagColor(pickColor(item));
           return (
             <span key={`${index}-${item}`} style={tagStyle(resolved)}>
               {String(item)}
@@ -124,7 +64,7 @@ function TagCell(params) {
     );
   }
 
-  const resolved = resolveColor(pickColor(value));
+  const resolved = resolveTagColor(pickColor(value));
   return <span style={tagStyle(resolved)}>{String(value)}</span>;
 }
 

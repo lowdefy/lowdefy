@@ -42,7 +42,7 @@ export default {
       html: {
         type: 'string',
         description:
-          'Content to be rendered as Html. data-icon, data-tooltip and data-popover work as in the Html block, unless DOMPurifyOptions removes data attributes.',
+          'Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate, data-tone) work here too, unless DOMPurifyOptions removes data attributes.',
         docs: {
           displayType: 'text-area',
         },

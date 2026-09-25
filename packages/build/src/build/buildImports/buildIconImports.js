@@ -19,6 +19,7 @@ import { ConfigWarning } from '@lowdefy/errors';
 import collectIconNames, { getIconNamePackages } from './collectIconNames.js';
 import createUnknownDataIconWarning from './createUnknownDataIconWarning.js';
 import getIconAliases from './getIconAliases.js';
+import HTML_ICON_ALIASES from './htmlIconAliases.js';
 import iconPackages from './iconPackages.js';
 import validateIconAliases from './validateIconAliases.js';
 import validateIconImports from './validateIconImports.js';
@@ -76,7 +77,7 @@ function buildIconImports({ blocks, components, context, defaults = {} }) {
   Object.keys(iconPackages).forEach((iconPackage) => {
     packageIcons[iconPackage] = new Set(defaults[iconPackage]);
   });
-  const usedAliases = new Set();
+  const usedAliases = new Set(HTML_ICON_ALIASES);
   const unknownDataIcons = new Set();
 
   getIconSources({ blocks, components, context }).forEach((source) => {

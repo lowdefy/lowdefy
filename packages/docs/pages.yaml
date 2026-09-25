@@ -30,6 +30,7 @@
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/theming.yaml
+- _ref: concepts/html-attributes.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/api.yaml
 - _ref: concepts/notifications.yaml

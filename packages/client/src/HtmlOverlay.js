@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import React, { forwardRef, useEffect, useId, useImperativeHandle } from 'react';
-import { Popover, Tooltip } from 'antd';
+import React, { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import { Popconfirm, Popover, Tooltip } from 'antd';
 
 // The target lives in HTML React does not own, so antd cannot wrap it. antd's
 // trigger resolves its anchor from the child's ref, so a child that renders
@@ -26,29 +26,80 @@ const TargetAnchor = forwardRef(function TargetAnchor({ target }, ref) {
   return null;
 });
 
-function HtmlOverlay({ content, kind, onClose, target }) {
+// Open popovers and confirms, newest last. Escape and outside clicks close only
+// the newest, so a confirm opened inside a popover closes before the popover,
+// and a click in the confirm is not an outside click for the popover.
+const dismissable = [];
+
+function isTop(entry) {
+  return dismissable[dismissable.length - 1] === entry;
+}
+
+function ConfirmOverlay({ content, onClose, onConfirm, popupClassName, target }) {
+  const messageId = `${useId().replace(/[^a-zA-Z0-9_-]/g, '')}-message`;
+  const cancelRef = useRef(null);
+  return (
+    <Popconfirm
+      afterOpenChange={(open) => {
+        // The least destructive action takes focus (WAI-ARIA alert dialog),
+        // once the popup is placed so focusing it cannot scroll the page.
+        if (open) cancelRef.current?.focus();
+      }}
+      cancelButtonProps={{ 'aria-describedby': messageId, ref: cancelRef }}
+      okButtonProps={{ 'aria-describedby': messageId }}
+      onCancel={() => onClose('cancel')}
+      onConfirm={onConfirm}
+      open={true}
+      placement="top"
+      rootClassName={popupClassName}
+      title={<span id={messageId}>{content}</span>}
+      trigger={[]}
+    >
+      <TargetAnchor target={target} />
+    </Popconfirm>
+  );
+}
+
+function HtmlOverlay({ content, kind, onClose, onConfirm, target }) {
   const popupClassName = `lowdefy-html-${kind}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   useEffect(() => {
-    // A click on the trigger toggles the popover itself; one inside the popup
+    // Tooltips close on Escape but take no clicks, so they are not dismissable.
+    const entry = kind === 'tooltip' ? null : {};
+    if (entry) dismissable.push(entry);
+    // A click on the trigger toggles the overlay itself; one inside the popup
     // is inside the overlay.
     function onPointerDown(event) {
-      if (kind !== 'popover') return;
+      if (!entry || !isTop(entry)) return;
       if (target.contains(event.target)) return;
       if (event.target.closest?.(`.${popupClassName}`)) return;
-      onClose();
+      onClose('outside');
     }
     function onKeyDown(event) {
-      if (event.key === 'Escape') onClose();
+      if (event.key !== 'Escape' || event.isComposing) return;
+      // Every tooltip closes on Escape; of popovers and confirms, the newest.
+      if (!entry || isTop(entry)) onClose('escape');
     }
     document.addEventListener('mousedown', onPointerDown);
     document.addEventListener('keydown', onKeyDown);
     return () => {
+      if (entry) dismissable.splice(dismissable.indexOf(entry), 1);
       document.removeEventListener('mousedown', onPointerDown);
       document.removeEventListener('keydown', onKeyDown);
     };
   }, [kind, onClose, popupClassName, target]);
 
+  if (kind === 'confirm') {
+    return (
+      <ConfirmOverlay
+        content={content}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        popupClassName={popupClassName}
+        target={target}
+      />
+    );
+  }
   const Overlay = kind === 'popover' ? Popover : Tooltip;
   const contentProps = kind === 'popover' ? { content } : { title: content };
   return (

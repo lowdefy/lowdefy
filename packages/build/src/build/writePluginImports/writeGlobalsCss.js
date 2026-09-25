@@ -102,6 +102,9 @@ async function writeGlobalsCss({ components, context }) {
    the only scan inputs Lowdefy needs. */
 @import "tailwindcss" source(none);
 @import "@lowdefy/layout/grid.css";
+/* Styles for data-* attributes in HTML (data-tag, data-status, …), scoped to
+   HTML that Lowdefy's HtmlComponent enhanced. */
+@import "@lowdefy/block-utils/html.css";
 
 /* Imported CSS file — when this changes, PostCSS re-runs and Tailwind re-scans @source.
    This import is the ONLY recompile trigger in dev: the @source .html files below are

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { getHtmlEnhancements } from '@lowdefy/block-utils/registerHtmlEnhancements.js';
+
 import initLowdefyContext from './initLowdefyContext.js';
 
 function baseArgs(overrides = {}) {
@@ -53,4 +55,24 @@ test('initLowdefyContext sets lowdefyGlobal from rootConfig', () => {
   const args = baseArgs({ lowdefyGlobal: { key: 'value' } });
   const result = initLowdefyContext(args);
   expect(result.lowdefyGlobal).toEqual({ key: 'value' });
+});
+
+test('initLowdefyContext registers HTML links that build hrefs with basePath and navigate with link', () => {
+  const args = baseArgs();
+  args.router.basePath = '/app';
+  const result = initLowdefyContext(args);
+  const registration = getHtmlEnhancements();
+  expect(registration.createHref({ pathname: '/contacts', query: 'id=1' })).toBe(
+    '/app/contacts?id=1'
+  );
+  expect(registration.link).toBe(result._internal.link);
+});
+
+test('initLowdefyContext registers the app locale and translate for HTML formatting', () => {
+  const args = baseArgs();
+  args.window.__lowdefy_locale = 'de-DE';
+  const result = initLowdefyContext(args);
+  const registration = getHtmlEnhancements();
+  expect(registration.getLocale()).toBe('de-DE');
+  expect(registration.translate).toBe(result._internal.translate);
 });
