@@ -105,3 +105,20 @@ test('the websocket route refuses a plain HTTP request', async () => {
   expect(response.status).toBe(400);
   expect(await response.json()).toEqual({ message: 'WebSocket upgrade required.' });
 });
+
+test('an upgrade answered 200 without a request context is refused and logged', async () => {
+  const upgrade = createUpgrade();
+  const app = new Hono();
+  app.get('/api/websocket', (c) => c.json({ ok: true }));
+
+  await handleWebSocketUpgrade({ app, ...upgrade });
+
+  expect(upgrade.wss.handleUpgrade).not.toHaveBeenCalled();
+  expect(upgrade.socket.end).toHaveBeenCalledWith(
+    'HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n'
+  );
+  expect(mockLogger.warn).toHaveBeenCalledWith(
+    { event: 'ws_upgrade_refused', status: 200 },
+    'WebSocket upgrade refused: /api/websocket answered 200 without a request context; the websocket route did not run.'
+  );
+});

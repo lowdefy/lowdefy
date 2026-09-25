@@ -178,3 +178,18 @@ test('lowdefyBuild runs the next build after a failed one', async () => {
   await expect(first).rejects.toThrow('Build failed');
   await expect(second).resolves.toEqual({ components: {}, pageRegistry: {}, context: {} });
 });
+
+test('lowdefyBuild reads the plugin types and messages maps in parallel', async () => {
+  const context = createContext();
+  let releaseTypes;
+  mockCreateCustomPluginTypesMap.mockImplementationOnce(
+    () => new Promise((resolve) => (releaseTypes = () => resolve({})))
+  );
+  mockShallowBuild.mockResolvedValue({ components: {}, pageRegistry: {}, context: {} });
+
+  const build = lowdefyBuild(context)();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(mockCreateCustomPluginMessagesMap).toHaveBeenCalledTimes(1);
+  releaseTypes();
+  await build;
+});

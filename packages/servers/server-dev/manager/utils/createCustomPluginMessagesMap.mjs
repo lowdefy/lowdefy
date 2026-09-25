@@ -44,23 +44,26 @@ async function createCustomPluginMessagesMap({ directories, logger }) {
   const customMessagesMap = {};
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
-  for (const plugin of pluginDefinitions) {
-    let messagesPath;
-    try {
-      messagesPath = require.resolve(`${plugin.name}/messages`);
-    } catch (e) {
-      // Plugin does not ship a `./messages` export — silently skip.
-      if (!warnedMissingMessages.has(plugin.name)) {
-        warnedMissingMessages.add(plugin.name);
-        logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
+  // Each import starts a worker, so the plugins are imported in parallel.
+  await Promise.all(
+    pluginDefinitions.map(async (plugin) => {
+      let messagesPath;
+      try {
+        messagesPath = require.resolve(`${plugin.name}/messages`);
+      } catch (e) {
+        // Plugin does not ship a `./messages` export — silently skip.
+        if (!warnedMissingMessages.has(plugin.name)) {
+          warnedMissingMessages.add(plugin.name);
+          logger?.debug?.(`Plugin "${plugin.name}" has no "./messages" export; skipping.`);
+        }
+        return;
       }
-      continue;
-    }
-    const messagesModule = await importFresh(messagesPath);
-    const messages = messagesModule.default ?? messagesModule;
-    if (!messages || typeof messages !== 'object') continue;
-    customMessagesMap[plugin.name] = messages;
-  }
+      const messagesModule = await importFresh(messagesPath);
+      const messages = messagesModule.default ?? messagesModule;
+      if (!messages || typeof messages !== 'object') return;
+      customMessagesMap[plugin.name] = messages;
+    })
+  );
 
   return customMessagesMap;
 }

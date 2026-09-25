@@ -29,8 +29,10 @@ function lowdefyBuild({ directories, logger, options }) {
   async function build() {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
+    const [customTypesMap, customMessagesMap] = await Promise.all([
+      createCustomPluginTypesMap({ directories, logger }),
+      createCustomPluginMessagesMap({ directories, logger }),
+    ]);
 
     let result;
     try {

@@ -37,6 +37,13 @@ async function listFiles(directory) {
 // working.
 const pageRegistryFile = 'pageRegistry.json';
 
+// Files the manager and the dev tools write into the build directory to
+// signal each other. The build does not write them, so they are never in the
+// staged build, and removing them as stale would drop the signal: a restart
+// request (.restart), a page invalidation or client reload queued behind the
+// build, or the build status the dev tools read.
+const controlFiles = new Set(['.restart', 'buildStatus.json', 'invalidatePages', 'reload']);
+
 async function moveFile({ buildDirectory, stagingDirectory, file }) {
   const target = path.join(buildDirectory, file);
   await fs.mkdir(path.dirname(target), { recursive: true });
@@ -53,7 +60,7 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   }
 
   const staged = new Set(stagedFiles);
-  const staleFiles = liveFiles.filter((file) => !staged.has(file));
+  const staleFiles = liveFiles.filter((file) => !staged.has(file) && !controlFiles.has(file));
   await Promise.all(
     staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), { force: true }))
   );
