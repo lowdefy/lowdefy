@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-function buildMcpServerEntry({ port }) {
-  return {
-    type: 'http',
-    url: `http://localhost:${port}/lowdefy-docs/mcp`,
-  };
+import resolveMcpCommand from './resolveMcpCommand.js';
+
+function buildMcpServerEntry({ cliVersion, configDirectory, projectDirectory }) {
+  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory, projectDirectory });
+  return { entry: { type: 'stdio', ...entry }, installed };
 }
 
 export default buildMcpServerEntry;

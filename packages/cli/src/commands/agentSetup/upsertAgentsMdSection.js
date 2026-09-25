@@ -22,12 +22,26 @@ import agentsMd from './agentsMd.js';
 
 const lowdefyHeadingPattern = /^##\s+Lowdefy\b/m;
 
+// Sections written by agent-setup before `lowdefy mcp` told agents to start
+// the dev server on a fixed port. They are replaced; a section a person wrote
+// or rewrote is left alone.
+const PORT_PINNED_SECTION_MARKER = '### Running the app';
+
+function findLowdefySection(content) {
+  const match = lowdefyHeadingPattern.exec(content);
+  const start = match.index;
+  const rest = content.slice(start + match[0].length);
+  const next = /^##\s/m.exec(rest);
+  const end = next === null ? content.length : start + match[0].length + next.index;
+  return { start, end, text: content.slice(start, end) };
+}
+
 // Appends a "## Lowdefy" section to the project's existing agent instructions
 // file instead of creating a competing one: an existing AGENTS.md wins, then
 // an existing CLAUDE.md, and only when neither exists is an AGENTS.md
 // created. Never overwrites — the file may already document the rest of the
 // project.
-async function upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand }) {
+async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand }) {
   const candidates = ['AGENTS.md', 'CLAUDE.md'].map((fileName) => ({
     fileName,
     filePath: path.join(projectDirectory, fileName),
@@ -40,13 +54,25 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, port,
     }
   }
 
+  const section = agentsMd({ devCommand, appPath });
+
   const withSection = existingFiles.find((file) => lowdefyHeadingPattern.test(file.content));
   if (withSection) {
-    context.logger.info(`'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`);
+    const current = findLowdefySection(withSection.content);
+    if (!current.text.includes(PORT_PINNED_SECTION_MARKER)) {
+      context.logger.info(`'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`);
+      return;
+    }
+    const after = withSection.content.slice(current.end);
+    const updated = `${withSection.content.slice(0, current.start)}${section}${
+      after === '' ? '' : `\n${after}`
+    }`;
+    await writeFile(withSection.filePath, updated);
+    context.logger.info(
+      `Updated the 'Lowdefy' section in '${withSection.fileName}' for 'lowdefy mcp' (agents no longer start the dev server on a fixed port).`
+    );
     return;
   }
-
-  const section = agentsMd({ port, devCommand, appPath });
 
   if (existingFiles.length === 0) {
     await writeFile(path.join(projectDirectory, 'AGENTS.md'), `${section}`);

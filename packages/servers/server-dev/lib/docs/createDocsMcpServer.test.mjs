@@ -50,6 +50,7 @@ const EXPECTED_TOOLS = [
   'lowdefy_search_docs',
   'lowdefy_get_plugin_doc',
   'lowdefy_build_status',
+  'lowdefy_check',
   'lowdefy_get_page_config',
   'lowdefy_find_config',
   'lowdefy_screenshot_page',
@@ -149,6 +150,14 @@ test('MCP tools/list returns all lowdefy tools', async () => {
   const { tools } = await client.listTools();
   const names = tools.map((tool) => tool.name).sort();
   expect(names).toEqual([...EXPECTED_TOOLS].sort());
+  await client.close();
+});
+
+test('MCP tools/list serves exactly the tools in devToolDefinitions, which the stdio shim lists', async () => {
+  const { default: devToolDefinitions } = await import('./devToolDefinitions.js');
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  expect(tools.map((tool) => tool.name).sort()).toEqual(Object.keys(devToolDefinitions).sort());
   await client.close();
 });
 

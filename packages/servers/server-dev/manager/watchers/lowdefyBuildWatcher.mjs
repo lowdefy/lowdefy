@@ -46,8 +46,7 @@ function lowdefyBuildWatcher(context) {
       const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
 
       const isSkeletonChange =
-        lowdefyYamlModified ||
-        changedFiles.some((f) => skeletonSourceFiles.has(f));
+        lowdefyYamlModified || changedFiles.some((f) => skeletonSourceFiles.has(f));
 
       if (isSkeletonChange) {
         await context.lowdefyBuild();
@@ -66,6 +65,7 @@ function lowdefyBuildWatcher(context) {
   return setupWatcher({
     callback,
     context,
+    onBusy: context.onConfigWatcherBusy,
     ignorePaths: [
       '**/node_modules/**',
       ...context.options.watchIgnore.map(fixRelativePathConfigDir),

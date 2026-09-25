@@ -39,7 +39,7 @@ lowdefy dev [options]
 |--------|-------------|---------|
 | `--config-directory` | Config directory path | Current directory |
 | `--dev-directory` | Dev server directory | `.lowdefy/dev` |
-| `--port` | Server port | 3000 |
+| `--port` | Server port; an explicit port (flag, `PORT`, `cli.port`) is strict, only the default moves | 3000 |
 | `--no-open` | Don't open browser | Opens browser |
 | `--watch` | Additional paths to watch | - |
 | `--watch-ignore` | Paths to ignore | - |
@@ -48,11 +48,17 @@ lowdefy dev [options]
 
 **What happens:**
 
-1. Downloads dev server package
-2. Runs `@lowdefy/build` on config
-3. Starts the dev server manager (Vite + Hono child process)
-4. Watches for config changes
-5. Rebuilds on change
+1. Refuses if `.lowdefy/instance.json` names a live dev server for this app (before touching `.lowdefy/dev`)
+2. Resolves the port (`LOWDEFY_DEV_PORT` from the hub outranks `--port`)
+3. Downloads dev server package
+4. Runs `@lowdefy/build` on config
+5. Starts the dev server manager (Vite + Hono child process), which writes `.lowdefy/instance.json`
+6. Watches for config changes
+7. Rebuilds on change
+
+### `lowdefy mcp` / `lowdefy hub`
+
+`lowdefy mcp` is the stdio MCP server agent clients spawn from `.mcp.json`; `lowdefy hub status|start|stop|logs` drive the per-user hub that runs dev servers for agents (`hub serve` is the hidden daemon entry). Both bypass `runCommand`/`startUp` (no lowdefy.yaml needed, nothing written to stdout) via `utils/runHubCommand.js`. See `code-docs/architecture/agent-dev-hub.md`.
 
 ### `lowdefy build`
 

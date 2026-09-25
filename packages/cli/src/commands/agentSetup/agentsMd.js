@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-function agentsMd({ port, devCommand, appPath }) {
+import devServerRules from './devServerRules.js';
+
+function agentsMd({ devCommand, appPath }) {
   const appDescription =
     appPath === ''
       ? 'This project is a [Lowdefy](https://lowdefy.com) app'
@@ -26,31 +28,23 @@ rather than hand-written code. Pages compose **blocks** (UI components), **opera
 like \`_if\`, \`_get\`, \`_state\`), **actions** (event handlers), and **connections/requests**
 (databases and APIs).
 
-### Running the app
+### The dev server
 
-Start the development server with:
+${devServerRules({ appPath })}
 
-\`\`\`bash
-${devCommand}
-\`\`\`
-
-This serves the app at \`http://localhost:${port}\` and hot-reloads on config changes.
+Developers start it themselves with \`${devCommand}\`; agents use the tools above.
 
 ### Looking up types, schemas, and docs
 
-While the dev server is running, it serves documentation for every block, operator, action,
-connection, and request type installed in this project (including local plugins) at
-\`http://localhost:${port}/lowdefy-docs\`, and as MCP tools via the \`lowdefy-docs\` MCP server
-(see \`.mcp.json\`).
+The dev server serves documentation for every block, operator, action, connection, and request type
+installed in this project (including local plugins).
 
 **Never guess type names or properties.** Before writing or editing Lowdefy config:
 
-1. List available types: call \`lowdefy_list_types\` (or \`GET /lowdefy-docs/{kind}\`, e.g.
-   \`/lowdefy-docs/blocks\`) — this includes this project's local plugins.
-2. Get the exact schema: call \`lowdefy_get_schema\` (or \`GET /lowdefy-docs/schema/{kind}/{type}\`).
-3. See real usage: call \`lowdefy_get_examples\` (or \`GET /lowdefy-docs/examples/{type}\`).
-4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\` (or
-   \`GET /lowdefy-docs/content/{slug}\`, \`GET /lowdefy-docs/search?q=...\`).
+1. List available types: call \`lowdefy_list_types\` — this includes this project's local plugins.
+2. Get the exact schema: call \`lowdefy_get_schema\`.
+3. See real usage: call \`lowdefy_get_examples\`.
+4. Read concept docs or search: call \`lowdefy_get_doc\` or \`lowdefy_search_docs\`.
 
 ### Visual feedback
 

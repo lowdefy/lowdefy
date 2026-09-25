@@ -16,6 +16,9 @@
 
 import path from 'path';
 
+import { type } from '@lowdefy/helpers';
+
+import findDevScripts from '../../utils/findDevScripts.js';
 import findProjectRoot from './findProjectRoot.js';
 import getDevCommand from './getDevCommand.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
@@ -42,10 +45,26 @@ function resolveDirectories({ context }) {
   return { projectDirectory, appPath: relative.split(path.sep).join('/') };
 }
 
+// lowdefy mcp starts the dev server with the app's own dev script. When several
+// scripts run `lowdefy dev` (debug logging, production secrets, ...) it will
+// not guess - the app names one in cli.devScript.
+function warnAmbiguousDevScript({ context }) {
+  if (!type.isNone(context.cliConfig?.devScript)) {
+    return;
+  }
+  const { matching } = findDevScripts({ configDirectory: context.directories.config });
+  if (matching.length > 1) {
+    context.logger.warn(
+      `Several package.json scripts run "lowdefy dev" (${matching.join(
+        ', '
+      )}). Set cli.devScript in lowdefy.yaml to the one agents' dev servers should start with - lowdefy mcp will not guess.`
+    );
+  }
+}
+
 async function agentSetup({ context }) {
   context.logger.info('Setting up this project for AI coding agents.');
 
-  const port = context.options.port;
   const { projectDirectory, appPath } = resolveDirectories({ context });
   if (appPath !== '') {
     context.logger.info(
@@ -58,10 +77,11 @@ async function agentSetup({ context }) {
   });
   const runCommand = appPath === '' ? devCommand : `cd ${appPath} && ${devCommand}`;
 
-  await upsertMcpServer({ context, projectDirectory, port });
+  await upsertMcpServer({ context, projectDirectory });
   await upsertClaudeSettings({ context, projectDirectory });
-  await writeSkillFile({ context, projectDirectory, appPath, port });
-  await upsertAgentsMdSection({ context, projectDirectory, appPath, port, devCommand: runCommand });
+  await writeSkillFile({ context, projectDirectory, appPath });
+  await upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand: runCommand });
+  warnAmbiguousDevScript({ context });
 
   await context.sendTelemetry();
   context.logger.info(

@@ -1,18 +1,51 @@
 When you run `lowdefy dev`, the development server also serves a documentation API and an [MCP](https://modelcontextprotocol.io) endpoint built for AI coding agents. It describes everything installed in _your_ project — every block, operator, action, connection and request type from core Lowdefy plugins _and_ your own local plugins — plus the full Lowdefy documentation as markdown. This means an agent like Claude Code never has to guess type names or property shapes: it can look up the exact schema, real examples, and the relevant docs page while it writes your config.
 
-Everything is served under the `/lowdefy-docs` path of your dev server (default `http://localhost:3000`). No setup or configuration is needed — it is always on in dev, and never part of your production server.
+Everything is served under the `/lowdefy-docs` path of your dev server. It is always on in dev, and never part of your production server.
 
 > The `/lowdefy-docs` route prefix is reserved by the dev server. A page with `id: lowdefy-docs` will not be reachable in dev.
 
-## The MCP endpoint
+## Connect your agent: `lowdefy mcp`
 
-The dev server exposes an MCP server (streamable HTTP) at:
+Run `lowdefy agent-setup` once in your project. It registers the `lowdefy-docs` MCP server in `.mcp.json`:
 
+```json
+{
+  "mcpServers": {
+    "lowdefy-docs": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["apps/main/node_modules/lowdefy/dist/index.js", "mcp"]
+    }
+  }
+}
 ```
-http://localhost:3000/lowdefy-docs/mcp
-```
 
-It provides these tools:
+Your agent client starts `lowdefy mcp` itself at the start of each session, so the tools are always there — whether or not a dev server is running yet. Nothing in the entry names a port, so the same checked-in file works in every git worktree.
+
+`lowdefy mcp` sends each tool call to the dev server of the app and checkout the agent is working in:
+
+- **It works out the app** from the session's working directory. Every tool also takes an optional `directory` argument — pass it when the repository holds several apps, or when an agent works in a different git worktree from the session (a subagent in its own worktree, for example).
+- **It starts the dev server when needed**, through the [Lowdefy hub](/cli#hub): a small per-user background process that gives each app its own port, runs the app's own dev script (so a secrets-manager wrapper still applies — set `cli.devScript` if several scripts run `lowdefy dev`), and stops servers nobody uses. A dev server you started yourself with `lowdefy dev` is used as it is, and never stopped by an agent.
+- **Every result starts with the app and checkout it came from**, for example `apps/main @ app-wt-invoices · http://localhost:4102`, so an agent never mistakes another worktree's answer for its own.
+
+Agents manage the dev server with these tools, and never run `lowdefy dev`, choose ports, or kill processes themselves:
+
+| Tool                 | Purpose                                                                                                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy_dev_start`  | Start the app's dev server (or return the running one) and wait until it is ready. `restart: true` after local plugin or `.env` changes; `clean: true` also deletes the build directory |
+| `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                         |
+| `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                           |
+| `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                          |
+| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                          |
+| `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                              |
+
+The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.
+
+The `/lowdefy-docs` tools accept requests from agents and tools on your machine and from the dev app's own pages; a request a browser makes on behalf of another website is refused.
+
+## The tools
+
+The dev server provides these tools:
 
 | Tool                             | Purpose                                                                                                                                                                                                                |
 | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,6 +58,7 @@ It provides these tools:
 | `lowdefy_search_docs`            | Keyword search over the Lowdefy docs                                                                                                                                                                                   |
 | `lowdefy_get_plugin_doc`         | Markdown (READMEs, guides) shipped inside an installed plugin package                                                                                                                                                  |
 | `lowdefy_build_status`           | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit                                                                                              |
+| `lowdefy_check`                  | Validate the whole app as `lowdefy build` would, without building — every page, and the prod-only checks dev shows as warnings come back as errors. Call before calling a change done                                  |
 | `lowdefy_get_page_config`        | The fully built config for a page, or its structured build errors                                                                                                                                                      |
 | `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification                                                                                                                                          |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout                     |
@@ -77,7 +111,7 @@ Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
 
 1. Discover types and schemas, write or edit YAML.
-2. Call `lowdefy_build_status` — did the build succeed? Errors come back with the exact source file and location.
+2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. Did the build succeed? Errors come back with the exact source file and location.
 3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
 5. Server-side failures appear beside them under `serverErrors` — a request whose database filter is malformed, an endpoint step that throws, an MCP tool call or an agent tool call that fails — each with the yaml `source` (`file:line`) and `config` path that produced it, plus the `endpointId`, `requestId` and `pageId` where known. The store holds the last 50 errors and is cleared on dev server restart.
@@ -313,64 +347,27 @@ Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy tes
 npx lowdefy agent-setup
 ```
 
-This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server, `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Use `--port` if your dev server doesn't run on 3000.
+This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` runs your app's own version of the CLI; each git worktree then needs its own `pnpm install` (or equivalent) before an agent session starts there.
+
+Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server keeps its `lowdefy-docs` name, so tool names and approvals carry over.
 
 ## Using it with Claude Code manually
 
-Add the MCP server to your project so Claude Code can use it. In your project directory run:
-
-```bash
-claude mcp add --transport http lowdefy-docs http://localhost:3000/lowdefy-docs/mcp
-```
-
-Or commit a `.mcp.json` file at your project root so the whole team gets it:
+Commit a `.mcp.json` file at your project root, pointing at your app's installed CLI:
 
 ```json
 {
   "mcpServers": {
     "lowdefy-docs": {
-      "type": "http",
-      "url": "http://localhost:3000/lowdefy-docs/mcp"
+      "type": "stdio",
+      "command": "node",
+      "args": ["node_modules/lowdefy/dist/index.js", "mcp"]
     }
   }
 }
 ```
 
-If your dev server runs on a different port, adjust the URL. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples), so it works well without any extra prompting.
-
-## Referencing it in a skill
-
-For the best results, add a skill to your project that tells the agent to use the docs server whenever it writes Lowdefy config. Create `.claude/skills/lowdefy-config/SKILL.md`:
-
-```markdown
----
-name: lowdefy-config
-description: Use when writing or editing Lowdefy YAML config — pages, blocks, operators, actions, connections, or requests. Looks up exact type names, schemas, and examples from the running dev server instead of guessing.
----
-
-# Writing Lowdefy config
-
-The dev server serves docs for everything installed in this project at
-`http://localhost:3000/lowdefy-docs` (also as MCP tools via the `lowdefy-docs` server).
-
-Never guess type names or properties. Before writing config:
-
-1. Call `lowdefy_list_types` (or `GET /lowdefy-docs/blocks`, `/lowdefy-docs/operators`,
-   `/lowdefy-docs/actions`, `/lowdefy-docs/connections`, `/lowdefy-docs/requests`) to find the exact
-   type name — this includes this project's local plugins.
-2. Call `lowdefy_get_schema` (or `GET /lowdefy-docs/schema/{kind}/{type}`) for the
-   exact properties and events of that type.
-3. Call `lowdefy_get_examples` (or `GET /lowdefy-docs/examples/{type}`) to see real
-   usage YAML for blocks.
-4. For concepts (state, operators, events, requests), call `lowdefy_get_doc`
-   or `lowdefy_search_docs`.
-
-After every edit, call `lowdefy_build_status` and fix what it reports. Use
-`lowdefy_inspect_state` to read the live state of the page (ask the developer
-to interact with it first when debugging), `lowdefy_eval_operator` to test
-operator expressions against real state, and `lowdefy_snapshot_state` /
-`lowdefy_load_state` to capture and restore app states for testing.
-```
+In a monorepo, use the path to the app's `node_modules`, for example `apps/main/node_modules/lowdefy/dist/index.js`. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
 
 ## Plain HTTP routes
 

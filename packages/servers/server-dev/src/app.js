@@ -63,6 +63,7 @@ import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
 import getMockUser from '../lib/server/auth/getMockUser.js';
 import jitPageHandler from './routes/jitPage.js';
+import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
@@ -126,6 +127,11 @@ function createApp() {
   // JSON-RPC envelope. MCP carries its own stale notice, prepended to each
   // tool result in createDocsMcpServer — merging fields into the envelope
   // instead would put unknown members on a strictly-validated message.
+  // localDevToolsOnly comes first of all: it refuses requests a browser sends
+  // on behalf of another site. Registered twice because hono's `/*` pattern
+  // does not match the bare path.
+  app.use('/lowdefy-docs', localDevToolsOnly());
+  app.use('/lowdefy-docs/*', localDevToolsOnly());
   app.all('/lowdefy-docs/mcp', docsMcpHandler);
   // Flags every other docs response while the last build failed. Registered
   // twice: hono's `/*` pattern does not match the bare path.
@@ -155,6 +161,10 @@ function createApp() {
   // Live-tab inspection channel: dev tabs (client/Inspector.jsx) answer
   // targeted SSE events by posting results here; GET lists connected tabs
   // and serves checkpoint parts for the ?_checkpoint bootstrap.
+  // The live-tab channel acts on the developer's open tabs and loads recorded
+  // request mocks - the same cross-site guard as the docs tools.
+  app.use('/api/dev-inspect', localDevToolsOnly());
+  app.use('/api/dev-inspect/*', localDevToolsOnly());
   app.all('/api/dev-inspect', devInspectHandler);
   app.all('/api/dev-inspect/*', devInspectHandler);
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);

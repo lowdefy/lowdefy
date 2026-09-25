@@ -15,33 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { readDevInstance } from '@lowdefy/node-utils';
 
-import discoverJourneys from './discoverJourneys.js';
-import formatJourneyResult from './formatJourneyResult.js';
-import runJourney from './runJourney.js';
+import selectTests from './selectTests.js';
 import startDevServer from './startDevServer.js';
-
-// Each suite discovers its own test items and runs one item against the dev server.
-// Request tests (tests/requests/*.test.yaml) are added here as a second entry.
-const suites = [
-  {
-    name: 'journeys',
-    discover: discoverJourneys,
-    run: runJourney,
-    format: formatJourneyResult,
-  },
-];
-
-function getItemName(item) {
-  return item.journey?.name ?? item.filePath;
-}
-
-function matchesFilter({ item, filter }) {
-  if (type.isNone(filter)) {
-    return true;
-  }
-  return getItemName(item).toLowerCase().includes(filter.toLowerCase());
-}
 
 function trimTrailingSlash(url) {
   return url.replace(/\/+$/, '');
@@ -51,6 +28,13 @@ async function resolveServer({ context }) {
   if (type.isString(context.options.url) && context.options.url !== '') {
     context.logger.info(`Running tests against ${context.options.url}.`);
     return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
+  }
+  // A dev server already running for this app owns .lowdefy/dev; starting a
+  // second one there would be refused, so test against the running one.
+  const running = readDevInstance({ configDirectory: context.directories.config });
+  if (running !== null && running.state === 'ready') {
+    context.logger.info(`Running tests against the running dev server at ${running.url}.`);
+    return { url: running.url, stop: async () => {} };
   }
   try {
     return await startDevServer({ context });
@@ -62,10 +46,7 @@ async function resolveServer({ context }) {
 
 async function test({ context }) {
   const filter = context.options.filter;
-  const items = suites.flatMap((suite) =>
-    suite.discover({ context }).map((item) => ({ suite, item }))
-  );
-  const selected = items.filter(({ item }) => matchesFilter({ item, filter }));
+  const selected = selectTests({ context, filter });
 
   if (selected.length === 0) {
     if (type.isNone(filter)) {

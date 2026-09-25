@@ -40,10 +40,19 @@ async function logError({ error, context = {} }) {
   }
 }
 
+// startUp can fail before it resolves context.options (an unreadable
+// lowdefy.yaml, say), so fall back to the raw command line options - the
+// opt-out must hold on every path.
+function isTelemetryDisabled(context) {
+  return Boolean(
+    context?.options?.disableTelemetry ?? context?.commandLineOptions?.disableTelemetry
+  );
+}
+
 async function errorHandler({ context, error }) {
   const logger = context?.logger ?? createCliLogger({ logLevel: 'info' });
   logger.error(error);
-  if (!context?.disableTelemetry) {
+  if (!isTelemetryDisabled(context)) {
     await logError({ context, error });
   }
 }
