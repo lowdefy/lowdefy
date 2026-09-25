@@ -18,6 +18,7 @@ import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -30,12 +31,16 @@ async function MongodbInsertOne({
   request,
   requestId,
   tenant,
+  tenantGuard,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { doc } = deserializedRequest;
   if (tenant) {
     doc = stampTenantOnDoc({ doc, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedDoc({ doc, field: tenantGuard.field });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;

@@ -17,6 +17,7 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -31,6 +32,7 @@ async function MongoDBVersionedUpdateOne({
   request,
   requestId,
   tenant,
+  tenantGuard,
 }) {
   const deserializedRequest = deserialize(request);
   const { options, disableNoMatchError } = deserializedRequest;
@@ -41,6 +43,14 @@ async function MongoDBVersionedUpdateOne({
   if (tenant) {
     filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
     update = applyTenantToUpdate({ update, tenant, upsert: updateOptions?.upsert === true });
+  }
+  if (tenantGuard) {
+    assertUnscopedUpdate({
+      update,
+      filter,
+      field: tenantGuard.field,
+      upsert: updateOptions?.upsert === true,
+    });
   }
   const { collection, logCollection } = await getCollection({ connection });
 

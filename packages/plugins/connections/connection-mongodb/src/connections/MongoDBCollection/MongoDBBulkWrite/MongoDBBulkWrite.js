@@ -15,17 +15,21 @@
 */
 
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
+import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request, tenant }) {
+async function MongodbBulkWrite({ connection, request, tenant, tenantGuard }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { operations } = deserializedRequest;
   if (tenant) {
     operations = applyTenantToBulkOperations({ operations, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedBulkOperations({ operations, field: tenantGuard.field });
   }
   const { collection } = await getCollection({ connection });
   let response;

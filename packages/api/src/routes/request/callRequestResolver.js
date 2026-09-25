@@ -21,7 +21,15 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
   context,
-  { connectionProperties, endpointDepth, requestConfig, requestProperties, requestResolver, tenant }
+  {
+    connectionProperties,
+    endpointDepth,
+    requestConfig,
+    requestProperties,
+    requestResolver,
+    tenant,
+    tenantGuard,
+  }
 ) {
   const { blockId, endpointId, logger, pageId, payload } = context;
   // stepId for endpoint steps (after build), requestId for page requests
@@ -75,6 +83,10 @@ async function callRequestResolver(
       // resolveTenant - connection types implementing the scoping contract
       // enforce it (stamp writes, merge filters, inject pipeline matches).
       tenant: tenant ?? null,
+      // The tenant: none write guard ({ field } or null) computed by
+      // resolveTenantGuard - scoping connection types assert every row the
+      // request writes still carries a real organization id.
+      tenantGuard: tenantGuard ?? null,
     });
     return response;
   } catch (error) {
