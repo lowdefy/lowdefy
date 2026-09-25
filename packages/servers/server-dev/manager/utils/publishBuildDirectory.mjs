@@ -29,17 +29,27 @@ async function listFiles(directory) {
 // artifacts are missing, so the build is written to a staging directory and
 // moved over the live one file by file. A rename replaces a file in one step,
 // so a reader always finds each artifact, from the old build or the new one.
-// Live files the new build did not write are removed last. The live directory
-// itself is never replaced, so file watchers on it keep working.
+// Live files the new build did not write are removed next. The page registry
+// is moved last: the JIT page builder rebuilds its cached build context, and
+// drops its built pages, when the registry changes, so the registry must
+// arrive after every other new file and after the old build's pages are gone.
+// The live directory itself is never replaced, so file watchers on it keep
+// working.
+const pageRegistryFile = 'pageRegistry.json';
+
+async function moveFile({ buildDirectory, stagingDirectory, file }) {
+  const target = path.join(buildDirectory, file);
+  await fs.mkdir(path.dirname(target), { recursive: true });
+  await fs.rename(path.join(stagingDirectory, file), target);
+}
+
 async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   await fs.mkdir(buildDirectory, { recursive: true });
   const stagedFiles = await listFiles(stagingDirectory);
   const liveFiles = await listFiles(buildDirectory);
 
-  for (const file of stagedFiles) {
-    const target = path.join(buildDirectory, file);
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.rename(path.join(stagingDirectory, file), target);
+  for (const file of stagedFiles.filter((stagedFile) => stagedFile !== pageRegistryFile)) {
+    await moveFile({ buildDirectory, stagingDirectory, file });
   }
 
   const staged = new Set(stagedFiles);
@@ -47,6 +57,8 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   await Promise.all(
     staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), { force: true }))
   );
+
+  await moveFile({ buildDirectory, stagingDirectory, file: pageRegistryFile });
   await fs.rm(stagingDirectory, { recursive: true, force: true });
 }
 

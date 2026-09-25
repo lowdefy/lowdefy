@@ -288,8 +288,11 @@ Building straight into `build/` would leave a window where a request finds an ar
 missing (`API Endpoint "x" does not exist.`), and Vite's SSR graph can fail to resolve a
 `build/plugins/*.js` import. So the build writes into `build-staging/` (a sibling, so
 relative paths written into artifacts are the same), and `publishBuildDirectory` renames each
-staged file over its live counterpart, then removes live files the new build did not write.
-A rename replaces a file in one step, so every artifact is always present, old or new. The
+staged file over its live counterpart, then removes live files the new build did not write,
+then moves `pageRegistry.json` last. A rename replaces a file in one step, so every artifact
+is always present, old or new. The JIT page builder rebuilds its cached build context and
+drops its built pages when the registry's mtime changes, so the registry landing last means
+that context is read from the complete new build. The
 live `build/` directory is never replaced, so the file watchers on it keep working. A failed
 build leaves the live build untouched. Vite does not watch `build-staging/`.
 
