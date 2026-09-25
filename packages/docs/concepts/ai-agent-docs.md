@@ -36,6 +36,7 @@ Agents manage the dev server with these tools, and never run `lowdefy dev`, choo
 | `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                         |
 | `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                           |
 | `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                          |
+| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                          |
 | `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                              |
 
 The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.

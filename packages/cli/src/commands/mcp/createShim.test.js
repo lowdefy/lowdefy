@@ -88,6 +88,7 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
     'lowdefy_dev_stop',
     'lowdefy_dev_status',
     'lowdefy_dev_logs',
+    'lowdefy_run_tests',
     'lowdefy_dev_list',
     'lowdefy_build_status',
   ]);
@@ -128,6 +129,27 @@ test('lowdefy_dev_status reports a terminal dev server from its instance record 
     owner: 'terminal',
     state: 'starting',
   });
+  expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
+
+test('lowdefy_run_tests reports that there are no tests without starting anything', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      url: 'http://localhost:3999',
+    })
+  );
+  await connect({ cwd: root });
+  const result = JSON.parse(
+    text(await client.callTool({ name: 'lowdefy_run_tests', arguments: {} }))
+  );
+  expect(result.summary).toEqual('No tests found. Add journeys to tests/journeys/*.yaml.');
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
 });
 

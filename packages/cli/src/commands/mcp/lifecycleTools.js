@@ -66,6 +66,21 @@ const lifecycleTools = [
     },
   },
   {
+    name: 'lowdefy_run_tests',
+    description:
+      "Run this app's tests (tests/journeys/*.yaml, as `lowdefy test` does) against its dev server, starting it if needed. Returns a summary and one result per journey: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.",
+    inputSchema: {
+      type: 'object',
+      properties: {
+        directory: DIRECTORY_PROPERTY,
+        filter: {
+          type: 'string',
+          description: 'Only run journeys whose name contains this text (case-insensitive).',
+        },
+      },
+    },
+  },
+  {
     name: 'lowdefy_dev_list',
     description:
       'List the dev servers of every app in this checkout, and every server the Lowdefy hub runs in other checkouts.',
