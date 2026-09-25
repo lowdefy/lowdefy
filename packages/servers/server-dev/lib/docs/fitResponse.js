@@ -39,11 +39,12 @@ function writeResponseFile({ name, response }) {
 // file's path and size in its place, so nothing is cut and an agent can read
 // or query the whole value.
 function fitResponse({ result, name, saveResponse = false }) {
-  const json = JSON.stringify(result.response) ?? '';
+  // A request can resolve with no response; it is written as null.
+  const { response = null, ...rest } = result;
+  const json = JSON.stringify(response);
   if (!saveResponse && json.length <= MAX_INLINE_RESPONSE_CHARS) {
     return result;
   }
-  const { response, ...rest } = result;
   const fitted = {
     ...rest,
     responseFile: writeResponseFile({ name, response }),
