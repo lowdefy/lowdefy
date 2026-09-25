@@ -28,6 +28,18 @@ test('truncateResponse keeps a null response untouched', () => {
   expect(truncateResponse(result)).toBe(result);
 });
 
+test('truncateResponse keeps a result with no response untouched', () => {
+  // A failed routine, or one that ends without :return, has no response.
+  const result = {
+    error: { '~e': { name: 'ServiceError', message: 'Something went wrong.' } },
+    response: undefined,
+    status: 'error',
+    success: false,
+  };
+
+  expect(truncateResponse(result)).toBe(result);
+});
+
 test('truncateResponse slices an oversized response and flags it', () => {
   const big = 'x'.repeat(MAX_RESPONSE_CHARS + 500);
   const result = { response: big, status: 'success', error: null };

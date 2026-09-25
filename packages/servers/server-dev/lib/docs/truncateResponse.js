@@ -23,6 +23,10 @@ const MAX_RESPONSE_CHARS = 100_000;
 // truncated flag and a note carrying the original size, so an agent knows it
 // is reading a partial value rather than the real shape.
 function truncateResponse(result) {
+  // A failed routine, or one that ends without :return, has no response to measure.
+  if (result.response === undefined) {
+    return result;
+  }
   const json = JSON.stringify(result.response);
   if (json.length <= MAX_RESPONSE_CHARS) {
     return result;
