@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
 import { MongoDBAdapter as AuthJsMongoDBAdapter } from '@auth/mongodb-adapter';
+
+import createGetMongoClient from '../createGetMongoClient.js';
 
 /*
 Default collections are:
@@ -31,8 +32,11 @@ Default collections are:
 
 function MongoDBAdapter({ properties }) {
   const { databaseUri, mongoDBClientOptions, options } = properties;
-  const clientPromise = new MongoClient(databaseUri, mongoDBClientOptions).connect();
-  return AuthJsMongoDBAdapter(clientPromise, options);
+  // A client promise would stay rejected after a failed first connect; a getter
+  // lets the Auth.js adapter resolve the current (possibly replaced) client per
+  // operation.
+  const getMongoClient = createGetMongoClient({ databaseUri, mongoDBClientOptions });
+  return AuthJsMongoDBAdapter(getMongoClient, options);
 }
 
 export default MongoDBAdapter;

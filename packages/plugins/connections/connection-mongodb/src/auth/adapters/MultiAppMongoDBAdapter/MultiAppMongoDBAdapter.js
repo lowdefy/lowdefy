@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
-
 import createDatabaseUser from './createDatabaseUser.js';
 import getUserFromDbByEmail from './getUserFromDbByEmail.js';
 import getUserFromDbById from './getUserFromDbById.js';
 import updateDatabaseUser from './updateDatabaseUser.js';
+import createGetMongoClient from '../createGetMongoClient.js';
 
 function from({ _id, ...data }) {
   return { id: _id, ...data };
@@ -31,7 +30,10 @@ function to({ id, ...data }) {
 
 function MultiAppMongoDBAdapter({ properties }) {
   const { appName, collections, databaseUri, mongoDBClientOptions } = properties;
-  const mongoClient = new MongoClient(databaseUri, mongoDBClientOptions);
+  const getMongoClient = createGetMongoClient({ databaseUri, mongoDBClientOptions });
+  // The adapter and its helpers only call mongoClient.db(), so a facade that
+  // resolves the current (possibly replaced) client is enough.
+  const mongoClient = { db: (dbName) => getMongoClient().db(dbName) };
   const collectionNames = {
     accounts: collections?.accounts ?? 'user-accounts',
     contacts: collections?.contacts ?? 'user-contacts',
