@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { readDevInstance } from '@lowdefy/node-utils';
 
 import discoverJourneys from './discoverJourneys.js';
 import formatJourneyResult from './formatJourneyResult.js';
@@ -51,6 +52,13 @@ async function resolveServer({ context }) {
   if (type.isString(context.options.url) && context.options.url !== '') {
     context.logger.info(`Running tests against ${context.options.url}.`);
     return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
+  }
+  // A dev server already running for this app owns .lowdefy/dev; starting a
+  // second one there would be refused, so test against the running one.
+  const running = readDevInstance({ configDirectory: context.directories.config });
+  if (running !== null && running.state === 'ready') {
+    context.logger.info(`Running tests against the running dev server at ${running.url}.`);
+    return { url: running.url, stop: async () => {} };
   }
   try {
     return await startDevServer({ context });

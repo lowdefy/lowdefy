@@ -15,14 +15,14 @@
   limitations under the License.
 */
 
-import { wait } from '@lowdefy/helpers';
-import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
-import acquireManagerLock from './utils/acquireManagerLock.mjs';
+import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
+import resolvePorts from './utils/resolvePorts.mjs';
+import waitForServer from './utils/waitForServer.mjs';
 
 /*
 The run script does the following:
@@ -82,18 +82,23 @@ The run script does the following:
 
 const context = await getContext();
 
-// Refuse to run beside another manager for the same app - two managers race
-// each other's incremental builds and one wedges serving a stale build.
-const managerLock = acquireManagerLock({ directory: context.directories.server });
-if (managerLock.acquired === false) {
+const instance = acquireDevInstance({
+  configDirectory: context.directories.config,
+  owner: context.options.owner,
+  version: context.version,
+});
+if (instance.acquired === false) {
+  const { holder } = instance;
+  const where = holder.port ? `, http://localhost:${holder.port}` : '';
   context.logger.error(
-    `Another lowdefy dev manager (pid ${managerLock.holder.pid}, started ${managerLock.holder.startedAt}) ` +
-      `is already running for this app. Two managers race writing the build directory. ` +
-      `Stop it first, or delete ${managerLock.lockPath} if it is stale.`
+    `A dev server for this app is already running (${holder.owner ?? 'terminal'}${where}, pid ${
+      holder.pid
+    }). ` +
+      'Two dev servers race writing the build directory. Use the running one, or stop it first.'
   );
   process.exit(1);
 }
-process.on('exit', () => managerLock.release());
+process.on('exit', () => instance.release());
 
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
@@ -112,27 +117,27 @@ try {
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
   context.startWatchers();
 
-  // The manager is the component that binds the port, so it re-checks here to
+  // The manager is the component that binds the port, so it checks here to
   // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
   // process that grabbed the port during the initial build.
-  const availablePort = await findAvailablePort({ port: context.options.port });
-  if (availablePort !== context.options.port) {
-    context.logger.warn(
-      `Port ${context.options.port} is in use, using port ${availablePort} instead.`
-    );
-    context.options.port = availablePort;
-  }
+  const { port, internalPort } = await resolvePorts(context);
+  context.options.port = port;
+  context.internalPort = internalPort;
+  instance.update({ port, internalPort, url: `http://localhost:${port}` });
 
   // The manager holds the public port for the whole session and proxies to the
   // Vite child on an internal loopback port — restarting the child (js module
   // or .env change) then never drops the listener, so long-lived clients (MCP
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
-  context.internalPort = await findAvailablePort({ port: context.options.port + 1 });
   await startProxy(context);
 
   startServer(context);
-  await wait(800);
+  if (await waitForServer({ port: context.internalPort })) {
+    instance.update({ state: 'ready' });
+  } else {
+    context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
+  }
   const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },
@@ -151,7 +156,8 @@ try {
       ],
     })
   );
-  if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+  // A hub-owned server was started for an agent, not for a person at a browser.
+  if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true' && context.options.owner !== 'hub') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
     opener(`http://localhost:${context.options.port}`);
   }

@@ -14,22 +14,19 @@
   limitations under the License.
 */
 
-import { findAvailablePort } from '@lowdefy/node-utils';
-
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import checkNoRunningInstance from './checkNoRunningInstance.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
-import installServer from '../../utils/installServer.js';
-import runDevServer from './runDevServer.js';
 import getServer from '../../utils/getServer.js';
+import installServer from '../../utils/installServer.js';
+import resolveDevPort from './resolveDevPort.js';
+import runDevServer from './runDevServer.js';
 
 async function dev({ context }) {
   const directory = context.directories.dev;
   context.logger.info('Starting development server.');
-  const port = await findAvailablePort({ port: context.options.port });
-  if (port !== context.options.port) {
-    context.logger.warn(`Port ${context.options.port} is in use, using port ${port} instead.`);
-    context.options.port = port;
-  }
+  checkNoRunningInstance({ context });
+  await resolveDevPort({ context });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   // Dev keeps the plugin dependency set accumulated by previous sessions —
   // resetting package.json to package.original.json here would uninstall

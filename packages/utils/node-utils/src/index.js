@@ -18,10 +18,13 @@ import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import findAvailablePort from './findAvailablePort.js';
+import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
+import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import readDevInstance from './readDevInstance.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -32,11 +35,14 @@ export {
   copyFileOrDirectory,
   createSecretScrubber,
   findAvailablePort,
+  getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,
   installIfPackageJsonChanged,
+  isPidAlive,
   isPortAvailable,
+  readDevInstance,
   spawnProcess,
   readFile,
   writeFile,
