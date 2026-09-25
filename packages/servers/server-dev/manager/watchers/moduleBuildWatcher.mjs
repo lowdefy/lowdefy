@@ -71,6 +71,7 @@ function moduleBuildWatcher(context) {
   return setupWatcher({
     callback,
     context,
+    onBusy: context.onConfigWatcherBusy,
     ignorePaths: ['**/node_modules/**'],
     watchPaths: localModuleRoots,
   });

@@ -36,6 +36,7 @@ Agents manage the dev server with these tools, and never run `lowdefy dev`, choo
 | `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                         |
 | `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                           |
 | `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                          |
+| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                          |
 | `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                              |
 
 The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.
@@ -57,6 +58,7 @@ The dev server provides these tools:
 | `lowdefy_search_docs`            | Keyword search over the Lowdefy docs                                                                                                                                                                                   |
 | `lowdefy_get_plugin_doc`         | Markdown (READMEs, guides) shipped inside an installed plugin package                                                                                                                                                  |
 | `lowdefy_build_status`           | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit                                                                                              |
+| `lowdefy_check`                  | Validate the whole app as `lowdefy build` would, without building — every page, and the prod-only checks dev shows as warnings come back as errors. Call before calling a change done                                  |
 | `lowdefy_get_page_config`        | The fully built config for a page, or its structured build errors                                                                                                                                                      |
 | `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification                                                                                                                                          |
 | `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `select`, `press`, `wait`, `screenshot`, `expect`) and assert state, visibility, text or url — verify behaviour, not just layout                     |
@@ -109,7 +111,7 @@ Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
 
 1. Discover types and schemas, write or edit YAML.
-2. Call `lowdefy_build_status` — did the build succeed? Errors come back with the exact source file and location.
+2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. Did the build succeed? Errors come back with the exact source file and location.
 3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
 5. Server-side failures appear beside them under `serverErrors` — a request whose database filter is malformed, an endpoint step that throws, an MCP tool call or an agent tool call that fails — each with the yaml `source` (`file:line`) and `config` path that produced it, plus the `endpointId`, `requestId` and `pageId` where known. The store holds the last 50 errors and is cleared on dev server restart.

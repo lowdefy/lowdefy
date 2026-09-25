@@ -29,6 +29,7 @@ function devServerRules({ appPath }) {
   \`lowdefy_dev_status\` and \`lowdefy_dev_logs\`.
 - Working in a different git worktree from the session (for example as a subagent)? Pass your working
   directory as \`directory\` on every \`lowdefy_\` call.${appNote}
+- After every config edit, call \`lowdefy_build_status\` with \`wait: true\` and fix what it reports.
 - Every result starts with the app and checkout it came from. Check it.`;
 }
 

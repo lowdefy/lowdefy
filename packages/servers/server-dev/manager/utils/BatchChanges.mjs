@@ -17,19 +17,38 @@
 import { type } from '@lowdefy/helpers';
 
 class BatchChanges {
-  constructor({ context, fn, delay }) {
+  constructor({ context, fn, delay, onBusy }) {
     this.context = context;
     this._call = this._call.bind(this);
     this.args = [];
+    this.busy = false;
     this.delay = delay || 500;
     this.fn = fn;
+    this.onBusy = onBusy ?? (() => {});
     this.repeat = false;
     this.running = false;
   }
 
   newChange(...args) {
     this.args.push(args.filter((arg) => type.isString(arg))); // filter for string paths since chokidar also returns an stats object on windows.
+    // Busy from the first change of a batch until the batch - and any batch
+    // queued behind it - has been processed, so a reader can wait for its
+    // edits to land instead of racing the debounce.
+    if (!this.busy) {
+      this.busy = true;
+      this.onBusy(true);
+    }
     this._startTimer();
+  }
+
+  _settle() {
+    if (this.repeat) {
+      this.repeat = false;
+      this._call();
+      return;
+    }
+    this.busy = false;
+    this.onBusy(false);
   }
 
   _startTimer() {
@@ -50,14 +69,11 @@ class BatchChanges {
       this.args = [];
       await this.fn(args);
       this.running = false;
-      if (this.repeat) {
-        this.repeat = false;
-        this._call();
-      }
     } catch (error) {
       this.running = false;
       this.context.logger.error(error?.message ?? error);
     }
+    this._settle();
   }
 }
 

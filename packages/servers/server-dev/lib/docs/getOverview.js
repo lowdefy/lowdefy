@@ -67,7 +67,7 @@ function getOverview() {
     '',
     'The dev server rebuilds automatically when config files change. After EVERY edit:',
     '',
-    '1. **Check what broke**: `GET /lowdefy-docs/build-status` — or `lowdefy_build_status`. Current build errors and warnings with source file locations, plus recent browser runtime errors.',
+    '1. **Check what broke**: `GET /lowdefy-docs/build-status?wait=true` — or `lowdefy_build_status` with `wait: true`, which answers once your latest edit has been processed. Current build errors and warnings with source file locations, plus recent browser runtime errors.',
     '   Or subscribe instead of polling: `GET /lowdefy-docs/events` streams `build`, `client_error`, `server_error` and `restart` events over SSE (MCP clients receive the same as `notifications/message` from logger `lowdefy`).',
     '2. **Verify the page**: `GET /lowdefy-docs/page-config/{pageId}` — or `lowdefy_get_page_config`. The fully built page config, or its structured build errors.',
     '3. **See it rendered**: `GET /lowdefy-docs/screenshot/{pageId}` — or `lowdefy_screenshot_page`. PNG of the page in headless Chromium.',

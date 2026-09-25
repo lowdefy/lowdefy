@@ -100,6 +100,15 @@ if (instance.acquired === false) {
 }
 process.on('exit', () => instance.release());
 
+// `building` is true while a config or module change is queued or being
+// processed. lowdefy_build_status({ wait: true }) waits on it, so an agent
+// reads the build that includes its last edit instead of the one before.
+let busyConfigWatchers = 0;
+context.onConfigWatcherBusy = (busy) => {
+  busyConfigWatchers += busy ? 1 : -1;
+  instance.update({ building: busyConfigWatchers > 0 });
+};
+
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
 // targeted SIGTERM would otherwise orphan the child.
