@@ -20,7 +20,7 @@
       "url": "https://github.com/Gervwyk"
     },
     {
-      "name": "Johann Möller",
+      "name": "Johann M\u00f6ller",
       "url": "https://github.com/JohannMoller"
     },
     {
@@ -59,6 +59,7 @@
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/blocks-basic": "6.0.0",
     "@lowdefy/blocks-loaders": "6.0.0",
+    "@lowdefy/codemods": "6.0.0",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/node-utils": "6.0.0",
@@ -68,6 +69,7 @@
     "acorn": "8.16.0",
     "ajv": "8.20.0",
     "json5": "2.2.3",
+    "lucide": "1.48.0",
     "picomatch": "4.0.4",
     "semver": "7.7.4",
     "tar": "7.5.21",

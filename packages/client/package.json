@@ -41,14 +41,15 @@
   },
   "dependencies": {
     "@ant-design/icons": "6.1.0",
-    "antd": "6.3.1",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/engine": "6.0.0",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/layout": "6.0.0",
     "@lowdefy/logger": "6.0.0",
+    "antd": "6.3.1",
     "dayjs": "1.11.20",
+    "lucide-react": "1.48.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tinykeys": "^3.0.0"
