@@ -38,6 +38,7 @@ beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-publish-build-'));
   buildDirectory = path.join(root, 'build');
   stagingDirectory = path.join(root, 'build-staging');
+  write(stagingDirectory, 'pageRegistry.json', 'new');
 });
 
 afterEach(() => {
@@ -114,4 +115,40 @@ test('an artifact present in both builds exists at every point of the publish', 
   expect(checks).toBeGreaterThan(1);
   expect(missing).toBe(0);
   expect(read('connections/db.json')).toBe('new');
+});
+
+test('the page registry arrives after every other new file and after stale files are removed', async () => {
+  write(buildDirectory, 'pageRegistry.json', 'old');
+  write(buildDirectory, 'pages/jit-page/jit-page.json', 'old');
+  for (let i = 0; i < 200; i++) {
+    write(buildDirectory, `api/endpoint-${i}.json`, 'old');
+    write(stagingDirectory, `api/endpoint-${i}.json`, 'new');
+  }
+
+  let checks = 0;
+  let early = 0;
+  let publishing = true;
+  const check = () => {
+    if (!publishing) {
+      return;
+    }
+    checks += 1;
+    if (read('pageRegistry.json') === 'new') {
+      const oldEndpoint = [...Array(200).keys()].some(
+        (i) => read(`api/endpoint-${i}.json`) === 'old'
+      );
+      const stalePage = fs.existsSync(path.join(buildDirectory, 'pages/jit-page/jit-page.json'));
+      if (oldEndpoint || stalePage) {
+        early += 1;
+      }
+    }
+    setImmediate(check);
+  };
+  setImmediate(check);
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+  publishing = false;
+
+  expect(checks).toBeGreaterThan(1);
+  expect(early).toBe(0);
+  expect(read('pageRegistry.json')).toBe('new');
 });
