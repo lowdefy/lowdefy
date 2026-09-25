@@ -35,8 +35,10 @@ Never guess type names or properties. Before writing config:
 
 ## Icons and interactive HTML
 
-- Icons: call \`lowdefy_search_icons\` — never guess a name. Use icons, never emoji. Prefer semantic names (\`icon: edit\`,
-  \`delete\`, \`warning\`); add app-specific ones under \`theme.icons.aliases\` in lowdefy.yaml.
+- Icons: use a semantic name (\`icon: edit\`, \`delete\`, \`warning\`). Otherwise use a Lucide name in
+  PascalCase (\`Receipt\`), found with \`lowdefy_search_icons\`. Never invent a name, and never use emoji.
+  Do not write old react-icons names (\`AiOutlineUser\`). Add app-specific semantic names under
+  \`theme.icons.aliases\` in lowdefy.yaml.
 - In any HTML string (Html, ClickableHtml, DangerousHtml, and html properties like Tooltip titles)
   write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
   help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.

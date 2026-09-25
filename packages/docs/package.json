@@ -29,6 +29,7 @@
   "type": "module",
   "exports": {
     "./actions": "./dist/actions.js",
+    "./iconSets": "./dist/iconSets.js",
     "./operators/client": "./dist/operatorsClient.js",
     "./types": "./dist/types.js"
   },

@@ -15,18 +15,15 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: '404'
-    hideFeedback: true
+    pageId: plugins-icon-sets
+    pageTitle: Icon Sets
+    section: Plugins
+    filePath: plugins/plugins-icon-sets.yaml
     content:
-      - id: result404
-        type: Result
+      - id: md1
+        type: MarkdownWithCode
         style:
-          background: var(--ant-color-bg-layout)
+          maxWidth: 800
         properties:
-          status: info
-          icon:
-            name: FileSearch
-            size: 80
-            color: var(--ant-color-primary)
-          title: '404'
-          subTitle: Sorry, the page you are visiting does not exist.
+          content:
+            _ref: plugins/plugins-icon-sets.md

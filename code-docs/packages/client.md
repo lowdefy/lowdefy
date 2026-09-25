@@ -101,11 +101,35 @@ See [keyboard-shortcuts.md](../architecture/keyboard-shortcuts.md) for the full 
 | `createHandleError.js`   | Creates error handler with dedup, server round-trip, display |
 | `setupLink.js`           | Configures navigation links                                  |
 | `createLinkComponent.js` | Creates the Link component for navigation                    |
-| `createIcon.js`          | Creates icon rendering function                              |
+| `createIcon.js`          | Creates the `Icon` component that renders `IconData`         |
 
 ### Authentication (`/auth/`)
 
 Handles auth state and session management on the client.
+
+### Icons (`createIcon.js`)
+
+`createIcon(Icons)` returns the `Icon` component that blocks receive as `components.Icon`, and that HTML `data-icon` renders through `registerHtmlEnhancements`. `Icons` is `types.icons`: the build-generated `plugins/icons.js`, a plain map from every icon name the app uses (semantic `edit`, set `Pencil`, qualified `lucide:Pencil`) to `IconData`:
+
+```javascript
+{ node: [['path', { d: 'M21.174 6.812…' }], ['path', { d: 'm15 5 4 4' }]], size: 24, attrs: { … } }
+```
+
+The build resolves names and bakes set `attrs` into the data, so the client does a plain `Icons[name]` lookup on every render (never at creation, so dev can add names to the same object later).
+
+**Rendering.** The data renders as children of lucide-react's generic `Icon`, with `icon={{ node: [], size, width, height }}` giving the viewBox. `renderNodes` walks the node tree recursively with index keys, because lucide-react's own `iconNode` renderer drops nested children. The `<svg>` sits inside `@ant-design/icons`' `Icon` through a stable `IconHost`, so the DOM stays `span.anticon > svg.lucide` and antd component CSS still spaces icons.
+
+**Props.**
+
+- `size`, `strokeWidth` and `nonScalingStroke` are per-icon props over the `LucideProvider` defaults. `Client.js` sets the provider from `lowdefy.theme.icons`, read at render because `createIcon` runs before the theme is set. The build writes the defaults into `theme.json`, so there are no client fallbacks.
+- `nonScalingStroke` is read with `useLucideContext()` and set as `vector-effect` on each shape, because children bypass lucide-react's handling.
+- `color` and `rotate` go through CSS (`color`, `transform`), so they work for stroke and fill sets alike.
+- An empty title sets `aria-hidden="true"`; a non-empty one renders a `<title>` child. The Icon block generates titles from names (`ArrowLeftRight` → "Arrow left right"); HTML icons pass `title: ''`.
+- `spin` swaps in the spinning `loading` icon. An unknown name renders `icon-missing` in red. Both are semantic names, so aliases and sets restyle them.
+
+**antd chrome.** `Client.js` also wraps the page in a nested `ConfigProvider` whose icon keys (`modal.closeIcon`, `alert.successIcon`, `collapse.expandIcon`, `button.loadingIcon`, …) are `<Icon>` elements with semantic names. Message, Notification and ConfirmModal render through `App.useApp()` holders above `Client`, so the message and notification helpers set `icon` and `closeIcon` on each call instead.
+
+See [plugin-system.md](../architecture/plugin-system.md#icon-sets) for how the build resolves names.
 
 ## The Lowdefy Context
 

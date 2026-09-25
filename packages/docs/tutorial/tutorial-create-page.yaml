@@ -79,7 +79,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          icon: AiFillWarning
+          icon: warning
           message: Indentation is important
           description: YAML files use indentation to determine the data structure represented. If you are having any problems, make sure the indentation is the same as in the instructions.
 
@@ -151,13 +151,13 @@ _ref:
                   - id: new-ticket
                     type: MenuLink
                     properties:
-                      icon: AiOutlineAlert
+                      icon: Siren
                       title: New ticket
                     pageId: new-ticket
                   - id: welcome
                     type: MenuLink
                     properties:
-                      icon: AiOutlineHome
+                      icon: home
                       title: Home
                     pageId: welcome
             ################ -------- Copy to here ---------- ################

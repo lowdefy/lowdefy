@@ -87,15 +87,15 @@ server-dev/
 │   ├── middleware/
 │   │   ├── apiContext.js     # Per-request context (replaces apiWrapper)
 │   │   └── errorHandler.js   # app.onError — serialized error contract
-│   ├── routes/               # reload, ping, jitPage, jsEnv, iconsDynamic,
-│   │                         # root, request, endpoints, auth, agent,
+│   ├── routes/               # reload, ping, jitPage, root, request,
+│   │                         # endpoints, auth, agent,
 │   │                         # clientError, usage, devTools
 │   └── lib/                  # getPathSegments, safeScriptJson, serveBuildJs
 ├── client/                   # Vite client entry (served as modules with HMR)
 │   ├── main.jsx              # CSS imports, router, HMR-stable React root
 │   ├── App.jsx               # Providers (StyleProvider, XProvider, Auth, ErrorBar)
 │   ├── Routing.jsx           # Page resolution from the custom router
-│   ├── Page.jsx              # Page renderer (merges jsMap, dynamic icons)
+│   ├── Page.jsx              # Page renderer (merges _jsEntries, _dynamicIcons)
 │   └── Reload.jsx            # SSE hot reload listener
 ├── lib/
 │   ├── build/                # Build artifact loaders (fs read + deserialize)
@@ -320,7 +320,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 ```
 
-`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and advances the `makeId` counter past skeleton IDs. Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart.
+`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and advances the `makeId` counter past skeleton IDs. Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
@@ -656,7 +656,7 @@ function reloadClients({ directories }) {
 
 The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compression in dev (parity with the old `compress: false`, and SSE must stay unbuffered). Mounting order matters:
 
-1. **Context-free routes first**: `/api/reload`, `/api/ping`, `/api/js/:env`, `/api/icons/dynamic`, `/api/dev-tools` — these had no `apiWrapper` before and need no request context.
+1. **Context-free routes first**: `/api/reload`, `/api/ping`, `/api/dev-tools` — these had no `apiWrapper` before and need no request context.
 2. **`initAuthConfig`** (app-wide) — only when `authJson.configured === true`.
 3. **`apiContext()`** on `/api/*`, then `/api/auth/*` (Auth.js handler), `/api/root`, `/api/page/*`, `/api/request/*`, `/api/endpoints/*`, `/api/client-error`, `/api/usage`, `/api/agent/*` (with a 10mb `bodyLimit`).
 4. **`serveStatic({ root: './public' })`** for user public assets (icons, images).
@@ -697,17 +697,16 @@ async function jitPageHandler(c) {
 }
 ```
 
-### JS Map
+### JIT enrichment: `_jsEntries` and `_dynamicIcons`
 
-**File:** `src/routes/jsEnv.js`
+**Files:** `src/routes/jitPage.js`, `lib/server/jitPageBuilder.js`
 
-`GET /api/js/:env` (`client` or `server`) serves `clientJsMap.js` or `serverJsMap.js` from `build/plugins/operators/` as JavaScript. The client fetches this after a JIT build to get newly extracted `_js` function entries.
+A JIT page build can find `_js` functions and icon names that the startup build did not bundle. The page response carries both, so first paint needs no second request:
 
-### Dynamic Icons
+- **`_jsEntries`** — module text for the page's `_js` functions. `usePageConfig` compiles it with `new Function` into the `{ hash: fn }` object `Page.jsx` merges into `jsMap`.
+- **`_dynamicIcons`** — `{ [name]: IconData }` for every icon name the page uses that the dev bundle lacks, keyed by the name as written (semantic, set or qualified). `detectMissingIcons` (in `@lowdefy/build`) resolves each name with `resolveIconName`, the same resolver the build uses, and loads its data from vanilla `lucide` or from an icon-set plugin's `loadIcons`. The data is plain JSON, so it goes into the response as it is.
 
-**File:** `src/routes/iconsDynamic.js`
-
-`GET /api/icons/dynamic` serves `build/plugins/iconsDynamic.js` — icon SVG data discovered by JIT page builds that is not in the static icon imports.
+There is no separate icons route and no `plugins/iconsDynamic.js`: icons travel only in the page response. See [plugin-system.md](../architecture/plugin-system.md#icon-sets) for `IconData` and name resolution.
 
 ### Health Check
 
@@ -777,7 +776,7 @@ Replaces the old `lib/client/App.js` — page resolution is driven by the custom
 
 **File:** `client/Page.jsx`
 
-Fetches page config via `usePageConfig` and renders `@lowdefy/client`'s `Client`. Handles the JIT response contract: `buildError` → `BuildErrorPage`, `installing` → `InstallingPluginsPage`, `restarting` → `RestartingPage`, `null` → replace to `/404`. Merges `_jsEntries` into the static `jsMap` and mutates the static icons object with `_dynamicIcons` (via `GenIcon`) so JIT-discovered icons render immediately.
+Fetches page config via `usePageConfig` and renders `@lowdefy/client`'s `Client`. Handles the JIT response contract: `buildError` → `BuildErrorPage`, `installing` → `InstallingPluginsPage`, `restarting` → `RestartingPage`, `null` → replace to `/404`. Merges `_jsEntries` into the static `jsMap`, and merges `_dynamicIcons` into the static icons object with `Object.assign(types.icons, _dynamicIcons)`, so JIT-discovered icons render immediately. `createIcon` looks up `Icons[name]` on every render from the object it captured, so mutating that object is enough. The values are `IconData` (plain data), so nothing is rebuilt on the client.
 
 ### ErrorBar
 
@@ -789,38 +788,7 @@ Fixed bottom bar that displays build errors and warnings in the browser. Build w
 
 **File:** `lib/client/utils/usePageConfig.js`
 
-Uses SWR with a versioned key to support cache busting on hot reload:
-
-```javascript
-async function fetchPageConfig(url) {
-  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
-  if (res.status === 404) return null;
-  const data = await res.json();
-  if (data?.buildError || data?.installing) return data;
-
-  // After page config fetch (which triggers JIT build), fetch JS entries
-  // and dynamic icons (parallel with each other, sequential after the build)
-  const basePath = url.replace(/\/api\/page\/.*$/, '');
-  const [jsEntries, dynamicIcons] = await Promise.all([
-    fetchJsEntries(basePath),
-    fetchDynamicIcons(basePath),
-  ]);
-  data._jsEntries = jsEntries;
-  data._dynamicIcons = dynamicIcons;
-  return data;
-}
-
-function usePageConfig(pageId, basePath) {
-  const url = `${basePath}/api/page/${pageId}`;
-  // reloadVersion changes on hot reload, orphaning old SWR cache entries
-  const { data } = useSWR([url, getReloadVersion()], ([fetchUrl]) => fetchPageConfig(fetchUrl), {
-    suspense: true,
-  });
-  return { data };
-}
-```
-
-The `/api/js/client` and `/api/icons/dynamic` responses are JS module text, evaluated client-side via `new Function`.
+Uses SWR with a versioned key to support cache busting on hot reload. `fetchPageConfig` fetches `/api/page/:pageId` (which runs the JIT build), returns the `buildError` / `installing` / auth-redirect shapes as they are, compiles `_jsEntries` module text into functions, and leaves `_dynamicIcons` as data for `Page.jsx`. The SWR key is `[url, reloadVersion, navVersion]`: `reloadVersion` changes on hot reload and orphans old cache entries, and `navVersion` makes server-resolved (dynamic) pages refetch on every navigation.
 
 **File:** `lib/client/utils/useMutateCache.js`
 
@@ -845,14 +813,14 @@ function useMutateCache(basePath) {
 **Why versioned keys instead of cache clearing:**
 
 - Clearing SWR entries to `undefined` causes React Suspense on currently mounted components
-- This creates a three-request waterfall (/api/root → /api/page → /api/js) with visible delay
+- This creates a request waterfall (/api/root → /api/page) with visible delay
 - Versioned keys orphan old entries without triggering Suspense, and new keys force fresh fetches
 
-**Why jsMap is fetched sequentially after page config:**
+**Why `_js` entries and icons ride on the page response:**
 
-- Page config fetch triggers JIT build which may extract new `_js` functions
-- If jsMap is fetched in parallel, it returns stale data missing the new JS entries
-- The `_jsEntries` are merged with the static `jsMap` in `Page.jsx`
+- The page fetch triggers the JIT build, which may extract new `_js` functions and find new icon names
+- A separate fetch would either race the build (stale data) or add a request after it (a waterfall)
+- `_jsEntries` merge into the static `jsMap`, and `_dynamicIcons` into `types.icons`, in `Page.jsx`
 
 ## Tailwind CSS Pipeline
 
@@ -901,32 +869,31 @@ export default defineConfig(({ mode }) => ({
 
 ## Key Files
 
-| File                                         | Purpose                                           |
-| -------------------------------------------- | ------------------------------------------------- |
-| `manager/run.mjs`                            | Entry point (signal handling, orchestration)      |
-| `manager/getContext.mjs`                     | Context factory with JIT build state              |
-| `manager/processes/startServer.mjs`          | Spawns the Vite child process                     |
-| `manager/processes/lowdefyBuild.mjs`         | Calls `shallowBuild`, captures result             |
-| `manager/utils/loadSkeletonSourceFiles.mjs`  | Load skeleton source file set from build artifact |
-| `manager/utils/updatePageTailwindCss.mjs`    | Refresh Tailwind candidates on page edits         |
-| `manager/watchers/lowdefyBuildWatcher.mjs`   | Skeleton vs page change classification            |
-| `manager/watchers/moduleBuildWatcher.mjs`    | Local module file change classification           |
-| `manager/watchers/serverArtifactWatcher.mjs` | Server-read artifact changes → restart            |
-| `lib/server/jitPageBuilder.js`               | JIT page build on API request                     |
-| `lib/server/pageCache.mjs`                   | PageCache class (compiled tracking, locks)        |
-| `src/app.js`                                 | Hono app assembly (routes, middleware, static)    |
-| `src/routes/jitPage.js`                      | Page route (triggers JIT build, frozen contract)  |
-| `src/routes/jsEnv.js`                        | Serves JS map as module                           |
-| `src/routes/reload.js`                       | SSE endpoint                                      |
-| `src/middleware/apiContext.js`               | Request context + dynamic serverJsMap loading     |
-| `src/html/renderDevPage.js`                  | Config-free HTML shell                            |
-| `client/main.jsx`                            | Client entry (CSS order, HMR-stable root)         |
-| `client/Routing.jsx`                         | Page resolution from the custom router            |
-| `client/Page.jsx`                            | Page renderer (merges jsMap, dynamic icons)       |
-| `client/Reload.jsx`                          | SSE hot reload listener                           |
-| `lib/client/utils/usePageConfig.js`          | SWR hook with versioned cache keys                |
-| `lib/client/utils/useMutateCache.js`         | `reloadVersion` counter for cache busting         |
-| `vite.config.js`                             | Vite dev server + Hono mounting                   |
+| File                                         | Purpose                                            |
+| -------------------------------------------- | -------------------------------------------------- |
+| `manager/run.mjs`                            | Entry point (signal handling, orchestration)       |
+| `manager/getContext.mjs`                     | Context factory with JIT build state               |
+| `manager/processes/startServer.mjs`          | Spawns the Vite child process                      |
+| `manager/processes/lowdefyBuild.mjs`         | Calls `shallowBuild`, captures result              |
+| `manager/utils/loadSkeletonSourceFiles.mjs`  | Load skeleton source file set from build artifact  |
+| `manager/utils/updatePageTailwindCss.mjs`    | Refresh Tailwind candidates on page edits          |
+| `manager/watchers/lowdefyBuildWatcher.mjs`   | Skeleton vs page change classification             |
+| `manager/watchers/moduleBuildWatcher.mjs`    | Local module file change classification            |
+| `manager/watchers/serverArtifactWatcher.mjs` | Server-read artifact changes → restart             |
+| `lib/server/jitPageBuilder.js`               | JIT page build on API request                      |
+| `lib/server/pageCache.mjs`                   | PageCache class (compiled tracking, locks)         |
+| `src/app.js`                                 | Hono app assembly (routes, middleware, static)     |
+| `src/routes/jitPage.js`                      | Page route (triggers JIT build, frozen contract)   |
+| `src/routes/reload.js`                       | SSE endpoint                                       |
+| `src/middleware/apiContext.js`               | Request context + dynamic serverJsMap loading      |
+| `src/html/renderDevPage.js`                  | Config-free HTML shell                             |
+| `client/main.jsx`                            | Client entry (CSS order, HMR-stable root)          |
+| `client/Routing.jsx`                         | Page resolution from the custom router             |
+| `client/Page.jsx`                            | Page renderer (merges \_jsEntries, \_dynamicIcons) |
+| `client/Reload.jsx`                          | SSE hot reload listener                            |
+| `lib/client/utils/usePageConfig.js`          | SWR hook with versioned cache keys                 |
+| `lib/client/utils/useMutateCache.js`         | `reloadVersion` counter for cache busting          |
+| `vite.config.js`                             | Vite dev server + Hono mounting                    |
 
 ## Reload Types
 

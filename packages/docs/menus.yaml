@@ -5,12 +5,12 @@
       pageId: introduction
       properties:
         title: Introduction
-        icon: AiOutlineCoffee
+        icon: Coffee
     - id: tutorial
       type: MenuGroup
       properties:
         title: Tutorial
-        icon: AiOutlineRocket
+        icon: Rocket
       links:
         - id: tutorial-start
           type: MenuLink
@@ -61,7 +61,7 @@
       type: MenuGroup
       properties:
         title: Concepts
-        icon: AiOutlineBulb
+        icon: Lightbulb
       links:
         - id: overview
           type: MenuLink
@@ -208,7 +208,7 @@
       type: MenuGroup
       properties:
         title: Agents
-        icon: AiOutlineRobot
+        icon: bot
       links:
         - id: agents-introduction
           type: MenuLink
@@ -255,7 +255,7 @@
       type: MenuGroup
       properties:
         title: WebSockets
-        icon: AiOutlineWifi
+        icon: Wifi
       links:
         - id: websockets-introduction
           type: MenuLink
@@ -277,7 +277,7 @@
       type: MenuGroup
       properties:
         title: Deployment
-        icon: AiOutlineCloudUpload
+        icon: CloudUpload
       links:
         - id: docker
           type: MenuLink
@@ -304,7 +304,7 @@
       type: MenuGroup
       properties:
         title: Plugins
-        icon: AiOutlineCode
+        icon: CodeXml
       links:
         - id: plugins-introduction
           type: MenuLink
@@ -331,6 +331,11 @@
           pageId: plugins-operators
           properties:
             title: Operators
+        - id: plugins-icon-sets
+          type: MenuLink
+          pageId: plugins-icon-sets
+          properties:
+            title: Icon Sets
         - id: PostHog
           type: MenuLink
           pageId: PostHog
@@ -341,7 +346,7 @@
       type: MenuGroup
       properties:
         title: User Authentication
-        icon: AiOutlineTeam
+        icon: users
       links:
         - id: users
           type: MenuLink
@@ -432,7 +437,7 @@
       type: MenuGroup
       properties:
         title: Testing
-        icon: AiOutlineExperiment
+        icon: FlaskConical
       links:
         - id: config-tests
           type: MenuLink
@@ -474,7 +479,7 @@
       type: MenuGroup
       properties:
         title: Input Blocks
-        icon: AiOutlineForm
+        icon: SquarePen
       links:
         - id: InputGallery
           type: MenuLink
@@ -602,7 +607,7 @@
       type: MenuGroup
       properties:
         title: Display Blocks
-        icon: AiOutlinePicture
+        icon: image
       links:
         - id: AgGrid
           type: MenuLink
@@ -738,7 +743,7 @@
       type: MenuGroup
       properties:
         title: Container Blocks
-        icon: AiOutlineContainer
+        icon: Archive
       links:
         - id: Affix
           type: MenuLink
@@ -853,7 +858,7 @@
       type: MenuGroup
       properties:
         title: List Blocks
-        icon: AiOutlineOrderedList
+        icon: ListOrdered
       links:
         - id: ControlledList
           type: MenuLink
@@ -874,7 +879,7 @@
       type: MenuGroup
       properties:
         title: Connections
-        icon: AiOutlineApi
+        icon: Plug
       links:
         - id: Anthropic
           type: MenuLink
@@ -972,7 +977,7 @@
       type: MenuGroup
       properties:
         title: Actions
-        icon: AiOutlineThunderbolt
+        icon: Zap
       links:
         - id: CallAPI
           type: MenuLink
@@ -1104,7 +1109,7 @@
       type: MenuGroup
       properties:
         title: Operators
-        icon: AiOutlineTool
+        icon: Wrench
       links:
         - id: _actions
           type: MenuLink
@@ -1326,7 +1331,7 @@
       type: MenuGroup
       properties:
         title: Controls
-        icon: MdAltRoute
+        icon: Split
       links:
         - id: :for
           type: MenuLink
@@ -1368,7 +1373,7 @@
       type: MenuGroup
       properties:
         title: Migration
-        icon: RiArrowLeftRightLine
+        icon: ArrowLeftRight
       links:
         - id: upgrade-guide
           type: MenuLink
@@ -1380,6 +1385,11 @@
           pageId: auth-upgrade
           properties:
             title: Auth Upgrade
+        - id: v6-to-v7
+          type: MenuLink
+          pageId: v6-to-v7
+          properties:
+            title: V6 to V7
         - id: v5-to-v6
           type: MenuLink
           pageId: v5-to-v6

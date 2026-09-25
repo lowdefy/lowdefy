@@ -15,18 +15,23 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: '404'
-    hideFeedback: true
+    pageId: v6-to-v7
+    pageTitle: Version 6 to Version 7
+    section: Migration
+    filePath: migration/v6-to-v7.yaml
     content:
-      - id: result404
-        type: Result
+      - id: md1
+        type: MarkdownWithCode
         style:
-          background: var(--ant-color-bg-layout)
+          maxWidth: 800
         properties:
-          status: info
-          icon:
-            name: FileSearch
-            size: 80
-            color: var(--ant-color-primary)
-          title: '404'
-          subTitle: Sorry, the page you are visiting does not exist.
+          content:
+            _ref: migration/v6-to-v7.md
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Auth Upgrade
+            previous_page_id: auth-upgrade
+            next_page_title: Version 5 to Version 6
+            next_page_id: v5-to-v6

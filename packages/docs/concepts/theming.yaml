@@ -154,12 +154,12 @@ _ref:
                         type: MenuLink
                         properties:
                           title: Edit
-                          icon: AiOutlineEdit
+                          icon: edit
                       - id: delete
                         type: MenuLink
                         properties:
                           title: Delete
-                          icon: AiOutlineDelete
+                          icon: delete
                           danger: true
                 ```
 
@@ -283,8 +283,8 @@ _ref:
                       _if:
                         test:
                           _media: darkMode
-                        then: AiOutlineSun
-                        else: AiOutlineMoon
+                        then: theme-light
+                        else: theme-dark
                   events:
                     onClick:
                       - id: toggle
@@ -461,7 +461,9 @@ _ref:
 
                 ## Icons (`theme.icons`)
 
-                Lowdefy has built-in semantic icon names such as `edit`, `delete`, `warning` and `external-link`. Use them anywhere an icon name is accepted, and in HTML with `data-icon`:
+                Lowdefy draws icons with [Lucide](https://lucide.dev). An icon name is a semantic name (`edit`), a Lucide name in PascalCase (`Pencil`), or a qualified name (`lucide:Pencil`). The [Icon](/Icon) block describes the three forms and the per-icon settings.
+
+                Use semantic names anywhere an icon name is accepted, and in HTML with `data-icon`:
 
                 ```yaml
                 - id: edit_button
@@ -475,25 +477,118 @@ _ref:
                     html: '<i data-icon="info"></i> Saved <span data-tooltip="Saved 2 minutes ago">just now</span>'
                 ```
 
-                The built-in names map to [Lucide](https://lucide.dev) icons, so an app that uses them looks consistent. Any [React Icons](https://react-icons.github.io/react-icons/) name, like `AiOutlineUser` or `LuPencil`, still works everywhere.
+                `theme.icons` sets the icon defaults for the whole app:
 
-                Built-in names: `add`, `arrow-down`, `arrow-left`, `arrow-right`, `arrow-up`, `attach`, `bell`, `calendar`, `chart`, `check`, `chevron-down`, `chevron-left`, `chevron-right`, `chevron-up`, `clock`, `close`, `copy`, `delete`, `document`, `download`, `drag`, `edit`, `error`, `external-link`, `file`, `filter`, `folder`, `globe`, `grid`, `heart`, `help`, `hide`, `history`, `home`, `image`, `info`, `link`, `list`, `loading`, `location`, `lock`, `login`, `logout`, `mail`, `menu`, `message`, `minus`, `more`, `more-vertical`, `phone`, `print`, `refresh`, `save`, `search`, `send`, `settings`, `share`, `sort`, `star`, `success`, `tag`, `unlock`, `upload`, `user`, `users`, `view`, `warning`.
+                ```yaml
+                theme:
+                  icons:
+                    set: lucide
+                    size: 1em
+                    strokeWidth: 1.75
+                    nonScalingStroke: true
+                    aliases:
+                      invoice: Receipt
+                      edit: tabler:Pencil
+                    include:
+                      - Flag
+                ```
 
-                Ant Design icon names also work and map to the same icons: `plus`, `setting`, `reload`, `ellipsis`, `printer`, `info-circle`, `check-circle`, `close-circle`, `clock-circle`, `file-text`, `environment`, `left`, `right`, `up` and `down`.
+                | Key | Default | Description |
+                | --- | --- | --- |
+                | `set` | `lucide` | The default icon set. PascalCase names resolve in this set first, then in Lucide. Set it to an installed [icon set](/plugins-icon-sets). |
+                | `size` | `1em` | Default width and height. `1em` follows the font size, so icons fit text, buttons and menus. |
+                | `strokeWidth` | `2` | Default line width, in units of the icon's 24px grid. |
+                | `nonScalingStroke` | `false` | Keep the line width constant in screen pixels at any size. |
+                | `aliases` | | Add semantic names, or point a built-in one at another icon. |
+                | `include` | | Icon names to bundle that only appear at runtime. |
 
-                Add your own names, or point a built-in name at a different icon, with `theme.icons.aliases`. Names are lowercase kebab-case; targets are React Icons names:
+                An icon's own `size`, `strokeWidth` and `nonScalingStroke` win over these defaults: `icon: { name: edit, strokeWidth: 1 }`.
+
+                ### Semantic names
+
+                Each built-in semantic name draws a Lucide icon:
+
+                | Name | Lucide icon | Name | Lucide icon |
+                | --- | --- | --- | --- |
+                | `add` | Plus | `info` | Info |
+                | `add-circle` | CirclePlus | `italic` | Italic |
+                | `arrow-down` | ArrowDown | `link` | Link |
+                | `arrow-left` | ArrowLeft | `list` | List |
+                | `arrow-right` | ArrowRight | `loading` | LoaderCircle |
+                | `arrow-up` | ArrowUp | `location` | MapPin |
+                | `attach` | Paperclip | `lock` | Lock |
+                | `bell` | Bell | `login` | LogIn |
+                | `bold` | Bold | `logout` | LogOut |
+                | `bot` | Bot | `mail` | Mail |
+                | `calendar` | Calendar | `menu` | Menu |
+                | `camera` | Camera | `message` | MessageSquare |
+                | `chart` | ChartColumn | `minus` | Minus |
+                | `check` | Check | `more` | Ellipsis |
+                | `chevron-down` | ChevronDown | `more-vertical` | EllipsisVertical |
+                | `chevron-left` | ChevronLeft | `phone` | Phone |
+                | `chevron-right` | ChevronRight | `print` | Printer |
+                | `chevron-up` | ChevronUp | `rating-high` | FaceSlightlySmiling |
+                | `chevrons-left` | ChevronsLeft | `rating-low` | FaceSlightlyFrowning |
+                | `chevrons-right` | ChevronsRight | `refresh` | RefreshCw |
+                | `clear` | CircleX | `remove` | CircleMinus |
+                | `clock` | Clock | `save` | Save |
+                | `close` | X | `search` | Search |
+                | `copy` | Copy | `send` | Send |
+                | `delete` | Trash | `settings` | Settings |
+                | `document` | FileText | `share` | Share2 |
+                | `download` | Download | `sidebar-collapse` | PanelLeftClose |
+                | `drag` | GripVertical | `sidebar-expand` | PanelLeftOpen |
+                | `edit` | Pencil | `sort` | ArrowUpDown |
+                | `error` | CircleX | `star` | Star |
+                | `external-link` | ExternalLink | `strikethrough` | Strikethrough |
+                | `file` | File | `success` | CircleCheck |
+                | `filter` | Funnel | `tag` | Tag |
+                | `folder` | Folder | `theme-dark` | Moon |
+                | `globe` | Globe | `theme-light` | Sun |
+                | `grid` | LayoutGrid | `theme-system` | Monitor |
+                | `heart` | Heart | `unchanged` | CirclePause |
+                | `help` | CircleQuestionMark | `unlock` | LockOpen |
+                | `hide` | EyeOff | `upload` | Upload |
+                | `highlight` | Highlighter | `user` | User |
+                | `history` | RotateCcwClock | `users` | Users |
+                | `home` | House | `view` | Eye |
+                | `icon-missing` | CircleAlert | `warning` | TriangleAlert |
+                | `image` | Image |  |  |
+
+                Ant Design icon names also work and map to the same icons: `check-circle` (CircleCheck), `clock-circle` (Clock), `close-circle` (CircleX), `down` (ChevronDown), `ellipsis` (Ellipsis), `environment` (MapPin), `file-text` (FileText), `info-circle` (Info), `left` (ChevronLeft), `plus` (Plus), `printer` (Printer), `reload` (RefreshCw), `right` (ChevronRight), `setting` (Settings), `up` (ChevronUp).
+
+                ### Blocks and Ant Design components follow semantic names
+
+                Blocks choose their own icons by semantic name: the date pickers use `calendar`, input validation uses `error`, `success`, `warning` and `loading`, selectors use `chevron-down`, `clear` and `check`, and the dark mode toggle uses `theme-light`, `theme-dark` and `theme-system`. Ant Design's own icons go through the same names: the close X on modals, drawers, tags and alerts (`close`), alert and message status icons (`success`, `info`, `warning`, `error`), collapse and menu arrows, pagination arrows, and the button spinner (`loading`).
+
+                So an alias restyles your icons and the built-in ones together. This makes every close button a circled X:
 
                 ```yaml
                 theme:
                   icons:
                     aliases:
-                      invoice: LuReceipt
-                      edit: TbPencil
-                    include:
-                      - LuFlag
+                      close: CircleX
                 ```
 
+                A few Ant Design visuals are not icons and stay as Ant Design draws them: Spin, Progress, QRCode, the Empty and Result illustrations, the date picker panel arrows, and the Switch and Timeline loading states.
+
+                ### Aliases
+
+                Alias names are lowercase kebab-case. An alias target is a set name (`Receipt`) or a qualified name (`tabler:Pencil`), never another semantic name. A semantic name resolves through, from lowest to highest precedence:
+
+                1. the built-in map above,
+                2. the `semantic` maps of the default set's plugins, in `plugins` order,
+                3. `theme.icons.aliases`.
+
+                ### Icon sets
+
+                `theme.icons.set` selects an installed [icon set](/plugins-icon-sets). PascalCase names then resolve in that set first and fall back to Lucide, and the set's own semantic map re-skins the block and Ant Design icons it covers. Semantic names the set leaves out keep their Lucide icons. A qualified name such as `lucide:Pencil` always resolves in its own set.
+
+                ### Bundling
+
                 The build bundles only the icons your config names. An icon name that only exists at runtime — read from state or a request — is not in the config, so list it under `theme.icons.include` to bundle it. A name kept in config data, such as `icon: warning` on a status enum that a template turns into `data-icon="{% raw %}{{ status.icon }}{% endraw %}"`, is already in the config and gets bundled.
+
+                An unknown icon name at an icon property fails the build, with a suggestion. Old react-icons names such as `AiOutlineUser` fail too; [V6 to V7](/v6-to-v7) shows how to migrate them.
 
                 ### Icons in HTML
 
@@ -508,7 +603,7 @@ _ref:
                   - Override tokens per block via `properties.theme`.
                   - Use [ConfigProvider](/ConfigProvider) block for scoped theming of block groups.
                   - Access tokens in expressions with the `_theme` operator.
-                  - Use built-in semantic icon names (`icon: edit`), and `data-icon` in HTML; add names with `theme.icons.aliases`. See [HTML attributes](/html-attributes) for everything HTML understands.
+                  - Icons are Lucide. Use semantic names (`icon: edit`) or Lucide names (`Pencil`), and `data-icon` in HTML; set app-wide `size` and `strokeWidth`, and add names, with `theme.icons`. See [HTML attributes](/html-attributes) for everything HTML understands.
                   - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
                   - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.
                   - Add custom Tailwind tokens via `theme.tailwind` in `lowdefy.yaml`.

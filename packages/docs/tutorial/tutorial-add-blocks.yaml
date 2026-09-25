@@ -74,7 +74,7 @@ _ref:
                       title: Reset
                       block: true # Make the button fill all the space available to it
                       type: default # Make the button a plain button
-                      icon: AiOutlineClear
+                      icon: Eraser
                   - id: submit_button
                     type: Button
                     layout:
@@ -83,7 +83,7 @@ _ref:
                       title: Submit
                       block: true
                       type: primary # Make the button a primary button with color
-                      icon: AiOutlineSave
+                      icon: save
             ################ -------- Copy to here ---------- ################
             ```
 
@@ -133,7 +133,7 @@ _ref:
                 properties:
                   title: Reset
                   block: true
-                  icon: AiOutlineClear
+                  icon: Eraser
               - id: submit_button
                 type: Button
                 layout:
@@ -143,7 +143,7 @@ _ref:
                   block: true
                   color: primary
                   variant: solid
-                  icon: AiOutlineSave
+                  icon: save
       - id: body_what_happened
         type: MarkdownWithCode
         properties:

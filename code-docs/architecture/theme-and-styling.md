@@ -17,6 +17,7 @@ lowdefy.yaml
 ├── theme:
 │   ├── antd:        → ConfigProvider tokens (runtime)
 │   ├── darkMode:    → 'system' | 'light' | 'dark' (default: 'system')
+│   ├── icons:       → icon set, size, strokeWidth, aliases (build + LucideProvider)
 │   └── tailwind:    → @theme inline vars (build-time)
 │
 ├── blocks:
@@ -26,6 +27,10 @@ lowdefy.yaml
 └── public/
     └── styles.css   → custom CSS (optional)
 ```
+
+## Icons (`theme.icons`)
+
+`theme.icons` holds `set` (default `lucide`), `size` (default `1em`), `strokeWidth` (default `2`), `nonScalingStroke` (default `false`), `aliases` and `include`. The build validates it, uses `set`, `aliases` and `include` to resolve and bundle icon names (see [plugin-system.md](./plugin-system.md#icon-sets)), and writes the defaults into `theme.json`. `Client.js` passes `size`, `strokeWidth` and `nonScalingStroke` to lucide-react's `LucideProvider`, so they reach every icon, and per-icon props override them (see [client.md](../packages/client.md#icons-createiconjs)).
 
 ## CSS Layer Architecture
 
