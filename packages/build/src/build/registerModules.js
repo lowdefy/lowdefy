@@ -379,10 +379,13 @@ async function resolveFullManifest({ entryId, context }) {
 
   const resolved = await resolve(manifest, ctx);
 
-  // Filter null entries produced by _ref resolution failures
+  // Filter null entries produced by _ref resolution failures. The arrays are
+  // filtered in place so they keep their ~r ref marker: the dev server's
+  // skeleton source files find a module's pages list file through it.
   for (const key of ['pages', 'connections', 'api', 'agents', 'notifications']) {
     if (type.isArray(resolved[key])) {
-      resolved[key] = resolved[key].filter((item) => !type.isNone(item));
+      const items = resolved[key].filter((item) => !type.isNone(item));
+      resolved[key].splice(0, resolved[key].length, ...items);
     }
   }
 
