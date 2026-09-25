@@ -28,7 +28,7 @@ async function docsRunRequestHandler(c) {
   // which throws ("body ... disturbed or locked") if the body was already
   // consumed. The normal /api/request path never hits this because its
   // session is read in middleware before the handler touches the body.
-  const { pageId, requestId, payload, user } = await c.req.raw.clone().json();
+  const { pageId, requestId, payload, user, saveResponse } = await c.req.raw.clone().json();
   const { user: parsedUser, error: userError } = parseUserParam({ value: user });
   if (userError) {
     return c.json({ error: userError }, 400);
@@ -39,6 +39,7 @@ async function docsRunRequestHandler(c) {
       requestId,
       payload,
       user: parsedUser,
+      saveResponse,
       honoContext: c,
     });
     return c.json(result);

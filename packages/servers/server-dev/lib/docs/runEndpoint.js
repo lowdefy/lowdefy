@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
-import truncateResponse from './truncateResponse.js';
+import fitResponse from './fitResponse.js';
 
 // Executes an Api endpoint routine the same way POST /api/endpoints/<endpointId>
 // does (src/routes/endpoints.js), but gated for agent use. Endpoints are not
@@ -38,7 +38,14 @@ import truncateResponse from './truncateResponse.js';
 // only local way to exercise a schedules-only InternalApi routine without
 // CRON_SECRET. Nested CallApi steps with detached: true are not faked: they
 // still dispatch over HTTP against the request origin and need CRON_SECRET.
-async function runEndpoint({ endpointId, payload = {}, user, system = false, honoContext }) {
+async function runEndpoint({
+  endpointId,
+  payload = {},
+  user,
+  system = false,
+  saveResponse = false,
+  honoContext,
+}) {
   if (type.isUndefined(endpointId) || !type.isString(endpointId)) {
     throw new ConfigError(
       `run_endpoint requires an "endpointId" string. Received ${JSON.stringify(endpointId)}.`
@@ -50,6 +57,12 @@ async function runEndpoint({ endpointId, payload = {}, user, system = false, hon
       `run_endpoint "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
         user
       )}.`
+    );
+  }
+
+  if (!type.isBoolean(saveResponse)) {
+    throw new ConfigError(
+      `run_endpoint "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
     );
   }
 
@@ -111,7 +124,7 @@ async function runEndpoint({ endpointId, payload = {}, user, system = false, hon
           pageId: undefined,
           payload,
         });
-    return { refused: false, ...truncateResponse(result) };
+    return { refused: false, ...fitResponse({ result, name: endpointId, saveResponse }) };
   } catch (error) {
     return {
       refused: false,

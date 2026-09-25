@@ -21,11 +21,11 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import fitResponse from './fitResponse.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import mapPageBuildErrors from './mapPageBuildErrors.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import reviewPageBuilds from './reviewPageBuilds.js';
-import truncateResponse from './truncateResponse.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -46,7 +46,14 @@ function getRequestType({ pageId, requestId }) {
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
 // returned as data so an agent can reason about them.
-async function runRequest({ pageId, requestId, payload = {}, user, honoContext }) {
+async function runRequest({
+  pageId,
+  requestId,
+  payload = {},
+  user,
+  saveResponse = false,
+  honoContext,
+}) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
     throw new ConfigError(
       `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
@@ -63,6 +70,12 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
       `run_request "user" must be an object, e.g. {"roles":["admin"]}. Received ${JSON.stringify(
         user
       )}.`
+    );
+  }
+
+  if (!type.isBoolean(saveResponse)) {
+    throw new ConfigError(
+      `run_request "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
     );
   }
 
@@ -128,7 +141,10 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
       payload,
       requestId,
     });
-    ran = { refused: false, ...truncateResponse(result) };
+    ran = {
+      refused: false,
+      ...fitResponse({ result, name: `${pageId}.${requestId}`, saveResponse }),
+    };
   } catch (error) {
     ran = {
       refused: false,

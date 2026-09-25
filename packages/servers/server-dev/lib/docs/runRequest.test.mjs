@@ -46,6 +46,7 @@ jest.unstable_mockModule('./reviewPageBuilds.js', () => ({
   default: mockReviewPageBuilds,
 }));
 
+const { ConfigError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
 
 const honoContext = { req: { path: '/lowdefy-docs/run-request' } };
@@ -148,6 +149,13 @@ test('runRequest does not note stale config for a page that is current', async (
   const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
 
   expect(result.staleConfig).toBeUndefined();
+});
+
+test('runRequest throws a ConfigError when saveResponse is not a boolean', async () => {
+  await expect(
+    runRequest({ pageId: 'home', requestId: 'get_rows', saveResponse: 1, honoContext })
+  ).rejects.toThrow(ConfigError);
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
 });
 
 test('runRequest notes stale config on a request that fails', async () => {
