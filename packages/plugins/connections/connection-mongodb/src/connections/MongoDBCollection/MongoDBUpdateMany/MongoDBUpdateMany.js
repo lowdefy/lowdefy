@@ -17,6 +17,7 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -31,6 +32,7 @@ async function MongodbUpdateMany({
   request,
   requestId,
   tenant,
+  tenantGuard,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
@@ -38,6 +40,14 @@ async function MongodbUpdateMany({
   if (tenant) {
     filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
     update = applyTenantToUpdate({ update, tenant, upsert: options?.upsert === true });
+  }
+  if (tenantGuard) {
+    assertUnscopedUpdate({
+      update,
+      filter,
+      field: tenantGuard.field,
+      upsert: options?.upsert === true,
+    });
   }
   const { collection, logCollection } = await getCollection({ connection });
   let response;

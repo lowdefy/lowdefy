@@ -410,6 +410,7 @@ test('deserialize inputs', async () => {
           payloadDate: new Date(0),
         },
         tenant: null,
+        tenantGuard: null,
       },
     ],
   ]);
