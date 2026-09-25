@@ -67,3 +67,12 @@ test('initLowdefyContext registers HTML links that build hrefs with basePath and
   );
   expect(registration.link).toBe(result._internal.link);
 });
+
+test('initLowdefyContext registers the app locale and translate for HTML formatting', () => {
+  const args = baseArgs();
+  args.window.__lowdefy_locale = 'de-DE';
+  const result = initLowdefyContext(args);
+  const registration = getHtmlEnhancements();
+  expect(registration.getLocale()).toBe('de-DE');
+  expect(registration.translate).toBe(result._internal.translate);
+});

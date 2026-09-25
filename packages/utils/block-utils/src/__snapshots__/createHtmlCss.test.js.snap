@@ -102,8 +102,129 @@ exports[`createHtmlCss output 1`] = `
   :where([data-lf-html] [data-status=\\"error\\"]) {
     --lf-tone: var(--ant-color-error);
   }
+  :where([data-lf-html] [data-tone=\\"secondary\\" i]) {
+    color: var(--ant-color-text-secondary);
+  }
+  :where([data-lf-html] [data-tone=\\"tertiary\\" i]) {
+    color: var(--ant-color-text-tertiary);
+  }
+  :where([data-lf-html] [data-tone=\\"quaternary\\" i]) {
+    color: var(--ant-color-text-quaternary);
+  }
+  :where([data-lf-html] [data-tone=\\"success\\" i]) {
+    color: var(--ant-color-success-text, var(--ant-color-success));
+  }
+  :where([data-lf-html] [data-tone=\\"warning\\" i]) {
+    color: var(--ant-color-warning-text, var(--ant-color-warning));
+  }
+  :where([data-lf-html] [data-tone=\\"error\\" i]) {
+    color: var(--ant-color-error-text, var(--ant-color-error));
+  }
+  :where([data-lf-html] [data-tone=\\"info\\" i]) {
+    color: var(--ant-color-info-text, var(--ant-color-info));
+  }
+  :where([data-lf-html] [data-truncate=\\"\\"]),
+  :where([data-lf-html] [data-truncate=\\"1\\"]),
+  :where([data-lf-html] [data-truncate=\\"2\\"]),
+  :where([data-lf-html] [data-truncate=\\"3\\"]),
+  :where([data-lf-html] [data-truncate=\\"4\\"]),
+  :where([data-lf-html] [data-truncate=\\"5\\"]),
+  :where([data-lf-html] [data-truncate=\\"6\\"]) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-word;
+  }
+  :where([data-lf-html] [data-truncate=\\"2\\"]) {
+    -webkit-line-clamp: 2;
+  }
+  :where([data-lf-html] [data-truncate=\\"3\\"]) {
+    -webkit-line-clamp: 3;
+  }
+  :where([data-lf-html] [data-truncate=\\"4\\"]) {
+    -webkit-line-clamp: 4;
+  }
+  :where([data-lf-html] [data-truncate=\\"5\\"]) {
+    -webkit-line-clamp: 5;
+  }
+  :where([data-lf-html] [data-truncate=\\"6\\"]) {
+    -webkit-line-clamp: 6;
+  }
   :where([data-lf-html] [data-popover-content]) {
     display: none;
+  }
+  :where([data-lf-html] [data-format]) {
+    font-variant-numeric: tabular-nums;
+  }
+  :where([data-lf-html] [data-avatar]) {
+    --lf-avatar-color: var(--ant-color-info);
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    min-width: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    height: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    overflow: hidden;
+    border-radius: 50%;
+    vertical-align: middle;
+    font-size: var(--lf-avatar-font-size, var(--ant-font-size-sm, 12px));
+    line-height: 1;
+    white-space: nowrap;
+    user-select: none;
+    color: var(--ant-color-text-light-solid, #fff);
+    background: var(--lf-avatar-color);
+  }
+  :where([data-lf-html] img[data-avatar]) {
+    object-fit: cover;
+    background: transparent;
+  }
+  :where([data-lf-html] [data-avatar][data-avatar-shape=\\"square\\"]) {
+    border-radius: var(--ant-border-radius, 6px);
+  }
+  :where([data-lf-html] [data-avatar][hidden]) {
+    display: none;
+  }
+  :where([data-lf-html] [data-lf-copy]) {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-inline-start: var(--ant-margin-xxs, 4px);
+  }
+  :where([data-lf-html] [data-lf-copy] > button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 2px;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: transparent;
+    color: var(--ant-color-text-tertiary);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+  }
+  :where([data-lf-html] [data-lf-copy] > button:hover) {
+    color: var(--ant-color-text);
+    background: var(--ant-color-fill-tertiary);
+  }
+  :where([data-lf-html] [data-lf-copy] > button:focus-visible) {
+    outline: var(--ant-line-width-focus, 2px) solid var(--ant-color-primary-border);
+    outline-offset: 1px;
+  }
+  :where([data-lf-html] [data-lf-visually-hidden]) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
   :where([data-lf-html] [data-status=\\"processing\\"])::before {
     animation: lf-status-processing 1.2s ease-in-out infinite;

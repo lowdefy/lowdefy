@@ -56,7 +56,17 @@ const popoverEnhancer = {
       kind: 'popover',
       target,
       html: popoverContents[id],
-      onClose: () => target.setAttribute('aria-expanded', 'false'),
+      onClose(reason) {
+        target.setAttribute('aria-expanded', 'false');
+        // Focus inside the closing popup would fall to the page; return it to
+        // the trigger, unless the user clicked somewhere else.
+        const focused = target.ownerDocument.activeElement;
+        const focusInPopup =
+          focused !== null && focused !== target.ownerDocument.body && !host.contains(focused);
+        if (reason !== 'outside' && target.isConnected && focusInPopup) {
+          target.focus();
+        }
+      },
     });
   },
 };

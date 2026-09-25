@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import lineClampStyle from './format/lineClampStyle.js';
 import tagStyle from './format/tagStyle.js';
+import TEXT_TONE_COLORS from './format/textToneColors.js';
 import TONE_COLORS from './format/toneColors.js';
 
 function toDeclarations(style) {
@@ -31,6 +33,28 @@ function toDeclarations(style) {
 // Tailwind utilities and inline styles all win.
 function scoped(selector) {
   return `:where([data-lf-html] ${selector})`;
+}
+
+function textToneRules() {
+  return Object.entries(TEXT_TONE_COLORS)
+    .map(([tone, color]) => `  ${scoped(`[data-tone="${tone}" i]`)} {\n    color: ${color};\n  }`)
+    .join('\n');
+}
+
+// Bare or 1 is one line; 2–6 clamp to that many lines, like the grid's
+// ellipsis cells.
+function truncateRules() {
+  const counts = ['2', '3', '4', '5', '6'];
+  const selectors = ['""', '"1"', ...counts.map((count) => `"${count}"`)]
+    .map((value) => scoped(`[data-truncate=${value}]`))
+    .join(',\n  ');
+  const lineRules = counts
+    .map(
+      (count) =>
+        `  ${scoped(`[data-truncate="${count}"]`)} {\n    -webkit-line-clamp: ${count};\n  }`
+    )
+    .join('\n');
+  return `  ${selectors} {\n${toDeclarations(lineClampStyle(1))}\n  }\n${lineRules}`;
 }
 
 function toneRules() {
@@ -69,8 +93,81 @@ ${toDeclarations(tagStyle('var(--lf-tone)'))}
     background: var(--lf-tone);
   }
 ${toneRules()}
+${textToneRules()}
+${truncateRules()}
   ${scoped('[data-popover-content]')} {
     display: none;
+  }
+  ${scoped('[data-format]')} {
+    font-variant-numeric: tabular-nums;
+  }
+  ${scoped('[data-avatar]')} {
+    --lf-avatar-color: var(--ant-color-info);
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    min-width: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    height: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    overflow: hidden;
+    border-radius: 50%;
+    vertical-align: middle;
+    font-size: var(--lf-avatar-font-size, var(--ant-font-size-sm, 12px));
+    line-height: 1;
+    white-space: nowrap;
+    user-select: none;
+    color: var(--ant-color-text-light-solid, #fff);
+    background: var(--lf-avatar-color);
+  }
+  ${scoped('img[data-avatar]')} {
+    object-fit: cover;
+    background: transparent;
+  }
+  ${scoped('[data-avatar][data-avatar-shape="square"]')} {
+    border-radius: var(--ant-border-radius, 6px);
+  }
+  ${scoped('[data-avatar][hidden]')} {
+    display: none;
+  }
+  ${scoped('[data-lf-copy]')} {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-inline-start: var(--ant-margin-xxs, 4px);
+  }
+  ${scoped('[data-lf-copy] > button')} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 2px;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: transparent;
+    color: var(--ant-color-text-tertiary);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+  }
+  ${scoped('[data-lf-copy] > button:hover')} {
+    color: var(--ant-color-text);
+    background: var(--ant-color-fill-tertiary);
+  }
+  ${scoped('[data-lf-copy] > button:focus-visible')} {
+    outline: var(--ant-line-width-focus, 2px) solid var(--ant-color-primary-border);
+    outline-offset: 1px;
+  }
+  ${scoped('[data-lf-visually-hidden]')} {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
   ${scoped('[data-status="processing"]')}::before {
     animation: lf-status-processing 1.2s ease-in-out infinite;

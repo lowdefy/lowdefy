@@ -14,6 +14,11 @@
   limitations under the License.
 */
 
+import React from 'react';
+
+import isOverlayBusy from './isOverlayBusy.js';
+import TooltipText from './TooltipText.js';
+
 function closeTooltip({ host, relatedTarget }) {
   const { overlay } = host;
   if (overlay?.kind !== 'tooltip' || overlay.target.contains(relatedTarget)) return;
@@ -22,10 +27,12 @@ function closeTooltip({ host, relatedTarget }) {
 
 function openTooltip({ event, host }) {
   const { overlay } = host;
-  if (overlay?.kind === 'popover') return;
+  if (isOverlayBusy(overlay)) return;
   const target = host.closestInRoot(event, '[data-tooltip]');
   if (!target || overlay?.target === target) return;
-  host.openOverlay({ kind: 'tooltip', target, content: target.getAttribute('data-tooltip') });
+  // A template like data-tooltip="{{ note }}" often renders empty.
+  if (target.getAttribute('data-tooltip') === '') return;
+  host.openOverlay({ kind: 'tooltip', target, content: <TooltipText target={target} /> });
 }
 
 // data-tooltip="Text" shows a themed tooltip on hover and keyboard focus.

@@ -52,6 +52,7 @@ class HtmlComponent extends React.Component {
     this.onClick = this.onClick.bind(this);
     this.onFocus = this.onFocus.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onPopoverDataEvent = this.onPopoverDataEvent.bind(this);
@@ -76,6 +77,7 @@ class HtmlComponent extends React.Component {
     const component = this;
     return {
       closestInRoot: (event, selector) => this.closestInRoot(event, selector),
+      contains: (node) => this.div.contains(node),
       closeOverlay: this.closeOverlay,
       openOverlay: (overlay) => this.setState({ overlay }),
       get overlay() {
@@ -164,17 +166,20 @@ class HtmlComponent extends React.Component {
   }
 
   onClick(event) {
+    let gated = false;
     if (this.props.onDataEvent) {
       const target = this.closestInRoot(event, '[data-event]');
       if (target) {
         const dataEvent = getDataEvent(target);
         if (dataEvent.name) {
           event.preventDefault();
-          this.props.onDataEvent(dataEvent);
+          gated = this.fireDataEvent({ dataEvent, target });
         }
       }
     }
-    if (this.state.enhanced) {
+    // A gate that took over (data-confirm) consumes the click, so no other
+    // enhancer replaces its overlay.
+    if (this.state.enhanced && !gated) {
       this.dispatch('onClick', event);
     }
     if (this.props.onClick) {
@@ -182,12 +187,50 @@ class HtmlComponent extends React.Component {
     }
   }
 
+  // An enhancer can take over firing a data-event (data-confirm asks first).
+  // Without the enhancement pass there is nothing to ask, as before.
+  fireDataEvent({ dataEvent, target }) {
+    const fire = () => this.props.onDataEvent(dataEvent);
+    if (this.state.enhanced) {
+      const gated = HTML_ENHANCERS.some(
+        (enhancer) =>
+          enhancer.gateDataEvent &&
+          enhancer.gateDataEvent({ dataEvent, fire, host: this.host, target })
+      );
+      if (gated) return true;
+    }
+    fire();
+    return false;
+  }
+
+  activationTarget(event) {
+    const target = this.closestInRoot(event, ACTIVATES);
+    if (!target || target !== event.target || target.matches(NATIVE_INTERACTIVE)) return null;
+    return target;
+  }
+
   // Enter and Space activate popover triggers and data-event targets that are
-  // not native controls, the way a <button> would.
+  // not native controls, the way a <button> would: Enter on keydown, Space on
+  // keyup, so a released Space never lands on a control that took focus.
   onKeyDown(event) {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    const target = this.closestInRoot(event, ACTIVATES);
-    if (!target || target !== event.target || target.matches(NATIVE_INTERACTIVE)) return;
+    const target = this.activationTarget(event);
+    if (!target) return;
+    event.preventDefault();
+    if (event.key === 'Enter') {
+      target.click();
+      return;
+    }
+    this.spaceTarget = target;
+  }
+
+  onKeyUp(event) {
+    if (event.key !== ' ') return;
+    const target = this.activationTarget(event);
+    const pressed = this.spaceTarget;
+    this.spaceTarget = null;
+    // Like a native button: only a Space pressed and released on the target.
+    if (!target || target !== pressed) return;
     event.preventDefault();
     target.click();
   }
@@ -208,20 +251,22 @@ class HtmlComponent extends React.Component {
     this.dispatch('onBlur', event);
   }
 
-  closeOverlay() {
+  // reason says why it closed (escape, outside, cancel, confirm), so an overlay
+  // can decide where focus goes.
+  closeOverlay(reason) {
     const { overlay } = this.state;
     if (overlay === null) return;
-    if (overlay.onClose) {
-      overlay.onClose();
-    }
     this.setState({ overlay: null });
+    if (overlay.onClose) {
+      overlay.onClose(reason);
+    }
   }
 
   // A data-event inside a popover is an action: it fires the block event, then
   // the popover closes.
   onPopoverDataEvent(dataEvent) {
     this.props.onDataEvent(dataEvent);
-    this.closeOverlay();
+    this.closeOverlay('action');
   }
 
   renderOverlay() {
@@ -248,6 +293,7 @@ class HtmlComponent extends React.Component {
           content={content}
           kind={overlay.kind}
           onClose={this.closeOverlay}
+          onConfirm={overlay.onConfirm}
           target={overlay.target}
         />
       </React.Suspense>
@@ -273,6 +319,7 @@ class HtmlComponent extends React.Component {
         onMouseUp={this.onTextSelection}
         onClick={enhanced || onClick || onDataEvent ? this.onClick : undefined}
         onKeyDown={enhanced ? this.onKeyDown : undefined}
+        onKeyUp={enhanced ? this.onKeyUp : undefined}
         onMouseOver={enhanced ? this.onMouseOver : undefined}
         onMouseOut={enhanced ? this.onMouseOut : undefined}
         onFocus={enhanced ? this.onFocus : undefined}

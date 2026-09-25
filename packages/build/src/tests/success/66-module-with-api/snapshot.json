@@ -1685,6 +1685,11 @@
           "id": "html-style-stripped",
           "message": "Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Clicks are wired through data-event attributes instead of inline handlers.",
           "see": "display-blocks/clickablehtml"
+        },
+        {
+          "id": "clickable-html-confirm-destructive",
+          "message": "Add data-confirm=\"Delete this row?\" to a data-event element whose event deletes or changes data, so a stray click cannot fire it. Only OK fires the event.",
+          "see": "concepts/html-attributes"
         }
       ]
     },
@@ -2423,7 +2428,7 @@
           "properties": {
             "html": {
               "type": "string",
-              "description": "Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event=\"onEditClick\" fires events.onEditClick), and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event=\"onEditClick\" data-record-id=\"42\" gives { record_id: \"42\" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag and data-status. See the HTML attributes docs page.",
+              "description": "Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event=\"onEditClick\" fires events.onEditClick), and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event=\"onEditClick\" data-record-id=\"42\" gives { record_id: \"42\" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm=\"Delete this row?\" on a data-event element asks first: only OK fires the event (bare data-confirm asks \"Are you sure?\"). All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page.",
               "docs": {
                 "displayType": "text-area"
               }
@@ -2645,7 +2650,7 @@
           "properties": {
             "html": {
               "type": "string",
-              "description": "Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status) work here too, unless DOMPurifyOptions removes data attributes.",
+              "description": "Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate, data-tone) work here too, unless DOMPurifyOptions removes data attributes.",
               "docs": {
                 "displayType": "text-area"
               }
@@ -3121,7 +3126,7 @@
           "properties": {
             "html": {
               "type": "string",
-              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete, warning, or a React Icons name); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"); data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour). See the HTML attributes docs page.",
+              "description": "Content to be rendered as Html. It understands these attributes: data-icon=\"edit\" renders an icon (a semantic name like edit, delete, warning, or a React Icons name); data-tooltip=\"Text\" shows a tooltip on hover and focus; data-popover=\"id\" toggles a popover showing the element with data-popover-content=\"id\" (mark it hidden); <a data-page-id=\"page-id\" data-url-query=\"key=value\"> links to an app page without reloading (never hard-code href=\"/page\"); data-link opts an existing app-relative <a href=\"/path\"> into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag=\"success\" renders a tinted status tag and data-status=\"success\" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour); <time datetime=\"ISO\" data-time=\"relative\"> renders a date as relative, date, datetime, time or a dayjs format; data-format=\"currency\" data-currency=\"USD\" formats the element's number as number, currency, percent, compact or bytes; data-avatar=\"Jane Doe\" renders initials (on an <img>, a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate=\"2\" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone=\"secondary\" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page.",
               "docs": {
                 "displayType": "text-area"
               }
@@ -6847,7 +6852,7 @@
   },
   "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Paragraph as Paragraph } from '@lowdefy/blocks-basic/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { ClickableHtml as ClickableHtml } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { PollingTimer as PollingTimer } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Paragraph,\n  Button,\n  Result,\n  Anchor,\n  ClickableHtml,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  List,\n  PollingTimer,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
   "plugins/connections.js": "import { SendGridMail as SendGridMail } from '@lowdefy/connection-sendgrid/connections';\nexport default {\n  SendGridMail,\n  };",
-  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nimport { LuHouse, LuMessageSquare, LuInfo } from 'react-icons/lu';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n  LuHouse,\n  LuMessageSquare,\n  LuInfo,\n  'home': LuHouse,\n  'info': LuInfo,\n  'message': LuMessageSquare,\n};",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineFileSearch } from 'react-icons/ai';\nimport { LuCheck, LuCopy, LuHouse, LuMessageSquare, LuInfo } from 'react-icons/lu';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineFileSearch,\n  LuCheck,\n  LuCopy,\n  LuHouse,\n  LuMessageSquare,\n  LuInfo,\n  'check': LuCheck,\n  'copy': LuCopy,\n  'home': LuHouse,\n  'info': LuInfo,\n  'message': LuMessageSquare,\n};",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
   "plugins/operatorMetas.json": {},
   "plugins/operatorSchemas.json": {

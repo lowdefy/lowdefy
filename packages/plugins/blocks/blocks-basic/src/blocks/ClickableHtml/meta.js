@@ -27,6 +27,12 @@ export default {
         'Content is sanitised with DOMPurify, so <style>, <script> and inline event handlers are removed before render. Clicks are wired through data-event attributes instead of inline handlers.',
       see: 'display-blocks/clickablehtml',
     },
+    {
+      id: 'clickable-html-confirm-destructive',
+      message:
+        'Add data-confirm="Delete this row?" to a data-event element whose event deletes or changes data, so a stray click cannot fire it. Only OK fires the event.',
+      see: 'concepts/html-attributes',
+    },
   ],
   // Each clickable element names its event in a data-event attribute, so the
   // event names this block fires are authored in its html.
@@ -42,7 +48,7 @@ export default {
       html: {
         type: 'string',
         description:
-          'Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), and its default browser action is prevented. The event object holds the element\'s other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag and data-status. See the HTML attributes docs page.',
+          'Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), and its default browser action is prevented. The event object holds the element\'s other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm="Delete this row?" on a data-event element asks first: only OK fires the event (bare data-confirm asks "Are you sure?"). All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page.',
         docs: {
           displayType: 'text-area',
         },

@@ -26,6 +26,7 @@ import createIcon from './createIcon.js';
 import createShortcutBadge from './createShortcutBadge.js';
 import createLinkComponent from './createLinkComponent.js';
 import createHandleError from './createHandleError.js';
+import getActiveLocale from './getActiveLocale.js';
 import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setupLink from './setupLink.js';
 import { createUrl } from './adapters/url.js';
@@ -85,10 +86,12 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     registerHtmlEnhancements({
       createHref: ({ pathname, query }) =>
         createUrl({ basePath: lowdefy.basePath, pathname, query }),
+      getLocale: () => getActiveLocale(window),
       HtmlOverlay: React.lazy(() => import('./HtmlOverlay.js')),
       Icon: lowdefy._internal.components.Icon,
       icons: types.icons,
       link: lowdefy._internal.link,
+      translate: lowdefy._internal.translate,
     });
 
     if (stage === 'dev' || stage === 'e2e') {
