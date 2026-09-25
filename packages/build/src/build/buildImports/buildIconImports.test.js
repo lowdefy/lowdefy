@@ -18,6 +18,9 @@ import { jest } from '@jest/globals';
 
 import defaultIconAliases from './defaultIconAliases.js';
 
+// data-copy's icons are always bundled.
+const HTML_ALIASES = { check: 'LuCheck', copy: 'LuCopy' };
+
 const mockRequire = jest.fn();
 
 jest.unstable_mockModule('module', () => ({
@@ -66,8 +69,8 @@ test('buildIconImports emits only the aliases the config uses', async () => {
     components,
     context: createContext(),
   });
-  expect(iconAliases).toEqual({ edit: 'LuPencil' });
-  expect(getIcons(iconImports, 'react-icons/lu')).toEqual(['LuPencil']);
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, edit: 'LuPencil' });
+  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual(['LuCheck', 'LuCopy', 'LuPencil']);
 });
 
 test('buildIconImports bundles icons named in client _js sources', async () => {
@@ -77,7 +80,7 @@ test('buildIconImports bundles icons named in client _js sources', async () => {
     client: { abc123: 'return `<i data-icon="delete"></i> <i data-icon="AiFillHome"></i>`;' },
   };
   const { iconAliases, iconImports } = buildIconImports({ blocks: [], components: {}, context });
-  expect(iconAliases).toEqual({ delete: 'LuTrash2' });
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, delete: 'LuTrash2' });
   expect(getIcons(iconImports, 'react-icons/ai')).toEqual(['AiFillHome']);
 });
 
@@ -92,9 +95,13 @@ test('buildIconImports lets theme aliases override and extend built-in names', a
     components,
     context: createContext(),
   });
-  expect(iconAliases).toEqual({ edit: 'TbPencil', invoice: 'LuReceipt' });
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, edit: 'TbPencil', invoice: 'LuReceipt' });
   expect(getIcons(iconImports, 'react-icons/tb')).toEqual(['TbPencil']);
-  expect(getIcons(iconImports, 'react-icons/lu')).toEqual(['LuReceipt']);
+  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual([
+    'LuCheck',
+    'LuCopy',
+    'LuReceipt',
+  ]);
 });
 
 test('buildIconImports bundles icons listed in theme.icons.include', async () => {
@@ -105,8 +112,13 @@ test('buildIconImports bundles icons listed in theme.icons.include', async () =>
     components,
     context: createContext(),
   });
-  expect(iconAliases).toEqual({ star: 'LuStar' });
-  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual(['LuFlag', 'LuStar']);
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, star: 'LuStar' });
+  expect(getIcons(iconImports, 'react-icons/lu').sort()).toEqual([
+    'LuCheck',
+    'LuCopy',
+    'LuFlag',
+    'LuStar',
+  ]);
 });
 
 test('buildIconImports warns on an include entry that names no icon', async () => {
@@ -133,7 +145,7 @@ test('buildIconImports bundles icons named in data-icon attributes', async () =>
     components,
     context: createContext(),
   });
-  expect(iconAliases).toEqual({ delete: 'LuTrash2' });
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, delete: 'LuTrash2' });
   expect(getIcons(iconImports, 'react-icons/ai')).toEqual(['AiFillHome']);
 });
 
@@ -159,7 +171,7 @@ test('buildIconImports bundles aliases named in block type default icons', async
     components: {},
     context,
   });
-  expect(iconAliases).toEqual({ close: 'LuX' });
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, close: 'LuX' });
 });
 
 test('buildIconImports throws when a theme alias targets an unknown icon', async () => {
@@ -197,6 +209,17 @@ test('buildIconImports throws when a theme alias name is not lowercase kebab-cas
   ).toThrow('Icon alias "Invoice" should be lowercase kebab-case, like "edit" or "external-link".');
 });
 
+test('buildIconImports always bundles the icons data-copy buttons render', async () => {
+  const { default: buildIconImports } = await import('./buildIconImports.js');
+  const { iconAliases, iconImports } = buildIconImports({
+    blocks: [],
+    components: {},
+    context: createContext(),
+  });
+  expect(iconAliases).toEqual(HTML_ALIASES);
+  expect(getIcons(iconImports, 'react-icons/lu')).toEqual(['LuCheck', 'LuCopy']);
+});
+
 test('buildIconImports keeps existing react-icons names working unchanged', async () => {
   const { default: buildIconImports } = await import('./buildIconImports.js');
   const { iconAliases, iconImports } = buildIconImports({
@@ -205,7 +228,7 @@ test('buildIconImports keeps existing react-icons names working unchanged', asyn
     context: createContext(),
     defaults: { 'react-icons/ai': ['AiOutlineExclamationCircle'] },
   });
-  expect(iconAliases).toEqual({});
+  expect(iconAliases).toEqual(HTML_ALIASES);
   expect(getIcons(iconImports, 'react-icons/ai')).toEqual([
     'AiOutlineExclamationCircle',
     'AiFillHome',
@@ -220,5 +243,5 @@ test('buildIconImports bundles icons named in HTML built by API endpoints', asyn
     ],
   };
   const { iconAliases } = buildIconImports({ blocks: [], components, context: createContext() });
-  expect(iconAliases).toEqual({ bell: 'LuBell' });
+  expect(iconAliases).toEqual({ ...HTML_ALIASES, bell: 'LuBell' });
 });

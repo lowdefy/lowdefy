@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
+import avatarEnhancer from './avatarEnhancer.js';
+import copyEnhancer from './copyEnhancer.js';
 import dataEventEnhancer from './dataEventEnhancer.js';
+import formatEnhancer from './formatEnhancer.js';
 import iconEnhancer from './iconEnhancer.js';
 import linkEnhancer from './linkEnhancer.js';
 import popoverEnhancer from './popoverEnhancer.js';
+import timeEnhancer from './timeEnhancer.js';
 import toneEnhancer from './toneEnhancer.js';
 import tooltipEnhancer from './tooltipEnhancer.js';
 
 // The HTML attribute vocabulary, in the order the pass runs. popover comes first
-// so it captures popover content before anything else changes it.
+// so it captures popover content before anything else changes it; copy comes
+// last so it copies the text the others wrote.
 const HTML_ENHANCERS = [
   popoverEnhancer,
   tooltipEnhancer,
@@ -30,6 +35,10 @@ const HTML_ENHANCERS = [
   iconEnhancer,
   linkEnhancer,
   toneEnhancer,
+  timeEnhancer,
+  formatEnhancer,
+  avatarEnhancer,
+  copyEnhancer,
 ];
 
 export default HTML_ENHANCERS;

@@ -15,6 +15,7 @@
 */
 
 import avatarColor from './avatarColor.js';
+import formatBytes from './formatBytes.js';
 import formatDate from './formatDate.js';
 import formatNumber from './formatNumber.js';
 import hashSeed from './hashSeed.js';
@@ -96,4 +97,13 @@ test('formatDate formats with a dayjs format, relative to now, or returns null',
     '3 hours ago'
   );
   expect(formatDate({ value: 'not a date', format: 'YYYY' })).toBeNull();
+});
+
+test('formatBytes picks the largest unit with base 1000', () => {
+  expect(formatBytes({ value: 12, locale: 'en-US' })).toBe('12 bytes');
+  expect(formatBytes({ value: 1536, locale: 'en-US' })).toBe('1.5 kB');
+  expect(formatBytes({ value: 3250000, locale: 'en-US' })).toBe('3.3 MB');
+  expect(formatBytes({ value: 2e18, locale: 'en-US' })).toBe('2,000 PB');
+  expect(formatBytes({ value: 1536, decimals: 2, locale: 'en-US' })).toBe('1.54 kB');
+  expect(formatBytes({ value: -2048, locale: 'en-US' })).toBe('-2 kB');
 });
