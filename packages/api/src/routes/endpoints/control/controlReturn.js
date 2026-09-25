@@ -19,6 +19,7 @@ import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 async function controlReturn(context, routineContext, { control }) {
   const response = evaluateRoutineOperators(context, routineContext, {
     input: control[':return'],
+    literalData: routineContext.literalData === true,
     location: control['~k'] ?? ':return',
   });
 
