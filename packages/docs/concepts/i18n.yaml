@@ -186,6 +186,10 @@ _ref:
             | `client.requestError` | `Request error` | Fallback when an API response has no message |
             | `client.backAriaLabel` | `back` | Aria label on browser-back links |
             | `client.shortcutThen` | `then` | Sequence shortcut badge separator |
+            | `client.copy` | `Copy` | Label of a `data-copy` button in HTML |
+            | `client.copyValue` | `Copy: {value}` | Label of a `data-copy` button whose value differs from its text |
+            | `client.copied` | `Copied` | Announced after a `data-copy` copy |
+            | `client.copyFailed` | `Copy failed` | Announced when a `data-copy` copy fails |
             | `errorPage.name` | `Error` | Full-page error fallback heading |
             | `errorPage.message` | `An error has occurred.` | Full-page error fallback body |
             | `errorPage.homeLink` | `Return to home page` | Full-page error fallback link |

@@ -301,7 +301,7 @@ Render raw HTML content without sanitization.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status) work here too, unless DOMPurifyOptions removes data attributes. |
+| `html` | string | - | Content to be rendered as Html. The Html block attributes (data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy) work here too, unless DOMPurifyOptions removes data attributes. |
 | `DOMPurifyOptions` | object | - | Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render. |
 
 No events defined.

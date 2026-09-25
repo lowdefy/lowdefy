@@ -27,7 +27,7 @@ _ref:
           - link-refs
         properties:
           content: |
-            Every block that renders HTML understands a small set of `data-*` attributes: `Html`, `ClickableHtml`, `DangerousHtml`, HTML properties such as Tooltip titles, Card titles and Alert messages, ag-grid cell HTML, and the `EventLog` block. They give HTML the icons, tooltips, links and status tags that apps otherwise build by hand with inline styles, and they look and behave the same in every app.
+            Every block that renders HTML understands a small set of `data-*` attributes: `Html`, `ClickableHtml`, `DangerousHtml`, HTML properties such as Tooltip titles, Card titles and Alert messages, ag-grid cell HTML, and the `EventLog` block. They give HTML the icons, tooltips, links, status tags, dates, numbers, avatars and copy buttons that apps otherwise build by hand with inline styles and templates, and they look and behave the same in every app.
 
             The attributes work on HTML from anywhere: page config, `_nunjucks` templates, request results and messages that API endpoints build on the server.
 
@@ -43,6 +43,10 @@ _ref:
             | `data-new-tab` | `<a href>` | Opens the link in a new tab. |
             | `data-tag="success"` | any element | A tinted status tag. |
             | `data-status="success"` | any element | A status dot before the text. |
+            | `data-time="relative"` | `<time datetime>` | A date as relative, date, datetime, time or a dayjs format. |
+            | `data-format="currency"` | any element | The element's number as number, currency, percent, compact or bytes. |
+            | `data-avatar="Jane Doe"` | any element, `<img>` | Initials in a theme colour; a fallback for a broken image. |
+            | `data-copy` | any element | A copy button for the element's text or the attribute's value. |
 
             Attribute values are plain text, names, numbers or colours. They are never read as HTML, templates or code, and HTML is sanitised before the attributes are applied.
 
@@ -140,6 +144,70 @@ _ref:
             - **Anything else, or nothing:** the colour is picked from the value, or from the element's text when the attribute has no value, so the same text always gets the same colour. `data-tag="{{ category_id }}"` keeps a colour stable when the category is renamed.
 
             The text is the label, so colour is never the only signal. Override the look with your own styles: the built-in styles have no specificity, so any class, Tailwind utility or inline style wins.
+
+            ## Dates and times
+
+            `data-time` formats the date in the element's `datetime` attribute, or in its text when it has none, in the app's locale and the browser's time zone:
+
+            ```html
+            <time datetime="{{ updated }}" data-time="relative"></time>
+            <time datetime="{{ created }}" data-time="date"></time>
+            <time datetime="{{ created }}" data-time="D MMM YYYY"></time>
+            ```
+
+            | Value | Renders |
+            |---|---|
+            | `relative` | `3 hours ago`, kept current while the page is open. Hovering shows the exact date and time. |
+            | `date` | `Sep 25, 2026` |
+            | `datetime`, or no value | `Sep 25, 2026, 3:30 PM` |
+            | `time` | `3:30 PM` |
+            | anything else | a [dayjs format](https://day.js.org/docs/en/display/format), such as `D MMM YYYY` |
+
+            The date can be an ISO string, anything dayjs parses, or epoch milliseconds (12 or more digits). A value that is not a date leaves the text as it is and logs a console warning, so put a readable fallback inside the element. Dates from the server are best sent as ISO strings, so they show in the reader's time zone instead of the server's.
+
+            ## Numbers
+
+            `data-format` formats the element's number, with the same formatting as the ag-grid block's `number` cells:
+
+            ```html
+            <span data-format="currency" data-currency="ZAR">{{ total }}</span>
+            <span data-format="percent" data-decimals="1">{{ ratio }}</span>
+            <span data-format="compact">{{ views }}</span>
+            <span data-format="bytes">{{ size }}</span>
+            ```
+
+            | Value | Example |
+            |---|---|
+            | `number`, or no value | `1234.5` → `1,234.5` |
+            | `currency` | `1234.5` with `data-currency="EUR"` → `€1,234.50` in English. `data-currency` (a three-letter currency code) is required. |
+            | `percent` | `0.123` → `12.3%` (the value is a fraction) |
+            | `compact` | `1500` → `1.5K` |
+            | `bytes` | `1536` → `1.5 kB` (base 1000) |
+
+            `data-decimals="2"` fixes the number of decimals. The text must be a plain decimal number such as `-1234.5`; anything else, like `1,234` or `N/A`, is left as it is. Formatted numbers use tabular figures, so columns line up.
+
+            ## Avatars
+
+            `data-avatar` renders a person's initials in a theme colour picked from their name, the same initials and colour as the ag-grid block's `avatar` cells. No image service is called.
+
+            ```html
+            <span data-avatar="{{ name }}"></span> {{ name }}
+            <img data-avatar="{{ name }}" src="{{ picture }}">
+            <span data-avatar="{{ name }}" data-avatar-shape="square"></span>
+            ```
+
+            On an `<img>`, the initials replace the image when it has no `src` or fails to load. The avatar is 24px by default; set `style="--lf-avatar-size: 40px; --lf-avatar-font-size: 16px"` to resize it. Next to the visible name the avatar is hidden from screen readers; on its own it is announced by the name.
+
+            ## Copy to clipboard
+
+            `data-copy` adds a copy button to the element. It copies the attribute's value, or the element's text when the attribute has no value:
+
+            ```html
+            <code data-copy>{{ api_key }}</code>
+            <span data-copy="{{ ticket_id }}">Ticket #{{ ticket_id }}</span>
+            ```
+
+            After a copy the icon shows a check and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it ("Copy: 42"). A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
 
             ## Plugin blocks
 

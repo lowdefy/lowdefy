@@ -59,7 +59,11 @@ installed in this project (including local plugins).
   \`href="/contacts?..."\` (it reloads the app and ignores basePath). \`data-new-tab\` instead of
   \`target="_blank"\` (sanitising strips \`target\`).
 - Statuses in HTML: \`<span data-tag="success">Approved</span>\` or \`<span data-status="warning">…</span>\`
-  — never inline-styled pills or hex status colours. See the \`concepts/html-attributes\` doc.
+  — never inline-styled pills or hex status colours.
+- Dates, numbers, people and copyable values in HTML: \`<time datetime="{{ iso }}" data-time="relative">\`
+  (or \`date\`, \`datetime\`, \`time\`), \`data-format="currency" data-currency="USD"\` (or \`number\`,
+  \`percent\`, \`compact\`, \`bytes\`) on the raw number, \`data-avatar="{{ name }}"\` (never an avatar image
+  service), and \`data-copy\` for a copy button. See the \`concepts/html-attributes\` doc.
 
 ### Visual feedback
 
