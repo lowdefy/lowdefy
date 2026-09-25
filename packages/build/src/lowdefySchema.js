@@ -1715,6 +1715,14 @@ export default {
             type: 'MCP "websiteUrl" should be a string.',
           },
         },
+        // Sent as the initialize result's instructions; clients such as
+        // Claude Code place it in the model's system prompt.
+        instructions: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "instructions" should be a string.',
+          },
+        },
         icons: {
           type: 'array',
           items: {
@@ -1811,7 +1819,7 @@ export default {
       errorMessage: {
         type: 'App "mcp" should be an object.',
         additionalProperties:
-          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions" and "endpoints".',
       },
     },
     block: {
