@@ -204,14 +204,15 @@ const serialize = (json, options = {}) => {
     }
     return { '~d': json.valueOf() };
   }
-  // skipMarkers is deliberately not threaded here - serialize has never applied
-  // it, and its callers depend on markers surviving.
+  // Markers survive unless the caller passes skipMarkers: config sent to the
+  // client needs them to resolve error locations, data does not.
   return JSON.parse(
     JSON.stringify(
       json,
       makeReplacer({
         replacer: options.replacer,
         isoStringDates: options.isoStringDates,
+        skipMarkers: options.skipMarkers,
         projectError: options.projectError,
       })
     )
