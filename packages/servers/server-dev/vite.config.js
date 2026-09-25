@@ -22,6 +22,8 @@ import { WebSocketServer } from 'ws';
 
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
 
+const devServerEntry = './src/app.js';
+
 // basePath from the Lowdefy build — assets and routes are served under it.
 let basePath = '';
 try {
@@ -32,10 +34,11 @@ try {
 }
 
 // Vite owns the HTTP server in dev, so /api/websocket upgrades are handled
-// here instead of @hono/node-server. The upgrade handler module is loaded
-// through Vite's SSR graph so it shares the Hono app and @lowdefy/api module
-// instances with the dev server routes. Vite's own HMR websocket uses a
-// different path and is untouched.
+// here instead of @hono/node-server. The Hono app is loaded from the same
+// entry @hono/vite-dev-server serves, so the upgrade runs the app every other
+// request runs, and the upgrade handler module is loaded through Vite's SSR
+// graph so it shares the @lowdefy/api module instances with the dev server
+// routes. Vite's own HMR websocket uses a different path and is untouched.
 function lowdefyWebSocket() {
   return {
     name: 'lowdefy-websocket',
@@ -47,12 +50,13 @@ function lowdefyWebSocket() {
           return;
         }
         try {
-          const { handleWebSocketUpgrade } = await server.ssrLoadModule(
-            './src/websocket/devWebSocket.js'
-          );
-          await handleWebSocketUpgrade({ request, socket, head, wss });
+          const [{ default: app }, { handleWebSocketUpgrade }] = await Promise.all([
+            server.ssrLoadModule(devServerEntry),
+            server.ssrLoadModule('./src/websocket/devWebSocket.js'),
+          ]);
+          await handleWebSocketUpgrade({ app, request, socket, head, wss });
         } catch (error) {
-          console.error(error);
+          console.error('WebSocket upgrade failed:', error);
           socket.destroy();
         }
       });
@@ -66,7 +70,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     lowdefyWebSocket(),
     devServer({
-      entry: './src/app.js',
+      entry: devServerEntry,
       exclude: createDevServerExclude({ basePath }),
     }),
   ],

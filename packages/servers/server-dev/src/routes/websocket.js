@@ -14,19 +14,20 @@
   limitations under the License.
 */
 
-import { setPendingWebSocketContext } from '../websocket/devWebSocket.js';
+import { type } from '@lowdefy/helpers';
 
 // In dev, Vite owns the HTTP server, so websocket upgrades can't flow through
-// @hono/node-server. The Vite plugin (see vite.config.js) fetches this route
-// with the upgrade request's headers to run the full middleware chain (auth
-// session, apiContext), and this handler hands the built context back to the
-// upgrade handler through a pending-context exchange keyed by request id.
+// @hono/node-server. The upgrade handler (src/websocket/devWebSocket.js) runs
+// this route with the upgrade request's headers so the full middleware chain
+// (auth session, apiContext) builds the request context, and passes a
+// websocketUpgrade object in the Hono env; this handler puts the context on
+// it. A plain HTTP request to this route carries no such object.
 function websocketHandler(c) {
-  const rid = c.req.header('x-lowdefy-websocket-rid');
-  if (!rid) {
+  const websocketUpgrade = c.env?.websocketUpgrade;
+  if (type.isNone(websocketUpgrade)) {
     return c.json({ message: 'WebSocket upgrade required.' }, 400);
   }
-  setPendingWebSocketContext(rid, c.get('lowdefyContext'));
+  websocketUpgrade.context = c.get('lowdefyContext');
   return c.json({ ok: true });
 }
 
