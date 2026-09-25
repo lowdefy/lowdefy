@@ -17,6 +17,9 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import findOperatorInData from './findOperatorInData.js';
+import isLiteralPassThrough from './isLiteralPassThrough.js';
+
 class ServerParser {
   constructor({ env, i18n, jsMap, lowdefyApp, operators, organization, secrets, user }) {
     this.env = env;
@@ -36,6 +39,7 @@ class ServerParser {
     error,
     input,
     items,
+    literalData = false,
     location,
     operatorPrefix = '_',
     payload,
@@ -60,6 +64,7 @@ class ServerParser {
           arrayIndices,
           error,
           items,
+          literalData,
           location,
           payload,
           state,
@@ -102,6 +107,20 @@ class ServerParser {
           steps,
           user: this.user,
         });
+        // Under literalData the output is sent to a client that evaluates every
+        // operator-shaped object, so no operator result may carry one unless
+        // the operator only passes through params the reviver already checked.
+        if (literalData && !isLiteralPassThrough({ op, methodName })) {
+          const found = findOperatorInData(res);
+          if (found) {
+            const operatorName = methodName ? `${op}.${methodName}` : op;
+            throw new ConfigError(
+              `Data returned by "${operatorName}" contains the operator "${found.operator}"${
+                found.path ? ` at "${found.path}"` : ''
+              }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
+            );
+          }
+        }
         return res;
       } catch (e) {
         if (e instanceof ConfigError) {

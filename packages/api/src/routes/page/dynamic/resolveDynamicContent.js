@@ -74,6 +74,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         urlQuery: shared.urlQuery ?? {},
       },
       endpointDepth: 0,
+      literalData: true,
     });
     if (['error', 'reject'].includes(status)) {
       throw (
